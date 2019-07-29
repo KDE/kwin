@@ -77,7 +77,7 @@ public:
     void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
     /**
      * Special hook to perform a paintScreen but just with the windows on @p desktop.
-     **/
+     */
     void paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData& data);
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
@@ -219,13 +219,13 @@ public:
 
     /**
      * @returns Whether we are currently in a desktop rendering process triggered by paintDesktop hook
-     **/
+     */
     bool isDesktopRendering() const {
         return m_desktopRendering;
     }
     /**
      * @returns the desktop currently being rendered in the paintDesktop hook.
-     **/
+     */
     int currentRenderedDesktop() const {
         return m_currentRenderedDesktop;
     }
@@ -270,7 +270,7 @@ public:
      * @param name The name of the effect.
      * @returns The effect with the given name @p name, or nullptr if there
      *     is no such effect loaded.
-     **/
+     */
     Effect *findEffect(const QString &name) const;
 
 public Q_SLOTS:
@@ -311,26 +311,26 @@ protected:
 
     /**
      * Default implementation does nothing and returns @c true.
-     **/
+     */
     virtual bool doGrabKeyboard();
     /**
      * Default implementation does nothing.
-     **/
+     */
     virtual void doUngrabKeyboard();
 
     /**
      * Default implementation sets Effects override cursor on the PointerInputRedirection.
-     **/
+     */
     virtual void doStartMouseInterception(Qt::CursorShape shape);
 
     /**
      * Default implementation removes the Effects override cursor on the PointerInputRedirection.
-     **/
+     */
     virtual void doStopMouseInterception();
 
     /**
      * Default implementation does nothing
-     **/
+     */
     virtual void doCheckInputWindowStacking();
 
     Effect* keyboard_grab_effect;
@@ -576,7 +576,7 @@ public:
     }
     /**
      * The foreground text color as specified by the default Plasma theme.
-     **/
+     */
     QColor styledTextColor();
 
 private Q_SLOTS:

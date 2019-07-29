@@ -78,7 +78,7 @@ class SwitcherItem : public QObject
 
     /**
      * The main QML item that will be displayed in the Dialog
-     **/
+     */
     Q_PROPERTY(QObject *item READ item WRITE setItem NOTIFY itemChanged)
 
     Q_CLASSINFO("DefaultProperty", "item")

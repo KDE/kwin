@@ -46,7 +46,7 @@ namespace MetaScripting
 /**
  * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.
  * Conversion functions for QPoint
- **/
+ */
 namespace Point
 {
 QScriptValue toScriptValue(QScriptEngine*, const QPoint&);
@@ -56,7 +56,7 @@ void fromScriptValue(const QScriptValue&, QPoint&);
 /**
  * The toScriptValue and fromScriptValue functions used in qScriptRegisterMetaType.
  * Conversion functions for QSize
- **/
+ */
 namespace Size
 {
 QScriptValue toScriptValue(QScriptEngine*, const QSize&);
@@ -68,7 +68,7 @@ void fromScriptValue(const QScriptValue&, QSize&);
  * Conversion functions for QRect
  * TODO: QRect conversions have to be linked from plasma as they provide a lot more
  *       features. As for QSize and QPoint, I don't really plan any such thing.
- **/
+ */
 namespace Rect
 {
 QScriptValue toScriptValue(QScriptEngine*, const QRect&);
@@ -89,18 +89,18 @@ void fromScriptValue(const QScriptValue &value, KToplevelRef& client);
 
 /**
  * Merges the second QScriptValue in the first one.
- **/
+ */
 void valueMerge(QScriptValue&, QScriptValue);
 
 /**
  * Registers all the meta conversion to the provided QScriptEngine
- **/
+ */
 void registration(QScriptEngine* eng);
 
 /**
  * Functions for the JS function objects, config.exists and config.get.
  * Read scripting/IMPLIST for details on how they work
- **/
+ */
 QScriptValue configExists(QScriptContext*, QScriptEngine*);
 QScriptValue getConfigValue(QScriptContext*, QScriptEngine*);
 
@@ -108,12 +108,12 @@ QScriptValue getConfigValue(QScriptContext*, QScriptEngine*);
  * Provide a config object to the given QScriptEngine depending
  * on the keys provided in the QVariant. The provided QVariant
  * MUST returns (true) on isHash()
- **/
+ */
 void supplyConfig(QScriptEngine*, const QVariant&);
 
 /**
  * For engines whose scripts have no associated configuration.
- **/
+ */
 void supplyConfig(QScriptEngine*);
 
 }
@@ -121,7 +121,7 @@ void supplyConfig(QScriptEngine*);
 
 /**
  * Code linked from plasma for QTimer.
- **/
+ */
 QScriptValue constructTimerClass(QScriptEngine *eng);
 
 #endif

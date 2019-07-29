@@ -31,7 +31,7 @@ class GLShader;
 
 /**
  * Inverts desktop's colors
- **/
+ */
 class InvertEffect
     : public Effect
 {

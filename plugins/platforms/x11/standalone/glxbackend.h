@@ -64,7 +64,7 @@ private:
 
 /**
  * @brief OpenGL Backend using GLX over an X overlay window.
- **/
+ */
 class GlxBackend : public OpenGLBackend
 {
 public:
@@ -101,7 +101,7 @@ private:
 
     /**
      * @brief The OverlayWindow used by this Backend.
-     **/
+     */
     OverlayWindow *m_overlayWindow;
     Window window;
     GLXFBConfig fbconfig;
@@ -125,7 +125,7 @@ private:
 
 /**
  * @brief Texture using an GLXPixmap.
- **/
+ */
 class GlxTexture : public SceneOpenGLTexturePrivate
 {
 public:

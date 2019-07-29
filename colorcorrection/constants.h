@@ -37,7 +37,7 @@ static const int FALLBACK_SLOW_UPDATE_TIME = 1800000;   /* 30 minutes */
  * This table was provided by Ingo Thies, 2013.
  * See the following file for more information:
  * https://github.com/jonls/redshift/blob/master/README-colorramp
- **/
+ */
 static const float blackbodyColor[] = {
     1.00000000, 0.18172716, 0.00000000,     /* 1000K */
     1.00000000, 0.25503671, 0.00000000,     /* 1100K */

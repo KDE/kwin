@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 1: fading out
  * 2: faded out
  * 3: fading in
- **/
+ */
 
 namespace KWin
 {

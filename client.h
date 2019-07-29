@@ -51,7 +51,7 @@ namespace KWin
  * @brief Defines Predicates on how to search for a Client.
  *
  * Used by Workspace::findClient.
- **/
+ */
 enum class Predicate {
     WindowMatch,
     WrapperIdMatch,
@@ -68,7 +68,7 @@ class KWIN_EXPORT Client
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
-     **/
+     */
     Q_PROPERTY(QSize basicUnit READ basicUnit)
     /**
      * A client can block compositing. That is while the Client is alive and the state is set,
@@ -79,12 +79,12 @@ class KWIN_EXPORT Client
      * group. For convenience it's exported as a property to the scripts.
      *
      * Use with care!
-     **/
+     */
     Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
     /**
      * Whether the Client uses client side window decorations.
      * Only GTK+ are detected.
-     **/
+     */
     Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
 public:
     explicit Client();
@@ -253,13 +253,13 @@ public:
      * the client is unmapped and hidden, this function is called
      * when the tabbing group of the client switches its visible
      * client.
-     **/
+     */
     void setClientShown(bool shown) override;
 
     /**
      * Whether or not the window has a strut that expands through the invisible area of
      * an xinerama setup where the monitors are not the same resolution.
-     **/
+     */
     bool hasOffscreenXineramaStrut() const;
 
     // Decorations <-> Effects
@@ -291,7 +291,7 @@ public:
     /**
      * Restores the Client after it had been hidden due to show on screen edge functionality.
      * In addition the property gets deleted so that the Client knows that it is visible again.
-     **/
+     */
     void showOnScreenEdge() override;
 
     Xcb::StringProperty fetchApplicationMenuServiceName() const;
@@ -381,24 +381,24 @@ Q_SIGNALS:
 
     /**
      * Emitted whenever the Client want to show it menu
-     **/
+     */
     void showRequest();
     /**
      * Emitted whenever the Client's menu is closed
-     **/
+     */
     void menuHidden();
     /**
      * Emitted whenever the Client's menu is available
-     **/
+     */
     void appMenuAvailable();
     /**
      * Emitted whenever the Client's menu is unavailable
-     **/
+     */
     void appMenuUnavailable();
 
     /**
      * Emitted whenever the Client's block compositing state changes.
-     **/
+     */
     void blockingCompositingChanged(KWin::Client *client);
     void clientSideDecoratedChanged();
 
@@ -466,7 +466,7 @@ private:
     /**
      * Reads the property and creates/destroys the screen edge if required
      * and shows/hides the client.
-     **/
+     */
     void updateShowOnScreenEdge();
 
     Xcb::Window m_client;

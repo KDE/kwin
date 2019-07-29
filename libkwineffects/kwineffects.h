@@ -63,7 +63,7 @@ class QAction;
 /**
  * Logging category to be used inside the KWin effects.
  * Do not use in this library.
- **/
+ */
 Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS)
 
 namespace KWayland {
@@ -184,7 +184,7 @@ X-KDE-Library=kwin4_effect_cooleffect
  *  classes.
  *
  * @{
- **/
+ */
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
@@ -212,7 +212,7 @@ enum WindowQuadType {
 /**
  * EffectWindow::setData() and EffectWindow::data() global roles.
  * All values between 0 and 999 are reserved for global roles.
- **/
+ */
 enum DataRole {
     // Grab roles are used to force all other animations to ignore the window.
     // The value of the data is set to the Effect's `this` value.
@@ -230,7 +230,7 @@ enum DataRole {
 /**
  * Style types used by @ref EffectFrame.
  * @since 4.6
- **/
+ */
 enum EffectFrameStyle {
     EffectFrameNone, ///< Displays no frame around the contents.
     EffectFrameUnstyled, ///< Displays a basic box around the contents.
@@ -239,7 +239,7 @@ enum EffectFrameStyle {
 
 /**
  * Infinite region (i.e. a special region type saying that everything needs to be painted).
- **/
+ */
 KWINEFFECTS_EXPORT inline
 QRect infiniteRegion()
 {
@@ -311,7 +311,7 @@ QRect infiniteRegion()
  * @endcode
  *
  * There is in general no need to call the matching doneCurrent method.
- **/
+ */
 class KWINEFFECTS_EXPORT Effect : public QObject
 {
     Q_OBJECT
@@ -321,39 +321,39 @@ public:
     enum {
         /**
          * Window (or at least part of it) will be painted opaque.
-         **/
+         */
         PAINT_WINDOW_OPAQUE         = 1 << 0,
         /**
          * Window (or at least part of it) will be painted translucent.
-         **/
+         */
         PAINT_WINDOW_TRANSLUCENT    = 1 << 1,
         /**
          * Window will be painted with transformed geometry.
-         **/
+         */
         PAINT_WINDOW_TRANSFORMED    = 1 << 2,
         /**
          * Paint only a region of the screen (can be optimized, cannot
          * be used together with TRANSFORMED flags).
-         **/
+         */
         PAINT_SCREEN_REGION         = 1 << 3,
         /**
          * The whole screen will be painted with transformed geometry.
          * Forces the entire screen to be painted.
-         **/
+         */
         PAINT_SCREEN_TRANSFORMED    = 1 << 4,
         /**
          * At least one window will be painted with transformed geometry.
          * Forces the entire screen to be painted.
-         **/
+         */
         PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
         /**
          * Clear whole background as the very first step, without optimizing it
-         **/
+         */
         PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
         // PAINT_DECORATION_ONLY = 1 << 7 has been deprecated
         /**
          * Window will be painted with a lanczos filter.
-         **/
+         */
         PAINT_WINDOW_LANCZOS = 1 << 8
         // PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS = 1 << 9 has been removed
     };
@@ -374,19 +374,19 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when the Effect is constructed.
-     **/
+     */
     Effect();
     /**
      * Destructs the Effect object.
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when the Effect is destroyed.
-     **/
+     */
     ~Effect() override;
 
     /**
      * Flags describing which parts of configuration have changed.
-     **/
+     */
     enum ReconfigureFlag {
         ReconfigureAll = 1 << 0 /// Everything needs to be reconfigured.
     };
@@ -398,12 +398,12 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when the Effect is reconfigured. If this method is called from within the Effect it is
      * required to ensure that the context is current if the implementation does OpenGL calls.
-     **/
+     */
     virtual void reconfigure(ReconfigureFlags flags);
 
     /**
      * Called when another effect requests the proxy for this effect.
-     **/
+     */
     virtual void* proxy();
 
     /**
@@ -416,7 +416,7 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-    **/
+    */
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     /**
      * In this method you can:
@@ -427,7 +427,7 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     /**
      * Called after all the painting has been finished.
@@ -437,7 +437,7 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void postPaintScreen();
 
     /**
@@ -450,7 +450,7 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     /**
      * This is the main method for painting windows.
@@ -461,7 +461,7 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     /**
      * Called for every window after all painting has been finished.
@@ -471,7 +471,7 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void postPaintWindow(EffectWindow* w);
 
     /**
@@ -486,13 +486,13 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
 
     /**
      * Called on Transparent resizes.
      * return true if your effect substitutes questioned feature
-     **/
+     */
     virtual bool provides(Feature);
 
     /**
@@ -505,7 +505,7 @@ public:
      *
      * The default implementation returns @c false.
      * @since 5.8
-     **/
+     */
     virtual bool perform(Feature feature, const QVariantList &arguments);
 
     /**
@@ -515,13 +515,13 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
-     **/
+     */
     virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
     /**
      * Define new window quads so that they can be transformed by other effects.
      * It's up to the effect to keep track of them.
-     **/
+     */
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList);
 
     virtual void windowInputMouseEvent(QEvent* e);
@@ -541,7 +541,7 @@ public:
      *
      * The default implementation of this method returns @c true.
      * @since 4.8
-     **/
+     */
     virtual bool isActive() const;
 
     /**
@@ -554,7 +554,7 @@ public:
      * object - signalling "let me alone, i know what i'm doing"
      * @param parameter A freeform string user input for your effect to interpret.
      * @since 4.11
-     **/
+     */
     virtual QString debug(const QString &parameter) const;
 
     /**
@@ -568,7 +568,7 @@ public:
      * X-KDE-Ordering. In the case of Scripted Effects this property is still used.
      *
      * @since 5.0
-     **/
+     */
     virtual int requestedEffectChainPosition() const;
 
 
@@ -590,7 +590,7 @@ public:
      * @see touchMotion
      * @see touchUp
      * @since 5.8
-     **/
+     */
     virtual bool touchDown(quint32 id, const QPointF &pos, quint32 time);
     /**
      * A touch point moved.
@@ -610,7 +610,7 @@ public:
      * @see touchDown
      * @see touchUp
      * @since 5.8
-     **/
+     */
     virtual bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
     /**
      * A touch point was released.
@@ -629,7 +629,7 @@ public:
      * @see touchDown
      * @see touchMotion
      * @since 5.8
-     **/
+     */
     virtual bool touchUp(quint32 id, quint32 time);
 
     static QPoint cursorPos();
@@ -642,31 +642,31 @@ public:
      * @param cfg configuration group to read value from
      * @param key configuration key to read value from
      * @param defaultTime default animation time in milliseconds
-     **/
+     */
     // return type is intentionally double so that one can divide using it without losing data
     static double animationTime(const KConfigGroup& cfg, const QString& key, int defaultTime);
     /**
      * @overload Use this variant if the animation time is hardcoded and not configurable
      * in the effect itself.
-     **/
+     */
     static double animationTime(int defaultTime);
     /**
      * @overload Use this variant if animation time is provided through a KConfigXT generated class
      * having a property called "duration".
-     **/
+     */
     template <typename T>
     int animationTime(int defaultDuration);
     /**
      * Linearly interpolates between @p x and @p y.
      *
      * Returns @p x when @p a = 0; returns @p y when @p a = 1.
-     **/
+     */
     static double interpolate(double x, double y, double a) {
         return x * (1 - a) + y * a;
     }
     /** Helper to set WindowPaintData and QRegion to necessary transformations so that
      * a following drawWindow() would put the window at the requested geometry (useful for thumbnails)
-     **/
+     */
     static void setPositionTransformations(WindowPaintData& data, QRect& region, EffectWindow* w,
                                            const QRect& r, Qt::AspectRatioMode aspect);
 
@@ -681,7 +681,7 @@ protected:
      * An implementing class can call this with it's kconfig compiled singleton class.
      * This method will perform the instance on the class.
      * @since 5.9
-     **/
+     */
     template <typename T>
     void initConfig();
 };
@@ -689,7 +689,7 @@ protected:
 
 /**
  * Prefer the KWIN_EFFECT_FACTORY macros.
- **/
+ */
 class KWINEFFECTS_EXPORT EffectPluginFactory : public KPluginFactory
 {
     Q_OBJECT
@@ -704,7 +704,7 @@ public:
      * If the current compositing backend is not supported it should return @c false.
      *
      * This method is optional, by default @c true is returned.
-     **/
+     */
     virtual bool isSupported() const;
     /**
      * Returns whether the Effect should get enabled by default.
@@ -718,11 +718,11 @@ public:
      * and if X-KDE-PluginInfo-EnabledByDefault is set to true in the .desktop file.
      *
      * This method is optional, by default @c true is returned.
-     **/
+     */
     virtual bool enabledByDefault() const;
     /**
      * This method returns the created Effect.
-     **/
+     */
     virtual KWin::Effect *createEffect() const = 0;
 };
 
@@ -743,7 +743,7 @@ public:
  * @param jsonFile Name of the json file to be compiled into the plugin as metadata
  * @param supported Source code to go into the isSupported() method, must return a boolean
  * @param enabled Source code to go into the enabledByDefault() method, must return a boolean
- **/
+ */
 #define KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, supported, enabled ) \
     class factoryName : public KWin::EffectPluginFactory \
     { \
@@ -785,7 +785,7 @@ public:
  *  workspace, e.g. to activate or move a specific window, change current
  *  desktop or create a special input window to receive mouse and keyboard
  *  events.
- **/
+ */
 class KWINEFFECTS_EXPORT EffectsHandler : public QObject
 {
     Q_OBJECT
@@ -799,7 +799,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     /**
      * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
-     **/
+     */
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     Q_PROPERTY(bool optionRollOverDesktops READ optionRollOverDesktops)
     Q_PROPERTY(int activeScreen READ activeScreen)
@@ -810,16 +810,16 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
      * animation speed. The actual value should be determined using animationTime().
      * Note: The factor can be also 0, so make sure your code can cope with 0ms time
      * if used manually.
-     **/
+     */
     Q_PROPERTY(qreal animationTimeFactor READ animationTimeFactor)
     Q_PROPERTY(QList< KWin::EffectWindow* > stackingOrder READ stackingOrder)
     /**
      * Whether window decorations use the alpha channel.
-     **/
+     */
     Q_PROPERTY(bool decorationsHaveAlpha READ decorationsHaveAlpha)
     /**
      * Whether the window decorations support blurring behind the decoration.
-     **/
+     */
     Q_PROPERTY(bool decorationSupportsBlurBehind READ decorationSupportsBlurBehind)
     Q_PROPERTY(CompositingType compositingType READ compositingType CONSTANT)
     Q_PROPERTY(QPoint cursorPos READ cursorPos)
@@ -845,7 +845,7 @@ public:
      * Sets the cursor while the mouse is intercepted.
      * @see startMouseInterception
      * @since 4.11
-     **/
+     */
     virtual void defineCursor(Qt::CursorShape shape) = 0;
     virtual QPoint cursorPos() const = 0;
     virtual bool grabKeyboard(Effect* effect) = 0;
@@ -863,13 +863,13 @@ public:
      * @see stopMouseInterception
      * @see Effect::windowInputMouseEvent
      * @since 4.11
-     **/
+     */
     virtual void startMouseInterception(Effect *effect, Qt::CursorShape shape) = 0;
     /**
      * Releases the hold mouse interception for @p effect
      * @see startMouseInterception
      * @since 4.11
-     **/
+     */
     virtual void stopMouseInterception(Effect *effect) = 0;
 
     /**
@@ -877,7 +877,7 @@ public:
      *
      * @param shortcut The global shortcut which should trigger the action
      * @param action The action which gets triggered when the shortcut matches
-     **/
+     */
     virtual void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) = 0;
     /**
      * @brief Registers a global pointer shortcut with the provided @p action.
@@ -885,7 +885,7 @@ public:
      * @param modifiers The keyboard modifiers which need to be holded
      * @param pointerButtons The pointer buttons which need to be pressed
      * @param action The action which gets triggered when the shortcut matches
-     **/
+     */
     virtual void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) = 0;
     /**
      * @brief Registers a global axis shortcut with the provided @p action.
@@ -893,7 +893,7 @@ public:
      * @param modifiers The keyboard modifiers which need to be holded
      * @param axis The direction in which the axis needs to be moved
      * @param action The action which gets triggered when the shortcut matches
-     **/
+     */
     virtual void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) = 0;
 
     /**
@@ -902,13 +902,13 @@ public:
      * @param direction The direction for the swipe
      * @param action The action which gets triggered when the gesture triggers
      * @since 5.10
-     **/
+     */
     virtual void registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action) = 0;
 
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
      * the effect isn't loaded or doesn't have a proxy class.
-     **/
+     */
     virtual void* getProxy(QString name) = 0;
 
     // Mouse polling
@@ -930,14 +930,14 @@ public:
      *
      * @see unregisterTouchBorder
      * @since 5.10
-     **/
+     */
     virtual void registerTouchBorder(ElectricBorder border, QAction *action) = 0;
     /**
      * Unregisters the given @p action for the given touch @p border.
      *
      * @see registerTouchBorder
      * @since 5.10
-     **/
+     */
     virtual void unregisterTouchBorder(ElectricBorder border, QAction *action) = 0;
 
     // functions that allow controlling windows/desktop
@@ -948,7 +948,7 @@ public:
     /**
      * Moves the window to the specific desktop
      * Setting desktop to NET::OnAllDesktops will set the window on all desktops
-     **/
+     */
     Q_SCRIPTABLE virtual void windowToDesktop(KWin::EffectWindow* w, int desktop) = 0;
 
     /**
@@ -957,7 +957,7 @@ public:
      * Setting this to an empty list will set the window on all desktops
      *
      * @arg desktopIds a list of desktops the window should be placed on. NET::OnAllDesktops is not a valid desktop X11Id
-     **/
+     */
     Q_SCRIPTABLE virtual void windowToDesktops(KWin::EffectWindow* w, const QVector<uint> &desktopIds) = 0;
 
     Q_SCRIPTABLE virtual void windowToScreen(KWin::EffectWindow* w, int screen) = 0;
@@ -966,77 +966,77 @@ public:
     // Activities
     /**
      * @returns The ID of the current activity.
-     **/
+     */
     virtual QString currentActivity() const = 0;
     // Desktops
     /**
      * @returns The ID of the current desktop.
-     **/
+     */
     virtual int currentDesktop() const = 0;
     /**
      * @returns Total number of desktops currently in existence.
-     **/
+     */
     virtual int numberOfDesktops() const = 0;
     /**
      * Set the current desktop to @a desktop.
-     **/
+     */
     virtual void setCurrentDesktop(int desktop) = 0;
     /**
      * Sets the total number of desktops to @a desktops.
-     **/
+     */
     virtual void setNumberOfDesktops(int desktops) = 0;
     /**
      * @returns The size of desktop layout in grid units.
-     **/
+     */
     virtual QSize desktopGridSize() const = 0;
     /**
      * @returns The width of desktop layout in grid units.
-     **/
+     */
     virtual int desktopGridWidth() const = 0;
     /**
      * @returns The height of desktop layout in grid units.
-     **/
+     */
     virtual int desktopGridHeight() const = 0;
     /**
      * @returns The width of desktop layout in pixels.
-     **/
+     */
     virtual int workspaceWidth() const = 0;
     /**
      * @returns The height of desktop layout in pixels.
-     **/
+     */
     virtual int workspaceHeight() const = 0;
     /**
      * @returns The ID of the desktop at the point @a coords or 0 if no desktop exists at that
      * point. @a coords is to be in grid units.
-     **/
+     */
     virtual int desktopAtCoords(QPoint coords) const = 0;
     /**
      * @returns The coords of desktop @a id in grid units.
-     **/
+     */
     virtual QPoint desktopGridCoords(int id) const = 0;
     /**
      * @returns The coords of the top-left corner of desktop @a id in pixels.
-     **/
+     */
     virtual QPoint desktopCoords(int id) const = 0;
     /**
      * @returns The ID of the desktop above desktop @a id. Wraps around to the bottom of
      * the layout if @a wrap is set. If @a id is not set use the current one.
-     **/
+     */
     Q_SCRIPTABLE virtual int desktopAbove(int desktop = 0, bool wrap = true) const = 0;
     /**
      * @returns The ID of the desktop to the right of desktop @a id. Wraps around to the
      * left of the layout if @a wrap is set. If @a id is not set use the current one.
-     **/
+     */
     Q_SCRIPTABLE virtual int desktopToRight(int desktop = 0, bool wrap = true) const = 0;
     /**
      * @returns The ID of the desktop below desktop @a id. Wraps around to the top of the
      * layout if @a wrap is set. If @a id is not set use the current one.
-     **/
+     */
     Q_SCRIPTABLE virtual int desktopBelow(int desktop = 0, bool wrap = true) const = 0;
     /**
      * @returns The ID of the desktop to the left of desktop @a id. Wraps around to the
      * right of the layout if @a wrap is set. If @a id is not set use the current one.
-     **/
+     */
     Q_SCRIPTABLE virtual int desktopToLeft(int desktop = 0, bool wrap = true) const = 0;
     Q_SCRIPTABLE virtual QString desktopName(int desktop) const = 0;
     virtual bool optionRollOverDesktops() const = 0;
@@ -1055,7 +1055,7 @@ public:
      * @see virtualScreenGeometry()
      * @see virtualScreenSizeChanged()
      * @since 5.0
-     **/
+     */
     virtual QSize virtualScreenSize() const = 0;
     /**
      * The bounding geometry of all outputs combined. Always starts at (0,0) and has
@@ -1064,7 +1064,7 @@ public:
      * @see virtualScreenSize()
      * @see virtualScreenGeometryChanged()
      * @since 5.0
-     **/
+     */
     virtual QRect virtualScreenGeometry() const = 0;
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
@@ -1072,7 +1072,7 @@ public:
      * animation speed. The actual value should be determined using animationTime().
      * Note: The factor can be also 0, so make sure your code can cope with 0ms time
      * if used manually.
-     **/
+     */
     virtual double animationTimeFactor() const = 0;
     virtual WindowQuadType newWindowQuadType() = 0;
 
@@ -1086,14 +1086,14 @@ public:
      * window id matching that of the provided window @p w.
      *
      * @since 5.16
-     **/
+     */
     Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(QWindow *w) const = 0;
     /**
      * Finds the EffectWindow for the Toplevel with KWin internal @p id.
      * If there is no such window @c null is returned.
      *
      * @since 5.16
-     **/
+     */
     Q_SCRIPTABLE virtual KWin::EffectWindow *findWindow(const QUuid &id) const = 0;
     virtual EffectWindowList stackingOrder() const = 0;
     // window will be temporarily painted as if being at the top of the stack
@@ -1116,7 +1116,7 @@ public:
      * Schedules the entire workspace to be repainted next time.
      * If you call it during painting (including prepaint) then it does not
      *  affect the current painting.
-     **/
+     */
     Q_SCRIPTABLE virtual void addRepaintFull() = 0;
     Q_SCRIPTABLE virtual void addRepaint(const QRect& r) = 0;
     Q_SCRIPTABLE virtual void addRepaint(const QRegion& r) = 0;
@@ -1127,7 +1127,7 @@ public:
      * @brief Whether the Compositor is OpenGL based (either GL 1 or 2).
      *
      * @return bool @c true in case of OpenGL based Compositor, @c false otherwise
-     **/
+     */
     bool isOpenGLCompositing() const;
     virtual unsigned long xrenderBufferPicture() = 0;
     /**
@@ -1137,7 +1137,7 @@ public:
      * @c null is returned.
      *
      * @return QPainter* The Scene's QPainter or @c null.
-     **/
+     */
     virtual QPainter *scenePainter() = 0;
     virtual void reconfigure() = 0;
 
@@ -1158,7 +1158,7 @@ public:
      * @return xcb_atom_t The created X11 atom
      * @see removeSupportProperty
      * @since 4.11
-     **/
+     */
     virtual xcb_atom_t announceSupportProperty(const QByteArray &propertyName, Effect *effect) = 0;
     /**
      * @brief Removes support for the feature with the given name. If there is no other Effect left
@@ -1171,24 +1171,24 @@ public:
      * @param effect The effect which had registered the property.
      * @see announceSupportProperty
      * @since 4.11
-     **/
+     */
     virtual void removeSupportProperty(const QByteArray &propertyName, Effect *effect) = 0;
 
     /**
      * Returns @a true if the active window decoration has shadow API hooks.
-     **/
+     */
     virtual bool hasDecorationShadows() const = 0;
 
     /**
      * Returns @a true if the window decorations use the alpha channel, and @a false otherwise.
      * @since 4.5
-     **/
+     */
     virtual bool decorationsHaveAlpha() const = 0;
 
     /**
      * Returns @a true if the window decorations support blurring behind the decoration, and @a false otherwise
      * @since 4.6
-     **/
+     */
     virtual bool decorationSupportsBlurBehind() const = 0;
 
     /**
@@ -1198,7 +1198,7 @@ public:
      * @returns A new @ref EffectFrame. It is the responsibility of the caller to delete the
      * EffectFrame.
      * @since 4.6
-     **/
+     */
     virtual EffectFrame* effectFrame(EffectFrameStyle style, bool staticSize = true,
                                      const QPoint& position = QPoint(-1, -1), Qt::Alignment alignment = Qt::AlignCenter) const = 0;
 
@@ -1209,7 +1209,7 @@ public:
      * hold.
      * @param effect The effect to reload
      * @since 4.8
-     **/
+     */
     virtual void reloadEffect(Effect *effect) = 0;
 
     /**
@@ -1221,7 +1221,7 @@ public:
      * @returns @c true if the screen is currently locked, @c false otherwise
      * @see screenLockingChanged
      * @since 4.11
-     **/
+     */
     virtual bool isScreenLocked() const = 0;
 
     /**
@@ -1230,7 +1230,7 @@ public:
      * If the compositing backend is not using OpenGL, this method returns @c false.
      *
      * @return bool @c true if the context became current, @c false otherwise.
-     **/
+     */
     virtual bool makeOpenGLContextCurrent() = 0;
     /**
      * @brief Makes a null OpenGL context current resulting in no context
@@ -1239,7 +1239,7 @@ public:
      * If the compositing backend is not OpenGL based, this method is a noop.
      *
      * There is normally no reason for an Effect to call this method.
-     **/
+     */
     virtual void doneOpenGLContextCurrent() = 0;
 
     virtual xcb_connection_t *xcbConnection() const = 0;
@@ -1249,7 +1249,7 @@ public:
      * Interface to the Wayland display: this is relevant only
      * on Wayland, on X11 it will be nullptr
      * @since 5.5
-     **/
+     */
     virtual KWayland::Server::Display *waylandDisplay() const = 0;
 
     /**
@@ -1259,28 +1259,28 @@ public:
      *
      * @returns Whether the Scene can drive animations
      * @since 5.8
-     **/
+     */
     virtual bool animationsSupported() const = 0;
 
     /**
      * The current cursor image of the Platform.
      * @see cursorPos
      * @since 5.9
-     **/
+     */
     virtual PlatformCursorImage cursorImage() const = 0;
 
     /**
      * The cursor image should be hidden.
      * @see showCursor
      * @since 5.9
-     **/
+     */
     virtual void hideCursor() = 0;
 
     /**
      * The cursor image should be shown again after having been hidden.
      * @see hideCursor
      * @since 5.9
-     **/
+     */
     virtual void showCursor() = 0;
 
     /**
@@ -1294,7 +1294,7 @@ public:
      *
      * @param callback The function to invoke once the interactive window selection ends
      * @since 5.9
-     **/
+     */
     virtual void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow*)> callback) = 0;
 
     /**
@@ -1309,7 +1309,7 @@ public:
      *
      * @param callback The function to invoke once the interactive position selection ends
      * @since 5.9
-     **/
+     */
     virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) = 0;
 
     /**
@@ -1319,19 +1319,19 @@ public:
      * @param iconName The optional themed icon name
      * @see hideOnScreenMessage
      * @since 5.9
-     **/
+     */
     virtual void showOnScreenMessage(const QString &message, const QString &iconName = QString()) = 0;
 
     /**
      * Flags for how to hide a shown on-screen-message
      * @see hideOnScreenMessage
      * @since 5.9
-     **/
+     */
     enum class OnScreenMessageHideFlag {
         /**
          * The on-screen-message should skip the close window animation.
          * @see EffectWindow::skipsCloseAnimation
-         **/
+         */
         SkipsCloseAnimation = 1
     };
     Q_DECLARE_FLAGS(OnScreenMessageHideFlags, OnScreenMessageHideFlag)
@@ -1340,24 +1340,24 @@ public:
      * @param flags The flags for how to hide the message
      * @see showOnScreenMessage
      * @since 5.9
-     **/
+     */
     virtual void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) = 0;
 
     /*
      * @returns The configuration used by the EffectsHandler.
      * @since 5.10
-     **/
+     */
     virtual KSharedConfigPtr config() const = 0;
 
     /**
      * @returns The global input configuration (kcminputrc)
      * @since 5.10
-     **/
+     */
     virtual KSharedConfigPtr inputConfig() const = 0;
 
     /**
      * Returns if activeFullScreenEffect is set
-     **/
+     */
     virtual bool hasActiveFullScreenEffect() const = 0;
 
 Q_SIGNALS:
@@ -1367,12 +1367,12 @@ Q_SIGNALS:
      * @param newDesktop The new current desktop
      * @param with The window which is taken over to the new desktop, can be NULL
      * @since 4.9
-     **/
+     */
     void desktopChanged(int oldDesktop, int newDesktop, KWin::EffectWindow *with);
     /**
      * @since 4.7
      * @deprecated
-     **/
+     */
     void desktopChanged(int oldDesktop, int newDesktop);
     /**
      * Signal emitted when a window moved to another desktop
@@ -1381,32 +1381,32 @@ Q_SIGNALS:
      * @param oldDesktop The previous desktop of the window
      * @param newDesktop The new desktop of the window
      * @since 4.11.4
-     **/
+     */
     void desktopPresenceChanged(KWin::EffectWindow *window, int oldDesktop, int newDesktop);
     /**
     * Signal emitted when the number of currently existing desktops is changed.
     * @param old The previous number of desktops in used.
     * @see EffectsHandler::numberOfDesktops.
     * @since 4.7
-    **/
+    */
     void numberDesktopsChanged(uint old);
     /**
      * Signal emitted when the number of screens changed.
      * @since 5.0
-     **/
+     */
     void numberScreensChanged();
     /**
      * Signal emitted when the desktop showing ("dashboard") state changed
      * The desktop is risen to the keepAbove layer, you may want to elevate
      * windows or such.
      * @since 5.3
-     **/
+     */
     void showingDesktopChanged(bool);
     /**
      * Signal emitted when a new window has been added to the Workspace.
      * @param w The added window
      * @since 4.7
-     **/
+     */
     void windowAdded(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window is being removed from the Workspace.
@@ -1415,13 +1415,13 @@ Q_SIGNALS:
      * refWindow
      * @param w The window which is being closed
      * @since 4.7
-     **/
+     */
     void windowClosed(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window get's activated.
      * @param w The new active window, or @c NULL if there is no active window.
      * @since 4.7
-     **/
+     */
     void windowActivated(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window is deleted.
@@ -1433,7 +1433,7 @@ Q_SIGNALS:
      * @see EffectWindow::unrefWindow
      * @see windowClosed
      * @since 4.7
-     **/
+     */
     void windowDeleted(KWin::EffectWindow *w);
     /**
      * Signal emitted when a user begins a window move or resize operation.
@@ -1449,7 +1449,7 @@ Q_SIGNALS:
      * @see EffectWindow::isUserMove
      * @see EffectWindow::isUserResize
      * @since 4.7
-     **/
+     */
     void windowStartUserMovedResized(KWin::EffectWindow *w);
     /**
      * Signal emitted during a move/resize operation when the user changed the geometry.
@@ -1466,7 +1466,7 @@ Q_SIGNALS:
      * @see EffectWindow::isUserMove
      * @see EffectWindow::isUserResize
      * @since 4.7
-     **/
+     */
     void windowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
     /**
      * Signal emitted when the user finishes move/resize of window @p w.
@@ -1474,7 +1474,7 @@ Q_SIGNALS:
      * @see windowStartUserMovedResized
      * @see windowFinishUserMovedResized
      * @since 4.7
-     **/
+     */
     void windowFinishUserMovedResized(KWin::EffectWindow *w);
     /**
      * Signal emitted when the maximized state of the window @p w changed.
@@ -1487,7 +1487,7 @@ Q_SIGNALS:
      * @param horizontal If @c true maximized horizontally
      * @param vertical If @c true maximized vertically
      * @since 4.7
-     **/
+     */
     void windowMaximizedStateChanged(KWin::EffectWindow *w, bool horizontal, bool vertical);
     /**
      * Signal emitted when the geometry or shape of a window changed.
@@ -1498,14 +1498,14 @@ Q_SIGNALS:
      * @param old The previous geometry
      * @see windowUserMovedResized
      * @since 4.7
-     **/
+     */
     void windowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
     /**
      * Signal emitted when the padding of a window changed. (eg. shadow size)
      * @param w The window whose geometry changed
      * @param old The previous expandedGeometry()
      * @since 4.9
-     **/
+     */
     void windowPaddingChanged(KWin::EffectWindow *w, const QRect &old);
     /**
      * Signal emitted when the windows opacity is changed.
@@ -1513,25 +1513,25 @@ Q_SIGNALS:
      * @param oldOpacity The previous opacity level
      * @param newOpacity The new opacity level
      * @since 4.7
-     **/
+     */
     void windowOpacityChanged(KWin::EffectWindow *w, qreal oldOpacity, qreal newOpacity);
     /**
      * Signal emitted when a window got minimized.
      * @param w The window which was minimized
      * @since 4.7
-     **/
+     */
     void windowMinimized(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window got unminimized.
      * @param w The window which was unminimized
      * @since 4.7
-     **/
+     */
     void windowUnminimized(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window either becomes modal (ie. blocking for its main client) or looses that state.
      * @param w The window which was unminimized
      * @since 4.11
-     **/
+     */
     void windowModalityChanged(KWin::EffectWindow *w);
     /**
      * Signal emitted when a window either became unresponsive (eg. app froze or crashed)
@@ -1539,7 +1539,7 @@ Q_SIGNALS:
      * @param w The window that became (un)responsive
      * @param unresponsive Whether the window is responsive or unresponsive
      * @since 5.10
-     **/
+     */
     void windowUnresponsiveChanged(KWin::EffectWindow *w, bool unresponsive);
     /**
      * Signal emitted when an area of a window is scheduled for repainting.
@@ -1547,7 +1547,7 @@ Q_SIGNALS:
      * @param w The window which is scheduled for repainting
      * @param r Always empty.
      * @since 4.7
-     **/
+     */
     void windowDamaged(KWin::EffectWindow *w, const QRect &r);
     /**
      * Signal emitted when a tabbox is added.
@@ -1558,7 +1558,7 @@ Q_SIGNALS:
      * @see tabBoxUpdated
      * @see tabBoxKeyEvent
      * @since 4.7
-     **/
+     */
     void tabBoxAdded(int mode);
     /**
      * Signal emitted when the TabBox was closed by KWin core.
@@ -1566,7 +1566,7 @@ Q_SIGNALS:
      * @see unrefTabBox
      * @see tabBoxAdded
      * @since 4.7
-     **/
+     */
     void tabBoxClosed();
     /**
      * Signal emitted when the selected TabBox window changed or the TabBox List changed.
@@ -1577,7 +1577,7 @@ Q_SIGNALS:
      * @see currentTabBoxWindow
      * @see currentTabBoxDesktop
      * @since 4.7
-     **/
+     */
     void tabBoxUpdated();
     /**
      * Signal emitted when a key event, which is not handled by TabBox directly is, happens while
@@ -1586,7 +1586,7 @@ Q_SIGNALS:
      * @param event The key event not handled by TabBox directly
      * @see refTabBox
      * @since 4.7
-     **/
+     */
     void tabBoxKeyEvent(QKeyEvent* event);
     void currentTabAboutToChange(KWin::EffectWindow* from, KWin::EffectWindow* to);
     void tabAdded(KWin::EffectWindow* from, KWin::EffectWindow* to);   // from merged with to
@@ -1603,7 +1603,7 @@ Q_SIGNALS:
      * @param oldmodifiers Previously pressed keyboard modifiers.
      * @see startMousePolling
      * @since 4.7
-     **/
+     */
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
@@ -1611,7 +1611,7 @@ Q_SIGNALS:
      * Signal emitted when the cursor shape changed.
      * You'll likely want to query the current cursor as reaction: xcb_xfixes_get_cursor_image_unchecked
      * Connection to this signal is tracked, so if you don't need it anymore, disconnect from it to stop cursor event filtering
-     **/
+     */
     void cursorShapeChanged();
     /**
      * Receives events registered for using registerPropertyType.
@@ -1622,7 +1622,7 @@ Q_SIGNALS:
      * @param w The window whose property changed, is @c null if it is a root window property
      * @param atom The property
      * @since 4.7
-     **/
+     */
     void propertyNotify(KWin::EffectWindow* w, long atom);
 
     /**
@@ -1631,7 +1631,7 @@ Q_SIGNALS:
      * react on this signal and update the caches.
      * @param size The new screen size
      * @since 4.8
-     **/
+     */
     void screenGeometryChanged(const QSize &size);
 
     /**
@@ -1639,40 +1639,40 @@ Q_SIGNALS:
      * activity is changed
      * @param id id of the new current activity
      * @since 4.9
-     **/
+     */
     void currentActivityChanged(const QString &id);
     /**
      * This signal is emitted when a new activity is added
      * @param id id of the new activity
      * @since 4.9
-     **/
+     */
     void activityAdded(const QString &id);
     /**
      * This signal is emitted when the activity
      * is removed
      * @param id id of the removed activity
      * @since 4.9
-     **/
+     */
     void activityRemoved(const QString &id);
     /**
      * This signal is emitted when the screen got locked or unlocked.
      * @param locked @c true if the screen is now locked, @c false if it is now unlocked
      * @since 4.11
-     **/
+     */
     void screenLockingChanged(bool locked);
 
     /**
      * This signal is emitted just before the screen locker tries to grab keys and lock the screen
      * Effects should release any grabs immediately
      * @since 5.17
-     **/
+     */
     void screenAboutToLock();
 
     /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen
      * or lowered
      * @since 4.10
-     **/
+     */
     void stackingOrderChanged();
     /**
      * This signal is emitted when the user starts to approach the @p border with the mouse.
@@ -1684,19 +1684,19 @@ Q_SIGNALS:
      * @param factor Value in range [0.0,1.0] to describe how close the mouse is to the border
      * @param geometry The geometry of the edge which is being approached
      * @since 4.11
-     **/
+     */
     void screenEdgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry);
     /**
      * Emitted whenever the virtualScreenSize changes.
      * @see virtualScreenSize()
      * @since 5.0
-     **/
+     */
     void virtualScreenSizeChanged();
     /**
      * Emitted whenever the virtualScreenGeometry changes.
      * @see virtualScreenGeometry()
      * @since 5.0
-     **/
+     */
     void virtualScreenGeometryChanged();
 
     /**
@@ -1706,7 +1706,7 @@ Q_SIGNALS:
      * @see windowHidden
      * @see windowAdded
      * @since 5.8
-     **/
+     */
     void windowShown(KWin::EffectWindow *w);
 
     /**
@@ -1719,7 +1719,7 @@ Q_SIGNALS:
      * @see windowShown
      * @see windowClosed
      * @since 5.8
-     **/
+     */
     void windowHidden(KWin::EffectWindow *w);
 
     /**
@@ -1734,7 +1734,7 @@ Q_SIGNALS:
      * @see EffectWindow::setData
      * @see EffectWindow::data
      * @since 5.8.4
-     **/
+     */
     void windowDataChanged(KWin::EffectWindow *w, int role);
 
     /**
@@ -1746,7 +1746,7 @@ Q_SIGNALS:
      * @see xcbConnection
      * @see x11RootWindow
      * @since 5.11
-     **/
+     */
     void xcbConnectionChanged();
 
     /**
@@ -1755,7 +1755,7 @@ Q_SIGNALS:
      * @see activeFullScreenEffect
      * @see setActiveFullScreenEffect
      * @since 5.14
-     **/
+     */
     void activeFullScreenEffectChanged();
 
     /**
@@ -1765,7 +1765,7 @@ Q_SIGNALS:
      * @see activeFullScreenEffect
      * @see setActiveFullScreenEffect
      * @since 5.15
-     **/
+     */
     void hasActiveFullScreenEffectChanged();
 
     /**
@@ -1773,7 +1773,7 @@ Q_SIGNALS:
      *
      * @param w The window whose the keep above state was changed.
      * @since 5.15
-     **/
+     */
     void windowKeepAboveChanged(KWin::EffectWindow *w);
 
     /**
@@ -1781,7 +1781,7 @@ Q_SIGNALS:
      *
      * @param w The window whose the keep below state was changed.
      * @since 5.15
-     **/
+     */
     void windowKeepBelowChanged(KWin::EffectWindow *w);
 
     /**
@@ -1789,7 +1789,7 @@ Q_SIGNALS:
      *
      * @param w The window whose the full screen state was changed.
      * @since 5.15
-     **/
+     */
     void windowFullScreenChanged(KWin::EffectWindow *w);
 
 protected:
@@ -1804,7 +1804,7 @@ protected:
  *
  * The purpose is to hide internal data and also to serve as a single
  *  representation for the case when Client/Unmanaged becomes Deleted.
- **/
+ */
 class KWINEFFECTS_EXPORT EffectWindow : public QObject
 {
     Q_OBJECT
@@ -1828,176 +1828,176 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool desktopWindow READ isDesktop)
     /**
      * Returns whether the window is a dock (i.e. a panel).
      * See _NET_WM_WINDOW_TYPE_DOCK at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dock READ isDock)
     /**
      * Returns whether the window is a standalone (detached) toolbar window.
      * See _NET_WM_WINDOW_TYPE_TOOLBAR at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool toolbar READ isToolbar)
     /**
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool menu READ isMenu)
     /**
      * Returns whether the window is a "normal" window, i.e. an application or any other window
      * for which none of the specialized window types fit.
      * See _NET_WM_WINDOW_TYPE_NORMAL at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool normalWindow READ isNormalWindow)
     /**
      * Returns whether the window is a dialog window.
      * See _NET_WM_WINDOW_TYPE_DIALOG at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dialog READ isDialog)
     /**
      * Returns whether the window is a splashscreen. Note that many (especially older) applications
      * do not support marking their splash windows with this type.
      * See _NET_WM_WINDOW_TYPE_SPLASH at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool splash READ isSplash)
     /**
      * Returns whether the window is a utility window, such as a tool window.
      * See _NET_WM_WINDOW_TYPE_UTILITY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool utility READ isUtility)
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
      * from the applications menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dropdownMenu READ isDropdownMenu)
     /**
      * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
      * See _NET_WM_WINDOW_TYPE_POPUP_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool popupMenu READ isPopupMenu)
     /**
      * Returns whether the window is a tooltip.
      * See _NET_WM_WINDOW_TYPE_TOOLTIP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool tooltip READ isTooltip)
     /**
      * Returns whether the window is a window with a notification.
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool notification READ isNotification)
     /**
      * Returns whether the window is a window with a critical notification.
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_CRITICAL_NOTIFICATION
-     **/
+     */
     Q_PROPERTY(bool criticalNotification READ isCriticalNotification)
     /**
      * Returns whether the window is an on screen display window
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
-     **/
+     */
     Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
     /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool comboBox READ isComboBox)
     /**
      * Returns whether the window is a Drag&Drop icon.
      * See _NET_WM_WINDOW_TYPE_DND at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dndIcon READ isDNDIcon)
     /**
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(int windowType READ windowType)
     /**
      * Whether this EffectWindow is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
-     **/
+     */
     Q_PROPERTY(bool managed READ isManaged)
     /**
      * Whether this EffectWindow represents an already deleted window and only kept for the compositor for animations.
-     **/
+     */
     Q_PROPERTY(bool deleted READ isDeleted)
     /**
      * Whether the window has an own shape
-     **/
+     */
     Q_PROPERTY(bool shaped READ hasOwnShape)
     /**
      * The Window's shape
-     **/
+     */
     Q_PROPERTY(QRegion shape READ shape)
     /**
      * The Caption of the window. Read from WM_NAME property together with a suffix for hostname and shortcut.
-     **/
+     */
     Q_PROPERTY(QString caption READ caption)
     /**
      * Whether the window is set to be kept above other windows.
-     **/
+     */
     Q_PROPERTY(bool keepAbove READ keepAbove)
     /**
      * Whether the window is set to be kept below other windows.
-     **/
+     */
     Q_PROPERTY(bool keepBelow READ keepBelow)
     /**
      * Whether the window is minimized.
-     **/
+     */
     Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized)
     /**
      * Whether the window represents a modal window.
-     **/
+     */
     Q_PROPERTY(bool modal READ isModal)
     /**
      * Whether the window is moveable. Even if it is not moveable, it might be possible to move
      * it to another screen.
      * @see moveableAcrossScreens
-     **/
+     */
     Q_PROPERTY(bool moveable READ isMovable)
     /**
      * Whether the window can be moved to another screen.
      * @see moveable
-     **/
+     */
     Q_PROPERTY(bool moveableAcrossScreens READ isMovableAcrossScreens)
     /**
      * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
-     **/
+     */
     Q_PROPERTY(QSize basicUnit READ basicUnit)
     /**
      * Whether the window is currently being moved by the user.
-     **/
+     */
     Q_PROPERTY(bool move READ isUserMove)
     /**
      * Whether the window is currently being resized by the user.
-     **/
+     */
     Q_PROPERTY(bool resize READ isUserResize)
     /**
      * The optional geometry representing the minimized Client in e.g a taskbar.
      * See _NET_WM_ICON_GEOMETRY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(QRect iconGeometry READ iconGeometry)
     /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
-     **/
+     */
     Q_PROPERTY(bool specialWindow READ isSpecialWindow)
     Q_PROPERTY(QIcon icon READ icon)
     /**
      * Whether the window should be excluded from window switching effects.
-     **/
+     */
     Q_PROPERTY(bool skipSwitcher READ isSkipSwitcher)
     /**
      * Geometry of the actual window contents inside the whole (including decorations) window.
-     **/
+     */
     Q_PROPERTY(QRect contentsRect READ contentsRect)
     /**
      * Geometry of the transparent rect in the decoration.
      * May be different from contentsRect if the decoration is extended into the client area.
-     **/
+     */
     Q_PROPERTY(QRect decorationInnerRect READ decorationInnerRect)
     Q_PROPERTY(bool hasDecoration READ hasDecoration)
     Q_PROPERTY(QStringList activities READ activities)
@@ -2006,7 +2006,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     /**
      * Whether the decoration currently uses an alpha channel.
      * @since 4.10
-     **/
+     */
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
     /**
      * Whether the window is currently visible to the user, that is:
@@ -2016,26 +2016,26 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * <li>On current activity</li>
      * </ul>
      * @since 4.11
-     **/
+     */
     Q_PROPERTY(bool visible READ isVisible)
     /**
      * Whether the window does not want to be animated on window close.
      * In case this property is @c true it is not useful to start an animation on window close.
      * The window will not be visible, but the animation hooks are executed.
      * @since 5.0
-     **/
+     */
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation)
 
     /**
      * Interface to the corresponding wayland surface.
      * relevant only in Wayland, on X11 it will be nullptr
-     **/
+     */
     Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
 
     /**
      * Whether the window is fullscreen.
      * @since 5.6
-     **/
+     */
     Q_PROPERTY(bool fullScreen READ isFullScreen)
 
     /**
@@ -2045,19 +2045,19 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * considered unresponsive. This usually indicates that the application froze or crashed.
      *
      * @since 5.10
-     **/
+     */
     Q_PROPERTY(bool unresponsive READ isUnresponsive)
 
     /**
      * Whether this is a Wayland client.
      * @since 5.15
-     **/
+     */
     Q_PROPERTY(bool waylandClient READ isWaylandClient CONSTANT)
 
     /**
      * Whether this is an X11 client.
      * @since 5.15
-     **/
+     */
     Q_PROPERTY(bool x11Client READ isX11Client CONSTANT)
 
     /**
@@ -2067,7 +2067,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * popup menus and other similar user interface concepts.
      *
      * @since 5.15
-     **/
+     */
     Q_PROPERTY(bool popupWindow READ isPopupWindow CONSTANT)
 
     /**
@@ -2075,7 +2075,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      *
      * If the EffectWindow does not reference an internal window, this property is @c null.
      * @since 5.16
-     **/
+     */
     Q_PROPERTY(QWindow *internalWindow READ internalWindow CONSTANT)
 
     /**
@@ -2084,7 +2084,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * When compositing is turned on, the outline is an actual window.
      *
      * @since 5.16
-     **/
+     */
     Q_PROPERTY(bool outline READ isOutline CONSTANT)
 
 public:
@@ -2140,7 +2140,7 @@ public:
      * use desktops() instead.
      * @see desktops()
      * @deprecated
-     **/
+     */
 #ifndef KWIN_NO_DEPRECATED
     virtual int KWIN_DEPRECATED desktop() const = 0; // prefer isOnXXX()
 #endif
@@ -2148,7 +2148,7 @@ public:
      * All the desktops by number that the window is in. On X11 this list will always have
      * a length of 1, on Wayland can be any subset.
      * If the list is empty it means the window is on all desktops
-     **/
+     */
     virtual QVector<uint> desktops() const = 0;
 
     virtual int x() const = 0;
@@ -2158,14 +2158,14 @@ public:
     /**
      * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
-     **/
+     */
     virtual QSize basicUnit() const = 0;
     virtual QRect geometry() const = 0;
     /**
      * Geometry of the window including decoration and potentially shadows.
      * May be different from geometry() if the window has a shadow.
      * @since 4.9
-     **/
+     */
     virtual QRect expandedGeometry() const = 0;
     virtual QRegion shape() const = 0;
     virtual int screen() const = 0;
@@ -2182,13 +2182,13 @@ public:
 
     /**
      * Geometry of the actual window contents inside the whole (including decorations) window.
-     **/
+     */
     virtual QRect contentsRect() const = 0;
     /**
      * Geometry of the transparent rect in the decoration.
      * May be different from contentsRect() if the decoration is extended into the client area.
      * @since 4.5
-     **/
+     */
     virtual QRect decorationInnerRect() const = 0;
     bool hasDecoration() const;
     virtual bool decorationHasAlpha() const = 0;
@@ -2204,113 +2204,113 @@ public:
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isDesktop() const = 0;
     /**
      * Returns whether the window is a dock (i.e. a panel).
      * See _NET_WM_WINDOW_TYPE_DOCK at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isDock() const = 0;
     /**
      * Returns whether the window is a standalone (detached) toolbar window.
      * See _NET_WM_WINDOW_TYPE_TOOLBAR at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isToolbar() const = 0;
     /**
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isMenu() const = 0;
     /**
      * Returns whether the window is a "normal" window, i.e. an application or any other window
      * for which none of the specialized window types fit.
      * See _NET_WM_WINDOW_TYPE_NORMAL at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isNormalWindow() const = 0; // normal as in 'NET::Normal or NET::Unknown non-transient'
     /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
-     **/
+     */
     virtual bool isSpecialWindow() const = 0;
     /**
      * Returns whether the window is a dialog window.
      * See _NET_WM_WINDOW_TYPE_DIALOG at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isDialog() const = 0;
     /**
      * Returns whether the window is a splashscreen. Note that many (especially older) applications
      * do not support marking their splash windows with this type.
      * See _NET_WM_WINDOW_TYPE_SPLASH at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isSplash() const = 0;
     /**
      * Returns whether the window is a utility window, such as a tool window.
      * See _NET_WM_WINDOW_TYPE_UTILITY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isUtility() const = 0;
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
      * from the applications menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isDropdownMenu() const = 0;
     /**
      * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
      * See _NET_WM_WINDOW_TYPE_POPUP_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isPopupMenu() const = 0; // a context popup, not dropdown, not torn-off
     /**
      * Returns whether the window is a tooltip.
      * See _NET_WM_WINDOW_TYPE_TOOLTIP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isTooltip() const = 0;
     /**
      * Returns whether the window is a window with a notification.
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isNotification() const = 0;
     /**
      * Returns whether the window is a window with a critical notification.
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_CRITICAL_NOTIFICATION
-     **/
+     */
     virtual bool isCriticalNotification() const = 0;
     /**
      * Returns whether the window is an on screen display window
      * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
-     **/
+     */
     virtual bool isOnScreenDisplay() const = 0;
     /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isComboBox() const = 0;
     /**
      * Returns whether the window is a Drag&Drop icon.
      * See _NET_WM_WINDOW_TYPE_DND at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual bool isDNDIcon() const = 0;
     /**
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     virtual NET::WindowType windowType() const = 0;
     /**
      * Returns whether the window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
-     **/
+     */
     virtual bool isManaged() const = 0; // whether it's managed or override-redirect
     /**
      * Returns whether or not the window can accept keyboard focus.
-     **/
+     */
     virtual bool acceptsFocus() const = 0;
     /**
      * Returns whether or not the window is kept above all other windows.
-     **/
+     */
     virtual bool keepAbove() const = 0;
     /**
      * Returns whether the window is kept below all other windows.
-     **/
+     */
     virtual bool keepBelow() const = 0;
 
     virtual bool isModal() const = 0;
@@ -2320,12 +2320,12 @@ public:
     /**
      * Returns whether the window should be excluded from window switching effects.
      * @since 4.5
-     **/
+     */
     virtual bool isSkipSwitcher() const = 0;
 
     /**
      * Returns the unmodified window quad list. Can also be used to force rebuilding.
-     **/
+     */
     virtual WindowQuadList buildQuads(bool force = false) const = 0;
 
     void setMinimized(bool minimize);
@@ -2337,52 +2337,52 @@ public:
 
     /**
      * @since 4.11
-     **/
+     */
     bool isVisible() const;
 
     /**
      * @since 5.0
-     **/
+     */
     virtual bool skipsCloseAnimation() const = 0;
 
     /**
      * @since 5.5
-     **/
+     */
     virtual KWayland::Server::SurfaceInterface *surface() const = 0;
 
     /**
      * @since 5.6
-     **/
+     */
     virtual bool isFullScreen() const = 0;
 
     /**
      * @since 5.10
-     **/
+     */
     virtual bool isUnresponsive() const = 0;
 
     /**
      * @since 5.15
-     **/
+     */
     virtual bool isWaylandClient() const = 0;
 
     /**
      * @since 5.15
-     **/
+     */
     virtual bool isX11Client() const = 0;
 
     /**
      * @since 5.15
-     **/
+     */
     virtual bool isPopupWindow() const = 0;
 
     /**
      * @since 5.16
-     **/
+     */
     virtual QWindow *internalWindow() const = 0;
 
     /**
      * @since 5.16
-     **/
+     */
     virtual bool isOutline() const = 0;
 
     /**
@@ -2390,7 +2390,7 @@ public:
      *
      * Invoking this method will emit the signal EffectsHandler::windowDataChanged.
      * @see EffectsHandler::windowDataChanged
-     **/
+     */
     Q_SCRIPTABLE virtual void setData(int role, const QVariant &data) = 0;
     Q_SCRIPTABLE virtual QVariant data(int role) const = 0;
 
@@ -2412,7 +2412,7 @@ public:
      *
      * @see unreferencePreviousWindowPixmap
      * @since 4.11
-     **/
+     */
     virtual void referencePreviousWindowPixmap() = 0;
     /**
      * @brief Unreferences the previous window pixmap. Only relevant after referencePreviousWindowPixmap had
@@ -2420,7 +2420,7 @@ public:
      *
      * @see referencePreviousWindowPixmap
      * @since 4.11
-     **/
+     */
     virtual void unreferencePreviousWindowPixmap() = 0;
 
 private:
@@ -2454,7 +2454,7 @@ struct GLVertex3D
  *
  * A vertex is one position in a window. WindowQuad consists of four WindowVertex objects
  * and represents one part of a window.
- **/
+ */
 class KWINEFFECTS_EXPORT WindowVertex
 {
 public:
@@ -2486,7 +2486,7 @@ private:
  * @short Class representing one area of a window.
  *
  * WindowQuads consists of four WindowVertex objects and represents one part of a window.
- **/
+ */
 // NOTE: This class expects the (original) vertices to be in the clockwise order starting from topleft.
 class KWINEFFECTS_EXPORT WindowQuad
 {
@@ -2541,22 +2541,22 @@ public:
     int mask;
     /**
      * Region that will be painted, in screen coordinates.
-     **/
+     */
     QRegion paint;
     /**
      * The clip region will be subtracted from paint region of following windows.
      * I.e. window will definitely cover it's clip region
-     **/
+     */
     QRegion clip;
     WindowQuadList quads;
     /**
      * Simple helper that sets data to say the window will be painted as non-opaque.
      * Takes also care of changing the regions.
-     **/
+     */
     void setTranslucent();
     /**
      * Helper to mark that this window will be transformed
-     **/
+     */
     void setTransformed();
 };
 
@@ -2567,79 +2567,79 @@ public:
     /**
      * @returns scale factor in X direction.
      * @since 4.10
-     **/
+     */
     qreal xScale() const;
     /**
      * @returns scale factor in Y direction.
      * @since 4.10
-     **/
+     */
     qreal yScale() const;
     /**
      * @returns scale factor in Z direction.
      * @since 4.10
-     **/
+     */
     qreal zScale() const;
     /**
      * Sets the scale factor in X direction to @p scale
      * @param scale The scale factor in X direction
      * @since 4.10
-     **/
+     */
     void setXScale(qreal scale);
     /**
      * Sets the scale factor in Y direction to @p scale
      * @param scale The scale factor in Y direction
      * @since 4.10
-     **/
+     */
     void setYScale(qreal scale);
     /**
      * Sets the scale factor in Z direction to @p scale
      * @param scale The scale factor in Z direction
      * @since 4.10
-     **/
+     */
     void setZScale(qreal scale);
     /**
      * Sets the scale factor in X and Y direction.
      * @param scale The scale factor for X and Y direction
      * @since 4.10
-     **/
+     */
     void setScale(const QVector2D &scale);
     /**
      * Sets the scale factor in X, Y and Z direction
      * @param scale The scale factor for X, Y and Z direction
      * @since 4.10
-     **/
+     */
     void setScale(const QVector3D &scale);
     const QGraphicsScale &scale() const;
     const QVector3D &translation() const;
     /**
      * @returns the translation in X direction.
      * @since 4.10
-     **/
+     */
     qreal xTranslation() const;
     /**
      * @returns the translation in Y direction.
      * @since 4.10
-     **/
+     */
     qreal yTranslation() const;
     /**
      * @returns the translation in Z direction.
      * @since 4.10
-     **/
+     */
     qreal zTranslation() const;
     /**
      * Sets the translation in X direction to @p translate.
      * @since 4.10
-     **/
+     */
     void setXTranslation(qreal translate);
     /**
      * Sets the translation in Y direction to @p translate.
      * @since 4.10
-     **/
+     */
     void setYTranslation(qreal translate);
     /**
      * Sets the translation in Z direction to @p translate.
      * @since 4.10
-     **/
+     */
     void setZTranslation(qreal translate);
     /**
      * Performs a translation by adding the values component wise.
@@ -2647,14 +2647,14 @@ public:
      * @param y Translation in Y direction
      * @param z Translation in Z direction
      * @since 4.10
-     **/
+     */
     void translate(qreal x, qreal y = 0.0, qreal z = 0.0);
     /**
      * Performs a translation by adding the values component wise.
      * Overloaded method for convenience.
      * @param translate The translation
      * @since 4.10
-     **/
+     */
     void translate(const QVector3D &translate);
 
     /**
@@ -2662,7 +2662,7 @@ public:
      * @param angle The new rotation angle.
      * @since 4.10
      * @see rotationAngle()
-     **/
+     */
     void setRotationAngle(qreal angle);
     /**
      * Returns the rotation angle.
@@ -2670,14 +2670,14 @@ public:
      * @returns The current rotation angle.
      * @since 4.10
      * @see setRotationAngle
-     **/
+     */
     qreal rotationAngle() const;
     /**
      * Sets the rotation origin.
      * @param origin The new rotation origin.
      * @since 4.10
      * @see rotationOrigin()
-     **/
+     */
     void setRotationOrigin(const QVector3D &origin);
     /**
      * Returns the rotation origin. That is the point in space which is fixed during the rotation.
@@ -2685,7 +2685,7 @@ public:
      * @returns The rotation's origin
      * @since 4.10
      * @see setRotationOrigin()
-     **/
+     */
     QVector3D rotationOrigin() const;
     /**
      * Sets the rotation axis.
@@ -2694,7 +2694,7 @@ public:
      * @param axis A vector holding information on which axis to rotate
      * @since 4.10
      * @see rotationAxis()
-     **/
+     */
     void setRotationAxis(const QVector3D &axis);
     /**
      * Sets the rotation axis.
@@ -2702,7 +2702,7 @@ public:
      * @param axis The axis around which should be rotated.
      * @since 4.10
      * @see rotationAxis()
-     **/
+     */
     void setRotationAxis(Qt::Axis axis);
     /**
      * The current rotation axis.
@@ -2710,7 +2710,7 @@ public:
      * @returns The current rotation axis.
      * @since 4.10
      * @see setRotationAxis
-     **/
+     */
     QVector3D rotationAxis() const;
 
 protected:
@@ -2732,62 +2732,62 @@ public:
      * Scales the window by @p scale factor.
      * Multiplies all three components by the given factor.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator*=(qreal scale);
     /**
      * Scales the window by @p scale factor.
      * Performs a component wise multiplication on x and y components.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator*=(const QVector2D &scale);
     /**
      * Scales the window by @p scale factor.
      * Performs a component wise multiplication.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator*=(const QVector3D &scale);
     /**
      * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator+=(const QPointF &translation);
     /**
      * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
      * Overloaded method for convenience.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator+=(const QPoint &translation);
     /**
      * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
      * Overloaded method for convenience.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator+=(const QVector2D &translation);
     /**
      * Translates the window by the given @p translation and returns a reference to the ScreenPaintData.
      * Overloaded method for convenience.
      * @since 4.10
-     **/
+     */
     WindowPaintData& operator+=(const QVector3D &translation);
     /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
      * @see setOpacity
      * @since 4.10
-     **/
+     */
     qreal opacity() const;
     /**
      * Sets the window opacity to the new @p opacity.
      * If you want to modify the existing opacity level consider using multiplyOpacity.
      * @param opacity The new opacity level
      * @since 4.10
-     **/
+     */
     void setOpacity(qreal opacity);
     /**
      * Multiplies the current opacity with the @p factor.
      * @param factor Factor with which the opacity should be multiplied
      * @return New opacity level
      * @since 4.10
-     **/
+     */
     qreal multiplyOpacity(qreal factor);
     /**
      * Saturation of the window, in range [0; 1]
@@ -2799,52 +2799,52 @@ public:
      * @return The current saturation
      * @see setSaturation()
      * @since 4.10
-     **/
+     */
     qreal saturation() const;
     /**
      * Sets the window saturation level to @p saturation.
      * If you want to modify the existing saturation level consider using multiplySaturation.
      * @param saturation The new saturation level
      * @since 4.10
-     **/
+     */
     void setSaturation(qreal saturation) const;
     /**
      * Multiplies the current saturation with @p factor.
      * @param factor with which the saturation should be multiplied
      * @return New saturation level
      * @since 4.10
-     **/
+     */
     qreal multiplySaturation(qreal factor);
     /**
      * Brightness of the window, in range [0; 1]
      * 1 means that the window is unchanged, 0 means that it's completely
      * black. 0.5 would make it 50% darker than usual
-     **/
+     */
     qreal brightness() const;
     /**
      * Sets the window brightness level to @p brightness.
      * If you want to modify the existing brightness level consider using multiplyBrightness.
      * @param brightness The new brightness level
-     **/
+     */
     void setBrightness(qreal brightness);
     /**
      * Multiplies the current brightness level with @p factor.
      * @param factor with which the brightness should be multiplied.
      * @return New brightness level
      * @since 4.10
-     **/
+     */
     qreal multiplyBrightness(qreal factor);
     /**
      * The screen number for which the painting should be done.
      * This affects color correction (different screens may need different
      * color correction lookup tables because they have different ICC profiles).
      * @return screen for which painting should be done
-     **/
+     */
     int screen() const;
     /**
      * @param screen New screen number
      * A value less than 0 will indicate that a default profile should be done.
-     **/
+     */
     void setScreen(int screen) const;
     /**
      * @brief Sets the cross fading @p factor to fade over with previously sized window.
@@ -2855,11 +2855,11 @@ public:
      *
      * @param factor The cross fade factor between @c 0.0 (previous window) and @c 1.0 (current window)
      * @see crossFadeProgress
-     **/
+     */
     void setCrossFadeProgress(qreal factor);
     /**
      * @see setCrossFadeProgress
-     **/
+     */
     qreal crossFadeProgress() const;
 
     /**
@@ -2867,19 +2867,19 @@ public:
      *
      * The default projection matrix can be overridden by setting this matrix
      * to a non-identity matrix.
-     **/
+     */
     void setProjectionMatrix(const QMatrix4x4 &matrix);
 
     /**
      * Returns the current projection matrix.
      *
      * The default value for this matrix is the identity matrix.
-     **/
+     */
     QMatrix4x4 projectionMatrix() const;
 
     /**
      * Returns a reference to the projection matrix.
-     **/
+     */
     QMatrix4x4 &rprojectionMatrix();
 
     /**
@@ -2887,19 +2887,19 @@ public:
      *
      * The default model-view matrix can be overridden by setting this matrix
      * to a non-identity matrix.
-     **/
+     */
     void setModelViewMatrix(const QMatrix4x4 &matrix);
 
     /**
      * Returns the current model-view matrix.
      *
      * The default value for this matrix is the identity matrix.
-     **/
+     */
     QMatrix4x4 modelViewMatrix() const;
 
     /**
      * Returns a reference to the model-view matrix.
-     **/
+     */
     QMatrix4x4 &rmodelViewMatrix();
 
     /**
@@ -2907,14 +2907,14 @@ public:
      * including screen transformations.
      *
      * @since 5.6
-     **/
+     */
     QMatrix4x4 screenProjectionMatrix() const;
 
     WindowQuadList quads;
 
     /**
      * Shader to be used for rendering, if any.
-     **/
+     */
     GLShader* shader;
 
 private:
@@ -2932,42 +2932,42 @@ public:
      * Scales the screen by @p scale factor.
      * Multiplies all three components by the given factor.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator*=(qreal scale);
     /**
      * Scales the screen by @p scale factor.
      * Performs a component wise multiplication on x and y components.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator*=(const QVector2D &scale);
     /**
      * Scales the screen by @p scale factor.
      * Performs a component wise multiplication.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator*=(const QVector3D &scale);
     /**
      * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator+=(const QPointF &translation);
     /**
      * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
      * Overloaded method for convenience.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator+=(const QPoint &translation);
     /**
      * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
      * Overloaded method for convenience.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator+=(const QVector2D &translation);
     /**
      * Translates the screen by the given @p translation and returns a reference to the ScreenPaintData.
      * Overloaded method for convenience.
      * @since 4.10
-     **/
+     */
     ScreenPaintData& operator+=(const QVector3D &translation);
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
 
@@ -2975,7 +2975,7 @@ public:
      * The projection matrix used by the scene for the current rendering pass.
      * On non-OpenGL compositors it's set to Identity matrix.
      * @since 5.6
-     **/
+     */
     QMatrix4x4 projectionMatrix() const;
 
     /**
@@ -2985,7 +2985,7 @@ public:
      * This geometry can be used as a hint about the native window the OpenGL context
      * is bound. OpenGL calls need to be translated to this geometry.
      * @since 5.9
-     **/
+     */
     QRect outputGeometry() const;
 private:
     class Private;
@@ -3007,35 +3007,35 @@ public:
  * and giving it the area that is allowed to be painted to. When the object
  * is destroyed, the restriction will be removed.
  * Note that all painting code must use paintArea() to actually perform the clipping.
- **/
+ */
 class KWINEFFECTS_EXPORT PaintClipper
 {
 public:
     /**
      * Calls push().
-     **/
+     */
     explicit PaintClipper(const QRegion& allowed_area);
     /**
      * Calls pop().
-     **/
+     */
     ~PaintClipper();
     /**
      * Allows painting only in the given area. When areas have been already
      * specified, painting is allowed only in the intersection of all areas.
-     **/
+     */
     static void push(const QRegion& allowed_area);
     /**
      * Removes the given area. It must match the top item in the stack.
-     **/
+     */
     static void pop(const QRegion& allowed_area);
     /**
      * Returns true if any clipping should be performed.
-     **/
+     */
     static bool clip();
     /**
      * If clip() returns true, this function gives the resulting area in which
      * painting is allowed. It is usually simpler to use the helper Iterator class.
-     **/
+     */
     static QRegion paintArea();
     /**
      * Helper class to perform the clipped painting. The usage is:
@@ -3046,7 +3046,7 @@ public:
      *     { // do the painting, possibly use iterator.boundingRect()
      *     }
      * @endcode
-     **/
+     */
     class KWINEFFECTS_EXPORT Iterator
     {
     public:
@@ -3066,7 +3066,7 @@ private:
 
 /**
  * @internal
- **/
+ */
 template <typename T>
 class KWINEFFECTS_EXPORT Motion
 {
@@ -3076,12 +3076,12 @@ public:
      * acceleration that is applied to the object when the target
      * changes and "smoothness" relates to how fast the object
      * can change its direction and speed.
-     **/
+     */
     explicit Motion(T initial, double strength, double smoothness);
     /**
      * Creates an exact copy of another motion object, including
      * position, target and velocity.
-     **/
+     */
     Motion(const Motion<T> &other);
     ~Motion();
 
@@ -3123,7 +3123,7 @@ public:
 
     /**
      * The distance between the current position and the target.
-     **/
+     */
     inline T distance() const {
         return m_target - m_value;
     }
@@ -3131,12 +3131,12 @@ public:
     /**
      * Calculates the new position if not at the target. Called
      * once per frame only.
-     **/
+     */
     void calculate(const int msec);
     /**
      * Place the object on top of the target immediately,
      * bypassing all movement calculation.
-     **/
+     */
     void finish();
 
 private:
@@ -3154,7 +3154,7 @@ private:
  * This class represents a single object that can be moved around a
  * 1D space. Although it can be used directly by itself it is
  * recommended to use a motion manager instead.
- **/
+ */
 class KWINEFFECTS_EXPORT Motion1D : public Motion<double>
 {
 public:
@@ -3169,7 +3169,7 @@ public:
  * This class represents a single object that can be moved around a
  * 2D space. Although it can be used directly by itself it is
  * recommended to use a motion manager instead.
- **/
+ */
 class KWINEFFECTS_EXPORT Motion2D : public Motion<QPointF>
 {
 public:
@@ -3189,23 +3189,23 @@ public:
  * transformedGeometry() method. As the manager knows if any windows
  * are moving at any given time it can also be used as a notifier as
  * to see whether the effect is active or not.
- **/
+ */
 class KWINEFFECTS_EXPORT WindowMotionManager
 {
 public:
     /**
      * Creates a new window manager object.
-     **/
+     */
     explicit WindowMotionManager(bool useGlobalAnimationModifier = true);
     ~WindowMotionManager();
 
     /**
      * Register a window for managing.
-     **/
+     */
     void manage(EffectWindow *w);
     /**
      * Register a list of windows for managing.
-     **/
+     */
     inline void manage(EffectWindowList list) {
         for (int i = 0; i < list.size(); i++)
             manage(list.at(i));
@@ -3213,19 +3213,19 @@ public:
     /**
      * Deregister a window. All transformations applied to the
      * window will be permanently removed and cannot be recovered.
-     **/
+     */
     void unmanage(EffectWindow *w);
     /**
      * Deregister all windows, returning the manager to its
      * originally initiated state.
-     **/
+     */
     void unmanageAll();
     /**
      * Determine the new positions for windows that have not
      * reached their target. Called once per frame, usually in
      * prePaintScreen(). Remember to set the
      * Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS flag.
-     **/
+     */
     void calculate(int time);
     /**
      * Modify a registered window's paint data to make it appear
@@ -3233,18 +3233,18 @@ public:
      * paintWindow(). Remember to flag the window as having been
      * transformed in prePaintWindow() by calling
      * WindowPrePaintData::setTransformed()
-     **/
+     */
     void apply(EffectWindow *w, WindowPaintData &data);
     /**
      * Set all motion targets and values back to where the
      * windows were before transformations. The same as
      * unmanaging then remanaging all windows.
-     **/
+     */
     void reset();
     /**
      * Resets the motion target and current value of a single
      * window.
-     **/
+     */
     void reset(EffectWindow *w);
 
     /**
@@ -3252,14 +3252,14 @@ public:
      * with the specified scale. If `yScale` is not provided or
      * set to 0.0, `scale` will be used as the scale in the
      * vertical direction as well as in the horizontal direction.
-     **/
+     */
     void moveWindow(EffectWindow *w, QPoint target, double scale = 1.0, double yScale = 0.0);
     /**
      * This is an overloaded method, provided for convenience.
      *
      * Ask the manager to move the window to the target rectangle.
      * Automatically determines scale.
-     **/
+     */
     inline void moveWindow(EffectWindow *w, QRect target) {
         // TODO: Scale might be slightly different in the comparison due to rounding
         moveWindow(w, target.topLeft(),
@@ -3269,44 +3269,44 @@ public:
     /**
      * Retrieve the current tranformed geometry of a registered
      * window.
-     **/
+     */
     QRectF transformedGeometry(EffectWindow *w) const;
     /**
      * Sets the current transformed geometry of a registered window to the given geometry.
      * @see transformedGeometry
      * @since 4.5
-     **/
+     */
     void setTransformedGeometry(EffectWindow *w, const QRectF &geometry);
     /**
      * Retrieve the current target geometry of a registered
      * window.
-     **/
+     */
     QRectF targetGeometry(EffectWindow *w) const;
     /**
      * Return the window that has its transformed geometry under
      * the specified point. It is recommended to use the stacking
      * order as it's what the user sees, but it is slightly
      * slower to process.
-     **/
+     */
     EffectWindow* windowAtPoint(QPoint point, bool useStackingOrder = true) const;
 
     /**
      * Return a list of all currently registered windows.
-     **/
+     */
     inline EffectWindowList managedWindows() const {
         return m_managedWindows.keys();
     }
     /**
      * Returns whether or not a specified window is being managed
      * by this manager object.
-     **/
+     */
     inline bool isManaging(EffectWindow *w) const {
         return m_managedWindows.contains(w);
     }
     /**
      * Returns whether or not this manager object is actually
      * managing any windows or not.
-     **/
+     */
     inline bool managingWindows() const {
         return !m_managedWindows.empty();
     }
@@ -3314,14 +3314,14 @@ public:
      * Returns whether all windows have reached their targets yet
      * or not. Can be used to see if an effect should be
      * processed and displayed or not.
-     **/
+     */
     inline bool areWindowsMoving() const {
         return !m_movingWindowsSet.isEmpty();
     }
     /**
      * Returns whether a window has reached its targets yet
      * or not.
-     **/
+     */
     inline bool isWindowMoving(EffectWindow *w) const {
         return m_movingWindowsSet.contains(w);
     }
@@ -3344,7 +3344,7 @@ private:
  * available frames includes one that follows the default Plasma theme and
  * another that doesn't.
  * It is recommended to use this class whenever displaying text.
- **/
+ */
 class KWINEFFECTS_EXPORT EffectFrame
 {
 public:
@@ -3354,19 +3354,19 @@ public:
     /**
      * Delete any existing textures to free up graphics memory. They will
      * be automatically recreated the next time they are required.
-     **/
+     */
     virtual void free() = 0;
 
     /**
      * Render the frame.
-     **/
+     */
     virtual void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
 
     virtual void setPosition(const QPoint& point) = 0;
     /**
      * Set the text alignment for static frames and the position alignment
      * for non-static.
-     **/
+     */
     virtual void setAlignment(Qt::Alignment alignment) = 0;
     virtual Qt::Alignment alignment() const = 0;
     virtual void setGeometry(const QRect& geometry, bool force = false) = 0;
@@ -3378,7 +3378,7 @@ public:
     virtual const QFont& font() const = 0;
     /**
      * Set the icon that will appear on the left-hand size of the frame.
-     **/
+     */
     virtual void setIcon(const QIcon& icon) = 0;
     virtual const QIcon& icon() const = 0;
     virtual void setIconSize(const QSize& size) = 0;
@@ -3388,21 +3388,21 @@ public:
      * Sets the geometry of a selection.
      * To remove the selection set a null rect.
      * @param selection The geometry of the selection in screen coordinates.
-     **/
+     */
     virtual void setSelection(const QRect& selection) = 0;
 
     /**
      * @param shader The GLShader for rendering.
-     **/
+     */
     virtual void setShader(GLShader* shader) = 0;
     /**
      * @returns The GLShader used for rendering or null if none.
-     **/
+     */
     virtual GLShader* shader() const = 0;
 
     /**
      * @returns The style of this EffectFrame.
-     **/
+     */
     virtual EffectFrameStyle style() const = 0;
 
     /**
@@ -3413,13 +3413,13 @@ public:
      * @see isCrossFade
      * @see setCrossFadeProgress
      * @since 4.6
-     **/
+     */
     void enableCrossFade(bool enable);
     /**
      * @returns @c true if cross fading is enabled, @c false otherwise
      * @see enableCrossFade
      * @since 4.6
-     **/
+     */
     bool isCrossFade() const;
     /**
      * Sets the current progress for cross fading the last used icon/text
@@ -3432,7 +3432,7 @@ public:
      * @see isCrossFade
      * @see crossFadeProgress
      * @since 4.6
-     **/
+     */
     void setCrossFadeProgress(qreal progress);
     /**
      * @returns The current progress for cross fading
@@ -3440,7 +3440,7 @@ public:
      * @see enableCrossFade
      * @see isCrossFade
      * @since 4.6
-     **/
+     */
     qreal crossFadeProgress() const;
 
     /**
@@ -3453,7 +3453,7 @@ public:
      * @see render
      * @see EffectsHandler::paintEffectFrame
      * @see Effect::paintEffectFrame
-     **/
+     */
     QMatrix4x4 screenProjectionMatrix() const;
 
 protected:
@@ -3465,7 +3465,7 @@ private:
 
 /**
  * The TimeLine class is a helper for controlling animations.
- **/
+ */
 class KWINEFFECTS_EXPORT TimeLine
 {
 public:
@@ -3477,7 +3477,7 @@ public:
      *
      * When the direction of the timeline is Backward, the progress
      * value will go from 1.0 to 0.0.
-     **/
+     */
     enum Direction {
         Forward,
         Backward
@@ -3489,7 +3489,7 @@ public:
      * @param duration Duration of the timeline, in milliseconds
      * @param direction Direction of the timeline
      * @since 5.14
-     **/
+     */
     explicit TimeLine(std::chrono::milliseconds duration = std::chrono::milliseconds(1000),
                       Direction direction = Forward);
     TimeLine(const TimeLine &other);
@@ -3499,7 +3499,7 @@ public:
      * Returns the current value of the timeline.
      *
      * @since 5.14
-     **/
+     */
     qreal value() const;
 
     /**
@@ -3510,7 +3510,7 @@ public:
      *
      * @param delta The number milliseconds passed since last frame
      * @since 5.14
-     **/
+     */
     void update(std::chrono::milliseconds delta);
 
     /**
@@ -3518,7 +3518,7 @@ public:
      *
      * @see setElapsed
      * @since 5.14
-     **/
+     */
     std::chrono::milliseconds elapsed() const;
 
     /**
@@ -3536,7 +3536,7 @@ public:
      * @param elapsed The new number of elapsed milliseconds
      * @see elapsed
      * @since 5.14
-     **/
+     */
     void setElapsed(std::chrono::milliseconds elapsed);
 
     /**
@@ -3545,7 +3545,7 @@ public:
      * @returns Duration of the timeline, in milliseconds
      * @see setDuration
      * @since 5.14
-     **/
+     */
     std::chrono::milliseconds duration() const;
 
     /**
@@ -3563,7 +3563,7 @@ public:
      * @param duration The new duration of the timeline, in milliseconds
      * @see duration
      * @since 5.14
-     **/
+     */
     void setDuration(std::chrono::milliseconds duration);
 
     /**
@@ -3573,7 +3573,7 @@ public:
      * @see setDirection
      * @see toggleDirection
      * @since 5.14
-     **/
+     */
     Direction direction() const;
 
     /**
@@ -3583,7 +3583,7 @@ public:
      * @see direction
      * @see toggleDirection
      * @since 5.14
-     **/
+     */
     void setDirection(Direction direction);
 
     /**
@@ -3595,7 +3595,7 @@ public:
      * @see direction
      * @see setDirection
      * @since 5.14
-     **/
+     */
     void toggleDirection();
 
     /**
@@ -3603,7 +3603,7 @@ public:
      *
      * @see setEasingCurve
      * @since 5.14
-     **/
+     */
     QEasingCurve easingCurve() const;
 
     /**
@@ -3612,7 +3612,7 @@ public:
      * @param easingCurve An easing curve to be set
      * @see easingCurve
      * @since 5.14
-     **/
+     */
     void setEasingCurve(const QEasingCurve &easingCurve);
 
     /**
@@ -3621,7 +3621,7 @@ public:
      * @param type Type of the easing curve(e.g. QEasingCurve::InQuad, etc)
      * @see easingCurve
      * @since 5.14
-     **/
+     */
     void setEasingCurve(QEasingCurve::Type type);
 
     /**
@@ -3629,7 +3629,7 @@ public:
      *
      * @see done
      * @since 5.14
-     **/
+     */
     bool running() const;
 
     /**
@@ -3637,14 +3637,14 @@ public:
      *
      * @see reset
      * @since 5.14
-     **/
+     */
     bool done() const;
 
     /**
      * Resets the timeline to initial state.
      *
      * @since 5.14
-     **/
+     */
     void reset();
 
     enum class RedirectMode {
@@ -3669,7 +3669,7 @@ public:
      *
      * @see targetRedirectMode
      * @since 5.15
-     **/
+     */
     RedirectMode sourceRedirectMode() const;
 
     /**
@@ -3677,7 +3677,7 @@ public:
      *
      * @param mode The new mode.
      * @since 5.15
-     **/
+     */
     void setSourceRedirectMode(RedirectMode mode);
 
     /**
@@ -3695,7 +3695,7 @@ public:
      *
      * @see sourceRedirectMode
      * @since 5.15
-     **/
+     */
     RedirectMode targetRedirectMode() const;
 
     /**
@@ -3703,7 +3703,7 @@ public:
      *
      * @param mode The new mode.
      * @since 5.15
-     **/
+     */
     void setTargetRedirectMode(RedirectMode mode);
 
     TimeLine &operator=(const TimeLine &other);
@@ -3718,7 +3718,7 @@ private:
 
 /**
  * Pointer to the global EffectsHandler object.
- **/
+ */
 extern KWINEFFECTS_EXPORT EffectsHandler* effects;
 
 /***************************************************************

@@ -45,7 +45,7 @@ Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
 /**
  * This test verifies the NoGlobalShortcuts initialization flag
- **/
+ */
 class NoGlobalShortcutsTest : public QObject
 {
     Q_OBJECT

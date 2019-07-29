@@ -193,7 +193,7 @@ void Workspace::unregisterEventFilter(X11EventFilter *filter)
 
 /**
  * Handles workspace specific XCB event
- **/
+ */
 bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
     const uint8_t eventType = e->response_type & ~0x80;
@@ -410,7 +410,7 @@ bool Workspace::workspaceEvent(QEvent* e)
 
 /**
  * General handler for XEvents concerning the client window
- **/
+ */
 bool Client::windowEvent(xcb_generic_event_t *e)
 {
     if (findEventWindow(e) == window()) { // avoid doing stuff on frame or wrapper
@@ -578,7 +578,7 @@ bool Client::windowEvent(xcb_generic_event_t *e)
 
 /**
  * Handles map requests of the client window
- **/
+ */
 bool Client::mapRequestEvent(xcb_map_request_event_t *e)
 {
     if (e->window != window()) {
@@ -614,7 +614,7 @@ bool Client::mapRequestEvent(xcb_map_request_event_t *e)
 
 /**
  * Handles unmap notify events of the client window
- **/
+ */
 void Client::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
 {
     if (e->window != window())
@@ -650,7 +650,7 @@ void Client::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
 
 /**
  * Handles client messages for the client window
- **/
+ */
 void Client::clientMessageEvent(xcb_client_message_event_t *e)
 {
     Toplevel::clientMessageEvent(e);
@@ -667,7 +667,7 @@ void Client::clientMessageEvent(xcb_client_message_event_t *e)
 
 /**
  * Handles configure  requests of the client window
- **/
+ */
 void Client::configureRequestEvent(xcb_configure_request_event_t *e)
 {
     if (e->window != window())
@@ -710,7 +710,7 @@ void Client::configureRequestEvent(xcb_configure_request_event_t *e)
 
 /**
  * Handles property changes of the client window
- **/
+ */
 void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
     Toplevel::propertyNotifyEvent(e);
@@ -864,7 +864,7 @@ void Client::ungrabButton(int modifier)
  * window becomes active. This helps broken X programs that
  * missinterpret LeaveNotify events in grab mode to work properly
  * (Motif, AWT, Tk, ...)
- **/
+ */
 void Client::updateMouseGrab()
 {
     if (workspace()->globalShortcutsDisabled()) {

@@ -49,7 +49,7 @@ public:
      * Adds/removes client \a c to/from \a activity.
      *
      * Takes care of transients as well.
-     **/
+     */
     void toggleClientOnActivity(Client* c, const QString &activity, bool dont_activate);
 
     QStringList running() const;
@@ -66,18 +66,18 @@ Q_SIGNALS:
      * This signal is emitted when the global
      * activity is changed
      * @param id id of the new current activity
-     **/
+     */
     void currentChanged(const QString &id);
     /**
      * This signal is emitted when a new activity is added
      * @param id id of the new activity
-     **/
+     */
     void added(const QString &id);
     /**
      * This signal is emitted when the activity
      * is removed
      * @param id id of the removed activity
-     **/
+     */
     void removed(const QString &id);
 
 private Q_SLOTS:

@@ -66,15 +66,15 @@ public:
 
     /**
      * @internal
-     **/
+     */
     void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     /**
      * @internal
-     **/
+     */
     void processKeymapChange(int fd, uint32_t size);
 
     Xkb *xkb() const {

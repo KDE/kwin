@@ -33,7 +33,7 @@ namespace KWin
 
 /**
  * X11 output representation
- **/
+ */
 class KWIN_EXPORT X11Output : public AbstractOutput
 {
     Q_OBJECT
@@ -46,19 +46,19 @@ public:
     void setName(QString set);
     /**
      * The geometry of this output in global compositor co-ordinates (i.e scaled)
-     **/
+     */
     QRect geometry() const override;
     void setGeometry(QRect set);
 
     /**
      * Current refresh rate in 1/ms.
-     **/
+     */
     int refreshRate() const override;
     void setRefreshRate(int set);
 
     /**
      * The size of gamma lookup table.
-     **/
+     */
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
 

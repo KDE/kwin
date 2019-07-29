@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
- **/
+ */
 
 namespace KWin
 {
@@ -41,7 +41,7 @@ class ClientModel;
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
- **/
+ */
 class DesktopModel
     : public QAbstractItemModel
 {
@@ -65,11 +65,11 @@ public:
     /**
      * Generates a new list of desktops based on the current config.
      * Calling this method will reset the model.
-     **/
+     */
     void createDesktopList();
     /**
      * @return The current list of desktops.
-     **/
+     */
     QList< int > desktopList() const {
         return m_desktopList;
     }
@@ -77,7 +77,7 @@ public:
      * @param desktop The desktop whose ModelIndex should be retrieved
      * @return The ModelIndex of given desktop or an invalid ModelIndex if
      * the desktop is not in the model.
-     **/
+     */
     QModelIndex desktopIndex(int desktop) const;
 
 private:

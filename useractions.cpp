@@ -1108,7 +1108,7 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
 
 /**
  * Creates the global accel object \c keys.
- **/
+ */
 void Workspace::initShortcuts()
 {
 #define IN_KWIN
@@ -1291,7 +1291,7 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
 /**
  * Called by the decoration in the new API to determine what buttons the user has configured for
  * window tab dragging and the operations menu.
- **/
+ */
 Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons button)
 {
     Options::MouseCommand com = Options::MouseNothing;
@@ -1316,7 +1316,7 @@ Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons b
 
 /**
  * Performs a mouse command on this client (see options.h)
- **/
+ */
 bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)
 {
     bool replay = false;
@@ -1429,7 +1429,7 @@ void Workspace::slotWindowToPrevScreen()
 
 /**
  * Maximizes the active client.
- **/
+ */
 void Workspace::slotWindowMaximize()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1438,7 +1438,7 @@ void Workspace::slotWindowMaximize()
 
 /**
  * Maximizes the active client vertically.
- **/
+ */
 void Workspace::slotWindowMaximizeVertical()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1447,7 +1447,7 @@ void Workspace::slotWindowMaximizeVertical()
 
 /**
  * Maximizes the active client horiozontally.
- **/
+ */
 void Workspace::slotWindowMaximizeHorizontal()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1457,7 +1457,7 @@ void Workspace::slotWindowMaximizeHorizontal()
 
 /**
  * Minimizes the active client.
- **/
+ */
 void Workspace::slotWindowMinimize()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1466,7 +1466,7 @@ void Workspace::slotWindowMinimize()
 
 /**
  * Shades/unshades the active client respectively.
- **/
+ */
 void Workspace::slotWindowShade()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1475,7 +1475,7 @@ void Workspace::slotWindowShade()
 
 /**
  * Raises the active client.
- **/
+ */
 void Workspace::slotWindowRaise()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1484,7 +1484,7 @@ void Workspace::slotWindowRaise()
 
 /**
  * Lowers the active client.
- **/
+ */
 void Workspace::slotWindowLower()
 {
     if (USABLE_ACTIVE_CLIENT) {
@@ -1506,7 +1506,7 @@ void Workspace::slotWindowLower()
 
 /**
  * Does a toggle-raise-and-lower on the active client.
- **/
+ */
 void Workspace::slotWindowRaiseOrLower()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1550,7 +1550,7 @@ void Workspace::slotSetupWindowShortcut()
 
 /**
  * Toggles show desktop.
- **/
+ */
 void Workspace::slotToggleShowDesktop()
 {
     setShowingDesktop(!showingDesktop());
@@ -1574,7 +1574,7 @@ void windowToDesktop(AbstractClient *c)
 
 /**
  * Moves the active client to the next desktop.
- **/
+ */
 void Workspace::slotWindowToNextDesktop()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1588,7 +1588,7 @@ void Workspace::windowToNextDesktop(AbstractClient* c)
 
 /**
  * Moves the active client to the previous desktop.
- **/
+ */
 void Workspace::slotWindowToPreviousDesktop()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1664,7 +1664,7 @@ void Workspace::slotUntab()
 
 /**
  * Kill Window feature, similar to xkill.
- **/
+ */
 void Workspace::slotKillWindow()
 {
     if (m_windowKiller.isNull()) {
@@ -1675,7 +1675,7 @@ void Workspace::slotKillWindow()
 
 /**
  * Switches to the nearest window in given direction.
- **/
+ */
 void Workspace::switchWindow(Direction direction)
 {
     if (!active_client)
@@ -1769,7 +1769,7 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
 
 /**
  * Shows the window operations popup menu for the active client.
- **/
+ */
 void Workspace::slotWindowOperations()
 {
     if (!active_client)
@@ -1790,7 +1790,7 @@ void Workspace::showApplicationMenu(const QRect &pos, AbstractClient *c, int act
 
 /**
  * Closes the active client.
- **/
+ */
 void Workspace::slotWindowClose()
 {
     // TODO: why?
@@ -1802,7 +1802,7 @@ void Workspace::slotWindowClose()
 
 /**
  * Starts keyboard move mode for the active client.
- **/
+ */
 void Workspace::slotWindowMove()
 {
     if (USABLE_ACTIVE_CLIENT)
@@ -1811,7 +1811,7 @@ void Workspace::slotWindowMove()
 
 /**
  * Starts keyboard resize mode for the active client.
- **/
+ */
 void Workspace::slotWindowResize()
 {
     if (USABLE_ACTIVE_CLIENT)

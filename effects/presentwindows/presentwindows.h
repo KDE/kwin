@@ -67,7 +67,7 @@ private:
 /**
  * Expose-like effect which shows all windows on current desktop side-by-side,
  *  letting the user select active window.
- **/
+ */
 class PresentWindowsEffect
     : public Effect
 {

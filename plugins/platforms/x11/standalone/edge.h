@@ -45,7 +45,7 @@ public:
     /**
      * The approach window is a special window to notice when get close to the screen border but
      * not yet triggering the border.
-     **/
+     */
     quint32 approachWindow() const override;
 
 protected:

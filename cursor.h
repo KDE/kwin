@@ -36,7 +36,7 @@ namespace KWin
 namespace ExtendedCursor {
 /**
  * Extension of Qt::CursorShape with values not currently present there
- **/
+ */
 enum Shape {
     SizeNorthWest = 0x100 + 0,
     SizeNorth = 0x100 + 1,
@@ -51,7 +51,7 @@ enum Shape {
 
 /**
  * @brief Wrapper round Qt::CursorShape with extensions enums into a single entity
- **/
+ */
 class KWIN_EXPORT CursorShape {
 public:
     CursorShape() = default;
@@ -69,7 +69,7 @@ public:
     }
     /**
      * @brief The name of a cursor shape in the theme.
-     **/
+     */
     QByteArray name() const;
 private:
     int m_shape = Qt::ArrowCursor;
@@ -92,7 +92,7 @@ private:
  * system specific subclass. So far only an X11 backend is implemented which uses query pointer to
  * fetch the position and warp pointer to set the position. It uses a timer based mouse polling and
  * can provide X11 cursors through the XCursor library.
- **/
+ */
 class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
@@ -112,7 +112,7 @@ public:
      * This tracking is not about pointer position tracking.
      * @see stopCursorTracking
      * @see cursorChanged
-     **/
+     */
     void startCursorTracking();
     /**
      * @brief Disables tracking changes of cursor images.
@@ -120,24 +120,24 @@ public:
      * Only call after using startCursorTracking.
      *
      * @see startCursorTracking
-     **/
+     */
     void stopCursorTracking();
 
     /**
      * @brief The name of the currently used Cursor theme.
      *
      * @return const QString&
-     **/
+     */
     const QString &themeName() const;
     /**
      * @brief The size of the currently used Cursor theme.
      *
      * @return int
-     **/
+     */
     int themeSize() const;
     /**
      * @return list of alternative names for the cursor with @p name
-     **/
+     */
     QVector<QByteArray> cursorAlternativeNames(const QByteArray &name) const;
 
     /**
@@ -146,18 +146,18 @@ public:
      *
      * Implementing subclasses should prefer to use currentPos which is not performing a check
      * for update.
-     **/
+     */
     static QPoint pos();
     /**
      * Warps the mouse cursor to new @p pos.
-     **/
+     */
     static void setPos(const QPoint &pos);
     static void setPos(int x, int y);
     static xcb_cursor_t x11Cursor(CursorShape shape);
     /**
      * Notice: if available always use the CursorShape variant to avoid cache duplicates for
      * ambiguous cursor names in the non existing cursor name specification
-     **/
+     */
     static xcb_cursor_t x11Cursor(const QByteArray &name);
 
 Q_SIGNALS:
@@ -172,7 +172,7 @@ Q_SIGNALS:
      *
      * @see startCursorTracking
      * @see stopCursorTracking
-     **/
+     */
     void cursorChanged();
     void themeChanged();
 
@@ -181,54 +181,54 @@ protected:
      * Called from x11Cursor to actually retrieve the X11 cursor. Base implementation returns
      * a null cursor, an implementing subclass should implement this method if it can provide X11
      * mouse cursors.
-     **/
+     */
     virtual xcb_cursor_t getX11Cursor(CursorShape shape);
     /**
      * Called from x11Cursor to actually retrieve the X11 cursor. Base implementation returns
      * a null cursor, an implementing subclass should implement this method if it can provide X11
      * mouse cursors.
-     **/
+     */
     virtual xcb_cursor_t getX11Cursor(const QByteArray &name);
     /**
      * Performs the actual warping of the cursor.
-     **/
+     */
     virtual void doSetPos();
     /**
      * Called from @ref pos() to allow syncing the internal position with the underlying
      * system's cursor position.
-     **/
+     */
     virtual void doGetPos();
     /**
      * Called from startMousePolling when the mouse polling gets activated. Base implementation
      * does nothing, inheriting classes can overwrite to e.g. start a timer.
-     **/
+     */
     virtual void doStartMousePolling();
     /**
      * Called from stopMousePolling when the mouse polling gets deactivated. Base implementation
      * does nothing, inheriting classes can overwrite to e.g. stop a timer.
-     **/
+     */
     virtual void doStopMousePolling();
     /**
      * Called from startCursorTracking when cursor image tracking gets activated. Inheriting class needs
      * to overwrite to enable platform specific code for the tracking.
-     **/
+     */
     virtual void doStartCursorTracking();
     /**
      * Called from stopCursorTracking when cursor image tracking gets deactivated. Inheriting class needs
      * to overwrite to disable platform specific code for the tracking.
-     **/
+     */
     virtual void doStopCursorTracking();
     bool isCursorTracking() const;
     /**
      * Provides the actual internal cursor position to inheriting classes. If an inheriting class needs
      * access to the cursor position this method should be used instead of the static @ref pos, as
      * the static method syncs with the underlying system's cursor.
-     **/
+     */
     const QPoint &currentPos() const;
     /**
      * Updates the internal position to @p pos without warping the pointer as
      * setPos does.
-     **/
+     */
     void updatePos(const QPoint &pos);
     void updatePos(int x, int y);
 
@@ -252,7 +252,7 @@ private:
  * @brief Implementation using the InputRedirection framework to get pointer positions.
  *
  * Does not support warping of cursor.
- **/
+ */
 class InputRedirectionCursor : public Cursor
 {
     Q_OBJECT

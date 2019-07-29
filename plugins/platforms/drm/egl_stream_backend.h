@@ -34,7 +34,7 @@ class ShellClient;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
- **/
+ */
 class EglStreamBackend : public AbstractEglBackend
 {
     Q_OBJECT
@@ -91,7 +91,7 @@ private:
 
 /**
  * @brief External texture bound to an EGLStreamKHR.
- **/
+ */
 class EglStreamTexture : public AbstractEglTexture
 {
 public:

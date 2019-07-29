@@ -920,7 +920,7 @@ struct KeySymbolsDeleter
 
 /**
  * Handles alt-tab / control-tab
- **/
+ */
 static bool areKeySymXsDepressed(const uint keySyms[], int nKeySyms)
 {
     Xcb::QueryKeymap keys;
@@ -1470,7 +1470,7 @@ int TabBox::previousDesktopStatic(int iDesktop) const
 /**
  * Auxiliary functions to travers all clients according to the static
  * order. Useful for the CDE-style Alt-tab feature.
- **/
+ */
 AbstractClient* TabBox::nextClientStatic(AbstractClient* c) const
 {
     const auto &list = Workspace::self()->allClientList();
@@ -1488,7 +1488,7 @@ AbstractClient* TabBox::nextClientStatic(AbstractClient* c) const
 /**
  * Auxiliary functions to travers all clients according to the static
  * order. Useful for the CDE-style Alt-tab feature.
- **/
+ */
 AbstractClient* TabBox::previousClientStatic(AbstractClient* c) const
 {
     const auto &list = Workspace::self()->allClientList();

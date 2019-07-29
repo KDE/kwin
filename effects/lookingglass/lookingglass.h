@@ -34,7 +34,7 @@ class GLVertexBuffer;
 
 /**
  * Enhanced magnifier
- **/
+ */
 class LookingGlassEffect : public Effect
 {
     Q_OBJECT

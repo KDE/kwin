@@ -42,7 +42,7 @@ public:
      * @internal
      *
      * Called from X11 event handler.
-     **/
+     */
     void notifyCursorChanged();
 
 protected:
@@ -60,7 +60,7 @@ private Q_SLOTS:
      * Because of QTimer's and the impossibility to get events for all mouse
      * movements (at least I haven't figured out how) the position needs
      * to be also refetched after each return to the event loop.
-     **/
+     */
     void resetTimeStamp();
     void mousePolled();
     void aboutToBlock();

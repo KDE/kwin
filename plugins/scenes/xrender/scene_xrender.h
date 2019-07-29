@@ -41,7 +41,7 @@ namespace Xcb
  *
  * This class is intended as a small abstraction to support multiple compositing backends in the
  * SceneXRender.
- **/
+ */
 class XRenderBackend
 {
 public:
@@ -56,14 +56,14 @@ public:
      * It's the task of the caller to check whether it is @c null.
      *
      * @return :OverlayWindow*
-     **/
+     */
     virtual OverlayWindow *overlayWindow();
     virtual bool usesOverlayWindow() const = 0;
     /**
      * @brief Shows the Overlay Window
      *
      * Default implementation does nothing.
-     **/
+     */
     virtual void showOverlay();
     /**
      * @brief React on screen geometry changes.
@@ -71,7 +71,7 @@ public:
      * Default implementation does nothing. Override if specific functionality is required.
      *
      * @param size The new screen size
-     **/
+     */
     virtual void screenGeometryChanged(const QSize &size);
     /**
      * @brief The compositing buffer hold by this backend.
@@ -79,7 +79,7 @@ public:
      * The Scene composites the new frame into this buffer.
      *
      * @return xcb_render_picture_t
-     **/
+     */
     xcb_render_picture_t buffer() const {
         return m_buffer;
     }
@@ -90,7 +90,7 @@ public:
      * returns @c true, the SceneXRender should not try to start the rendering.
      *
      * @return bool @c true if the creation of the Backend failed, @c false otherwise.
-     **/
+     */
     bool isFailed() const {
         return m_failed;
     }
@@ -102,7 +102,7 @@ protected:
      *
      * @param buffer The buffer to use for compositing
      * @return void
-     **/
+     */
     void setBuffer(xcb_render_picture_t buffer);
     /**
      * @brief Sets the backend initialization to failed.
@@ -111,7 +111,7 @@ protected:
      * The given @p reason is logged as a warning.
      *
      * @param reason The reason why the initialization failed.
-     **/
+     */
     void setFailed(const QString &reason);
 
 private:
@@ -123,7 +123,7 @@ private:
 
 /**
  * @brief XRenderBackend using an X11 Overlay Window as compositing target.
- **/
+ */
 class X11XRenderBackend : public XRenderBackend
 {
 public:
@@ -279,7 +279,7 @@ xcb_render_picture_t XRenderWindowPixmap::picture() const
  *
  * This class extends Shadow by the elements required for XRender rendering.
  * @author Jacopo De Simoi <wilderkde@gmail.org>
- **/
+ */
 class SceneXRenderShadow
     : public Shadow
 {

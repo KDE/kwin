@@ -204,7 +204,7 @@ public:
     }
     /**
      * Set the Device to tap to click if @p set is @c true.
-     **/
+     */
     void setTapToClick(bool set);
     bool tapAndDragEnabledByDefault() const {
         return m_tapAndDragEnabledByDefault;
@@ -340,7 +340,7 @@ public:
     /**
      * Sets the Device to left handed mode if @p set is @c true.
      * If @p set is @c false the device is set to right handed mode
-     **/
+     */
     void setLeftHanded(bool set);
 
     qreal defaultPointerAcceleration() const {
@@ -351,7 +351,7 @@ public:
     }
     /**
      * @param acceleration mapped to range [-1,1] with -1 being the slowest, 1 being the fastest supported acceleration.
-     **/
+     */
     void setPointerAcceleration(qreal acceleration);
     void setPointerAccelerationFromString(QString acceleration) {
         setPointerAcceleration(acceleration.toDouble());
@@ -434,21 +434,21 @@ public:
     /**
      * Sets the @p config to load the Device configuration from and to store each
      * successful Device configuration.
-     **/
+     */
     void setConfig(const KConfigGroup &config) {
         m_config = config;
     }
 
     /**
      * The id of the screen in KWin identifiers. Set from KWin through setScreenId.
-     **/
+     */
     int screenId() const {
         return m_screenId;
     }
 
     /**
      * Sets the KWin screen id for the device
-     **/
+     */
     void setScreenId(int screenId) {
         m_screenId = screenId;
     }
@@ -457,7 +457,7 @@ public:
 
     /**
      * Loads the configuration and applies it to the Device
-     **/
+     */
     void loadConfiguration();
 
     bool isSwitch() const {
@@ -474,13 +474,13 @@ public:
 
     /**
      * All created Devices
-     **/
+     */
     static QVector<Device*> devices() {
         return s_devices;
     }
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
-     **/
+     */
     static Device *getDevice(libinput_device *native);
 
 Q_SIGNALS:

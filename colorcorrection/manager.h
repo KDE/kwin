@@ -44,29 +44,29 @@ class ColorCorrectDBusInterface;
 
 /**
  * This enum type is used to specify operation mode of the night color manager.
- **/
+ */
 enum NightColorMode {
     /**
      * Color temperature is computed based on the current position of the Sun.
      *
      * Location of the user is provided by Plasma.
-     **/
+     */
     Automatic,
     /**
      * Color temperature is computed based on the current position of the Sun.
      *
      * Location of the user is provided by themselves.
-     **/
+     */
     Location,
     /**
      * Color temperature is computed based on the current time.
      *
      * Sunrise and sunset times have to be specified by the user.
-     **/
+     */
     Timings,
     /**
      * Color temperature is constant thoughout the day.
-     **/
+     */
     Constant,
 };
 
@@ -85,7 +85,7 @@ enum NightColorMode {
  * transition time.
  *
  * With the Constant mode, screen color temperature is always constant.
- **/
+ */
 class KWIN_EXPORT Manager : public QObject
 {
     Q_OBJECT
@@ -98,13 +98,13 @@ public:
      * Get current configuration
      * @see changeConfiguration
      * @since 5.12
-     **/
+     */
     QHash<QString, QVariant> info() const;
     /**
      * Change configuration
      * @see info
      * @since 5.12
-     **/
+     */
     bool changeConfiguration(QHash<QString, QVariant> data);
     void autoLocationUpdate(double latitude, double longitude);
 
@@ -123,7 +123,7 @@ public:
      *
      * Note that this method is a no-op if the underlying platform doesn't support
      * adjusting gamma ramps.
-     **/
+     */
     void toggle();
 
     // for auto tests
@@ -146,11 +146,11 @@ private:
     void cancelAllTimers();
     /**
      * Quick shift on manual change to current target Temperature
-     **/
+     */
     void resetQuickAdjustTimer();
     /**
      * Slow shift to daytime target Temperature
-     **/
+     */
     void resetSlowUpdateTimer();
 
     void updateSunTimings(bool force);

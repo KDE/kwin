@@ -60,7 +60,7 @@ public:
     /**
      * Gets the next event, if there is no new event @c null is returned.
      * The caller takes ownership of the returned pointer.
-     **/
+     */
     Event *event();
 
     static int openRestrictedCallback(const char *path, int flags, void *user_data);

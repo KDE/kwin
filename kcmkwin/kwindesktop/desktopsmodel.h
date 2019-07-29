@@ -52,7 +52,7 @@ namespace KWin
  * until the user makes further changes.
  *
  * @author Eike Hein <hein@kde.org>
- **/
+ */
 
 class DesktopsModel : public QAbstractListModel
 {

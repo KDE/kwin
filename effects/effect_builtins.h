@@ -30,7 +30,7 @@ class Effect;
 
 /**
  * Defines all the built in effects.
- **/
+ */
 enum class BuiltInEffect
 {
     Invalid, ///< not a valid Effect

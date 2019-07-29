@@ -153,7 +153,7 @@ QScriptValue KWin::MetaScripting::getConfigValue(QScriptContext* ctx, QScriptEng
 
     /*
      * Handle config.get() separately. Compute and return immediately.
-     **/
+     */
     if (num == 0) {
         QHash<QString, QVariant>::const_iterator i;
         QScriptValue ret = eng->newArray();

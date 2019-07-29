@@ -79,7 +79,7 @@ public:
      * @param callback Script method to execute when the UserActionsMenu is about to be shown.
      * @return void
      * @see actionsForUserActionMenu
-     **/
+     */
     void registerUseractionsMenuCallback(QScriptValue callback);
     /**
      * @brief Creates actions for the UserActionsMenu by invoking the registered callbacks.
@@ -122,7 +122,7 @@ public:
      * @param parent The Parent for the created Menus or Actions
      * @return QList< QAction* > List of QActions obtained from asking the registered callbacks
      * @see registerUseractionsMenuCallback
-     **/
+     */
     QList<QAction*> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
 
     KConfigGroup config() const;
@@ -148,7 +148,7 @@ private Q_SLOTS:
      * from the map of actions.
      *
      * @param object The destroyed action
-     **/
+     */
     void actionDestroyed(QObject *object);
 
 Q_SIGNALS:
@@ -177,7 +177,7 @@ private:
      * @param value The ScriptValue describing either a menu or action
      * @param parent The parent to use for the created menu or action
      * @return QAction* The parsed action or menu action, if parsing fails returns @c null.
-     **/
+     */
     QAction *scriptValueToAction(QScriptValue &value, QMenu *parent);
     /**
      * @brief Creates a new QAction from the provided data and registers it for invoking the
@@ -192,7 +192,7 @@ private:
      * @param callback The callback to invoke when the action is triggered
      * @param parent The parent to be used for the new created action
      * @return QAction* The created action
-     **/
+     */
     QAction *createAction(const QString &title, bool checkable, bool checked, QScriptValue &callback, QMenu *parent);
     /**
      * @brief Parses the @p items and creates a QMenu from it.
@@ -201,7 +201,7 @@ private:
      * @param items JavaScript Array containing Menu items.
      * @param parent The parent to use for the new created menu
      * @return QAction* The menu action for the new Menu
-     **/
+     */
     QAction *createMenu(const QString &title, QScriptValue &items, QMenu *parent);
     int m_scriptId;
     QString m_fileName;
@@ -213,7 +213,7 @@ private:
     /**
      * @brief List of registered functions to call when the UserActionsMenu is about to show
      * to add further entries.
-     **/
+     */
     QList<QScriptValue> m_userActionsMenuCallbacks;
 };
 
@@ -242,11 +242,11 @@ private Q_SLOTS:
     /**
      * A nice clean way to handle exceptions in scripting.
      * TODO: Log to file, show from notifier..
-     **/
+     */
     void sigException(const QScriptValue &exception);
     /**
      * Callback for when loadScriptFromFile has finished.
-     **/
+     */
     void slotScriptLoadedFromFile();
 
 private:
@@ -254,7 +254,7 @@ private:
     /**
      * Read the script from file into a byte array.
      * If file cannot be read an empty byte array is returned.
-     **/
+     */
     QByteArray loadScriptFromFile(const QString &fileName);
     QScriptEngine *m_engine;
     QDBusMessage m_invocationContext;
@@ -332,7 +332,7 @@ private:
 
 /**
  * The heart of KWin::Scripting. Infinite power lies beyond
- **/
+ */
 class KWIN_EXPORT Scripting : public QObject
 {
     Q_OBJECT
@@ -343,7 +343,7 @@ private:
     QList<KWin::AbstractScript*> scripts;
     /**
      * Lock to protect the scripts member variable.
-     **/
+     */
     QScopedPointer<QMutex> m_scriptsLock;
 
     // Preferably call ONLY at load time
@@ -362,7 +362,7 @@ public:
      * @param c The Client for which the UserActionsMenu is about to be shown
      * @param parent The parent menu to which to add created child menus and items
      * @return QList< QAction* > List of all actions aggregated from all scripts.
-     **/
+     */
     QList<QAction*> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
 
     QQmlEngine *qmlEngine() const;

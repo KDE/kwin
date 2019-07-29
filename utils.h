@@ -131,7 +131,7 @@ enum ShadeMode {
  * Maximize mode. These values specify how a window is maximized.
  *
  * @note these values are written to session files, don't change the order
- **/
+ */
 enum MaximizeMode {
     MaximizeRestore    = 0, ///< The window is not maximized in any direction.
     MaximizeVertical   = 1, ///< The window is maximized vertically.
@@ -172,7 +172,7 @@ void KWIN_EXPORT ungrabXKeyboard();
  * ungrab are matched.
  *
  * To simplify usage consider using the macro GRAB_SERVER_DURING_CONTEXT
- **/
+ */
 class XServerGrabber
 {
 public:
@@ -199,7 +199,7 @@ Qt::KeyboardModifiers KWIN_EXPORT x11ToQtKeyboardModifiers(int state);
 
 /**
  * Separate the concept of an unet QPoint and 0,0
- **/
+ */
 class ClearablePoint
 {
 public:
@@ -226,7 +226,7 @@ private:
 
 /**
  * QProcess subclass which unblocks SIGUSR in the child process.
- **/
+ */
 class KWIN_EXPORT Process : public QProcess
 {
     Q_OBJECT

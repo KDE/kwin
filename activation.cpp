@@ -226,7 +226,7 @@ namespace KWin
  * effect than fixing the focus chain and the return value of
  * activeClient(). And of course, to propagate the active client to the
  * world.
- **/
+ */
 void Workspace::setActiveClient(AbstractClient* c)
 {
     if (active_client == c)
@@ -289,7 +289,7 @@ void Workspace::setActiveClient(AbstractClient* c)
  *
  * @see setActiveClient
  * @see requestFocus
- **/
+ */
 void Workspace::activateClient(AbstractClient* c, bool force)
 {
     if (c == NULL) {
@@ -340,7 +340,7 @@ void Workspace::activateClient(AbstractClient* c, bool force)
  * Workspace::activateClient() instead.
  *
  * @see activateClient
- **/
+ */
 void Workspace::requestFocus(AbstractClient* c, bool force)
 {
     takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
@@ -411,7 +411,7 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
  * the workspace activates another one.
  *
  * @note @p c may already be destroyed.
- **/
+ */
 void Workspace::clientHidden(AbstractClient* c)
 {
     assert(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
@@ -706,7 +706,7 @@ void Workspace::clientAttentionChanged(AbstractClient* c, bool set)
  * This is called inside  kwin for every action with the window
  * that qualifies for user interaction (clicking on it, activate it
  * externally, etc.).
- **/
+ */
 void Client::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime

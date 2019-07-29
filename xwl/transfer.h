@@ -51,7 +51,7 @@ namespace Xwl
  * Lives for the duration of the transfer and must be cleaned up
  * externally afterwards. For that the owner should connect to the
  * @c finished() signal.
- **/
+ */
 class Transfer : public QObject
 {
     Q_OBJECT
@@ -111,7 +111,7 @@ private:
 
 /**
  * Represents a transfer from a Wayland native source to an X window.
- **/
+ */
 class TransferWltoX : public Transfer
 {
     Q_OBJECT
@@ -150,7 +150,7 @@ private:
 
 /**
  * Helper class for X to Wl transfers.
- **/
+ */
 class DataReceiver
 {
 public:
@@ -178,7 +178,7 @@ private:
 /**
  * Compatibility receiver for clients only
  * supporting the NETSCAPE_URL scheme (Firefox)
- **/
+ */
 class NetscapeUrlReceiver : public DataReceiver
 {
 public:
@@ -188,7 +188,7 @@ public:
 /**
  * Compatibility receiver for clients only
  * supporting the text/x-moz-url scheme (Chromium on own drags)
- **/
+ */
 class MozUrlReceiver : public DataReceiver
 {
 public:
@@ -197,7 +197,7 @@ public:
 
 /**
  * Represents a transfer from an X window to a Wayland native client.
- **/
+ */
 class TransferXtoWl : public Transfer
 {
     Q_OBJECT

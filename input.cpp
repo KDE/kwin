@@ -1246,7 +1246,7 @@ private:
 /**
  * This filter implements window actions. If the event should not be passed to the
  * current pointer window it will filter out the event
- **/
+ */
 class WindowActionInputFilter : public InputEventFilter
 {
 public:
@@ -1302,7 +1302,7 @@ public:
 
 /**
  * The remaining default input filter which forwards events to other windows
- **/
+ */
 class ForwardInputFilter : public InputEventFilter
 {
 public:

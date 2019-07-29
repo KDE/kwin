@@ -35,7 +35,7 @@ class GbmSurface;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
- **/
+ */
 class EglGbmBackend : public AbstractEglBackend
 {
     Q_OBJECT
@@ -69,7 +69,7 @@ private:
         int bufferAge = 0;
         /**
          * @brief The damage history for the past 10 frames.
-         **/
+         */
         QList<QRegion> damageHistory;
     };
     bool resetOutput(Output &output, DrmOutput *drmOutput);
@@ -85,7 +85,7 @@ private:
 
 /**
  * @brief Texture using an EGLImageKHR.
- **/
+ */
 class EglGbmTexture : public AbstractEglTexture
 {
 public:

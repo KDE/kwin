@@ -89,60 +89,60 @@ public:
     /**
      * Allows the platform to create a platform specific screen edge.
      * The default implementation creates a Edge.
-     **/
+     */
     virtual Edge *createScreenEdge(ScreenEdges *parent);
     /**
      * Allows the platform to create a platform specific Cursor.
      * The default implementation creates an InputRedirectionCursor.
-     **/
+     */
     virtual void createPlatformCursor(QObject *parent = nullptr);
     virtual void warpPointer(const QPointF &globalPos);
     /**
      * Whether our Compositing EGL display allows a surface less context
      * so that a sharing context could be created.
-     **/
+     */
     virtual bool supportsQpaContext() const;
     /**
      * The EGLDisplay used by the compositing scene.
-     **/
+     */
     EGLDisplay sceneEglDisplay() const;
     void setSceneEglDisplay(EGLDisplay display);
     /**
      * The EGLContext used by the compositing scene.
-     **/
+     */
     virtual EGLContext sceneEglContext() const {
         return m_context;
     }
     /**
      * Sets the @p context used by the compositing scene.
-     **/
+     */
     void setSceneEglContext(EGLContext context) {
         m_context = context;
     }
     /**
      * The first (in case of multiple) EGLSurface used by the compositing scene.
-     **/
+     */
     EGLSurface sceneEglSurface() const {
         return m_surface;
     }
     /**
      * Sets the first @p surface used by the compositing scene.
      * @see sceneEglSurface
-     **/
+     */
     void setSceneEglSurface(EGLSurface surface) {
         m_surface = surface;
     }
 
     /**
      * The EglConfig used by the compositing scene.
-     **/
+     */
     EGLConfig sceneEglConfig() const {
         return m_eglConfig;
     }
     /**
      * Sets the @p config used by the compositing scene.
      * @see sceneEglConfig
-     **/
+     */
     void setSceneEglConfig(EGLConfig config) {
         m_eglConfig = config;
     }
@@ -152,14 +152,14 @@ public:
      * a basic screen and uses the BasicScreens.
      *
      * Base implementation returns an invalid size.
-     **/
+     */
     virtual QSize screenSize() const;
     /**
      * Implementing subclasses should provide all geometries in case the backend represents
      * a basic screen and uses the BasicScreens.
      *
      * Base implementation returns one QRect positioned at 0/0 with screenSize() as size.
-     **/
+     */
     virtual QVector<QRect> screenGeometries() const;
 
     /**
@@ -167,7 +167,7 @@ public:
      * a basic screen and uses the BasicScreens.
      *
      * Base implementation returns a screen with a scale of 1.
-     **/
+     */
     virtual QVector<qreal> screenScales() const;
     /**
      * Implement this method to receive configuration change requests through KWayland's
@@ -175,14 +175,14 @@ public:
      *
      * Base implementation warns that the current backend does not implement this
      * functionality.
-     **/
+     */
     virtual void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
 
     /**
      * Whether the Platform requires compositing for rendering.
      * Default implementation returns @c true. If the implementing Platform allows to be used
      * without compositing (e.g. rendering is done by the windowing system), re-implement this method.
-     **/
+     */
     virtual bool requiresCompositing() const;
     /**
      * Whether Compositing is possible in the Platform.
@@ -190,7 +190,7 @@ public:
      *
      * The default implementation returns @c true.
      * @see requiresCompositing
-     **/
+     */
     virtual bool compositingPossible() const;
     /**
      * Returns a user facing text explaining why compositing is not possible in case
@@ -198,7 +198,7 @@ public:
      *
      * The default implementation returns an empty string.
      * @see compositingPossible
-     **/
+     */
     virtual QString compositingNotPossibleReason() const;
     /**
      * Whether OpenGL compositing is broken.
@@ -207,7 +207,7 @@ public:
      *
      * Default implementation returns @c false.
      * @see createOpenGLSafePoint
-     **/
+     */
     virtual bool openGLCompositingIsBroken() const;
     enum class OpenGLSafePoint {
         PreInit,
@@ -223,7 +223,7 @@ public:
      *
      * The default implementation does nothing.
      * @see openGLCompositingIsBroken.
-     **/
+     */
     virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
 
     /**
@@ -241,7 +241,7 @@ public:
      *
      * @param callback The function to invoke once the interactive window selection ends
      * @param cursorName The optional name of the cursor shape to use, default is crosshair
-     **/
+     */
     virtual void startInteractiveWindowSelection(std::function<void(KWin::Toplevel*)> callback, const QByteArray &cursorName = QByteArray());
 
     /**
@@ -257,7 +257,7 @@ public:
      * The default implementation forwards to InputRedirection.
      *
      * @param callback The function to invoke once the interactive position selection ends
-     **/
+     */
     virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
 
     /**
@@ -273,7 +273,7 @@ public:
      *
      * @param action The action which will be used with KGlobalAccel.
      * @since 5.10
-     **/
+     */
     virtual void setupActionForGlobalAccel(QAction *action);
 
     bool usesSoftwareCursor() const {
@@ -291,7 +291,7 @@ public:
      * @see softwareCursor
      * @see softwareCursorHotspot
      * @since 5.9
-     **/
+     */
     virtual PlatformCursorImage cursorImage() const;
 
     /**
@@ -300,7 +300,7 @@ public:
      * @see doHideCursor
      * @see isCursorHidden
      * @since 5.9
-     **/
+     */
     void hideCursor();
 
     /**
@@ -309,7 +309,7 @@ public:
      * @see doShowCursor
      * @see isCursorHidden
      * @since 5.9
-     **/
+     */
     void showCursor();
 
     /**
@@ -317,7 +317,7 @@ public:
      * @see showCursor
      * @see hideCursor
      * @since 5.9
-     **/
+     */
     bool isCursorHidden() const {
         return m_hideCursorCounter > 0;
     }
@@ -359,7 +359,7 @@ public:
     /**
      * Creates the OverlayWindow required for X11 based compositors.
      * Default implementation returns @c nullptr.
-     **/
+     */
     virtual OverlayWindow *createOverlayWindow();
 
     /**
@@ -368,43 +368,43 @@ public:
      *
      * Default implementation does nothing. This means code relying on the X timestamp being up to date,
      * might not be working. E.g. synced X11 window resizing
-     **/
+     */
     virtual void updateXTime();
 
     /**
      * Creates the OutlineVisual for the given @p outline.
      * Default implementation creates an OutlineVisual suited for composited usage.
-     **/
+     */
     virtual OutlineVisual *createOutline(Outline *outline);
 
     /**
      * Creates the Decoration::Renderer for the given @p client.
      *
      * The default implementation creates a Renderer suited for the Compositor, @c nullptr if there is no Compositor.
-     **/
+     */
     virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
     /**
      * Platform specific way to invert the screen.
      * Default implementation invokes the invert effect
-     **/
+     */
     virtual void invertScreen();
 
     /**
      * Default implementation creates an EffectsHandlerImp;
-     **/
+     */
     virtual void createEffectsHandler(Compositor *compositor, Scene *scene);
     /**
      * The CompositingTypes supported by the Platform.
      * The first item should be the most preferred one.
      * @since 5.11
-     **/
+     */
     virtual QVector<CompositingType> supportedCompositors() const = 0;
 
     /**
      * Whether gamma control is supported by the backend.
      * @since 5.12
-     **/
+     */
     bool supportsGammaControl() const {
         return m_supportsGammaControl;
     }
@@ -428,7 +428,7 @@ public:
      *
      * The base implementation prints the name.
      * @since 5.12
-     **/
+     */
     virtual QString supportInformation() const;
 
     /**
@@ -437,14 +437,14 @@ public:
      *
      * This method allows the platforms to limit the offerings in @link{supportedCompositors}
      * in case they do not support runtime compositor switching
-     **/
+     */
     CompositingType selectedCompositor() const
     {
         return m_selectedCompositor;
     }
     /**
      * Used by Compositor to set the used compositor.
-     **/
+     */
     void setSelectedCompositor(CompositingType type)
     {
         m_selectedCompositor = type;
@@ -484,7 +484,7 @@ Q_SIGNALS:
     void readyChanged(bool);
     /**
      * Emitted by backends using a one screen (nested window) approach and when the size of that changes.
-     **/
+     */
     void screenSizeChanged();
 
 protected:
@@ -518,7 +518,7 @@ protected:
      * @see doShowCursor
      * @see hideCursor
      * @see showCursor
-     **/
+     */
     virtual void doHideCursor();
     /**
      * Actual platform specific way to show the cursor.
@@ -529,7 +529,7 @@ protected:
      * @see doShowCursor
      * @see hideCursor
      * @see showCursor
-     **/
+     */
     virtual void doShowCursor();
 
 private:

@@ -41,101 +41,101 @@ class KWIN_EXPORT EffectsModel : public QAbstractItemModel
 public:
     /**
      * This enum type is used to specify data roles.
-     **/
+     */
     enum AdditionalRoles {
         /**
          * The user-friendly name of the effect.
-         **/
+         */
         NameRole = Qt::UserRole + 1,
         /**
          * The description of the effect.
-         **/
+         */
         DescriptionRole,
         /**
          * The name of the effect's author. If there are several authors, they
          * will be comma separated.
-         **/
+         */
         AuthorNameRole,
         /**
          * The email of the effect's author. If there are several authors, the
          * emails will be comma separated.
-         **/
+         */
         AuthorEmailRole,
         /**
          * The license of the effect.
-         **/
+         */
         LicenseRole,
         /**
          * The version of the effect.
-         **/
+         */
         VersionRole,
         /**
          * The category of the effect.
-         **/
+         */
         CategoryRole,
         /**
          * The service name(plugin name) of the effect.
-         **/
+         */
         ServiceNameRole,
         /**
          * The icon name of the effect.
-         **/
+         */
         IconNameRole,
         /**
          * Whether the effect is enabled or disabled.
-         **/
+         */
         StatusRole,
         /**
          * Link to a video demonstration of the effect.
-         **/
+         */
         VideoRole,
         /**
          * Link to the home page of the effect.
-         **/
+         */
         WebsiteRole,
         /**
          * Whether the effect is supported.
-         **/
+         */
         SupportedRole,
         /**
          * The exclusive group of the effect.
-         **/
+         */
         ExclusiveRole,
         /**
          * Whether the effect is internal.
-         **/
+         */
         InternalRole,
         /**
          * Whether the effect has a KCM.
-         **/
+         */
         ConfigurableRole,
         /**
          * Whether this is a scripted effect.
-         **/
+         */
         ScriptedRole,
         /**
          * Whether the effect is enabled by default.
-         **/
+         */
         EnabledByDefaultRole
     };
 
     /**
      * This enum type is used to specify the status of a given effect.
-     **/
+     */
     enum class Status {
         /**
          * The effect is disabled.
-         **/
+         */
         Disabled = Qt::Unchecked,
         /**
          * An enable function is used to determine whether the effect is enabled.
          * For example, such function can be useful to disable the blur effect
          * when running in a virtual machine.
-         **/
+         */
         EnabledUndeterminded = Qt::PartiallyChecked,
         /**
          * The effect is enabled.
-         **/
+         */
         Enabled = Qt::Checked
     };
 
@@ -156,17 +156,17 @@ public:
      * @param rowIndex An effect represented by the given index.
      * @param effectState The new state.
      * @note In order to actually apply the change, you have to call save().
-     **/
+     */
     void updateEffectStatus(const QModelIndex &rowIndex, Status effectState);
 
     /**
      * This enum type is used to specify load options.
-     **/
+     */
     enum class LoadOptions {
         None,
         /**
          * Do not discard unsaved changes when reloading the model.
-         **/
+         */
         KeepDirty
     };
 
@@ -174,29 +174,29 @@ public:
      * Loads effects.
      *
      * You have to call this method in order to populate the model.
-     **/
+     */
     void load(LoadOptions options = LoadOptions::None);
 
     /**
      * Saves status of each modified effect.
-     **/
+     */
     void save();
 
     /**
      * Resets the status of each effect to the default state.
      *
      * @note In order to actually apply the change, you have to call save().
-     **/
+     */
     void defaults();
 
     /**
      * Whether the model has unsaved changes.
-     **/
+     */
     bool needsSave() const;
 
     /**
      * Finds an effect with the given plugin id.
-     **/
+     */
     QModelIndex findByPluginId(const QString &pluginId) const;
 
     /**
@@ -204,7 +204,7 @@ public:
      *
      * @param index An effect represented by the given index.
      * @param transientParent The transient parent of the configuration dialog.
-     **/
+     */
     void requestConfigure(const QModelIndex &index, QWindow *transientParent);
 
 Q_SIGNALS:
@@ -212,7 +212,7 @@ Q_SIGNALS:
      * This signal is emitted when the model is loaded or reloaded.
      *
      * @see load
-     **/
+     */
     void loaded();
 
 protected:
@@ -252,7 +252,7 @@ protected:
      *
      * @param data The effect.
      * @returns @c true if the effect should be stored, otherwise @c false.
-     **/
+     */
     virtual bool shouldStore(const EffectData &data) const;
 
 private:

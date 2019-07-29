@@ -66,7 +66,7 @@ extern bool is_multihead;
 
 /**
  * Resizes the workspace after an XRANDR screen size change
- **/
+ */
 void Workspace::desktopResized()
 {
     QRect geom = screens()->geometry();
@@ -108,7 +108,7 @@ void Workspace::saveOldScreenSizes()
  * etc).
  *
  * @see clientArea()
- **/
+ */
 void Workspace::updateClientArea(bool force)
 {
     const Screens *s = Screens::self();
@@ -340,7 +340,7 @@ void Workspace::updateClientArea()
  * Returns the area available for clients. This is the desktop
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
- **/
+ */
 QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 {
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
@@ -453,7 +453,7 @@ int Workspace::oldDisplayHeight() const
  * The parameter \a snapAdjust is a multiplier used to calculate the
  * effective snap zones. When 1.0, it means that the snap zones will be
  * used without change.
- **/
+ */
 QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust)
 {
     QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
@@ -879,7 +879,7 @@ QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int m
 
 /**
  * Marks the client as being moved or resized by the user.
- **/
+ */
 void Workspace::setMoveResizeClient(AbstractClient *c)
 {
     Q_ASSERT(!c || !movingClient); // Catch attempts to move a second
@@ -916,7 +916,7 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
  * Returns \a area with the client's strut taken into account.
  *
  * Used from Workspace in updateClientArea.
- **/
+ */
 // TODO move to Workspace?
 
 QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) const
@@ -1347,7 +1347,7 @@ QSize AbstractClient::adjustedSize() const
  *
  * \a wsize is adapted according to the window's size hints (minimum,
  * maximum and incremental size changes).
- **/
+ */
 QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe) const
 {
     int w = wsize.width();
@@ -1519,7 +1519,7 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 
 /**
  * Gets the client's normal WM hints and reconfigures itself respectively.
- **/
+ */
 void Client::getWmNormalHints()
 {
     const bool hadFixedAspect = m_geometryHints.hasAspect();
@@ -1574,7 +1574,7 @@ QSize Client::basicUnit() const
 /**
  * Auxiliary function to inform the client about the current window
  * configuration.
- **/
+ */
 void Client::sendSyntheticConfigureNotify()
 {
     xcb_configure_notify_event_t c;
@@ -1917,7 +1917,7 @@ bool Client::isMaximizable() const
 
 /**
  * Reimplemented to inform the client about the new window position.
- **/
+ */
 void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
     // this code is also duplicated in Client::plainResize()
@@ -2079,7 +2079,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 
 /**
  * Reimplemented to inform the client about the new window position.
- **/
+ */
 void AbstractClient::move(int x, int y, ForceGeometry_t force)
 {
     // resuming geometry updates is handled only in setGeometry()
@@ -2534,7 +2534,7 @@ void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
 /**
  * Calculates the bounding rectangle defined by the 4 monitor indices indicating the
  * top, bottom, left, and right edges of the window when the fullscreen state is enabled.
- **/
+ */
 QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
 {
     QRect top, bottom, left, right, total;

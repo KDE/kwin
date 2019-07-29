@@ -583,7 +583,7 @@ void Connection::applyDeviceConfig(Device *device)
 
 void Connection::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
-    if (type == 3 /**SettingsChanged**/ && arg == 0 /** SETTINGS_MOUSE **/) {
+    if (type == 3 /**SettingsChanged**/ && arg == 0 /** SETTINGS_MOUSE */) {
         m_config->reparseConfiguration();
         for (auto it = m_devices.constBegin(), end = m_devices.constEnd(); it != end; ++it) {
             if ((*it)->isPointer()) {

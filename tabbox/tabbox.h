@@ -122,49 +122,49 @@ public:
     /**
      * Returns the currently displayed client ( only works in TabBoxWindowsMode ).
      * Returns 0 if no client is displayed.
-     **/
+     */
     AbstractClient *currentClient();
 
     /**
      * Returns the list of clients potentially displayed ( only works in
      * TabBoxWindowsMode ).
      * Returns an empty list if no clients are available.
-     **/
+     */
     QList<AbstractClient*> currentClientList();
 
     /**
      * Returns the currently displayed virtual desktop ( only works in
      * TabBoxDesktopListMode )
      * Returns -1 if no desktop is displayed.
-     **/
+     */
     int currentDesktop();
 
     /**
      * Returns the list of desktops potentially displayed ( only works in
      * TabBoxDesktopListMode )
      * Returns an empty list if no are available.
-     **/
+     */
     QList< int > currentDesktopList();
 
     /**
      * Change the currently selected client, and notify the effects.
      *
      * @see setCurrentDesktop
-     **/
+     */
     void setCurrentClient(AbstractClient *newClient);
 
     /**
      * Change the currently selected desktop, and notify the effects.
      *
      * @see setCurrentClient
-     **/
+     */
     void setCurrentDesktop(int newDesktop);
 
     /**
      * Sets the current mode to \a mode, either TabBoxDesktopListMode or TabBoxWindowsMode
      *
      * @see mode
-     **/
+     */
     void setMode(TabBoxMode mode);
     TabBoxMode mode() const {
         return m_tabBoxMode;
@@ -173,12 +173,12 @@ public:
     /**
      * Resets the tab box to display the active client in TabBoxWindowsMode, or the
      * current desktop in TabBoxDesktopListMode
-     **/
+     */
     void reset(bool partial_reset = false);
 
     /**
      * Shows the next or previous item, depending on \a next
-     **/
+     */
     void nextPrev(bool next = true);
 
     /**
@@ -194,12 +194,12 @@ public:
      * less 'flicker' to the eyes. You don't need to see the tab box if you're
      * just quickly switching between 2 or 3 windows. It seems to work quite
      * nicely.
-     **/
+     */
     void delayedShow();
 
     /**
      * Notify effects that the tab box is being hidden.
-     **/
+     */
     void hide(bool abort = false);
 
     /**
@@ -207,7 +207,7 @@ public:
      *
      * @see unreference
      * @see isDisplayed
-     **/
+     */
     void reference() {
         ++m_displayRefcount;
     }
@@ -215,7 +215,7 @@ public:
     /**
      * Decreases the reference count. Only when the reference count is 0 will
      * the default tab box be shown.
-     **/
+     */
     void unreference() {
         --m_displayRefcount;
     }
@@ -226,14 +226,14 @@ public:
      *
      * @see reference
      * @see unreference
-     **/
+     */
     bool isDisplayed() const {
         return m_displayRefcount > 0;
     }
 
     /**
      * @returns @c true if TabBox is shown, @c false if replaced by Effect
-     **/
+     */
     bool isShown() const {
         return m_isShown;
     }
@@ -271,7 +271,7 @@ public Q_SLOTS:
     /**
      * Notify effects that the tab box is being shown, and only display the
      * default tab box QFrame if no effect has referenced the tab box.
-     **/
+     */
     void show();
     void close(bool abort = false);
     void accept(bool closeTabBox = true);

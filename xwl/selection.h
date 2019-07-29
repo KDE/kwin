@@ -52,7 +52,7 @@ class X11Source;
  * Independently of each other the class holds the currently active
  * source instance and active transfers relative to the represented
  * selection.
- **/
+ */
 class Selection : public QObject
 {
     Q_OBJECT

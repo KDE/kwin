@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
- **/
+ */
 
 namespace KWin
 {
@@ -42,7 +42,7 @@ namespace TabBox
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.4
- **/
+ */
 class ClientModel
     : public QAbstractItemModel
 {
@@ -71,7 +71,7 @@ public:
      * @param client The TabBoxClient whose index should be returned
      * @return Returns the ModelIndex of given TabBoxClient or an invalid ModelIndex
      * if the model does not contain the given TabBoxClient.
-     **/
+     */
     QModelIndex index(QWeakPointer<TabBoxClient> client) const;
 
     /**
@@ -82,16 +82,16 @@ public:
      * list.
      * @param desktop The desktop for which the list should be created
      * @param partialReset Keep the currently selected client or regenerate everything
-     **/
+     */
     void createClientList(int desktop, bool partialReset = false);
     /**
      * This method is provided as a overload for current desktop
      * @see createClientList
-     **/
+     */
     void createClientList(bool partialReset = false);
     /**
      * @return Returns the current list of TabBoxClients.
-     **/
+     */
     TabBoxClientList clientList() const {
         return m_clientList;
     }
@@ -101,7 +101,7 @@ public Q_SLOTS:
     /**
      * Activates the client at @p index and closes the TabBox.
      * @param index The row index
-     **/
+     */
     void activate(int index);
 
 private:

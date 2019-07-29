@@ -61,7 +61,7 @@ class Shadow;
 
 /**
  * Enum to describe the reason why a Toplevel has to be released.
- **/
+ */
 enum class ReleaseReason {
     Release, ///< Normal Release after e.g. an Unmap notify event (window still valid)
     Destroyed, ///< Release after an Destroy notify event (window no longer valid)
@@ -90,7 +90,7 @@ class KWIN_EXPORT Toplevel
 
     /**
      * Whether the window is on all desktops. That is desktop is -1.
-     **/
+     */
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
 
     Q_PROPERTY(QRect rect READ rect)
@@ -103,104 +103,104 @@ class KWIN_EXPORT Toplevel
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool desktopWindow READ isDesktop)
 
     /**
      * Returns whether the window is a dock (i.e. a panel).
      * See _NET_WM_WINDOW_TYPE_DOCK at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dock READ isDock)
 
     /**
      * Returns whether the window is a standalone (detached) toolbar window.
      * See _NET_WM_WINDOW_TYPE_TOOLBAR at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool toolbar READ isToolbar)
 
     /**
      * Returns whether the window is a torn-off menu.
      * See _NET_WM_WINDOW_TYPE_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool menu READ isMenu)
 
     /**
      * Returns whether the window is a "normal" window, i.e. an application or any other window
      * for which none of the specialized window types fit.
      * See _NET_WM_WINDOW_TYPE_NORMAL at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool normalWindow READ isNormalWindow)
 
     /**
      * Returns whether the window is a dialog window.
      * See _NET_WM_WINDOW_TYPE_DIALOG at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dialog READ isDialog)
 
     /**
      * Returns whether the window is a splashscreen. Note that many (especially older) applications
      * do not support marking their splash windows with this type.
      * See _NET_WM_WINDOW_TYPE_SPLASH at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool splash READ isSplash)
 
     /**
      * Returns whether the window is a utility window, such as a tool window.
      * See _NET_WM_WINDOW_TYPE_UTILITY at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool utility READ isUtility)
 
     /**
      * Returns whether the window is a dropdown menu (i.e. a popup directly or indirectly open
      * from the applications menubar).
      * See _NET_WM_WINDOW_TYPE_DROPDOWN_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dropdownMenu READ isDropdownMenu)
 
     /**
      * Returns whether the window is a popup menu (that is not a torn-off or dropdown menu).
      * See _NET_WM_WINDOW_TYPE_POPUP_MENU at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool popupMenu READ isPopupMenu)
 
     /**
      * Returns whether the window is a tooltip.
      * See _NET_WM_WINDOW_TYPE_TOOLTIP at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool tooltip READ isTooltip)
 
     /**
      * Returns whether the window is a window with a notification.
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool notification READ isNotification)
 
     /**
      * Returns whether the window is a window with a critical notification.
-     **/
+     */
     Q_PROPERTY(bool criticalNotification READ isCriticalNotification)
 
     /**
      * Returns whether the window is an On Screen Display.
-     **/
+     */
     Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
 
     /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool comboBox READ isComboBox)
 
     /**
      * Returns whether the window is a Drag&Drop icon.
      * See _NET_WM_WINDOW_TYPE_DND at https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(bool dndIcon READ isDNDIcon)
 
     /**
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
-     **/
+     */
     Q_PROPERTY(int windowType READ windowType)
 
     Q_PROPERTY(QStringList activities READ activities NOTIFY activitiesChanged)
@@ -208,48 +208,48 @@ class KWIN_EXPORT Toplevel
     /**
      * Whether this Toplevel is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
-     **/
+     */
     Q_PROPERTY(bool managed READ isClient CONSTANT)
 
     /**
      * Whether this Toplevel represents an already deleted window and only kept for the compositor for animations.
-     **/
+     */
     Q_PROPERTY(bool deleted READ isDeleted CONSTANT)
 
     /**
      * Whether the window has an own shape
-     **/
+     */
     Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
 
     /**
      * Whether the window does not want to be animated on window close.
      * There are legit reasons for this like a screenshot application which does not want it's
      * window being captured.
-     **/
+     */
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 
     /**
      * The Id of the Wayland Surface associated with this Toplevel.
      * On X11 only setups the value is @c 0.
-     **/
+     */
     Q_PROPERTY(quint32 surfaceId READ surfaceId NOTIFY surfaceIdChanged)
 
     /**
      * Interface to the Wayland Surface.
      * Relevant only in Wayland, in X11 it will be nullptr
-     **/
+     */
     Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
 
     /**
      * Whether the window is a popup.
-     **/
+     */
     Q_PROPERTY(bool popupWindow READ isPopupWindow)
 
     /**
      * Whether this Toplevel represents the outline.
      *
      * @note It's always @c false if compositing is turned off.
-     **/
+     */
     Q_PROPERTY(bool outline READ isOutline)
 
 public:
@@ -258,7 +258,7 @@ public:
     xcb_window_t window() const;
     /**
      * @return a unique identifier for the Toplevel. On X11 same as @ref window
-     **/
+     */
     virtual quint32 windowId() const;
     QRect geometry() const;
     /**
@@ -266,7 +266,7 @@ public:
      * than the actual geometry, e.g. to support resizing outside the window.
      *
      * Default implementation returns same as geometry.
-     **/
+     */
     virtual QRect inputGeometry() const;
     QSize size() const;
     QPoint pos() const;
@@ -282,13 +282,13 @@ public:
      * The scale of the screen this window is currently on
      * @note The buffer scale can be different.
      * @since 5.12
-     **/
+     */
     qreal screenScale() const; //
     virtual QPoint clientPos() const = 0; // inside of geometry()
     /**
      * Describes how the client's content maps to the window geometry including the frame.
      * The default implementation is a 1:1 mapping meaning the frame is part of the content.
-     **/
+     */
     virtual QPoint clientContentPos() const;
     virtual QSize clientSize() const = 0;
     virtual QRect visibleRect() const; // the area the window occupies on the screen
@@ -327,7 +327,7 @@ public:
      * is located in, 0 if it isn't located on any special desktop (not mapped yet),
      * or NET::OnAllDesktops. Do not use desktop() directly, use
      * isOnDesktop() instead.
-     **/
+     */
     virtual int desktop() const = 0;
     virtual QVector<VirtualDesktop *> desktops() const = 0;
     virtual QStringList activities() const = 0;
@@ -379,13 +379,13 @@ public:
     /**
      * Window will be temporarily painted as if being at the top of the stack.
      * Only available if Compositor is active, if not active, this method is a no-op.
-     **/
+     */
     void elevate(bool elevate);
 
     /**
      * @returns Whether the Toplevel has a Shadow or not
      * @see shadow
-     **/
+     */
     bool hasShadow() const;
     /**
      * Returns the pointer to the Toplevel's Shadow. A Shadow
@@ -394,25 +394,25 @@ public:
      * If a shadow is available hasShadow returns @c true.
      * @returns The Shadow belonging to this Toplevel, may be @c NULL.
      * @see hasShadow
-     **/
+     */
     const Shadow *shadow() const;
     Shadow *shadow();
     /**
      * Updates the Shadow associated with this Toplevel from X11 Property.
      * Call this method when the Property changes or Compositing is started.
-     **/
+     */
     void getShadow();
     /**
      * Whether the Toplevel currently wants the shadow to be rendered. Default
      * implementation always returns @c true.
-     **/
+     */
     virtual bool wantsShadowToBeRendered() const;
 
     /**
      * This method returns the area that the Toplevel window reports to be opaque.
      * It is supposed to only provide valuable information if hasAlpha is @c true .
      * @see hasAlpha
-     **/
+     */
     const QRegion& opaqueRegion() const;
 
     virtual Layer layer() const = 0;
@@ -423,14 +423,14 @@ public:
      * or the reply will be leaked.
      *
      * Returns true if the window was damaged, and false otherwise.
-     **/
+     */
     bool resetAndFetchDamage();
 
     /**
      * Gets the reply from a previous call to resetAndFetchDamage().
      * Calling this function is a no-op if there is no pending reply.
      * Call damage() to return the fetched region.
-     **/
+     */
     void getDamageRegionReply();
 
     bool skipsCloseAnimation() const;
@@ -448,7 +448,7 @@ public:
      *
      * Default implementation returns a translation on negative pos().
      * @see pos
-     **/
+     */
     virtual QMatrix4x4 inputTransformation() const;
 
     /**
@@ -463,7 +463,7 @@ public:
      * The default implementation returns @c false.
      * @see popupDone
      * @since 5.10
-     **/
+     */
     virtual bool hasPopupGrab() const {
         return false;
     }
@@ -474,7 +474,7 @@ public:
      * The default implementation does nothing.
      * @see hasPopupGrab
      * @since 5.10
-     **/
+     */
     virtual void popupDone() {};
 
     /**
@@ -485,7 +485,7 @@ public:
      * @param list The list to search in
      * @param func The condition function (compare std::find_if)
      * @return T* The found Toplevel or @c null if there is no matching Toplevel
-     **/
+     */
     template <class T, class U>
     static T *findInList(const QList<T*> &list, std::function<bool (const U*)> func);
 
@@ -495,12 +495,12 @@ public:
      * Popups can be used to implement popup menus, tooltips, combo boxes, etc.
      *
      * @since 5.15
-     **/
+     */
     virtual bool isPopupWindow() const;
 
     /**
      * A UUID to uniquely identify this Toplevel independent of windowing system.
-     **/
+     */
     QUuid internalId() const
     {
         return m_internalId;
@@ -519,64 +519,64 @@ Q_SIGNALS:
      * Signal emitted when the window's shape state changed. That is if it did not have a shape
      * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's
      * decoration.
-     **/
+     */
     void shapedChanged();
     /**
      * Emitted whenever the state changes in a way, that the Compositor should
      * schedule a repaint of the scene.
-     **/
+     */
     void needsRepaint();
     void activitiesChanged(KWin::Toplevel* toplevel);
     /**
      * Emitted whenever the Toplevel's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Toplevel's geometry changes.
      * @since 4.11
-     **/
+     */
     void screenChanged();
     void skipCloseAnimationChanged();
     /**
      * Emitted whenever the window role of the window changes.
      * @since 5.0
-     **/
+     */
     void windowRoleChanged();
     /**
      * Emitted whenever the window class name or resource name of the window changes.
      * @since 5.0
-     **/
+     */
     void windowClassChanged();
     /**
      * Emitted when a Wayland Surface gets associated with this Toplevel.
      * @since 5.3
-     **/
+     */
     void surfaceIdChanged(quint32);
     /**
      * @since 5.4
-     **/
+     */
     void hasAlphaChanged();
 
     /**
      * Emitted whenever the Surface for this Toplevel changes.
-     **/
+     */
     void surfaceChanged();
 
     /*
      * Emitted when the client's screen changes onto a screen of a different scale
      * or the screen we're on changes
      * @since 5.12
-     **/
+     */
     void screenScaleChanged();
 
     /**
      * Emitted whenever the client's shadow changes.
      * @since 5.15
-     **/
+     */
     void shadowChanged();
 
 protected Q_SLOTS:
     /**
      * Checks whether the screen number for this Toplevel changed and updates if needed.
      * Any method changing the geometry of the Toplevel should call this method.
-     **/
+     */
     void checkScreen();
     void setupCheckScreenConnection();
     void removeCheckScreenConnection();
@@ -598,13 +598,13 @@ protected:
     void getWmClientMachine();
     /**
      * @returns Whether there is a compositor and it is active.
-     **/
+     */
     bool compositing() const;
 
     /**
      * This function fetches the opaque region from this Toplevel.
      * Will only be called on corresponding property changes and for initialization.
-     **/
+     */
     void getWmOpaqueRegion();
 
     void getResourceClass();
@@ -650,7 +650,7 @@ private:
     KWayland::Server::SurfaceInterface *m_surface = nullptr;
     /**
      * An FBO object KWin internal windows might render to.
-     **/
+     */
     QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;

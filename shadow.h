@@ -56,7 +56,7 @@ class Toplevel;
  * 
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @todo React on Toplevel size changes.
- **/
+ */
 class KWIN_EXPORT Shadow : public QObject
 {
     Q_OBJECT
@@ -65,13 +65,13 @@ public:
 
     /**
      * @return Region of the shadow.
-     **/
+     */
     const QRegion &shadowRegion() const {
         return m_shadowRegion;
     };
     /**
      * @return Cached Shadow Quads
-     **/
+     */
     const WindowQuadList &shadowQuads() const {
         return m_shadowQuads;
     };
@@ -87,7 +87,7 @@ public:
      * been withdrawn the method returns @c false. In that case the owner should
      * delete the Shadow.
      * @returns @c true when the shadow has been updated, @c false if the property is not set anymore.
-     **/
+     */
     virtual bool updateShadow();
 
     /**
@@ -99,14 +99,14 @@ public:
      * will return @c NULL.
      * @param toplevel The Toplevel for which the shadow should be created
      * @return Created Shadow or @c NULL in case there is no shadow defined.
-     **/
+     */
     static Shadow *createShadow(Toplevel *toplevel);
 
     /**
      * Reparents the shadow to @p toplevel.
      * Used when a window is deleted.
      * @param toplevel The new parent
-     **/
+     */
     void setToplevel(Toplevel *toplevel);
 
     bool hasDecorationShadow() const {

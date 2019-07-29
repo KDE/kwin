@@ -91,7 +91,7 @@ private:
      * If KWin is compiled with OpenGL ES or without OpenGL at
      * all, @c false is returned.
      * @returns @c true if GLX is available, @c false otherwise and if not build with OpenGL support.
-     **/
+     */
     static bool hasGlx();
 
     template <typename T>

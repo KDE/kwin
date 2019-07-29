@@ -101,7 +101,7 @@ Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
  * client side objects which can be used to create windows.
  * @returns @c true if created successfully, @c false if there was an error
  * @see destroyWaylandConnection
- **/
+ */
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags = AdditionalWaylandInterfaces());
 
 /**
@@ -188,7 +188,7 @@ void initXdgShellPopup(KWayland::Client::Surface *surface, KWayland::Client::Xdg
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.
  * The @p surface gets damaged and committed, thus it's rendered.
- **/
+ */
 void render(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32_Premultiplied);
 
 /**
@@ -199,29 +199,29 @@ void render(KWayland::Client::Surface *surface, const QImage &img);
 /**
  * Waits till a new ShellClient is shown and returns the created ShellClient.
  * If no ShellClient gets shown during @p timeout @c null is returned.
- **/
+ */
 ShellClient *waitForWaylandWindowShown(int timeout = 5000);
 
 /**
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
- **/
+ */
 ShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
 /**
  * Waits for the @p client to be destroyed.
- **/
+ */
 bool waitForWindowDestroyed(AbstractClient *client);
 
 /**
  * Locks the screen and waits till the screen is locked.
  * @returns @c true if the screen could be locked, @c false otherwise
- **/
+ */
 bool lockScreen();
 
 /**
  * Unlocks the screen and waits till the screen is unlocked.
  * @returns @c true if the screen could be unlocked, @c false otherwise
- **/
+ */
 bool unlockScreen();
 }
 

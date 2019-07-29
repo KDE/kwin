@@ -21,7 +21,7 @@ struct ParameterSet;
 
 /**
  * Effect which wobble windows
- **/
+ */
 class WobblyWindowsEffect : public Effect
 {
     Q_OBJECT

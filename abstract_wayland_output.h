@@ -51,7 +51,7 @@ namespace KWin
 
 /**
  * Generic output representation in a Wayland session
- **/
+ */
 class KWIN_EXPORT AbstractWaylandOutput : public AbstractOutput
 {
     Q_OBJECT
@@ -70,7 +70,7 @@ public:
     }
     /**
      * The geometry of this output in global compositor co-ordinates (i.e scaled)
-     **/
+     */
     QRect geometry() const override;
     QSize physicalSize() const override;
     Qt::ScreenOrientation orientation() const override {
@@ -79,7 +79,7 @@ public:
 
     /**
      * Current refresh rate in 1/ms.
-     **/
+     */
     int refreshRate() const override;
 
     bool isInternal() const override {
@@ -91,7 +91,7 @@ public:
 
     /**
      * This sets the changes and tests them against the specific output.
-     **/
+     */
     void setChanges(KWayland::Server::OutputChangeSet *changeset);
 
     QPointer<KWayland::Server::OutputInterface> waylandOutput() const {
@@ -103,7 +103,7 @@ public:
      *
      * This differs from updateDpms as it also removes the wl_output.
      * The default is on.
-     **/
+     */
     void setEnabled(bool enable);
 
 Q_SIGNALS:

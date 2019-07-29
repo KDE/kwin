@@ -29,7 +29,7 @@ namespace KWin
 
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
- **/
+ */
 class KWIN_EXPORT EglOnXBackend : public AbstractEglBackend
 {
 public:
@@ -70,7 +70,7 @@ private:
     bool initRenderingContext();
     /**
      * @brief The OverlayWindow used by this Backend.
-     **/
+     */
     OverlayWindow *m_overlayWindow;
     int surfaceHasSubPost;
     int m_bufferAge;
@@ -88,7 +88,7 @@ private:
 
 /**
  * @brief Texture using an EGLImageKHR.
- **/
+ */
 class EglTexture : public AbstractEglTexture
 {
 public:

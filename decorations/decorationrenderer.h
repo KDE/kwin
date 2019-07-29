@@ -47,7 +47,7 @@ public:
      * Reparents this Renderer to the @p deleted.
      * After this call the Renderer is no longer able to render
      * anything, client() returns a nullptr.
-     **/
+     */
     virtual void reparent(Deleted *deleted);
 
 Q_SIGNALS:
@@ -57,7 +57,7 @@ protected:
     explicit Renderer(DecoratedClientImpl *client);
     /**
      * @returns the scheduled paint region and resets
-     **/
+     */
     QRegion getScheduled();
 
     virtual void render() = 0;

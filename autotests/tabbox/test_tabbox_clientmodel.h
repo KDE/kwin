@@ -32,21 +32,21 @@ private slots:
      * pointer to a deleted TabBoxClient.
      *
      * See bug #303840
-     **/
+     */
     void testLongestCaptionWithNullClient();
     /**
      * Tests the creation of the Client list for the case that
      * there is no active Client, but that Clients actually exist.
      *
      * See BUG: 305449
-     **/
+     */
     void testCreateClientListNoActiveClient();
     /**
      * Tests the creation of the Client list for the case that
      * the active Client is not in the Focus chain.
      *
      * See BUG: 306260
-     **/
+     */
     void testCreateClientListActiveClientNotInFocusChain();
 };
 

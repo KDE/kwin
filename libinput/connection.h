@@ -58,7 +58,7 @@ public:
     /**
      * Sets the screen @p size. This is needed for mapping absolute pointer events to
      * the screen data.
-     **/
+     */
     void setScreenSize(const QSize &size);
 
     void updateScreens();

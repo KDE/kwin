@@ -142,7 +142,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
  * the regular propagateClients function in that it completely ignores managed clients and everything
  * else and also does not update the NETWM property.
  * Called from Effects::destroyInputWindow so far.
- **/
+ */
 void Workspace::stackScreenEdgesUnderOverrideRedirect()
 {
     if (!rootInfo()) {
@@ -154,7 +154,7 @@ void Workspace::stackScreenEdgesUnderOverrideRedirect()
 /**
  * Propagates the managed clients to the world.
  * Called ONLY from updateStackingOrder().
- **/
+ */
 void Workspace::propagateClients(bool propagate_new_clients)
 {
     if (!rootInfo()) {
@@ -241,7 +241,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
  * Returns topmost visible client. Windows on the dock, the desktop
  * or of any other special kind are excluded. Also if the window
  * doesn't accept focus it's excluded.
- **/
+ */
 // TODO misleading name for this method, too many slightly different ways to use it
 AbstractClient* Workspace::topClientOnDesktop(int desktop, int screen, bool unconstrained, bool only_normal) const
 {
@@ -503,7 +503,7 @@ void Workspace::restoreSessionStackingOrder(Client* c)
 
 /**
  * Returns a stacking order based upon \a list that fulfills certain contained.
- **/
+ */
 ToplevelList Workspace::constrainedStackingOrder()
 {
     ToplevelList layer[ NumLayers ];

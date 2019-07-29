@@ -86,7 +86,7 @@ public:
      *
      * @param toplevel The window to be added.
      * @note You can add a toplevel to scene only once.
-     **/
+     */
     void addToplevel(Toplevel *toplevel);
 
     /**
@@ -94,14 +94,14 @@ public:
      *
      * @param toplevel The window to be removed.
      * @note You can remove a toplevel from the scene only once.
-     **/
+     */
     void removeToplevel(Toplevel *toplevel);
 
     /**
      * @brief Creates the Scene backend of an EffectFrame.
      *
      * @param frame The EffectFrame this Scene::EffectFrame belongs to.
-     **/
+     */
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) = 0;
     /**
      * @brief Creates the Scene specific Shadow subclass.
@@ -110,14 +110,14 @@ public:
      * return @c null.
      *
      * @param toplevel The Toplevel for which the Shadow needs to be created.
-     **/
+     */
     virtual Shadow *createShadow(Toplevel *toplevel) = 0;
     /**
      * Method invoked when the screen geometry is changed.
      * Reimplementing classes should also invoke the parent method
      * as it takes care of resizing the overlay window.
      * @param size The new screen geometry size
-     **/
+     */
     virtual void screenGeometryChanged(const QSize &size);
     // Flags controlling how painting is done.
     enum {
@@ -156,7 +156,7 @@ public:
 
     /**
      * Whether the Scene uses an X11 overlay window to perform compositing.
-     **/
+     */
     virtual bool usesOverlayWindow() const = 0;
 
     virtual void triggerFence();
@@ -168,25 +168,25 @@ public:
      * This is used as a hint to the effects system which effects can be supported.
      * If the Scene performs software rendering it is supposed to return @c false,
      * if rendering is hardware accelerated it should return @c true.
-     **/
+     */
     virtual bool animationsSupported() const = 0;
 
     /**
      * The render buffer used by an XRender based compositor scene.
      * Default implementation returns XCB_RENDER_PICTURE_NONE
-     **/
+     */
     virtual xcb_render_picture_t xrenderBufferPicture() const;
 
     /**
      * The QPainter used by a QPainter based compositor scene.
      * Default implementation returns @c nullptr;
-     **/
+     */
     virtual QPainter *scenePainter() const;
 
     /**
      * The render buffer used by a QPainter based compositor.
      * Default implementation returns @c nullptr.
-     **/
+     */
     virtual QImage *qpainterRenderBuffer() const;
 
     /**
@@ -195,7 +195,7 @@ public:
      * Not the OpenGL (ES) extension!
      *
      * Default implementation returns empty list
-     **/
+     */
     virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
 
 Q_SIGNALS:
@@ -269,7 +269,7 @@ private:
 
 /**
  * Factory class to create a Scene. Needs to be implemented by the plugins.
- **/
+ */
 class KWIN_EXPORT SceneFactory : public QObject
 {
     Q_OBJECT
@@ -278,7 +278,7 @@ public:
 
     /**
      * @returns The created Scene, may be @c nullptr.
-     **/
+     */
     virtual Scene *create(QObject *parent = nullptr) const = 0;
 
 protected:
@@ -360,7 +360,7 @@ protected:
      * need to know the actual WindowPixmap subclass used by the concrete Scene implementations.
      *
      * @return The WindowPixmap casted to T* or @c NULL if there is no valid window pixmap.
-     **/
+     */
     template<typename T> T *windowPixmap();
     template<typename T> T *previousWindowPixmap();
     /**
@@ -368,7 +368,7 @@ protected:
      *
      * The inheriting classes need to implement this method to create a new instance of their WindowPixmap subclass.
      * @note Do not use WindowPixmap::create on the created instance. The Scene will take care of that.
-     **/
+     */
     virtual WindowPixmap *createWindowPixmap() = 0;
     Toplevel* toplevel;
     ImageFilterType filter;
@@ -399,7 +399,7 @@ private:
  *
  * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
  * the native pixmap to the respective rendering format.
- **/
+ */
 class KWIN_EXPORT WindowPixmap
 {
 public:
@@ -412,19 +412,19 @@ public:
      *
      * Inheriting classes should re-implement this method in case they need to add further functionality for mapping the
      * native pixmap to the rendering format.
-     **/
+     */
     virtual void create();
     /**
      * @return @c true if the pixmap has been created and is valid, @c false otherwise
-     **/
+     */
     virtual bool isValid() const;
     /**
      * @return The native X11 pixmap handle
-     **/
+     */
     xcb_pixmap_t pixmap() const;
     /**
      * @return The Wayland BufferInterface for this WindowPixmap.
-     **/
+     */
     QPointer<KWayland::Server::BufferInterface> buffer() const;
     const QSharedPointer<QOpenGLFramebufferObject> &fbo() const;
     /**
@@ -433,55 +433,55 @@ public:
      *
      * @return @c true if this WindowPixmap is considered as discarded, @c false otherwise.
      * @see markAsDiscarded
-     **/
+     */
     bool isDiscarded() const;
     /**
      * @brief Marks this WindowPixmap as discarded. From now on isDiscarded will return @c true. This method should
      * only be used by the Window when it changes in a way that a new pixmap is required.
      *
      * @see isDiscarded
-     **/
+     */
     void markAsDiscarded();
     /**
      * The size of the pixmap.
-     **/
+     */
     const QSize &size() const;
     /**
      * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
      * pixmap also contains the decoration which is not rendered into this pixmap, though. This
      * contentsRect tells where inside the complete pixmap the real content is.
-     **/
+     */
     const QRect &contentsRect() const;
     /**
      * @brief Returns the Toplevel this WindowPixmap belongs to.
      * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
-     **/
+     */
     Toplevel *toplevel() const;
 
     /**
      * @returns the parent WindowPixmap in the sub-surface tree
-     **/
+     */
     WindowPixmap *parent() const {
         return m_parent;
     }
 
     /**
      * @returns the current sub-surface tree
-     **/
+     */
     QVector<WindowPixmap*> children() const {
         return m_children;
     }
 
     /**
      * @returns the subsurface this WindowPixmap is for if it is not for a root window
-     **/
+     */
     QPointer<KWayland::Server::SubSurfaceInterface> subSurface() const {
         return m_subSurface;
     }
 
     /**
      * @returns the surface this WindowPixmap references, might be @c null.
-     **/
+     */
     KWayland::Server::SurfaceInterface *surface() const;
 
 protected:
@@ -490,18 +490,18 @@ protected:
     virtual WindowPixmap *createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface);
     /**
      * @return The Window this WindowPixmap belongs to
-     **/
+     */
     Scene::Window *window();
 
     /**
      * Should be called by the implementing subclasses when the Wayland Buffer changed and needs
      * updating.
-     **/
+     */
     virtual void updateBuffer();
 
     /**
      * Sets the sub-surface tree to @p children.
-     **/
+     */
     void setChildren(const QVector<WindowPixmap*> &children) {
         m_children = children;
     }

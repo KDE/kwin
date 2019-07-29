@@ -42,7 +42,7 @@ namespace KWin
  *     onActivated: doSomething()
  * }
  * @endcode
- **/
+ */
 class ScreenEdgeItem : public QObject
 {
     Q_OBJECT
@@ -50,15 +50,15 @@ class ScreenEdgeItem : public QObject
     Q_ENUMS(Mode)
     /**
      * @brief Whether the edge is currently enabled, that is reserved. Default value is @c true.
-     **/
+     */
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     /**
      * @brief Which of the screen edges is to be reserved. Default value is @c NoEdge.
-     **/
+     */
     Q_PROPERTY(Edge edge READ edge WRITE setEdge NOTIFY edgeChanged)
     /**
      * @brief The operation mode for this edge. Default value is @c Mode::Pointer
-     **/
+     */
     Q_PROPERTY(Mode mode READ mode WRITE setMode NOTIFY modeChanged)
 public:
     enum Edge {
@@ -75,7 +75,7 @@ public:
     };
     /**
      * Enum describing the operation modes of the edge.
-     **/
+     */
     enum class Mode {
         Pointer,
         Touch

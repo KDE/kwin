@@ -92,7 +92,7 @@ private:
     qint32 m_internalId = -1;
     /**
      * external/kwayland
-     **/
+     */
     QHash<qint32, qint32> m_idMapper;
     QMetaObject::Connection m_focusGeometryConnection;
     bool m_windowUpdatedInCycle = false;

@@ -46,7 +46,7 @@ public:
     /**
      * Just like QOrientationReading::Orientation,
      * copied to not leak the QSensors API into internal API.
-     **/
+     */
     enum class Orientation {
         Undefined,
         TopUp,

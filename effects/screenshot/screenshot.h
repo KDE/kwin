@@ -64,7 +64,7 @@ public Q_SLOTS:
      * returned to the DBus peer.
      *
      * @param mask The mask for what to include in the screenshot
-     **/
+     */
     Q_SCRIPTABLE QString interactive(int mask = 0);
     /**
      * Starts an interactive window screenshot session. The user can select a window to
@@ -76,7 +76,7 @@ public Q_SLOTS:
      *
      * @param fd File descriptor into which the screenshot should be saved
      * @param mask The mask for what to include in the screenshot
-     **/
+     */
     Q_SCRIPTABLE void interactive(QDBusUnixFileDescriptor fd, int mask = 0);
     Q_SCRIPTABLE void screenshotWindowUnderCursor(int mask = 0);
     /**
@@ -84,7 +84,7 @@ public Q_SLOTS:
      * Functionality requires hardware support, if not available a null string is returned.
      * @param captureCursor Whether to include the cursor in the image
      * @returns Path to stored screenshot, or null string in failure case.
-     **/
+     */
     Q_SCRIPTABLE QString screenshotFullscreen(bool captureCursor = false);
     /**
      * Starts an interactive screenshot session.
@@ -98,7 +98,7 @@ public Q_SLOTS:
      *
      * @param fd File descriptor into which the screenshot should be saved
      * @param captureCursor Whether to include the mouse cursor
-     **/
+     */
     Q_SCRIPTABLE void screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor = false);
     /**
      * Saves a screenshot of the screen identified by @p screen into a file and returns the path to the file.
@@ -106,7 +106,7 @@ public Q_SLOTS:
      * @param screen Number of screen as numbered by QDesktopWidget
      * @param captureCursor Whether to include the cursor in the image
      * @returns Path to stored screenshot, or null string in failure case.
-     **/
+     */
     Q_SCRIPTABLE QString screenshotScreen(int screen, bool captureCursor = false);
     /**
      * Starts an interactive screenshot of a screen session.
@@ -119,7 +119,7 @@ public Q_SLOTS:
      *
      * @param fd File descriptor into which the screenshot should be saved
      * @param captureCursor Whether to include the mouse cursor
-     **/
+     */
     Q_SCRIPTABLE void screenshotScreen(QDBusUnixFileDescriptor fd, bool captureCursor = false);
     /**
      * Saves a screenshot of the selected geometry into a file and returns the path to the file.
@@ -130,7 +130,7 @@ public Q_SLOTS:
      * @param height Height of the region to screenshot
      * @param captureCursor Whether to include the cursor in the image
      * @returns Path to stored screenshot, or null string in failure case.
-     **/
+     */
     Q_SCRIPTABLE QString screenshotArea(int x, int y, int width, int height, bool captureCursor = false);
 
 Q_SIGNALS:

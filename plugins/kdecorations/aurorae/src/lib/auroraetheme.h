@@ -175,21 +175,21 @@ public:
     /**
      * Sets the title edges according to maximized state.
      * Title edges are global to all windows.
-     **/
+     */
     void titleEdges(int &left, int &top, int &right, int &bottom, bool maximized) const;
     void setCompositingActive(bool active);
     bool isCompositingActive() const;
 
     /**
      * @returns true if the theme contains a FrameSvg for specified button.
-     **/
+     */
     bool hasButton(AuroraeButtonType button) const;
     void setBorderSize(KDecoration2::BorderSize size);
     /**
      * Sets the size of the buttons.
      * The available sizes are identical to border sizes, therefore BorderSize is used.
      * @param size The buttons size
-     **/
+     */
     void setButtonSize(KDecoration2::BorderSize size);
     qreal buttonSizeFactor() const;
 
@@ -213,12 +213,12 @@ private:
     /**
      * Sets the borders according to maximized state.
      * Borders are global to all windows.
-     **/
+     */
     void borders(int &left, int &top, int &right, int &bottom, bool maximized) const;
     /**
      * Sets the padding according.
      * Padding is global to all windows.
-     **/
+     */
     void padding(int &left, int &top, int &right, int &bottom) const;
 
     AuroraeThemePrivate* const d;

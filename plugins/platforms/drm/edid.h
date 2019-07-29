@@ -30,7 +30,7 @@ namespace KWin
  * Helper class that can be used for parsing EDID blobs.
  *
  * http://read.pudn.com/downloads110/ebook/456020/E-EDID%20Standard.pdf
- **/
+ */
 class Edid
 {
 public:
@@ -39,27 +39,27 @@ public:
 
     /**
      * Whether this instance of EDID is valid.
-     **/
+     */
     bool isValid() const;
 
     /**
      * Returns physical dimensions of the monitor, in millimeters.
-     **/
+     */
     QSize physicalSize() const;
 
     /**
      * Returns EISA ID of the manufacturer of the monitor.
-     **/
+     */
     QByteArray eisaId() const;
 
     /**
      * Returns the product name of the monitor.
-     **/
+     */
     QByteArray monitorName() const;
 
     /**
      * Returns the serial number of the monitor.
-     **/
+     */
     QByteArray serialNumber() const;
 
 private:

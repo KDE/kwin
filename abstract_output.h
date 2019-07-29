@@ -37,7 +37,7 @@ public:
 
     /**
      * Returns the size of the gamma ramp.
-     **/
+     */
     uint32_t size() const;
 
     /**
@@ -45,12 +45,12 @@ public:
      *
      * The returned pointer can be used for altering the red component
      * in the gamma ramp.
-     **/
+     */
     uint16_t *red();
 
     /**
      * Returns pointer to the first red component in the gamma ramp.
-     **/
+     */
     const uint16_t *red() const;
 
     /**
@@ -58,12 +58,12 @@ public:
      *
      * The returned pointer can be used for altering the green component
      * in the gamma ramp.
-     **/
+     */
     uint16_t *green();
 
     /**
      * Returns pointer to the first green component in the gamma ramp.
-     **/
+     */
     const uint16_t *green() const;
 
     /**
@@ -71,12 +71,12 @@ public:
      *
      * The returned pointer can be used for altering the blue component
      * in the gamma ramp.
-     **/
+     */
     uint16_t *blue();
 
     /**
      * Returns pointer to the first blue component in the gamma ramp.
-     **/
+     */
     const uint16_t *blue() const;
 
 private:
@@ -86,7 +86,7 @@ private:
 
 /**
  * Generic output representation.
- **/
+ */
 class KWIN_EXPORT AbstractOutput : public QObject
 {
     Q_OBJECT
@@ -97,17 +97,17 @@ public:
 
     /**
      * Returns the human readable name of this output.
-     **/
+     */
     virtual QString name() const = 0;
 
     /**
      * Returns geometry of this output in device independent pixels.
-     **/
+     */
     virtual QRect geometry() const = 0;
 
     /**
      * Returns the approximate vertical refresh rate of this output, in mHz.
-     **/
+     */
     virtual int refreshRate() const = 0;
 
     /**
@@ -115,42 +115,42 @@ public:
      * e.g. LVDS, or eDP.
      *
      * Default implementation returns @c false.
-     **/
+     */
     virtual bool isInternal() const;
 
     /**
      * Returns the ratio between physical pixels and logical pixels.
      *
      * Default implementation returns 1.
-     **/
+     */
     virtual qreal scale() const;
 
     /**
      * Returns the physical size of this output, in millimeters.
      *
      * Default implementation returns an invalid QSize.
-     **/
+     */
     virtual QSize physicalSize() const;
 
     /**
      * Returns the orientation of this output.
      *
      * Default implementation returns Qt::PrimaryOrientation.
-     **/
+     */
     virtual Qt::ScreenOrientation orientation() const;
 
     /**
      * Returns the size of the gamma lookup table.
      *
      * Default implementation returns 0.
-     **/
+     */
     virtual int gammaRampSize() const;
 
     /**
      * Sets the gamma ramp of this output.
      *
      * Returns @c true if the gamma ramp was successfully set.
-     **/
+     */
     virtual bool setGammaRamp(const GammaRamp &gamma);
 
 private:

@@ -61,19 +61,19 @@ public:
      * Windowing Systems at startup. For example whether KWin only talks to X11 or also to a Wayland
      * Compositor.
      *
-     **/
+     */
     enum OperationMode {
         /**
          * @brief KWin uses only X11 for managing windows and compositing
-         **/
+         */
         OperationModeX11,
         /**
          * @brief KWin uses only Wayland
-         **/
+         */
         OperationModeWaylandOnly,
         /**
          * @brief KWin uses Wayland and controls a nested Xwayland server.
-         **/
+         */
         OperationModeXwayland
     };
     ~Application() override;
@@ -106,7 +106,7 @@ public:
      * @brief The operation mode used by KWin.
      *
      * @return OperationMode
-     **/
+     */
     OperationMode operationMode() const;
     void setOperationMode(OperationMode mode);
     bool shouldUseWaylandForCompositing() const;
@@ -136,36 +136,36 @@ public:
     /**
      * Creates the KAboutData object for the KWin instance and registers it as
      * KAboutData::setApplicationData.
-     **/
+     */
     static void createAboutData();
 
     /**
      * @returns the X11 Screen number. If not applicable it's set to @c -1.
-     **/
+     */
     static int x11ScreenNumber();
     /**
      * Sets the X11 screen number of this KWin instance to @p screenNumber.
-     **/
+     */
     static void setX11ScreenNumber(int screenNumber);
     /**
      * @returns whether this is a multi head setup on X11.
-     **/
+     */
     static bool isX11MultiHead();
     /**
      * Sets whether this is a multi head setup on X11.
-     **/
+     */
     static void setX11MultiHead(bool multiHead);
 
     /**
      * @returns the X11 root window.
-     **/
+     */
     xcb_window_t x11RootWindow() const {
         return m_rootWindow;
     }
 
     /**
      * @returns the X11 xcb connection
-     **/
+     */
     xcb_connection_t *x11Connection() const {
         return m_connection;
     }
@@ -219,14 +219,14 @@ protected:
     /**
      * Inheriting classes should use this method to set the X11 root window
      * before accessing any X11 specific code pathes.
-     **/
+     */
     void setX11RootWindow(xcb_window_t root) {
         m_rootWindow = root;
     }
     /**
      * Inheriting classes should use this method to set the xcb connection
      * before accessing any X11 specific code pathes.
-     **/
+     */
     void setX11Connection(xcb_connection_t *c) {
         m_connection = c;
         emit x11ConnectionChanged();

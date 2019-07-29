@@ -38,7 +38,7 @@ namespace KWin
  * @param w1 The first window
  * @param w2 The second window
  * @returns @c true if both windows belong to the same window group, @c false otherwise
- **/
+ */
 static inline bool belongToSameGroup(const EffectWindow *w1, const EffectWindow *w2)
 {
     return w1 && w2 && w1->group() && w1->group() == w2->group();

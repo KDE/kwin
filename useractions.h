@@ -53,7 +53,7 @@ class Client;
  * Whenever the menu is changed it should be tried to also adjust the menu in libtaskmanager.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
- **/
+ */
 class KWIN_EXPORT UserActionsMenu : public QObject
 {
     Q_OBJECT
@@ -64,40 +64,40 @@ public:
      * Discards the constructed menu, so that it gets recreates
      * on next show event.
      * @see show
-     **/
+     */
     void discard();
 
     /**
      * @returns Whether the menu is currently visible
-     **/
+     */
     bool isShown() const;
 
     /**
      * grabs keyboard and mouse, workaround(?) for bug #351112
-     **/
+     */
     void grabInput();
 
     /**
      * @returns Whether the menu has a Client set to operate on.
-     **/
+     */
     bool hasClient() const;
     /**
      * Checks whether the given Client @p c is the Client
      * for which the Menu is shown.
      * @param c The Client to compare
      * @returns Whether the Client is the one related to this Menu
-     **/
+     */
     bool isMenuClient(const AbstractClient *c) const;
     /**
      * Closes the Menu and prepares it for next usage.
-     **/
+     */
     void close();
     /**
      * @brief Shows the menu at the given @p pos for the given @p client.
      *
      * @param pos The position where the menu should be shown.
      * @param client The Client for which the Menu has to be shown.
-     **/
+     */
     void show(const QRect &pos, const QWeakPointer<AbstractClient> &client);
 
 public Q_SLOTS:
@@ -109,7 +109,7 @@ public Q_SLOTS:
      * whether to show the activity menu and to invoke the initialization of it.
      *
      * @see initActivityPopup
-     **/
+     */
     void showHideActivityMenu();
 
 private Q_SLOTS:
@@ -117,140 +117,140 @@ private Q_SLOTS:
      * The menu will become visible soon.
      *
      * Adjust the items according to the respective Client.
-     **/
+     */
     void menuAboutToShow();
     /**
      * Adjusts the add to tab group menu to the current value of the Client.
-     **/
+     */
     void rebuildTabGroupPopup();
     /**
      * Adjusts the switch to tab menu to the current values of the Client.
-     **/
+     */
     void rebuildTabListPopup();
     /**
      * Adds the Client as tab to the Client identified by the @p action.
      *
      * @param action The invoked action containing the Client to which the active Client should be tabbed.
-     **/
+     */
     void entabPopupClient(QAction *action);
     /**
      * Activates the selected tabbed Client.
      *
      * @param action The invoked action containing the tabbed Client which should be activated.
-     **/
+     */
     void selectPopupClientTab(QAction *action);
     /**
      * Adjusts the desktop popup to the current values and the location of
      * the Client.
-     **/
+     */
     void desktopPopupAboutToShow();
     /**
      * Adjusts the multipleDesktopsMenu popup to the current values and the location of
      * the Client, Wayland only.
-     **/
+     */
     void multipleDesktopsPopupAboutToShow();
     /**
      * Adjusts the screen popup to the current values and the location of
      * the Client.
-     **/
+     */
     void screenPopupAboutToShow();
     /**
      * Adjusts the activity popup to the current values and the location of
      * the Client.
-     **/
+     */
     void activityPopupAboutToShow();
     /**
      * Sends the client to desktop \a desk
      *
      * @param action Invoked Action containing the Desktop as data element
-     **/
+     */
     void slotSendToDesktop(QAction *action);
     /**
      * Toggle whether the Client is on a desktop (Wayland only)
      *
      * @param action Invoked Action containing the Desktop as data element
-     **/
+     */
     void slotToggleOnVirtualDesktop(QAction *action);
     /**
      * Sends the Client to screen \a screen
      *
      * @param action Invoked Action containing the Screen as data element
-     **/
+     */
     void slotSendToScreen(QAction *action);
     /**
      * Toggles whether the Client is on the \a activity
      *
      * @param action Invoked Action containing the Id of the Activity to toggle the Client on
-     **/
+     */
     void slotToggleOnActivity(QAction *action);
     /**
      * Performs a window operation.
      *
      * @param action Invoked Action containing the Window Operation to perform for the Client
-     **/
+     */
     void slotWindowOperation(QAction *action);
 
 private:
     /**
      * Creates the menu if not already created.
-     **/
+     */
     void init();
     /**
      * Creates the Move To Desktop sub-menu.
-     **/
+     */
     void initDesktopPopup();
     /**
      * Creates the Move To Screen sub-menu.
-     **/
+     */
     void initScreenPopup();
     /**
      * Creates activity popup.
      * I'm going with checkable ones instead of "copy to" and "move to" menus; I *think* it's an easier way.
      * Oh, and an 'all' option too of course
-     **/
+     */
     void initActivityPopup();
     /**
      * Creates the Window Tabbing related menus.
-     **/
+     */
     void initTabbingPopups();
     /**
      * Shows a helper Dialog to inform the user how to get back in case he triggered
      * an action which hides the window decoration (e.g. NoBorder or Fullscreen).
      * @param message The message type to be shown
      * @param c The Client for which the dialog should be shown.
-     **/
+     */
     void helperDialog(const QString &message, const QWeakPointer<AbstractClient> &c);
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
-     **/
+     */
     QMenu* m_menu;
     /**
      * The move to desktop sub menu.
-     **/
+     */
     QMenu* m_desktopMenu;
     /**
      * The move to desktop sub menu, with the Wayland protocol.
-     **/
+     */
     QMenu* m_multipleDesktopsMenu;
     /**
      * The move to screen sub menu.
-     **/
+     */
     QMenu* m_screenMenu;
     /**
      * The activities sub menu.
-     **/
+     */
     QMenu* m_activityMenu;
     /**
      * Menu to add the group to other group.
-     **/
+     */
     QMenu* m_addTabsMenu;
     /**
      * Menu to change tab.
-     **/
+     */
     QMenu* m_switchToTabMenu;
     /**
      * Menu for further entries added by scripts.
-     **/
+     */
     QMenu* m_scriptsMenu;
     QAction* m_resizeOperation;
     QAction* m_moveOperation;
@@ -265,15 +265,15 @@ private:
     QAction* m_shortcutOperation;
     /**
      * Remove client from group.
-     **/
+     */
     QAction* m_removeFromTabGroup;
     /**
      * Close all clients in the group.
-     **/
+     */
     QAction* m_closeTabGroup;
     /**
      * The Client for which the menu is shown.
-     **/
+     */
     QWeakPointer<AbstractClient> m_client;
     QAction *m_rulesOperation = nullptr;
     QAction *m_applicationRulesOperation = nullptr;

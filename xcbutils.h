@@ -176,7 +176,7 @@ static void selectInput(xcb_window_t window, uint32_t events);
  * @see Tree
  * @see CurrentInput
  * @see TransientFor
- **/
+ */
 template <typename Reply,
           typename Cookie,
           typename... Args>
@@ -184,29 +184,29 @@ struct WrapperData
 {
     /**
      * @brief The type returned by the xcb reply function.
-     **/
+     */
     typedef Reply reply_type;
     /**
      * @brief The type returned by the xcb request function.
-     **/
+     */
     typedef Cookie cookie_type;
     /**
      * @brief Variadic arguments combined as a std::tuple.
      * @internal Used for verifying the arguments.
-     **/
+     */
     typedef std::tuple<Args...> argument_types;
     /**
      * @brief The function pointer definition for the xcb request function.
-     **/
+     */
     typedef Cookie (*request_func)(xcb_connection_t*, Args...);
     /**
      * @brief The function pointer definition for the xcb reply function.
-     **/
+     */
     typedef Reply *(*reply_func)(xcb_connection_t*, Cookie, xcb_generic_error_t**);
     /**
      * @brief Number of variadic arguments.
      * @internal Used for verifying the arguments.
-     **/
+     */
     static constexpr std::size_t argumentCount = sizeof...(Args);
 };
 
@@ -214,7 +214,7 @@ struct WrapperData
  * @brief Partial template specialization for WrapperData with no further arguments.
  *
  * This will be used for xcb requests just taking the xcb_connection_t* argument.
- **/
+ */
 template <typename Reply,
           typename Cookie>
 struct WrapperData<Reply, Cookie>
@@ -232,7 +232,7 @@ struct WrapperData<Reply, Cookie>
  *
  * This class contains the complete functionality of the Wrapper. It's only an abstract
  * base class to provide partial template specialization for more specific constructors.
- **/
+ */
 template<typename Data>
 class AbstractWrapper
 {
@@ -295,7 +295,7 @@ public:
      * will crash.
      *
      * Callers of this function take ownership of the pointer.
-     **/
+     */
     inline Reply *take() {
         getReply();
         Reply *ret = m_reply;
@@ -362,7 +362,7 @@ private:
  * @brief Template to compare the arguments of two std::tuple.
  *
  * @internal Used by static_assert in Wrapper
- **/
+ */
 template <typename T1, typename T2, std::size_t I>
 struct tupleCompare
 {
@@ -370,13 +370,13 @@ struct tupleCompare
     typedef typename std::tuple_element<I, T2>::type tuple2Type;
     /**
      * @c true if both tuple have the same arguments, @c false otherwise.
-     **/
+     */
     static constexpr bool value = std::is_same< tuple1Type, tuple2Type >::value && tupleCompare<T1, T2, I-1>::value;
 };
 
 /**
  * @brief Recursive template case for first tuple element.
- **/
+ */
 template <typename T1, typename T2>
 struct tupleCompare<T1, T2, 0>
 {
@@ -387,7 +387,7 @@ struct tupleCompare<T1, T2, 0>
 
 /**
  * @brief Wrapper taking a WrapperData as first template argument and xcb request args as variadic args.
- **/
+ */
 template<typename Data, typename... Args>
 class Wrapper : public AbstractWrapper<Data>
 {
@@ -413,7 +413,7 @@ public:
 
 /**
  * @brief Template specialization for xcb_window_t being first variadic argument.
- **/
+ */
 template<typename Data, typename... Args>
 class Wrapper<Data, xcb_window_t, Args...> : public AbstractWrapper<Data>
 {
@@ -437,7 +437,7 @@ public:
  * @brief Template specialization for no variadic arguments.
  *
  * It's needed to prevent ambiguous constructors being generated.
- **/
+ */
 template<typename Data>
 class Wrapper<Data> : public AbstractWrapper<Data>
 {
@@ -525,7 +525,7 @@ private:
  * @param __REQUEST__ The name of the xcb request, e.g. xcb_get_geometry
  * @param __VA_ARGS__ The variadic template arguments, e.g. xcb_drawable_t
  * @see XCB_WRAPPER
- **/
+ */
 #define XCB_WRAPPER_DATA( __NAME__, __REQUEST__, ... ) \
     struct __NAME__ : public WrapperData< __REQUEST__##_reply_t, __REQUEST__##_cookie_t, __VA_ARGS__ > \
     { \
@@ -544,7 +544,7 @@ private:
  * @param __REQUEST__ The name of the xcb request, passed to XCB_WRAPPER_DATA
  * @param __VA_ARGS__ The variadic template arguments for Wrapper and WrapperData
  * @see XCB_WRAPPER_DATA
- **/
+ */
 #define XCB_WRAPPER( __NAME__, __REQUEST__, ... ) \
     XCB_WRAPPER_DATA( __NAME__##Data, __REQUEST__, __VA_ARGS__ ) \
     typedef Wrapper< __NAME__##Data, __VA_ARGS__ > __NAME__;
@@ -680,7 +680,7 @@ public:
      * @param defaultValue The default value to return in case of error
      * @param ok Set to @c false in case of error, @c true in case of success
      * @return The read value or @p defaultValue in error case
-     **/
+     */
     template <typename T>
     inline typename std::enable_if<!std::is_pointer<T>::value, T>::type value(T defaultValue = T(), bool *ok = nullptr) {
         return value<T>(sizeof(T) * 8, m_type, defaultValue, ok);
@@ -698,7 +698,7 @@ public:
      * @param defaultValue The default value to return in case of error
      * @param ok Set to @c false in case of error, @c true in case of success
      * @return The read value or @p defaultValue in error case
-     **/
+     */
     template <typename T>
     inline typename std::enable_if<!std::is_pointer<T>::value, T>::type value(uint8_t format, xcb_atom_t type, T defaultValue = T(), bool *ok = nullptr) {
         T *reply = value<T*>(format, type, nullptr, ok);
@@ -718,7 +718,7 @@ public:
      * @param defaultValue The default value to return in case of error
      * @param ok Set to @c false in case of error, @c true in case of success
      * @return The read value or @p defaultValue in error case
-     **/
+     */
     template <typename T>
     inline typename std::enable_if<std::is_pointer<T>::value, T>::type value(T defaultValue = nullptr, bool *ok = nullptr) {
         return value<T>(sizeof(typename std::remove_pointer<T>::type) * 8, m_type, defaultValue, ok);
@@ -740,7 +740,7 @@ public:
      * @param defaultValue The default value to return in case of error
      * @param ok Set to @c false in case of error, @c true in case of success
      * @return The read value or @p defaultValue in error case
-     **/
+     */
     template <typename T>
     inline typename std::enable_if<std::is_pointer<T>::value, T>::type value(uint8_t format, xcb_atom_t type, T defaultValue = nullptr, bool *ok = nullptr) {
         if (ok) {
@@ -770,7 +770,7 @@ public:
      * @brief Reads the property as string and returns a QByteArray.
      *
      * In case of error this method returns a null QByteArray.
-     **/
+     */
     inline QByteArray toByteArray(uint8_t format = 8, xcb_atom_t type = XCB_ATOM_STRING, bool *ok = nullptr) {
         bool valueOk = false;
         const char *reply = value<const char*>(format, type, nullptr, &valueOk);
@@ -787,7 +787,7 @@ public:
     }
     /**
      * @brief Overloaded method for convenience.
-     **/
+     */
     inline QByteArray toByteArray(bool *ok) {
         return toByteArray(8, m_type, ok);
     }
@@ -806,7 +806,7 @@ public:
      * @param ok Set to @c false in case of error, @c true in case of success
      * @return bool The first element interpreted as a boolean value or @c false in error case
      * @see value
-     **/
+     */
     inline bool toBool(uint8_t format = 32, xcb_atom_t type = XCB_ATOM_CARDINAL, bool *ok = nullptr) {
         bool *reply = value<bool*>(format, type, nullptr, ok);
         if (!reply) {
@@ -822,7 +822,7 @@ public:
     }
     /**
      * @brief Overloaded method for convenience.
-     **/
+     */
     inline bool toBool(bool *ok) {
         return toBool(32, m_type, ok);
     }
@@ -855,7 +855,7 @@ public:
      * @brief Fill given window pointer with the WM_TRANSIENT_FOR property of a window.
      * @param prop WM_TRANSIENT_FOR property value.
      * @returns @c true on success, @c false otherwise
-     **/
+     */
     inline bool getTransientFor(WindowId *prop) {
         WindowId *windows = value<WindowId*>();
         if (!windows) {
@@ -965,7 +965,7 @@ public:
 private:
     /**
     * NormalHints as specified in ICCCM 4.1.2.3.
-    **/
+    */
     class NormalHints : public Property
     {
     public:
@@ -1307,7 +1307,7 @@ private:
  *
  * For the cases that one is more interested in wrapping the xcb methods the constructor which takes
  * an existing window and the @ref reset method allow to disable the RAII functionality.
- **/
+ */
 class Window
 {
 public:
@@ -1322,7 +1322,7 @@ public:
      * @param window The window to manage.
      * @param destroy Whether the window should be destroyed together with the object.
      * @see reset
-     **/
+     */
     Window(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true);
     /**
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
@@ -1331,7 +1331,7 @@ public:
      * @param mask The mask for the values
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
-     **/
+     */
     Window(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     /**
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
@@ -1341,7 +1341,7 @@ public:
      * @param mask The mask for the values
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
-     **/
+     */
     Window(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     Window(const Window &other) = delete;
     ~Window();
@@ -1355,7 +1355,7 @@ public:
      * @param mask The mask for the values
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
-     **/
+     */
     void create(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     /**
      * Creates a new window for which the responsibility is taken over. If a window had been managed
@@ -1367,24 +1367,24 @@ public:
      * @param mask The mask for the values
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
-     **/
+     */
     void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     /**
      * Frees the existing window and starts to manage the new @p window.
      * If @p destroy is @c true the new managed window will be destroyed together with this
      * object or when reset is called again. If @p destroy is @c false the window will not
      * be destroyed. It is then the responsibility of the caller to destroy the window.
-     **/
+     */
     void reset(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true);
     /**
      * @returns @c true if a window is managed, @c false otherwise.
-     **/
+     */
     bool isValid() const;
     inline const QRect &geometry() const { return m_logicGeometry; }
     /**
      * Configures the window with a new geometry.
      * @param geometry The new window geometry to be used
-     **/
+     */
     void setGeometry(const QRect &geometry);
     void setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     void move(const QPoint &pos);
@@ -1410,7 +1410,7 @@ public:
     void ungrabButton(uint16_t modifiers = XCB_MOD_MASK_ANY, uint8_t button = XCB_BUTTON_INDEX_ANY);
     /**
      * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
-     **/
+     */
     void clear();
     void setBackgroundPixmap(xcb_pixmap_t pixmap);
     void defineCursor(xcb_cursor_t cursor);
@@ -1829,7 +1829,7 @@ void selectInput(xcb_window_t window, uint32_t events)
 
 /**
  * @brief Small helper class to encapsulate SHM related functionality.
- **/
+ */
 class Shm
 {
 public:

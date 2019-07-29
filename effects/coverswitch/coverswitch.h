@@ -116,7 +116,7 @@ private:
      * Updates the caption of the caption frame.
      * Taking care of rewording the desktop client.
      * As well sets the icon for the caption frame.
-     **/
+     */
     void updateCaption();
 
     bool mActivated;

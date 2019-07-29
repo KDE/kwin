@@ -29,7 +29,7 @@ class AbstractOutput;
 
 /**
  * @brief Implementation for backends with Outputs
- **/
+ */
 class KWIN_EXPORT OutputScreens : public Screens
 {
     Q_OBJECT

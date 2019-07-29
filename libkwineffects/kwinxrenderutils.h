@@ -40,7 +40,7 @@ namespace KWin
 {
 /**
  * dumps a QColor into a xcb_render_color_t
- **/
+ */
 KWINXRENDERUTILS_EXPORT xcb_render_color_t preMultiply(const QColor &c, float opacity = 1.0);
 
 /** @internal */
@@ -62,7 +62,7 @@ private:
  * This class wraps XRender's Picture, providing proper initialization,
  * convenience constructors and freeing of resources.
  * It should otherwise act exactly like the Picture type.
- **/
+ */
 class KWINXRENDERUTILS_EXPORT XRenderPicture
 {
 public:
@@ -119,11 +119,11 @@ XFixesRegion::operator xcb_xfixes_region_t()
 /**
  * Static 1x1 picture used to deliver a black pixel with given opacity (for blending performance)
  * Call and Use, the PixelPicture will stay, but may change it's opacity meanwhile. It's NOT threadsafe either
- **/
+ */
 KWINXRENDERUTILS_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
 /**
  * Creates a 1x1 Picture filled with c
- **/
+ */
 KWINXRENDERUTILS_EXPORT XRenderPicture xRenderFill(const xcb_render_color_t &c);
 KWINXRENDERUTILS_EXPORT XRenderPicture xRenderFill(const QColor &c);
 
@@ -132,7 +132,7 @@ KWINXRENDERUTILS_EXPORT XRenderPicture xRenderFill(const QColor &c);
  * NOTICE: the result can be queried as xRenderWindowOffscreenTarget()
  * NOTICE: it may be 0
  * NOTICE: when done call setXRenderWindowOffscreen(false) to continue normal render process
- **/
+ */
 KWINXRENDERUTILS_EXPORT void setXRenderOffscreen(bool b);
 
 /**
@@ -140,49 +140,49 @@ KWINXRENDERUTILS_EXPORT void setXRenderOffscreen(bool b);
  * The window (including shadows) is rendered into the top left corner
  * NOTICE: do NOT call setXRenderOffscreen(true) in addition!
  * NOTICE: do not forget to xRenderPopTarget once you're done to continue the normal render process
- **/
+ */
 KWINXRENDERUTILS_EXPORT void xRenderPushTarget(XRenderPicture *pic);
 KWINXRENDERUTILS_EXPORT void xRenderPopTarget();
 
 /**
  * Whether windows are currently rendered into an offscreen target buffer
- **/
+ */
 KWINXRENDERUTILS_EXPORT bool xRenderOffscreen();
 /**
  * The offscreen buffer as set by the renderer because of setXRenderWindowOffscreen(true)
- **/
+ */
 KWINXRENDERUTILS_EXPORT xcb_render_picture_t xRenderOffscreenTarget();
 
 /**
  * NOTICE: HANDS OFF!!!
  * scene_setXRenderWindowOffscreenTarget() is ONLY to be used by the renderer - DO NOT TOUCH!
- **/
+ */
 KWINXRENDERUTILS_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix);
 /**
  * scene_xRenderWindowOffscreenTarget() is used by the scene to figure the target set by an effect
- **/
+ */
 KWINXRENDERUTILS_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
 
 namespace XRenderUtils
 {
 /**
  * @internal
- **/
+ */
 KWINXRENDERUTILS_EXPORT void init(xcb_connection_t *connection, xcb_window_t rootWindow);
 
 /**
  * Returns the Xrender format that corresponds to the given visual ID.
- **/
+ */
 KWINXRENDERUTILS_EXPORT xcb_render_pictformat_t findPictFormat(xcb_visualid_t visual);
 
 /**
  * Returns the xcb_render_directformat_t for the given Xrender format.
- **/
+ */
 KWINXRENDERUTILS_EXPORT const xcb_render_directformat_t *findPictFormatInfo(xcb_render_pictformat_t format);
 
 /**
  * @internal
- **/
+ */
 KWINXRENDERUTILS_EXPORT void cleanup();
 
 } // namespace XRenderUtils

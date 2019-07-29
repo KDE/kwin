@@ -56,7 +56,7 @@ enum class DragEventReply;
  * and Wayland's internal mechanism.
  *
  * Exists only once per Xwayland session.
- **/
+ */
 class DataBridge : public QObject
 {
     Q_OBJECT

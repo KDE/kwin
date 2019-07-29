@@ -237,7 +237,7 @@ void Workspace::updateMinimizedOfTransients(AbstractClient* c)
 
 /**
  * Sets the client \a c's transient windows' on_all_desktops property to \a on_all_desktops.
- **/
+ */
 void Workspace::updateOnAllDesktopsOfTransients(AbstractClient* c)
 {
     for (auto it = c->transients().constBegin();
@@ -584,7 +584,7 @@ void Client::checkGroupTransients()
 
 /**
  * Check that the window is not transient for itself, and similar nonsense.
- **/
+ */
 xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set)
 {
     xcb_window_t new_property_value = new_transient_for;

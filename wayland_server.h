@@ -137,33 +137,33 @@ public:
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any
-     **/
+     */
     KWayland::Server::SurfaceInterface *findForeignTransientForSurface(KWayland::Server::SurfaceInterface *surface);
 
     /**
      * @returns file descriptor for Xwayland to connect to.
-     **/
+     */
     int createXWaylandConnection();
     void destroyXWaylandConnection();
 
     /**
      * @returns file descriptor to the input method server's socket.
-     **/
+     */
     int createInputMethodConnection();
     void destroyInputMethodConnection();
 
     /**
      * @returns true if screen is locked.
-     **/
+     */
     bool isScreenLocked() const;
     /**
      * @returns whether integration with KScreenLocker is available.
-     **/
+     */
     bool hasScreenLockerIntegration() const;
 
     /**
      * @returns whether any kind of global shortcuts are supported.
-     **/
+     */
     bool hasGlobalShortcutSupport() const;
 
     void createInternalConnection();
@@ -205,20 +205,20 @@ public:
     /**
      * Struct containing information for a created Wayland connection through a
      * socketpair.
-     **/
+     */
     struct SocketPairConnection {
         /**
          * ServerSide Connection
-         **/
+         */
         KWayland::Server::ClientConnection *connection = nullptr;
         /**
          * client-side file descriptor for the socket
-         **/
+         */
         int fd = -1;
     };
     /**
      * Creates a Wayland connection using a socket pair.
-     **/
+     */
     SocketPairConnection createConnection();
 
     void simulateUserActivity();

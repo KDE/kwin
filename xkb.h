@@ -109,7 +109,7 @@ public:
 
     /**
      * Forwards the current modifier state to the Wayland seat
-     **/
+     */
     void forwardModifiers();
 
     void setSeat(KWayland::Server::SeatInterface *seat);

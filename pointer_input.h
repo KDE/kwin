@@ -98,51 +98,51 @@ public:
 
     /**
      * @internal
-     **/
+     */
     void processMotion(const QPointF &pos, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device);
     /**
      * @internal
-     **/
+     */
     void processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta, InputRedirection::PointerAxisSource source, uint32_t time, LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processSwipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processSwipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processSwipeGestureEnd(quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processSwipeGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processPinchGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processPinchGestureEnd(quint32 time, KWin::LibInput::Device *device = nullptr);
     /**
      * @internal
-     **/
+     */
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
 
 private:

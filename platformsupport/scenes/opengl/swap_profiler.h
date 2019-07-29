@@ -30,7 +30,7 @@ namespace KWin
 /**
  * @short Profiler to detect whether we have triple buffering
  * The strategy is to start setBlocksForRetrace(false) but assume blocking and have the system prove that assumption wrong
- **/
+ */
 class KWIN_EXPORT SwapProfiler
 {
 public:
@@ -40,7 +40,7 @@ public:
     /**
      * @return char being 'd' for double, 't' for triple (or more - but non-blocking) buffering and
      * 0 (NOT '0') otherwise, so you can act on "if (char result = SwapProfiler::end()) { fooBar(); }
-     **/
+     */
     char end();
 private:
     QElapsedTimer m_timer;

@@ -51,7 +51,7 @@ class Selection;
 
 /**
  * Base class representing a data source.
- **/
+ */
 class SelectionSource : public QObject
 {
     Q_OBJECT
@@ -87,7 +87,7 @@ private:
 
 /**
  * Representing a Wayland native data source.
- **/
+ */
 class WlSource : public SelectionSource
 {
     Q_OBJECT
@@ -122,7 +122,7 @@ using Mimes = QVector<QPair<QString, xcb_atom_t> >;
 
 /**
  * Representing an X data source.
- **/
+ */
 class X11Source : public SelectionSource
 {
     Q_OBJECT
@@ -135,7 +135,7 @@ public:
      *
      * X11Source does not take ownership of it in general, but if the function
      * is called again, it will delete the previous data source.
-     **/
+     */
     void setDataSource(KWayland::Client::DataSource *dataSource);
     KWayland::Client::DataSource *dataSource() const {
         return m_dataSource;

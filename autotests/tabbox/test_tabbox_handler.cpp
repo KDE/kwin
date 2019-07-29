@@ -36,7 +36,7 @@ private slots:
      * shown is not valid. That is accessing the Pointer
      * to the Client returns an invalid QVariant.
      * BUG: 304620
-     **/
+     */
     void testDontCrashUpdateOutlineNullClient();
 };
 

@@ -55,7 +55,7 @@ Placement::~Placement()
 
 /**
  * Places the client \a c according to the workspace's layout policy
- **/
+ */
 void Placement::place(AbstractClient* c, QRect& area)
 {
     Policy policy = c->rules()->checkPlacement(Default);
@@ -132,7 +132,7 @@ void Placement::place(AbstractClient* c, QRect& area, Policy policy, Policy next
 
 /**
  * Place the client \a c according to a simply "random" placement algorithm.
- **/
+ */
 void Placement::placeAtRandom(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
     const int step  = 24;
@@ -193,7 +193,7 @@ static inline bool isIrrelevant(const AbstractClient *client, const AbstractClie
 
 /**
  * Place the client \a c according to a really smart placement algorithm :-)
- **/
+ */
 void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
     /*
@@ -377,7 +377,7 @@ QPoint Workspace::cascadeOffset(const AbstractClient *c) const
 
 /**
  * Place windows in a cascading order, remembering positions for each desktop
- **/
+ */
 void Placement::placeCascaded(AbstractClient* c, QRect& area, Policy nextPlacement)
 {
     if (!c->size().isValid()) {
@@ -462,7 +462,7 @@ void Placement::placeCascaded(AbstractClient* c, QRect& area, Policy nextPlaceme
 
 /**
  * Place windows centered, on top of all others
- **/
+ */
 void Placement::placeCentered(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
 
@@ -478,7 +478,7 @@ void Placement::placeCentered(AbstractClient* c, const QRect& area, Policy /*nex
 
 /**
  * Place windows in the (0,0) corner, on top of all others
- **/
+ */
 void Placement::placeZeroCornered(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
     // get the maximum allowed windows space and desk's origin
@@ -707,7 +707,7 @@ void AbstractClient::packTo(int left, int top)
 
 /**
  * Moves active window left until in bumps into another window or workarea edge.
- **/
+ */
 void Workspace::slotWindowPackLeft()
 {
     if (active_client && active_client->isMovable())

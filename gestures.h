@@ -44,15 +44,15 @@ Q_SIGNALS:
      * Matching of a gesture started and this Gesture might match.
      * On further evaluation either the signal @ref triggered or
      * @ref cancelled will get emitted.
-     **/
+     */
     void started();
     /**
      * Gesture matching ended and this Gesture matched.
-     **/
+     */
     void triggered();
     /**
      * This Gesture no longer matches.
-     **/
+     */
     void cancelled();
 };
 
@@ -160,7 +160,7 @@ Q_SIGNALS:
     /**
      * The progress of the gesture if a minimumDelta is set.
      * The progress is reported in [0.0,1.0]
-     **/
+     */
     void progress(qreal);
 
 private:

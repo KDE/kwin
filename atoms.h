@@ -93,7 +93,7 @@ public:
 
     /**
      * @internal
-     **/
+     */
     void retrieveHelpers();
 
 private:

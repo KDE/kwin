@@ -30,7 +30,7 @@ namespace KWin {
 
 /**
  * Wraps effects->setActiveFullScreenEffect for the duration of it's lifespan
- **/
+ */
 class FullScreenEffectLock
 {
 public:
@@ -43,7 +43,7 @@ typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
 
 /**
  * Keeps windows alive during animation after they got closed
- **/
+ */
 class KeepAliveLock
 {
 public:
@@ -58,7 +58,7 @@ typedef QSharedPointer<KeepAliveLock> KeepAliveLockPtr;
 
 /**
  * References the previous window pixmap to prevent discarding.
- **/
+ */
 class PreviousWindowPixmapLock
 {
 public:

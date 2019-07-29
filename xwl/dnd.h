@@ -48,7 +48,7 @@ enum class DragEventReply;
 /**
  * Represents the drag and drop mechanism, on X side this is the XDND protocol.
  * For more information on XDND see: https://johnlindal.wixsite.com/xdnd
- **/
+ */
 class Dnd : public Selection
 {
     Q_OBJECT

@@ -40,7 +40,7 @@ namespace KWin
  * @param context The scripting context in which the argument type needs to be validated.
  * @param index The argument index to validate
  * @returns @c true if the argument is of required type, @c false otherwise
- **/
+ */
 template<class T>
 bool validateArgumentType(QScriptContext *context, int index)
 {
@@ -58,7 +58,7 @@ bool validateArgumentType(QScriptContext *context, int index)
  * Throws a type error in the scripting context if there is a type mismatch.
  * @param context The scripting context in which the argument type needs to be validated.
  * @returns @c true if the argument is of required type, @c false otherwise
- **/
+ */
 template<class T>
 bool validateArgumentType(QScriptContext *context)
 {
@@ -99,7 +99,7 @@ bool validateArgumentType(QScriptContext *context)
  * @param min The minimum number of arguments.
  * @param max The maximum number of arguments
  * @returns @c true if the argument count is correct, otherwise @c false
- **/
+ */
 bool validateParameters(QScriptContext *context, int min, int max);
 
 template<class T>

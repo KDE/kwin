@@ -40,7 +40,7 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(EasingCurve)
     /**
      * True if we are the active fullscreen effect
-     **/
+     */
     Q_PROPERTY(bool isActiveFullScreenEffect READ isActiveFullScreenEffect NOTIFY isActiveFullScreenEffectChanged)
 public:
     // copied from kwineffects.h
@@ -78,7 +78,7 @@ public:
      * @param w The window to check
      * @param grabRole The grab role to check
      * @returns @c true if another window has grabbed the effect, @c false otherwise
-     **/
+     */
     Q_SCRIPTABLE bool isGrabbed(KWin::EffectWindow *w, DataRole grabRole);
 
     /**
@@ -91,7 +91,7 @@ public:
      *   would like to grab a window even if it's grabbed by another effect, then
      *   pass @c true.
      * @returns @c true if the window was grabbed successfully, otherwise @c false.
-     **/
+     */
     Q_SCRIPTABLE bool grab(KWin::EffectWindow *w, DataRole grabRole, bool force = false);
 
     /**
@@ -100,7 +100,7 @@ public:
      * @param w The window.
      * @param grabRole The grab role.
      * @returns @c true if the window was ungrabbed successfully, otherwise @c false.
-     **/
+     */
     Q_SCRIPTABLE bool ungrab(KWin::EffectWindow *w, DataRole grabRole);
 
     /**
@@ -108,7 +108,7 @@ public:
      * @param key The key to search for
      * @param defaultValue The value to return if the key is not found
      * @returns The config value if present
-     **/
+     */
     Q_SCRIPTABLE QVariant readConfig(const QString &key, const QVariant defaultValue = QVariant());
     void registerShortcut(QAction *a, QScriptValue callback);
     const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
@@ -136,7 +136,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     /**
      * Signal emitted whenever the effect's config changed.
-     **/
+     */
     void configChanged();
     void animationEnded(KWin::EffectWindow *w, quint64 animationId);
     void isActiveFullScreenEffectChanged();

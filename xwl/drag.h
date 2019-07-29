@@ -38,7 +38,7 @@ using DnDAction = KWayland::Client::DataDeviceManager::DnDAction;
 
 /**
  * An ongoing drag operation.
- **/
+ */
 class Drag : public QObject
 {
     Q_OBJECT

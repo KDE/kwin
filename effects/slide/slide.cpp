@@ -93,7 +93,7 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData &data, int time)
  * @param diff Vector between two points
  * @param w Width of the desktop grid
  * @param h Height of the desktop grid
- **/
+ */
 inline void wrapDiff(QPoint &diff, int w, int h)
 {
     if (diff.x() > w/2) {
@@ -200,7 +200,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
 /**
  * Decide whether given window @p w should be transformed/translated.
  * @returns @c true if given window @p w should be transformed, otherwise @c false
- **/
+ */
 bool SlideEffect::isTranslated(const EffectWindow *w) const
 {
     if (w->isOnAllDesktops()) {
@@ -222,7 +222,7 @@ bool SlideEffect::isTranslated(const EffectWindow *w) const
 /**
  * Decide whether given window @p w should be painted.
  * @returns @c true if given window @p w should be painted, otherwise @c false
- **/
+ */
 bool SlideEffect::isPainted(const EffectWindow *w) const
 {
     if (w->isOnAllDesktops()) {
@@ -295,7 +295,7 @@ void SlideEffect::postPaintScreen()
 /**
  * Get position of the top-left corner of desktop @p id within desktop grid with gaps.
  * @param id ID of a virtual desktop
- **/
+ */
 QPoint SlideEffect::desktopCoords(int id) const
 {
     QPoint c = effects->desktopCoords(id);
@@ -308,7 +308,7 @@ QPoint SlideEffect::desktopCoords(int id) const
 /**
  * Get geometry of desktop @p id within desktop grid with gaps.
  * @param id ID of a virtual desktop
- **/
+ */
 QRect SlideEffect::desktopGeometry(int id) const
 {
     QRect g = effects->virtualScreenGeometry();
@@ -318,7 +318,7 @@ QRect SlideEffect::desktopGeometry(int id) const
 
 /**
  * Get width of a virtual desktop grid.
- **/
+ */
 int SlideEffect::workspaceWidth() const
 {
     int w = effects->workspaceWidth();
@@ -328,7 +328,7 @@ int SlideEffect::workspaceWidth() const
 
 /**
  * Get height of a virtual desktop grid.
- **/
+ */
 int SlideEffect::workspaceHeight() const
 {
     int h = effects->workspaceHeight();

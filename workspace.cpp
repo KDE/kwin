@@ -667,7 +667,7 @@ void Workspace::addUnmanaged(Unmanaged* c)
 
 /**
  * Destroys the client \a c
- **/
+ */
 void Workspace::removeClient(Client* c)
 {
     if (c == active_popup_client)
@@ -862,7 +862,7 @@ void Workspace::reconfigure()
 
 /**
  * Reread settings
- **/
+ */
 
 void Workspace::slotReconfigure()
 {
@@ -1009,7 +1009,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
  * do *not* call this directly; it does not set the activity.
  *
  * Shows/Hides windows according to the stacking order
- **/
+ */
 
 void Workspace::updateCurrentActivity(const QString &new_activity)
 {
@@ -1143,7 +1143,7 @@ void Workspace::selectWmInputEventMask()
  * Sends client \a c to desktop \a desk.
  *
  * Takes care of transients as well.
- **/
+ */
 void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activate)
 {
     if ((desk < 1 && desk != NET::OnAllDesktops) || desk > static_cast<int>(VirtualDesktopManager::self()->count()))
@@ -1182,7 +1182,7 @@ void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activ
  *
  * this is NOT in any way related to XRandR multiscreen
  *
- **/
+ */
 extern bool is_multihead; // main.cpp
 bool Workspace::isOnCurrentHead()
 {
@@ -1217,7 +1217,7 @@ void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
 
 /**
  * Delayed focus functions
- **/
+ */
 void Workspace::delayFocus()
 {
     requestFocus(delayfocus_client);
@@ -1248,7 +1248,7 @@ bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KSt
 /**
  * Puts the focus on a dummy window
  * Just using XSetInputFocus() with None would block keyboard input
- **/
+ */
 void Workspace::focusToNull()
 {
     if (m_nullFocus) {

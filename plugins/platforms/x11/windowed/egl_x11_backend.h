@@ -28,7 +28,7 @@ class X11WindowedBackend;
 
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
- **/
+ */
 class EglX11Backend : public EglOnXBackend
 {
 public:

@@ -65,19 +65,19 @@ public:
 
     /**
      * Schedules a new repaint if no repaint is currently scheduled.
-     **/
+     */
     void scheduleRepaint();
 
     /**
      * Notifies the compositor that SwapBuffers() is about to be called.
      * Rendering of the next frame will be deferred until bufferSwapComplete()
      * is called.
-     **/
+     */
     void aboutToSwapBuffers();
 
     /**
      * Notifies the compositor that a pending buffer swap has completed.
-     **/
+     */
     void bufferSwapComplete();
 
     /**
@@ -89,7 +89,7 @@ public:
      * @return void
      * @see resume
      * @see isActive
-     **/
+     */
     Q_INVOKABLE void suspend(Compositor::SuspendReason reason);
 
     /**
@@ -108,26 +108,26 @@ public:
      * @see isActive
      * @see isCompositingPossible
      * @see isOpenGLBroken
-     **/
+     */
     Q_INVOKABLE void resume(Compositor::SuspendReason reason);
 
     /**
      * Toggles compositing, that is if the Compositor is suspended it will be resumed
      * and if the Compositor is active it will be suspended.
      * Invoked by keybinding (shortcut default: Shift + Alt + F12).
-     **/
+     */
     void toggleCompositing();
 
     /**
      * Re-initializes the Compositor completely.
      * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
-     **/
+     */
     void reinitialize();
 
     /**
      * Whether the Compositor is active. That is a Scene is present and the Compositor is
      * not shutting down itself.
-     **/
+     */
     bool isActive();
     int xrrRefreshRate() const {
         return m_xrrRefreshRate;
@@ -139,11 +139,11 @@ public:
 
     /**
      * Checks whether @p w is the Scene's overlay window.
-     **/
+     */
     bool checkForOverlayWindow(WId w) const;
     /**
      * @returns Whether the Scene's Overlay X Window is visible.
-     **/
+     */
     bool isOverlayWindowVisible() const;
 
     Scene *scene() {
@@ -154,7 +154,7 @@ public:
      * @brief Static check to test whether the Compositor is available and active.
      *
      * @return bool @c true if there is a Compositor and it is active, @c false otherwise
-     **/
+     */
     static bool compositing() {
         return s_compositor != NULL && s_compositor->isActive();
     }
@@ -184,7 +184,7 @@ private:
 
     /**
      * Continues the startup after Scene And Workspace are created
-     **/
+     */
     void startupWithWorkspace();
     void setupX11Support();
 
@@ -200,7 +200,7 @@ private:
     State m_state;
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
-     **/
+     */
     SuspendReasons m_suspended;
 
     QBasicTimer compositeTimer;

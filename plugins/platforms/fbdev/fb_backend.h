@@ -89,7 +89,7 @@ public:
     QImage::Format imageFormat() const;
     /**
      * @returns whether the imageFormat is BGR instead of RGB.
-     **/
+     */
     bool isBGR() const {
         return m_bgr;
     }

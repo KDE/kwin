@@ -73,7 +73,7 @@ public:
      * @brief Factory method to create a backend specific texture.
      *
      * @return :SceneOpenGL::Texture*
-     **/
+     */
     SceneOpenGLTexture *createTexture();
 
     OpenGLBackend *backend() const {
@@ -214,7 +214,7 @@ private:
     void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping);
     /**
      * Whether prepareStates enabled blending and restore states should disable again.
-     **/
+     */
     bool m_blendingEnabled;
 };
 
@@ -277,7 +277,7 @@ private:
  *
  * This class extends Shadow by the Elements required for OpenGL rendering.
  * @author Martin Gräßlin <mgraesslin@kde.org>
- **/
+ */
 class SceneOpenGLShadow
     : public Shadow
 {

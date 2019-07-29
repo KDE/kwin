@@ -125,7 +125,7 @@ void Workspace::commitData(QSessionManager &sm)
  * Stores the current session in the config file
  *
  * @see loadSessionInfo
- **/
+ */
 void Workspace::storeSession(KConfig* config, SMSavePhase phase)
 {
     KConfigGroup cg(config, "Session");
@@ -243,7 +243,7 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
  * Loads the session information from the config file.
  *
  * @see storeSession
- **/
+ */
 void Workspace::loadSessionInfo(const QString &key)
 {
     // NOTICE: qApp->sessionKey() is outdated when this gets invoked
@@ -316,7 +316,7 @@ static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info)
  * We try to find a matching entry in the session.
  *
  * May return 0 if there's no session info for the client.
- **/
+ */
 SessionInfo* Workspace::takeSessionInfo(Client* c)
 {
     SessionInfo *realInfo = 0;

@@ -67,7 +67,7 @@ public Q_SLOTS:
      * @see nightColorConfigChange
      * @see signalNightColorConfigChange
      * @since 5.12
-     **/
+     */
     QHash<QString, QVariant> nightColorInfo();
     /**
      * @brief Allows changing the Night Color configuration.
@@ -93,13 +93,13 @@ public Q_SLOTS:
      * @see nightColorInfo
      * @see signalNightColorConfigChange
      * @since 5.12
-     **/
+     */
     bool setNightColorConfig(QHash<QString, QVariant> data);
     /**
      * @brief For receiving auto location updates, primarily through the KDE Daemon
      * @return void
      * @since 5.12
-     **/
+     */
     void nightColorAutoLocationUpdate(double latitude, double longitude);
 
 Q_SIGNALS:
@@ -112,7 +112,7 @@ Q_SIGNALS:
      * @see nightColorInfo
      * @see nightColorConfigChange
      * @since 5.12
-     **/
+     */
     void nightColorConfigChanged(QHash<QString, QVariant> data);
 
 private:

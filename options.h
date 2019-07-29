@@ -59,57 +59,57 @@ class KWIN_EXPORT Options : public QObject
     /**
      * Whether clicking on a window raises it in FocusFollowsMouse
      * mode or not.
-     **/
+     */
     Q_PROPERTY(bool clickRaise READ isClickRaise WRITE setClickRaise NOTIFY clickRaiseChanged)
     /**
      * Whether autoraise is enabled FocusFollowsMouse mode or not.
-     **/
+     */
     Q_PROPERTY(bool autoRaise READ isAutoRaise WRITE setAutoRaise NOTIFY autoRaiseChanged)
     /**
      * Autoraise interval.
-     **/
+     */
     Q_PROPERTY(int autoRaiseInterval READ autoRaiseInterval WRITE setAutoRaiseInterval NOTIFY autoRaiseIntervalChanged)
     /**
      * Delayed focus interval.
-     **/
+     */
     Q_PROPERTY(int delayFocusInterval READ delayFocusInterval WRITE setDelayFocusInterval NOTIFY delayFocusIntervalChanged)
     /**
      * Whether shade hover is enabled or not.
-     **/
+     */
     Q_PROPERTY(bool shadeHover READ isShadeHover WRITE setShadeHover NOTIFY shadeHoverChanged)
     /**
      * Shade hover interval.
-     **/
+     */
     Q_PROPERTY(int shadeHoverInterval READ shadeHoverInterval WRITE setShadeHoverInterval NOTIFY shadeHoverIntervalChanged)
     /**
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
-     **/
+     */
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
     Q_PROPERTY(int placement READ placement WRITE setPlacement NOTIFY placementChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
     /**
      * The size of the zone that triggers snapping on desktop borders.
-     **/
+     */
     Q_PROPERTY(int borderSnapZone READ borderSnapZone WRITE setBorderSnapZone NOTIFY borderSnapZoneChanged)
     /**
      * The size of the zone that triggers snapping with other windows.
-     **/
+     */
     Q_PROPERTY(int windowSnapZone READ windowSnapZone WRITE setWindowSnapZone NOTIFY windowSnapZoneChanged)
     /**
      * The size of the zone that triggers snapping on the screen center.
-     **/
+     */
     Q_PROPERTY(int centerSnapZone READ centerSnapZone WRITE setCenterSnapZone NOTIFY centerSnapZoneChanged)
     /**
      * Snap only when windows will overlap.
-     **/
+     */
     Q_PROPERTY(bool snapOnlyWhenOverlapping READ isSnapOnlyWhenOverlapping WRITE setSnapOnlyWhenOverlapping NOTIFY snapOnlyWhenOverlappingChanged)
     /**
      * Whether or not we roll over to the other edge when switching desktops past the edge.
-     **/
+     */
     Q_PROPERTY(bool rollOverDesktops READ isRollOverDesktops WRITE setRollOverDesktops NOTIFY rollOverDesktopsChanged)
     /**
      * 0 - 4 , see Workspace::allowClientActivation()
-     **/
+     */
     Q_PROPERTY(int focusStealingPreventionLevel READ focusStealingPreventionLevel WRITE setFocusStealingPreventionLevel NOTIFY focusStealingPreventionLevelChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick WRITE setOperationTitlebarDblClick NOTIFY operationTitlebarDblClickChanged)
     Q_PROPERTY(KWin::Options::WindowOperation operationMaxButtonLeftClick READ operationMaxButtonLeftClick WRITE setOperationMaxButtonLeftClick NOTIFY operationMaxButtonLeftClickChanged)
@@ -131,32 +131,32 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(uint keyCmdAllModKey READ keyCmdAllModKey WRITE setKeyCmdAllModKey NOTIFY keyCmdAllModKeyChanged)
     /**
      * Whether the Geometry Tip should be shown during a window move/resize.
-     **/
+     */
     Q_PROPERTY(bool showGeometryTip READ showGeometryTip WRITE setShowGeometryTip NOTIFY showGeometryTipChanged)
     /**
      * Whether the visible name should be condensed.
-     **/
+     */
     Q_PROPERTY(bool condensedTitle READ condensedTitle WRITE setCondensedTitle NOTIFY condensedTitleChanged)
     /**
      * Whether a window gets maximized when it reaches top screen edge while being moved.
-     **/
+     */
     Q_PROPERTY(bool electricBorderMaximize READ electricBorderMaximize WRITE setElectricBorderMaximize NOTIFY electricBorderMaximizeChanged)
     /**
      * Whether a window is tiled to half screen when reaching left or right screen edge while been moved.
-     **/
+     */
     Q_PROPERTY(bool electricBorderTiling READ electricBorderTiling WRITE setElectricBorderTiling NOTIFY electricBorderTilingChanged)
     /**
      * Whether a window is tiled to half screen when reaching left or right screen edge while been moved.
-     **/
+     */
     Q_PROPERTY(float electricBorderCornerRatio READ electricBorderCornerRatio WRITE setElectricBorderCornerRatio NOTIFY electricBorderCornerRatioChanged)
     Q_PROPERTY(bool borderlessMaximizedWindows READ borderlessMaximizedWindows WRITE setBorderlessMaximizedWindows NOTIFY borderlessMaximizedWindowsChanged)
     /**
      * timeout before non-responding application will be killed after attempt to close.
-     **/
+     */
     Q_PROPERTY(int killPingTimeout READ killPingTimeout WRITE setKillPingTimeout NOTIFY killPingTimeoutChanged)
     /**
      * Whether to hide utility windows for inactive applications.
-     **/
+     */
     Q_PROPERTY(bool hideUtilityWindowsForInactive READ isHideUtilityWindowsForInactive WRITE setHideUtilityWindowsForInactive NOTIFY hideUtilityWindowsForInactiveChanged)
     Q_PROPERTY(bool inactiveTabsSkipTaskbar READ isInactiveTabsSkipTaskbar WRITE setInactiveTabsSkipTaskbar NOTIFY inactiveTabsSkipTaskbarChanged)
     Q_PROPERTY(bool autogroupSimilarWindows READ isAutogroupSimilarWindows WRITE setAutogroupSimilarWindows NOTIFY autogroupSimilarWindowsChanged)
@@ -168,7 +168,7 @@ class KWIN_EXPORT Options : public QObject
      * 0 = no, 1 = yes when transformed,
      * 2 = try trilinear when transformed; else 1,
      * -1 = auto
-     **/
+     */
     Q_PROPERTY(int glSmoothScale READ glSmoothScale WRITE setGlSmoothScale NOTIFY glSmoothScaleChanged)
     Q_PROPERTY(bool xrenderSmoothScale READ isXrenderSmoothScale WRITE setXrenderSmoothScale NOTIFY xrenderSmoothScaleChanged)
     Q_PROPERTY(qint64 maxFpsInterval READ maxFpsInterval WRITE setMaxFpsInterval NOTIFY maxFpsIntervalChanged)
@@ -179,7 +179,7 @@ class KWIN_EXPORT Options : public QObject
      * Whether strict binding follows the driver or has been overwritten by a user defined config value.
      * If @c true glStrictBinding is set by the OpenGL Scene during initialization.
      * If @c false glStrictBinding is set from a config value and not updated during scene initialization.
-     **/
+     */
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
@@ -198,17 +198,17 @@ public:
      * Note that FocusUnderMouse and FocusStrictlyUnderMouse are not
      * particulary useful. They are only provided for old-fashined
      * die-hard UNIX people ;-)
-     **/
+     */
     enum FocusPolicy {
         /**
          * Clicking into a window activates it. This is also the default.
-         **/
+         */
         ClickToFocus,
         /**
          * Moving the mouse pointer actively onto a normal window activates it.
          * For convenience, the desktop and windows on the dock are excluded.
          * They require clicking.
-         **/
+         */
         FocusFollowsMouse,
         /**
          * The window that happens to be under the mouse pointer becomes active.
@@ -217,14 +217,14 @@ public:
          * usually unsable with the keyboard. Note that the desktop and windows on
          * the dock are excluded for convenience. They get focus only when clicking
          * on it.
-         **/
+         */
         FocusUnderMouse,
         /**
          * This is even worse than FocusUnderMouse. Only the window under the mouse
          * pointer is active. If the mouse points nowhere, nothing has the focus. If
          * the mouse points onto the desktop, the desktop has focus. The same holds
          * for windows on the dock.
-         **/
+         */
         FocusStrictlyUnderMouse
     };
 
@@ -238,49 +238,49 @@ public:
     /**
      * Whether clicking on a window raises it in FocusFollowsMouse
      * mode or not.
-     **/
+     */
     bool isClickRaise() const {
         return m_clickRaise;
     }
 
     /**
      * Whether autoraise is enabled FocusFollowsMouse mode or not.
-     **/
+     */
     bool isAutoRaise() const {
         return m_autoRaise;
     }
 
     /**
      * Autoraise interval
-     **/
+     */
     int autoRaiseInterval() const {
         return m_autoRaiseInterval;
     }
 
     /**
      * Delayed focus interval.
-     **/
+     */
     int delayFocusInterval() const {
         return m_delayFocusInterval;
     }
 
     /**
      * Whether shade hover is enabled or not.
-     **/
+     */
     bool isShadeHover() const {
         return m_shadeHover;
     }
 
     /**
      * Shade hover interval.
-     **/
+     */
     int shadeHoverInterval() {
         return m_shadeHoverInterval;
     }
 
     /**
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
-     **/
+     */
     bool isSeparateScreenFocus() const {
         return m_separateScreenFocus;
     }
@@ -295,21 +295,21 @@ public:
 
     /**
      * The size of the zone that triggers snapping on desktop borders.
-     **/
+     */
     int borderSnapZone() const {
         return m_borderSnapZone;
     }
 
     /**
      * The size of the zone that triggers snapping with other windows.
-     **/
+     */
     int windowSnapZone() const {
         return m_windowSnapZone;
     }
 
     /**
      * The size of the zone that triggers snapping on the screen center.
-     **/
+     */
     int centerSnapZone() const {
         return m_centerSnapZone;
     }
@@ -317,14 +317,14 @@ public:
 
     /**
      * Snap only when windows will overlap.
-     **/
+     */
     bool isSnapOnlyWhenOverlapping() const {
         return m_snapOnlyWhenOverlapping;
     }
 
     /**
      * Whether or not we roll over to the other edge when switching desktops past the edge.
-     **/
+     */
     bool isRollOverDesktops() const {
         return m_rollOverDesktops;
     }
@@ -333,7 +333,7 @@ public:
      * Returns the focus stealing prevention level.
      *
      * @see allowClientActivation
-     **/
+     */
     int focusStealingPreventionLevel() const {
         return m_focusStealingPreventionLevel;
     }
@@ -473,31 +473,31 @@ public:
 
     /**
      * @returns true if the Geometry Tip should be shown during a window move/resize.
-     **/
+     */
     bool showGeometryTip() const;
 
     /**
      * Returns whether the user prefers his caption clean.
-     **/
+     */
     bool condensedTitle() const;
 
     /**
      * @returns true if a window gets maximized when it reaches top screen edge
      * while being moved.
-     **/
+     */
     bool electricBorderMaximize() const {
         return electric_border_maximize;
     }
     /**
      * @returns true if window is tiled to half screen when reaching left or
      * right screen edge while been moved.
-     **/
+     */
     bool electricBorderTiling() const {
         return electric_border_tiling;
     }
     /**
      * @returns the factor that determines the corner part of the edge (ie. 0.1 means tiny corner)
-     **/
+     */
     float electricBorderCornerRatio() const {
         return electric_border_corner_ratio;
     }
@@ -508,14 +508,14 @@ public:
 
     /**
      * Timeout before non-responding application will be killed after attempt to close.
-     **/
+     */
     int killPingTimeout() const {
         return m_killPingTimeout;
     }
 
     /**
      * Whether to hide utility windows for inactive applications.
-     **/
+     */
     bool isHideUtilityWindowsForInactive() const {
         return m_hideUtilityWindowsForInactive;
     }
@@ -532,7 +532,7 @@ public:
 
     /**
      * Returns the animation time factor for desktop effects.
-     **/
+     */
     double animationTimeFactor() const;
 
     //----------------------
@@ -771,11 +771,11 @@ public:
 
     /**
      * Performs loading all settings except compositing related.
-     **/
+     */
     void loadConfig();
     /**
      * Performs loading of compositing settings which do not depend on OpenGL.
-     **/
+     */
     bool loadCompositingConfig(bool force);
     void reparseConfiguration();
 

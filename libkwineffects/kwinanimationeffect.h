@@ -105,7 +105,7 @@ class AnimationEffectPrivate;
  * standard attributes(e.g. size, position, etc) satisfy your requirements.
  *
  * @since 4.8
- **/
+ */
 class KWINEFFECTS_EXPORT AnimationEffect : public Effect
 {
     Q_OBJECT
@@ -130,7 +130,7 @@ public:
      * This enum type is used to specify the direction of the animation.
      *
      * @since 5.15
-     **/
+     */
     enum Direction {
         Forward, ///< The animation goes from source to target.
         Backward ///< The animation goes from target to source.
@@ -141,22 +141,22 @@ public:
      * This enum type is used to specify when the animation should be terminated.
      *
      * @since 5.15
-     **/
+     */
     enum TerminationFlag {
         /**
          * Don't terminate the animation when it reaches source or target position.
-         **/
+         */
         DontTerminate     = 0x00,
         /**
          * Terminate the animation when it reaches the source position. An animation
          * can reach the source position if its direction was changed to go backward
          * (from target to source).
-         **/
+         */
         TerminateAtSource = 0x01,
         /**
          * Terminate the animation when it reaches the target position. If this flag
          * is not set, then the animation will be persistent.
-         **/
+         */
         TerminateAtTarget = 0x02
     };
     Q_FLAGS(TerminationFlag)
@@ -175,7 +175,7 @@ public:
      *
      * If you shadow _windowClosed or connect your slot to EffectsHandler::windowClosed()
      * after _windowClosed was connected, animations for closing windows will fail.
-     **/
+     */
     AnimationEffect();
     ~AnimationEffect() override;
 
@@ -194,7 +194,7 @@ public:
      * @param meta Where the metadata is stored.
      * @returns Stored metadata.
      * @since 4.8
-     **/
+     */
     static int metaData(MetaType type, uint meta );
 
     /**
@@ -204,7 +204,7 @@ public:
      * @param value The data to be stored.
      * @param meta Where the metadata will be stored.
      * @since 4.8
-     **/
+     */
     static void setMetaData(MetaType type, uint value, uint &meta );
 
     // Reimplemented from KWin::Effect.
@@ -218,7 +218,7 @@ public:
      * Gaussian (bumper) animation curve for QEasingCurve.
      *
      * @since 4.8
-     **/
+     */
     static qreal qecGaussian(qreal progress)
     {
         progress = 2*progress - 1;
@@ -228,7 +228,7 @@ public:
 
     /**
      * @since 4.8
-     **/
+     */
     static inline qint64 clock() {
         return s_clock.elapsed();
     }
@@ -257,7 +257,7 @@ protected:
      * @param keepAlive Whether closed windows should be kept alive during animation.
      * @returns An ID that you can use to cancel a running animation.
      * @since 4.8
-     **/
+     */
     quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false, bool keepAlive = true)
     { return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive); }
 
@@ -287,7 +287,7 @@ protected:
      * @param keepAlive Whether closed windows should be kept alive during animation.
      * @returns An ID that you need to use to cancel this manipulation.
      * @since 4.11
-     **/
+     */
     quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false, bool keepAlive = true)
     { return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive); }
 
@@ -303,7 +303,7 @@ protected:
      * @returns @c true if the animation was retargetted successfully, @c false otherwise.
      * @note You can NOT retarget an animation that just has just ended!
      * @since 5.6
-     **/
+     */
     bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
 
     /**
@@ -317,7 +317,7 @@ protected:
      * @returns @c true if the direction of the animation was changed successfully,
      *   otherwise @c false.
      * @since 5.15
-     **/
+     */
     bool redirect(quint64 animationId,
                   Direction direction,
                   TerminationFlags terminationFlags = TerminateAtSource);
@@ -329,7 +329,7 @@ protected:
      * @returns @c true if the animation was fast-forwarded successfully, otherwise
      *   @c false.
      * @since 5.15
-     **/
+     */
     bool complete(quint64 animationId);
 
     /**
@@ -342,7 +342,7 @@ protected:
      * @param a The animated attribute.
      * @param meta Originally supplied metadata to animate() or set().
      * @since 4.8
-     **/
+     */
     virtual void animationEnded(EffectWindow *w, Attribute a, uint meta)
     {Q_UNUSED(w); Q_UNUSED(a); Q_UNUSED(meta);}
 
@@ -357,7 +357,7 @@ protected:
      * @note If you intend to run another animation on the (Deleted) window, you have
      *   to do that before cancelling the old animation (to keep the window around).
      * @since 4.11
-     **/
+     */
     bool cancel(quint64 animationId);
 
     /**
@@ -371,18 +371,18 @@ protected:
      * @param progress Current progress value.
      * @param meta The metadata.
      * @since 4.8
-     **/
+     */
     virtual void genericAnimation( EffectWindow *w, WindowPaintData &data, float progress, uint meta )
     {Q_UNUSED(w); Q_UNUSED(data); Q_UNUSED(progress); Q_UNUSED(meta);}
 
     /**
      * @internal
-     **/
+     */
     typedef QMap<EffectWindow *, QPair<QList<AniData>, QRect> > AniMap;
 
     /**
      * @internal
-     **/
+     */
     AniMap state() const;
 
 private:

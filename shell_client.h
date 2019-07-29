@@ -42,7 +42,7 @@ namespace KWin
 
 /**
  * @brief The reason for which the server pinged a client surface
- **/
+ */
 enum class PingReason {
     CloseWindow = 0,
     FocusWindow
@@ -120,7 +120,7 @@ public:
      * Note that processes started by kwin will share its process id.
      * @since 5.11
      * @returns the process if for this client.
-     **/
+     */
     pid_t pid() const override;
 
     bool isLockScreen() const override;
@@ -200,12 +200,12 @@ private Q_SLOTS:
 private:
     /**
      *  Called when the shell is created.
-     **/
+     */
     void init();
     /**
      * Called for the XDG case when the shell surface is committed to the surface.
      * At this point all initial properties should have been set by the client.
-     **/
+     */
     void finishInit();
     template <class T>
     void initSurface(T *shellSurface);

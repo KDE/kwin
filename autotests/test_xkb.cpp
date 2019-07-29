@@ -460,7 +460,7 @@ static const TransKey g_rgQtToSymX[] = {
     { Qt::Key_ydiaeresis,     XKB_KEY_ydiaeresis, Qt::KeyboardModifiers() },
     /*
      * Numpad
-     **/
+     */
     { Qt::Key_0, XKB_KEY_KP_0, Qt::KeypadModifier },
     { Qt::Key_1, XKB_KEY_KP_1, Qt::KeypadModifier },
     { Qt::Key_2, XKB_KEY_KP_2, Qt::KeypadModifier },

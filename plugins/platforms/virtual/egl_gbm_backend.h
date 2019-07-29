@@ -29,7 +29,7 @@ class GLRenderTarget;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
- **/
+ */
 class EglGbmBackend : public AbstractEglBackend
 {
 public:
@@ -58,7 +58,7 @@ private:
 
 /**
  * @brief Texture using an EGLImageKHR.
- **/
+ */
 class EglGbmTexture : public AbstractEglTexture
 {
 public:
