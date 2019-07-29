@@ -52,11 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/server_decoration_palette_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
 
-#include <KDesktopFile>
-
 #include <QFileInfo>
-#include <QOpenGLFramebufferObject>
-#include <QWindow>
 
 #include <sys/types.h>
 #include <unistd.h>
