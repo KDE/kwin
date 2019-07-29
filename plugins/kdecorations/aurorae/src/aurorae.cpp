@@ -306,7 +306,6 @@ void Decoration::init()
             const KConfigGroup themeGroup(conf, m_themeName.mid(16));
             theme->setButtonSize((KDecoration2::BorderSize)(themeGroup.readEntry<int>("ButtonSize",
                                                                                       int(KDecoration2::BorderSize::Normal) - s_indexMapper) + s_indexMapper));
-            updateBorders();
         };
         connect(this, &Decoration::configChanged, theme, readButtonSize);
         readButtonSize();
@@ -404,6 +403,18 @@ void Decoration::init()
         }
     }
     setupBorders(m_item);
+    // TODO: Is there a more efficient way to react to border changes?
+    auto trackBorders = [this](KWin::Borders *borders) {
+        if (!borders) {
+            return;
+        }
+        connect(borders, &KWin::Borders::leftChanged, this, &Decoration::updateBorders);
+        connect(borders, &KWin::Borders::rightChanged, this, &Decoration::updateBorders);
+        connect(borders, &KWin::Borders::topChanged, this, &Decoration::updateBorders);
+        connect(borders, &KWin::Borders::bottomChanged, this, &Decoration::updateBorders);
+    };
+    trackBorders(m_borders);
+    trackBorders(m_maximizedBorders);
     if (m_extendedBorders) {
         auto updateExtendedBorders = [this] {
             setResizeOnlyBorders(*m_extendedBorders);
