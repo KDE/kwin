@@ -223,7 +223,7 @@ void Client::releaseWindow(bool on_shutdown)
     deleting = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);
     }
 #endif
@@ -299,7 +299,7 @@ void Client::destroyClient()
     deleting = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);
     }
 #endif
