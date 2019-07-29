@@ -141,7 +141,7 @@ void TestScreens::testSize()
     using namespace KWin;
     MockWorkspace ws;
     MockScreens *mockScreens = static_cast<MockScreens*>(Screens::create(&ws));
-    QSignalSpy sizeChangedSpy(screens(), SIGNAL(sizeChanged()));
+    QSignalSpy sizeChangedSpy(screens(), &KWin::Screens::sizeChanged);
     QVERIFY(sizeChangedSpy.isValid());
 
     QCOMPARE(screens()->size(), QSize(100, 100));
@@ -160,7 +160,7 @@ void TestScreens::testCount()
     using namespace KWin;
     MockWorkspace ws;
     MockScreens *mockScreens = static_cast<MockScreens*>(Screens::create(&ws));
-    QSignalSpy countChangedSpy(screens(), SIGNAL(countChanged(int,int)));
+    QSignalSpy countChangedSpy(screens(), &KWin::Screens::countChanged);
     QVERIFY(countChangedSpy.isValid());
 
     QCOMPARE(screens()->count(), 1);
@@ -185,7 +185,7 @@ void TestScreens::testCount()
     QCOMPARE(screens()->count(), 1);
 
     // setting the same geometries shouldn't emit the signal, but we should get a changed signal
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &KWin::Screens::changed);
     QVERIFY(changedSpy.isValid());
     mockScreens->setGeometries(geometries);
     QVERIFY(changedSpy.wait());
@@ -211,7 +211,7 @@ void TestScreens::testIntersecting()
     using namespace KWin;
     MockWorkspace ws;
     MockScreens *mockScreens = static_cast<MockScreens*>(Screens::create(&ws));
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &KWin::Screens::changed);
     QVERIFY(changedSpy.isValid());
     QFETCH(QList<QRect>, geometries);
     mockScreens->setGeometries(geometries);
@@ -239,7 +239,7 @@ void TestScreens::testCurrent()
     using namespace KWin;
     MockWorkspace ws;
     Screens::create(&ws);
-    QSignalSpy currentChangedSpy(screens(), SIGNAL(currentChanged()));
+    QSignalSpy currentChangedSpy(screens(), &KWin::Screens::currentChanged);
     QVERIFY(currentChangedSpy.isValid());
 
     QFETCH(int, current);
@@ -253,7 +253,7 @@ void TestScreens::testCurrentClient()
     using namespace KWin;
     MockWorkspace ws;
     MockScreens *mockScreens = static_cast<MockScreens*>(Screens::create(&ws));
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &KWin::Screens::changed);
     QVERIFY(changedSpy.isValid());
     mockScreens->setGeometries(QList<QRect>{{QRect{0, 0, 100, 100}, QRect{100, 0, 100, 100}}});
     // first is before it's updated
@@ -261,7 +261,7 @@ void TestScreens::testCurrentClient()
     // second is after it's updated
     QVERIFY(changedSpy.wait());
 
-    QSignalSpy currentChangedSpy(screens(), SIGNAL(currentChanged()));
+    QSignalSpy currentChangedSpy(screens(), &KWin::Screens::currentChanged);
     QVERIFY(currentChangedSpy.isValid());
 
     // create a mock client
@@ -312,7 +312,7 @@ void TestScreens::testCurrentWithFollowsMouse()
     using namespace KWin;
     MockWorkspace ws;
     MockScreens *mockScreens = static_cast<MockScreens*>(Screens::create(&ws));
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &KWin::Screens::changed);
     QVERIFY(changedSpy.isValid());
     screens()->setCurrentFollowsMouse(true);
     QCOMPARE(screens()->current(), 0);
@@ -347,7 +347,7 @@ void TestScreens::testCurrentPoint()
     using namespace KWin;
     MockWorkspace ws;
     MockScreens *mockScreens = static_cast<MockScreens*>(Screens::create(&ws));
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &KWin::Screens::changed);
     QVERIFY(changedSpy.isValid());
 
     QFETCH(QList<QRect>, geometries);

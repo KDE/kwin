@@ -132,11 +132,11 @@ void TestVirtualDesktops::count()
     // start with a useful desktop count
     vds->setCount(s_countInitValue);
 
-    QSignalSpy spy(vds, SIGNAL(countChanged(uint,uint)));
-    QSignalSpy desktopsRemoved(vds, SIGNAL(desktopRemoved(KWin::VirtualDesktop *)));
+    QSignalSpy spy(vds, &VirtualDesktopManager::countChanged);
+    QSignalSpy desktopsRemoved(vds, &VirtualDesktopManager::desktopRemoved);
 
     auto vdToRemove = vds->desktops().last();
-    
+
     QFETCH(uint, request);
     QFETCH(uint, result);
     QFETCH(bool, signal);
@@ -186,7 +186,7 @@ void TestVirtualDesktops::navigationWrapsAround()
     vds->setNavigationWrappingAround(init);
     QCOMPARE(vds->isNavigationWrappingAround(), init);
 
-    QSignalSpy spy(vds, SIGNAL(navigationWrappingAroundChanged()));
+    QSignalSpy spy(vds, &VirtualDesktopManager::navigationWrappingAroundChanged);
     vds->setNavigationWrappingAround(request);
     QCOMPARE(vds->isNavigationWrappingAround(), result);
     QCOMPARE(spy.isEmpty(), !signal);
@@ -219,7 +219,7 @@ void TestVirtualDesktops::current()
     QVERIFY(vds->setCurrent(init));
     QCOMPARE(vds->current(), init);
 
-    QSignalSpy spy(vds, SIGNAL(currentChanged(uint,uint)));
+    QSignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
 
     QFETCH(uint, request);
     QFETCH(uint, result);
@@ -261,7 +261,7 @@ void TestVirtualDesktops::currentChangeOnCountChange()
     vds->setCount(initCount);
     vds->setCurrent(initCurrent);
 
-    QSignalSpy spy(vds,  SIGNAL(currentChanged(uint,uint)));
+    QSignalSpy spy(vds, &VirtualDesktopManager::currentChanged);
 
     QFETCH(uint, request);
     QFETCH(uint, current);
@@ -528,7 +528,7 @@ void TestVirtualDesktops::updateLayout_data()
 void TestVirtualDesktops::updateLayout()
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    QSignalSpy spy(vds, SIGNAL(layoutChanged(int,int)));
+    QSignalSpy spy(vds, &VirtualDesktopManager::layoutChanged);
     // call update layout - implicitly through setCount
     QFETCH(uint, desktop);
     QFETCH(QSize, result);

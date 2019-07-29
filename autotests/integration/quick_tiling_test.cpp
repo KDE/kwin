@@ -255,9 +255,9 @@ void QuickTilingTest::testQuickMaximizing()
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
-    QSignalSpy maximizeChangedSpy1(c, SIGNAL(clientMaximizedStateChanged(KWin::AbstractClient*,MaximizeMode)));
+    QSignalSpy maximizeChangedSpy1(c, qOverload<AbstractClient *, MaximizeMode>(&AbstractClient::clientMaximizedStateChanged));
     QVERIFY(maximizeChangedSpy1.isValid());
-    QSignalSpy maximizeChangedSpy2(c, SIGNAL(clientMaximizedStateChanged(KWin::AbstractClient*,bool,bool)));
+    QSignalSpy maximizeChangedSpy2(c, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged));
     QVERIFY(maximizeChangedSpy2.isValid());
 
     c->setQuickTileMode(QuickTileFlag::Maximize, true);

@@ -124,7 +124,7 @@ void TestClientMachine::hostName()
     setClientMachineProperty(window, hostName);
 
     ClientMachine clientMachine;
-    QSignalSpy spy(&clientMachine, SIGNAL(localhostChanged()));
+    QSignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);
     clientMachine.resolve(window, XCB_WINDOW_NONE);
     QTEST(clientMachine.hostName(), "expectedHost");
 
@@ -144,7 +144,7 @@ void TestClientMachine::emptyHostName()
     const uint32_t values[] = { true };
     Xcb::Window window(geometry, XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, values);
     ClientMachine clientMachine;
-    QSignalSpy spy(&clientMachine, SIGNAL(localhostChanged()));
+    QSignalSpy spy(&clientMachine, &ClientMachine::localhostChanged);
     clientMachine.resolve(window, XCB_WINDOW_NONE);
     QCOMPARE(clientMachine.hostName(), ClientMachine::localhost());
     QVERIFY(clientMachine.isLocal());

@@ -344,7 +344,7 @@ void TestScreenEdges::testCreatingInitialEdges()
     }
 
     static_cast<MockScreens*>(screens())->setGeometries(QList<QRect>{QRect{0, 0, 1024, 768}});
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
     // first is before it's updated
     QVERIFY(changedSpy.wait());
@@ -421,7 +421,7 @@ void TestScreenEdges::testCallback()
     using namespace KWin;
     MockWorkspace ws;
     static_cast<MockScreens*>(screens())->setGeometries(QList<QRect>{QRect{0, 0, 1024, 768}, QRect{200, 768, 1024, 768}});
-    QSignalSpy changedSpy(screens(), SIGNAL(changed()));
+    QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
     // first is before it's updated
     QVERIFY(changedSpy.wait());
@@ -430,7 +430,7 @@ void TestScreenEdges::testCallback()
     auto s = ScreenEdges::self();
     s->init();
     TestObject callback;
-    QSignalSpy spy(&callback, SIGNAL(gotCallback(KWin::ElectricBorder)));
+    QSignalSpy spy(&callback, &TestObject::gotCallback);
     QVERIFY(spy.isValid());
     s->reserve(ElectricLeft, &callback, "callback");
     s->reserve(ElectricTopLeft, &callback, "callback");
@@ -569,7 +569,7 @@ void TestScreenEdges::testCallbackWithCheck()
     auto s = ScreenEdges::self();
     s->init();
     TestObject callback;
-    QSignalSpy spy(&callback, SIGNAL(gotCallback(KWin::ElectricBorder)));
+    QSignalSpy spy(&callback, &TestObject::gotCallback);
     QVERIFY(spy.isValid());
     s->reserve(ElectricLeft, &callback, "callback");
 
@@ -632,7 +632,7 @@ void TestScreenEdges::testPushBack()
     s->setConfig(config);
     s->init();
     TestObject callback;
-    QSignalSpy spy(&callback, SIGNAL(gotCallback(KWin::ElectricBorder)));
+    QSignalSpy spy(&callback, &TestObject::gotCallback);
     QVERIFY(spy.isValid());
     QFETCH(ElectricBorder, border);
     s->reserve(border, &callback, "callback");
@@ -676,7 +676,7 @@ void TestScreenEdges::testFullScreenBlocking()
     s->setConfig(config);
     s->init();
     TestObject callback;
-    QSignalSpy spy(&callback, SIGNAL(gotCallback(KWin::ElectricBorder)));
+    QSignalSpy spy(&callback, &TestObject::gotCallback);
     QVERIFY(spy.isValid());
     s->reserve(KWin::ElectricLeft, &callback, "callback");
     s->reserve(KWin::ElectricBottomRight, &callback, "callback");

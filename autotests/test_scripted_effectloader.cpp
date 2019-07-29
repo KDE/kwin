@@ -38,7 +38,6 @@ Q_DECLARE_METATYPE(KSharedConfigPtr)
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
-
 namespace KWin
 {
 ScreenEdges *ScreenEdges::s_self = nullptr;
@@ -242,7 +241,7 @@ void TestScriptedEffectLoader::testLoadEffect()
     loader.setConfig(config);
 
     qRegisterMetaType<KWin::Effect*>();
-    QSignalSpy spy(&loader, SIGNAL(effectLoaded(KWin::Effect*,QString)));
+    QSignalSpy spy(&loader, &KWin::ScriptedEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
     connect(&loader, &KWin::ScriptedEffectLoader::effectLoaded,
         [&name](KWin::Effect *effect, const QString &effectName) {
@@ -322,7 +321,7 @@ void TestScriptedEffectLoader::testLoadScriptedEffect()
     QCOMPARE(services.count(), 1);
 
     qRegisterMetaType<KWin::Effect*>();
-    QSignalSpy spy(&loader, SIGNAL(effectLoaded(KWin::Effect*,QString)));
+    QSignalSpy spy(&loader, &KWin::ScriptedEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
     connect(&loader, &KWin::ScriptedEffectLoader::effectLoaded,
         [&name](KWin::Effect *effect, const QString &effectName) {
@@ -392,7 +391,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     loader.setConfig(config);
 
     qRegisterMetaType<KWin::Effect*>();
-    QSignalSpy spy(&loader, SIGNAL(effectLoaded(KWin::Effect*,QString)));
+    QSignalSpy spy(&loader, &KWin::ScriptedEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
     connect(&loader, &KWin::ScriptedEffectLoader::effectLoaded,
         [](KWin::Effect *effect) {

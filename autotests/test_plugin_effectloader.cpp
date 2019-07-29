@@ -213,7 +213,7 @@ void TestPluginEffectLoader::testLoadEffect()
     loader.setConfig(config);
 
     qRegisterMetaType<KWin::Effect*>();
-    QSignalSpy spy(&loader, SIGNAL(effectLoaded(KWin::Effect*,QString)));
+    QSignalSpy spy(&loader, &KWin::PluginEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
     connect(&loader, &KWin::PluginEffectLoader::effectLoaded,
         [&name](KWin::Effect *effect, const QString &effectName) {
@@ -305,7 +305,7 @@ void TestPluginEffectLoader::testLoadPluginEffect()
     QCOMPARE(plugins.size(), 1);
 
     qRegisterMetaType<KWin::Effect*>();
-    QSignalSpy spy(&loader, SIGNAL(effectLoaded(KWin::Effect*,QString)));
+    QSignalSpy spy(&loader, &KWin::PluginEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
     connect(&loader, &KWin::PluginEffectLoader::effectLoaded,
         [&name](KWin::Effect *effect, const QString &effectName) {
@@ -361,7 +361,7 @@ void TestPluginEffectLoader::testLoadAllEffects()
     loader.setConfig(config);
 
     qRegisterMetaType<KWin::Effect*>();
-    QSignalSpy spy(&loader, SIGNAL(effectLoaded(KWin::Effect*,QString)));
+    QSignalSpy spy(&loader, &KWin::PluginEffectLoader::effectLoaded);
     // connect to signal to ensure that we delete the Effect again as the Effect doesn't have a parent
     connect(&loader, &KWin::PluginEffectLoader::effectLoaded,
         [](KWin::Effect *effect) {
