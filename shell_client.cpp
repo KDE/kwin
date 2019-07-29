@@ -418,7 +418,7 @@ void ShellClient::destroyClient()
     m_closing = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);
     }
 #endif
