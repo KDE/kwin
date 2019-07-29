@@ -322,6 +322,7 @@ void Workspace::init()
                 if (c->wantsInput() && !c->isMinimized()) {
                     activateClient(c);
                 }
+                updateTabbox();
                 connect(c, &ShellClient::windowShown, this,
                     [this, c] {
                         updateClientLayer(c);
@@ -340,6 +341,7 @@ void Workspace::init()
                 );
                 connect(c, &ShellClient::windowHidden, this,
                     [this] {
+                        // TODO: update tabbox if it's displayed
                         markXStackingOrderAsDirty();
                         updateStackingOrder(true);
                         updateClientArea();
@@ -370,6 +372,7 @@ void Workspace::init()
                 markXStackingOrderAsDirty();
                 updateStackingOrder(true);
                 updateClientArea();
+                updateTabbox();
             }
         );
     }
@@ -653,10 +656,7 @@ void Workspace::addClient(Client* c)
     updateStackingOrder(true);   // Propagate new client
     if (c->isUtility() || c->isMenu() || c->isToolbar())
         updateToolWindows(true);
-#ifdef KWIN_BUILD_TABBOX
-    if (TabBox::TabBox::self()->isDisplayed())
-        TabBox::TabBox::self()->reset(true);
-#endif
+    updateTabbox();
 }
 
 void Workspace::addUnmanaged(Unmanaged* c)
@@ -708,14 +708,8 @@ void Workspace::removeClient(Client* c)
     emit clientRemoved(c);
 
     updateStackingOrder(true);
-
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed())
-        tabBox->reset(true);
-#endif
-
     updateClientArea();
+    updateTabbox();
 }
 
 void Workspace::removeUnmanaged(Unmanaged* c)
@@ -1779,6 +1773,15 @@ void Workspace::setWasUserInteraction()
             m_wasUserInteractionFilter.reset();
         }
     );
+}
+
+void Workspace::updateTabbox()
+{
+#ifdef KWIN_BUILD_TABBOX
+    if (TabBox::TabBox::self()->isDisplayed()) {
+        TabBox::TabBox::self()->reset(true);
+    }
+#endif
 }
 
 } // namespace

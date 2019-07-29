@@ -25,10 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "placement.h"
 #include "screenedge.h"
 #include "screens.h"
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox.h"
+#endif
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "virtualdesktops.h"
-#include "screens.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decoratedclient.h"
 #include <KDecoration2/Decoration>
@@ -418,6 +420,12 @@ void ShellClient::finishInit() {
 void ShellClient::destroyClient()
 {
     m_closing = true;
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+        tabBox->nextPrev(true);
+    }
+#endif
     if (isMoveResize()) {
         leaveMoveResize();
     }

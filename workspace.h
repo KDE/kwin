@@ -553,6 +553,7 @@ private:
     QList<SessionInfo*> session;
 
     void updateXStackingOrder();
+    void updateTabbox();
 
     AbstractClient* active_client;
     AbstractClient* last_active_client;
