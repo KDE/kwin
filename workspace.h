@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_WORKSPACE_H
 
 // kwin
-#include "sm.h"
 #include "options.h"
+#include "sm.h"
 #include "utils.h"
 // Qt
 #include <QTimer>
@@ -34,14 +34,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <functional>
 #include <memory>
 
-// TODO: Cleanup the order of things in this .h file
-
-class QStringList;
 class KConfig;
 class KConfigGroup;
 class KStartupInfo;
-class KStartupInfoId;
 class KStartupInfoData;
+class KStartupInfoId;
+class QStringList;
 
 namespace KWin
 {
@@ -54,10 +52,10 @@ class Window;
 
 class AbstractClient;
 class Client;
+class Compositor;
 class KillWindow;
 class ShortcutDialog;
 class UserActionsMenu;
-class Compositor;
 class X11EventFilter;
 enum class Predicate;
 
