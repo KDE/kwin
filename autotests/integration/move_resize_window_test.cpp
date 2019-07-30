@@ -213,14 +213,33 @@ void MoveResizeWindowTest::testResize()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(
+        surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
+
+    // Let's render.
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QSignalSpy surfaceSizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QSignalSpy surfaceSizeChangedSpy(shellSurface.data(), &XdgShellSurface::sizeChanged);
     QVERIFY(surfaceSizeChangedSpy.isValid());
+
+    // We have to receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
 
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
@@ -237,7 +256,7 @@ void MoveResizeWindowTest::testResize()
     QVERIFY(clientFinishUserMovedResizedSpy.isValid());
 
     // begin resize
-    QVERIFY(workspace()->moveResizeClient() == nullptr);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
     QCOMPARE(c->isMove(), false);
     QCOMPARE(c->isResize(), false);
     workspace()->slotWindowResize();
@@ -246,43 +265,71 @@ void MoveResizeWindowTest::testResize()
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(c->isResize(), true);
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 3);
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
 
-    // trigger a change
+    // Trigger a change.
     const QPoint cursorPos = Cursor::pos();
     c->keyPressEvent(Qt::Key_Right);
     c->updateMoveResize(Cursor::pos());
     QCOMPARE(Cursor::pos(), cursorPos + QPoint(8, 0));
-    // should result in a size change request
-    QVERIFY(surfaceSizeChangedSpy.wait());
+
+    // The client should receive a configure event with the new size.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 4);
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
     QCOMPARE(surfaceSizeChangedSpy.count(), 1);
     QCOMPARE(surfaceSizeChangedSpy.last().first().toSize(), QSize(108, 50));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
-    // now render new size
+
+    // Now render new size.
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(108, 50), Qt::blue);
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(c->geometry(), QRect(0, 0, 108, 50));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
-    // go down
+    // Go down.
     c->keyPressEvent(Qt::Key_Down);
     c->updateMoveResize(Cursor::pos());
     QCOMPARE(Cursor::pos(), cursorPos + QPoint(8, 8));
-    QVERIFY(surfaceSizeChangedSpy.wait());
+
+    // The client should receive another configure event.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 5);
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(states.testFlag(XdgShellSurface::State::Resizing));
     QCOMPARE(surfaceSizeChangedSpy.count(), 2);
     QCOMPARE(surfaceSizeChangedSpy.last().first().toSize(), QSize(108, 58));
-    // now render new size
+
+    // Now render new size.
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(108, 58), Qt::blue);
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(c->geometry(), QRect(0, 0, 108, 58));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
 
-    // let's end
+    // Let's finalize the resize operation.
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
     c->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 2);
     QCOMPARE(c->isResize(), false);
-    QVERIFY(workspace()->moveResizeClient() == nullptr);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    QEXPECT_FAIL("", "ShellClient currently doesn't send final configure event", Abort);
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 6);
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
+
+    // Destroy the client.
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(c));
 }
