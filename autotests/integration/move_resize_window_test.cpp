@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "shell_client.h"
+#include "deleted.h"
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
@@ -93,8 +94,9 @@ private:
 
 void MoveResizeWindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::ShellClient *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
