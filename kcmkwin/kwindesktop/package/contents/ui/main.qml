@@ -126,6 +126,7 @@ ScrollViewKCM {
 
                 from: 1
                 to: 20
+                editable: true
 
                 onValueModified: kcm.desktopsModel.rows = value
             }
