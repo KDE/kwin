@@ -83,18 +83,23 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
-    if (m_xwayland) {
-        // needs to be done before workspace gets destroyed
-        m_xwayland->prepareDestroy();
-    }
-    destroyWorkspace();
+
+    // Kill Xwayland before terminating its connection.
+    delete m_xwayland;
+    m_xwayland = nullptr;
+
+    // Terminate all client connections before Workspace is destroyed.
+    // Shell clients need to access RuleBook whose lifetime is bound
+    // to the Workspace class.
+    waylandServer()->terminateClientConnections();
     waylandServer()->dispatch();
+
+    destroyWorkspace();
+
     if (QStyle *s = style()) {
         s->unpolish(this);
     }
-    // kill Xwayland before terminating its connection
-    delete m_xwayland;
-    waylandServer()->terminateClientConnections();
+
     destroyCompositor();
 }
 
