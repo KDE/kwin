@@ -18,47 +18,66 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
+import QtQuick.Window 2.0
 import QtQuick.Controls 2.3
 import QtQuick.VirtualKeyboard 2.1
 import org.kde.kirigami 2.5 as Kirigami
 
-Item {
+Window {
     id: window
     property real adjustment: 0
     property real adjustmentFactor: 0.0
-    InputPanel {
-        id: inputPanel
-        objectName: "inputPanel"
-        width: parent.width - parent.width * parent.adjustmentFactor
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-    }
-    //NOTE: ToolButton for some reasons breaks the virtual keyboard loading on Plasma Mobile
-    Button {
-        id: resizeButton
-        visible: !Kirigami.Settings.isMobile //don't show on handheld devices
-        flat: true
-        display: AbstractButton.IconOnly
-        icon.name: "transform-scale"
-        icon.color: "white"
-        down: mouseArea.pressed
+    visible: false
 
-        anchors {
-            right: inputPanel.right
-            top: inputPanel.top
-        }
+    Loader {
+        anchors.fill: parent
 
-        MouseArea {
-            id: mouseArea
-            property real startPoint: 0
-            anchors.fill: parent
-            onPressed: {
-                startPoint = mouse.x;
-            }
-            onPositionChanged: {
-                window.adjustment -= (mouse.x - startPoint);
-                window.adjustmentFactor = Math.min(Math.max(window.adjustment / window.width, 0.0), 0.66);
-                startPoint = mouse.x;
+        sourceComponent: window.visible ? theKeyboard : null
+
+        Component {
+            id: theKeyboard
+            Item {
+                InputPanel {
+                    id: inputPanel
+
+                    readonly property real sideMargin: window.width * window.adjustmentFactor/2
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                        leftMargin: sideMargin
+                        rightMargin: sideMargin
+                    }
+                }
+                //NOTE: ToolButton for some reasons breaks the virtual keyboard loading on Plasma Mobile
+                Button {
+                    id: resizeButton
+                    visible: !Kirigami.Settings.isMobile //don't show on handheld devices
+                    flat: true
+                    display: AbstractButton.IconOnly
+                    icon.name: "transform-scale"
+                    icon.color: "white"
+                    down: mouseArea.pressed
+
+                    anchors {
+                        right: inputPanel.right
+                        top: inputPanel.top
+                    }
+
+                    MouseArea {
+                        id: mouseArea
+                        property real startPoint: 0
+                        anchors.fill: parent
+                        onPressed: {
+                            startPoint = mouse.x;
+                        }
+                        onPositionChanged: {
+                            window.adjustment -= (mouse.x - startPoint);
+                            window.adjustmentFactor = Math.min(Math.max(window.adjustment / window.width, 0.0), 0.66);
+                            startPoint = mouse.x;
+                        }
+                    }
+                }
             }
         }
     }
