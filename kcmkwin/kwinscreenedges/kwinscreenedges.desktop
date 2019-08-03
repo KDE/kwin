@@ -80,7 +80,7 @@ Name[x-test]=xxScreen Edgesxx
 Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 
-Comment=Active Screen Corners and Edges
+Comment=Configure active screen corners and edges
 Comment[bs]=Ivice i uglovi aktivnog ekrana
 Comment[ca]=Cantonades i vores actives de la pantalla
 Comment[ca@valencia]=Cantons i vores actives de la pantalla

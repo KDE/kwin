@@ -61,7 +61,7 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget* parent, const QVariantList
     connect(m_ui->triggerCooldownSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
     connect(m_ui->quickMaximizeBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->quickTileBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(m_ui->electricBorderCornerRatio, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(m_ui->electricBorderCornerRatioSpin, SIGNAL(valueChanged(int)), this, SLOT(changed()));
 
     // Visual feedback of action group conflicts
     connect(m_ui->desktopSwitchCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(groupChanged()));
@@ -102,7 +102,7 @@ void KWinScreenEdgesConfig::load()
     m_ui->triggerCooldownSpin->setValue(config.readEntry("ElectricBorderCooldown", 350));
     m_ui->quickMaximizeBox->setChecked(config.readEntry("ElectricBorderMaximize", true));
     m_ui->quickTileBox->setChecked(config.readEntry("ElectricBorderTiling", true));
-    m_ui->electricBorderCornerRatio->setValue(qRound(config.readEntry("ElectricBorderCornerRatio", 0.25)*100));
+    m_ui->electricBorderCornerRatioSpin->setValue(qRound(config.readEntry("ElectricBorderCornerRatio", 0.25)*100));
 
     emit changed(false);
 }
@@ -120,7 +120,7 @@ void KWinScreenEdgesConfig::save()
     config.writeEntry("ElectricBorderCooldown", m_ui->triggerCooldownSpin->value());
     config.writeEntry("ElectricBorderMaximize", m_ui->quickMaximizeBox->isChecked());
     config.writeEntry("ElectricBorderTiling", m_ui->quickTileBox->isChecked());
-    config.writeEntry("ElectricBorderCornerRatio", m_ui->electricBorderCornerRatio->value()/100.0);
+    config.writeEntry("ElectricBorderCornerRatio", m_ui->electricBorderCornerRatioSpin->value()/100.0);
 
     config.sync();
 
@@ -147,7 +147,7 @@ void KWinScreenEdgesConfig::defaults()
     m_ui->triggerCooldownSpin->setValue(350);
     m_ui->quickMaximizeBox->setChecked(true);
     m_ui->quickTileBox->setChecked(true);
-    m_ui->electricBorderCornerRatio->setValue(25);
+    m_ui->electricBorderCornerRatioSpin->setValue(25);
 
     emit changed(true);
 }

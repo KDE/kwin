@@ -6,278 +6,259 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>488</width>
-    <height>511</height>
+    <width>500</width>
+    <height>525</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>525</height>
+   </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Active Screen Corners and Edges</string>
+    <widget class="QLabel" name="infoLabel">
+     <property name="text">
+      <string>You can trigger an action by pushing the mouse cursor against the corresponding screen edge or corner.</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="KWin::Monitor" name="monitor" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>200</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Trigger an action by pushing the mouse cursor against the corresponding screen edge or corner</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Window Management</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="quickMaximizeBox">
-        <property name="text">
-         <string>Maximize windows by dragging them to the top edge of the screen</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="quickTileBox">
-        <property name="text">
-         <string>Tile windows by dragging them to the left or right edges of the screen</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>Quarter tiling triggered in the outer</string>
-          </property>
-          <property name="buddy">
-           <cstring>electricBorderCornerRatio</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="electricBorderCornerRatio">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="suffix">
-           <string>%</string>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>49</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="text">
-           <string>of the screen</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="enabled">
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
-     <property name="title">
-      <string>Other Settings</string>
-     </property>
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <property name="verticalSpacing">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="desktopSwitchLabel">
-        <property name="toolTip">
-         <string>Change desktop when the mouse cursor is pushed against the edge of the screen</string>
-        </property>
-        <property name="text">
-         <string>&amp;Switch desktop on edge:</string>
-        </property>
-        <property name="buddy">
-         <cstring>desktopSwitchCombo</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="KComboBox" name="desktopSwitchCombo">
-        <item>
-         <property name="text">
-          <string comment="Switch desktop on edge">Disabled</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Only When Moving Windows</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Always Enabled</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label">
-        <property name="toolTip">
-         <string>Amount of time required for the mouse cursor to be pushed against the edge of the screen before the action is triggered</string>
-        </property>
-        <property name="text">
-         <string>Activation &amp;delay:</string>
-        </property>
-        <property name="buddy">
-         <cstring>activationDelaySpin</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="activationDelaySpin">
-        <property name="suffix">
-         <string> ms</string>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="singleStep">
-         <number>50</number>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="toolTip">
-         <string>Amount of time required after triggering an action until the next trigger can occur</string>
-        </property>
-        <property name="text">
-         <string>&amp;Reactivation delay:</string>
-        </property>
-        <property name="buddy">
-         <cstring>triggerCooldownSpin</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QSpinBox" name="triggerCooldownSpin">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="suffix">
-         <string> ms</string>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="singleStep">
-         <number>50</number>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacer_2">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>0</height>
+       <height>20</height>
       </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="KWin::Monitor" name="monitor" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>200</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <property name="formAlignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="quickMaximizeLabel">
+       <property name="text">
+        <string>&amp;Maximize:</string>
+       </property>
+       <property name="buddy">
+        <cstring>quickMaximizeBox</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="quickMaximizeBox">
+       <property name="text">
+        <string>Windows dragged to top edge</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="quickTileLabel">
+       <property name="text">
+        <string>&amp;Tile:</string>
+       </property>
+       <property name="buddy">
+        <cstring>quickTileBox</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="quickTileBox">
+       <property name="text">
+        <string>Windows dragged to left or right edge</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="electricBorderCornerRatioLabel">
+       <property name="text">
+        <string>Trigger &amp;quarter tiling in:</string>
+       </property>
+       <property name="buddy">
+        <cstring>electricBorderCornerRatioSpin</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QSpinBox" name="electricBorderCornerRatioSpin">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="suffix">
+          <string>%</string>
+         </property>
+         <property name="prefix">
+          <string>Outer </string>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>49</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_1">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>of the screen</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="desktopSwitchLabel">
+       <property name="toolTip">
+        <string>Change desktop when the mouse cursor is pushed against the edge of the screen</string>
+       </property>
+       <property name="text">
+        <string>&amp;Switch desktop on edge:</string>
+       </property>
+       <property name="buddy">
+        <cstring>desktopSwitchCombo</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="KComboBox" name="desktopSwitchCombo">
+       <item>
+        <property name="text">
+         <string comment="Switch desktop on edge">Disabled</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Only When Moving Windows</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Always Enabled</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="activationDelayLabel">
+       <property name="toolTip">
+        <string>Amount of time required for the mouse cursor to be pushed against the edge of the screen before the action is triggered</string>
+       </property>
+       <property name="text">
+        <string>Activation &amp;delay:</string>
+       </property>
+       <property name="buddy">
+        <cstring>activationDelaySpin</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSpinBox" name="activationDelaySpin">
+       <property name="suffix">
+        <string> ms</string>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>50</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="triggerCooldownLabel">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="toolTip">
+        <string>Amount of time required after triggering an action until the next trigger can occur</string>
+       </property>
+       <property name="text">
+        <string>&amp;Reactivation delay:</string>
+       </property>
+       <property name="buddy">
+        <cstring>triggerCooldownSpin</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QSpinBox" name="triggerCooldownSpin">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="suffix">
+        <string> ms</string>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="singleStep">
+        <number>50</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <spacer name="verticalSpacer_1">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>4</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
      </property>
     </spacer>
    </item>
@@ -296,59 +277,53 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>monitor</tabstop>
-  <tabstop>desktopSwitchCombo</tabstop>
-  <tabstop>activationDelaySpin</tabstop>
-  <tabstop>triggerCooldownSpin</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>
    <sender>quickTileBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>label_3</receiver>
+   <receiver>label_1</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>306</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
     <hint type="destinationlabel">
-     <x>105</x>
-     <y>329</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>quickTileBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>electricBorderCornerRatio</receiver>
+   <receiver>electricBorderCornerRatioSpin</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>312</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
     <hint type="destinationlabel">
-     <x>301</x>
-     <y>345</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>quickTileBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>label_4</receiver>
+   <receiver>electricBorderCornerRatioLabel</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>220</x>
-     <y>305</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
     <hint type="destinationlabel">
-     <x>340</x>
-     <y>329</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
