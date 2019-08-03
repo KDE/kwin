@@ -17,31 +17,26 @@
  *
  */
 
-import QtQuick 2.1
-import QtQuick.Controls 2.5 as QtControls
-import QtQuick.Layouts 1.0
+import QtQuick 2.5
+import QtQuick.Controls 2.5 as QQC2
+import QtQuick.Layouts 1.1
+
 import org.kde.kirigami 2.5 as Kirigami
 
-Rectangle {
-    height: row.implicitHeight
-
-    Kirigami.Theme.inherit: false
-    Kirigami.Theme.colorSet: Kirigami.Theme.View
-    color: index % 2 ? Kirigami.Theme.backgroundColor : palette.alternateBase
-
-    RowLayout {
+Kirigami.SwipeListItem {
+    hoverEnabled: true
+    onClicked: {
+        view.currentIndex = index;
+    }
+    contentItem: RowLayout {
         id: row
-
-        x: spacing
-        width: parent.width - 2 * spacing
-
-        QtControls.RadioButton {
+        QQC2.RadioButton {
             property bool _exclusive: model.ExclusiveRole != ""
             property bool _toggled: false
 
             checked: model.StatusRole
             visible: _exclusive
-            QtControls.ButtonGroup.group: _exclusive ? effectsList.findButtonGroup(model.ExclusiveRole) : null
+            QQC2.ButtonGroup.group: _exclusive ? effectsList.findButtonGroup(model.ExclusiveRole) : null
 
             onToggled: {
                 model.StatusRole = checked ? Qt.Checked : Qt.Unchecked;
@@ -56,7 +51,7 @@ Rectangle {
             }
         }
 
-        QtControls.CheckBox {
+        QQC2.CheckBox {
             checkState: model.StatusRole
             visible: model.ExclusiveRole == ""
 
@@ -64,7 +59,7 @@ Rectangle {
         }
 
         ColumnLayout {
-            QtControls.Label {
+            QQC2.Label {
                 Layout.fillWidth: true
 
                 font.weight: Font.Bold
@@ -72,21 +67,21 @@ Rectangle {
                 wrapMode: Text.Wrap
             }
 
-            QtControls.Label {
+            QQC2.Label {
                 Layout.fillWidth: true
 
                 text: model.DescriptionRole
                 wrapMode: Text.Wrap
             }
 
-            QtControls.Label {
+            QQC2.Label {
                 id: aboutItem
 
                 Layout.fillWidth: true
 
                 font.weight: Font.Bold
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
-                visible: false
+                visible: view.currentIndex === index
                 wrapMode: Text.Wrap
             }
 
@@ -108,33 +103,20 @@ Rectangle {
                 }
             }
         }
-
-        QtControls.Button {
-            icon.name: "video"
+    }
+    actions: [
+        Kirigami.Action {
             visible: model.VideoRole.toString() !== ""
-
-            onClicked: videoItem.showHide()
-        }
-
-        QtControls.Button {
+            icon.name: "videoclip-amarok"
+            tooltip: i18nc("@info:tooltip", "Show/Hide Video")
+            onTriggered: videoItem.showHide()
+        },
+        Kirigami.Action {
+            visible: model.ConfigurableRole
             enabled: model.StatusRole != Qt.Unchecked
             icon.name: "configure"
-            visible: model.ConfigurableRole
-
-            onClicked: kcm.configure(model.ServiceNameRole, this)
+            tooltip: i18nc("@info:tooltip", "Configure...")
+            onTriggered: kcm.configure(model.ServiceNameRole, this)
         }
-
-        QtControls.Button {
-            icon.name: "dialog-information"
-
-            onClicked: aboutItem.visible = !aboutItem.visible;
-        }
-    }
-
-    // Kirigami.Theme doesn't provide alternate color.
-    SystemPalette {
-        id: palette
-
-        colorGroup: SystemPalette.Active
-    }
+    ]
 }

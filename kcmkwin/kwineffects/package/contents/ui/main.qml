@@ -16,9 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.1
-import QtQuick.Controls 2.5 as QtControls
+import QtQuick 2.5
+import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Layouts 1.1
+
 import org.kde.kcm 1.2
 import org.kde.kconfig 1.0
 import org.kde.kirigami 2.8 as Kirigami
@@ -28,7 +29,7 @@ ScrollViewKCM {
     ConfigModule.quickHelp: i18n("This module lets you configure desktop effects.")
 
     header: ColumnLayout {
-        QtControls.Label {
+        QQC2.Label {
             Layout.fillWidth: true
 
             elide: Text.ElideRight
@@ -42,35 +43,37 @@ ScrollViewKCM {
                 Layout.fillWidth: true
             }
 
-            QtControls.Button {
-                id: configureButton
+            QQC2.ToolButton {
+                id: filterButton
 
-                QtControls.ToolTip.visible: hovered
-                QtControls.ToolTip.text: i18n("Configure filter")
+                icon.name: "view-filter"
 
-                icon.name: "configure"
+                checkable: true
+                checked: menu.opened
+                onClicked: menu.popup(filterButton, filterButton.width - menu.width, filterButton.height)
 
-                onClicked: menu.opened ? menu.close() : menu.open()
+                QQC2.ToolTip {
+                    text: i18n("Configure Filter")
+                }
             }
 
-            QtControls.Menu {
+            QQC2.Menu {
                 id: menu
 
-                x: parent.width - width
-                y: configureButton.height
+                modal: true
 
-                QtControls.MenuItem {
+                QQC2.MenuItem {
                     checkable: true
                     checked: searchModel.excludeUnsupported
-                    text: i18n("Exclude Desktop Effects not supported by the Compositor")
+                    text: i18n("Exclude unsupported effects")
 
                     onToggled: searchModel.excludeUnsupported = checked
                 }
 
-                QtControls.MenuItem {
+                QQC2.MenuItem {
                     checkable: true
                     checked: searchModel.excludeInternal
-                    text: i18n("Exclude internal Desktop Effects")
+                    text: i18n("Exclude internal effects")
 
                     onToggled: searchModel.excludeInternal = checked
                 }
@@ -82,8 +85,6 @@ ScrollViewKCM {
         id: effectsList
 
         property var _buttonGroups: []
-
-        spacing: Kirigami.Units.smallSpacing
 
         model: Private.EffectsFilterProxyModel {
             id: searchModel
@@ -97,20 +98,19 @@ ScrollViewKCM {
         }
 
         section.property: "CategoryRole"
-        section.delegate: Item {
+        section.delegate:Kirigami.AbstractListItem {
             width: effectsList.width
-            height: sectionText.implicitHeight + 2 * Kirigami.Units.smallSpacing
 
-            QtControls.Label {
-                id: sectionText
+            backgroundColor: Kirigami.Theme.backgroundColor
+            Kirigami.Theme.inherit: false
+            Kirigami.Theme.colorSet: Kirigami.Theme.Window
 
-                anchors.fill: parent
+            hoverEnabled: false
+            supportsMouseEvents: false
 
-                color: Kirigami.Theme.disabledTextColor
-                font.weight: Font.Bold
-                horizontalAlignment: Text.AlignHCenter
+            Kirigami.Heading {
+                level: 3
                 text: section
-                verticalAlignment: Text.AlignVCenter
             }
         }
 
@@ -122,7 +122,7 @@ ScrollViewKCM {
             }
 
             let group = Qt.createQmlObject(
-                'import QtQuick 2.1;' +
+                'import QtQuick 2.5;' +
                 'import QtQuick.Controls 2.5;' +
                 'ButtonGroup {}',
                 effectsList,
@@ -139,7 +139,7 @@ ScrollViewKCM {
         RowLayout {
             Layout.alignment: Qt.AlignRight
 
-            QtControls.Button {
+            QQC2.Button {
                 icon.name: "get-hot-new-stuff"
                 text: i18n("Get New Desktop Effects...")
                 visible: KAuthorized.authorize("ghns")

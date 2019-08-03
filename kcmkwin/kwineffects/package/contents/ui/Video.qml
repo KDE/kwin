@@ -18,10 +18,10 @@
 * You should have received a copy of the GNU General Public License      *
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.  *
 **************************************************************************/
-import QtQuick 2.1
-import QtQuick.Controls 1.1
-import QtQuick.Controls 2.0 as QQC2
-import QtQuick.Layouts 1.0
+
+import QtQuick 2.5
+import QtQuick.Controls 2.5 as QQC2
+import QtQuick.Layouts 1.1
 import QtMultimedia 5.0 as Multimedia
 
 Multimedia.Video {
@@ -35,11 +35,11 @@ Multimedia.Video {
         visible: videoItem.status == Multimedia.MediaPlayer.Loading
         running: true
     }
-    Button {
+    QQC2.Button {
         id: replayButton
         visible: false
         anchors.centerIn: parent
-        iconName: "media-playback-start"
+        icon.name: "media-playback-start"
         onClicked: {
             replayButton.visible = false;
             videoItem.play();
