@@ -41,7 +41,7 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
     , m_animationsModel(new AnimationsModel(this))
 {
     KAboutData *about = new KAboutData(QStringLiteral("kcm_kwin_virtualdesktops"),
-        i18n("Configure Virtual Desktops"),
+        i18n("Virtual Desktops"),
         QStringLiteral("2.0"), QString(), KAboutLicense::GPL);
     setAboutData(about);
 

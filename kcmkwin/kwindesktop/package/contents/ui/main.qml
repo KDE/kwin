@@ -17,17 +17,18 @@
  *  Boston, MA 02110-1301, USA.
 */
 
-import QtQuick 2.1
+import QtQuick 2.5
+import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls 2.4 as QtControls
+
+import org.kde.kcm 1.2
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.plasma.core 2.1 as PlasmaCore
-import org.kde.kcm 1.2
 
 ScrollViewKCM {
     id: root
 
-    ConfigModule.quickHelp: i18n("Virtual Desktops")
+    ConfigModule.quickHelp: i18n("This module lets you configure the navigation, number and layout of virtual desktops.")
 
     Connections {
         target: kcm.desktopsModel
@@ -48,7 +49,7 @@ ScrollViewKCM {
             id: listItem
 
             contentItem: RowLayout {
-                QtControls.TextField {
+                QQC2.TextField {
                     id: nameField
 
                     background: null
@@ -84,7 +85,7 @@ ScrollViewKCM {
             },
             Kirigami.Action {
                 enabled: !model.IsMissing
-                iconName: "list-remove"
+                iconName: "edit-delete-remove"
                 tooltip: i18nc("@info:tooltip", "Remove")
                 onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
             }]
@@ -115,35 +116,6 @@ ScrollViewKCM {
 
             visible: kcm.desktopsModel.serverModified
         }
-
-        RowLayout {
-            QtControls.Label {
-                text: i18n("Rows:")
-            }
-
-            QtControls.SpinBox {
-                id: rowsSpinBox
-
-                from: 1
-                to: 20
-                editable: true
-
-                onValueModified: kcm.desktopsModel.rows = value
-            }
-
-            Item { // Spacer
-                Layout.fillWidth: true
-            }
-
-            QtControls.Button {
-                Layout.alignment: Qt.AlignRight
-
-                text: i18nc("@action:button", "Add")
-                icon.name: "list-add"
-
-                onClicked: kcm.desktopsModel.createDesktop(i18n("New Desktop"))
-            }
-        }
     }
 
     view: ListView {
@@ -156,14 +128,14 @@ ScrollViewKCM {
             width: desktopsList.width
 
             backgroundColor: Kirigami.Theme.backgroundColor
+            Kirigami.Theme.inherit: false
+            Kirigami.Theme.colorSet: Kirigami.Theme.Window
 
             hoverEnabled: false
             supportsMouseEvents: false
 
-            Kirigami.Theme.inherit: false
-            Kirigami.Theme.colorSet: Kirigami.Theme.Window
-
-            QtControls.Label {
+            Kirigami.Heading {
+                level: 2
                 text: i18n("Row %1", section)
             }
         }
@@ -175,119 +147,146 @@ ScrollViewKCM {
         }
     }
 
-    footer: Kirigami.FormLayout {
-        Connections {
-            target: kcm
-
-            onNavWrapsChanged: navWraps.checked = kcm.navWraps
-
-            onOsdEnabledChanged: osdEnabled.checked = kcm.osdEnabled
-            onOsdDurationChanged: osdDuration.value = kcm.osdDuration
-            onOsdTextOnlyChanged: osdTextOnly.checked = !kcm.osdTextOnly
-        }
-
-        QtControls.CheckBox {
-            id: navWraps
-
-            Kirigami.FormData.label: i18n("Options:")
-
-            text: i18n("Navigation wraps around")
-
-            checked: kcm.navWraps
-
-            onCheckedChanged: kcm.navWraps = checked
-        }
-
+    footer: ColumnLayout {
         RowLayout {
-            Layout.fillWidth: true
+            QQC2.Button {
+                text: i18nc("@action:button", "Add")
+                icon.name: "list-add"
 
-            QtControls.CheckBox {
-                id: animationEnabled
-
-                text: i18n("Show animation when switching:")
-
-                checked: kcm.animationsModel.enabled
-
-                onCheckedChanged: kcm.animationsModel.enabled = checked
+                onClicked: kcm.desktopsModel.createDesktop(i18n("New Desktop"))
             }
 
-            QtControls.ComboBox {
-                enabled: animationEnabled.checked
-
-                model: kcm.animationsModel
-                textRole: "NameRole"
-                currentIndex: kcm.animationsModel.currentIndex
-                onActivated: kcm.animationsModel.currentIndex = currentIndex
-            }
-
-            QtControls.Button {
-                enabled: animationEnabled.checked && kcm.animationsModel.currentConfigurable
-
-                icon.name: "configure"
-
-                onClicked: kcm.configureAnimation()
-            }
-
-            QtControls.Button {
-                enabled: animationEnabled.checked
-
-                icon.name: "dialog-information"
-
-                onClicked: kcm.showAboutAnimation()
-            }
-
-            Item {
+            Item { // Spacer
                 Layout.fillWidth: true
             }
-        }
 
-        RowLayout {
-            Layout.fillWidth: true
+            QQC2.SpinBox {
+                id: rowsSpinBox
 
-            QtControls.CheckBox {
-                id: osdEnabled
+                from: 1
+                to: 20
+                editable: true
 
-                text: i18n("Show on-screen display when switching:")
+                textFromValue: function(value, locale) { return i18np("1 Row", "%1 Rows", value)}
 
-                checked: kcm.osdEnabled
-
-                onToggled: kcm.osdEnabled = checked
-            }
-
-            QtControls.SpinBox {
-                id: osdDuration
-
-                enabled: osdEnabled.checked
-
-                from: 0
-                to: 10000
-                stepSize: 100
-
-                textFromValue: function(value, locale) { return i18n("%1 ms", value)}
-
-                value: kcm.osdDuration
-
-                onValueChanged: kcm.osdDuration = value
+                onValueModified: kcm.desktopsModel.rows = value
             }
         }
 
-        RowLayout {
-            Layout.fillWidth: true
+        Kirigami.FormLayout {
+            Connections {
+                target: kcm
 
-            Item {
-                width: units.largeSpacing
+                onNavWrapsChanged: navWraps.checked = kcm.navWraps
+
+                onOsdEnabledChanged: osdEnabled.checked = kcm.osdEnabled
+                onOsdDurationChanged: osdDuration.value = kcm.osdDuration
+                onOsdTextOnlyChanged: osdTextOnly.checked = !kcm.osdTextOnly
             }
 
-            QtControls.CheckBox {
-                id: osdTextOnly
+            QQC2.CheckBox {
+                id: navWraps
 
-                enabled: osdEnabled.checked
+                Kirigami.FormData.label: i18n("Options:")
 
-                text: i18n("Show desktop layout indicators")
+                text: i18n("Navigation wraps around")
 
-                checked: !kcm.osdTextOnly
+                checked: kcm.navWraps
 
-                onToggled: kcm.osdTextOnly = !checked
+                onCheckedChanged: kcm.navWraps = checked
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                QQC2.CheckBox {
+                    id: animationEnabled
+
+                    text: i18n("Show animation when switching:")
+
+                    checked: kcm.animationsModel.enabled
+
+                    onCheckedChanged: kcm.animationsModel.enabled = checked
+                }
+
+                QQC2.ComboBox {
+                    enabled: animationEnabled.checked
+
+                    model: kcm.animationsModel
+                    textRole: "NameRole"
+                    currentIndex: kcm.animationsModel.currentIndex
+                    onActivated: kcm.animationsModel.currentIndex = currentIndex
+                }
+
+                QQC2.Button {
+                    enabled: animationEnabled.checked && kcm.animationsModel.currentConfigurable
+
+                    icon.name: "configure"
+
+                    onClicked: kcm.configureAnimation()
+                }
+
+                QQC2.Button {
+                    enabled: animationEnabled.checked
+
+                    icon.name: "dialog-information"
+
+                    onClicked: kcm.showAboutAnimation()
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                QQC2.CheckBox {
+                    id: osdEnabled
+
+                    text: i18n("Show on-screen display when switching:")
+
+                    checked: kcm.osdEnabled
+
+                    onToggled: kcm.osdEnabled = checked
+                }
+
+                QQC2.SpinBox {
+                    id: osdDuration
+
+                    enabled: osdEnabled.checked
+
+                    from: 0
+                    to: 10000
+                    stepSize: 100
+
+                    textFromValue: function(value, locale) { return i18n("%1 ms", value)}
+
+                    value: kcm.osdDuration
+
+                    onValueChanged: kcm.osdDuration = value
+                }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+
+                Item {
+                    width: units.largeSpacing
+                }
+
+                QQC2.CheckBox {
+                    id: osdTextOnly
+
+                    enabled: osdEnabled.checked
+
+                    text: i18n("Show desktop layout indicators")
+
+                    checked: !kcm.osdTextOnly
+
+                    onToggled: kcm.osdTextOnly = !checked
+                }
             }
         }
     }
