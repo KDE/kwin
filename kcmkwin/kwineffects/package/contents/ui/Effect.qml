@@ -24,6 +24,7 @@ import QtQuick.Layouts 1.1
 import org.kde.kirigami 2.5 as Kirigami
 
 Kirigami.SwipeListItem {
+    id: listItem
     hoverEnabled: true
     onClicked: {
         view.currentIndex = index;
@@ -59,10 +60,14 @@ Kirigami.SwipeListItem {
         }
 
         ColumnLayout {
-            QQC2.Label {
+            Layout.topMargin: Kirigami.Units.smallSpacing
+            Layout.bottomMargin: Kirigami.Units.smallSpacing
+            spacing: 0
+
+            Kirigami.Heading {
                 Layout.fillWidth: true
 
-                font.weight: Font.Bold
+                level: 4
                 text: model.NameRole
                 wrapMode: Text.Wrap
             }
@@ -71,6 +76,7 @@ Kirigami.SwipeListItem {
                 Layout.fillWidth: true
 
                 text: model.DescriptionRole
+                opacity: listItem.hovered ? 0.8 : 0.6
                 wrapMode: Text.Wrap
             }
 
@@ -79,8 +85,8 @@ Kirigami.SwipeListItem {
 
                 Layout.fillWidth: true
 
-                font.weight: Font.Bold
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
+                opacity: listItem.hovered ? 0.8 : 0.6
                 visible: view.currentIndex === index
                 wrapMode: Text.Wrap
             }

@@ -109,7 +109,7 @@ ScrollViewKCM {
             supportsMouseEvents: false
 
             Kirigami.Heading {
-                level: 3
+                level: 2
                 text: section
             }
         }
