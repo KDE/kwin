@@ -88,9 +88,6 @@ Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
 
 Xwayland::~Xwayland()
 {
-    delete m_dataBridge;
-    m_dataBridge = nullptr;
-
     disconnect(m_xwaylandFailConnection);
     if (m_app->x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
@@ -179,6 +176,12 @@ void Xwayland::init()
     );
     m_xwaylandProcess->start();
     close(pipeFds[1]);
+}
+
+void Xwayland::prepareDestroy()
+{
+    delete m_dataBridge;
+    m_dataBridge = nullptr;
 }
 
 void Xwayland::createX11Connection()

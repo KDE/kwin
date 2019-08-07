@@ -47,6 +47,7 @@ public:
     ~Xwayland() override;
 
     void init();
+    void prepareDestroy();
 
     xcb_screen_t *xcbScreen() const {
         return m_xcbScreen;
