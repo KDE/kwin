@@ -63,6 +63,16 @@ Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=Configure navigation, number and layout of virtual desktops
+Comment[ca]=Configura la navegació, el nombre i la disposició dels escriptoris virtuals
+Comment[de]=Navigation, Anzahl und Layout virtueller Arbeitsflächen einrichten
+Comment[es]=Configurar la navegación, número y disposición de los escritorios virtuales
+Comment[eu]=Konfiguratu nabigatzea, alegiazko mahaigainen kopurua eta antolamendua
+Comment[nl]=Navigatie, aantal en indeling van virtuele bureaubladen configureren
+Comment[pt]=Configura a navegação, número e disposição dos ecrãs virtuais
+Comment[sv]=Anpassa navigering, antal och layout av virtuella skrivbord
+Comment[uk]=Налаштовування навігації, кількості та компонування віртуальних стільниць
+Comment[x-test]=xxConfigure navigation, number and layout of virtual desktopsxx
+Comment[zh_TW]=設定虛擬桌面的導覽、數字與佈局
 
 Icon=preferences-desktop
 Type=Service
