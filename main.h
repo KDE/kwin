@@ -212,7 +212,6 @@ protected:
     void createWorkspace();
     void createAtoms();
     void createOptions();
-    void createCompositor();
     void setupEventFilters();
     void destroyWorkspace();
     void destroyCompositor();

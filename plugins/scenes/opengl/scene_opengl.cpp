@@ -519,7 +519,7 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
     return scene;
 }
 
-OverlayWindow *SceneOpenGL::overlayWindow()
+OverlayWindow *SceneOpenGL::overlayWindow() const
 {
     return m_backend->overlayWindow();
 }
@@ -823,11 +823,15 @@ SceneOpenGLTexture *SceneOpenGL::createTexture()
 }
 
 bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        // TODO: On Wayland we can't suspend. Find a solution that works here as well!
+        return true;
+    }
     GLint limit[2];
     glGetIntegerv(GL_MAX_VIEWPORT_DIMS, limit);
     if (limit[0] < size.width() || limit[1] < size.height()) {
-        QMetaObject::invokeMethod(Compositor::self(), "suspend",
-                                  Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, Compositor::AllReasonSuspend));
+        QMetaObject::invokeMethod(static_cast<X11Compositor*>(Compositor::self()), "suspend",
+                                  Qt::QueuedConnection, Q_ARG(X11Compositor::SuspendReason, X11Compositor::AllReasonSuspend));
         return false;
     }
     return true;

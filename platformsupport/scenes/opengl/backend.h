@@ -112,7 +112,7 @@ public:
      *
      * @return :OverlayWindow*
      */
-    virtual OverlayWindow *overlayWindow();
+    virtual OverlayWindow *overlayWindow() const;
     /**
      * @brief Whether the creation of the Backend failed.
      *

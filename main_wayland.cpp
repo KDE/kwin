@@ -180,7 +180,7 @@ void ApplicationWayland::continueStartupWithScreens()
 {
     disconnect(kwinApp()->platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
-    createCompositor();
+    WaylandCompositor::create();
     connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
 }
 

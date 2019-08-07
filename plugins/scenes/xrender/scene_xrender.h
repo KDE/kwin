@@ -159,7 +159,7 @@ public:
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t xrenderBufferPicture() const override;
-    OverlayWindow *overlayWindow() override {
+    OverlayWindow *overlayWindow() const override {
         return m_backend->overlayWindow();
     }
     bool usesOverlayWindow() const override {

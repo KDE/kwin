@@ -38,15 +38,6 @@ class KWIN_EXPORT Compositor : public QObject
 {
     Q_OBJECT
 public:
-    enum SuspendReason {
-        NoReasonSuspend     = 0,
-        UserSuspend         = 1 << 0,
-        BlockRuleSuspend    = 1 << 1,
-        ScriptSuspend       = 1 << 2,
-        AllReasonSuspend    = 0xff
-    };
-    Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
-
     enum class State {
         On = 0,
         Off,
@@ -55,6 +46,7 @@ public:
     };
 
     ~Compositor() override;
+    static Compositor *self();
 
     // when adding repaints caused by a window, you probably want to use
     // either Toplevel::addRepaint() or Toplevel::addWorkspaceRepaint()
@@ -81,6 +73,157 @@ public:
     void bufferSwapComplete();
 
     /**
+     * Toggles compositing, that is if the Compositor is suspended it will be resumed
+     * and if the Compositor is active it will be suspended.
+     * Invoked by keybinding (shortcut default: Shift + Alt + F12).
+     */
+    virtual void toggleCompositing() = 0;
+
+    /**
+     * Re-initializes the Compositor completely.
+     * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
+     */
+    virtual void reinitialize();
+
+    /**
+     * Whether the Compositor is active. That is a Scene is present and the Compositor is
+     * not shutting down itself.
+     */
+    bool isActive();
+    virtual int refreshRate() const = 0;
+
+    bool hasScene() const {
+        return m_scene != NULL;
+    }
+    Scene *scene() const {
+        return m_scene;
+    }
+
+    /**
+     * Checks whether @p w is the Scene's overlay window.
+     */
+    virtual bool checkForOverlayWindow(WId w) const = 0;
+
+    /**
+     * @brief Static check to test whether the Compositor is available and active.
+     *
+     * @return bool @c true if there is a Compositor and it is active, @c false otherwise
+     */
+    static bool compositing() {
+        return s_compositor != NULL && s_compositor->isActive();
+    }
+
+
+    virtual void updateCompositeBlocking() = 0;
+    virtual void updateClientCompositeBlocking(KWin::Client *c) = 0;
+
+    // for delayed supportproperty management of effects
+    void keepSupportProperty(xcb_atom_t atom);
+    void removeSupportProperty(xcb_atom_t atom);
+
+Q_SIGNALS:
+    void compositingToggled(bool active);
+    void aboutToDestroy();
+    void aboutToToggleCompositing();
+    void sceneCreated();
+    void bufferSwapCompleted();
+
+protected:
+    explicit Compositor(QObject *parent = nullptr);
+    void timerEvent(QTimerEvent *te) override;
+
+    virtual void start() = 0;
+    void stop();
+
+    /**
+     * @brief Prepares start.
+     * @return bool @c true if start should be continued and @c if not.
+     */
+    bool setupStart();
+    /**
+     * Continues the startup after Scene And Workspace are created
+     */
+    void startupWithWorkspace();
+    virtual void performCompositing();
+
+    virtual void configChanged();
+
+    void destroyCompositorSelection();
+
+    static Compositor *s_compositor;
+
+private:
+    void claimCompositorSelection();
+
+    void setupX11Support();
+
+    void setCompositeTimer();
+    bool windowRepaintsPending() const;
+
+    void releaseCompositorSelection();
+    void deleteUnusedSupportProperties();
+
+    State m_state;
+
+    QBasicTimer compositeTimer;
+    CompositorSelectionOwner *m_selectionOwner;
+    QTimer m_releaseSelectionTimer;
+    QList<xcb_atom_t> m_unusedSupportProperties;
+    QTimer m_unusedSupportPropertyTimer;
+    qint64 vBlankInterval, fpsInterval;
+    QRegion repaints_region;
+
+    qint64 m_timeSinceLastVBlank;
+
+    Scene *m_scene;
+
+    bool m_bufferSwapPending;
+    bool m_composeAtSwapCompletion;
+
+    int m_framesToTestForSafety = 3;
+    QElapsedTimer m_monotonicClock;
+};
+
+class KWIN_EXPORT WaylandCompositor : public Compositor
+{
+    Q_OBJECT
+public:
+    static WaylandCompositor *create(QObject *parent = nullptr);
+    ~WaylandCompositor() override = default;
+
+    int refreshRate() const override;
+
+    void toggleCompositing() override;
+
+    bool checkForOverlayWindow(WId w) const override;
+
+    void updateCompositeBlocking() override;
+    void updateClientCompositeBlocking(KWin::Client* c) override;
+
+protected:
+    void start() override;
+
+private:
+    explicit WaylandCompositor(QObject *parent);
+};
+
+class KWIN_EXPORT X11Compositor : public Compositor
+{
+    Q_OBJECT
+public:
+    enum SuspendReason {
+        NoReasonSuspend     = 0,
+        UserSuspend         = 1 << 0,
+        BlockRuleSuspend    = 1 << 1,
+        ScriptSuspend       = 1 << 2,
+        AllReasonSuspend    = 0xff
+    };
+    Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
+
+    static X11Compositor *create(QObject *parent = nullptr);
+    ~X11Compositor() override = default;
+
+    /**
      * @brief Suspends the Compositor if it is currently active.
      *
      * Note: it is possible that the Compositor is not able to suspend. Use isActive to check
@@ -89,8 +232,8 @@ public:
      * @return void
      * @see resume
      * @see isActive
-     */
-    Q_INVOKABLE void suspend(Compositor::SuspendReason reason);
+     **/
+    Q_INVOKABLE void suspend(SuspendReason reason);
 
     /**
      * @brief Resumes the Compositor if it is currently suspended.
@@ -108,121 +251,37 @@ public:
      * @see isActive
      * @see isCompositingPossible
      * @see isOpenGLBroken
-     */
-    Q_INVOKABLE void resume(Compositor::SuspendReason reason);
+     **/
+    Q_INVOKABLE void resume(SuspendReason reason);
 
-    /**
-     * Toggles compositing, that is if the Compositor is suspended it will be resumed
-     * and if the Compositor is active it will be suspended.
-     * Invoked by keybinding (shortcut default: Shift + Alt + F12).
-     */
-    void toggleCompositing();
+    void toggleCompositing() override;
+    void reinitialize() override;
 
-    /**
-     * Re-initializes the Compositor completely.
-     * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
-     */
-    void reinitialize();
+    void configChanged() override;
 
-    /**
-     * Whether the Compositor is active. That is a Scene is present and the Compositor is
-     * not shutting down itself.
-     */
-    bool isActive();
-    int xrrRefreshRate() const {
-        return m_xrrRefreshRate;
-    }
-
-    bool hasScene() const {
-        return m_scene != NULL;
-    }
-
-    /**
-     * Checks whether @p w is the Scene's overlay window.
-     */
-    bool checkForOverlayWindow(WId w) const;
+    bool checkForOverlayWindow(WId w) const override;
     /**
      * @returns Whether the Scene's Overlay X Window is visible.
-     */
+     **/
     bool isOverlayWindowVisible() const;
 
-    Scene *scene() {
-        return m_scene;
-    }
+    int refreshRate() const override;
 
-    /**
-     * @brief Static check to test whether the Compositor is available and active.
-     *
-     * @return bool @c true if there is a Compositor and it is active, @c false otherwise
-     */
-    static bool compositing() {
-        return s_compositor != NULL && s_compositor->isActive();
-    }
-
-    void updateCompositeBlocking();
-    void updateClientCompositeBlocking(KWin::Client* c);
-
-    // for delayed supportproperty management of effects
-    void keepSupportProperty(xcb_atom_t atom);
-    void removeSupportProperty(xcb_atom_t atom);
-
-Q_SIGNALS:
-    void compositingToggled(bool active);
-    void aboutToDestroy();
-    void aboutToToggleCompositing();
-    void sceneCreated();
-    void bufferSwapCompleted();
+    void updateCompositeBlocking() override;
+    void updateClientCompositeBlocking(KWin::Client* c) override;
 
 protected:
-    void timerEvent(QTimerEvent *te) override;
+    void start() override;
+    void performCompositing() override;
 
 private:
-    Q_INVOKABLE void start();
-    void stop();
-
-    void claimCompositorSelection();
-
-    /**
-     * Continues the startup after Scene And Workspace are created
-     */
-    void startupWithWorkspace();
-    void setupX11Support();
-
-    void setCompositeTimer();
-    void performCompositing();
-    bool windowRepaintsPending() const;
-
-    void releaseCompositorSelection();
-    void deleteUnusedSupportProperties();
-
-    void slotConfigChanged();
-
-    State m_state;
+    explicit X11Compositor(QObject *parent);
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
-     */
+     **/
     SuspendReasons m_suspended;
 
-    QBasicTimer compositeTimer;
-    CompositorSelectionOwner *m_selectionOwner;
-    QTimer m_releaseSelectionTimer;
-    QList<xcb_atom_t> m_unusedSupportProperties;
-    QTimer m_unusedSupportPropertyTimer;
-    qint64 vBlankInterval, fpsInterval;
     int m_xrrRefreshRate;
-    QRegion repaints_region;
-
-    qint64 m_timeSinceLastVBlank;
-
-    Scene *m_scene;
-
-    bool m_bufferSwapPending;
-    bool m_composeAtSwapCompletion;
-
-    int m_framesToTestForSafety = 3;
-    QElapsedTimer m_monotonicClock;
-
-    KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };
 
 }

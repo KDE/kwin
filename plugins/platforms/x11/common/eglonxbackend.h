@@ -40,7 +40,7 @@ public:
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
-    OverlayWindow* overlayWindow() override;
+    OverlayWindow* overlayWindow() const override;
     bool usesOverlayWindow() const override;
     void init() override;
 

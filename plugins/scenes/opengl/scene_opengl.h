@@ -51,7 +51,7 @@ public:
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
-    OverlayWindow *overlayWindow() override;
+    OverlayWindow *overlayWindow() const override;
     bool usesOverlayWindow() const override;
     bool blocksForRetrace() const override;
     bool syncsToVBlank() const override;

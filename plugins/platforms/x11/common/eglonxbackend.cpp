@@ -463,7 +463,7 @@ bool EglOnXBackend::usesOverlayWindow() const
     return m_usesOverlayWindow;
 }
 
-OverlayWindow* EglOnXBackend::overlayWindow()
+OverlayWindow* EglOnXBackend::overlayWindow() const
 {
     return m_overlayWindow;
 }

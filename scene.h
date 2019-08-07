@@ -147,7 +147,7 @@ public:
     virtual void idle();
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
-    virtual OverlayWindow* overlayWindow() = 0;
+    virtual OverlayWindow* overlayWindow() const = 0;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();

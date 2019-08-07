@@ -849,7 +849,7 @@ void GlxBackend::doneCurrent()
     glXMakeCurrent(display(), None, nullptr);
 }
 
-OverlayWindow* GlxBackend::overlayWindow()
+OverlayWindow* GlxBackend::overlayWindow() const
 {
     return m_overlayWindow;
 }

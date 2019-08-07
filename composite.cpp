@@ -62,7 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <cstdio>
 
-Q_DECLARE_METATYPE(KWin::Compositor::SuspendReason)
+Q_DECLARE_METATYPE(KWin::X11Compositor::SuspendReason)
 
 namespace KWin
 {
@@ -70,6 +70,27 @@ namespace KWin
 extern int screen_number; // main.cpp
 extern bool is_multihead;
 extern int currentRefreshRate();
+
+Compositor *Compositor::s_compositor = nullptr;
+Compositor *Compositor::self()
+{
+    return s_compositor;
+}
+
+WaylandCompositor *WaylandCompositor::create(QObject *parent)
+{
+    Q_ASSERT(!s_compositor);
+    auto *compositor = new WaylandCompositor(parent);
+    s_compositor = compositor;
+    return compositor;
+}
+X11Compositor *X11Compositor::create(QObject *parent)
+{
+    Q_ASSERT(!s_compositor);
+    auto *compositor = new X11Compositor(parent);
+    s_compositor = compositor;
+    return compositor;
+}
 
 class CompositorSelectionOwner : public KSelectionOwner
 {
@@ -92,26 +113,21 @@ private:
     bool m_owning;
 };
 
-KWIN_SINGLETON_FACTORY_VARIABLE(Compositor, s_compositor)
-
 static inline qint64 milliToNano(int milli) { return qint64(milli) * 1000 * 1000; }
 static inline qint64 nanoToMilli(int nano) { return nano / (1000*1000); }
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
     , m_state(State::Off)
-    , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
     , m_selectionOwner(NULL)
     , vBlankInterval(0)
     , fpsInterval(0)
-    , m_xrrRefreshRate(0)
     , m_timeSinceLastVBlank(0)
     , m_scene(NULL)
     , m_bufferSwapPending(false)
     , m_composeAtSwapCompletion(false)
 {
-    qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
-    connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
+    connect(options, &Options::configChanged, this, &Compositor::configChanged);
 
     m_monotonicClock.start();
 
@@ -131,7 +147,7 @@ Compositor::Compositor(QObject* workspace)
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
     if (kwinApp()->platform()->isReady()) {
-        QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
+        QTimer::singleShot(0, this, &Compositor::start);
     }
     connect(kwinApp()->platform(), &Platform::readyChanged, this,
         [this] (bool ready) {
@@ -141,12 +157,6 @@ Compositor::Compositor(QObject* workspace)
                 stop();
             }
         }, Qt::QueuedConnection
-    );
-    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this,
-        [this] {
-            delete m_selectionOwner;
-            m_selectionOwner = nullptr;
-        }
     );
 
     if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED"))
@@ -161,35 +171,18 @@ Compositor::~Compositor()
     emit aboutToDestroy();
     stop();
     deleteUnusedSupportProperties();
-    delete m_selectionOwner;
+    destroyCompositorSelection();
     s_compositor = NULL;
 }
 
-void Compositor::start()
+bool Compositor::setupStart()
 {
     if (kwinApp()->isTerminating()) {
         // Don't start while KWin is terminating. An event to restart might be lingering in the event queue due to graphics reset.
-        return;
+        return false;
     }
     if (m_state != State::Off) {
-        return;
-    }
-    if (m_suspended) {
-        QStringList reasons;
-        if (m_suspended & UserSuspend) {
-            reasons << QStringLiteral("Disabled by User");
-        }
-        if (m_suspended & BlockRuleSuspend) {
-            reasons << QStringLiteral("Disabled by Window");
-        }
-        if (m_suspended & ScriptSuspend) {
-            reasons << QStringLiteral("Disabled by Script");
-        }
-        qCDebug(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
-        return;
-    } else if (!kwinApp()->platform()->compositingPossible()) {
-        qCCritical(KWIN_CORE) << "Compositing is not possible";
-        return;
+        return false;
     }
     m_state = State::Starting;
 
@@ -262,7 +255,7 @@ void Compositor::start()
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
         }
-        return;
+        return false;
     }
 
     kwinApp()->platform()->setSelectedCompositor(m_scene->compositingType() & OpenGLCompositing ? OpenGLCompositing : m_scene->compositingType());
@@ -275,11 +268,7 @@ void Compositor::start()
     connect(m_scene, &Scene::resetCompositing, this, &Compositor::reinitialize);
     emit sceneCreated();
 
-    if (Workspace::self()) {
-        startupWithWorkspace();
-    } else {
-        connect(kwinApp(), &Application::workspaceCreated, this, &Compositor::startupWithWorkspace);
-    }
+    return true;
 }
 
 void Compositor::claimCompositorSelection()
@@ -319,10 +308,9 @@ void Compositor::startupWithWorkspace()
     Q_ASSERT(m_scene);
     connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
     setupX11Support();
-    m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = options->maxFpsInterval();
     if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
-        vBlankInterval = milliToNano(1000) / m_xrrRefreshRate;
+        vBlankInterval = milliToNano(1000) / currentRefreshRate();
         fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
     } else
         vBlankInterval = milliToNano(1); // no sync - DO NOT set "0", would cause div-by-zero segfaults.
@@ -431,6 +419,12 @@ void Compositor::stop()
     emit compositingToggled(false);
 }
 
+void Compositor::destroyCompositorSelection()
+{
+    delete m_selectionOwner;
+    m_selectionOwner = nullptr;
+}
+
 void Compositor::releaseCompositorSelection()
 {
     switch (m_state) {
@@ -479,16 +473,14 @@ void Compositor::deleteUnusedSupportProperties()
     }
 }
 
-void Compositor::slotConfigChanged()
+void Compositor::configChanged()
 {
-    if (!m_suspended) {
-        start();
-        if (effects)   // setupCompositing() may fail
-            effects->reconfigure();
-        addRepaintFull();
-    } else {
-        stop();
+    reinitialize();
+    if (effects) {
+        // setupCompositing() might fail.
+        effects->reconfigure();
     }
+    addRepaintFull();
 }
 
 void Compositor::reinitialize()
@@ -498,84 +490,11 @@ void Compositor::reinitialize()
 
     // Restart compositing
     stop();
-    // resume compositing if suspended
-    m_suspended = NoReasonSuspend;
     start();
 
     if (effects) { // start() may fail
         effects->reconfigure();
     }
-}
-
-// for the shortcut
-void Compositor::toggleCompositing()
-{
-    if (kwinApp()->platform()->requiresCompositing()) {
-        // we are not allowed to turn on/off compositing
-        return;
-    }
-    if (m_suspended) { // direct user call; clear all bits
-        resume(AllReasonSuspend);
-    } else { // but only set the user one (sufficient to suspend)
-        suspend(UserSuspend);
-    }
-}
-
-void Compositor::updateCompositeBlocking()
-{
-    updateClientCompositeBlocking(NULL);
-}
-
-void Compositor::updateClientCompositeBlocking(Client *c)
-{
-    if (kwinApp()->platform()->requiresCompositing()) {
-        return;
-    }
-    if (c) { // if c == 0 we just check if we can resume
-        if (c->isBlockingCompositing()) {
-            if (!(m_suspended & BlockRuleSuspend)) // do NOT attempt to call suspend(true); from within the eventchain!
-                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, BlockRuleSuspend));
-        }
-    }
-    else if (m_suspended & BlockRuleSuspend) {  // lost a client and we're blocked - can we resume?
-        bool resume = true;
-        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin(); it != Workspace::self()->clientList().constEnd(); ++it) {
-            if ((*it)->isBlockingCompositing()) {
-                resume = false;
-                break;
-            }
-        }
-        if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
-            QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection, Q_ARG(Compositor::SuspendReason, BlockRuleSuspend));
-        }
-    }
-}
-
-void Compositor::suspend(Compositor::SuspendReason reason)
-{
-    if (kwinApp()->platform()->requiresCompositing()) {
-        return;
-    }
-    Q_ASSERT(reason != NoReasonSuspend);
-    m_suspended |= reason;
-    if (reason & KWin::Compositor::ScriptSuspend) {
-        // when disabled show a shortcut how the user can get back compositing
-        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
-        if (!shortcuts.isEmpty()) {
-            // display notification only if there is the shortcut
-            const QString message = i18n("Desktop effects have been suspended by another application.<br/>"
-                                         "You can resume using the '%1' shortcut.", shortcuts.first().toString(QKeySequence::NativeText));
-            KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
-        }
-    }
-    stop();
-}
-
-void Compositor::resume(Compositor::SuspendReason reason)
-{
-    Q_ASSERT(reason != NoReasonSuspend);
-    m_suspended &= ~reason;
-    start();
 }
 
 void Compositor::addRepaint(int x, int y, int w, int h)
@@ -641,9 +560,6 @@ void Compositor::bufferSwapComplete()
 
 void Compositor::performCompositing()
 {
-    if (m_scene->usesOverlayWindow() && !isOverlayWindowVisible())
-        return; // nothing is visible anyway
-
     // If a buffer swap is still pending, we return to the event loop and
     // continue processing events until the swap has completed.
     if (m_bufferSwapPending) {
@@ -875,29 +791,212 @@ bool Compositor::isActive()
     return m_state == State::On;
 }
 
-bool Compositor::checkForOverlayWindow(WId w) const
+WaylandCompositor::WaylandCompositor(QObject *parent)
+    : Compositor(parent)
+{
+    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed,
+            this, &WaylandCompositor::destroyCompositorSelection);
+}
+
+// for the shortcut
+void WaylandCompositor::toggleCompositing()
+{
+    // Not possible on Wayland because we always composite.
+}
+
+void WaylandCompositor::start()
+{
+    if (!Compositor::setupStart()) {
+        // Internal setup failed, abort.
+        return;
+    }
+    if (Workspace::self()) {
+        startupWithWorkspace();
+    } else {
+        connect(kwinApp(), &Application::workspaceCreated, this, &WaylandCompositor::startupWithWorkspace);
+    }
+}
+
+bool WaylandCompositor::checkForOverlayWindow(WId w) const
+{
+    Q_UNUSED(w)
+    // There is no overlay window in Wayland/XWayland.
+    return false;
+}
+
+int WaylandCompositor::refreshRate() const
+{
+    // TODO: This makes no sense on Wayland. First step would be to atleast
+    //       set the refresh rate to the highest available one. Second step
+    //       would be to not use a uniform value at all but per screen.
+    return KWin::currentRefreshRate();
+}
+
+void WaylandCompositor::updateCompositeBlocking()
+{
+    // Composite blocking not possible on Wayland.
+}
+
+void WaylandCompositor::updateClientCompositeBlocking(Client *c)
+{
+    Q_UNUSED(c)
+    // Composite blocking not possible on Wayland.
+}
+
+X11Compositor::X11Compositor(QObject *parent)
+    : Compositor(parent)
+    , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
+    , m_xrrRefreshRate(0)
+{
+    qRegisterMetaType<X11Compositor::SuspendReason>("X11Compositor::SuspendReason");
+}
+
+// for the shortcut
+void X11Compositor::toggleCompositing()
+{
+    if (kwinApp()->platform()->requiresCompositing()) {
+        // we are not allowed to turn on/off compositing
+        return;
+    }
+    if (m_suspended) { // direct user call; clear all bits
+        resume(AllReasonSuspend);
+    } else { // but only set the user one (sufficient to suspend)
+        suspend(UserSuspend);
+    }
+}
+
+void X11Compositor::reinitialize()
+{
+    // resume compositing if suspended
+    m_suspended = NoReasonSuspend;
+    Compositor::reinitialize();
+}
+
+void X11Compositor::configChanged()
+{
+    if (m_suspended) {
+        stop();
+        return;
+    }
+    Compositor::configChanged();
+}
+
+void X11Compositor::suspend(X11Compositor::SuspendReason reason)
+{
+    Q_ASSERT(reason != NoReasonSuspend);
+    m_suspended |= reason;
+    if (reason & ScriptSuspend) {
+        // when disabled show a shortcut how the user can get back compositing
+        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
+        if (!shortcuts.isEmpty()) {
+            // display notification only if there is the shortcut
+            const QString message = i18n("Desktop effects have been suspended by another application.<br/>"
+                                         "You can resume using the '%1' shortcut.", shortcuts.first().toString(QKeySequence::NativeText));
+            KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
+        }
+    }
+    stop();
+}
+
+void X11Compositor::resume(X11Compositor::SuspendReason reason)
+{
+    Q_ASSERT(reason != NoReasonSuspend);
+    m_suspended &= ~reason;
+    start();
+}
+
+void X11Compositor::start()
+{
+    if (m_suspended) {
+        QStringList reasons;
+        if (m_suspended & UserSuspend) {
+            reasons << QStringLiteral("Disabled by User");
+        }
+        if (m_suspended & BlockRuleSuspend) {
+            reasons << QStringLiteral("Disabled by Window");
+        }
+        if (m_suspended & ScriptSuspend) {
+            reasons << QStringLiteral("Disabled by Script");
+        }
+        qCDebug(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
+        return;
+    } else if (!kwinApp()->platform()->compositingPossible()) {
+        qCCritical(KWIN_CORE) << "Compositing is not possible";
+        return;
+    }
+    if (!Compositor::setupStart()) {
+        // Internal setup failed, abort.
+        return;
+    }
+    m_xrrRefreshRate = KWin::currentRefreshRate();
+    startupWithWorkspace();
+}
+void X11Compositor::performCompositing()
+{
+    if (scene()->usesOverlayWindow() && !isOverlayWindowVisible()) {
+        return; // nothing is visible anyway
+    }
+    Compositor::performCompositing();
+}
+
+bool X11Compositor::checkForOverlayWindow(WId w) const
 {
     if (!hasScene()) {
         // no scene, so it cannot be the overlay window
         return false;
     }
-    if (!m_scene->overlayWindow()) {
+    if (!scene()->overlayWindow()) {
         // no overlay window, it cannot be the overlay
         return false;
     }
     // and compare the window ID's
-    return w == m_scene->overlayWindow()->window();
+    return w == scene()->overlayWindow()->window();
 }
 
-bool Compositor::isOverlayWindowVisible() const
+bool X11Compositor::isOverlayWindowVisible() const
 {
     if (!hasScene()) {
         return false;
     }
-    if (!m_scene->overlayWindow()) {
+    if (!scene()->overlayWindow()) {
         return false;
     }
-    return m_scene->overlayWindow()->isVisible();
+    return scene()->overlayWindow()->isVisible();
+}
+
+int X11Compositor::refreshRate() const
+{
+    return m_xrrRefreshRate;
+}
+
+void X11Compositor::updateCompositeBlocking()
+{
+    updateClientCompositeBlocking(NULL);
+}
+
+void X11Compositor::updateClientCompositeBlocking(Client *c)
+{
+    if (kwinApp()->platform()->requiresCompositing()) {
+        return;
+    }
+    if (c) { // if c == 0 we just check if we can resume
+        if (c->isBlockingCompositing()) {
+            if (!(m_suspended & BlockRuleSuspend)) // do NOT attempt to call suspend(true); from within the eventchain!
+                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection, Q_ARG(SuspendReason, BlockRuleSuspend));
+        }
+    }
+    else if (m_suspended & BlockRuleSuspend) {  // lost a client and we're blocked - can we resume?
+        bool resume = true;
+        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin(); it != Workspace::self()->clientList().constEnd(); ++it) {
+            if ((*it)->isBlockingCompositing()) {
+                resume = false;
+                break;
+            }
+        }
+        if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
+            QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection, Q_ARG(SuspendReason, BlockRuleSuspend));
+        }
+    }
 }
 
 } // namespace

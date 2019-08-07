@@ -53,7 +53,7 @@ void XRandRScreens::init()
         if (!workspace()->compositing()) {
             return;
         }
-        if (Compositor::self()->xrrRefreshRate() == Options::currentRefreshRate()) {
+        if (Compositor::self()->refreshRate() == Options::currentRefreshRate()) {
             return;
         }
         // desktopResized() should take care of when the size or

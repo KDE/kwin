@@ -76,7 +76,7 @@ public:
     void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
     bool makeCurrent() override;
     void doneCurrent() override;
-    OverlayWindow* overlayWindow() override;
+    OverlayWindow* overlayWindow() const override;
     bool usesOverlayWindow() const override;
     void init() override;
 

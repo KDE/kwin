@@ -176,7 +176,8 @@ Workspace::Workspace(const QString &sessionKey)
     if (Compositor::self()) {
         m_compositor = Compositor::self();
     } else {
-        m_compositor = Compositor::create(this);
+        Q_ASSERT(kwinApp()->operationMode() == Application::OperationMode::OperationModeX11);
+        m_compositor = X11Compositor::create(this);
     }
     connect(this, &Workspace::currentDesktopChanged, m_compositor, &Compositor::addRepaintFull);
     connect(m_compositor, &QObject::destroyed, this, [this] { m_compositor = nullptr; });

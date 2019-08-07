@@ -35,7 +35,7 @@ class KWIN_EXPORT SceneQPainter : public Scene
 public:
     ~SceneQPainter() override;
     bool usesOverlayWindow() const override;
-    OverlayWindow* overlayWindow() override;
+    OverlayWindow* overlayWindow() const override;
     qint64 paint(QRegion damage, ToplevelList windows) override;
     void paintGenericScreen(int mask, ScreenPaintData data) override;
     CompositingType compositingType() const override;
@@ -180,7 +180,7 @@ bool SceneQPainter::usesOverlayWindow() const
 }
 
 inline
-OverlayWindow* SceneQPainter::overlayWindow()
+OverlayWindow* SceneQPainter::overlayWindow() const
 {
     return m_backend->overlayWindow();
 }

@@ -80,7 +80,7 @@ QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
     return region;
 }
 
-OverlayWindow* OpenGLBackend::overlayWindow()
+OverlayWindow* OpenGLBackend::overlayWindow() const
 {
     return NULL;
 }

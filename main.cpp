@@ -310,11 +310,6 @@ void Application::createOptions()
     options = new Options;
 }
 
-void Application::createCompositor()
-{
-    Compositor::create(this);
-}
-
 void Application::setupEventFilters()
 {
     installNativeEventFilter(m_eventFilter.data());
