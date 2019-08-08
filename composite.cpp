@@ -67,7 +67,9 @@ Q_DECLARE_METATYPE(KWin::X11Compositor::SuspendReason)
 namespace KWin
 {
 
-extern int screen_number; // main.cpp
+// See main.cpp:
+extern int screen_number;
+
 extern bool is_multihead;
 extern int currentRefreshRate();
 
@@ -131,16 +133,18 @@ Compositor::Compositor(QObject* workspace)
 
     m_monotonicClock.start();
 
-    // 2 sec which should be enough to restart the compositor
+    // 2 sec which should be enough to restart the compositor.
     static const int compositorLostMessageDelay = 2000;
 
     m_releaseSelectionTimer.setSingleShot(true);
     m_releaseSelectionTimer.setInterval(compositorLostMessageDelay);
-    connect(&m_releaseSelectionTimer, &QTimer::timeout, this, &Compositor::releaseCompositorSelection);
+    connect(&m_releaseSelectionTimer, &QTimer::timeout,
+            this, &Compositor::releaseCompositorSelection);
 
     m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
     m_unusedSupportPropertyTimer.setSingleShot(true);
-    connect(&m_unusedSupportPropertyTimer, &QTimer::timeout, this, &Compositor::deleteUnusedSupportProperties);
+    connect(&m_unusedSupportPropertyTimer, &QTimer::timeout,
+            this, &Compositor::deleteUnusedSupportProperties);
 
     // Delay the call to start by one event cycle.
     // The ctor of this class is invoked from the Workspace ctor, that means before
@@ -178,7 +182,8 @@ Compositor::~Compositor()
 bool Compositor::setupStart()
 {
     if (kwinApp()->isTerminating()) {
-        // Don't start while KWin is terminating. An event to restart might be lingering in the event queue due to graphics reset.
+        // Don't start while KWin is terminating. An event to restart might be lingering
+        // in the event queue due to graphics reset.
         return false;
     }
     if (m_state != State::Off) {
@@ -190,7 +195,8 @@ bool Compositor::setupStart()
 
     setupX11Support();
 
-    // There might still be a deleted around, needs to be cleared before creating the scene (BUG 333275)
+    // There might still be a deleted around, needs to be cleared before
+    // creating the scene (BUG 333275).
     if (Workspace::self()) {
         while (!Workspace::self()->deletedList().isEmpty()) {
             Workspace::self()->deletedList().first()->discard();
@@ -200,12 +206,15 @@ bool Compositor::setupStart()
     emit aboutToToggleCompositing();
 
     auto supportedCompositors = kwinApp()->platform()->supportedCompositors();
-    const auto userConfigIt = std::find(supportedCompositors.begin(), supportedCompositors.end(), options->compositingMode());
+    const auto userConfigIt = std::find(supportedCompositors.begin(), supportedCompositors.end(),
+                                        options->compositingMode());
+
     if (userConfigIt != supportedCompositors.end()) {
         supportedCompositors.erase(userConfigIt);
         supportedCompositors.prepend(options->compositingMode());
     } else {
-        qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+        qCWarning(KWIN_CORE)
+                << "Configured compositor not supported by Platform. Falling back to defaults";
     }
 
     const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
@@ -223,12 +232,14 @@ bool Compositor::setupStart()
                 return false;
             });
         if (pluginIt != availablePlugins.end()) {
-            std::unique_ptr<SceneFactory> factory{qobject_cast<SceneFactory*>(pluginIt->instantiate())};
+            std::unique_ptr<SceneFactory>
+                    factory{ qobject_cast<SceneFactory*>(pluginIt->instantiate()) };
             if (factory) {
                 m_scene = factory->create(this);
                 if (m_scene) {
                     if (!m_scene->initFailed()) {
-                        qCDebug(KWIN_CORE) << "Instantiated compositing plugin:" << pluginIt->name();
+                        qCDebug(KWIN_CORE) << "Instantiated compositing plugin:"
+                                           << pluginIt->name();
                         break;
                     } else {
                         delete m_scene;
@@ -258,10 +269,15 @@ bool Compositor::setupStart()
         return false;
     }
 
-    kwinApp()->platform()->setSelectedCompositor(m_scene->compositingType() & OpenGLCompositing ? OpenGLCompositing : m_scene->compositingType());
+    CompositingType compositingType = m_scene->compositingType();
+    if (compositingType & OpenGLCompositing) {
+        // Override for OpenGl sub-type OpenGL2Compositing.
+        compositingType = OpenGLCompositing;
+    }
+    kwinApp()->platform()->setSelectedCompositor(compositingType);
 
     if (!Workspace::self() && m_scene && m_scene->compositingType() == QPainterCompositing) {
-        // Force Software QtQuick on first startup with QPainter
+        // Force Software QtQuick on first startup with QPainter.
         QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
     }
 
@@ -277,67 +293,84 @@ void Compositor::claimCompositorSelection()
         char selection_name[ 100 ];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
         m_selectionOwner = new CompositorSelectionOwner(selection_name);
-        connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership, this, &Compositor::stop);
+        connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership,
+                this, &Compositor::stop);
     }
 
-    if (!m_selectionOwner) // no X11 yet
+    if (!m_selectionOwner) {
+        // No X11 yet.
         return;
-
+    }
     if (!m_selectionOwner->owning()) {
-        m_selectionOwner->claim(true);   // force claiming
+        // Force claim ownership.
+        m_selectionOwner->claim(true);
         m_selectionOwner->setOwning(true);
     }
 }
 
 void Compositor::setupX11Support()
 {
-    auto c = kwinApp()->x11Connection();
-    if (!c) {
+    auto *con = kwinApp()->x11Connection();
+    if (!con) {
         delete m_selectionOwner;
         m_selectionOwner = nullptr;
         return;
     }
     claimCompositorSelection();
-    xcb_composite_redirect_subwindows(c, kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+    xcb_composite_redirect_subwindows(con, kwinApp()->x11RootWindow(),
+                                      XCB_COMPOSITE_REDIRECT_MANUAL);
 }
 
 void Compositor::startupWithWorkspace()
 {
-    connect(kwinApp(), &Application::x11ConnectionChanged, this, &Compositor::setupX11Support, Qt::UniqueConnection);
+    connect(kwinApp(), &Application::x11ConnectionChanged,
+            this, &Compositor::setupX11Support, Qt::UniqueConnection);
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
+
     connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
     setupX11Support();
     fpsInterval = options->maxFpsInterval();
-    if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
+
+    if (m_scene->syncsToVBlank()) {
+        // If we do vsync, set the fps to the next multiple of the vblank rate.
         vBlankInterval = milliToNano(1000) / currentRefreshRate();
         fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
-    } else
-        vBlankInterval = milliToNano(1); // no sync - DO NOT set "0", would cause div-by-zero segfaults.
-    m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now" - we don't have even a slight idea when the first vsync will occur
+    } else {
+        // No vsync - DO NOT set "0", would cause div-by-zero segfaults.
+        vBlankInterval = milliToNano(1);
+    }
+
+    // This means "start now" - we don't have even a slight idea when the first vsync will occur.
+    m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1);
     scheduleRepaint();
-    kwinApp()->platform()->createEffectsHandler(this, m_scene);   // sets also the 'effects' pointer
+
+    // Sets also the 'effects' pointer.
+    kwinApp()->platform()->createEffectsHandler(this, m_scene);
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
     connect(effects, &EffectsHandler::screenGeometryChanged, this, &Compositor::addRepaintFull);
     addRepaintFull();
-    foreach (Client * c, Workspace::self()->clientList()) {
+
+    for (Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
         c->getShadow();
     }
-    foreach (Client * c,  Workspace::self()->desktopList())
+    for (Client *c : Workspace::self()->desktopList()) {
         c->setupCompositing();
-    foreach (Unmanaged * c, Workspace::self()->unmanagedList()) {
+    }
+    for (Unmanaged *c : Workspace::self()->unmanagedList()) {
         c->setupCompositing();
         c->getShadow();
     }
-    if (auto w = waylandServer()) {
-        const auto clients = w->clients();
-        for (auto c : clients) {
+
+    if (auto *server = waylandServer()) {
+        const auto clients = server->clients();
+        for (ShellClient *c : clients) {
             c->setupCompositing();
             c->getShadow();
         }
-        const auto internalClients = w->internalClients();
-        for (auto c : internalClients) {
+        const auto internalClients = server->internalClients();
+        for (ShellClient *c : internalClients) {
             c->setupCompositing();
             c->getShadow();
         }
@@ -350,7 +383,7 @@ void Compositor::startupWithWorkspace()
         m_releaseSelectionTimer.stop();
     }
 
-    // render at least once
+    // Render at least once.
     performCompositing();
 }
 
@@ -377,39 +410,48 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        foreach (Client * c, Workspace::self()->clientList())
+        for (Client *c : Workspace::self()->clientList()) {
             m_scene->removeToplevel(c);
-        foreach (Client * c, Workspace::self()->desktopList())
+        }
+        for (Client *c : Workspace::self()->desktopList()) {
             m_scene->removeToplevel(c);
-        foreach (Unmanaged * c, Workspace::self()->unmanagedList())
+        }
+        for (Unmanaged *c : Workspace::self()->unmanagedList()) {
             m_scene->removeToplevel(c);
-        foreach (Client * c, Workspace::self()->clientList())
-        c->finishCompositing();
-        foreach (Client * c, Workspace::self()->desktopList())
-        c->finishCompositing();
-        foreach (Unmanaged * c, Workspace::self()->unmanagedList())
-        c->finishCompositing();
-        if (auto c = kwinApp()->x11Connection()) {
-            xcb_composite_unredirect_subwindows(c, kwinApp()->x11RootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+        }
+        for (Client *c : Workspace::self()->clientList()) {
+            c->finishCompositing();
+        }
+        for (Client *c : Workspace::self()->desktopList()) {
+            c->finishCompositing();
+        }
+        for (Unmanaged *c : Workspace::self()->unmanagedList()) {
+            c->finishCompositing();
+        }
+        if (auto *con = kwinApp()->x11Connection()) {
+            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
+                                                XCB_COMPOSITE_REDIRECT_MANUAL);
         }
         while (!workspace()->deletedList().isEmpty()) {
             workspace()->deletedList().first()->discard();
         }
     }
+
     if (waylandServer()) {
-        foreach (ShellClient *c, waylandServer()->clients()) {
+        for (ShellClient *c : waylandServer()->clients()) {
             m_scene->removeToplevel(c);
         }
-        foreach (ShellClient *c, waylandServer()->internalClients()) {
+        for (ShellClient *c : waylandServer()->internalClients()) {
             m_scene->removeToplevel(c);
         }
-        foreach (ShellClient *c, waylandServer()->clients()) {
+        for (ShellClient *c : waylandServer()->clients()) {
             c->finishCompositing();
         }
-        foreach (ShellClient *c, waylandServer()->internalClients()) {
+        for (ShellClient *c : waylandServer()->internalClients()) {
             c->finishCompositing();
         }
     }
+
     delete m_scene;
     m_scene = NULL;
     compositeTimer.stop();
@@ -465,10 +507,10 @@ void Compositor::deleteUnusedSupportProperties()
         m_unusedSupportPropertyTimer.start();
         return;
     }
-    if (const auto c = kwinApp()->x11Connection()) {
-        foreach (const xcb_atom_t &atom, m_unusedSupportProperties) {
+    if (auto *con = kwinApp()->x11Connection()) {
+        for (const xcb_atom_t &atom : qAsConst(m_unusedSupportProperties)) {
             // remove property from root window
-            xcb_delete_property(c, kwinApp()->x11RootWindow(), atom);
+            xcb_delete_property(con, kwinApp()->x11RootWindow(), atom);
         }
     }
 }
@@ -581,9 +623,10 @@ void Compositor::performCompositing()
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    foreach (Toplevel *win, windows) {
-        if (win->resetAndFetchDamage())
+    for (Toplevel *win : windows) {
+        if (win->resetAndFetchDamage()) {
             damaged << win;
+        }
     }
 
     if (damaged.count() > 0) {
@@ -594,14 +637,14 @@ void Compositor::performCompositing()
     }
 
     // Move elevated windows to the top of the stacking order
-    foreach (EffectWindow *c, static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {
-        Toplevel* t = static_cast< EffectWindowImpl* >(c)->window();
+    for (EffectWindow *c : static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {
+        Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
         windows.removeAll(t);
         windows.append(t);
     }
 
     // Get the replies
-    foreach (Toplevel *win, damaged) {
+    for (Toplevel *win : damaged) {
         // Discard the cached lanczos texture
         if (win->effectWindow()) {
             const QVariant texture = win->effectWindow()->data(LanczosCacheRole);
@@ -625,18 +668,19 @@ void Compositor::performCompositing()
         return;
     }
 
-    // skip windows that are not yet ready for being painted and if screen is locked skip windows that are
-    // neither lockscreen nor inputmethod windows
-    // TODO ?
-    // this cannot be used so carelessly - needs protections against broken clients, the window
-    // should not get focus before it's displayed, handle unredirected windows properly and so on.
-    foreach (Toplevel *t, windows) {
-        if (!t->readyForPainting()) {
-            windows.removeAll(t);
+    // Skip windows that are not yet ready for being painted and if screen is locked skip windows
+    // that are neither lockscreen nor inputmethod windows.
+    //
+    // TODO? This cannot be used so carelessly - needs protections against broken clients, the
+    // window should not get focus before it's displayed, handle unredirected windows properly and
+    // so on.
+    for (Toplevel *win : windows) {
+        if (!win->readyForPainting()) {
+            windows.removeAll(win);
         }
         if (waylandServer() && waylandServer()->isScreenLocked()) {
-            if(!t->isLockScreen() && !t->isInputMethod()) {
-                windows.removeAll(t);
+            if(!win->isLockScreen() && !win->isInputMethod()) {
+                windows.removeAll(win);
             }
         }
     }
@@ -655,7 +699,8 @@ void Compositor::performCompositing()
         }
         m_framesToTestForSafety--;
         if (m_framesToTestForSafety == 0 && (m_scene->compositingType() & OpenGLCompositing)) {
-            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
+            kwinApp()->platform()->createOpenGLSafePoint(
+                Platform::OpenGLSafePoint::PostLastGuardedFrame);
         }
     }
 
@@ -668,7 +713,9 @@ void Compositor::performCompositing()
         }
     }
 
-    compositeTimer.stop(); // stop here to ensure *we* cause the next repaint schedule - not some effect through m_scene->paint()
+    // Stop here to ensure *we* cause the next repaint schedule - not some effect
+    // through m_scene->paint().
+    compositeTimer.stop();
 
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
@@ -684,7 +731,8 @@ void Compositor::performCompositing()
 template <class T>
 static bool repaintsPending(const QList<T*> &windows)
 {
-    return std::any_of(windows.begin(), windows.end(), [] (T *t) { return !t->repaints().isEmpty(); });
+    return std::any_of(windows.begin(), windows.end(),
+                       [](T *t) { return !t->repaints().isEmpty(); });
 }
 
 bool Compositor::windowRepaintsPending() const
@@ -701,16 +749,16 @@ bool Compositor::windowRepaintsPending() const
     if (repaintsPending(Workspace::self()->deletedList())) {
         return true;
     }
-    if (auto w = waylandServer()) {
-        const auto &clients = w->clients();
-        auto test = [] (ShellClient *c) {
+    if (auto *server = waylandServer()) {
+        const auto &clients = server->clients();
+        auto test = [](ShellClient *c) {
             return c->readyForPainting() && !c->repaints().isEmpty();
         };
         if (std::any_of(clients.begin(), clients.end(), test)) {
             return true;
         }
-        const auto &internalClients = w->internalClients();
-        auto internalTest = [] (ShellClient *c) {
+        const auto &internalClients = server->internalClients();
+        auto internalTest = [](ShellClient *c) {
             return c->isShown(true) && !c->repaints().isEmpty();
         };
         if (std::any_of(internalClients.begin(), internalClients.end(), internalTest)) {
@@ -747,15 +795,19 @@ void Compositor::setCompositeTimer()
 
         qint64 padding = m_timeSinceLastVBlank;
         if (padding > fpsInterval) {
-            // we're at low repaints or spent more time in painting than the user wanted to wait for that frame
-            padding = vBlankInterval - (padding%vBlankInterval); // -> align to next vblank
-        } else {  // -> align to the next maxFps tick
-            padding = ((vBlankInterval - padding%vBlankInterval) + (fpsInterval/vBlankInterval-1)*vBlankInterval);
-            //               "remaining time of the first vsync" + "time for the other vsyncs of the frame"
+            // We're at low repaints or spent more time in painting than the user wanted to wait
+            // for that frame. Align to next vblank:
+            padding = vBlankInterval - (padding % vBlankInterval);
+        } else {
+            // Align to the next maxFps tick:
+            // "remaining time of the first vsync" + "time for the other vsyncs of the frame"
+            padding = ((vBlankInterval - padding % vBlankInterval) +
+                       (fpsInterval / vBlankInterval - 1) * vBlankInterval);
         }
 
-        if (padding < options->vBlankTime()) { // we'll likely miss this frame
-            waitTime = nanoToMilli(padding + vBlankInterval - options->vBlankTime()); // so we add one
+        if (padding < options->vBlankTime()) {
+            // We'll likely miss this frame so we add one:
+            waitTime = nanoToMilli(padding + vBlankInterval - options->vBlankTime());
         } else {
             waitTime = nanoToMilli(padding - options->vBlankTime());
         }
@@ -764,9 +816,11 @@ void Compositor::setCompositeTimer()
         if (fpsInterval > m_timeSinceLastVBlank) {
             waitTime = nanoToMilli(fpsInterval - m_timeSinceLastVBlank);
             if (!waitTime) {
-                waitTime = 1; // will ensure we don't block out the eventloop - the system's just not faster ...
+                // Will ensure we don't block out the eventloop - the system's just not faster ...
+                waitTime = 1;
             }
-        }/* else if (m_scene->syncsToVBlank() && m_timeSinceLastVBlank - fpsInterval < (vBlankInterval<<1)) {
+        }
+        /* else if (m_scene->syncsToVBlank() && m_timeSinceLastVBlank - fpsInterval < (vBlankInterval<<1)) {
             // NOTICE - "for later" ------------------------------------------------------------------
             // It can happen that we push two frames within one refresh cycle.
             // Swapping will then block even with triple buffering when the GPU does not discard but
@@ -779,11 +833,14 @@ void Compositor::setCompositeTimer()
             // NOTICE: obviously m_timeSinceLastVBlank can be too big because we're too slow as well
             // So if this code was enabled, we'd needlessly half the framerate once more (15 instead of 30)
             waitTime = nanoToMilli(vBlankInterval - (m_timeSinceLastVBlank - fpsInterval)%vBlankInterval) + 2;
-        }*/ else {
-            waitTime = 1; // ... "0" would be sufficient, but the compositor isn't the WMs only task
+        }*/
+        else {
+            // "0" would be sufficient here, but the compositor isn't the WMs only task.
+            waitTime = 1;
         }
     }
-    compositeTimer.start(qMin(waitTime, 250u), this); // force 4fps minimum
+    // Force 4fps minimum:
+    compositeTimer.start(qMin(waitTime, 250u), this);
 }
 
 bool Compositor::isActive()
@@ -798,10 +855,9 @@ WaylandCompositor::WaylandCompositor(QObject *parent)
             this, &WaylandCompositor::destroyCompositorSelection);
 }
 
-// for the shortcut
 void WaylandCompositor::toggleCompositing()
 {
-    // Not possible on Wayland because we always composite.
+    // For the shortcut. Not possible on Wayland because we always composite.
 }
 
 void WaylandCompositor::start()
@@ -810,10 +866,12 @@ void WaylandCompositor::start()
         // Internal setup failed, abort.
         return;
     }
+
     if (Workspace::self()) {
         startupWithWorkspace();
     } else {
-        connect(kwinApp(), &Application::workspaceCreated, this, &WaylandCompositor::startupWithWorkspace);
+        connect(kwinApp(), &Application::workspaceCreated,
+                this, &WaylandCompositor::startupWithWorkspace);
     }
 }
 
@@ -851,23 +909,25 @@ X11Compositor::X11Compositor(QObject *parent)
     qRegisterMetaType<X11Compositor::SuspendReason>("X11Compositor::SuspendReason");
 }
 
-// for the shortcut
 void X11Compositor::toggleCompositing()
 {
+    // For the shortcut.
     if (kwinApp()->platform()->requiresCompositing()) {
-        // we are not allowed to turn on/off compositing
+        // We are not allowed to turn on/off compositing.
         return;
     }
-    if (m_suspended) { // direct user call; clear all bits
+    if (m_suspended) {
+        // Direct user call; clear all bits.
         resume(AllReasonSuspend);
-    } else { // but only set the user one (sufficient to suspend)
+    } else {
+        // But only set the user one (sufficient to suspend).
         suspend(UserSuspend);
     }
 }
 
 void X11Compositor::reinitialize()
 {
-    // resume compositing if suspended
+    // Resume compositing if suspended.
     m_suspended = NoReasonSuspend;
     Compositor::reinitialize();
 }
@@ -885,13 +945,17 @@ void X11Compositor::suspend(X11Compositor::SuspendReason reason)
 {
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended |= reason;
+
     if (reason & ScriptSuspend) {
-        // when disabled show a shortcut how the user can get back compositing
-        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
+        // When disabled show a shortcut how the user can get back compositing.
+        const auto shortcuts = KGlobalAccel::self()->shortcut(
+            workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
         if (!shortcuts.isEmpty()) {
-            // display notification only if there is the shortcut
-            const QString message = i18n("Desktop effects have been suspended by another application.<br/>"
-                                         "You can resume using the '%1' shortcut.", shortcuts.first().toString(QKeySequence::NativeText));
+            // Display notification only if there is the shortcut.
+            const QString message =
+                    i18n("Desktop effects have been suspended by another application.<br/>"
+                         "You can resume using the '%1' shortcut.",
+                         shortcuts.first().toString(QKeySequence::NativeText));
             KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
         }
     }
@@ -934,7 +998,8 @@ void X11Compositor::start()
 void X11Compositor::performCompositing()
 {
     if (scene()->usesOverlayWindow() && !isOverlayWindowVisible()) {
-        return; // nothing is visible anyway
+        // Return since nothing is visible.
+        return;
     }
     Compositor::performCompositing();
 }
@@ -942,14 +1007,14 @@ void X11Compositor::performCompositing()
 bool X11Compositor::checkForOverlayWindow(WId w) const
 {
     if (!hasScene()) {
-        // no scene, so it cannot be the overlay window
+        // No scene, so it cannot be the overlay window.
         return false;
     }
     if (!scene()->overlayWindow()) {
-        // no overlay window, it cannot be the overlay
+        // No overlay window, it cannot be the overlay.
         return false;
     }
-    // and compare the window ID's
+    // Compare the window ID's.
     return w == scene()->overlayWindow()->window();
 }
 
@@ -979,27 +1044,34 @@ void X11Compositor::updateClientCompositeBlocking(Client *c)
     if (kwinApp()->platform()->requiresCompositing()) {
         return;
     }
-    if (c) { // if c == 0 we just check if we can resume
+    if (c) {
         if (c->isBlockingCompositing()) {
-            if (!(m_suspended & BlockRuleSuspend)) // do NOT attempt to call suspend(true); from within the eventchain!
-                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection, Q_ARG(SuspendReason, BlockRuleSuspend));
+            // Do NOT attempt to call suspend(true) from within the eventchain!
+            if (!(m_suspended & BlockRuleSuspend))
+                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection,
+                                          Q_ARG(SuspendReason, BlockRuleSuspend));
         }
     }
-    else if (m_suspended & BlockRuleSuspend) {  // lost a client and we're blocked - can we resume?
+    else if (m_suspended & BlockRuleSuspend) {
+        // If !c we just check if we can resume in case a blocking client was lost.
         bool resume = true;
-        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin(); it != Workspace::self()->clientList().constEnd(); ++it) {
+
+        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
+             it != Workspace::self()->clientList().constEnd(); ++it) {
             if ((*it)->isBlockingCompositing()) {
                 resume = false;
                 break;
             }
         }
-        if (resume) { // do NOT attempt to call suspend(false); from within the eventchain!
-            QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection, Q_ARG(SuspendReason, BlockRuleSuspend));
+        if (resume) {
+            // Do NOT attempt to call suspend(false) from within the eventchain!
+            QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection,
+                                      Q_ARG(SuspendReason, BlockRuleSuspend));
         }
     }
 }
 
-} // namespace
+}
 
 // included for CompositorSelectionOwner
 #include "composite.moc"
