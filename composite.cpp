@@ -911,11 +911,6 @@ X11Compositor::X11Compositor(QObject *parent)
 
 void X11Compositor::toggleCompositing()
 {
-    // For the shortcut.
-    if (kwinApp()->platform()->requiresCompositing()) {
-        // We are not allowed to turn on/off compositing.
-        return;
-    }
     if (m_suspended) {
         // Direct user call; clear all bits.
         resume(AllReasonSuspend);
@@ -1041,9 +1036,6 @@ void X11Compositor::updateCompositeBlocking()
 
 void X11Compositor::updateClientCompositeBlocking(Client *c)
 {
-    if (kwinApp()->platform()->requiresCompositing()) {
-        return;
-    }
     if (c) {
         if (c->isBlockingCompositing()) {
             // Do NOT attempt to call suspend(true) from within the eventchain!
