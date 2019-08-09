@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <QQuickView>
 #include <QQuickWindow>
-#include <QQmlApplicationEngine>
 #include <QTimer>
 // xkbcommon
 #include <xkbcommon/xkbcommon.h>
@@ -74,20 +74,17 @@ VirtualKeyboard::~VirtualKeyboard() = default;
 void VirtualKeyboard::init()
 {
     // TODO: need a shared Qml engine
-    const QUrl source = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main.qml")));
-    qCDebug(KWIN_VIRTUALKEYBOARD) << "Initializing window" << source;
-    QQmlApplicationEngine* engine = new QQmlApplicationEngine(this);
-    connect(engine, &QQmlEngine::warnings, this, [] (const QList<QQmlError> &warnings) { qCWarning(KWIN_VIRTUALKEYBOARD     ) << warnings; });
-    engine->load(source);
-
-    if (engine->rootObjects().isEmpty()) {
-        qCWarning(KWIN_VIRTUALKEYBOARD) << "could not load the virtual keyboard";
+    qCDebug(KWIN_VIRTUALKEYBOARD) << "Initializing window";
+    m_inputWindow.reset(new QQuickView(nullptr));
+    m_inputWindow->setFlags(Qt::FramelessWindowHint);
+    m_inputWindow->setGeometry(screens()->geometry(screens()->current()));
+    m_inputWindow->setResizeMode(QQuickView::SizeRootObjectToView);
+    m_inputWindow->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main.qml"))));
+    if (m_inputWindow->status() != QQuickView::Status::Ready) {
+        qCWarning(KWIN_VIRTUALKEYBOARD) << "window not ready yet";
         m_inputWindow.reset();
         return;
     }
-
-    m_inputWindow.reset(qobject_cast<QQuickWindow*>(engine->rootObjects().constFirst()));
-    m_inputWindow->setFlags(Qt::FramelessWindowHint);
     m_inputWindow->setProperty("__kwin_input_method", true);
 
     if (waylandServer()) {
@@ -140,27 +137,18 @@ void VirtualKeyboard::init()
                     m_waylandShowConnection = connect(t, &TextInputInterface::requestShowInputPanel, this, &VirtualKeyboard::show);
                     m_waylandHideConnection = connect(t, &TextInputInterface::requestHideInputPanel, this, &VirtualKeyboard::hide);
                     m_waylandSurroundingTextConnection = connect(t, &TextInputInterface::surroundingTextChanged, this,
-                        [this] {
-                            if (m_enabled) {
-                                m_inputWindow->show();
-                            }
+                        [] {
                             qApp->inputMethod()->update(Qt::ImSurroundingText | Qt::ImCursorPosition | Qt::ImAnchorPosition);
                         }
                     );
                     m_waylandHintsConnection = connect(t, &TextInputInterface::contentTypeChanged, this,
-                        [this] {
-                            if (m_enabled) {
-                                m_inputWindow->show();
-                            }
+                        [] {
                             qApp->inputMethod()->update(Qt::ImHints);
                         }
                     );
                     m_waylandResetConnection = connect(t, &TextInputInterface::requestReset, qApp->inputMethod(), &QInputMethod::reset);
                     m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this,
-                        [this] {
-                            if (m_enabled) {
-                                m_inputWindow->show();
-                            }
+                        [] {
                             qApp->inputMethod()->update(Qt::ImQueryAll);
                         }
                     );
@@ -197,19 +185,19 @@ void VirtualKeyboard::init()
         }
     );
     m_inputWindow->setColor(Qt::transparent);
-    m_inputWindow->setMask(m_inputWindow->contentItem()->childrenRect().toRect());
-    connect(m_inputWindow->contentItem(), &QQuickItem::childrenRectChanged, m_inputWindow.data(),
+    m_inputWindow->setMask(m_inputWindow->rootObject()->childrenRect().toRect());
+    connect(m_inputWindow->rootObject(), &QQuickItem::childrenRectChanged, m_inputWindow.data(),
         [this] {
             if (!m_inputWindow) {
                 return;
             }
-            m_inputWindow->setMask(m_inputWindow->contentItem()->childrenRect().toRect());
+            m_inputWindow->setMask(m_inputWindow->rootObject()->childrenRect().toRect());
         }
     );
 
     connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this, &VirtualKeyboard::updateInputPanelState);
 
-    connect(m_inputWindow->contentItem(), &QQuickItem::childrenRectChanged, this, &VirtualKeyboard::updateInputPanelState);
+    connect(m_inputWindow->rootObject(), &QQuickItem::childrenRectChanged, this, &VirtualKeyboard::updateInputPanelState);
 }
 
 void VirtualKeyboard::setEnabled(bool enabled)
@@ -268,11 +256,11 @@ void VirtualKeyboard::updateInputPanelState()
     m_inputWindow->setVisible(qApp->inputMethod()->isVisible());
 
     if (qApp->inputMethod()->isVisible()) {
-        m_inputWindow->setMask(m_inputWindow->contentItem()->childrenRect().toRect());
+        m_inputWindow->setMask(m_inputWindow->rootObject()->childrenRect().toRect());
     }
 
-    if (m_inputWindow->isVisible() && m_trackedClient && m_inputWindow) {
-        const QRect inputPanelGeom = m_inputWindow->contentItem()->childrenRect().toRect().translated(m_inputWindow->geometry().topLeft());
+    if (m_inputWindow->isVisible() && m_trackedClient && m_inputWindow->rootObject()) {
+        const QRect inputPanelGeom = m_inputWindow->rootObject()->childrenRect().toRect().translated(m_inputWindow->geometry().topLeft());
 
         m_trackedClient->setVirtualKeyboardGeometry(inputPanelGeom);
 
@@ -298,7 +286,7 @@ void VirtualKeyboard::show()
 
 void VirtualKeyboard::hide()
 {
-    if (!m_inputWindow) {
+    if (m_inputWindow.isNull()) {
         return;
     }
     qApp->inputMethod()->hide();
