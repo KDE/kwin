@@ -22,7 +22,7 @@ import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Layouts 1.1
 
 import org.kde.kcm 1.2
-import org.kde.kirigami 2.5 as Kirigami
+import org.kde.kirigami 2.10 as Kirigami
 import org.kde.plasma.core 2.1 as PlasmaCore
 
 ScrollViewKCM {
@@ -124,19 +124,9 @@ ScrollViewKCM {
         model: kcm.desktopsModel.ready ? kcm.desktopsModel : null
 
         section.property: "DesktopRow"
-        section.delegate: Kirigami.AbstractListItem {
+        section.delegate: Kirigami.ListSectionHeader {
             width: desktopsList.width
-
-            backgroundColor: Kirigami.Theme.backgroundColor
-            Kirigami.Theme.inherit: false
-            Kirigami.Theme.colorSet: Kirigami.Theme.Window
-
-            hoverEnabled: false
-            supportsMouseEvents: false
-
-            Kirigami.Heading {
-                level: 2
-                text: i18n("Row %1", section)
+            label: i18n("Row %1", section)
             }
         }
 
