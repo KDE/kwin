@@ -850,7 +850,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
         break;
     default:
         break;
-    };
+    }
     if (!type.isEmpty())
         helperDialog(type, c);
     // need to delay performing the window operation as we need to have the
