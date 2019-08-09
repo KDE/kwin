@@ -2134,7 +2134,7 @@ public:
     bool isOnCurrentDesktop() const;
     bool isOnAllDesktops() const;
     /**
-     * The desktop this window is in. This mkaes sense only on X11
+     * The desktop this window is in. This makes sense only on X11
      * where desktops are mutually exclusive, on Wayland it's the last
      * desktop the window has been added to.
      * use desktops() instead.
