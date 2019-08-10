@@ -494,7 +494,7 @@ public:
     QVariant data(int role) const override;
 
     void registerThumbnail(AbstractThumbnailItem *item);
-    QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> > const &thumbnails() const {
+    QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> > const &thumbnails() const {
         return m_thumbnails;
     }
     QList<DesktopThumbnailItem*> const &desktopThumbnails() const {
@@ -510,7 +510,7 @@ private:
     Toplevel* toplevel;
     Scene::Window* sw; // This one is used only during paint pass.
     QHash<int, QVariant> dataMap;
-    QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> > m_thumbnails;
+    QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> > m_thumbnails;
     QList<DesktopThumbnailItem*> m_desktopThumbnails;
     bool managed = false;
     bool waylandClient;

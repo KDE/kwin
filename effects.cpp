@@ -2063,9 +2063,9 @@ void EffectWindowImpl::insertThumbnail(WindowThumbnailItem *item)
 {
     EffectWindow *w = effects->findWindow(item->wId());
     if (w) {
-        m_thumbnails.insert(item, QWeakPointer<EffectWindowImpl>(static_cast<EffectWindowImpl*>(w)));
+        m_thumbnails.insert(item, QPointer<EffectWindowImpl>(static_cast<EffectWindowImpl*>(w)));
     } else {
-        m_thumbnails.insert(item, QWeakPointer<EffectWindowImpl>());
+        m_thumbnails.insert(item, QPointer<EffectWindowImpl>());
     }
 }
 

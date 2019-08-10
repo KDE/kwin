@@ -509,7 +509,7 @@ static void adjustClipRegion(AbstractThumbnailItem *item, QRegion &clippingRegio
 void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation)
 {
     EffectWindowImpl *wImpl = static_cast<EffectWindowImpl*>(effectWindow(w));
-    for (QHash<WindowThumbnailItem*, QWeakPointer<EffectWindowImpl> >::const_iterator it = wImpl->thumbnails().constBegin();
+    for (QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> >::const_iterator it = wImpl->thumbnails().constBegin();
             it != wImpl->thumbnails().constEnd();
             ++it) {
         if (it.value().isNull()) {
