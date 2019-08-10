@@ -1190,16 +1190,18 @@ QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 {
 #ifdef KWIN_BUILD_TABBOX
     return TabBox::TabBox::self()->currentDesktopList();
-#endif
+#else
     return QList< int >();
+#endif
 }
 
 int EffectsHandlerImpl::currentTabBoxDesktop() const
 {
 #ifdef KWIN_BUILD_TABBOX
     return TabBox::TabBox::self()->currentDesktop();
-#endif
+#else
     return -1;
+#endif
 }
 
 EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
