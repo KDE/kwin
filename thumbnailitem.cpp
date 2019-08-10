@@ -36,7 +36,6 @@ namespace KWin
 
 AbstractThumbnailItem::AbstractThumbnailItem(QQuickItem *parent)
     : QQuickPaintedItem(parent)
-    , m_parent(QWeakPointer<EffectWindowImpl>())
     , m_brightness(1.0)
     , m_saturation(1.0)
     , m_clipToItem()
@@ -63,8 +62,8 @@ void AbstractThumbnailItem::compositingToggled()
 void AbstractThumbnailItem::init()
 {
     findParentEffectWindow();
-    if (!m_parent.isNull()) {
-        m_parent.data()->registerThumbnail(this);
+    if (m_parent) {
+        m_parent->registerThumbnail(this);
     }
 }
 
@@ -77,7 +76,7 @@ void AbstractThumbnailItem::findParentEffectWindow()
             return;
         }
         if (auto *w = static_cast<EffectWindowImpl*>(effects->findWindow(qw))) {
-            m_parent = QWeakPointer<EffectWindowImpl>(w);
+            m_parent = QPointer<EffectWindowImpl>(w);
         }
     }
 }
@@ -88,8 +87,8 @@ void AbstractThumbnailItem::effectWindowAdded()
     // by using this slot we can register the thumbnail when it is finally created
     if (m_parent.isNull()) {
         findParentEffectWindow();
-        if (!m_parent.isNull()) {
-            m_parent.data()->registerThumbnail(this);
+        if (m_parent) {
+            m_parent->registerThumbnail(this);
         }
     }
 }
