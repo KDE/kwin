@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QDialog>
 #include <QObject>
+#include <QPointer>
 
 class QAction;
 class QRect;
@@ -98,7 +99,7 @@ public:
      * @param pos The position where the menu should be shown.
      * @param client The Client for which the Menu has to be shown.
      */
-    void show(const QRect &pos, const QWeakPointer<AbstractClient> &client);
+    void show(const QRect &pos, AbstractClient *client);
 
 public Q_SLOTS:
     /**
@@ -219,7 +220,7 @@ private:
      * @param message The message type to be shown
      * @param c The Client for which the dialog should be shown.
      */
-    void helperDialog(const QString &message, const QWeakPointer<AbstractClient> &c);
+    void helperDialog(const QString &message, AbstractClient *c);
     /**
      * The actual main context menu which is show when the UserActionsMenu is invoked.
      */
@@ -274,7 +275,7 @@ private:
     /**
      * The Client for which the menu is shown.
      */
-    QWeakPointer<AbstractClient> m_client;
+    QPointer<AbstractClient> m_client;
     QAction *m_rulesOperation = nullptr;
     QAction *m_applicationRulesOperation = nullptr;
 };

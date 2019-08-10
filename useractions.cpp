@@ -96,7 +96,6 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_closeOperation(NULL)
     , m_removeFromTabGroup(NULL)
     , m_closeTabGroup(NULL)
-    , m_client(QWeakPointer<AbstractClient>())
 {
 }
 
@@ -132,8 +131,9 @@ bool UserActionsMenu::isMenuClient(const AbstractClient *c) const
     return c == m_client.data();
 }
 
-void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> &cl)
+void UserActionsMenu::show(const QRect &pos, AbstractClient *client)
 {
+    QPointer<AbstractClient> cl(client);
     if (!KAuthorized::authorizeAction(QStringLiteral("kwin_rmb")))
         return;
     if (cl.isNull())
@@ -189,7 +189,7 @@ void UserActionsMenu::grabInput()
     m_menu->windowHandle()->setKeyboardGrabEnabled(true);
 }
 
-void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<AbstractClient> &c)
+void UserActionsMenu::helperDialog(const QString& message, AbstractClient* client)
 {
     QStringList args;
     QString type;
@@ -226,8 +226,8 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Ab
             return;
         args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
     }
-    if (!c.isNull())
-        args << QStringLiteral("--embed") << QString::number(c.data()->windowId());
+    if (client)
+        args << QStringLiteral("--embed") << QString::number(client->windowId());
     QtConcurrent::run([args]() {
         KProcess::startDetached(QStringLiteral("kdialog"), args);
     });
@@ -835,17 +835,17 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
         return;
 
     Options::WindowOperation op = static_cast< Options::WindowOperation >(action->data().toInt());
-    QWeakPointer<AbstractClient> c = (!m_client.isNull()) ? m_client : QWeakPointer<AbstractClient>(Workspace::self()->activeClient());
+    QPointer<AbstractClient> c = m_client ? m_client : QPointer<AbstractClient>(Workspace::self()->activeClient());
     if (c.isNull())
         return;
     QString type;
     switch(op) {
     case Options::FullScreenOp:
-        if (!c.data()->isFullScreen() && c.data()->userCanSetFullScreen())
+        if (!c->isFullScreen() && c->userCanSetFullScreen())
             type = QStringLiteral("fullscreenaltf3");
         break;
     case Options::NoBorderOp:
-        if (!c.data()->noBorder() && c.data()->userCanSetNoBorder())
+        if (!c->noBorder() && c->userCanSetNoBorder())
             type = QStringLiteral("noborderaltf3");
         break;
     default:
@@ -858,7 +858,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     qRegisterMetaType<Options::WindowOperation>();
     QMetaObject::invokeMethod(workspace(), "performWindowOperation",
                               Qt::QueuedConnection,
-                              Q_ARG(KWin::AbstractClient*, c.data()),
+                              Q_ARG(KWin::AbstractClient*, c),
                               Q_ARG(Options::WindowOperation, op));
 }
 
