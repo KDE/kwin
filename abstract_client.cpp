@@ -889,7 +889,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMovable(isMovable());
     w->setVirtualDesktopChangeable(true); // FIXME Matches Client::actionSupported(), but both should be implemented.
     w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
-    w->setGeometry(geom);
+    w->setGeometry(geometry());
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
@@ -929,7 +929,7 @@ void AbstractClient::setupWindowManagementInterface()
     );
     connect(this, &AbstractClient::geometryChanged, w,
         [w, this] {
-            w->setGeometry(geom);
+            w->setGeometry(geometry());
         }
     );
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
@@ -1402,7 +1402,7 @@ void AbstractClient::addRepaintDuringGeometryUpdates()
 
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
-    m_geometryBeforeUpdateBlocking = geom;
+    m_geometryBeforeUpdateBlocking = geometry();
 }
 
 void AbstractClient::updateTabGroupStates(TabGroup::States)

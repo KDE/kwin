@@ -238,7 +238,7 @@ void ShellClient::init()
     connect(s, &SurfaceInterface::sizeChanged, this,
         [this] {
             m_clientSize = surface()->size();
-            doSetGeometry(QRect(geom.topLeft(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+            doSetGeometry(QRect(pos(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
         }
     );
     connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);
@@ -1231,7 +1231,7 @@ bool ShellClient::requestGeometry(const QRect &rect)
 
 void ShellClient::updatePendingGeometry()
 {
-    QPoint position = geom.topLeft();
+    QPoint position = pos();
     MaximizeMode maximizeMode = m_maximizeMode;
     for (auto it = m_pendingConfigureRequests.begin(); it != m_pendingConfigureRequests.end(); it++) {
         if (it->serialId > m_lastAckedConfigureRequest) {
@@ -1389,19 +1389,20 @@ void ShellClient::updateShowOnScreenEdge()
     if ((m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide && m_hidden) ||
         m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover) {
         // screen edge API requires an edge, thus we need to figure out which edge the window borders
+        const QRect clientGeometry = geometry();
         Qt::Edges edges;
         for (int i = 0; i < screens()->count(); i++) {
-            const auto &screenGeo = screens()->geometry(i);
-            if (screenGeo.x() == geom.x()) {
+            const QRect screenGeometry = screens()->geometry(i);
+            if (screenGeometry.left() == clientGeometry.left()) {
                 edges |= Qt::LeftEdge;
             }
-            if (screenGeo.x() + screenGeo.width() == geom.x() + geom.width()) {
+            if (screenGeometry.right() == clientGeometry.right()) {
                 edges |= Qt::RightEdge;
             }
-            if (screenGeo.y() == geom.y()) {
+            if (screenGeometry.top() == clientGeometry.top()) {
                 edges |= Qt::TopEdge;
             }
-            if (screenGeo.y() + screenGeo.height() == geom.y() + geom.height()) {
+            if (screenGeometry.bottom() == clientGeometry.bottom()) {
                 edges |= Qt::BottomEdge;
             }
         }
@@ -1416,9 +1417,9 @@ void ShellClient::updateShowOnScreenEdge()
         }
         // it's still possible that a panel borders two edges, e.g. bottom and left
         // in that case the one which is sharing more with the edge wins
-        auto check = [this](Qt::Edges edges, Qt::Edge horiz, Qt::Edge vert) {
+        auto check = [clientGeometry](Qt::Edges edges, Qt::Edge horiz, Qt::Edge vert) {
             if (edges.testFlag(horiz) && edges.testFlag(vert)) {
-                if (geom.width() >= geom.height()) {
+                if (clientGeometry.width() >= clientGeometry.height()) {
                     return edges & ~horiz;
                 } else {
                     return edges & ~vert;
