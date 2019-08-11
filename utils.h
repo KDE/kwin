@@ -90,12 +90,6 @@ enum Layer {
     NumLayers // number of layers, must be last
 };
 
-// yes, I know this is not 100% like standard operator++
-inline void operator++(Layer& lay)
-{
-    lay = static_cast< Layer >(lay + 1);
-}
-
 enum StrutArea {
     StrutAreaInvalid = 0, // Null
     StrutAreaTop     = 1 << 0,

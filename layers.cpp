@@ -530,10 +530,9 @@ ToplevelList Workspace::constrainedStackingOrder()
         layer[ l ].append(*it);
     }
     ToplevelList stacking;
-    for (Layer lay = FirstLayer;
-            lay < NumLayers;
-            ++lay)
-        stacking += layer[ lay ];
+    for (int lay = FirstLayer; lay < NumLayers; ++lay) {
+        stacking += layer[lay];
+    }
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
     for (int i = stacking.size() - 1; i >= 0;) {
