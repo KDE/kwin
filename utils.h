@@ -113,7 +113,7 @@ public:
     StrutRect(const StrutRect& other);
     inline StrutArea area() const {
         return m_area;
-    };
+    }
 private:
     StrutArea m_area;
 };
