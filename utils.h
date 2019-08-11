@@ -111,6 +111,7 @@ class StrutRect : public QRect
 public:
     explicit StrutRect(QRect rect = QRect(), StrutArea area = StrutAreaInvalid);
     StrutRect(const StrutRect& other);
+    StrutRect &operator=(const StrutRect& other);
     inline StrutArea area() const {
         return m_area;
     }

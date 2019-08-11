@@ -69,6 +69,15 @@ StrutRect::StrutRect(const StrutRect& other)
 {
 }
 
+StrutRect &StrutRect::operator=(const StrutRect &other)
+{
+    if (this != &other) {
+        QRect::operator=(other);
+        m_area = other.area();
+    }
+    return *this;
+}
+
 #endif
 
 #ifndef KCMRULES
