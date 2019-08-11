@@ -165,5 +165,8 @@ DEF6(I18N_NOOP("Invert Screen Colors"),            0, kwinApp()->platform(), Pla
 #undef DEF
 #undef DEF2
 #undef DEF3
+#undef DEF4
+#undef DEF5
+#undef DEF6
 
 //  }
