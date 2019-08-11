@@ -148,12 +148,12 @@ void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *o
     // nothing to do
 }
 
-void TouchInputRedirection::insertId(quint32 internalId, qint32 kwaylandId)
+void TouchInputRedirection::insertId(qint32 internalId, qint32 kwaylandId)
 {
     m_idMapper.insert(internalId, kwaylandId);
 }
 
-qint32 TouchInputRedirection::mappedId(quint32 internalId)
+qint32 TouchInputRedirection::mappedId(qint32 internalId)
 {
     auto it = m_idMapper.constFind(internalId);
     if (it != m_idMapper.constEnd()) {
@@ -162,7 +162,7 @@ qint32 TouchInputRedirection::mappedId(quint32 internalId)
     return -1;
 }
 
-void TouchInputRedirection::removeId(quint32 internalId)
+void TouchInputRedirection::removeId(qint32 internalId)
 {
     m_idMapper.remove(internalId);
 }

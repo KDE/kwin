@@ -646,7 +646,7 @@ void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type
         setHighlightedWindow(highlightCandidate);
 }
 
-bool PresentWindowsEffect::touchDown(quint32 id, const QPointF &pos, quint32 time)
+bool PresentWindowsEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(time)
     if (!m_activated) {
@@ -661,7 +661,7 @@ bool PresentWindowsEffect::touchDown(quint32 id, const QPointF &pos, quint32 tim
     return true;
 }
 
-bool PresentWindowsEffect::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+bool PresentWindowsEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(time)
@@ -675,7 +675,7 @@ bool PresentWindowsEffect::touchMotion(quint32 id, const QPointF &pos, quint32 t
     return true;
 }
 
-bool PresentWindowsEffect::touchUp(quint32 id, quint32 time)
+bool PresentWindowsEffect::touchUp(qint32 id, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(time)

@@ -732,7 +732,7 @@ bool EffectsHandlerImpl::isMouseInterception() const
 }
 
 
-bool EffectsHandlerImpl::touchDown(quint32 id, const QPointF &pos, quint32 time)
+bool EffectsHandlerImpl::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -743,7 +743,7 @@ bool EffectsHandlerImpl::touchDown(quint32 id, const QPointF &pos, quint32 time)
     return false;
 }
 
-bool EffectsHandlerImpl::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+bool EffectsHandlerImpl::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -754,7 +754,7 @@ bool EffectsHandlerImpl::touchMotion(quint32 id, const QPointF &pos, quint32 tim
     return false;
 }
 
-bool EffectsHandlerImpl::touchUp(quint32 id, quint32 time)
+bool EffectsHandlerImpl::touchUp(qint32 id, quint32 time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {

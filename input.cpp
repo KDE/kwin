@@ -92,7 +92,7 @@ bool InputEventFilter::keyEvent(QKeyEvent *event)
     return false;
 }
 
-bool InputEventFilter::touchDown(quint32 id, const QPointF &point, quint32 time)
+bool InputEventFilter::touchDown(qint32 id, const QPointF &point, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(point)
@@ -100,7 +100,7 @@ bool InputEventFilter::touchDown(quint32 id, const QPointF &point, quint32 time)
     return false;
 }
 
-bool InputEventFilter::touchMotion(quint32 id, const QPointF &point, quint32 time)
+bool InputEventFilter::touchMotion(qint32 id, const QPointF &point, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(point)
@@ -108,7 +108,7 @@ bool InputEventFilter::touchMotion(quint32 id, const QPointF &point, quint32 tim
     return false;
 }
 
-bool InputEventFilter::touchUp(quint32 id, quint32 time)
+bool InputEventFilter::touchUp(qint32 id, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(time)
@@ -293,7 +293,7 @@ public:
         }
         return true;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -304,7 +304,7 @@ public:
         }
         return true;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -318,7 +318,7 @@ public:
         }
         return true;
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
@@ -419,19 +419,19 @@ public:
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(event);
         return true;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         if (!effects) {
             return false;
         }
         return static_cast< EffectsHandlerImpl* >(effects)->touchDown(id, pos, time);
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         if (!effects) {
             return false;
         }
         return static_cast< EffectsHandlerImpl* >(effects)->touchMotion(id, pos, time);
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         if (!effects) {
             return false;
         }
@@ -481,7 +481,7 @@ public:
         return true;
     }
 
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(id)
         Q_UNUSED(pos)
         Q_UNUSED(time)
@@ -492,7 +492,7 @@ public:
         return true;
     }
 
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
         AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
@@ -508,7 +508,7 @@ public:
         return true;
     }
 
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         Q_UNUSED(time)
         AbstractClient *c = workspace()->moveResizeClient();
         if (!c) {
@@ -524,7 +524,7 @@ public:
         return true;
     }
 private:
-    quint32 m_id = 0;
+    qint32 m_id = 0;
     bool m_set = false;
 };
 
@@ -598,7 +598,7 @@ public:
         return true;
     }
 
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
         if (!isActive()) {
             return false;
@@ -607,7 +607,7 @@ public:
         return true;
     }
 
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
         if (!isActive()) {
             return false;
@@ -619,7 +619,7 @@ public:
         return true;
     }
 
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         Q_UNUSED(time)
         if (!isActive()) {
             return false;
@@ -917,7 +917,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         return false;
     }
 
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             // something else is getting the events
@@ -947,7 +947,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         QCoreApplication::sendEvent(internal.data(), &e);
         return true;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         auto touch = input()->touch();
         auto internal = touch->internalWindow();
         if (!internal) {
@@ -968,7 +968,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         QCoreApplication::instance()->sendEvent(internal.data(), &e);
         return true;
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         auto touch = input()->touch();
         auto internal = touch->internalWindow();
         if (!internal) {
@@ -1070,7 +1070,7 @@ public:
         }
         return true;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             return false;
@@ -1100,7 +1100,7 @@ public:
         }
         return true;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
@@ -1121,7 +1121,7 @@ public:
         decoration->client()->processDecorationMove(m_lastLocalTouchPos.toPoint(), pos.toPoint());
         return true;
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         Q_UNUSED(time);
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
@@ -1201,7 +1201,7 @@ public:
         // always forward
         return false;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
         // TODO: better check whether a touch sequence is in progress
         if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
@@ -1219,7 +1219,7 @@ public:
         }
         return false;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
             ScreenEdges::self()->gestureRecognizer()->updateSwipeGesture(QSizeF(pos.x() - m_lastPos.x(), pos.y() - m_lastPos.y()));
@@ -1228,7 +1228,7 @@ public:
         }
         return false;
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
             ScreenEdges::self()->gestureRecognizer()->endSwipeGesture();
@@ -1239,7 +1239,7 @@ public:
     }
 private:
     bool m_touchInProgress = false;
-    quint32 m_id = 0;
+    qint32 m_id = 0;
     QPointF m_lastPos;
 };
 
@@ -1280,7 +1280,7 @@ public:
         }
         return false;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         Q_UNUSED(id)
         Q_UNUSED(time)
         auto seat = waylandServer()->seat();
@@ -1369,7 +1369,7 @@ public:
         passToWaylandServer(event);
         return true;
     }
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         if (!workspace()) {
             return false;
         }
@@ -1378,7 +1378,7 @@ public:
         input()->touch()->insertId(id, seat->touchDown(pos));
         return true;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         if (!workspace()) {
             return false;
         }
@@ -1390,7 +1390,7 @@ public:
         }
         return true;
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         if (!workspace()) {
             return false;
         }
@@ -1534,7 +1534,7 @@ public:
         return true;
     }
 
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override {
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
             return true;
@@ -1549,7 +1549,7 @@ public:
         input()->touch()->insertId(id, seat->touchDown(pos));
         return true;
     }
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override {
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
         auto seat = waylandServer()->seat();
         if (seat->isDragPointer()) {
             return true;
@@ -1588,7 +1588,7 @@ public:
         }
         return true;
     }
-    bool touchUp(quint32 id, quint32 time) override {
+    bool touchUp(qint32 id, quint32 time) override {
         auto seat = waylandServer()->seat();
         if (!seat->isDragTouch()) {
             return false;
@@ -1749,21 +1749,21 @@ void InputRedirection::setupWorkspace()
                     }
                 );
                 connect(device, &FakeInputDevice::touchDownRequested, this,
-                   [this] (quint32 id, const QPointF &pos) {
+                   [this] (qint32 id, const QPointF &pos) {
                        // TODO: Fix time
                        m_touch->processDown(id, pos, 0);
                         waylandServer()->simulateUserActivity();
                    }
                 );
                 connect(device, &FakeInputDevice::touchMotionRequested, this,
-                   [this] (quint32 id, const QPointF &pos) {
+                   [this] (qint32 id, const QPointF &pos) {
                        // TODO: Fix time
                        m_touch->processMotion(id, pos, 0);
                         waylandServer()->simulateUserActivity();
                    }
                 );
                 connect(device, &FakeInputDevice::touchUpRequested, this,
-                    [this] (quint32 id) {
+                    [this] (qint32 id) {
                         // TODO: Fix time
                         m_touch->processUp(id, 0);
                         waylandServer()->simulateUserActivity();

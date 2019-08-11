@@ -50,21 +50,21 @@ void InputEventSpy::keyEvent(KeyEvent *event)
     Q_UNUSED(event)
 }
 
-void InputEventSpy::touchDown(quint32 id, const QPointF &point, quint32 time)
+void InputEventSpy::touchDown(qint32 id, const QPointF &point, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(point)
     Q_UNUSED(time)
 }
 
-void InputEventSpy::touchMotion(quint32 id, const QPointF &point, quint32 time)
+void InputEventSpy::touchMotion(qint32 id, const QPointF &point, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(point)
     Q_UNUSED(time)
 }
 
-void InputEventSpy::touchUp(quint32 id, quint32 time)
+void InputEventSpy::touchUp(qint32 id, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(time)

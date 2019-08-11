@@ -28,7 +28,7 @@ class TouchHideCursorSpy : public InputEventSpy
 public:
     void pointerEvent(KWin::MouseEvent *event) override;
     void wheelEvent(KWin::WheelEvent *event) override;
-    void touchDown(quint32 id, const QPointF &pos, quint32 time) override;
+    void touchDown(qint32 id, const QPointF &pos, quint32 time) override;
 
 private:
     void showCursor();

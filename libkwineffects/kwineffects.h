@@ -591,7 +591,7 @@ public:
      * @see touchUp
      * @since 5.8
      */
-    virtual bool touchDown(quint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchDown(qint32 id, const QPointF &pos, quint32 time);
     /**
      * A touch point moved.
      *
@@ -611,7 +611,7 @@ public:
      * @see touchUp
      * @since 5.8
      */
-    virtual bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
     /**
      * A touch point was released.
      *
@@ -630,7 +630,7 @@ public:
      * @see touchMotion
      * @since 5.8
      */
-    virtual bool touchUp(quint32 id, quint32 time);
+    virtual bool touchUp(qint32 id, quint32 time);
 
     static QPoint cursorPos();
 

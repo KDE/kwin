@@ -354,9 +354,9 @@ public:
      * @return @c tru to stop further event processing, @c false to pass to next filter.
      */
     virtual bool keyEvent(QKeyEvent *event);
-    virtual bool touchDown(quint32 id, const QPointF &pos, quint32 time);
-    virtual bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
-    virtual bool touchUp(quint32 id, quint32 time);
+    virtual bool touchDown(qint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchUp(qint32 id, quint32 time);
 
     virtual bool pinchGestureBegin(int fingerCount, quint32 time);
     virtual bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);

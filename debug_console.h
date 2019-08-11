@@ -136,9 +136,9 @@ public:
     void pointerEvent(MouseEvent *event) override;
     void wheelEvent(WheelEvent *event) override;
     void keyEvent(KeyEvent *event) override;
-    void touchDown(quint32 id, const QPointF &pos, quint32 time) override;
-    void touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
-    void touchUp(quint32 id, quint32 time) override;
+    void touchDown(qint32 id, const QPointF &pos, quint32 time) override;
+    void touchMotion(qint32 id, const QPointF &pos, quint32 time) override;
+    void touchUp(qint32 id, quint32 time) override;
 
     void pinchGestureBegin(int fingerCount, quint32 time) override;
     void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override;

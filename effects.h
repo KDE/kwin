@@ -252,9 +252,9 @@ public:
         return m_scene;
     }
 
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time);
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time);
-    bool touchUp(quint32 id, quint32 time);
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time);
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
+    bool touchUp(qint32 id, quint32 time);
 
     void highlightWindows(const QVector<EffectWindow *> &windows);
 

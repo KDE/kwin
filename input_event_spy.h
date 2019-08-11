@@ -68,9 +68,9 @@ public:
      * @param event The event information about the key event
      */
     virtual void keyEvent(KeyEvent *event);
-    virtual void touchDown(quint32 id, const QPointF &pos, quint32 time);
-    virtual void touchMotion(quint32 id, const QPointF &pos, quint32 time);
-    virtual void touchUp(quint32 id, quint32 time);
+    virtual void touchDown(qint32 id, const QPointF &pos, quint32 time);
+    virtual void touchMotion(qint32 id, const QPointF &pos, quint32 time);
+    virtual void touchUp(qint32 id, quint32 time);
 
     virtual void pinchGestureBegin(int fingerCount, quint32 time);
     virtual void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);

@@ -127,9 +127,9 @@ public:
     void grabbedKeyboardEvent(QKeyEvent *e) override;
     bool isActive() const override;
 
-    bool touchDown(quint32 id, const QPointF &pos, quint32 time) override;
-    bool touchMotion(quint32 id, const QPointF &pos, quint32 time) override;
-    bool touchUp(quint32 id, quint32 time) override;
+    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
+    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override;
+    bool touchUp(qint32 id, quint32 time) override;
 
     int requestedEffectChainPosition() const override {
         return 70;
@@ -338,7 +338,7 @@ private:
     EffectWindow* m_closeWindow;
     Qt::Corner m_closeButtonCorner;
     struct {
-        quint32 id = 0;
+        qint32 id = 0;
         bool active = false;
     } m_touch;
 

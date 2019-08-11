@@ -299,7 +299,7 @@ void DebugConsoleFilter::keyEvent(KeyEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+void DebugConsoleFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -314,7 +314,7 @@ void DebugConsoleFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+void DebugConsoleFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -329,7 +329,7 @@ void DebugConsoleFilter::touchMotion(quint32 id, const QPointF &pos, quint32 tim
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchUp(quint32 id, quint32 time)
+void DebugConsoleFilter::touchUp(qint32 id, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);

@@ -60,9 +60,9 @@ public:
     void cancel();
     void frame();
 
-    void insertId(quint32 internalId, qint32 kwaylandId);
-    void removeId(quint32 internalId);
-    qint32 mappedId(quint32 internalId);
+    void insertId(qint32 internalId, qint32 kwaylandId);
+    void removeId(qint32 internalId);
+    qint32 mappedId(qint32 internalId);
 
     void setDecorationPressId(qint32 id) {
         m_decorationId = id;

@@ -58,7 +58,7 @@ bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(pos)
     Q_UNUSED(time)
@@ -83,7 +83,7 @@ bool DpmsInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint32 tim
     return true;
 }
 
-bool DpmsInputEventFilter::touchUp(quint32 id, quint32 time)
+bool DpmsInputEventFilter::touchUp(qint32 id, quint32 time)
 {
     m_touchPoints.removeAll(id);
     if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
@@ -97,7 +97,7 @@ bool DpmsInputEventFilter::touchUp(quint32 id, quint32 time)
     return true;
 }
 
-bool DpmsInputEventFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(pos)
