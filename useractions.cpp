@@ -148,22 +148,11 @@ void UserActionsMenu::show(const QRect &pos, AbstractClient *client)
     }
     m_client = cl;
     init();
-    int x = pos.left();
-    int y = pos.bottom();
     m_client->blockActivityUpdates(true);
-    if (y != pos.top()) {
-        const QRect area = Workspace::self()->clientArea(ScreenArea, QPoint(x, y),
-                                                         VirtualDesktopManager::self()->current());
-        menuAboutToShow(); // needed for sizeHint() to be correct :-/
-        int popupHeight = m_menu->sizeHint().height();
-        if (y + popupHeight >= area.height()) {
-            y = pos.top() - popupHeight;
-        }
-    }
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        m_menu->popup(QPoint(x, y));
+        m_menu->popup(pos.bottomLeft());
     } else {
-        m_menu->exec(QPoint(x, y));
+        m_menu->exec(pos.bottomLeft());
     }
     if (m_client) {
         m_client->blockActivityUpdates(false);
