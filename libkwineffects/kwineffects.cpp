@@ -1159,8 +1159,8 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
                     v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
                 }
 
-                const __m128i *srcP = (const __m128i *) &v;
-                __m128i *dstP = (__m128i *) vertex;
+                const __m128i *srcP = reinterpret_cast<const __m128i *>(&v);
+                __m128i *dstP = reinterpret_cast<__m128i *>(vertex);
 
                 _mm_stream_si128(&dstP[0], _mm_load_si128(&srcP[0])); // Top-left
                 _mm_stream_si128(&dstP[1], _mm_load_si128(&srcP[1])); // Top-right
@@ -1202,8 +1202,8 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
                     v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
                 }
 
-                const __m128i *srcP = (const __m128i *) &v;
-                __m128i *dstP = (__m128i *) vertex;
+                const __m128i *srcP = reinterpret_cast<const __m128i *>(&v);
+                __m128i *dstP = reinterpret_cast<__m128i *>(vertex);
 
                 __m128i src[4];
                 src[0] = _mm_load_si128(&srcP[0]); // Top-left
