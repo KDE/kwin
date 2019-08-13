@@ -37,7 +37,7 @@ and <guilabel>Window Management</guilabel>.</para>
 <para>Use the incremental search bar above the list window to find items in the list.</para>
 
 <para>Normally there is no reason for users to change that, but 
-there is a <inlinemediaobject><imageobject><imagedata fileref="configure-filter.png" format="PNG"/>
+there is a <inlinemediaobject><imageobject><imagedata fileref="configure-effects.png" format="PNG"/>
 </imageobject></inlinemediaobject> configuration button to modify the filtering of the list to show 
 also those effects.
 </para>
