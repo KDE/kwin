@@ -49,19 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xfixes.h>
 #endif
 
-#if defined(__GNUC__)
-#  define KWIN_ALIGN(n) __attribute((aligned(n)))
-#  if defined(__SSE2__)
-#    define HAVE_SSE2
-#  endif
-#elif defined(__INTEL_COMPILER)
-#  define KWIN_ALIGN(n) __declspec(align(n))
-#  define HAVE_SSE2
-#else
-#  define KWIN_ALIGN(n)
-#endif
-
-#ifdef HAVE_SSE2
+#if defined(__SSE2__)
 #  include <emmintrin.h>
 #endif
 
@@ -1146,11 +1134,11 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
     switch (type)
     {
     case GL_QUADS:
-#ifdef HAVE_SSE2
+#if defined(__SSE2__)
         if (!(intptr_t(vertex) & 0xf)) {
             for (int i = 0; i < count(); i++) {
                 const WindowQuad &quad = at(i);
-                KWIN_ALIGN(16) GLVertex2D v[4];
+                alignas(16) GLVertex2D v[4];
 
                 for (int j = 0; j < 4; j++) {
                     const WindowVertex &wv = quad[j];
@@ -1170,7 +1158,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
                 vertex += 4;
             }
         } else
-#endif // HAVE_SSE2
+#endif // __SSE2__
         {
             for (int i = 0; i < count(); i++) {
                 const WindowQuad &quad = at(i);
@@ -1189,11 +1177,11 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
         break;
 
     case GL_TRIANGLES:
-#ifdef HAVE_SSE2
+#if defined(__SSE2__)
         if (!(intptr_t(vertex) & 0xf)) {
             for (int i = 0; i < count(); i++) {
                 const WindowQuad &quad = at(i);
-                KWIN_ALIGN(16) GLVertex2D v[4];
+                alignas(16) GLVertex2D v[4];
 
                 for (int j = 0; j < 4; j++) {
                     const WindowVertex &wv = quad[j];
@@ -1224,7 +1212,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
                 vertex += 6;
             }
         } else
-#endif // HAVE_SSE2
+#endif // __SSE2__
         {
             for (int i = 0; i < count(); i++) {
                 const WindowQuad &quad = at(i);
