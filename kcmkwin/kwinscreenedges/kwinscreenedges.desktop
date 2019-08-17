@@ -98,6 +98,7 @@ Comment[ru]=Настройка действий для краёв и углов 
 Comment[sv]=Anpassa aktiva skärmhörn och kanter
 Comment[uk]=Налаштовування активних кутів і країв екрана
 Comment[x-test]=xxConfigure active screen corners and edgesxx
+Comment[zh_CN]=配置活动屏幕的边角和边缘
 Comment[zh_TW]=設定作用中螢幕角落與邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
