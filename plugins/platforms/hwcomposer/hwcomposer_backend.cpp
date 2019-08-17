@@ -83,7 +83,7 @@ bool BacklightInputEventFilter::keyEvent(QKeyEvent *event)
     return m_backend->isBacklightOff();
 }
 
-bool BacklightInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint32 time)
+bool BacklightInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(pos)
     Q_UNUSED(time)
@@ -111,7 +111,7 @@ bool BacklightInputEventFilter::touchDown(quint32 id, const QPointF &pos, quint3
     return true;
 }
 
-bool BacklightInputEventFilter::touchUp(quint32 id, quint32 time)
+bool BacklightInputEventFilter::touchUp(qint32 id, quint32 time)
 {
     Q_UNUSED(time)
     m_touchPoints.removeAll(id);
@@ -128,7 +128,7 @@ bool BacklightInputEventFilter::touchUp(quint32 id, quint32 time)
     return true;
 }
 
-bool BacklightInputEventFilter::touchMotion(quint32 id, const QPointF &pos, quint32 time)
+bool BacklightInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     Q_UNUSED(id)
     Q_UNUSED(pos)
