@@ -528,7 +528,7 @@ void X11StandalonePlatform::doUpdateOutputs()
             o->setCrtc(crtc);
             o->setGammaRampSize(gamma.isNull() ? 0 : gamma->size);
             o->setGeometry(geo);
-            o->setRefreshRate(refreshRate);
+            o->setRefreshRate(refreshRate * 1000);
 
             QString name;
             for (int j = 0; j < info->num_outputs; ++j) {

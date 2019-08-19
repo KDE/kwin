@@ -51,7 +51,7 @@ public:
     void setGeometry(QRect set);
 
     /**
-     * Current refresh rate in 1/ms.
+     * Current refresh rate in 1/μs = 1000/ms.
      */
     int refreshRate() const override;
     void setRefreshRate(int set);
