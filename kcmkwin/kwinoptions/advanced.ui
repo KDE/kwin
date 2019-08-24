@@ -77,17 +77,17 @@
      </property>
      <item>
       <property name="text">
-       <string>Smart</string>
+       <string>Minimal Overlapping</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Maximizing</string>
+       <string>Maximized</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Cascade</string>
+       <string>Cascaded</string>
       </property>
      </item>
      <item>
@@ -102,7 +102,7 @@
      </item>
      <item>
       <property name="text">
-       <string>Zero-cornered</string>
+       <string>In Top-Left Corner</string>
       </property>
      </item>
      <item>

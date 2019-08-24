@@ -642,11 +642,11 @@ the spinbox to configure the delay un-shading.
 <varlistentry>
 <term><guilabel>Placement</guilabel></term>
 <listitem><para>The placement policy determines where a new window will appear
-on the desktop.  <guilabel>Smart</guilabel> will try to achieve a minimum
-overlap of windows, <guilabel>Cascade</guilabel> will cascade the
+on the desktop.  <guilabel>Minimal Overlapping</guilabel> will try to achieve a minimum
+overlap of windows, <guilabel>Cascaded</guilabel> will cascade the
 windows, and <guilabel>Random</guilabel> will use a random
 position.  <guilabel>Centered</guilabel> will open all new windows in
-the center of the screen, and <guilabel>Zero-Cornered</guilabel> will
+the center of the screen, and <guilabel>In Top-Left Corner</guilabel> will
 open all windows with their top left corner in the top left corner of
 the screen.</para></listitem>
 </varlistentry>

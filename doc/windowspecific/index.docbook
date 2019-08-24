@@ -338,12 +338,12 @@ and <guibutton>Move Down</guibutton> buttons effects on how they are applied.</p
 <itemizedlist>
 <listitem><para><guilabel>Default</guilabel> - use the global window placement strategy.</para></listitem>
 <listitem><para><guilabel>No Placement</guilabel> - top-left corner.</para></listitem>
-<listitem><para><guilabel>Smart</guilabel> - place where no other window exists.</para></listitem>
-<listitem><para><guilabel>Maximizing</guilabel> - start the window maximized.</para></listitem>
-<listitem><para><guilabel>Cascade</guilabel> - staircase-by-title.</para></listitem>
+<listitem><para><guilabel>Minimal Overlapping</guilabel> - place where no other window exists.</para></listitem>
+<listitem><para><guilabel>Maximized</guilabel> - start the window maximized.</para></listitem>
+<listitem><para><guilabel>Cascaded</guilabel> - staircase-by-title.</para></listitem>
 <listitem><para><guilabel>Centered</guilabel> - center of the desktop.</para></listitem>
 <listitem><para><guilabel>Random</guilabel></para></listitem>
-<listitem><para><guilabel>Top-Left Corner</guilabel></para></listitem>
+<listitem><para><guilabel>In Top-Left Corner</guilabel></para></listitem>
 <listitem><para><guilabel>Under Mouse</guilabel></para></listitem>
 <listitem><para><guilabel>On Main Window</guilabel> - restrict placement of a child window to the boundaries of the parent window.</para></listitem>
 </itemizedlist>
