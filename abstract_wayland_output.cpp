@@ -104,23 +104,25 @@ void AbstractWaylandOutput::setScale(qreal scale)
         m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
         m_xdgOutput->done();
     }
-    emit modeChanged();
 }
 
 void AbstractWaylandOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
 {
     qCDebug(KWIN_CORE) << "Set changes in AbstractWaylandOutput.";
     Q_ASSERT(!m_waylandOutputDevice.isNull());
+    bool emitModeChanged = false;
 
     //enabledChanged is handled by plugin code
     if (changes->modeChanged()) {
         qCDebug(KWIN_CORE) << "Setting new mode:" << changes->mode();
         m_waylandOutputDevice->setCurrentMode(changes->mode());
         updateMode(changes->mode());
+        emitModeChanged = true;
     }
     if (changes->transformChanged()) {
         qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changes->transform());
         transform(changes->transform());
+        emitModeChanged = true;
     }
     if (changes->positionChanged()) {
         qCDebug(KWIN_CORE) << "Server setting position: " << changes->position();
@@ -130,6 +132,11 @@ void AbstractWaylandOutput::setChanges(KWayland::Server::OutputChangeSet *change
     if (changes->scaleChanged()) {
         qCDebug(KWIN_CORE) << "Setting scale:" << changes->scale();
         setScale(changes->scaleF());
+        emitModeChanged = true;
+    }
+
+    if (emitModeChanged) {
+        emit modeChanged();
     }
 }
 
