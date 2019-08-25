@@ -112,10 +112,6 @@ void AbstractWaylandOutput::setChanges(KWayland::Server::OutputChangeSet *change
     qCDebug(KWIN_CORE) << "Set changes in AbstractWaylandOutput.";
     Q_ASSERT(!m_waylandOutputDevice.isNull());
 
-    if (!changes) {
-        qCDebug(KWIN_CORE) << "No changes.";
-        // No changes to an output is an entirely valid thing
-    }
     //enabledChanged is handled by plugin code
     if (changes->modeChanged()) {
         qCDebug(KWIN_CORE) << "Setting new mode:" << changes->mode();
