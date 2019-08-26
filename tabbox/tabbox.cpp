@@ -355,7 +355,7 @@ void TabBoxHandlerImpl::highlightWindows(TabBoxClient *window, QWindow *controll
     if (window) {
         windows << static_cast<TabBoxClientImpl*>(window)->client()->effectWindow();
     }
-    if (auto t = Workspace::self()->findToplevel(controller)) {
+    if (Toplevel *t = workspace()->findInternal(controller)) {
         windows << t->effectWindow();
     }
     static_cast<EffectsHandlerImpl*>(effects)->highlightWindows(windows);

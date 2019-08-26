@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "group.h"
 #include "input.h"
+#include "internal_client.h"
 #include "logind.h"
 #include "moving_client_x11_filter.h"
 #include "killwindow.h"
@@ -562,15 +564,14 @@ Workspace::~Workspace()
         for (ShellClient *shellClient : shellClients) {
             shellClient->destroyClient();
         }
-
-        const QList<ShellClient *> internalClients = waylandServer()->internalClients();
-        for (ShellClient *internalClient : internalClients) {
-            internalClient->destroyClient();
-        }
     }
 
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(ReleaseReason::KWinShutsDown);
+
+    for (InternalClient *client : m_internalClients) {
+        client->destroyClient();
+    }
 
     if (auto c = kwinApp()->x11Connection()) {
         xcb_delete_property(c, kwinApp()->x11RootWindow(), atoms->kwin_running);
@@ -1667,10 +1668,8 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool (const Abstract
     if (Client *ret = Toplevel::findInList(desktops, func)) {
         return ret;
     }
-    if (waylandServer()) {
-        if (AbstractClient *ret = Toplevel::findInList(waylandServer()->internalClients(), func)) {
-            return ret;
-        }
+    if (InternalClient *ret = Toplevel::findInList(m_internalClients, func)) {
+        return ret;
     }
     return nullptr;
 }
@@ -1721,20 +1720,10 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
     if (Unmanaged *ret = Toplevel::findInList(unmanaged, func)) {
         return ret;
     }
+    if (InternalClient *ret = Toplevel::findInList(m_internalClients, func)) {
+        return ret;
+    }
     return nullptr;
-}
-
-Toplevel *Workspace::findToplevel(QWindow *w) const
-{
-    if (!w) {
-        return nullptr;
-    }
-    if (waylandServer()) {
-        if (auto c = waylandServer()->findClient(w)) {
-            return c;
-        }
-    }
-    return findUnmanaged(w->winId());
 }
 
 bool Workspace::hasClient(const AbstractClient *c)
@@ -1753,6 +1742,7 @@ void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > fu
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
     std::for_each(desktops.constBegin(), desktops.constEnd(), func);
+    std::for_each(m_internalClients.constBegin(), m_internalClients.constEnd(), func);
 }
 
 Toplevel *Workspace::findInternal(QWindow *w) const
@@ -1762,9 +1752,13 @@ Toplevel *Workspace::findInternal(QWindow *w) const
     }
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         return findUnmanaged(w->winId());
-    } else {
-        return waylandServer()->findClient(w);
     }
+    for (InternalClient *client : m_internalClients) {
+        if (client->internalWindow() == w) {
+            return client;
+        }
+    }
+    return nullptr;
 }
 
 bool Workspace::compositing() const
@@ -1804,5 +1798,33 @@ void Workspace::updateTabbox()
 #endif
 }
 
-} // namespace
+void Workspace::addInternalClient(InternalClient *client)
+{
+    m_internalClients.append(client);
 
+    setupClientConnections(client);
+    client->updateLayer();
+
+    if (client->isDecorated()) {
+        client->keepInArea(clientArea(FullScreenArea, client));
+    }
+
+    markXStackingOrderAsDirty();
+    updateStackingOrder(true);
+    updateClientArea();
+
+    emit internalClientAdded(client);
+}
+
+void Workspace::removeInternalClient(InternalClient *client)
+{
+    m_internalClients.removeOne(client);
+
+    markXStackingOrderAsDirty();
+    updateStackingOrder(true);
+    updateClientArea();
+
+    emit internalClientRemoved(client);
+}
+
+} // namespace

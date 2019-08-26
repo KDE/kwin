@@ -5,6 +5,7 @@
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,6 +54,7 @@ class Window;
 class AbstractClient;
 class Client;
 class Compositor;
+class InternalClient;
 class KillWindow;
 class ShortcutDialog;
 class UserActionsMenu;
@@ -127,11 +129,6 @@ public:
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
     Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
-    /**
-     * Finds the Toplevel for the KWin internal window @p w.
-     * On Wayland this is normally a ShellClient. For X11 an Unmanaged.
-     */
-    Toplevel *findToplevel(QWindow *w) const;
     /**
      * @brief Finds a Toplevel for the internal window @p w.
      *
@@ -236,6 +233,13 @@ public:
      */
     const QList<AbstractClient*> allClientList() const {
         return m_allClients;
+    }
+
+    /**
+     * @returns List of all internal clients currently managed by Workspace
+     */
+    const QList<InternalClient *> &internalClients() const {
+        return m_internalClients;
     }
 
     void stackScreenEdgesUnderOverrideRedirect();
@@ -392,6 +396,26 @@ public:
         return client_keys_dialog;
     }
 
+    /**
+     * Adds the internal client to Workspace.
+     *
+     * This method will be called by InternalClient when it's mapped.
+     *
+     * @see internalClientAdded
+     * @internal
+     */
+    void addInternalClient(InternalClient *client);
+
+    /**
+     * Removes the internal client from Workspace.
+     *
+     * This method is meant to be called only by InternalClient.
+     *
+     * @see internalClientRemoved
+     * @internal
+     */
+    void removeInternalClient(InternalClient *client);
+
 public Q_SLOTS:
     void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
@@ -497,6 +521,16 @@ Q_SIGNALS:
      */
     void stackingOrderChanged();
 
+    /**
+     * This signal is emitted whenever an internal client is created.
+     */
+    void internalClientAdded(KWin::InternalClient *client);
+
+    /**
+     * This signal is emitted whenever an internal client gets removed.
+     */
+    void internalClientRemoved(KWin::InternalClient *client);
+
 private:
     void init();
     void initWithX11();
@@ -564,6 +598,7 @@ private:
     ClientList desktops;
     UnmanagedList unmanaged;
     DeletedList deleted;
+    QList<InternalClient *> m_internalClients;
 
     ToplevelList unconstrained_stacking_order; // Topmost last
     ToplevelList stacking_order; // Topmost last

@@ -285,6 +285,13 @@ public:
      * @since 5.12
      */
     qreal screenScale() const; //
+    /**
+     * Returns the ratio between physical pixels and device-independent pixels for
+     * the attached buffer (or pixmap).
+     *
+     * For X11 clients, this method always returns 1.
+     */
+    virtual qreal bufferScale() const;
     virtual QPoint clientPos() const = 0; // inside of geometry()
     /**
      * Describes how the client's content maps to the window geometry including the frame.
@@ -441,8 +448,8 @@ public:
     KWayland::Server::SurfaceInterface *surface() const;
     void setSurface(KWayland::Server::SurfaceInterface *surface);
 
-    virtual void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
     const QSharedPointer<QOpenGLFramebufferObject> &internalFramebufferObject() const;
+    QImage internalImageObject() const;
 
     /**
      * @returns Transformation to map from global to window coordinates.
@@ -626,6 +633,11 @@ protected:
     bool ready_for_painting;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
     QRegion layer_repaints_region;
+    /**
+     * An FBO object KWin internal windows might render to.
+     */
+    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
+    QImage m_internalImage;
 
 protected:
     bool m_isDamaged;
@@ -649,10 +661,6 @@ private:
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
     KWayland::Server::SurfaceInterface *m_surface = nullptr;
-    /**
-     * An FBO object KWin internal windows might render to.
-     */
-    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;
 };
@@ -917,6 +925,11 @@ inline KWayland::Server::SurfaceInterface *Toplevel::surface() const
 inline const QSharedPointer<QOpenGLFramebufferObject> &Toplevel::internalFramebufferObject() const
 {
     return m_internalFBO;
+}
+
+inline QImage Toplevel::internalImageObject() const
+{
+    return m_internalImage;
 }
 
 inline QPoint Toplevel::clientContentPos() const

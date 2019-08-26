@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -833,6 +834,14 @@ public:
      * Default implementation returns @c true.
      */
     virtual bool supportsWindowRules() const;
+
+    /**
+     * Returns the extents of the server-side decoration.
+     *
+     * Note that the returned margins object will have all margins set to 0 if
+     * the client doesn't have a server-side decoration.
+     */
+    QMargins frameMargins() const;
 
 public Q_SLOTS:
     virtual void closeWindow() = 0;

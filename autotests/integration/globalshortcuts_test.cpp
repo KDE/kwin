@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "input.h"
+#include "internal_client.h"
 #include "platform.h"
 #include "screens.h"
 #include "shell_client.h"
@@ -63,8 +64,9 @@ private Q_SLOTS:
 
 void GlobalShortcutsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::InternalClient *>();
+    qRegisterMetaType<KWin::ShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -346,11 +348,11 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     QVERIFY(client->isActive());
     QCOMPARE(client->shortcut(), QKeySequence());
 
-    QSignalSpy shortcutDialogAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy shortcutDialogAddedSpy(workspace(), &Workspace::internalClientAdded);
     QVERIFY(shortcutDialogAddedSpy.isValid());
     workspace()->slotSetupWindowShortcut();
     QTRY_COMPARE(shortcutDialogAddedSpy.count(), 1);
-    auto dialog = shortcutDialogAddedSpy.first().first().value<ShellClient*>();
+    auto dialog = shortcutDialogAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(dialog);
     QVERIFY(dialog->isInternal());
     auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit*>();

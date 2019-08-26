@@ -18,16 +18,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
-#include "platform.h"
 #include "abstract_client.h"
 #include "cursor.h"
+#include "internal_client.h"
+#include "platform.h"
 #include "pointer_input.h"
 #include "touch_input.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "shell_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "shell_client.h"
 #include <kwineffects.h>
 
 #include "decorations/decoratedclient.h"
@@ -133,8 +134,9 @@ AbstractClient *DecorationInputTest::showWindow(Test::ShellSurfaceType type)
 
 void DecorationInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::InternalClient *>();
+    qRegisterMetaType<KWin::ShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -910,12 +912,12 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QSignalSpy keyEvent(keyboard, &KWayland::Client::Keyboard::keyChanged);
     QVERIFY(keyEvent.isValid());
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
     QVERIFY(clientAddedSpy.isValid());
     c->decoratedClient()->requestShowToolTip(QStringLiteral("test"));
     // now we should get an internal window
     QVERIFY(clientAddedSpy.wait());
-    ShellClient *internal = clientAddedSpy.first().first().value<ShellClient*>();
+    InternalClient *internal = clientAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(internal->isInternal());
     QVERIFY(internal->internalWindow()->flags().testFlag(Qt::ToolTip));
 

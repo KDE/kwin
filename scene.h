@@ -425,6 +425,7 @@ public:
      */
     QPointer<KWayland::Server::BufferInterface> buffer() const;
     const QSharedPointer<QOpenGLFramebufferObject> &fbo() const;
+    QImage internalImage() const;
     /**
      * @brief Whether this WindowPixmap is considered as discarded. This means the window has changed in a way that a new
      * WindowPixmap should have been created already.
@@ -512,6 +513,7 @@ private:
     QRect m_contentsRect;
     QPointer<KWayland::Server::BufferInterface> m_buffer;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
+    QImage m_internalImage;
     WindowPixmap *m_parent = nullptr;
     QVector<WindowPixmap*> m_children;
     QPointer<KWayland::Server::SubSurfaceInterface> m_subSurface;
@@ -616,6 +618,12 @@ inline
 const QSharedPointer<QOpenGLFramebufferObject> &WindowPixmap::fbo() const
 {
     return m_fbo;
+}
+
+inline
+QImage WindowPixmap::internalImage() const
+{
+    return m_internalImage;
 }
 
 template <typename T>

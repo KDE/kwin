@@ -94,6 +94,7 @@ void Deleted::copyToDeleted(Toplevel* c)
 {
     Q_ASSERT(dynamic_cast< Deleted* >(c) == nullptr);
     Toplevel::copyToDeleted(c);
+    m_bufferScale = c->bufferScale();
     desk = c->desktop();
     m_desktops = c->desktops();
     activityList = c->activities();
@@ -146,7 +147,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     }
 
     m_wasWaylandClient = qobject_cast<ShellClient *>(c) != nullptr;
-    m_wasX11Client = !m_wasWaylandClient;
+    m_wasX11Client = qobject_cast<Client *>(c) != nullptr;
     m_wasPopupWindow = c->isPopupWindow();
     m_wasOutline = c->isOutline();
 }
@@ -160,6 +161,11 @@ void Deleted::unrefWindow()
     // window going away during a painting pass
     // b) to prevent dangeling pointers in the stacking order, see bug #317765
     deleteLater();
+}
+
+qreal Deleted::bufferScale() const
+{
+    return m_bufferScale;
 }
 
 int Deleted::desktop() const

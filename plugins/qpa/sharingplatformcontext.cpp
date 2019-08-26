@@ -20,8 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sharingplatformcontext.h"
 #include "offscreensurface.h"
 #include "window.h"
+
+#include "../../internal_client.h"
+#include "../../main.h"
 #include "../../platform.h"
-#include "../../shell_client.h"
+
 #include <logging.h>
 
 #include <QOpenGLFramebufferObject>
@@ -82,14 +85,13 @@ void SharingPlatformContext::swapBuffers(QPlatformSurface *surface)
 {
     if (surface->surface()->surfaceClass() == QSurface::Window) {
         Window *window = static_cast<Window *>(surface);
-        auto c = window->shellClient();
-        if (!c) {
-            qCDebug(KWIN_QPA) << "SwapBuffers called but there is no ShellClient";
+        InternalClient *client = window->client();
+        if (!client) {
             return;
         }
         context()->makeCurrent(surface->surface());
         glFlush();
-        c->setInternalFramebufferObject(window->swapFBO());
+        client->present(window->swapFBO());
         window->bindContentFBO();
     }
 }

@@ -558,6 +558,11 @@ qreal Toplevel::screenScale() const
     return m_screenScale;
 }
 
+qreal Toplevel::bufferScale() const
+{
+    return surface() ? surface()->scale() : 1;
+}
+
 bool Toplevel::isOnScreen(int screen) const
 {
     return screens()->geometry(screen).intersects(geometry());
@@ -768,15 +773,6 @@ QRegion Toplevel::inputShape() const
         // TODO: maybe also for X11?
         return QRegion();
     }
-}
-
-void Toplevel::setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo)
-{
-    if (m_internalFBO != fbo) {
-        discardWindowPixmap();
-        m_internalFBO = fbo;
-    }
-    setDepth(32);
 }
 
 QMatrix4x4 Toplevel::inputTransformation() const

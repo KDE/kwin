@@ -40,6 +40,7 @@ namespace KWin
 {
 
 class Client;
+class InternalClient;
 class ShellClient;
 class Unmanaged;
 class DebugConsoleFilter;
@@ -73,13 +74,13 @@ private:
     template <class T>
     void remove(int parentRow, QVector<T*> &clients, T *client);
     ShellClient *shellClient(const QModelIndex &index) const;
-    ShellClient *internalClient(const QModelIndex &index) const;
+    InternalClient *internalClient(const QModelIndex &index) const;
     Client *x11Client(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
     QVector<ShellClient*> m_shellClients;
-    QVector<ShellClient*> m_internalClients;
+    QVector<InternalClient*> m_internalClients;
     QVector<Client*> m_x11Clients;
     QVector<Unmanaged*> m_unmanageds;
 

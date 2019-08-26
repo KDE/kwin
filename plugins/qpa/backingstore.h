@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,15 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <qpa/qplatformbackingstore.h>
 
-namespace KWayland
-{
-namespace Client
-{
-class Buffer;
-class ShmPool;
-}
-}
-
 namespace KWin
 {
 namespace QPA
@@ -39,20 +31,16 @@ namespace QPA
 class BackingStore : public QPlatformBackingStore
 {
 public:
-    explicit BackingStore(QWindow *w, KWayland::Client::ShmPool *shm);
+    explicit BackingStore(QWindow *window);
     ~BackingStore() override;
 
     QPaintDevice *paintDevice() override;
     void flush(QWindow *window, const QRegion &region, const QPoint &offset) override;
     void resize(const QSize &size, const QRegion &staticContents) override;
-    void beginPaint(const QRegion &) override;
 
 private:
-    int scale() const;
-    KWayland::Client::ShmPool *m_shm;
-    QWeakPointer<KWayland::Client::Buffer> m_buffer;
     QImage m_backBuffer;
-    QSize m_size;
+    QImage m_frontBuffer;
 };
 
 }

@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "integration.h"
 #include "backingstore.h"
-#include "nativeinterface.h"
 #include "offscreensurface.h"
 #include "screen.h"
 #include "sharingplatformcontext.h"
@@ -28,14 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../platform.h"
 #include "../../screens.h"
 #include "../../virtualkeyboard.h"
-#include "../../wayland_server.h"
-
-#include <KWayland/Client/compositor.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/registry.h>
-#include <KWayland/Client/shell.h>
-#include <KWayland/Client/surface.h>
-#include <KWayland/Server/clientconnection.h>
 
 #include <QCoreApplication>
 #include <QtConcurrentRun>
@@ -59,7 +51,6 @@ Integration::Integration()
     : QObject()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
-    , m_nativeInterface(new NativeInterface(this))
     , m_inputContext()
 {
 }
@@ -139,25 +130,12 @@ QAbstractEventDispatcher *Integration::createEventDispatcher() const
 
 QPlatformBackingStore *Integration::createPlatformBackingStore(QWindow *window) const
 {
-    auto registry = waylandServer()->internalClientRegistry();
-    const auto shm = registry->interface(KWayland::Client::Registry::Interface::Shm);
-    if (shm.name == 0u) {
-        return nullptr;
-    }
-    return new BackingStore(window, registry->createShmPool(shm.name, shm.version, window));
+    return new BackingStore(window);
 }
 
 QPlatformWindow *Integration::createPlatformWindow(QWindow *window) const
 {
-    auto c = compositor();
-    auto s = shell();
-    if (!s || !c) {
-        return new QPlatformWindow(window);
-    } else {
-        // don't set window as parent, cause infinite recursion in PlasmaQuick::Dialog
-        auto surface = c->createSurface(c);
-        return new Window(window, surface, s->createSurface(surface, surface), this);
-    }
+    return new Window(window);
 }
 
 QPlatformOffscreenSurface *Integration::createPlatformOffscreenSurface(QOffscreenSurface *surface) const
@@ -181,11 +159,6 @@ QStringList Integration::themeNames() const
         return QStringList({QStringLiteral("kde")});
     }
     return QStringList({QLatin1String(QGenericUnixTheme::name)});
-}
-
-QPlatformNativeInterface *Integration::nativeInterface() const
-{
-    return m_nativeInterface;
 }
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
@@ -233,37 +206,6 @@ void Integration::initScreens()
 #endif
     }
     m_screens = newScreens;
-}
-
-KWayland::Client::Compositor *Integration::compositor() const
-{
-    if (!m_compositor) {
-        using namespace KWayland::Client;
-        auto registry = waylandServer()->internalClientRegistry();
-        const auto c = registry->interface(Registry::Interface::Compositor);
-        if (c.name != 0u) {
-            const_cast<Integration*>(this)->m_compositor = registry->createCompositor(c.name, c.version, registry);
-        }
-    }
-    return m_compositor;
-}
-
-KWayland::Client::Shell *Integration::shell() const
-{
-    if (!m_shell) {
-        using namespace KWayland::Client;
-        auto registry = waylandServer()->internalClientRegistry();
-        const auto s = registry->interface(Registry::Interface::Shell);
-        if (s.name != 0u) {
-            const_cast<Integration*>(this)->m_shell = registry->createShell(s.name, s.version, registry);
-        }
-    }
-    return m_shell;
-}
-
-EGLDisplay Integration::eglDisplay() const
-{
-    return m_eglDisplay;
 }
 
 QPlatformInputContext *Integration::inputContext() const

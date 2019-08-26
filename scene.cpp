@@ -844,10 +844,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     if (cached_quad_list != nullptr && !force)
         return *cached_quad_list;
     WindowQuadList ret;
-    qreal scale = 1.0;
-    if (toplevel->surface()) {
-        scale = toplevel->surface()->scale();
-    }
+
+    const qreal scale = toplevel->bufferScale();
 
     if (toplevel->clientPos() == QPoint(0, 0) && toplevel->clientSize() == toplevel->decorationRect().size())
         ret = makeQuads(WindowQuadContents, shape(), QPoint(0,0), scale);  // has no decoration
@@ -1059,7 +1057,7 @@ WindowPixmap *WindowPixmap::createChild(const QPointer<KWayland::Server::SubSurf
 
 bool WindowPixmap::isValid() const
 {
-    if (!m_buffer.isNull() || !m_fbo.isNull()) {
+    if (!m_buffer.isNull() || !m_fbo.isNull() || !m_internalImage.isNull()) {
         return true;
     }
     return m_pixmap != XCB_PIXMAP_NONE;
@@ -1110,13 +1108,11 @@ void WindowPixmap::updateBuffer()
                 m_buffer->unref();
                 m_buffer.clear();
             }
-        } else {
-            // might be an internal window
-            const auto &fbo = toplevel()->internalFramebufferObject();
-            if (!fbo.isNull()) {
-                m_fbo = fbo;
-            }
         }
+    } else if (toplevel()->internalFramebufferObject()) {
+        m_fbo = toplevel()->internalFramebufferObject();
+    } else if (!toplevel()->internalImageObject().isNull()) {
+        m_internalImage = toplevel()->internalImageObject();
     } else {
         if (m_buffer) {
             QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);

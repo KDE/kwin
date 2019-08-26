@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,15 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <qpa/qplatformintegration.h>
 #include <QObject>
 
-namespace KWayland
-{
-namespace Client
-{
-class Compositor;
-class Shell;
-}
-}
-
 namespace KWin
 {
 namespace QPA
@@ -58,24 +50,16 @@ public:
     QPlatformFontDatabase *fontDatabase() const override;
     QStringList themeNames() const override;
     QPlatformTheme *createPlatformTheme(const QString &name) const override;
-    QPlatformNativeInterface *nativeInterface() const override;
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const override;
-
-    void initialize() override;
     QPlatformInputContext *inputContext() const override;
 
-    KWayland::Client::Compositor *compositor() const;
-    EGLDisplay eglDisplay() const;
+    void initialize() override;
 
 private:
     void initScreens();
-    KWayland::Client::Shell *shell() const;
 
     QPlatformFontDatabase *m_fontDb;
     QPlatformNativeInterface *m_nativeInterface;
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::Shell *m_shell = nullptr;
-    EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     Screen *m_dummyScreen = nullptr;
     QScopedPointer<QPlatformInputContext> m_inputContext;
     QVector<Screen*> m_screens;

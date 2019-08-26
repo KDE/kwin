@@ -402,6 +402,11 @@ void QPainterWindowPixmap::create()
     if (!isValid()) {
         return;
     }
+    if (!surface()) {
+        // That's an internal client.
+        m_image = internalImage();
+        return;
+    }
     // performing deep copy, this could probably be improved
     m_image = buffer()->data().copy();
     if (auto s = surface()) {
@@ -419,6 +424,11 @@ void QPainterWindowPixmap::updateBuffer()
     const auto oldBuffer = buffer();
     WindowPixmap::updateBuffer();
     const auto &b = buffer();
+    if (!surface()) {
+        // That's an internal client.
+        m_image = internalImage();
+        return;
+    }
     if (b.isNull()) {
         m_image = QImage();
         return;

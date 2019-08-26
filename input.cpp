@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "xwl/xwayland_interface.h"
+#include "internal_client.h"
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/fakeinput_interface.h>
 #include <KWayland/Server/seat_interface.h>
@@ -818,7 +819,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         {
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease: {
-            auto s = waylandServer()->findClient(internal);
+            auto s = qobject_cast<InternalClient *>(workspace()->findInternal(internal));
             if (s && s->isDecorated()) {
                 // only perform mouse commands on decorated internal windows
                 const auto actionResult = performClientMouseAction(event, s);
@@ -845,7 +846,7 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         if (event->angleDelta().y() != 0) {
-            auto s = waylandServer()->findClient(internal);
+            auto s = qobject_cast<InternalClient *>(workspace()->findInternal(internal));
             if (s && s->isDecorated()) {
                 // client window action only on vertical scrolling
                 const auto actionResult = performClientWheelAction(event, s);
@@ -868,7 +869,7 @@ class InternalWindowEventFilter : public InputEventFilter {
         return e.isAccepted();
     }
     bool keyEvent(QKeyEvent *event) override {
-        const auto &internalClients = waylandServer()->internalClients();
+        const QList<InternalClient *> &internalClients = workspace()->internalClients();
         if (internalClients.isEmpty()) {
             return false;
         }
@@ -2349,7 +2350,7 @@ void InputDeviceHandler::update()
         const auto pos = position().toPoint();
         internalWindow = findInternalWindow(pos);
         if (internalWindow) {
-            toplevel = waylandServer()->findClient(internalWindow);
+            toplevel = workspace()->findInternal(internalWindow);
         } else {
             toplevel = input()->findToplevel(pos);
         }
@@ -2394,7 +2395,7 @@ QWindow* InputDeviceHandler::findInternalWindow(const QPoint &pos) const
         return nullptr;
     }
 
-    const auto &internalClients = waylandServer()->internalClients();
+    const QList<InternalClient *> &internalClients = workspace()->internalClients();
     if (internalClients.isEmpty()) {
         return nullptr;
     }

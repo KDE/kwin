@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
+#include "internal_client.h"
 #include "platform.h"
 #include "shell_client.h"
 #include "useractions.h"
@@ -64,6 +65,7 @@ void PopupOpenCloseAnimationTest::initTestCase()
 
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::Deleted *>();
+    qRegisterMetaType<KWin::InternalClient *>();
     qRegisterMetaType<KWin::ShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -248,11 +250,11 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QVERIFY(!effect->isActive());
 
     // Show a decoration tooltip.
-    QSignalSpy tooltipAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy tooltipAddedSpy(workspace(), &Workspace::internalClientAdded);
     QVERIFY(tooltipAddedSpy.isValid());
     client->decoratedClient()->requestShowToolTip(QStringLiteral("KWin rocks!"));
     QVERIFY(tooltipAddedSpy.wait());
-    ShellClient *tooltip = tooltipAddedSpy.first().first().value<ShellClient *>();
+    InternalClient *tooltip = tooltipAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(tooltip->isInternal());
     QVERIFY(tooltip->isPopupWindow());
     QVERIFY(tooltip->internalWindow()->flags().testFlag(Qt::ToolTip));
@@ -262,7 +264,7 @@ void PopupOpenCloseAnimationTest::testAnimateDecorationTooltips()
     QTRY_VERIFY(!effect->isActive());
 
     // Hide the decoration tooltip.
-    QSignalSpy tooltipClosedSpy(tooltip, &ShellClient::windowClosed);
+    QSignalSpy tooltipClosedSpy(tooltip, &InternalClient::windowClosed);
     QVERIFY(tooltipClosedSpy.isValid());
     client->decoratedClient()->requestHideToolTip();
     QVERIFY(tooltipClosedSpy.wait());

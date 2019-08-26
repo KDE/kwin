@@ -95,6 +95,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedge.h"
 #include "shell_client.h"
 #include "wayland_server.h"
+#include "internal_client.h"
 
 #include <QDebug>
 
@@ -761,14 +762,13 @@ void Workspace::updateXStackingOrder()
             }
         }
     }
-    if (waylandServer()) {
-        const auto clients = waylandServer()->internalClients();
-        for (auto c: clients) {
-            if (c->isShown(false)) {
-                x_stacking << c;
-            }
+
+    for (InternalClient *client : workspace()->internalClients()) {
+        if (client->isShown(false)) {
+            x_stacking.append(client);
         }
     }
+
     m_xStackingDirty = false;
 }
 

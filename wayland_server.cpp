@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "composite.h"
 #include "idle_inhibition.h"
-#include "internal_client.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "workspace.h"
@@ -159,12 +158,7 @@ void WaylandServer::createSurface(T *surface)
     if (surface->client() == m_screenLockerClientConnection) {
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
-    ShellClient *client;
-    if (surface->client() == waylandServer()->internalConnection()) {
-        client = new InternalClient(surface);
-    } else {
-        client = new ShellClient(surface);
-    }
+    ShellClient *client = new ShellClient(surface);
     if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
         client->installServerSideDecoration(deco);
     }
@@ -183,11 +177,7 @@ void WaylandServer::createSurface(T *surface)
     if (auto palette = m_paletteManager->paletteForSurface(surface->surface())) {
         client->installPalette(palette);
     }
-    if (client->isInternal()) {
-        m_internalClients << client;
-    } else {
-        m_clients << client;
-    }
+    m_clients << client;
     if (client->readyForPainting()) {
         emit shellClientAdded(client);
     } else {
@@ -650,7 +640,6 @@ void WaylandServer::createInternalConnection()
 void WaylandServer::removeClient(ShellClient *c)
 {
     m_clients.removeAll(c);
-    m_internalClients.removeAll(c);
     emit shellClientRemoved(c);
 }
 
@@ -699,9 +688,6 @@ ShellClient *WaylandServer::findClient(quint32 id) const
     if (ShellClient *c = findClientInList(m_clients, id)) {
         return c;
     }
-    if (ShellClient *c = findClientInList(m_internalClients, id)) {
-        return c;
-    }
     return nullptr;
 }
 
@@ -713,31 +699,12 @@ ShellClient *WaylandServer::findClient(SurfaceInterface *surface) const
     if (ShellClient *c = findClientInList(m_clients, surface)) {
         return c;
     }
-    if (ShellClient *c = findClientInList(m_internalClients, surface)) {
-        return c;
-    }
     return nullptr;
 }
 
 AbstractClient *WaylandServer::findAbstractClient(SurfaceInterface *surface) const
 {
     return findClient(surface);
-}
-
-ShellClient *WaylandServer::findClient(QWindow *w) const
-{
-    if (!w) {
-        return nullptr;
-    }
-    auto it = std::find_if(m_internalClients.constBegin(), m_internalClients.constEnd(),
-        [w] (const ShellClient *c) {
-            return c->internalWindow() == w;
-        }
-    );
-    if (it != m_internalClients.constEnd()) {
-        return *it;
-    }
-    return nullptr;
 }
 
 quint32 WaylandServer::createWindowId(SurfaceInterface *surface)

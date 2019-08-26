@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2019 Martin Flöser <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,12 +19,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "internal_client.h"
+#include "decorations/decorationbridge.h"
+#include "deleted.h"
 #include "workspace.h"
 
-#include <KWayland/Client/surface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KDecoration2/Decoration>
 
 #include <QOpenGLFramebufferObject>
+#include <QWindow>
 
 Q_DECLARE_METATYPE(NET::WindowType)
 
@@ -32,58 +35,51 @@ static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_C
 namespace KWin
 {
 
-InternalClient::InternalClient(KWayland::Server::ShellSurfaceInterface *surface)
-    : ShellClient(surface)
+InternalClient::InternalClient(QWindow *window)
+    : m_internalWindow(window)
+    , m_clientSize(window->size())
+    , m_windowId(window->winId())
+    , m_internalWindowFlags(window->flags())
 {
-    findInternalWindow();
-    updateInternalWindowGeometry();
-    updateDecoration(true);
-}
+    // Don't render the client until it provides a buffer.
+    ready_for_painting = false;
 
-InternalClient::InternalClient(KWayland::Server::XdgShellSurfaceInterface *surface)
-    : ShellClient(surface)
-{
-}
+    connect(m_internalWindow, &QWindow::xChanged, this, &InternalClient::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::yChanged, this, &InternalClient::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::widthChanged, this, &InternalClient::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::heightChanged, this, &InternalClient::updateInternalWindowGeometry);
+    connect(m_internalWindow, &QWindow::windowTitleChanged, this, &InternalClient::setCaption);
+    connect(m_internalWindow, &QWindow::opacityChanged, this, &InternalClient::setOpacity);
+    connect(m_internalWindow, &QWindow::destroyed, this, &InternalClient::destroyClient);
 
-InternalClient::InternalClient(KWayland::Server::XdgShellPopupInterface *surface)
-    : ShellClient(surface)
-{
-}
+    connect(this, &InternalClient::opacityChanged, this, &InternalClient::addRepaintFull);
 
-InternalClient::~InternalClient() = default;
-
-void InternalClient::findInternalWindow()
-{
-    const QWindowList windows = kwinApp()->topLevelWindows();
-    for (QWindow *w: windows) {
-        auto s = KWayland::Client::Surface::fromWindow(w);
-        if (!s) {
-            continue;
-        }
-        if (s->id() != surface()->id()) {
-            continue;
-        }
-        m_internalWindow = w;
-        m_windowId = m_internalWindow->winId();
-        m_internalWindowFlags = m_internalWindow->flags();
-        connect(m_internalWindow, &QWindow::xChanged, this, &InternalClient::updateInternalWindowGeometry);
-        connect(m_internalWindow, &QWindow::yChanged, this, &InternalClient::updateInternalWindowGeometry);
-        connect(m_internalWindow, &QWindow::destroyed, this, [this] { m_internalWindow = nullptr; });
-        connect(m_internalWindow, &QWindow::opacityChanged, this, &InternalClient::setOpacity);
-
-        const QVariant windowType = m_internalWindow->property("kwin_windowType");
-        if (!windowType.isNull()) {
-            m_windowType = windowType.value<NET::WindowType>();
-        }
-        setOpacity(m_internalWindow->opacity());
-
-        // skip close animation support
-        setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
-        m_internalWindow->installEventFilter(this);
-        return;
+    const QVariant windowType = m_internalWindow->property("kwin_windowType");
+    if (!windowType.isNull()) {
+        m_windowType = windowType.value<NET::WindowType>();
     }
 
-    qCWarning(KWIN_CORE, "Couldn't find an internal window for surface with id %x", surface()->id());
+    setCaption(m_internalWindow->title());
+    setIcon(QIcon::fromTheme(QStringLiteral("kwin")));
+    setOnAllDesktops(true);
+    setOpacity(m_internalWindow->opacity());
+    setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
+
+    setupCompositing();
+    updateColorScheme();
+
+    blockGeometryUpdates(true);
+    commitGeometry(m_internalWindow->geometry());
+    updateDecoration(true);
+    setGeometry(mapFromClient(m_internalWindow->geometry()));
+    setGeometryRestore(geometry());
+    blockGeometryUpdates(false);
+
+    m_internalWindow->installEventFilter(this);
+}
+
+InternalClient::~InternalClient()
+{
 }
 
 bool InternalClient::eventFilter(QObject *watched, QEvent *event)
@@ -101,6 +97,56 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
+QStringList InternalClient::activities() const
+{
+    return QStringList();
+}
+
+void InternalClient::blockActivityUpdates(bool b)
+{
+    Q_UNUSED(b)
+
+    // Internal clients do not support activities.
+}
+
+qreal InternalClient::bufferScale() const
+{
+    if (m_internalWindow) {
+        return m_internalWindow->devicePixelRatio();
+    }
+    return 1;
+}
+
+QString InternalClient::captionNormal() const
+{
+    return m_captionNormal;
+}
+
+QString InternalClient::captionSuffix() const
+{
+    return m_captionSuffix;
+}
+
+QPoint InternalClient::clientContentPos() const
+{
+    return -1 * clientPos();
+}
+
+QSize InternalClient::clientSize() const
+{
+    return m_clientSize;
+}
+
+void InternalClient::debug(QDebug &stream) const
+{
+    stream.nospace() << "\'InternalClient:" << m_internalWindow << "\'";
+}
+
+QRect InternalClient::transparentRect() const
+{
+    return QRect();
+}
+
 NET::WindowType InternalClient::windowType(bool direct, int supported_types) const
 {
     Q_UNUSED(direct)
@@ -108,31 +154,39 @@ NET::WindowType InternalClient::windowType(bool direct, int supported_types) con
     return m_windowType;
 }
 
+double InternalClient::opacity() const
+{
+    return m_opacity;
+}
+
+void InternalClient::setOpacity(double opacity)
+{
+    if (m_opacity == opacity) {
+        return;
+    }
+
+    const double oldOpacity = m_opacity;
+    m_opacity = opacity;
+
+    emit opacityChanged(this, oldOpacity);
+}
+
 void InternalClient::killWindow()
 {
-    // we don't kill our internal windows
+    // We don't kill our internal windows.
 }
 
 bool InternalClient::isPopupWindow() const
 {
-    if (Toplevel::isPopupWindow()) {
+    if (AbstractClient::isPopupWindow()) {
         return true;
     }
     return m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-void InternalClient::setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo)
+QByteArray InternalClient::windowRole() const
 {
-    if (fbo.isNull()) {
-        unmap();
-        return;
-    }
-
-    setClientSize(fbo->size() / surface()->scale());
-    markAsMapped();
-    doSetGeometry(QRect(geom.topLeft(), clientSize()));
-    Toplevel::setInternalFramebufferObject(fbo);
-    Toplevel::addDamage(QRegion(0, 0, width(), height()));
+    return QByteArray();
 }
 
 void InternalClient::closeWindow()
@@ -145,6 +199,16 @@ void InternalClient::closeWindow()
 bool InternalClient::isCloseable() const
 {
     return true;
+}
+
+bool InternalClient::isFullScreenable() const
+{
+    return false;
+}
+
+bool InternalClient::isFullScreen() const
+{
+    return false;
 }
 
 bool InternalClient::isMaximizable() const
@@ -174,7 +238,7 @@ bool InternalClient::isResizable() const
 
 bool InternalClient::noBorder() const
 {
-    return m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
+    return m_userNoBorder || m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
 bool InternalClient::userCanSetNoBorder() const
@@ -183,11 +247,6 @@ bool InternalClient::userCanSetNoBorder() const
 }
 
 bool InternalClient::wantsInput() const
-{
-    return false;
-}
-
-bool InternalClient::acceptsFocus() const
 {
     return false;
 }
@@ -226,75 +285,31 @@ quint32 InternalClient::windowId() const
     return m_windowId;
 }
 
-void InternalClient::updateInternalWindowGeometry()
+MaximizeMode InternalClient::maximizeMode() const
 {
-    if (!m_internalWindow) {
-        return;
-    }
-    doSetGeometry(QRect(m_internalWindow->geometry().topLeft() - QPoint(borderLeft(), borderTop()),
-                        m_internalWindow->geometry().size() + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+    return MaximizeRestore;
 }
 
-bool InternalClient::requestGeometry(const QRect &rect)
+QRect InternalClient::geometryRestore() const
 {
-    if (!ShellClient::requestGeometry(rect)) {
-        return false;
-    }
-    if (m_internalWindow) {
-        m_internalWindow->setGeometry(QRect(rect.topLeft() + QPoint(borderLeft(), borderTop()), rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
-    }
-    return true;
+    return m_maximizeRestoreGeometry;
 }
 
-void InternalClient::doSetGeometry(const QRect &rect)
+bool InternalClient::isShown(bool shaded_is_shown) const
 {
-    if (geom == rect && pendingGeometryUpdate() == PendingGeometryNone) {
-        return;
-    }
-    if (!isUnmapped()) {
-        addWorkspaceRepaint(visibleRect());
-    }
-    geom = rect;
+    Q_UNUSED(shaded_is_shown)
 
-    if (isUnmapped() && geometryRestore().isEmpty() && !geom.isEmpty()) {
-        // use first valid geometry as restore geometry
-        setGeometryRestore(geom);
-    }
-
-    if (!isUnmapped()) {
-        addWorkspaceRepaint(visibleRect());
-    }
-    syncGeometryToInternalWindow();
-    if (hasStrut()) {
-        workspace()->updateClientArea();
-    }
-    const auto old = geometryBeforeUpdateBlocking();
-    updateGeometryBeforeUpdateBlocking();
-    emit geometryShapeChanged(this, old);
-
-    if (isResize()) {
-        performMoveResize();
-    }
+    return readyForPainting();
 }
 
-void InternalClient::doMove(int x, int y)
+bool InternalClient::isHiddenInternal() const
 {
-    Q_UNUSED(x)
-    Q_UNUSED(y)
-    syncGeometryToInternalWindow();
+    return false;
 }
 
-void InternalClient::syncGeometryToInternalWindow()
+void InternalClient::hideClient(bool hide)
 {
-    if (!m_internalWindow) {
-        return;
-    }
-    const QRect windowRect = QRect(geom.topLeft() + QPoint(borderLeft(), borderTop()),
-                                    geom.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
-    if (m_internalWindow->geometry() != windowRect) {
-        // delay to end of cycle to prevent freeze, see BUG 384441
-        QTimer::singleShot(0, m_internalWindow, std::bind(static_cast<void (QWindow::*)(const QRect&)>(&QWindow::setGeometry), m_internalWindow, windowRect));
-    }
+    Q_UNUSED(hide)
 }
 
 void InternalClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
@@ -311,16 +326,186 @@ void InternalClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
     if (h > area.height()) {
         h = area.height();
     }
-    m_internalWindow->setGeometry(QRect(pos() + QPoint(borderLeft(), borderTop()), QSize(w, h) - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+    setGeometry(QRect(x(), y(), w, h));
 }
 
-void InternalClient::doResizeSync()
+void InternalClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
-    if (!m_internalWindow) {
+    const QRect rect(x, y, w, h);
+
+    if (areGeometryUpdatesBlocked()) {
+        geom = rect;
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            // Maximum, nothing needed.
+        } else if (force == ForceGeometrySet) {
+            setPendingGeometryUpdate(PendingGeometryForced);
+        } else {
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        }
         return;
     }
-    const auto rect = moveResizeGeometry();
-    m_internalWindow->setGeometry(QRect(rect.topLeft() + QPoint(borderLeft(), borderTop()), rect.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+
+    if (pendingGeometryUpdate() != PendingGeometryNone) {
+        // Reset geometry to the one before blocking, so that we can compare properly.
+        geom = geometryBeforeUpdateBlocking();
+    }
+
+    if (geom == rect) {
+        return;
+    }
+
+    const QRect newClientGeometry = mapToClient(rect);
+
+    if (m_clientSize == newClientGeometry.size()) {
+        commitGeometry(rect);
+    } else {
+        requestGeometry(rect);
+    }
+}
+
+void InternalClient::setGeometryRestore(const QRect &rect)
+{
+    m_maximizeRestoreGeometry = rect;
+}
+
+bool InternalClient::supportsWindowRules() const
+{
+    return false;
+}
+
+AbstractClient *InternalClient::findModal(bool allow_itself)
+{
+    Q_UNUSED(allow_itself)
+    return nullptr;
+}
+
+void InternalClient::setOnAllActivities(bool set)
+{
+    Q_UNUSED(set)
+
+    // Internal clients do not support activities.
+}
+
+void InternalClient::takeFocus()
+{
+}
+
+bool InternalClient::userCanSetFullScreen() const
+{
+    return false;
+}
+
+void InternalClient::setFullScreen(bool set, bool user)
+{
+    Q_UNUSED(set)
+    Q_UNUSED(user)
+}
+
+void InternalClient::setNoBorder(bool set)
+{
+    if (!userCanSetNoBorder()) {
+        return;
+    }
+    if (m_userNoBorder == set) {
+        return;
+    }
+    m_userNoBorder = set;
+    updateDecoration(true);
+}
+
+void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
+{
+    if (!force && isDecorated() == !noBorder()) {
+        return;
+    }
+
+    const QRect oldFrameGeometry = geometry();
+    const QRect oldClientGeometry = oldFrameGeometry - frameMargins();
+
+    GeometryUpdatesBlocker blocker(this);
+
+    if (force) {
+        destroyDecoration();
+    }
+
+    if (!noBorder()) {
+        createDecoration(oldClientGeometry);
+    } else {
+        destroyDecoration();
+    }
+
+    getShadow();
+
+    if (check_workspace_pos) {
+        checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
+    }
+}
+
+void InternalClient::updateColorScheme()
+{
+    AbstractClient::updateColorScheme(QString());
+}
+
+void InternalClient::showOnScreenEdge()
+{
+}
+
+void InternalClient::destroyClient()
+{
+    if (isMoveResize()) {
+        leaveMoveResize();
+    }
+
+    Deleted *deleted = Deleted::create(this);
+    emit windowClosed(this, deleted);
+
+    destroyDecoration();
+
+    workspace()->removeInternalClient(this);
+
+    deleted->unrefWindow();
+    m_internalWindow = nullptr;
+
+    delete this;
+}
+
+void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
+{
+    Q_ASSERT(m_internalImage.isNull());
+
+    const QSize bufferSize = fbo->size() / bufferScale();
+
+    commitGeometry(QRect(pos(), sizeForClientSize(bufferSize)));
+    markAsMapped();
+
+    if (m_internalFBO != fbo) {
+        discardWindowPixmap();
+        m_internalFBO = fbo;
+    }
+
+    setDepth(32);
+    addDamageFull();
+    addRepaintFull();
+}
+
+void InternalClient::present(const QImage &image, const QRegion &damage)
+{
+    Q_ASSERT(m_internalFBO.isNull());
+
+    const QSize bufferSize = image.size() / bufferScale();
+
+    commitGeometry(QRect(pos(), sizeForClientSize(bufferSize)));
+    markAsMapped();
+
+    if (m_internalImage.size() != image.size()) {
+        discardWindowPixmap();
+    }
+
+    m_internalImage = image;
+
+    setDepth(32);
+    addDamage(damage);
+    addRepaint(damage.translated(borderLeft(), borderTop()));
 }
 
 QWindow *InternalClient::internalWindow() const
@@ -328,9 +513,173 @@ QWindow *InternalClient::internalWindow() const
     return m_internalWindow;
 }
 
-bool InternalClient::supportsWindowRules() const
+bool InternalClient::acceptsFocus() const
 {
     return false;
+}
+
+bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
+{
+    Q_UNUSED(checks)
+
+    return qobject_cast<const InternalClient *>(other) != nullptr;
+}
+
+void InternalClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
+{
+    Q_UNUSED(horizontal)
+    Q_UNUSED(vertical)
+    Q_UNUSED(adjust)
+
+    // Internal clients are not maximizable.
+}
+
+void InternalClient::destroyDecoration()
+{
+    if (!isDecorated()) {
+        return;
+    }
+
+    const QRect clientGeometry = mapToClient(geometry());
+    AbstractClient::destroyDecoration();
+    setGeometry(clientGeometry);
+}
+
+void InternalClient::doMove(int x, int y)
+{
+    Q_UNUSED(x)
+    Q_UNUSED(y)
+
+    syncGeometryToInternalWindow();
+}
+
+void InternalClient::doResizeSync()
+{
+    requestGeometry(moveResizeGeometry());
+}
+
+void InternalClient::updateCaption()
+{
+    const QString oldSuffix = m_captionSuffix;
+    const auto shortcut = shortcutCaptionSuffix();
+    m_captionSuffix = shortcut;
+    if ((!isSpecialWindow() || isToolbar()) && findClientWithSameCaption()) {
+        int i = 2;
+        do {
+            m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
+            i++;
+        } while (findClientWithSameCaption());
+    }
+    if (m_captionSuffix != oldSuffix) {
+        emit captionChanged();
+    }
+}
+
+QRect InternalClient::mapFromClient(const QRect &rect) const
+{
+    return rect + frameMargins();
+}
+
+QRect InternalClient::mapToClient(const QRect &rect) const
+{
+    return rect - frameMargins();
+}
+
+void InternalClient::createDecoration(const QRect &rect)
+{
+    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
+    if (decoration) {
+        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
+            [this]() {
+                GeometryUpdatesBlocker blocker(this);
+                const QRect oldGeometry = geometry();
+                if (!isShade()) {
+                    checkWorkspacePosition(oldGeometry);
+                }
+                emit geometryShapeChanged(this, oldGeometry);
+            }
+        );
+    }
+
+    const QRect oldFrameGeometry = geometry();
+
+    setDecoration(decoration);
+    setGeometry(mapFromClient(rect));
+
+    emit geometryShapeChanged(this, oldFrameGeometry);
+}
+
+void InternalClient::requestGeometry(const QRect &rect)
+{
+    if (m_internalWindow) {
+        m_internalWindow->setGeometry(mapToClient(rect));
+    }
+}
+
+void InternalClient::commitGeometry(const QRect &rect)
+{
+    if (geom == rect && pendingGeometryUpdate() == PendingGeometryNone) {
+        return;
+    }
+
+    geom = rect;
+
+    m_clientSize = mapToClient(geometry()).size();
+
+    addWorkspaceRepaint(visibleRect());
+    syncGeometryToInternalWindow();
+
+    const QRect oldGeometry = geometryBeforeUpdateBlocking();
+    updateGeometryBeforeUpdateBlocking();
+    emit geometryShapeChanged(this, oldGeometry);
+
+    if (isResize()) {
+        performMoveResize();
+    }
+}
+
+void InternalClient::setCaption(const QString &caption)
+{
+    if (m_captionNormal == caption) {
+        return;
+    }
+
+    m_captionNormal = caption;
+
+    const QString oldCaptionSuffix = m_captionSuffix;
+    updateCaption();
+
+    if (m_captionSuffix == oldCaptionSuffix) {
+        emit captionChanged();
+    }
+}
+
+void InternalClient::markAsMapped()
+{
+    if (!ready_for_painting) {
+        setReadyForPainting();
+        workspace()->addInternalClient(this);
+    }
+}
+
+void InternalClient::syncGeometryToInternalWindow()
+{
+    if (m_internalWindow->geometry() == mapToClient(geometry())) {
+        return;
+    }
+
+    QTimer::singleShot(0, this, [this] { requestGeometry(geometry()); });
+}
+
+void InternalClient::updateInternalWindowGeometry()
+{
+    if (isMoveResize()) {
+        return;
+    }
+
+    commitGeometry(mapFromClient(m_internalWindow->geometry()));
 }
 
 }

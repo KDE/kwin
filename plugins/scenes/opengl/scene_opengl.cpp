@@ -1534,6 +1534,27 @@ OpenGLWindowPixmap::~OpenGLWindowPixmap()
 {
 }
 
+static bool needsPixmapUpdate(const OpenGLWindowPixmap *pixmap)
+{
+    // That's a regular Wayland client.
+    if (pixmap->surface()) {
+        return !pixmap->surface()->trackedDamage().isEmpty();
+    }
+
+    // That's an internal client with a raster buffer attached.
+    if (!pixmap->internalImage().isNull()) {
+        return !pixmap->toplevel()->damage().isEmpty();
+    }
+
+    // That's an internal client with an opengl framebuffer object attached.
+    if (!pixmap->fbo().isNull()) {
+        return !pixmap->toplevel()->damage().isEmpty();
+    }
+
+    // That's an X11 client.
+    return false;
+}
+
 bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
@@ -1541,8 +1562,7 @@ bool OpenGLWindowPixmap::bind()
         if (subSurface().isNull() && !toplevel()->damage().isEmpty()) {
             updateBuffer();
         }
-        auto s = surface();
-        if (s && !s->trackedDamage().isEmpty()) {
+        if (needsPixmapUpdate(this)) {
             m_texture->updateFromPixmap(this);
             // mipmaps need to be updated
             m_texture->setDirty();

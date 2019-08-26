@@ -18,11 +18,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
-#include "platform.h"
 #include "debug_console.h"
+#include "internal_client.h"
+#include "platform.h"
 #include "screens.h"
 #include "shell_client.h"
 #include "wayland_server.h"
+#include "workspace.h"
 #include "xcbutils.h"
 
 #include <KWayland/Client/connection_thread.h>
@@ -57,8 +59,9 @@ private Q_SLOTS:
 
 void DebugConsoleTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
-    qRegisterMetaType<KWin::AbstractClient*>();
+    qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::InternalClient *>();
+    qRegisterMetaType<KWin::ShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -497,8 +500,7 @@ void DebugConsoleTest::testInternalWindow()
     w->hide();
     w.reset();
 
-    QVERIFY(rowsRemovedSpy.wait());
-    QCOMPARE(rowsRemovedSpy.count(), 1);
+    QTRY_COMPARE(rowsRemovedSpy.count(), 1);
     QCOMPARE(rowsRemovedSpy.first().first().value<QModelIndex>(), internalTopLevelIndex);
 }
 
@@ -511,12 +513,12 @@ void DebugConsoleTest::testClosingDebugConsole()
     QSignalSpy destroyedSpy(console, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
     QVERIFY(clientAddedSpy.isValid());
     console->show();
     QCOMPARE(console->windowHandle()->isVisible(), true);
     QTRY_COMPARE(clientAddedSpy.count(), 1);
-    ShellClient *c = clientAddedSpy.first().first().value<ShellClient*>();
+    InternalClient *c = clientAddedSpy.first().first().value<InternalClient *>();
     QVERIFY(c->isInternal());
     QCOMPARE(c->internalWindow(), console->windowHandle());
     QVERIFY(c->isDecorated());

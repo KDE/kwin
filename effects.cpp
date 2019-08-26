@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "group.h"
+#include "internal_client.h"
 #include "osd.h"
 #include "pointer_input.h"
 #include "unmanaged.h"
@@ -178,6 +179,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             connect(u, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
         }
     );
+    connect(ws, &Workspace::internalClientAdded, this,
+        [this](InternalClient *client) {
+            setupAbstractClientConnections(client);
+            emit windowAdded(client->effectWindow());
+        }
+    );
     connect(ws, &Workspace::clientActivated, this,
         [this](KWin::AbstractClient *c) {
             emit windowActivated(c ? c->effectWindow() : nullptr);
@@ -244,6 +251,9 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
+    }
+    for (InternalClient *client : ws->internalClients()) {
+        setupAbstractClientConnections(client);
     }
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
@@ -1087,13 +1097,8 @@ EffectWindow* EffectsHandlerImpl::findWindow(KWayland::Server::SurfaceInterface 
 
 EffectWindow *EffectsHandlerImpl::findWindow(QWindow *w) const
 {
-    if (waylandServer()) {
-        if (auto c = waylandServer()->findClient(w)) {
-            return c->effectWindow();
-        }
-    }
-    if (auto u = Workspace::self()->findUnmanaged(w->winId())) {
-        return u->effectWindow();
+    if (Toplevel *toplevel = workspace()->findInternal(w)) {
+        return toplevel->effectWindow();
     }
     return nullptr;
 }
@@ -1716,7 +1721,7 @@ EffectWindowImpl::EffectWindowImpl(Toplevel *toplevel)
     managed = toplevel->isClient();
 
     waylandClient = qobject_cast<KWin::ShellClient *>(toplevel) != nullptr;
-    x11Client = !waylandClient;
+    x11Client = qobject_cast<KWin::Client *>(toplevel) != nullptr;
 }
 
 EffectWindowImpl::~EffectWindowImpl()
@@ -1969,7 +1974,7 @@ EffectWindow* EffectWindowImpl::findModal()
 
 QWindow *EffectWindowImpl::internalWindow() const
 {
-    auto client = qobject_cast<ShellClient*>(toplevel);
+    auto client = qobject_cast<InternalClient *>(toplevel);
     if (!client) {
         return nullptr;
     }

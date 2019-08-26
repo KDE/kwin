@@ -4,6 +4,7 @@
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
 Copyright (C) 2018 David Edmundson <davidedmundson@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -71,7 +72,6 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     , m_shellSurface(surface)
     , m_xdgShellSurface(nullptr)
     , m_xdgShellPopup(nullptr)
-    , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
     init();
@@ -83,7 +83,6 @@ ShellClient::ShellClient(XdgShellSurfaceInterface *surface)
     , m_shellSurface(nullptr)
     , m_xdgShellSurface(surface)
     , m_xdgShellPopup(nullptr)
-    , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
     m_requestGeometryBlockCounter++;
@@ -96,7 +95,6 @@ ShellClient::ShellClient(XdgShellPopupInterface *surface)
     , m_shellSurface(nullptr)
     , m_xdgShellSurface(nullptr)
     , m_xdgShellPopup(surface)
-    , m_internal(surface->client() == waylandServer()->internalConnection())
 {
     setSurface(surface->surface());
     m_requestGeometryBlockCounter++;
@@ -228,9 +226,7 @@ void ShellClient::init()
     } else {
         ready_for_painting = false;
     }
-    if (!m_internal) {
-        doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
-    }
+    doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
     if (waylandServer()->inputMethodConnection() == s->client()) {
         m_windowType = NET::OnScreenDisplay;
     }
@@ -337,7 +333,7 @@ void ShellClient::init()
     }
 
     // set initial desktop
-    setDesktop(m_internal ? int(NET::OnAllDesktops) : VirtualDesktopManager::self()->current());
+    setDesktop(VirtualDesktopManager::self()->current());
 
     // setup shadow integration
     getShadow();
@@ -1159,9 +1155,7 @@ bool ShellClient::acceptsFocus() const
 
 void ShellClient::createWindowId()
 {
-    if (!m_internal) {
-        m_windowId = waylandServer()->createWindowId(surface());
-    }
+    m_windowId = waylandServer()->createWindowId(surface());
 }
 
 pid_t ShellClient::pid() const
@@ -1179,11 +1173,11 @@ bool ShellClient::isInputMethod() const
     return surface()->client() == waylandServer()->inputMethodConnection();
 }
 
-bool ShellClient::requestGeometry(const QRect &rect)
+void ShellClient::requestGeometry(const QRect &rect)
 {
     if (m_requestGeometryBlockCounter != 0) {
         m_blockedRequestGeometry = rect;
-        return false;
+        return;
     }
 
     QSize size;
@@ -1220,7 +1214,6 @@ bool ShellClient::requestGeometry(const QRect &rect)
     }
 
     m_blockedRequestGeometry = QRect();
-    return true;
 }
 
 void ShellClient::updatePendingGeometry()
@@ -1292,12 +1285,7 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
     m_plasmaShellSurface = surface;
     auto updatePosition = [this, surface] {
         QRect rect = QRect(surface->position(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom()));
-        // Shell surfaces of internal windows are sometimes desync to current value.
-        // Make sure to not set window geometry of internal windows to invalid values (bug 386304).
-        // This is a workaround.
-        if (!m_internal || rect.isValid()) {
-            doSetGeometry(rect);
-        }
+        doSetGeometry(rect);
     };
     auto updateRole = [this, surface] {
         NET::WindowType type = NET::Unknown;
@@ -1824,9 +1812,6 @@ void ShellClient::installXdgDecoration(XdgDecorationInterface *deco)
 
 bool ShellClient::shouldExposeToWindowManagement()
 {
-    if (m_internal) {
-        return false;
-    }
     if (isLockScreen()) {
         return false;
     }
@@ -1867,21 +1852,6 @@ void ShellClient::doMinimize()
         emit windowShown(this);
     }
     workspace()->updateMinimizedOfTransients(this);
-}
-
-bool ShellClient::setupCompositing()
-{
-    if (m_compositingSetup) {
-        return true;
-    }
-    m_compositingSetup = Toplevel::setupCompositing();
-    return m_compositingSetup;
-}
-
-void ShellClient::finishCompositing(ReleaseReason releaseReason)
-{
-    m_compositingSetup = false;
-    Toplevel::finishCompositing(releaseReason);
 }
 
 void ShellClient::placeIn(const QRect &area)
@@ -1995,11 +1965,6 @@ bool ShellClient::isPopupWindow() const
         return true;
     }
     return false;
-}
-
-QWindow *ShellClient::internalWindow() const
-{
-    return nullptr;
 }
 
 bool ShellClient::supportsWindowRules() const

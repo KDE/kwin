@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "effects.h"
 #include "screenedge.h"
+#include "internal_client.h"
 #include <QApplication>
 #include <QDebug>
 #include <QVarLengthArray>
@@ -266,10 +267,6 @@ void Workspace::updateClientArea(bool force)
         };
         const auto clients = waylandServer()->clients();
         for (auto c : clients) {
-            updateStrutsForWaylandClient(c);
-        }
-        const auto internalClients = waylandServer()->internalClients();
-        for (auto c : internalClients) {
             updateStrutsForWaylandClient(c);
         }
     }

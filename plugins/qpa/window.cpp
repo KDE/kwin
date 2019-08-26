@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,19 +19,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "window.h"
-#include "integration.h"
 #include "screens.h"
-#include "../../shell_client.h"
-#include "../../wayland_server.h"
+
+#include "internal_client.h"
+
 #include <logging.h>
 
 #include <QOpenGLFramebufferObject>
 #include <qpa/qwindowsysteminterface.h>
-
-#include <KWayland/Client/buffer.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/shell.h>
-#include <KWayland/Client/surface.h>
 
 namespace KWin
 {
@@ -38,38 +34,26 @@ namespace QPA
 {
 static quint32 s_windowId = 0;
 
-Window::Window(QWindow *window, KWayland::Client::Surface *surface, KWayland::Client::ShellSurface *shellSurface, const Integration *integration)
+Window::Window(QWindow *window)
     : QPlatformWindow(window)
-    , m_surface(surface)
-    , m_shellSurface(shellSurface)
     , m_windowId(++s_windowId)
-    , m_integration(integration)
     , m_scale(screens()->maxScale())
 {
-    m_surface->setScale(m_scale);
-
-    QObject::connect(m_surface, &QObject::destroyed, window, [this] { m_surface = nullptr;});
-    QObject::connect(m_shellSurface, &QObject::destroyed, window, [this] { m_shellSurface = nullptr;});
-    waylandServer()->internalClientConection()->flush();
 }
 
 Window::~Window()
 {
     unmap();
-    delete m_shellSurface;
-    delete m_surface;
-}
-
-WId Window::winId() const
-{
-    return m_windowId;
 }
 
 void Window::setVisible(bool visible)
 {
-    if (!visible) {
+    if (visible) {
+        map();
+    } else {
         unmap();
     }
+
     QPlatformWindow::setVisible(visible);
 }
 
@@ -100,18 +84,14 @@ void Window::setGeometry(const QRect &rect)
     QWindowSystemInterface::handleGeometryChange(window(), geometry());
 }
 
-void Window::unmap()
+WId Window::winId() const
 {
-    if (m_shellClient) {
-        m_shellClient->setInternalFramebufferObject(QSharedPointer<QOpenGLFramebufferObject>());
-    }
-    if (m_surface) {
-        m_surface->attachBuffer(KWayland::Client::Buffer::Ptr());
-        m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    }
-    if (waylandServer()->internalClientConection()) {
-        waylandServer()->internalClientConection()->flush();
-    }
+    return m_windowId;
+}
+
+qreal Window::devicePixelRatio() const
+{
+    return m_scale;
 }
 
 void Window::bindContentFBO()
@@ -122,12 +102,21 @@ void Window::bindContentFBO()
     m_contentFBO->bind();
 }
 
+const QSharedPointer<QOpenGLFramebufferObject> &Window::contentFBO() const
+{
+    return m_contentFBO;
+}
+
 QSharedPointer<QOpenGLFramebufferObject> Window::swapFBO()
 {
-    auto fbo = m_contentFBO;
+    QSharedPointer<QOpenGLFramebufferObject> fbo = m_contentFBO;
     m_contentFBO.clear();
-    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     return fbo;
+}
+
+InternalClient *Window::client() const
+{
+    return m_handle;
 }
 
 void Window::createFBO()
@@ -144,23 +133,25 @@ void Window::createFBO()
     m_resized = false;
 }
 
-ShellClient *Window::shellClient()
+void Window::map()
 {
-    if (!m_shellClient) {
-        waylandServer()->dispatch();
-        m_shellClient = waylandServer()->findClient(window());
+    if (m_handle) {
+        return;
     }
-    return m_shellClient;
+
+    m_handle = new InternalClient(window());
 }
 
-int Window::scale() const
+void Window::unmap()
 {
-    return m_scale;
-}
+    if (!m_handle) {
+        return;
+    }
 
-qreal Window::devicePixelRatio() const
-{
-    return m_scale;
+    m_handle->destroyClient();
+    m_handle = nullptr;
+
+    m_contentFBO = nullptr;
 }
 
 }

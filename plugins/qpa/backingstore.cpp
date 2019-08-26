@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,39 +18,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "window.h"
 #include "backingstore.h"
-#include "../../wayland_server.h"
+#include "window.h"
 
-#include <KWayland/Client/buffer.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/shm_pool.h>
-#include <KWayland/Client/surface.h>
+#include "internal_client.h"
 
 namespace KWin
 {
 namespace QPA
 {
 
-BackingStore::BackingStore(QWindow *w, KWayland::Client::ShmPool *shm)
-    : QPlatformBackingStore(w)
-    , m_shm(shm)
-    , m_backBuffer(QSize(), QImage::Format_ARGB32_Premultiplied)
+BackingStore::BackingStore(QWindow *window)
+    : QPlatformBackingStore(window)
 {
-    QObject::connect(m_shm, &KWayland::Client::ShmPool::poolResized,
-        [this] {
-            if (!m_buffer) {
-                return;
-            }
-            auto b = m_buffer.toStrongRef();
-            if (!b->isUsed()){
-                return;
-            }
-            const QSize size = m_backBuffer.size();
-            m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
-            m_backBuffer.setDevicePixelRatio(scale());
-        }
-    );
 }
 
 BackingStore::~BackingStore() = default;
@@ -62,66 +43,60 @@ QPaintDevice *BackingStore::paintDevice()
 void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
     Q_UNUSED(staticContents)
-    m_size = size * scale();
-    if (!m_buffer) {
+
+    if (m_backBuffer.size() == size) {
         return;
     }
-    m_buffer.toStrongRef()->setUsed(false);
-    m_buffer.clear();
+
+    const QPlatformWindow *platformWindow = static_cast<QPlatformWindow *>(window()->handle());
+    const qreal devicePixelRatio = platformWindow->devicePixelRatio();
+
+    m_backBuffer = QImage(size * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
+    m_backBuffer.setDevicePixelRatio(devicePixelRatio);
+
+    m_frontBuffer = QImage(size * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
+    m_frontBuffer.setDevicePixelRatio(devicePixelRatio);
+}
+
+static void blitImage(const QImage &source, QImage &target, const QRect &rect)
+{
+    Q_ASSERT(source.format() == QImage::Format_ARGB32_Premultiplied);
+    Q_ASSERT(target.format() == QImage::Format_ARGB32_Premultiplied);
+
+    const int devicePixelRatio = target.devicePixelRatio();
+
+    const int x = rect.x() * devicePixelRatio;
+    const int y = rect.y() * devicePixelRatio;
+    const int width = rect.width() * devicePixelRatio;
+    const int height = rect.height() * devicePixelRatio;
+
+    for (int i = y; i < y + height; ++i) {
+        const uint32_t *in = reinterpret_cast<const uint32_t *>(source.scanLine(i));
+        uint32_t *out = reinterpret_cast<uint32_t *>(target.scanLine(i));
+        std::copy(in + x, in + x + width, out + x);
+    }
+}
+
+static void blitImage(const QImage &source, QImage &target, const QRegion &region)
+{
+    for (const QRect &rect : region) {
+        blitImage(source, target, rect);
+    }
 }
 
 void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
-    Q_UNUSED(region)
     Q_UNUSED(offset)
 
-    auto w = static_cast<Window *>(window->handle());
-    auto s = w->surface();
-    if (!s) {
+    Window *platformWindow = static_cast<Window *>(window->handle());
+    InternalClient *client = platformWindow->client();
+    if (!client) {
         return;
     }
-    s->attachBuffer(m_buffer);
-    // TODO: proper damage region
-    s->damage(QRect(QPoint(0, 0), m_backBuffer.size() / scale()));
-    s->commit(KWayland::Client::Surface::CommitFlag::None);
-    waylandServer()->internalClientConection()->flush();
-    waylandServer()->dispatch();
-}
 
-void BackingStore::beginPaint(const QRegion&)
-{
-    if (m_buffer) {
-        auto b = m_buffer.toStrongRef();
-        if (b->isReleased()) {
-            // we can re-use this buffer
-            b->setReleased(false);
-            return;
-        } else {
-            // buffer is still in use, get a new one
-            b->setUsed(false);
-        }
-    }
-    auto oldBuffer = m_buffer.toStrongRef();
-    m_buffer.clear();
-    m_buffer = m_shm->getBuffer(m_size, m_size.width() * 4);
-    if (!m_buffer) {
-        m_backBuffer = QImage();
-        return;
-    }
-    auto b = m_buffer.toStrongRef();
-    b->setUsed(true);
-    m_backBuffer = QImage(b->address(), m_size.width(), m_size.height(), QImage::Format_ARGB32_Premultiplied);
-    m_backBuffer.setDevicePixelRatio(scale());
-    if (oldBuffer) {
-        b->copy(oldBuffer->address());
-    } else {
-        m_backBuffer.fill(Qt::transparent);
-    }
-}
+    blitImage(m_backBuffer, m_frontBuffer, region);
 
-int BackingStore::scale() const
-{
-    return static_cast<Window *>(window()->handle())->scale();
+    client->present(m_frontBuffer, region);
 }
 
 }

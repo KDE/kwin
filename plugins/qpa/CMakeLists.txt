@@ -7,7 +7,6 @@ set(QPA_SOURCES
     eglhelpers.cpp
     integration.cpp
     main.cpp
-    nativeinterface.cpp
     offscreensurface.cpp
     platformcursor.cpp
     screen.cpp
@@ -31,7 +30,6 @@ target_link_libraries(KWinQpaPlugin
     ${QT5PLATFORMSUPPORT_LIBS}
     ${FREETYPE_LIBRARIES} # Must be after QT5PLATFORMSUPPORT_LIBS
     Fontconfig::Fontconfig
-    KF5::WaylandClient
     kwin
 )
 

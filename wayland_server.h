@@ -126,14 +126,10 @@ public:
     QList<ShellClient*> clients() const {
         return m_clients;
     }
-    QList<ShellClient*> internalClients() const {
-        return m_internalClients;
-    }
     void removeClient(ShellClient *c);
     ShellClient *findClient(quint32 id) const;
     ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
     AbstractClient *findAbstractClient(KWayland::Server::SurfaceInterface *surface) const;
-    ShellClient *findClient(QWindow *w) const;
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any
@@ -277,7 +273,6 @@ private:
     KWayland::Server::XdgForeignInterface *m_XdgForeign = nullptr;
     KWayland::Server::KeyStateInterface *m_keyState = nullptr;
     QList<ShellClient*> m_clients;
-    QList<ShellClient*> m_internalClients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     InitalizationFlags m_initFlags;
     QVector<KWayland::Server::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
