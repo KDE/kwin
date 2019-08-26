@@ -37,6 +37,8 @@ public:
     VirtualOutput(QObject *parent = nullptr);
     ~VirtualOutput() override;
 
+    void init(const QPoint &logicalPosition, const QSize &pixelSize);
+
     QSize pixelSize() const override;
 
     void setGeometry(const QRect &geo);

@@ -49,6 +49,7 @@ VirtualBackend::VirtualBackend(QObject *parent)
     }
     setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
+    handleOutputs();
 }
 
 VirtualBackend::~VirtualBackend()
@@ -65,11 +66,10 @@ void VirtualBackend::init()
      */
     if (!m_outputs.size()) {
         VirtualOutput *dummyOutput = new VirtualOutput(this);
-        dummyOutput->setGeometry(QRect(QPoint(0, 0), initialWindowSize()));
+        dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
         m_enabledOutputs << dummyOutput ;
     }
-
 
     setSoftWareCursor(true);
     setReady(true);
@@ -126,14 +126,15 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
         VirtualOutput *vo = new VirtualOutput(this);
+        if (geometries.size()) {
+            const QRect geo = geometries.at(i);
+            vo->init(geo.topLeft(), geo.size());
+        } else {
+            vo->init(QPoint(sumWidth, 0), initialWindowSize());
+            sumWidth += initialWindowSize().width();
+        }
         if (scales.size()) {
             vo->setScale(scales.at(i));
-        }
-        if (geometries.size()) {
-            vo->setGeometry(geometries.at(i));
-        } else if (!vo->geometry().isValid()) {
-            vo->setGeometry(QRect(QPoint(sumWidth, 0), initialWindowSize()));
-            sumWidth += initialWindowSize().width();
         }
         m_outputs[i] = m_enabledOutputs[i] = vo;
     }
