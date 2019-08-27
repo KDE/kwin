@@ -502,35 +502,35 @@ HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device)
         HWC_DISPLAY_NO_ATTRIBUTE
     };
     device->getDisplayAttributes(device, 0, configs[0], attributes, attr_values);
-    QSize pixel(attr_values[0], attr_values[1]);
-    if (pixel.isEmpty()) {
+    QSize pixelSize(attr_values[0], attr_values[1]);
+    if (pixelSize.isEmpty()) {
         return;
     }
 
+    QSizeF physicalSize;
     if (attr_values[2] != 0 && attr_values[3] != 0) {
          static const qreal factor = 25.4;
-         auto physicalSize = QSizeF(qreal(pixel.width() * 1000) / qreal(attr_values[2]) * factor,
-                                 qreal(pixel.height() * 1000) / qreal(attr_values[3]) * factor);
-         setRawPhysicalSize(physicalSize.toSize());
+         physicalSize = QSizeF(qreal(pixelSize.width() * 1000) / qreal(attr_values[2]) * factor,
+                               qreal(pixelSize.height() * 1000) / qreal(attr_values[3]) * factor);
     } else {
          // couldn't read physical size, assume 96 dpi
-         setRawPhysicalSize(pixel / 3.8);
+         physicalSize = pixelSize / 3.8;
     }
 
     OutputDeviceInterface::Mode mode;
     mode.id = 0;
-    mode.size = pixel;
+    mode.size = pixelSize;
     mode.flags = OutputDeviceInterface::ModeFlag::Current | OutputDeviceInterface::ModeFlag::Preferred;
     mode.refreshRate = (attr_values[4] == 0) ? 60000 : 10E11/attr_values[4];
 
-    initWaylandOutputDevice(QString(), QString(), QByteArray(), {mode});
+    initWaylandOutputDevice(QString(), QString(), QByteArray(), physicalSize.toSize(), {mode});
     setInternal(true);
     setEnabled(true);
     setDpmsSupported(true);
 
     const auto outputGroup = kwinApp()->config()->group("HWComposerOutputs").group("0");
     setScale(outputGroup.readEntry("Scale", 1));
-    setWaylandMode(pixel, mode.refreshRate);
+    setWaylandMode(pixelSize, mode.refreshRate);
 }
 
 HwcomposerOutput::~HwcomposerOutput()

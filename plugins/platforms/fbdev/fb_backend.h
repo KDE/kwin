@@ -37,11 +37,7 @@ public:
     FramebufferOutput(QObject *parent = nullptr) : AbstractWaylandOutput(parent) {}
     ~FramebufferOutput() override = default;
 
-    void init(const QSize &size);
-
-    void setRawPhysicalSize(const QSize &set) {
-        AbstractWaylandOutput::setRawPhysicalSize(set);
-    }
+    void init(const QSize &pixelSize, const QSize &physicalSize);
 };
 
 class KWIN_EXPORT FramebufferBackend : public Platform

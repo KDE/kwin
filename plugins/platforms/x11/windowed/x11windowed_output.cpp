@@ -54,8 +54,12 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     mode.size = pixelSize;
     mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO: get refresh rate via randr
+
+    // Physicial size must be adjusted, such that QPA calculates correct sizes of
+    // internal elements.
+    const QSize physicalSize = pixelSize / 96.0 * 25.4 / scale();
     AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
-                                                   "UUID_TODO", { mode });
+                                                   "UUID_TODO", physicalSize, { mode });
 
     setEnabled(true);
     setGeometry(logicalPosition, pixelSize);
@@ -137,11 +141,6 @@ void X11WindowedOutput::initXInputForWindow()
 void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
     // TODO: set mode to have updated pixelSize
-
-    // Physicial size must be adjusted, such that QPA calculates correct sizes of
-    // internal elements.
-    setRawPhysicalSize(pixelSize / 96.0 * 25.4 / scale());
-
     setGlobalPos(logicalPosition);
 }
 

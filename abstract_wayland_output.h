@@ -113,6 +113,7 @@ protected:
     void initWaylandOutputDevice(const QString &model,
                                  const QString &manufacturer,
                                  const QByteArray &uuid,
+                                 const QSize &physicalSize,
                                  const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
 
     QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
@@ -125,13 +126,6 @@ protected:
     }
 
     QPoint globalPos() const;
-
-    QSize rawPhysicalSize() const {
-        return m_physicalSize;
-    }
-    void setRawPhysicalSize(const QSize &set) {
-        m_physicalSize = set;
-    }
 
     void setOrientation(Qt::ScreenOrientation set) {
         m_orientation = set;
@@ -166,7 +160,6 @@ private:
 
     KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
 
-    QSize m_physicalSize;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     bool m_internal = false;
     bool m_supportsDpms = false;

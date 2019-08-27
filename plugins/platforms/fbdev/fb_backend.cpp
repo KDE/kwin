@@ -37,15 +37,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-void FramebufferOutput::init(const QSize &size)
+void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
 {
     KWayland::Server::OutputDeviceInterface::Mode mode;
     mode.id = 0;
-    mode.size = size;
+    mode.size = pixelSize;
     mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO: get actual refresh rate of fb device?
     AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
-                                                   "UUID_TODO", { mode });
+                                                   "UUID_TODO", physicalSize, { mode });
 }
 
 FramebufferBackend::FramebufferBackend(QObject *parent)
@@ -149,8 +149,7 @@ bool FramebufferBackend::handleScreenInfo()
     }
 
     auto *output = new FramebufferOutput(this);
-    output->init(QSize(varinfo.xres, varinfo.yres));
-    output->setRawPhysicalSize(QSize(varinfo.width, varinfo.height));
+    output->init(QSize(varinfo.xres, varinfo.yres), QSize(varinfo.width, varinfo.height));
     output->setEnabled(true);
     m_outputs << output;
 

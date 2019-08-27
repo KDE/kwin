@@ -59,7 +59,7 @@ QRect AbstractWaylandOutput::geometry() const
 
 QSize AbstractWaylandOutput::physicalSize() const
 {
-    return orientateSize(m_physicalSize);
+    return orientateSize(m_waylandOutputDevice->physicalSize());
 }
 
 int AbstractWaylandOutput::refreshRate() const
@@ -203,7 +203,7 @@ void AbstractWaylandOutput::initWaylandOutput()
      */
     m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
     m_waylandOutput->setModel(m_waylandOutputDevice->model());
-    m_waylandOutput->setPhysicalSize(rawPhysicalSize());
+    m_waylandOutput->setPhysicalSize(m_waylandOutputDevice->physicalSize());
 
     /*
      *  add modes
@@ -236,6 +236,7 @@ void AbstractWaylandOutput::initWaylandOutput()
 void AbstractWaylandOutput::initWaylandOutputDevice(const QString &model,
                                              const QString &manufacturer,
                                              const QByteArray &uuid,
+                                             const QSize &physicalSize,
                                              const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes)
 {
     Q_ASSERT(m_waylandOutputDevice.isNull());
@@ -249,7 +250,7 @@ void AbstractWaylandOutput::initWaylandOutputDevice(const QString &model,
     }
 
     m_waylandOutputDevice->setModel(model);
-    m_waylandOutputDevice->setPhysicalSize(m_physicalSize);
+    m_waylandOutputDevice->setPhysicalSize(physicalSize);
 
     int i = 0;
     for (auto mode : modes) {

@@ -62,8 +62,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO: can we get refresh rate data from Wayland host?
     AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
-                                                   "UUID_TODO", { mode });
-    setRawPhysicalSize(pixelSize);
+                                                   "UUID_TODO", pixelSize, { mode });
     setEnabled(true);
     setGeometry(logicalPosition, pixelSize);
     setScale(backend()->initialOutputScale());
@@ -72,7 +71,8 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
     // TODO: set mode to have updated pixelSize
-    setRawPhysicalSize(pixelSize);
+    Q_UNUSED(pixelSize)
+
     setGlobalPos(logicalPosition);
 }
 

@@ -266,20 +266,6 @@ bool DrmOutput::init(drmModeConnector *connector)
         );
     }
 
-    QSize physicalSize = !m_edid.physicalSize().isEmpty() ? m_edid.physicalSize() : QSize(connector->mmWidth, connector->mmHeight);
-    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
-    // as this information is used to calculate DPI info, it's going to result in everything being huge
-    const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
-                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
-                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
-    if (group.hasKey("PhysicalSize")) {
-        const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << physicalSize << "to " << overwriteSize;
-        physicalSize = overwriteSize;
-    }
-    setRawPhysicalSize(physicalSize);
-
     initOutputDevice(connector);
 
     setEnabled(true);
@@ -343,7 +329,20 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         modes << mode;
     }
 
-    AbstractWaylandOutput::initWaylandOutputDevice(model, manufacturer, m_uuid, modes);
+    QSize physicalSize = !m_edid.physicalSize().isEmpty() ? m_edid.physicalSize() : QSize(connector->mmWidth, connector->mmHeight);
+    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
+    // as this information is used to calculate DPI info, it's going to result in everything being huge
+    const QByteArray unknown = QByteArrayLiteral("unknown");
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
+                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
+                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
+    if (group.hasKey("PhysicalSize")) {
+        const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << physicalSize << "to " << overwriteSize;
+        physicalSize = overwriteSize;
+    }
+
+    initWaylandOutputDevice(model, manufacturer, m_uuid, physicalSize, modes);
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
