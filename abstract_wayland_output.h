@@ -65,9 +65,8 @@ public:
     }
 
     virtual QSize pixelSize() const = 0;
-    qreal scale() const override {
-        return m_scale;
-    }
+    qreal scale() const override;
+
     /**
      * The geometry of this output in global compositor co-ordinates (i.e scaled)
      */
@@ -125,9 +124,7 @@ protected:
         return m_waylandOutputDevice;
     }
 
-    QPoint globalPos() const {
-        return m_globalPos;
-    }
+    QPoint globalPos() const;
 
     QSize rawPhysicalSize() const {
         return m_physicalSize;
@@ -169,8 +166,6 @@ private:
 
     KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
 
-    QPoint m_globalPos;
-    qreal m_scale = 1;
     QSize m_physicalSize;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     bool m_internal = false;

@@ -54,7 +54,12 @@ QString AbstractWaylandOutput::name() const
 
 QRect AbstractWaylandOutput::geometry() const
 {
-    return QRect(m_globalPos, pixelSize() / scale());
+    // TODO: This is inefficient on current KWayland since
+    //       we loop over modes.
+//    const QSize size = m_waylandOutputDevice->pixelSize();
+    const QSize size = pixelSize();
+
+    return QRect(globalPos(), size / scale());
 }
 
 QSize AbstractWaylandOutput::physicalSize() const
@@ -70,9 +75,13 @@ int AbstractWaylandOutput::refreshRate() const
     return m_waylandOutput->refreshRate();
 }
 
+QPoint AbstractWaylandOutput::globalPos() const
+{
+    return m_waylandOutputDevice->globalPosition();
+}
+
 void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
 {
-    m_globalPos = pos;
     m_waylandOutputDevice->setGlobalPosition(pos);
 
     if (m_waylandOutput) {
@@ -84,9 +93,13 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
     }
 }
 
+qreal AbstractWaylandOutput::scale() const
+{
+    return m_waylandOutputDevice->scaleF();
+}
+
 void AbstractWaylandOutput::setScale(qreal scale)
 {
-    m_scale = scale;
     m_waylandOutputDevice->setScaleF(scale);
 
     if (m_waylandOutput) {
@@ -99,7 +112,7 @@ void AbstractWaylandOutput::setScale(qreal scale)
         m_waylandOutput->setScale(std::ceil(scale));
     }
     if (m_xdgOutput) {
-        m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
+        m_xdgOutput->setLogicalSize(pixelSize() / scale);
         m_xdgOutput->done();
     }
 }
@@ -172,7 +185,7 @@ void AbstractWaylandOutput::createXdgOutput()
     }
     m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, m_waylandOutput);
     m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->setLogicalPosition(m_globalPos);
+    m_xdgOutput->setLogicalPosition(globalPos());
     m_xdgOutput->done();
 }
 
