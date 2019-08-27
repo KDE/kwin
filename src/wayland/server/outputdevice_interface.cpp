@@ -73,6 +73,7 @@ public:
     Transform transform = Transform::Normal;
     ColorCurves colorCurves;
     QList<Mode> modes;
+    Mode currentMode;
     QList<ResourceData> resources;
 
     QByteArray edid;
@@ -161,15 +162,11 @@ OutputDeviceInterface::~OutputDeviceInterface() = default;
 QSize OutputDeviceInterface::pixelSize() const
 {
     Q_D();
-    auto it = std::find_if(d->modes.begin(), d->modes.end(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    if (it == d->modes.end()) {
+
+    if (d->currentMode.id == -1) {
         return QSize();
     }
-    return (*it).size;
+    return d->currentMode.size;
 }
 
 OutputDeviceInterface *OutputDeviceInterface::get(wl_resource* native)
@@ -180,15 +177,11 @@ OutputDeviceInterface *OutputDeviceInterface::get(wl_resource* native)
 int OutputDeviceInterface::refreshRate() const
 {
     Q_D();
-    auto it = std::find_if(d->modes.begin(), d->modes.end(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    if (it == d->modes.end()) {
+
+    if (d->currentMode.id == -1) {
         return 60000;
     }
-    return (*it).refreshRate;
+    return d->currentMode.refreshRate;
 }
 
 void OutputDeviceInterface::addMode(Mode &mode)
@@ -230,9 +223,10 @@ void OutputDeviceInterface::addMode(Mode &mode)
                    mode.id == mode_it.id;
         }
     );
-    auto emitChanges = [this,mode] {
+    auto emitChanges = [this, d, mode] {
         emit modesChanged();
         if (mode.flags.testFlag(ModeFlag::Current)) {
+            d->currentMode = mode;
             emit refreshRateChanged(mode.refreshRate);
             emit pixelSizeChanged(mode.size);
             emit currentModeChanged();
@@ -283,6 +277,7 @@ void OutputDeviceInterface::setCurrentMode(const int modeId)
 
     Q_ASSERT(existingModeIt != d->modes.end());
     (*existingModeIt).flags |= ModeFlag::Current;
+    d->currentMode = *existingModeIt;
     emit modesChanged();
     emit refreshRateChanged((*existingModeIt).refreshRate);
     emit pixelSizeChanged((*existingModeIt).size);
