@@ -37,11 +37,9 @@ public:
     FramebufferOutput(QObject *parent = nullptr) : AbstractWaylandOutput(parent) {}
     ~FramebufferOutput() override = default;
 
+    void init(const QSize &size);
     QSize pixelSize() const override {
         return m_pixelSize;
-    }
-    void setPixelSize(const QSize &set) {
-        m_pixelSize = set;
     }
 
     void setRawPhysicalSize(const QSize &set) {
