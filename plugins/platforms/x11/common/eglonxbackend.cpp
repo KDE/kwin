@@ -121,27 +121,21 @@ void EglOnXBackend::init()
         }
     }
 
-    setSyncsToVBlank(false);
     setBlocksForRetrace(true);
     if (surfaceHasSubPost) {
         qCDebug(KWIN_CORE) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
-        if (options->glPreferBufferSwap() != Options::NoSwapEncourage) {
-            // check if swap interval 1 is supported
-            EGLint val;
-            eglGetConfigAttrib(eglDisplay(), config(), EGL_MAX_SWAP_INTERVAL, &val);
-            if (val >= 1) {
-                if (eglSwapInterval(eglDisplay(), 1)) {
-                    qCDebug(KWIN_CORE) << "Enabled v-sync";
-                    setSyncsToVBlank(true);
-                }
-            } else {
-                qCWarning(KWIN_CORE) << "Cannot enable v-sync as max. swap interval is" << val;
+        // check if swap interval 1 is supported
+        EGLint val;
+        eglGetConfigAttrib(eglDisplay(), config(), EGL_MAX_SWAP_INTERVAL, &val);
+        if (val >= 1) {
+            if (eglSwapInterval(eglDisplay(), 1)) {
+                qCDebug(KWIN_CORE) << "Enabled v-sync";
             }
         } else {
-            // disable v-sync
-            eglSwapInterval(eglDisplay(), 0);
+            qCWarning(KWIN_CORE) << "Cannot enable v-sync as max. swap interval is" << val;
         }
+
     } else {
         /* In the GLX backend, we fall back to using glCopyPixels if we have no extension providing support for partial screen updates.
          * However, that does not work in EGL - glCopyPixels with glDrawBuffer(GL_FRONT); does nothing.

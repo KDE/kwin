@@ -334,14 +334,12 @@ void Compositor::startupWithWorkspace()
     setupX11Support();
     fpsInterval = options->maxFpsInterval();
 
-    if (m_scene->syncsToVBlank()) {
-        // If we do vsync, set the fps to the next multiple of the vblank rate.
-        vBlankInterval = milliToNano(1000) / currentRefreshRate();
-        fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
-    } else {
-        // No vsync - DO NOT set "0", would cause div-by-zero segfaults.
-        vBlankInterval = milliToNano(1);
-    }
+    const auto rate = currentRefreshRate();
+    Q_ASSERT(rate != 0); // There is a fallback in options.cpp, so why check at all?
+
+    // If we do vsync, set the fps to the next multiple of the vblank rate.
+    vBlankInterval = milliToNano(1000) / currentRefreshRate();
+    fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
 
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
@@ -719,7 +717,7 @@ void Compositor::performCompositing()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // scheduleRepaint() would restart it again somewhen later, called from functions that
     // would again add something pending.
-    if (m_bufferSwapPending && m_scene->syncsToVBlank()) {
+    if (m_bufferSwapPending) {
         m_composeAtSwapCompletion = true;
     } else {
         scheduleRepaint();
@@ -818,7 +816,7 @@ void Compositor::setCompositeTimer()
                 waitTime = 1;
             }
         }
-        /* else if (m_scene->syncsToVBlank() && m_timeSinceLastVBlank - fpsInterval < (vBlankInterval<<1)) {
+        /* else if (m_timeSinceLastVBlank - fpsInterval < (vBlankInterval<<1)) {
             // NOTICE - "for later" ------------------------------------------------------------------
             // It can happen that we push two frames within one refresh cycle.
             // Swapping will then block even with triple buffering when the GPU does not discard but

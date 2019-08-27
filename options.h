@@ -570,7 +570,7 @@ public:
         return m_glPlatformInterface;
     }
 
-    enum GlSwapStrategy { NoSwapEncourage = 0, CopyFrontBuffer = 'c', PaintFullScreen = 'p', ExtendDamage = 'e', AutoSwapStrategy = 'a' };
+    enum GlSwapStrategy { CopyFrontBuffer = 'c', PaintFullScreen = 'p', ExtendDamage = 'e', AutoSwapStrategy = 'a' };
     GlSwapStrategy glPreferBufferSwap() const {
         return m_glPreferBufferSwap;
     }

@@ -81,16 +81,14 @@ void Compositing::reset()
     auto swapStrategy = [&kwinConfig]() {
         const QString glSwapStrategyValue = kwinConfig.readEntry("GLPreferBufferSwap", "a");
 
-        if (glSwapStrategyValue == "n") {
+        if (glSwapStrategyValue == "a") {
             return 0;
-        } else if (glSwapStrategyValue == "a") {
-            return 1;
         } else if (glSwapStrategyValue == "e") {
-            return 2;
+            return 1;
         } else if (glSwapStrategyValue == "p") {
-            return 3;
+            return 2;
         } else if (glSwapStrategyValue == "c") {
-            return 4;
+            return 3;
         }
         return 0;
     };
@@ -286,15 +284,13 @@ void Compositing::save()
     }
     auto swapStrategy = [this] {
         switch (glSwapStrategy()) {
-            case 0:
-                return QStringLiteral("n");
-            case 2:
-                return QStringLiteral("e");
-            case 3:
-                return QStringLiteral("p");
-            case 4:
-                return QStringLiteral("c");
             case 1:
+                return QStringLiteral("e");
+            case 2:
+                return QStringLiteral("p");
+            case 3:
+                return QStringLiteral("c");
+            case 0:
             default:
                 return QStringLiteral("a");
         }

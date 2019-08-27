@@ -918,12 +918,12 @@ void Options::reloadCompositingSettings(bool force)
     }
     setGLCoreProfile(config.readEntry("GLCore", Options::defaultGLCoreProfile()));
 
-    char c = 0;
+    char c = 'a';
     const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));
     if (!s.isEmpty())
         c = s.at(0).toLatin1();
     if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
-        c = 0;
+        c = 'a';
     setGlPreferBufferSwap(c);
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);

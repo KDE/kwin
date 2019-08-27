@@ -42,7 +42,6 @@ EglGbmBackend::EglGbmBackend(DrmBackend *b)
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
-    setSyncsToVBlank(true);
     connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::createOutput);
     connect(m_backend, &DrmBackend::outputRemoved, this,
         [this] (DrmOutput *output) {

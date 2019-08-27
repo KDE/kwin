@@ -113,7 +113,6 @@ GlxBackend::GlxBackend(Display *display)
     , glxWindow(None)
     , ctx(nullptr)
     , m_bufferAge(0)
-    , haveSwapInterval(false)
     , m_x11Display(display)
 {
      // Ensures calls to glXSwapBuffers will always block until the next
@@ -221,8 +220,6 @@ void GlxBackend::init()
         glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
     }
 
-    haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl;
-
     setSupportsBufferAge(false);
 
     if (hasExtension(QByteArrayLiteral("GLX_EXT_buffer_age"))) {
@@ -232,20 +229,16 @@ void GlxBackend::init()
             setSupportsBufferAge(true);
     }
 
-    setSyncsToVBlank(false);
     setBlocksForRetrace(true);
-    const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
-    if (wantSync && glXIsDirect(display(), ctx)) {
-        if (haveSwapInterval) { // glXSwapInterval is preferred being more reliable
-            setSwapInterval(1);
-            setSyncsToVBlank(true);
-        } else {
-            qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! glSwapInterval is not supported";
-        }
+
+    if (m_haveEXTSwapControl) {
+        glXSwapIntervalEXT(display(), glxWindow, 1);
+    } else if (m_haveMESASwapControl) {
+        glXSwapIntervalMESA(1);
     } else {
-        // disable v-sync (if possible)
-        setSwapInterval(0);
+        qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! glSwapInterval is not supported";
     }
+
     if (glPlatform->isVirtualBox()) {
         // VirtualBox does not support glxQueryDrawable
         // this should actually be in kwinglutils_funcs, but QueryDrawable seems not to be provided by an extension
@@ -672,14 +665,6 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     return info;
 }
 
-void GlxBackend::setSwapInterval(int interval)
-{
-    if (m_haveEXTSwapControl)
-        glXSwapIntervalEXT(display(), glxWindow, interval);
-    else if (m_haveMESASwapControl)
-        glXSwapIntervalMESA(interval);
-}
-
 void GlxBackend::present()
 {
     if (lastDamage().isEmpty())
@@ -693,11 +678,8 @@ void GlxBackend::present()
         if (m_haveINTELSwapEvent)
             Compositor::self()->aboutToSwapBuffers();
 
-        if (haveSwapInterval) {
-            glXSwapBuffers(display(), glxWindow);
-        } else {
-            glXSwapBuffers(display(), glxWindow);
-        }
+        glXSwapBuffers(display(), glxWindow);
+
         if (supportsBufferAge()) {
             glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
         }

@@ -86,7 +86,6 @@ EglStreamBackend::EglStreamBackend(DrmBackend *b)
     : AbstractEglBackend(), m_backend(b)
 {
     setIsDirectRendering(true);
-    setSyncsToVBlank(true);
     connect(m_backend, &DrmBackend::outputAdded, this, &EglStreamBackend::createOutput);
     connect(m_backend, &DrmBackend::outputRemoved, this,
         [this] (DrmOutput *output) {
