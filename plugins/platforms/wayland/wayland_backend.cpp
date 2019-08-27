@@ -454,6 +454,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThread(nullptr)
 {
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
+    handleOutputs();
 }
 
 WaylandBackend::~WaylandBackend()
@@ -707,8 +708,7 @@ void WaylandBackend::createOutputs()
             return;
         }
 
-        waylandOutput->setScale(initialOutputScale());
-        waylandOutput->setGeometry(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
+        waylandOutput->init(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
 
         connect(waylandOutput, &WaylandOutput::sizeChanged, this, [this, waylandOutput](const QSize &size) {
             Q_UNUSED(size)

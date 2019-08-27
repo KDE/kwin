@@ -50,8 +50,10 @@ class WaylandOutput : public AbstractWaylandOutput
 {
     Q_OBJECT
 public:
-    explicit WaylandOutput(KWayland::Client::Surface *surface, QObject *parent = nullptr);
+    WaylandOutput(KWayland::Client::Surface *surface, WaylandBackend *backend);
     ~WaylandOutput() override;
+
+    void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
     virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock) {
         Q_UNUSED(pointer)
@@ -84,8 +86,14 @@ Q_SIGNALS:
     void sizeChanged(const QSize &size);
     void frameRendered();
 
+protected:
+    WaylandBackend *backend() {
+        return m_backend;
+    }
+
 private:
     KWayland::Client::Surface *m_surface;
+    WaylandBackend *m_backend;
 
     QSize m_pixelSize;
     bool m_rendered = false;
@@ -118,7 +126,6 @@ private:
     void updateWindowTitle();
 
     KWayland::Client::XdgShellSurface *m_xdgShellSurface = nullptr;
-    WaylandBackend *m_backend;
     int m_number;
     KWayland::Client::LockedPointer *m_pointerLock = nullptr;
     bool m_hasPointerLock = false;

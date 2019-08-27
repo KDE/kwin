@@ -17,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
 #include "wayland_output.h"
 #include "wayland_backend.h"
 
@@ -38,9 +37,10 @@ namespace Wayland
 
 using namespace KWayland::Client;
 
-WaylandOutput::WaylandOutput(Surface *surface, QObject *parent)
-    : AbstractWaylandOutput(parent),
-      m_surface(surface)
+WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
+    : AbstractWaylandOutput(backend)
+    , m_surface(surface)
+    , m_backend(backend)
 {
     connect(surface, &Surface::frameRendered, [this] {
         m_rendered = true;
@@ -52,6 +52,21 @@ WaylandOutput::~WaylandOutput()
 {
     m_surface->destroy();
     delete m_surface;
+}
+
+void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
+{
+    KWayland::Server::OutputDeviceInterface::Mode mode;
+    mode.id = 0;
+    mode.size = pixelSize;
+    mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
+    mode.refreshRate = 60000;  // TODO: can we get refresh rate data from Wayland host?
+    AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
+                                                   "UUID_TODO", { mode });
+    setRawPhysicalSize(pixelSize);
+    setEnabled(true);
+    setGeometry(logicalPosition, pixelSize);
+    setScale(backend()->initialOutputScale());
 }
 
 QSize WaylandOutput::pixelSize() const
@@ -81,7 +96,6 @@ ShellOutput::~ShellOutput()
 
 XdgShellOutput::XdgShellOutput(Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number)
     : WaylandOutput(surface, backend)
-    , m_backend(backend)
     , m_number(number)
 {
     m_xdgShellSurface = xdgShell->createSurface(surface, this);
@@ -130,7 +144,7 @@ void XdgShellOutput::updateWindowTitle()
     QString grab;
     if (m_hasPointerLock) {
         grab = i18n("Press right control to ungrab pointer");
-    } else if (m_backend->pointerConstraints()) {
+    } else if (backend()->pointerConstraints()) {
         grab = i18n("Press right control key to grab pointer");
     }
     const QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
@@ -151,13 +165,13 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
         m_pointerLock = nullptr;
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
-            emit m_backend->pointerLockChanged(false);
+            emit backend()->pointerLockChanged(false);
         }
         return;
     }
 
     Q_ASSERT(!m_pointerLock);
-    m_pointerLock = m_backend->pointerConstraints()->lockPointer(surface(), pointer, nullptr,
+    m_pointerLock = backend()->pointerConstraints()->lockPointer(surface(), pointer, nullptr,
                                                                  PointerConstraints::LifeTime::OneShot,
                                                                  this);
     if (!m_pointerLock->isValid()) {
@@ -168,7 +182,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
     connect(m_pointerLock, &LockedPointer::locked, this,
         [this] {
             m_hasPointerLock = true;
-            emit m_backend->pointerLockChanged(true);
+            emit backend()->pointerLockChanged(true);
         }
     );
     connect(m_pointerLock, &LockedPointer::unlocked, this,
@@ -176,7 +190,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
             delete m_pointerLock;
             m_pointerLock = nullptr;
             m_hasPointerLock = false;
-            emit m_backend->pointerLockChanged(false);
+            emit backend()->pointerLockChanged(false);
         }
     );
 }
