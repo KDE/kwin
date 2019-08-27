@@ -64,7 +64,7 @@ public:
         return !m_waylandOutput.isNull();
     }
 
-    virtual QSize pixelSize() const = 0;
+    QSize pixelSize() const;
     qreal scale() const override;
 
     /**

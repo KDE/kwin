@@ -69,14 +69,9 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     setScale(backend()->initialOutputScale());
 }
 
-QSize WaylandOutput::pixelSize() const
-{
-    return m_pixelSize;
-}
-
 void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    m_pixelSize = pixelSize;
+    // TODO: set mode to have updated pixelSize
     setRawPhysicalSize(pixelSize);
     setGlobalPos(logicalPosition);
 }

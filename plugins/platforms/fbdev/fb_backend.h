@@ -38,16 +38,10 @@ public:
     ~FramebufferOutput() override = default;
 
     void init(const QSize &size);
-    QSize pixelSize() const override {
-        return m_pixelSize;
-    }
 
     void setRawPhysicalSize(const QSize &set) {
         AbstractWaylandOutput::setRawPhysicalSize(set);
     }
-
-private:
-    QSize m_pixelSize;
 };
 
 class KWIN_EXPORT FramebufferBackend : public Platform

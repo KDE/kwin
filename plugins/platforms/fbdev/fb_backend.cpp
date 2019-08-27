@@ -39,7 +39,6 @@ namespace KWin
 
 void FramebufferOutput::init(const QSize &size)
 {
-    m_pixelSize = size;
     KWayland::Server::OutputDeviceInterface::Mode mode;
     mode.id = 0;
     mode.size = size;

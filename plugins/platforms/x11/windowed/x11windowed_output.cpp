@@ -134,14 +134,9 @@ void X11WindowedOutput::initXInputForWindow()
 #endif
 }
 
-QSize X11WindowedOutput::pixelSize() const
-{
-    return m_pixelSize;
-}
-
 void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    m_pixelSize = pixelSize;
+    // TODO: set mode to have updated pixelSize
 
     // Physicial size must be adjusted, such that QPA calculates correct sizes of
     // internal elements.

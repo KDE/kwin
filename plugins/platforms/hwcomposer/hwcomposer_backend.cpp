@@ -506,7 +506,6 @@ HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device)
     if (pixel.isEmpty()) {
         return;
     }
-    m_pixelSize = pixel;
 
     if (attr_values[2] != 0 && attr_values[3] != 0) {
          static const qreal factor = 25.4;
@@ -531,7 +530,7 @@ HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device)
 
     const auto outputGroup = kwinApp()->config()->group("HWComposerOutputs").group("0");
     setScale(outputGroup.readEntry("Scale", 1));
-    setWaylandMode(m_pixelSize, mode.refreshRate);
+    setWaylandMode(pixel, mode.refreshRate);
 }
 
 HwcomposerOutput::~HwcomposerOutput()
@@ -539,14 +538,9 @@ HwcomposerOutput::~HwcomposerOutput()
     hwc_close_1(m_device);
 }
 
-QSize HwcomposerOutput::pixelSize() const
-{
-    return m_pixelSize;
-}
-
 bool HwcomposerOutput::isValid() const
 {
-    return m_pixelSize.isValid();
+    return isEnabled();
 }
 
 void HwcomposerOutput::updateDpms(KWayland::Server::OutputInterface::DpmsMode mode)

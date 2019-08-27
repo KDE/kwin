@@ -59,8 +59,6 @@ public:
 
     void setWindowTitle(const QString &title);
 
-    QSize pixelSize() const override;
-
     /**
      * @brief defines the geometry of the output
      * @param logicalPosition top left position of the output in compositor space
@@ -75,7 +73,6 @@ private:
     NETWinInfo *m_winInfo = nullptr;
 
     QPoint m_hostPosition;
-    QSize m_pixelSize;
 
     X11WindowedBackend *m_backend;
 };

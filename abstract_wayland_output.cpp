@@ -54,12 +54,7 @@ QString AbstractWaylandOutput::name() const
 
 QRect AbstractWaylandOutput::geometry() const
 {
-    // TODO: This is inefficient on current KWayland since
-    //       we loop over modes.
-//    const QSize size = m_waylandOutputDevice->pixelSize();
-    const QSize size = pixelSize();
-
-    return QRect(globalPos(), size / scale());
+    return QRect(globalPos(), pixelSize() / scale());
 }
 
 QSize AbstractWaylandOutput::physicalSize() const
@@ -91,6 +86,11 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
         m_xdgOutput->setLogicalPosition(pos);
         m_xdgOutput->done();
     }
+}
+
+QSize AbstractWaylandOutput::pixelSize() const
+{
+    return orientateSize(m_waylandOutputDevice->pixelSize());
 }
 
 qreal AbstractWaylandOutput::scale() const

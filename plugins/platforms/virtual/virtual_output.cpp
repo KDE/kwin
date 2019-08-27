@@ -46,15 +46,10 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     setScale(1.);
 }
 
-QSize VirtualOutput::pixelSize() const
-{
-    return m_pixelSize;
-}
-
 void VirtualOutput::setGeometry(const QRect &geo)
 {
-    m_pixelSize = geo.size();
-    setRawPhysicalSize(m_pixelSize);
+    // TODO: set mode to have updated pixelSize
+    setRawPhysicalSize(geo.size());
     setGlobalPos(geo.topLeft());
 }
 

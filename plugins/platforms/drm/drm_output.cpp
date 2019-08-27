@@ -675,11 +675,6 @@ void DrmOutput::updateMode(int modeIndex)
     setWaylandMode();
 }
 
-QSize DrmOutput::pixelSize() const
-{
-    return orientateSize(QSize(m_mode.hdisplay, m_mode.vdisplay));
-}
-
 void DrmOutput::setWaylandMode()
 {
     AbstractWaylandOutput::setWaylandMode(QSize(m_mode.hdisplay, m_mode.vdisplay),

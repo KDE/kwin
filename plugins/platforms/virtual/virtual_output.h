@@ -39,8 +39,6 @@ public:
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
-    QSize pixelSize() const override;
-
     void setGeometry(const QRect &geo);
 
     int gammaRampSize() const override {
@@ -54,8 +52,6 @@ public:
 private:
     Q_DISABLE_COPY(VirtualOutput);
     friend class VirtualBackend;
-
-    QSize m_pixelSize;
 
     int m_gammaSize = 200;
     bool m_gammaResult = true;

@@ -60,8 +60,6 @@ public:
     bool present(DrmBuffer *buffer);
     void pageFlipped();
 
-    QSize pixelSize() const override;
-
     // These values are defined by the kernel
     enum class DpmsMode {
         On = DRM_MODE_DPMS_ON,

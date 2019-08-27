@@ -62,8 +62,6 @@ public:
 
     virtual bool pointerIsLocked() { return false; }
 
-    QSize pixelSize() const override;
-
     /**
      * @brief defines the geometry of the output
      * @param logicalPosition top left position of the output in compositor space
@@ -95,7 +93,6 @@ private:
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
 
-    QSize m_pixelSize;
     bool m_rendered = false;
 };
 
