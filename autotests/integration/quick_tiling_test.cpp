@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/server_decoration.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
 
@@ -75,10 +74,8 @@ private Q_SLOTS:
     void testQuickTilingKeyboardMove();
     void testQuickTilingPointerMove_data();
     void testQuickTilingPointerMove();
-    void testQuickTilingPointerMoveXdgShell_data();
-    void testQuickTilingPointerMoveXdgShell();
-    void testQuickTilingTouchMoveXdgShell_data();
-    void testQuickTilingTouchMoveXdgShell();
+    void testQuickTilingTouchMove_data();
+    void testQuickTilingTouchMove();
     void testX11QuickTiling_data();
     void testX11QuickTiling();
     void testX11QuickTilingAfterVertMaximize_data();
@@ -91,7 +88,6 @@ private Q_SLOTS:
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::Shell *m_shell = nullptr;
 };
 
 void QuickTilingTest::initTestCase()
@@ -127,7 +123,6 @@ void QuickTilingTest::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
-    m_shell = Test::waylandShell();
 
     screens()->setCurrent(0);
 }
@@ -167,18 +162,22 @@ void QuickTilingTest::testQuickTiling()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
+    // Map the client.
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+
+    // We have to receive a configure event when the client becomes active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
@@ -194,13 +193,14 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(c->quickTileMode(), mode);
 
     // but we got requested a new geometry
-    QVERIFY(sizeChangeSpy.wait());
-    QCOMPARE(sizeChangeSpy.count(), 1);
-    QCOMPARE(sizeChangeSpy.first().first().toSize(), expectedGeometry.size());
+    QVERIFY(configureRequestedSpy.wait());
+    QEXPECT_FAIL("maximize", "Two configure events are sent for maximized", Continue);
+    QCOMPARE(configureRequestedSpy.count(), 2);
+    QCOMPARE(configureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
 
     // attach a new image
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), expectedGeometry.size(), Qt::red);
-    m_connection->flush();
 
     QVERIFY(geometryChangedSpy.wait());
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
@@ -238,19 +238,23 @@ void QuickTilingTest::testQuickMaximizing()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
+    // Map the client.
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(c->maximizeMode(), MaximizeRestore);
+
+    // We have to receive a configure event upon becoming active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
@@ -270,13 +274,14 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
     // but we got requested a new geometry
-    QVERIFY(sizeChangeSpy.wait());
-    QCOMPARE(sizeChangeSpy.count(), 1);
-    QCOMPARE(sizeChangeSpy.first().first().toSize(), QSize(1280, 1024));
+    QVERIFY(configureRequestedSpy.wait());
+    QEXPECT_FAIL("", "Two configure events are sent for maximized", Continue);
+    QCOMPARE(configureRequestedSpy.count(), 2);
+    QCOMPARE(configureRequestedSpy.last().at(0).toSize(), QSize(1280, 1024));
 
     // attach a new image
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(1280, 1024), Qt::red);
-    m_connection->flush();
 
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(geometryChangedSpy.count(), 2);
@@ -302,13 +307,14 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->geometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
     // we got requested a new geometry
-    QVERIFY(sizeChangeSpy.wait());
-    QCOMPARE(sizeChangeSpy.count(), 2);
-    QCOMPARE(sizeChangeSpy.last().first().toSize(), QSize(100, 50));
+    QVERIFY(configureRequestedSpy.wait());
+    QEXPECT_FAIL("", "Two configure events are sent for maximized", Continue);
+    QCOMPARE(configureRequestedSpy.count(), 3);
+    QCOMPARE(configureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
 
     // render again
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::yellow);
-    m_connection->flush();
 
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(geometryChangedSpy.count(), 4);
@@ -343,9 +349,9 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QSignalSpy sizeChangeSpy(shellSurface.data(), &XdgShellSurface::sizeChanged);
     QVERIFY(sizeChangeSpy.isValid());
     // let's render
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
@@ -392,8 +398,6 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QTEST(c->quickTileMode(), "expectedMode");
 }
 
-
-
 void QuickTilingTest::testQuickTilingPointerMove_data()
 {
     QTest::addColumn<QPoint>("targetPos");
@@ -408,60 +412,6 @@ void QuickTilingTest::testQuickTilingPointerMove_data()
 }
 
 void QuickTilingTest::testQuickTilingPointerMove()
-{
-    using namespace KWayland::Client;
-
-    QScopedPointer<Surface> surface(Test::createSurface());
-    QVERIFY(!surface.isNull());
-
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
-    QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-
-    QVERIFY(c);
-    QCOMPARE(workspace()->activeClient(), c);
-    QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
-    QCOMPARE(c->maximizeMode(), MaximizeRestore);
-
-    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
-    QVERIFY(quickTileChangedSpy.isValid());
-
-    workspace()->performWindowOperation(c, Options::UnrestrictedMoveOp);
-    QCOMPARE(c, workspace()->moveResizeClient());
-    QCOMPARE(Cursor::pos(), QPoint(49, 24));
-
-    QFETCH(QPoint, targetPos);
-    quint32 timestamp = 1;
-    kwinApp()->platform()->pointerMotion(targetPos, timestamp++);
-    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
-    kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
-    QCOMPARE(Cursor::pos(), targetPos);
-    QVERIFY(!workspace()->moveResizeClient());
-
-    QCOMPARE(quickTileChangedSpy.count(), 1);
-    QTEST(c->quickTileMode(), "expectedMode");
-    QTRY_COMPARE(sizeChangeSpy.count(), 1);
-}
-
-
-void QuickTilingTest::testQuickTilingPointerMoveXdgShell_data()
-{
-    QTest::addColumn<QPoint>("targetPos");
-    QTest::addColumn<QuickTileMode>("expectedMode");
-
-    QTest::newRow("topRight") << QPoint(2559, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
-    QTest::newRow("right") << QPoint(2559, 512) << QuickTileMode(QuickTileFlag::Right);
-    QTest::newRow("bottomRight") << QPoint(2559, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
-    QTest::newRow("bottomLeft") << QPoint(0, 1023) << QuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
-    QTest::newRow("Left") << QPoint(0, 512) << QuickTileMode(QuickTileFlag::Left);
-    QTest::newRow("topLeft") << QPoint(0, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
-}
-
-void QuickTilingTest::testQuickTilingPointerMoveXdgShell()
 {
     using namespace KWayland::Client;
 
@@ -517,7 +467,7 @@ void QuickTilingTest::testQuickTilingPointerMoveXdgShell()
     QCOMPARE(false, configureRequestedSpy.last().first().toSize().isEmpty());
 }
 
-void QuickTilingTest::testQuickTilingTouchMoveXdgShell_data()
+void QuickTilingTest::testQuickTilingTouchMove_data()
 {
     QTest::addColumn<QPoint>("targetPos");
     QTest::addColumn<QuickTileMode>("expectedMode");
@@ -530,7 +480,7 @@ void QuickTilingTest::testQuickTilingTouchMoveXdgShell_data()
     QTest::newRow("topLeft") << QPoint(0, 24) << QuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
 }
 
-void QuickTilingTest::testQuickTilingTouchMoveXdgShell()
+void QuickTilingTest::testQuickTilingTouchMove()
 {
     // test verifies that touch on decoration also allows quick tiling
     // see BUG: 390113
@@ -789,25 +739,23 @@ void QuickTilingTest::testShortcut()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
+    // Map the client.
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
-    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
-    QVERIFY(quickTileChangedSpy.isValid());
-    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+
+    // We have to receive a configure event when the client becomes active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
 
     QFETCH(QString, shortcut);
-    QFETCH(QuickTileMode, expectedMode);
     QFETCH(QRect, expectedGeometry);
 
     // invoke global shortcut through dbus
@@ -819,20 +767,25 @@ void QuickTilingTest::testShortcut()
     msg.setArguments(QList<QVariant>{shortcut});
     QDBusConnection::sessionBus().asyncCall(msg);
 
+    QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
+    QVERIFY(quickTileChangedSpy.isValid());
     QVERIFY(quickTileChangedSpy.wait());
     QCOMPARE(quickTileChangedSpy.count(), 1);
     // at this point the geometry did not yet change
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed
-    QCOMPARE(c->quickTileMode(), expectedMode);
+    QTEST(c->quickTileMode(), "expectedMode");
 
     // but we got requested a new geometry
-    QTRY_COMPARE(sizeChangeSpy.count(), 1);
-    QCOMPARE(sizeChangeSpy.first().first().toSize(), expectedGeometry.size());
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
+    QCOMPARE(configureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
 
     // attach a new image
+    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), expectedGeometry.size(), Qt::red);
-    m_connection->flush();
 
     QVERIFY(geometryChangedSpy.wait());
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
@@ -866,18 +819,22 @@ void QuickTilingTest::testScript()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy sizeChangeSpy(shellSurface.data(), &ShellSurface::sizeChanged);
-    QVERIFY(sizeChangeSpy.isValid());
-    // let's render
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
+    // Map the client.
+    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
     QCOMPARE(c->geometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+
+    // We have to receive a configure event upon the client becoming active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
@@ -916,12 +873,13 @@ void QuickTilingTest::testScript()
     QCOMPARE(c->quickTileMode(), expectedMode);
 
     // but we got requested a new geometry
-    QTRY_COMPARE(sizeChangeSpy.count(), 1);
-    QCOMPARE(sizeChangeSpy.first().first().toSize(), expectedGeometry.size());
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
+    QCOMPARE(configureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
 
     // attach a new image
+    shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), expectedGeometry.size(), Qt::red);
-    m_connection->flush();
 
     QVERIFY(geometryChangedSpy.wait());
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);

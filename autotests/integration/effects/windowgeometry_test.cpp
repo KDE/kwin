@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 
 #include <KWayland/Client/buffer.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;

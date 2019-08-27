@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Server/buffer_interface.h>
@@ -153,12 +152,11 @@ void SceneQPainterTest::testCursorMoving()
 
 void SceneQPainterTest::testWindow_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void SceneQPainterTest::testWindow()
@@ -169,8 +167,8 @@ void SceneQPainterTest::testWindow()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     QScopedPointer<Surface> s(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> ss(Test::createShellSurface(type, s.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellSurface(type, s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
 
     auto scene = KWin::Compositor::self()->scene();
@@ -214,7 +212,7 @@ void SceneQPainterTest::testWindowScaled()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     QScopedPointer<Surface> s(Test::createSurface());
-    QScopedPointer<ShellSurface> ss(Test::createShellSurface(s.data()));
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellStableSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
     QSignalSpy pointerEnteredSpy(p.data(), &Pointer::entered);
     QVERIFY(pointerEnteredSpy.isValid());
@@ -258,11 +256,11 @@ void SceneQPainterTest::testWindowScaled()
 
 void SceneQPainterTest::testCompositorRestart_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void SceneQPainterTest::testCompositorRestart()
@@ -274,8 +272,8 @@ void SceneQPainterTest::testCompositorRestart()
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection());
     QScopedPointer<Surface> s(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> ss(Test::createShellSurface(type, s.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellSurface(type, s.data()));
     QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
 
     // now let's try to reinitialize the compositing scene

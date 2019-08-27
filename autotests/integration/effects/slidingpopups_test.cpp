@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/slide.h>
 
 #include <netwm.h>
@@ -337,7 +336,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QScopedPointer<Slide> slide(slideManager->createSlide(surface.data()));
     slide->setLocation(Slide::Location::Left);
     slide->commit();
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(shellSurface);
     QCOMPARE(windowAddedSpy.count(), 0);
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(10, 20), Qt::blue);

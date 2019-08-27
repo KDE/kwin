@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shadow.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/subcompositor.h>
@@ -68,7 +67,6 @@ static struct {
     SubCompositor *subCompositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
     ShadowManager *shadowManager = nullptr;
-    Shell *shell = nullptr;
     XdgShell *xdgShellV5 = nullptr;
     XdgShell *xdgShellV6 = nullptr;
     XdgShell *xdgShellStable = nullptr;
@@ -155,10 +153,6 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     }
     s_waylandConnection.shm = registry->createShmPool(registry->interface(Registry::Interface::Shm).name, registry->interface(Registry::Interface::Shm).version);
     if (!s_waylandConnection.shm->isValid()) {
-        return false;
-    }
-    s_waylandConnection.shell = registry->createShell(registry->interface(Registry::Interface::Shell).name, registry->interface(Registry::Interface::Shell).version);
-    if (!s_waylandConnection.shell->isValid()) {
         return false;
     }
     s_waylandConnection.xdgShellV5 = registry->createXdgShell(registry->interface(Registry::Interface::XdgShellUnstableV5).name, registry->interface(Registry::Interface::XdgShellUnstableV5).version);
@@ -261,8 +255,6 @@ void destroyWaylandConnection()
     s_waylandConnection.xdgShellV6 = nullptr;
     delete s_waylandConnection.xdgShellStable;
     s_waylandConnection.xdgShellStable = nullptr;
-    delete s_waylandConnection.shell;
-    s_waylandConnection.shell = nullptr;
     delete s_waylandConnection.shadowManager;
     s_waylandConnection.shadowManager = nullptr;
     delete s_waylandConnection.idleInhibit;
@@ -309,11 +301,6 @@ SubCompositor *waylandSubCompositor()
 ShadowManager *waylandShadowManager()
 {
     return s_waylandConnection.shadowManager;
-}
-
-Shell *waylandShell()
-{
-    return s_waylandConnection.shell;
 }
 
 ShmPool *waylandShmPool()
@@ -471,19 +458,6 @@ SubSurface *createSubSurface(Surface *surface, Surface *parentSurface, QObject *
     return s;
 }
 
-ShellSurface *createShellSurface(Surface *surface, QObject *parent)
-{
-    if (!s_waylandConnection.shell) {
-        return nullptr;
-    }
-    auto s = s_waylandConnection.shell->createSurface(surface, parent);
-    if (!s->isValid()) {
-        delete s;
-        return nullptr;
-    }
-    return s;
-}
-
 XdgShellSurface *createXdgShellV5Surface(Surface *surface, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellV5) {
@@ -568,32 +542,14 @@ void initXdgShellPopup(KWayland::Client::Surface *surface, KWayland::Client::Xdg
     shellPopup->ackConfigure(configureRequestedSpy.last()[1].toInt());
 }
 
-
-QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent)
+KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent, CreationSetup creationSetup)
 {
     switch (type) {
-    case ShellSurfaceType::WlShell:
-        return createShellSurface(surface, parent);
-    case ShellSurfaceType::XdgShellV5:
-        return createXdgShellV5Surface(surface, parent, CreationSetup::CreateAndConfigure);
-    case ShellSurfaceType::XdgShellV6:
-        return createXdgShellV6Surface(surface, parent, CreationSetup::CreateAndConfigure);
-    case ShellSurfaceType::XdgShellStable:
-        return createXdgShellStableSurface(surface, parent, CreationSetup::CreateAndConfigure);
-    default:
-        Q_UNREACHABLE();
-        return nullptr;
-    }
-}
-
-KWayland::Client::XdgShellSurface *createXdgShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent, CreationSetup creationSetup)
-{
-    switch (type) {
-    case ShellSurfaceType::XdgShellV5:
+    case XdgShellSurfaceType::XdgShellV5:
         return createXdgShellV5Surface(surface, parent, creationSetup);
-    case ShellSurfaceType::XdgShellV6:
+    case XdgShellSurfaceType::XdgShellV6:
         return createXdgShellV6Surface(surface, parent, creationSetup);
-    case ShellSurfaceType::XdgShellStable:
+    case XdgShellSurfaceType::XdgShellStable:
         return createXdgShellStableSurface(surface, parent, creationSetup);
     default:
         return nullptr;

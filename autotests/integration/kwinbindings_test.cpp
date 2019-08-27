@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 
 #include <QDBusConnection>
@@ -88,16 +87,16 @@ void KWinBindingsTest::testSwitchWindow()
 {
     // first create windows
     QScopedPointer<Surface> surface1(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
     auto c1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface3(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface3(Test::createShellSurface(surface3.data()));
+    QScopedPointer<XdgShellSurface> shellSurface3(Test::createXdgShellStableSurface(surface3.data()));
     auto c3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface4(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface4(Test::createShellSurface(surface4.data()));
+    QScopedPointer<XdgShellSurface> shellSurface4(Test::createXdgShellStableSurface(surface4.data()));
     auto c4 = Test::renderAndWaitForShown(surface4.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(c4->isActive());
@@ -148,16 +147,16 @@ void KWinBindingsTest::testSwitchWindowScript()
 
     // first create windows
     QScopedPointer<Surface> surface1(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
     auto c1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface3(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface3(Test::createShellSurface(surface3.data()));
+    QScopedPointer<XdgShellSurface> shellSurface3(Test::createXdgShellStableSurface(surface3.data()));
     auto c3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface4(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface4(Test::createShellSurface(surface4.data()));
+    QScopedPointer<XdgShellSurface> shellSurface4(Test::createXdgShellStableSurface(surface4.data()));
     auto c4 = Test::renderAndWaitForShown(surface4.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(c4->isActive());
@@ -231,7 +230,7 @@ void KWinBindingsTest::testWindowToDesktop()
 
     // now create a window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QSignalSpy desktopChangedSpy(c, &AbstractClient::desktopChanged);
     QVERIFY(desktopChangedSpy.isValid());

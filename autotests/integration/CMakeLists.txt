@@ -19,8 +19,6 @@ function(integrationTest)
     endif()
 endfunction()
 
-integrationTest(WAYLAND_ONLY NAME testStart SRCS start_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testTransientNoInput SRCS transient_no_input_test.cpp)
 integrationTest(NAME testDontCrashGlxgears SRCS dont_crash_glxgears.cpp)
 integrationTest(NAME testLockScreen SRCS lockscreen.cpp)
 integrationTest(WAYLAND_ONLY NAME testDecorationInput SRCS decoration_input_test.cpp)

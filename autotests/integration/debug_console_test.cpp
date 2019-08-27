@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
@@ -299,10 +298,11 @@ void DebugConsoleTest::testX11Unmanaged()
 
 void DebugConsoleTest::testWaylandClient_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void DebugConsoleTest::testWaylandClient()
@@ -331,8 +331,8 @@ void DebugConsoleTest::testWaylandClient()
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
     QVERIFY(!shellSurface.isNull());
     Test::render(surface.data(), QSize(10, 10), Qt::red);
 

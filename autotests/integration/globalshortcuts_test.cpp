@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Server/seat_interface.h>
 
@@ -166,7 +165,7 @@ void GlobalShortcutsTest::testUserActionsMenu()
 
     // first create a window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QVERIFY(c->isActive());
@@ -305,7 +304,7 @@ void GlobalShortcutsTest::testX11ClientShortcut()
 void GlobalShortcutsTest::testWaylandClientShortcut()
 {
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QCOMPARE(workspace()->activeClient(), client);
@@ -341,7 +340,7 @@ void GlobalShortcutsTest::testWaylandClientShortcut()
 void GlobalShortcutsTest::testSetupWindowShortcut()
 {
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QCOMPARE(workspace()->activeClient(), client);

@@ -42,8 +42,6 @@ class PointerConstraints;
 class Seat;
 class ServerSideDecorationManager;
 class ShadowManager;
-class Shell;
-class ShellSurface;
 class ShmPool;
 class SubCompositor;
 class SubSurface;
@@ -116,7 +114,6 @@ KWayland::Client::ConnectionThread *waylandConnection();
 KWayland::Client::Compositor *waylandCompositor();
 KWayland::Client::SubCompositor *waylandSubCompositor();
 KWayland::Client::ShadowManager *waylandShadowManager();
-KWayland::Client::Shell *waylandShell();
 KWayland::Client::ShmPool *waylandShmPool();
 KWayland::Client::Seat *waylandSeat();
 KWayland::Client::ServerSideDecorationManager *waylandServerSideDecoration();
@@ -136,8 +133,7 @@ void flushWaylandConnection();
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
-enum class ShellSurfaceType {
-    WlShell,
+enum class XdgShellSurfaceType {
     XdgShellV5,
     XdgShellV6,
     XdgShellStable
@@ -148,19 +144,11 @@ enum class CreationSetup {
     CreateAndConfigure, /// commit and wait for the configure event, making this surface ready to commit buffers
 };
 
-/**
- * Creates either a ShellSurface * or XdgShellSurface * as defined by @arg type
- * For XDG top levels this method will block for a configure event, make this surface ready to commit buffers
- */
-QObject *createShellSurface(ShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent = nullptr);
-
-KWayland::Client::XdgShellSurface *createXdgShellSurface(ShellSurfaceType type,
+KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type,
                                                          KWayland::Client::Surface *surface,
                                                          QObject *parent = nullptr,
                                                          CreationSetup creationSetup = CreationSetup::CreateAndConfigure);
 
-KWayland::Client::ShellSurface *createShellSurface(KWayland::Client::Surface *surface,
-                                                   QObject *parent = nullptr);
 KWayland::Client::XdgShellSurface *createXdgShellV5Surface(KWayland::Client::Surface *surface,
                                                            QObject *parent = nullptr,
                                                            CreationSetup = CreationSetup::CreateAndConfigure);
@@ -228,7 +216,7 @@ bool unlockScreen();
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
-Q_DECLARE_METATYPE(KWin::Test::ShellSurfaceType)
+Q_DECLARE_METATYPE(KWin::Test::XdgShellSurfaceType)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
 int main(int argc, char *argv[]) \

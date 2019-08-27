@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/region.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -111,7 +110,7 @@ void TestPointerConstraints::cleanup()
 
 void TestPointerConstraints::testConfinedPointer_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
     QTest::addColumn<PointerFunc>("positionFunction");
     QTest::addColumn<int>("xOffset");
     QTest::addColumn<int>("yOffset");
@@ -120,22 +119,18 @@ void TestPointerConstraints::testConfinedPointer_data()
     PointerFunc topRight = &QRect::topRight;
     PointerFunc topLeft = &QRect::topLeft;
 
-    QTest::newRow("wlShell - bottomLeft")  << Test::ShellSurfaceType::WlShell << bottomLeft  << -1 << 1;
-    QTest::newRow("wlShell - bottomRight") << Test::ShellSurfaceType::WlShell << bottomRight << 1  << 1;
-    QTest::newRow("wlShell - topLeft")     << Test::ShellSurfaceType::WlShell << topLeft  << -1 << -1;
-    QTest::newRow("wlShell - topRight")    << Test::ShellSurfaceType::WlShell << topRight << 1  << -1;
-    QTest::newRow("XdgShellV5 - bottomLeft")  << Test::ShellSurfaceType::XdgShellV5 << bottomLeft  << -1 << 1;
-    QTest::newRow("XdgShellV5 - bottomRight") << Test::ShellSurfaceType::XdgShellV5 << bottomRight << 1  << 1;
-    QTest::newRow("XdgShellV5 - topLeft")     << Test::ShellSurfaceType::XdgShellV5 << topLeft  << -1 << -1;
-    QTest::newRow("XdgShellV5 - topRight")    << Test::ShellSurfaceType::XdgShellV5 << topRight << 1  << -1;
-    QTest::newRow("XdgShellV6 - bottomLeft")  << Test::ShellSurfaceType::XdgShellV6 << bottomLeft  << -1 << 1;
-    QTest::newRow("XdgShellV6 - bottomRight") << Test::ShellSurfaceType::XdgShellV6 << bottomRight << 1  << 1;
-    QTest::newRow("XdgShellV6 - topLeft")     << Test::ShellSurfaceType::XdgShellV6 << topLeft  << -1 << -1;
-    QTest::newRow("XdgShellV6 - topRight")    << Test::ShellSurfaceType::XdgShellV6 << topRight << 1  << -1;
-    QTest::newRow("XdgWmBase - bottomLeft")   << Test::ShellSurfaceType::XdgShellStable << bottomLeft  << -1 << 1;
-    QTest::newRow("XdgWmBase - bottomRight")  << Test::ShellSurfaceType::XdgShellStable << bottomRight << 1  << 1;
-    QTest::newRow("XdgWmBase - topLeft")      << Test::ShellSurfaceType::XdgShellStable << topLeft  << -1 << -1;
-    QTest::newRow("XdgWmBase - topRight")     << Test::ShellSurfaceType::XdgShellStable << topRight << 1  << -1;
+    QTest::newRow("XdgShellV5 - bottomLeft")  << Test::XdgShellSurfaceType::XdgShellV5 << bottomLeft  << -1 << 1;
+    QTest::newRow("XdgShellV5 - bottomRight") << Test::XdgShellSurfaceType::XdgShellV5 << bottomRight << 1  << 1;
+    QTest::newRow("XdgShellV5 - topLeft")     << Test::XdgShellSurfaceType::XdgShellV5 << topLeft  << -1 << -1;
+    QTest::newRow("XdgShellV5 - topRight")    << Test::XdgShellSurfaceType::XdgShellV5 << topRight << 1  << -1;
+    QTest::newRow("XdgShellV6 - bottomLeft")  << Test::XdgShellSurfaceType::XdgShellV6 << bottomLeft  << -1 << 1;
+    QTest::newRow("XdgShellV6 - bottomRight") << Test::XdgShellSurfaceType::XdgShellV6 << bottomRight << 1  << 1;
+    QTest::newRow("XdgShellV6 - topLeft")     << Test::XdgShellSurfaceType::XdgShellV6 << topLeft  << -1 << -1;
+    QTest::newRow("XdgShellV6 - topRight")    << Test::XdgShellSurfaceType::XdgShellV6 << topRight << 1  << -1;
+    QTest::newRow("XdgWmBase - bottomLeft")   << Test::XdgShellSurfaceType::XdgShellStable << bottomLeft  << -1 << 1;
+    QTest::newRow("XdgWmBase - bottomRight")  << Test::XdgShellSurfaceType::XdgShellStable << bottomRight << 1  << 1;
+    QTest::newRow("XdgWmBase - topLeft")      << Test::XdgShellSurfaceType::XdgShellStable << topLeft  << -1 << -1;
+    QTest::newRow("XdgWmBase - topRight")     << Test::XdgShellSurfaceType::XdgShellStable << topRight << 1  << -1;
 }
 
 void TestPointerConstraints::testConfinedPointer()
@@ -143,8 +138,8 @@ void TestPointerConstraints::testConfinedPointer()
     // this test sets up a Surface with a confined pointer
     // simple interaction test to verify that the pointer gets confined
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
     QScopedPointer<ConfinedPointer> confinedPointer(Test::waylandPointerConstraints()->confinePointer(surface.data(), pointer.data(), nullptr, PointerConstraints::LifeTime::OneShot));
     QSignalSpy confinedSpy(confinedPointer.data(), &ConfinedPointer::confined);
@@ -251,7 +246,7 @@ void TestPointerConstraints::testConfinedPointer()
 
     // create a second window and move it above our constrained window
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<QObject> shellSurface2(Test::createShellSurface(type, surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellSurface(type, surface2.data()));
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(c2);
     QVERIFY(unconfinedSpy2.wait());
@@ -299,12 +294,11 @@ void TestPointerConstraints::testConfinedPointer()
 
 void TestPointerConstraints::testLockedPointer_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void TestPointerConstraints::testLockedPointer()
@@ -313,8 +307,8 @@ void TestPointerConstraints::testLockedPointer()
     // simple interaction test to verify that the pointer gets locked
     // the various ways to unlock are not tested as that's already verified by testConfinedPointer
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
     QScopedPointer<LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(surface.data(), pointer.data(), nullptr, PointerConstraints::LifeTime::OneShot));
     QSignalSpy lockedSpy(lockedPointer.data(), &LockedPointer::locked);
@@ -378,20 +372,19 @@ void TestPointerConstraints::testLockedPointer()
 
 void TestPointerConstraints::testCloseWindowWithLockedPointer_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("XdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("XdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("XdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("XdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("XdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("XdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void TestPointerConstraints::testCloseWindowWithLockedPointer()
 {
     // test case which verifies that the pointer gets unlocked when the window for it gets closed
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
     QScopedPointer<Pointer> pointer(Test::waylandSeat()->createPointer());
     QScopedPointer<LockedPointer> lockedPointer(Test::waylandPointerConstraints()->lockPointer(surface.data(), pointer.data(), nullptr, PointerConstraints::LifeTime::OneShot));
     QSignalSpy lockedSpy(lockedPointer.data(), &LockedPointer::locked);

@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
@@ -106,7 +105,7 @@ AbstractClient *TouchInputTest::showWindow(bool decorated)
 
     Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
-    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     VERIFY(shellSurface);
     if (decorated) {
         auto deco = Test::waylandServerSideDecoration()->create(surface, surface);

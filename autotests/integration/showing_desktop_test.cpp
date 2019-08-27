@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/shell.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -71,10 +70,10 @@ void ShowingDesktopTest::cleanup()
 void ShowingDesktopTest::testRestoreFocus()
 {
     QScopedPointer<Surface> surface1(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
     auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
     auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client1 != client2);
 
@@ -94,7 +93,7 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
 
     QScopedPointer<Surface> desktopSurface(Test::createSurface());
     QVERIFY(!desktopSurface.isNull());
-    QScopedPointer<ShellSurface> desktopShellSurface(Test::createShellSurface(desktopSurface.data()));
+    QScopedPointer<XdgShellSurface> desktopShellSurface(Test::createXdgShellStableSurface(desktopSurface.data()));
     QVERIFY(!desktopSurface.isNull());
     QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(desktopSurface.data()));
     QVERIFY(!plasmaSurface.isNull());
@@ -106,10 +105,10 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
 
     // now create some windows
     QScopedPointer<Surface> surface1(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface1(Test::createShellSurface(surface1.data()));
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
     auto client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
     auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client1 != client2);
 

@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmashell.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
 
 #include <KDecoration2/Decoration>
@@ -173,11 +172,11 @@ void StrutsTest::testWaylandStruts()
     for (auto it = windowGeometries.constBegin(), end = windowGeometries.constEnd(); it != end; it++) {
         const QRect windowGeometry = *it;
         Surface *surface = Test::createSurface(m_compositor);
-        ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
-        Q_UNUSED(shellSurface)
+        XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface, Test::CreationSetup::CreateOnly);
         PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface, surface);
         plasmaSurface->setPosition(windowGeometry.topLeft());
         plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+        Test::initXdgShellSurface(surface, shellSurface);
 
         // map the window
         auto c = Test::renderAndWaitForShown(surface, windowGeometry.size(), Qt::red, QImage::Format_RGB32);
@@ -228,11 +227,11 @@ void StrutsTest::testMoveWaylandPanel()
     using namespace KWayland::Client;
     const QRect windowGeometry(0, 1000, 1280, 24);
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
-    Q_UNUSED(shellSurface)
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    Test::initXdgShellSurface(surface.data(), shellSurface.data());
 
     // map the window
     auto c = Test::renderAndWaitForShown(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
@@ -272,11 +271,11 @@ void StrutsTest::testWaylandMobilePanel()
     // create first top panel
     const QRect windowGeometry(0, 0, 1280, 60);
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
-    Q_UNUSED(shellSurface)
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.data()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
     plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    Test::initXdgShellSurface(surface.data(), shellSurface.data());
 
     // map the first panel
     auto c = Test::renderAndWaitForShown(surface.data(), windowGeometry.size(), Qt::red, QImage::Format_RGB32);
@@ -295,11 +294,11 @@ void StrutsTest::testWaylandMobilePanel()
     // create another bottom panel
     const QRect windowGeometry2(0, 874, 1280, 150);
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
-    Q_UNUSED(shellSurface2)
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data(), surface2.data(), Test::CreationSetup::CreateOnly));
     QScopedPointer<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.data()));
     plasmaSurface2->setPosition(windowGeometry2.topLeft());
     plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
+    Test::initXdgShellSurface(surface2.data(), shellSurface2.data());
 
     auto c1 = Test::renderAndWaitForShown(surface2.data(), windowGeometry2.size(), Qt::blue, QImage::Format_RGB32);
 
@@ -314,6 +313,12 @@ void StrutsTest::testWaylandMobilePanel()
     QCOMPARE(workspace()->clientArea(PlacementArea, 1, 1), QRect(1280, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 60, 2560, 814));
+
+    // Destroy test clients.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c1));
 }
 
 void StrutsTest::testX11Struts_data()

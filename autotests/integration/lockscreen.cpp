@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/pointer.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -168,7 +167,7 @@ AbstractClient *LockScreenTest::showWindow()
 
     Surface *surface = Test::createSurface(m_compositor);
     VERIFY(surface);
-    ShellSurface *shellSurface = Test::createShellSurface(surface, surface);
+    XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     VERIFY(shellSurface);
     // let's render
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
@@ -212,7 +211,6 @@ void LockScreenTest::init()
     QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
-    m_shell = Test::waylandShell();
     m_shm = Test::waylandShmPool();
     m_seat = Test::waylandSeat();
 

@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/shell.h>
 #include <KWindowSystem>
 
 #include <KWayland/Server/surface_interface.h>
@@ -390,7 +389,7 @@ void InternalWindowTest::testKeyboardTriggersLeave()
     QSignalSpy leftSpy(keyboard.data(), &Keyboard::left);
     QVERIFY(leftSpy.isValid());
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(Test::ShellSurfaceType::WlShell, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
 
     // now let's render
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);

@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shadow.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Server/shadow_interface.h>
@@ -632,12 +631,12 @@ void SceneQPainterShadowTest::testShadowTileOverlaps()
 
     // Create a decorated client.
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QScopedPointer<ServerSideDecoration> ssd(Test::waylandServerSideDecoration()->create(surface.data()));
 
     auto *client = Test::renderAndWaitForShown(surface.data(), windowSize, Qt::blue);
 
-    QSignalSpy sizeChangedSpy(shellSurface.data(), &ShellSurface::sizeChanged);
+    QSignalSpy sizeChangedSpy(shellSurface.data(), &XdgShellSurface::sizeChanged);
     QVERIFY(sizeChangedSpy.isValid());
 
     // Check the client is decorated.
@@ -693,7 +692,7 @@ void SceneQPainterShadowTest::testShadowTextureReconstruction()
 
     // Create a surface.
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto *client = Test::renderAndWaitForShown(surface.data(), QSize(512, 512), Qt::blue);
     QVERIFY(client);
     QVERIFY(!client->isDecorated());

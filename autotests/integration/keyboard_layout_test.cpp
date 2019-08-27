@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobalAccel>
 
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/shell.h>
 
 #include <QAction>
 #include <QDBusConnection>
@@ -364,7 +363,7 @@ void KeyboardLayoutTest::testWindowPolicy()
     // create a window
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto c1 = Test::renderAndWaitForShown(surface.data(), QSize(100, 100), Qt::blue);
     QVERIFY(c1);
 
@@ -380,7 +379,7 @@ void KeyboardLayoutTest::testWindowPolicy()
 
     // create a second window
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 100), Qt::red);
     QVERIFY(c2);
     // this should have switched back to English
@@ -411,7 +410,7 @@ void KeyboardLayoutTest::testApplicationPolicy()
     // create a window
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto c1 = Test::renderAndWaitForShown(surface.data(), QSize(100, 100), Qt::blue);
     QVERIFY(c1);
 
@@ -432,7 +431,7 @@ void KeyboardLayoutTest::testApplicationPolicy()
 
     // create a second window
     QScopedPointer<Surface> surface2(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface2(Test::createShellSurface(surface2.data()));
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
     auto c2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 100), Qt::red);
     QVERIFY(c2);
     // it is the same application and should not switch the layout

@@ -97,11 +97,11 @@ void MaximizeAnimationTest::cleanup()
 
 void MaximizeAnimationTest::testMaximizeRestore_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("xdgWmBase")  << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase")  << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void MaximizeAnimationTest::testMaximizeRestore()
@@ -115,7 +115,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<XdgShellSurface> shellSurface(createXdgShellSurface(type, surface.data(), nullptr, Test::CreationSetup::CreateOnly));
 
     // Wait for the initial configure event.

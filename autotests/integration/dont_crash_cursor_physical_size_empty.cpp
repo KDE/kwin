@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
-#include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
@@ -89,12 +88,11 @@ void DontCrashCursorPhysicalSizeEmpty::initTestCase()
 
 void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
@@ -103,9 +101,9 @@ void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
     // a reason for creation failure could be physical size not existing
     // see BUG: 390314
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     Test::waylandServerSideDecoration()->create(surface.data(), surface.data());
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
 
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);

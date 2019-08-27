@@ -32,9 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/xdgshell.h>
 
 #include <QDBusArgument>
 #include <QDBusConnection>
@@ -116,12 +114,11 @@ void TestDbusInterface::testGetWindowInfoInvalidUuid()
 
 void TestDbusInterface::testGetWindowInfoShellClient_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("xdgWmBase") << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void TestDbusInterface::testGetWindowInfoShellClient()
@@ -130,12 +127,10 @@ void TestDbusInterface::testGetWindowInfoShellClient()
     QVERIFY(clientAddedSpy.isValid());
 
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
-    if (type != Test::ShellSurfaceType::WlShell) {
-        qobject_cast<XdgShellSurface*>(shellSurface.data())->setAppId(QByteArrayLiteral("org.kde.foo"));
-        qobject_cast<XdgShellSurface*>(shellSurface.data())->setTitle(QStringLiteral("Test window"));
-    }
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    shellSurface->setAppId(QByteArrayLiteral("org.kde.foo"));
+    shellSurface->setTitle(QStringLiteral("Test window"));
 
     // now let's render
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
@@ -173,15 +168,9 @@ void TestDbusInterface::testGetWindowInfoShellClient()
     QCOMPARE(windowData.value(QStringLiteral("localhost")).toBool(), true);
     QCOMPARE(windowData.value(QStringLiteral("role")).toString(), QString());
     QCOMPARE(windowData.value(QStringLiteral("resourceName")).toString(), QStringLiteral("testDbusInterface"));
-    if (type == Test::ShellSurfaceType::WlShell) {
-        QCOMPARE(windowData.value(QStringLiteral("resourceClass")).toString(), QString());
-        QCOMPARE(windowData.value(QStringLiteral("desktopFile")).toString(), QString());
-        QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QString());
-    } else {
-        QCOMPARE(windowData.value(QStringLiteral("resourceClass")).toString(), QStringLiteral("org.kde.foo"));
-        QCOMPARE(windowData.value(QStringLiteral("desktopFile")).toString(), QStringLiteral("org.kde.foo"));
-        QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QStringLiteral("Test window"));
-    }
+    QCOMPARE(windowData.value(QStringLiteral("resourceClass")).toString(), QStringLiteral("org.kde.foo"));
+    QCOMPARE(windowData.value(QStringLiteral("desktopFile")).toString(), QStringLiteral("org.kde.foo"));
+    QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QStringLiteral("Test window"));
 
     auto verifyProperty = [client] (const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};

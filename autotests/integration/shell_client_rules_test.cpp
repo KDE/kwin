@@ -265,13 +265,13 @@ void TestShellClientRules::cleanup()
 #define TEST_DATA(name) \
 void TestShellClientRules::name##_data() \
 { \
-    QTest::addColumn<Test::ShellSurfaceType>("type"); \
-    QTest::newRow("XdgShellV5") << Test::ShellSurfaceType::XdgShellV5; \
-    QTest::newRow("XdgShellV6") << Test::ShellSurfaceType::XdgShellV6; \
-    QTest::newRow("XdgWmBase") << Test::ShellSurfaceType::XdgShellStable; \
+    QTest::addColumn<Test::XdgShellSurfaceType>("type"); \
+    QTest::newRow("XdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5; \
+    QTest::newRow("XdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6; \
+    QTest::newRow("XdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable; \
 }
 
-std::tuple<ShellClient *, Surface *, XdgShellSurface *> createWindow(Test::ShellSurfaceType type, const QByteArray &appId)
+std::tuple<ShellClient *, Surface *, XdgShellSurface *> createWindow(Test::XdgShellSurfaceType type, const QByteArray &appId)
 {
     // Create an xdg surface.
     Surface *surface = Test::createSurface();
@@ -310,7 +310,7 @@ void TestShellClientRules::testPositionDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -348,7 +348,7 @@ void TestShellClientRules::testPositionApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -427,7 +427,7 @@ void TestShellClientRules::testPositionRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -506,7 +506,7 @@ void TestShellClientRules::testPositionForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -553,7 +553,7 @@ TEST_DATA(testPositionApplyNow)
 void TestShellClientRules::testPositionApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     QObject *shellSurface;
@@ -647,7 +647,7 @@ void TestShellClientRules::testPositionForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -707,7 +707,7 @@ void TestShellClientRules::testSizeDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -758,7 +758,7 @@ void TestShellClientRules::testSizeApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -896,7 +896,7 @@ void TestShellClientRules::testSizeRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1034,7 +1034,7 @@ void TestShellClientRules::testSizeForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1109,7 +1109,7 @@ TEST_DATA(testSizeApplyNow)
 void TestShellClientRules::testSizeApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1191,7 +1191,7 @@ void TestShellClientRules::testSizeForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1281,7 +1281,7 @@ void TestShellClientRules::testMaximizeDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1343,7 +1343,7 @@ void TestShellClientRules::testMaximizeApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1455,7 +1455,7 @@ void TestShellClientRules::testMaximizeRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1567,7 +1567,7 @@ void TestShellClientRules::testMaximizeForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1654,7 +1654,7 @@ TEST_DATA(testMaximizeApplyNow)
 void TestShellClientRules::testMaximizeApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1776,7 +1776,7 @@ void TestShellClientRules::testMaximizeForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     QScopedPointer<Surface> surface;
     surface.reset(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface;
@@ -1882,7 +1882,7 @@ void TestShellClientRules::testDesktopDontAffect()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -1923,7 +1923,7 @@ void TestShellClientRules::testDesktopApply()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -1980,7 +1980,7 @@ void TestShellClientRules::testDesktopRemember()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2033,7 +2033,7 @@ void TestShellClientRules::testDesktopForce()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2077,7 +2077,7 @@ void TestShellClientRules::testDesktopApplyNow()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2143,7 +2143,7 @@ void TestShellClientRules::testDesktopForceTemporarily()
     QCOMPARE(VirtualDesktopManager::self()->current(), 1);
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2202,7 +2202,7 @@ void TestShellClientRules::testMinimizeDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2237,7 +2237,7 @@ void TestShellClientRules::testMinimizeApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2285,7 +2285,7 @@ void TestShellClientRules::testMinimizeRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2331,7 +2331,7 @@ void TestShellClientRules::testMinimizeForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2366,7 +2366,7 @@ TEST_DATA(testMinimizeApplyNow)
 void TestShellClientRules::testMinimizeApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2425,7 +2425,7 @@ void TestShellClientRules::testMinimizeForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2473,7 +2473,7 @@ void TestShellClientRules::testSkipTaskbarDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2507,7 +2507,7 @@ void TestShellClientRules::testSkipTaskbarApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2553,7 +2553,7 @@ void TestShellClientRules::testSkipTaskbarRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2601,7 +2601,7 @@ void TestShellClientRules::testSkipTaskbarForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2636,7 +2636,7 @@ TEST_DATA(testSkipTaskbarApplyNow)
 void TestShellClientRules::testSkipTaskbarApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2692,7 +2692,7 @@ void TestShellClientRules::testSkipTaskbarForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2742,7 +2742,7 @@ void TestShellClientRules::testSkipPagerDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2776,7 +2776,7 @@ void TestShellClientRules::testSkipPagerApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2822,7 +2822,7 @@ void TestShellClientRules::testSkipPagerRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2870,7 +2870,7 @@ void TestShellClientRules::testSkipPagerForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2905,7 +2905,7 @@ TEST_DATA(testSkipPagerApplyNow)
 void TestShellClientRules::testSkipPagerApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -2961,7 +2961,7 @@ void TestShellClientRules::testSkipPagerForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3011,7 +3011,7 @@ void TestShellClientRules::testSkipSwitcherDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3045,7 +3045,7 @@ void TestShellClientRules::testSkipSwitcherApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3091,7 +3091,7 @@ void TestShellClientRules::testSkipSwitcherRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3139,7 +3139,7 @@ void TestShellClientRules::testSkipSwitcherForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3174,7 +3174,7 @@ TEST_DATA(testSkipSwitcherApplyNow)
 void TestShellClientRules::testSkipSwitcherApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3230,7 +3230,7 @@ void TestShellClientRules::testSkipSwitcherForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3280,7 +3280,7 @@ void TestShellClientRules::testKeepAboveDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3314,7 +3314,7 @@ void TestShellClientRules::testKeepAboveApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3360,7 +3360,7 @@ void TestShellClientRules::testKeepAboveRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3406,7 +3406,7 @@ void TestShellClientRules::testKeepAboveForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3439,7 +3439,7 @@ TEST_DATA(testKeepAboveApplyNow)
 void TestShellClientRules::testKeepAboveApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3495,7 +3495,7 @@ void TestShellClientRules::testKeepAboveForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3547,7 +3547,7 @@ void TestShellClientRules::testKeepBelowDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3581,7 +3581,7 @@ void TestShellClientRules::testKeepBelowApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3627,7 +3627,7 @@ void TestShellClientRules::testKeepBelowRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3673,7 +3673,7 @@ void TestShellClientRules::testKeepBelowForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3706,7 +3706,7 @@ TEST_DATA(testKeepBelowApplyNow)
 void TestShellClientRules::testKeepBelowApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3762,7 +3762,7 @@ void TestShellClientRules::testKeepBelowForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3814,7 +3814,7 @@ void TestShellClientRules::testShortcutDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3861,7 +3861,7 @@ void TestShellClientRules::testShortcutApply()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -3946,7 +3946,7 @@ void TestShellClientRules::testShortcutRemember()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4019,7 +4019,7 @@ void TestShellClientRules::testShortcutForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4077,7 +4077,7 @@ TEST_DATA(testShortcutApplyNow)
 void TestShellClientRules::testShortcutApplyNow()
 {
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4158,7 +4158,7 @@ void TestShellClientRules::testShortcutForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4287,7 +4287,7 @@ void TestShellClientRules::testActiveOpacityDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4322,7 +4322,7 @@ void TestShellClientRules::testActiveOpacityForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4355,7 +4355,7 @@ void TestShellClientRules::testActiveOpacityForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4397,7 +4397,7 @@ void TestShellClientRules::testInactiveOpacityDontAffect()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4436,7 +4436,7 @@ void TestShellClientRules::testInactiveOpacityForce()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
@@ -4476,7 +4476,7 @@ void TestShellClientRules::testInactiveOpacityForceTemporarily()
     workspace()->slotReconfigure();
 
     // Create the test client.
-    QFETCH(Test::ShellSurfaceType, type);
+    QFETCH(Test::XdgShellSurfaceType, type);
     ShellClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;

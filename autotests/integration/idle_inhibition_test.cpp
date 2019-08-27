@@ -84,12 +84,11 @@ void TestIdleInhibition::cleanup()
 
 void TestIdleInhibition::testInhibit_data()
 {
-    QTest::addColumn<Test::ShellSurfaceType>("type");
+    QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("wlShell") << Test::ShellSurfaceType::WlShell;
-    QTest::newRow("xdgShellV5") << Test::ShellSurfaceType::XdgShellV5;
-    QTest::newRow("xdgShellV6") << Test::ShellSurfaceType::XdgShellV6;
-    QTest::newRow("xdgWmBase")  << Test::ShellSurfaceType::XdgShellStable;
+    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
+    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
+    QTest::newRow("xdgWmBase")  << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
 void TestIdleInhibition::testInhibit()
@@ -102,8 +101,8 @@ void TestIdleInhibition::testInhibit()
 
     // now create window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::ShellSurfaceType, type);
-    QScopedPointer<QObject> shellSurface(Test::createShellSurface(type, surface.data()));
+    QFETCH(Test::XdgShellSurfaceType, type);
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
 
     // now create inhibition on window
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
@@ -127,9 +126,6 @@ void TestIdleInhibition::testInhibit()
     QVERIFY(idle->isInhibited());
 
     shellSurface.reset();
-    if (type == Test::ShellSurfaceType::WlShell) {
-        surface.reset();
-    }
     QVERIFY(Test::waitForWindowDestroyed(c));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);

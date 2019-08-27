@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -93,7 +92,7 @@ void TestDontCrashUseractionsMenu::testShowHideShowUseractionsMenu()
 {
     // this test creates the condition of BUG 382063
     QScopedPointer<Surface> surface1(Test::createSurface());
-    QScopedPointer<QObject> shellSurface1(Test::createShellSurface(Test::ShellSurfaceType::WlShell, surface1.data()));
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
     auto client = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 

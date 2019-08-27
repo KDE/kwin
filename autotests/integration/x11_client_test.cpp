@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/shell.h>
 
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
@@ -199,7 +198,7 @@ void X11ClientTest::testFullscreenLayerWithActiveWaylandWindow()
 
     // now let's open a Wayland window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto waylandClient = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(waylandClient);
     QVERIFY(waylandClient->isActive());
@@ -310,7 +309,7 @@ void X11ClientTest::testFocusInWithWaylandLastActiveWindow()
 
     // create Wayland window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto waylandClient = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(waylandClient);
     QVERIFY(waylandClient->isActive());
@@ -378,7 +377,7 @@ void X11ClientTest::testX11WindowId()
 
     // activate a wayland window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<ShellSurface> shellSurface(Test::createShellSurface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto waylandClient = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(waylandClient);
     QVERIFY(waylandClient->isActive());
