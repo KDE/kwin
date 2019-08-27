@@ -125,16 +125,6 @@ public:
         return m_failed;
     }
     /**
-     * @brief Whether VSync blocks execution until the screen is in the retrace
-     *
-     * Case for waitVideoSync and non triple buffering buffer swaps (triple buffering support
-     * has been removed).
-     *
-     */
-    bool blocksForRetrace() const {
-        return m_blocksForRetrace;
-    }
-    /**
      * @brief Whether the backend uses direct rendering.
      *
      * Some OpenGLScene modes require direct rendering. E.g. the OpenGL 2 should not be used
@@ -203,16 +193,6 @@ protected:
      */
     void setFailed(const QString &reason);
     /**
-     * @brief Sets whether the VSync iplementation blocks
-     *
-     * Should be called by the concrete subclass once it is determined how VSync works.
-     * If the subclass does not call this method, the backend defaults to @c false.
-     * @param enabled @c true if VSync blocks, @c false otherwise.
-     */
-    void setBlocksForRetrace(bool enabled) {
-        m_blocksForRetrace = enabled;
-    }
-    /**
      * @brief Sets whether the OpenGL context is direct.
      *
      * Should be called by the concrete subclass once it is determined whether the OpenGL context is
@@ -264,10 +244,6 @@ protected:
     }
 
 private:
-    /**
-     * @brief Whether present() will block execution until the next vertical retrace @c false.
-     */
-    bool m_blocksForRetrace;
     /**
      * @brief Whether direct rendering is used, defaults to @c false.
      */

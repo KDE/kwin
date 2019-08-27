@@ -145,7 +145,6 @@ public:
     enum ImageFilterType { ImageFilterFast, ImageFilterGood };
     // there's nothing to paint (adjust time_diff later)
     virtual void idle();
-    virtual bool blocksForRetrace() const;
     virtual OverlayWindow* overlayWindow() const = 0;
 
     virtual bool makeOpenGLContextCurrent();
