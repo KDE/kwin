@@ -127,9 +127,6 @@ GlxBackend::GlxBackend(Display *display)
      QOpenGLContext::supportsThreadedOpenGL();
 }
 
-static bool gs_tripleBufferUndetected = true;
-static bool gs_tripleBufferNeedsDetection = false;
-
 GlxBackend::~GlxBackend()
 {
     if (isFailed()) {
@@ -140,9 +137,6 @@ GlxBackend::~GlxBackend()
     cleanupGL();
     doneCurrent();
     EffectQuickView::setShareContext(nullptr);
-
-    gs_tripleBufferUndetected = true;
-    gs_tripleBufferNeedsDetection = false;
 
     if (ctx)
         glXDestroyContext(display(), ctx);
@@ -242,19 +236,11 @@ void GlxBackend::init()
     setSyncsToVBlank(false);
     setBlocksForRetrace(false);
     haveWaitSync = false;
-    gs_tripleBufferNeedsDetection = false;
-    m_swapProfiler.init();
     const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
     if (wantSync && glXIsDirect(display(), ctx)) {
         if (haveSwapInterval) { // glXSwapInterval is preferred being more reliable
             setSwapInterval(1);
             setSyncsToVBlank(true);
-            const QByteArray tripleBuffer = qgetenv("KWIN_TRIPLE_BUFFER");
-            if (!tripleBuffer.isEmpty()) {
-                setBlocksForRetrace(qstrcmp(tripleBuffer, "0") == 0);
-                gs_tripleBufferUndetected = false;
-            }
-            gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
         } else if (hasExtension(QByteArrayLiteral("GLX_SGI_video_sync"))) {
             unsigned int sync;
             if (glXGetVideoSyncSGI(&sync) == 0 && glXWaitVideoSyncSGI(1, 0, &sync) == 0) {
@@ -736,18 +722,7 @@ void GlxBackend::present()
             Compositor::self()->aboutToSwapBuffers();
 
         if (haveSwapInterval) {
-            if (gs_tripleBufferNeedsDetection) {
-                glXWaitGL();
-                m_swapProfiler.begin();
-            }
             glXSwapBuffers(display(), glxWindow);
-            if (gs_tripleBufferNeedsDetection) {
-                glXWaitGL();
-                if (char result = m_swapProfiler.end()) {
-                    gs_tripleBufferUndetected = gs_tripleBufferNeedsDetection = false;
-                    setBlocksForRetrace(result == 'd');
-                }
-            }
         } else {
             waitSync();
             glXSwapBuffers(display(), glxWindow);
@@ -797,15 +772,6 @@ SceneOpenGLTexturePrivate *GlxBackend::createBackendTexture(SceneOpenGLTexture *
 QRegion GlxBackend::prepareRenderingFrame()
 {
     QRegion repaint;
-
-    if (gs_tripleBufferNeedsDetection) {
-        // the composite timer floors the repaint frequency. This can pollute our triple buffering
-        // detection because the glXSwapBuffers call for the new frame has to wait until the pending
-        // one scanned out.
-        // So we compensate for that by waiting an extra milisecond to give the driver the chance to
-        // fllush the buffer queue
-        usleep(1000);
-    }
 
     present();
 

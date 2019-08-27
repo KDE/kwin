@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLX_BACKEND_H
 #include "backend.h"
 #include "texture.h"
-#include "swap_profiler.h"
 #include "x11eventfilter.h"
 
 #include <xcb/glx.h>
@@ -119,7 +118,6 @@ private:
     bool haveSwapInterval = false;
     bool haveWaitSync = false;
     Display *m_x11Display;
-    SwapProfiler m_swapProfiler;
     friend class GlxTexture;
 };
 
