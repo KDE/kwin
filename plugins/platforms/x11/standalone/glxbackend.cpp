@@ -212,7 +212,6 @@ void GlxBackend::init()
     m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
     m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
-    m_haveSGISwapControl    = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
     // only enable Intel swap event if env variable is set, see BUG 342582
     m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
                                 && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1");
@@ -222,7 +221,7 @@ void GlxBackend::init()
         glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
     }
 
-    haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
+    haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl;
 
     setSupportsBufferAge(false);
 
@@ -234,23 +233,15 @@ void GlxBackend::init()
     }
 
     setSyncsToVBlank(false);
-    setBlocksForRetrace(false);
-    haveWaitSync = false;
+    setBlocksForRetrace(true);
     const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
     if (wantSync && glXIsDirect(display(), ctx)) {
         if (haveSwapInterval) { // glXSwapInterval is preferred being more reliable
             setSwapInterval(1);
             setSyncsToVBlank(true);
-        } else if (hasExtension(QByteArrayLiteral("GLX_SGI_video_sync"))) {
-            unsigned int sync;
-            if (glXGetVideoSyncSGI(&sync) == 0 && glXWaitVideoSyncSGI(1, 0, &sync) == 0) {
-                setSyncsToVBlank(true);
-                setBlocksForRetrace(true);
-                haveWaitSync = true;
-            } else
-                qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";
-        } else
-            qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! neither glSwapInterval nor glXWaitVideoSync are supported";
+        } else {
+            qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! glSwapInterval is not supported";
+        }
     } else {
         // disable v-sync (if possible)
         setSwapInterval(0);
@@ -687,25 +678,6 @@ void GlxBackend::setSwapInterval(int interval)
         glXSwapIntervalEXT(display(), glxWindow, interval);
     else if (m_haveMESASwapControl)
         glXSwapIntervalMESA(interval);
-    else if (m_haveSGISwapControl)
-        glXSwapIntervalSGI(interval);
-}
-
-void GlxBackend::waitSync()
-{
-    // NOTE that vsync has no effect with indirect rendering
-    if (haveWaitSync) {
-        uint sync;
-#if 0
-        // TODO: why precisely is this important?
-        // the sync counter /can/ perform multiple steps during glXGetVideoSync & glXWaitVideoSync
-        // but this only leads to waiting for two frames??!?
-        glXGetVideoSync(&sync);
-        glXWaitVideoSync(2, (sync + 1) % 2, &sync);
-#else
-        glXWaitVideoSyncSGI(1, 0, &sync);
-#endif
-    }
 }
 
 void GlxBackend::present()
@@ -724,7 +696,6 @@ void GlxBackend::present()
         if (haveSwapInterval) {
             glXSwapBuffers(display(), glxWindow);
         } else {
-            waitSync();
             glXSwapBuffers(display(), glxWindow);
         }
         if (supportsBufferAge()) {
