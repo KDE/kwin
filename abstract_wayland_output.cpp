@@ -39,9 +39,9 @@ AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
 
 AbstractWaylandOutput::~AbstractWaylandOutput()
 {
-    delete m_waylandOutputDevice.data();
     delete m_xdgOutput.data();
     delete m_waylandOutput.data();
+    delete m_waylandOutputDevice.data();
 }
 
 QString AbstractWaylandOutput::name() const
@@ -73,11 +73,10 @@ int AbstractWaylandOutput::refreshRate() const
 void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
 {
     m_globalPos = pos;
+    m_waylandOutputDevice->setGlobalPosition(pos);
+
     if (m_waylandOutput) {
         m_waylandOutput->setGlobalPosition(pos);
-    }
-    if (m_waylandOutputDevice) {
-        m_waylandOutputDevice->setGlobalPosition(pos);
     }
     if (m_xdgOutput) {
         m_xdgOutput->setLogicalPosition(pos);
@@ -88,6 +87,8 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
 void AbstractWaylandOutput::setScale(qreal scale)
 {
     m_scale = scale;
+    m_waylandOutputDevice->setScaleF(scale);
+
     if (m_waylandOutput) {
         // this is the scale that clients will ideally use for their buffers
         // this has to be an int which is fine
@@ -96,9 +97,6 @@ void AbstractWaylandOutput::setScale(qreal scale)
         // or maybe even set this to 3 when we're scaling to 1.5
         // don't treat this like it's chosen deliberately
         m_waylandOutput->setScale(std::ceil(scale));
-    }
-    if (m_waylandOutputDevice) {
-        m_waylandOutputDevice->setScaleF(scale);
     }
     if (m_xdgOutput) {
         m_xdgOutput->setLogicalSize(pixelSize() / m_scale);
@@ -109,7 +107,6 @@ void AbstractWaylandOutput::setScale(qreal scale)
 void AbstractWaylandOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
 {
     qCDebug(KWIN_CORE) << "Set changes in AbstractWaylandOutput.";
-    Q_ASSERT(!m_waylandOutputDevice.isNull());
     bool emitModeChanged = false;
 
     //enabledChanged is handled by plugin code
@@ -181,8 +178,6 @@ void AbstractWaylandOutput::createXdgOutput()
 
 void AbstractWaylandOutput::initWaylandOutput()
 {
-    Q_ASSERT(m_waylandOutputDevice);
-
     if (!m_waylandOutput.isNull()) {
         delete m_waylandOutput.data();
         m_waylandOutput.clear();
@@ -230,10 +225,7 @@ void AbstractWaylandOutput::initWaylandOutputDevice(const QString &model,
                                              const QByteArray &uuid,
                                              const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes)
 {
-    if (!m_waylandOutputDevice.isNull()) {
-        delete m_waylandOutputDevice.data();
-        m_waylandOutputDevice.clear();
-    }
+    Q_ASSERT(m_waylandOutputDevice.isNull());
     m_waylandOutputDevice = waylandServer()->display()->createOutputDevice();
     m_waylandOutputDevice->setUuid(uuid);
 
