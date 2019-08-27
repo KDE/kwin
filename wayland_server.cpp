@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/blur_interface.h>
-#include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/outputmanagement_interface.h>
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
@@ -312,9 +311,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
             }
         }
     );
-    m_shell = m_display->createShell(m_display);
-    m_shell->create();
-    connect(m_shell, &ShellInterface::surfaceCreated, this, &WaylandServer::createSurface<ShellSurfaceInterface>);
 
     m_xdgShell5 = m_display->createXdgShell(XdgShellInterfaceVersion::UnstableV5, m_display);
     m_xdgShell5->create();

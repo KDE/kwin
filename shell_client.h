@@ -29,7 +29,6 @@ namespace KWayland
 {
 namespace Server
 {
-class ShellSurfaceInterface;
 class ServerSideDecorationInterface;
 class ServerSideDecorationPaletteInterface;
 class AppMenuInterface;
@@ -53,7 +52,6 @@ class KWIN_EXPORT ShellClient : public AbstractClient
 {
     Q_OBJECT
 public:
-    ShellClient(KWayland::Server::ShellSurfaceInterface *surface);
     ShellClient(KWayland::Server::XdgShellSurfaceInterface *surface);
     ShellClient(KWayland::Server::XdgShellPopupInterface *surface);
     ~ShellClient() override;
@@ -171,7 +169,6 @@ protected:
         m_geomMaximizeRestore = geo;
     }
     void doResizeSync() override;
-    bool isWaitingForMoveResizeSync() const override;
     bool acceptsFocus() const override;
     void doMinimize() override;
     void updateCaption() override;
@@ -213,7 +210,6 @@ private:
 
     QSize toWindowGeometry(const QSize &geometry) const;
 
-    KWayland::Server::ShellSurfaceInterface *m_shellSurface;
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellSurface;
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
 

@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
@@ -67,20 +66,8 @@ using namespace KWayland::Server;
 namespace KWin
 {
 
-ShellClient::ShellClient(ShellSurfaceInterface *surface)
-    : AbstractClient()
-    , m_shellSurface(surface)
-    , m_xdgShellSurface(nullptr)
-    , m_xdgShellPopup(nullptr)
-{
-    setSurface(surface->surface());
-    init();
-    m_isInitialized = true;
-}
-
 ShellClient::ShellClient(XdgShellSurfaceInterface *surface)
     : AbstractClient()
-    , m_shellSurface(nullptr)
     , m_xdgShellSurface(surface)
     , m_xdgShellPopup(nullptr)
 {
@@ -92,7 +79,6 @@ ShellClient::ShellClient(XdgShellSurfaceInterface *surface)
 
 ShellClient::ShellClient(XdgShellPopupInterface *surface)
     : AbstractClient()
-    , m_shellSurface(nullptr)
     , m_xdgShellSurface(nullptr)
     , m_xdgShellPopup(surface)
 {
@@ -186,11 +172,6 @@ void ShellClient::initSurface(T *shellSurface)
     );
     connect(shellSurface, &T::maximizedChanged, this,
         [this] (bool maximized) {
-            if (m_shellSurface && isFullScreen()) {
-                // ignore for wl_shell - there it is mutual exclusive and messes with the geometry
-                return;
-            }
-
             // If the maximized state of the client hasn't been changed due to a window
             // rule or because the requested state is the same as the current, then the
             // compositor still has to send a configure event.
@@ -216,16 +197,7 @@ void ShellClient::init()
     updateIcon();
     SurfaceInterface *s = surface();
     Q_ASSERT(s);
-    if (s->buffer()) {
-        setReadyForPainting();
-        if (shouldExposeToWindowManagement()) {
-            setupWindowManagementInterface();
-        }
-        m_unmapped = false;
-        m_clientSize = s->size();
-    } else {
-        ready_for_painting = false;
-    }
+    ready_for_painting = false;
     doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
     if (waylandServer()->inputMethodConnection() == s->client()) {
         m_windowType = NET::OnScreenDisplay;
@@ -240,15 +212,7 @@ void ShellClient::init()
     connect(s, &SurfaceInterface::unmapped, this, &ShellClient::unmap);
     connect(s, &SurfaceInterface::unbound, this, &ShellClient::destroyClient);
     connect(s, &SurfaceInterface::destroyed, this, &ShellClient::destroyClient);
-    if (m_shellSurface) {
-        initSurface(m_shellSurface);
-        auto setPopup = [this] {
-            // TODO: verify grab serial
-            m_hasPopupGrab = m_shellSurface->isPopup();
-        };
-        connect(m_shellSurface, &ShellSurfaceInterface::popupChanged, this, setPopup);
-        setPopup();
-    } else if (m_xdgShellSurface) {
+    if (m_xdgShellSurface) {
         initSurface(m_xdgShellSurface);
 
         auto global = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
@@ -447,7 +411,6 @@ void ShellClient::destroyClient()
 
     deleted->unrefWindow();
 
-    m_shellSurface = nullptr;
     m_xdgShellSurface = nullptr;
     m_xdgShellPopup = nullptr;
     deleteClient(this);
@@ -666,7 +629,7 @@ void ShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     const QSize requestedClientSize = newGeometry.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
     const QSize requestedWindowGeometrySize = toWindowGeometry(newGeometry.size());
 
-    if (requestedClientSize == m_clientSize && !isWaitingForMoveResizeSync() &&
+    if (requestedClientSize == m_clientSize &&
         (m_requestedClientSize.isEmpty() || requestedWindowGeometrySize == m_requestedClientSize)) {
         // size didn't change, and we don't need to explicitly request a new size
         doSetGeometry(newGeometry);
@@ -1013,13 +976,7 @@ void ShellClient::setFullScreen(bool set, bool user)
     if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
     } else {
-        // in shell surface, maximise mode and fullscreen are exclusive
-        // fullscreen->toplevel should restore the state we had before maximising
-        if (m_shellSurface && m_maximizeMode == MaximizeMode::MaximizeFull) {
-            m_geomFsRestore = m_geomMaximizeRestore;
-        } else {
-            m_geomFsRestore = geometry();
-        }
+        m_geomFsRestore = geometry();
     }
     m_fullScreen = set;
 
@@ -1140,12 +1097,6 @@ bool ShellClient::acceptsFocus() const
         // an unmapped window does not accept focus
         return false;
     }
-    if (m_shellSurface) {
-        if (m_shellSurface->isPopup()) {
-            return false;
-        }
-        return m_shellSurface->acceptsKeyboardFocus();
-    }
     if (m_xdgShellSurface) {
         // TODO: proper
         return true;
@@ -1190,9 +1141,6 @@ void ShellClient::requestGeometry(const QRect &rect)
 
     quint64 serialId = 0;
 
-    if (m_shellSurface && !size.isEmpty()) {
-        m_shellSurface->requestSize(size);
-    }
     if (m_xdgShellSurface) {
         serialId = m_xdgShellSurface->configure(xdgSurfaceStates(), size);
     }
@@ -1256,9 +1204,6 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
     }
     if (h > area.height()) {
         h = area.height();
-    }
-    if (m_shellSurface) {
-        m_shellSurface->requestSize(QSize(w, h));
     }
     if (m_xdgShellSurface) {
         m_xdgShellSurface->configure(xdgSurfaceStates(), QSize(w, h));
@@ -1526,9 +1471,6 @@ bool ShellClient::isTransient() const
 void ShellClient::setTransient()
 {
     SurfaceInterface *s = nullptr;
-    if (m_shellSurface) {
-        s = m_shellSurface->transientFor().data();
-    }
     if (m_xdgShellSurface) {
         if (auto transient = m_xdgShellSurface->transientFor().data()) {
             s = transient->surface();
@@ -1555,8 +1497,7 @@ void ShellClient::setTransient()
 
 bool ShellClient::hasTransientPlacementHint() const
 {
-    return isTransient() && transientFor() != nullptr &&
-            (m_shellSurface || m_xdgShellPopup);
+    return isTransient() && transientFor() && m_xdgShellPopup;
 }
 
 QRect ShellClient::transientPlacement(const QRect &bounds) const
@@ -1589,12 +1530,7 @@ QRect ShellClient::transientPlacement(const QRect &bounds) const
         return true;
     };
 
-    if (m_shellSurface) {
-        anchorRect = QRect(m_shellSurface->transientOffset(), QSize(1,1));
-        anchorEdge = Qt::TopEdge | Qt::LeftEdge;
-        gravity = Qt::BottomEdge | Qt::RightEdge; //our single point represents the top left of the popup
-        constraintAdjustments = (PositionerConstraint::SlideX | PositionerConstraint::SlideY);
-    } else if (m_xdgShellPopup) {
+    if (m_xdgShellPopup) {
         anchorRect = m_xdgShellPopup->anchorRect();
         anchorEdge = m_xdgShellPopup->anchorEdge();
         gravity = m_xdgShellPopup->gravity();
@@ -1736,14 +1672,6 @@ QPoint ShellClient::popupOffset(const QRect &anchorRect, const Qt::Edges anchorE
     return anchorPoint + popupPosAdjust;
 }
 
-bool ShellClient::isWaitingForMoveResizeSync() const
-{
-    if (m_shellSurface) {
-        return !m_pendingConfigureRequests.isEmpty();
-    }
-    return false;
-}
-
 void ShellClient::doResizeSync()
 {
     requestGeometry(moveResizeGeometry());
@@ -1817,11 +1745,6 @@ bool ShellClient::shouldExposeToWindowManagement()
     }
     if (m_xdgShellPopup) {
         return false;
-    }
-    if (m_shellSurface) {
-        if (m_shellSurface->isTransient() && !m_shellSurface->acceptsKeyboardFocus()) {
-            return false;
-        }
     }
     return true;
 }
@@ -1904,9 +1827,6 @@ bool ShellClient::hasPopupGrab() const
 
 void ShellClient::popupDone()
 {
-    if (m_shellSurface) {
-        m_shellSurface->popupDone();
-    }
     if (m_xdgShellPopup) {
         m_xdgShellPopup->popupDone();
     }
@@ -1932,13 +1852,11 @@ void ShellClient::updateWindowMargins()
 
     if (m_xdgShellSurface) {
         windowGeometry = m_xdgShellSurface->windowGeometry();
-    } else if (m_xdgShellPopup) {
+    } else {
         windowGeometry = m_xdgShellPopup->windowGeometry();
         if (!clientSize.isValid()) {
             clientSize = m_xdgShellPopup->initialSize();
         }
-    } else {
-        return;
     }
 
     if (windowGeometry.isEmpty() ||
@@ -1957,9 +1875,6 @@ bool ShellClient::isPopupWindow() const
 {
     if (Toplevel::isPopupWindow()) {
         return true;
-    }
-    if (m_shellSurface != nullptr) {
-        return m_shellSurface->isPopup();
     }
     if (m_xdgShellPopup != nullptr) {
         return true;

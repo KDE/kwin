@@ -49,7 +49,6 @@ class CompositorInterface;
 class Display;
 class DataDeviceInterface;
 class IdleInterface;
-class ShellInterface;
 class SeatInterface;
 class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
@@ -106,9 +105,6 @@ public:
     }
     KWayland::Server::DataDeviceManagerInterface *dataDeviceManager() {
         return m_dataDeviceManager;
-    }
-    KWayland::Server::ShellInterface *shell() {
-        return m_shell;
     }
     KWayland::Server::PlasmaVirtualDesktopManagementInterface *virtualDesktopManagement() {
         return m_virtualDesktopManagement;
@@ -238,7 +234,6 @@ private:
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManager = nullptr;
-    KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::XdgShellInterface *m_xdgShell5 = nullptr;
     KWayland::Server::XdgShellInterface *m_xdgShell6 = nullptr;
     KWayland::Server::XdgShellInterface *m_xdgShell = nullptr;
