@@ -83,7 +83,6 @@ DrmBackend::DrmBackend(QObject *parent)
     }
 #endif
     setSupportsGammaControl(true);
-    handleOutputs();
 }
 
 DrmBackend::~DrmBackend()

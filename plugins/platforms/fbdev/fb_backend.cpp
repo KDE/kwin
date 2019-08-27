@@ -51,7 +51,6 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
 FramebufferBackend::FramebufferBackend(QObject *parent)
     : Platform(parent)
 {
-    handleOutputs();
 }
 
 FramebufferBackend::~FramebufferBackend()

@@ -321,10 +321,6 @@ public:
     bool isCursorHidden() const {
         return m_hideCursorCounter > 0;
     }
-
-    bool handlesOutputs() const {
-        return m_handlesOutputs;
-    }
     bool isReady() const {
         return m_ready;
     }
@@ -490,9 +486,6 @@ Q_SIGNALS:
 protected:
     explicit Platform(QObject *parent = nullptr);
     void setSoftWareCursor(bool set);
-    void handleOutputs() {
-        m_handlesOutputs = true;
-    }
     void repaint(const QRect &rect);
     void setReady(bool ready);
     QSize initialWindowSize() const {
@@ -538,7 +531,6 @@ private:
     struct {
         QRect lastRenderedGeometry;
     } m_cursor;
-    bool m_handlesOutputs = false;
     bool m_ready = false;
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;

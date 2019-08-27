@@ -97,8 +97,6 @@ WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
 {
     qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
-
-    connect(kwinApp(), &Application::screensCreated, this, &WaylandServer::initOutputs);
 }
 
 WaylandServer::~WaylandServer()
@@ -539,47 +537,6 @@ void WaylandServer::initScreenLocker()
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
     emit initialized();
-}
-
-void WaylandServer::initOutputs()
-{
-    if (kwinApp()->platform()->handlesOutputs()) {
-        return;
-    }
-    syncOutputsToWayland();
-    connect(screens(), &Screens::changed, this,
-        [this] {
-            // when screens change we need to sync this to Wayland.
-            // Unfortunately we don't have much information and cannot properly match a KWin screen
-            // to a Wayland screen.
-            // Thus we just recreate all outputs and delete the old ones
-            const auto outputs = m_display->outputs();
-            syncOutputsToWayland();
-            qDeleteAll(outputs);
-        }
-    );
-}
-
-void WaylandServer::syncOutputsToWayland()
-{
-    Screens *s = screens();
-    Q_ASSERT(s);
-    for (int i = 0; i < s->count(); ++i) {
-        OutputInterface *output = m_display->createOutput(m_display);
-        auto xdgOutput = xdgOutputManager()->createXdgOutput(output, output);
-
-        output->setScale(s->scale(i));
-        const QRect &geo = s->geometry(i);
-        output->setGlobalPosition(geo.topLeft());
-        output->setPhysicalSize(s->physicalSize(i).toSize());
-        output->addMode(geo.size());
-
-        xdgOutput->setLogicalPosition(geo.topLeft());
-        xdgOutput->setLogicalSize(geo.size());
-        xdgOutput->done();
-
-        output->create();
-    }
 }
 
 WaylandServer::SocketPairConnection WaylandServer::createConnection()

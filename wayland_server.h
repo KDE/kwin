@@ -233,8 +233,6 @@ Q_SIGNALS:
 
 private:
     void shellClientShown(Toplevel *t);
-    void initOutputs();
-    void syncOutputsToWayland();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
     void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);

@@ -152,7 +152,6 @@ HwcomposerBackend::HwcomposerBackend(QObject *parent)
                                               SLOT(screenBrightnessChanged(int)))) {
         qCWarning(KWIN_HWCOMPOSER) << "Failed to connect to brightness control";
     }
-    handleOutputs();
 }
 
 HwcomposerBackend::~HwcomposerBackend()
