@@ -54,6 +54,7 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
 {
     setSupportsPointerWarping(true);
     connect(this, &X11WindowedBackend::sizeChanged, this, &X11WindowedBackend::screenSizeChanged);
+    handleOutputs();
 }
 
 X11WindowedBackend::~X11WindowedBackend()
@@ -153,9 +154,7 @@ void X11WindowedBackend::createOutputs()
     int logicalWidthSum = 0;
     for (int i = 0; i < initialOutputCount(); ++i) {
         auto *output = new X11WindowedOutput(this);
-        output->setScale(initialOutputScale());
-        output->setGeometry(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
-        output->init();
+        output->init(QPoint(logicalWidthSum, 0), QSize(pixelWidth, pixelHeight));
 
         m_protocols = protocolsAtom;
         m_deleteWindowProtocol = deleteWindowAtom;

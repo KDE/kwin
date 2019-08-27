@@ -45,7 +45,7 @@ public:
     explicit X11WindowedOutput(X11WindowedBackend *backend);
     ~X11WindowedOutput() override;
 
-    void init();
+    void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
     xcb_window_t window() const {
         return m_window;

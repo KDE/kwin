@@ -47,8 +47,20 @@ X11WindowedOutput::~X11WindowedOutput()
     xcb_flush(m_backend->connection());
 }
 
-void X11WindowedOutput::init()
+void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
+    KWayland::Server::OutputDeviceInterface::Mode mode;
+    mode.id = 0;
+    mode.size = pixelSize;
+    mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
+    mode.refreshRate = 60000;  // TODO: get refresh rate via randr
+    AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
+                                                   "UUID_TODO", { mode });
+
+    setEnabled(true);
+    setGeometry(logicalPosition, pixelSize);
+    setScale(m_backend->initialOutputScale());
+
     uint32_t mask = XCB_CW_BACK_PIXEL | XCB_CW_EVENT_MASK;
     const uint32_t values[] = {
         m_backend->screen()->black_pixel,
@@ -67,7 +79,7 @@ void X11WindowedOutput::init()
                       m_window,
                       m_backend->screen()->root,
                       0, 0,
-                      pixelSize().width(), pixelSize().height(),
+                      pixelSize.width(), pixelSize.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT,
                       mask, values);
 
