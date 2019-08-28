@@ -337,6 +337,7 @@ void Decoration::init()
         if (usingGL) {
             // first create the context
             QSurfaceFormat format;
+            format.setSwapBehavior(QSurfaceFormat::SingleBuffer);
             format.setDepthBufferSize(16);
             format.setStencilBufferSize(8);
             m_context.reset(new QOpenGLContext);
