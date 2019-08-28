@@ -607,37 +607,37 @@ void Decoration::installTitleItem(QQuickItem *item)
 
 void Decoration::updateBuffer()
 {
-        Q_ASSERT(m_view);
-        const bool usingGL = m_view->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL;
-        if (usingGL) {
-            Q_ASSERT(m_view->size().isValid());
-            if (!m_context->makeCurrent(m_offscreenSurface.data())) {
+    Q_ASSERT(m_view);
+    const bool usingGL = m_view->rendererInterface()->graphicsApi() == QSGRendererInterface::OpenGL;
+    if (usingGL) {
+        Q_ASSERT(m_view->size().isValid());
+        if (!m_context->makeCurrent(m_offscreenSurface.data())) {
+            return;
+        }
+        if (m_fbo.isNull() || m_fbo->size() != m_view->size()) {
+            m_fbo.reset(new QOpenGLFramebufferObject(m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
+            if (!m_fbo->isValid()) {
+                qCWarning(AURORAE) << "Creating FBO as render target failed";
+                m_fbo.reset();
                 return;
             }
-            if (m_fbo.isNull() || m_fbo->size() != m_view->size()) {
-                m_fbo.reset(new QOpenGLFramebufferObject(m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
-                if (!m_fbo->isValid()) {
-                    qCWarning(AURORAE) << "Creating FBO as render target failed";
-                    m_fbo.reset();
-                    return;
-                }
-            }
-            m_view->setRenderTarget(m_fbo.data());
-            m_view->resetOpenGLState();
         }
+        m_view->setRenderTarget(m_fbo.data());
+        m_view->resetOpenGLState();
+    }
 
-        m_buffer = m_renderControl->grab();
+    m_buffer = m_renderControl->grab();
 
-        m_contentRect = QRect(QPoint(0, 0), m_buffer.size());
-        if (m_padding &&
-                (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
-                !client().data()->isMaximized()) {
-            m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
-        }
-        updateShadow();
+    m_contentRect = QRect(QPoint(0, 0), m_buffer.size());
+    if (m_padding &&
+            (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
+            !client().data()->isMaximized()) {
+        m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
+    }
+    updateShadow();
 
-        QOpenGLFramebufferObject::bindDefault();
-        update();
+    QOpenGLFramebufferObject::bindDefault();
+    update();
 }
 
 KDecoration2::DecoratedClient *Decoration::clientPointer() const
