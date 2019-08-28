@@ -522,9 +522,8 @@ HwcomposerOutput::HwcomposerOutput(hwc_composer_device_1_t *device)
     mode.flags = OutputDeviceInterface::ModeFlag::Current | OutputDeviceInterface::ModeFlag::Preferred;
     mode.refreshRate = (attr_values[4] == 0) ? 60000 : 10E11/attr_values[4];
 
-    initWaylandOutputDevice(QString(), QString(), QByteArray(), physicalSize.toSize(), {mode});
+    initInterfaces(QString(), QString(), QByteArray(), physicalSize.toSize(), {mode});
     setInternal(true);
-    setEnabled(true);
     setDpmsSupported(true);
 
     const auto outputGroup = kwinApp()->config()->group("HWComposerOutputs").group("0");

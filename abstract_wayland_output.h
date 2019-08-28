@@ -61,9 +61,6 @@ public:
 
     QString name() const override;
     QByteArray uuid() const override;
-    bool isEnabled() const {
-        return !m_waylandOutput.isNull();
-    }
 
     QSize pixelSize() const;
     qreal scale() const override;
@@ -107,11 +104,9 @@ Q_SIGNALS:
     void modeChanged();
 
 protected:
-    void initWaylandOutputDevice(const QString &model,
-                                 const QString &manufacturer,
-                                 const QByteArray &uuid,
-                                 const QSize &physicalSize,
-                                 const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
+    void initInterfaces(const QString &model, const QString &manufacturer,
+                        const QByteArray &uuid, const QSize &physicalSize,
+                        const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
 
     QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
         return m_xdgOutput;
@@ -152,6 +147,7 @@ protected:
 private:
     void createWaylandOutput();
     void createXdgOutput();
+    bool isEnabled() const;
 
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;

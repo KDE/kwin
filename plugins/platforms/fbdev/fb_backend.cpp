@@ -44,8 +44,7 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
     mode.size = pixelSize;
     mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO: get actual refresh rate of fb device?
-    AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
-                                                   "UUID_TODO", physicalSize, { mode });
+    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode });
 }
 
 FramebufferBackend::FramebufferBackend(QObject *parent)
@@ -149,7 +148,6 @@ bool FramebufferBackend::handleScreenInfo()
 
     auto *output = new FramebufferOutput(this);
     output->init(QSize(varinfo.xres, varinfo.yres), QSize(varinfo.width, varinfo.height));
-    output->setEnabled(true);
     m_outputs << output;
 
     m_id = QByteArray(fixinfo.id);

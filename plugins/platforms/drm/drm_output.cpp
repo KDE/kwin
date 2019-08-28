@@ -268,8 +268,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     }
 
     initOutputDevice(connector);
-
-    setEnabled(true);
+    updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
     return true;
 }
 
@@ -343,7 +342,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         physicalSize = overwriteSize;
     }
 
-    initWaylandOutputDevice(model, manufacturer, m_uuid, physicalSize, modes);
+    initInterfaces(model, manufacturer, m_uuid, physicalSize, modes);
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const

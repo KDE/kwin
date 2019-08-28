@@ -39,11 +39,8 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.size = pixelSize;
     mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO
-    AbstractWaylandOutput::initWaylandOutputDevice("model_TODO", "manufacturer_TODO",
-                                                   "UUID_TODO", pixelSize, { mode });
-    setEnabled(true);
+    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode });
     setGeometry(QRect(logicalPosition, pixelSize));
-    setScale(1.);
 }
 
 void VirtualOutput::setGeometry(const QRect &geo)
