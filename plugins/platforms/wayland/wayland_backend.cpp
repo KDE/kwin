@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
-#include <KWayland/Client/shell.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
@@ -448,7 +447,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_registry(new Registry(this))
     , m_compositor(new KWayland::Client::Compositor(this))
     , m_subCompositor(new KWayland::Client::SubCompositor(this))
-    , m_shell(new Shell(this))
     , m_shm(new ShmPool(this))
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
@@ -468,7 +466,6 @@ WaylandBackend::~WaylandBackend()
     if (m_xdgShell) {
         m_xdgShell->release();
     }
-    m_shell->release();
     m_subCompositor->release();
     m_compositor->release();
     m_registry->release();
@@ -493,11 +490,6 @@ void WaylandBackend::init()
     connect(m_registry, &Registry::subCompositorAnnounced, this,
         [this](quint32 name) {
             m_subCompositor->setup(m_registry->bindSubCompositor(name, 1));
-        }
-    );
-    connect(m_registry, &Registry::shellAnnounced, this,
-        [this](quint32 name) {
-            m_shell->setup(m_registry->bindShell(name, 1));
         }
     );
     connect(m_registry, &Registry::seatAnnounced, this,
@@ -619,9 +611,6 @@ void WaylandBackend::initConnection()
             qDeleteAll(m_outputs);
             m_outputs.clear();
 
-            if (m_shell) {
-                m_shell->destroy();
-            }
             if (m_xdgShell) {
                 m_xdgShell->destroy();
             }
@@ -698,8 +687,6 @@ void WaylandBackend::createOutputs()
 
         if (m_xdgShell && m_xdgShell->isValid()) {
             waylandOutput = new XdgShellOutput(surface, m_xdgShell, this, i+1);
-        } else if (m_shell->isValid()) {
-            waylandOutput = new ShellOutput(surface, m_shell, this);
         }
 
         if (!waylandOutput) {

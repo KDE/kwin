@@ -96,18 +96,6 @@ private:
     bool m_rendered = false;
 };
 
-class ShellOutput : public WaylandOutput
-{
-public:
-    ShellOutput(KWayland::Client::Surface *surface,
-                KWayland::Client::Shell *shell,
-                WaylandBackend *backend);
-    ~ShellOutput() override;
-
-private:
-    KWayland::Client::ShellSurface *m_shellSurface = nullptr;
-};
-
 class XdgShellOutput : public WaylandOutput
 {
 public:

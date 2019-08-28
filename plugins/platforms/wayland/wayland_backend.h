@@ -56,7 +56,6 @@ class Registry;
 class RelativePointer;
 class RelativePointerManager;
 class Seat;
-class Shell;
 class SubCompositor;
 class SubSurface;
 class Surface;
@@ -236,7 +235,6 @@ private:
     KWayland::Client::Registry *m_registry;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::SubCompositor *m_subCompositor;
-    KWayland::Client::Shell *m_shell;
     KWayland::Client::XdgShell *m_xdgShell = nullptr;
     KWayland::Client::ShmPool *m_shm;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;

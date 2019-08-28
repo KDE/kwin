@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/shell.h>
 
 #include <KWayland/Server/display.h>
 
@@ -72,19 +71,6 @@ void WaylandOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixe
     Q_UNUSED(pixelSize)
 
     setGlobalPos(logicalPosition);
-}
-
-ShellOutput::ShellOutput(Surface *surface, Shell *shell, WaylandBackend *backend)
-    : WaylandOutput(surface, backend)
-{
-    auto shellSurface = shell->createSurface(surface, this);
-    shellSurface->setToplevel();
-}
-
-ShellOutput::~ShellOutput()
-{
-    m_shellSurface->destroy();
-    delete m_shellSurface;
 }
 
 XdgShellOutput::XdgShellOutput(Surface *surface, XdgShell *xdgShell, WaylandBackend *backend, int number)
