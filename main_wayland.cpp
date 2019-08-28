@@ -312,7 +312,8 @@ static void disablePtrace()
     const QFileInfo parent(QStringLiteral("/proc/%1/exe").arg(getppid()));
     if (parent.isSymLink() &&
             (parent.symLinkTarget().endsWith(QLatin1String("/gdb")) ||
-             parent.symLinkTarget().endsWith(QLatin1String("/gdbserver")))) {
+             parent.symLinkTarget().endsWith(QLatin1String("/gdbserver")) ||
+             parent.symLinkTarget().endsWith(QLatin1String("/lldb-server")))) {
         // debugger, don't adjust
         return;
     }
