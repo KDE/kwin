@@ -61,7 +61,7 @@ public:
     };
     Drag drag;
 
-    SurfaceInterface *proxyRemoteSurface = nullptr;
+    QPointer<SurfaceInterface> proxyRemoteSurface;
 
 private:
     DataDeviceInterface *q_func() {
@@ -104,7 +104,7 @@ void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, Su
     SurfaceInterface *focusSurface = origin;
     if (proxyRemoteSurface) {
         // origin is a proxy surface
-        focusSurface = proxyRemoteSurface;
+        focusSurface = proxyRemoteSurface.data();
     }
     const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == focusSurface;
     if (!pointerGrab) {
@@ -216,7 +216,7 @@ SurfaceInterface *DataDeviceInterface::icon() const
 SurfaceInterface *DataDeviceInterface::origin() const
 {
     Q_D();
-    return d->proxyRemoteSurface ? d->proxyRemoteSurface : d->surface;
+    return d->proxyRemoteSurface ? d->proxyRemoteSurface.data() : d->surface;
 }
 
 DataSourceInterface *DataDeviceInterface::selection() const
