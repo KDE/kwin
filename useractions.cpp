@@ -1710,7 +1710,7 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
     int bestScore = 0;
 
     ToplevelList clist = stackingOrder();
-    for (ToplevelList::Iterator i = clist.begin(); i != clist.end(); ++i) {
+    for (auto i = clist.rbegin(); i != clist.rend(); ++i) {
         auto client = qobject_cast<AbstractClient*>(*i);
         if (!client) {
             continue;
