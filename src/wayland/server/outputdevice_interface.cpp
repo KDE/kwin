@@ -136,12 +136,9 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     Q_D();
     connect(this, &OutputDeviceInterface::currentModeChanged, this,
         [this, d] {
-            auto currentModeIt = std::find_if(d->modes.constBegin(), d->modes.constEnd(), [](const Mode &mode) { return mode.flags.testFlag(ModeFlag::Current); });
-            if (currentModeIt == d->modes.constEnd()) {
-                return;
-            }
+            Q_ASSERT(d->currentMode.id >= 0);
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
-                d->sendMode((*it).resource, *currentModeIt);
+                d->sendMode((*it).resource, d->currentMode);
                 d->sendDone(*it);
             }
             wl_display_flush_clients(*(d->display));
@@ -187,8 +184,9 @@ int OutputDeviceInterface::refreshRate() const
 void OutputDeviceInterface::addMode(Mode &mode)
 {
     Q_ASSERT(!isValid());
+    Q_ASSERT(mode.id >= 0);
+    Q_ASSERT(mode.size.isValid());
     Q_D();
-
 
     auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {

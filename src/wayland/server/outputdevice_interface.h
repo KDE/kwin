@@ -132,6 +132,13 @@ public:
     void setSubPixel(SubPixel subPixel);
     void setTransform(Transform transform);
     void setColorCurves(const ColorCurves &colorCurves);
+
+    /**
+     * Add an additional mode to this output device. This is only allowed before create() is called
+     * on the object.
+     *
+     * @param mode must have a valid size and non-negative id.
+     */
     void addMode(Mode &mode);
     void setCurrentMode(const int modeId);
 
