@@ -46,10 +46,8 @@ AbstractWaylandOutput::~AbstractWaylandOutput()
 
 QString AbstractWaylandOutput::name() const
 {
-    if (!m_waylandOutput) {
-        return i18n("unknown");
-    }
-    return QStringLiteral("%1 %2").arg(m_waylandOutput->manufacturer()).arg(m_waylandOutput->model());
+    return QStringLiteral("%1 %2").arg(m_waylandOutputDevice->manufacturer()).arg(
+                m_waylandOutputDevice->model());
 }
 
 QRect AbstractWaylandOutput::geometry() const
@@ -64,10 +62,7 @@ QSize AbstractWaylandOutput::physicalSize() const
 
 int AbstractWaylandOutput::refreshRate() const
 {
-    if (!m_waylandOutput) {
-        return 60000;
-    }
-    return m_waylandOutput->refreshRate();
+    return m_waylandOutputDevice->refreshRate();
 }
 
 QPoint AbstractWaylandOutput::globalPos() const
