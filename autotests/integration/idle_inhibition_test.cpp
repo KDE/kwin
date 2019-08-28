@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "platform.h"
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -58,7 +59,9 @@ void TestIdleInhibition::initTestCase()
 
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
+    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
     QVERIFY(workspaceCreatedSpy.wait());
