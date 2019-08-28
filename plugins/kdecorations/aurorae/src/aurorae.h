@@ -76,6 +76,7 @@ protected:
 private:
     void setupBorders(QQuickItem *item);
     void updateBorders();
+    void updateBuffer();
     QMouseEvent translatedMouseEvent(QMouseEvent *orig);
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
