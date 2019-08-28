@@ -109,7 +109,6 @@ Q_SIGNALS:
     void modeChanged();
 
 protected:
-    void initWaylandOutput();
     void initWaylandOutputDevice(const QString &model,
                                  const QString &manufacturer,
                                  const QByteArray &uuid,
@@ -119,7 +118,6 @@ protected:
     QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
         return m_xdgOutput;
     }
-    void createXdgOutput();
 
     QPointer<KWayland::Server::OutputDeviceInterface> waylandOutputDevice() const {
         return m_waylandOutputDevice;
@@ -154,6 +152,9 @@ protected:
     QSize orientateSize(const QSize &size) const;
 
 private:
+    void createWaylandOutput();
+    void createXdgOutput();
+
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
     QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;

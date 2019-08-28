@@ -157,7 +157,7 @@ void AbstractWaylandOutput::setEnabled(bool enable)
     }
     if (enable) {
         updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
-        initWaylandOutput();
+        createWaylandOutput();
     } else {
         updateDpms(KWayland::Server::OutputInterface::DpmsMode::Off);
         delete waylandOutput().data();
@@ -180,21 +180,18 @@ void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 
 void AbstractWaylandOutput::createXdgOutput()
 {
-    if (!m_waylandOutput || m_xdgOutput) {
-        return;
-    }
+    Q_ASSERT(!m_waylandOutput.isNull());
+    Q_ASSERT(m_xdgOutput.isNull());
+
     m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, m_waylandOutput);
     m_xdgOutput->setLogicalSize(pixelSize() / scale());
     m_xdgOutput->setLogicalPosition(globalPos());
     m_xdgOutput->done();
 }
 
-void AbstractWaylandOutput::initWaylandOutput()
+void AbstractWaylandOutput::createWaylandOutput()
 {
-    if (!m_waylandOutput.isNull()) {
-        delete m_waylandOutput.data();
-        m_waylandOutput.clear();
-    }
+    Q_ASSERT(m_waylandOutput.isNull());
     m_waylandOutput = waylandServer()->display()->createOutput();
     createXdgOutput();
 
