@@ -235,7 +235,6 @@ private:
     void shellClientShown(Toplevel *t);
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
-    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
     template <class T>
     void createSurface(T *surface);
     void initScreenLocker();
