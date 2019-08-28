@@ -141,6 +141,7 @@ void X11WindowedOutput::initXInputForWindow()
 void X11WindowedOutput::setGeometry(const QPoint &logicalPosition, const QSize &pixelSize)
 {
     // TODO: set mode to have updated pixelSize
+    Q_UNUSED(pixelSize);
     setGlobalPos(logicalPosition);
 }
 
