@@ -60,6 +60,7 @@ public:
     ~AbstractWaylandOutput() override;
 
     QString name() const override;
+    QByteArray uuid() const override;
     bool isEnabled() const {
         return !m_waylandOutput.isNull();
     }
@@ -88,10 +89,7 @@ public:
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
 
-    /**
-     * This sets the changes and tests them against the specific output.
-     */
-    void setChanges(KWayland::Server::OutputChangeSet *changeset);
+    void applyChanges(const KWayland::Server::OutputChangeSet *changeSet) override;
 
     QPointer<KWayland::Server::OutputInterface> waylandOutput() const {
         return m_waylandOutput;
@@ -103,7 +101,7 @@ public:
      * This differs from updateDpms as it also removes the wl_output.
      * The default is on.
      */
-    void setEnabled(bool enable);
+    void setEnabled(bool enable) override;
 
 Q_SIGNALS:
     void modeChanged();

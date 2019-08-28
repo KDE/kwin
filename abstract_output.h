@@ -27,6 +27,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QVector>
 
+namespace KWayland
+{
+namespace Server
+{
+class OutputChangeSet;
+}
+}
+
 namespace KWin
 {
 
@@ -99,6 +107,27 @@ public:
      * Returns the human readable name of this output.
      */
     virtual QString name() const = 0;
+
+    /**
+     * Returns the identifying uuid of this output.
+     *
+     * Default implementation returns an empty byte array.
+     */
+    virtual QByteArray uuid() const;
+
+    /**
+     * Enable or disable the output.
+     *
+     * Default implementation does nothing
+     */
+    virtual void setEnabled(bool enable);
+
+    /**
+     * This sets the changes and tests them against the specific output.
+     *
+     * Default implementation does nothing
+     */
+    virtual void applyChanges(const KWayland::Server::OutputChangeSet *changeSet);
 
     /**
      * Returns geometry of this output in device independent pixels.

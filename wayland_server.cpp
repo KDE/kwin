@@ -453,7 +453,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_outputManagement = m_display->createOutputManagement(m_display);
     connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
             this, [this](KWayland::Server::OutputConfigurationInterface *config) {
-                kwinApp()->platform()->configurationChangeRequested(config);
+                kwinApp()->platform()->requestOutputsChange(config);
     });
     m_outputManagement->create();
 

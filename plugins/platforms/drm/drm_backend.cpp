@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 // KWayland
 #include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/outputconfiguration_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KCoreAddons>
@@ -83,6 +82,7 @@ DrmBackend::DrmBackend(QObject *parent)
     }
 #endif
     setSupportsGammaControl(true);
+    supportsOutputChanges();
 }
 
 DrmBackend::~DrmBackend()
@@ -562,71 +562,22 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
     return hash.result().toHex().left(10);
 }
 
-void DrmBackend::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+void DrmBackend::enableOutput(AbstractOutput *output, bool enable)
 {
-    const auto changes = config->changes();
-    bool countChanged = false;
-
-    //process all non-disabling changes
-    for (auto it = changes.begin(); it != changes.end(); it++) {
-        KWayland::Server::OutputChangeSet *changeset = it.value();
-
-        auto drmoutput = findOutput(it.key()->uuid());
-        if (drmoutput == nullptr) {
-            qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << it.key()->uuid();
-            continue;
-        }
-        if (changeset->enabledChanged() && changeset->enabled() == KWayland::Server::OutputDeviceInterface::Enablement::Enabled) {
-            drmoutput->setEnabled(true);
-            m_enabledOutputs << drmoutput;
-            emit outputAdded(drmoutput);
-            countChanged = true;
-        }
-        drmoutput->setChanges(changeset);
-    }
-    //process any disable requests
-    for (auto it = changes.begin(); it != changes.end(); it++) {
-        KWayland::Server::OutputChangeSet *changeset = it.value();
-        if (changeset->enabledChanged() && changeset->enabled() == KWayland::Server::OutputDeviceInterface::Enablement::Disabled) {
-            if (m_enabledOutputs.count() == 1) {
-                qCWarning(KWIN_DRM) << "Not disabling final screen" << it.key()->uuid();
-                continue;
-            }
-            auto drmoutput = findOutput(it.key()->uuid());
-            if (drmoutput == nullptr) {
-                qCWarning(KWIN_DRM) << "Could NOT find DrmOutput matching " << it.key()->uuid();
-                continue;
-            }
-            drmoutput->setEnabled(false);
-            m_enabledOutputs.removeOne(drmoutput);
-            emit outputRemoved(drmoutput);
-            countChanged = true;
-        }
-    }
-
-    if (countChanged) {
-        emit screensQueried();
+    auto *drmOutput = static_cast<DrmOutput*>(output);
+    if (enable) {
+        m_enabledOutputs << drmOutput;
+        emit outputAdded(drmOutput);
     } else {
-        emit screens()->changed();
+        m_enabledOutputs.removeOne(drmOutput);
+        emit outputRemoved(drmOutput);
     }
-    config->setApplied();
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
 {
     auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
         return o->m_conn->id() == connector;
-    });
-    if (it != m_outputs.constEnd()) {
-        return *it;
-    }
-    return nullptr;
-}
-
-DrmOutput *DrmBackend::findOutput(const QByteArray &uuid)
-{
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [uuid] (DrmOutput *o) {
-        return o->m_uuid == uuid;
     });
     if (it != m_outputs.constEnd()) {
         return *it;

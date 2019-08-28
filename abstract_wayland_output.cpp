@@ -50,6 +50,11 @@ QString AbstractWaylandOutput::name() const
                 m_waylandOutputDevice->model());
 }
 
+QByteArray AbstractWaylandOutput::uuid() const
+{
+    return m_waylandOutputDevice->uuid();
+}
+
 QRect AbstractWaylandOutput::geometry() const
 {
     return QRect(globalPos(), pixelSize() / scale());
@@ -112,31 +117,31 @@ void AbstractWaylandOutput::setScale(qreal scale)
     }
 }
 
-void AbstractWaylandOutput::setChanges(KWayland::Server::OutputChangeSet *changes)
+void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet *changeSet)
 {
-    qCDebug(KWIN_CORE) << "Set changes in AbstractWaylandOutput.";
+    qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
     bool emitModeChanged = false;
 
-    //enabledChanged is handled by plugin code
-    if (changes->modeChanged()) {
-        qCDebug(KWIN_CORE) << "Setting new mode:" << changes->mode();
-        m_waylandOutputDevice->setCurrentMode(changes->mode());
-        updateMode(changes->mode());
+    // Enablement changes are handled by platform.
+    if (changeSet->modeChanged()) {
+        qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->mode();
+        m_waylandOutputDevice->setCurrentMode(changeSet->mode());
+        updateMode(changeSet->mode());
         emitModeChanged = true;
     }
-    if (changes->transformChanged()) {
-        qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changes->transform());
-        transform(changes->transform());
+    if (changeSet->transformChanged()) {
+        qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changeSet->transform());
+        transform(changeSet->transform());
         emitModeChanged = true;
     }
-    if (changes->positionChanged()) {
-        qCDebug(KWIN_CORE) << "Server setting position: " << changes->position();
-        setGlobalPos(changes->position());
+    if (changeSet->positionChanged()) {
+        qCDebug(KWIN_CORE) << "Server setting position: " << changeSet->position();
+        setGlobalPos(changeSet->position());
         // may just work already!
     }
-    if (changes->scaleChanged()) {
-        qCDebug(KWIN_CORE) << "Setting scale:" << changes->scale();
-        setScale(changes->scaleF());
+    if (changeSet->scaleChanged()) {
+        qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scale();
+        setScale(changeSet->scaleF());
         emitModeChanged = true;
     }
 

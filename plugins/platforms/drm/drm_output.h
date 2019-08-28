@@ -72,10 +72,6 @@ public:
         return m_dpmsModePending == DpmsMode::On;
     }
 
-    QByteArray uuid() const {
-        return m_uuid;
-    }
-
     const DrmCrtc *crtc() const {
         return m_crtc;
     }

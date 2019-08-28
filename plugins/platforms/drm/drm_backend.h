@@ -42,17 +42,6 @@ struct gbm_bo;
 struct gbm_device;
 struct gbm_surface;
 
-namespace KWayland
-{
-namespace Server
-{
-class OutputInterface;
-class OutputDeviceInterface;
-class OutputChangeSet;
-class OutputManagementInterface;
-}
-}
-
 namespace KWin
 {
 
@@ -75,7 +64,6 @@ public:
     explicit DrmBackend(QObject *parent = nullptr);
     ~DrmBackend() override;
 
-    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config) override;
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
@@ -100,6 +88,8 @@ public:
     QVector<DrmOutput*> drmEnabledOutputs() const {
         return m_enabledOutputs;
     }
+
+    void enableOutput(AbstractOutput *output, bool enable) override;
 
     QVector<DrmPlane*> planes() const {
         return m_planes;
@@ -175,7 +165,6 @@ private:
     void writeOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
-    DrmOutput *findOutput(const QByteArray &uuid);
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;
@@ -203,7 +192,6 @@ private:
     QVector<DrmPlane*> m_planes;
     QVector<DrmPlane*> m_overlayPlanes;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
-    KWayland::Server::OutputManagementInterface *m_outputManagement = nullptr;
     gbm_device *m_gbmDevice = nullptr;
 };
 

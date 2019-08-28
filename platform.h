@@ -184,7 +184,7 @@ public:
      * Base implementation warns that the current backend does not implement this
      * functionality.
      */
-    virtual void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config);
+    void requestOutputsChange(KWayland::Server::OutputConfigurationInterface *config);
 
     /**
      * Whether the Platform requires compositing for rendering.
@@ -427,6 +427,9 @@ public:
         return Outputs();
     }
 
+    AbstractOutput *findOutput(const QByteArray &uuid);
+    virtual void enableOutput(AbstractOutput *output, bool enable);
+
     /**
      * A string of information to include in kwin debug output
      * It should not be translated.
@@ -511,6 +514,13 @@ protected:
     }
 
     /**
+     * Whether the backend is supposed to change the configuration of outputs.
+     */
+    void supportsOutputChanges() {
+        m_supportsOutputChanges = true;
+    }
+
+    /**
      * Actual platform specific way to hide the cursor.
      * Sub-classes need to implement if they support hiding the cursor.
      *
@@ -554,6 +564,7 @@ private:
     int m_hideCursorCounter = 0;
     ColorCorrect::Manager *m_colorCorrect = nullptr;
     bool m_supportsGammaControl = false;
+    bool m_supportsOutputChanges = false;
     CompositingType m_selectedCompositor = NoCompositing;
 };
 

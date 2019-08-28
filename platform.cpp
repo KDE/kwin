@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "platform.h"
+
+#include "abstract_output.h"
 #include <config-kwin.h>
 #include "composite.h"
 #include "cursor.h"
@@ -27,11 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "outline.h"
 #include "pointer_input.h"
 #include "scene.h"
+#include "screens.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "colorcorrection/manager.h"
 
 #include <KWayland/Server/outputconfiguration_interface.h>
+#include <KWayland/Server/outputchangeset.h>
 
 namespace KWin
 {
@@ -121,11 +125,86 @@ void Platform::createPlatformCursor(QObject *parent)
     new InputRedirectionCursor(parent);
 }
 
-void Platform::configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *config)
+void Platform::requestOutputsChange(KWayland::Server::OutputConfigurationInterface *config)
 {
-    qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
+    if (!m_supportsOutputChanges) {
+        qCWarning(KWIN_CORE) << "This backend does not support configuration changes.";
+        config->setFailed();
+        return;
+    }
 
-    config->setFailed();
+    using Enablement = KWayland::Server::OutputDeviceInterface::Enablement;
+
+    const auto changes = config->changes();
+    bool countChanged = false;
+
+    //process all non-disabling changes
+    for (auto it = changes.begin(); it != changes.end(); it++) {
+        const KWayland::Server::OutputChangeSet *changeset = it.value();
+
+        auto output = findOutput(it.key()->uuid());
+        if (!output) {
+            qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
+            continue;
+        }
+
+        if (changeset->enabledChanged() &&
+                changeset->enabled() == Enablement::Enabled) {
+            output->setEnabled(true);
+            enableOutput(output, true);
+            countChanged = true;
+        }
+        output->applyChanges(changeset);
+    }
+
+    //process any disable requests
+    for (auto it = changes.begin(); it != changes.end(); it++) {
+        const KWayland::Server::OutputChangeSet *changeset = it.value();
+
+        if (changeset->enabledChanged() &&
+                changeset->enabled() == Enablement::Disabled) {
+            if (enabledOutputs().count() == 1) {
+                // TODO: check beforehand this condition and set failed otherwise
+                // TODO: instead create a dummy output?
+                qCWarning(KWIN_CORE) << "Not disabling final screen" << it.key()->uuid();
+                continue;
+            }
+            auto output = findOutput(it.key()->uuid());
+            if (!output) {
+                qCWarning(KWIN_CORE) << "Could NOT find output matching " << it.key()->uuid();
+                continue;
+            }
+            output->setEnabled(false);
+            enableOutput(output, false);
+            countChanged = true;
+        }
+    }
+
+    if (countChanged) {
+        emit screensQueried();
+    } else {
+        emit screens()->changed();
+    }
+    config->setApplied();
+}
+
+AbstractOutput *Platform::findOutput(const QByteArray &uuid)
+{
+    const auto outs = outputs();
+    auto it = std::find_if(outs.constBegin(), outs.constEnd(),
+        [uuid](AbstractOutput *output) {
+            return output->uuid() == uuid; }
+    );
+    if (it != outs.constEnd()) {
+        return *it;
+    }
+    return nullptr;
+}
+
+void Platform::enableOutput(AbstractOutput *output, bool enable)
+{
+    Q_UNUSED(output)
+    Q_UNUSED(enable)
 }
 
 void Platform::setSoftWareCursor(bool set)
