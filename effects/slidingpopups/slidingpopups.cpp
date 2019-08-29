@@ -400,23 +400,25 @@ void SlidingPopupsEffect::setupInternalWindowSlide(EffectWindow *w)
     if (!slideProperty.isValid()) {
         return;
     }
-    AnimationData &animData = m_animationsData[w];
+    Location location;
     switch (slideProperty.value<KWindowEffects::SlideFromLocation>()) {
     case KWindowEffects::BottomEdge:
-        animData.location = Location::Bottom;
+        location = Location::Bottom;
         break;
     case KWindowEffects::TopEdge:
-        animData.location = Location::Top;
+        location = Location::Top;
         break;
     case KWindowEffects::RightEdge:
-        animData.location = Location::Right;
+        location = Location::Right;
         break;
     case KWindowEffects::LeftEdge:
-        animData.location = Location::Left;
+        location = Location::Left;
         break;
     default:
         return;
     }
+    AnimationData &animData = m_animationsData[w];
+    animData.location = location;
     bool intOk = false;
     animData.offset = internal->property("kwin_slide_offset").toInt(&intOk);
     if (!intOk) {
