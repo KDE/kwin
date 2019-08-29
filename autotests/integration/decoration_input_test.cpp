@@ -181,9 +181,6 @@ void DecorationInputTest::testAxis_data()
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("topLeft|xdgv5") << QPoint(0, 0) << Qt::TopLeftSection << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("top|xdgv5") << QPoint(250, 0) << Qt::TopSection << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("topRight|xdgv5") << QPoint(499, 0) << Qt::TopRightSection << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("topLeft|xdgv6") << QPoint(0, 0) << Qt::TopLeftSection << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("top|xdgv6") << QPoint(250, 0) << Qt::TopSection << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("topRight|xdgv6") << QPoint(499, 0) << Qt::TopRightSection << Test::XdgShellSurfaceType::XdgShellV6;
@@ -238,9 +235,6 @@ void DecorationInputTest::testDoubleClick_data()
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("topLeft|xdgv5") << QPoint(0, 0) << Qt::TopLeftSection << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("top|xdgv5") << QPoint(250, 0) << Qt::TopSection << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("topRight|xdgv5") << QPoint(499, 0) << Qt::TopRightSection << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("topLeft|xdgv6") << QPoint(0, 0) << Qt::TopLeftSection << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("top|xdgv6") << QPoint(250, 0) << Qt::TopSection << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("topRight|xdgv6") << QPoint(499, 0) << Qt::TopRightSection << Test::XdgShellSurfaceType::XdgShellV6;
@@ -296,9 +290,6 @@ void DecorationInputTest::testDoubleTap_data()
     QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("topLeft|xdgv5") << QPoint(10, 10) << Qt::TopLeftSection << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("top|xdgv5") << QPoint(260, 10) << Qt::TopSection << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("topRight|xdgv5") << QPoint(509, 10) << Qt::TopRightSection << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("topLeft|xdgv6") << QPoint(10, 10) << Qt::TopLeftSection << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("top|xdgv6") << QPoint(260, 10) << Qt::TopSection << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("topRight|xdgv6") << QPoint(509, 10) << Qt::TopRightSection << Test::XdgShellSurfaceType::XdgShellV6;
@@ -354,7 +345,6 @@ void DecorationInputTest::testHover_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
@@ -414,10 +404,6 @@ void DecorationInputTest::testPressToMove_data()
     QTest::addColumn<QPoint>("offset3");
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("To right|xdgv5")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("To left|xdgv5")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("To bottom|xdgv5") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("To top|xdgv5")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("To right|xdgv6")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("To left|xdgv6")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("To bottom|xdgv6") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::XdgShellSurfaceType::XdgShellV6;
@@ -483,10 +469,6 @@ void DecorationInputTest::testTapToMove_data()
     QTest::addColumn<QPoint>("offset3");
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("To right|xdgv5")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("To left|xdgv5")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("To bottom|xdgv5") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::XdgShellSurfaceType::XdgShellV5;
-    QTest::newRow("To top|xdgv5")    << QPoint(0, -10) << QPoint(0, -20) << QPoint(0, -30) << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("To right|xdgv6")  << QPoint(10, 0)  << QPoint(20, 0)  << QPoint(30, 0) << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("To left|xdgv6")   << QPoint(-10, 0) << QPoint(-20, 0) << QPoint(-30, 0) << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("To bottom|xdgv6") << QPoint(0, 10)  << QPoint(0, 20)  << QPoint(0, 30) << Test::XdgShellSurfaceType::XdgShellV6;
@@ -552,13 +534,10 @@ void DecorationInputTest::testResizeOutsideWindow_data()
     QTest::addColumn<Qt::Edge>("edge");
     QTest::addColumn<Qt::CursorShape>("expectedCursor");
 
-    QTest::newRow("xdgShellV5 - left") << Test::XdgShellSurfaceType::XdgShellV5 << Qt::LeftEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgShellV6 - left") << Test::XdgShellSurfaceType::XdgShellV6 << Qt::LeftEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgWmBase - left") << Test::XdgShellSurfaceType::XdgShellStable << Qt::LeftEdge << Qt::SizeHorCursor;
-    QTest::newRow("xdgShellV5 - right") << Test::XdgShellSurfaceType::XdgShellV5 << Qt::RightEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgShellV6 - right") << Test::XdgShellSurfaceType::XdgShellV6 << Qt::RightEdge << Qt::SizeHorCursor;
     QTest::newRow("xdgWmBase - right") << Test::XdgShellSurfaceType::XdgShellStable << Qt::RightEdge << Qt::SizeHorCursor;
-    QTest::newRow("xdgShellV5 - bottom") << Test::XdgShellSurfaceType::XdgShellV5 << Qt::BottomEdge << Qt::SizeVerCursor;
     QTest::newRow("xdgShellV6 - bottom") << Test::XdgShellSurfaceType::XdgShellV6 << Qt::BottomEdge << Qt::SizeVerCursor;
     QTest::newRow("xdgWmBase - bottom") << Test::XdgShellSurfaceType::XdgShellStable << Qt::BottomEdge << Qt::SizeVerCursor;
 }
@@ -624,7 +603,6 @@ void DecorationInputTest::testModifierClickUnrestrictedMove_data()
     const QString meta = QStringLiteral("Meta");
 
     const QVector<std::pair<Test::XdgShellSurfaceType, QByteArray>> surfaceTypes{
-        { Test::XdgShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5") },
         { Test::XdgShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6") },
         { Test::XdgShellSurfaceType::XdgShellStable, QByteArrayLiteral("XdgWmBase") },
     };
@@ -723,7 +701,6 @@ void DecorationInputTest::testModifierScrollOpacity_data()
     const QString meta = QStringLiteral("Meta");
 
     const QVector<std::pair<Test::XdgShellSurfaceType, QByteArray>> surfaceTypes{
-        { Test::XdgShellSurfaceType::XdgShellV5, QByteArrayLiteral("XdgShellV5") },
         { Test::XdgShellSurfaceType::XdgShellV6, QByteArrayLiteral("XdgShellV6") },
         { Test::XdgShellSurfaceType::XdgShellStable, QByteArrayLiteral("XdgWmBase") },
     };
@@ -786,7 +763,6 @@ void DecorationInputTest::testTouchEvents_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5;
     QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }

@@ -266,7 +266,6 @@ void TestShellClientRules::cleanup()
 void TestShellClientRules::name##_data() \
 { \
     QTest::addColumn<Test::XdgShellSurfaceType>("type"); \
-    QTest::newRow("XdgShellV5") << Test::XdgShellSurfaceType::XdgShellV5; \
     QTest::newRow("XdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6; \
     QTest::newRow("XdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable; \
 }
