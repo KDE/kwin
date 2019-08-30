@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "screenlockerwatcher.h"
 #include "wayland_server.h"
 
@@ -392,7 +392,7 @@ void render(Surface *surface, const QImage &img)
     surface->commit(Surface::CommitFlag::None);
 }
 
-ShellClient *waitForWaylandWindowShown(int timeout)
+XdgShellClient *waitForWaylandWindowShown(int timeout)
 {
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     if (!clientAddedSpy.isValid()) {
@@ -401,10 +401,10 @@ ShellClient *waitForWaylandWindowShown(int timeout)
     if (!clientAddedSpy.wait(timeout)) {
         return nullptr;
     }
-    return clientAddedSpy.first().first().value<ShellClient*>();
+    return clientAddedSpy.first().first().value<XdgShellClient *>();
 }
 
-ShellClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
+XdgShellClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     if (!clientAddedSpy.isValid()) {
@@ -415,7 +415,7 @@ ShellClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QC
     if (!clientAddedSpy.wait(timeout)) {
         return nullptr;
     }
-    return clientAddedSpy.first().first().value<ShellClient*>();
+    return clientAddedSpy.first().first().value<XdgShellClient *>();
 }
 
 void flushWaylandConnection()

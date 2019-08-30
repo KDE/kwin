@@ -30,7 +30,7 @@ namespace KWin
 class DrmBackend;
 class DrmOutput;
 class DrmBuffer;
-class ShellClient;
+class XdgShellClient;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.

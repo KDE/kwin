@@ -20,7 +20,7 @@
  */
 #include "popup_input_filter.h"
 #include "deleted.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 
 #include <QMouseEvent>

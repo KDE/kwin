@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "internal_client.h"
 #include "main.h"
 #include "scene.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -798,12 +798,12 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
         }
         // TODO: that only includes windows getting shown, not those which are only created
         connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-            [this] (ShellClient *c) {
+            [this] (XdgShellClient *c) {
                 add(s_waylandClientId -1, m_shellClients, c);
             }
         );
         connect(waylandServer(), &WaylandServer::shellClientRemoved, this,
-            [this] (ShellClient *c) {
+            [this] (XdgShellClient *c) {
                 remove(s_waylandClientId -1, m_shellClients, c);
             }
         );
@@ -1113,7 +1113,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         if (index.column() >= 2 || role != Qt::DisplayRole) {
             return QVariant();
         }
-        if (ShellClient *c = shellClient(index)) {
+        if (XdgShellClient *c = shellClient(index)) {
             return propertyData(c, index, role);
         } else if (InternalClient *c = internalClient(index)) {
             return propertyData(c, index, role);
@@ -1161,7 +1161,7 @@ static T *clientForIndex(const QModelIndex &index, const QVector<T*> &clients, i
     return clients.at(row);
 }
 
-ShellClient *DebugConsoleModel::shellClient(const QModelIndex &index) const
+XdgShellClient *DebugConsoleModel::shellClient(const QModelIndex &index) const
 {
     return clientForIndex(index, m_shellClients, s_waylandClientId);
 }
@@ -1213,7 +1213,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     }
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-            [this, reset] (ShellClient *c) {
+            [this, reset] (XdgShellClient *c) {
                 connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
                 reset();
             }

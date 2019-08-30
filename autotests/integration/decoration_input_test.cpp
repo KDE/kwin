@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "touch_input.h"
 #include "screenedge.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include <kwineffects.h>
@@ -135,7 +135,7 @@ void DecorationInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::InternalClient *>();
-    qRegisterMetaType<KWin::ShellClient *>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

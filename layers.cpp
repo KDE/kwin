@@ -93,7 +93,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "composite.h"
 #include "screenedge.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "internal_client.h"
 

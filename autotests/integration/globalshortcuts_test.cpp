@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "internal_client.h"
 #include "platform.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "useractions.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -65,7 +65,7 @@ void GlobalShortcutsTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::InternalClient *>();
-    qRegisterMetaType<KWin::ShellClient *>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));

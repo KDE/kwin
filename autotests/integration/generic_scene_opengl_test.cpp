@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "platform.h"
 #include "scene.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "effect_builtins.h"
 
@@ -49,7 +49,7 @@ void GenericSceneOpenGLTest::cleanup()
 
 void GenericSceneOpenGLTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

@@ -45,7 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVarLengthArray>
 
 #include "outline.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 
 #include <KDecoration2/Decoration>
@@ -201,7 +201,7 @@ void Workspace::updateClientArea(bool force)
         }
     }
     if (waylandServer()) {
-        auto updateStrutsForWaylandClient = [&] (ShellClient *c) {
+        auto updateStrutsForWaylandClient = [&] (XdgShellClient *c) {
             // assuming that only docks have "struts" and that all docks have a strut
             if (!c->hasStrut()) {
                 return;

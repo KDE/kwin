@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "was_user_interaction_x11_filter.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
@@ -291,7 +291,7 @@ void Workspace::init()
 
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
-            [this] (ShellClient *c) {
+            [this] (XdgShellClient *c) {
                 setupClientConnections(c);
                 c->updateDecoration(false);
                 updateClientLayer(c);
@@ -326,7 +326,7 @@ void Workspace::init()
                     activateClient(c);
                 }
                 updateTabbox();
-                connect(c, &ShellClient::windowShown, this,
+                connect(c, &XdgShellClient::windowShown, this,
                     [this, c] {
                         updateClientLayer(c);
                         // TODO: when else should we send the client through placement?
@@ -342,7 +342,7 @@ void Workspace::init()
                         }
                     }
                 );
-                connect(c, &ShellClient::windowHidden, this,
+                connect(c, &XdgShellClient::windowHidden, this,
                     [this] {
                         // TODO: update tabbox if it's displayed
                         markXStackingOrderAsDirty();
@@ -353,7 +353,7 @@ void Workspace::init()
             }
         );
         connect(w, &WaylandServer::shellClientRemoved, this,
-            [this] (ShellClient *c) {
+            [this] (XdgShellClient *c) {
                 m_allClients.removeAll(c);
                 if (c == most_recently_raised) {
                     most_recently_raised = nullptr;
@@ -560,8 +560,8 @@ Workspace::~Workspace()
     Client::cleanupX11();
 
     if (waylandServer()) {
-        const QList<ShellClient *> shellClients = waylandServer()->clients();
-        for (ShellClient *shellClient : shellClients) {
+        const QList<XdgShellClient *> shellClients = waylandServer()->clients();
+        for (XdgShellClient *shellClient : shellClients) {
             shellClient->destroyClient();
         }
     }

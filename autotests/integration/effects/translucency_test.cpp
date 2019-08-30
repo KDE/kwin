@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effectloader.h"
 #include "cursor.h"
 #include "platform.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "effect_builtins.h"
@@ -55,7 +55,7 @@ private:
 void TranslucencyTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Effect*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);

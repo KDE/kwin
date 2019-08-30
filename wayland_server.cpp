@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "idle_inhibition.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "workspace.h"
 
 // Client
@@ -157,7 +157,7 @@ void WaylandServer::createSurface(T *surface)
     if (surface->client() == m_screenLockerClientConnection) {
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
-    ShellClient *client = new ShellClient(surface);
+    XdgShellClient *client = new XdgShellClient(surface);
     if (ServerSideDecorationInterface *deco = ServerSideDecorationInterface::get(surface->surface())) {
         client->installServerSideDecoration(deco);
     }
@@ -180,7 +180,7 @@ void WaylandServer::createSurface(T *surface)
     if (client->readyForPainting()) {
         emit shellClientAdded(client);
     } else {
-        connect(client, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
+        connect(client, &XdgShellClient::windowShown, this, &WaylandServer::shellClientShown);
     }
 
     //not directly connected as the connection is tied to client instead of this
@@ -325,7 +325,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_xdgDecorationManager = m_display->createXdgDecorationManager(m_xdgShell, m_display);
     m_xdgDecorationManager->create();
     connect(m_xdgDecorationManager, &XdgDecorationManagerInterface::xdgDecorationInterfaceCreated, this,  [this] (XdgDecorationInterface *deco) {
-        if (ShellClient *client = findClient(deco->surface()->surface())) {
+        if (XdgShellClient *client = findClient(deco->surface()->surface())) {
             client->installXdgDecoration(deco);
         }
     });
@@ -340,13 +340,13 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_idle = m_display->createIdle(m_display);
     m_idle->create();
     auto idleInhibition = new IdleInhibition(m_idle);
-    connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerShellClient);
+    connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerXdgShellClient);
     m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display)->create();
     m_plasmaShell = m_display->createPlasmaShell(m_display);
     m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
         [this] (PlasmaShellSurfaceInterface *surface) {
-            if (ShellClient *client = findClient(surface->surface())) {
+            if (XdgShellClient *client = findClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
             } else {
                 m_plasmaShellSurfaces << surface;
@@ -362,7 +362,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_appMenuManager->create();
     connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated,
         [this] (AppMenuInterface *appMenu) {
-            if (ShellClient *client = findClient(appMenu->surface())) {
+            if (XdgShellClient *client = findClient(appMenu->surface())) {
                 client->installAppMenu(appMenu);
             }
         }
@@ -371,7 +371,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_paletteManager->create();
     connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated,
         [this] (ServerSideDecorationPaletteInterface *palette) {
-            if (ShellClient *client = findClient(palette->surface())) {
+            if (XdgShellClient *client = findClient(palette->surface())) {
                 client->installPalette(palette);
             }
         }
@@ -417,7 +417,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_decorationManager = m_display->createServerSideDecorationManager(m_display);
     connect(m_decorationManager, &ServerSideDecorationManagerInterface::decorationCreated, this,
         [this] (ServerSideDecorationInterface *deco) {
-            if (ShellClient *c = findClient(deco->surface())) {
+            if (XdgShellClient *c = findClient(deco->surface())) {
                 c->installServerSideDecoration(deco);
             }
             connect(deco, &ServerSideDecorationInterface::modeRequested, this,
@@ -458,12 +458,12 @@ SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface
 
 void WaylandServer::shellClientShown(Toplevel *t)
 {
-    ShellClient *c = dynamic_cast<ShellClient*>(t);
+    XdgShellClient *c = dynamic_cast<XdgShellClient *>(t);
     if (!c) {
-        qCWarning(KWIN_CORE) << "Failed to cast a Toplevel which is supposed to be a ShellClient to ShellClient";
+        qCWarning(KWIN_CORE) << "Failed to cast a Toplevel which is supposed to be a XdgShellClient to XdgShellClient";
         return;
     }
-    disconnect(c, &ShellClient::windowShown, this, &WaylandServer::shellClientShown);
+    disconnect(c, &XdgShellClient::windowShown, this, &WaylandServer::shellClientShown);
     emit shellClientAdded(c);
 }
 
@@ -627,7 +627,7 @@ void WaylandServer::createInternalConnection()
     m_internalConnection.client->initConnection();
 }
 
-void WaylandServer::removeClient(ShellClient *c)
+void WaylandServer::removeClient(XdgShellClient *c)
 {
     m_clients.removeAll(c);
     emit shellClientRemoved(c);
@@ -644,10 +644,10 @@ void WaylandServer::dispatch()
     m_display->dispatchEvents(0);
 }
 
-static ShellClient *findClientInList(const QList<ShellClient*> &clients, quint32 id)
+static XdgShellClient *findClientInList(const QList<XdgShellClient *> &clients, quint32 id)
 {
     auto it = std::find_if(clients.begin(), clients.end(),
-        [id] (ShellClient *c) {
+        [id] (XdgShellClient *c) {
             return c->windowId() == id;
         }
     );
@@ -657,10 +657,10 @@ static ShellClient *findClientInList(const QList<ShellClient*> &clients, quint32
     return *it;
 }
 
-static ShellClient *findClientInList(const QList<ShellClient*> &clients, KWayland::Server::SurfaceInterface *surface)
+static XdgShellClient *findClientInList(const QList<XdgShellClient *> &clients, KWayland::Server::SurfaceInterface *surface)
 {
     auto it = std::find_if(clients.begin(), clients.end(),
-        [surface] (ShellClient *c) {
+        [surface] (XdgShellClient *c) {
             return c->surface() == surface;
         }
     );
@@ -670,23 +670,23 @@ static ShellClient *findClientInList(const QList<ShellClient*> &clients, KWaylan
     return *it;
 }
 
-ShellClient *WaylandServer::findClient(quint32 id) const
+XdgShellClient *WaylandServer::findClient(quint32 id) const
 {
     if (id == 0) {
         return nullptr;
     }
-    if (ShellClient *c = findClientInList(m_clients, id)) {
+    if (XdgShellClient *c = findClientInList(m_clients, id)) {
         return c;
     }
     return nullptr;
 }
 
-ShellClient *WaylandServer::findClient(SurfaceInterface *surface) const
+XdgShellClient *WaylandServer::findClient(SurfaceInterface *surface) const
 {
     if (!surface) {
         return nullptr;
     }
-    if (ShellClient *c = findClientInList(m_clients, surface)) {
+    if (XdgShellClient *c = findClientInList(m_clients, surface)) {
         return c;
     }
     return nullptr;

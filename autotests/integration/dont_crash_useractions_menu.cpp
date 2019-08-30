@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "platform.h"
 #include "pointer_input.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "screens.h"
 #include "useractions.h"
 #include "wayland_server.h"
@@ -56,7 +56,7 @@ private Q_SLOTS:
 
 void TestDontCrashUseractionsMenu::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

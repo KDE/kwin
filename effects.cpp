@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "xcbutils.h"
 #include "platform.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 
 #include "decorations/decorationbridge.h"
@@ -257,19 +257,19 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
-            [this](ShellClient *c) {
+            [this](XdgShellClient *c) {
                 if (c->readyForPainting())
-                    slotShellClientShown(c);
+                    slotXdgShellClientShown(c);
                 else
-                    connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotShellClientShown);
+                    connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotXdgShellClientShown);
             }
         );
         const auto clients = waylandServer()->clients();
-        for (ShellClient *c : clients) {
+        for (XdgShellClient *c : clients) {
             if (c->readyForPainting()) {
                 setupAbstractClientConnections(c);
             } else {
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotShellClientShown);
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotXdgShellClientShown);
             }
         }
     }
@@ -574,9 +574,9 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     emit windowAdded(c->effectWindow());
 }
 
-void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
+void EffectsHandlerImpl::slotXdgShellClientShown(Toplevel *t)
 {
-    ShellClient *c = static_cast<ShellClient*>(t);
+    XdgShellClient *c = static_cast<XdgShellClient *>(t);
     setupAbstractClientConnections(c);
     emit windowAdded(t->effectWindow());
 }
@@ -1078,7 +1078,7 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
     if (waylandServer()) {
-        if (ShellClient *w = waylandServer()->findClient(id)) {
+        if (XdgShellClient *w = waylandServer()->findClient(id)) {
             return w->effectWindow();
         }
     }
@@ -1088,7 +1088,7 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 EffectWindow* EffectsHandlerImpl::findWindow(KWayland::Server::SurfaceInterface *surf) const
 {
     if (waylandServer()) {
-        if (ShellClient *w = waylandServer()->findClient(surf)) {
+        if (XdgShellClient *w = waylandServer()->findClient(surf)) {
             return w->effectWindow();
         }
     }
@@ -1715,12 +1715,12 @@ EffectWindowImpl::EffectWindowImpl(Toplevel *toplevel)
     // emitted, effects can't distinguish managed windows from unmanaged
     // windows(e.g. combo box popups, popup menus, etc). Save value of the
     // managed property during construction of EffectWindow. At that time,
-    // parent can be Client, ShellClient, or Unmanaged. So, later on, when
+    // parent can be Client, XdgShellClient, or Unmanaged. So, later on, when
     // an instance of Deleted becomes parent of the EffectWindow, effects
     // can still figure out whether it is/was a managed window.
     managed = toplevel->isClient();
 
-    waylandClient = qobject_cast<KWin::ShellClient *>(toplevel) != nullptr;
+    waylandClient = qobject_cast<KWin::XdgShellClient *>(toplevel) != nullptr;
     x11Client = qobject_cast<KWin::Client *>(toplevel) != nullptr;
 }
 

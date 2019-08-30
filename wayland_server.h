@@ -72,7 +72,7 @@ class KeyStateInterface;
 
 namespace KWin
 {
-class ShellClient;
+class XdgShellClient;
 
 class AbstractClient;
 class Toplevel;
@@ -119,12 +119,12 @@ public:
         return m_xdgOutputManager;
     }
 
-    QList<ShellClient*> clients() const {
+    QList<XdgShellClient *> clients() const {
         return m_clients;
     }
-    void removeClient(ShellClient *c);
-    ShellClient *findClient(quint32 id) const;
-    ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
+    void removeClient(XdgShellClient *c);
+    XdgShellClient *findClient(quint32 id) const;
+    XdgShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
     AbstractClient *findAbstractClient(KWayland::Server::SurfaceInterface *surface) const;
 
     /**
@@ -217,8 +217,8 @@ public:
     void updateKeyState(KWin::Xkb::LEDs leds);
 
 Q_SIGNALS:
-    void shellClientAdded(KWin::ShellClient*);
-    void shellClientRemoved(KWin::ShellClient*);
+    void shellClientAdded(KWin::XdgShellClient *);
+    void shellClientRemoved(KWin::XdgShellClient *);
     void terminatingInternalClientConnection();
     void initialized();
     void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
@@ -266,7 +266,7 @@ private:
     } m_internalConnection;
     KWayland::Server::XdgForeignInterface *m_XdgForeign = nullptr;
     KWayland::Server::KeyStateInterface *m_keyState = nullptr;
-    QList<ShellClient*> m_clients;
+    QList<XdgShellClient *> m_clients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     InitalizationFlags m_initFlags;
     QVector<KWayland::Server::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "platform.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "tabbox/tabbox.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -52,7 +52,7 @@ private Q_SLOTS:
 
 void TabBoxTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

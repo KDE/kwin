@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "internal_client.h"
 #include "platform.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xcbutils.h"
@@ -60,7 +60,7 @@ void DebugConsoleTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::InternalClient *>();
-    qRegisterMetaType<KWin::ShellClient *>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -393,7 +393,7 @@ void DebugConsoleTest::testWaylandClient()
     shellSurface.reset();
     Test::flushWaylandConnection();
     qDebug() << rowsRemovedSpy.count();
-    QEXPECT_FAIL("wlShell", "Deleting a ShellSurface does not result in the server removing the ShellClient", Continue);
+    QEXPECT_FAIL("wlShell", "Deleting a ShellSurface does not result in the server removing the XdgShellClient", Continue);
     QVERIFY(rowsRemovedSpy.wait(500));
     surface.reset();
 

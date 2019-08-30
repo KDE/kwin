@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "generic_scene_opengl_test.h"
 
 #include "composite.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 
 #include <KWayland/Client/xdgshell.h>
@@ -61,7 +61,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QVERIFY(!shellSurface.isNull());
 
     // set buffer size
-    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // add a first repaint
@@ -73,7 +73,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     // now change buffer size
     Test::render(surface.data(), QSize(30, 10), Qt::red);
 
-    QSignalSpy damagedSpy(client, &ShellClient::damaged);
+    QSignalSpy damagedSpy(client, &XdgShellClient::damaged);
     QVERIFY(damagedSpy.isValid());
     QVERIFY(damagedSpy.wait());
     KWin::Compositor::self()->addRepaintFull();
@@ -98,7 +98,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
 
     // set buffer sizes
     Test::render(surface.data(), QSize(30, 10), Qt::red);
-    ShellClient *parent = Test::renderAndWaitForShown(parentSurface.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *parent = Test::renderAndWaitForShown(parentSurface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(parent);
 
     // add a first repaint
@@ -108,7 +108,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     QVERIFY(swapSpy.wait());
 
     // change buffer size of sub surface
-    QSignalSpy damagedParentSpy(parent, &ShellClient::damaged);
+    QSignalSpy damagedParentSpy(parent, &XdgShellClient::damaged);
     QVERIFY(damagedParentSpy.isValid());
     Test::render(surface.data(), QSize(20, 10), Qt::red);
     parentSurface->commit(Surface::CommitFlag::None);

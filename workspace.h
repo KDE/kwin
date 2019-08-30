@@ -133,7 +133,7 @@ public:
      * @brief Finds a Toplevel for the internal window @p w.
      *
      * Internal window means a window created by KWin itself. On X11 this is an Unmanaged
-     * and mapped by the window id, on Wayland a ShellClient mapped on the internal window id.
+     * and mapped by the window id, on Wayland a XdgShellClient mapped on the internal window id.
      *
      * @returns Toplevel
      */

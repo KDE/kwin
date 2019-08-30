@@ -475,7 +475,6 @@ set(kwin_KDEINIT_SRCS
     scripting/timer.cpp
     scripting/workspace_wrapper.cpp
     shadow.cpp
-    shell_client.cpp
     sm.cpp
     thumbnailitem.cpp
     toplevel.cpp
@@ -496,6 +495,7 @@ set(kwin_KDEINIT_SRCS
     workspace.cpp
     x11eventfilter.cpp
     xcbutils.cpp
+    xdgshellclient.cpp
     xkb.cpp
     xwl/xwayland_interface.cpp
 )

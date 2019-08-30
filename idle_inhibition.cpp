@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "idle_inhibition.h"
 #include "deleted.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "workspace.h"
 
 #include <KWayland/Server/idle_interface.h>
@@ -44,19 +44,19 @@ IdleInhibition::IdleInhibition(IdleInterface *idle)
 
 IdleInhibition::~IdleInhibition() = default;
 
-void IdleInhibition::registerShellClient(ShellClient *client)
+void IdleInhibition::registerXdgShellClient(XdgShellClient *client)
 {
     auto updateInhibit = [this, client] {
         update(client);
     };
 
     m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, updateInhibit);
-    connect(client, &ShellClient::desktopChanged, this, updateInhibit);
-    connect(client, &ShellClient::clientMinimized, this, updateInhibit);
-    connect(client, &ShellClient::clientUnminimized, this, updateInhibit);
-    connect(client, &ShellClient::windowHidden, this, updateInhibit);
-    connect(client, &ShellClient::windowShown, this, updateInhibit);
-    connect(client, &ShellClient::windowClosed, this,
+    connect(client, &XdgShellClient::desktopChanged, this, updateInhibit);
+    connect(client, &XdgShellClient::clientMinimized, this, updateInhibit);
+    connect(client, &XdgShellClient::clientUnminimized, this, updateInhibit);
+    connect(client, &XdgShellClient::windowHidden, this, updateInhibit);
+    connect(client, &XdgShellClient::windowShown, this, updateInhibit);
+    connect(client, &XdgShellClient::windowClosed, this,
         [this, client] {
             uninhibit(client);
             auto it = m_connections.find(client);

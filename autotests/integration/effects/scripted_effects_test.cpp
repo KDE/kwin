@@ -29,7 +29,7 @@ along with this program.  If not, see <http:// www.gnu.org/licenses/>.
 #include "effects.h"
 #include "kwin_wayland_test.h"
 #include "platform.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -143,7 +143,7 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
 
 void ScriptedEffectsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::Effect*>();
@@ -511,7 +511,7 @@ void ScriptedEffectsTest::testGrab()
     QVERIFY(surface);
     XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
-    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    XdgShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -544,7 +544,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
     QVERIFY(surface);
     XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
-    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    XdgShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -581,7 +581,7 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
     QVERIFY(surface);
     XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
-    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    XdgShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -612,7 +612,7 @@ void ScriptedEffectsTest::testUngrab()
     QVERIFY(surface);
     XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
-    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    XdgShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -655,7 +655,7 @@ void ScriptedEffectsTest::testRedirect()
     QVERIFY(surface);
     XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
-    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    XdgShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 
@@ -733,7 +733,7 @@ void ScriptedEffectsTest::testComplete()
     QVERIFY(surface);
     XdgShellSurface *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
-    ShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    XdgShellClient *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeClient(), c);
 

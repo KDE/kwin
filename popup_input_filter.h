@@ -29,7 +29,7 @@
 namespace KWin
 {
 class Toplevel;
-class ShellClient;
+class XdgShellClient;
 
 class PopupInputFilter : public QObject, public InputEventFilter
 {

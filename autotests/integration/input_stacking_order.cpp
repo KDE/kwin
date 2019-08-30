@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/connection_thread.h>
@@ -61,7 +61,7 @@ private:
 
 void InputStackingOrderTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Deleted*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);

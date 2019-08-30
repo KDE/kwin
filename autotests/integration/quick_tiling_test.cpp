@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "scripting/scripting.h"
 
 #include <KDecoration2/DecoratedClient>
@@ -92,7 +92,7 @@ private:
 
 void QuickTilingTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);

@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "rules.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -61,15 +61,15 @@ private Q_SLOTS:
     void cleanup();
 
     void testGetWindowInfoInvalidUuid();
-    void testGetWindowInfoShellClient_data();
-    void testGetWindowInfoShellClient();
+    void testGetWindowInfoXdgShellClient_data();
+    void testGetWindowInfoXdgShellClient();
     void testGetWindowInfoX11Client();
 };
 
 void TestDbusInterface::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
 
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -112,7 +112,7 @@ void TestDbusInterface::testGetWindowInfoInvalidUuid()
     QVERIFY(windowData.empty());
 }
 
-void TestDbusInterface::testGetWindowInfoShellClient_data()
+void TestDbusInterface::testGetWindowInfoXdgShellClient_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
@@ -120,7 +120,7 @@ void TestDbusInterface::testGetWindowInfoShellClient_data()
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
-void TestDbusInterface::testGetWindowInfoShellClient()
+void TestDbusInterface::testGetWindowInfoXdgShellClient()
 {
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
@@ -135,7 +135,7 @@ void TestDbusInterface::testGetWindowInfoShellClient()
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<ShellClient*>();
+    auto client = clientAddedSpy.first().first().value<XdgShellClient *>();
     QVERIFY(client);
 
     // let's get the window info
@@ -226,7 +226,7 @@ void TestDbusInterface::testGetWindowInfoShellClient()
 
     // finally close window
     const auto id = client->internalId();
-    QSignalSpy windowClosedSpy(client, &ShellClient::windowClosed);
+    QSignalSpy windowClosedSpy(client, &XdgShellClient::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();

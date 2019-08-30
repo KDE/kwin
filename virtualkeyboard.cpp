@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xkb.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>

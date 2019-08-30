@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../client.h"
 #include "../outline.h"
 #include "../screens.h"
-#include "../shell_client.h"
+#include "../xdgshellclient.h"
 #include "../virtualdesktops.h"
 #include "../wayland_server.h"
 #include "../workspace.h"

@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -89,7 +89,7 @@ void TestPlacement::cleanup()
 
 void TestPlacement::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -215,7 +215,7 @@ void TestPlacement::testPlaceCentered()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
-    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
+    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(client);
     QCOMPARE(client->geometry(), QRect(590, 487, 100, 50));
 
@@ -237,7 +237,7 @@ void TestPlacement::testPlaceUnderMouse()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
-    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
+    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(client);
     QCOMPARE(client->geometry(), QRect(151, 276, 100, 50));
 
@@ -256,21 +256,21 @@ void TestPlacement::testPlaceCascaded()
 
     QScopedPointer<Surface> surface1(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
-    ShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::red);
+    XdgShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::red);
     QVERIFY(client1);
     QCOMPARE(client1->pos(), QPoint(0, 0));
     QCOMPARE(client1->size(), QSize(100, 50));
 
     QScopedPointer<Surface> surface2(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
-    ShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client2);
     QCOMPARE(client2->pos(), client1->pos() + workspace()->cascadeOffset(client2));
     QCOMPARE(client2->size(), QSize(100, 50));
 
     QScopedPointer<Surface> surface3(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface3(Test::createXdgShellStableSurface(surface3.data()));
-    ShellClient *client3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::green);
+    XdgShellClient *client3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::green);
     QVERIFY(client3);
     QCOMPARE(client3->pos(), client2->pos() + workspace()->cascadeOffset(client3));
     QCOMPARE(client3->size(), QSize(100, 50));
@@ -294,20 +294,20 @@ void TestPlacement::testPlaceRandom()
 
     QScopedPointer<Surface> surface1(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
-    ShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::red);
+    XdgShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::red);
     QVERIFY(client1);
     QCOMPARE(client1->size(), QSize(100, 50));
 
     QScopedPointer<Surface> surface2(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
-    ShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client2);
     QVERIFY(client2->pos() != client1->pos());
     QCOMPARE(client2->size(), QSize(100, 50));
 
     QScopedPointer<Surface> surface3(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface3(Test::createXdgShellStableSurface(surface3.data()));
-    ShellClient *client3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::green);
+    XdgShellClient *client3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::green);
     QVERIFY(client3);
     QVERIFY(client3->pos() != client1->pos());
     QVERIFY(client3->pos() != client2->pos());

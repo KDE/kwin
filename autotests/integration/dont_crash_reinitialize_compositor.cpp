@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "platform.h"
 #include "screens.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -60,7 +60,7 @@ void DontCrashReinitializeCompositorTest::initTestCase()
 
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::Deleted *>();
-    qRegisterMetaType<KWin::ShellClient *>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -134,7 +134,7 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // Make sure that only the test effect is loaded.
@@ -147,7 +147,7 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     QVERIFY(!effect->isActive());
 
     // Close the test client.
-    QSignalSpy windowClosedSpy(client, &ShellClient::windowClosed);
+    QSignalSpy windowClosedSpy(client, &XdgShellClient::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();

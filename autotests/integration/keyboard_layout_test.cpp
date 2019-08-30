@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
 #include "platform.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -74,7 +74,7 @@ void KeyboardLayoutTest::reconfigureLayouts()
 
 void KeyboardLayoutTest::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

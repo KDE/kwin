@@ -58,7 +58,7 @@ class Xwayland;
 }
 
 class AbstractClient;
-class ShellClient;
+class XdgShellClient;
 
 class WaylandTestApplication : public ApplicationWaylandAbstract
 {
@@ -181,15 +181,15 @@ void render(KWayland::Client::Surface *surface, const QSize &size, const QColor 
 void render(KWayland::Client::Surface *surface, const QImage &img);
 
 /**
- * Waits till a new ShellClient is shown and returns the created ShellClient.
- * If no ShellClient gets shown during @p timeout @c null is returned.
+ * Waits till a new XdgShellClient is shown and returns the created XdgShellClient.
+ * If no XdgShellClient gets shown during @p timeout @c null is returned.
  */
-ShellClient *waitForWaylandWindowShown(int timeout = 5000);
+XdgShellClient *waitForWaylandWindowShown(int timeout = 5000);
 
 /**
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  */
-ShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+XdgShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
 /**
  * Waits for the @p client to be destroyed.

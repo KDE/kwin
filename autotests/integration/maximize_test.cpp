@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
 #include "platform.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -61,7 +61,7 @@ private Q_SLOTS:
 
 void TestMaximized::initTestCase()
 {
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -103,7 +103,7 @@ void TestMaximized::cleanup()
 
 void TestMaximized::testMaximizedPassedToDeco()
 {
-    // this test verifies that when a ShellClient gets maximized the Decoration receives the signal
+    // this test verifies that when a XdgShellClient gets maximized the Decoration receives the signal
 
     // Create the test client.
     QScopedPointer<Surface> surface(Test::createSurface());
@@ -202,7 +202,7 @@ void TestMaximized::testInitiallyMaximized()
 
     // Now let's render in an incorrect size.
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
-    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QCOMPARE(client->geometry(), QRect(0, 0, 100, 50));
     QEXPECT_FAIL("", "Should go out of maximzied", Continue);
@@ -249,7 +249,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
-    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
@@ -326,7 +326,7 @@ void TestMaximized::testBorderlessMaximizedWindowNoClientSideDecoration()
 
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QSignalSpy geometryChangedSpy(client, &ShellClient::geometryChanged);
+    QSignalSpy geometryChangedSpy(client, &XdgShellClient::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
     QSignalSpy sizeChangeRequestedSpy(xdgShellSurface.data(), &XdgShellSurface::sizeChanged);
     QVERIFY(sizeChangeRequestedSpy.isValid());

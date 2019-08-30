@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "scene.h"
-#include "shell_client.h"
+#include "xdgshellclient.h"
 #include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
@@ -54,7 +54,7 @@ private Q_SLOTS:
 void DontCrashAuroraeDestroyDecoTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::ShellClient*>();
+    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

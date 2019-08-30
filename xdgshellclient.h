@@ -48,13 +48,13 @@ enum class PingReason {
     FocusWindow
 };
 
-class KWIN_EXPORT ShellClient : public AbstractClient
+class KWIN_EXPORT XdgShellClient : public AbstractClient
 {
     Q_OBJECT
 public:
-    ShellClient(KWayland::Server::XdgShellSurfaceInterface *surface);
-    ShellClient(KWayland::Server::XdgShellPopupInterface *surface);
-    ~ShellClient() override;
+    XdgShellClient(KWayland::Server::XdgShellSurfaceInterface *surface);
+    XdgShellClient(KWayland::Server::XdgShellPopupInterface *surface);
+    ~XdgShellClient() override;
 
     QStringList activities() const override;
     QPoint clientContentPos() const override;
@@ -206,7 +206,7 @@ private:
     void doSetGeometry(const QRect &rect);
     void unmap();
     void markAsMapped();
-    static void deleteClient(ShellClient *c);
+    static void deleteClient(XdgShellClient *c);
 
     QSize toWindowGeometry(const QSize &geometry) const;
 
@@ -255,7 +255,7 @@ private:
 
     class RequestGeometryBlocker { //TODO rename ConfigureBlocker when this class is Xdg only
     public:
-        RequestGeometryBlocker(ShellClient *client)
+        RequestGeometryBlocker(XdgShellClient *client)
             : m_client(client)
         {
             m_client->m_requestGeometryBlockCounter++;
@@ -268,7 +268,7 @@ private:
             }
         }
     private:
-        ShellClient *m_client;
+        XdgShellClient *m_client;
     };
     friend class RequestGeometryBlocker;
     int m_requestGeometryBlockCounter = 0;
@@ -286,6 +286,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(KWin::ShellClient*)
+Q_DECLARE_METATYPE(KWin::XdgShellClient *)
 
 #endif
