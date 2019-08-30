@@ -113,10 +113,6 @@ public:
         return s_compositor != NULL && s_compositor->isActive();
     }
 
-
-    virtual void updateCompositeBlocking() = 0;
-    virtual void updateClientCompositeBlocking(KWin::Client *c) = 0;
-
     // for delayed supportproperty management of effects
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
@@ -197,9 +193,6 @@ public:
 
     bool checkForOverlayWindow(WId w) const override;
 
-    void updateCompositeBlocking() override;
-    void updateClientCompositeBlocking(KWin::Client* c) override;
-
 protected:
     void start() override;
 
@@ -267,8 +260,9 @@ public:
 
     int refreshRate() const override;
 
-    void updateCompositeBlocking() override;
-    void updateClientCompositeBlocking(KWin::Client* c) override;
+    void updateClientCompositeBlocking(Client *client = nullptr);
+
+    static X11Compositor *self();
 
 protected:
     void start() override;

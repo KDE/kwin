@@ -596,7 +596,9 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
     StackingUpdatesBlocker blocker(this);
     Client* c = new Client();
     setupClientConnections(c);
-    connect(c, &Client::blockingCompositingChanged, m_compositor, &Compositor::updateClientCompositeBlocking);
+    if (X11Compositor *compositor = X11Compositor::self()) {
+        connect(c, &Client::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
+    }
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
@@ -749,8 +751,11 @@ void Workspace::removeDeleted(Deleted* c)
     unconstrained_stacking_order.removeAll(c);
     stacking_order.removeAll(c);
     markXStackingOrderAsDirty();
-    if (c->wasClient() && m_compositor) {
-        m_compositor->updateCompositeBlocking();
+    if (!c->wasClient()) {
+        return;
+    }
+    if (X11Compositor *compositor = X11Compositor::self()) {
+        compositor->updateClientCompositeBlocking();
     }
 }
 

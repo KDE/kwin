@@ -890,17 +890,6 @@ int WaylandCompositor::refreshRate() const
     return KWin::currentRefreshRate();
 }
 
-void WaylandCompositor::updateCompositeBlocking()
-{
-    // Composite blocking not possible on Wayland.
-}
-
-void WaylandCompositor::updateClientCompositeBlocking(Client *c)
-{
-    Q_UNUSED(c)
-    // Composite blocking not possible on Wayland.
-}
-
 X11Compositor::X11Compositor(QObject *parent)
     : Compositor(parent)
     , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
@@ -1029,11 +1018,6 @@ int X11Compositor::refreshRate() const
     return m_xrrRefreshRate;
 }
 
-void X11Compositor::updateCompositeBlocking()
-{
-    updateClientCompositeBlocking(NULL);
-}
-
 void X11Compositor::updateClientCompositeBlocking(Client *c)
 {
     if (c) {
@@ -1061,6 +1045,11 @@ void X11Compositor::updateClientCompositeBlocking(Client *c)
                                       Q_ARG(SuspendReason, BlockRuleSuspend));
         }
     }
+}
+
+X11Compositor *X11Compositor::self()
+{
+    return qobject_cast<X11Compositor *>(Compositor::self());
 }
 
 }
