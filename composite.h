@@ -232,7 +232,7 @@ public:
      * @return void
      * @see resume
      * @see isActive
-     **/
+     */
     Q_INVOKABLE void suspend(SuspendReason reason);
 
     /**
@@ -251,7 +251,7 @@ public:
      * @see isActive
      * @see isCompositingPossible
      * @see isOpenGLBroken
-     **/
+     */
     Q_INVOKABLE void resume(SuspendReason reason);
 
     void toggleCompositing() override;
@@ -262,7 +262,7 @@ public:
     bool checkForOverlayWindow(WId w) const override;
     /**
      * @returns Whether the Scene's Overlay X Window is visible.
-     **/
+     */
     bool isOverlayWindowVisible() const;
 
     int refreshRate() const override;
@@ -278,7 +278,7 @@ private:
     explicit X11Compositor(QObject *parent);
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
-     **/
+     */
     SuspendReasons m_suspended;
 
     int m_xrrRefreshRate;
