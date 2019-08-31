@@ -81,6 +81,7 @@ Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 
 Comment=Active Screen Corners and Edges
+Comment[ca]=Cantonades i vores actives de la pantalla
 Comment[da]=Aktive skærmhjørner og -kanter
 Comment[de]=Aktive Bildschirmränder
 Comment[el]=Ενεργές γωνίες και άκρα οθόνης
@@ -94,8 +95,10 @@ Comment[gl]=Bordos e esquinas activos da pantalla
 Comment[hu]=Aktív képernyősarkok és szélek
 Comment[id]=Tepian dan Sudut Layar Aktif
 Comment[it]=Angoli e bordi attivi dello schermo
+Comment[nb]=Aktive skjemkanter og hjørner
 Comment[nds]=Aktive Schirmkanten un -hörns
 Comment[nl]=Hoeken en randen van het actieve scherm
+Comment[nn]=Aktive skjermhjørne og skjermkantar
 Comment[pa]=ਸਰਗਰਮ ਸਕਰੀਨ ਕੋਨੇ ਅਤੇ ਬਾਹੀਆਂ
 Comment[pl]=Narożniki i krawędzie aktywnego ekranu
 Comment[ru]=Настройка действий для краёв экрана
@@ -107,6 +110,8 @@ Comment[sr@ijekavianlatin]=Aktivni uglovi i ivice ekrana
 Comment[sr@latin]=Aktivni uglovi i ivice ekrana
 Comment[sv]=Aktiva skärmhörn och kanter
 Comment[tr]=Etkin Ekran Kenar ve Köşeleri
+Comment[uk]=Активні кути та краї екрана
+Comment[x-test]=xxActive Screen Corners and Edgesxx
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[bs]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners, prozor, menadćer, efekt, uigao, ivica, akcija, prebacivanje, desktop ivice, ivice ekrana, maksimitiranje prozora, ponašanje ekrana, virtualni desktop

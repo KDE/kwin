@@ -63,10 +63,19 @@ Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=Navigation, Number and Layout of Virtual Desktops
+Comment[ca]=Navegació, nombre i disposició dels escriptoris virtuals
+Comment[es]=Navegación, número y disposición de los escritorios virtuales
+Comment[fr]=Navigation, nombre et disposition des bureaux virtuels
+Comment[nb]=Navigering, antall og utlegg av virtuelle skrivebord
+Comment[nn]=Navigering, nummer og vising av virtuelle skrivebord
+Comment[sk]=Navigácia, počet a rozloženie virtuálnych plôch
 Comment[sr]=Кретање, број и распоред виртуелних површи
 Comment[sr@ijekavian]=Кретање, број и распоред виртуелних површи
 Comment[sr@ijekavianlatin]=Kretanje, broj i raspored virtuelnih površi
 Comment[sr@latin]=Kretanje, broj i raspored virtuelnih površi
+Comment[sv]=Navigering, antal och layout av virtuella skrivbord
+Comment[uk]=Навігація, кількість та компонування віртуальних стільниць
+Comment[x-test]=xxNavigation, Number and Layout of Virtual Desktopsxx
 
 Icon=preferences-desktop
 Type=Service
