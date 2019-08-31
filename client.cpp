@@ -200,7 +200,7 @@ Client::~Client()
     Q_ASSERT(!isMoveResize());
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
-    //Q_ASSERT( frameId() == None );
+    Q_ASSERT(m_frame == XCB_WINDOW_NONE);
     Q_ASSERT(!check_active_modal);
     for (auto it = m_connections.constBegin(); it != m_connections.constEnd(); ++it) {
         disconnect(*it);
