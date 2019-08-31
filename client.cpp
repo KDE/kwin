@@ -198,11 +198,11 @@ Client::~Client()
     //SWrapper::Client::clientRelease(this);
     if (syncRequest.alarm != XCB_NONE)
         xcb_sync_destroy_alarm(connection(), syncRequest.alarm);
-    assert(!isMoveResize());
-    assert(m_client == XCB_WINDOW_NONE);
-    assert(m_wrapper == XCB_WINDOW_NONE);
-    //assert( frameId() == None );
-    assert(!check_active_modal);
+    Q_ASSERT(!isMoveResize());
+    Q_ASSERT(m_client == XCB_WINDOW_NONE);
+    Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
+    //Q_ASSERT( frameId() == None );
+    Q_ASSERT(!check_active_modal);
     for (auto it = m_connections.constBegin(); it != m_connections.constEnd(); ++it) {
         disconnect(*it);
     }
@@ -219,7 +219,7 @@ void Client::deleteClient(Client* c)
  */
 void Client::releaseWindow(bool on_shutdown)
 {
-    assert(!deleting);
+    Q_ASSERT(!deleting);
     deleting = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
@@ -295,7 +295,7 @@ void Client::releaseWindow(bool on_shutdown)
  */
 void Client::destroyClient()
 {
-    assert(!deleting);
+    Q_ASSERT(!deleting);
     deleting = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
@@ -841,7 +841,7 @@ void Client::setShade(ShadeMode mode)
         return; // No real change in shaded state
     }
 
-    assert(isDecorated());   // noborder windows can't be shaded
+    Q_ASSERT(isDecorated());   // noborder windows can't be shaded
     GeometryUpdatesBlocker blocker(this);
 
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
@@ -983,13 +983,13 @@ void Client::updateVisibility()
  */
 void Client::exportMappingState(int s)
 {
-    assert(m_client != XCB_WINDOW_NONE);
-    assert(!deleting || s == WithdrawnState);
+    Q_ASSERT(m_client != XCB_WINDOW_NONE);
+    Q_ASSERT(!deleting || s == WithdrawnState);
     if (s == WithdrawnState) {
         m_client.deleteProperty(atoms->wm_state);
         return;
     }
-    assert(s == NormalState || s == IconicState);
+    Q_ASSERT(s == NormalState || s == IconicState);
 
     int32_t data[2];
     data[0] = s;
@@ -1029,7 +1029,7 @@ void Client::internalHide()
 
 void Client::internalKeep()
 {
-    assert(compositing());
+    Q_ASSERT(compositing());
     if (mapping_state == Kept)
         return;
     MappingState old = mapping_state;

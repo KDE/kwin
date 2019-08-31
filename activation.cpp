@@ -414,7 +414,7 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
  */
 void Workspace::clientHidden(AbstractClient* c)
 {
-    assert(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
+    Q_ASSERT(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
     activateNextClient(c);
 }
 
@@ -813,7 +813,7 @@ xcb_timestamp_t Client::userTime() const
     xcb_timestamp_t time = m_userTime;
     if (time == 0)   // doesn't want focus after showing
         return 0;
-    assert(group() != NULL);
+    Q_ASSERT(group() != NULL);
     if (time == -1U
             || (group()->userTime() != -1U
                 && NET::timestampCompare(group()->userTime(), time) > 0))

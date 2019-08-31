@@ -3778,21 +3778,21 @@ WindowQuad::WindowQuad(WindowQuadType t, int id)
 inline
 WindowVertex& WindowQuad::operator[](int index)
 {
-    assert(index >= 0 && index < 4);
+    Q_ASSERT(index >= 0 && index < 4);
     return verts[ index ];
 }
 
 inline
 const WindowVertex& WindowQuad::operator[](int index) const
 {
-    assert(index >= 0 && index < 4);
+    Q_ASSERT(index >= 0 && index < 4);
     return verts[ index ];
 }
 
 inline
 WindowQuadType WindowQuad::type() const
 {
-    assert(quadType != WindowQuadError);
+    Q_ASSERT(quadType != WindowQuadError);
     return quadType;
 }
 
@@ -3805,14 +3805,14 @@ int WindowQuad::id() const
 inline
 bool WindowQuad::decoration() const
 {
-    assert(quadType != WindowQuadError);
+    Q_ASSERT(quadType != WindowQuadError);
     return quadType == WindowQuadDecoration;
 }
 
 inline
 bool WindowQuad::effect() const
 {
-    assert(quadType != WindowQuadError);
+    Q_ASSERT(quadType != WindowQuadError);
     return quadType >= EFFECT_QUAD_TYPE_START;
 }
 

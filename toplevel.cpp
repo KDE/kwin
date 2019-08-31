@@ -64,7 +64,7 @@ Toplevel::Toplevel()
 
 Toplevel::~Toplevel()
 {
-    assert(damage_handle == None);
+    Q_ASSERT(damage_handle == None);
     delete info;
 }
 

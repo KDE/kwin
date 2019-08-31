@@ -1517,7 +1517,7 @@ bool TabBox::establishTabBoxGrab()
     // in order to catch MouseRelease events and close the tabbox (#67416).
     // All clients already have passive grabs in their wrapper windows, so check only
     // the active client, which may not have it.
-    assert(!m_forcedGlobalMouseGrab);
+    Q_ASSERT(!m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = true;
     if (Workspace::self()->activeClient() != nullptr)
         Workspace::self()->activeClient()->updateMouseGrab();
@@ -1533,7 +1533,7 @@ void TabBox::removeTabBoxGrab()
     }
     updateXTime();
     ungrabXKeyboard();
-    assert(m_forcedGlobalMouseGrab);
+    Q_ASSERT(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
     if (Workspace::self()->activeClient() != nullptr)
         Workspace::self()->activeClient()->updateMouseGrab();

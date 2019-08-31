@@ -96,7 +96,7 @@ void grabXServer()
 
 void ungrabXServer()
 {
-    assert(server_grab_count > 0);
+    Q_ASSERT(server_grab_count > 0);
     if (--server_grab_count == 0) {
         xcb_ungrab_server(connection());
         xcb_flush(connection());

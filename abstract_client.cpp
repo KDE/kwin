@@ -107,7 +107,7 @@ AbstractClient::AbstractClient()
 
 AbstractClient::~AbstractClient()
 {
-    assert(m_blockGeometryUpdates == 0);
+    Q_ASSERT(m_blockGeometryUpdates == 0);
     Q_ASSERT(m_decoration.decoration == nullptr);
 }
 
@@ -1343,8 +1343,8 @@ bool AbstractClient::isModal() const
 
 void AbstractClient::addTransient(AbstractClient *cl)
 {
-    assert(!m_transients.contains(cl));
-    assert(cl != this);
+    Q_ASSERT(!m_transients.contains(cl));
+    Q_ASSERT(cl != this);
     m_transients.append(cl);
 }
 

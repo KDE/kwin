@@ -149,7 +149,7 @@ SyncObject::~SyncObject()
 
 void SyncObject::trigger()
 {
-    assert(m_state == Ready || m_state == Resetting);
+    Q_ASSERT(m_state == Ready || m_state == Resetting);
 
     // Finish resetting the fence if necessary
     if (m_state == Resetting)
@@ -176,7 +176,7 @@ bool SyncObject::finish()
     // Note: It is possible that we never inserted a wait for the fence.
     //       This can happen if we ended up not rendering the damaged
     //       window because it is fully occluded.
-    assert(m_state == TriggerSent || m_state == Waiting);
+    Q_ASSERT(m_state == TriggerSent || m_state == Waiting);
 
     // Check if the fence is signaled
     GLint value;
@@ -205,7 +205,7 @@ bool SyncObject::finish()
 
 void SyncObject::reset()
 {
-    assert(m_state == Done);
+    Q_ASSERT(m_state == Done);
 
     xcb_connection_t * const c = connection();
 
@@ -223,7 +223,7 @@ void SyncObject::reset()
 
 void SyncObject::finishResetting()
 {
-    assert(m_state == Resetting);
+    Q_ASSERT(m_state == Resetting);
     free(xcb_get_input_focus_reply(connection(), m_reset_cookie, nullptr));
     m_state = Ready;
 }
@@ -468,7 +468,7 @@ void SceneOpenGL::initDebugOutput()
     if (have_KHR_debug)
         glEnable(GL_DEBUG_OUTPUT);
 
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
     // Enable all debug messages
     glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 #else

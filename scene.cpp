@@ -224,7 +224,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow(effectWindow(w), data, time_diff);
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
         if (data.quads.isTransformed()) {
             qFatal("Pre-paint calls are not allowed to transform quads!");
         }
@@ -248,7 +248,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
 // to reduce painting and improve performance.
 void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 {
-    assert((orig_mask & (PAINT_SCREEN_TRANSFORMED
+    Q_ASSERT((orig_mask & (PAINT_SCREEN_TRANSFORMED
                          | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) == 0);
     QVector<Phase2Data> phase2data;
     phase2data.reserve(stacking_order.size());
@@ -300,7 +300,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         data.quads = w->buildQuads();
         // preparation step
         effects->prePaintWindow(effectWindow(w), data, time_diff);
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
         if (data.quads.isTransformed()) {
             qFatal("Pre-paint calls are not allowed to transform quads!");
         }
@@ -392,7 +392,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
 void Scene::addToplevel(Toplevel *c)
 {
-    assert(!m_windows.contains(c));
+    Q_ASSERT(!m_windows.contains(c));
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
@@ -447,7 +447,7 @@ void Scene::createStackingOrder(ToplevelList toplevels)
 {
     // TODO: cache the stacking_order in case it has not changed
     foreach (Toplevel *c, toplevels) {
-        assert(m_windows.contains(c));
+        Q_ASSERT(m_windows.contains(c));
         stacking_order.append(m_windows[ c ]);
     }
 }

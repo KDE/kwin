@@ -539,7 +539,7 @@ bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWayland::Server::Buf
         return false;
     }
 
-    assert(m_image == EGL_NO_IMAGE_KHR);
+    Q_ASSERT(m_image == EGL_NO_IMAGE_KHR);
 
     glGenTextures(1, &m_texture);
     q->setWrapMode(GL_CLAMP_TO_EDGE);

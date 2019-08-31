@@ -736,7 +736,7 @@ EffectsHandler::EffectsHandler(CompositingType type)
 EffectsHandler::~EffectsHandler()
 {
     // All effects should already be unloaded by Impl dtor
-    assert(loaded_effects.count() == 0);
+    Q_ASSERT(loaded_effects.count() == 0);
     KWin::effects = nullptr;
 }
 
@@ -847,8 +847,8 @@ EffectWindowGroup::~EffectWindowGroup()
 
 WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) const
 {
-    assert(x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
-#ifndef NDEBUG
+    Q_ASSERT(x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
+#if !defined(QT_NO_DEBUG)
     if (isTransformed())
         qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
@@ -935,7 +935,7 @@ WindowQuadList WindowQuadList::splitAtX(double x) const
 {
     WindowQuadList ret;
     foreach (const WindowQuad & quad, *this) {
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
@@ -967,7 +967,7 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
 {
     WindowQuadList ret;
     foreach (const WindowQuad & quad, *this) {
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
@@ -1007,7 +1007,7 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
     double bottom = first().bottom();
 
     foreach (const WindowQuad &quad, *this) {
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
@@ -1064,7 +1064,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     double bottom = first().bottom();
 
     foreach (const WindowQuad &quad, *this) {
-#ifndef NDEBUG
+#if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
@@ -1129,7 +1129,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
 
     GLVertex2D *vertex = vertices;
 
-    assert(type == GL_QUADS || type == GL_TRIANGLES);
+    Q_ASSERT(type == GL_QUADS || type == GL_TRIANGLES);
 
     switch (type)
     {
@@ -1361,7 +1361,7 @@ bool PaintClipper::clip()
 
 QRegion PaintClipper::paintArea()
 {
-    assert(areas != nullptr);   // can be called only with clip() == true
+    Q_ASSERT(areas != nullptr);   // can be called only with clip() == true
     const QSize &s = effects->virtualScreenSize();
     QRegion ret = QRegion(0, 0, s.width(), s.height());
     foreach (const QRegion & r, *areas)

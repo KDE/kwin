@@ -683,7 +683,7 @@ STRING_MATCH_COMBO(machine)
 
 void RulesWidget::detectClicked()
 {
-    assert(detect_dlg == nullptr);
+    Q_ASSERT(detect_dlg == nullptr);
     detect_dlg = new DetectDialog;
     connect(detect_dlg, SIGNAL(detectionDone(bool)), this, SLOT(detected(bool)));
     detect_dlg->detect(Ui::RulesWidgetBase::detection_delay->value());

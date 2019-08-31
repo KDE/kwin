@@ -681,7 +681,7 @@ const char* Placement::policyToString(Policy policy)
         "NoPlacement", "Default", "XXX should never see", "Random", "Smart", "Cascade", "Centered",
         "ZeroCornered", "UnderMouse", "OnMainWindow", "Maximizing"
     };
-    assert(policy < int(sizeof(policies) / sizeof(policies[ 0 ])));
+    Q_ASSERT(policy < int(sizeof(policies) / sizeof(policies[ 0 ])));
     return policies[ policy ];
 }
 

@@ -201,7 +201,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert(newWindowStack.at(0) == rootInfo()->supportWindow());
+    Q_ASSERT(newWindowStack.at(0) == rootInfo()->supportWindow());
     Xcb::restackWindows(newWindowStack);
 
     int pos = 0;
@@ -450,7 +450,7 @@ void Workspace::lowerClientRequest(KWin::AbstractClient *c)
 
 void Workspace::restack(AbstractClient* c, AbstractClient* under, bool force)
 {
-    assert(unconstrained_stacking_order.contains(under));
+    Q_ASSERT(unconstrained_stacking_order.contains(under));
     if (!force && !AbstractClient::belongToSameApplication(under, c)) {
          // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
@@ -466,7 +466,7 @@ void Workspace::restack(AbstractClient* c, AbstractClient* under, bool force)
         unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(under), c);
     }
 
-    assert(unconstrained_stacking_order.contains(c));
+    Q_ASSERT(unconstrained_stacking_order.contains(c));
     FocusChain::self()->moveAfterClient(c, under);
     updateStackingOrder();
 }

@@ -171,7 +171,7 @@ void UserActionsMenu::helperDialog(const QString& message, AbstractClient* clien
     QString type;
     auto shortcut = [](const QString &name) {
         QAction* action = Workspace::self()->findChild<QAction*>(name);
-        assert(action != NULL);
+        Q_ASSERT(action != NULL);
         const auto shortcuts = KGlobalAccel::self()->shortcut(action);
         return QStringLiteral("%1 (%2)").arg(action->text())
                              .arg(shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
@@ -1120,7 +1120,7 @@ void Workspace::initShortcuts()
 
 void Workspace::setupWindowShortcut(AbstractClient* c)
 {
-    assert(client_keys_dialog == NULL);
+    Q_ASSERT(client_keys_dialog == NULL);
     // TODO: PORT ME (KGlobalAccel related)
     //keys->setEnabled( false );
     //disable_shortcuts_keys->setEnabled( false );

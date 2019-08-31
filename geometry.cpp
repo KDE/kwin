@@ -1020,7 +1020,7 @@ NETExtendedStrut Client::strut() const
 
 StrutRect Client::strutRect(StrutArea area) const
 {
-    assert(area != StrutAreaAll);   // Not valid
+    Q_ASSERT(area != StrutAreaAll);   // Not valid
     const QSize displaySize = screens()->displaySize();
     NETExtendedStrut strutArea = strut();
     switch(area) {
@@ -1783,7 +1783,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
 
 void Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force)
 {
-    assert(!shade_geometry_change);
+    Q_ASSERT(!shade_geometry_change);
     if (isShade()) {
         if (h == borderTop() + borderBottom()) {
             qCWarning(KWIN_CORE) << "Shaded geometry passed for size:" ;
@@ -2036,7 +2036,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
         qCDebug(KWIN_CORE) << "forced size fail:" << s << ":" << rules()->checkSize(s);
     }
     // resuming geometry updates is handled only in setGeometry()
-    assert(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
+    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     if (force == NormalGeometrySet && geom.size() == s)
         return;
     geom.setSize(s);
@@ -2083,7 +2083,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 void AbstractClient::move(int x, int y, ForceGeometry_t force)
 {
     // resuming geometry updates is handled only in setGeometry()
-    assert(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
+    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     QPoint p(x, y);
     if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
@@ -2555,7 +2555,7 @@ static GeometryTip* geometryTip    = 0;
 
 void Client::positionGeometryTip()
 {
-    assert(isMove() || isResize());
+    Q_ASSERT(isMove() || isResize());
     // Position and Size display
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::GeometryTip))
         return; // some effect paints this for us
@@ -2577,9 +2577,9 @@ void Client::positionGeometryTip()
 
 bool AbstractClient::startMoveResize()
 {
-    assert(!isMoveResize());
-    assert(QWidget::keyboardGrabber() == NULL);
-    assert(QWidget::mouseGrabber() == NULL);
+    Q_ASSERT(!isMoveResize());
+    Q_ASSERT(QWidget::keyboardGrabber() == NULL);
+    Q_ASSERT(QWidget::mouseGrabber() == NULL);
     stopDelayedMoveResize();
     if (QApplication::activePopupWidget() != NULL)
         return false; // popups have grab
@@ -2774,7 +2774,7 @@ void AbstractClient::startDelayedMoveResize()
     m_moveResize.delayedTimer->setSingleShot(true);
     connect(m_moveResize.delayedTimer, &QTimer::timeout, this,
         [this]() {
-            assert(isMoveResizePointerButtonDown());
+            Q_ASSERT(isMoveResizePointerButtonDown());
             if (!startMoveResize()) {
                 setMoveResizePointerButtonDown(false);
             }
@@ -3032,7 +3032,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         if (moveResizeGeometry().size() != previousMoveResizeGeom.size())
             update = true;
     } else if (isMove()) {
-        assert(mode == PositionCenter);
+        Q_ASSERT(mode == PositionCenter);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
             int screen = screens()->number(globalPos);

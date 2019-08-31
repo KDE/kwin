@@ -617,7 +617,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         }
     } else
         updateVisibility();
-    assert(mapping_state != Withdrawn);
+    Q_ASSERT(mapping_state != Withdrawn);
     m_managed = true;
     blockGeometryUpdates(false);
 
@@ -664,9 +664,9 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 // Called only from manage()
 void Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth)
 {
-    assert(m_client == XCB_WINDOW_NONE);
-    assert(frameId() == XCB_WINDOW_NONE);
-    assert(m_wrapper == XCB_WINDOW_NONE);
+    Q_ASSERT(m_client == XCB_WINDOW_NONE);
+    Q_ASSERT(frameId() == XCB_WINDOW_NONE);
+    Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
     m_client.reset(w, false);
 
     const uint32_t zero_value = 0;

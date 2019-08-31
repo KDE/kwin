@@ -136,13 +136,13 @@ void Group::deref()
 
 void Group::gotLeader(Client* leader_P)
 {
-    assert(leader_P->window() == leader_wid);
+    Q_ASSERT(leader_P->window() == leader_wid);
     leader_client = leader_P;
 }
 
 void Group::lostLeader()
 {
-    assert(!_members.contains(leader_client));
+    Q_ASSERT(!_members.contains(leader_client));
     leader_client = NULL;
     if (_members.isEmpty()) {
         workspace()->removeGroup(this);
@@ -156,7 +156,7 @@ void Group::lostLeader()
 
 Group* Workspace::findGroup(xcb_window_t leader) const
 {
-    assert(leader != None);
+    Q_ASSERT(leader != None);
     for (GroupList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it)
@@ -439,7 +439,7 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
         m_transientForId = new_transient_for_id;
         if (m_transientForId != XCB_WINDOW_NONE && !groupTransient()) {
             transient_for = workspace()->findClient(Predicate::WindowMatch, m_transientForId);
-            assert(transient_for != NULL);   // verifyTransient() had to check this
+            Q_ASSERT(transient_for != NULL);   // verifyTransient() had to check this
             transient_for->addTransient(this);
         } // checkGroup() will check 'check_active_modal'
         setTransientFor(transient_for);

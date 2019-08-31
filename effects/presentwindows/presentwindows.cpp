@@ -1073,7 +1073,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
             const int dist = distance(pos, slotCenters[i]);
             if (dist < slotCandidateDistance) { // window is interested in this slot
                 EffectWindow *occupier = takenSlots[i];
-                assert(occupier != w);
+                Q_ASSERT(occupier != w);
                 if (!occupier || dist < distance((otherPos = occupier->geometry().center()), slotCenters[i])) {
                     // either nobody lives here, or we're better - takeover the slot if it's our best
                     slotCandidate = i;
@@ -1081,7 +1081,7 @@ void PresentWindowsEffect::calculateWindowTransformationsClosest(EffectWindowLis
                 }
             }
         }
-        assert(slotCandidate != -1);
+        Q_ASSERT(slotCandidate != -1);
         if (takenSlots[slotCandidate])
             tmpList << takenSlots[slotCandidate]; // occupier needs a new home now :p
         tmpList.removeAll(w);

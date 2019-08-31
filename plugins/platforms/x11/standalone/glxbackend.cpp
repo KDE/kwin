@@ -904,7 +904,7 @@ bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visuali
         m_scale.setWidth(1.0f / m_size.width());
         m_scale.setHeight(1.0f / m_size.height());
     } else {
-        assert(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
+        Q_ASSERT(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
 
         m_target = GL_TEXTURE_RECTANGLE;
         m_scale.setWidth(1.0f);

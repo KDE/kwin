@@ -466,10 +466,10 @@ void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
     fblayer->releaseFenceFd = -1;
 
     int err = device->prepare(device, 1, m_list);
-    assert(err == 0);
+    Q_ASSERT(err == 0);
 
     err = device->set(device, 1, m_list);
-    assert(err == 0);
+    Q_ASSERT(err == 0);
     m_backend->enableVSync(true);
     setFenceBufferFd(buffer, fblayer->releaseFenceFd);
 

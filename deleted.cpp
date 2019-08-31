@@ -61,7 +61,7 @@ Deleted::~Deleted()
 {
     if (delete_refcount != 0)
         qCCritical(KWIN_CORE) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
-    assert(delete_refcount == 0);
+    Q_ASSERT(delete_refcount == 0);
     if (workspace()) {
         workspace()->removeDeleted(this);
     }
@@ -93,7 +93,7 @@ void Deleted::discard()
 
 void Deleted::copyToDeleted(Toplevel* c)
 {
-    assert(dynamic_cast< Deleted* >(c) == NULL);
+    Q_ASSERT(dynamic_cast< Deleted* >(c) == NULL);
     Toplevel::copyToDeleted(c);
     desk = c->desktop();
     m_desktops = c->desktops();

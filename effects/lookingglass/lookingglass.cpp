@@ -232,7 +232,7 @@ void LookingGlassEffect::paintScreen(int mask, QRegion region, ScreenPaintData &
     if (m_valid && m_enabled) {
         // Disable render texture
         GLRenderTarget* target = GLRenderTarget::popRenderTarget();
-        assert(target == m_fbo);
+        Q_ASSERT(target == m_fbo);
         Q_UNUSED(target);
         m_texture->bind();
         m_texture->generateMipmaps();

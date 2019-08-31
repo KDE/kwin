@@ -663,7 +663,7 @@ inline xcb_window_t Toplevel::window() const
 
 inline void Toplevel::setWindowHandles(xcb_window_t w)
 {
-    assert(!m_client.isValid() && w != XCB_WINDOW_NONE);
+    Q_ASSERT(!m_client.isValid() && w != XCB_WINDOW_NONE);
     m_client.reset(w, false);
 }
 

@@ -678,7 +678,7 @@ bool EffectsHandlerImpl::doGrabKeyboard()
 
 void EffectsHandlerImpl::ungrabKeyboard()
 {
-    assert(keyboard_grab_effect != NULL);
+    Q_ASSERT(keyboard_grab_effect != NULL);
     doUngrabKeyboard();
     keyboard_grab_effect = NULL;
 }

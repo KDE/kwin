@@ -717,7 +717,7 @@ void Workspace::removeClient(Client* c)
 
 void Workspace::removeUnmanaged(Unmanaged* c)
 {
-    assert(unmanaged.contains(c));
+    Q_ASSERT(unmanaged.contains(c));
     unmanaged.removeAll(c);
     emit unmanagedRemoved(c);
     markXStackingOrderAsDirty();
@@ -725,7 +725,7 @@ void Workspace::removeUnmanaged(Unmanaged* c)
 
 void Workspace::addDeleted(Deleted* c, Toplevel *orig)
 {
-    assert(!deleted.contains(c));
+    Q_ASSERT(!deleted.contains(c));
     deleted.append(c);
     const int unconstraintedIndex = unconstrained_stacking_order.indexOf(orig);
     if (unconstraintedIndex != -1) {
@@ -745,7 +745,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig)
 
 void Workspace::removeDeleted(Deleted* c)
 {
-    assert(deleted.contains(c));
+    Q_ASSERT(deleted.contains(c));
     emit deletedRemoved(c);
     deleted.removeAll(c);
     unconstrained_stacking_order.removeAll(c);

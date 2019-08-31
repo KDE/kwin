@@ -1910,7 +1910,7 @@ bool GLVertexBufferPrivate::awaitFence(intptr_t end)
         fences.pop_front();
     }
 
-    assert(!fences.empty());
+    Q_ASSERT(!fences.empty());
 
     // Wait on the next fence
     const BufferFence &fence = fences.front();
@@ -2113,8 +2113,8 @@ void GLVertexBuffer::setAttribLayout(const GLVertexAttrib *attribs, int count, i
     for (int i = 0; i < count; i++) {
         const int index = attribs[i].index;
 
-        assert(index >= 0 && index < VertexAttributeCount);
-        assert(!d->enabledArrays[index]);
+        Q_ASSERT(index >= 0 && index < VertexAttributeCount);
+        Q_ASSERT(!d->enabledArrays[index]);
 
         d->attrib[index].size   = attribs[i].size;
         d->attrib[index].type   = attribs[i].type;
