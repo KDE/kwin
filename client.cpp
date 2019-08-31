@@ -195,7 +195,6 @@ Client::~Client()
         ::kill(m_killHelperPID, SIGTERM);
         m_killHelperPID = 0;
     }
-    //SWrapper::Client::clientRelease(this);
     if (syncRequest.alarm != XCB_NONE)
         xcb_sync_destroy_alarm(connection(), syncRequest.alarm);
     Q_ASSERT(!isMoveResize());
