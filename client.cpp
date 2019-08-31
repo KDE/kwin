@@ -278,7 +278,6 @@ void Client::releaseWindow(bool on_shutdown)
     m_client.reset();
     m_wrapper.reset();
     m_frame.reset();
-    //frame = None;
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     if (!on_shutdown) {
         disownDataPassedToDeleted();
@@ -325,7 +324,6 @@ void Client::destroyClient()
     m_client.reset(); // invalidate
     m_wrapper.reset();
     m_frame.reset();
-    //frame = None;
     unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
     del->unrefWindow();
