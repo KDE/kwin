@@ -36,6 +36,8 @@ OrientationSensor::OrientationSensor(QObject *parent)
 {
     connect(m_sensor, &QOrientationSensor::readingChanged, this, &OrientationSensor::updateState);
     connect(m_sensor, &QOrientationSensor::activeChanged, this, &OrientationSensor::refresh);
+
+    new OrientationSensorAdaptor(this);
 }
 
 void OrientationSensor::updateState()
@@ -133,12 +135,11 @@ void OrientationSensor::setEnabled(bool enabled)
     if (m_enabled) {
         loadConfig();
         refresh();
-        m_adaptor = new OrientationSensorAdaptor(this);
+        QDBusConnection::sessionBus().registerObject(QStringLiteral("/Orientation"), this);
     } else {
+        QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Orientation"));
         delete m_sni;
         m_sni = nullptr;
-        delete m_adaptor;
-        m_adaptor = nullptr;
     }
     startStopSensor();
 }

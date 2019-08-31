@@ -35,7 +35,6 @@ namespace KWin
 class KWIN_EXPORT OrientationSensor : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.OrientationSensor")
     Q_PROPERTY(bool userEnabled READ isUserEnabled WRITE setUserEnabled NOTIFY userEnabledChanged)
 public:
     explicit OrientationSensor(QObject *parent = nullptr);
@@ -88,8 +87,6 @@ private:
     Orientation m_orientation = Orientation::Undefined;
     KStatusNotifierItem *m_sni = nullptr;
     KSharedConfig::Ptr m_config;
-    OrientationSensorAdaptor *m_adaptor = nullptr;
-
 };
 
 }
