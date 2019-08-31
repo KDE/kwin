@@ -158,15 +158,17 @@ void AbstractWaylandOutput::setEnabled(bool enable)
     if (enable == isEnabled()) {
         return;
     }
+
     if (enable) {
-        updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
+        waylandOutputDevice()->setEnabled(DeviceInterface::Enablement::Enabled);
         createWaylandOutput();
+        updateEnablement(true);
     } else {
-        updateDpms(KWayland::Server::OutputInterface::DpmsMode::Off);
-        delete waylandOutput().data();
+        waylandOutputDevice()->setEnabled(DeviceInterface::Enablement::Disabled);
+        // xdg-output is destroyed in KWayland on wl_output going away.
+        delete m_waylandOutput.data();
+        updateEnablement(false);
     }
-    waylandOutputDevice()->setEnabled(enable ? DeviceInterface::Enablement::Enabled :
-                                               DeviceInterface::Enablement::Disabled);
 }
 
 void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
@@ -227,7 +229,7 @@ void AbstractWaylandOutput::createWaylandOutput()
     connect(m_waylandOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
         [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
             updateDpms(mode);
-        }, Qt::QueuedConnection
+        }
     );
 }
 

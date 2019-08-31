@@ -92,6 +92,7 @@ public:
         return m_waylandOutput;
     }
 
+    bool isEnabled() const;
     /**
      * Enable or disable the output.
      *
@@ -130,6 +131,10 @@ protected:
     void setDpmsSupported(bool set) {
         m_supportsDpms = set;
     }
+
+    virtual void updateEnablement(bool enable) {
+        Q_UNUSED(enable);
+    }
     virtual void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) {
         Q_UNUSED(mode);
     }
@@ -147,7 +152,6 @@ protected:
 private:
     void createWaylandOutput();
     void createXdgOutput();
-    bool isEnabled() const;
 
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;

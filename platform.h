@@ -426,9 +426,7 @@ public:
     virtual Outputs enabledOutputs() const {
         return Outputs();
     }
-
     AbstractOutput *findOutput(const QByteArray &uuid);
-    virtual void enableOutput(AbstractOutput *output, bool enable);
 
     /**
      * A string of information to include in kwin debug output

@@ -151,7 +151,6 @@ void Platform::requestOutputsChange(KWayland::Server::OutputConfigurationInterfa
         if (changeset->enabledChanged() &&
                 changeset->enabled() == Enablement::Enabled) {
             output->setEnabled(true);
-            enableOutput(output, true);
             countChanged = true;
         }
         output->applyChanges(changeset);
@@ -175,16 +174,10 @@ void Platform::requestOutputsChange(KWayland::Server::OutputConfigurationInterfa
                 continue;
             }
             output->setEnabled(false);
-            enableOutput(output, false);
             countChanged = true;
         }
     }
-
-    if (countChanged) {
-        emit screensQueried();
-    } else {
-        emit screens()->changed();
-    }
+    emit screens()->changed();
     config->setApplied();
 }
 
@@ -199,12 +192,6 @@ AbstractOutput *Platform::findOutput(const QByteArray &uuid)
         return *it;
     }
     return nullptr;
-}
-
-void Platform::enableOutput(AbstractOutput *output, bool enable)
-{
-    Q_UNUSED(output)
-    Q_UNUSED(enable)
 }
 
 void Platform::setSoftWareCursor(bool set)

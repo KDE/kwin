@@ -142,7 +142,7 @@ Outputs DrmBackend::enabledOutputs() const
     return m_enabledOutputs;
 }
 
-void DrmBackend::outputWentOff()
+void DrmBackend::createDpmsFilter()
 {
     if (!m_dpmsFilter.isNull()) {
         // already another output is off
@@ -199,7 +199,6 @@ void DrmBackend::reactivate()
             DrmOutput *o = *it;
             // only relevant in atomic mode
             o->m_modesetRequested = true;
-            o->pageFlipped();   // TODO: Do we really need this?
             o->m_crtc->blank();
             o->showCursor();
             o->moveCursor(cp);
@@ -237,16 +236,12 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     Q_UNUSED(sec)
     Q_UNUSED(usec)
     auto output = reinterpret_cast<DrmOutput*>(data);
+
     output->pageFlipped();
     output->m_backend->m_pageFlipsPending--;
     if (output->m_backend->m_pageFlipsPending == 0) {
         // TODO: improve, this currently means we wait for all page flips or all outputs.
         // It would be better to driver the repaint per output
-
-        if (output->m_dpmsAtomicOffPending) {
-            output->m_modesetRequested = true;
-            output->dpmsAtomicOff();
-        }
 
         if (Compositor::self()) {
             Compositor::self()->bufferSwapComplete();
@@ -474,7 +469,6 @@ void DrmBackend::updateOutputs()
                 output->m_conn = con;
                 crtc->setOutput(output);
                 output->m_crtc = crtc;
-                connect(output, &DrmOutput::dpmsChanged, this, &DrmBackend::outputDpmsChanged);
 
                 if (modeCrtc->mode_valid) {
                     output->m_mode = modeCrtc->mode;
@@ -562,16 +556,21 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
     return hash.result().toHex().left(10);
 }
 
-void DrmBackend::enableOutput(AbstractOutput *output, bool enable)
+void DrmBackend::enableOutput(DrmOutput *output, bool enable)
 {
-    auto *drmOutput = static_cast<DrmOutput*>(output);
     if (enable) {
-        m_enabledOutputs << drmOutput;
-        emit outputAdded(drmOutput);
+        Q_ASSERT(!m_enabledOutputs.contains(output));
+        m_enabledOutputs << output;
+        emit outputAdded(output);
     } else {
-        m_enabledOutputs.removeOne(drmOutput);
-        emit outputRemoved(drmOutput);
+        Q_ASSERT(m_enabledOutputs.contains(output));
+        m_enabledOutputs.removeOne(output);
+        Q_ASSERT(!m_enabledOutputs.contains(output));
+        emit outputRemoved(output);
     }
+    updateOutputsEnabled();
+    checkOutputsAreOn();
+    emit screensQueried();
 }
 
 DrmOutput *DrmBackend::findOutput(quint32 connector)
@@ -753,7 +752,7 @@ DrmSurfaceBuffer *DrmBackend::createBuffer(const std::shared_ptr<GbmSurface> &su
 }
 #endif
 
-void DrmBackend::outputDpmsChanged()
+void DrmBackend::updateOutputsEnabled()
 {
     if (m_enabledOutputs.isEmpty()) {
         return;

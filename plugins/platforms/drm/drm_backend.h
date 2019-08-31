@@ -89,7 +89,7 @@ public:
         return m_enabledOutputs;
     }
 
-    void enableOutput(AbstractOutput *output, bool enable) override;
+    void enableOutput(DrmOutput *output, bool enable);
 
     QVector<DrmPlane*> planes() const {
         return m_planes;
@@ -98,7 +98,7 @@ public:
         return m_overlayPlanes;
     }
 
-    void outputWentOff();
+    void createDpmsFilter();
     void checkOutputsAreOn();
 
     // QPainter reuses buffers
@@ -160,11 +160,11 @@ private:
     void updateCursor();
     void moveCursor();
     void initCursor();
-    void outputDpmsChanged();
     void readOutputsConfiguration();
     void writeOutputsConfiguration();
     QByteArray generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
+    void updateOutputsEnabled();
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;

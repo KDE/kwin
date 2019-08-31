@@ -83,9 +83,6 @@ public:
 
     bool supportsTransformations() const;
 
-Q_SIGNALS:
-    void dpmsChanged();
-
 private:
     friend class DrmBackend;
     friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc
@@ -111,9 +108,16 @@ private:
     bool initPrimaryPlane();
     bool initCursorPlane();
 
-    void dpmsOnHandler();
-    void dpmsOffHandler();
+    void atomicEnable();
+    void atomicDisable();
+    void updateEnablement(bool enable) override;
+
     bool dpmsAtomicOff();
+    bool dpmsLegacyApply();
+
+    void dpmsFinishOn();
+    void dpmsFinishOff();
+
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
     void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) override;
     void updateMode(int modeIndex) override;
@@ -142,7 +146,7 @@ private:
     DrmPlane* m_cursorPlane = nullptr;
     QVector<DrmPlane*> m_nextPlanesFlipList;
     bool m_pageFlipPending = false;
-    bool m_dpmsAtomicOffPending = false;
+    bool m_atomicOffPending = false;
     bool m_modesetRequested = true;
 
     struct {
