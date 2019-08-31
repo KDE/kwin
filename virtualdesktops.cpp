@@ -255,7 +255,7 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
 
 QString VirtualDesktopManager::name(uint desktop) const
 {
-    if (m_desktops.length() > desktop - 1) {
+    if (uint(m_desktops.length()) > desktop - 1) {
         return m_desktops[desktop - 1]->name();
     }
 
