@@ -252,6 +252,11 @@ class KWIN_EXPORT Toplevel
      */
     Q_PROPERTY(bool outline READ isOutline)
 
+    /**
+     * This property holds a UUID to uniquely identify this Toplevel.
+     */
+    Q_PROPERTY(QUuid internalId READ internalId CONSTANT)
+
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
