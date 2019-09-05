@@ -341,15 +341,10 @@ void Compositor::startupWithWorkspace()
         vBlankInterval = milliToNano(1);
     }
 
-    // This means "start now" - we don't have even a slight idea when the first vsync will occur.
-    m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1);
-    scheduleRepaint();
-
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
     connect(effects, &EffectsHandler::screenGeometryChanged, this, &Compositor::addRepaintFull);
-    addRepaintFull();
 
     for (Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
@@ -384,6 +379,7 @@ void Compositor::startupWithWorkspace()
     }
 
     // Render at least once.
+    addRepaintFull();
     performCompositing();
 }
 
