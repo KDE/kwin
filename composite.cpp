@@ -514,10 +514,6 @@ void Compositor::deleteUnusedSupportProperties()
 void Compositor::configChanged()
 {
     reinitialize();
-    if (effects) {
-        // setupCompositing() might fail.
-        effects->reconfigure();
-    }
     addRepaintFull();
 }
 
