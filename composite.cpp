@@ -867,13 +867,6 @@ void WaylandCompositor::start()
     }
 }
 
-bool WaylandCompositor::checkForOverlayWindow(WId w) const
-{
-    Q_UNUSED(w)
-    // There is no overlay window in Wayland/XWayland.
-    return false;
-}
-
 int WaylandCompositor::refreshRate() const
 {
     // TODO: This makes no sense on Wayland. First step would be to atleast

@@ -610,8 +610,11 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
 
 Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
 {
-    if (m_compositor && m_compositor->checkForOverlayWindow(w))
-        return NULL;
+    if (X11Compositor *compositor = X11Compositor::self()) {
+        if (compositor->checkForOverlayWindow(w)) {
+            return nullptr;
+        }
+    }
     Unmanaged* c = new Unmanaged();
     if (!c->track(w)) {
         Unmanaged::deleteUnmanaged(c);

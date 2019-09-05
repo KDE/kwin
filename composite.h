@@ -100,11 +100,6 @@ public:
     }
 
     /**
-     * Checks whether @p w is the Scene's overlay window.
-     */
-    virtual bool checkForOverlayWindow(WId w) const = 0;
-
-    /**
      * @brief Static check to test whether the Compositor is available and active.
      *
      * @return bool @c true if there is a Compositor and it is active, @c false otherwise
@@ -191,8 +186,6 @@ public:
 
     void toggleCompositing() override;
 
-    bool checkForOverlayWindow(WId w) const override;
-
 protected:
     void start() override;
 
@@ -252,7 +245,11 @@ public:
 
     void configChanged() override;
 
-    bool checkForOverlayWindow(WId w) const override;
+    /**
+     * Checks whether @p w is the Scene's overlay window.
+     */
+    bool checkForOverlayWindow(WId w) const;
+
     /**
      * @returns Whether the Scene's Overlay X Window is visible.
      */
