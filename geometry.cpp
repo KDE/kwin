@@ -3221,9 +3221,10 @@ QRect AbstractClient::electricBorderMaximizeGeometry(QPoint pos, int desktop)
 
 void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 {
-    // Only allow quick tile on a regular or maximized window
-    if (!isResizable() && maximizeMode() != MaximizeFull)
+    // Only allow quick tile on a regular window.
+    if (!isResizable()) {
         return;
+    }
 
     workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
 
