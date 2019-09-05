@@ -9,7 +9,7 @@ Icon=preferences-system-windows-actions
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinactions
 
-Name=Actions
+Name=Window Actions
 Name[af]=Aksies
 Name[ar]=إجراءات
 Name[be]=Дзеянні
@@ -99,7 +99,7 @@ Name[x-test]=xxActionsxx
 Name[zh_CN]=操作
 Name[zh_TW]=動作
 
-Comment=Mouse Actions on Windows
+Comment=Configure mouse actions for windows and titlebars
 Comment[bs]=Akcioje miša na prozorima
 Comment[ca]=Accions del ratolí en les finestres
 Comment[ca@valencia]=Accions del ratolí en les finestres

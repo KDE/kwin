@@ -80,22 +80,22 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
 
     mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
-    tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
+    tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
     connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
-    tab->addTab(mWindowActions, i18n("Window Actio&ns"));
+    tab->addTab(mWindowActions, i18n("W&indow Actions"));
     connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     mMoving = new KMovingConfig(false, mConfig, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
-    tab->addTab(mMoving, i18n("&Moving"));
+    tab->addTab(mMoving, i18n("Mo&vement"));
     connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     mAdvanced = new KAdvancedConfig(false, mConfig, this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
-    tab->addTab(mAdvanced, i18n("Ad&vanced"));
+    tab->addTab(mAdvanced, i18n("Adva&nced"));
     connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     KAboutData *about =

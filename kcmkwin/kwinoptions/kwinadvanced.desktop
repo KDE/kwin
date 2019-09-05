@@ -8,7 +8,7 @@ X-DocPath=kcontrol/windowbehaviour/index.html#action-advanced
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinadvanced
 
-Name=Advanced
+Name=Advanced Window Behavior
 Name[af]=Gevorderd
 Name[ar]=متقدم
 Name[be]=Асаблівы
@@ -98,7 +98,7 @@ Name[x-test]=xxAdvancedxx
 Name[zh_CN]=高级
 Name[zh_TW]=進階
 
-Comment=Advanced Window Management Features
+Comment=Configure advanced window management options
 Comment[bs]=Napredne mogućnosti upravljanja prozoeima
 Comment[ca]=Característiques avançades per a la gestió de les finestres
 Comment[ca@valencia]=Característiques avançades per a la gestió de les finestres
@@ -143,7 +143,7 @@ Comment[x-test]=xxAdvanced Window Management Featuresxx
 Comment[zh_CN]=高级窗口管理特性
 Comment[zh_TW]=進階視窗管理功能
 
-X-KDE-Keywords=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior
+X-KDE-Keywords=unshade,unshading,shade,shading,border,hover,active borders,tiling,tabs,tabbing,window,window tabbing,window grouping,window tiling,placement,window placement,placement of windows,window advanced behavior
 X-KDE-Keywords[bs]=sjenčanje, granične, lebdjenje, aktivne granice, popločavanje, Kartice, tabovanje, prozorno tabovanje, grupiranje prozora, pločica, prozorna pločica,  plasman przora, plasman prozorâ, napredo ponašanje prozora
 X-KDE-Keywords[ca]=ombra,vora,passar per sobre,vores actives,mosaic,pestanyes,pestanyes de finestra,agrupació de les finestres,mosaic de les finestres,col·locació de les finestres,comportament avançat de les finestres
 X-KDE-Keywords[ca@valencia]=ombra,vora,passar per damunt,vores actives,mosaic,pestanyes,pestanyes de finestra,agrupació de les finestres,mosaic de les finestres,col·locació de les finestres,comportament avançat de les finestres

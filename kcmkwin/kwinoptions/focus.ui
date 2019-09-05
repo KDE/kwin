@@ -6,502 +6,239 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>540</height>
+    <width>600</width>
+    <height>500</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1,1,100" columnstretch="1,2,3,2">
-   <item row="0" column="0">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout_1">
+     <property name="formAlignment">
+      <set>Qt::AlignHCenter|Qt::AlignTop</set>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="1" colspan="2">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Activating windows</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="3" column="1">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <spacer name="horizontalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
-       <widget class="QStackedWidget" name="stackedWidget">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="page">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>&lt;b&gt;Click To Focus&lt;/b&gt;&lt;br&gt;
-A window becomes active when you click into it.&lt;br&gt;&lt;br&gt;
-This behaviour is common on other operating systems and&lt;br&gt;
-likely what you want.</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="page_3">
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>&lt;b&gt;Click To Focus - Mouse Precedence&lt;/b&gt;&lt;br&gt;
-This is mostly the same as &lt;i&gt;Click To Focus&lt;/i&gt;&lt;br&gt;&lt;br&gt;
-If an active window has to be chosen by the system&lt;br&gt;
-(eg. because the currently active one was closed) &lt;br&gt;
-the window under the mouse is the preferred candidate.&lt;br&gt;&lt;br&gt;
-Unusual, but possible variant of &lt;i&gt;Click To Focus&lt;/i&gt;.</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="page_4">
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>&lt;b&gt;Focus Follows Mouse&lt;/b&gt;&lt;br&gt;
-Moving the mouse onto a window will activate it.&lt;br&gt;&lt;br&gt;
-Eg. windows randomly appearing under the mouse will not gain the focus.&lt;br&gt;
-Focus stealing prevention takes place as usual.&lt;br&gt;&lt;br&gt;
-Think as &lt;i&gt;Click To Focus&lt;/i&gt; just without having to actually click.</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="page_5">
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>&lt;b&gt;Focus Follows Mouse - Mouse Precedence&lt;/b&gt;&lt;br&gt;
-This is mostly the same as &lt;i&gt;Focus Follows Mouse&lt;/i&gt;&lt;br&gt;&lt;br&gt;
-If an active window has to be chosen by the system&lt;br&gt;
-(eg. because the currently active one was closed) &lt;br&gt;
-the window under the mouse is the preferred candidate.&lt;br&gt;&lt;br&gt;
-Choose this, if you want a hover controlled focus.</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="page_2">
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>&lt;b&gt;Focus Under Mouse&lt;/b&gt;&lt;br&gt;
-The focus always remains on the window under the mouse.&lt;br&gt;&lt;br&gt;
-
-Notice:&lt;br&gt;
-&lt;b&gt;Focus stealing prevention&lt;/b&gt; and the &lt;b&gt;tabbox (&quot;Alt+Tab&quot;)&lt;/b&gt;&lt;br&gt;
-contradict the policy and &lt;b&gt;will not work&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
-You very likely want to use&lt;br&gt;
-&lt;i&gt;Focus Follows Mouse - Mouse Precedence&lt;/i&gt; instead!</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="page_6">
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>&lt;b&gt;Focus Strictly Under Mouse&lt;/b&gt;&lt;br&gt;
-The focus is always on the window under the mouse - in doubt nowhere -&lt;br&gt;
-very much like the focus behaviour in an unmanaged legacy X11 environment.&lt;br&gt;&lt;br&gt;
-
-Notice:&lt;br&gt;
-&lt;b&gt;Focus stealing prevention&lt;/b&gt; and the &lt;b&gt;tabbox (&quot;Alt+Tab&quot;)&lt;/b&gt;&lt;br&gt;
-contradict the policy and &lt;b&gt;will not work&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
-You very likely want to use&lt;br&gt;
-&lt;i&gt;Focus Follows Mouse - Mouse Precedence&lt;/i&gt; instead!</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <spacer name="horizontalSpacer_7">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="2" column="0" colspan="3">
-       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="100,1,1">
-        <item>
-         <spacer name="horizontalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="delayFocusOnLabel">
-          <property name="text">
-           <string>&amp;Delay focus by</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>delayFocus</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="delayFocus">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="whatsThis">
-           <string>This is the delay after which the window the mouse pointer is over will automatically receive focus.</string>
-          </property>
-          <property name="suffix">
-           <string> ms</string>
-          </property>
-          <property name="minimum">
-           <number>0</number>
-          </property>
-          <property name="maximum">
-           <number>3000</number>
-          </property>
-          <property name="singleStep">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>99</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="4" column="0" colspan="3">
-       <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="1,1,100">
-        <item>
-         <widget class="QLabel" name="focusStealingLabel">
-          <property name="text">
-           <string>Focus &amp;stealing prevention</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="buddy">
-           <cstring>focusStealing</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="KComboBox" name="focusStealing">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="whatsThis">
-           <string>&lt;p&gt;This option specifies how much KWin will try to prevent unwanted focus stealing caused by unexpected activation of new windows. (Note: This feature does not work with the Focus Under Mouse or Focus Strictly Under Mouse focus policies.)
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;None:&lt;/em&gt; Prevention is turned off and new windows always become activated.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Low:&lt;/em&gt; Prevention is enabled; when some window does not have support for the underlying mechanism and KWin cannot reliably decide whether to activate the window or not, it will be activated. This setting may have both worse and better results than the medium level, depending on the applications.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Medium:&lt;/em&gt; Prevention is enabled.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;High:&lt;/em&gt; New windows get activated only if no window is currently active or if they belong to the currently active application. This setting is probably not really usable when not using mouse focus policy.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Extreme:&lt;/em&gt; All windows must be explicitly activated by the user.&lt;/li&gt;
-&lt;/ul&gt;&lt;/p&gt;
-&lt;p&gt;Windows that are prevented from stealing focus are marked as demanding attention, which by default means their taskbar entry will be highlighted. This can be changed in the Notifications control module.&lt;/p&gt;</string>
-          </property>
-          <item>
-           <property name="text">
-            <string extracomment="Focus Stealing Prevention Level">None</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string extracomment="Focus Stealing Prevention Level">Low</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string extracomment="Focus Stealing Prevention Level">Medium</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string extracomment="Focus Stealing Prevention Level">High</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string extracomment="Focus Stealing Prevention Level">Extreme</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="0" colspan="3">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <property name="verticalSpacing">
-         <number>0</number>
-        </property>
-        <item row="1" column="2">
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Policy</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Click</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="3">
-         <widget class="QSlider" name="windowFocusPolicy">
-          <property name="maximum">
-           <number>5</number>
-          </property>
-          <property name="pageStep">
-           <number>1</number>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="tickPosition">
-           <enum>QSlider::NoTicks</enum>
-          </property>
-          <property name="tickInterval">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="4">
-         <widget class="QLabel" name="label_4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Hover</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="3">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="1" colspan="2">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Raising windows</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout" columnstretch="1,1,100">
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="autoRaiseOn">
-        <property name="whatsThis">
-         <string>When this option is enabled, a window in the background will automatically come to the front when the mouse pointer has been over it for some time.</string>
-        </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="windowFocusPolicyLabel">
+       <property name="text">
+        <string>Window &amp;activation policy:</string>
+       </property>
+       <property name="buddy">
+        <cstring>windowFocusPolicyCombo</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="windowFocusPolicyCombo">
+       <property name="whatsThis">
+        <string>With this option you can specify how and when windows will be focused.</string>
+       </property>
+       <item>
         <property name="text">
-         <string>&amp;Raise on hover, delayed by</string>
+         <string comment="sassa asas">Click to focus</string>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="autoRaise">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string>This is the delay after which the window that the mouse pointer is over will automatically come to the front.</string>
-        </property>
-        <property name="suffix">
-         <string> ms</string>
-        </property>
-        <property name="minimum">
-         <number>0</number>
-        </property>
-        <property name="maximum">
-         <number>3000</number>
-        </property>
-        <property name="singleStep">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>99</number>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="clickRaiseOn">
-        <property name="whatsThis">
-         <string>When this option is enabled, the active window will be brought to the front when you click somewhere into the window contents. To change it for inactive windows, you need to change the settings in the Actions tab.</string>
-        </property>
+       </item>
+       <item>
         <property name="text">
-         <string>C&amp;lick raises active window</string>
+         <string>Click to focus (mouse precedence)</string>
         </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+       </item>
+       <item>
+        <property name="text">
+         <string>Focus follows mouse</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Focus follows mouse (mouse precedence)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Focus under mouse</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Focus strictly under mouse</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="delayFocusOnLabel">
+       <property name="text">
+        <string>&amp;Delay focus by:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>delayFocus</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QSpinBox" name="delayFocus">
+       <property name="whatsThis">
+        <string>This is the delay after which the window the mouse pointer is over will automatically receive focus.</string>
+       </property>
+       <property name="suffix">
+        <string> ms</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="focusStealingLabel">
+       <property name="text">
+        <string>Focus &amp;stealing prevention:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>focusStealing</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="KComboBox" name="focusStealing">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option specifies how much KWin will try to prevent unwanted focus stealing caused by unexpected activation of new windows. (Note: This feature does not work with the &lt;span style=&quot; font-style:italic;&quot;&gt;Focus under mouse&lt;/span&gt; or &lt;span style=&quot; font-style:italic;&quot;&gt;Focus strictly under mouse&lt;/span&gt; focus policies.) &lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;None:&lt;/span&gt; Prevention is turned off and new windows always become activated.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Low:&lt;/span&gt; Prevention is enabled; when some window does not have support for the underlying mechanism and KWin cannot reliably decide whether to activate the window or not, it will be activated. This setting may have both worse and better results than the medium level, depending on the applications.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Medium:&lt;/span&gt; Prevention is enabled.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;High:&lt;/span&gt; New windows get activated only if no window is currently active or if they belong to the currently active application. This setting is probably not really usable when not using mouse focus policy.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Extreme:&lt;/span&gt; All windows must be explicitly activated by the user.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Windows that are prevented from stealing focus are marked as demanding attention, which by default means their taskbar entry will be highlighted. This can be changed in the Notifications control module.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <item>
+        <property name="text">
+         <string extracomment="Focus Stealing Prevention Level">None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="Focus Stealing Prevention Level">Low</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="Focus Stealing Prevention Level">Medium</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="Focus Stealing Prevention Level">High</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string extracomment="Focus Stealing Prevention Level">Extreme</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="raisingWindowsLabel">
+       <property name="text">
+        <string>Raising windows:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="clickRaiseOn">
+       <property name="whatsThis">
+        <string>When this option is enabled, the active window will be brought to the front when you click somewhere into the window contents. To change it for inactive windows, you need to change the settings in the Actions tab.</string>
+       </property>
+       <property name="text">
+        <string>&amp;Click raises active window</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_1">
+       <item>
+        <widget class="QCheckBox" name="autoRaiseOn">
+         <property name="whatsThis">
+          <string>When this option is enabled, a window in the background will automatically come to the front when the mouse pointer has been over it for some time.</string>
+         </property>
+         <property name="text">
+          <string>&amp;Raise on hover, delayed by:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="autoRaise">
+         <property name="whatsThis">
+          <string>This is the delay after which the window that the mouse pointer is over will automatically come to the front.</string>
+         </property>
+         <property name="suffix">
+          <string> ms</string>
+         </property>
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>3000</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="multiscreenBehaviorLabel">
+       <property name="text">
+        <string>Multiscreen behavior:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="activeMouseScreen">
+       <property name="whatsThis">
+        <string>When this option is enabled, the active Xinerama screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the screen containing the focused window. By default this option is disabled for Click to focus and enabled for other focus policies.</string>
+       </property>
+       <property name="text">
+        <string>Active screen follows &amp;mouse</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QCheckBox" name="separateScreenFocus">
+       <property name="whatsThis">
+        <string>When this option is enabled, focus operations are limited only to the active Xinerama screen</string>
+       </property>
+       <property name="text">
+        <string>&amp;Separate screen focus</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="windowFocusPolicyDescriptionLabel">
+       <property name="minimumSize">
+        <size>
+         <width>280</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string notr="true">Window activation policy description</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="3" column="2">
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -509,42 +246,10 @@ You very likely want to use&lt;br&gt;
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>192</height>
+       <height>40</height>
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="2" column="1" colspan="2">
-    <widget class="QGroupBox" name="multiscreenBox">
-     <property name="title">
-      <string>Multiscreen behaviour</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QCheckBox" name="separateScreenFocus">
-        <property name="whatsThis">
-         <string>When this option is enabled, focus operations are limited only to the active Xinerama screen</string>
-        </property>
-        <property name="text">
-         <string>S&amp;eparate screen focus</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="activeMouseScreen">
-        <property name="whatsThis">
-         <string>When this option is enabled, the active Xinerama screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the screen containing the focused window. By default this option is disabled for Click to focus and enabled for other focus policies.</string>
-        </property>
-        <property name="text">
-         <string>Active screen follows &amp;mouse</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
    </item>
   </layout>
  </widget>
@@ -555,31 +260,6 @@ You very likely want to use&lt;br&gt;
    <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>focusStealing</tabstop>
-  <tabstop>autoRaiseOn</tabstop>
-  <tabstop>autoRaise</tabstop>
-  <tabstop>delayFocus</tabstop>
-  <tabstop>separateScreenFocus</tabstop>
-  <tabstop>activeMouseScreen</tabstop>
- </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>windowFocusPolicy</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>stackedWidget</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>244</x>
-     <y>38</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>444</x>
-     <y>84</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

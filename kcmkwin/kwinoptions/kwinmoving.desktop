@@ -9,7 +9,7 @@ Icon=preferences-system-windows-move
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinmoving
 
-Name=Moving
+Name=Window Movement
 Name[af]=Beweeg
 Name[ar]=التحريك
 Name[be]=Перамяшчэнне
@@ -97,7 +97,7 @@ Name[x-test]=xxMovingxx
 Name[zh_CN]=移动中
 Name[zh_TW]=移動
 
-Comment=Window Moving
+Comment=Configure window movement options
 Comment[bs]=Kretanje prozora
 Comment[ca]=Moviment de les finestres
 Comment[ca@valencia]=Moviment de les finestres

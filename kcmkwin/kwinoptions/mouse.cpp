@@ -253,8 +253,8 @@ const char* const tbl_WinWheel[] = {
 };
 
 const char* const tbl_AllKey[] = {
-    "Meta",
     "Alt",
+    "Meta",
     ""
 };
 

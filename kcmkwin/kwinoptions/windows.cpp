@@ -95,10 +95,10 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, QWidget * parent)
     , m_ui(new KWinFocusConfigForm(this))
 {
     connect(m_ui->focusStealing, SIGNAL(activated(int)), SLOT(changed()));
-    connect(m_ui->windowFocusPolicy, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(m_ui->windowFocusPolicy, SIGNAL(valueChanged(int)), this, SLOT(focusPolicyChanged()));
-    connect(m_ui->windowFocusPolicy, SIGNAL(valueChanged(int)), this, SLOT(setDelayFocusEnabled()));
-    connect(m_ui->windowFocusPolicy, SIGNAL(valueChanged(int)), this, SLOT(updateActiveMouseScreen()));
+    connect(m_ui->windowFocusPolicyCombo, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
+    connect(m_ui->windowFocusPolicyCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(focusPolicyChanged()));
+    connect(m_ui->windowFocusPolicyCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setDelayFocusEnabled()));
+    connect(m_ui->windowFocusPolicyCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(updateActiveMouseScreen()));
     connect(m_ui->autoRaiseOn, SIGNAL(clicked()), SLOT(changed()));
     connect(m_ui->autoRaiseOn, SIGNAL(toggled(bool)), SLOT(autoRaiseOnTog(bool)));
     connect(m_ui->clickRaiseOn, SIGNAL(clicked()), SLOT(changed()));
@@ -115,13 +115,15 @@ KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, QWidget * parent)
 
 void KFocusConfig::updateMultiScreen()
 {
-    m_ui->multiscreenBox->setVisible(QApplication::screens().count() > 1);
+    m_ui->multiscreenBehaviorLabel->setVisible(QApplication::screens().count() > 1);
+    m_ui->activeMouseScreen->setVisible(QApplication::screens().count() > 1);
+    m_ui->separateScreenFocus->setVisible(QApplication::screens().count() > 1);
 }
 
 
 int KFocusConfig::getFocus()
 {
-    int policy = m_ui->windowFocusPolicy->value();
+    int policy = m_ui->windowFocusPolicyCombo->currentIndex();
     if (policy == 1 || policy == 3)
         --policy; // fix the NextFocusPrefersMouse condition
     return policy;
@@ -129,7 +131,7 @@ int KFocusConfig::getFocus()
 
 void KFocusConfig::setFocus(int foc)
 {
-    m_ui->windowFocusPolicy->setValue(foc);
+    m_ui->windowFocusPolicyCombo->setCurrentIndex(foc);
 
     // this will disable/hide the auto raise delay widget if focus==click
     focusPolicyChanged();
@@ -167,6 +169,27 @@ void KFocusConfig::setClickRaise(bool on)
 
 void KFocusConfig::focusPolicyChanged()
 {
+    switch (m_ui->windowFocusPolicyCombo->currentIndex()) {
+    case 0:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<html><head/><body><p><span style=\" font-style:italic;\">Click to focus:</span> A window becomes active when you click into it. This behavior is common on other operating systems and likely what you want.</p></body></html>"));
+        break;
+    case 1:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<html><head/><body><p><span style=\" font-style:italic;\">Click to focus (mouse precedence):</span> Mostly the same as <span style=\" font-style:italic;\">Click to focus</span>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Unusual, but possible variant of <span style=\" font-style:italic;\">Click to focus</span>.</p></body></html>"));
+        break;
+    case 2:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<html><head/><body><p><span style=\" font-style:italic;\">Focus follows mouse:</span> Moving the mouse onto a window will activate it. Eg. windows randomly appearing under the mouse will not gain the focus. <span style=\" font-style:italic;\">Focus stealing prevention</span> takes place as usual. Think as <span style=\" font-style:italic;\">Click to focus</span> just without having to actually click.</p></body></html>"));
+        break;
+    case 3:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<html><head/><body><p>This is mostly the same as <span style=\" font-style:italic;\">Focus follows mouse</span>. If an active window has to be chosen by the system (eg. because the currently active one was closed) the window under the mouse is the preferred candidate. Choose this, if you want a hover controlled focus.</p></body></html>"));
+        break;
+    case 4:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<html><head/><body><p><span style=\" font-style:italic;\">Focus under mouse:</span> The focus always remains on the window under the mouse.<br/><span style=\" font-weight:600;\">Warning: </span><span style=\" font-style:italic;\">Focus stealing prevention</span> and the <span style=\" font-style:italic;\">tabbox ('Alt+Tab') </span>contradict the activation policy and will not work. You very likely want to use <span style=\" font-style:italic;\">Focus follows mouse (mouse precedence)</span> instead!</p></body></html>"));
+        break;
+    case 5:
+        m_ui->windowFocusPolicyDescriptionLabel->setText(i18n("<html><head/><body><p><span style=\" font-style:italic;\">Focus strictly under mouse:</span> The focus is always on the window under the mouse (in doubt nowhere) very much like the focus behavior in an unmanaged legacy X11 environment.<br/><span style=\" font-weight:600;\">Warning: </span><span style=\" font-style:italic;\">Focus stealing prevention</span> and the <span style=\" font-style:italic;\">tabbox ('Alt+Tab') </span>contradict the activation policy and will not work. You very likely want to use <span style=\" font-style:italic;\">Focus follows mouse (mouse precedence)</span> instead!</p></body></html>"));
+        break;
+    }
+
     int policyIndex = getFocus();
 
     // the auto raise related widgets are: autoRaise
@@ -289,7 +312,7 @@ void KFocusConfig::save(void)
     else
         cg.writeEntry(KWIN_FOCUS, "FocusFollowsMouse");
 
-    cg.writeEntry("NextFocusPrefersMouse", v != m_ui->windowFocusPolicy->value());
+    cg.writeEntry("NextFocusPrefersMouse", v != m_ui->windowFocusPolicyCombo->currentIndex());
 
     v = getAutoRaiseInterval();
     if (v < 0) v = 0;
@@ -381,7 +404,6 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, QWidget *pa
 void KAdvancedConfig::setShadeHover(bool on)
 {
     m_ui->shadeHoverOn->setChecked(on);
-    m_ui->shadeHoverLabel->setEnabled(on);
     m_ui->shadeHover->setEnabled(on);
 }
 
@@ -398,7 +420,6 @@ int KAdvancedConfig::getShadeHoverInterval()
 
 void KAdvancedConfig::shadeHoverChanged(bool a)
 {
-    m_ui->shadeHoverLabel->setEnabled(a);
     m_ui->shadeHover->setEnabled(a);
 }
 

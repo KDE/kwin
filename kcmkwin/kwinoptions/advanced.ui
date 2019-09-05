@@ -6,253 +6,167 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>504</width>
-    <height>387</height>
+    <width>600</width>
+    <height>500</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout" columnstretch="2,1,5">
-   <item row="2" column="2">
-    <spacer name="horizontalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+  <layout class="QFormLayout" name="formLayout">
+   <property name="formAlignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="shadeHoverLabel">
+     <property name="text">
+      <string>Window &amp;unshading:</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+     <property name="buddy">
+      <cstring>shadeHoverOn</cstring>
      </property>
-    </spacer>
-   </item>
-   <item row="2" column="0">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="wtBox">
-     <property name="title">
-      <string>Window Tabbing</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <layout class="QVBoxLayout" name="wtLay">
-      <item>
-       <widget class="QCheckBox" name="inactiveTabsSkipTaskbar">
-        <property name="whatsThis">
-         <string>When turned on hide all tabs that are not active from the taskbar.</string>
-        </property>
-        <property name="text">
-         <string>Hide inactive window tabs from the taskbar</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="autogroupSimilarWindows">
-        <property name="whatsThis">
-         <string>When turned on attempt to automatically detect when a newly opened window is related to an existing one and place them in the same window group.</string>
-        </property>
-        <property name="text">
-         <string>Automatically group similar windows</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="autogroupInForeground">
-        <property name="whatsThis">
-         <string>When turned on immediately switch to any new window tabs that were automatically added to the current group.</string>
-        </property>
-        <property name="text">
-         <string>Switch to automatically grouped windows immediately</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="1">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>&amp;Placement:</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="KComboBox" name="placementCombo">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string>The placement policy determines where a new window will appear on the desktop.&lt;br&gt;&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Smart&lt;/em&gt; will try to achieve a minimum overlap of windows&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Maximizing&lt;/em&gt; will try to maximize every window to fill the whole screen. It might be useful to selectively affect placement of some windows using the window-specific settings.&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Cascade&lt;/em&gt; will cascade the windows&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Random&lt;/em&gt; will use a random position&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Centered&lt;/em&gt; will place the window centered&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Zero-Cornered&lt;/em&gt; will place the window in the top-left corner&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Under Mouse&lt;/em&gt; will place the window under the pointer&lt;/li&gt;
-&lt;/ul&gt;</string>
-        </property>
-        <item>
-         <property name="text">
-          <string>Smart</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Maximizing</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cascade</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Random</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Centered</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Zero-Cornered</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Under Mouse</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QGroupBox" name="shBox">
-     <property name="title">
-      <string>Shading</string>
+    <layout class="QHBoxLayout" name="horizontalLayout_1">
+     <item>
+      <widget class="QCheckBox" name="shadeHoverOn">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this option is enabled, a shaded window will unshade automatically when the mouse pointer has been over the titlebar for some time.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>On titlebar hover after:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="shadeHover">
+       <property name="whatsThis">
+        <string>Sets the time in milliseconds before the window unshades when the mouse pointer goes over the shaded window.</string>
+       </property>
+       <property name="suffix">
+        <string> ms</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>3000</number>
+       </property>
+       <property name="singleStep">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>250</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="windowPlacementLabel">
+     <property name="text">
+      <string>Window &amp;placement:</string>
      </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="buddy">
+      <cstring>placementCombo</cstring>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="3" column="1">
-       <widget class="QLabel" name="shadeHoverLabel">
-        <property name="text">
-         <string>Dela&amp;y:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>shadeHover</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>24</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0" rowspan="3" colspan="5">
-       <widget class="QCheckBox" name="shadeHoverOn">
-        <property name="whatsThis">
-         <string>If Shade Hover is enabled, a shaded window will un-shade automatically when the mouse pointer has been over the title bar for some time.</string>
-        </property>
-        <property name="text">
-         <string>&amp;Enable hover</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2" colspan="3">
-       <widget class="QSpinBox" name="shadeHover">
-        <property name="whatsThis">
-         <string>Sets the time in milliseconds before the window unshades when the mouse pointer goes over the shaded window.</string>
-        </property>
-        <property name="value">
-         <number>500</number>
-        </property>
-        <property name="minimum">
-         <number>0</number>
-        </property>
-        <property name="maximum">
-         <number>3000</number>
-        </property>
-        <property name="singleStep">
-         <number>100</number>
-        </property>
-        <property name="suffix">
-         <string> ms</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="KComboBox" name="placementCombo">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The placement policy determines where a new window will appear on the desktop.&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Smart&lt;/span&gt; will try to achieve a minimum overlap of windows&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Maximizing&lt;/span&gt; will try to maximize every window to fill the whole screen. It might be useful to selectively affect placement of some windows using the window-specific settings.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Cascade&lt;/span&gt; will cascade the windows&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Random&lt;/span&gt; will use a random position&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Centered&lt;/span&gt; will place the window centered&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Zero-cornered&lt;/span&gt; will place the window in the top-left corner&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Under mouse&lt;/span&gt; will place the window under the pointer&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Smart</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Maximizing</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Cascade</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Random</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Centered</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Zero-cornered</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Under mouse</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="windowTabbingLabel">
+     <property name="text">
+      <string>Window tabbing:</string>
+     </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Special Windows</string>
+    <widget class="QCheckBox" name="autogroupInForeground">
+     <property name="whatsThis">
+      <string>When turned on immediately switch to any new window tabs that were automatically added to the current group.</string>
      </property>
-     <property name="flat">
-      <bool>true</bool>
+     <property name="text">
+      <string>&amp;Switch to automatically grouped windows immediately</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="QCheckBox" name="hideUtilityWindowsForInactive">
-        <property name="whatsThis">
-         <string>When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be hidden and will be shown only when the application becomes active. Note that applications have to mark the windows with the proper window type for this feature to work.</string>
-        </property>
-        <property name="text">
-         <string>Hide utility windows for inactive applications</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="inactiveTabsSkipTaskbar">
+     <property name="whatsThis">
+      <string>When turned on hide all tabs that are not active from the taskbar.</string>
+     </property>
+     <property name="text">
+      <string>&amp;Hide inactive window tabs from the taskbar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="specialWindowsLabel">
+     <property name="text">
+      <string>&amp;Special windows:</string>
+     </property>
+     <property name="buddy">
+      <cstring>hideUtilityWindowsForInactive</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="hideUtilityWindowsForInactive">
+     <property name="whatsThis">
+      <string>When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be hidden and will be shown only when the application becomes active. Note that applications have to mark the windows with the proper window type for this feature to work.</string>
+     </property>
+     <property name="text">
+      <string>Hide utility windows for inactive applications</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="autogroupSimilarWindows">
+     <property name="whatsThis">
+      <string>When turned on attempt to automatically detect when a newly opened window is related to an existing one and place them in the same window group.</string>
+     </property>
+     <property name="text">
+      <string>&amp;Group similar windows automatically</string>
+     </property>
     </widget>
    </item>
   </layout>
@@ -263,21 +177,7 @@
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
   </customwidget>
-  <customwidget>
-   <class>QSpinBox</class>
-   <extends>QWidget</extends>
-   <header>knuminput.h</header>
-  </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>shadeHoverOn</tabstop>
-  <tabstop>shadeHover</tabstop>
-  <tabstop>inactiveTabsSkipTaskbar</tabstop>
-  <tabstop>autogroupSimilarWindows</tabstop>
-  <tabstop>autogroupInForeground</tabstop>
-  <tabstop>placementCombo</tabstop>
-  <tabstop>hideUtilityWindowsForInactive</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

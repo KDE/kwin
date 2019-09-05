@@ -8,7 +8,7 @@ X-DocPath=kcontrol/windowbehaviour/index.html#action-focus
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinfocus
 
-Name=Focus
+Name=Window Focus Behavior
 Name[af]=Fokus
 Name[ar]=التركيز
 Name[be]=Фокус
@@ -96,7 +96,7 @@ Name[x-test]=xxFocusxx
 Name[zh_CN]=对焦
 Name[zh_TW]=焦點
 
-Comment=Active Window Policy
+Comment=Configure window activation policy
 Comment[bs]=Pravila aktivnih prozora
 Comment[ca]=Política de la finestra activa
 Comment[ca@valencia]=Política de la finestra activa
@@ -139,7 +139,7 @@ Comment[x-test]=xxActive Window Policyxx
 Comment[zh_CN]=活动窗口策略
 Comment[zh_TW]=作用中視窗政策
 
-X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
+X-KDE-Keywords=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
 X-KDE-Keywords[bs]=fokus, smještaj, automatski rast, rast, kliknite na rast, tastatura, CDE, Alt-Tab, cijeli desktop, fokus slijedi miša, fokus prevenciju, usredotoči krade, fokus politike, fokus prozora ponašanje, prozor zaslon ponašanje
 X-KDE-Keywords[ca]=focus,col·locació,elevació automàtica,elevació,elevació en clic,teclat,CDE,alt-tab,tots els escriptoris,focus segueix el ratolí,prevenció del focus,robatori del focus,política del focus,comportament del focus de la finestra,comportament en pantalla de la finestra
 X-KDE-Keywords[ca@valencia]=focus,col·locació,elevació automàtica,elevació,elevació en clic,teclat,CDE,alt-tab,tots els escriptoris,focus segueix el ratolí,prevenció de focus,robatori de focus,política de focus,comportament del focus de la finestra,comportament en pantalla de la finestra
