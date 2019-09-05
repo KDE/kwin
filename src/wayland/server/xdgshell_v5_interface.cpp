@@ -1,5 +1,6 @@
 /****************************************************************************
 Copyright 2016  Martin Gräßlin <mgraesslin@kde.org>
+Copyright 2019  Vlad Zagorodniy <vladzzag@gmail.com>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -71,6 +72,8 @@ public:
     Private(XdgPopupV5Interface *q, XdgShellV5Interface *c, SurfaceInterface *surface, wl_resource *parentResource);
     ~Private();
 
+    QRect windowGeometry() const override;
+    void commit() override;
     void popupDone() override;
 
     XdgPopupV5Interface *q_func() {
@@ -220,7 +223,7 @@ quint32 XdgShellV5Interface::Private::ping(XdgShellSurfaceInterface * surface)
 {
     auto client = surface->client()->client();
     //from here we can get the resource bound to our global.
-    
+
     auto clientXdgShellResource = resources.value(client);
     if (!clientXdgShellResource) {
         return 0;
@@ -243,7 +246,11 @@ public:
     Private(XdgSurfaceV5Interface *q, XdgShellV5Interface *c, SurfaceInterface *surface, wl_resource *parentResource);
     ~Private();
 
+    QRect windowGeometry() const override;
+    QSize minimumSize() const override;
+    QSize maximumSize() const override;
     void close() override;
+    void commit() override;
     quint32 configure(States states, const QSize &size) override;
 
     XdgSurfaceV5Interface *q_func() {
@@ -262,6 +269,16 @@ private:
     static void setMinimizedCallback(wl_client *client, wl_resource *resource);
 
     static const struct zxdg_surface_v5_interface s_interface;
+
+    struct ShellSurfaceState
+    {
+        QRect windowGeometry;
+
+        bool windowGeometryIsSet = false;
+    };
+
+    ShellSurfaceState m_currentState;
+    ShellSurfaceState m_pendingState;
 };
 
 namespace {
@@ -360,13 +377,14 @@ void XdgSurfaceV5Interface::Private::ackConfigureCallback(wl_client *client, wl_
 
 void XdgSurfaceV5Interface::Private::setWindowGeometryCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    // TODO: implement
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(x)
-    Q_UNUSED(y)
-    Q_UNUSED(width)
-    Q_UNUSED(height)
+    if (width < 0 || height < 0) {
+        wl_resource_post_error(resource, -1, "Tried to set invalid xdg-surface geometry");
+        return;
+    }
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    s->m_pendingState.windowGeometry = QRect(x, y, width, height);
+    s->m_pendingState.windowGeometryIsSet = true;
 }
 
 void XdgSurfaceV5Interface::Private::setMaximizedCallback(wl_client *client, wl_resource *resource)
@@ -415,10 +433,40 @@ XdgSurfaceV5Interface::Private::Private(XdgSurfaceV5Interface *q, XdgShellV5Inte
 
 XdgSurfaceV5Interface::Private::~Private() = default;
 
+QRect XdgSurfaceV5Interface::Private::windowGeometry() const
+{
+    return m_currentState.windowGeometry;
+}
+
+QSize XdgSurfaceV5Interface::Private::minimumSize() const
+{
+    return QSize(0, 0);
+}
+
+QSize XdgSurfaceV5Interface::Private::maximumSize() const
+{
+    return QSize(INT_MAX, INT_MAX);
+}
+
 void XdgSurfaceV5Interface::Private::close()
 {
     zxdg_surface_v5_send_close(resource);
     client->flush();
+}
+
+void XdgSurfaceV5Interface::Private::commit()
+{
+    const bool windowGeometryChanged = m_pendingState.windowGeometryIsSet;
+
+    if (windowGeometryChanged) {
+        m_currentState.windowGeometry = m_pendingState.windowGeometry;
+    }
+
+    m_pendingState = ShellSurfaceState{};
+
+    if (windowGeometryChanged) {
+        emit q_func()->windowGeometryChanged(m_currentState.windowGeometry);
+    }
 }
 
 quint32 XdgSurfaceV5Interface::Private::configure(States states, const QSize &size)
@@ -466,6 +514,14 @@ XdgPopupV5Interface::Private::Private(XdgPopupV5Interface *q, XdgShellV5Interfac
 
 XdgPopupV5Interface::Private::~Private() = default;
 
+QRect XdgPopupV5Interface::Private::windowGeometry() const
+{
+    return QRect();
+}
+
+void XdgPopupV5Interface::Private::commit()
+{
+}
 
 void XdgPopupV5Interface::Private::popupDone()
 {

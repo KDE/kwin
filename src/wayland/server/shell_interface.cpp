@@ -71,6 +71,8 @@ public:
     Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource);
     void ping();
 
+    void commit() override;
+
     QScopedPointer<QTimer> pingTimer;
     quint32 pingSerial = 0;
     enum class WindowMode {
@@ -194,6 +196,10 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
 }
 
 ShellSurfaceInterface::~ShellSurfaceInterface() = default;
+
+void ShellSurfaceInterface::Private::commit()
+{
+}
 
 void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
 {

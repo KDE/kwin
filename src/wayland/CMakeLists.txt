@@ -49,6 +49,7 @@ set(SERVER_LIB_SRCS
     slide_interface.cpp
     subcompositor_interface.cpp
     surface_interface.cpp
+    surfacerole.cpp
     textinput_interface.cpp
     textinput_interface_v0.cpp
     textinput_interface_v2.cpp

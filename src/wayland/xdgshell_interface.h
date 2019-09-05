@@ -287,6 +287,18 @@ public:
      */
     QRect windowGeometry() const;
 
+    /**
+     * @returns The minimum size for the window specified by the client.
+     * @since 5.65
+     */
+    QSize minimumSize() const;
+
+    /**
+     * @returns The maximum size for the window specified by the client.
+     * @since 5.65
+     */
+    QSize maximumSize() const;
+
 Q_SIGNALS:
     /**
      * Emitted whenever the title changes.

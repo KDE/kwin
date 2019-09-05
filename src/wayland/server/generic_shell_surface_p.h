@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "seat_interface.h"
 #include "surface_interface.h"
+#include "surfacerole_p.h"
 #include <wayland-server.h>
 
 namespace KWayland
@@ -31,11 +32,12 @@ namespace Server
 {
 
 template <class T>
-class GenericShellSurface
+class GenericShellSurface : public SurfaceRole
 {
 public:
     GenericShellSurface(T *shellSurface, SurfaceInterface *surface)
-        : surface(surface)
+        : SurfaceRole(surface)
+        , surface(surface)
         , shellSurface(shellSurface)
     {}
 

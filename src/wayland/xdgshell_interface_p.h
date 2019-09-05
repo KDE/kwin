@@ -53,6 +53,9 @@ public:
 
     virtual void close() = 0;
     virtual quint32 configure(States states, const QSize &size) = 0;
+    virtual QRect windowGeometry() const = 0;
+    virtual QSize minimumSize() const = 0;
+    virtual QSize maximumSize() const = 0;
 
     XdgShellSurfaceInterface *q_func() {
         return reinterpret_cast<XdgShellSurfaceInterface *>(q);
@@ -60,7 +63,6 @@ public:
 
     QVector<quint32> configureSerials;
     QPointer<XdgShellSurfaceInterface> parent;
-    QRect windowGeometry;
     XdgShellInterfaceVersion interfaceVersion;
 
 protected:
@@ -72,6 +74,7 @@ class XdgShellPopupInterface::Private : public Resource::Private, public Generic
 public:
     virtual ~Private();
     virtual void popupDone() = 0;
+    virtual QRect windowGeometry() const = 0;
 
     XdgShellPopupInterface *q_func() {
         return reinterpret_cast<XdgShellPopupInterface *>(q);
@@ -94,7 +97,6 @@ public:
     Qt::Edges gravity;
     PositionerConstraints constraintAdjustments;
     QPoint anchorOffset;
-    QRect windowGeometry;
 
     XdgShellInterfaceVersion interfaceVersion;
 

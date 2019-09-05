@@ -1,5 +1,6 @@
 /****************************************************************************
 Copyright 2017  David Edmundson <davidedmundson@kde.org>
+Copyright 2019  Vlad Zagorodniy <vladzzag@gmail.com>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -74,6 +75,9 @@ public:
     Private(XdgPopupStableInterface *q, XdgShellStableInterface *c, SurfaceInterface *surface, wl_resource *parentResource);
     ~Private() override;
 
+    QRect windowGeometry() const override;
+    void commit() override;
+
     void ackConfigure(quint32 serial) {
         if (!configureSerials.contains(serial)) {
             return;
@@ -94,9 +98,23 @@ public:
         return static_cast<XdgPopupStableInterface *>(q);
     }
 private:
+    void setWindowGeometryCallback(const QRect &rect);
+
     static void grabCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial);
 
     static const struct xdg_popup_interface s_interface;
+
+    struct ShellSurfaceState
+    {
+        QRect windowGeometry;
+
+        bool windowGeometryIsSet = false;
+    };
+
+    ShellSurfaceState m_currentState;
+    ShellSurfaceState m_pendingState;
+
+    friend class XdgSurfaceStableInterface;
 };
 
 class XdgSurfaceStableInterface::Private : public KWayland::Server::Resource::Private
@@ -135,7 +153,11 @@ public:
     Private(XdgTopLevelStableInterface* q, XdgShellStableInterface* c, SurfaceInterface* surface, wl_resource* parentResource);
     ~Private() override;
 
+    QRect windowGeometry() const override;
+    QSize minimumSize() const override;
+    QSize maximumSize() const override;
     void close() override;
+    void commit() override;
 
     void ackConfigure(quint32 serial) {
         if (!configureSerials.contains(serial)) {
@@ -188,6 +210,8 @@ public:
     }
 
 private:
+    void setWindowGeometryCallback(const QRect &rect);
+
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void setParentCallback(struct wl_client *client, struct wl_resource *resource, wl_resource *parent);
     static void showWindowMenuCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial, int32_t x, int32_t y);
@@ -200,6 +224,22 @@ private:
     static void setMinimizedCallback(wl_client *client, wl_resource *resource);
 
     static const struct xdg_toplevel_interface s_interface;
+
+    struct ShellSurfaceState
+    {
+        QRect windowGeometry;
+        QSize minimumSize = QSize(0, 0);
+        QSize maximiumSize = QSize(INT32_MAX, INT32_MAX);
+
+        bool windowGeometryIsSet = false;
+        bool minimumSizeIsSet = false;
+        bool maximumSizeIsSet = false;
+    };
+
+    ShellSurfaceState m_currentState;
+    ShellSurfaceState m_pendingState;
+
+    friend class XdgSurfaceStableInterface;
 };
 
 
@@ -441,6 +481,8 @@ void XdgSurfaceStableInterface::Private::getTopLevelCallback(wl_client *client, 
 
 void XdgSurfaceStableInterface::Private::createTopLevel(wl_client *client, uint32_t version, uint32_t id, wl_resource *parentResource)
 {
+    // FIXME: That's incorrect! The client may have asked us to create an xdg-toplevel
+    // for a pointer surface or a subsurface. We have to post an error in that case.
     if (m_topLevel) {
         wl_resource_post_error(parentResource, XDG_SURFACE_ERROR_ALREADY_CONSTRUCTED, "Toplevel already created on this surface");
         return;
@@ -464,7 +506,8 @@ void XdgSurfaceStableInterface::Private::getPopupCallback(wl_client *client, wl_
 
 void XdgSurfaceStableInterface::Private::createPopup(wl_client *client, uint32_t version, uint32_t id, wl_resource *parentResource, wl_resource *parentSurface, wl_resource *positioner)
 {
-
+    // FIXME: That's incorrect! The client may have asked us to create an xdg-popup
+    // for a pointer surface or a subsurface. We have to post an error in that case.
     if (m_topLevel) {
         wl_resource_post_error(parentResource, XDG_SURFACE_ERROR_ALREADY_CONSTRUCTED, "Toplevel already created on this surface");
         return;
@@ -518,14 +561,15 @@ void XdgSurfaceStableInterface::Private::setWindowGeometryCallback(wl_client *cl
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
 
-    const QRect windowRect(x, y, width, height);
+    if (width < 0 || height < 0) {
+        wl_resource_post_error(resource, XDG_WM_BASE_ERROR_INVALID_SURFACE_STATE , "Tried to set invalid xdg-surface geometry");
+        return;
+    }
 
     if (s->m_topLevel) {
-        s->m_topLevel->d_func()->windowGeometry = windowRect;
-        emit s->m_topLevel->windowGeometryChanged(windowRect);
+        s->m_topLevel->d_func()->setWindowGeometryCallback(QRect(x, y, width, height));
     } else if (s->m_popup) {
-        s->m_popup->d_func()->windowGeometry = windowRect;
-        emit s->m_popup->windowGeometryChanged(windowRect);
+        s->m_popup->d_func()->setWindowGeometryCallback(QRect(x, y, width, height));
     }
 }
 
@@ -706,24 +750,90 @@ void XdgPositionerStableInterface::Private::setOffsetCallback(wl_client *client,
     s->anchorOffset = QPoint(x,y);
 }
 
+QRect XdgTopLevelStableInterface::Private::windowGeometry() const
+{
+    return m_currentState.windowGeometry;
+}
+
+QSize XdgTopLevelStableInterface::Private::minimumSize() const
+{
+    return m_currentState.minimumSize;
+}
+
+QSize XdgTopLevelStableInterface::Private::maximumSize() const
+{
+    return m_currentState.maximiumSize;
+}
+
 void XdgTopLevelStableInterface::Private::close()
 {
     xdg_toplevel_send_close(resource);
     client->flush();
 }
 
+void XdgTopLevelStableInterface::Private::commit()
+{
+    const bool windowGeometryChanged = m_pendingState.windowGeometryIsSet;
+    const bool minimumSizeChanged = m_pendingState.minimumSizeIsSet;
+    const bool maximumSizeChanged = m_pendingState.maximumSizeIsSet;
+
+    if (windowGeometryChanged) {
+        m_currentState.windowGeometry = m_pendingState.windowGeometry;
+    }
+    if (minimumSizeChanged) {
+        m_currentState.minimumSize = m_pendingState.minimumSize;
+    }
+    if (maximumSizeChanged) {
+        m_currentState.maximiumSize = m_pendingState.maximiumSize;
+    }
+
+    m_pendingState = ShellSurfaceState{};
+
+    if (windowGeometryChanged) {
+        emit q_func()->windowGeometryChanged(m_currentState.windowGeometry);
+    }
+    if (minimumSizeChanged) {
+        emit q_func()->minSizeChanged(m_currentState.minimumSize);
+    }
+    if (maximumSizeChanged) {
+        emit q_func()->maxSizeChanged(m_currentState.maximiumSize);
+    }
+}
+
 void XdgTopLevelStableInterface::Private::setMaxSizeCallback(wl_client *client, wl_resource *resource, int32_t width, int32_t height)
 {
+    if (width < 0 || height < 0) {
+        wl_resource_post_error(resource, XDG_WM_BASE_ERROR_INVALID_SURFACE_STATE, "Tried to set invalid xdg-toplevel maximum size");
+        return;
+    }
+    if (width == 0) {
+        width = INT32_MAX;
+    }
+    if (height == 0) {
+        height = INT32_MAX;
+    }
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    s->q_func()->maxSizeChanged(QSize(width, height));
+    s->m_pendingState.maximiumSize = QSize(width, height);
+    s->m_pendingState.maximumSizeIsSet = true;
 }
 
 void XdgTopLevelStableInterface::Private::setMinSizeCallback(wl_client *client, wl_resource *resource, int32_t width, int32_t height)
 {
+    if (width < 0 || height < 0) {
+        wl_resource_post_error(resource, XDG_WM_BASE_ERROR_INVALID_SURFACE_STATE, "Tried to set invalid xdg-toplevel minimum size");
+        return;
+    }
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    s->q_func()->minSizeChanged(QSize(width, height));
+    s->m_pendingState.minimumSize = QSize(width, height);
+    s->m_pendingState.minimumSizeIsSet = true;
+}
+
+void XdgTopLevelStableInterface::Private::setWindowGeometryCallback(const QRect &rect)
+{
+    m_pendingState.windowGeometry = rect;
+    m_pendingState.windowGeometryIsSet = true;
 }
 
 const struct xdg_toplevel_interface XdgTopLevelStableInterface::Private::s_interface = {
@@ -829,6 +939,32 @@ const struct xdg_popup_interface XdgPopupStableInterface::Private::s_interface =
 XdgPopupStableInterface::Private::Private(XdgPopupStableInterface *q, XdgShellStableInterface *c, SurfaceInterface *surface, wl_resource *parentResource)
     : XdgShellPopupInterface::Private(XdgShellInterfaceVersion::Stable, q, c, surface, parentResource, &xdg_popup_interface, &s_interface)
 {
+}
+
+QRect XdgPopupStableInterface::Private::windowGeometry() const
+{
+    return m_currentState.windowGeometry;
+}
+
+void XdgPopupStableInterface::Private::commit()
+{
+    const bool windowGeometryChanged = m_pendingState.windowGeometryIsSet;
+
+    if (windowGeometryChanged) {
+        m_currentState.windowGeometry = m_pendingState.windowGeometry;
+    }
+
+    m_pendingState = ShellSurfaceState{};
+
+    if (windowGeometryChanged) {
+        emit q_func()->windowGeometryChanged(m_currentState.windowGeometry);
+    }
+}
+
+void XdgPopupStableInterface::Private::setWindowGeometryCallback(const QRect &rect)
+{
+    m_pendingState.windowGeometry = rect;
+    m_pendingState.windowGeometryIsSet = true;
 }
 
 void XdgPopupStableInterface::Private::grabCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)

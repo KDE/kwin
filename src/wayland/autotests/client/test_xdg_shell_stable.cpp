@@ -57,14 +57,18 @@ void XdgShellTestStable::testMaxSize()
     QVERIFY(maxSizeSpy.isValid());
 
     xdgSurface->setMaxSize(QSize(100, 100));
+    surface->commit(Surface::CommitFlag::None);
     QVERIFY(maxSizeSpy.wait());
     QCOMPARE(maxSizeSpy.count(), 1);
     QCOMPARE(maxSizeSpy.last().at(0).value<QSize>(), QSize(100,100));
+    QCOMPARE(serverXdgSurface->maximumSize(), QSize(100, 100));
 
     xdgSurface->setMaxSize(QSize(200, 200));
+    surface->commit(Surface::CommitFlag::None);
     QVERIFY(maxSizeSpy.wait());
     QCOMPARE(maxSizeSpy.count(), 2);
     QCOMPARE(maxSizeSpy.last().at(0).value<QSize>(), QSize(200,200));
+    QCOMPARE(serverXdgSurface->maximumSize(), QSize(200, 200));
 }
 
 
@@ -141,14 +145,18 @@ void XdgShellTestStable::testMinSize()
     QVERIFY(minSizeSpy.isValid());
 
     xdgSurface->setMinSize(QSize(200, 200));
+    surface->commit(Surface::CommitFlag::None);
     QVERIFY(minSizeSpy.wait());
     QCOMPARE(minSizeSpy.count(), 1);
     QCOMPARE(minSizeSpy.last().at(0).value<QSize>(), QSize(200,200));
+    QCOMPARE(serverXdgSurface->minimumSize(), QSize(200, 200));
 
     xdgSurface->setMinSize(QSize(100, 100));
+    surface->commit(Surface::CommitFlag::None);
     QVERIFY(minSizeSpy.wait());
     QCOMPARE(minSizeSpy.count(), 2);
     QCOMPARE(minSizeSpy.last().at(0).value<QSize>(), QSize(100,100));
+    QCOMPARE(serverXdgSurface->minimumSize(), QSize(100, 100));
 }
 
 //top level then toplevel
@@ -224,10 +232,9 @@ void XdgShellTestStable::testWindowGeometry()
     SURFACE
     QSignalSpy windowGeometryChangedSpy(serverXdgSurface, &XdgShellSurfaceInterface::windowGeometryChanged);
     xdgSurface->setWindowGeometry(QRect(50, 50, 400, 400));
-
-    windowGeometryChangedSpy.wait();
+    surface->commit(Surface::CommitFlag::None);
+    QVERIFY(windowGeometryChangedSpy.wait());
     QCOMPARE(serverXdgSurface->windowGeometry(), QRect(50, 50, 400, 400));
-
 
     //add a popup to this surface
     XdgPositioner positioner(QSize(10,10), QRect(100,100,50,50));
@@ -240,7 +247,8 @@ void XdgShellTestStable::testWindowGeometry()
 
     QSignalSpy popupWindowGeometryChangedSpy(serverXdgPopup, &XdgShellPopupInterface::windowGeometryChanged);
     xdgPopupSurface->setWindowGeometry(QRect(60, 60, 300, 300));
-    popupWindowGeometryChangedSpy.wait();
+    popupSurface->commit(Surface::CommitFlag::None);
+    QVERIFY(popupWindowGeometryChangedSpy.wait());
     QCOMPARE(serverXdgPopup->windowGeometry(), QRect(60, 60, 300, 300));
 }
 

@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "region_interface.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
+#include "surfacerole_p.h"
 // Qt
 #include <QListIterator>
 // Wayland
@@ -528,6 +529,9 @@ void SurfaceInterface::Private::commit()
             }
             subSurface->d_func()->commit();
         }
+    }
+    if (role) {
+        role->commit();
     }
     emit q->committed();
 }

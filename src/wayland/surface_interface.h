@@ -374,6 +374,7 @@ private:
     friend class ContrastManagerInterface;
     friend class IdleInhibitManagerUnstableV1Interface;
     friend class PointerConstraintsUnstableV1Interface;
+    friend class SurfaceRole;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 
     class Private;
