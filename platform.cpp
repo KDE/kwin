@@ -529,7 +529,7 @@ OutlineVisual *Platform::createOutline(Outline *outline)
 
 Decoration::Renderer *Platform::createDecorationRenderer(Decoration::DecoratedClientImpl *client)
 {
-    if (Compositor::self()->hasScene()) {
+    if (Compositor::self()->scene()) {
         return Compositor::self()->scene()->createDecorationRenderer(client);
     }
     return nullptr;

@@ -267,7 +267,7 @@ QString CompositorDBusInterface::compositingNotPossibleReason() const
 
 QString CompositorDBusInterface::compositingType() const
 {
-    if (!m_compositor->hasScene()) {
+    if (!m_compositor->scene()) {
         return QStringLiteral("none");
     }
     switch (m_compositor->scene()->compositingType()) {

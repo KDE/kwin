@@ -534,32 +534,36 @@ void Compositor::reinitialize()
 
 void Compositor::addRepaint(int x, int y, int w, int h)
 {
-    if (!hasScene())
+    if (m_state != State::On) {
         return;
+    }
     repaints_region += QRegion(x, y, w, h);
     scheduleRepaint();
 }
 
 void Compositor::addRepaint(const QRect& r)
 {
-    if (!hasScene())
+    if (m_state != State::On) {
         return;
+    }
     repaints_region += r;
     scheduleRepaint();
 }
 
 void Compositor::addRepaint(const QRegion& r)
 {
-    if (!hasScene())
+    if (m_state != State::On) {
         return;
+    }
     repaints_region += r;
     scheduleRepaint();
 }
 
 void Compositor::addRepaintFull()
 {
-    if (!hasScene())
+    if (m_state != State::On) {
         return;
+    }
     const QSize &s = screens()->size();
     repaints_region = QRegion(0, 0, s.width(), s.height());
     scheduleRepaint();
@@ -976,7 +980,7 @@ void X11Compositor::performCompositing()
 
 bool X11Compositor::checkForOverlayWindow(WId w) const
 {
-    if (!hasScene()) {
+    if (!scene()) {
         // No scene, so it cannot be the overlay window.
         return false;
     }
@@ -990,7 +994,7 @@ bool X11Compositor::checkForOverlayWindow(WId w) const
 
 bool X11Compositor::isOverlayWindowVisible() const
 {
-    if (!hasScene()) {
+    if (!scene()) {
         return false;
     }
     if (!scene()->overlayWindow()) {

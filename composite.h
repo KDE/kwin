@@ -92,9 +92,6 @@ public:
     bool isActive();
     virtual int refreshRate() const = 0;
 
-    bool hasScene() const {
-        return m_scene != NULL;
-    }
     Scene *scene() const {
         return m_scene;
     }
