@@ -508,6 +508,7 @@ void Compositor::deleteUnusedSupportProperties()
             // remove property from root window
             xcb_delete_property(con, kwinApp()->x11RootWindow(), atom);
         }
+        m_unusedSupportProperties.clear();
     }
 }
 
