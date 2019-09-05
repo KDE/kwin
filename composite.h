@@ -180,7 +180,6 @@ class KWIN_EXPORT WaylandCompositor : public Compositor
     Q_OBJECT
 public:
     static WaylandCompositor *create(QObject *parent = nullptr);
-    ~WaylandCompositor() override = default;
 
     int refreshRate() const override;
 
@@ -207,7 +206,6 @@ public:
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
 
     static X11Compositor *create(QObject *parent = nullptr);
-    ~X11Compositor() override = default;
 
     /**
      * @brief Suspends the Compositor if it is currently active.
