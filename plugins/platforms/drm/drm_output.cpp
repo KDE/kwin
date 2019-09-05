@@ -59,13 +59,14 @@ DrmOutput::DrmOutput(DrmBackend *backend)
 DrmOutput::~DrmOutput()
 {
     Q_ASSERT(!m_pageFlipPending);
-    if (!m_deleted) {
-        teardown();
-    }
+    teardown();
 }
 
 void DrmOutput::teardown()
 {
+    if (m_deleted) {
+        return;
+    }
     m_deleted = true;
     hideCursor();
     m_crtc->blank();

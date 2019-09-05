@@ -86,6 +86,14 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
+
+    /**
+     * Informs the Platform that it is about to go down and shall do appropriate cleanup.
+     * Child classes can override this function but must call the parent implementation in
+     * the end.
+     */
+    virtual void prepareShutdown();
+
     /**
      * Allows the platform to create a platform specific screen edge.
      * The default implementation creates a Edge.
@@ -390,6 +398,7 @@ public:
      * Default implementation creates an EffectsHandlerImp;
      */
     virtual void createEffectsHandler(Compositor *compositor, Scene *scene);
+
     /**
      * The CompositingTypes supported by the Platform.
      * The first item should be the most preferred one.

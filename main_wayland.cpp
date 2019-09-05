@@ -121,8 +121,8 @@ ApplicationWayland::~ApplicationWayland()
         return;
     }
 
-    if (kwinApp()->platform()) {
-        kwinApp()->platform()->setOutputsEnabled(false);
+    if (auto *platform = kwinApp()->platform()) {
+        platform->prepareShutdown();
     }
     // need to unload all effects prior to destroying X connection as they might do X calls
     if (effects) {

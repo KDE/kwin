@@ -81,6 +81,8 @@ public:
     OpenGLBackend* createOpenGLBackend() override;
 
     void init() override;
+    void prepareShutdown() override;
+
     DrmDumbBuffer *createBuffer(const QSize &size);
 #if HAVE_GBM
     DrmSurfaceBuffer *createBuffer(const std::shared_ptr<GbmSurface> &surface);

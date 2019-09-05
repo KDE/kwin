@@ -87,7 +87,6 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend()
 {
-    writeOutputsConfiguration();
 #if HAVE_GBM
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
@@ -98,10 +97,6 @@ DrmBackend::~DrmBackend()
         while (m_pageFlipsPending != 0) {
             QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
         }
-        // we need to first remove all outputs
-        qDeleteAll(m_outputs);
-        m_outputs.clear();
-        m_enabledOutputs.clear();
 
         qDeleteAll(m_planes);
         qDeleteAll(m_crtcs);
@@ -126,6 +121,15 @@ void DrmBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
+}
+
+void DrmBackend::prepareShutdown()
+{
+    writeOutputsConfiguration();
+    for (DrmOutput *output : m_outputs) {
+        output->teardown();
+    }
+    Platform::prepareShutdown();
 }
 
 Outputs DrmBackend::outputs() const
