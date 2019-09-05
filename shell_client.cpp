@@ -357,8 +357,6 @@ void ShellClient::finishInit() {
     SurfaceInterface *s = surface();
     disconnect(s, &SurfaceInterface::committed, this, &ShellClient::finishInit);
 
-    updateWindowMargins();
-
     bool needsPlacement = !isInitialPositionSet();
 
     if (supportsWindowRules()) {
