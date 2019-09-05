@@ -266,7 +266,7 @@ public:
             }
             qCDebug(KWIN_CORE) << "interfaces for" << client->executablePath() << requestedInterfaces << interfaceName << requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName));
             if (!requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName))) {
-                qCWarning(KWIN_CORE) << "Did not grant the interface" << interfaceName << "to" << client->executablePath() << ". Please request it under X-Wayland-Interfaces";
+                qCWarning(KWIN_CORE) << "Did not grant the interface" << interfaceName << "to" << client->executablePath() << ". Please request it under X-KDE-Wayland-Interfaces";
                 return false;
             }
         }
