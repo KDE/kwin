@@ -85,6 +85,7 @@ Comment[sr@latin]=Kretanje, broj i raspored virtuelnih površi
 Comment[sv]=Navigering, antal och layout av virtuella skrivbord
 Comment[uk]=Навігація, кількість та компонування віртуальних стільниць
 Comment[x-test]=xxNavigation, Number and Layout of Virtual Desktopsxx
+Comment[zh_CN]=虚拟桌面的切换，数量和布局
 
 Icon=preferences-desktop
 Type=Service

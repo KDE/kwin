@@ -69,6 +69,7 @@ Comment[sr@latin]=Gestovi zamaha na dodirniku
 Comment[sv]=Draggester för pekskärm
 Comment[uk]=Жести на сенсорній панелі
 Comment[x-test]=xxTouch screen swipe gesturesxx
+Comment[zh_CN]=触摸屏滑动手势
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,vora,frontera,acció,canvi,escriptori,vores de l'escriptori,vores de la pantalla,costat de la pantalla,comportament de la pantalla,pantalla tàctil
