@@ -39,8 +39,6 @@
 
 #include "detectwidget.h"
 
-#include <cassert>
-
 Q_DECLARE_METATYPE(NET::WindowType)
 
 namespace KWin

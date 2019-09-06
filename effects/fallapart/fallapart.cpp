@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "fallapartconfig.h"
 
-#include <cassert>
 #include <cmath>
 
 namespace KWin

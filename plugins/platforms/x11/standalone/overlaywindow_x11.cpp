@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QVector>
 
-#include <cassert>
-
 #include <xcb/composite.h>
 #include <xcb/shape.h>
 #if XCB_COMPOSITE_MAJOR_VERSION > 0 || XCB_COMPOSITE_MINOR_VERSION >= 3

@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "workspace.h"
 
-#include <cassert>
 #include <csignal>
 #include <cstdio>
 

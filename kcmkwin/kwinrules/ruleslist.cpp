@@ -24,8 +24,6 @@
 
 #include "ruleswidget.h"
 
-#include <cassert>
-
 namespace KWin
 {
 

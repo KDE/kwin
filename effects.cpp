@@ -60,8 +60,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations/decorationbridge.h"
 #include <KDecoration2/DecorationSettings>
 
-#include <cassert>
-
 namespace KWin
 {
 //---------------------

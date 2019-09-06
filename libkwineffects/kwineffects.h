@@ -49,7 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <netwm.h>
 
-#include <cassert>
 #include <climits>
 #include <functional>
 

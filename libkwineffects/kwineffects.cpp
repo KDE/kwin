@@ -41,8 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 
-#include <cassert>
-
 #include <KWayland/Server/surface_interface.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

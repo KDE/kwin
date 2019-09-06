@@ -37,9 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWindowSystem>
 #include <QDebug>
 
-#include <cassert>
-
-
 /*
  TODO
  Rename as many uses of 'transient' as possible (hasTransient->hasSubwindow,etc.),
