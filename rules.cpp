@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "rules.h"
 
-#include <fixx11h.h>
 #include <kconfig.h>
 #include <KXMessages>
 #include <QRegExp>

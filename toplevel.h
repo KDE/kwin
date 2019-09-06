@@ -35,9 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // xcb
 #include <xcb/damage.h>
 #include <xcb/xfixes.h>
-// XLib
-#include <X11/Xlib.h>
-#include <fixx11h.h>
 // c++
 #include <functional>
 
@@ -350,7 +347,7 @@ public:
     QByteArray wmClientMachine(bool use_localhost) const;
     const ClientMachine *clientMachine() const;
     virtual bool isLocalhost() const;
-    Window wmClientLeader() const;
+    xcb_window_t wmClientLeader() const;
     virtual pid_t pid() const;
     static bool resourceMatch(const Toplevel* c1, const Toplevel* c2);
 
@@ -589,7 +586,7 @@ protected Q_SLOTS:
 protected:
     ~Toplevel() override;
     void setWindowHandles(xcb_window_t client);
-    void detectShape(Window id);
+    void detectShape(xcb_window_t id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
     virtual void damageNotifyEvent();
     virtual void clientMessageEvent(xcb_client_message_event_t *e);
@@ -644,7 +641,7 @@ private:
     QByteArray resource_name;
     QByteArray resource_class;
     ClientMachine *m_clientMachine;
-    WId wmClientLeaderWin;
+    xcb_window_t m_wmClientLeader;
     bool m_damageReplyPending;
     QRegion opaque_region;
     xcb_xfixes_fetch_region_cookie_t m_regionCookie;

@@ -53,9 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFileInfo>
 #include <QMouseEvent>
 #include <QProcess>
-// XLib
-#include <X11/Xutil.h>
-#include <fixx11h.h>
+// xcb
 #include <xcb/xcb_icccm.h>
 // system
 #include <unistd.h>
@@ -246,7 +244,7 @@ void Client::releaseWindow(bool on_shutdown)
     // Grab X during the release to make removing of properties, setting to withdrawn state
     // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
     grabXServer();
-    exportMappingState(WithdrawnState);
+    exportMappingState(XCB_ICCCM_WM_STATE_WITHDRAWN);
     setModal(false);   // Otherwise its mainwindow wouldn't get focus
     hidden = true; // So that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if (!on_shutdown)
@@ -853,7 +851,7 @@ void Client::setShade(ShadeMode mode)
         m_wrapper.unmap();
         m_client.unmap();
         m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
-        exportMappingState(IconicState);
+        exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
         plainResize(s);
         shade_geometry_change = false;
         if (was_shade_mode == ShadeHover) {
@@ -892,7 +890,7 @@ void Client::setShade(ShadeMode mode)
         }
         m_wrapper.map();
         m_client.map();
-        exportMappingState(NormalState);
+        exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
         if (isActive())
             workspace()->requestFocus(this);
     }
@@ -981,12 +979,12 @@ void Client::updateVisibility()
 void Client::exportMappingState(int s)
 {
     Q_ASSERT(m_client != XCB_WINDOW_NONE);
-    Q_ASSERT(!deleting || s == WithdrawnState);
-    if (s == WithdrawnState) {
+    Q_ASSERT(!deleting || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
+    if (s == XCB_ICCCM_WM_STATE_WITHDRAWN) {
         m_client.deleteProperty(atoms->wm_state);
         return;
     }
-    Q_ASSERT(s == NormalState || s == IconicState);
+    Q_ASSERT(s == XCB_ICCCM_WM_STATE_NORMAL || s == XCB_ICCCM_WM_STATE_ICONIC);
 
     int32_t data[2];
     data[0] = s;
@@ -1058,9 +1056,9 @@ void Client::map()
         m_wrapper.map();
         m_client.map();
         m_decoInputExtent.map();
-        exportMappingState(NormalState);
+        exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
     } else
-        exportMappingState(IconicState);
+        exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
     addLayerRepaint(visibleRect());
 }
 
@@ -1081,7 +1079,7 @@ void Client::unmap()
     m_client.unmap();
     m_decoInputExtent.unmap();
     m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
-    exportMappingState(IconicState);
+    exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
 }
 
 /**

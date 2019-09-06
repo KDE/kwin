@@ -47,7 +47,7 @@ Unmanaged::~Unmanaged()
 {
 }
 
-bool Unmanaged::track(Window w)
+bool Unmanaged::track(xcb_window_t w)
 {
     GRAB_SERVER_DURING_CONTEXT
     Xcb::WindowAttributes attr(w);

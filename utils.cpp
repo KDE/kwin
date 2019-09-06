@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QDebug>
 
-#include <X11/Xlib.h>
-
 #include "atoms.h"
 #include "platform.h"
 #include "workspace.h"

@@ -162,7 +162,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
 {
     Workspace *workspace = Workspace::self();
     if (Client* c = workspace->findClient(Predicate::WindowMatch, w)) {
-        if (timestamp == CurrentTime)
+        if (timestamp == XCB_CURRENT_TIME)
             timestamp = c->userTime();
         if (src != NET::FromApplication && src != FromTool)
             src = NET::FromTool;
@@ -175,7 +175,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
             if (workspace->allowClientActivation(c, timestamp, false, true))
                 workspace->activateClient(c);
             // if activation of the requestor's window would be allowed, allow activation too
-            else if (active_window != None
+            else if (active_window != XCB_WINDOW_NONE
                     && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != NULL
                     && workspace->allowClientActivation(c2,
                             timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
@@ -189,7 +189,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
 void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t above, int detail, xcb_timestamp_t timestamp)
 {
     if (Client* c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
-        if (timestamp == CurrentTime)
+        if (timestamp == XCB_CURRENT_TIME)
             timestamp = c->userTime();
         if (src != NET::FromApplication && src != FromTool)
             src = NET::FromTool;

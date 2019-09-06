@@ -50,14 +50,14 @@ namespace KWin
 // Group
 //********************************************
 
-Group::Group(Window leader_P)
+Group::Group(xcb_window_t leader_P)
     :   leader_client(NULL),
         leader_wid(leader_P),
         leader_info(NULL),
         user_time(-1U),
         refcount(0)
 {
-    if (leader_P != None) {
+    if (leader_P != XCB_WINDOW_NONE) {
         leader_client = workspace()->findClient(Predicate::WindowMatch, leader_P);
         leader_info = new NETWinInfo(connection(), leader_P, rootWindow(),
                                       0, NET::WM2StartupId);
@@ -76,7 +76,7 @@ QIcon Group::icon() const
 {
     if (leader_client != NULL)
         return leader_client->icon();
-    else if (leader_wid != None) {
+    else if (leader_wid != XCB_WINDOW_NONE) {
         QIcon ic;
         NETWinInfo info(connection(), leader_wid, rootWindow(), NET::WMIcon, NET::WM2IconPixmap);
         auto readIcon = [&ic, &info, this](int size, bool scale = true) {
@@ -153,7 +153,7 @@ void Group::lostLeader()
 
 Group* Workspace::findGroup(xcb_window_t leader) const
 {
-    Q_ASSERT(leader != None);
+    Q_ASSERT(leader != XCB_WINDOW_NONE);
     for (GroupList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it)
@@ -809,7 +809,7 @@ void Client::checkGroup(Group* set_group, bool force)
             // try creating group with other windows with the same client leader
             Group* new_group = workspace()->findClientLeaderGroup(this);
             if (new_group == NULL)
-                new_group = new Group(None);
+                new_group = new Group(XCB_WINDOW_NONE);
             if (new_group != in_group) {
                 if (in_group != NULL)
                     in_group->removeMember(this);
@@ -826,7 +826,7 @@ void Client::checkGroup(Group* set_group, bool force)
                 in_group = NULL;
             }
             if (new_group == NULL)
-                new_group = new Group(None);
+                new_group = new Group(XCB_WINDOW_NONE);
             if (in_group != new_group) {
                 in_group = new_group;
                 in_group->addMember(this);
