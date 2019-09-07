@@ -28,7 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 ///////////////////////////////////////////////////////////////////////////////
-// NOTE: if you change the menu, keep kde-workspace/libs/taskmanager/taskactions.cpp in sync
+// NOTE: if you change the menu, keep
+//       plasma-desktop/applets/taskmanager/package/contents/ui/ContextMenu.qml
+//       in sync
 //////////////////////////////////////////////////////////////////////////////
 
 #include "useractions.h"
@@ -257,17 +259,18 @@ void UserActionsMenu::init()
     m_moveOperation->setData(Options::UnrestrictedMoveOp);
 
     m_resizeOperation = advancedMenu->addAction(i18n("&Resize"));
+    m_resizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-scale")));
     setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
     m_resizeOperation->setData(Options::ResizeOp);
 
     m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
-    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
+    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-above")));
     setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
     m_keepAboveOperation->setCheckable(true);
     m_keepAboveOperation->setData(Options::KeepAboveOp);
 
     m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
-    m_keepBelowOperation->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
+    m_keepBelowOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-below")));
     setShortcut(m_keepBelowOperation, QStringLiteral("Window Below Other Windows"));
     m_keepBelowOperation->setCheckable(true);
     m_keepBelowOperation->setData(Options::KeepBelowOp);
@@ -279,28 +282,30 @@ void UserActionsMenu::init()
     m_fullScreenOperation->setData(Options::FullScreenOp);
 
     m_shadeOperation = advancedMenu->addAction(i18n("&Shade"));
+    m_shadeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-shade")));
     setShortcut(m_shadeOperation, QStringLiteral("Window Shade"));
     m_shadeOperation->setCheckable(true);
     m_shadeOperation->setData(Options::ShadeOp);
 
     m_noBorderOperation = advancedMenu->addAction(i18n("&No Border"));
+    m_noBorderOperation->setIcon(QIcon::fromTheme(QStringLiteral("edit-none-border")));
     setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
     m_noBorderOperation->setCheckable(true);
     m_noBorderOperation->setData(Options::NoBorderOp);
 
     advancedMenu->addSeparator();
 
-    m_shortcutOperation = advancedMenu->addAction(i18n("Window Short&cut..."));
+    m_shortcutOperation = advancedMenu->addAction(i18n("Set Window Short&cut..."));
     m_shortcutOperation->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
     setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
     m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
 
-    QAction *action = advancedMenu->addAction(i18n("Special &Window Settings..."));
+    QAction *action = advancedMenu->addAction(i18n("Configure Special &Window Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
     m_rulesOperation = action;
 
-    action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
+    action = advancedMenu->addAction(i18n("Configure S&pecial Application Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
     m_applicationRulesOperation = action;
@@ -308,7 +313,7 @@ void UserActionsMenu::init()
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
-                                        "Window Manager S&ettings..."));
+                                        "Configure W&indow Manager..."));
         action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
         connect(action, &QAction::triggered, this,
             [this]() {
@@ -338,16 +343,16 @@ void UserActionsMenu::init()
         );
     }
 
-    m_minimizeOperation = m_menu->addAction(i18n("Mi&nimize"));
-    setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
-    m_minimizeOperation->setData(Options::MinimizeOp);
-
     m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
+    m_maximizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-maximize")));
     setShortcut(m_maximizeOperation, QStringLiteral("Window Maximize"));
     m_maximizeOperation->setCheckable(true);
     m_maximizeOperation->setData(Options::MaximizeOp);
 
-    m_menu->addSeparator();
+    m_minimizeOperation = m_menu->addAction(i18n("Mi&nimize"));
+    m_minimizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize")));
+    setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
+    m_minimizeOperation->setData(Options::MinimizeOp);
 
     // Actions for window tabbing
     if (false) {
@@ -363,12 +368,9 @@ void UserActionsMenu::init()
         m_menu->addSeparator();
     }
 
-    m_menu->addSeparator();
-
     action = m_menu->addMenu(advancedMenu);
     action->setText(i18n("&More Actions"));
-
-    m_menu->addSeparator();
+    action->setIcon(QIcon::fromTheme(QStringLiteral("view-more-symbolic")));
 
     m_closeOperation = m_menu->addAction(i18n("&Close"));
     m_closeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
@@ -599,8 +601,9 @@ void UserActionsMenu::initDesktopPopup()
 
         QAction *action = m_multipleDesktopsMenu->menuAction();
         // set it as the first item
-        m_menu->insertAction(m_minimizeOperation, action);
+        m_menu->insertAction(m_maximizeOperation, action);
         action->setText(i18n("&Desktops"));
+        action->setIcon(QIcon::fromTheme(QStringLiteral("virtual-desktops")));
 
     } else {
         if (m_desktopMenu)
@@ -612,8 +615,9 @@ void UserActionsMenu::initDesktopPopup()
 
         QAction *action = m_desktopMenu->menuAction();
         // set it as the first item
-        m_menu->insertAction(m_minimizeOperation, action);
-        action->setText(i18n("Move To &Desktop"));
+        m_menu->insertAction(m_maximizeOperation, action);
+        action->setText(i18n("Move to &Desktop"));
+        action->setIcon(QIcon::fromTheme(QStringLiteral("virtual-desktops")));
     }
 }
 
@@ -630,7 +634,8 @@ void UserActionsMenu::initScreenPopup()
     QAction *action = m_screenMenu->menuAction();
     // set it as the first item after desktop
     m_menu->insertAction(m_activityMenu ? m_activityMenu->menuAction() : m_minimizeOperation, action);
-    action->setText(i18n("Move To &Screen"));
+    action->setText(i18n("Move to &Screen"));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("computer")));
 }
 
 void UserActionsMenu::initActivityPopup()
@@ -644,8 +649,9 @@ void UserActionsMenu::initActivityPopup()
 
     QAction *action = m_activityMenu->menuAction();
     // set it as the first item
-    m_menu->insertAction(m_minimizeOperation, action);
-    action->setText(i18n("Ac&tivities"));   //FIXME is that a good string?
+    m_menu->insertAction(m_maximizeOperation, action);
+    action->setText(i18n("Show in &Activities"));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("activities")));
 }
 
 void UserActionsMenu::desktopPopupAboutToShow()

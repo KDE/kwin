@@ -197,11 +197,11 @@ private:
      */
     void init();
     /**
-     * Creates the Move To Desktop sub-menu.
+     * Creates the Move to Desktop sub-menu.
      */
     void initDesktopPopup();
     /**
-     * Creates the Move To Screen sub-menu.
+     * Creates the Move to Screen sub-menu.
      */
     void initScreenPopup();
     /**
