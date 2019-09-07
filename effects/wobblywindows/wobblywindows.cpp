@@ -249,6 +249,10 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
         bool stop = false;
         qreal updateTime = time;
 
+        // We have to reset the clip region in order to render clients below
+        // opaque wobbly windows.
+        data.clip = QRegion();
+
         while (!stop && (updateTime > maxTime)) {
 #if defined VERBOSE_MODE
             qCDebug(KWINEFFECTS) << "loop time " << updateTime << " / " << time;
