@@ -50,6 +50,7 @@ private:
     static void touchUpCallback(wl_client *client, wl_resource *resource, quint32 id);
     static void touchCancelCallback(wl_client *client, wl_resource *resource);
     static void touchFrameCallback(wl_client *client, wl_resource *resource);
+    static void keyboardKeyCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t state);
 
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
@@ -75,7 +76,7 @@ private:
     FakeInputDevice *q;
 };
 
-const quint32 FakeInputInterface::Private::s_version = 3;
+const quint32 FakeInputInterface::Private::s_version = 4;
 QList<quint32> FakeInputInterface::Private::touchIds = QList<quint32>();
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -89,7 +90,8 @@ const struct org_kde_kwin_fake_input_interface FakeInputInterface::Private::s_in
     touchUpCallback,
     touchCancelCallback,
     touchFrameCallback,
-    pointerMotionAbsoluteCallback
+    pointerMotionAbsoluteCallback,
+    keyboardKeyCallback
 };
 #endif
 
@@ -263,6 +265,26 @@ void FakeInputInterface::Private::touchFrameCallback(wl_client *client, wl_resou
         return;
     }
     emit d->touchFrameRequested();
+}
+
+void FakeInputInterface::Private::keyboardKeyCallback(wl_client *client, wl_resource *resource, uint32_t button, uint32_t state)
+{
+    Q_UNUSED(client)
+    FakeInputDevice *d = device(resource);
+    if (!d || !d->isAuthenticated()) {
+        return;
+    }
+    switch (state) {
+    case WL_KEYBOARD_KEY_STATE_PRESSED:
+        emit d->keyboardKeyPressRequested(button);
+        break;
+    case WL_KEYBOARD_KEY_STATE_RELEASED:
+        emit d->keyboardKeyReleaseRequested(button);
+        break;
+    default:
+        // nothing
+        break;
+    }
 }
 
 FakeInputInterface::FakeInputInterface(Display *display, QObject *parent)

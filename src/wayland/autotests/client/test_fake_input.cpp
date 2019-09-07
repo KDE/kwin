@@ -52,6 +52,8 @@ private Q_SLOTS:
     void testAxis_data();
     void testAxis();
     void testTouch();
+    void testKeyboardKeyLinux_data();
+    void testKeyboardKeyLinux();
 
 private:
     Display *m_display = nullptr;
@@ -423,6 +425,57 @@ void FakeInputTest::testTouch()
     QCOMPARE(touchCancelSpy.count(), 1);
 }
 
+void FakeInputTest::testKeyboardKeyLinux_data()
+{
+    QTest::addColumn<quint32>("linuxKey");
+
+    QTest::newRow("A") << quint32(KEY_A);
+    QTest::newRow("S") << quint32(KEY_S);
+    QTest::newRow("D") << quint32(KEY_D);
+    QTest::newRow("F") << quint32(KEY_F);
+}
+
+void FakeInputTest::testKeyboardKeyLinux()
+{
+    // this test verifies that keyboard key events are properly passed to the server with Qt button codes
+    QVERIFY(!m_device->isAuthenticated());
+    QSignalSpy pressedSpy(m_device, &FakeInputDevice::keyboardKeyPressRequested);
+    QVERIFY(pressedSpy.isValid());
+    QSignalSpy releasedSpy(m_device, &FakeInputDevice::keyboardKeyReleaseRequested);
+    QVERIFY(releasedSpy.isValid());
+
+    // without an authentication we shouldn't get the signals
+    QFETCH(quint32, linuxKey);
+    m_fakeInput->requestKeyboardKeyPress(linuxKey);
+    m_fakeInput->requestKeyboardKeyRelease(linuxKey);
+    QVERIFY(!pressedSpy.wait(100));
+    QVERIFY(pressedSpy.isEmpty());
+    QVERIFY(releasedSpy.isEmpty());
+
+    // now authenticate
+    m_device->setAuthentication(true);
+    // now our click should work
+    m_fakeInput->requestKeyboardKeyPress(linuxKey);
+    m_fakeInput->requestKeyboardKeyRelease(linuxKey);
+    QVERIFY(releasedSpy.wait());
+    QCOMPARE(pressedSpy.count(), 1);
+    QCOMPARE(releasedSpy.count(), 1);
+    QTEST(pressedSpy.last().first().value<quint32>(), "linuxKey");
+    QTEST(releasedSpy.last().first().value<quint32>(), "linuxKey");
+
+    // and a press/release "manually"
+    m_fakeInput->requestKeyboardKeyPress(linuxKey);
+    QVERIFY(pressedSpy.wait());
+    QCOMPARE(pressedSpy.count(), 2);
+    QCOMPARE(releasedSpy.count(), 1);
+    QTEST(pressedSpy.last().first().value<quint32>(), "linuxKey");
+    // and release
+    m_fakeInput->requestKeyboardKeyRelease(linuxKey);
+    QVERIFY(releasedSpy.wait());
+    QCOMPARE(pressedSpy.count(), 2);
+    QCOMPARE(releasedSpy.count(), 2);
+    QTEST(releasedSpy.last().first().value<quint32>(), "linuxKey");
+}
 
 QTEST_GUILESS_MAIN(FakeInputTest)
 #include "test_fake_input.moc"

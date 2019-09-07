@@ -161,6 +161,18 @@ Q_SIGNALS:
      * @since 5.23
      **/
     void touchFrameRequested();
+     /**
+     * Requests a keyboard key pressed for @p key.
+     *
+     * @since 5.63
+     **/
+    void keyboardKeyPressRequested(quint32 key);
+    /**
+     * Requests a keyboard key release for @p key.
+     *
+     * @since 5.63
+     **/
+    void keyboardKeyReleaseRequested(quint32 key);
 
 private:
     friend class FakeInputInterface;
