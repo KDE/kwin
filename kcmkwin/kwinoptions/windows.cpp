@@ -36,10 +36,6 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
 #include "windows.h"
 #include <effect_builtins.h>
 #include <kwin_effects_interface.h>
