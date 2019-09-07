@@ -53,14 +53,5 @@
         <entry name="StopAcceleration" type="Double">
             <default>5.0</default>
         </entry>
-        <entry name="MoveEffect" type="Bool">
-            <default>true</default>
-        </entry>
-        <entry name="OpenEffect" type="Bool">
-            <default>false</default>
-        </entry>
-        <entry name="CloseEffect" type="Bool">
-            <default>false</default>
-        </entry>
     </group>
 </kcfg>

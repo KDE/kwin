@@ -36,9 +36,6 @@ class WobblyWindowsEffect : public Effect
     Q_PROPERTY(qreal minAcceleration READ minAcceleration)
     Q_PROPERTY(qreal maxAcceleration READ maxAcceleration)
     Q_PROPERTY(qreal stopAcceleration READ stopAcceleration)
-    Q_PROPERTY(bool moveEffectEnabled READ isMoveEffectEnabled)
-    Q_PROPERTY(bool openEffectEnabled READ isOpenEffectEnabled)
-    Q_PROPERTY(bool closeEffectEnabled READ isCloseEffectEnabled)
     Q_PROPERTY(bool moveWobble READ isMoveWobble)
     Q_PROPERTY(bool resizeWobble READ isResizeWobble)
 public:
@@ -74,8 +71,6 @@ public:
     enum WindowStatus {
         Free,
         Moving,
-        Openning,
-        Closing
     };
 
     static bool supported();
@@ -114,32 +109,20 @@ public:
     qreal stopAcceleration() const {
         return m_stopAcceleration;
     }
-    bool isMoveEffectEnabled() const {
-        return m_moveEffectEnabled;
-    }
-    bool isOpenEffectEnabled() const {
-        return m_openEffectEnabled;
-    }
-    bool isCloseEffectEnabled() const {
-        return m_closeEffectEnabled;
-    }
     bool isMoveWobble() const {
         return m_moveWobble;
     }
     bool isResizeWobble() const {
         return m_resizeWobble;
     }
+
 public Q_SLOTS:
-    void slotWindowAdded(KWin::EffectWindow *w);
-    void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
     void slotWindowStepUserMovedResized(KWin::EffectWindow *w, const QRect &geometry);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
     void slotWindowMaximizeStateChanged(KWin::EffectWindow *w, bool horizontal, bool vertical);
 
 private:
-
-    void cancelWindowGrab(KWin::EffectWindow *w, int grabRole);
     void startMovedResized(EffectWindow* w);
     void stepMovedResized(EffectWindow* w);
     bool updateWindowWobblyDatas(EffectWindow* w, qreal time);
@@ -165,9 +148,6 @@ private:
         unsigned int bezierCount;
 
         WindowStatus status;
-
-        // for closing
-        QRectF closeRect;
 
         // for resizing. Only sides that have moved will wobble
         bool can_wobble_top, can_wobble_left, can_wobble_right, can_wobble_bottom;
@@ -195,17 +175,11 @@ private:
     qreal m_maxAcceleration;
     qreal m_stopAcceleration;
 
-    bool m_moveEffectEnabled;
-    bool m_openEffectEnabled;
-    bool m_closeEffectEnabled;
-
-    bool m_moveWobble; // Expands m_moveEffectEnabled
+    bool m_moveWobble;
     bool m_resizeWobble;
 
     void initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry) const;
     void freeWobblyInfo(WindowWobblyInfos& wwi) const;
-    void wobblyOpenInit(WindowWobblyInfos& wwi) const;
-    void wobblyCloseInit(WindowWobblyInfos& wwi, EffectWindow* w) const;
 
     WobblyWindowsEffect::Pair computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const;
 
