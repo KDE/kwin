@@ -26,9 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QModelIndex>
 #include <QPixmap>
 #include <QString>
-#include <X11/Xlib.h>
-#include <fixx11h.h>
-#include <xcb/xcb.h>
 
 /**
  * @file

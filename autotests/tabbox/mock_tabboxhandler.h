@@ -72,9 +72,6 @@ public:
     int numberOfDesktops() const override {
         return 1;
     }
-    virtual QVector< xcb_window_t > outlineWindowIds() const {
-        return QVector<xcb_window_t>();
-    }
     bool isKWinCompositing() const override {
         return false;
     }
