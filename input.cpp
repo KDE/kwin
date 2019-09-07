@@ -1780,6 +1780,20 @@ void InputRedirection::setupWorkspace()
                        m_touch->frame();
                    }
                 );
+                connect(device, &FakeInputDevice::keyboardKeyPressRequested, this,
+                    [this] (quint32 button) {
+                        // TODO: Fix time
+                        m_keyboard->processKey(button, InputRedirection::KeyboardKeyPressed, 0);
+                        waylandServer()->simulateUserActivity();
+                    }
+                );
+                connect(device, &FakeInputDevice::keyboardKeyReleaseRequested, this,
+                    [this] (quint32 button) {
+                        // TODO: Fix time
+                        m_keyboard->processKey(button, InputRedirection::KeyboardKeyReleased, 0);
+                        waylandServer()->simulateUserActivity();
+                    }
+                );
             }
         );
         connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
