@@ -126,7 +126,7 @@ static const int s_indexMapper = 2;
 QQmlComponent *Helper::component(const QString &themeName)
 {
     // maybe it's an SVG theme?
-    if (themeName.startsWith(QLatin1Literal("__aurorae__svg__"))) {
+    if (themeName.startsWith(QLatin1String("__aurorae__svg__"))) {
         if (m_svgComponent.isNull()) {
             /* use logic from KDeclarative::setupBindings():
             "addImportPath adds the path at the beginning, so to honour user's
