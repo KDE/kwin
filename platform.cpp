@@ -136,7 +136,6 @@ void Platform::requestOutputsChange(KWayland::Server::OutputConfigurationInterfa
     using Enablement = KWayland::Server::OutputDeviceInterface::Enablement;
 
     const auto changes = config->changes();
-    bool countChanged = false;
 
     //process all non-disabling changes
     for (auto it = changes.begin(); it != changes.end(); it++) {
@@ -151,7 +150,6 @@ void Platform::requestOutputsChange(KWayland::Server::OutputConfigurationInterfa
         if (changeset->enabledChanged() &&
                 changeset->enabled() == Enablement::Enabled) {
             output->setEnabled(true);
-            countChanged = true;
         }
         output->applyChanges(changeset);
     }
@@ -174,7 +172,6 @@ void Platform::requestOutputsChange(KWayland::Server::OutputConfigurationInterfa
                 continue;
             }
             output->setEnabled(false);
-            countChanged = true;
         }
     }
     emit screens()->changed();
