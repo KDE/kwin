@@ -401,7 +401,11 @@ void Scene::addToplevel(Toplevel *c)
     if (c->surface()) {
         connect(c->surface(), &KWayland::Server::SurfaceInterface::scaleChanged, this, std::bind(&Scene::windowGeometryShapeChanged, this, c));
     }
-    connect(c, &Toplevel::screenScaleChanged, std::bind(&Scene::windowGeometryShapeChanged, this, c));
+    connect(c, &Toplevel::screenScaleChanged, this,
+        [this, c] {
+            windowGeometryShapeChanged(c);
+        }
+    );
     c->effectWindow()->setSceneWindow(w);
     c->getShadow();
     w->updateShadow(c->shadow());
