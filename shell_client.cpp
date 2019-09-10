@@ -423,11 +423,10 @@ void ShellClient::destroyClient()
     if (isMoveResize()) {
         leaveMoveResize();
     }
-    Deleted *del = nullptr;
-    if (workspace()) {
-        del = Deleted::create(this);
-    }
-    emit windowClosed(this, del);
+
+    // Replace ShellClient with an instance of Deleted in the stacking order.
+    Deleted *deleted = Deleted::create(this);
+    emit windowClosed(this, deleted);
 
     // Remove Force Temporarily rules.
     RuleBook::self()->discardUsed(this, true);
@@ -435,25 +434,23 @@ void ShellClient::destroyClient()
     destroyWindowManagementInterface();
     destroyDecoration();
 
-    if (workspace()) {
-        StackingUpdatesBlocker blocker(workspace());
-        if (transientFor()) {
-            transientFor()->removeTransient(this);
-        }
-        for (auto it = transients().constBegin(); it != transients().constEnd();) {
-            if ((*it)->transientFor() == this) {
-                removeTransient(*it);
-                it = transients().constBegin(); // restart, just in case something more has changed with the list
-            } else {
-                ++it;
-            }
+    StackingUpdatesBlocker blocker(workspace());
+    if (transientFor()) {
+        transientFor()->removeTransient(this);
+    }
+    for (auto it = transients().constBegin(); it != transients().constEnd();) {
+        if ((*it)->transientFor() == this) {
+            removeTransient(*it);
+            it = transients().constBegin(); // restart, just in case something more has changed with the list
+        } else {
+            ++it;
         }
     }
+
     waylandServer()->removeClient(this);
 
-    if (del) {
-        del->unrefWindow();
-    }
+    deleted->unrefWindow();
+
     m_shellSurface = nullptr;
     m_xdgShellSurface = nullptr;
     m_xdgShellPopup = nullptr;

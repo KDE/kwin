@@ -556,6 +556,19 @@ Workspace::~Workspace()
         desktops.removeAll(c);
     }
     Client::cleanupX11();
+
+    if (waylandServer()) {
+        const QList<ShellClient *> shellClients = waylandServer()->clients();
+        for (ShellClient *shellClient : shellClients) {
+            shellClient->destroyClient();
+        }
+
+        const QList<ShellClient *> internalClients = waylandServer()->internalClients();
+        for (ShellClient *internalClient : internalClients) {
+            internalClient->destroyClient();
+        }
+    }
+
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(ReleaseReason::KWinShutsDown);
 

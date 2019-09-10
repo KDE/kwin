@@ -300,6 +300,8 @@ private:
 
     bool m_compositingSetup = false;
     bool m_isInitialized = false;
+
+    friend class Workspace;
 };
 
 }
