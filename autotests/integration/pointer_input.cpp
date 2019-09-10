@@ -365,8 +365,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(window->geometry().contains(Cursor::pos()));
 
     // and we should get an enter event
-    QVERIFY(enteredSpy.wait());
-    QCOMPARE(enteredSpy.count(), 1);
+    QTRY_COMPARE(enteredSpy.count(), 1);
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
