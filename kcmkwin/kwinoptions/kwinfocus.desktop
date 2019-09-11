@@ -9,7 +9,28 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinfocus
 
 Name=Window Focus Behavior
+Name[ca]=Comportament del focus de les finestres
+Name[eu]=Leiho fokuaren portaera
+Name[nl]=Focusgedrag venster
+Name[pt]=Comportamento do Foco da Janela
+Name[sv]=Fönsterfokusbeteende
+Name[uk]=Параметри фокусування вікон
+Name[x-test]=xxWindow Focus Behaviorxx
 
 Comment=Configure window activation policy
+Comment[ca]=Configura la política d'activació de les finestres
+Comment[eu]=Konfiguratu leihoa aktibatzeko gidalerroak
+Comment[nl]=Vensteractiveringsbeleid configureren
+Comment[pt]=Configurar a política de activação da janela
+Comment[sv]=Anpassa policy för fönsteraktivering
+Comment[uk]=Налаштовування правил активації вікон
+Comment[x-test]=xxConfigure window activation policyxx
 
 X-KDE-Keywords=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
+X-KDE-Keywords[ca]=focus,elevació automàtica,elevació,elevació en clic,teclat,CDE,alt-tab,tots els escriptoris,focus segueix el ratolí,prevenció del focus,robatori del focus,política del focus,comportament del focus de la finestra,comportament en pantalla de la finestra
+X-KDE-Keywords[eu]=fokua,automatikoki igo,igo,egin klik igotzeko,teklatu,CDE,alt-tab,mahaigain guztiak,fokuak saguari jarraitzen dio,foku-prebentzioa,foku-lapurreta,fokuaren gidalerro,leihoen fokuaren portaera,leihoen pantailen portaera
+X-KDE-Keywords[nl]=focus,automatisch omhoog komen,omhoog komen,omhoog komen bij klikken,toetsenbord,CDE,alt-tab,alle bureaubladen,focus volgt muis,voorkomen van focus,focus stelen,focusbeleid,focusgedrag in venster,gedrag van vensterscherm
+X-KDE-Keywords[pt]=foco,colocação,elevação automática,elevar,elevar ao carregar,teclado,CDE,alt-tab,todos os ecrãs,foco segue o rato,prevenção do foco,roubo do foco,política de foco,comportamento do foco da janela,comportamento da janela no ecrã
+X-KDE-Keywords[sv]=fokus,fönsterbeteende,animering,höj,höj automatiskt,höj med klick,CDE,alt-tab,alla skrivbord,fokus följer musen,förhindra fokus,stjäla fokus,fokusprincip,fönsterfokusbeteende,fönsterskärmbeteende
+X-KDE-Keywords[uk]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior,фокус,фокусування,автопідняття,підняття,клацання,клавіатура,альт-таб,всі стільниці,фокус за мишею,запобігання,перехід фокуса,правила фокусування,поведінка вікон
+X-KDE-Keywords[x-test]=xxfocusxx,xxauto raisexx,xxraisexx,xxclick raisexx,xxkeyboardxx,xxCDExx,xxalt-tabxx,xxall desktopxx,xxfocus follows mousexx,xxfocus preventionxx,xxfocus stealingxx,xxfocus policyxx,xxwindow focus behaviorxx,xxwindow screen behaviorxx
