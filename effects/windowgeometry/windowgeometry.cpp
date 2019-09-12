@@ -165,7 +165,7 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
         QPoint center = geometry.center();
         const QRect &r = geometry;
         const QRect &r2 = myOriginalGeometry;
-        const QRect screen = effects->clientArea(ScreenArea, center, w->desktop());
+        const QRect screen = effects->clientArea(ScreenArea, w);
         QRect expandedGeometry = w->expandedGeometry();
         expandedGeometry = geometry.adjusted(expandedGeometry.x() - w->x(),
                                              expandedGeometry.y() - w->y(),
