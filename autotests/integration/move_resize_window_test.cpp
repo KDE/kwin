@@ -916,33 +916,39 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(
-        Test::ShellSurfaceType::XdgShellStable, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
 
     // let's render
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
+    QVERIFY(client);
+
+    // The client should receive a configure event upon becoming active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+
     client->move(100, 300);
     QSignalSpy geometryChangedSpy(client, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
 
     QCOMPARE(client->geometry(), QRect(100, 300, 500, 800));
     client->setVirtualKeyboardGeometry(QRect(0, 100, 1280, 500));
-    configureRequestedSpy.wait();
+    QVERIFY(configureRequestedSpy.wait());
 
     shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
     // render at the new size
     Test::render(surface.data(), configureRequestedSpy.last().first().toSize(), Qt::blue);
-    geometryChangedSpy.wait();
+    QVERIFY(geometryChangedSpy.wait());
 
     QCOMPARE(client->geometry(), QRect(100, 0, 500, 101));
     client->setVirtualKeyboardGeometry(QRect());
-    configureRequestedSpy.wait();
+    QVERIFY(configureRequestedSpy.wait());
 
     shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
     // render at the new size
     Test::render(surface.data(), configureRequestedSpy.last().first().toSize(), Qt::blue);
-    geometryChangedSpy.wait();
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->geometry(), QRect(100, 300, 500, 800));
 }
 
@@ -953,34 +959,38 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(
-        Test::ShellSurfaceType::XdgShellStable, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
 
     // let's render
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
+    QVERIFY(client);
+
+    // The client should receive a configure event upon becoming active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+
     client->move(100, 300);
     QSignalSpy geometryChangedSpy(client, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
 
     QCOMPARE(client->geometry(), QRect(100, 300, 500, 800));
     client->setVirtualKeyboardGeometry(QRect(0, 100, 1280, 500));
-    configureRequestedSpy.wait();
+    QVERIFY(configureRequestedSpy.wait());
 
     shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
     // render at the new size
     Test::render(surface.data(), configureRequestedSpy.last().first().toSize(), Qt::blue);
-    geometryChangedSpy.wait();
-
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->geometry(), QRect(100, 0, 500, 101));
 
     client->setMaximize(true, true);
-    configureRequestedSpy.wait();
+    QVERIFY(configureRequestedSpy.wait());
     shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
     Test::render(surface.data(), configureRequestedSpy.last().first().toSize(), Qt::blue);
-    geometryChangedSpy.wait();
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->geometry(), QRect(0, 0, 1280, 1024));
-
 
     client->setVirtualKeyboardGeometry(QRect());
     QVERIFY(!configureRequestedSpy.wait(10));
@@ -1000,34 +1010,38 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithFullScreen()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(
-        Test::ShellSurfaceType::XdgShellStable, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
 
     // let's render
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
+    QVERIFY(client);
+
+    // The client should receive a configure event upon becoming active.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
+    QVERIFY(configureRequestedSpy.wait());
+
     client->move(100, 300);
     QSignalSpy geometryChangedSpy(client, &ShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
 
     QCOMPARE(client->geometry(), QRect(100, 300, 500, 800));
     client->setVirtualKeyboardGeometry(QRect(0, 100, 1280, 500));
-    configureRequestedSpy.wait();
+    QVERIFY(configureRequestedSpy.wait());
 
     shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
     // render at the new size
     Test::render(surface.data(), configureRequestedSpy.last().first().toSize(), Qt::blue);
-    geometryChangedSpy.wait();
-
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->geometry(), QRect(100, 0, 500, 101));
 
     client->setFullScreen(true, true);
-    configureRequestedSpy.wait();
+    QVERIFY(configureRequestedSpy.wait());
     shellSurface->ackConfigure(configureRequestedSpy.last()[2].toInt());
     Test::render(surface.data(), configureRequestedSpy.last().first().toSize(), Qt::blue);
-    geometryChangedSpy.wait();
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->geometry(), QRect(0, 0, 1280, 1024));
-
 
     client->setVirtualKeyboardGeometry(QRect());
     QVERIFY(!configureRequestedSpy.wait(10));
