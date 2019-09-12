@@ -603,11 +603,9 @@ void Placement::placeMaximizing(AbstractClient *c, const QRect &area, Policy nex
 
 void Placement::cascadeDesktop()
 {
-// TODO XINERAMA this probably is not right for xinerama
     Workspace *ws = Workspace::self();
     const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
-    const QRect area = ws->clientArea(PlacementArea, QPoint(0, 0), desktop);
     foreach (Toplevel *toplevel, ws->stackingOrder()) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
         if (!client ||
@@ -616,7 +614,8 @@ void Placement::cascadeDesktop()
                 (client->isOnAllDesktops())     ||
                 (!client->isMovable()))
             continue;
-        placeCascaded(client, area);
+        const QRect placementArea = workspace()->clientArea(PlacementArea, client);
+        placeCascaded(client, placementArea);
     }
 }
 
