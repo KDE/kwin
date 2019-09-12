@@ -67,7 +67,7 @@ Kirigami.SwipeListItem {
             Kirigami.Heading {
                 Layout.fillWidth: true
 
-                level: 4
+                level: 5
                 text: model.NameRole
                 wrapMode: Text.Wrap
             }

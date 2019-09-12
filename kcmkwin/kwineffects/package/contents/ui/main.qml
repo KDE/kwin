@@ -22,7 +22,7 @@ import QtQuick.Layouts 1.1
 
 import org.kde.kcm 1.2
 import org.kde.kconfig 1.0
-import org.kde.kirigami 2.8 as Kirigami
+import org.kde.kirigami 2.10 as Kirigami
 import org.kde.private.kcms.kwin.effects 1.0 as Private
 
 ScrollViewKCM {
@@ -98,20 +98,9 @@ ScrollViewKCM {
         }
 
         section.property: "CategoryRole"
-        section.delegate:Kirigami.AbstractListItem {
+        section.delegate: Kirigami.ListSectionHeader {
             width: effectsList.width
-
-            backgroundColor: Kirigami.Theme.backgroundColor
-            Kirigami.Theme.inherit: false
-            Kirigami.Theme.colorSet: Kirigami.Theme.Window
-
-            hoverEnabled: false
-            supportsMouseEvents: false
-
-            Kirigami.Heading {
-                level: 2
-                text: section
-            }
+            text: section
         }
 
         function findButtonGroup(name) {
