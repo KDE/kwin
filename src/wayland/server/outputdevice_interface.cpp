@@ -135,7 +135,7 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
 {
     Q_D();
     connect(this, &OutputDeviceInterface::currentModeChanged, this,
-        [this, d] {
+        [d] {
             Q_ASSERT(d->currentMode.id >= 0);
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
                 d->sendMode((*it).resource, d->currentMode);
@@ -144,14 +144,14 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
             wl_display_flush_clients(*(d->display));
         }
     );
-    connect(this, &OutputDeviceInterface::subPixelChanged,       this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::transformChanged,      this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::globalPositionChanged, this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::modelChanged,          this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::scaleFChanged,          this, [this, d] { d->updateScale(); });
-    connect(this, &OutputDeviceInterface::scaleChanged,          this, [this, d] { d->updateScale(); });
-    connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [this, d] { d->updateColorCurves(); });
+    connect(this, &OutputDeviceInterface::subPixelChanged,       this, [d] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::transformChanged,      this, [d] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::globalPositionChanged, this, [d] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::modelChanged,          this, [d] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [d] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::scaleFChanged,          this, [d] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::scaleChanged,          this, [d] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [d] { d->updateColorCurves(); });
 }
 
 OutputDeviceInterface::~OutputDeviceInterface() = default;

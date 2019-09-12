@@ -71,13 +71,13 @@ SeatInterface::SeatInterface(Display *display, QObject *parent)
 {
     Q_D();
     connect(this, &SeatInterface::nameChanged, this,
-        [this, d] {
+        [d] {
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
                 d->sendName(*it);
             }
         }
     );
-    auto sendCapabilitiesAll = [this, d] {
+    auto sendCapabilitiesAll = [d] {
         for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
             d->sendCapabilities(*it);
         }
