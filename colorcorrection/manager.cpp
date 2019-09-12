@@ -397,9 +397,9 @@ void Manager::resetSlowUpdateTimer()
     bool isDay = daylight();
     int targetTemp = isDay ? m_dayTargetTemp : m_nightTargetTemp;
 
-    if (m_prev.first == m_prev.second) {
-        // transition time is zero
-        commitGammaRamps(isDay ? m_dayTargetTemp : m_nightTargetTemp);
+    // We've reached the target color temperature or the transition time is zero.
+    if (m_prev.first == m_prev.second || m_currentTemp == targetTemp) {
+        commitGammaRamps(targetTemp);
         return;
     }
 
