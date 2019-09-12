@@ -166,8 +166,6 @@ void PopupOpenCloseAnimationTest::testAnimatePopups()
 
 void PopupOpenCloseAnimationTest::testAnimateUserActionsPopup()
 {
-    QSKIP("Can't animate the disappearing of the user actions popup.");
-
     // This test verifies that popup open/close animation effects try
     // to animate the user actions popup.
 
