@@ -11,8 +11,10 @@ X-KDE-PluginKeyword=kwinmoving
 
 Name=Window Movement
 Name[ca]=Moviment de les finestres
+Name[es]=Movimiento de las ventanas
 Name[eu]=Leihoaren mugimendua
 Name[nl]=Verplaatsen van vensters
+Name[nn]=Vidaugs­flytting
 Name[pt]=Movimentação das Janelas
 Name[sv]=Fönsterförflyttning
 Name[uk]=Пересування вікон
@@ -20,8 +22,10 @@ Name[x-test]=xxWindow Movementxx
 
 Comment=Configure window movement options
 Comment[ca]=Configura les opcions de moviment de les finestres
+Comment[es]=Configurar las opciones del movimiento de las ventanas
 Comment[eu]=Konfiguratu leiho mugimenduaren aukerak
 Comment[nl]=Opties voor vensterverplaatsing configureren
+Comment[nn]=Set opp vindaugsflytting
 Comment[pt]=Configurar as opções de movimentação das janelas
 Comment[sv]=Anpassa alternativ för fönsterförflyttning
 Comment[uk]=Налаштовування параметрів пересування вікон

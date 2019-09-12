@@ -11,8 +11,10 @@ X-KDE-PluginKeyword=kwinactions
 
 Name=Window Actions
 Name[ca]=Accions de la finestra
+Name[es]=Acciones de ventanas
 Name[eu]=Leihoetako ekintzak
 Name[nl]=Vensteracties
+Name[nn]=Handlingar for vindauge
 Name[pt]=Acções das Janelas
 Name[sv]=Fönsteråtgärder
 Name[uk]=Дії з вікнами
@@ -20,8 +22,10 @@ Name[x-test]=xxWindow Actionsxx
 
 Comment=Configure mouse actions for windows and titlebars
 Comment[ca]=Configura les accions de ratolí per a les finestres i les barres de títol
+Comment[es]=Configurar las acciones del ratón para las ventanas y las barras de títulos
 Comment[eu]=Konfiguratu saguaren ekintzak leihoekin eta titulu-barrekin
 Comment[nl]=Muisacties voor vensters en titelbalken configureren
+Comment[nn]=Set opp musehandlingar for vindauge og tittellinjer
 Comment[pt]=Configurar as acções do rato para as janelas e barras do título
 Comment[sv]=Anpassa musåtgärder för fönster och namnlister
 Comment[uk]=Налаштовування керування мишею для вікон та смужок заголовків
