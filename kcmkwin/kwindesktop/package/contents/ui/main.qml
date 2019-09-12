@@ -127,7 +127,6 @@ ScrollViewKCM {
         section.delegate: Kirigami.ListSectionHeader {
             width: desktopsList.width
             label: i18n("Row %1", section)
-            }
         }
 
         delegate: Kirigami.DelegateRecycler {
