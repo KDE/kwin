@@ -323,4 +323,4 @@ void TestPlacement::testPlaceRandom()
 }
 
 WAYLANDTEST_MAIN(TestPlacement)
-#include "placement.moc"
+#include "placement_test.moc"
