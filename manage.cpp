@@ -360,6 +360,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (!placementDone) {
         // Placement needs to be after setting size
         Placement::self()->place(this, area);
+        // The client may have been moved to another screen, update placement area.
+        area = workspace()->clientArea(PlacementArea, this);
         dontKeepInArea = true;
         placementDone = true;
     }

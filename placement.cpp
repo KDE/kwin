@@ -54,7 +54,7 @@ Placement::~Placement()
 /**
  * Places the client \a c according to the workspace's layout policy
  */
-void Placement::place(AbstractClient* c, QRect& area)
+void Placement::place(AbstractClient *c, const QRect &area)
 {
     Policy policy = c->rules()->checkPlacement(Default);
     if (policy != Default) {
@@ -78,7 +78,7 @@ void Placement::place(AbstractClient* c, QRect& area)
         place(c, area, options->placement());
 }
 
-void Placement::place(AbstractClient* c, QRect& area, Policy policy, Policy nextPlacement)
+void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Policy nextPlacement)
 {
     if (policy == Unknown)
         policy = Default;
@@ -374,7 +374,7 @@ QPoint Workspace::cascadeOffset(const AbstractClient *c) const
 /**
  * Place windows in a cascading order, remembering positions for each desktop
  */
-void Placement::placeCascaded(AbstractClient* c, QRect& area, Policy nextPlacement)
+void Placement::placeCascaded(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
     if (!c->size().isValid()) {
         return;
@@ -481,7 +481,7 @@ void Placement::placeZeroCornered(AbstractClient* c, const QRect& area, Policy /
     c->move(checkArea(c, area).topLeft());
 }
 
-void Placement::placeUtility(AbstractClient* c, QRect& area, Policy /*next*/)
+void Placement::placeUtility(AbstractClient *c, const QRect &area, Policy /*next*/)
 {
 // TODO kwin should try to place utility windows next to their mainwindow,
 // preferably at the right edge, and going down if there are more of them
@@ -491,7 +491,7 @@ void Placement::placeUtility(AbstractClient* c, QRect& area, Policy /*next*/)
     place(c, area, Default);
 }
 
-void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
+void Placement::placeOnScreenDisplay(AbstractClient *c, const QRect &area)
 {
     // place at lower 1/3 of the screen
     const int x = area.left() + (area.width() -  c->width())  / 2;
@@ -519,27 +519,25 @@ void Placement::placeTransient(AbstractClient *c)
     }
 }
 
-void Placement::placeDialog(AbstractClient* c, QRect& area, Policy nextPlacement)
+void Placement::placeDialog(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
     placeOnMainWindow(c, area, nextPlacement);
 }
 
-void Placement::placeUnderMouse(AbstractClient* c, QRect& area, Policy /*next*/)
+void Placement::placeUnderMouse(AbstractClient *c, const QRect &area, Policy /*next*/)
 {
-    area = checkArea(c, area);
     QRect geom = c->geometry();
     geom.moveCenter(Cursor::pos());
     c->move(geom.topLeft());
     c->keepInArea(area);   // make sure it's kept inside workarea
 }
 
-void Placement::placeOnMainWindow(AbstractClient* c, QRect& area, Policy nextPlacement)
+void Placement::placeOnMainWindow(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
     if (nextPlacement == Unknown)
         nextPlacement = Centered;
     if (nextPlacement == Maximizing)   // maximize if needed
         placeMaximizing(c, area, NoPlacement);
-    area = checkArea(c, area);
     auto mainwindows = c->mainClients();
     AbstractClient* place_on = nullptr;
     AbstractClient* place_on2 = nullptr;
@@ -582,11 +580,11 @@ void Placement::placeOnMainWindow(AbstractClient* c, QRect& area, Policy nextPla
     geom.moveCenter(place_on->geometry().center());
     c->move(geom.topLeft());
     // get area again, because the mainwindow may be on different xinerama screen
-    area = checkArea(c, QRect());
-    c->keepInArea(area);   // make sure it's kept inside workarea
+    const QRect placementArea = checkArea(c, QRect());
+    c->keepInArea(placementArea);   // make sure it's kept inside workarea
 }
 
-void Placement::placeMaximizing(AbstractClient* c, QRect& area, Policy nextPlacement)
+void Placement::placeMaximizing(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
     if (nextPlacement == Unknown)
         nextPlacement = Smart;
@@ -609,8 +607,7 @@ void Placement::cascadeDesktop()
     Workspace *ws = Workspace::self();
     const int desktop = VirtualDesktopManager::self()->current();
     reinitCascading(desktop);
-    // TODO: make area const once placeFoo methods are fixed to take a const QRect&
-    QRect area = ws->clientArea(PlacementArea, QPoint(0, 0), desktop);
+    const QRect area = ws->clientArea(PlacementArea, QPoint(0, 0), desktop);
     foreach (Toplevel *toplevel, ws->stackingOrder()) {
         auto client = qobject_cast<AbstractClient*>(toplevel);
         if (!client ||

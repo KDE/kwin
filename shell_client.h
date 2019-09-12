@@ -148,8 +148,7 @@ public:
 
     void killWindow() override;
 
-    // TODO: const-ref
-    void placeIn(QRect &area);
+    void placeIn(const QRect &area);
 
     bool hasPopupGrab() const override;
     void popupDone() override;

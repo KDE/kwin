@@ -88,7 +88,7 @@ AbstractClient::AbstractClient()
             Q_UNUSED(c)
             if (isOnScreenDisplay() && !geometry().isEmpty() && old.size() != geometry().size() && !isInitialPositionSet()) {
                 GeometryUpdatesBlocker blocker(this);
-                QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
+                const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
                 Placement::self()->place(this, area);
                 setGeometryRestore(geometry());
             }

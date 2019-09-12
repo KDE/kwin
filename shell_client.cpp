@@ -399,7 +399,7 @@ void ShellClient::finishInit() {
     }
 
     if (needsPlacement) {
-        QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
+        const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
         placeIn(area);
     }
 
@@ -1884,7 +1884,7 @@ void ShellClient::finishCompositing(ReleaseReason releaseReason)
     Toplevel::finishCompositing(releaseReason);
 }
 
-void ShellClient::placeIn(QRect &area)
+void ShellClient::placeIn(const QRect &area)
 {
     Placement::self()->place(this, area);
     setGeometryRestore(geometry());

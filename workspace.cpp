@@ -294,7 +294,7 @@ void Workspace::init()
                 c->updateDecoration(false);
                 updateClientLayer(c);
                 if (!c->isInternal()) {
-                    QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
+                    const QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
                     bool placementDone = false;
                     if (c->isInitialPositionSet()) {
                         placementDone = true;
@@ -329,7 +329,7 @@ void Workspace::init()
                         updateClientLayer(c);
                         // TODO: when else should we send the client through placement?
                         if (c->hasTransientPlacementHint()) {
-                            QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
+                            const QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
                             c->placeIn(area);
                         }
                         markXStackingOrderAsDirty();
