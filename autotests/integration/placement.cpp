@@ -3,6 +3,7 @@ KWin - the KDE window manager
 This file is part of the KDE project.
 
 Copyright (C) 2019 David Edmundson <davidedmundson@kde.org>
+Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/plasmashell.h>
@@ -50,6 +50,7 @@ struct PlaceWindowResult
 class TestPlacement : public QObject
 {
     Q_OBJECT
+
 private Q_SLOTS:
     void init();
     void cleanup();
@@ -57,7 +58,11 @@ private Q_SLOTS:
 
     void testPlaceSmart();
     void testPlaceZeroCornered();
-    void testMaximize();
+    void testPlaceMaximized();
+    void testPlaceCentered();
+    void testPlaceUnderMouse();
+    void testPlaceCascaded();
+    void testPlaceRandom();
 
 private:
     void setPlacementPolicy(Placement::Policy policy);
@@ -110,7 +115,6 @@ void TestPlacement::setPlacementPolicy(Placement::Policy policy)
     group.sync();
     Workspace::self()->slotReconfigure();
 }
-
 
 PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, QObject *parent)
 {
@@ -178,7 +182,7 @@ void TestPlacement::testPlaceZeroCornered()
     }
 }
 
-void TestPlacement::testMaximize()
+void TestPlacement::testPlaceMaximized()
 {
     setPlacementPolicy(Placement::Maximizing);
 
@@ -199,6 +203,123 @@ void TestPlacement::testMaximize()
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(1280, 1024 - 20));
         QCOMPARE(windowPlacement.finalGeometry, QRect(0, 20, 1280, 1024 - 20)); // under the panel
     }
+}
+
+void TestPlacement::testPlaceCentered()
+{
+    // This test verifies that Centered placement policy works.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(Placement::Centered));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(client);
+    QCOMPARE(client->geometry(), QRect(590, 487, 100, 50));
+
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestPlacement::testPlaceUnderMouse()
+{
+    // This test verifies that Under Mouse placement policy works.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(Placement::UnderMouse));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    KWin::Cursor::setPos(QPoint(200, 300));
+    QCOMPARE(KWin::Cursor::pos(), QPoint(200, 300));
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    ShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
+    QVERIFY(client);
+    QCOMPARE(client->geometry(), QRect(151, 276, 100, 50));
+
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestPlacement::testPlaceCascaded()
+{
+    // This test verifies that Cascaded placement policy works.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(Placement::Cascade));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    QScopedPointer<Surface> surface1(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
+    ShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::red);
+    QVERIFY(client1);
+    QCOMPARE(client1->pos(), QPoint(0, 0));
+    QCOMPARE(client1->size(), QSize(100, 50));
+
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
+    ShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client2);
+    QCOMPARE(client2->pos(), client1->pos() + workspace()->cascadeOffset(client2));
+    QCOMPARE(client2->size(), QSize(100, 50));
+
+    QScopedPointer<Surface> surface3(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface3(Test::createXdgShellStableSurface(surface3.data()));
+    ShellClient *client3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::green);
+    QVERIFY(client3);
+    QCOMPARE(client3->pos(), client2->pos() + workspace()->cascadeOffset(client3));
+    QCOMPARE(client3->size(), QSize(100, 50));
+
+    shellSurface3.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client3));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client2));
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client1));
+}
+
+void TestPlacement::testPlaceRandom()
+{
+    // This test verifies that Random placement policy works.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(Placement::Random));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    QScopedPointer<Surface> surface1(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
+    ShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::red);
+    QVERIFY(client1);
+    QCOMPARE(client1->size(), QSize(100, 50));
+
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
+    ShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client2);
+    QVERIFY(client2->pos() != client1->pos());
+    QCOMPARE(client2->size(), QSize(100, 50));
+
+    QScopedPointer<Surface> surface3(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface3(Test::createXdgShellStableSurface(surface3.data()));
+    ShellClient *client3 = Test::renderAndWaitForShown(surface3.data(), QSize(100, 50), Qt::green);
+    QVERIFY(client3);
+    QVERIFY(client3->pos() != client1->pos());
+    QVERIFY(client3->pos() != client2->pos());
+    QCOMPARE(client3->size(), QSize(100, 50));
+
+    shellSurface3.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client3));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client2));
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client1));
 }
 
 WAYLANDTEST_MAIN(TestPlacement)
