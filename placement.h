@@ -93,7 +93,6 @@ private:
     void placeUnderMouse(AbstractClient *c, const QRect &area, Policy next = Unknown);
     void placeOnMainWindow(AbstractClient *c, const QRect &area, Policy next = Unknown);
     void placeTransient(AbstractClient *c);
-    QRect checkArea(const AbstractClient*c, const QRect& area);
 
     //CT needed for cascading+
     struct DesktopCascadingInfo {

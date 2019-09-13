@@ -133,38 +133,42 @@ void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Polic
  */
 void Placement::placeAtRandom(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
+    Q_ASSERT(area.isValid());
+
     const int step  = 24;
     static int px = step;
     static int py = 2 * step;
     int tx, ty;
 
-    const QRect maxRect = checkArea(c, area);
-
-    if (px < maxRect.x())
-        px = maxRect.x();
-    if (py < maxRect.y())
-        py = maxRect.y();
+    if (px < area.x()) {
+        px = area.x();
+    }
+    if (py < area.y()) {
+        py = area.y();
+    }
 
     px += step;
     py += 2 * step;
 
-    if (px > maxRect.width() / 2)
-        px =  maxRect.x() + step;
-    if (py > maxRect.height() / 2)
-        py =  maxRect.y() + step;
+    if (px > area.width() / 2) {
+        px = area.x() + step;
+    }
+    if (py > area.height() / 2) {
+        py = area.y() + step;
+    }
     tx = px;
     ty = py;
-    if (tx + c->width() > maxRect.right()) {
-        tx = maxRect.right() - c->width();
+    if (tx + c->width() > area.right()) {
+        tx = area.right() - c->width();
         if (tx < 0)
             tx = 0;
-        px =  maxRect.x();
+        px = area.x();
     }
-    if (ty + c->height() > maxRect.bottom()) {
-        ty = maxRect.bottom() - c->height();
+    if (ty + c->height() > area.bottom()) {
+        ty = area.bottom() - c->height();
         if (ty < 0)
             ty = 0;
-        py =  maxRect.y();
+        py = area.y();
     }
     c->move(tx, ty);
 }
@@ -192,6 +196,8 @@ static inline bool isIrrelevant(const AbstractClient *client, const AbstractClie
  */
 void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
+    Q_ASSERT(area.isValid());
+
     /*
      * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
      * adapted for kwm (16-19jan98) and for kwin (16Nov1999) using (with
@@ -216,8 +222,8 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
     int basket;                 //temp holder
 
     // get the maximum allowed windows space
-    const QRect maxRect = checkArea(c, area);
-    int x = maxRect.left(), y = maxRect.top();
+    int x = area.left();
+    int y = area.top();
     x_optimal = x; y_optimal = y;
 
     //client gabarit
@@ -229,11 +235,11 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
     //loop over possible positions
     do {
         //test if enough room in x and y directions
-        if (y + ch > maxRect.bottom() && ch < maxRect.height())
+        if (y + ch > area.bottom() && ch < area.height()) {
             overlap = h_wrong; // this throws the algorithm to an exit
-        else if (x + cw > maxRect.right())
+        } else if (x + cw > area.right()) {
             overlap = w_wrong;
-        else {
+        } else {
             overlap = none; //initialize
 
             cxl = x; cxr = x + cw;
@@ -283,7 +289,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
         // really need to loop? test if there's any overlap
         if (overlap > none) {
 
-            possible = maxRect.right();
+            possible = area.right();
             if (possible - cw > x) possible -= cw;
 
             // compare to the position of each client on the same desk
@@ -312,8 +318,8 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
 
         // ... else ==> not enough x dimension (overlap was wrong on horizontal)
         else if (overlap == w_wrong) {
-            x = maxRect.left();
-            possible = maxRect.bottom();
+            x = area.left();
+            possible = area.bottom();
 
             if (possible - ch > y) possible -= ch;
 
@@ -337,10 +343,11 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
             }
             y = possible;
         }
-    } while ((overlap != none) && (overlap != h_wrong) && (y < maxRect.bottom()));
+    } while ((overlap != none) && (overlap != h_wrong) && (y < area.bottom()));
 
-    if (ch >= maxRect.height())
-        y_optimal = maxRect.top();
+    if (ch >= area.height()) {
+        y_optimal = area.top();
+    }
 
     // place the window
     c->move(x_optimal, y_optimal);
@@ -376,6 +383,8 @@ QPoint Workspace::cascadeOffset(const AbstractClient *c) const
  */
 void Placement::placeCascaded(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
+    Q_ASSERT(area.isValid());
+
     if (!c->size().isValid()) {
         return;
     }
@@ -390,16 +399,13 @@ void Placement::placeCascaded(AbstractClient *c, const QRect &area, Policy nextP
 
     const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (VirtualDesktopManager::self()->current() - 1) : (c->desktop() - 1);
 
-    // get the maximum allowed windows space and desk's origin
-    QRect maxRect = checkArea(c, area);
-
     // initialize often used vars: width and height of c; we gain speed
     const int ch = c->height();
     const int cw = c->width();
-    const int X = maxRect.left();
-    const int Y = maxRect.top();
-    const int H = maxRect.height();
-    const int W = maxRect.width();
+    const int X = area.left();
+    const int Y = area.top();
+    const int H = area.height();
+    const int W = area.width();
 
     if (nextPlacement == Unknown)
         nextPlacement = Smart;
@@ -461,12 +467,10 @@ void Placement::placeCascaded(AbstractClient *c, const QRect &area, Policy nextP
  */
 void Placement::placeCentered(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
+    Q_ASSERT(area.isValid());
 
-    // get the maximum allowed windows space and desk's origin
-    const QRect maxRect = checkArea(c, area);
-
-    const int xp = maxRect.left() + (maxRect.width() -  c->width())  / 2;
-    const int yp = maxRect.top()  + (maxRect.height() - c->height()) / 2;
+    const int xp = area.left() + (area.width() - c->width()) / 2;
+    const int yp = area.top() + (area.height() - c->height()) / 2;
 
     // place the window
     c->move(QPoint(xp, yp));
@@ -477,8 +481,10 @@ void Placement::placeCentered(AbstractClient* c, const QRect& area, Policy /*nex
  */
 void Placement::placeZeroCornered(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
+    Q_ASSERT(area.isValid());
+
     // get the maximum allowed windows space and desk's origin
-    c->move(checkArea(c, area).topLeft());
+    c->move(area.topLeft());
 }
 
 void Placement::placeUtility(AbstractClient *c, const QRect &area, Policy /*next*/)
@@ -493,6 +499,8 @@ void Placement::placeUtility(AbstractClient *c, const QRect &area, Policy /*next
 
 void Placement::placeOnScreenDisplay(AbstractClient *c, const QRect &area)
 {
+    Q_ASSERT(area.isValid());
+
     // place at lower 1/3 of the screen
     const int x = area.left() + (area.width() -  c->width())  / 2;
     const int y = area.top()  + 2 * (area.height() - c->height()) / 3;
@@ -526,6 +534,8 @@ void Placement::placeDialog(AbstractClient *c, const QRect &area, Policy nextPla
 
 void Placement::placeUnderMouse(AbstractClient *c, const QRect &area, Policy /*next*/)
 {
+    Q_ASSERT(area.isValid());
+
     QRect geom = c->geometry();
     geom.moveCenter(Cursor::pos());
     c->move(geom.topLeft());
@@ -534,6 +544,8 @@ void Placement::placeUnderMouse(AbstractClient *c, const QRect &area, Policy /*n
 
 void Placement::placeOnMainWindow(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
+    Q_ASSERT(area.isValid());
+
     if (nextPlacement == Unknown)
         nextPlacement = Centered;
     if (nextPlacement == Maximizing)   // maximize if needed
@@ -580,12 +592,14 @@ void Placement::placeOnMainWindow(AbstractClient *c, const QRect &area, Policy n
     geom.moveCenter(place_on->geometry().center());
     c->move(geom.topLeft());
     // get area again, because the mainwindow may be on different xinerama screen
-    const QRect placementArea = checkArea(c, QRect());
+    const QRect placementArea = workspace()->clientArea(PlacementArea, c);
     c->keepInArea(placementArea);   // make sure it's kept inside workarea
 }
 
 void Placement::placeMaximizing(AbstractClient *c, const QRect &area, Policy nextPlacement)
 {
+    Q_ASSERT(area.isValid());
+
     if (nextPlacement == Unknown)
         nextPlacement = Smart;
     if (c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height()) {
@@ -629,15 +643,9 @@ void Placement::unclutterDesktop()
                 (client->isOnAllDesktops()) ||
                 (!client->isMovable()))
             continue;
-        placeSmart(client, QRect());
+        const QRect placementArea = workspace()->clientArea(PlacementArea, client);
+        placeSmart(client, placementArea);
     }
-}
-
-QRect Placement::checkArea(const AbstractClient* c, const QRect& area)
-{
-    if (area.isNull())
-        return workspace()->clientArea(PlacementArea, c->geometry().center(), c->desktop());
-    return area;
 }
 
 #endif
