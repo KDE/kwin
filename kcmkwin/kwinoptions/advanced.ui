@@ -113,33 +113,6 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="windowTabbingLabel">
-     <property name="text">
-      <string>Window tabbing:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QCheckBox" name="autogroupInForeground">
-     <property name="whatsThis">
-      <string>When turned on immediately switch to any new window tabs that were automatically added to the current group.</string>
-     </property>
-     <property name="text">
-      <string>&amp;Switch to automatically grouped windows immediately</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QCheckBox" name="inactiveTabsSkipTaskbar">
-     <property name="whatsThis">
-      <string>When turned on hide all tabs that are not active from the taskbar.</string>
-     </property>
-     <property name="text">
-      <string>&amp;Hide inactive window tabs from the taskbar</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
     <widget class="QLabel" name="specialWindowsLabel">
      <property name="text">
       <string>&amp;Special windows:</string>
@@ -149,23 +122,13 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="2" column="1">
     <widget class="QCheckBox" name="hideUtilityWindowsForInactive">
      <property name="whatsThis">
       <string>When turned on, utility windows (tool windows, torn-off menus,...) of inactive applications will be hidden and will be shown only when the application becomes active. Note that applications have to mark the windows with the proper window type for this feature to work.</string>
      </property>
      <property name="text">
       <string>Hide utility windows for inactive applications</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="autogroupSimilarWindows">
-     <property name="whatsThis">
-      <string>When turned on attempt to automatically detect when a newly opened window is related to an existing one and place them in the same window group.</string>
-     </property>
-     <property name="text">
-      <string>&amp;Group similar windows automatically</string>
      </property>
     </widget>
    </item>

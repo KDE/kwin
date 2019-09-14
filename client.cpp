@@ -170,17 +170,6 @@ Client::Client()
         }
     });
 
-    connect(this, &Client::tabGroupChanged, this,
-        [this] {
-            auto group = tabGroup();
-            if (group) {
-                unsigned long data[] = {qHash(group)}; //->id();
-                m_client.changeProperty(atoms->kde_net_wm_tab_group, XCB_ATOM_CARDINAL, 32, 1, data);
-            }
-            else
-                m_client.deleteProperty(atoms->kde_net_wm_tab_group);
-        });
-
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -257,8 +246,7 @@ void Client::releaseWindow(bool on_shutdown)
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
         info->setState(0, info->state());  // Reset all state flags
-    } else
-        untab();
+    }
     xcb_connection_t *c = connection();
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
@@ -614,7 +602,7 @@ bool Client::noBorder() const
 
 bool Client::userCanSetNoBorder() const
 {
-    return !isFullScreen() && !isShade() && !tabGroup();
+    return !isFullScreen() && !isShade();
 }
 
 void Client::setNoBorder(bool set)
@@ -774,9 +762,6 @@ void Client::doMinimize()
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Minimized);
 }
 
 QRect Client::iconGeometry() const
@@ -825,10 +810,6 @@ void Client::setShade(ShadeMode mode)
     if (decoration)
         decoration->borders(border_left, border_right, border_top, border_bottom);
 #endif
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Shaded);
 
     if (was_shade == isShade()) {
         // Decoration may want to update after e.g. hover-shade changes
@@ -912,9 +893,7 @@ void Client::shadeHover()
 
 void Client::shadeUnhover()
 {
-    if (!tabGroup() || tabGroup()->current() == this ||
-        tabGroup()->current()->shadeMode() == ShadeNormal)
-        setShade(ShadeNormal);
+    setShade(ShadeNormal);
     cancelShadeHoverTimer();
 }
 
@@ -934,7 +913,7 @@ void Client::updateVisibility()
 {
     if (deleting)
         return;
-    if (hidden && isCurrentTab()) {
+    if (hidden) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true);   // Also hide from taskbar
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
@@ -943,8 +922,7 @@ void Client::updateVisibility()
             internalHide();
         return;
     }
-    if (isCurrentTab())
-        setSkipTaskbar(originalSkipTaskbar());   // Reset from 'hidden'
+    setSkipTaskbar(originalSkipTaskbar());   // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
@@ -1270,10 +1248,6 @@ void Client::doSetDesktop(int desktop, int was_desk)
     Q_UNUSED(desktop)
     Q_UNUSED(was_desk)
     updateVisibility();
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Desktop);
 }
 
 /**
@@ -1377,10 +1351,6 @@ void Client::updateActivities(bool includeTransients)
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateVisibility();
     updateWindowRules(Rules::Activity);
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Activity);
 }
 
 /**
@@ -1596,8 +1566,6 @@ void Client::setClientShown(bool shown)
     if (shown != hidden)
         return; // nothing to change
     hidden = !shown;
-    if (options->isInactiveTabsSkipTaskbar())
-        setSkipTaskbar(hidden); // TODO: Causes reshuffle of the taskbar
     if (shown) {
         map();
         takeFocus();
@@ -1606,8 +1574,7 @@ void Client::setClientShown(bool shown)
     } else {
         unmap();
         // Don't move tabs to the end of the list when another tab get's activated
-        if (isCurrentTab())
-            FocusChain::self()->update(this, FocusChain::MakeLast);
+        FocusChain::self()->update(this, FocusChain::MakeLast);
         addWorkspaceRepaint(visibleRect());
     }
 }
@@ -2104,13 +2071,6 @@ bool Client::belongsToSameApplication(const AbstractClient *other, SameApplicati
         return false;
     }
     return Client::belongToSameApplication(this, c2, checks);
-}
-
-void Client::updateTabGroupStates(TabGroup::States states)
-{
-    if (auto t = tabGroup()) {
-        t->updateStates(this, states);
-    }
 }
 
 QSize Client::resizeIncrements() const

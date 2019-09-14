@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "options.h"
 #include "rules.h"
-#include "tabgroup.h"
 #include "cursor.h"
 
 #include <memory>
@@ -74,12 +73,6 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Because of that there is no notify signal.
      */
     Q_PROPERTY(bool fullScreenable READ isFullScreenable)
-
-    /**
-     * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
-     * For change connect to the visibleChanged signal on the Client's Group.
-     */
-    Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
 
     /**
      * Whether this Client is active or not. Use Workspace::activateClient() to activate a Client.
@@ -319,11 +312,6 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(bool unresponsive READ unresponsive NOTIFY unresponsiveChanged)
 
     /**
-     * The "Window Tabs" Group this Client belongs to.
-     */
-    Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
-
-    /**
      * The color scheme set on this client
      * Absolute file path, or name of palette in the user's config directory following KColorSchemes format.
      * An empty string indicates the default palette from kdeglobals is used.
@@ -494,36 +482,9 @@ public:
         return m_minimized;
     }
     virtual void setFullScreen(bool set, bool user = true) = 0;
-    // Tabbing functions
-    Q_INVOKABLE inline bool tabBefore(AbstractClient *other, bool activate) { return tabTo(other, false, activate); }
-    Q_INVOKABLE inline bool tabBehind(AbstractClient *other, bool activate) { return tabTo(other, true, activate); }
-    /**
-     * Syncs the *dynamic* @p property @p fromThisClient or the currentTab() to
-     * all members of the tabGroup() (if there is one)
-     *
-     * eg. if you call:
-     * @code
-     * client->setProperty("kwin_tiling_floats", true);
-     * client->syncTabGroupFor("kwin_tiling_floats", true)
-     * @endcode
-     * all clients in this tabGroup will have property("kwin_tiling_floats").toBool() == true
-     *
-     * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
-     */
-    Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
-    TabGroup *tabGroup() const;
-    /**
-     * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
-     */
-    void setTabGroup(TabGroup* group);
+
     virtual void setClientShown(bool shown);
-    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
-    /**
-     * When a click is done in the decoration and it calls the group
-     * to change the visible client it starts to move-resize the new
-     * client, this function stops it.
-     */
-    bool isCurrentTab() const;
+
     virtual QRect geometryRestore() const = 0;
     /**
      * The currently applied maximize mode
@@ -917,11 +878,6 @@ Q_SIGNALS:
     void hasApplicationMenuChanged(bool);
     void applicationMenuActiveChanged(bool);
     void unresponsiveChanged(bool);
-    /**
-     * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
-     * another group, but not when a Client gets added or removed to the Client's ClientGroup.
-     */
-    void tabGroupChanged();
 
 protected:
     AbstractClient();
@@ -1052,13 +1008,6 @@ protected:
      * next time this method is called as the before geometry.
      */
     void addRepaintDuringGeometryUpdates();
-
-    /**
-     * Convenient method to update the TabGroup states if there is one present.
-     * Marked as virtual as TabGroup does not yet handle AbstractClient, but only
-     * subclasses of AbstractClient. Given that the default implementation does nothing.
-     */
-    virtual void updateTabGroupStates(TabGroup::States states);
 
     /**
      * @returns whether the Client is currently in move resize mode
@@ -1303,7 +1252,6 @@ private:
     QKeySequence _shortcut;
 
     WindowRules m_rules;
-    TabGroup* tab_group = nullptr;
 
     static bool s_haveResizeEffect;
 };
@@ -1369,11 +1317,6 @@ inline AbstractClient::PendingGeometry_t AbstractClient::pendingGeometryUpdate()
 inline void AbstractClient::setPendingGeometryUpdate(PendingGeometry_t update)
 {
     m_pendingGeometryUpdate = update;
-}
-
-inline TabGroup* AbstractClient::tabGroup() const
-{
-    return tab_group;
 }
 
 }

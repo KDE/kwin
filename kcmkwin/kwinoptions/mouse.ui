@@ -129,11 +129,6 @@
         </item>
         <item>
          <property name="text">
-          <string>Switch to window tab to the left/right</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
           <string>Do nothing</string>
          </property>
         </item>
@@ -273,11 +268,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Start window tab drag</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -340,11 +330,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Start window tab drag</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -394,11 +379,6 @@
           <item>
            <property name="text">
             <string>Show actions menu</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Start window tab drag</string>
            </property>
           </item>
           <item>
@@ -465,11 +445,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Start window tab drag</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -519,11 +494,6 @@
           <item>
            <property name="text">
             <string>Show actions menu</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Start window tab drag</string>
            </property>
           </item>
           <item>
@@ -586,11 +556,6 @@
           <item>
            <property name="text">
             <string>Show actions menu</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Start window tab drag</string>
            </property>
           </item>
           <item>

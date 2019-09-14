@@ -395,7 +395,6 @@ set(kwin_KDEINIT_SRCS
    client_machine.cpp
    cursor.cpp
    debug_console.cpp
-   tabgroup.cpp
    focuschain.cpp
    globalshortcuts.cpp
    input.cpp

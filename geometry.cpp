@@ -548,8 +548,6 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
                     continue; // is minimized
                 if (!(*l)->isShown(false))
                     continue;
-                if ((*l)->tabGroup() && (*l) != (*l)->tabGroup()->current())
-                    continue; // is not active tab
                 if (!((*l)->isOnDesktop(c->desktop()) || c->isOnDesktop((*l)->desktop())))
                     continue; // wrong virtual desktop
                 if (!(*l)->isOnCurrentActivity())
@@ -1360,8 +1358,8 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 
     // basesize, minsize, maxsize, paspect and resizeinc have all values defined,
     // even if they're not set in flags - see getWmNormalHints()
-    QSize min_size = tabGroup() ? tabGroup()->minSize() : minSize();
-    QSize max_size = tabGroup() ? tabGroup()->maxSize() : maxSize();
+    QSize min_size = minSize();
+    QSize max_size = maxSize();
     if (isDecorated()) {
         QSize decominsize(0, 0);
         QSize border_size(borderLeft() + borderRight(), borderTop() + borderBottom());
@@ -1531,10 +1529,6 @@ void Client::getWmNormalHints()
         // align to eventual new contraints
         maximize(max_mode);
     }
-    // Update min/max size of this group
-    if (tabGroup())
-        tabGroup()->updateMinMaxSize();
-
     if (isManaged()) {
         // update to match restrictions
         QSize new_size = adjustedSize();
@@ -1913,8 +1907,8 @@ bool Client::isResizable() const
          mode == PositionLeft || mode == PositionBottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint)
         return false;
 
-    QSize min = tabGroup() ? tabGroup()->minSize() : minSize();
-    QSize max = tabGroup() ? tabGroup()->maxSize() : maxSize();
+    QSize min = minSize();
+    QSize max = maxSize();
     return min.width() < max.width() || min.height() < max.height();
 }
 
@@ -2009,10 +2003,8 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
 
-    // need to regenerate decoration pixmaps when either
+    // need to regenerate decoration pixmaps when
     // - size is changed
-    // - maximize mode is changed to MaximizeRestore, when size unchanged
-    //   which can happen when untabbing maximized windows
     if (resized) {
         if (oldClientSize != QSize(w,h))
             discardWindowPixmap();
@@ -2020,11 +2012,6 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Geometry);
-
     // TODO: this signal is emitted too often
     emit geometryChanged();
 }
@@ -2082,10 +2069,6 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Geometry);
     // TODO: this signal is emitted too often
     emit geometryChanged();
 }
@@ -2120,9 +2103,6 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     // client itself is not damaged
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-
-    // Update states of all other windows in this group
-    updateTabGroupStates(TabGroup::Geometry);
     emit geometryChanged();
 }
 
@@ -2171,34 +2151,6 @@ void AbstractClient::setMaximize(bool vertically, bool horizontally)
     }
 
 }
-
-// Update states of all other windows in this group
-class TabSynchronizer
-{
-public:
-    TabSynchronizer(AbstractClient *client, TabGroup::States syncStates) :
-    m_client(client) , m_states(syncStates)
-    {
-        if (client->tabGroup())
-            client->tabGroup()->blockStateUpdates(true);
-    }
-    ~TabSynchronizer()
-    {
-        syncNow();
-    }
-    void syncNow()
-    {
-        if (m_client && m_client->tabGroup()) {
-            m_client->tabGroup()->blockStateUpdates(false);
-            m_client->tabGroup()->updateStates(dynamic_cast<Client*>(m_client), m_states);
-        }
-        m_client = 0;
-    }
-private:
-    AbstractClient *m_client;
-    TabGroup::States m_states;
-};
-
 
 static bool changeMaximizeRecursion = false;
 void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
@@ -2249,8 +2201,6 @@ void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         return;
 
     GeometryUpdatesBlocker blocker(this);
-    // QT synchronizing required because we eventually change from QT to Maximized
-    TabSynchronizer syncer(this, TabGroup::Maximized|TabGroup::QuickTile);
 
     // maximing one way and unmaximizing the other way shouldn't happen,
     // so restore first and then maximize the other way
@@ -2450,8 +2400,6 @@ void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         break;
     }
 
-    syncer.syncNow(); // important because of window rule updates!
-
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
     emit quickTileModeChanged();
@@ -2487,7 +2435,6 @@ void Client::setFullScreen(bool set, bool user)
 
     if (set) {
         m_fullscreenMode = FullScreenNormal;
-        untab();
         workspace()->raiseClient(this);
     } else {
         m_fullscreenMode = FullScreenNone;
@@ -3244,7 +3191,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     GeometryUpdatesBlocker blocker(this);
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
         m_quickTileMode = int(QuickTileFlag::None);
         if (maximizeMode() == MaximizeFull) {
             setMaximize(false, false);
@@ -3275,8 +3221,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
     if (maximizeMode() != MaximizeRestore) {
 
-        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
-
         if (mode != QuickTileMode(QuickTileFlag::None)) {
             // decorations may turn off some borders when tiled
             const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
@@ -3298,8 +3242,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     }
 
     if (mode != QuickTileMode(QuickTileFlag::None)) {
-        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
-
         QPoint whichScreen = keyboard ? geometry().center() : Cursor::pos();
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
@@ -3364,8 +3306,6 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     }
 
     if (mode == QuickTileMode(QuickTileFlag::None)) {
-        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
-
         m_quickTileMode = int(QuickTileFlag::None);
         // Untiling, so just restore geometry, and we're done.
         if (!geometryRestore().isValid()) // invalid if we started maximized and wait for placement

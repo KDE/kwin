@@ -695,8 +695,6 @@ void Workspace::removeClient(Client* c)
         m_userActionsMenu->close();
     }
 
-    c->untab(QRect(), true);
-
     if (client_keys_client == c)
         setupWindowShortcutDone(false);
     if (!c->shortcut().isEmpty()) {
@@ -780,8 +778,7 @@ void Workspace::updateToolWindows(bool also_hide)
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->isHideUtilityWindowsForInactive()) {
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-            if (!(*it)->tabGroup() || (*it)->tabGroup()->current() == *it)
-                (*it)->hideClient(false);
+            (*it)->hideClient(false);
         return;
     }
     const Group* group = nullptr;

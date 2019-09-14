@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox.h"
 #endif
 #include "screenedge.h"
-#include "tabgroup.h"
 #include "useractions.h"
 #include "workspace.h"
 
@@ -125,94 +124,9 @@ bool AbstractClient::isTransient() const
     return false;
 }
 
-void AbstractClient::setTabGroup(TabGroup* group)
-{
-    tab_group = group;
-    emit tabGroupChanged();
-}
-
 void AbstractClient::setClientShown(bool shown)
 {
     Q_UNUSED(shown)
-}
-
-bool AbstractClient::untab(const QRect &toGeometry, bool clientRemoved)
-{
-    TabGroup *group = tab_group;
-    if (group && group->remove(this)) { // remove sets the tabgroup to "0", therefore the pointer is cached
-        if (group->isEmpty()) {
-            delete group;
-        }
-        if (clientRemoved)
-            return true; // there's been a broadcast signal that this client is now removed - don't touch it
-        setClientShown(!(isMinimized() || isShade()));
-        bool keepSize = toGeometry.size() == size();
-        bool changedSize = false;
-        if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-            changedSize = true;
-            setQuickTileMode(QuickTileFlag::None); // if we leave a quicktiled group, assume that the user wants to untile
-        }
-        if (toGeometry.isValid()) {
-            if (maximizeMode() != MaximizeRestore) {
-                changedSize = true;
-                maximize(MaximizeRestore); // explicitly calling for a geometry -> unmaximize
-            }
-            if (keepSize && changedSize) {
-                setGeometryRestore(geometry()); // checkWorkspacePosition() invokes it
-                QPoint cpoint = Cursor::pos();
-                QPoint point = cpoint;
-                point.setX((point.x() - toGeometry.x()) * geometryRestore().width() / toGeometry.width());
-                point.setY((point.y() - toGeometry.y()) * geometryRestore().height() / toGeometry.height());
-                auto geometry_restore = geometryRestore();
-                geometry_restore.moveTo(cpoint-point);
-                setGeometryRestore(geometry_restore);
-            } else {
-                setGeometryRestore(toGeometry); // checkWorkspacePosition() invokes it
-            }
-            setGeometry(geometryRestore());
-            checkWorkspacePosition();
-        }
-        return true;
-    }
-    return false;
-}
-
-bool AbstractClient::tabTo(AbstractClient *other, bool behind, bool activate)
-{
-    Q_ASSERT(other && other != this);
-
-    if (tab_group && tab_group == other->tabGroup()) { // special case: move inside group
-        tab_group->move(this, other, behind);
-        return true;
-    }
-
-    GeometryUpdatesBlocker blocker(this);
-    const bool wasBlocking = signalsBlocked();
-    blockSignals(true); // prevent client emitting "retabbed to nowhere" cause it's about to be entabbed the next moment
-    untab();
-    blockSignals(wasBlocking);
-
-    TabGroup *newGroup = other->tabGroup() ? other->tabGroup() : new TabGroup(other);
-
-    if (!newGroup->add(this, other, behind, activate)) {
-        if (newGroup->count() < 2) { // adding "c" to "to" failed for whatever reason
-            newGroup->remove(other);
-            delete newGroup;
-        }
-        return false;
-    }
-    return true;
-}
-
-void AbstractClient::syncTabGroupFor(QString property, bool fromThisClient)
-{
-    if (tab_group)
-        tab_group->sync(property.toLatin1().data(), fromThisClient ? this : tab_group->current());
-}
-
-bool AbstractClient::isCurrentTab() const
-{
-    return !tab_group || tab_group->current() == this;
 }
 
 MaximizeMode AbstractClient::requestedMaximizeMode() const
@@ -1195,14 +1109,6 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         if (!isDesktop())   // No point in changing the opacity of the desktop
             setOpacity(qMax(opacity() - 0.1, 0.1));
         break;
-    case Options::MousePreviousTab:
-        if (tabGroup())
-            tabGroup()->activatePrev();
-    break;
-    case Options::MouseNextTab:
-        if (tabGroup())
-            tabGroup()->activateNext();
-    break;
     case Options::MouseClose:
         closeWindow();
         break;
@@ -1258,7 +1164,6 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         updateCursor();
         break;
     }
-    case Options::MouseDragTab:
     case Options::MouseNothing:
     default:
         replay = true;
@@ -1403,10 +1308,6 @@ void AbstractClient::addRepaintDuringGeometryUpdates()
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
     m_geometryBeforeUpdateBlocking = geometry();
-}
-
-void AbstractClient::updateTabGroupStates(TabGroup::States)
-{
 }
 
 void AbstractClient::doMove(int, int)
@@ -1742,8 +1643,8 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
     if (event->button() == Qt::LeftButton
             && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
-            && com != Options::MouseMinimize  // mouse release event
-            && com != Options::MouseDragTab) {
+            && com != Options::MouseMinimize)  // mouse release event
+    {
         setMoveResizePointerMode(mousePosition());
         setMoveResizePointerButtonDown(true);
         setMoveOffset(event->pos());
@@ -1763,7 +1664,6 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
                com == Options::MouseActivate ||
                com == Options::MouseActivateRaiseAndPassClick ||
                com == Options::MouseActivateAndPassClick ||
-               com == Options::MouseDragTab ||
                com == Options::MouseNothing);
 }
 

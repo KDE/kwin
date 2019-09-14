@@ -142,11 +142,6 @@ bool ClientLevel::exclude(AbstractClient *client) const
             return true;
         }
     }
-    if (exclusions & ClientModel::NonSelectedWindowTabExclusion) {
-        if (!client->isCurrentTab()) {
-            return true;
-        }
-    }
     if (exclusions & ClientModel::NotAcceptingFocusExclusion) {
         if (!client->wantsInput()) {
             return true;

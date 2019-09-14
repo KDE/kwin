@@ -216,7 +216,6 @@ const char* const tbl_TiAc[] = {
     "Shade",
     "Close",
     "Operations menu",
-    "Start window tab drag",
     "Nothing",
     ""
 };
@@ -232,7 +231,6 @@ const char* const tbl_TiInAc[] = {
     "Shade",
     "Close",
     "Operations menu",
-    "Start window tab drag",
     "Nothing",
     ""
 };
@@ -279,7 +277,6 @@ const char* const tbl_TiWAc[] = {
     "Above/Below",
     "Previous/Next Desktop",
     "Change Opacity",
-    "Switch to Window Tab to the Left/Right",
     "Nothing",
     ""
 };
@@ -291,7 +288,6 @@ const char* const tbl_AllW[] = {
     "Above/Below",
     "Previous/Next Desktop",
     "Change Opacity",
-    "Switch to Window Tab to the Left/Right",
     "Nothing",
     ""
 };
@@ -393,11 +389,11 @@ void KTitleBarActionsConfig::load()
 
     KConfigGroup cg(config, "MouseBindings");
     setComboText(m_ui->coTiAct1, cg.readEntry("CommandActiveTitlebar1", "Raise").toLatin1());
-    setComboText(m_ui->coTiAct2, cg.readEntry("CommandActiveTitlebar2", "Start Window Tab Drag").toLatin1());
+    setComboText(m_ui->coTiAct2, cg.readEntry("CommandActiveTitlebar2", "Nothing").toLatin1());
     setComboText(m_ui->coTiAct3, cg.readEntry("CommandActiveTitlebar3", "Operations menu").toLatin1());
-    setComboText(m_ui->coTiAct4, cg.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right").toLatin1());
+    setComboText(m_ui->coTiAct4, cg.readEntry("CommandTitlebarWheel", "Nothing").toLatin1());
     setComboText(m_ui->coTiInAct1, cg.readEntry("CommandInactiveTitlebar1", "Activate and raise").toLatin1());
-    setComboText(m_ui->coTiInAct2, cg.readEntry("CommandInactiveTitlebar2", "Start Window Tab Drag").toLatin1());
+    setComboText(m_ui->coTiInAct2, cg.readEntry("CommandInactiveTitlebar2", "Nothing").toLatin1());
     setComboText(m_ui->coTiInAct3, cg.readEntry("CommandInactiveTitlebar3", "Operations menu").toLatin1());
 }
 
@@ -432,11 +428,11 @@ void KTitleBarActionsConfig::defaults()
 {
     setComboText(m_ui->coTiDbl, "Maximize");
     setComboText(m_ui->coTiAct1, "Raise");
-    setComboText(m_ui->coTiAct2, "Start Window Tab Drag");
+    setComboText(m_ui->coTiAct2, "Nothing");
     setComboText(m_ui->coTiAct3, "Operations menu");
-    setComboText(m_ui->coTiAct4, "Switch to Window Tab to the Left/Right");
+    setComboText(m_ui->coTiAct4, "Nothing");
     setComboText(m_ui->coTiInAct1, "Activate and raise");
-    setComboText(m_ui->coTiInAct2, "Start Window Tab Drag");
+    setComboText(m_ui->coTiInAct2, "Nothing");
     setComboText(m_ui->coTiInAct3, "Operations menu");
     setComboText(m_ui->leftClickMaximizeButton, tbl_Max[0]);
     setComboText(m_ui->middleClickMaximizeButton, tbl_Max[1]);

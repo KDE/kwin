@@ -1028,7 +1028,6 @@ void ShellClient::setFullScreen(bool set, bool user)
     m_fullScreen = set;
 
     if (set) {
-        untab();
         workspace()->raiseClient(this);
     }
     RequestGeometryBlocker requestBlocker(this);
@@ -1111,10 +1110,10 @@ bool ShellClient::userCanSetFullScreen() const
 bool ShellClient::userCanSetNoBorder() const
 {
     if (m_serverDecoration && m_serverDecoration->mode() == ServerSideDecorationManagerInterface::Mode::Server) {
-        return !isFullScreen() && !isShade() && !tabGroup();
+        return !isFullScreen() && !isShade();
     }
     if (m_xdgDecoration && m_xdgDecoration->requestedMode() != XdgDecorationInterface::Mode::ClientSide) {
-        return !isFullScreen() && !isShade() && !tabGroup();
+        return !isFullScreen() && !isShade();
     }
     return false;
 }

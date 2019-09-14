@@ -46,10 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     initShortcut(QStringLiteral(name), i18n(name), key, target, &fnSlot);
 
 
-DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotActivateNextTab);
-DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotActivatePrevTab);
-DEF(I18N_NOOP("Remove Window From Group"),             0, slotUntab);
-
 DEF(I18N_NOOP("Window Operations Menu"),
     Qt::ALT + Qt::Key_F3, slotWindowOperations);
 DEF2("Window Close", I18N_NOOP("Close Window"),

@@ -69,7 +69,6 @@ public:
     Xcb::Atom net_wm_sync_request_counter;
     Xcb::Atom net_wm_sync_request;
     Xcb::Atom kde_net_wm_shadow;
-    Xcb::Atom kde_net_wm_tab_group;
     Xcb::Atom kde_first_in_window_list;
     Xcb::Atom kde_color_sheme;
     Xcb::Atom kde_skip_close_animation;

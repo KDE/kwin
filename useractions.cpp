@@ -83,8 +83,6 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_desktopMenu(NULL)
     , m_screenMenu(NULL)
     , m_activityMenu(NULL)
-    , m_addTabsMenu(NULL)
-    , m_switchToTabMenu(NULL)
     , m_scriptsMenu(NULL)
     , m_resizeOperation(NULL)
     , m_moveOperation(NULL)
@@ -96,8 +94,6 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_noBorderOperation(NULL)
     , m_minimizeOperation(NULL)
     , m_closeOperation(NULL)
-    , m_removeFromTabGroup(NULL)
-    , m_closeTabGroup(NULL)
 {
 }
 
@@ -354,20 +350,6 @@ void UserActionsMenu::init()
     setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
     m_minimizeOperation->setData(Options::MinimizeOp);
 
-    // Actions for window tabbing
-    if (false) {
-        m_removeFromTabGroup = m_menu->addAction(i18n("&Untab"));
-        setShortcut(m_removeFromTabGroup, QStringLiteral("Untab"));
-        m_removeFromTabGroup->setData(Options::RemoveTabFromGroupOp);
-
-        m_closeTabGroup = m_menu->addAction(i18n("Close Entire &Group"));
-        m_closeTabGroup->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
-        setShortcut(m_closeTabGroup, QStringLiteral("Close TabGroup"));
-        m_closeTabGroup->setData(Options::CloseTabGroupOp);
-
-        m_menu->addSeparator();
-    }
-
     action = m_menu->addMenu(advancedMenu);
     action->setText(i18n("&More Actions"));
     action->setIcon(QIcon::fromTheme(QStringLiteral("view-more-symbolic")));
@@ -386,8 +368,6 @@ void UserActionsMenu::discard()
     m_multipleDesktopsMenu = nullptr;
     m_screenMenu = NULL;
     m_activityMenu = NULL;
-    m_switchToTabMenu = NULL;
-    m_addTabsMenu = NULL;
     m_scriptsMenu = NULL;
 }
 
@@ -428,17 +408,9 @@ void UserActionsMenu::menuAboutToShow()
     m_closeOperation->setEnabled(m_client->isCloseable());
     m_shortcutOperation->setEnabled(m_client->rules()->checkShortcut(QString()).isNull());
 
-    if (false) {
-        initTabbingPopups();
-        m_addTabsMenu->setPalette(m_client->palette());
-    } else {
-        delete m_addTabsMenu;
-        m_addTabsMenu = 0;
-    }
-
     // drop the existing scripts menu
     delete m_scriptsMenu;
-    m_scriptsMenu = NULL;
+    m_scriptsMenu = nullptr;
     // ask scripts whether they want to add entries for the given Client
     QList<QAction*> scriptActions = Scripting::self()->actionsForUserActionMenu(m_client.data(), m_scriptsMenu);
     if (!scriptActions.isEmpty()) {
@@ -473,118 +445,6 @@ void UserActionsMenu::showHideActivityMenu()
         initActivityPopup();
     }
 #endif
-}
-
-void UserActionsMenu::selectPopupClientTab(QAction* action)
-{
-    if (!m_client || !m_client->tabGroup() || !action->data().isValid()) {
-        return;
-    }
-
-    if (AbstractClient *other = action->data().value<AbstractClient*>()) {
-        m_client->tabGroup()->setCurrent(other);
-        return;
-    }
-
-    // failed conversion, try "1" & "2", being prev and next
-    int direction = action->data().toInt();
-    if (direction == 1) {
-        m_client->tabGroup()->activatePrev();
-    } else if (direction == 2) {
-        m_client->tabGroup()->activateNext();
-    }
-}
-
-static QString shortCaption(const QString &s)
-{
-    if (s.length() < 64)
-        return s;
-    QString ss = s;
-    return ss.replace(32,s.length()-64, QStringLiteral("..."));
-}
-
-void UserActionsMenu::rebuildTabListPopup()
-{
-    Q_ASSERT(m_switchToTabMenu);
-
-    m_switchToTabMenu->clear();
-    // whatever happens "0x1" and "0x2" are no heap positions ;-)
-    m_switchToTabMenu->addAction(i18nc("Switch to tab -> Previous", "Previous"))->setData(1);
-    m_switchToTabMenu->addAction(i18nc("Switch to tab -> Next", "Next"))->setData(2);
-
-    m_switchToTabMenu->addSeparator();
-
-    if (!m_client) {
-        return;
-    }
-    for (auto i = m_client->tabGroup()->clients().constBegin(),
-                                        end = m_client->tabGroup()->clients().constEnd(); i != end; ++i) {
-        if ((*i)->noBorder() || *i == m_client->tabGroup()->current())
-            continue; // cannot tab there anyway
-        m_switchToTabMenu->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
-    }
-}
-
-void UserActionsMenu::entabPopupClient(QAction* action)
-{
-    if (m_client.isNull() || !action->data().isValid()) {
-        return;
-    }
-    AbstractClient *other = action->data().value<AbstractClient*>();
-    if (!Workspace::self()->allClientList().contains(other)) { // might have been lost betwenn pop-up and selection
-        return;
-    }
-
-    m_client->tabBehind(other, true);
-    if (options->focusPolicyIsReasonable()) {
-        Workspace::self()->requestFocus(m_client);
-    }
-}
-
-void UserActionsMenu::rebuildTabGroupPopup()
-{
-    Q_ASSERT(m_addTabsMenu);
-
-    m_addTabsMenu->clear();
-    const auto &clientList = Workspace::self()->allClientList();
-    for (auto i = clientList.constBegin(), end = clientList.constEnd(); i != end; ++i) {
-        if (*i == m_client.data() || (*i)->noBorder())
-            continue;
-        m_addTabsMenu->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
-    }
-    if (m_addTabsMenu->actions().isEmpty())
-        m_addTabsMenu->addAction(i18nc("There's no window available to be attached as tab to this one", "None available"))->setEnabled(false);
-}
-
-void UserActionsMenu::initTabbingPopups()
-{
-    bool needTabManagers = false;
-    Q_ASSERT(m_client);
-    if (!m_client)
-        return;
-    if (m_client->tabGroup() && m_client->tabGroup()->count() > 1) {
-        needTabManagers = true;
-        if (!m_switchToTabMenu) {
-            m_switchToTabMenu = new QMenu(i18n("Switch to Tab"), m_menu);
-            connect(m_switchToTabMenu, &QMenu::triggered,   this, &UserActionsMenu::selectPopupClientTab);
-            connect(m_switchToTabMenu, &QMenu::aboutToShow, this, &UserActionsMenu::rebuildTabListPopup);
-            m_menu->insertMenu(m_removeFromTabGroup, m_switchToTabMenu);
-        }
-    } else {
-        delete m_switchToTabMenu;
-        m_switchToTabMenu = 0;
-    }
-
-    if (!m_addTabsMenu) {
-        m_addTabsMenu = new QMenu(i18n("&Attach as tab to"), m_menu);
-        connect(m_addTabsMenu, &QMenu::triggered,   this, &UserActionsMenu::entabPopupClient);
-        connect(m_addTabsMenu, &QMenu::aboutToShow, this, &UserActionsMenu::rebuildTabGroupPopup);
-        m_menu->insertMenu(m_removeFromTabGroup, m_addTabsMenu);
-    }
-
-    m_addTabsMenu->menuAction()->setEnabled(!m_client->isFullScreen());
-    m_removeFromTabGroup->setVisible(needTabManagers);
-    m_closeTabGroup->setVisible(needTabManagers);
 }
 
 void UserActionsMenu::initDesktopPopup()
@@ -1270,23 +1130,7 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
     case Options::LowerOp:
         lowerClient(c);
         break;
-    case Options::TabDragOp: // Handled by decoration itself
     case Options::NoOp:
-        break;
-    case Options::RemoveTabFromGroupOp:
-        if (c->untab(c->geometry().translated(cascadeOffset(c))) && options->focusPolicyIsReasonable())
-             takeActivity(c, ActivityFocus | ActivityRaise);
-        break;
-    case Options::ActivateNextTabOp:
-        if (c->tabGroup())
-            c->tabGroup()->activateNext();
-        break;
-    case Options::ActivatePreviousTabOp:
-        if (c->tabGroup())
-            c->tabGroup()->activatePrev();
-        break;
-    case Options::CloseTabGroupOp:
-        c->tabGroup()->closeAll();
         break;
     }
 }
@@ -1309,9 +1153,6 @@ Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons b
     else if (button == Qt::RightButton)
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
 
-    // TODO: Complete the list
-    if (com == Options::MouseDragTab)
-        return Options::TabDragOp;
     if (com == Options::MouseOperationsMenu)
         return Options::OperationsOp;
     return Options::NoOp;
@@ -1647,24 +1488,6 @@ void Workspace::slotWindowToDesktopDown()
     }
 }
 
-void Workspace::slotActivateNextTab()
-{
-    if (active_client && active_client->tabGroup())
-        active_client->tabGroup()->activateNext();
-}
-
-void Workspace::slotActivatePrevTab()
-{
-    if (active_client && active_client->tabGroup())
-        active_client->tabGroup()->activatePrev();
-}
-
-void Workspace::slotUntab()
-{
-    if (active_client)
-        active_client->untab(active_client->geometry().translated(cascadeOffset(active_client)));
-}
-
 /**
  * Kill Window feature, similar to xkill.
  */
@@ -1762,8 +1585,6 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
         }
     }
     if (switchTo) {
-        if (switchTo->tabGroup())
-            switchTo = switchTo->tabGroup()->current();
         activateClient(switchTo);
     }
 

@@ -561,8 +561,7 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     Client *c = static_cast<Client*>(t);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
-    if (!c->tabGroup()) // the "window" has already been there
-        emit windowAdded(c->effectWindow());
+    emit windowAdded(c->effectWindow());
 }
 
 void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
@@ -1856,13 +1855,18 @@ TOPLEVEL_HELPER(bool, isOutline, isOutline)
 CLIENT_HELPER_WITH_DELETED(bool, isMinimized, isMinimized, false)
 CLIENT_HELPER_WITH_DELETED(bool, isModal, isModal, false)
 CLIENT_HELPER_WITH_DELETED(bool, isFullScreen, isFullScreen, false)
-CLIENT_HELPER_WITH_DELETED(bool, isCurrentTab, isCurrentTab, false)
 CLIENT_HELPER_WITH_DELETED(bool, keepAbove, keepAbove, false)
 CLIENT_HELPER_WITH_DELETED(bool, keepBelow, keepBelow, false)
 CLIENT_HELPER_WITH_DELETED(QString, caption, caption, QString());
 CLIENT_HELPER_WITH_DELETED(QVector<uint>, desktops, x11DesktopIds, QVector<uint>());
 
 #undef CLIENT_HELPER_WITH_DELETED
+
+// legacy from tab groups, can be removed when no effects use this any more.
+bool EffectWindowImpl::isCurrentTab() const
+{
+    return true;
+}
 
 QString EffectWindowImpl::windowClass() const
 {

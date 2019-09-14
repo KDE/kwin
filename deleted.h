@@ -87,9 +87,6 @@ public:
         return m_fullscreen;
     }
 
-    bool isCurrentTab() const {
-        return m_wasCurrentTab;
-    }
     bool keepAbove() const {
         return m_keepAbove;
     }
@@ -220,7 +217,6 @@ private:
     bool m_modal;
     QList<AbstractClient*> m_mainClients;
     bool m_wasClient;
-    bool m_wasCurrentTab;
     Decoration::Renderer *m_decorationRenderer;
     double m_opacity;
     NET::WindowType m_type = NET::Unknown;

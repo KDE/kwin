@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "options.h"
 #include "rules.h"
-#include "tabgroup.h"
 #include "abstract_client.h"
 #include "xcbutils.h"
 // Qt
@@ -346,8 +345,6 @@ private:
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
 
-    Client* findAutogroupCandidate() const;
-
 protected:
     void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
@@ -362,7 +359,6 @@ protected:
     void doSetSkipSwitcher() override;
     bool belongsToDesktop() const override;
     void setGeometryRestore(const QRect &geo) override;
-    void updateTabGroupStates(TabGroup::States states) override;
     void doMove(int x, int y) override;
     bool doStartMoveResize() override;
     void doPerformMoveResize() override;
@@ -596,8 +592,7 @@ inline Group* Client::group()
 
 inline bool Client::isShown(bool shaded_is_shown) const
 {
-    return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden &&
-           (!tabGroup() || tabGroup()->current() == this);
+    return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden;
 }
 
 inline bool Client::isHiddenInternal() const

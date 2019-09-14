@@ -53,8 +53,6 @@
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
 #define KWIN_HIDE_UTILITY          "HideUtilityWindowsForInactive"
 #define KWIN_INACTIVE_SKIP_TASKBAR "InactiveTabsSkipTaskbar"
-#define KWIN_AUTOGROUP_SIMILAR     "AutogroupSimilarWindows"
-#define KWIN_AUTOGROUP_FOREGROUND  "AutogroupInForeground"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
 
@@ -389,14 +387,10 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, QWidget *pa
     m_ui->placementCombo->setItemData(6, "UnderMouse");
 
     connect(m_ui->shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
-    connect(m_ui->inactiveTabsSkipTaskbar, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect(m_ui->autogroupSimilarWindows, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect(m_ui->autogroupInForeground, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(m_ui->shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(m_ui->shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->placementCombo, SIGNAL(activated(int)), SLOT(changed()));
     connect(m_ui->hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
-    m_ui->inactiveTabsSkipTaskbar->setVisible(false);   // TODO: We want translations in case this is fixed...
     load();
 
 }
@@ -447,9 +441,6 @@ void KAdvancedConfig::load(void)
     m_ui->placementCombo->setCurrentIndex(idx);
 
     setHideUtilityWindowsForInactive(cg.readEntry(KWIN_HIDE_UTILITY, true));
-    setInactiveTabsSkipTaskbar(cg.readEntry(KWIN_INACTIVE_SKIP_TASKBAR, false));
-    setAutogroupSimilarWindows(cg.readEntry(KWIN_AUTOGROUP_SIMILAR, false));
-    setAutogroupInForeground(cg.readEntry(KWIN_AUTOGROUP_FOREGROUND, true));
 
     emit KCModule::changed(false);
 }
@@ -464,13 +455,8 @@ void KAdvancedConfig::save(void)
     v = getShadeHoverInterval();
     if (v < 0) v = 0;
     cg.writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
-
     cg.writeEntry(KWIN_PLACEMENT, m_ui->placementCombo->itemData(m_ui->placementCombo->currentIndex()).toString());
-
     cg.writeEntry(KWIN_HIDE_UTILITY, m_ui->hideUtilityWindowsForInactive->isChecked());
-    cg.writeEntry(KWIN_INACTIVE_SKIP_TASKBAR, m_ui->inactiveTabsSkipTaskbar->isChecked());
-    cg.writeEntry(KWIN_AUTOGROUP_SIMILAR, m_ui->autogroupSimilarWindows->isChecked());
-    cg.writeEntry(KWIN_AUTOGROUP_FOREGROUND, m_ui->autogroupInForeground->isChecked());
 
     if (standAlone) {
         config->sync();
@@ -489,9 +475,6 @@ void KAdvancedConfig::defaults()
     setShadeHoverInterval(250);
     m_ui->placementCombo->setCurrentIndex(0); // default to Smart
     setHideUtilityWindowsForInactive(true);
-    setInactiveTabsSkipTaskbar(false);
-    setAutogroupSimilarWindows(false);
-    setAutogroupInForeground(true);
     emit KCModule::changed(true);
 }
 
@@ -499,21 +482,6 @@ void KAdvancedConfig::defaults()
 void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s)
 {
     m_ui->hideUtilityWindowsForInactive->setChecked(s);
-}
-
-void KAdvancedConfig::setInactiveTabsSkipTaskbar(bool s)
-{
-    m_ui->inactiveTabsSkipTaskbar->setChecked(s);
-}
-
-void KAdvancedConfig::setAutogroupSimilarWindows(bool s)
-{
-    m_ui->autogroupSimilarWindows->setChecked(s);
-}
-
-void KAdvancedConfig::setAutogroupInForeground(bool s)
-{
-    m_ui->autogroupInForeground->setChecked(s);
 }
 
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)

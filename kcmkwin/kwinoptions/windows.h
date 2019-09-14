@@ -183,9 +183,6 @@ private:
     KWinAdvancedConfigForm *m_ui;
 
     void setHideUtilityWindowsForInactive(bool);
-    void setInactiveTabsSkipTaskbar(bool);
-    void setAutogroupSimilarWindows(bool);
-    void setAutogroupInForeground(bool);
 };
 
 #endif // KKWMWINDOWS_H

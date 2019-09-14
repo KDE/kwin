@@ -6,7 +6,7 @@
     <kcfgfile arg="true" />
     <group name="MouseBindings">
         <entry name="CommandTitlebarWheel" type="String">
-            <default>Switch to Window Tab to the Left/Right</default>
+            <default>Nothing</default>
         </entry>
         <entry name="CommandAllKey" type="String">
             <default>Alt</default>
@@ -18,7 +18,7 @@
             <default>Raise</default>
         </entry>
         <entry name="CommandActiveTitlebar2" type="String">
-            <default>Start Window Tab Drag</default>
+            <default>Nothing</default>
         </entry>
         <entry name="CommandActiveTitlebar3" type="String">
             <default>Operations menu</default>
@@ -27,7 +27,7 @@
             <default>Activate and raise</default>
         </entry>
         <entry name="CommandInactiveTitlebar2" type="String">
-            <default>Start Window Tab Drag</default>
+            <default>Nothing</default>
         </entry>
         <entry name="CommandInactiveTitlebar3" type="String">
             <default>Operations menu</default>

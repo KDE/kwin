@@ -201,8 +201,6 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
     cg.writeEntry(QLatin1String("windowType") + n, windowTypeToTxt(c->windowType()));
     cg.writeEntry(QLatin1String("shortcut") + n, c->shortcut().toString());
     cg.writeEntry(QLatin1String("stackingOrder") + n, unconstrained_stacking_order.indexOf(c));
-    // KConfig doesn't support long so we need to live with less precision on 64-bit systems
-    cg.writeEntry(QLatin1String("tabGroup") + n, static_cast<int>(reinterpret_cast<long>(c->tabGroup())));
     cg.writeEntry(QLatin1String("activities") + n, c->activities());
 }
 
@@ -286,8 +284,6 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
         info->shortcut = cg.readEntry(QLatin1String("shortcut") + n, QString());
         info->active = (active_client == i);
         info->stackingOrder = cg.readEntry(QLatin1String("stackingOrder") + n, -1);
-        info->tabGroup = cg.readEntry(QLatin1String("tabGroup") + n, 0);
-        info->tabGroupClient = NULL;
         info->activities = cg.readEntry(QLatin1String("activities") + n, QStringList());
     }
 }
@@ -362,15 +358,6 @@ SessionInfo* Workspace::takeSessionInfo(Client* c)
             }
         }
     }
-
-    // Set tabGroupClient for other clients in the same group
-    if (realInfo && realInfo->tabGroup) {
-        foreach (SessionInfo * info, session) {
-            if (!info->tabGroupClient && info->tabGroup == realInfo->tabGroup)
-                info->tabGroupClient = c;
-        }
-    }
-
     return realInfo;
 }
 

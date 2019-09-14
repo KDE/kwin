@@ -853,16 +853,10 @@ void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource sr
 
 void Client::doSetKeepAbove()
 {
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Layer);
 }
 
 void Client::doSetKeepBelow()
 {
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Layer);
 }
 
 bool Client::belongsToDesktop() const

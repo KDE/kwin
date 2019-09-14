@@ -158,9 +158,6 @@ class KWIN_EXPORT Options : public QObject
      * Whether to hide utility windows for inactive applications.
      */
     Q_PROPERTY(bool hideUtilityWindowsForInactive READ isHideUtilityWindowsForInactive WRITE setHideUtilityWindowsForInactive NOTIFY hideUtilityWindowsForInactiveChanged)
-    Q_PROPERTY(bool inactiveTabsSkipTaskbar READ isInactiveTabsSkipTaskbar WRITE setInactiveTabsSkipTaskbar NOTIFY inactiveTabsSkipTaskbarChanged)
-    Q_PROPERTY(bool autogroupSimilarWindows READ isAutogroupSimilarWindows WRITE setAutogroupSimilarWindows NOTIFY autogroupSimilarWindowsChanged)
-    Q_PROPERTY(bool autogroupInForeground READ isAutogroupInForeground WRITE setAutogroupInForeground NOTIFY autogroupInForegroundChanged)
     Q_PROPERTY(int compositingMode READ compositingMode WRITE setCompositingMode NOTIFY compositingModeChanged)
     Q_PROPERTY(bool useCompositing READ isUseCompositing WRITE setUseCompositing NOTIFY useCompositingChanged)
     Q_PROPERTY(int hiddenPreviews READ hiddenPreviews WRITE setHiddenPreviews NOTIFY hiddenPreviewsChanged)
@@ -362,11 +359,6 @@ public:
         NoOp,
         SetupWindowShortcutOp,
         ApplicationRulesOp,
-        RemoveTabFromGroupOp, // Remove from group
-        CloseTabGroupOp, // Close the group
-        ActivateNextTabOp, // Move left in the group
-        ActivatePreviousTabOp, // Move right in the group
-        TabDragOp,
     };
 
     WindowOperation operationTitlebarDblClick() const {
@@ -396,14 +388,14 @@ public:
         MouseNextDesktop, MousePreviousDesktop,
         MouseAbove, MouseBelow,
         MouseOpacityMore, MouseOpacityLess,
-        MouseClose, MousePreviousTab, MouseNextTab, MouseDragTab,
+        MouseClose,
         MouseNothing
     };
 
     enum MouseWheelCommand {
         MouseWheelRaiseLower, MouseWheelShadeUnshade, MouseWheelMaximizeRestore,
         MouseWheelAboveBelow, MouseWheelPreviousNextDesktop,
-        MouseWheelChangeOpacity, MouseWheelChangeCurrentTab,
+        MouseWheelChangeOpacity,
         MouseWheelNothing
     };
 
@@ -520,16 +512,6 @@ public:
         return m_hideUtilityWindowsForInactive;
     }
 
-    bool isInactiveTabsSkipTaskbar() const {
-        return m_inactiveTabsSkipTaskbar;
-    }
-    bool isAutogroupSimilarWindows() const {
-        return m_autogroupSimilarWindows;
-    }
-    bool isAutogroupInForeground() const {
-        return m_autogroupInForeground;
-    }
-
     /**
      * Returns the animation time factor for desktop effects.
      */
@@ -641,9 +623,6 @@ public:
     void setBorderlessMaximizedWindows(bool borderlessMaximizedWindows);
     void setKillPingTimeout(int killPingTimeout);
     void setHideUtilityWindowsForInactive(bool hideUtilityWindowsForInactive);
-    void setInactiveTabsSkipTaskbar(bool inactiveTabsSkipTaskbar);
-    void setAutogroupSimilarWindows(bool autogroupSimilarWindows);
-    void setAutogroupInForeground(bool autogroupInForeground);
     void setCompositingMode(int compositingMode);
     void setUseCompositing(bool useCompositing);
     void setHiddenPreviews(int hiddenPreviews);
@@ -676,7 +655,7 @@ public:
         return MouseRaise;
     }
     static MouseCommand defaultCommandActiveTitlebar2() {
-        return MouseDragTab;
+        return MouseNothing;
     }
     static MouseCommand defaultCommandActiveTitlebar3() {
         return MouseOperationsMenu;
@@ -685,7 +664,7 @@ public:
         return MouseActivateAndRaise;
     }
     static MouseCommand defaultCommandInactiveTitlebar2() {
-        return MouseDragTab;
+        return MouseNothing;
     }
     static MouseCommand defaultCommandInactiveTitlebar3() {
         return MouseOperationsMenu;
@@ -712,16 +691,13 @@ public:
         return MouseUnrestrictedResize;
     }
     static MouseWheelCommand defaultCommandTitlebarWheel() {
-        return MouseWheelChangeCurrentTab;
+        return MouseWheelNothing;
     }
     static MouseWheelCommand defaultCommandAllWheel() {
         return MouseWheelNothing;
     }
     static uint defaultKeyCmdAllModKey() {
         return Qt::Key_Alt;
-    }
-    static bool defaultAutogroupInForeground() {
-        return true;
     }
     static CompositingType defaultCompositingMode() {
         return OpenGLCompositing;
@@ -827,9 +803,6 @@ Q_SIGNALS:
     void borderlessMaximizedWindowsChanged();
     void killPingTimeoutChanged();
     void hideUtilityWindowsForInactiveChanged();
-    void inactiveTabsSkipTaskbarChanged();
-    void autogroupSimilarWindowsChanged();
-    void autogroupInForegroundChanged();
     void compositingModeChanged();
     void useCompositingChanged();
     void hiddenPreviewsChanged();
@@ -869,9 +842,6 @@ private:
     int m_focusStealingPreventionLevel;
     int m_killPingTimeout;
     bool m_hideUtilityWindowsForInactive;
-    bool m_inactiveTabsSkipTaskbar;
-    bool m_autogroupSimilarWindows;
-    bool m_autogroupInForeground;
 
     CompositingType m_compositingMode;
     bool m_useCompositing;

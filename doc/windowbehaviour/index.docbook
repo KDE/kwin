@@ -42,8 +42,7 @@ you can configure how titlebars and windows react to
 mouse clicks. <guilabel>Moving</guilabel> allows you to configure how
 windows move and place themselves when started.  The
 <guilabel>Advanced</guilabel> options cover some specialized options
-like <quote>window tabbing</quote> and <quote>window
-shading</quote>.
+like <quote>window shading</quote>.
 </para>
 
 <note>
@@ -279,7 +278,7 @@ restores the window to its normal size.
 
 <para>Similar options are available for <guilabel>Wheel event</guilabel>.
 </para>
-<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity  Switch to Window Tab to the Left/Reght -->
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity -->
 
 <tip>
 <para>
@@ -340,7 +339,7 @@ are already on top.
 </varlistentry>
 
 <!--FIXME missing:
-Minimize, Shade, Close, Start Window Tab Drag
+Minimize, Shade, Close
 -->
 
 <varlistentry>
@@ -531,7 +530,7 @@ Increase Opacity + Decrease Opacity
 <!--FIXME
 Mouse Wheel has different choices:
 Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
-Move to Previous/Next Desktop, Change Opacity, Switch to Window Tab to the Left/Right
+Move to Previous/Next Desktop, Change Opacity
 Nothing
 -->
 
@@ -639,19 +638,6 @@ the spinbox to configure the delay un-shading.
 </variablelist>
 
 <variablelist>
-<title>Window Tabbing</title>
-
-<varlistentry>
-<term><guilabel>Automatically group similar windows</guilabel></term>
-<listitem><para>When turned on attempt to automatically detect when a newly opened window is 
-related to an existing one and place them in the same window group.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Switch to automatically grouped windows immediately</guilabel></term>
-<listitem><para>When turned on immediately switch to any new window tabs that were 
-automatically added to the current group.</para></listitem>
-</varlistentry>
 
 <varlistentry>
 <term><guilabel>Placement</guilabel></term>
