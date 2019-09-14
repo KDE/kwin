@@ -10,6 +10,7 @@ X-KDE-PluginKeyword=kwinfocus
 
 Name=Window Focus Behavior
 Name[ca]=Comportament del focus de les finestres
+Name[cs]=Chování při zaměření na okno
 Name[es]=Comportamiento del foco de las ventanas
 Name[eu]=Leiho fokuaren portaera
 Name[nl]=Focusgedrag venster
