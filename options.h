@@ -764,7 +764,7 @@ public:
     }
     static OpenGLPlatformInterface defaultGlPlatformInterface() {
         return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
-    };
+    }
     static int defaultAnimationSpeed() {
         return 3;
     }
