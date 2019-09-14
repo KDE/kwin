@@ -99,6 +99,7 @@ private:
     void updateSize(xcb_configure_notify_event_t *event);
     void createCursor(const QImage &img, const QPoint &hotspot);
     void initXInput();
+    X11WindowedOutput *findOutput(xcb_window_t window) const;
 
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;

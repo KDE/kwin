@@ -66,6 +66,11 @@ public:
      */
     void setGeometry(const QPoint &logicalPosition, const QSize &pixelSize);
 
+    /**
+     * Translates the global X11 screen coordinate @p pos to output coordinates.
+     */
+    QPointF mapFromGlobal(const QPointF &pos) const;
+
 private:
     void initXInputForWindow();
 

@@ -157,4 +157,9 @@ void X11WindowedOutput::setHostPosition(const QPoint &pos)
     m_hostPosition = pos;
 }
 
+QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
+{
+    return (pos - hostPosition() + internalPosition()) / scale();
+}
+
 }

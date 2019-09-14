@@ -139,6 +139,19 @@ void X11WindowedBackend::initXInput()
 #endif
 }
 
+X11WindowedOutput *X11WindowedBackend::findOutput(xcb_window_t window) const
+{
+    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
+        [window] (X11WindowedOutput *output) {
+            return output->window() == window;
+        }
+    );
+    if (it != m_outputs.constEnd()) {
+        return *it;
+    }
+    return nullptr;
+}
+
 void X11WindowedBackend::createOutputs()
 {
     Xcb::Atom protocolsAtom(QByteArrayLiteral("WM_PROTOCOLS"), false, m_connection);
@@ -208,17 +221,12 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         break;
     case XCB_MOTION_NOTIFY: {
             auto event = reinterpret_cast<xcb_motion_notify_event_t*>(e);
-            auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-                                   [event] (X11WindowedOutput *output) { return output->window() == event->event; }
-                      );
-            if (it == m_outputs.constEnd()) {
+            const X11WindowedOutput *output = findOutput(event->event);
+            if (!output) {
                 break;
             }
-            //generally we don't need to normalise input to the output scale; however because we're getting input
-            //from a host window that doesn't understand scaling, we need to apply it ourselves so the cursor matches
-            pointerMotion(QPointF(event->root_x - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
-                                  event->root_y - (*it)->hostPosition().y() + (*it)->internalPosition().y()) / (*it)->scale(),
-                          event->time);
+            const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
+            pointerMotion(position, event->time);
         }
         break;
     case XCB_KEY_PRESS:
@@ -243,15 +251,12 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
         break;
     case XCB_ENTER_NOTIFY: {
             auto event = reinterpret_cast<xcb_enter_notify_event_t*>(e);
-            auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-                                   [event] (X11WindowedOutput *output) { return output->window() == event->event; }
-                      );
-            if (it == m_outputs.constEnd()) {
+            const X11WindowedOutput *output = findOutput(event->event);
+            if (!output) {
                 break;
             }
-            pointerMotion(QPointF(event->root_x - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
-                                  event->root_y - (*it)->hostPosition().y() + (*it)->internalPosition().y()) / (*it)->scale(),
-                          event->time);
+            const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
+            pointerMotion(position, event->time);
         }
         break;
     case XCB_CLIENT_MESSAGE:
@@ -269,17 +274,12 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
     case XCB_GE_GENERIC: {
         GeEventMemMover ge(e);
         auto te = reinterpret_cast<xXIDeviceEvent*>(e);
-        auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-                               [te] (X11WindowedOutput *output) { return output->window() == te->event; }
-                  );
-        if (it == m_outputs.constEnd()) {
+        const X11WindowedOutput *output = findOutput(te->event);
+        if (!output) {
             break;
         }
-        QPointF position{
-            fixed1616ToReal(te->root_x) - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
-            fixed1616ToReal(te->root_y) - (*it)->hostPosition().y() + (*it)->internalPosition().y()
-        };
-        position /= (*it)->scale();
+
+        const QPointF position = output->mapFromGlobal(QPointF(fixed1616ToReal(te->root_x), fixed1616ToReal(te->root_y)));
 
         switch (ge->event_type) {
 
@@ -394,10 +394,8 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 
 void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
 {
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
-                           [event] (X11WindowedOutput *output) { return output->window() == event->event; }
-              );
-    if (it == m_outputs.constEnd()) {
+    const X11WindowedOutput *output = findOutput(event->event);
+    if (!output) {
         return;
     }
     bool const pressed = (event->response_type & ~0x80) == XCB_BUTTON_PRESS;
@@ -431,9 +429,9 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         return;
     }
 
-    pointerMotion(QPointF(event->root_x - (*it)->hostPosition().x() + (*it)->internalPosition().x(),
-                          event->root_y - (*it)->hostPosition().y() + (*it)->internalPosition().y()) / (*it)->scale(),
-                  event->time);
+    const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
+    pointerMotion(position, event->time);
+
     if (pressed) {
         pointerButtonPressed(button, event->time);
     } else {
@@ -448,18 +446,16 @@ void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)
 
 void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
 {
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                           [event] (X11WindowedOutput *output) { return output->window() == event->window; }
-              );
-    if (it == m_outputs.end()) {
+    X11WindowedOutput *output = findOutput(event->window);
+    if (!output) {
         return;
     }
 
-    (*it)->setHostPosition(QPoint(event->x, event->y));
+    output->setHostPosition(QPoint(event->x, event->y));
 
     const QSize s = QSize(event->width, event->height);
-    if (s != (*it)->pixelSize()) {
-        (*it)->setGeometry((*it)->internalPosition(), s);
+    if (s != output->pixelSize()) {
+        output->setGeometry(output->internalPosition(), s);
     }
     emit sizeChanged();
 }
