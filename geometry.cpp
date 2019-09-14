@@ -2341,7 +2341,7 @@ void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         setGeometry(restore, geom_mode);
         if (!clientArea.contains(geom_restore.center()))    // Not restoring to the same screen
             Placement::self()->place(this, clientArea);
-        info->setState(0, NET::Max);
+        info->setState(NET::States(), NET::Max);
         updateQuickTileMode(QuickTileFlag::None);
         break;
     }
@@ -2446,7 +2446,7 @@ void Client::setFullScreen(bool set, bool user)
     // active fullscreens get different layer
     workspace()->updateClientLayer(this);
 
-    info->setState(isFullScreen() ? NET::FullScreen : NET::States(0), NET::FullScreen);
+    info->setState(isFullScreen() ? NET::FullScreen : NET::States(), NET::FullScreen);
     updateDecoration(false, false);
 
     if (set) {

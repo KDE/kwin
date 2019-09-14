@@ -322,12 +322,12 @@ void AbstractClient::setKeepAbove(bool b)
     if (b == keepAbove()) {
         // force hint change if different
         if (info && bool(info->state() & NET::KeepAbove) != keepAbove())
-            info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
+            info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
         return;
     }
     m_keepAbove = b;
     if (info) {
-        info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
+        info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
     }
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Above);
@@ -348,12 +348,12 @@ void AbstractClient::setKeepBelow(bool b)
     if (b == keepBelow()) {
         // force hint change if different
         if (info && bool(info->state() & NET::KeepBelow) != keepBelow())
-            info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
+            info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
         return;
     }
     m_keepBelow = b;
     if (info) {
-        info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
+        info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
     }
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Below);
@@ -406,7 +406,7 @@ void AbstractClient::demandAttention(bool set)
         return;
     m_demandsAttention = set;
     if (info) {
-        info->setState(set ? NET::DemandsAttention : NET::States(0), NET::DemandsAttention);
+        info->setState(set ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
     }
     workspace()->clientAttentionChanged(this, set);
     emit demandsAttentionChanged();
@@ -614,7 +614,7 @@ void AbstractClient::minimize(bool avoid_animation)
         return;
 
     if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(0, NET::Shaded);
+        info->setState(NET::States(), NET::Shaded);
 
     m_minimized = true;
 

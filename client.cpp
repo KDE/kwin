@@ -245,7 +245,7 @@ void Client::releaseWindow(bool on_shutdown)
         workspace()->removeClient(this);
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
-        info->setState(0, info->state());  // Reset all state flags
+        info->setState(NET::States(), info->state());  // Reset all state flags
     }
     xcb_connection_t *c = connection();
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
@@ -875,8 +875,8 @@ void Client::setShade(ShadeMode mode)
         if (isActive())
             workspace()->requestFocus(this);
     }
-    info->setState(isShade() ? NET::Shaded : NET::States(0), NET::Shaded);
-    info->setState(isShown(false) ? NET::States(0) : NET::Hidden, NET::Hidden);
+    info->setState(isShade() ? NET::Shaded : NET::States(), NET::Shaded);
+    info->setState(isShown(false) ? NET::States() : NET::Hidden, NET::Hidden);
     discardWindowPixmap();
     updateVisibility();
     updateAllowedActions();
@@ -931,7 +931,7 @@ void Client::updateVisibility()
             internalHide();
         return;
     }
-    info->setState(0, NET::Hidden);
+    info->setState(NET::States(), NET::Hidden);
     if (!isOnCurrentDesktop()) {
         if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
             internalKeep();
@@ -1230,17 +1230,17 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
 
 void Client::doSetSkipTaskbar()
 {
-    info->setState(skipTaskbar() ? NET::SkipTaskbar : NET::States(0), NET::SkipTaskbar);
+    info->setState(skipTaskbar() ? NET::SkipTaskbar : NET::States(), NET::SkipTaskbar);
 }
 
 void Client::doSetSkipPager()
 {
-    info->setState(skipPager() ? NET::SkipPager : NET::States(0), NET::SkipPager);
+    info->setState(skipPager() ? NET::SkipPager : NET::States(), NET::SkipPager);
 }
 
 void Client::doSetSkipSwitcher()
 {
-    info->setState(skipSwitcher() ? NET::SkipSwitcher : NET::States(0), NET::SkipSwitcher);
+    info->setState(skipSwitcher() ? NET::SkipSwitcher : NET::States(), NET::SkipSwitcher);
 }
 
 void Client::doSetDesktop(int desktop, int was_desk)
