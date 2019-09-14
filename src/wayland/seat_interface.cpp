@@ -192,7 +192,7 @@ T *interfaceForSurface(SurfaceInterface *surface, const QVector<T*> &interfaces)
         return nullptr;
     }
 
-    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
+    for (auto it = interfaces.constBegin(); it != interfaces.constEnd(); ++it) {
         if ((*it)->client() == surface->client()) {
             return (*it);
         }
@@ -209,7 +209,7 @@ QVector<T *> interfacesForSurface(SurfaceInterface *surface, const QVector<T*> &
         return ret;
     }
 
-    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
+    for (auto it = interfaces.constBegin(); it != interfaces.constEnd(); ++it) {
         if ((*it)->client() == surface->client() && (*it)->resource()) {
             ret << *it;
         }
@@ -225,7 +225,7 @@ bool forEachInterface(SurfaceInterface *surface, const QVector<T*> &interfaces, 
         return false;
     }
     bool calledAtLeastOne = false;
-    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
+    for (auto it = interfaces.constBegin(); it != interfaces.constEnd(); ++it) {
         if ((*it)->client() == surface->client() && (*it)->resource()) {
             method(*it);
             calledAtLeastOne = true;
@@ -1271,7 +1271,7 @@ QVector< quint32 > SeatInterface::pressedKeys() const
 {
     Q_D();
     QVector<quint32> keys;
-    for (auto it = d->keys.states.begin(); it != d->keys.states.end(); ++it) {
+    for (auto it = d->keys.states.constBegin(); it != d->keys.states.constEnd(); ++it) {
         if (it.value() == Private::Keyboard::State::Pressed) {
             keys << it.key();
         }
@@ -1502,7 +1502,7 @@ bool SeatInterface::hasImplicitPointerGrab(quint32 serial) const
 {
     Q_D();
     const auto &serials = d->globalPointer.buttonSerials;
-    for (auto it = serials.begin(), end = serials.end(); it != end; it++) {
+    for (auto it = serials.constBegin(), end = serials.constEnd(); it != end; it++) {
         if (it.value() == serial) {
             return isPointerButtonPressed(it.key());
         }

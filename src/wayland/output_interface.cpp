@@ -115,8 +115,8 @@ OutputInterface::Private *OutputInterface::Private::cast(wl_resource *native)
 {
     for (auto it = s_privates.constBegin(); it != s_privates.constEnd(); ++it) {
         const auto &resources = (*it)->resources;
-        auto rit = std::find_if(resources.begin(), resources.end(), [native] (const ResourceData &data) { return data.resource == native; });
-        if (rit != resources.end()) {
+        auto rit = std::find_if(resources.constBegin(), resources.constEnd(), [native] (const ResourceData &data) { return data.resource == native; });
+        if (rit != resources.constEnd()) {
             return (*it);
         }
     }
@@ -153,12 +153,12 @@ OutputInterface::~OutputInterface() = default;
 QSize OutputInterface::pixelSize() const
 {
     Q_D();
-    auto it = std::find_if(d->modes.begin(), d->modes.end(),
+    auto it = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
         [](const Mode &mode) {
             return mode.flags.testFlag(ModeFlag::Current);
         }
     );
-    if (it == d->modes.end()) {
+    if (it == d->modes.constEnd()) {
         return QSize();
     }
     return (*it).size;
@@ -167,12 +167,12 @@ QSize OutputInterface::pixelSize() const
 int OutputInterface::refreshRate() const
 {
     Q_D();
-    auto it = std::find_if(d->modes.begin(), d->modes.end(),
+    auto it = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
         [](const Mode &mode) {
             return mode.flags.testFlag(ModeFlag::Current);
         }
     );
-    if (it == d->modes.end()) {
+    if (it == d->modes.constEnd()) {
         return 60000;
     }
     return (*it).refreshRate;

@@ -61,7 +61,7 @@ void KeyboardInterface::Private::sendEnter(SurfaceInterface *surface, quint32 se
     wl_array keys;
     wl_array_init(&keys);
     const auto states = seat->pressedKeys();
-    for (auto it = states.begin(); it != states.end(); ++it) {
+    for (auto it = states.constBegin(); it != states.constEnd(); ++it) {
         uint32_t *k = reinterpret_cast<uint32_t*>(wl_array_add(&keys, sizeof(uint32_t)));
         *k = *it;
     }

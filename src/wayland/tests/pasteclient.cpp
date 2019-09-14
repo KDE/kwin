@@ -149,11 +149,11 @@ void PasteClient::setupRegistry(Registry *registry)
                         return;
                     }
                     const auto &mimeTypes = dataOffer->offeredMimeTypes();
-                    auto it = std::find_if(mimeTypes.begin(), mimeTypes.end(),
+                    auto it = std::find_if(mimeTypes.constBegin(), mimeTypes.constEnd(),
                         [](const QMimeType &type) {
                             return type.inherits(QStringLiteral("text/plain"));
                         });
-                    if (it == mimeTypes.end()) {
+                    if (it == mimeTypes.constEnd()) {
                         return;
                     }
                     int pipeFds[2];

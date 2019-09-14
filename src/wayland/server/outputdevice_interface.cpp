@@ -239,12 +239,12 @@ void OutputDeviceInterface::addMode(Mode &mode)
         emitChanges();
         return;
     } else {
-        auto idIt = std::find_if(d->modes.begin(), d->modes.end(),
+        auto idIt = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
                                         [mode](const Mode &mode_it) {
                                             return mode.id == mode_it.id;
                                         }
         );
-        if (idIt != d->modes.end()) {
+        if (idIt != d->modes.constEnd()) {
             qCWarning(KWAYLAND_SERVER) << "Duplicate Mode id" << mode.id << ": not adding mode" << mode.size << mode.refreshRate;
             return;
         }
