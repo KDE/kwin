@@ -41,9 +41,6 @@ InternalClient::InternalClient(QWindow *window)
     , m_windowId(window->winId())
     , m_internalWindowFlags(window->flags())
 {
-    // Don't render the client until it provides a buffer.
-    ready_for_painting = false;
-
     connect(m_internalWindow, &QWindow::xChanged, this, &InternalClient::updateInternalWindowGeometry);
     connect(m_internalWindow, &QWindow::yChanged, this, &InternalClient::updateInternalWindowGeometry);
     connect(m_internalWindow, &QWindow::widthChanged, this, &InternalClient::updateInternalWindowGeometry);

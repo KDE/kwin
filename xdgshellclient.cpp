@@ -196,7 +196,6 @@ void XdgShellClient::init()
     updateIcon();
     SurfaceInterface *s = surface();
     Q_ASSERT(s);
-    ready_for_painting = false;
     doSetGeometry(QRect(QPoint(0, 0), m_clientSize));
     if (waylandServer()->inputMethodConnection() == s->client()) {
         m_windowType = NET::OnScreenDisplay;
