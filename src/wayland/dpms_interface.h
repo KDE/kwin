@@ -33,12 +33,13 @@ namespace Server
 class Display;
 
 /**
- * @brief Global for the org_kde_kwin_dpms_manager interface.
+ * @brief Global for server side Display Power Management Signaling interface.
  *
- * If the DpmsManagerInterface is created it allows a client to
- * query the Dpms state on a given OutputInterface and request
- * changes for it. The code interaction happens only via the
- * OutputInterface.
+ * A DpmsManagerInterface allows a client to query the DPMS state
+ * on a given OutputInterface and request changes to it.
+ * Server-side the interaction happens only via the OutputInterface,
+ * for clients the Dpms class provides the API.
+ * This global implements org_kde_kwin_dpms_manager.
  *
  * To create a DpmsManagerInterface use:
  * @code

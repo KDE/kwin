@@ -38,7 +38,12 @@ class SeatInterface;
 class SurfaceInterface;
 
 /**
- * @brief Represents the Resource for the wl_data_device interface.
+ * @brief DataDeviceInterface allows clients to share data by copy-and-paste and drag-and-drop.
+ *
+ * The data device is per seat.
+ * Copy-and-paste use the selection functions.
+ *
+ * Represents the Resource for the wl_data_device interface.
  *
  * @see SeatInterface
  * @see DataSourceInterface
