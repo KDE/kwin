@@ -34,10 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/decoratedclient.h"
+
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
-
-#include <KWayland/Client/surface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/seat_interface.h>
