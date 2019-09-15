@@ -89,105 +89,6 @@ XdgShellClient::XdgShellClient(XdgShellPopupInterface *surface)
 
 XdgShellClient::~XdgShellClient() = default;
 
-template <class T>
-void XdgShellClient::initSurface(T *shellSurface)
-{
-    m_caption = shellSurface->title().simplified();
-    // delay till end of init
-    QTimer::singleShot(0, this, &XdgShellClient::updateCaption);
-    connect(shellSurface, &T::destroyed, this, &XdgShellClient::destroyClient);
-    connect(shellSurface, &T::titleChanged, this,
-        [this] (const QString &s) {
-            const auto oldSuffix = m_captionSuffix;
-            m_caption = s.simplified();
-            updateCaption();
-            if (m_captionSuffix == oldSuffix) {
-                // don't emit caption change twice
-                // it already got emitted by the changing suffix
-                emit captionChanged();
-            }
-        }
-    );
-    connect(shellSurface, &T::moveRequested, this,
-        [this] {
-            // TODO: check the seat and serial
-            performMouseCommand(Options::MouseMove, Cursor::pos());
-        }
-    );
-
-    // determine the resource name, this is inspired from ICCCM 4.1.2.5
-    // the binary name of the invoked client
-    QFileInfo info{shellSurface->client()->executablePath()};
-    QByteArray resourceName;
-    if (info.exists()) {
-        resourceName = info.fileName().toUtf8();
-    }
-    setResourceClass(resourceName, shellSurface->windowClass());
-    setDesktopFileName(shellSurface->windowClass());
-    connect(shellSurface, &T::windowClassChanged, this,
-        [this, resourceName] (const QByteArray &windowClass) {
-            setResourceClass(resourceName, windowClass);
-            if (m_isInitialized && supportsWindowRules()) {
-                setupWindowRules(true);
-                applyWindowRules();
-            }
-            setDesktopFileName(windowClass);
-        }
-    );
-    connect(shellSurface, &T::resizeRequested, this,
-        [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
-            // TODO: check the seat and serial
-            Q_UNUSED(seat)
-            Q_UNUSED(serial)
-            if (!isResizable() || isShade()) {
-                return;
-            }
-            if (isMoveResize()) {
-                finishMoveResize(false);
-            }
-            setMoveResizePointerButtonDown(true);
-            setMoveOffset(Cursor::pos() - pos());  // map from global
-            setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-            setUnrestrictedMoveResize(false);
-            auto toPosition = [edges] {
-                Position pos = PositionCenter;
-                if (edges.testFlag(Qt::TopEdge)) {
-                    pos = PositionTop;
-                } else if (edges.testFlag(Qt::BottomEdge)) {
-                    pos = PositionBottom;
-                }
-                if (edges.testFlag(Qt::LeftEdge)) {
-                    pos = Position(pos | PositionLeft);
-                } else if (edges.testFlag(Qt::RightEdge)) {
-                    pos = Position(pos | PositionRight);
-                }
-                return pos;
-            };
-            setMoveResizePointerMode(toPosition());
-            if (!startMoveResize())
-                setMoveResizePointerButtonDown(false);
-            updateCursor();
-        }
-    );
-    connect(shellSurface, &T::maximizedChanged, this,
-        [this] (bool maximized) {
-            // If the maximized state of the client hasn't been changed due to a window
-            // rule or because the requested state is the same as the current, then the
-            // compositor still has to send a configure event.
-            RequestGeometryBlocker blocker(this);
-
-            maximize(maximized ? MaximizeFull : MaximizeRestore);
-        }
-    );
-    // TODO: consider output!
-    connect(shellSurface, &T::fullscreenChanged, this, &XdgShellClient::clientFullScreenChanged);
-
-    connect(shellSurface, &T::transientForChanged, this, &XdgShellClient::setTransient);
-
-    connect(this, &XdgShellClient::geometryChanged, this, &XdgShellClient::updateClientOutputs);
-    connect(screens(), &Screens::changed, this, &XdgShellClient::updateClientOutputs);
-}
-
 void XdgShellClient::init()
 {
     connect(this, &XdgShellClient::desktopFileNameChanged, this, &XdgShellClient::updateIcon);
@@ -211,7 +112,104 @@ void XdgShellClient::init()
     connect(s, &SurfaceInterface::unbound, this, &XdgShellClient::destroyClient);
     connect(s, &SurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
     if (m_xdgShellSurface) {
-        initSurface(m_xdgShellSurface);
+        m_caption = m_xdgShellSurface->title().simplified();
+        // delay till end of init
+        QTimer::singleShot(0, this, &XdgShellClient::updateCaption);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::titleChanged, this,
+            [this] (const QString &caption) {
+                const auto oldSuffix = m_captionSuffix;
+                m_caption = caption.simplified();
+                updateCaption();
+                if (m_captionSuffix == oldSuffix) {
+                    // don't emit caption change twice
+                    // it already got emitted by the changing suffix
+                    emit captionChanged();
+                }
+            }
+        );
+
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::moveRequested, this,
+            [this] {
+                // TODO: check the seat and serial
+                performMouseCommand(Options::MouseMove, Cursor::pos());
+            }
+        );
+
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::resizeRequested, this,
+            [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
+                // TODO: check the seat and serial
+                Q_UNUSED(seat)
+                Q_UNUSED(serial)
+                if (!isResizable() || isShade()) {
+                    return;
+                }
+                if (isMoveResize()) {
+                    finishMoveResize(false);
+                }
+                setMoveResizePointerButtonDown(true);
+                setMoveOffset(Cursor::pos() - pos());  // map from global
+                setInvertedMoveOffset(rect().bottomRight() - moveOffset());
+                setUnrestrictedMoveResize(false);
+                auto toPosition = [edges] {
+                    Position pos = PositionCenter;
+                    if (edges.testFlag(Qt::TopEdge)) {
+                        pos = PositionTop;
+                    } else if (edges.testFlag(Qt::BottomEdge)) {
+                        pos = PositionBottom;
+                    }
+                    if (edges.testFlag(Qt::LeftEdge)) {
+                        pos = Position(pos | PositionLeft);
+                    } else if (edges.testFlag(Qt::RightEdge)) {
+                        pos = Position(pos | PositionRight);
+                    }
+                    return pos;
+                };
+                setMoveResizePointerMode(toPosition());
+                if (!startMoveResize()) {
+                    setMoveResizePointerButtonDown(false);
+                }
+                updateCursor();
+            }
+        );
+
+        // Determine the resource name, this is inspired from ICCCM 4.1.2.5
+        // the binary name of the invoked client.
+        QFileInfo info{m_xdgShellSurface->client()->executablePath()};
+        QByteArray resourceName;
+        if (info.exists()) {
+            resourceName = info.fileName().toUtf8();
+        }
+        setResourceClass(resourceName, m_xdgShellSurface->windowClass());
+        setDesktopFileName(m_xdgShellSurface->windowClass());
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowClassChanged, this,
+            [this, resourceName] (const QByteArray &windowClass) {
+                setResourceClass(resourceName, windowClass);
+                if (m_isInitialized && supportsWindowRules()) {
+                    setupWindowRules(true);
+                    applyWindowRules();
+                }
+                setDesktopFileName(windowClass);
+            }
+        );
+
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::maximizedChanged, this,
+            [this] (bool maximized) {
+                // If the maximized state of the client hasn't been changed due to a window
+                // rule or because the requested state is the same as the current, then the
+                // compositor still has to send a configure event.
+                RequestGeometryBlocker blocker(this);
+
+                maximize(maximized ? MaximizeFull : MaximizeRestore);
+            }
+        );
+        // TODO: consider output!
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::fullscreenChanged, this, &XdgShellClient::clientFullScreenChanged);
+
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::transientForChanged, this, &XdgShellClient::setTransient);
+
+        connect(this, &XdgShellClient::geometryChanged, this, &XdgShellClient::updateClientOutputs);
+        connect(screens(), &Screens::changed, this, &XdgShellClient::updateClientOutputs);
 
         auto global = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
         connect(global, &XdgShellInterface::pingDelayed,

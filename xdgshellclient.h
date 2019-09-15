@@ -153,8 +153,6 @@ private:
      * At this point all initial properties should have been set by the client.
      */
     void finishInit();
-    template <class T>
-    void initSurface(T *shellSurface);
     void createDecoration(const QRect &oldgeom);
     void destroyClient();
     void createWindowId();
