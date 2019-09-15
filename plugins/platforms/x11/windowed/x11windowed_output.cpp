@@ -130,8 +130,6 @@ void X11WindowedOutput::initXInputForWindow()
     evmasks[0].mask_len = sizeof(mask1);
     evmasks[0].mask = mask1;
     XISelectEvents(m_backend->display(), m_window, evmasks, 1);
-#else
-    Q_UNUSED(window)
 #endif
 }
 
