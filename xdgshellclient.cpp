@@ -102,76 +102,21 @@ void XdgShellClient::init()
         m_windowType = NET::OnScreenDisplay;
     }
 
-    connect(s, &SurfaceInterface::sizeChanged, this,
-        [this] {
-            m_clientSize = surface()->size();
-            doSetGeometry(QRect(pos(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
-        }
-    );
+    connect(surface(), &SurfaceInterface::sizeChanged, this, &XdgShellClient::handleSurfaceSizeChanged);
     connect(s, &SurfaceInterface::unmapped, this, &XdgShellClient::unmap);
     connect(s, &SurfaceInterface::unbound, this, &XdgShellClient::destroyClient);
     connect(s, &SurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
+
     if (m_xdgShellSurface) {
-        m_caption = m_xdgShellSurface->title().simplified();
-        // delay till end of init
-        QTimer::singleShot(0, this, &XdgShellClient::updateCaption);
         connect(m_xdgShellSurface, &XdgShellSurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::titleChanged, this,
-            [this] (const QString &caption) {
-                const auto oldSuffix = m_captionSuffix;
-                m_caption = caption.simplified();
-                updateCaption();
-                if (m_captionSuffix == oldSuffix) {
-                    // don't emit caption change twice
-                    // it already got emitted by the changing suffix
-                    emit captionChanged();
-                }
-            }
-        );
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::configureAcknowledged, this, &XdgShellClient::handleConfigureAcknowledged);
 
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::moveRequested, this,
-            [this] {
-                // TODO: check the seat and serial
-                performMouseCommand(Options::MouseMove, Cursor::pos());
-            }
-        );
+        m_caption = m_xdgShellSurface->title().simplified();
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::titleChanged, this, &XdgShellClient::handleWindowTitleChanged);
+        QTimer::singleShot(0, this, &XdgShellClient::updateCaption);
 
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::resizeRequested, this,
-            [this] (SeatInterface *seat, quint32 serial, Qt::Edges edges) {
-                // TODO: check the seat and serial
-                Q_UNUSED(seat)
-                Q_UNUSED(serial)
-                if (!isResizable() || isShade()) {
-                    return;
-                }
-                if (isMoveResize()) {
-                    finishMoveResize(false);
-                }
-                setMoveResizePointerButtonDown(true);
-                setMoveOffset(Cursor::pos() - pos());  // map from global
-                setInvertedMoveOffset(rect().bottomRight() - moveOffset());
-                setUnrestrictedMoveResize(false);
-                auto toPosition = [edges] {
-                    Position pos = PositionCenter;
-                    if (edges.testFlag(Qt::TopEdge)) {
-                        pos = PositionTop;
-                    } else if (edges.testFlag(Qt::BottomEdge)) {
-                        pos = PositionBottom;
-                    }
-                    if (edges.testFlag(Qt::LeftEdge)) {
-                        pos = Position(pos | PositionLeft);
-                    } else if (edges.testFlag(Qt::RightEdge)) {
-                        pos = Position(pos | PositionRight);
-                    }
-                    return pos;
-                };
-                setMoveResizePointerMode(toPosition());
-                if (!startMoveResize()) {
-                    setMoveResizePointerButtonDown(false);
-                }
-                updateCursor();
-            }
-        );
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::moveRequested, this, &XdgShellClient::handleMoveRequested);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::resizeRequested, this, &XdgShellClient::handleResizeRequested);
 
         // Determine the resource name, this is inspired from ICCCM 4.1.2.5
         // the binary name of the invoked client.
@@ -182,89 +127,19 @@ void XdgShellClient::init()
         }
         setResourceClass(resourceName, m_xdgShellSurface->windowClass());
         setDesktopFileName(m_xdgShellSurface->windowClass());
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowClassChanged, this,
-            [this, resourceName] (const QByteArray &windowClass) {
-                setResourceClass(resourceName, windowClass);
-                if (m_isInitialized && supportsWindowRules()) {
-                    setupWindowRules(true);
-                    applyWindowRules();
-                }
-                setDesktopFileName(windowClass);
-            }
-        );
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowClassChanged, this, &XdgShellClient::handleWindowClassChanged);
 
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::maximizedChanged, this,
-            [this] (bool maximized) {
-                // If the maximized state of the client hasn't been changed due to a window
-                // rule or because the requested state is the same as the current, then the
-                // compositor still has to send a configure event.
-                RequestGeometryBlocker blocker(this);
-
-                maximize(maximized ? MaximizeFull : MaximizeRestore);
-            }
-        );
-        // TODO: consider output!
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::fullscreenChanged, this, &XdgShellClient::clientFullScreenChanged);
-
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::transientForChanged, this, &XdgShellClient::setTransient);
-
-        connect(this, &XdgShellClient::geometryChanged, this, &XdgShellClient::updateClientOutputs);
-        connect(screens(), &Screens::changed, this, &XdgShellClient::updateClientOutputs);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::minimizeRequested, this, &XdgShellClient::handleMinimizeRequested);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::maximizedChanged, this, &XdgShellClient::handleMaximizeRequested);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::fullscreenChanged, this, &XdgShellClient::handleFullScreenRequested);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowMenuRequested, this, &XdgShellClient::handleWindowMenuRequested);
+        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::transientForChanged, this, &XdgShellClient::handleTransientForChanged);
 
         auto global = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
-        connect(global, &XdgShellInterface::pingDelayed,
-            this, [this](qint32 serial) {
-                auto it = m_pingSerials.find(serial);
-                if (it != m_pingSerials.end()) {
-                    qCDebug(KWIN_CORE) << "First ping timeout:" << caption();
-                    setUnresponsive(true);
-                }
-            });
+        connect(global, &XdgShellInterface::pingDelayed, this, &XdgShellClient::handlePingDelayed);
+        connect(global, &XdgShellInterface::pingTimeout, this, &XdgShellClient::handlePingTimeout);
+        connect(global, &XdgShellInterface::pongReceived, this, &XdgShellClient::handlePongReceived);
 
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::configureAcknowledged, this, [this](int serial) {
-           m_lastAckedConfigureRequest = serial;
-        });
-
-        connect(global, &XdgShellInterface::pingTimeout,
-            this, [this](qint32 serial) {
-                auto it = m_pingSerials.find(serial);
-                if (it != m_pingSerials.end()) {
-                    if (it.value() == PingReason::CloseWindow) {
-                        qCDebug(KWIN_CORE) << "Final ping timeout on a close attempt, asking to kill:" << caption();
-
-                        //for internal windows, killing the window will delete this
-                        QPointer<QObject> guard(this);
-                        killWindow();
-                        if (!guard) {
-                            return;
-                        }
-                    }
-                    m_pingSerials.erase(it);
-                }
-            });
-
-        connect(global, &XdgShellInterface::pongReceived,
-            this, [this](qint32 serial){
-                auto it = m_pingSerials.find(serial);
-                if (it != m_pingSerials.end()) {
-                    setUnresponsive(false);
-                    m_pingSerials.erase(it);
-                }
-            });
-
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowMenuRequested, this,
-            [this] (SeatInterface *seat, quint32 serial, const QPoint &surfacePos) {
-                // TODO: check serial on seat
-                Q_UNUSED(seat)
-                Q_UNUSED(serial)
-                performMouseCommand(Options::MouseOperationsMenu, pos() + surfacePos);
-            }
-        );
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::minimizeRequested, this,
-            [this] {
-                performMouseCommand(Options::MouseMinimize, Cursor::pos());
-            }
-        );
         auto configure = [this] {
             if (m_closing) {
                 return;
@@ -277,18 +152,12 @@ void XdgShellClient::init()
         connect(this, &AbstractClient::activeChanged, this, configure);
         connect(this, &AbstractClient::clientStartUserMovedResized, this, configure);
         connect(this, &AbstractClient::clientFinishUserMovedResized, this, configure);
+
+        connect(this, &XdgShellClient::geometryChanged, this, &XdgShellClient::updateClientOutputs);
+        connect(screens(), &Screens::changed, this, &XdgShellClient::updateClientOutputs);
     } else if (m_xdgShellPopup) {
-        connect(m_xdgShellPopup, &XdgShellPopupInterface::grabRequested, this, [this](SeatInterface *seat, quint32 serial) {
-            Q_UNUSED(seat)
-            Q_UNUSED(serial)
-            //TODO - should check the parent had focus
-            m_hasPopupGrab = true;
-        });
-
-        connect(m_xdgShellPopup, &XdgShellPopupInterface::configureAcknowledged, this, [this](int serial) {
-           m_lastAckedConfigureRequest = serial;
-        });
-
+        connect(m_xdgShellPopup, &XdgShellPopupInterface::configureAcknowledged, this, &XdgShellClient::handleConfigureAcknowledged);
+        connect(m_xdgShellPopup, &XdgShellPopupInterface::grabRequested, this, &XdgShellClient::handleGrabRequested);
         connect(m_xdgShellPopup, &XdgShellPopupInterface::destroyed, this, &XdgShellClient::destroyClient);
     }
 
@@ -301,10 +170,10 @@ void XdgShellClient::init()
 
     connect(waylandServer(), &WaylandServer::foreignTransientChanged, this, [this](KWayland::Server::SurfaceInterface *child) {
         if (child == surface()) {
-            setTransient();
+            handleTransientForChanged();
         }
     });
-    setTransient();
+    handleTransientForChanged();
 
     AbstractClient::updateColorScheme(QString());
 }
@@ -1210,9 +1079,182 @@ void XdgShellClient::updatePendingGeometry()
     updateMaximizeMode(maximizeMode);
 }
 
-void XdgShellClient::clientFullScreenChanged(bool fullScreen)
+void XdgShellClient::handleConfigureAcknowledged(quint32 serial)
 {
+    m_lastAckedConfigureRequest = serial;
+}
+
+void XdgShellClient::handleSurfaceSizeChanged()
+{
+    m_clientSize = surface()->size();
+    doSetGeometry(QRect(pos(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+}
+
+void XdgShellClient::handleTransientForChanged()
+{
+    SurfaceInterface *transientSurface = nullptr;
+    if (m_xdgShellSurface) {
+        if (auto transient = m_xdgShellSurface->transientFor().data()) {
+            transientSurface = transient->surface();
+        }
+    }
+    if (m_xdgShellPopup) {
+        transientSurface = m_xdgShellPopup->transientFor().data();
+    }
+    if (!transientSurface) {
+        transientSurface = waylandServer()->findForeignTransientForSurface(surface());
+    }
+    XdgShellClient *transientClient = waylandServer()->findClient(transientSurface);
+    if (transientClient != transientFor()) {
+        // Remove from main client.
+        if (transientFor()) {
+            transientFor()->removeTransient(this);
+        }
+        setTransientFor(transientClient);
+        if (transientClient) {
+            transientClient->addTransient(this);
+        }
+    }
+    m_transient = (transientSurface != nullptr);
+}
+
+void XdgShellClient::handleWindowClassChanged(const QByteArray &windowClass)
+{
+    setResourceClass(resourceName(), windowClass);
+    if (m_isInitialized && supportsWindowRules()) {
+        setupWindowRules(true);
+        applyWindowRules();
+    }
+    setDesktopFileName(windowClass);
+}
+
+void XdgShellClient::handleWindowTitleChanged(const QString &title)
+{
+    const QString oldSuffix = m_captionSuffix;
+    m_caption = title.simplified();
+    updateCaption();
+    if (m_captionSuffix == oldSuffix) {
+        // Don't emit caption change twice it already got emitted by the changing suffix.
+        emit captionChanged();
+    }
+}
+
+void XdgShellClient::handleMoveRequested(SeatInterface *seat, quint32 serial)
+{
+    // FIXME: Check the seat and serial.
+    Q_UNUSED(seat)
+    Q_UNUSED(serial)
+    performMouseCommand(Options::MouseMove, Cursor::pos());
+}
+
+void XdgShellClient::handleResizeRequested(SeatInterface *seat, quint32 serial, Qt::Edges edges)
+{
+    // FIXME: Check the seat and serial.
+    Q_UNUSED(seat)
+    Q_UNUSED(serial)
+    if (!isResizable() || isShade()) {
+        return;
+    }
+    if (isMoveResize()) {
+        finishMoveResize(false);
+    }
+    setMoveResizePointerButtonDown(true);
+    setMoveOffset(Cursor::pos() - pos());  // map from global
+    setInvertedMoveOffset(rect().bottomRight() - moveOffset());
+    setUnrestrictedMoveResize(false);
+    auto toPosition = [edges] {
+        Position position = PositionCenter;
+        if (edges.testFlag(Qt::TopEdge)) {
+            position = PositionTop;
+        } else if (edges.testFlag(Qt::BottomEdge)) {
+            position = PositionBottom;
+        }
+        if (edges.testFlag(Qt::LeftEdge)) {
+            position = Position(position | PositionLeft);
+        } else if (edges.testFlag(Qt::RightEdge)) {
+            position = Position(position | PositionRight);
+        }
+        return position;
+    };
+    setMoveResizePointerMode(toPosition());
+    if (!startMoveResize()) {
+        setMoveResizePointerButtonDown(false);
+    }
+    updateCursor();
+}
+
+void XdgShellClient::handleMinimizeRequested()
+{
+    performMouseCommand(Options::MouseMinimize, Cursor::pos());
+}
+
+void XdgShellClient::handleMaximizeRequested(bool maximized)
+{
+    // If the maximized state of the client hasn't been changed due to a window
+    // rule or because the requested state is the same as the current, then the
+    // compositor still has to send a configure event.
+    RequestGeometryBlocker blocker(this);
+
+    maximize(maximized ? MaximizeFull : MaximizeRestore);
+}
+
+void XdgShellClient::handleFullScreenRequested(bool fullScreen, OutputInterface *output)
+{
+    // FIXME: Consider output as well.
+    Q_UNUSED(output);
     setFullScreen(fullScreen, false);
+}
+
+void XdgShellClient::handleWindowMenuRequested(SeatInterface *seat, quint32 serial, const QPoint &surfacePos)
+{
+    // FIXME: Check the seat and serial.
+    Q_UNUSED(seat)
+    Q_UNUSED(serial)
+    performMouseCommand(Options::MouseOperationsMenu, pos() + surfacePos);
+}
+
+void XdgShellClient::handleGrabRequested(SeatInterface *seat, quint32 serial)
+{
+    // FIXME: Check the seat and serial as well whether the parent had focus.
+    Q_UNUSED(seat)
+    Q_UNUSED(serial)
+    m_hasPopupGrab = true;
+}
+
+void XdgShellClient::handlePingDelayed(quint32 serial)
+{
+    auto it = m_pingSerials.find(serial);
+    if (it != m_pingSerials.end()) {
+        qCDebug(KWIN_CORE) << "First ping timeout:" << caption();
+        setUnresponsive(true);
+    }
+}
+
+void XdgShellClient::handlePingTimeout(quint32 serial)
+{
+    auto it = m_pingSerials.find(serial);
+    if (it != m_pingSerials.end()) {
+        if (it.value() == PingReason::CloseWindow) {
+            qCDebug(KWIN_CORE) << "Final ping timeout on a close attempt, asking to kill:" << caption();
+
+            //for internal windows, killing the window will delete this
+            QPointer<QObject> guard(this);
+            killWindow();
+            if (!guard) {
+                return;
+            }
+        }
+        m_pingSerials.erase(it);
+    }
+}
+
+void XdgShellClient::handlePongReceived(quint32 serial)
+{
+    auto it = m_pingSerials.find(serial);
+    if (it != m_pingSerials.end()) {
+        setUnresponsive(false);
+        m_pingSerials.erase(it);
+    }
 }
 
 void XdgShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
@@ -1492,33 +1534,6 @@ void XdgShellClient::updateIcon()
 bool XdgShellClient::isTransient() const
 {
     return m_transient;
-}
-
-void XdgShellClient::setTransient()
-{
-    SurfaceInterface *s = nullptr;
-    if (m_xdgShellSurface) {
-        if (auto transient = m_xdgShellSurface->transientFor().data()) {
-            s = transient->surface();
-        }
-    }
-    if (m_xdgShellPopup) {
-        s = m_xdgShellPopup->transientFor().data();
-    }
-    if (!s) {
-        s = waylandServer()->findForeignTransientForSurface(surface());
-    }
-    auto t = waylandServer()->findClient(s);
-    if (t != transientFor()) {
-        // remove from main client
-        if (transientFor())
-            transientFor()->removeTransient(this);
-        setTransientFor(t);
-        if (t) {
-            t->addTransient(this);
-        }
-    }
-    m_transient = (s != nullptr);
 }
 
 bool XdgShellClient::hasTransientPlacementHint() const

@@ -141,7 +141,21 @@ protected:
     void updateCaption() override;
 
 private Q_SLOTS:
-    void clientFullScreenChanged(bool fullScreen);
+    void handleConfigureAcknowledged(quint32 serial);
+    void handleSurfaceSizeChanged();
+    void handleTransientForChanged();
+    void handleWindowClassChanged(const QByteArray &windowClass);
+    void handleWindowTitleChanged(const QString &title);
+    void handleMoveRequested(KWayland::Server::SeatInterface *seat, quint32 serial);
+    void handleResizeRequested(KWayland::Server::SeatInterface *seat, quint32 serial, Qt::Edges edges);
+    void handleMinimizeRequested();
+    void handleMaximizeRequested(bool maximized);
+    void handleFullScreenRequested(bool fullScreen, KWayland::Server::OutputInterface *output);
+    void handleWindowMenuRequested(KWayland::Server::SeatInterface *seat, quint32 serial, const QPoint &surfacePos);
+    void handleGrabRequested(KWayland::Server::SeatInterface *seat, quint32 serial);
+    void handlePingDelayed(quint32 serial);
+    void handlePingTimeout(quint32 serial);
+    void handlePongReceived(quint32 serial);
 
 private:
     /**
@@ -157,7 +171,6 @@ private:
     void destroyClient();
     void createWindowId();
     void updateIcon();
-    void setTransient();
     bool shouldExposeToWindowManagement();
     void updateClientOutputs();
     void updateWindowMargins();
