@@ -41,7 +41,7 @@ DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const QVariantList &args)
 
     auto about = new KAboutData(
         QStringLiteral("kcm_kwin_effects"),
-        i18n("Configure Desktop Effects"),
+        i18n("Desktop Effects"),
         QStringLiteral("2.0"),
         QString(),
         KAboutLicense::GPL
