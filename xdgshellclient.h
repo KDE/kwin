@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include "abstract_client.h"
+
 #include <KWayland/Server/xdgshell_interface.h>
 
 namespace KWayland
@@ -51,6 +52,7 @@ enum class PingReason {
 class KWIN_EXPORT XdgShellClient : public AbstractClient
 {
     Q_OBJECT
+
 public:
     XdgShellClient(KWayland::Server::XdgShellSurfaceInterface *surface);
     XdgShellClient(KWayland::Server::XdgShellPopupInterface *surface);
@@ -65,14 +67,9 @@ public:
     double opacity() const override;
     void setOpacity(double opacity) override;
     QByteArray windowRole() const override;
-
     void blockActivityUpdates(bool b = true) override;
-    QString captionNormal() const override {
-        return m_caption;
-    }
-    QString captionSuffix() const override {
-        return m_captionSuffix;
-    }
+    QString captionNormal() const override;
+    QString captionSuffix() const override;
     void closeWindow() override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool isCloseable() const override;
@@ -84,16 +81,11 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
     bool isShown(bool shaded_is_shown) const override;
-    bool isHiddenInternal() const override {
-        return m_unmapped || m_hidden;
-    }
+    bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
     MaximizeMode maximizeMode() const override;
     MaximizeMode requestedMaximizeMode() const override;
-
-    QRect geometryRestore() const override {
-        return m_geomMaximizeRestore;
-    }
+    QRect geometryRestore() const override;
     bool noBorder() const override;
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
@@ -109,21 +101,23 @@ public:
     using AbstractClient::setGeometry;
     void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
-
-    quint32 windowId() const override {
-        return m_windowId;
-    }
-
-    /**
-     * The process for this client.
-     * Note that processes started by kwin will share its process id.
-     * @since 5.11
-     * @returns the process if for this client.
-     */
+    quint32 windowId() const override;
     pid_t pid() const override;
-
     bool isLockScreen() const override;
     bool isInputMethod() const override;
+    bool isInitialPositionSet() const override;
+    bool isTransient() const override;
+    bool hasTransientPlacementHint() const override;
+    QRect transientPlacement(const QRect &bounds) const override;
+    QMatrix4x4 inputTransformation() const override;
+    void showOnScreenEdge() override;
+    bool hasPopupGrab() const override;
+    void popupDone() override;
+    void updateColorScheme() override;
+    bool isPopupWindow() const override;
+    void killWindow() override;
+    bool isLocalhost() const override;
+    bool supportsWindowRules() const override;
 
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
@@ -131,32 +125,7 @@ public:
     void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWayland::Server::XdgDecorationInterface *decoration);
 
-    bool isInitialPositionSet() const override;
-
-    bool isTransient() const override;
-    bool hasTransientPlacementHint() const override;
-    QRect transientPlacement(const QRect &bounds) const override;
-
-    QMatrix4x4 inputTransformation() const override;
-    void showOnScreenEdge() override;
-
-    void killWindow() override;
-
     void placeIn(const QRect &area);
-
-    bool hasPopupGrab() const override;
-    void popupDone() override;
-
-    void updateColorScheme() override;
-
-    bool isPopupWindow() const override;
-
-    bool isLocalhost() const override
-    {
-        return true;
-    }
-
-    bool supportsWindowRules() const override;
 
 protected:
     void addDamage(const QRegion &damage) override;
@@ -165,9 +134,7 @@ protected:
     bool belongsToDesktop() const override;
     Layer layerForDock() const override;
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
-    void setGeometryRestore(const QRect &geo) override {
-        m_geomMaximizeRestore = geo;
-    }
+    void setGeometryRestore(const QRect &geo) override;
     void doResizeSync() override;
     bool acceptsFocus() const override;
     void doMinimize() override;

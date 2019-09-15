@@ -694,6 +694,16 @@ void XdgShellClient::blockActivityUpdates(bool b)
     Q_UNUSED(b)
 }
 
+QString XdgShellClient::captionNormal() const
+{
+    return m_caption;
+}
+
+QString XdgShellClient::captionSuffix() const
+{
+    return m_captionSuffix;
+}
+
 void XdgShellClient::updateCaption()
 {
     const QString oldSuffix = m_captionSuffix;
@@ -807,6 +817,11 @@ bool XdgShellClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
     return !m_closing && !m_unmapped && !isMinimized() && !m_hidden;
+}
+
+bool XdgShellClient::isHiddenInternal() const
+{
+    return m_unmapped || m_hidden;
 }
 
 void XdgShellClient::hideClient(bool hide)
@@ -926,6 +941,11 @@ void XdgShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 }
 
+void XdgShellClient::setGeometryRestore(const QRect &geo)
+{
+    m_geomMaximizeRestore = geo;
+}
+
 MaximizeMode XdgShellClient::maximizeMode() const
 {
     return m_maximizeMode;
@@ -934,6 +954,11 @@ MaximizeMode XdgShellClient::maximizeMode() const
 MaximizeMode XdgShellClient::requestedMaximizeMode() const
 {
     return m_requestedMaximizeMode;
+}
+
+QRect XdgShellClient::geometryRestore() const
+{
+    return m_geomMaximizeRestore;
 }
 
 bool XdgShellClient::noBorder() const
@@ -1451,6 +1476,11 @@ bool XdgShellClient::hasStrut() const
     return m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
 }
 
+quint32 XdgShellClient::windowId() const
+{
+    return m_windowId;
+}
+
 void XdgShellClient::updateIcon()
 {
     const QString waylandIconName = QStringLiteral("wayland");
@@ -1817,6 +1847,11 @@ void XdgShellClient::killWindow()
     ::kill(c->processId(), SIGTERM);
     // give it time to terminate and only if terminate fails, try destroy Wayland connection
     QTimer::singleShot(5000, c, &ClientConnection::destroy);
+}
+
+bool XdgShellClient::isLocalhost() const
+{
+    return true;
 }
 
 bool XdgShellClient::hasPopupGrab() const
