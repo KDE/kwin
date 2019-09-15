@@ -19,8 +19,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SHELL_CLIENT_H
-#define KWIN_SHELL_CLIENT_H
+
+#pragma once
 
 #include "abstract_client.h"
 #include <KWayland/Server/xdgshell_interface.h>
@@ -287,5 +287,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWin::XdgShellClient *)
-
-#endif
