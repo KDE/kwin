@@ -237,6 +237,7 @@ extern "C"
 KWIN_EXPORT int kdemain(int argc, char* argv[])
 {
     QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setApplicationDisplayName(i18n("KWin"));
     app.setApplicationName("kwin_rules_dialog");
     app.setApplicationVersion("1.0");
