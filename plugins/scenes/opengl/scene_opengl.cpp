@@ -1169,13 +1169,18 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
     }
 
     // Update the texture filter
-    if (options->glSmoothScale() != 0 &&
-        (mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
+    if (waylandServer()) {
         filter = ImageFilterGood;
-    else
-        filter = ImageFilterFast;
+        s_frameTexture->setFilter(GL_LINEAR);
+    } else {
+        if (options->glSmoothScale() != 0 &&
+            (mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
+            filter = ImageFilterGood;
+        else
+            filter = ImageFilterFast;
 
-    s_frameTexture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+        s_frameTexture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+    }
 
     const GLVertexAttrib attribs[] = {
         { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
@@ -1373,8 +1378,18 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
 
     shader->setUniform(GLShader::Saturation, data.saturation());
 
-    const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
-                           && options->glSmoothScale() != 0 ? GL_LINEAR : GL_NEAREST;
+    GLenum filter;
+    if (waylandServer()) {
+        filter = GL_LINEAR;
+    } else {
+        const bool isTransformed = mask & (Effect::PAINT_WINDOW_TRANSFORMED |
+                                           Effect::PAINT_SCREEN_TRANSFORMED);
+        if (isTransformed && options->glSmoothScale() != 0) {
+            filter = GL_LINEAR;
+        } else {
+            filter = GL_NEAREST;
+        }
+    }
 
     WindowQuadList quads[LeafCount];
 
