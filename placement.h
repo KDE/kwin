@@ -35,7 +35,6 @@ namespace KWin
 {
 
 class AbstractClient;
-class Client;
 
 class KWIN_EXPORT Placement
 {
