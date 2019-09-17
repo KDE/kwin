@@ -24,8 +24,8 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     DBus
     Quick
     QuickWidgets
-    Sensors
     Script
+    Sensors
     UiTools
     Widgets
     X11Extras
@@ -68,15 +68,15 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Crash
     GlobalAccel
     I18n
+    IconThemes
+    IdleTime
     Init
     Notifications
     Package
     Plasma
+    Wayland
     WidgetsAddons
     WindowSystem
-    IconThemes
-    IdleTime
-    Wayland
 )
 # required frameworks by config modules
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
@@ -84,9 +84,9 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Declarative
     KCMUtils
     KIO
-    TextWidgets
     NewStuff
     Service
+    TextWidgets
     XmlGui
 )
 
@@ -222,20 +222,20 @@ set(HAVE_X11_XINPUT ${X11_Xinput_FOUND})
 # All the required XCB components
 find_package(XCB 1.10
     REQUIRED COMPONENTS
+        COMPOSITE
+        CURSOR
+        DAMAGE
+        GLX
+        ICCCM
+        IMAGE
+        KEYSYMS
+        RANDR
+        RENDER
+        SHAPE
+        SHM
+        SYNC
         XCB
         XFIXES
-        DAMAGE
-        COMPOSITE
-        SHAPE
-        SYNC
-        RENDER
-        RANDR
-        KEYSYMS
-        IMAGE
-        SHM
-        GLX
-        CURSOR
-        ICCCM
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 
@@ -387,111 +387,111 @@ add_subdirectory(helpers)
 ########### next target ###############
 
 set(kwin_KDEINIT_SRCS
-   workspace.cpp
-   dbusinterface.cpp
-   virtualdesktopsdbustypes.cpp
-   abstract_client.cpp
-   client.cpp
-   client_machine.cpp
-   cursor.cpp
-   debug_console.cpp
-   focuschain.cpp
-   globalshortcuts.cpp
-   input.cpp
-   input_event.cpp
-   input_event_spy.cpp
-   keyboard_input.cpp
-   keyboard_layout.cpp
-   keyboard_layout_switching.cpp
-   keyboard_repeat.cpp
-   pointer_input.cpp
-   touch_input.cpp
-   netinfo.cpp
-   placement.cpp
-   atoms.cpp
-   utils.cpp
-   layers.cpp
-   main.cpp
-   options.cpp
-   outline.cpp
-   events.cpp
-   killwindow.cpp
-   geometrytip.cpp
-   screens.cpp
-   outputscreens.cpp
-   shadow.cpp
-   sm.cpp
-   group.cpp
-   manage.cpp
-   overlaywindow.cpp
-   activation.cpp
-   useractions.cpp
-   geometry.cpp
-   rules.cpp
-   composite.cpp
-   toplevel.cpp
-   unmanaged.cpp
-   scene.cpp
-   screenlockerwatcher.cpp
-   thumbnailitem.cpp
-   deleted.cpp
-   effects.cpp
-   effectloader.cpp
-   virtualdesktops.cpp
-   xcbutils.cpp
-   x11eventfilter.cpp
-   logind.cpp
-   onscreennotification.cpp
-   osd.cpp
-    screenedge.cpp
-    scripting/scripting.cpp
-    scripting/workspace_wrapper.cpp
-    scripting/meta.cpp
-    scripting/scriptedeffect.cpp
-    scripting/scriptingutils.cpp
-    scripting/timer.cpp
-    scripting/scripting_model.cpp
-    scripting/dbuscall.cpp
-    scripting/screenedgeitem.cpp
-    scripting/scripting_logging.cpp
+    abstract_client.cpp
+    abstract_opengl_context_attribute_builder.cpp
+    abstract_output.cpp
+    abstract_wayland_output.cpp
+    activation.cpp
+    appmenu.cpp
+    atoms.cpp
+    client.cpp
+    client_machine.cpp
+    colorcorrection/colorcorrectdbusinterface.cpp
+    colorcorrection/manager.cpp
+    colorcorrection/suncalc.cpp
+    composite.cpp
+    cursor.cpp
+    dbusinterface.cpp
+    debug_console.cpp
     decorations/decoratedclient.cpp
     decorations/decorationbridge.cpp
     decorations/decorationpalette.cpp
-    decorations/settings.cpp
     decorations/decorationrenderer.cpp
     decorations/decorations_logging.cpp
-    platform.cpp
-    abstract_output.cpp
-    abstract_wayland_output.cpp
-    shell_client.cpp
-    wayland_server.cpp
-    wayland_cursor_theme.cpp
-    virtualkeyboard.cpp
-    virtualkeyboard_dbus.cpp
-    appmenu.cpp
-    modifier_only_shortcuts.cpp
-    xkb.cpp
-    gestures.cpp
-    popup_input_filter.cpp
-    colorcorrection/manager.cpp
-    colorcorrection/colorcorrectdbusinterface.cpp
-    colorcorrection/suncalc.cpp
-    abstract_opengl_context_attribute_builder.cpp
+    decorations/settings.cpp
+    deleted.cpp
+    effectloader.cpp
+    effects.cpp
     egl_context_attribute_builder.cpp
-    was_user_interaction_x11_filter.cpp
-    moving_client_x11_filter.cpp
-    window_property_notify_x11_filter.cpp
-    rootinfo_filter.cpp
-    orientation_sensor.cpp
+    events.cpp
+    focuschain.cpp
+    geometry.cpp
+    geometrytip.cpp
+    gestures.cpp
+    globalshortcuts.cpp
+    group.cpp
     idle_inhibition.cpp
-    libinput/context.cpp
+    input.cpp
+    input_event.cpp
+    input_event_spy.cpp
+    internal_client.cpp
+    keyboard_input.cpp
+    keyboard_layout.cpp
+    keyboard_layout_switching.cpp
+    keyboard_repeat.cpp
+    killwindow.cpp
+    layers.cpp
     libinput/connection.cpp
+    libinput/context.cpp
     libinput/device.cpp
     libinput/events.cpp
     libinput/libinput_logging.cpp
-    udev.cpp
+    logind.cpp
+    main.cpp
+    manage.cpp
+    modifier_only_shortcuts.cpp
+    moving_client_x11_filter.cpp
+    netinfo.cpp
+    onscreennotification.cpp
+    options.cpp
+    orientation_sensor.cpp
+    osd.cpp
+    outline.cpp
+    outputscreens.cpp
+    overlaywindow.cpp
+    placement.cpp
+    platform.cpp
+    pointer_input.cpp
+    popup_input_filter.cpp
+    rootinfo_filter.cpp
+    rules.cpp
+    scene.cpp
+    screenedge.cpp
+    screenlockerwatcher.cpp
+    screens.cpp
+    scripting/dbuscall.cpp
+    scripting/meta.cpp
+    scripting/screenedgeitem.cpp
+    scripting/scriptedeffect.cpp
+    scripting/scripting.cpp
+    scripting/scripting_logging.cpp
+    scripting/scripting_model.cpp
+    scripting/scriptingutils.cpp
+    scripting/timer.cpp
+    scripting/workspace_wrapper.cpp
+    shadow.cpp
+    shell_client.cpp
+    sm.cpp
+    thumbnailitem.cpp
+    toplevel.cpp
     touch_hide_cursor_spy.cpp
-    internal_client.cpp
+    touch_input.cpp
+    udev.cpp
+    unmanaged.cpp
+    useractions.cpp
+    utils.cpp
+    virtualdesktops.cpp
+    virtualdesktopsdbustypes.cpp
+    virtualkeyboard.cpp
+    virtualkeyboard_dbus.cpp
+    was_user_interaction_x11_filter.cpp
+    wayland_cursor_theme.cpp
+    wayland_server.cpp
+    window_property_notify_x11_filter.cpp
+    workspace.cpp
+    x11eventfilter.cpp
+    xcbutils.cpp
+    xkb.cpp
     xwl/xwayland_interface.cpp
    )
 
@@ -511,14 +511,14 @@ if(KWIN_BUILD_TABBOX)
     include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
     set(
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        tabbox/tabbox.cpp
         tabbox/clientmodel.cpp
         tabbox/desktopchain.cpp
         tabbox/desktopmodel.cpp
         tabbox/switcheritem.cpp
+        tabbox/tabbox.cpp
+        tabbox/tabbox_logging.cpp
         tabbox/tabboxconfig.cpp
         tabbox/tabboxhandler.cpp
-        tabbox/tabbox_logging.cpp
         tabbox/x11_filter.cpp
   )
 endif()
@@ -560,61 +560,61 @@ ki18n_wrap_ui(kwin_KDEINIT_SRCS
 ########### target link libraries ###############
 
 set(kwin_OWN_LIBS
-    kwineffects
     kwin4_effect_builtins
+    kwineffects
 )
 
 set(kwin_QT_LIBS
     Qt5::Concurrent
     Qt5::DBus
     Qt5::Quick
-    Qt5::Sensors
     Qt5::Script
+    Qt5::Sensors
 )
 
 set(kwin_KDE_LIBS
+    KDecoration2::KDecoration
+    KDecoration2::KDecoration2Private
     KF5::ConfigCore
-    KF5::CoreAddons
     KF5::ConfigWidgets
+    KF5::CoreAddons
     KF5::GlobalAccel
     KF5::GlobalAccelPrivate
     KF5::I18n
     KF5::Notifications
     KF5::Package
     KF5::Plasma
-    KF5::WindowSystem
     KF5::QuickAddons
-    KDecoration2::KDecoration
-    KDecoration2::KDecoration2Private
+    KF5::WindowSystem
     PW::KScreenLocker
 )
 
 set(kwin_XLIB_LIBS
-    ${X11_X11_LIB}
     ${X11_ICE_LIB}
     ${X11_SM_LIB}
+    ${X11_X11_LIB}
 )
 
 set(kwin_XCB_LIBS
-    XCB::XCB
-    XCB::XFIXES
-    XCB::DAMAGE
     XCB::COMPOSITE
-    XCB::SHAPE
-    XCB::SYNC
-    XCB::RENDER
-    XCB::RANDR
-    XCB::KEYSYMS
-    XCB::SHM
+    XCB::DAMAGE
     XCB::GLX
     XCB::ICCCM
+    XCB::KEYSYMS
+    XCB::RANDR
+    XCB::RENDER
+    XCB::SHAPE
+    XCB::SHM
+    XCB::SYNC
+    XCB::XCB
+    XCB::XFIXES
 )
 
 set(kwin_WAYLAND_LIBS
-    XKB::XKB
     KF5::WaylandClient
     KF5::WaylandServer
     Wayland::Cursor
+    XKB::XKB
     ${CMAKE_THREAD_LIBS_INIT}
 )
 
@@ -653,16 +653,16 @@ install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set(kwin_XWAYLAND_SRCS
-   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/xwayland.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/databridge.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection_source.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/transfer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/clipboard.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/databridge.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/dnd.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/drag.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/drag_wl.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/drag_x.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection_source.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/transfer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/xwayland.cpp
    )
 include(ECMQtDeclareLoggingCategory)
 ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS
@@ -677,8 +677,8 @@ ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS
 )
 
 set(kwin_WAYLAND_SRCS
-   tabletmodemanager.cpp
    main_wayland.cpp
+   tabletmodemanager.cpp
    )
 
 add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
@@ -708,11 +708,11 @@ install( FILES colorcorrection/colorcorrect_settings.kcfg  DESTINATION  ${KCFG_I
 install( FILES kwin.notifyrc  DESTINATION  ${KNOTIFYRC_INSTALL_DIR} RENAME ${KWIN_NAME}.notifyrc)
 install(
     FILES
-        org.kde.KWin.xml
-        org.kde.kwin.Compositing.xml
-        org.kde.kwin.ColorCorrect.xml
-        org.kde.kwin.Effects.xml
         org.kde.KWin.VirtualDesktopManager.xml
+        org.kde.KWin.xml
+        org.kde.kwin.ColorCorrect.xml
+        org.kde.kwin.Compositing.xml
+        org.kde.kwin.Effects.xml
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )
