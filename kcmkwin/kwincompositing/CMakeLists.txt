@@ -10,24 +10,25 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FR
 
 set(kwincomposing_SRC
     main.cpp
-    compositing.cpp)
+    compositing.cpp
+)
 
-qt5_add_dbus_interface( kwincomposing_SRC
-  ${KWIN_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface)
+qt5_add_dbus_interface(kwincomposing_SRC
+    ${KWIN_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface
+)
 
 ki18n_wrap_ui(kwincomposing_SRC compositing.ui)
 
 add_library(kwincompositing MODULE ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
-    Qt5::DBus
-    Qt5::Widgets
-    KF5::CoreAddons
     KF5::ConfigCore
+    KF5::CoreAddons
     KF5::I18n
     KF5::KCMUtils
+    Qt5::DBus
+    Qt5::Widgets
 )
 
-INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kwincompositing.desktop DESTINATION  ${SERVICES_INSTALL_DIR})
-################# list the subdirectories #################
+install(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES kwincompositing.desktop DESTINATION ${SERVICES_INSTALL_DIR})

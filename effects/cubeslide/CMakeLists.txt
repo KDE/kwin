@@ -9,10 +9,10 @@ kconfig_add_kcfg_files(kwin_cubeslide_config_SRCS cubeslideconfig.kcfgc)
 add_library(kwin_cubeslide_config MODULE ${kwin_cubeslide_config_SRCS})
 
 target_link_libraries(kwin_cubeslide_config
-    kwineffects
     KF5::ConfigWidgets
     KF5::I18n
     KF5::Service
+    kwineffects
 )
 
 kcoreaddons_desktop_to_json(kwin_cubeslide_config cubeslide_config.desktop SERVICE_TYPES kcmodule.desktop)

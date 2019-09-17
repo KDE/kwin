@@ -1,9 +1,9 @@
 set(VIRTUAL_SOURCES
     egl_gbm_backend.cpp
-    virtual_backend.cpp
-    virtual_output.cpp
     scene_qpainter_virtual_backend.cpp
     screens_virtual.cpp
+    virtual_backend.cpp
+    virtual_output.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)

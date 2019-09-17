@@ -2,9 +2,7 @@
 # Effect
 
 # Data files
-install( FILES
-    data/cubecap.png
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+install(FILES data/cubecap.png DESTINATION ${DATA_INSTALL_DIR}/kwin)
 
 #######################################
 # Config

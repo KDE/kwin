@@ -13,7 +13,7 @@ set(DRM_SOURCES
     screens_drm.cpp
 )
 
-if(HAVE_GBM)
+if (HAVE_GBM)
     set(DRM_SOURCES ${DRM_SOURCES}
         egl_gbm_backend.cpp
         drm_buffer_gbm.cpp
@@ -22,7 +22,7 @@ if(HAVE_GBM)
     )
 endif()
 
-if(HAVE_EGL_STREAMS)
+if (HAVE_EGL_STREAMS)
     set(DRM_SOURCES ${DRM_SOURCES}
         egl_stream_backend.cpp
     )
@@ -34,7 +34,7 @@ add_library(KWinWaylandDrmBackend MODULE ${DRM_SOURCES})
 set_target_properties(KWinWaylandDrmBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
 target_link_libraries(KWinWaylandDrmBackend kwin Libdrm::Libdrm SceneQPainterBackend SceneOpenGLBackend)
 
-if(HAVE_GBM)
+if (HAVE_GBM)
     target_link_libraries(KWinWaylandDrmBackend gbm::gbm)
 endif()
 

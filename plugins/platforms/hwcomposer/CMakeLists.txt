@@ -9,11 +9,11 @@ include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
 add_library(KWinWaylandHwcomposerBackend MODULE ${HWCOMPOSER_SOURCES})
 set_target_properties(KWinWaylandHwcomposerBackend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
 target_link_libraries(KWinWaylandHwcomposerBackend
+    SceneOpenGLBackend
     kwin
-    libhybris::libhardware
     libhybris::hwcomposer
     libhybris::hybriseglplatform
-    SceneOpenGLBackend
+    libhybris::libhardware
 )
 
 install(

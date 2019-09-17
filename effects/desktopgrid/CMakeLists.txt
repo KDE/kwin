@@ -1,9 +1,6 @@
 #######################################
 # Effect
-install( FILES
-    main.qml
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/desktopgrid/
-)
+install(FILES main.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/desktopgrid/)
 
 #######################################
 # Config
@@ -15,14 +12,14 @@ kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
 add_library(kwin_desktopgrid_config MODULE ${kwin_desktopgrid_config_SRCS})
 
 target_link_libraries(kwin_desktopgrid_config
-    kwineffects
-    Qt5::Quick
     KF5::Completion
     KF5::ConfigWidgets
     KF5::GlobalAccel
     KF5::I18n
     KF5::Service
     KF5::XmlGui
+    Qt5::Quick
+    kwineffects
 )
 
 kcoreaddons_desktop_to_json(kwin_desktopgrid_config desktopgrid_config.desktop SERVICE_TYPES kcmodule.desktop SERVICE_TYPES kcmodule.desktop)

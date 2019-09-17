@@ -1,8 +1,8 @@
 ########### decoration ###############
 include_directories(
-        ./lib
-        ${CMAKE_CURRENT_BINARY_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}
+    ./lib
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 set(kwin5_aurorae_PART_SRCS
@@ -28,41 +28,43 @@ target_link_libraries(kwin5_aurorae
 install(TARGETS kwin5_aurorae DESTINATION ${PLUGIN_INSTALL_DIR}/org.kde.kdecoration2)
 
 set(decoration_plugin_SRCS
-    decorationplugin.cpp
-    decorationoptions.cpp
     colorhelper.cpp
-    )
+    decorationoptions.cpp
+    decorationplugin.cpp
+)
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 set_target_properties(decorationplugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/")
 target_link_libraries(decorationplugin
-    Qt5::Quick
     KDecoration2::KDecoration
     KF5::ConfigWidgets
+    Qt5::Quick
 )
 install(TARGETS decorationplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
 
 ########### install files ###############
 
-install( FILES aurorae.knsrc  DESTINATION  ${KDE_INSTALL_KNSRCDIR} )
-install( FILES
-    qml/aurorae.qml
-    qml/AuroraeButton.qml
-    qml/AuroraeButtonGroup.qml
-    qml/AuroraeMaximizeButton.qml
-    qml/Decoration.qml
-    qml/DecorationButton.qml
-    qml/MenuButton.qml
-    qml/AppMenuButton.qml
-    DESTINATION ${DATA_INSTALL_DIR}/kwin/aurorae )
+install(FILES aurorae.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
+install(
+    FILES
+        qml/AppMenuButton.qml
+        qml/AuroraeButton.qml
+        qml/AuroraeButtonGroup.qml
+        qml/AuroraeMaximizeButton.qml
+        qml/Decoration.qml
+        qml/DecorationButton.qml
+        qml/MenuButton.qml
+        qml/aurorae.qml
+    DESTINATION
+        ${DATA_INSTALL_DIR}/kwin/aurorae)
 set(QMLFILES
-    qml/Decoration.qml
-    qml/DecorationButton.qml
-    qml/MenuButton.qml
     qml/AppMenuButton.qml
     qml/ButtonGroup.qml
+    qml/Decoration.qml
+    qml/DecorationButton.qml
+    qml/MenuButton.qml
     qml/qmldir
 )
-install( FILES ${QMLFILES} DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration )
+install(FILES ${QMLFILES} DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
 file(COPY ${QMLFILES} DESTINATION ${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/)
-install( FILES kwindecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
+install(FILES kwindecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

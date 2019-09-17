@@ -9,5 +9,5 @@ target_link_libraries(blendPictureTest
     XCB::XCB
     XCB::RENDER
     XCB::XFIXES
-    )
+)
 ecm_mark_as_test(blendPictureTest)

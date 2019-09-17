@@ -1,10 +1,7 @@
 #######################################
 # Effect
 # Data files
-install( FILES
-    data/tm_inner.png
-    data/tm_outer.png
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+install(FILES data/tm_inner.png data/tm_outer.png DESTINATION ${DATA_INSTALL_DIR}/kwin)
 
 #######################################
 # Config

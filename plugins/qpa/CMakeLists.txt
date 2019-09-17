@@ -22,17 +22,17 @@ add_library(KWinQpaPlugin MODULE ${QPA_SOURCES})
 set_target_properties(KWinQpaPlugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/platforms/")
 
 set(QT5PLATFORMSUPPORT_LIBS
-     Qt5FontDatabaseSupport::Qt5FontDatabaseSupport
-     Qt5ThemeSupport::Qt5ThemeSupport
-     Qt5EventDispatcherSupport::Qt5EventDispatcherSupport
+    Qt5FontDatabaseSupport::Qt5FontDatabaseSupport
+    Qt5ThemeSupport::Qt5ThemeSupport
+    Qt5EventDispatcherSupport::Qt5EventDispatcherSupport
 )
 
 target_link_libraries(KWinQpaPlugin
-    kwin
-    KF5::WaylandClient
+    ${FREETYPE_LIBRARIES}
     ${QT5PLATFORMSUPPORT_LIBS}
     Fontconfig::Fontconfig
-    ${FREETYPE_LIBRARIES}
+    KF5::WaylandClient
+    kwin
 )
 
 install(

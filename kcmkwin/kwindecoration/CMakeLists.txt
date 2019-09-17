@@ -4,10 +4,10 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwindecoration\")
 add_subdirectory(declarative-plugin)
 
 set(kcmkwindecoration_SRCS
+    declarative-plugin/buttonsmodel.cpp
+    decorationmodel.cpp
     kcm.cpp
     utils.cpp
-    decorationmodel.cpp
-    declarative-plugin/buttonsmodel.cpp
 )
 
 add_library(kcm_kwindecoration MODULE ${kcmkwindecoration_SRCS})
@@ -15,8 +15,8 @@ add_library(kcm_kwindecoration MODULE ${kcmkwindecoration_SRCS})
 target_link_libraries(kcm_kwindecoration
     KDecoration2::KDecoration
     KF5::I18n
-    KF5::QuickAddons
     KF5::NewStuff
+    KF5::QuickAddons
     Qt5::Quick
 )
 

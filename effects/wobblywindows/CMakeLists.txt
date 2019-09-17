@@ -8,10 +8,10 @@ kconfig_add_kcfg_files(kwin_wobblywindows_config_SRCS wobblywindowsconfig.kcfgc)
 add_library(kwin_wobblywindows_config MODULE ${kwin_wobblywindows_config_SRCS})
 
 target_link_libraries(kwin_wobblywindows_config
-    Qt5::DBus
     KF5::ConfigWidgets
     KF5::I18n
     KF5::Service
+    Qt5::DBus
 )
 
 kcoreaddons_desktop_to_json(kwin_wobblywindows_config wobblywindows_config.desktop SERVICE_TYPES kcmodule.desktop)
