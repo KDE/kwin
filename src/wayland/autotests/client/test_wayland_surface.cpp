@@ -393,9 +393,13 @@ void TestWaylandSurface::testAttachBuffer()
     QImage blue(24, 24, QImage::Format_ARGB32_Premultiplied);
     blue.fill(QColor(0, 0, 255, 128));
 
-    wl_buffer *blackBuffer = *(m_shm->createBuffer(black).data());
-    auto redBuffer = m_shm->createBuffer(red);
-    auto blueBuffer = m_shm->createBuffer(blue).toStrongRef();
+    QSharedPointer<KWayland::Client::Buffer> blackBufferPtr = m_shm->createBuffer(black).toStrongRef();
+    QVERIFY(blackBufferPtr);
+    wl_buffer *blackBuffer = *(blackBufferPtr.data());
+    QSharedPointer<KWayland::Client::Buffer> redBuffer = m_shm->createBuffer(red).toStrongRef();
+    QVERIFY(redBuffer);
+    QSharedPointer<KWayland::Client::Buffer> blueBuffer = m_shm->createBuffer(blue).toStrongRef();
+    QVERIFY(blueBuffer);
 
     QCOMPARE(blueBuffer->format(), KWayland::Client::Buffer::Format::ARGB32);
     QCOMPARE(blueBuffer->size(), blue.size());
@@ -776,7 +780,8 @@ void TestWaylandSurface::testScale()
     //attach a buffer of 100x100, our scale is 4, so this should be a size of 25x25
     QImage red(100, 100, QImage::Format_ARGB32_Premultiplied);
     red.fill(QColor(255, 0, 0, 128));
-    auto redBuffer = m_shm->createBuffer(red);
+    QSharedPointer<Buffer> redBuffer = m_shm->createBuffer(red).toStrongRef();
+    QVERIFY(redBuffer);
     s->attachBuffer(redBuffer.data());
     s->damage(QRect(0,0, 25,25));
     s->commit(Surface::CommitFlag::None);
@@ -800,7 +805,8 @@ void TestWaylandSurface::testScale()
     //set scale and size in one commit, buffer is 50x50 at scale 2 so size should be 25x25
     QImage blue(50, 50, QImage::Format_ARGB32_Premultiplied);
     red.fill(QColor(255, 0, 0, 128));
-    auto blueBuffer = m_shm->createBuffer(blue);
+    QSharedPointer<Buffer> blueBuffer = m_shm->createBuffer(blue).toStrongRef();
+    QVERIFY(blueBuffer);
     s->attachBuffer(blueBuffer.data());
     s->setScale(2);
     s->commit(Surface::CommitFlag::None);

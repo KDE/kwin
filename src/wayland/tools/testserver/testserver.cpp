@@ -183,8 +183,7 @@ void TestServer::startTestApp(const QString &app, const QStringList &arguments)
     p->setProcessEnvironment(environment);
     auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
     connect(p, finishedSignal, QCoreApplication::instance(), &QCoreApplication::exit);
-    auto errorSignal = static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error);
-    connect(p, errorSignal, this,
+    connect(p, &QProcess::errorOccurred, this,
         [] {
             QCoreApplication::instance()->exit(1);
         }

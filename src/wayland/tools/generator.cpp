@@ -500,7 +500,7 @@ void Generator::startAuthorNameProcess()
         QStringLiteral("user.name")
     });
     git->setProgram(QStringLiteral("git"));
-    connect(git, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this,
+    connect(git, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this,
         [this, git] {
             QMutexLocker locker(&m_mutex);
             m_authorName = QString::fromLocal8Bit(git->readAllStandardOutput()).trimmed();
@@ -520,7 +520,7 @@ void Generator::startAuthorEmailProcess()
         QStringLiteral("user.email")
     });
     git->setProgram(QStringLiteral("git"));
-    connect(git, static_cast<void (QProcess::*)(int)>(&QProcess::finished), this,
+    connect(git, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this,
         [this, git] {
             QMutexLocker locker(&m_mutex);
             m_authorEmail = QString::fromLocal8Bit(git->readAllStandardOutput()).trimmed();
