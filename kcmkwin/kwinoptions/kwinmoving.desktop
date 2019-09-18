@@ -24,6 +24,7 @@ Name[x-test]=xxWindow Movementxx
 
 Comment=Configure window movement options
 Comment[ca]=Configura les opcions de moviment de les finestres
+Comment[cs]=Nastavit volby pohybu oken
 Comment[es]=Configurar las opciones del movimiento de las ventanas
 Comment[eu]=Konfiguratu leiho mugimenduaren aukerak
 Comment[it]=Configura opzioni di spostamento delle finestre
