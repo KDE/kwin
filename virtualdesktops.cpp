@@ -698,7 +698,7 @@ void VirtualDesktopManager::load()
     if (screen_number == 0) {
         groupname = QStringLiteral("Desktops");
     } else {
-        groupname.sprintf("Desktops-screen-%d", screen_number);
+        groupname = QStringLiteral("Desktops-screen-%1").arg(screen_number);
     }
     KConfigGroup group(m_config, groupname);
     const int n = group.readEntry("Number", 1);
@@ -752,7 +752,7 @@ void VirtualDesktopManager::save()
     if (screen_number == 0) {
         groupname = QStringLiteral("Desktops");
     } else {
-        groupname.sprintf("Desktops-screen-%d", screen_number);
+        groupname = QStringLiteral("Desktops-screen-%1").arg(screen_number);
     }
     KConfigGroup group(m_config, groupname);
 

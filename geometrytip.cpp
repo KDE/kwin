@@ -40,6 +40,13 @@ GeometryTip::~GeometryTip()
 {
 }
 
+static QString numberWithSign(int n)
+{
+    const QLocale locale;
+    const QChar sign = n >= 0 ? locale.positiveSign() : locale.negativeSign();
+    return sign + QString::number(std::abs(n));
+}
+
 void GeometryTip::setGeometry(const QRect& geom)
 {
     int w = geom.width();
@@ -53,9 +60,11 @@ void GeometryTip::setGeometry(const QRect& geom)
     }
 
     h = qMax(h, 0);   // in case of isShade() and PBaseSize
-    QString pos;
-    pos.sprintf("%+d,%+d<br>(<b>%d&nbsp;x&nbsp;%d</b>)",
-                geom.x(), geom.y(), w, h);
+    const QString pos = QStringLiteral("%1,%2<br>(<b>%3&nbsp;x&nbsp;%4</b>)")
+        .arg(numberWithSign(geom.x()))
+        .arg(numberWithSign(geom.y()))
+        .arg(w)
+        .arg(h);
     setText(pos);
     adjustSize();
     move(geom.x() + ((geom.width()  - width())  / 2),

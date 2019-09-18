@@ -363,7 +363,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         if ((pos = display_name.lastIndexOf('.')) != -1)
             display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
 
-        QString envir;
         for (int i = 0; i < number_of_screens; i++) {
             // If execution doesn't pass by here, then kwin
             // acts exactly as previously
@@ -382,7 +381,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         }
         // In the next statement, display_name shouldn't contain a screen
         // number. If it had it, it was removed at the "pos" check
-        envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::Application::x11ScreenNumber());
+        const QString envir = QStringLiteral("DISPLAY=%1.%2")
+            .arg(display_name.data())
+            .arg(KWin::Application::x11ScreenNumber());
 
         if (putenv(strdup(envir.toLatin1().constData()))) {
             fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
