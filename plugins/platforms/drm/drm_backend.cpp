@@ -257,7 +257,7 @@ void DrmBackend::openDrm()
         qCWarning(KWIN_DRM) << "Did not find a GPU";
         return;
     }
-    m_devNode = device->devNode();
+    m_devNode = qEnvironmentVariableIsSet("KWIN_DRM_DEVICE_NODE") ? qgetenv("KWIN_DRM_DEVICE_NODE") : QByteArray(device->devNode());
     int fd = LogindIntegration::self()->takeDevice(m_devNode.constData());
     if (fd < 0) {
         qCWarning(KWIN_DRM) << "failed to open drm device at" << m_devNode;
