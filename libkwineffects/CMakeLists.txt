@@ -18,9 +18,11 @@ add_library(kwinxrenderutils SHARED ${kwin_XRENDERUTILS_SRCS})
 generate_export_header(kwinxrenderutils EXPORT_FILE_NAME kwinxrenderutils_export.h)
 target_link_libraries(kwinxrenderutils
     PUBLIC
-        KF5::WaylandServer
         Qt5::Core
         Qt5::Gui
+
+        KF5::WaylandServer
+
         XCB::RENDER
         XCB::XCB
         XCB::XFIXES

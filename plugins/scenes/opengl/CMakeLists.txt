@@ -20,8 +20,8 @@ qt5_add_resources(SCENE_OPENGL_SRCS resources.qrc)
 add_library(KWinSceneOpenGL MODULE ${SCENE_OPENGL_SRCS})
 set_target_properties(KWinSceneOpenGL PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.scenes/")
 target_link_libraries(KWinSceneOpenGL
-    SceneOpenGLBackend
     kwin
+    SceneOpenGLBackend
 )
 
 install(

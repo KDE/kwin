@@ -16,11 +16,13 @@ set(kcm_kwin_virtualdesktops_PART_SRCS
 add_library(kcm_kwin_virtualdesktops MODULE ${kcm_kwin_virtualdesktops_PART_SRCS})
 
 target_link_libraries(kcm_kwin_virtualdesktops
+    Qt5::DBus
+
     KF5::I18n
     KF5::KCMUtils
     KF5::QuickAddons
     KF5::XmlGui
-    Qt5::DBus
+
     kcmkwincommon
 )
 

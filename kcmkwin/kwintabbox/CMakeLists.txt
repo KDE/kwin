@@ -18,6 +18,8 @@ qt5_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWIN_SOURCE_DIR}/org.kde.kwin.
 add_library(kcm_kwintabbox MODULE ${kcm_kwintabbox_PART_SRCS})
 
 target_link_libraries(kcm_kwintabbox
+    Qt5::Quick
+
     KF5::Completion
     KF5::GlobalAccel
     KF5::I18n
@@ -25,8 +27,9 @@ target_link_libraries(kcm_kwintabbox
     KF5::NewStuff
     KF5::Package
     KF5::Service
-    Qt5::Quick
+
     XCB::XCB
+
     kwin4_effect_builtins
 )
 

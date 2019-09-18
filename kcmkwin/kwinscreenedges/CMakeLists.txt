@@ -12,6 +12,8 @@ set(kcm_kwinscreenedges_PART_SRCS main.cpp ${kcm_screenedges_SRCS})
 ki18n_wrap_ui(kcm_kwinscreenedges_PART_SRCS main.ui)
 add_library(kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS})
 set(kcm_screenedges_LIBS
+    Qt5::DBus
+
     KF5::Completion
     KF5::ConfigCore
     KF5::ConfigWidgets
@@ -19,7 +21,7 @@ set(kcm_screenedges_LIBS
     KF5::Package
     KF5::Plasma
     KF5::Service
-    Qt5::DBus
+
     kwin4_effect_builtins
 )
 target_link_libraries(kcm_kwinscreenedges ${X11_LIBRARIES} ${kcm_screenedges_LIBS})

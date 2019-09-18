@@ -14,12 +14,13 @@ ki18n_wrap_ui(kcm_SRCS module.ui)
 add_library(kcm_kwin_scripts MODULE ${kcm_SRCS})
 
 target_link_libraries(kcm_kwin_scripts
+    Qt5::DBus
+
     KF5::I18n
     KF5::KCMUtils
     KF5::KIOCore
     KF5::NewStuff
     KF5::Package
-    Qt5::DBus
 )
 
 install(TARGETS kcm_kwin_scripts DESTINATION ${PLUGIN_INSTALL_DIR})

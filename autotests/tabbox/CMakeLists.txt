@@ -17,10 +17,6 @@ set(testTabBoxClientModel_SRCS
 add_executable(testTabBoxClientModel ${testTabBoxClientModel_SRCS})
 set_target_properties(testTabBoxClientModel PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_link_libraries(testTabBoxClientModel
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
     Qt5::Core
     Qt5::DBus
     Qt5::Quick
@@ -28,6 +24,12 @@ target_link_libraries(testTabBoxClientModel
     Qt5::Test
     Qt5::Widgets
     Qt5::X11Extras
+
+    KF5::ConfigCore
+    KF5::I18n
+    KF5::Package
+    KF5::WindowSystem
+
     XCB::XCB
 )
 add_test(NAME kwin-testTabBoxClientModel COMMAND testTabBoxClientModel)
@@ -50,10 +52,6 @@ set(testTabBoxHandler_SRCS
 add_executable(testTabBoxHandler ${testTabBoxHandler_SRCS})
 set_target_properties(testTabBoxHandler PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_link_libraries(testTabBoxHandler
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
     Qt5::Core
     Qt5::DBus
     Qt5::Quick
@@ -61,6 +59,12 @@ target_link_libraries(testTabBoxHandler
     Qt5::Test
     Qt5::Widgets
     Qt5::X11Extras
+
+    KF5::ConfigCore
+    KF5::I18n
+    KF5::Package
+    KF5::WindowSystem
+
     XCB::XCB
 )
 add_test(NAME kwin-testTabBoxHandler COMMAND testTabBoxHandler)

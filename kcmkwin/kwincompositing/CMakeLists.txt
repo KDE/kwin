@@ -22,12 +22,13 @@ ki18n_wrap_ui(kwincomposing_SRC compositing.ui)
 add_library(kwincompositing MODULE ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
+    Qt5::DBus
+    Qt5::Widgets
+
     KF5::ConfigCore
     KF5::CoreAddons
     KF5::I18n
     KF5::KCMUtils
-    Qt5::DBus
-    Qt5::Widgets
 )
 
 install(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})

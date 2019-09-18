@@ -94,11 +94,12 @@ set(testLibinputContext_SRCS
 )
 add_executable(testLibinputContext ${testLibinputContext_SRCS})
 target_link_libraries(testLibinputContext
-    KF5::ConfigCore
-    KF5::WindowSystem
     Qt5::DBus
     Qt5::Test
     Qt5::Widgets
+
+    KF5::ConfigCore
+    KF5::WindowSystem
 )
 add_test(NAME kwin-testLibinputContext COMMAND testLibinputContext)
 ecm_mark_as_test(testLibinputContext)

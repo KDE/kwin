@@ -37,13 +37,14 @@ set(testVirtualDesktops_SRCS
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
 
 target_link_libraries(testVirtualDesktops
+    Qt5::Test
+    Qt5::Widgets
+
     KF5::ConfigCore
     KF5::GlobalAccel
     KF5::I18n
     KF5::WaylandServer
     KF5::WindowSystem
-    Qt5::Test
-    Qt5::Widgets
 )
 add_test(NAME kwin-testVirtualDesktops COMMAND testVirtualDesktops)
 ecm_mark_as_test(testVirtualDesktops)
@@ -59,15 +60,18 @@ add_executable(testClientMachine ${testClientMachine_SRCS})
 set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 
 target_link_libraries(testClientMachine
-    ${X11_X11_LIB} # to make jenkins happy
-    KF5::ConfigCore
-    KF5::WindowSystem
     Qt5::Concurrent
     Qt5::Test
     Qt5::Widgets
     Qt5::X11Extras
+
+    KF5::ConfigCore
+    KF5::WindowSystem
+
     XCB::XCB
     XCB::XFIXES
+
+    ${X11_X11_LIB} # to make jenkins happy
 )
 add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
 ecm_mark_as_test(testClientMachine)
@@ -81,11 +85,13 @@ set(testXcbWrapper_SRCS
 add_executable(testXcbWrapper ${testXcbWrapper_SRCS})
 
 target_link_libraries(testXcbWrapper
-    KF5::ConfigCore
-    KF5::WindowSystem
     Qt5::Test
     Qt5::Widgets
     Qt5::X11Extras
+
+    KF5::ConfigCore
+    KF5::WindowSystem
+
     XCB::XCB
 )
 add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
@@ -95,11 +101,13 @@ if (XCB_ICCCM_FOUND)
     add_executable(testXcbSizeHints test_xcb_size_hints.cpp)
     set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
     target_link_libraries(testXcbSizeHints
-        KF5::ConfigCore
-        KF5::WindowSystem
         Qt5::Test
         Qt5::Widgets
         Qt5::X11Extras
+
+        KF5::ConfigCore
+        KF5::WindowSystem
+
         XCB::ICCCM
         XCB::XCB
     )
@@ -116,11 +124,13 @@ set(testXcbWindow_SRCS
 add_executable(testXcbWindow ${testXcbWindow_SRCS})
 
 target_link_libraries(testXcbWindow
-    KF5::ConfigCore
-    KF5::WindowSystem
     Qt5::Test
     Qt5::Widgets
     Qt5::X11Extras
+
+    KF5::ConfigCore
+    KF5::WindowSystem
+
     XCB::XCB
 )
 add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
@@ -138,12 +148,14 @@ add_executable(testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
 set_target_properties(testBuiltInEffectLoader PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 
 target_link_libraries(testBuiltInEffectLoader
-    KF5::Package
     Qt5::Concurrent
     Qt5::Test
     Qt5::X11Extras
-    kwin4_effect_builtins
+
+    KF5::Package
+
     kwineffects
+    kwin4_effect_builtins
 )
 
 add_test(NAME kwin-testBuiltInEffectLoader COMMAND testBuiltInEffectLoader)
@@ -171,19 +183,21 @@ qt5_add_dbus_adaptor(testScriptedEffectLoader_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/.
 add_executable(testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
 
 target_link_libraries(testScriptedEffectLoader
-    KF5::ConfigGui
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::Notifications
-    KF5::Package
     Qt5::Concurrent
     Qt5::Qml
     Qt5::Script
     Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
-    kwin4_effect_builtins
+
+    KF5::ConfigGui
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Notifications
+    KF5::Package
+
     kwineffects
+    kwin4_effect_builtins
 )
 
 add_test(NAME kwin-testScriptedEffectLoader COMMAND testScriptedEffectLoader)
@@ -200,12 +214,14 @@ set(testPluginEffectLoader_SRCS
 add_executable(testPluginEffectLoader ${testPluginEffectLoader_SRCS})
 
 target_link_libraries(testPluginEffectLoader
-    KF5::Package
     Qt5::Concurrent
     Qt5::Test
     Qt5::X11Extras
-    kwin4_effect_builtins
+
+    KF5::Package
+
     kwineffects
+    kwin4_effect_builtins
 )
 
 add_test(NAME kwin-testPluginEffectLoader COMMAND testPluginEffectLoader)
@@ -244,16 +260,17 @@ qt5_add_dbus_adaptor(testScreens_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.kwi
 add_executable(testScreens ${testScreens_SRCS})
 target_include_directories(testScreens BEFORE PRIVATE ./)
 target_link_libraries(testScreens
-    KF5::ConfigCore
-    KF5::ConfigGui
-    KF5::I18n
-    KF5::Notifications
-    KF5::WindowSystem
     Qt5::DBus
     Qt5::Sensors
     Qt5::Test
     Qt5::Widgets
     Qt5::X11Extras
+
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::I18n
+    KF5::Notifications
+    KF5::WindowSystem
 )
 
 add_test(NAME kwin_testScreens COMMAND testScreens)
@@ -285,6 +302,11 @@ add_executable(testScreenEdges ${testScreenEdges_SRCS})
 set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_include_directories(testScreenEdges BEFORE PRIVATE ./)
 target_link_libraries(testScreenEdges
+    Qt5::DBus
+    Qt5::Sensors
+    Qt5::Test
+    Qt5::X11Extras
+
     KF5::ConfigCore
     KF5::ConfigGui
     KF5::GlobalAccel
@@ -292,10 +314,7 @@ target_link_libraries(testScreenEdges
     KF5::Notifications
     KF5::WaylandServer
     KF5::WindowSystem
-    Qt5::DBus
-    Qt5::Sensors
-    Qt5::Test
-    Qt5::X11Extras
+
     XCB::COMPOSITE
     XCB::DAMAGE
     XCB::GLX
@@ -320,11 +339,12 @@ set(testOnScreenNotification_SRCS
 add_executable(testOnScreenNotification ${testOnScreenNotification_SRCS})
 
 target_link_libraries(testOnScreenNotification
-    KF5::ConfigCore
     Qt5::DBus
     Qt5::Quick
     Qt5::Test
     Qt5::Widgets # QAction include
+
+    KF5::ConfigCore
 )
 
 add_test(NAME kwin-testOnScreenNotification COMMAND testOnScreenNotification)
@@ -378,12 +398,14 @@ set(testXkb_SRCS
 )
 add_executable(testXkb ${testXkb_SRCS})
 target_link_libraries(testXkb
-    KF5::ConfigCore
-    KF5::WaylandServer
-    KF5::WindowSystem
     Qt5::Gui
     Qt5::Test
     Qt5::Widgets
+
+    KF5::ConfigCore
+    KF5::WaylandServer
+    KF5::WindowSystem
+
     XKB::XKB
 )
 add_test(NAME kwin-testXkb COMMAND testXkb)

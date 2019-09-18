@@ -561,8 +561,8 @@ ki18n_wrap_ui(kwin_KDEINIT_SRCS
 ########### target link libraries ###############
 
 set(kwin_OWN_LIBS
-    kwin4_effect_builtins
     kwineffects
+    kwin4_effect_builtins
 )
 
 set(kwin_QT_LIBS
@@ -574,8 +574,6 @@ set(kwin_QT_LIBS
 )
 
 set(kwin_KDE_LIBS
-    KDecoration2::KDecoration
-    KDecoration2::KDecoration2Private
     KF5::ConfigCore
     KF5::ConfigWidgets
     KF5::CoreAddons
@@ -587,6 +585,10 @@ set(kwin_KDE_LIBS
     KF5::Plasma
     KF5::QuickAddons
     KF5::WindowSystem
+
+    KDecoration2::KDecoration
+    KDecoration2::KDecoration2Private
+
     PW::KScreenLocker
 )
 
