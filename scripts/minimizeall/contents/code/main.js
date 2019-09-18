@@ -26,28 +26,38 @@ function isRelevant(client) {
            (!client.activities.length || client.activities.indexOf(workspace.currentActivity.toString()) > -1);
 }
 
-var minimizeAllWindows = function() {
+function minimizeAllWindows() {
     var allClients = workspace.clientList();
-    var clients = [];
+    var relevantClients = [];
     var minimize = false;
+
     for (var i = 0; i < allClients.length; ++i) {
-        if (isRelevant(allClients[i])) {
-            clients.push(allClients[i]);
-            if (!allClients[i].minimized && allClients[i].minimizedForMinimizeAll !== true) {
-                minimize = true;
-            }
-        }
-    }
-    for (var i = 0; i < clients.length; ++i) {
-        if ((minimize == clients[i].minimized) || // no change required at all
-            (!minimize && clients[i].minimizedForMinimizeAll !== true)) { // unminimize, but not this one
-            delete clients[i].minimizedForMinimizeAll;
+        if (!isRelevant(allClients[i])) {
             continue;
         }
-        clients[i].minimized = minimize;
-        clients[i].minimizedForMinimizeAll = minimize;
+        if (!allClients[i].minimized) {
+            minimize = true;
+        }
+        relevantClients.push(allClients[i]);
     }
-    clients = [];
+
+    for (var i = 0; i < relevantClients.length; ++i) {
+        var wasMinimizedByScript = relevantClients[i].minimizedByScript;
+        delete relevantClients[i].minimizedByScript;
+
+        if (minimize) {
+            if (relevantClients[i].minimized) {
+                continue;
+            }
+            relevantClients[i].minimized = true;
+            relevantClients[i].minimizedByScript = true;
+        } else {
+            if (!wasMinimizedByScript) {
+                continue;
+            }
+            relevantClients[i].minimized = false;
+        }
+    }
 }
 
 function init() {
