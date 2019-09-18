@@ -61,7 +61,7 @@ QVariant DesktopModel::data(const QModelIndex& index, int role) const
     case DesktopRole:
         return m_desktopList[ desktopIndex ];
     case ClientModelRole:
-        return qVariantFromValue((void*)m_clientModels[ m_desktopList[ desktopIndex ] ]);
+        return QVariant::fromValue<void *>(m_clientModels[m_desktopList[desktopIndex]]);
     default:
         return QVariant();
     }

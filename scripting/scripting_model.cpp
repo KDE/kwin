@@ -699,7 +699,7 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::DisplayRole || role == ClientRole) {
         if (AbstractClient *client = m_root->clientForId(index.internalId())) {
-            return qVariantFromValue(client);
+            return QVariant::fromValue(client);
         }
     }
     return QVariant();

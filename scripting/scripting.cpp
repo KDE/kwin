@@ -207,7 +207,7 @@ QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
     for (int i=4; i<argumentsCount; ++i) {
         if (context->argument(i).isArray()) {
             QStringList stringArray = engine->fromScriptValue<QStringList>(context->argument(i));
-            arguments << qVariantFromValue(stringArray);
+            arguments << QVariant::fromValue(stringArray);
         } else {
             arguments << context->argument(i).toVariant();
         }

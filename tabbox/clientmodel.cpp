@@ -71,7 +71,7 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
         return caption;
     }
     case ClientRole:
-        return qVariantFromValue((void*)client.data());
+        return QVariant::fromValue<void *>(client.data());
     case DesktopNameRole: {
         return tabBox->desktopName(client.data());
     }
