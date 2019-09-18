@@ -28,8 +28,8 @@ set(QT5PLATFORMSUPPORT_LIBS
 )
 
 target_link_libraries(KWinQpaPlugin
-    ${FREETYPE_LIBRARIES}
     ${QT5PLATFORMSUPPORT_LIBS}
+    ${FREETYPE_LIBRARIES} # Must be after QT5PLATFORMSUPPORT_LIBS
     Fontconfig::Fontconfig
     KF5::WaylandClient
     kwin
