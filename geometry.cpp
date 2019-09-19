@@ -894,7 +894,7 @@ void Workspace::setMoveResizeClient(AbstractClient *c)
 // (the property with the size of the frame remains on the window after the crash).
 void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geometry)
 {
-    NETWinInfo i(connection(), w, rootWindow(), NET::WMFrameExtents, nullptr);
+    NETWinInfo i(connection(), w, rootWindow(), NET::WMFrameExtents, NET::Properties2());
     NETStrut frame = i.frameExtents();
 
     if (frame.left != 0 || frame.top != 0) {

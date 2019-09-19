@@ -172,7 +172,7 @@ Qt::MouseButton x11ToQtMouseButton(int button)
 
 Qt::MouseButtons x11ToQtMouseButtons(int state)
 {
-    Qt::MouseButtons ret = nullptr;
+    Qt::MouseButtons ret = {};
     if (state & XCB_KEY_BUT_MASK_BUTTON_1)
         ret |= Qt::LeftButton;
     if (state & XCB_KEY_BUT_MASK_BUTTON_2)
@@ -188,7 +188,7 @@ Qt::MouseButtons x11ToQtMouseButtons(int state)
 
 Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
 {
-    Qt::KeyboardModifiers ret = nullptr;
+    Qt::KeyboardModifiers ret = {};
     if (state & XCB_KEY_BUT_MASK_SHIFT)
         ret |= Qt::ShiftModifier;
     if (state & XCB_KEY_BUT_MASK_CONTROL)

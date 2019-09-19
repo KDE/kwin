@@ -606,7 +606,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             if (opacity() == 1.0) {
                 return;
             }
-            NETWinInfo info(connection(), frameId(), rootWindow(), nullptr, nullptr);
+            NETWinInfo info(connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
             info.setOpacity(static_cast<unsigned long>(opacity() * 0xffffffff));
         }
     );

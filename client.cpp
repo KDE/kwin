@@ -116,7 +116,7 @@ Client::Client()
     , m_killHelperPID(0)
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
     , m_userTime(XCB_TIME_CURRENT_TIME)   // Not known yet
-    , allowed_actions(nullptr)
+    , allowed_actions()
     , shade_geometry_change(false)
     , sm_stacking_order(-1)
     , activitiesDefined(false)
@@ -1768,7 +1768,7 @@ void Client::updateAllowedActions(bool force)
     if (!isManaged() && !force)
         return;
     NET::Actions old_allowed_actions = NET::Actions(allowed_actions);
-    allowed_actions = nullptr;
+    allowed_actions = NET::Actions();
     if (isMovable())
         allowed_actions |= NET::ActionMove;
     if (isResizable())

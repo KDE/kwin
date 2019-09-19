@@ -60,7 +60,7 @@ Group::Group(xcb_window_t leader_P)
     if (leader_P != XCB_WINDOW_NONE) {
         leader_client = workspace()->findClient(Predicate::WindowMatch, leader_P);
         leader_info = new NETWinInfo(connection(), leader_P, rootWindow(),
-                                      nullptr, NET::WM2StartupId);
+                                     NET::Properties(), NET::WM2StartupId);
     }
     effect_group = new EffectWindowGroupImpl(this);
     workspace()->addGroup(this);

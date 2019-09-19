@@ -586,7 +586,7 @@ Rules* RulesWidget::rules() const
     rules->wmclassmatch = static_cast< Rules::StringMatch >(wmclass_match->currentIndex());
     rules->windowrole = role->text().toUtf8();
     rules->windowrolematch = static_cast< Rules::StringMatch >(role_match->currentIndex());
-    rules->types = nullptr;
+    rules->types = {};
     bool all_types = true;
     for (int i = 0;
             i < types->count();
