@@ -56,7 +56,7 @@ Unmanaged::~Unmanaged()
 
 bool Unmanaged::track(xcb_window_t w)
 {
-    GRAB_SERVER_DURING_CONTEXT
+    XServerGrabber xserverGrabber;
     Xcb::WindowAttributes attr(w);
     Xcb::WindowGeometry geo(w);
     if (attr.isNull() || attr->map_state != XCB_MAP_STATE_VIEWABLE) {
