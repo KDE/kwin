@@ -77,6 +77,12 @@ const long ClientWinMask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE
                            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                            XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
 
+// window types that are supported as normal windows (i.e. KWin actually manages them)
+const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
+        | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
+        | NET::UtilityMask | NET::SplashMask | NET::NotificationMask | NET::OnScreenDisplayMask
+        | NET::CriticalNotificationMask;
+
 // Creating a client:
 //  - only by calling Workspace::createClient()
 //      - it creates a new client and calls manage() for it

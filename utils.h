@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 // kwin
 #include <kwinglobals.h>
-// KDE
-#include <netwm_def.h>
 // Qt
 #include <QLoggingCategory>
 #include <QList>
@@ -42,18 +40,6 @@ Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
 Q_DECLARE_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD)
 namespace KWin
 {
-
-// window types that are supported as normal windows (i.e. KWin actually manages them)
-const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-        | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
-        | NET::UtilityMask | NET::SplashMask | NET::NotificationMask | NET::OnScreenDisplayMask
-        | NET::CriticalNotificationMask;
-// window types that are supported as unmanaged (mainly for compositing)
-const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-        | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
-        | NET::UtilityMask | NET::SplashMask | NET::DropdownMenuMask | NET::PopupMenuMask
-        | NET::TooltipMask | NET::NotificationMask | NET::ComboBoxMask | NET::DNDIconMask | NET::OnScreenDisplayMask
-        | NET::CriticalNotificationMask;
 
 const QPoint invalidPoint(INT_MIN, INT_MIN);
 

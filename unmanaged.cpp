@@ -35,6 +35,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+// window types that are supported as unmanaged (mainly for compositing)
+const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
+        | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
+        | NET::UtilityMask | NET::SplashMask | NET::DropdownMenuMask | NET::PopupMenuMask
+        | NET::TooltipMask | NET::NotificationMask | NET::ComboBoxMask | NET::DNDIconMask | NET::OnScreenDisplayMask
+        | NET::CriticalNotificationMask;
+
 Unmanaged::Unmanaged()
     : Toplevel()
 {
