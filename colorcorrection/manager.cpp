@@ -94,7 +94,7 @@ void Manager::init()
 
     // Monitor for the time changing (flags == TFD_TIMER_ABSTIME | TFD_TIMER_CANCEL_ON_SET).
     // However these are not exposed in glibc so value is hardcoded:
-    ::timerfd_settime(timeChangedFd, 3, &timespec, 0);
+    ::timerfd_settime(timeChangedFd, 3, &timespec, nullptr);
 
     connect(this, &QObject::destroyed, [timeChangedFd]() {
         ::close(timeChangedFd);

@@ -326,7 +326,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         const auto *event = reinterpret_cast<xcb_map_notify_event_t*>(e);
         if (event->override_redirect) {
             Unmanaged* c = findUnmanaged(event->window);
-            if (c == NULL)
+            if (c == nullptr)
                 c = createUnmanaged(event->window);
             if (c)
                 return c->windowEvent(e);
@@ -373,9 +373,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT || lostFocusPointerToRoot)) {
                 //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
                 AbstractClient *c = mostRecentlyActivatedClient();
-                if (c != NULL)
+                if (c != nullptr)
                     requestFocus(c, true);
-                else if (activateNextClient(NULL))
+                else if (activateNextClient(nullptr))
                     ; // ok, activated
                 else
                     focusToNull();
@@ -444,7 +444,7 @@ bool Client::windowEvent(xcb_generic_event_t *e)
                 emit opacityChanged(this, old_opacity);
             } else {
                 // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo i(connection(), frameId(), rootWindow(), 0, 0);
+                NETWinInfo i(connection(), frameId(), rootWindow(), nullptr, nullptr);
                 i.setOpacity(info->opacity());
             }
         }
@@ -821,7 +821,7 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             }
         }
         if (options->focusPolicy() == Options::FocusStrictlyUnderMouse && isActive() && lostMouse) {
-            workspace()->requestDelayFocus(0);
+            workspace()->requestDelayFocus(nullptr);
         }
         return;
     }

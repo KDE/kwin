@@ -59,7 +59,7 @@ class KWIN_EXPORT UserActionsMenu : public QObject
 {
     Q_OBJECT
 public:
-    explicit UserActionsMenu(QObject *parent = 0);
+    explicit UserActionsMenu(QObject *parent = nullptr);
     ~UserActionsMenu() override;
     /**
      * Discards the constructed menu, so that it gets recreates

@@ -68,7 +68,7 @@ static const char* windowTypeToTxt(NET::WindowType type)
     if (type == -2)   // undefined (not really part of NET::WindowType)
         return "Undefined";
     qFatal("Unknown Window Type");
-    return NULL;
+    return nullptr;
 }
 
 static NET::WindowType txtToWindowType(const char* txt)
@@ -314,7 +314,7 @@ static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info)
  */
 SessionInfo* Workspace::takeSessionInfo(Client* c)
 {
-    SessionInfo *realInfo = 0;
+    SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
     QByteArray windowRole = c->windowRole();
     QByteArray wmCommand = c->wmCommand();
@@ -430,14 +430,14 @@ SessionSaveDoneHelper::SessionSaveDoneHelper()
     calls.save_complete.client_data = reinterpret_cast< SmPointer >(this);
     calls.shutdown_cancelled.callback = shutdown_cancelled;
     calls.shutdown_cancelled.client_data = reinterpret_cast< SmPointer >(this);
-    char* id = NULL;
+    char* id = nullptr;
     char err[ 11 ];
-    conn = SmcOpenConnection(NULL, 0, 1, 0,
+    conn = SmcOpenConnection(nullptr, nullptr, 1, 0,
                              SmcSaveYourselfProcMask | SmcDieProcMask | SmcSaveCompleteProcMask
-                             | SmcShutdownCancelledProcMask, &calls, NULL, &id, 10, err);
-    if (id != NULL)
+                             | SmcShutdownCancelledProcMask, &calls, nullptr, &id, 10, err);
+    if (id != nullptr)
         free(id);
-    if (conn == NULL)
+    if (conn == nullptr)
         return; // no SM
 
     // detect ksmserver
@@ -456,8 +456,8 @@ SessionSaveDoneHelper::SessionSaveDoneHelper()
     props[ 0 ].num_vals = 1;
     props[ 0 ].vals = &propvalue[ 0 ];
     struct passwd* entry = getpwuid(geteuid());
-    propvalue[ 1 ].length = entry != NULL ? strlen(entry->pw_name) : 0;
-    propvalue[ 1 ].value = (SmPointer)(entry != NULL ? entry->pw_name : "");
+    propvalue[ 1 ].length = entry != nullptr ? strlen(entry->pw_name) : 0;
+    propvalue[ 1 ].value = (SmPointer)(entry != nullptr ? entry->pw_name : "");
     props[ 1 ].name = const_cast< char* >(SmUserID);
     props[ 1 ].type = const_cast< char* >(SmARRAY8);
     props[ 1 ].num_vals = 1;
@@ -494,17 +494,17 @@ SessionSaveDoneHelper::~SessionSaveDoneHelper()
 
 void SessionSaveDoneHelper::close()
 {
-    if (conn != NULL) {
+    if (conn != nullptr) {
         delete notifier;
-        SmcCloseConnection(conn, 0, NULL);
+        SmcCloseConnection(conn, 0, nullptr);
     }
-    conn = NULL;
+    conn = nullptr;
 }
 
 void SessionSaveDoneHelper::processData()
 {
-    if (conn != NULL)
-        IceProcessMessages(SmcGetIceConnection(conn), 0, 0);
+    if (conn != nullptr)
+        IceProcessMessages(SmcGetIceConnection(conn), nullptr, nullptr);
 }
 
 void Workspace::sessionSaveDone()

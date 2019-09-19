@@ -80,7 +80,7 @@ public:
         Pointer,
         Touch
     };
-    explicit ScreenEdgeItem(QObject *parent = 0);
+    explicit ScreenEdgeItem(QObject *parent = nullptr);
     ~ScreenEdgeItem() override;
     bool isEnabled() const;
     Edge edge() const;

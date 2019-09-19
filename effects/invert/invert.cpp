@@ -37,7 +37,7 @@ namespace KWin
 InvertEffect::InvertEffect()
     :   m_inited(false),
         m_valid(true),
-        m_shader(NULL),
+        m_shader(nullptr),
         m_allWindows(false)
 {
     QAction* a = new QAction(this);

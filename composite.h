@@ -102,7 +102,7 @@ public:
      * @return bool @c true if there is a Compositor and it is active, @c false otherwise
      */
     static bool compositing() {
-        return s_compositor != NULL && s_compositor->isActive();
+        return s_compositor != nullptr && s_compositor->isActive();
     }
 
     // for delayed supportproperty management of effects

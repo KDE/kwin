@@ -56,13 +56,13 @@ CubeEffect::CubeEffect()
     , cubeOpacity(1.0)
     , opacityDesktopOnly(true)
     , displayDesktopName(false)
-    , desktopNameFrame(NULL)
+    , desktopNameFrame(nullptr)
     , reflection(true)
     , desktopChangedWhileRotating(false)
     , paintCaps(true)
-    , wallpaper(NULL)
+    , wallpaper(nullptr)
     , texturedCaps(true)
-    , capTexture(NULL)
+    , capTexture(nullptr)
     , reflectionPainting(false)
     , activeScreen(0)
     , bottomCap(false)
@@ -74,12 +74,12 @@ CubeEffect::CubeEffect()
     , shortcutsRegistered(false)
     , mode(Cube)
     , useShaders(false)
-    , cylinderShader(0)
-    , sphereShader(0)
+    , cylinderShader(nullptr)
+    , sphereShader(nullptr)
     , zOrderingFactor(0.0f)
     , mAddedHeightCoeff1(0.0f)
     , mAddedHeightCoeff2(0.0f)
-    , m_cubeCapBuffer(NULL)
+    , m_cubeCapBuffer(nullptr)
     , m_proxy(this)
     , m_cubeAction(new QAction(this))
     , m_cylinderAction(new QAction(this))
@@ -93,8 +93,8 @@ CubeEffect::CubeEffect()
         m_reflectionShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("cube-reflection.glsl"));
         m_capShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("cube-cap.glsl"));
     } else {
-        m_reflectionShader = NULL;
-        m_capShader = NULL;
+        m_reflectionShader = nullptr;
+        m_capShader = nullptr;
     }
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
@@ -179,9 +179,9 @@ void CubeEffect::reconfigure(ReconfigureFlags)
     capDeformationFactor = (float)CubeConfig::capDeformation() / 100.0f;
     useZOrdering = CubeConfig::zOrdering();
     delete wallpaper;
-    wallpaper = NULL;
+    wallpaper = nullptr;
     delete capTexture;
-    capTexture = NULL;
+    capTexture = nullptr;
     texturedCaps = CubeConfig::texturedCaps();
 
     timeLine.setEasingCurve(QEasingCurve::InOutSine);
@@ -282,7 +282,7 @@ void CubeEffect::slotCubeCapLoaded()
         }
         // need to recreate the VBO for the cube cap
         delete m_cubeCapBuffer;
-        m_cubeCapBuffer = NULL;
+        m_cubeCapBuffer = nullptr;
         effects->addRepaintFull();
     }
     watcher->deleteLater();
@@ -844,7 +844,7 @@ void CubeEffect::paintCubeCap()
     }
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
-    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
+    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : nullptr);
 }
 
 void CubeEffect::paintCylinderCap()
@@ -899,7 +899,7 @@ void CubeEffect::paintCylinderCap()
     }
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
-    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
+    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : nullptr);
 }
 
 void CubeEffect::paintSphereCap()
@@ -956,7 +956,7 @@ void CubeEffect::paintSphereCap()
     }
     delete m_cubeCapBuffer;
     m_cubeCapBuffer = new GLVertexBuffer(GLVertexBuffer::Static);
-    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : NULL);
+    m_cubeCapBuffer->setData(verts.count() / 3, 3, verts.constData(), texture ? texCoords.constData() : nullptr);
 }
 
 void CubeEffect::postPaintScreen()
@@ -975,9 +975,9 @@ void CubeEffect::postPaintScreen()
             keyboard_grab = false;
             effects->stopMouseInterception(this);
             effects->setCurrentDesktop(frontDesktop);
-            effects->setActiveFullScreenEffect(0);
+            effects->setActiveFullScreenEffect(nullptr);
             delete m_cubeCapBuffer;
-            m_cubeCapBuffer = NULL;
+            m_cubeCapBuffer = nullptr;
             if (desktopNameFrame)
                 desktopNameFrame->free();
             activated = false;
@@ -1314,7 +1314,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 QColor color = capColor;
                 capColor.setAlphaF(cubeOpacity);
                 vbo->setColor(color);
-                vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
+                vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
                 if (!capShader || mode == Cube) {
                     // TODO: use sphere and cylinder shaders
                     vbo->render(GL_TRIANGLES);

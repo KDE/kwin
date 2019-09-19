@@ -92,7 +92,7 @@ void Deleted::discard()
 
 void Deleted::copyToDeleted(Toplevel* c)
 {
-    Q_ASSERT(dynamic_cast< Deleted* >(c) == NULL);
+    Q_ASSERT(dynamic_cast< Deleted* >(c) == nullptr);
     Toplevel::copyToDeleted(c);
     desk = c->desktop();
     m_desktops = c->desktops();

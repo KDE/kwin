@@ -49,7 +49,7 @@ public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotPropertyNotify(KWin::EffectWindow* w, long atom, EffectWindow *addedWindow = NULL);
+    void slotPropertyNotify(KWin::EffectWindow* w, long atom, EffectWindow *addedWindow = nullptr);
 
 private:
     void prepareHighlighting();

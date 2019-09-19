@@ -102,7 +102,7 @@ static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
     // get the atom for the propertyName
     ScopedCPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(c,
         xcb_intern_atom_unchecked(c, false, propertyName.size(), propertyName.constData()),
-        NULL));
+        nullptr));
     if (atomReply.isNull()) {
         return XCB_ATOM_NONE;
     }
@@ -117,8 +117,8 @@ static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 
 EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     : EffectsHandler(scene->compositingType())
-    , keyboard_grab_effect(NULL)
-    , fullscreen_effect(0)
+    , keyboard_grab_effect(nullptr)
+    , fullscreen_effect(nullptr)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
     , m_compositor(compositor)
     , m_scene(scene)
@@ -150,7 +150,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         [this](int old, AbstractClient *c) {
             const int newDesktop = VirtualDesktopManager::self()->current();
             if (old != 0 && newDesktop != old) {
-                emit desktopChanged(old, newDesktop, c ? c->effectWindow() : 0);
+                emit desktopChanged(old, newDesktop, c ? c->effectWindow() : nullptr);
                 // TODO: remove in 4.10
                 emit desktopChanged(old, newDesktop);
             }
@@ -464,7 +464,7 @@ Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
     for (int i = 0; i < loaded_effects.size(); ++i)
         if (loaded_effects.at(i).second->provides(ef))
             return loaded_effects.at(i).second;
-    return NULL;
+    return nullptr;
 }
 
 void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
@@ -620,7 +620,7 @@ void EffectsHandlerImpl::slotGeometryShapeChanged(Toplevel* t, const QRect& old)
 {
     // during late cleanup effectWindow() may be already NULL
     // in some functions that may still call this
-    if (t == NULL || t->effectWindow() == NULL)
+    if (t == nullptr || t->effectWindow() == nullptr)
         return;
     emit windowGeometryShapeChanged(t->effectWindow(), old);
 }
@@ -629,7 +629,7 @@ void EffectsHandlerImpl::slotPaddingChanged(Toplevel* t, const QRect& old)
 {
     // during late cleanup effectWindow() may be already NULL
     // in some functions that may still call this
-    if (t == NULL || t->effectWindow() == NULL)
+    if (t == nullptr || t->effectWindow() == nullptr)
         return;
     emit windowPaddingChanged(t->effectWindow(), old);
 }
@@ -659,7 +659,7 @@ bool EffectsHandlerImpl::hasActiveFullScreenEffect() const
 
 bool EffectsHandlerImpl::grabKeyboard(Effect* effect)
 {
-    if (keyboard_grab_effect != NULL)
+    if (keyboard_grab_effect != nullptr)
         return false;
     if (!doGrabKeyboard()) {
         return false;
@@ -675,9 +675,9 @@ bool EffectsHandlerImpl::doGrabKeyboard()
 
 void EffectsHandlerImpl::ungrabKeyboard()
 {
-    Q_ASSERT(keyboard_grab_effect != NULL);
+    Q_ASSERT(keyboard_grab_effect != nullptr);
     doUngrabKeyboard();
-    keyboard_grab_effect = NULL;
+    keyboard_grab_effect = nullptr;
 }
 
 void EffectsHandlerImpl::doUngrabKeyboard()
@@ -686,7 +686,7 @@ void EffectsHandlerImpl::doUngrabKeyboard()
 
 void EffectsHandlerImpl::grabbedKeyboardEvent(QKeyEvent* e)
 {
-    if (keyboard_grab_effect != NULL)
+    if (keyboard_grab_effect != nullptr)
         keyboard_grab_effect->grabbedKeyboardEvent(e);
 }
 
@@ -788,7 +788,7 @@ void* EffectsHandlerImpl::getProxy(QString name)
         if ((*it).first == name)
             return (*it).second->proxy();
 
-    return NULL;
+    return nullptr;
 }
 
 void EffectsHandlerImpl::startMousePolling()
@@ -805,7 +805,7 @@ void EffectsHandlerImpl::stopMousePolling()
 
 bool EffectsHandlerImpl::hasKeyboardGrab() const
 {
-    return keyboard_grab_effect != NULL;
+    return keyboard_grab_effect != nullptr;
 }
 
 void EffectsHandlerImpl::desktopResized(const QSize &size)
@@ -885,7 +885,7 @@ void EffectsHandlerImpl::activateWindow(EffectWindow* c)
 
 EffectWindow* EffectsHandlerImpl::activeWindow() const
 {
-    return Workspace::self()->activeClient() ? Workspace::self()->activeClient()->effectWindow() : NULL;
+    return Workspace::self()->activeClient() ? Workspace::self()->activeClient()->effectWindow() : nullptr;
 }
 
 void EffectsHandlerImpl::moveWindow(EffectWindow* w, const QPoint& pos, bool snap, double snapAdjust)
@@ -1072,7 +1072,7 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
             return w->effectWindow();
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 EffectWindow* EffectsHandlerImpl::findWindow(KWayland::Server::SurfaceInterface *surf) const
@@ -1207,7 +1207,7 @@ EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
     if (auto c = TabBox::TabBox::self()->currentClient())
         return c->effectWindow();
 #endif
-    return NULL;
+    return nullptr;
 }
 
 void EffectsHandlerImpl::addRepaintFull()
@@ -2149,13 +2149,13 @@ EffectWindowList EffectWindowGroupImpl::members() const
 //****************************************
 
 EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
-    : QObject(0)
+    : QObject(nullptr)
     , EffectFrame()
     , m_style(style)
     , m_static(staticSize)
     , m_point(position)
     , m_alignment(alignment)
-    , m_shader(NULL)
+    , m_shader(nullptr)
     , m_theme(new Plasma::Theme(this))
 {
     if (m_style == EffectFrameStyled) {
@@ -2271,7 +2271,7 @@ void EffectFrameImpl::render(QRegion region, double opacity, double frameOpacity
     if (m_geometry.isEmpty()) {
         return; // Nothing to display
     }
-    m_shader = NULL;
+    m_shader = nullptr;
     setScreenProjectionMatrix(static_cast<EffectsHandlerImpl*>(effects)->scene()->screenProjectionMatrix());
     effects->paintEffectFrame(this, region, opacity, frameOpacity);
 }

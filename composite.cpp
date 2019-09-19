@@ -121,11 +121,11 @@ static inline qint64 nanoToMilli(int nano) { return nano / (1000*1000); }
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
     , m_state(State::Off)
-    , m_selectionOwner(NULL)
+    , m_selectionOwner(nullptr)
     , vBlankInterval(0)
     , fpsInterval(0)
     , m_timeSinceLastVBlank(0)
-    , m_scene(NULL)
+    , m_scene(nullptr)
     , m_bufferSwapPending(false)
     , m_composeAtSwapCompletion(false)
 {
@@ -176,7 +176,7 @@ Compositor::~Compositor()
     stop();
     deleteUnusedSupportProperties();
     destroyCompositorSelection();
-    s_compositor = NULL;
+    s_compositor = nullptr;
 }
 
 bool Compositor::setupStart()
@@ -250,12 +250,12 @@ bool Compositor::setupStart()
         }
     }
 
-    if (m_scene == NULL || m_scene->initFailed()) {
+    if (m_scene == nullptr || m_scene->initFailed()) {
         qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";
         m_state = State::Off;
 
         delete m_scene;
-        m_scene = NULL;
+        m_scene = nullptr;
 
         if (m_selectionOwner) {
             m_selectionOwner->setOwning(false);
@@ -449,7 +449,7 @@ void Compositor::stop()
     }
 
     delete m_scene;
-    m_scene = NULL;
+    m_scene = nullptr;
     compositeTimer.stop();
     repaints_region = QRegion();
 

@@ -260,7 +260,7 @@ XBackend::XBackend(QObject *parent)
 void XBackend::init(QQuickView *view)
 {
     Backend::init(view);
-    m_xcbConn = xcb_connect(NULL, NULL);
+    m_xcbConn = xcb_connect(nullptr, nullptr);
     if (!m_xcbConn) {
         qDebug() << "Could not open XCB connection.";
     }

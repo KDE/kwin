@@ -100,7 +100,7 @@ public:
     AbstractClient* findModal(bool allow_itself = false) override;
     const Group* group() const override;
     Group* group() override;
-    void checkGroup(Group* gr = NULL, bool force = false);
+    void checkGroup(Group* gr = nullptr, bool force = false);
     void changeClientLeaderGroup(Group* gr);
     void updateWindowRules(Rules::Types selection) override;
     void updateFullscreenMonitors(NETFullscreenMonitors topology);

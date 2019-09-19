@@ -45,7 +45,7 @@ FlipSwitchEffect::FlipSwitchEffect()
     , m_stop(false)
     , m_animation(false)
     , m_hasKeyboardGrab(false)
-    , m_captionFrame(NULL)
+    , m_captionFrame(nullptr)
 {
     initConfig<FlipSwitchConfig>();
     reconfigure(ReconfigureAll);
@@ -153,7 +153,7 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                     index = index % tempList.count();
             }
             tabIndex = index;
-            EffectWindow* w = NULL;
+            EffectWindow* w = nullptr;
             if (!m_scheduledDirections.isEmpty() && m_scheduledDirections.head() == DirectionBackward) {
                 index--;
                 if (index < 0)
@@ -180,7 +180,7 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                     index = 0;
             }
             tabIndex = index;
-            EffectWindow* w = NULL;
+            EffectWindow* w = nullptr;
             if (!m_scheduledDirections.isEmpty() && m_scheduledDirections.head() == DirectionBackward) {
                 index++;
                 if (index >= tempList.count())
@@ -331,7 +331,7 @@ void FlipSwitchEffect::postPaintScreen()
             m_stop = false;
             m_active = false;
             m_captionFrame->free();
-            effects->setActiveFullScreenEffect(0);
+            effects->setActiveFullScreenEffect(nullptr);
             effects->addRepaintFull();
             qDeleteAll(m_windows);
             m_windows.clear();
@@ -437,7 +437,7 @@ void FlipSwitchEffect::slotTabBoxUpdated()
         if (!effects->currentTabBoxWindowList().isEmpty()) {
             // determine the switch direction
             if (m_selectedWindow != effects->currentTabBoxWindow()) {
-                if (m_selectedWindow != NULL) {
+                if (m_selectedWindow != nullptr) {
                     int old_index = effects->currentTabBoxWindowList().indexOf(m_selectedWindow);
                     int new_index = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
                     SwitchingDirection new_direction;
@@ -485,7 +485,7 @@ void FlipSwitchEffect::slotWindowAdded(EffectWindow* w)
 void FlipSwitchEffect::slotWindowClosed(EffectWindow* w)
 {
     if (m_selectedWindow == w)
-        m_selectedWindow = 0;
+        m_selectedWindow = nullptr;
     if (m_active) {
         QHash< const EffectWindow*, ItemInfo* >::iterator it = m_windows.find(w);
         if (it != m_windows.end()) {

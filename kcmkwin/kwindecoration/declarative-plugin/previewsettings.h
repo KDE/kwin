@@ -37,7 +37,7 @@ class BorderSizesModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit BorderSizesModel(QObject *parent = 0);
+    explicit BorderSizesModel(QObject *parent = nullptr);
     ~BorderSizesModel() override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;

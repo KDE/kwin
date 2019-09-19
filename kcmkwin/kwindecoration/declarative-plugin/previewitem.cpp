@@ -78,7 +78,7 @@ void PreviewItem::createDecoration()
     if (m_bridge.isNull() || m_settings.isNull() || m_decoration) {
         return;
     }
-    Decoration *decoration = m_bridge->createDecoration(0);
+    Decoration *decoration = m_bridge->createDecoration(nullptr);
     m_client = m_bridge->lastCreatedClient();
     setDecoration(decoration);
 }

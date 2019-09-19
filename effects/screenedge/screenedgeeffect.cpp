@@ -233,7 +233,7 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
         }
         if (glow->texture.isNull()) {
             delete glow;
-            return NULL;
+            return nullptr;
         }
     } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -246,7 +246,7 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
         }
         if (glow->picture.isNull()) {
             delete glow;
-            return NULL;
+            return nullptr;
         }
 #endif
     } else if (effects->compositingType() == QPainterCompositing) {
@@ -259,7 +259,7 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
         }
         if (glow->image.isNull()) {
             delete glow;
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -281,7 +281,7 @@ T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
     case ElectricBottomLeft:
         return new T(m_glow->pixmap(QStringLiteral("topright")).toImage());
     default:
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -336,7 +336,7 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
         pixmapPosition = QPoint(size.width() - c.width(), 0);
         break;
     default:
-        return NULL;
+        return nullptr;
     }
     QPixmap image(size);
     image.fill(Qt::transparent);

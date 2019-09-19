@@ -134,7 +134,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
             icon = QRect(pt, QSize(0, 0));
         } else {
             // Assumption: there is a panel containing the icon position
-            EffectWindow* panel = NULL;
+            EffectWindow* panel = nullptr;
             foreach (EffectWindow * window, effects->stackingOrder()) {
                 if (!window->isDock())
                     continue;

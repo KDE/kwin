@@ -232,13 +232,13 @@ KWIN_SINGLETON_FACTORY_VARIABLE(VirtualDesktopManager, s_manager)
 VirtualDesktopManager::VirtualDesktopManager(QObject *parent)
     : QObject(parent)
     , m_navigationWrapsAround(false)
-    , m_rootInfo(NULL)
+    , m_rootInfo(nullptr)
 {
 }
 
 VirtualDesktopManager::~VirtualDesktopManager()
 {
-    s_manager = NULL;
+    s_manager = nullptr;
 }
 
 void VirtualDesktopManager::setRootInfo(NETRootInfo *info)

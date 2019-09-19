@@ -113,7 +113,7 @@ void ThumbnailAsideEffect::slotWindowClosed(EffectWindow* w)
 void ThumbnailAsideEffect::toggleCurrentThumbnail()
 {
     EffectWindow* active = effects->activeWindow();
-    if (active == NULL)
+    if (active == nullptr)
         return;
     if (windows.contains(active))
         removeThumbnail(active);

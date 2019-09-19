@@ -209,10 +209,10 @@ void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
 }
 
 WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
-    : QObject(NULL)
+    : QObject(nullptr)
     , m_seat(new Seat(this))
-    , m_pointer(NULL)
-    , m_keyboard(NULL)
+    , m_pointer(nullptr)
+    , m_keyboard(nullptr)
     , m_touch(nullptr)
     , m_enteredSerial(0)
     , m_backend(backend)

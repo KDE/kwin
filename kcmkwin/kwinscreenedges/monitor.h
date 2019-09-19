@@ -100,7 +100,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* e) override;
     void hoverEnterEvent(QGraphicsSceneHoverEvent * e) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * e) override;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 private:
     Monitor* monitor;
     Plasma::FrameSvg *button;

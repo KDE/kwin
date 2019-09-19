@@ -50,8 +50,8 @@ CoverSwitchEffect::CoverSwitchEffect()
     , zPosition(900.0)
     , scaleFactor(0.0)
     , direction(Left)
-    , selected_window(0)
-    , captionFrame(NULL)
+    , selected_window(nullptr)
+    , captionFrame(nullptr)
     , primaryTabBox(false)
     , secondaryTabBox(false)
 {
@@ -65,7 +65,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     if (effects->compositingType() == OpenGL2Compositing) {
         m_reflectionShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("coverswitch-reflection.glsl"));
     } else {
-        m_reflectionShader = NULL;
+        m_reflectionShader = nullptr;
     }
     connect(effects, &EffectsHandler::windowClosed, this, &CoverSwitchEffect::slotWindowClosed);
     connect(effects, &EffectsHandler::tabBoxAdded, this, &CoverSwitchEffect::slotTabBoxAdded);
@@ -123,7 +123,7 @@ void CoverSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         if (animation || start || stop) {
             timeLine.update(std::chrono::milliseconds(time));
         }
-        if (selected_window == NULL)
+        if (selected_window == nullptr)
             abort();
     }
     effects->prePaintScreen(data, time);
@@ -292,7 +292,7 @@ void CoverSwitchEffect::postPaintScreen()
             timeLine.reset();
             if (stop) {
                 stop = false;
-                effects->setActiveFullScreenEffect(0);
+                effects->setActiveFullScreenEffect(nullptr);
                 foreach (EffectWindow * window, referrencedWindows) {
                     window->unrefWindow();
                 }
@@ -547,7 +547,7 @@ void CoverSwitchEffect::slotTabBoxClosed()
                 stopRequested = true;
             }
         } else {
-            effects->setActiveFullScreenEffect(0);
+            effects->setActiveFullScreenEffect(nullptr);
             start = false;
             animation = false;
             timeLine.reset();
@@ -565,7 +565,7 @@ void CoverSwitchEffect::slotTabBoxUpdated()
         if (animateSwitch && currentWindowList.count() > 1) {
             // determine the switch direction
             if (selected_window != effects->currentTabBoxWindow()) {
-                if (selected_window != NULL) {
+                if (selected_window != nullptr) {
                     int old_index = currentWindowList.indexOf(selected_window);
                     int new_index = effects->currentTabBoxWindowList().indexOf(effects->currentTabBoxWindow());
                     Direction new_direction;
@@ -701,7 +701,7 @@ void CoverSwitchEffect::paintWindowCover(EffectWindow* w, bool reflectedWindow, 
 
 void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow)
 {
-    if (frontWindow == NULL)
+    if (frontWindow == nullptr)
         return;
     bool specialHandlingForward = false;
     WindowPaintData data(frontWindow);
@@ -764,7 +764,7 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
         xTranslate = ((float)screenSize.width() * 0.5 * scaleFactor) - (float)width * 0.5f;
     // handling for additional window from other side
     // has to appear on this side after half of the time
-    if (animation && timeLine.value() >= 0.5 && additionalWindow != NULL) {
+    if (animation && timeLine.value() >= 0.5 && additionalWindow != nullptr) {
         WindowPaintData data(additionalWindow);
         if (effects->numScreens() > 1) {
             data.setProjectionMatrix(m_projectionMatrix);
@@ -786,7 +786,7 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
     // normal behaviour
     for (int i = 0; i < windows.count(); i++) {
         window = windows.at(i);
-        if (window == NULL || window->isDeleted()) {
+        if (window == nullptr || window->isDeleted()) {
             continue;
         }
         WindowPaintData data(window);
@@ -918,7 +918,7 @@ void CoverSwitchEffect::abort()
         effects->unrefTabBox();
         effects->stopMouseInterception(this);
     }
-    effects->setActiveFullScreenEffect(0);
+    effects->setActiveFullScreenEffect(nullptr);
     timeLine.reset();
     mActivated = false;
     stop = false;
@@ -930,7 +930,7 @@ void CoverSwitchEffect::abort()
 void CoverSwitchEffect::slotWindowClosed(EffectWindow* c)
 {
     if (c == selected_window)
-        selected_window = 0;
+        selected_window = nullptr;
     // if the list is not empty, the effect is active
     if (!currentWindowList.isEmpty()) {
         c->refWindow();

@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-GLPlatform *GLPlatform::s_platform = 0;
+GLPlatform *GLPlatform::s_platform = nullptr;
 
 static qint64 parseVersionString(const QByteArray &version)
 {
@@ -293,7 +293,7 @@ static ChipClass detectNVidiaClass(const QString &chipset)
 {
     QString name = extract(chipset, QStringLiteral("\\bNV[0-9,A-F]{2}\\b")); // NV followed by two hexadecimal digits
     if (!name.isEmpty()) {
-        const int id = chipset.midRef(2, -1).toInt(0, 16); // Strip the 'NV' from the id
+        const int id = chipset.midRef(2, -1).toInt(nullptr, 16); // Strip the 'NV' from the id
 
         switch(id & 0xf0) {
         case 0x00:

@@ -387,7 +387,7 @@ void CubeSlideEffect::postPaintScreen()
                     w->setData(WindowForceBackgroundContrastRole, QVariant());
                 }
                 staticWindows.clear();
-                effects->setActiveFullScreenEffect(0);
+                effects->setActiveFullScreenEffect(nullptr);
             }
         }
         effects->addRepaintFull();
@@ -586,7 +586,7 @@ void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
         timeLine.setCurrentTime(0);
         if (!slideRotations.isEmpty())
             slideRotations.clear();
-        effects->setActiveFullScreenEffect(0);
+        effects->setActiveFullScreenEffect(nullptr);
         effects->addRepaintFull();
     }
 }

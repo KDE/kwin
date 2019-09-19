@@ -41,7 +41,7 @@ class MouseMarkEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MouseMarkEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit MouseMarkEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~MouseMarkEffectConfig() override;
 
     void save() override;

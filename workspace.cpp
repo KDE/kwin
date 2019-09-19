@@ -99,31 +99,31 @@ void ColorMapper::update()
     }
 }
 
-Workspace* Workspace::_self = 0;
+Workspace* Workspace::_self = nullptr;
 
 Workspace::Workspace(const QString &sessionKey)
-    : QObject(0)
-    , m_compositor(NULL)
+    : QObject(nullptr)
+    , m_compositor(nullptr)
     // Unsorted
-    , active_popup(NULL)
-    , active_popup_client(NULL)
+    , active_popup(nullptr)
+    , active_popup_client(nullptr)
     , m_initialDesktop(1)
-    , active_client(0)
-    , last_active_client(0)
-    , most_recently_raised(0)
-    , movingClient(0)
-    , delayfocus_client(0)
+    , active_client(nullptr)
+    , last_active_client(nullptr)
+    , most_recently_raised(nullptr)
+    , movingClient(nullptr)
+    , delayfocus_client(nullptr)
     , force_restacking(false)
     , showing_desktop(false)
     , was_user_interaction(false)
     , session_saving(false)
     , block_focus(0)
     , m_userActionsMenu(new UserActionsMenu(this))
-    , client_keys_dialog(NULL)
-    , client_keys_client(NULL)
+    , client_keys_dialog(nullptr)
+    , client_keys_client(nullptr)
     , global_shortcuts_disabled_for_client(false)
     , workspaceInit(true)
-    , startup(0)
+    , startup(nullptr)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
 {
@@ -150,7 +150,7 @@ Workspace::Workspace(const QString &sessionKey)
     options->loadConfig();
     options->loadCompositingConfig(false);
 
-    delayFocusTimer = 0;
+    delayFocusTimer = nullptr;
 
     if (!sessionKey.isEmpty())
         loadSessionInfo(sessionKey);
@@ -281,7 +281,7 @@ void Workspace::init()
                                           QStringLiteral("refreshFonts"),
                                           this, SLOT(reconfigure()));
 
-    active_client = NULL;
+    active_client = nullptr;
 
     initWithX11();
 
@@ -517,15 +517,15 @@ void Workspace::initWithX11()
         --block_focus;
         new_active_client = findClient(Predicate::WindowMatch, client_info.activeWindow());
     }
-    if (new_active_client == NULL
-            && activeClient() == NULL && should_get_focus.count() == 0) {
+    if (new_active_client == nullptr
+            && activeClient() == nullptr && should_get_focus.count() == 0) {
         // No client activated in manage()
-        if (new_active_client == NULL)
+        if (new_active_client == nullptr)
             new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->current(), -1);
-        if (new_active_client == NULL && !desktops.isEmpty())
+        if (new_active_client == nullptr && !desktops.isEmpty())
             new_active_client = findDesktop(true, VirtualDesktopManager::self()->current());
     }
-    if (new_active_client != NULL)
+    if (new_active_client != nullptr)
         activateClient(new_active_client);
 }
 
@@ -594,7 +594,7 @@ Workspace::~Workspace()
     // TODO: ungrabXServer();
 
     Xcb::Extensions::destroy();
-    _self = 0;
+    _self = nullptr;
 }
 
 void Workspace::setupClientConnections(AbstractClient *c)
@@ -615,7 +615,7 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
-        return NULL;
+        return nullptr;
     }
     addClient(c);
     return c;
@@ -631,7 +631,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
     Unmanaged* c = new Unmanaged();
     if (!c->track(w)) {
         Unmanaged::deleteUnmanaged(c);
-        return NULL;
+        return nullptr;
     }
     connect(c, &Unmanaged::needsRepaint, m_compositor, &Compositor::scheduleRepaint);
     addUnmanaged(c);
@@ -645,12 +645,12 @@ void Workspace::addClient(Client* c)
 
     emit clientAdded(c);
 
-    if (grp != NULL)
+    if (grp != nullptr)
         grp->gotLeader(c);
 
     if (c->isDesktop()) {
         desktops.append(c);
-        if (active_client == NULL && should_get_focus.isEmpty() && c->isOnCurrentDesktop())
+        if (active_client == nullptr && should_get_focus.isEmpty() && c->isOnCurrentDesktop())
             requestFocus(c);   // TODO: Make sure desktop is active after startup if there's no other window active
     } else {
         FocusChain::self()->update(c, FocusChain::Update);
@@ -667,7 +667,7 @@ void Workspace::addClient(Client* c)
     if (c->isDesktop()) {
         raiseClient(c);
         // If there's no active client, make this desktop the active one
-        if (activeClient() == NULL && should_get_focus.count() == 0)
+        if (activeClient() == nullptr && should_get_focus.count() == 0)
             activateClient(findDesktop(true, VirtualDesktopManager::self()->current()));
     }
     c->checkActiveModal();
@@ -710,15 +710,15 @@ void Workspace::removeClient(Client* c)
     markXStackingOrderAsDirty();
     attention_chain.removeAll(c);
     Group* group = findGroup(c->window());
-    if (group != NULL)
+    if (group != nullptr)
         group->lostLeader();
 
     if (c == most_recently_raised)
-        most_recently_raised = 0;
+        most_recently_raised = nullptr;
     should_get_focus.removeAll(c);
     Q_ASSERT(c != active_client);
     if (c == last_active_client)
-        last_active_client = 0;
+        last_active_client = nullptr;
     if (c == delayfocus_client)
         cancelDelayFocus();
 
@@ -811,14 +811,14 @@ void Workspace::updateToolWindows(bool also_hide)
             if (!c->isTransient()) {
                 if (!c->group() || c->group()->members().count() == 1)   // Has its own group, keep always visible
                     show = true;
-                else if (client != NULL && c->group() == client->group())
+                else if (client != nullptr && c->group() == client->group())
                     show = true;
                 else
                     show = false;
             } else {
-                if (group != NULL && c->group() == group)
+                if (group != nullptr && c->group() == group)
                     show = true;
-                else if (client != NULL && client->hasTransient(c, true))
+                else if (client != nullptr && client->hasTransient(c, true))
                     show = true;
                 else
                     show = false;
@@ -968,7 +968,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
 
 void Workspace::activateClientOnNewDesktop(uint desktop)
 {
-    AbstractClient* c = NULL;
+    AbstractClient* c = nullptr;
     if (options->focusPolicyIsReasonable()) {
         c = findClientToActivateOnDesktop(desktop);
     }
@@ -978,11 +978,11 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
     else if (active_client && active_client->isShown(true) && active_client->isOnCurrentDesktop())
         c = active_client;
 
-    if (c == NULL && !desktops.isEmpty())
+    if (c == nullptr && !desktops.isEmpty())
         c = findDesktop(true, desktop);
 
     if (c != active_client)
-        setActiveClient(NULL);
+        setActiveClient(nullptr);
 
     if (c)
         requestFocus(c);
@@ -994,7 +994,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
 
 AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
 {
-    if (movingClient != NULL && active_client == movingClient &&
+    if (movingClient != nullptr && active_client == movingClient &&
         FocusChain::self()->contains(active_client, desktop) &&
         active_client->isShown(true) && active_client->isOnCurrentDesktop()) {
         // A requestFocus call will fail, as the client is already active
@@ -1081,7 +1081,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
     // Restore the focus on this desktop
     --block_focus;
-    AbstractClient* c = 0;
+    AbstractClient* c = nullptr;
 
     //FIXME below here is a lot of focuschain stuff, probably all wrong now
     if (options->focusPolicyIsReasonable()) {
@@ -1094,11 +1094,11 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     else if (active_client && active_client->isShown(true) && active_client->isOnCurrentDesktop() && active_client->isOnCurrentActivity())
         c = active_client;
 
-    if (c == NULL && !desktops.isEmpty())
+    if (c == nullptr && !desktops.isEmpty())
         c = findDesktop(true, VirtualDesktopManager::self()->current());
 
     if (c != active_client)
-        setActiveClient(NULL);
+        setActiveClient(nullptr);
 
     if (c)
         requestFocus(c);
@@ -1256,7 +1256,7 @@ void Workspace::requestDelayFocus(AbstractClient* c)
 void Workspace::cancelDelayFocus()
 {
     delete delayFocusTimer;
-    delayFocusTimer = 0;
+    delayFocusTimer = nullptr;
 }
 
 bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data)

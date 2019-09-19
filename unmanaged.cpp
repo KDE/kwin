@@ -92,7 +92,7 @@ bool Unmanaged::track(xcb_window_t w)
 
 void Unmanaged::release(ReleaseReason releaseReason)
 {
-    Deleted* del = NULL;
+    Deleted* del = nullptr;
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         del = Deleted::create(this);
     }

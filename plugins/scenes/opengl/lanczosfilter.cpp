@@ -45,10 +45,10 @@ namespace KWin
 
 LanczosFilter::LanczosFilter(QObject* parent)
     : QObject(parent)
-    , m_offscreenTex(0)
-    , m_offscreenTarget(0)
+    , m_offscreenTex(nullptr)
+    , m_offscreenTarget(nullptr)
     , m_inited(false)
-    , m_shader(0)
+    , m_shader(nullptr)
     , m_uOffsets(0)
     , m_uKernel(0)
 {
@@ -240,7 +240,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                 } else {
                     // offscreen texture not matching - delete
                     delete cachedTexture;
-                    cachedTexture = 0;
+                    cachedTexture = nullptr;
                     w->setData(LanczosCacheRole, QVariant());
                 }
             }
@@ -392,8 +392,8 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
 
         delete m_offscreenTarget;
         delete m_offscreenTex;
-        m_offscreenTarget = 0;
-        m_offscreenTex = 0;
+        m_offscreenTarget = nullptr;
+        m_offscreenTex = nullptr;
         foreach (Client *c, Workspace::self()->clientList()) {
             discardCacheTexture(c->effectWindow());
         }

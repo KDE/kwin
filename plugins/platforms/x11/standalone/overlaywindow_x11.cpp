@@ -88,7 +88,7 @@ void OverlayWindowX11::setup(xcb_window_t window)
 
 void OverlayWindowX11::setupInputShape(xcb_window_t window)
 {
-    xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED, window, 0, 0, 0, NULL);
+    xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED, window, 0, 0, 0, nullptr);
 }
 
 void OverlayWindowX11::setNoneBackgroundPixmap(xcb_window_t window)

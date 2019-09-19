@@ -82,7 +82,7 @@ QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
 
 OverlayWindow* OpenGLBackend::overlayWindow() const
 {
-    return NULL;
+    return nullptr;
 }
 
 QRegion OpenGLBackend::prepareRenderingForScreen(int screenId)

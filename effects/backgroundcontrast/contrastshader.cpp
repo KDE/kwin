@@ -34,7 +34,7 @@ using namespace KWin;
 
 
 ContrastShader::ContrastShader()
-    : mValid(false), shader(NULL), m_opacity(1)
+    : mValid(false), shader(nullptr), m_opacity(1)
 {
 }
 
@@ -51,7 +51,7 @@ ContrastShader *ContrastShader::create()
 void ContrastShader::reset()
 {
     delete shader;
-    shader = NULL;
+    shader = nullptr;
 
     setIsValid(false);
 }

@@ -32,7 +32,7 @@ class ShowFpsEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit ShowFpsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit ShowFpsEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~ShowFpsEffectConfig() override;
 
 public Q_SLOTS:

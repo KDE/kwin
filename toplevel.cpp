@@ -42,14 +42,14 @@ namespace KWin
 Toplevel::Toplevel()
     : m_visual(XCB_NONE)
     , bit_depth(24)
-    , info(NULL)
+    , info(nullptr)
     , ready_for_painting(true)
     , m_isDamaged(false)
     , m_internalId(QUuid::createUuid())
     , m_client()
     , damage_handle(XCB_NONE)
     , is_shape(false)
-    , effect_window(NULL)
+    , effect_window(nullptr)
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_damageReplyPending(false)
@@ -70,7 +70,7 @@ Toplevel::~Toplevel()
 
 QDebug& operator<<(QDebug& stream, const Toplevel* cl)
 {
-    if (cl == NULL)
+    if (cl == nullptr)
         return stream << "\'NULL\'";
     cl->debug(stream);
     return stream;
@@ -122,7 +122,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     layer_repaints_region = c->layer_repaints_region;
     is_shape = c->is_shape;
     effect_window = c->effect_window;
-    if (effect_window != NULL)
+    if (effect_window != nullptr)
         effect_window->setWindow(this);
     resource_name = c->resourceName();
     resource_class = c->resourceClass();
@@ -139,7 +139,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
 // owner by Deleted
 void Toplevel::disownDataPassedToDeleted()
 {
-    info = NULL;
+    info = nullptr;
 }
 
 QRect Toplevel::visibleRect() const
@@ -298,13 +298,13 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
     damage_handle = XCB_NONE;
     damage_region = QRegion();
     repaints_region = QRegion();
-    effect_window = NULL;
+    effect_window = nullptr;
 }
 
 void Toplevel::discardWindowPixmap()
 {
     addDamageFull();
-    if (effectWindow() != NULL && effectWindow()->sceneWindow() != NULL)
+    if (effectWindow() != nullptr && effectWindow()->sceneWindow() != nullptr)
         effectWindow()->sceneWindow()->pixmapDiscarded();
 }
 
@@ -359,7 +359,7 @@ bool Toplevel::resetAndFetchDamage()
     // Create a new region and copy the damage region to it,
     // resetting the damaged state.
     xcb_xfixes_region_t region = xcb_generate_id(conn);
-    xcb_xfixes_create_region(conn, region, 0, 0);
+    xcb_xfixes_create_region(conn, region, 0, nullptr);
     xcb_damage_subtract(conn, damage_handle, 0, region);
 
     // Send a fetch-region request and destroy the region
@@ -381,7 +381,7 @@ void Toplevel::getDamageRegionReply()
 
     // Get the fetch-region reply
     xcb_xfixes_fetch_region_reply_t *reply =
-            xcb_xfixes_fetch_region_reply(connection(), m_regionCookie, 0);
+            xcb_xfixes_fetch_region_reply(connection(), m_regionCookie, nullptr);
 
     if (!reply)
         return;
@@ -511,7 +511,7 @@ void Toplevel::setReadyForPainting()
 void Toplevel::deleteEffectWindow()
 {
     delete effect_window;
-    effect_window = NULL;
+    effect_window = nullptr;
 }
 
 void Toplevel::checkScreen()
@@ -594,7 +594,7 @@ void Toplevel::getShadow()
 bool Toplevel::hasShadow() const
 {
     if (effectWindow() && effectWindow()->sceneWindow()) {
-        return effectWindow()->sceneWindow()->shadow() != NULL;
+        return effectWindow()->sceneWindow()->shadow() != nullptr;
     }
     return false;
 }
@@ -604,7 +604,7 @@ Shadow *Toplevel::shadow()
     if (effectWindow() && effectWindow()->sceneWindow()) {
         return effectWindow()->sceneWindow()->shadow();
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -613,7 +613,7 @@ const Shadow *Toplevel::shadow() const
     if (effectWindow() && effectWindow()->sceneWindow()) {
         return effectWindow()->sceneWindow()->shadow();
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 

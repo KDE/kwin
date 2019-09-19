@@ -183,7 +183,7 @@ public:
     struct LeafNode
     {
         LeafNode()
-            : texture(0),
+            : texture(nullptr),
               firstVertex(0),
               vertexCount(0),
               opacity(1.0),

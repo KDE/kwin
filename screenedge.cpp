@@ -716,7 +716,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_desktopSwitchingMovingClients(false)
     , m_timeThreshold(0)
     , m_reactivateThreshold(0)
-    , m_virtualDesktopLayout(0)
+    , m_virtualDesktopLayout(nullptr)
     , m_actionTopLeft(ElectricActionNone)
     , m_actionTop(ElectricActionNone)
     , m_actionTopRight(ElectricActionNone)
@@ -735,7 +735,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
 
 ScreenEdges::~ScreenEdges()
 {
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 void ScreenEdges::init()
@@ -880,7 +880,7 @@ void ScreenEdges::setActionForTouchBorder(ElectricBorder border, ElectricBorderA
 void ScreenEdges::updateLayout()
 {
     const QSize desktopMatrix = VirtualDesktopManager::self()->grid().size();
-    Qt::Orientations newLayout = 0;
+    Qt::Orientations newLayout = nullptr;
     if (desktopMatrix.width() > 1) {
         newLayout |= Qt::Horizontal;
     }

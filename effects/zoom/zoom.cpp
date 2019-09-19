@@ -61,7 +61,7 @@ ZoomEffect::ZoomEffect()
     , moveFactor(20.0)
 {
     initConfig<ZoomConfig>();
-    QAction* a = 0;
+    QAction* a = nullptr;
     a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
@@ -369,7 +369,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
             };
             if (mousePointer == MousePointerScale) {
-                xcb_render_set_picture_filter(xcbConnection(), *xrenderPicture, 4, const_cast<char*>("good"), 0, NULL);
+                xcb_render_set_picture_filter(xcbConnection(), *xrenderPicture, 4, const_cast<char*>("good"), 0, nullptr);
                 const xcb_render_transform_t xform = {
                     DOUBLE_TO_FIXED(1.0 / zoom), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
                     DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1.0 / zoom), DOUBLE_TO_FIXED(0),

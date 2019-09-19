@@ -34,14 +34,14 @@ class ZoomEffectConfigForm : public QWidget, public Ui::ZoomEffectConfigForm
 {
     Q_OBJECT
 public:
-    explicit ZoomEffectConfigForm(QWidget* parent = 0);
+    explicit ZoomEffectConfigForm(QWidget* parent = nullptr);
 };
 
 class ZoomEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit ZoomEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit ZoomEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~ZoomEffectConfig() override;
 
 public Q_SLOTS:

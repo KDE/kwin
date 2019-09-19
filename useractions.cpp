@@ -79,21 +79,21 @@ namespace KWin
 
 UserActionsMenu::UserActionsMenu(QObject *parent)
     : QObject(parent)
-    , m_menu(NULL)
-    , m_desktopMenu(NULL)
-    , m_screenMenu(NULL)
-    , m_activityMenu(NULL)
-    , m_scriptsMenu(NULL)
-    , m_resizeOperation(NULL)
-    , m_moveOperation(NULL)
-    , m_maximizeOperation(NULL)
-    , m_shadeOperation(NULL)
-    , m_keepAboveOperation(NULL)
-    , m_keepBelowOperation(NULL)
-    , m_fullScreenOperation(NULL)
-    , m_noBorderOperation(NULL)
-    , m_minimizeOperation(NULL)
-    , m_closeOperation(NULL)
+    , m_menu(nullptr)
+    , m_desktopMenu(nullptr)
+    , m_screenMenu(nullptr)
+    , m_activityMenu(nullptr)
+    , m_scriptsMenu(nullptr)
+    , m_resizeOperation(nullptr)
+    , m_moveOperation(nullptr)
+    , m_maximizeOperation(nullptr)
+    , m_shadeOperation(nullptr)
+    , m_keepAboveOperation(nullptr)
+    , m_keepBelowOperation(nullptr)
+    , m_fullScreenOperation(nullptr)
+    , m_noBorderOperation(nullptr)
+    , m_minimizeOperation(nullptr)
+    , m_closeOperation(nullptr)
 {
 }
 
@@ -169,7 +169,7 @@ void UserActionsMenu::helperDialog(const QString& message, AbstractClient* clien
     QString type;
     auto shortcut = [](const QString &name) {
         QAction* action = Workspace::self()->findChild<QAction*>(name);
-        Q_ASSERT(action != NULL);
+        Q_ASSERT(action != nullptr);
         const auto shortcuts = KGlobalAccel::self()->shortcut(action);
         return QStringLiteral("%1 (%2)").arg(action->text())
                              .arg(shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
@@ -363,12 +363,12 @@ void UserActionsMenu::init()
 void UserActionsMenu::discard()
 {
     delete m_menu;
-    m_menu = NULL;
-    m_desktopMenu = NULL;
+    m_menu = nullptr;
+    m_desktopMenu = nullptr;
     m_multipleDesktopsMenu = nullptr;
-    m_screenMenu = NULL;
-    m_activityMenu = NULL;
-    m_scriptsMenu = NULL;
+    m_screenMenu = nullptr;
+    m_activityMenu = nullptr;
+    m_scriptsMenu = nullptr;
 }
 
 void UserActionsMenu::menuAboutToShow()
@@ -378,7 +378,7 @@ void UserActionsMenu::menuAboutToShow()
 
     if (VirtualDesktopManager::self()->count() == 1) {
         delete m_desktopMenu;
-        m_desktopMenu = 0;
+        m_desktopMenu = nullptr;
         delete m_multipleDesktopsMenu;
         m_multipleDesktopsMenu = nullptr;
     } else {
@@ -386,7 +386,7 @@ void UserActionsMenu::menuAboutToShow()
     }
     if (screens()->count() == 1 || (!m_client->isMovable() && !m_client->isMovableAcrossScreens())) {
         delete m_screenMenu;
-        m_screenMenu = NULL;
+        m_screenMenu = nullptr;
     } else {
         initScreenPopup();
     }
@@ -440,7 +440,7 @@ void UserActionsMenu::showHideActivityMenu()
     qCDebug(KWIN_CORE) << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
         delete m_activityMenu;
-        m_activityMenu = 0;
+        m_activityMenu = nullptr;
     } else {
         initActivityPopup();
     }
@@ -941,8 +941,8 @@ void Workspace::closeActivePopup()
 {
     if (active_popup) {
         active_popup->close();
-        active_popup = NULL;
-        active_popup_client = NULL;
+        active_popup = nullptr;
+        active_popup_client = nullptr;
     }
     m_userActionsMenu->close();
 }
@@ -986,7 +986,7 @@ void Workspace::initShortcuts()
 
 void Workspace::setupWindowShortcut(AbstractClient* c)
 {
-    Q_ASSERT(client_keys_dialog == NULL);
+    Q_ASSERT(client_keys_dialog == nullptr);
     // TODO: PORT ME (KGlobalAccel related)
     //keys->setEnabled( false );
     //disable_shortcuts_keys->setEnabled( false );
@@ -1016,8 +1016,8 @@ void Workspace::setupWindowShortcutDone(bool ok)
         client_keys_client->setShortcut(client_keys_dialog->shortcut().toString());
     closeActivePopup();
     client_keys_dialog->deleteLater();
-    client_keys_dialog = NULL;
-    client_keys_client = NULL;
+    client_keys_dialog = nullptr;
+    client_keys_client = nullptr;
     if (active_client)
         active_client->takeFocus();
 }
@@ -1027,7 +1027,7 @@ void Workspace::clientShortcutUpdated(AbstractClient* c)
     QString key = QStringLiteral("_k_session:%1").arg(c->window());
     QAction* action = findChild<QAction*>(key);
     if (!c->shortcut().isEmpty()) {
-        if (action == NULL) { // new shortcut
+        if (action == nullptr) { // new shortcut
             action = new QAction(this);
             kwinApp()->platform()->setupActionForGlobalAccel(action);
             action->setProperty("componentName", QStringLiteral(KWIN_NAME));

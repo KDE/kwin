@@ -94,7 +94,7 @@ bool WindowSelector::activate(const QByteArray &cursorName)
         XCB_EVENT_MASK_POINTER_MOTION |
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, XCB_WINDOW_NONE,
-        cursor, XCB_TIME_CURRENT_TIME), NULL));
+        cursor, XCB_TIME_CURRENT_TIME), nullptr));
     if (grabPointer.isNull() || grabPointer->status != XCB_GRAB_STATUS_SUCCESS) {
         return false;
     }
@@ -241,7 +241,7 @@ void WindowSelector::selectWindowId(xcb_window_t window_to_select)
         return;
     }
     xcb_window_t window = window_to_select;
-    Client* client = NULL;
+    Client* client = nullptr;
     while (true) {
         client = Workspace::self()->findClient(Predicate::FrameIdMatch, window);
         if (client) {

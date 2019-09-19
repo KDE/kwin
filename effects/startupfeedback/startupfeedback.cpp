@@ -78,13 +78,13 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_active(false)
     , m_frame(0)
     , m_progress(0)
-    , m_texture(0)
+    , m_texture(nullptr)
     , m_type(BouncingFeedback)
-    , m_blinkingShader(0)
+    , m_blinkingShader(nullptr)
     , m_cursorSize(0)
 {
     for (int i = 0; i < 5; ++i) {
-        m_bouncingTextures[i] = 0;
+        m_bouncingTextures[i] = nullptr;
     }
     if (KWindowSystem::isPlatformX11()) {
         m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", xcbConnection(), x11RootWindow(), this);
@@ -276,7 +276,7 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (m_type == BouncingFeedback)
         m_bounceSizesRatio = IconSize(KIconLoader::Small) / 16.0;
     QPixmap iconPixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Small, 0,
-                         KIconLoader::DefaultState, QStringList(), 0, true);  // return null pixmap if not found
+                         KIconLoader::DefaultState, QStringList(), nullptr, true);  // return null pixmap if not found
     if (iconPixmap.isNull())
         iconPixmap = SmallIcon(QStringLiteral("system-run"));
     prepareTextures(iconPixmap);
@@ -307,13 +307,13 @@ void StartupFeedbackEffect::stop()
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
             delete m_bouncingTextures[i];
-            m_bouncingTextures[i] = 0;
+            m_bouncingTextures[i] = nullptr;
         }
         break;
     case BlinkingFeedback:
     case PassiveFeedback:
         delete m_texture;
-        m_texture = 0;
+        m_texture = nullptr;
         break;
     case NoFeedback:
         return; // don't want the full repaint
@@ -371,7 +371,7 @@ QRect StartupFeedbackEffect::feedbackRect() const
     else
         xDiff = 32 + 7;
     int yDiff = xDiff;
-    GLTexture* texture = 0;
+    GLTexture* texture = nullptr;
     int yOffset = 0;
     switch(m_type) {
     case BouncingFeedback:

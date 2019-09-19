@@ -29,14 +29,14 @@ KWIN_SINGLETON_FACTORY_VARIABLE(FocusChain, s_manager)
 FocusChain::FocusChain(QObject *parent)
     : QObject(parent)
     , m_separateScreenFocus(false)
-    , m_activeClient(NULL)
+    , m_activeClient(nullptr)
     , m_currentDesktop(0)
 {
 }
 
 FocusChain::~FocusChain()
 {
-    s_manager = NULL;
+    s_manager = nullptr;
 }
 
 void FocusChain::remove(AbstractClient *client)
@@ -68,7 +68,7 @@ AbstractClient *FocusChain::getForActivation(uint desktop, int screen) const
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
-        return NULL;
+        return nullptr;
     }
     const auto &chain = it.value();
     for (int i = chain.size() - 1; i >= 0; --i) {
@@ -79,7 +79,7 @@ AbstractClient *FocusChain::getForActivation(uint desktop, int screen) const
             return tmp;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void FocusChain::update(AbstractClient *client, FocusChain::Change change)
@@ -191,7 +191,7 @@ void FocusChain::moveAfterClientInChain(AbstractClient *client, AbstractClient *
 AbstractClient *FocusChain::firstMostRecentlyUsed() const
 {
     if (m_mostRecentlyUsed.isEmpty()) {
-        return NULL;
+        return nullptr;
     }
     return m_mostRecentlyUsed.first();
 }
@@ -199,7 +199,7 @@ AbstractClient *FocusChain::firstMostRecentlyUsed() const
 AbstractClient *FocusChain::nextMostRecentlyUsed(AbstractClient *reference) const
 {
     if (m_mostRecentlyUsed.isEmpty()) {
-        return NULL;
+        return nullptr;
     }
     const int index = m_mostRecentlyUsed.indexOf(reference);
     if (index == -1) {
@@ -223,7 +223,7 @@ AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint deskt
 {
     auto it = m_desktopFocusChains.constFind(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
-        return NULL;
+        return nullptr;
     }
     const auto &chain = it.value();
     for (int i = chain.size() - 1; i >= 0; --i) {
@@ -232,7 +232,7 @@ AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint deskt
             return client;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void FocusChain::makeFirstInChain(AbstractClient *client, Chain &chain)

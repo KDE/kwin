@@ -41,7 +41,7 @@ class MagnifierEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit MagnifierEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit MagnifierEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~MagnifierEffectConfig() override;
 
     void save() override;

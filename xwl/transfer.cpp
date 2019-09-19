@@ -265,7 +265,7 @@ void TransferWltoX::handlePropertyDelete()
                                 m_request->requestor,
                                 m_request->property,
                                 m_request->target,
-                                8, 0, NULL);
+                                8, 0, nullptr);
             xcb_flush(xcbConn);
             m_flushPropertyOnDelete = false;
             endTransfer();
@@ -375,8 +375,8 @@ void TransferXtoWl::startTransfer()
                                    0x1fffffff
                                    );
 
-    auto *reply = xcb_get_property_reply(xcbConn, cookie, NULL);
-    if (reply == NULL) {
+    auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
+    if (reply == nullptr) {
         qCWarning(KWIN_XWL) << "Can't get selection property.";
         endTransfer();
         return;

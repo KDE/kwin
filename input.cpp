@@ -1647,7 +1647,7 @@ InputRedirection::InputRedirection(QObject *parent)
 
 InputRedirection::~InputRedirection()
 {
-    s_self = NULL;
+    s_self = nullptr;
     qDeleteAll(m_filters);
     qDeleteAll(m_spies);
 }
@@ -2129,7 +2129,7 @@ Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
     const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
     const ToplevelList &stacking = Workspace::self()->stackingOrder();
     if (stacking.isEmpty()) {
-        return NULL;
+        return nullptr;
     }
     auto it = stacking.end();
     do {
@@ -2156,7 +2156,7 @@ Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
             return t;
         }
     } while (it != stacking.begin());
-    return NULL;
+    return nullptr;
 }
 
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const

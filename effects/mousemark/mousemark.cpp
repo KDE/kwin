@@ -138,7 +138,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             foreach (const QPoint & p, mark) {
                 verts << p.x() << p.y();
             }
-            vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
+            vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
             vbo->render(GL_LINE_STRIP);
         }
         if (!drawing.isEmpty()) {
@@ -147,7 +147,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             foreach (const QPoint & p, drawing) {
                 verts << p.x() << p.y();
             }
-            vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
+            vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
             vbo->render(GL_LINE_STRIP);
         }
         glLineWidth(1.0);
