@@ -106,17 +106,17 @@ Client::Client()
     , m_managed(false)
     , m_transientForId(XCB_WINDOW_NONE)
     , m_originalTransientForId(XCB_WINDOW_NONE)
-    , shade_below(NULL)
+    , shade_below(nullptr)
     , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
-    , shadeHoverTimer(NULL)
+    , shadeHoverTimer(nullptr)
     , m_colormap(XCB_COLORMAP_NONE)
-    , in_group(NULL)
-    , ping_timer(NULL)
+    , in_group(nullptr)
+    , ping_timer(nullptr)
     , m_killHelperPID(0)
     , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
     , m_userTime(XCB_TIME_CURRENT_TIME)   // Not known yet
-    , allowed_actions(0)
+    , allowed_actions(nullptr)
     , shade_geometry_change(false)
     , sm_stacking_order(-1)
     , activitiesDefined(false)
@@ -128,14 +128,14 @@ Client::Client()
 {
     // TODO: Do all as initialization
     syncRequest.counter = syncRequest.alarm = XCB_NONE;
-    syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
+    syncRequest.timeout = syncRequest.failsafeTimeout = nullptr;
     syncRequest.lastTimestamp = xTime();
     syncRequest.isPending = false;
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
 
-    info = NULL;
+    info = nullptr;
 
     shade_mode = ShadeNone;
     deleting = false;
@@ -214,7 +214,7 @@ void Client::releaseWindow(bool on_shutdown)
     }
 #endif
     destroyWindowManagementInterface();
-    Deleted* del = NULL;
+    Deleted* del = nullptr;
     if (!on_shutdown) {
         del = Deleted::create(this);
     }
@@ -856,7 +856,7 @@ void Client::setShade(ShadeMode mode)
         if (shade_mode == ShadeHover) {
             ToplevelList order = workspace()->stackingOrder();
             // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
-            shade_below = NULL;
+            shade_below = nullptr;
             // this is likely related to the index parameter?!
             for (int idx = order.indexOf(this) + 1; idx < order.count(); ++idx) {
                 shade_below = qobject_cast<Client*>(order.at(idx));
@@ -867,7 +867,7 @@ void Client::setShade(ShadeMode mode)
             if (shade_below && shade_below->isNormalWindow())
                 workspace()->raiseClient(this);
             else
-                shade_below = NULL;
+                shade_below = nullptr;
         }
         m_wrapper.map();
         m_client.map();
@@ -900,7 +900,7 @@ void Client::shadeUnhover()
 void Client::cancelShadeHoverTimer()
 {
     delete shadeHoverTimer;
-    shadeHoverTimer = 0;
+    shadeHoverTimer = nullptr;
 }
 
 void Client::toggleShade()
@@ -1077,7 +1077,7 @@ void Client::updateHiddenPreview()
         workspace()->forceRestacking();
         if (Xcb::Extensions::self()->isShapeInputAvailable()) {
             xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
-                                 XCB_CLIP_ORDERING_UNSORTED, frameId(), 0, 0, 0, NULL);
+                                 XCB_CLIP_ORDERING_UNSORTED, frameId(), 0, 0, 0, nullptr);
         }
     } else {
         workspace()->forceRestacking();
@@ -1155,7 +1155,7 @@ void Client::pingWindow()
         return; // Can't ping :(
     if (options->killPingTimeout() == 0)
         return; // Turned off
-    if (ping_timer != NULL)
+    if (ping_timer != nullptr)
         return; // Pinging already
     ping_timer = new QTimer(this);
     connect(ping_timer, &QTimer::timeout, this,
@@ -1188,7 +1188,7 @@ void Client::gotPing(xcb_timestamp_t timestamp)
     if (NET::timestampCompare(timestamp, m_pingTimestamp) != 0)
         return;
     delete ping_timer;
-    ping_timer = NULL;
+    ping_timer = nullptr;
 
     setUnresponsive(false);
 
@@ -1759,7 +1759,7 @@ void Client::setBlockingCompositing(bool block)
     const bool usedToBlock = blocks_compositing;
     blocks_compositing = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
     if (usedToBlock != blocks_compositing) {
-        emit blockingCompositingChanged(blocks_compositing ? this : 0);
+        emit blockingCompositingChanged(blocks_compositing ? this : nullptr);
     }
 }
 
@@ -1768,7 +1768,7 @@ void Client::updateAllowedActions(bool force)
     if (!isManaged() && !force)
         return;
     NET::Actions old_allowed_actions = NET::Actions(allowed_actions);
-    allowed_actions = 0;
+    allowed_actions = nullptr;
     if (isMovable())
         allowed_actions |= NET::ActionMove;
     if (isResizable())

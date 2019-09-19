@@ -343,11 +343,11 @@ ExtensionData::ExtensionData()
 template<typename reply, typename T, typename F>
 void Extensions::initVersion(T cookie, F f, ExtensionData *dataToFill)
 {
-    ScopedCPointer<reply> version(f(connection(), cookie, NULL));
+    ScopedCPointer<reply> version(f(connection(), cookie, nullptr));
     dataToFill->version = version->major_version * 0x10 + version->minor_version;
 }
 
-Extensions *Extensions::s_self = NULL;
+Extensions *Extensions::s_self = nullptr;
 
 Extensions *Extensions::self()
 {
@@ -360,7 +360,7 @@ Extensions *Extensions::self()
 void Extensions::destroy()
 {
     delete s_self;
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 Extensions::Extensions()
@@ -499,7 +499,7 @@ bool Extensions::hasShape(xcb_window_t w) const
         return false;
     }
     ScopedCPointer<xcb_shape_query_extents_reply_t> extents(xcb_shape_query_extents_reply(
-        connection(), xcb_shape_query_extents_unchecked(connection(), w), NULL));
+        connection(), xcb_shape_query_extents_unchecked(connection(), w), nullptr));
     if (extents.isNull()) {
         return false;
     }
@@ -560,7 +560,7 @@ QVector<ExtensionData> Extensions::extensions() const
 //****************************************
 Shm::Shm()
     : m_shmId(-1)
-    , m_buffer(NULL)
+    , m_buffer(nullptr)
     , m_segment(XCB_NONE)
     , m_valid(false)
     , m_pixmapFormat(XCB_IMAGE_FORMAT_XY_BITMAP)
@@ -584,7 +584,7 @@ bool Shm::init()
         return false;
     }
     ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
-        xcb_shm_query_version_unchecked(connection()), NULL));
+        xcb_shm_query_version_unchecked(connection()), nullptr));
     if (version.isNull()) {
         qCDebug(KWIN_CORE) << "Failed to get SHM extension version information";
         return false;
@@ -596,13 +596,13 @@ bool Shm::init()
         qCDebug(KWIN_CORE) << "Failed to allocate SHM segment";
         return false;
     }
-    m_buffer = shmat(m_shmId, NULL, 0 /*read/write*/);
+    m_buffer = shmat(m_shmId, nullptr, 0 /*read/write*/);
     if (-1 == reinterpret_cast<long>(m_buffer)) {
         qCDebug(KWIN_CORE) << "Failed to attach SHM segment";
-        shmctl(m_shmId, IPC_RMID, NULL);
+        shmctl(m_shmId, IPC_RMID, nullptr);
         return false;
     }
-    shmctl(m_shmId, IPC_RMID, NULL);
+    shmctl(m_shmId, IPC_RMID, nullptr);
 
     m_segment = xcb_generate_id(connection());
     const xcb_void_cookie_t cookie = xcb_shm_attach_checked(connection(), m_segment, m_shmId, false);

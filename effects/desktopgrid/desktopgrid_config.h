@@ -41,7 +41,7 @@ class DesktopGridEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit DesktopGridEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit DesktopGridEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~DesktopGridEffectConfig() override;
 
 public Q_SLOTS:

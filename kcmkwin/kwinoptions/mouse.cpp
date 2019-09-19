@@ -64,7 +64,7 @@ void createMaxButtonPixmaps()
 {
     char const * maxButtonXpms[][3 + 13] = {
         {
-            0, 0, 0,
+            nullptr, nullptr, nullptr,
             "...............",
             ".......#.......",
             "......###......",
@@ -80,7 +80,7 @@ void createMaxButtonPixmaps()
             "..............."
         },
         {
-            0, 0, 0,
+            nullptr, nullptr, nullptr,
             "...............",
             ".......#.......",
             "......###......",
@@ -96,7 +96,7 @@ void createMaxButtonPixmaps()
             "..............."
         },
         {
-            0, 0, 0,
+            nullptr, nullptr, nullptr,
             "...............",
             "...............",
             "...............",

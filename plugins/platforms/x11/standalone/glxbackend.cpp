@@ -107,7 +107,7 @@ GlxBackend::GlxBackend(Display *display)
     : OpenGLBackend()
     , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
     , window(None)
-    , fbconfig(NULL)
+    , fbconfig(nullptr)
     , glxWindow(None)
     , ctx(nullptr)
     , m_bufferAge(0)
@@ -270,7 +270,7 @@ void GlxBackend::init()
         // VirtualBox does not support glxQueryDrawable
         // this should actually be in kwinglutils_funcs, but QueryDrawable seems not to be provided by an extension
         // and the GLPlatform has not been initialized at the moment when initGLX() is called.
-        glXQueryDrawable = NULL;
+        glXQueryDrawable = nullptr;
     }
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
@@ -336,7 +336,7 @@ bool GlxBackend::initRenderingContext()
         }
         for (auto it = candidates.begin(); it != candidates.end(); it++) {
             const auto attribs = it->build();
-            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, true, attribs.data());
+            ctx = glXCreateContextAttribsARB(display(), fbconfig, nullptr, true, attribs.data());
             if (ctx) {
                 qCDebug(KWIN_X11STANDALONE) << "Created GLX context with attributes:" << &(*it);
                 break;
@@ -345,7 +345,7 @@ bool GlxBackend::initRenderingContext()
     }
 
     if (!ctx)
-        ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
+        ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, nullptr, direct);
 
     if (!ctx) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to create an OpenGL context.";
@@ -355,7 +355,7 @@ bool GlxBackend::initRenderingContext()
     if (!glXMakeCurrent(display(), glxWindow, ctx)) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to make the OpenGL context current.";
         glXDestroyContext(display(), ctx);
-        ctx = 0;
+        ctx = nullptr;
         return false;
     }
 
@@ -389,7 +389,7 @@ bool GlxBackend::initBuffer()
                           0, 0, size.width(), size.height(), 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
                           visual, XCB_CW_COLORMAP, &colormap);
 
-        glxWindow = glXCreateWindow(display(), fbconfig, window, NULL);
+        glxWindow = glXCreateWindow(display(), fbconfig, window, nullptr);
         overlayWindow()->setup(window);
     } else {
         qCCritical(KWIN_X11STANDALONE) << "Failed to create overlay window";
@@ -884,7 +884,7 @@ void GlxTexture::onDamage()
 {
     if (options->isGlStrictBinding() && m_glxpixmap) {
         glXReleaseTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT);
-        glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
+        glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, nullptr);
     }
     GLTexturePrivate::onDamage();
 }

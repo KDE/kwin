@@ -184,7 +184,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
 public:
 
-    explicit Options(QObject *parent = NULL);
+    explicit Options(QObject *parent = nullptr);
     ~Options() override;
 
     void updateSettings();

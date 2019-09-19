@@ -47,7 +47,7 @@ Activities::Activities(QObject *parent)
 
 Activities::~Activities()
 {
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 KActivities::Consumer::ServiceStatus Activities::serviceStatus() const

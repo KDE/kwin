@@ -58,7 +58,7 @@ bool ScreenShotEffect::supported()
 }
 
 ScreenShotEffect::ScreenShotEffect()
-    : m_scheduledScreenshot(0)
+    : m_scheduledScreenshot(nullptr)
 {
     connect(effects, &EffectsHandler::windowClosed, this, &ScreenShotEffect::windowClosed);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Screenshot"), this, QDBusConnection::ExportScriptableContents);
@@ -234,7 +234,7 @@ void ScreenShotEffect::postPaintScreen()
                 ScreenShotEffect::convertFromGLImage(img, width, height);
             }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            xcb_image_t *xImage = NULL;
+            xcb_image_t *xImage = nullptr;
             if (effects->compositingType() == XRenderCompositing) {
                 setXRenderOffscreen(true);
                 effects->drawWindow(m_scheduledScreenshot, mask, QRegion(0, 0, width, height), d);
@@ -276,7 +276,7 @@ void ScreenShotEffect::postPaintScreen()
             }
 #endif
         }
-        m_scheduledScreenshot = NULL;
+        m_scheduledScreenshot = nullptr;
     }
 
     if (!m_scheduledGeometry.isNull()) {
@@ -373,7 +373,7 @@ void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
             !m_scheduledScreenshot->isMinimized() && !m_scheduledScreenshot->isDeleted() &&
             m_scheduledScreenshot->geometry().contains(cursor))
             break;
-        m_scheduledScreenshot = 0;
+        m_scheduledScreenshot = nullptr;
     }
     if (m_scheduledScreenshot) {
         m_windowMode = WindowMode::Xpixmap;
@@ -626,7 +626,7 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing) {
-    xcb_image_t *xImage = NULL;
+    xcb_image_t *xImage = nullptr;
         img = xPictureToImage(effects->xrenderBufferPicture(), geometry, &xImage);
         if (xImage) {
             xcb_image_destroy(xImage);
@@ -684,13 +684,13 @@ void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 
 bool ScreenShotEffect::isActive() const
 {
-    return (m_scheduledScreenshot != NULL || !m_scheduledGeometry.isNull()) && !effects->isScreenLocked();
+    return (m_scheduledScreenshot != nullptr || !m_scheduledGeometry.isNull()) && !effects->isScreenLocked();
 }
 
 void ScreenShotEffect::windowClosed( EffectWindow* w )
 {
     if (w == m_scheduledScreenshot) {
-        m_scheduledScreenshot = NULL;
+        m_scheduledScreenshot = nullptr;
         screenshotWindowUnderCursor(m_type);
     }
 }

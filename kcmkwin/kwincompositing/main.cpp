@@ -33,7 +33,7 @@ class KWinCompositingSettings : public KCModule
 {
     Q_OBJECT
 public:
-    explicit KWinCompositingSettings(QWidget *parent = 0, const QVariantList &args = QVariantList());
+    explicit KWinCompositingSettings(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
 
 public Q_SLOTS:
     void load() override;

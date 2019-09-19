@@ -461,7 +461,7 @@ void LinuxDmabuf::setSupportedFormatsAndModifiers()
 {
     const EGLDisplay eglDisplay = m_backend->eglDisplay();
     EGLint count = 0;
-    EGLBoolean success = eglQueryDmaBufFormatsEXT(eglDisplay, 0, NULL, &count);
+    EGLBoolean success = eglQueryDmaBufFormatsEXT(eglDisplay, 0, nullptr, &count);
 
     if (!success || count == 0) {
         return;
@@ -479,13 +479,13 @@ void LinuxDmabuf::setSupportedFormatsAndModifiers()
     for (auto format : qAsConst(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             count = 0;
-            success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, NULL, NULL, &count);
+            success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
 
             if (success && count > 0) {
                 QVector<uint64_t> modifiers(count);
                 if (eglQueryDmaBufModifiersEXT(eglDisplay,
                                                format, count, modifiers.data(),
-                                               NULL, &count)) {
+                                               nullptr, &count)) {
                     QSet<uint64_t> modifiersSet;
                     for (auto mod : qAsConst(modifiers)) {
                         modifiersSet.insert(mod);

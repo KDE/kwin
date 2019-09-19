@@ -37,7 +37,7 @@ WindowGeometry::WindowGeometry()
     initConfig<WindowGeometryConfiguration>();
     iAmActivated = true;
     iAmActive = false;
-    myResizeWindow = 0L;
+    myResizeWindow = nullptr;
 #define myResizeString "Window geometry display, %1 and %2 are the new size," \
                        " %3 and %4 are pixel increments - avoid reformatting or suffixes like 'px'", \
                        "Width: %1 (%3)\nHeight: %2 (%4)"
@@ -128,7 +128,7 @@ void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
 {
     if (iAmActive && w == myResizeWindow) {
         iAmActive = false;
-        myResizeWindow = 0L;
+        myResizeWindow = nullptr;
         w->addRepaintFull();
         if (myExtraDirtyArea.isValid())
             w->addLayerRepaint(myExtraDirtyArea);

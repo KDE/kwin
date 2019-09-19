@@ -74,7 +74,7 @@ Screens::Screens(QObject *parent)
 
 Screens::~Screens()
 {
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 void Screens::init()

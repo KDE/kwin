@@ -40,7 +40,7 @@ class WindowGeometryConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit WindowGeometryConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit WindowGeometryConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
     ~WindowGeometryConfig() override;
 
 public Q_SLOTS:

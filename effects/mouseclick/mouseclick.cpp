@@ -164,7 +164,7 @@ void MouseClickEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
     if (buttons == oldButtons)
         return;
 
-    MouseEvent* m = NULL;
+    MouseEvent* m = nullptr;
     int i = BUTTON_COUNT;
     while (--i >= 0) {
         MouseButton* b = m_buttons[i];
@@ -187,7 +187,7 @@ void MouseClickEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
 
 EffectFrame* MouseClickEffect::createEffectFrame(const QPoint& pos, const QString& text) {
     if (!m_showText) {
-        return NULL;
+        return nullptr;
     }
     QPoint point(pos.x() + m_ringMaxSize, pos.y());
     EffectFrame* frame = effects->effectFrame(EffectFrameStyled, false, point, Qt::AlignLeft);
@@ -295,7 +295,7 @@ void MouseClickEffect::drawCircleGl(const QColor& color, float cx, float cy, flo
         x = c * x - s * y;
         y = s * t + c * y;
     }
-    vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
+    vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
     vbo->render(GL_LINE_LOOP);
 }
 

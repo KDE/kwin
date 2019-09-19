@@ -69,7 +69,7 @@ const char *BrightnessSaturationShader::fragmentShader() const
 
 const char* const *BrightnessSaturationShader::attributeNames() const
 {
-    static char const *const names[] = { "vertex", "texCoord", 0 };
+    static char const *const names[] = { "vertex", "texCoord", nullptr };
     return names;
 }
 

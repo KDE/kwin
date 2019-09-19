@@ -69,8 +69,8 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
 Xkb::Xkb(QObject *parent)
     : QObject(parent)
     , m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
-    , m_keymap(NULL)
-    , m_state(NULL)
+    , m_keymap(nullptr)
+    , m_state(nullptr)
     , m_shiftModifier(0)
     , m_capsModifier(0)
     , m_controlModifier(0)
@@ -206,7 +206,7 @@ void Xkb::installKeymap(int fd, uint32_t size)
     if (!m_context) {
         return;
     }
-    char *map = reinterpret_cast<char*>(mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0));
+    char *map = reinterpret_cast<char*>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
     if (map == MAP_FAILED) {
         return;
     }

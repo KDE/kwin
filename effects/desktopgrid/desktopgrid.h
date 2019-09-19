@@ -36,7 +36,7 @@ class DesktopButtonsView : public QQuickView
 {
     Q_OBJECT
 public:
-    explicit DesktopButtonsView(QWindow *parent = 0);
+    explicit DesktopButtonsView(QWindow *parent = nullptr);
     void windowInputMouseEvent(QMouseEvent* e);
     void setAddDesktopEnabled(bool enable);
     void setRemoveDesktopEnabled(bool enable);
@@ -119,7 +119,7 @@ private Q_SLOTS:
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;
-    QPoint unscalePos(const QPoint& pos, int* desktop = NULL) const;
+    QPoint unscalePos(const QPoint& pos, int* desktop = nullptr) const;
     int posToDesktop(const QPoint& pos) const;
     EffectWindow* windowAt(QPoint pos) const;
     void setCurrentDesktop(int desktop);

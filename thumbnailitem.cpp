@@ -121,8 +121,8 @@ void AbstractThumbnailItem::setClipTo(QQuickItem *clip)
 
 WindowThumbnailItem::WindowThumbnailItem(QQuickItem* parent)
     : AbstractThumbnailItem(parent)
-    , m_wId(0)
-    , m_client(NULL)
+    , m_wId(nullptr)
+    , m_client(nullptr)
 {
 }
 
@@ -136,10 +136,10 @@ void WindowThumbnailItem::setWId(const QUuid &wId)
         return;
     }
     m_wId = wId;
-    if (m_wId != 0) {
+    if (m_wId != nullptr) {
         setClient(workspace()->findAbstractClient([this] (const AbstractClient *c) { return c->internalId() == m_wId; }));
     } else if (m_client) {
-        m_client = NULL;
+        m_client = nullptr;
         emit clientChanged();
     }
     emit wIdChanged(wId);

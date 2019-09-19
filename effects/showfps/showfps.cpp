@@ -201,7 +201,7 @@ void ShowFpsEffect::paintGL(int fps, const QMatrix4x4 &projectionMatrix)
     verts << x << y + MAX_TIME;
     verts << x + 2 * NUM_PAINTS + FPS_WIDTH << y + MAX_TIME;
     verts << x + 2 * NUM_PAINTS + FPS_WIDTH << y;
-    vbo->setData(6, 2, verts.constData(), NULL);
+    vbo->setData(6, 2, verts.constData(), nullptr);
     vbo->render(GL_TRIANGLES);
     y += MAX_TIME; // paint up from the bottom
     color.setRed(0);
@@ -214,7 +214,7 @@ void ShowFpsEffect::paintGL(int fps, const QMatrix4x4 &projectionMatrix)
     verts << x << y;
     verts << x + FPS_WIDTH << y;
     verts << x + FPS_WIDTH << y - fps;
-    vbo->setData(6, 2, verts.constData(), NULL);
+    vbo->setData(6, 2, verts.constData(), nullptr);
     vbo->render(GL_TRIANGLES);
 
 
@@ -227,7 +227,7 @@ void ShowFpsEffect::paintGL(int fps, const QMatrix4x4 &projectionMatrix)
         vertices << x << y - i;
         vertices << x + FPS_WIDTH << y - i;
     }
-    vbo->setData(vertices.size() / 2, 2, vertices.constData(), NULL);
+    vbo->setData(vertices.size() / 2, 2, vertices.constData(), nullptr);
     vbo->render(GL_LINES);
     x += FPS_WIDTH;
 
@@ -406,7 +406,7 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
             verts << x << y - h;
             verts << x + values.count() << y - h;
         }
-        vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
+        vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
         vbo->render(GL_LINES);
         // Then the graph values
         int lastValue = 0;
@@ -415,7 +415,7 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
             int value = values[ i ];
             if (colorize && value != lastValue) {
                 if (!verts.isEmpty()) {
-                    vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
+                    vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
                     vbo->render(GL_LINES);
                 }
                 verts.clear();
@@ -435,7 +435,7 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
             lastValue = value;
         }
         if (!verts.isEmpty()) {
-            vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
+            vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
             vbo->render(GL_LINES);
         }
     }

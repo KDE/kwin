@@ -33,7 +33,7 @@ namespace KWin
 {
 extern int screen_number;
 
-RootInfo *RootInfo::s_self = NULL;
+RootInfo *RootInfo::s_self = nullptr;
 
 RootInfo *RootInfo::create()
 {
@@ -136,7 +136,7 @@ void RootInfo::destroy()
     }
     xcb_window_t supportWindow = s_self->supportWindow();
     delete s_self;
-    s_self = NULL;
+    s_self = nullptr;
     xcb_destroy_window(connection(), supportWindow);
 }
 
@@ -176,7 +176,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
                 workspace->activateClient(c);
             // if activation of the requestor's window would be allowed, allow activation too
             else if (active_window != XCB_WINDOW_NONE
-                    && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != NULL
+                    && (c2 = workspace->findClient(Predicate::WindowMatch, active_window)) != nullptr
                     && workspace->allowClientActivation(c2,
                             timestampCompare(timestamp, c2->userTime() > 0 ? timestamp : c2->userTime()), false, true)) {
                 workspace->activateClient(c);
@@ -299,7 +299,7 @@ void WinInfo::changeState(NET::States state, NET::States mask)
 
 void WinInfo::disable()
 {
-    m_client = NULL; // only used when the object is passed to Deleted
+    m_client = nullptr; // only used when the object is passed to Deleted
 }
 
 } // namespace

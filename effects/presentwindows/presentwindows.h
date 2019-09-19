@@ -36,7 +36,7 @@ class CloseWindowView : public QObject
 {
     Q_OBJECT
 public:
-    explicit CloseWindowView(QObject *parent = 0);
+    explicit CloseWindowView(QObject *parent = nullptr);
     void windowInputMouseEvent(QMouseEvent* e);
     void disarm();
 

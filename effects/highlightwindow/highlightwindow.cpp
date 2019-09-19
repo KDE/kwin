@@ -26,7 +26,7 @@ namespace KWin
 HighlightWindowEffect::HighlightWindowEffect()
     : m_finishing(false)
     , m_fadeDuration(float(animationTime(150)))
-    , m_monitorWindow(NULL)
+    , m_monitorWindow(nullptr)
 {
     m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
     connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
@@ -259,7 +259,7 @@ void HighlightWindowEffect::prepareHighlighting()
 void HighlightWindowEffect::finishHighlighting()
 {
     m_finishing = true;
-    m_monitorWindow = NULL;
+    m_monitorWindow = nullptr;
     m_highlightedWindows.clear();
     if (!m_windowOpacity.isEmpty())
         m_windowOpacity.constBegin().key()->addRepaintFull();

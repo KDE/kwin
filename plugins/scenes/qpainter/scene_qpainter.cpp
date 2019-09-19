@@ -53,7 +53,7 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
         return nullptr;
     }
     if (backend->isFailed()) {
-        return NULL;
+        return nullptr;
     }
     return new SceneQPainter(backend.take(), parent);
 }

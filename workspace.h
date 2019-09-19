@@ -331,7 +331,7 @@ public:
     void focusToNull(); // SELI TODO: Public?
 
     void clientShortcutUpdated(AbstractClient* c);
-    bool shortcutAvailable(const QKeySequence &cut, AbstractClient* ignore = NULL) const;
+    bool shortcutAvailable(const QKeySequence &cut, AbstractClient* ignore = nullptr) const;
     bool globalShortcutsDisabled() const;
     void disableGlobalShortcutsForClient(bool disable);
 

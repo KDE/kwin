@@ -107,7 +107,7 @@ private:
                     bool reflectedWindows = false);
     void paintWindowCover(EffectWindow* w, bool reflectedWindow, WindowPaintData& data);
     void paintFrontWindow(EffectWindow* frontWindow, int width, int leftWindows, int rightWindows, bool reflectedWindow);
-    void paintWindows(const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = NULL);
+    void paintWindows(const EffectWindowList& windows, bool left, bool reflectedWindows, EffectWindow* additionalWindow = nullptr);
     void selectNextOrPreviousWindow(bool forward);
     inline void selectNextWindow() { selectNextOrPreviousWindow(true); }
     inline void selectPreviousWindow() { selectNextOrPreviousWindow(false); }

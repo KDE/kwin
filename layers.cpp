@@ -265,7 +265,7 @@ AbstractClient* Workspace::topClientOnDesktop(int desktop, int screen, bool unco
                 return c;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
@@ -286,13 +286,13 @@ AbstractClient* Workspace::findDesktop(bool topmost, int desktop) const
                 return client;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void Workspace::raiseOrLowerClient(AbstractClient *c)
 {
     if (!c) return;
-    AbstractClient* topmost = NULL;
+    AbstractClient* topmost = nullptr;
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (most_recently_raised && stacking_order.contains(most_recently_raised) &&
             most_recently_raised->isShown(true) && c->isOnCurrentDesktop())
@@ -334,7 +334,7 @@ void Workspace::lowerClient(AbstractClient* c, bool nogroup)
     }
 
     if (c == most_recently_raised)
-        most_recently_raised = 0;
+        most_recently_raised = nullptr;
 }
 
 void Workspace::lowerClientWithinApplication(AbstractClient* c)
@@ -454,7 +454,7 @@ void Workspace::restack(AbstractClient* c, AbstractClient* under, bool force)
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
             AbstractClient *other = qobject_cast<AbstractClient*>(unconstrained_stacking_order.at(i));
             if (other && other->layer() == c->layer() && AbstractClient::belongToSameApplication(under, other)) {
-                under = (c == other) ? 0 : other;
+                under = (c == other) ? nullptr : other;
                 break;
             }
         }
@@ -514,7 +514,7 @@ ToplevelList Workspace::constrainedStackingOrder()
 
         const int screen = (*it)->screen();
         Client *c = qobject_cast<Client*>(*it);
-        QMap< Group*, Layer >::iterator mLayer = minimum_layer[screen].find(c ? c->group() : NULL);
+        QMap< Group*, Layer >::iterator mLayer = minimum_layer[screen].find(c ? c->group() : nullptr);
         if (mLayer != minimum_layer[screen].end()) {
             // If a window is raised above some other window in the same window group
             // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
@@ -778,7 +778,7 @@ void Workspace::updateXStackingOrder()
 
 void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource src, xcb_timestamp_t timestamp, bool send_event)
 {
-    Client *other = 0;
+    Client *other = nullptr;
     if (detail == XCB_STACK_MODE_OPPOSITE) {
         other = workspace()->findClient(Predicate::WindowMatch, above);
         if (!other) {
@@ -837,7 +837,7 @@ void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource sr
         if (it != begin && (*(it - 1) == other))
             other = qobject_cast<Client*>(*it);
         else
-            other = 0;
+            other = nullptr;
     }
 
     if (other)

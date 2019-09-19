@@ -56,7 +56,7 @@ Q_SIGNALS:
     void clipToChanged();
 
 protected:
-    explicit AbstractThumbnailItem(QQuickItem *parent = 0);
+    explicit AbstractThumbnailItem(QQuickItem *parent = nullptr);
 
 protected Q_SLOTS:
     virtual void repaint(KWin::EffectWindow* w) = 0;
@@ -80,7 +80,7 @@ class WindowThumbnailItem : public AbstractThumbnailItem
     Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(KWin::AbstractClient *client READ client WRITE setClient NOTIFY clientChanged)
 public:
-    explicit WindowThumbnailItem(QQuickItem *parent = 0);
+    explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
     ~WindowThumbnailItem() override;
 
     QUuid wId() const {
@@ -105,7 +105,7 @@ class DesktopThumbnailItem : public AbstractThumbnailItem
     Q_OBJECT
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
 public:
-    DesktopThumbnailItem(QQuickItem *parent = 0);
+    DesktopThumbnailItem(QQuickItem *parent = nullptr);
     ~DesktopThumbnailItem() override;
 
     int desktop() const {

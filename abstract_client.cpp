@@ -211,7 +211,7 @@ void AbstractClient::setActive(bool act)
                              ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
                              : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
     setOpacity(ruledOpacity / 100.0);
-    workspace()->setActiveClient(act ? this : NULL);
+    workspace()->setActiveClient(act ? this : nullptr);
 
     if (!m_active)
         cancelAutoRaise();

@@ -231,7 +231,7 @@ void TouchPointsEffect::drawCircleGl(const QColor& color, float cx, float cy, fl
         x = c * x - s * y;
         y = s * t + c * y;
     }
-    vbo->setData(verts.size() / 2, 2, verts.data(), NULL);
+    vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
     vbo->render(GL_LINE_LOOP);
 }
 

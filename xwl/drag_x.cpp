@@ -408,8 +408,8 @@ void WlVisit::getMimesFromWinProperty(Mimes &offers)
                                    XCB_GET_PROPERTY_TYPE_ANY,
                                    0, 0x1fffffff);
 
-    auto *reply = xcb_get_property_reply(xcbConn, cookie, NULL);
-    if (reply == NULL) {
+    auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
+    if (reply == nullptr) {
         return;
     }
     if (reply->type != XCB_ATOM_ATOM || reply->value_len == 0) {

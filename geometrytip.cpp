@@ -24,7 +24,7 @@ namespace KWin
 {
 
 GeometryTip::GeometryTip(const Xcb::GeometryHints* xSizeHints):
-    QLabel(0)
+    QLabel(nullptr)
 {
     setObjectName(QLatin1String("kwingeometry"));
     setMargin(1);

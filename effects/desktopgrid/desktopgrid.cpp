@@ -57,7 +57,7 @@ DesktopGridEffect::DesktopGridEffect()
     , wasWindowCopy(false)
     , wasDesktopMove(false)
     , isValidMove(false)
-    , windowMove(NULL)
+    , windowMove(nullptr)
     , windowMoveDiff()
     , gridSize()
     , orientation(Qt::Horizontal)
@@ -66,7 +66,7 @@ DesktopGridEffect::DesktopGridEffect()
     , unscaledBorder()
     , scaledSize()
     , scaledOffset()
-    , m_proxy(0)
+    , m_proxy(nullptr)
     , m_activateAction(new QAction(this))
 {
     initConfig<DesktopGridConfig>();
@@ -428,7 +428,7 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
         return;
     if (w == windowMove) {
         effects->setElevatedWindow(windowMove, false);
-        windowMove = NULL;
+        windowMove = nullptr;
     }
     if (isUsingPresentWindows()) {
         foreach (const int i, desktopList(w)) {
@@ -443,7 +443,7 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
 void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
 {
     if (w == windowMove)
-        windowMove = 0;
+        windowMove = nullptr;
     foreach (DesktopButtonsView *view, m_desktopButtonsViews) {
         if (view->effectWindow && view->effectWindow == w) {
             view->effectWindow = nullptr;
@@ -494,7 +494,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
 
     if (e->type() == QEvent::MouseMove) {
         int d = posToDesktop(me->pos());
-        if (windowMove != NULL &&
+        if (windowMove != nullptr &&
                 (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             // Handle window moving
             if (!wasWindowMove) { // Activate on move
@@ -522,7 +522,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
             if (windowMove->isMovable() && !isUsingPresentWindows()) {
                 wasWindowMove = true;
                 int screen = effects->screenNumber(me->pos());
-                effects->moveWindow(windowMove, unscalePos(me->pos(), NULL) + windowMoveDiff, true, 1.0 / scale[screen]);
+                effects->moveWindow(windowMove, unscalePos(me->pos(), nullptr) + windowMoveDiff, true, 1.0 / scale[screen]);
             }
             if (wasWindowMove) {
                 if (effects->waylandDisplay() && (me->modifiers() & Qt::ControlModifier)) {
@@ -603,25 +603,25 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
             dragStartPos = me->pos();
             sourceDesktop = posToDesktop(me->pos());
             bool isDesktop = (me->modifiers() & Qt::ShiftModifier);
-            EffectWindow* w = isDesktop ? NULL : windowAt(me->pos());
-            if (w != NULL)
+            EffectWindow* w = isDesktop ? nullptr : windowAt(me->pos());
+            if (w != nullptr)
                 isDesktop = w->isDesktop();
             if (isDesktop)
                 m_originalMovingDesktop = posToDesktop(me->pos());
             else
                 m_originalMovingDesktop = 0;
-            if (w != NULL && !w->isDesktop() && (w->isMovable() || w->isMovableAcrossScreens() || isUsingPresentWindows())) {
+            if (w != nullptr && !w->isDesktop() && (w->isMovable() || w->isMovableAcrossScreens() || isUsingPresentWindows())) {
                 // Prepare it for moving
-                windowMoveDiff = w->pos() - unscalePos(me->pos(), NULL);
+                windowMoveDiff = w->pos() - unscalePos(me->pos(), nullptr);
                 windowMove = w;
                 effects->setElevatedWindow(windowMove, true);
             }
-        } else if ((me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton) && windowMove == NULL) {
+        } else if ((me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton) && windowMove == nullptr) {
             EffectWindow* w = windowAt(me->pos());
             if (w && w->isDesktop()) {
                 w = nullptr;
             }
-            if (w != NULL) {
+            if (w != nullptr) {
                 const int desktop = posToDesktop(me->pos());
                 if (w->isOnAllDesktops()) {
                     effects->windowToDesktop(w, desktop);
@@ -675,7 +675,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 effects->addRepaintFull();
             }
             effects->setElevatedWindow(windowMove, false);
-            windowMove = NULL;
+            windowMove = nullptr;
         }
         wasWindowMove = false;
         wasWindowCopy = false;
@@ -687,7 +687,7 @@ void DesktopGridEffect::grabbedKeyboardEvent(QKeyEvent* e)
 {
     if (timeline.currentValue() != 1)   // Block user input during animations
         return;
-    if (windowMove != NULL)
+    if (windowMove != nullptr)
         return;
     if (e->type() == QEvent::KeyPress) {
         // check for global shortcuts
@@ -823,7 +823,7 @@ QPoint DesktopGridEffect::unscalePos(const QPoint& pos, int* desktop) const
     int gy = qBound(0, int(scaledY), gridSize.height() - 1);
     scaledX -= gx;
     scaledY -= gy;
-    if (desktop != NULL) {
+    if (desktop != nullptr) {
         if (orientation == Qt::Horizontal)
             *desktop = gy * gridSize.width() + gx + 1;
         else
@@ -879,7 +879,7 @@ EffectWindow* DesktopGridEffect::windowAt(QPoint pos) const
     int desktop;
     pos = unscalePos(pos, &desktop);
     if (desktop > effects->numberOfDesktops())
-        return NULL;
+        return nullptr;
     if (isUsingPresentWindows()) {
         const int screen = effects->screenNumber(pos);
         EffectWindow *w =
@@ -896,7 +896,7 @@ EffectWindow* DesktopGridEffect::windowAt(QPoint pos) const
                 return w;
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void DesktopGridEffect::setCurrentDesktop(int desktop)
@@ -1223,13 +1223,13 @@ void DesktopGridEffect::finish()
         effects->ungrabKeyboard();
     keyboardGrab = false;
     effects->stopMouseInterception(this);
-    effects->setActiveFullScreenEffect(0);
+    effects->setActiveFullScreenEffect(nullptr);
     if (isUsingPresentWindows()) {
         while (!m_managers.isEmpty()) {
             m_managers.first().unmanageAll();
             m_managers.removeFirst();
         }
-        m_proxy = 0;
+        m_proxy = nullptr;
     }
 }
 
@@ -1256,7 +1256,7 @@ bool DesktopGridEffect::isMotionManagerMovingWindows() const
 
 bool DesktopGridEffect::isUsingPresentWindows() const
 {
-    return (m_proxy != NULL);
+    return (m_proxy != nullptr);
 }
 
 // transforms the geometry of the moved window to a geometry on the desktop

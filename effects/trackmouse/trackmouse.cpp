@@ -46,9 +46,9 @@ TrackMouseEffect::TrackMouseEffect()
     : m_angle(0)
 {
     initConfig<TrackMouseConfig>();
-    m_texture[0] = m_texture[1] = 0;
+    m_texture[0] = m_texture[1] = nullptr;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    m_picture[0] = m_picture[1] = 0;
+    m_picture[0] = m_picture[1] = nullptr;
     if ( effects->compositingType() == XRenderCompositing)
         m_angleBase = 1.57079632679489661923; // Pi/2
 #endif
@@ -74,16 +74,16 @@ TrackMouseEffect::~TrackMouseEffect()
     if (m_mousePolling)
         effects->stopMousePolling();
     for (int i = 0; i < 2; ++i) {
-        delete m_texture[i]; m_texture[i] = 0;
+        delete m_texture[i]; m_texture[i] = nullptr;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        delete m_picture[i]; m_picture[i] = 0;
+        delete m_picture[i]; m_picture[i] = nullptr;
 #endif
     }
 }
 
 void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
-    m_modifiers = 0;
+    m_modifiers = nullptr;
     TrackMouseConfig::self()->read();
     if (TrackMouseConfig::shift())
         m_modifiers |= Qt::ShiftModifier;
@@ -161,7 +161,7 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             };
 #undef DOUBLE_TO_FIXED
             xcb_render_set_picture_transform(xcbConnection(), picture, xform);
-            xcb_render_set_picture_filter(xcbConnection(), picture, 8, "bilinear", 0, NULL);
+            xcb_render_set_picture_filter(xcbConnection(), picture, 8, "bilinear", 0, nullptr);
             const QRect &rect = m_lastRect[i];
             xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
                                  effects->xrenderBufferPicture(), 0, 0, 0, 0,

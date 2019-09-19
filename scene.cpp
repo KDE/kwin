@@ -461,7 +461,7 @@ void Scene::clearStackingOrder()
     stacking_order.clear();
 }
 
-static Scene::Window *s_recursionCheck = NULL;
+static Scene::Window *s_recursionCheck = nullptr;
 
 void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads)
 {
@@ -597,7 +597,7 @@ void Scene::paintDesktopThumbnails(Scene::Window *w)
         data += QPointF(x, y);
         const int desktopMask = PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         paintDesktop(item->desktop(), desktopMask, clippingRegion, data);
-        s_recursionCheck = NULL;
+        s_recursionCheck = nullptr;
     }
 }
 
@@ -690,13 +690,13 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
 Scene::Window::Window(Toplevel * c)
     : toplevel(c)
     , filter(ImageFilterFast)
-    , m_shadow(NULL)
+    , m_shadow(nullptr)
     , m_currentPixmap()
     , m_previousPixmap()
     , m_referencePixmapCounter(0)
     , disable_painting(0)
     , shape_valid(false)
-    , cached_quad_list(NULL)
+    , cached_quad_list(nullptr)
 {
 }
 
@@ -841,7 +841,7 @@ void Scene::Window::disablePainting(int reason)
 
 WindowQuadList Scene::Window::buildQuads(bool force) const
 {
-    if (cached_quad_list != NULL && !force)
+    if (cached_quad_list != nullptr && !force)
         return *cached_quad_list;
     WindowQuadList ret;
     qreal scale = 1.0;

@@ -263,7 +263,7 @@ public:
     }
     inline bool isNull() {
         getReply();
-        return m_reply == NULL;
+        return m_reply == nullptr;
     }
     inline bool isNull() const {
         const_cast<AbstractWrapper*>(this)->getReply();
@@ -299,7 +299,7 @@ public:
     inline Reply *take() {
         getReply();
         Reply *ret = m_reply;
-        m_reply = NULL;
+        m_reply = nullptr;
         m_window = XCB_WINDOW_NONE;
         return ret;
     }
@@ -308,7 +308,7 @@ protected:
     AbstractWrapper()
         : m_retrieved(false)
         , m_window(XCB_WINDOW_NONE)
-        , m_reply(NULL)
+        , m_reply(nullptr)
     {
         m_cookie.sequence = 0;
     }
@@ -316,14 +316,14 @@ protected:
         : m_retrieved(false)
         , m_cookie(cookie)
         , m_window(window)
-        , m_reply(NULL)
+        , m_reply(nullptr)
     {
     }
     explicit AbstractWrapper(const AbstractWrapper &other)
         : m_retrieved(other.m_retrieved)
         , m_cookie(other.m_cookie)
         , m_window(other.m_window)
-        , m_reply(NULL)
+        , m_reply(nullptr)
     {
         takeFromOther(const_cast<AbstractWrapper&>(other));
     }
@@ -1332,7 +1332,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    Window(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    Window(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     /**
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
      * depth and visual being copied from parent and border being @c 0.
@@ -1342,7 +1342,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    Window(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    Window(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     Window(const Window &other) = delete;
     ~Window();
 
@@ -1356,7 +1356,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    void create(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    void create(const QRect &geometry, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     /**
      * Creates a new window for which the responsibility is taken over. If a window had been managed
      * before it is freed.
@@ -1368,7 +1368,7 @@ public:
      * @param values The values to be passed to xcb_create_window
      * @param parent The parent window
      */
-    void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     /**
      * Frees the existing window and starts to manage the new @p window.
      * If @p destroy is @c true the new managed window will be destroyed together with this
@@ -1419,7 +1419,7 @@ public:
     void kill();
     operator xcb_window_t() const;
 private:
-    xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
+    xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
     void destroy();
     xcb_window_t m_window;
     bool m_destroy;

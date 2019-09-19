@@ -34,7 +34,7 @@ class ButtonsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ButtonsModel(const QVector< DecorationButtonType > &buttons, QObject *parent = 0);
+    explicit ButtonsModel(const QVector< DecorationButtonType > &buttons, QObject *parent = nullptr);
     explicit ButtonsModel(QObject *parent = nullptr);
     ~ButtonsModel() override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;

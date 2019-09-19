@@ -31,7 +31,7 @@ class KGlobalAccelImpl : public KGlobalAccelInterface
     Q_INTERFACES(KGlobalAccelInterface)
 
 public:
-    KGlobalAccelImpl(QObject *parent = 0);
+    KGlobalAccelImpl(QObject *parent = nullptr);
     ~KGlobalAccelImpl() override;
 
     bool grabKey(int key, bool grab) override;

@@ -44,8 +44,8 @@ MagnifierEffect::MagnifierEffect()
     : zoom(1)
     , target_zoom(1)
     , polling(false)
-    , m_texture(0)
-    , m_fbo(0)
+    , m_texture(nullptr)
+    , m_fbo(nullptr)
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     , m_pixmap(XCB_PIXMAP_NONE)
 #endif
@@ -127,8 +127,8 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
                 // zoom ended - delete FBO and texture
                 delete m_fbo;
                 delete m_texture;
-                m_fbo = NULL;
-                m_texture = NULL;
+                m_fbo = nullptr;
+                m_texture = nullptr;
                 destroyPixmap();
             }
         }
@@ -195,7 +195,7 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             verts << areaF.left() - FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
             verts << areaF.right() + FRAME_WIDTH << areaF.bottom() + FRAME_WIDTH;
             verts << areaF.right() + FRAME_WIDTH << areaF.bottom();
-            vbo->setData(verts.size() / 2, 2, verts.constData(), NULL);
+            vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
 
             ShaderBinder binder(ShaderTrait::UniformColor);
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
@@ -228,10 +228,10 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             xform.matrix22 = DOUBLE_TO_FIXED(1.0/zoom);
 #undef DOUBLE_TO_FIXED
             xcb_render_set_picture_transform(xcbConnection(), *m_picture, xform);
-            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("good"), 0, NULL);
+            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("good"), 0, nullptr);
             xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_SRC, *m_picture, 0, effects->xrenderBufferPicture(),
                                  0, 0, 0, 0, area.x(), area.y(), area.width(), area.height() );
-            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("fast"), 0, NULL);
+            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("fast"), 0, nullptr);
             xcb_render_set_picture_transform(xcbConnection(), *m_picture, identity);
             const xcb_rectangle_t rects[4] = {
                 { int16_t(area.x()+FRAME_WIDTH), int16_t(area.y()), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
@@ -290,8 +290,8 @@ void MagnifierEffect::zoomOut()
             effects->makeOpenGLContextCurrent();
             delete m_fbo;
             delete m_texture;
-            m_fbo = NULL;
-            m_texture = NULL;
+            m_fbo = nullptr;
+            m_texture = nullptr;
             destroyPixmap();
         }
     }

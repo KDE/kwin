@@ -494,15 +494,15 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
     }
     if (backend->isFailed()) {
         delete backend;
-        return NULL;
+        return nullptr;
     }
-    SceneOpenGL *scene = NULL;
+    SceneOpenGL *scene = nullptr;
     // first let's try an OpenGL 2 scene
     if (SceneOpenGL2::supported(backend)) {
         scene = new SceneOpenGL2(backend, parent);
         if (scene->initFailed()) {
             delete scene;
-            scene = NULL;
+            scene = nullptr;
         } else {
             return scene;
         }
@@ -918,7 +918,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
 
 SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
     : SceneOpenGL(backend, parent)
-    , m_lanczosFilter(NULL)
+    , m_lanczosFilter(nullptr)
 {
     if (!init_ok) {
         // base ctor already failed
@@ -1027,7 +1027,7 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
     vbo->setUseColor(true);
-    vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
+    vbo->setData(vertices.count() / 2, 2, vertices.data(), nullptr);
 
     ShaderBinder binder(ShaderTrait::UniformColor);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, m_projectionMatrix);
@@ -1060,7 +1060,7 @@ void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion reg
             connect(screens(), &Screens::changed, this, [this]() {
                 makeOpenGLContextCurrent();
                 delete m_lanczosFilter;
-                m_lanczosFilter = NULL;
+                m_lanczosFilter = nullptr;
             });
         }
         m_lanczosFilter->performPaint(w, mask, region, data);
@@ -1074,7 +1074,7 @@ void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion reg
 
 SceneOpenGL::Window::Window(Toplevel* c)
     : Scene::Window(c)
-    , m_scene(NULL)
+    , m_scene(nullptr)
 {
 }
 
@@ -1082,11 +1082,11 @@ SceneOpenGL::Window::~Window()
 {
 }
 
-static SceneOpenGLTexture *s_frameTexture = NULL;
+static SceneOpenGLTexture *s_frameTexture = nullptr;
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
 {
-    s_frameTexture = NULL;
+    s_frameTexture = nullptr;
     OpenGLWindowPixmap *pixmap = windowPixmap<OpenGLWindowPixmap>();
     if (!pixmap) {
         return false;
@@ -1293,7 +1293,7 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
 
     if (data.crossFadeProgress() != 1.0) {
         OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
-        nodes[PreviousContentLeaf].texture = previous ? previous->texture() : NULL;
+        nodes[PreviousContentLeaf].texture = previous ? previous->texture() : nullptr;
         nodes[PreviousContentLeaf].hasAlpha = !isOpaque();
         nodes[PreviousContentLeaf].opacity = data.opacity() * (1.0 - data.crossFadeProgress());
         nodes[PreviousContentLeaf].coordinateType = NormalizedCoordinates;
@@ -1596,19 +1596,19 @@ bool OpenGLWindowPixmap::isValid() const
 // SceneOpenGL::EffectFrame
 //****************************************
 
-GLTexture* SceneOpenGL::EffectFrame::m_unstyledTexture = NULL;
-QPixmap* SceneOpenGL::EffectFrame::m_unstyledPixmap = NULL;
+GLTexture* SceneOpenGL::EffectFrame::m_unstyledTexture = nullptr;
+QPixmap* SceneOpenGL::EffectFrame::m_unstyledPixmap = nullptr;
 
 SceneOpenGL::EffectFrame::EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene)
     : Scene::EffectFrame(frame)
-    , m_texture(NULL)
-    , m_textTexture(NULL)
-    , m_oldTextTexture(NULL)
-    , m_textPixmap(NULL)
-    , m_iconTexture(NULL)
-    , m_oldIconTexture(NULL)
-    , m_selectionTexture(NULL)
-    , m_unstyledVBO(NULL)
+    , m_texture(nullptr)
+    , m_textTexture(nullptr)
+    , m_oldTextTexture(nullptr)
+    , m_textPixmap(nullptr)
+    , m_iconTexture(nullptr)
+    , m_oldIconTexture(nullptr)
+    , m_selectionTexture(nullptr)
+    , m_unstyledVBO(nullptr)
     , m_scene(scene)
 {
     if (m_effectFrame->style() == EffectFrameUnstyled && !m_unstyledTexture) {
@@ -1632,55 +1632,55 @@ void SceneOpenGL::EffectFrame::free()
 {
     glFlush();
     delete m_texture;
-    m_texture = NULL;
+    m_texture = nullptr;
     delete m_textTexture;
-    m_textTexture = NULL;
+    m_textTexture = nullptr;
     delete m_textPixmap;
-    m_textPixmap = NULL;
+    m_textPixmap = nullptr;
     delete m_iconTexture;
-    m_iconTexture = NULL;
+    m_iconTexture = nullptr;
     delete m_selectionTexture;
-    m_selectionTexture = NULL;
+    m_selectionTexture = nullptr;
     delete m_unstyledVBO;
-    m_unstyledVBO = NULL;
+    m_unstyledVBO = nullptr;
     delete m_oldIconTexture;
-    m_oldIconTexture = NULL;
+    m_oldIconTexture = nullptr;
     delete m_oldTextTexture;
-    m_oldTextTexture = NULL;
+    m_oldTextTexture = nullptr;
 }
 
 void SceneOpenGL::EffectFrame::freeIconFrame()
 {
     delete m_iconTexture;
-    m_iconTexture = NULL;
+    m_iconTexture = nullptr;
 }
 
 void SceneOpenGL::EffectFrame::freeTextFrame()
 {
     delete m_textTexture;
-    m_textTexture = NULL;
+    m_textTexture = nullptr;
     delete m_textPixmap;
-    m_textPixmap = NULL;
+    m_textPixmap = nullptr;
 }
 
 void SceneOpenGL::EffectFrame::freeSelection()
 {
     delete m_selectionTexture;
-    m_selectionTexture = NULL;
+    m_selectionTexture = nullptr;
 }
 
 void SceneOpenGL::EffectFrame::crossFadeIcon()
 {
     delete m_oldIconTexture;
     m_oldIconTexture = m_iconTexture;
-    m_iconTexture = NULL;
+    m_iconTexture = nullptr;
 }
 
 void SceneOpenGL::EffectFrame::crossFadeText()
 {
     delete m_oldTextTexture;
     m_oldTextTexture = m_textTexture;
-    m_textTexture = NULL;
+    m_textTexture = nullptr;
 }
 
 void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double frameOpacity)
@@ -1951,7 +1951,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 void SceneOpenGL::EffectFrame::updateTexture()
 {
     delete m_texture;
-    m_texture = 0L;
+    m_texture = nullptr;
     if (m_effectFrame->style() == EffectFrameStyled) {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
         m_texture = new GLTexture(pixmap);
@@ -1961,9 +1961,9 @@ void SceneOpenGL::EffectFrame::updateTexture()
 void SceneOpenGL::EffectFrame::updateTextTexture()
 {
     delete m_textTexture;
-    m_textTexture = 0L;
+    m_textTexture = nullptr;
     delete m_textPixmap;
-    m_textPixmap = 0L;
+    m_textPixmap = nullptr;
 
     if (m_effectFrame->text().isEmpty())
         return;
@@ -1996,9 +1996,9 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
 {
     delete m_unstyledTexture;
-    m_unstyledTexture = 0L;
+    m_unstyledTexture = nullptr;
     delete m_unstyledPixmap;
-    m_unstyledPixmap = 0L;
+    m_unstyledPixmap = nullptr;
     // Based off circle() from kwinxrenderutils.cpp
 #define CS 8
     m_unstyledPixmap = new QPixmap(2 * CS, 2 * CS);
@@ -2016,9 +2016,9 @@ void SceneOpenGL::EffectFrame::updateUnstyledTexture()
 void SceneOpenGL::EffectFrame::cleanup()
 {
     delete m_unstyledTexture;
-    m_unstyledTexture = NULL;
+    m_unstyledTexture = nullptr;
     delete m_unstyledPixmap;
-    m_unstyledPixmap = NULL;
+    m_unstyledPixmap = nullptr;
 }
 
 //****************************************

@@ -56,7 +56,7 @@ Cursor::Cursor(QObject *parent)
 
 Cursor::~Cursor()
 {
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 void Cursor::loadThemeSettings()

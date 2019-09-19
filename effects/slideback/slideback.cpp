@@ -26,7 +26,7 @@ namespace KWin
 SlideBackEffect::SlideBackEffect()
 {
     m_tabboxActive = 0;
-    m_justMapped = m_upmostWindow = NULL;
+    m_justMapped = m_upmostWindow = nullptr;
     connect(effects, &EffectsHandler::windowAdded, this, &SlideBackEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &SlideBackEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::windowUnminimized, this, &SlideBackEffect::slotWindowUnminimized);
@@ -54,7 +54,7 @@ void SlideBackEffect::slotStackingOrderChanged()
     m_upmostWindow = usableNewStackingOrder.last();
 
     if (m_upmostWindow == m_justMapped ) // a window was added, got on top, stacking changed. Nothing impressive
-        m_justMapped = 0;
+        m_justMapped = nullptr;
     else if (!usableOldStackingOrder.isEmpty() && m_upmostWindow != usableOldStackingOrder.last())
         windowRaised(m_upmostWindow);
 
@@ -259,9 +259,9 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
 void SlideBackEffect::slotWindowDeleted(EffectWindow* w)
 {
     if (w == m_upmostWindow)
-        m_upmostWindow = 0;
+        m_upmostWindow = nullptr;
     if (w == m_justMapped)
-        m_justMapped = 0;
+        m_justMapped = nullptr;
     usableOldStackingOrder.removeAll(w);
     oldStackingOrder.removeAll(w);
     coveringWindows.removeAll(w);

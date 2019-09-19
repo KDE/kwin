@@ -51,7 +51,7 @@ Shadow::~Shadow()
 Shadow *Shadow::createShadow(Toplevel *toplevel)
 {
     if (!effects) {
-        return NULL;
+        return nullptr;
     }
     Shadow *shadow = createShadowFromDecoration(toplevel);
     if (!shadow && waylandServer()) {
@@ -78,11 +78,11 @@ Shadow *Shadow::createShadowFromX11(Toplevel *toplevel)
 
         if (!shadow->init(data)) {
             delete shadow;
-            return NULL;
+            return nullptr;
         }
         return shadow;
     } else {
-        return NULL;
+        return nullptr;
     }
 }
 

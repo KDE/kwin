@@ -357,7 +357,7 @@ QList<KWin::AbstractClient *> QtScriptWorkspaceWrapper::clientList() const
 
 QQmlListProperty<KWin::AbstractClient> DeclarativeScriptWorkspaceWrapper::clients()
 {
-    return QQmlListProperty<KWin::AbstractClient>(this, 0, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
+    return QQmlListProperty<KWin::AbstractClient>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
 }
 
 int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::AbstractClient> *clients)

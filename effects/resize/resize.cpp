@@ -38,7 +38,7 @@ namespace KWin
 ResizeEffect::ResizeEffect()
     : AnimationEffect()
     , m_active(false)
-    , m_resizeWindow(0)
+    , m_resizeWindow(nullptr)
 {
     initConfig<ResizeConfig>();
     reconfigure(ReconfigureAll);
@@ -102,7 +102,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                     verts << r.x() + r.width() << r.y() + r.height();
                     verts << r.x() + r.width() << r.y();
                 }
-                vbo->setData(verts.count() / 2, 2, verts.data(), NULL);
+                vbo->setData(verts.count() / 2, 2, verts.data(), nullptr);
                 vbo->render(GL_TRIANGLES);
                 glDisable(GL_BLEND);
             }
@@ -159,7 +159,7 @@ void ResizeEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
 {
     if (m_active && w == m_resizeWindow) {
         m_active = false;
-        m_resizeWindow = NULL;
+        m_resizeWindow = nullptr;
         if (m_features & TextureScale)
             animate(w, CrossFadePrevious, 0, 150, FPx2(1.0));
         effects->addRepaintFull();

@@ -894,7 +894,7 @@ void Workspace::setMoveResizeClient(AbstractClient *c)
 // (the property with the size of the frame remains on the window after the crash).
 void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geometry)
 {
-    NETWinInfo i(connection(), w, rootWindow(), NET::WMFrameExtents, 0);
+    NETWinInfo i(connection(), w, rootWindow(), NET::WMFrameExtents, nullptr);
     NETStrut frame = i.frameExtents();
 
     if (frame.left != 0 || frame.top != 0) {
@@ -2511,7 +2511,7 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
     return total;
 }
 
-static GeometryTip* geometryTip    = 0;
+static GeometryTip* geometryTip    = nullptr;
 
 void Client::positionGeometryTip()
 {
@@ -2538,10 +2538,10 @@ void Client::positionGeometryTip()
 bool AbstractClient::startMoveResize()
 {
     Q_ASSERT(!isMoveResize());
-    Q_ASSERT(QWidget::keyboardGrabber() == NULL);
-    Q_ASSERT(QWidget::mouseGrabber() == NULL);
+    Q_ASSERT(QWidget::keyboardGrabber() == nullptr);
+    Q_ASSERT(QWidget::mouseGrabber() == nullptr);
     stopDelayedMoveResize();
-    if (QApplication::activePopupWidget() != NULL)
+    if (QApplication::activePopupWidget() != nullptr)
         return false; // popups have grab
     if (isFullScreen() && (screens()->count() < 2 || !isMovableAcrossScreens()))
         return false;
@@ -2585,7 +2585,7 @@ bool Client::doStartMoveResize()
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
     // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
     QRect r = workspace()->clientArea(FullArea, this);
-    m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, NULL, rootWindow());
+    m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, rootWindow());
     m_moveResizeGrabWindow.map();
     m_moveResizeGrabWindow.raise();
     updateXTime();
@@ -2593,7 +2593,7 @@ bool Client::doStartMoveResize()
         XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION |
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
         XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursor::x11Cursor(cursor()), xTime());
-    ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(connection(), cookie, NULL));
+    ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(connection(), cookie, nullptr));
     if (!pointerGrab.isNull() && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
         has_grab = true;
     }
@@ -2666,7 +2666,7 @@ void Client::leaveMoveResize()
     if (geometryTip) {
         geometryTip->hide();
         delete geometryTip;
-        geometryTip = NULL;
+        geometryTip = nullptr;
     }
     if (move_resize_has_keyboard_grab)
         ungrabXKeyboard();
@@ -2676,7 +2676,7 @@ void Client::leaveMoveResize()
     if (syncRequest.counter == XCB_NONE) // don't forget to sanitize since the timeout will no more fire
         syncRequest.isPending = false;
     delete syncRequest.timeout;
-    syncRequest.timeout = NULL;
+    syncRequest.timeout = nullptr;
     AbstractClient::leaveMoveResize();
 }
 

@@ -1475,7 +1475,7 @@ AbstractClient* TabBox::nextClientStatic(AbstractClient* c) const
 {
     const auto &list = Workspace::self()->allClientList();
     if (!c || list.isEmpty())
-        return 0;
+        return nullptr;
     int pos = list.indexOf(c);
     if (pos == -1)
         return list.first();
@@ -1493,7 +1493,7 @@ AbstractClient* TabBox::previousClientStatic(AbstractClient* c) const
 {
     const auto &list = Workspace::self()->allClientList();
     if (!c || list.isEmpty())
-        return 0;
+        return nullptr;
     int pos = list.indexOf(c);
     if (pos == -1)
         return list.last();

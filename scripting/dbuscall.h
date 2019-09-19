@@ -81,7 +81,7 @@ class DBusCall : public QObject
     Q_PROPERTY(QString method READ method WRITE setMethod NOTIFY methodChanged)
     Q_PROPERTY(QVariantList arguments READ arguments WRITE setArguments NOTIFY argumentsChanged)
 public:
-    explicit DBusCall(QObject* parent = 0);
+    explicit DBusCall(QObject* parent = nullptr);
     ~DBusCall() override;
 
     const QString &service() const;

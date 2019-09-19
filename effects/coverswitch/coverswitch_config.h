@@ -40,7 +40,7 @@ class CoverSwitchEffectConfig : public KCModule
 {
     Q_OBJECT
 public:
-    explicit CoverSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    explicit CoverSwitchEffectConfig(QWidget* parent = nullptr, const QVariantList& args = QVariantList());
 
 public Q_SLOTS:
     void save() override;

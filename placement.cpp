@@ -48,7 +48,7 @@ Placement::Placement(QObject*)
 
 Placement::~Placement()
 {
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 /**
@@ -562,7 +562,7 @@ void Placement::placeOnMainWindow(AbstractClient *c, const QRect &area, Policy n
         ++mains_count;
         place_on2 = *it;
         if ((*it)->isOnCurrentDesktop()) {
-            if (place_on == NULL)
+            if (place_on == nullptr)
                 place_on = *it;
             else {
                 // two or more on current desktop -> center
@@ -576,7 +576,7 @@ void Placement::placeOnMainWindow(AbstractClient *c, const QRect &area, Policy n
             }
         }
     }
-    if (place_on == NULL) {
+    if (place_on == nullptr) {
         // 'mains_count' is used because it doesn't include ignored mainwindows
         if (mains_count != 1) {
             place(c, area, Centered);

@@ -223,7 +223,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                 desk = NET::OnAllDesktops;
             else if (on_current)
                 desk = VirtualDesktopManager::self()->current();
-            else if (maincl != NULL)
+            else if (maincl != nullptr)
                 desk = maincl->desktop();
 
             if (maincl)
@@ -517,7 +517,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     updateAllowedActions(true);
 
     // Set initial user time directly
-    m_userTime = readUserTimeMapTimestamp(asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session);
+    m_userTime = readUserTimeMapTimestamp(asn_valid ? &asn_id : nullptr, asn_valid ? &asn_data : nullptr, session);
     group()->updateUserTime(m_userTime);   // And do what Client::updateUserTime() does
 
     // This should avoid flicker, because real restacking is done
@@ -539,7 +539,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         bool allow;
         if (session)
             allow = session->active &&
-                    (!workspace()->wasUserInteraction() || workspace()->activeClient() == NULL ||
+                    (!workspace()->wasUserInteraction() || workspace()->activeClient() == nullptr ||
                      workspace()->activeClient()->isDesktop());
         else
             allow = workspace()->allowClientActivation(this, userTime(), false);
@@ -606,7 +606,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             if (opacity() == 1.0) {
                 return;
             }
-            NETWinInfo info(connection(), frameId(), rootWindow(), 0, 0);
+            NETWinInfo info(connection(), frameId(), rootWindow(), nullptr, nullptr);
             info.setOpacity(static_cast<unsigned long>(opacity() * 0xffffffff));
         }
     );
