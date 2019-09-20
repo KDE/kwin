@@ -633,6 +633,9 @@ bool DrmOutput::dpmsLegacyApply()
     return true;
 }
 
+// TODO: Rotation is currently broken in the DRM backend for 90° and 270°. Disable all rotation for
+// now to not break user setups until it is possible again.
+#if 0
 void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
 {
     waylandOutputDevice()->setTransform(transform);
@@ -710,6 +713,12 @@ void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform tra
     // TODO: are these calls not enough in updateMode already?
     setWaylandMode();
 }
+#else
+void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
+{
+    Q_UNUSED(transform)
+}
+#endif
 
 void DrmOutput::updateMode(int modeIndex)
 {
