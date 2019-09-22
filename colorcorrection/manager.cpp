@@ -371,13 +371,7 @@ void Manager::resetSlowUpdateStartTimer()
     connect(m_slowUpdateStartTimer, &QTimer::timeout, this, &Manager::resetSlowUpdateStartTimer);
 
     updateSunTimings(false);
-    int diff;
-    if (m_mode == NightColorMode::Timings) {
-        // Timings mode is in local time
-        diff = QDateTime::currentDateTime().msecsTo(m_next.first);
-    } else {
-        diff = QDateTime::currentDateTimeUtc().msecsTo(m_next.first);
-    }
+    const int diff = QDateTime::currentDateTime().msecsTo(m_next.first);
     if (diff <= 0) {
         qCCritical(KWIN_COLORCORRECTION) << "Error in time calculation. Deactivating Night Color.";
         return;
@@ -393,7 +387,7 @@ void Manager::resetSlowUpdateTimer()
     delete m_slowUpdateTimer;
     m_slowUpdateTimer = nullptr;
 
-    QDateTime now = QDateTime::currentDateTimeUtc();
+    QDateTime now = QDateTime::currentDateTime();
     bool isDay = daylight();
     int targetTemp = isDay ? m_dayTargetTemp : m_nightTargetTemp;
 
@@ -443,21 +437,18 @@ void Manager::slowUpdate(int targetTemp)
 
 void Manager::updateSunTimings(bool force)
 {
-    QDateTime todayNow = QDateTime::currentDateTimeUtc();
+    QDateTime todayNow = QDateTime::currentDateTime();
 
     if (m_mode == NightColorMode::Timings) {
-
-        QDateTime todayNowLocal = QDateTime::currentDateTime();
-
-        QDateTime morB = QDateTime(todayNowLocal.date(), m_morning);
+        QDateTime morB = QDateTime(todayNow.date(), m_morning);
         QDateTime morE = morB.addSecs(m_trTime * 60);
-        QDateTime eveB = QDateTime(todayNowLocal.date(), m_evening);
+        QDateTime eveB = QDateTime(todayNow.date(), m_evening);
         QDateTime eveE = eveB.addSecs(m_trTime * 60);
 
-        if (morB <= todayNowLocal && todayNowLocal < eveB) {
+        if (morB <= todayNow && todayNow < eveB) {
             m_next = DateTimes(eveB, eveE);
             m_prev = DateTimes(morB, morE);
-        } else if (todayNowLocal < morB) {
+        } else if (todayNow < morB) {
             m_next = DateTimes(morB, morE);
             m_prev = DateTimes(eveB.addDays(-1), eveE.addDays(-1));
         } else {
@@ -481,62 +472,63 @@ void Manager::updateSunTimings(bool force)
         if (daylight()) {
             // next is morning
             m_prev = m_next;
-            m_next = getSunTimings(todayNow.date().addDays(1), lat, lng, true);
+            m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
         } else {
             // next is evening
             m_prev = m_next;
-            m_next = getSunTimings(todayNow.date(), lat, lng, false);
+            m_next = getSunTimings(todayNow, lat, lng, false);
         }
     }
 
     if (force || !checkAutomaticSunTimings()) {
         // in case this fails, reset them
-        DateTimes morning = getSunTimings(todayNow.date(), lat, lng, true);
+        DateTimes morning = getSunTimings(todayNow, lat, lng, true);
         if (todayNow < morning.first) {
-            m_prev = getSunTimings(todayNow.date().addDays(-1), lat, lng, false);
+            m_prev = getSunTimings(todayNow.addDays(-1), lat, lng, false);
             m_next = morning;
         } else {
-            DateTimes evening = getSunTimings(todayNow.date(), lat, lng, false);
+            DateTimes evening = getSunTimings(todayNow, lat, lng, false);
             if (todayNow < evening.first) {
                 m_prev = morning;
                 m_next = evening;
             } else {
                 m_prev = evening;
-                m_next = getSunTimings(todayNow.date().addDays(1), lat, lng, true);
+                m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
             }
         }
     }
 }
 
-DateTimes Manager::getSunTimings(QDate date, double latitude, double longitude, bool morning) const
+DateTimes Manager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
 {
-    Times times = calculateSunTimings(date, latitude, longitude, morning);
+    DateTimes dateTimes = calculateSunTimings(dateTime, latitude, longitude, morning);
     // At locations near the poles it is possible, that we can't
     // calculate some or all sun timings (midnight sun).
     // In this case try to fallback to sensible default values.
-    bool beginDefined = !times.first.isNull();
-    bool endDefined = !times.second.isNull();
+    bool beginDefined = !dateTimes.first.isNull();
+    bool endDefined = !dateTimes.second.isNull();
     if (!beginDefined || !endDefined) {
         if (beginDefined) {
-            times.second = times.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
+            dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
         } else if (endDefined) {
-            times.first = times.second.addMSecs( - FALLBACK_SLOW_UPDATE_TIME);
+            dateTimes.first = dateTimes.second.addMSecs( - FALLBACK_SLOW_UPDATE_TIME );
         } else {
             // Just use default values for morning and evening, but the user
             // will probably deactivate Night Color anyway if he is living
             // in a region without clear sun rise and set.
-            times.first = morning ? QTime(6,0,0) : QTime(18,0,0);
-            times.second = times.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
+            const QTime referenceTime = morning ? QTime(6, 0) : QTime(18, 0);
+            dateTimes.first = QDateTime(dateTime.date(), referenceTime);
+            dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
         }
     }
-    return DateTimes(QDateTime(date, times.first, Qt::UTC), QDateTime(date, times.second, Qt::UTC));
+    return dateTimes;
 }
 
 bool Manager::checkAutomaticSunTimings() const
 {
     if (m_prev.first.isValid() && m_prev.second.isValid() &&
             m_next.first.isValid() && m_next.second.isValid()) {
-        QDateTime todayNow = QDateTime::currentDateTimeUtc();
+        QDateTime todayNow = QDateTime::currentDateTime();
         return m_prev.first <= todayNow && todayNow < m_next.first &&
                 m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23./24;
     }
@@ -558,7 +550,7 @@ int Manager::currentTargetTemp() const
        return m_nightTargetTemp;
     }
 
-    QDateTime todayNow = QDateTime::currentDateTimeUtc();
+    QDateTime todayNow = QDateTime::currentDateTime();
 
     auto f = [this, todayNow](int target1, int target2) {
         if (todayNow <= m_prev.second) {

@@ -154,7 +154,7 @@ private:
     void resetSlowUpdateTimer();
 
     void updateSunTimings(bool force);
-    DateTimes getSunTimings(QDate date, double latitude, double longitude, bool morning) const;
+    DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
     bool checkAutomaticSunTimings() const;
     bool daylight() const;
 
