@@ -105,6 +105,7 @@ Comment[cs]=Nastavte činností a chování oken
 Comment[en_GB]=Configure window actions and behaviour
 Comment[es]=Configurar las acciones y el comportamiento de las ventanas
 Comment[eu]=Konfiguratu leihoaren ekintzak eta jokabidea
+Comment[gl]=Configurar o comportamento e as accións das xanelas
 Comment[it]=Configura azioni e comportamento delle finestre
 Comment[nl]=Vensteracties en gedrag configureren
 Comment[nn]=Set opp utsjånad og åtferd for vindauge
@@ -115,6 +116,7 @@ Comment[sk]=Nastaviť akcie a správanie okien
 Comment[sv]=Anpassa fönsteråtgärder och beteende
 Comment[uk]=Налаштовування реакції та поведінки вікон
 Comment[x-test]=xxConfigure window actions and behaviorxx
+Comment[zh_TW]=設定視窗動作及行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 X-KDE-Keywords[bs]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,fokus,pozicioniranje,ponašanje prozora,akcije prozora,animacija,podizanje,okvir,naslovna traka
