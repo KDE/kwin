@@ -48,7 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCommandLineParser>
 #include <QQuickWindow>
 #include <QStandardPaths>
-#include <QtDBus>
+#include <QTranslator>
+#include <QLibraryInfo>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -255,17 +256,6 @@ void Application::setupMalloc()
 void Application::setupLocalizedString()
 {
     KLocalizedString::setApplicationDomain("kwin");
-}
-
-void Application::notifyKSplash()
-{
-    // Tell KSplash that KWin has started
-    QDBusMessage ksplashProgressMessage = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KSplash"),
-                                                                            QStringLiteral("/KSplash"),
-                                                                            QStringLiteral("org.kde.KSplash"),
-                                                                            QStringLiteral("setStage"));
-    ksplashProgressMessage.setArguments(QList<QVariant>() << QStringLiteral("wm"));
-    QDBusConnection::sessionBus().asyncCall(ksplashProgressMessage);
 }
 
 void Application::createWorkspace()

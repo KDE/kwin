@@ -191,7 +191,6 @@ void ApplicationWayland::finalizeStartup()
     }
     startSession();
     createWorkspace();
-    notifyKSplash();
 }
 
 void ApplicationWayland::continueStartupWithScene()
