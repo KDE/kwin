@@ -47,7 +47,7 @@ private:
     QTimer *m_timer;
     Xkb *m_xkb;
     quint32 m_time;
-    quint32 m_key;
+    quint32 m_key = 0;
 };
 
 
