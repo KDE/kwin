@@ -435,6 +435,10 @@ void InternalWindowTest::testKeyboardTriggersLeave()
     kwinApp()->platform()->keyboardKeyPressed(KEY_A, timestamp++);
     QVERIFY(enteredSpy.wait());
     kwinApp()->platform()->keyboardKeyReleased(KEY_A, timestamp++);
+
+    // Destroy the test client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(c));
 }
 
 void InternalWindowTest::testTouch()
