@@ -1792,7 +1792,7 @@ void Workspace::updateTabbox()
 {
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox && tabBox->isDisplayed()) {
+    if (tabBox->isDisplayed()) {
         tabBox->reset(true);
     }
 #endif

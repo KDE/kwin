@@ -214,7 +214,7 @@ void Client::releaseWindow(bool on_shutdown)
     deleting = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);
     }
 #endif

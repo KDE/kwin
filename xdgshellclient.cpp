@@ -374,7 +374,7 @@ void XdgShellClient::destroyClient()
     m_closing = true;
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
         tabBox->nextPrev(true);
     }
 #endif
