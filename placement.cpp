@@ -107,22 +107,25 @@ void Placement::place(AbstractClient *c, const QRect &area, Policy policy, Polic
         // snap to titlebar / snap to window borders on inner screen edges
         const QRect geo(c->geometry());
         QPoint corner = geo.topLeft();
-        const QPoint cp = c->clientPos();
-        const QSize cs = geo.size() - c->clientSize();
+        const QMargins frameMargins = c->frameMargins();
         AbstractClient::Position titlePos = c->titlebarPosition();
 
         const QRect fullRect = workspace()->clientArea(FullArea, c);
         if (!(c->maximizeMode() & MaximizeHorizontal)) {
-            if (titlePos != AbstractClient::PositionRight && geo.right() == fullRect.right())
-                corner.rx() += cs.width() - cp.x();
-            if (titlePos != AbstractClient::PositionLeft && geo.x() == fullRect.x())
-                corner.rx() -= cp.x();
+            if (titlePos != AbstractClient::PositionRight && geo.right() == fullRect.right()) {
+                corner.rx() += frameMargins.right();
+            }
+            if (titlePos != AbstractClient::PositionLeft && geo.left() == fullRect.left()) {
+                corner.rx() -= frameMargins.left();
+            }
         }
         if (!(c->maximizeMode() & MaximizeVertical)) {
-            if (titlePos != AbstractClient::PositionBottom && geo.bottom() == fullRect.bottom())
-                corner.ry() += cs.height() - cp.y();
-            if (titlePos != AbstractClient::PositionTop && geo.y() == fullRect.y())
-                corner.ry() -= cp.y();
+            if (titlePos != AbstractClient::PositionBottom && geo.bottom() == fullRect.bottom()) {
+                corner.ry() += frameMargins.bottom();
+            }
+            if (titlePos != AbstractClient::PositionTop && geo.top() == fullRect.top()) {
+                corner.ry() -= frameMargins.top();
+            }
         }
         c->move(corner);
     }

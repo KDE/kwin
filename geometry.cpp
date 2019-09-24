@@ -498,40 +498,42 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
         const int snapY = borderSnapZone.height() * snapAdjust;
         if (snapX || snapY) {
             QRect geo = c->geometry();
-            const QPoint cp = c->clientPos();
-            const QSize cs = geo.size() - c->clientSize();
-            int padding[4] = { cp.x(), cs.width() - cp.x(), cp.y(), cs.height() - cp.y() };
+            QMargins frameMargins = c->frameMargins();
 
             // snap to titlebar / snap to window borders on inner screen edges
             AbstractClient::Position titlePos = c->titlebarPosition();
-            if (padding[0] && (titlePos == AbstractClient::PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
-                               screens()->intersecting(geo.translated(maxRect.x() - (padding[0] + geo.x()), 0)) > 1))
-                padding[0] = 0;
-            if (padding[1] && (titlePos == AbstractClient::PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
-                               screens()->intersecting(geo.translated(maxRect.right() + padding[1] - geo.right(), 0)) > 1))
-                padding[1] = 0;
-            if (padding[2] && (titlePos == AbstractClient::PositionTop || (c->maximizeMode() & MaximizeVertical) ||
-                               screens()->intersecting(geo.translated(0, maxRect.y() - (padding[2] + geo.y()))) > 1))
-                padding[2] = 0;
-            if (padding[3] && (titlePos == AbstractClient::PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
-                               screens()->intersecting(geo.translated(0, maxRect.bottom() + padding[3] - geo.bottom())) > 1))
-                padding[3] = 0;
+            if (frameMargins.left() && (titlePos == AbstractClient::PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
+                                        screens()->intersecting(geo.translated(maxRect.x() - (frameMargins.left() + geo.x()), 0)) > 1)) {
+                frameMargins.setLeft(0);
+            }
+            if (frameMargins.right() && (titlePos == AbstractClient::PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
+                                         screens()->intersecting(geo.translated(maxRect.right() + frameMargins.right() - geo.right(), 0)) > 1)) {
+                frameMargins.setRight(0);
+            }
+            if (frameMargins.top() && (titlePos == AbstractClient::PositionTop || (c->maximizeMode() & MaximizeVertical) ||
+                                       screens()->intersecting(geo.translated(0, maxRect.y() - (frameMargins.top() + geo.y()))) > 1)) {
+                frameMargins.setTop(0);
+            }
+            if (frameMargins.bottom() && (titlePos == AbstractClient::PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
+                                          screens()->intersecting(geo.translated(0, maxRect.bottom() + frameMargins.bottom() - geo.bottom())) > 1)) {
+                frameMargins.setBottom(0);
+            }
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
                 deltaX = xmin - cx;
-                nx = xmin - padding[0];
+                nx = xmin - frameMargins.left();
             }
             if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
                 deltaX = rx - xmax;
-                nx = xmax - cw + padding[1];
+                nx = xmax - cw + frameMargins.right();
             }
 
             if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
                 deltaY = ymin - cy;
-                ny = ymin - padding[2];
+                ny = ymin - frameMargins.top();
             }
             if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
                 deltaY = ry - ymax;
-                ny = ymax - ch + padding[3];
+                ny = ymax - ch + frameMargins.bottom();
             }
         }
 
