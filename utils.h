@@ -44,15 +44,15 @@ namespace KWin
 const QPoint invalidPoint(INT_MIN, INT_MIN);
 
 class Toplevel;
-class Client;
+class X11Client;
 class Unmanaged;
 class Deleted;
 class Group;
 class Options;
 
 typedef QList< Toplevel* > ToplevelList;
-typedef QList< Client* > ClientList;
-typedef QList< const Client* > ConstClientList;
+typedef QList< X11Client *> ClientList;
+typedef QList< const X11Client *> ConstClientList;
 typedef QList< Unmanaged* > UnmanagedList;
 typedef QList< Deleted* > DeletedList;
 

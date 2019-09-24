@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "logging.h"
 #include "toplevel.h"
-#include "client.h"
+#include "x11client.h"
 #include "composite.h"
 #include "deleted.h"
 #include "effects.h"
@@ -451,7 +451,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     qreal yscale = 1;
     bool scaled = false;
 
-    Client *client = dynamic_cast<Client*>(toplevel);
+    X11Client *client = dynamic_cast<X11Client *>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
     const QRect decorationRect = toplevel->decorationRect();
     if (((client && !client->noBorder()) || (deleted && !deleted->noBorder())) &&

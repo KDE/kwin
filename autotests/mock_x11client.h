@@ -28,12 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class Client : public AbstractClient
+class X11Client : public AbstractClient
 {
     Q_OBJECT
 public:
-    explicit Client(QObject *parent);
-    ~Client() override;
+    explicit X11Client(QObject *parent);
+    ~X11Client() override;
     void showOnScreenEdge() override;
 
 };

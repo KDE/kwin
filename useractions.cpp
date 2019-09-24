@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "useractions.h"
 #include "cursor.h"
-#include "client.h"
+#include "x11client.h"
 #include "colorcorrection/manager.h"
 #include "composite.h"
 #include "input.h"
@@ -803,7 +803,7 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
         return;
     }
 
-    Client *c = dynamic_cast<Client*>(m_client.data());
+    X11Client *c = dynamic_cast<X11Client *>(m_client.data());
     if (!c) {
         return;
     }
@@ -1139,7 +1139,7 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
  * Called by the decoration in the new API to determine what buttons the user has configured for
  * window tab dragging and the operations menu.
  */
-Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons button)
+Options::WindowOperation X11Client::mouseButtonToWindowOperation(Qt::MouseButtons button)
 {
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
@@ -1161,7 +1161,7 @@ Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons b
 /**
  * Performs a mouse command on this client (see options.h)
  */
-bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)
+bool X11Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)
 {
     bool replay = false;
     switch(command) {
@@ -1717,7 +1717,7 @@ void AbstractClient::setShortcutInternal()
     workspace()->clientShortcutUpdated(this);
 }
 
-void Client::setShortcutInternal()
+void X11Client::setShortcutInternal()
 {
     updateCaption();
 #if 0

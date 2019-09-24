@@ -802,7 +802,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setShaded(isShade());
     w->setResizable(isResizable());
     w->setMovable(isMovable());
-    w->setVirtualDesktopChangeable(true); // FIXME Matches Client::actionSupported(), but both should be implemented.
+    w->setVirtualDesktopChangeable(true); // FIXME Matches X11Client::actionSupported(), but both should be implemented.
     w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
     w->setGeometry(geometry());
     connect(this, &AbstractClient::skipTaskbarChanged, w,

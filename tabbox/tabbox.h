@@ -40,7 +40,6 @@ namespace KWin
 
 class Workspace;
 class AbstractClient;
-class Client;
 class X11EventFilter;
 namespace TabBox
 {

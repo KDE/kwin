@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #endif
 #include "deleted.h"
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "group.h"
 #include "internal_client.h"
@@ -166,7 +166,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         }
     );
     connect(ws, &Workspace::clientAdded, this,
-        [this](Client *c) {
+        [this](X11Client *c) {
             if (c->readyForPainting())
                 slotClientShown(c);
             else
@@ -246,7 +246,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
 
     // connect all clients
-    for (Client *c : ws->clientList()) {
+    for (X11Client *c : ws->clientList()) {
         setupClientConnections(c);
     }
     for (Unmanaged *u : ws->unmanagedList()) {
@@ -367,10 +367,10 @@ void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
     );
 }
 
-void EffectsHandlerImpl::setupClientConnections(Client* c)
+void EffectsHandlerImpl::setupClientConnections(X11Client *c)
 {
     setupAbstractClientConnections(c);
-    connect(c, &Client::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
+    connect(c, &X11Client::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
@@ -567,8 +567,8 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
-    Q_ASSERT(qobject_cast<Client *>(t));
-    Client *c = static_cast<Client*>(t);
+    Q_ASSERT(qobject_cast<X11Client *>(t));
+    X11Client *c = static_cast<X11Client *>(t);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
     emit windowAdded(c->effectWindow());
@@ -599,7 +599,7 @@ void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c, KWin::Deleted *d)
 
 void EffectsHandlerImpl::slotClientModalityChanged()
 {
-    emit windowModalityChanged(static_cast<Client*>(sender())->effectWindow());
+    emit windowModalityChanged(static_cast<X11Client *>(sender())->effectWindow());
 }
 
 void EffectsHandlerImpl::slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to)
@@ -1073,7 +1073,7 @@ WindowQuadType EffectsHandlerImpl::newWindowQuadType()
 
 EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 {
-    if (Client* w = Workspace::self()->findClient(Predicate::WindowMatch, id))
+    if (X11Client *w = Workspace::self()->findClient(Predicate::WindowMatch, id))
         return w->effectWindow();
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
@@ -1721,7 +1721,7 @@ EffectWindowImpl::EffectWindowImpl(Toplevel *toplevel)
     managed = toplevel->isClient();
 
     waylandClient = qobject_cast<KWin::XdgShellClient *>(toplevel) != nullptr;
-    x11Client = qobject_cast<KWin::Client *>(toplevel) != nullptr;
+    x11Client = qobject_cast<KWin::X11Client *>(toplevel) != nullptr;
 }
 
 EffectWindowImpl::~EffectWindowImpl()
@@ -1775,7 +1775,7 @@ void EffectWindowImpl::addLayerRepaint(int x, int y, int w, int h)
 
 const EffectWindowGroup* EffectWindowImpl::group() const
 {
-    if (auto c = qobject_cast<Client *>(toplevel)) {
+    if (auto c = qobject_cast<X11Client *>(toplevel)) {
         return c->group()->effectGroup();
     }
     return nullptr; // TODO
@@ -1914,7 +1914,7 @@ CLIENT_HELPER(bool, isUnresponsive, unresponsive, false)
 
 QSize EffectWindowImpl::basicUnit() const
 {
-    if (auto client = qobject_cast<Client*>(toplevel)){
+    if (auto client = qobject_cast<X11Client *>(toplevel)){
         return client->basicUnit();
     }
     return QSize(1,1);
@@ -1938,7 +1938,7 @@ QRegion EffectWindowImpl::shape() const
 
 QRect EffectWindowImpl::decorationInnerRect() const
 {
-    auto client = qobject_cast<Client *>(toplevel);
+    auto client = qobject_cast<X11Client *>(toplevel);
     return client ? client->transparentRect() : contentsRect();
 }
 

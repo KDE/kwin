@@ -17,19 +17,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "mock_client.h"
+#include "mock_x11client.h"
 
 namespace KWin
 {
 
-Client::Client(QObject *parent)
+X11Client::X11Client(QObject *parent)
     : AbstractClient(parent)
 {
 }
 
-Client::~Client() = default;
+X11Client::~X11Client() = default;
 
-void Client::showOnScreenEdge()
+void X11Client::showOnScreenEdge()
 {
     setKeepBelow(false);
     setHiddenInternal(false);

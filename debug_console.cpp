@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "debug_console.h"
 #include "composite.h"
-#include "client.h"
+#include "x11client.h"
 #include "input_event.h"
 #include "internal_client.h"
 #include "main.h"
@@ -817,13 +817,13 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
         m_x11Clients.append(c);
     }
     connect(workspace(), &Workspace::clientAdded, this,
-        [this] (Client *c) {
+        [this] (X11Client *c) {
             add(s_x11ClientId -1, m_x11Clients, c);
         }
     );
     connect(workspace(), &Workspace::clientRemoved, this,
         [this] (AbstractClient *ac) {
-            Client *c = qobject_cast<Client*>(ac);
+            X11Client *c = qobject_cast<X11Client *>(ac);
             if (!c) {
                 return;
             }
@@ -1117,7 +1117,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return propertyData(c, index, role);
         } else if (InternalClient *c = internalClient(index)) {
             return propertyData(c, index, role);
-        } else if (Client *c = x11Client(index)) {
+        } else if (X11Client *c = x11Client(index)) {
             return propertyData(c, index, role);
         } else if (Unmanaged *u = unmanaged(index)) {
             return propertyData(u, index, role);
@@ -1171,7 +1171,7 @@ InternalClient *DebugConsoleModel::internalClient(const QModelIndex &index) cons
     return clientForIndex(index, m_internalClients, s_workspaceInternalId);
 }
 
-Client *DebugConsoleModel::x11Client(const QModelIndex &index) const
+X11Client *DebugConsoleModel::x11Client(const QModelIndex &index) const
 {
     return clientForIndex(index, m_x11Clients, s_x11ClientId);
 }

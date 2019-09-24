@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "windowselector.h"
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "unmanaged.h"
 #include "workspace.h"
@@ -241,7 +241,7 @@ void WindowSelector::selectWindowId(xcb_window_t window_to_select)
         return;
     }
     xcb_window_t window = window_to_select;
-    Client* client = nullptr;
+    X11Client *client = nullptr;
     while (true) {
         client = Workspace::self()->findClient(Predicate::FrameIdMatch, window);
         if (client) {

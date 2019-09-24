@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #endif
 #include "atoms.h"
-#include "client.h"
+#include "x11client.h"
 #include "client_machine.h"
 #include "composite.h"
 #include "effects.h"
@@ -326,7 +326,7 @@ bool Toplevel::compositing() const
     return Workspace::self()->compositing();
 }
 
-void Client::damageNotifyEvent()
+void X11Client::damageNotifyEvent()
 {
     if (syncRequest.isPending && isResize()) {
         emit damaged(this, QRect());

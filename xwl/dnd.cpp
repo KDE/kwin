@@ -99,7 +99,7 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
                     m_surfaceIface = si;
                     connect(workspace(), &Workspace::clientActivated, this,
                         [this](AbstractClient *ac) {
-                            if (!ac || !ac->inherits("KWin::Client")) {
+                            if (!ac || !ac->inherits("KWin::X11Client")) {
                                 return;
                             }
                             auto *surface = ac->surface();

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mock_workspace.h"
 #include "../cursor.h"
 #include "mock_screens.h"
-#include "mock_client.h"
+#include "mock_x11client.h"
 // frameworks
 #include <KConfigGroup>
 // Qt
@@ -265,7 +265,7 @@ void TestScreens::testCurrentClient()
     QVERIFY(currentChangedSpy.isValid());
 
     // create a mock client
-    Client *client = new Client(&ws);
+    X11Client *client = new X11Client(&ws);
     client->setScreen(1);
 
     // it's not the active client, so changing won't work

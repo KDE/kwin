@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwin_wayland_test.h"
 #include "composite.h"
 #include "effectloader.h"
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "effects.h"
 #include "platform.h"

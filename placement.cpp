@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KCMRULES
 #include "workspace.h"
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "options.h"
 #include "rules.h"
@@ -261,7 +261,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
                     if (client->keepAbove())
                         overlap += 16 * (xr - xl) * (yb - yt);
                     else if (client->keepBelow() && !client->isDock()) // ignore KeepBelow windows
-                        overlap += 0; // for placement (see Client::belongsToLayer() for Dock)
+                        overlap += 0; // for placement (see X11Client::belongsToLayer() for Dock)
                     else
                         overlap += (xr - xl) * (yb - yt);
                 }

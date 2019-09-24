@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 
 #include "dbusinterface.h"
-#include "client.h"
+#include "x11client.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
@@ -348,11 +348,11 @@ void Compositor::startupWithWorkspace()
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::removeToplevel);
     connect(effects, &EffectsHandler::screenGeometryChanged, this, &Compositor::addRepaintFull);
 
-    for (Client *c : Workspace::self()->clientList()) {
+    for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
         c->getShadow();
     }
-    for (Client *c : Workspace::self()->desktopList()) {
+    for (X11Client *c : Workspace::self()->desktopList()) {
         c->setupCompositing();
     }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -407,10 +407,10 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        for (Client *c : Workspace::self()->clientList()) {
+        for (X11Client *c : Workspace::self()->clientList()) {
             m_scene->removeToplevel(c);
         }
-        for (Client *c : Workspace::self()->desktopList()) {
+        for (X11Client *c : Workspace::self()->desktopList()) {
             m_scene->removeToplevel(c);
         }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -419,10 +419,10 @@ void Compositor::stop()
         for (InternalClient *client : workspace()->internalClients()) {
             m_scene->removeToplevel(client);
         }
-        for (Client *c : Workspace::self()->clientList()) {
+        for (X11Client *c : Workspace::self()->clientList()) {
             c->finishCompositing();
         }
-        for (Client *c : Workspace::self()->desktopList()) {
+        for (X11Client *c : Workspace::self()->desktopList()) {
             c->finishCompositing();
         }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -1009,7 +1009,7 @@ int X11Compositor::refreshRate() const
     return m_xrrRefreshRate;
 }
 
-void X11Compositor::updateClientCompositeBlocking(Client *c)
+void X11Compositor::updateClientCompositeBlocking(X11Client *c)
 {
     if (c) {
         if (c->isBlockingCompositing()) {

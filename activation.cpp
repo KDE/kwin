@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "focuschain.h"
 #include "netinfo.h"
@@ -92,7 +92,7 @@ namespace KWin
    futher user actions took place after the action leading to this new
    mapped window. This check is done by Workspace::allowClientActivation().
     There are several ways how to get the timestamp of action that caused
-   the new mapped window (done in Client::readUserTimeMapTimestamp()) :
+   the new mapped window (done in X11Client::readUserTimeMapTimestamp()) :
      - the window may have the _NET_WM_USER_TIME property. This way
        the application may either explicitly request that the window is not
        activated (by using 0 timestamp), or the property contains the time
@@ -131,7 +131,7 @@ namespace KWin
        than any user action done after launching this application.
      - if no timestamp is found at all, the window is activated.
     The check whether two windows belong to the same application (same
-   process) is done in Client::belongToSameApplication(). Not 100% reliable,
+   process) is done in X11Client::belongToSameApplication(). Not 100% reliable,
    but hopefully 99,99% reliable.
 
  As a somewhat special case, window activation is always enabled when
@@ -170,7 +170,7 @@ namespace KWin
         - without ASN - user timestamp needs to be reset, otherwise it would
             be used, and it's old; moreover this new window mustn't be detected
             as window belonging to already running application, or it wouldn't
-            be activated - see Client::sameAppWindowRoleMatch() for the (rather ugly)
+            be activated - see X11Client::sameAppWindowRoleMatch() for the (rather ugly)
             hack
     - konqueror preloading, i.e. window is created in advance, and kfmclient
         tells this Konqueror instance to show it later
@@ -326,8 +326,8 @@ void Workspace::activateClient(AbstractClient* c, bool force)
     // of the currently active window old, and reject further activation for it.
     // E.g. typing URL in minicli which will show kio_uiserver dialog (with workaround),
     // and then kdesktop shows dialog about SSL certificate.
-    // This needs also avoiding user creation time in Client::readUserTimeMapTimestamp().
-    if (Client *client = dynamic_cast<Client*>(c)) {
+    // This needs also avoiding user creation time in X11Client::readUserTimeMapTimestamp().
+    if (X11Client *client = dynamic_cast<X11Client *>(c)) {
         // updateUserTime is X11 specific
         client->updateUserTime();
     }
@@ -695,7 +695,7 @@ void Workspace::clientAttentionChanged(AbstractClient* c, bool set)
  * that qualifies for user interaction (clicking on it, activate it
  * externally, etc.).
  */
-void Client::updateUserTime(xcb_timestamp_t time)
+void X11Client::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime
     if (time == XCB_TIME_CURRENT_TIME) {
@@ -711,13 +711,13 @@ void Client::updateUserTime(xcb_timestamp_t time)
     group()->updateUserTime(m_userTime);
 }
 
-xcb_timestamp_t Client::readUserCreationTime() const
+xcb_timestamp_t X11Client::readUserCreationTime() const
 {
     Xcb::Property prop(false, window(), atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 0, 1);
     return prop.value<xcb_timestamp_t>(-1);
 }
 
-xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
+xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                                  bool session) const
 {
     xcb_timestamp_t time = info->userTime();
@@ -741,21 +741,21 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
         // Otherwise, refuse activation of a window
         // from already running application if this application
         // is not the active one (unless focus stealing prevention is turned off).
-        Client* act = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient());
+        X11Client *act = dynamic_cast<X11Client *>(workspace()->mostRecentlyActivatedClient());
         if (act != nullptr && !belongToSameApplication(act, this, SameApplicationCheck::RelaxedForActive)) {
             bool first_window = true;
-            auto sameApplicationActiveHackPredicate = [this](const Client *cl) {
+            auto sameApplicationActiveHackPredicate = [this](const X11Client *cl) {
                 // ignore already existing splashes, toolbars, utilities and menus,
                 // as the app may show those before the main window
                 return !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
-                        && cl != this && Client::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
+                        && cl != this && X11Client::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
             };
             if (isTransient()) {
                 auto clientMainClients = [this] () -> ClientList {
                     ClientList ret;
                     const auto mcs = mainClients();
                     for (auto mc: mcs) {
-                        if (Client *c  = dynamic_cast<Client*>(mc)) {
+                        if (X11Client *c  = dynamic_cast<X11Client *>(mc)) {
                             ret << c;
                         }
                     }
@@ -765,7 +765,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
                     ; // is transient for currently active window, even though it's not
                 // the same app (e.g. kcookiejar dialog) -> allow activation
                 else if (groupTransient() &&
-                        findInList<Client, Client>(clientMainClients(), sameApplicationActiveHackPredicate) == nullptr)
+                        findInList<X11Client, X11Client>(clientMainClients(), sameApplicationActiveHackPredicate) == nullptr)
                     ; // standalone transient
                 else
                     first_window = false;
@@ -796,7 +796,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
     return time;
 }
 
-xcb_timestamp_t Client::userTime() const
+xcb_timestamp_t X11Client::userTime() const
 {
     xcb_timestamp_t time = m_userTime;
     if (time == 0)   // doesn't want focus after showing
@@ -809,13 +809,13 @@ xcb_timestamp_t Client::userTime() const
     return time;
 }
 
-void Client::doSetActive()
+void X11Client::doSetActive()
 {
     updateUrgency(); // demand attention again if it's still urgent
     info->setState(isActive() ? NET::Focused : NET::States(), NET::Focused);
 }
 
-void Client::startupIdChanged()
+void X11Client::startupIdChanged()
 {
     KStartupInfoId asn_id;
     KStartupInfoData asn_data;
@@ -844,7 +844,7 @@ void Client::startupIdChanged()
     }
 }
 
-void Client::updateUrgency()
+void X11Client::updateUrgency()
 {
     if (info->urgency())
         demandAttention();
@@ -869,7 +869,7 @@ void Group::startupIdChanged()
 
 void Group::updateUserTime(xcb_timestamp_t time)
 {
-    // copy of Client::updateUserTime
+    // copy of X11Client::updateUserTime
     if (time == XCB_CURRENT_TIME) {
         updateXTime();
         time = xTime();

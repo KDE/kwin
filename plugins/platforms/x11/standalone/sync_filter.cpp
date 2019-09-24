@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "sync_filter.h"
-#include "client.h"
+#include "x11client.h"
 #include "workspace.h"
 #include "xcbutils.h"
 
@@ -34,7 +34,7 @@ bool SyncFilter::event(xcb_generic_event_t *event)
 {
     auto e = reinterpret_cast< xcb_sync_alarm_notify_event_t* >(event);
     auto client = workspace()->findClient(
-        [e] (const Client *c) {
+        [e] (const X11Client *c) {
             const auto syncRequest = c->getSyncRequest();
             return e->alarm == syncRequest.alarm && e->counter_value.hi == syncRequest.value.hi && e->counter_value.lo == syncRequest.value.lo;
         }

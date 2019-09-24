@@ -34,7 +34,6 @@ class QRect;
 namespace KWin
 {
 class AbstractClient;
-class Client;
 
 /**
  * @brief Menu shown for a Client.

@@ -39,7 +39,6 @@ namespace KWin
 {
 
 class AbstractClient;
-class Client;
 class Rules;
 
 #ifndef KCMRULES // only for kwin core

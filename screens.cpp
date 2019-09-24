@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens.h"
 #include <abstract_client.h>
-#include <client.h>
+#include <x11client.h>
 #include "cursor.h"
 #include "orientation_sensor.h"
 #include "utils.h"

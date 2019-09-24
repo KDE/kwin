@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "appmenu.h"
 #include "atoms.h"
-#include "client.h"
+#include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "dbusinterface.h"
@@ -90,7 +90,7 @@ ColorMapper::~ColorMapper()
 void ColorMapper::update()
 {
     xcb_colormap_t cmap = m_default;
-    if (Client *c = dynamic_cast<Client*>(Workspace::self()->activeClient())) {
+    if (X11Client *c = dynamic_cast<X11Client *>(Workspace::self()->activeClient())) {
         if (c->colormap() != XCB_COLORMAP_NONE) {
             cmap = c->colormap();
         }
@@ -544,7 +544,7 @@ Workspace::~Workspace()
     stacking_order.clear();
 
     for (ToplevelList::const_iterator it = stack.constBegin(), end = stack.constEnd(); it != end; ++it) {
-        Client *c = qobject_cast<Client*>(const_cast<Toplevel*>(*it));
+        X11Client *c = qobject_cast<X11Client *>(const_cast<Toplevel*>(*it));
         if (!c) {
             continue;
         }
@@ -557,7 +557,7 @@ Workspace::~Workspace()
         m_allClients.removeAll(c);
         desktops.removeAll(c);
     }
-    Client::cleanupX11();
+    X11Client::cleanupX11();
 
     if (waylandServer()) {
         const QList<XdgShellClient *> shellClients = waylandServer()->clients();
@@ -605,17 +605,17 @@ void Workspace::setupClientConnections(AbstractClient *c)
     connect(c, &AbstractClient::minimizedChanged, this, std::bind(&Workspace::clientMinimizedChanged, this, c));
 }
 
-Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
+X11Client *Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
-    Client* c = new Client();
+    X11Client *c = new X11Client();
     setupClientConnections(c);
     if (X11Compositor *compositor = X11Compositor::self()) {
-        connect(c, &Client::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
+        connect(c, &X11Client::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
     }
-    connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
+    connect(c, SIGNAL(clientFullScreenSet(KWin::X11Client *,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
     if (!c->manage(w, is_mapped)) {
-        Client::deleteClient(c);
+        X11Client::deleteClient(c);
         return nullptr;
     }
     addClient(c);
@@ -640,7 +640,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
     return c;
 }
 
-void Workspace::addClient(Client* c)
+void Workspace::addClient(X11Client *c)
 {
     Group* grp = findGroup(c->window());
 
@@ -688,7 +688,7 @@ void Workspace::addUnmanaged(Unmanaged* c)
 /**
  * Destroys the client \a c
  */
-void Workspace::removeClient(Client* c)
+void Workspace::removeClient(X11Client *c)
 {
     if (c == active_popup_client)
         closeActivePopup();
@@ -938,7 +938,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
-        Client *c = qobject_cast<Client*>(*it);
+        X11Client *c = qobject_cast<X11Client *>(*it);
         if (!c) {
             continue;
         }
@@ -956,7 +956,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
     }
 
     for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
-        Client *c = qobject_cast<Client*>(stacking_order.at(i));
+        X11Client *c = qobject_cast<X11Client *>(stacking_order.at(i));
         if (!c) {
             continue;
         }
@@ -1005,7 +1005,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
     if (options->isNextFocusPrefersMouse()) {
         ToplevelList::const_iterator it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
-            Client *client = qobject_cast<Client*>(*(--it));
+            X11Client *client = qobject_cast<X11Client *>(*(--it));
             if (!client) {
                 continue;
             }
@@ -1049,7 +1049,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
-        Client *c = qobject_cast<Client*>(*it);
+        X11Client *c = qobject_cast<X11Client *>(*it);
         if (!c) {
             continue;
         }
@@ -1068,7 +1068,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         */
 
     for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
-        Client *c = qobject_cast<Client*>(stacking_order.at(i));
+        X11Client *c = qobject_cast<X11Client *>(stacking_order.at(i));
         if (!c) {
             continue;
         }
@@ -1299,7 +1299,7 @@ void Workspace::setShowingDesktop(bool showing)
                 if (!topDesk)
                     topDesk = c;
                 if (auto group = c->group()) {
-                    foreach (Client *cm, group->members()) {
+                    foreach (X11Client *cm, group->members()) {
                         cm->updateLayer();
                     }
                 }
@@ -1649,12 +1649,12 @@ QString Workspace::supportInformation() const
     return support;
 }
 
-Client *Workspace::findClient(std::function<bool (const Client*)> func) const
+X11Client *Workspace::findClient(std::function<bool (const X11Client *)> func) const
 {
-    if (Client *ret = Toplevel::findInList(clients, func)) {
+    if (X11Client *ret = Toplevel::findInList(clients, func)) {
         return ret;
     }
-    if (Client *ret = Toplevel::findInList(desktops, func)) {
+    if (X11Client *ret = Toplevel::findInList(desktops, func)) {
         return ret;
     }
     return nullptr;
@@ -1665,7 +1665,7 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool (const Abstract
     if (AbstractClient *ret = Toplevel::findInList(m_allClients, func)) {
         return ret;
     }
-    if (Client *ret = Toplevel::findInList(desktops, func)) {
+    if (X11Client *ret = Toplevel::findInList(desktops, func)) {
         return ret;
     }
     if (InternalClient *ret = Toplevel::findInList(m_internalClients, func)) {
@@ -1686,23 +1686,23 @@ Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
     });
 }
 
-Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
+X11Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
 {
     switch (predicate) {
     case Predicate::WindowMatch:
-        return findClient([w](const Client *c) {
+        return findClient([w](const X11Client *c) {
             return c->window() == w;
         });
     case Predicate::WrapperIdMatch:
-        return findClient([w](const Client *c) {
+        return findClient([w](const X11Client *c) {
             return c->wrapperId() == w;
         });
     case Predicate::FrameIdMatch:
-        return findClient([w](const Client *c) {
+        return findClient([w](const X11Client *c) {
             return c->frameId() == w;
         });
     case Predicate::InputIdMatch:
-        return findClient([w](const Client *c) {
+        return findClient([w](const X11Client *c) {
             return c->inputId() == w;
         });
     }
@@ -1711,10 +1711,10 @@ Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
 
 Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) const
 {
-    if (Client *ret = Toplevel::findInList(clients, func)) {
+    if (X11Client *ret = Toplevel::findInList(clients, func)) {
         return ret;
     }
-    if (Client *ret = Toplevel::findInList(desktops, func)) {
+    if (X11Client *ret = Toplevel::findInList(desktops, func)) {
         return ret;
     }
     if (Unmanaged *ret = Toplevel::findInList(unmanaged, func)) {
@@ -1728,7 +1728,7 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
 
 bool Workspace::hasClient(const AbstractClient *c)
 {
-    if (auto cc = dynamic_cast<const Client*>(c)) {
+    if (auto cc = dynamic_cast<const X11Client *>(c)) {
         return hasClient(cc);
     } else {
         return findAbstractClient([c](const AbstractClient *test) {

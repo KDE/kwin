@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDir>
 
 #ifndef KCMRULES
-#include "client.h"
+#include "x11client.h"
 #include "client_machine.h"
 #include "screens.h"
 #include "workspace.h"
@@ -944,7 +944,7 @@ void AbstractClient::applyWindowRules()
     // AutogroupById : Only checked on window manage
     // StrictGeometry
     setShortcut(rules()->checkShortcut(shortcut().toString()));
-    // see also Client::setActive()
+    // see also X11Client::setActive()
     if (isActive()) {
         setOpacity(rules()->checkOpacityActive(qRound(opacity() * 100.0)) / 100.0);
         workspace()->disableGlobalShortcutsForClient(rules()->checkDisableGlobalShortcuts(false));
@@ -953,7 +953,7 @@ void AbstractClient::applyWindowRules()
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
 }
 
-void Client::updateWindowRules(Rules::Types selection)
+void X11Client::updateWindowRules(Rules::Types selection)
 {
     if (!isManaged())  // not fully setup yet
         return;
@@ -1170,7 +1170,7 @@ void RuleBook::setUpdatesDisabled(bool disable)
 {
     m_updatesDisabled = disable;
     if (!disable) {
-        foreach (Client * c, Workspace::self()->clientList())
+        foreach (X11Client *c, Workspace::self()->clientList())
             c->updateWindowRules(Rules::All);
     }
 }

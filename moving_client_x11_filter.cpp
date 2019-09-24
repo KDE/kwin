@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "moving_client_x11_filter.h"
-#include "client.h"
+#include "x11client.h"
 #include "workspace.h"
 #include <KKeyServer>
 #include <xcb/xcb.h>
@@ -33,7 +33,7 @@ MovingClientX11Filter::MovingClientX11Filter()
 
 bool MovingClientX11Filter::event(xcb_generic_event_t *event)
 {
-    auto client = dynamic_cast<Client*>(workspace()->moveResizeClient());
+    auto client = dynamic_cast<X11Client *>(workspace()->moveResizeClient());
     if (!client) {
         return false;
     }

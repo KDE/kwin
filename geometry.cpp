@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include "client.h"
+#include "x11client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "netinfo.h"
@@ -914,7 +914,7 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
  */
 // TODO move to Workspace?
 
-QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) const
+QRect X11Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) const
 {
     QRect r = area;
     NETExtendedStrut str = strut();
@@ -981,7 +981,7 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
     return r;
 }
 
-NETExtendedStrut Client::strut() const
+NETExtendedStrut X11Client::strut() const
 {
     NETExtendedStrut ext = info->extendedStrut();
     NETStrut str = info->strut();
@@ -1013,7 +1013,7 @@ NETExtendedStrut Client::strut() const
     return ext;
 }
 
-StrutRect Client::strutRect(StrutArea area) const
+StrutRect X11Client::strutRect(StrutArea area) const
 {
     Q_ASSERT(area != StrutAreaAll);   // Not valid
     const QSize displaySize = screens()->displaySize();
@@ -1053,7 +1053,7 @@ StrutRect Client::strutRect(StrutArea area) const
     return StrutRect(); // Null rect
 }
 
-StrutRects Client::strutRects() const
+StrutRects X11Client::strutRects() const
 {
     StrutRects region;
     region += strutRect(StrutAreaTop);
@@ -1063,7 +1063,7 @@ StrutRects Client::strutRects() const
     return region;
 }
 
-bool Client::hasStrut() const
+bool X11Client::hasStrut() const
 {
     NETExtendedStrut ext = strut();
     if (ext.left_width == 0 && ext.right_width == 0 && ext.top_width == 0 && ext.bottom_width == 0)
@@ -1071,7 +1071,7 @@ bool Client::hasStrut() const
     return true;
 }
 
-bool Client::hasOffscreenXineramaStrut() const
+bool X11Client::hasOffscreenXineramaStrut() const
 {
     // Get strut as a QRegion
     QRegion region;
@@ -1330,7 +1330,7 @@ QSize AbstractClient::adjustedSize(const QSize& frame, Sizemode mode) const
 }
 
 // this helper returns proper size even if the window is shaded
-// see also the comment in Client::setGeometry()
+// see also the comment in X11Client::setGeometry()
 QSize AbstractClient::adjustedSize() const
 {
     return sizeForClientSize(clientSize());
@@ -1343,7 +1343,7 @@ QSize AbstractClient::adjustedSize() const
  * \a wsize is adapted according to the window's size hints (minimum,
  * maximum and incremental size changes).
  */
-QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe) const
+QSize X11Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe) const
 {
     int w = wsize.width();
     int h = wsize.height();
@@ -1515,7 +1515,7 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 /**
  * Gets the client's normal WM hints and reconfigures itself respectively.
  */
-void Client::getWmNormalHints()
+void X11Client::getWmNormalHints()
 {
     const bool hadFixedAspect = m_geometryHints.hasAspect();
     // roundtrip to X server
@@ -1547,17 +1547,17 @@ void Client::getWmNormalHints()
     updateAllowedActions(); // affects isResizeable()
 }
 
-QSize Client::minSize() const
+QSize X11Client::minSize() const
 {
     return rules()->checkMinSize(m_geometryHints.minSize());
 }
 
-QSize Client::maxSize() const
+QSize X11Client::maxSize() const
 {
     return rules()->checkMaxSize(m_geometryHints.maxSize());
 }
 
-QSize Client::basicUnit() const
+QSize X11Client::basicUnit() const
 {
     return m_geometryHints.resizeIncrements();
 }
@@ -1566,7 +1566,7 @@ QSize Client::basicUnit() const
  * Auxiliary function to inform the client about the current window
  * configuration.
  */
-void Client::sendSyntheticConfigureNotify()
+void X11Client::sendSyntheticConfigureNotify()
 {
     xcb_configure_notify_event_t c;
     memset(&c, 0, sizeof(c));
@@ -1584,7 +1584,7 @@ void Client::sendSyntheticConfigureNotify()
     xcb_flush(connection());
 }
 
-const QPoint Client::calculateGravitation(bool invert, int gravity) const
+const QPoint X11Client::calculateGravitation(bool invert, int gravity) const
 {
     int dx, dy;
     dx = dy = 0;
@@ -1649,7 +1649,7 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
         return QPoint(x() - dx, y() - dy);
 }
 
-void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
+void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
 {
     const int configurePositionMask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     const int configureSizeMask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
@@ -1743,7 +1743,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
         // this is part of the kicker-xinerama-hack... it should be
         // safe to remove when kicker gets proper ExtendedStrut support;
         // see Workspace::updateClientArea() and
-        // Client::adjustedClientArea()
+        // X11Client::adjustedClientArea()
         if (hasStrut())
             workspace() -> updateClientArea();
     }
@@ -1781,7 +1781,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
 }
 
-void Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force)
+void X11Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force)
 {
     Q_ASSERT(!shade_geometry_change);
     if (isShade()) {
@@ -1843,7 +1843,7 @@ void Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry
 }
 
 // _NET_MOVERESIZE_WINDOW
-void Client::NETMoveResizeWindow(int flags, int x, int y, int width, int height)
+void X11Client::NETMoveResizeWindow(int flags, int x, int y, int width, int height)
 {
     int gravity = flags & 0xff;
     int value_mask = 0;
@@ -1862,7 +1862,7 @@ void Client::NETMoveResizeWindow(int flags, int x, int y, int width, int height)
     configureRequest(value_mask, x, y, width, height, gravity, true);
 }
 
-bool Client::isMovable() const
+bool X11Client::isMovable() const
 {
     if (!hasNETSupport() && !m_motif.move()) {
         return false;
@@ -1876,7 +1876,7 @@ bool Client::isMovable() const
     return true;
 }
 
-bool Client::isMovableAcrossScreens() const
+bool X11Client::isMovableAcrossScreens() const
 {
     if (!hasNETSupport() && !m_motif.move()) {
         return false;
@@ -1888,7 +1888,7 @@ bool Client::isMovableAcrossScreens() const
     return true;
 }
 
-bool Client::isResizable() const
+bool X11Client::isResizable() const
 {
     if (!hasNETSupport() && !m_motif.resize()) {
         return false;
@@ -1909,7 +1909,7 @@ bool Client::isResizable() const
     return min.width() < max.width() || min.height() < max.height();
 }
 
-bool Client::isMaximizable() const
+bool X11Client::isMaximizable() const
 {
     if (!isResizable() || isToolbar())  // SELI isToolbar() ?
         return false;
@@ -1922,9 +1922,9 @@ bool Client::isMaximizable() const
 /**
  * Reimplemented to inform the client about the new window position.
  */
-void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
+void X11Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
-    // this code is also duplicated in Client::plainResize()
+    // this code is also duplicated in X11Client::plainResize()
     // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
     // simply because there are too many places dealing with geometry. Those places
     // ignore shaded state and use normal geometry, which they usually should get
@@ -1934,7 +1934,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     // This gets more complicated in the case the code does only something like
     // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
     // Such code is wrong and should be changed to handle the case when the window is shaded,
-    // for example using Client::clientSize()
+    // for example using X11Client::clientSize()
 
     if (shade_geometry_change)
         ; // nothing
@@ -2013,9 +2013,9 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     emit geometryChanged();
 }
 
-void Client::plainResize(int w, int h, ForceGeometry_t force)
+void X11Client::plainResize(int w, int h, ForceGeometry_t force)
 {
-    // this code is also duplicated in Client::setGeometry(), and it's also commented there
+    // this code is also duplicated in X11Client::setGeometry(), and it's also commented there
     if (shade_geometry_change)
         ; // nothing
     else if (isShade()) {
@@ -2103,7 +2103,7 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     emit geometryChanged();
 }
 
-void Client::doMove(int x, int y)
+void X11Client::doMove(int x, int y)
 {
     m_frame.move(x, y);
     sendSyntheticConfigureNotify();
@@ -2150,7 +2150,7 @@ void AbstractClient::setMaximize(bool vertically, bool horizontally)
 }
 
 static bool changeMaximizeRecursion = false;
-void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
+void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
 {
     if (changeMaximizeRecursion)
         return;
@@ -2402,7 +2402,7 @@ void Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     emit quickTileModeChanged();
 }
 
-bool Client::userCanSetFullScreen() const
+bool X11Client::userCanSetFullScreen() const
 {
     if (!isFullScreenable()) {
         return false;
@@ -2410,7 +2410,7 @@ bool Client::userCanSetFullScreen() const
     return isNormalWindow() || isDialog();
 }
 
-void Client::setFullScreen(bool set, bool user)
+void X11Client::setFullScreen(bool set, bool user)
 {
     set = rules()->checkFullScreen(set);
 
@@ -2467,7 +2467,7 @@ void Client::setFullScreen(bool set, bool user)
 }
 
 
-void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
+void X11Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
 {
     int nscreens = screens()->count();
 
@@ -2492,7 +2492,7 @@ void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
  * Calculates the bounding rectangle defined by the 4 monitor indices indicating the
  * top, bottom, left, and right edges of the window when the fullscreen state is enabled.
  */
-QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
+QRect X11Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) const
 {
     QRect top, bottom, left, right, total;
 
@@ -2510,7 +2510,7 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
 
 static GeometryTip* geometryTip    = nullptr;
 
-void Client::positionGeometryTip()
+void X11Client::positionGeometryTip()
 {
     Q_ASSERT(isMove() || isResize());
     // Position and Size display
@@ -2575,7 +2575,7 @@ bool AbstractClient::startMoveResize()
     return true;
 }
 
-bool Client::doStartMoveResize()
+bool X11Client::doStartMoveResize()
 {
     bool has_grab = false;
     // This reportedly improves smoothness of the moveresize operation,
@@ -2651,7 +2651,7 @@ void AbstractClient::finishMoveResize(bool cancel)
     emit clientFinishUserMovedResized(this);
 }
 
-void Client::leaveMoveResize()
+void X11Client::leaveMoveResize()
 {
     if (needsXWindowMove) {
         // Do the deferred move
@@ -2768,7 +2768,7 @@ void AbstractClient::handleMoveResize(const QPoint &local, const QPoint &global)
     }
 }
 
-bool Client::isWaitingForMoveResizeSync() const
+bool X11Client::isWaitingForMoveResizeSync() const
 {
     return syncRequest.isPending && isResize();
 }
@@ -3094,11 +3094,11 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
     }
 }
 
-void Client::doResizeSync()
+void X11Client::doResizeSync()
 {
     if (!syncRequest.timeout) {
         syncRequest.timeout = new QTimer(this);
-        connect(syncRequest.timeout, &QTimer::timeout, this, &Client::performMoveResize);
+        connect(syncRequest.timeout, &QTimer::timeout, this, &X11Client::performMoveResize);
         syncRequest.timeout->setSingleShot(true);
     }
     if (syncRequest.counter != XCB_NONE) {
@@ -3125,7 +3125,7 @@ void AbstractClient::performMoveResize()
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 
-void Client::doPerformMoveResize()
+void X11Client::doPerformMoveResize()
 {
     if (syncRequest.counter == XCB_NONE)   // client w/o XSYNC support. allow the next resize event
         syncRequest.isPending = false; // NEVER do this for clients with a valid counter

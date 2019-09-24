@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "workspace_wrapper.h"
-#include "../client.h"
+#include "../x11client.h"
 #include "../outline.h"
 #include "../screens.h"
 #include "../xdgshellclient.h"
@@ -71,7 +71,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
         connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::clientAdded);
         connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::setupAbstractClientConnections);
     }
-    foreach (KWin::Client *client, ws->clientList()) {
+    foreach (KWin::X11Client *client, ws->clientList()) {
         setupClientConnections(client);
     }
 }
@@ -274,12 +274,12 @@ void WorkspaceWrapper::setupAbstractClientConnections(AbstractClient *client)
             this, &WorkspaceWrapper::clientMaximizeSet);
 }
 
-void WorkspaceWrapper::setupClientConnections(Client *client)
+void WorkspaceWrapper::setupClientConnections(X11Client *client)
 {
     setupAbstractClientConnections(client);
 
-    connect(client, &Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
-    connect(client, &Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
+    connect(client, &X11Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
+    connect(client, &X11Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)
@@ -297,7 +297,7 @@ void WorkspaceWrapper::hideOutline()
     outline()->hide();
 }
 
-Client *WorkspaceWrapper::getClient(qulonglong windowId)
+X11Client *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     return Workspace::self()->findClient(Predicate::WindowMatch, windowId);
 }

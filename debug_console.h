@@ -39,7 +39,7 @@ class DebugConsole;
 namespace KWin
 {
 
-class Client;
+class X11Client;
 class InternalClient;
 class XdgShellClient;
 class Unmanaged;
@@ -75,13 +75,13 @@ private:
     void remove(int parentRow, QVector<T*> &clients, T *client);
     XdgShellClient *shellClient(const QModelIndex &index) const;
     InternalClient *internalClient(const QModelIndex &index) const;
-    Client *x11Client(const QModelIndex &index) const;
+    X11Client *x11Client(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
     QVector<XdgShellClient *> m_shellClients;
     QVector<InternalClient*> m_internalClients;
-    QVector<Client*> m_x11Clients;
+    QVector<X11Client *> m_x11Clients;
     QVector<Unmanaged*> m_unmanageds;
 
 };

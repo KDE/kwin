@@ -96,7 +96,7 @@ public:
      * If no Client for activation is found @c null is returned.
      *
      * @param desktop The virtual desktop to look for a Client for activation
-     * @return :Client* The Client which could be activated or @c null if there is none.
+     * @return :X11Client *The Client which could be activated or @c null if there is none.
      */
     AbstractClient *getForActivation(uint desktop) const;
     /**
@@ -109,7 +109,7 @@ public:
      *
      * @param desktop The virtual desktop to look for a Client for activation
      * @param screen The screen to constrain the search on with separate screen focus
-     * @return :Client* The Client which could be activated or @c null if there is none.
+     * @return :X11Client *The Client which could be activated or @c null if there is none.
      */
     AbstractClient *getForActivation(uint desktop, int screen) const;
 
@@ -142,7 +142,7 @@ public:
      * chain is returned.
      *
      * @param reference The start point in the focus chain to search
-     * @return :Client* The relatively next Client in the most recently used chain.
+     * @return :X11Client *The relatively next Client in the most recently used chain.
      */
     AbstractClient *nextMostRecentlyUsed(AbstractClient *reference) const;
     /**
@@ -154,14 +154,14 @@ public:
      *
      * @param reference The reference Client which should not be returned
      * @param desktop The virtual desktop whose focus chain should be used
-     * @return :Client* The next usable Client or @c null if none can be found.
+     * @return :X11Client *The next usable Client or @c null if none can be found.
      */
     AbstractClient *nextForDesktop(AbstractClient *reference, uint desktop) const;
     /**
      * @brief Returns the first Client in the most recently used focus chain. First Client in this
      * case means really the first Client in the chain and not the most recently used Client.
      *
-     * @return :Client* The first Client in the most recently used chain.
+     * @return :X11Client *The first Client in the most recently used chain.
      */
     AbstractClient *firstMostRecentlyUsed() const;
 

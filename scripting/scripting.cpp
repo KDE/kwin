@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedgeitem.h"
 #include "scripting_model.h"
 #include "scripting_logging.h"
-#include "../client.h"
+#include "../x11client.h"
 #include "../thumbnailitem.h"
 #include "../options.h"
 #include "../workspace.h"
@@ -65,7 +65,7 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
             stream << " ";
         }
         QScriptValue argument = context->argument(i);
-        if (KWin::Client *client = qscriptvalue_cast<KWin::Client*>(argument)) {
+        if (KWin::X11Client *client = qscriptvalue_cast<KWin::X11Client *>(argument)) {
             client->print<QTextStream>(stream);
         } else {
             stream << argument.toString();
@@ -711,7 +711,7 @@ void KWin::Scripting::init()
     qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
     qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
     qmlRegisterType<KWin::AbstractClient>();
-    qmlRegisterType<KWin::Client>();
+    qmlRegisterType<KWin::X11Client>();
     qmlRegisterType<QAbstractItemModel>();
 
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);

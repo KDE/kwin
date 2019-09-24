@@ -19,8 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-#ifndef KWIN_CLIENT_H
-#define KWIN_CLIENT_H
+#pragma once
 
 // kwin
 #include "options.h"
@@ -58,8 +57,7 @@ enum class Predicate {
     InputIdMatch
 };
 
-class KWIN_EXPORT Client
-    : public AbstractClient
+class KWIN_EXPORT X11Client : public AbstractClient
 {
     Q_OBJECT
     /**
@@ -86,7 +84,7 @@ class KWIN_EXPORT Client
      */
     Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
 public:
-    explicit Client();
+    explicit X11Client();
     xcb_window_t wrapperId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }
     xcb_window_t frameId() const override;
@@ -233,10 +231,10 @@ public:
     bool hasUserTimeSupport() const;
 
     /// Does 'delete c;'
-    static void deleteClient(Client* c);
+    static void deleteClient(X11Client *c);
 
-    static bool belongToSameApplication(const Client* c1, const Client* c2, SameApplicationChecks checks = SameApplicationChecks());
-    static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
+    static bool belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks = SameApplicationChecks());
+    static bool sameAppWindowRoleMatch(const X11Client *c1, const X11Client *c2, bool active_hack);
 
     void killWindow() override;
     void toggleShade();
@@ -326,7 +324,7 @@ private Q_SLOTS:
 
 private:
     // Use Workspace::createClient()
-    ~Client() override; ///< Use destroyClient() or releaseWindow()
+    ~X11Client() override; ///< Use destroyClient() or releaseWindow()
 
     // Handlers for X11 events
     bool mapRequestEvent(xcb_map_request_event_t *e);
@@ -372,8 +370,8 @@ protected:
     //in between objects as compared to simple function
     //calls
 Q_SIGNALS:
-    void clientManaging(KWin::Client*);
-    void clientFullScreenSet(KWin::Client*, bool, bool);
+    void clientManaging(KWin::X11Client *);
+    void clientFullScreenSet(KWin::X11Client *, bool, bool);
 
     /**
      * Emitted whenever the Client want to show it menu
@@ -395,7 +393,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever the Client's block compositing state changes.
      */
-    void blockingCompositingChanged(KWin::Client *client);
+    void blockingCompositingChanged(KWin::X11Client *client);
     void clientSideDecoratedChanged();
 
 private:
@@ -411,7 +409,7 @@ private:
     void fetchIconicName();
     QString readName() const;
     void setCaption(const QString& s, bool force = false);
-    bool hasTransientInternal(const Client* c, bool indirect, ConstClientList& set) const;
+    bool hasTransientInternal(const X11Client *c, bool indirect, ConstClientList& set) const;
     void setShortcutInternal() override;
 
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
@@ -498,7 +496,7 @@ private:
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     ShadeMode shade_mode;
-    Client *shade_below;
+    X11Client *shade_below;
     uint deleting : 1; ///< True when doing cleanup and destroying the client
     Xcb::MotifHints m_motif;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
@@ -527,7 +525,7 @@ private:
     QSize client_size;
     bool shade_geometry_change;
     SyncRequest syncRequest;
-    static bool check_active_modal; ///< \see Client::checkActiveModal()
+    static bool check_active_modal; ///< \see X11Client::checkActiveModal()
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
 
@@ -553,142 +551,140 @@ private:
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 };
 
-inline xcb_window_t Client::wrapperId() const
+inline xcb_window_t X11Client::wrapperId() const
 {
     return m_wrapper;
 }
 
-inline bool Client::isClientSideDecorated() const
+inline bool X11Client::isClientSideDecorated() const
 {
     return m_clientSideDecorated;
 }
 
-inline bool Client::groupTransient() const
+inline bool X11Client::groupTransient() const
 {
     return m_transientForId == rootWindow();
 }
 
 // Needed because verifyTransientFor() may set transient_for_id to root window,
 // if the original value has a problem (window doesn't exist, etc.)
-inline bool Client::wasOriginallyGroupTransient() const
+inline bool X11Client::wasOriginallyGroupTransient() const
 {
     return m_originalTransientForId == rootWindow();
 }
 
-inline bool Client::isTransient() const
+inline bool X11Client::isTransient() const
 {
     return m_transientForId != XCB_WINDOW_NONE;
 }
 
-inline const Group* Client::group() const
+inline const Group* X11Client::group() const
 {
     return in_group;
 }
 
-inline Group* Client::group()
+inline Group* X11Client::group()
 {
     return in_group;
 }
 
-inline bool Client::isShown(bool shaded_is_shown) const
+inline bool X11Client::isShown(bool shaded_is_shown) const
 {
     return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden;
 }
 
-inline bool Client::isHiddenInternal() const
+inline bool X11Client::isHiddenInternal() const
 {
     return hidden;
 }
 
-inline ShadeMode Client::shadeMode() const
+inline ShadeMode X11Client::shadeMode() const
 {
     return shade_mode;
 }
 
-inline QRect Client::geometryRestore() const
+inline QRect X11Client::geometryRestore() const
 {
     return geom_restore;
 }
 
-inline void Client::setGeometryRestore(const QRect &geo)
+inline void X11Client::setGeometryRestore(const QRect &geo)
 {
     geom_restore = geo;
 }
 
-inline MaximizeMode Client::maximizeMode() const
+inline MaximizeMode X11Client::maximizeMode() const
 {
     return max_mode;
 }
 
-inline bool Client::isFullScreen() const
+inline bool X11Client::isFullScreen() const
 {
     return m_fullscreenMode != FullScreenNone;
 }
 
-inline bool Client::hasNETSupport() const
+inline bool X11Client::hasNETSupport() const
 {
     return info->hasNETSupport();
 }
 
-inline xcb_colormap_t Client::colormap() const
+inline xcb_colormap_t X11Client::colormap() const
 {
     return m_colormap;
 }
 
-inline int Client::sessionStackingOrder() const
+inline int X11Client::sessionStackingOrder() const
 {
     return sm_stacking_order;
 }
 
-inline bool Client::isManaged() const
+inline bool X11Client::isManaged() const
 {
     return m_managed;
 }
 
-inline QSize Client::clientSize() const
+inline QSize X11Client::clientSize() const
 {
     return client_size;
 }
 
-inline void Client::plainResize(const QSize& s, ForceGeometry_t force)
+inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)
 {
     plainResize(s.width(), s.height(), force);
 }
 
-inline void Client::resizeWithChecks(int w, int h, AbstractClient::ForceGeometry_t force)
+inline void X11Client::resizeWithChecks(int w, int h, AbstractClient::ForceGeometry_t force)
 {
     resizeWithChecks(w, h, XCB_GRAVITY_BIT_FORGET, force);
 }
 
-inline void Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)
+inline void X11Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)
 {
     resizeWithChecks(s.width(), s.height(), gravity, force);
 }
 
-inline bool Client::hasUserTimeSupport() const
+inline bool X11Client::hasUserTimeSupport() const
 {
     return info->userTime() != -1U;
 }
 
-inline xcb_window_t Client::moveResizeGrabWindow() const
+inline xcb_window_t X11Client::moveResizeGrabWindow() const
 {
     return m_moveResizeGrabWindow;
 }
 
-inline bool Client::hiddenPreview() const
+inline bool X11Client::hiddenPreview() const
 {
     return mapping_state == Kept;
 }
 
 template <typename T>
-inline void Client::print(T &stream) const
+inline void X11Client::print(T &stream) const
 {
     stream << "\'Client:" << window() << ";WMCLASS:" << resourceClass() << ":"
            << resourceName() << ";Caption:" << caption() << "\'";
 }
 
 } // namespace
-Q_DECLARE_METATYPE(KWin::Client*)
-Q_DECLARE_METATYPE(QList<KWin::Client*>)
-
-#endif
+Q_DECLARE_METATYPE(KWin::X11Client *)
+Q_DECLARE_METATYPE(QList<KWin::X11Client *>)

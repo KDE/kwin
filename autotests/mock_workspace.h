@@ -27,7 +27,7 @@ namespace KWin
 {
 
 class AbstractClient;
-class Client;
+class X11Client;
 class X11EventFilter;
 
 class MockWorkspace;
@@ -58,7 +58,7 @@ public:
     static Workspace *self();
 
 Q_SIGNALS:
-    void clientRemoved(KWin::Client*);
+    void clientRemoved(KWin::X11Client *);
 
 private:
     AbstractClient *m_activeClient;

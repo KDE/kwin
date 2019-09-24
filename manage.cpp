@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // This file contains things relevant to handling incoming events.
 
-#include "client.h"
+#include "x11client.h"
 
 #include <kstartupinfo.h>
 
@@ -47,7 +47,7 @@ namespace KWin
  * reparenting, initial geometry, initial state, placement, etc.
  * Returns false if KWin is not going to manage this window.
  */
-bool Client::manage(xcb_window_t w, bool isMapped)
+bool X11Client::manage(xcb_window_t w, bool isMapped)
 {
     StackingUpdatesBlocker stacking_blocker(workspace());
 
@@ -133,7 +133,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     setupWindowRules(false);
     setCaption(cap_normal, true);
 
-    connect(this, &Client::windowClassChanged, this, &Client::evaluateWindowRules);
+    connect(this, &X11Client::windowClassChanged, this, &X11Client::evaluateWindowRules);
 
     if (Xcb::Extensions::self()->isShapeAvailable())
         xcb_shape_select_input(connection(), window(), true);
@@ -151,7 +151,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     readTransientProperty(transientCookie);
     setDesktopFileName(rules()->checkDesktopFile(QByteArray(info->desktopFileName()), true).toUtf8());
     getIcons();
-    connect(this, &Client::desktopFileNameChanged, this, &Client::getIcons);
+    connect(this, &X11Client::desktopFileNameChanged, this, &X11Client::getIcons);
 
     m_geometryHints.read();
     getMotifHints();
@@ -447,7 +447,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (!init_minimize && isTransient() && mainClients().count() > 0 && !workspace()->sessionSaving()) {
         bool visible_parent = false;
         // Use allMainClients(), to include also main clients of group transients
-        // that have been optimized out in Client::checkGroupTransients()
+        // that have been optimized out in X11Client::checkGroupTransients()
         auto mainclients = allMainClients();
         for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
@@ -518,7 +518,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     // Set initial user time directly
     m_userTime = readUserTimeMapTimestamp(asn_valid ? &asn_id : nullptr, asn_valid ? &asn_data : nullptr, session);
-    group()->updateUserTime(m_userTime);   // And do what Client::updateUserTime() does
+    group()->updateUserTime(m_userTime);   // And do what X11Client::updateUserTime() does
 
     // This should avoid flicker, because real restacking is done
     // only after manage() finishes because of blocking, but the window is shown sooner
@@ -553,7 +553,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         if( !isMapped && !session && workspace()->sessionSaving() && !isOnCurrentActivity()) {
             setSessionActivityOverride( true );
             foreach( AbstractClient* c, mainClients()) {
-                if (Client *mc = dynamic_cast<Client*>(c)) {
+                if (X11Client *mc = dynamic_cast<X11Client *>(c)) {
                     mc->setSessionActivityOverride(true);
                 }
             }
@@ -619,7 +619,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 }
 
 // Called only from manage()
-void Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth)
+void X11Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth)
 {
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
     Q_ASSERT(frameId() == XCB_WINDOW_NONE);

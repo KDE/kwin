@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "pointer_input.h"
 #include "touch_input.h"
 #include "touch_hide_cursor_spy.h"
-#include "client.h"
+#include "x11client.h"
 #include "effects.h"
 #include "gestures.h"
 #include "globalshortcuts.h"

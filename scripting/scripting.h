@@ -52,9 +52,9 @@ typedef QList< QPair<bool, QPair<QString, QString > > > LoadScriptList;
 namespace KWin
 {
 class AbstractClient;
-class Client;
 class ScriptUnloaderAgent;
 class QtScriptWorkspaceWrapper;
+class X11Client;
 
 class KWIN_EXPORT AbstractScript : public QObject
 {

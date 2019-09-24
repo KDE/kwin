@@ -249,9 +249,9 @@ set(testScreens_SRCS
     ../screens.cpp
     ../x11eventfilter.cpp
     mock_abstract_client.cpp
-    mock_client.cpp
     mock_screens.cpp
     mock_workspace.cpp
+    mock_x11client.cpp
     test_screens.cpp
 )
 kconfig_add_kcfg_files(testScreens_SRCS ../settings.kcfgc)
@@ -289,9 +289,9 @@ set(testScreenEdges_SRCS
     ../virtualdesktops.cpp
     ../xcbutils.cpp # init of extensions
     mock_abstract_client.cpp
-    mock_client.cpp
     mock_screens.cpp
     mock_workspace.cpp
+    mock_x11client.cpp
     test_screen_edges.cpp
 )
 kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)

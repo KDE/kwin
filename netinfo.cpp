@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "netinfo.h"
 // kwin
-#include "client.h"
+#include "x11client.h"
 #include "rootinfo_filter.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -161,7 +161,7 @@ void RootInfo::changeCurrentDesktop(int d)
 void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window)
 {
     Workspace *workspace = Workspace::self();
-    if (Client* c = workspace->findClient(Predicate::WindowMatch, w)) {
+    if (X11Client *c = workspace->findClient(Predicate::WindowMatch, w)) {
         if (timestamp == XCB_CURRENT_TIME)
             timestamp = c->userTime();
         if (src != NET::FromApplication && src != FromTool)
@@ -171,7 +171,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
         else if (c == workspace->mostRecentlyActivatedClient()) {
             return; // WORKAROUND? With > 1 plasma activities, we cause this ourselves. bug #240673
         } else { // NET::FromApplication
-            Client* c2;
+            X11Client *c2;
             if (workspace->allowClientActivation(c, timestamp, false, true))
                 workspace->activateClient(c);
             // if activation of the requestor's window would be allowed, allow activation too
@@ -188,7 +188,7 @@ void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_ti
 
 void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t above, int detail, xcb_timestamp_t timestamp)
 {
-    if (Client* c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
+    if (X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
         if (timestamp == XCB_CURRENT_TIME)
             timestamp = c->userTime();
         if (src != NET::FromApplication && src != FromTool)
@@ -199,14 +199,14 @@ void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t abo
 
 void RootInfo::closeWindow(xcb_window_t w)
 {
-    Client* c = Workspace::self()->findClient(Predicate::WindowMatch, w);
+    X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c)
         c->closeWindow();
 }
 
 void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction)
 {
-    Client* c = Workspace::self()->findClient(Predicate::WindowMatch, w);
+    X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c) {
         updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
         c->NETMoveResize(x_root, y_root, (Direction)direction);
@@ -215,14 +215,14 @@ void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long 
 
 void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height)
 {
-    Client* c = Workspace::self()->findClient(Predicate::WindowMatch, w);
+    X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c)
         c->NETMoveResizeWindow(flags, x, y, width, height);
 }
 
 void RootInfo::gotPing(xcb_window_t w, xcb_timestamp_t timestamp)
 {
-    if (Client* c = Workspace::self()->findClient(Predicate::WindowMatch, w))
+    if (X11Client *c = Workspace::self()->findClient(Predicate::WindowMatch, w))
         c->gotPing(timestamp);
 }
 
@@ -245,7 +245,7 @@ void RootInfo::setActiveClient(AbstractClient *client)
 // WinInfo
 // ****************************************
 
-WinInfo::WinInfo(Client * c, xcb_window_t window,
+WinInfo::WinInfo(X11Client *c, xcb_window_t window,
                  xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2)
     : NETWinInfo(connection(), window, rwin, properties, properties2, NET::WindowManager), m_client(c)
 {

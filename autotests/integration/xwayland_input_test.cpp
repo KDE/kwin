@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "platform.h"
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "screenedge.h"
@@ -171,7 +171,7 @@ void XWaylandInputTest::testPointerEnterLeave()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    Client *client = windowCreatedSpy.last().first().value<Client*>();
+    X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client);
     QVERIFY(client->isDecorated());
     QVERIFY(!client->hasStrut());
@@ -198,7 +198,7 @@ void XWaylandInputTest::testPointerEnterLeave()
     QVERIFY(leftSpy.wait());
 
     // destroy window again
-    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QSignalSpy windowClosedSpy(client, &X11Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.data(), w);
     xcb_destroy_window(c.data(), w);

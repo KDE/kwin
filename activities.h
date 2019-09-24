@@ -33,7 +33,7 @@ class Controller;
 
 namespace KWin
 {
-class Client;
+class X11Client;
 
 class KWIN_EXPORT Activities : public QObject
 {
@@ -50,7 +50,7 @@ public:
      *
      * Takes care of transients as well.
      */
-    void toggleClientOnActivity(Client* c, const QString &activity, bool dont_activate);
+    void toggleClientOnActivity(X11Client *c, const QString &activity, bool dont_activate);
 
     QStringList running() const;
     QStringList all() const;

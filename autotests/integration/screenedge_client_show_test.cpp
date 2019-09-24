@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
 #include "platform.h"
-#include "client.h"
+#include "x11client.h"
 #include "cursor.h"
 #include "deleted.h"
 #include "screenedge.h"
@@ -140,7 +140,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    Client *client = windowCreatedSpy.last().first().value<Client*>();
+    X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client);
     QVERIFY(!client->isDecorated());
     QCOMPARE(client->geometry(), windowGeometry);
@@ -158,7 +158,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
 
     QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
     QVERIFY(effectsWindowHiddenSpy.isValid());
-    QSignalSpy clientHiddenSpy(client, &Client::windowHidden);
+    QSignalSpy clientHiddenSpy(client, &X11Client::windowHidden);
     QVERIFY(clientHiddenSpy.isValid());
     QVERIFY(clientHiddenSpy.wait());
     QVERIFY(client->isHiddenInternal());
@@ -189,7 +189,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QVERIFY(client->isHiddenInternal());
 
     // destroy window again
-    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QSignalSpy windowClosedSpy(client, &X11Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.data(), w);
     xcb_destroy_window(c.data(), w);
@@ -244,7 +244,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(windowCreatedSpy.isValid());
     QVERIFY(windowCreatedSpy.wait());
-    Client *client = windowCreatedSpy.last().first().value<Client*>();
+    X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client);
     QVERIFY(!client->isDecorated());
     QCOMPARE(client->geometry(), windowGeometry);
@@ -262,7 +262,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
 
     QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
     QVERIFY(effectsWindowHiddenSpy.isValid());
-    QSignalSpy clientHiddenSpy(client, &Client::windowHidden);
+    QSignalSpy clientHiddenSpy(client, &X11Client::windowHidden);
     QVERIFY(clientHiddenSpy.isValid());
     QVERIFY(clientHiddenSpy.wait());
     QVERIFY(client->isHiddenInternal());
@@ -282,7 +282,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     QCOMPARE(effectsWindowShownSpy.count(), 1);
 
     // destroy window again
-    QSignalSpy windowClosedSpy(client, &Client::windowClosed);
+    QSignalSpy windowClosedSpy(client, &X11Client::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     xcb_unmap_window(c.data(), w);
     xcb_destroy_window(c.data(), w);

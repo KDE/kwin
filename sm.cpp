@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfig.h>
 
 #include "workspace.h"
-#include "client.h"
+#include "x11client.h"
 #include <QDebug>
 #include <QFile>
 #include <QSocketNotifier>
@@ -132,7 +132,7 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
     int active_client = -1;
 
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
-        Client* c = (*it);
+        X11Client *c = (*it);
         if (c->windowType() > NET::Splash) {
             //window types outside this are not tooltips/menus/OSDs
             //typically these will be unmanaged and not in this list anyway, but that is not enforced
@@ -168,7 +168,7 @@ void Workspace::storeSession(KConfig* config, SMSavePhase phase)
     }
 }
 
-void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
+void Workspace::storeClient(KConfigGroup &cg, int num, X11Client *c)
 {
     c->setSessionActivityOverride(false); //make sure we get the real values
     QString n = QString::number(num);
@@ -211,7 +211,7 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     int count =  0;
     int active_client = -1;
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
-        Client* c = (*it);
+        X11Client *c = (*it);
         if (c->windowType() > NET::Splash) {
             continue;
         }
@@ -294,7 +294,7 @@ void Workspace::loadSubSessionInfo(const QString &name)
     addSessionInfo(cg);
 }
 
-static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info)
+static bool sessionInfoWindowTypeMatch(X11Client *c, SessionInfo* info)
 {
     if (info->windowType == -2) {
         // undefined (not really part of NET::WindowType)
@@ -312,7 +312,7 @@ static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info)
  *
  * May return 0 if there's no session info for the client.
  */
-SessionInfo* Workspace::takeSessionInfo(Client* c)
+SessionInfo* Workspace::takeSessionInfo(X11Client *c)
 {
     SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
@@ -510,7 +510,7 @@ void SessionSaveDoneHelper::processData()
 void Workspace::sessionSaveDone()
 {
     session_saving = false;
-    foreach (Client * c, clients) {
+    foreach (X11Client *c, clients) {
         c->setSessionActivityOverride(false);
     }
 }

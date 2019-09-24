@@ -399,7 +399,6 @@ set(kwin_KDEINIT_SRCS
     activation.cpp
     appmenu.cpp
     atoms.cpp
-    client.cpp
     client_machine.cpp
     colorcorrection/colorcorrectdbusinterface.cpp
     colorcorrection/manager.cpp
@@ -493,6 +492,7 @@ set(kwin_KDEINIT_SRCS
     wayland_server.cpp
     window_property_notify_x11_filter.cpp
     workspace.cpp
+    x11client.cpp
     x11eventfilter.cpp
     xcbutils.cpp
     xdgshellclient.cpp

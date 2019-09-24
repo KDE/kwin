@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11_decoration_renderer.h"
 #include "decorations/decoratedclient.h"
-#include "client.h"
+#include "x11client.h"
 #include "deleted.h"
 
 #include <kwinglobals.h>

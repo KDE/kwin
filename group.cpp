@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include <QTextStream>
 #include "workspace.h"
-#include "client.h"
+#include "x11client.h"
 #include "effects.h"
 
 #include <kstartupinfo.h>
@@ -95,14 +95,14 @@ QIcon Group::icon() const
     return QIcon();
 }
 
-void Group::addMember(Client* member_P)
+void Group::addMember(X11Client *member_P)
 {
     _members.append(member_P);
 //    qDebug() << "GROUPADD:" << this << ":" << member_P;
 //    qDebug() << kBacktrace();
 }
 
-void Group::removeMember(Client* member_P)
+void Group::removeMember(X11Client *member_P)
 {
 //    qDebug() << "GROUPREMOVE:" << this << ":" << member_P;
 //    qDebug() << kBacktrace();
@@ -131,7 +131,7 @@ void Group::deref()
     }
 }
 
-void Group::gotLeader(Client* leader_P)
+void Group::gotLeader(X11Client *leader_P)
 {
     Q_ASSERT(leader_P->window() == leader_wid);
     leader_client = leader_P;
@@ -164,7 +164,7 @@ Group* Workspace::findGroup(xcb_window_t leader) const
 
 // Client is group transient, but has no group set. Try to find
 // group with windows with the same client leader.
-Group* Workspace::findClientLeaderGroup(const Client* c) const
+Group* Workspace::findClientLeaderGroup(const X11Client *c) const
 {
     Group* ret = nullptr;
     for (ClientList::ConstIterator it = clients.constBegin();
@@ -185,7 +185,7 @@ Group* Workspace::findClientLeaderGroup(const Client* c) const
                 for (int pos = 0;
                         pos < old_group.count();
                         ++pos) {
-                    Client* tmp = old_group[ pos ];
+                    X11Client *tmp = old_group[ pos ];
                     if (tmp != c)
                         tmp->changeClientLeaderGroup(ret);
                 }
@@ -271,7 +271,7 @@ bool Toplevel::resourceMatch(const Toplevel* c1, const Toplevel* c2)
 // Client
 //****************************************
 
-bool Client::belongToSameApplication(const Client* c1, const Client* c2, SameApplicationChecks checks)
+bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)
 {
     bool same_app = false;
 
@@ -322,10 +322,10 @@ bool Client::belongToSameApplication(const Client* c1, const Client* c2, SameApp
 // considered belonging to the same application. This is for
 // the cases when opening new mainwindow directly from the application,
 // e.g. 'Open New Window' in konqy ( active_hack == true ).
-bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack)
+bool X11Client::sameAppWindowRoleMatch(const X11Client *c1, const X11Client *c2, bool active_hack)
 {
     if (c1->isTransient()) {
-        while (const Client *t = dynamic_cast<const Client*>(c1->transientFor()))
+        while (const X11Client *t = dynamic_cast<const X11Client *>(c1->transientFor()))
             c1 = t;
         if (c1->groupTransient())
             return c1->group() == c2->group();
@@ -337,7 +337,7 @@ bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool act
 #endif
     }
     if (c2->isTransient()) {
-        while (const Client *t = dynamic_cast<const Client*>(c2->transientFor()))
+        while (const X11Client *t = dynamic_cast<const X11Client *>(c2->transientFor()))
             c2 = t;
         if (c2->groupTransient())
             return c1->group() == c2->group();
@@ -368,21 +368,21 @@ bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool act
  of this property in some cases (window pointing to itself or creating a loop,
  keeping NET::Splash windows above other windows from the same app, etc.).
 
- Client::transient_for_id is the value of the WM_TRANSIENT_FOR property, after
- possibly being adjusted by KWin. Client::transient_for points to the Client
- this Client is transient for, or is NULL. If Client::transient_for_id is
+ X11Client::transient_for_id is the value of the WM_TRANSIENT_FOR property, after
+ possibly being adjusted by KWin. X11Client::transient_for points to the Client
+ this Client is transient for, or is NULL. If X11Client::transient_for_id is
  poiting to the root window, the window is considered to be transient
  for the whole window group, as suggested in NETWM 7.3.
 
- In the case of group transient window, Client::transient_for is NULL,
- and Client::groupTransient() returns true. Such window is treated as
+ In the case of group transient window, X11Client::transient_for is NULL,
+ and X11Client::groupTransient() returns true. Such window is treated as
  if it were transient for every window in its window group that has been
  mapped _before_ it (or, to be exact, was added to the same group before it).
  Otherwise two group transients can create loops, which can lead very very
  nasty things (bug #67914 and all its dupes).
 
- Client::original_transient_for_id is the value of the property, which
- may be different if Client::transient_for_id if e.g. forcing NET::Splash
+ X11Client::original_transient_for_id is the value of the property, which
+ may be different if X11Client::transient_for_id if e.g. forcing NET::Splash
  to be kept on top of its window group, or when the mainwindow is not mapped
  yet, in which case the window is temporarily made group transient,
  and when the mainwindow is mapped, transiency is re-evaluated.
@@ -404,12 +404,12 @@ bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool act
  - every window in the group : group()->members()
 */
 
-Xcb::TransientFor Client::fetchTransient() const
+Xcb::TransientFor X11Client::fetchTransient() const
 {
     return Xcb::TransientFor(window());
 }
 
-void Client::readTransientProperty(Xcb::TransientFor &transientFor)
+void X11Client::readTransientProperty(Xcb::TransientFor &transientFor)
 {
     xcb_window_t new_transient_for_id = XCB_WINDOW_NONE;
     if (transientFor.getTransientFor(&new_transient_for_id)) {
@@ -422,17 +422,17 @@ void Client::readTransientProperty(Xcb::TransientFor &transientFor)
     setTransient(new_transient_for_id);
 }
 
-void Client::readTransient()
+void X11Client::readTransient()
 {
     Xcb::TransientFor transientFor = fetchTransient();
     readTransientProperty(transientFor);
 }
 
-void Client::setTransient(xcb_window_t new_transient_for_id)
+void X11Client::setTransient(xcb_window_t new_transient_for_id)
 {
     if (new_transient_for_id != m_transientForId) {
         removeFromMainClients();
-        Client *transient_for = nullptr;
+        X11Client *transient_for = nullptr;
         m_transientForId = new_transient_for_id;
         if (m_transientForId != XCB_WINDOW_NONE && !groupTransient()) {
             transient_for = workspace()->findClient(Predicate::WindowMatch, m_transientForId);
@@ -447,7 +447,7 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
     }
 }
 
-void Client::removeFromMainClients()
+void X11Client::removeFromMainClients()
 {
     if (transientFor())
         transientFor()->removeTransient(this);
@@ -463,7 +463,7 @@ void Client::removeFromMainClients()
 // This one is called when destroying/releasing a window.
 // It makes sure this client is removed from all grouping
 // related lists.
-void Client::cleanGrouping()
+void X11Client::cleanGrouping()
 {
 //    qDebug() << "CLEANGROUPING:" << this;
 //    for ( ClientList::ConstIterator it = group()->members().begin();
@@ -530,7 +530,7 @@ void Client::cleanGrouping()
 // for a window that is (directly or indirectly) transient for it
 // (including another group transients).
 // Non-group transients not causing loops are checked in verifyTransientFor().
-void Client::checkGroupTransients()
+void X11Client::checkGroupTransients()
 {
     for (ClientList::ConstIterator it1 = group()->members().constBegin();
             it1 != group()->members().constEnd();
@@ -582,7 +582,7 @@ void Client::checkGroupTransients()
 /**
  * Check that the window is not transient for itself, and similar nonsense.
  */
-xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set)
+xcb_window_t X11Client::verifyTransientFor(xcb_window_t new_transient_for, bool set)
 {
     xcb_window_t new_property_value = new_transient_for;
     // make sure splashscreens are shown above all their app's windows, even though
@@ -613,7 +613,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
         }
         new_transient_for = tree->parent;
     }
-    if (Client* new_transient_for_client = workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
+    if (X11Client *new_transient_for_client = workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
         if (new_transient_for != before_search) {
             qCDebug(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
                          << before_search << ", child of " << new_transient_for_client << ", adjusting.";
@@ -627,7 +627,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     int count = 20;
     xcb_window_t loop_pos = new_transient_for;
     while (loop_pos != XCB_WINDOW_NONE && loop_pos != rootWindow()) {
-        Client* pos = workspace()->findClient(Predicate::WindowMatch, loop_pos);
+        X11Client *pos = workspace()->findClient(Predicate::WindowMatch, loop_pos);
         if (pos == nullptr)
             break;
         loop_pos = pos->m_transientForId;
@@ -646,7 +646,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     return new_transient_for;
 }
 
-void Client::addTransient(AbstractClient* cl)
+void X11Client::addTransient(AbstractClient* cl)
 {
     AbstractClient::addTransient(cl);
     if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
@@ -659,7 +659,7 @@ void Client::addTransient(AbstractClient* cl)
 //        qDebug() << "AT:" << (*it);
 }
 
-void Client::removeTransient(AbstractClient* cl)
+void X11Client::removeTransient(AbstractClient* cl)
 {
 //    qDebug() << "REMOVETRANS:" << this << ":" << cl;
 //    qDebug() << kBacktrace();
@@ -667,7 +667,7 @@ void Client::removeTransient(AbstractClient* cl)
     // make cl group transient
     AbstractClient::removeTransient(cl);
     if (cl->transientFor() == this) {
-        if (Client *c = dynamic_cast<Client*>(cl)) {
+        if (X11Client *c = dynamic_cast<X11Client *>(cl)) {
             c->m_transientForId = XCB_WINDOW_NONE;
             c->setTransientFor(nullptr); // SELI
 // SELI       cl->setTransient( rootWindow());
@@ -677,7 +677,7 @@ void Client::removeTransient(AbstractClient* cl)
 }
 
 // A new window has been mapped. Check if it's not a mainwindow for this already existing window.
-void Client::checkTransient(xcb_window_t w)
+void X11Client::checkTransient(xcb_window_t w)
 {
     if (m_originalTransientForId != w)
         return;
@@ -687,9 +687,9 @@ void Client::checkTransient(xcb_window_t w)
 
 // returns true if cl is the transient_for window for this client,
 // or recursively the transient_for window
-bool Client::hasTransient(const AbstractClient* cl, bool indirect) const
+bool X11Client::hasTransient(const AbstractClient* cl, bool indirect) const
 {
-    if (const Client *c = dynamic_cast<const Client*>(cl)) {
+    if (const X11Client *c = dynamic_cast<const X11Client *>(cl)) {
         // checkGroupTransients() uses this to break loops, so hasTransient() must detect them
         ConstClientList set;
         return hasTransientInternal(c, indirect, set);
@@ -697,9 +697,9 @@ bool Client::hasTransient(const AbstractClient* cl, bool indirect) const
     return false;
 }
 
-bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientList& set) const
+bool X11Client::hasTransientInternal(const X11Client *cl, bool indirect, ConstClientList& set) const
 {
-    if (const Client *t = dynamic_cast<const Client*>(cl->transientFor())) {
+    if (const X11Client *t = dynamic_cast<const X11Client *>(cl->transientFor())) {
         if (t == this)
             return true;
         if (!indirect)
@@ -714,7 +714,7 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     if (group() != cl->group())
         return false;
     // cl is group transient, search from top
-    if (transients().contains(const_cast< Client* >(cl)))
+    if (transients().contains(const_cast< X11Client *>(cl)))
         return true;
     if (!indirect)
         return false;
@@ -724,7 +724,7 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     for (auto it = transients().constBegin();
             it != transients().constEnd();
             ++it) {
-        const Client *c = qobject_cast<const Client *>(*it);
+        const X11Client *c = qobject_cast<const X11Client *>(*it);
         if (!c) {
             continue;
         }
@@ -734,7 +734,7 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     return false;
 }
 
-QList<AbstractClient*> Client::mainClients() const
+QList<AbstractClient*> X11Client::mainClients() const
 {
     if (!isTransient())
         return QList<AbstractClient*>();
@@ -750,7 +750,7 @@ QList<AbstractClient*> Client::mainClients() const
     return result;
 }
 
-AbstractClient* Client::findModal(bool allow_itself)
+AbstractClient* X11Client::findModal(bool allow_itself)
 {
     for (auto it = transients().constBegin();
             it != transients().constEnd();
@@ -762,10 +762,10 @@ AbstractClient* Client::findModal(bool allow_itself)
     return nullptr;
 }
 
-// Client::window_group only holds the contents of the hint,
+// X11Client::window_group only holds the contents of the hint,
 // but it should be used only to find the group, not for anything else
 // Argument is only when some specific group needs to be set.
-void Client::checkGroup(Group* set_group, bool force)
+void X11Client::checkGroup(Group* set_group, bool force)
 {
     Group* old_group = in_group;
     if (old_group != nullptr)
@@ -779,7 +779,7 @@ void Client::checkGroup(Group* set_group, bool force)
         }
     } else if (info->groupLeader() != XCB_WINDOW_NONE) {
         Group* new_group = workspace()->findGroup(info->groupLeader());
-        Client *t = qobject_cast<Client*>(transientFor());
+        X11Client *t = qobject_cast<X11Client *>(transientFor());
         if (t != nullptr && t->group() != new_group) {
             // move the window to the right group (e.g. a dialog provided
             // by different app, but transient for this one, so make it part of that group)
@@ -794,7 +794,7 @@ void Client::checkGroup(Group* set_group, bool force)
             in_group->addMember(this);
         }
     } else {
-        if (Client *t = qobject_cast<Client*>(transientFor())) {
+        if (X11Client *t = qobject_cast<X11Client *>(transientFor())) {
             // doesn't have window group set, but is transient for something
             // so make it part of that group
             Group* new_group = t->group();
@@ -884,7 +884,7 @@ void Client::checkGroup(Group* set_group, bool force)
 }
 
 // used by Workspace::findClientLeaderGroup()
-void Client::changeClientLeaderGroup(Group* gr)
+void X11Client::changeClientLeaderGroup(Group* gr)
 {
     // transientFor() != NULL are in the group of their mainwindow, so keep them there
     if (transientFor() != nullptr)
@@ -895,16 +895,16 @@ void Client::changeClientLeaderGroup(Group* gr)
     checkGroup(gr);   // change group
 }
 
-bool Client::check_active_modal = false;
+bool X11Client::check_active_modal = false;
 
-void Client::checkActiveModal()
+void X11Client::checkActiveModal()
 {
     // if the active window got new modal transient, activate it.
     // cannot be done in AddTransient(), because there may temporarily
     // exist loops, breaking findModal
-    Client* check_modal = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient());
+    X11Client *check_modal = dynamic_cast<X11Client *>(workspace()->mostRecentlyActivatedClient());
     if (check_modal != nullptr && check_modal->check_active_modal) {
-        Client* new_modal = dynamic_cast<Client*>(check_modal->findModal());
+        X11Client *new_modal = dynamic_cast<X11Client *>(check_modal->findModal());
         if (new_modal != nullptr && new_modal != check_modal) {
             if (!new_modal->isManaged())
                 return; // postpone check until end of manage()

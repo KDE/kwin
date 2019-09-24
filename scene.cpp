@@ -71,7 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickWindow>
 #include <QVector2D>
 
-#include "client.h"
+#include "x11client.h"
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
@@ -278,7 +278,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             if (c) {
                 opaqueFullscreen = c->isFullScreen();
             }
-            Client *cc = dynamic_cast<Client*>(c);
+            X11Client *cc = dynamic_cast<X11Client *>(c);
             // the window is fully opaque
             if (cc && cc->decorationHasAlpha()) {
                 // decoration uses alpha channel, so we may not exclude it in clipping

@@ -36,7 +36,7 @@ class QSocketNotifier;
 namespace KWin
 {
 
-class Client;
+class X11Client;
 
 struct SessionInfo {
     QByteArray sessionId;

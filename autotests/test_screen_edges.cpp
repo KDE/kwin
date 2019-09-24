@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../utils.h"
 #include "../virtualdesktops.h"
 #include "../xcbutils.h"
-#include "mock_client.h"
 #include "mock_screens.h"
 #include "mock_workspace.h"
+#include "mock_x11client.h"
 #include "testutils.h"
 // Frameworks
 #include <KConfigGroup>
@@ -395,7 +395,7 @@ void TestScreenEdges::testCreatingInitialEdges()
     }
 
     // let's start a move of window.
-    Client client(workspace());
+    X11Client client(workspace());
     workspace()->setMoveResizeClient(&client);
     for (int i = 0; i < 8; ++i) {
         auto e = edges.at(i);
@@ -667,7 +667,7 @@ void TestScreenEdges::testFullScreenBlocking()
 {
     using namespace KWin;
     MockWorkspace ws;
-    Client client(&ws);
+    X11Client client(&ws);
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("Windows").writeEntry("ElectricBorderPushbackPixels", 1);
     config->sync();
@@ -781,7 +781,7 @@ void TestScreenEdges::testFullScreenBlocking()
 void TestScreenEdges::testClientEdge()
 {
     using namespace KWin;
-    Client client(workspace());
+    X11Client client(workspace());
     client.setGeometry(QRect(10, 50, 10, 50));
     auto s = ScreenEdges::self();
     s->init();

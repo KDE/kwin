@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xwayland.h"
 
 #include "atoms.h"
-#include "client.h"
+#include "x11client.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -64,7 +64,7 @@ DragEventReply WlToXDrag::moveFilter(Toplevel *target, const QPoint &pos)
         delete m_visit;
         m_visit = nullptr;
     }
-    if (!qobject_cast<Client *>(ac)) {
+    if (!qobject_cast<X11Client *>(ac)) {
         // no target or wayland native target,
         // handled by input code directly
         return DragEventReply::Wayland;

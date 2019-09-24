@@ -32,17 +32,14 @@ namespace KWin
 {
 
 class AbstractClient;
-class Client;
 class RootInfoFilter;
+class X11Client;
 
 /**
  * NET WM Protocol handler class
  */
 class RootInfo : public NETRootInfo
 {
-private:
-    typedef KWin::Client Client;  // Because of NET::Client
-
 public:
     static RootInfo *create();
     static void destroy();
@@ -80,11 +77,8 @@ inline RootInfo *rootInfo()
  */
 class WinInfo : public NETWinInfo
 {
-private:
-    typedef KWin::Client Client; // Because of NET::Client
-
 public:
-    WinInfo(Client* c, xcb_window_t window,
+    WinInfo(X11Client *c, xcb_window_t window,
             xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2);
     void changeDesktop(int desktop) override;
     void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
@@ -92,7 +86,7 @@ public:
     void disable();
 
 private:
-    Client * m_client;
+    X11Client *m_client;
 };
 
 } // KWin

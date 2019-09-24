@@ -52,12 +52,12 @@ class Window;
 }
 
 class AbstractClient;
-class Client;
 class Compositor;
 class InternalClient;
 class KillWindow;
 class ShortcutDialog;
 class UserActionsMenu;
+class X11Client;
 class X11EventFilter;
 enum class Predicate;
 
@@ -75,7 +75,7 @@ public:
     bool workspaceEvent(xcb_generic_event_t*);
     bool workspaceEvent(QEvent*);
 
-    bool hasClient(const Client*);
+    bool hasClient(const X11Client *);
     bool hasClient(const AbstractClient*);
 
     /**
@@ -85,7 +85,7 @@ public:
      * needs to be implemented. An example usage for finding a Client with a matching windowId
      * @code
      * xcb_window_t w; // our test window
-     * Client *client = findClient([w](const Client *c) -> bool {
+     * X11Client *client = findClient([w](const X11Client *c) -> bool {
      *     return c->window() == w;
      * });
      * @endcode
@@ -95,29 +95,29 @@ public:
      * can be simplified to:
      * @code
      * xcb_window_t w; // our test window
-     * Client *client = findClient(Predicate::WindowMatch, w);
+     * X11Client *client = findClient(Predicate::WindowMatch, w);
      * @endcode
      *
-     * @param func Unary function that accepts a Client* as argument and
+     * @param func Unary function that accepts a X11Client *as argument and
      * returns a value convertible to bool. The value returned indicates whether the
-     * Client* is considered a match in the context of this function.
+     * X11Client *is considered a match in the context of this function.
      * The function shall not modify its argument.
      * This can either be a function pointer or a function object.
-     * @return KWin::Client* The found Client or @c null
+     * @return KWin::X11Client *The found Client or @c null
      * @see findClient(Predicate, xcb_window_t)
      */
-    Client *findClient(std::function<bool (const Client*)> func) const;
+    X11Client *findClient(std::function<bool (const X11Client *)> func) const;
     AbstractClient *findAbstractClient(std::function<bool (const AbstractClient*)> func) const;
     /**
      * @brief Finds the Client matching the given match @p predicate for the given window.
      *
      * @param predicate Which window should be compared
      * @param w The window id to test against
-     * @return KWin::Client* The found Client or @c null
-     * @see findClient(std::function<bool (const Client*)>)
+     * @return KWin::X11Client *The found Client or @c null
+     * @see findClient(std::function<bool (const X11Client *)>)
      */
-    Client *findClient(Predicate predicate, xcb_window_t w) const;
-    void forEachClient(std::function<void (Client*)> func);
+    X11Client *findClient(Predicate predicate, xcb_window_t w) const;
+    void forEachClient(std::function<void (X11Client *)> func);
     void forEachAbstractClient(std::function<void (AbstractClient*)> func);
     Unmanaged *findUnmanaged(std::function<bool (const Unmanaged*)> func) const;
     /**
@@ -190,14 +190,14 @@ public:
     void raiseClient(AbstractClient* c, bool nogroup = false);
     void lowerClient(AbstractClient* c, bool nogroup = false);
     void raiseClientRequest(AbstractClient* c, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);
-    void lowerClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
+    void lowerClientRequest(X11Client *c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void lowerClientRequest(AbstractClient* c);
     void restackClientUnderActive(AbstractClient*);
     void restack(AbstractClient *c, AbstractClient *under, bool force = false);
     void updateClientLayer(AbstractClient* c);
     void raiseOrLowerClient(AbstractClient*);
     void resetUpdateToolWindowsTimer();
-    void restoreSessionStackingOrder(Client* c);
+    void restoreSessionStackingOrder(X11Client *c);
     void updateStackingOrder(bool propagate_new_clients = false);
     void forceRestacking();
 
@@ -303,11 +303,11 @@ public:
     void checkTransients(xcb_window_t w);
 
     void storeSession(KConfig* config, SMSavePhase phase);
-    void storeClient(KConfigGroup &cg, int num, Client *c);
+    void storeClient(KConfigGroup &cg, int num, X11Client *c);
     void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
     void loadSubSessionInfo(const QString &name);
 
-    SessionInfo* takeSessionInfo(Client*);
+    SessionInfo* takeSessionInfo(X11Client *);
 
     // D-Bus interface
     QString supportInformation() const;
@@ -317,14 +317,14 @@ public:
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;
 
-    void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from Client::pingWindow()
+    void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from X11Client::pingWindow()
 
-    void removeClient(Client*);   // Only called from Client::destroyClient() or Client::releaseWindow()
+    void removeClient(X11Client *);   // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
     void setActiveClient(AbstractClient*);
     Group* findGroup(xcb_window_t leader) const;
     void addGroup(Group* group);
     void removeGroup(Group* group);
-    Group* findClientLeaderGroup(const Client* c) const;
+    Group* findClientLeaderGroup(const X11Client *c) const;
 
     void removeUnmanaged(Unmanaged*);   // Only called from Unmanaged::release()
     void removeDeleted(Deleted*);
@@ -504,7 +504,7 @@ Q_SIGNALS:
     //Signals required for the scripting interface
     void desktopPresenceChanged(KWin::AbstractClient*, int);
     void currentDesktopChanged(int, KWin::AbstractClient*);
-    void clientAdded(KWin::Client*);
+    void clientAdded(KWin::X11Client *);
     void clientRemoved(KWin::AbstractClient*);
     void clientActivated(KWin::AbstractClient*);
     void clientDemandsAttentionChanged(KWin::AbstractClient*, bool);
@@ -556,9 +556,9 @@ private:
     void saveOldScreenSizes();
 
     /// This is the right way to create a new client
-    Client* createClient(xcb_window_t w, bool is_mapped);
+    X11Client *createClient(xcb_window_t w, bool is_mapped);
     void setupClientConnections(AbstractClient *client);
-    void addClient(Client* c);
+    void addClient(X11Client *c);
     Unmanaged* createUnmanaged(xcb_window_t w);
     void addUnmanaged(Unmanaged* c);
 
@@ -779,7 +779,7 @@ inline QPoint Workspace::focusMousePosition() const
 }
 
 inline
-void Workspace::forEachClient(std::function< void (Client*) > func)
+void Workspace::forEachClient(std::function< void (X11Client *) > func)
 {
     std::for_each(clients.constBegin(), clients.constEnd(), func);
     std::for_each(desktops.constBegin(), desktops.constEnd(), func);
@@ -791,9 +791,9 @@ void Workspace::forEachUnmanaged(std::function< void (Unmanaged*) > func)
     std::for_each(unmanaged.constBegin(), unmanaged.constEnd(), func);
 }
 
-inline bool Workspace::hasClient(const Client* c)
+inline bool Workspace::hasClient(const X11Client *c)
 {
-    return findClient([c](const Client *test) {
+    return findClient([c](const X11Client *test) {
         return test == c;
     });
 }

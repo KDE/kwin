@@ -30,9 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class Client;
 class CompositorSelectionOwner;
 class Scene;
+class X11Client;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -252,7 +252,7 @@ public:
 
     int refreshRate() const override;
 
-    void updateClientCompositeBlocking(Client *client = nullptr);
+    void updateClientCompositeBlocking(X11Client *client = nullptr);
 
     static X11Compositor *self();
 
