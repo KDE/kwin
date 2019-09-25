@@ -256,7 +256,8 @@ bool DrmOutput::init(drmModeConnector *connector)
         return false;
     }
 
-    setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP);
+    setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP
+                || connector->connector_type == DRM_MODE_CONNECTOR_DSI);
     setDpmsSupported(true);
 
     if (isInternal()) {
