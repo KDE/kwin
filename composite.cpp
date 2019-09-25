@@ -131,6 +131,7 @@ Compositor::Compositor(QObject* workspace)
     , m_composeAtSwapCompletion(false)
 {
     connect(options, &Options::configChanged, this, &Compositor::configChanged);
+    connect(options, &Options::animationSpeedChanged, this, &Compositor::configChanged);
 
     m_monotonicClock.start();
 

@@ -248,11 +248,6 @@
             <min>4</min>
             <max>6</max>
         </entry>
-        <entry name="AnimationSpeed" type="Int">
-            <default>3</default>
-            <min>0</min>
-            <max>6</max>
-        </entry>
         <entry name="GLPlatformInterface" type="String">
             <default>glx</default>
         </entry>
@@ -299,6 +294,12 @@
         </entry>
         <entry name="LayoutName" type="String">
             <default>thumbnails</default>
+        </entry>
+    </group>
+    <group name="KDE">
+        <entry name="AnimationDurationFactor" type="Double">
+            <default>1</default>
+            <min>0</min>
         </entry>
     </group>
 </kcfg>

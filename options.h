@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "placement.h"
 
+#include <KConfigWatcher>
+
 namespace KWin
 {
 
@@ -741,10 +743,6 @@ public:
     static OpenGLPlatformInterface defaultGlPlatformInterface() {
         return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
     }
-    static int defaultAnimationSpeed() {
-        return 3;
-    }
-
     /**
      * Performs loading all settings except compositing related.
      */
@@ -817,6 +815,7 @@ Q_SIGNALS:
     void glPreferBufferSwapChanged();
     void glPlatformInterfaceChanged();
     void windowsBlockCompositingChanged();
+    void animationSpeedChanged();
 
     void configChanged();
 
@@ -824,6 +823,8 @@ private:
     void setElectricBorders(int borders);
     void syncFromKcfgc();
     QScopedPointer<Settings> m_settings;
+    KConfigWatcher::Ptr m_configWatcher;
+
     FocusPolicy m_focusPolicy;
     bool m_nextFocusPrefersMouse;
     bool m_clickRaise;
@@ -888,7 +889,6 @@ private:
     bool borderless_maximized_windows;
     bool show_geometry_tip;
     bool condensed_title;
-    int animationSpeed; // 0 - instant, 5 - very slow
 
     QHash<Qt::KeyboardModifier, QStringList> m_modifierOnlyShortcuts;
 

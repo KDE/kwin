@@ -143,10 +143,16 @@ Options::Options(QObject *parent)
     , borderless_maximized_windows(false)
     , show_geometry_tip(false)
     , condensed_title(false)
-    , animationSpeed(Options::defaultAnimationSpeed())
 {
     m_settings->setDefaults();
     syncFromKcfgc();
+
+    m_configWatcher = KConfigWatcher::create(m_settings->sharedConfig());
+    connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+        if (group.name() == QLatin1String("KDE") && names.contains(QByteArrayLiteral("AnimationDurationFactor"))) {
+            emit animationSpeedChanged();
+        }
+    });
 }
 
 Options::~Options()
@@ -933,9 +939,6 @@ void Options::reloadCompositingSettings(bool force)
         previews = HiddenPreviewsAlways;
     setHiddenPreviews(previews);
 
-    // TOOD: add setter
-    animationSpeed = qBound(0, config.readEntry("AnimationSpeed", Options::defaultAnimationSpeed()), 6);
-
     auto interfaceToKey = [](OpenGLPlatformInterface interface) {
         switch (interface) {
         case GlxPlatformInterface:
@@ -1062,8 +1065,11 @@ Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int de
 
 double Options::animationTimeFactor() const
 {
-    const double factors[] = { 0, 0.2, 0.5, 1, 2, 4, 20 };
-    return factors[ animationSpeed ];
+ #ifndef KCMRULES
+    return m_settings->animationDurationFactor();
+#else
+    return 0;
+#endif
 }
 
 Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons button) const
