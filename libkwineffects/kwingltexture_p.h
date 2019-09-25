@@ -63,6 +63,7 @@ public:
     bool m_filterChanged;
     bool m_wrapModeChanged;
     bool m_immutable;
+    bool m_foreign;
     int m_mipLevels;
 
     int m_unnormalizeActive; // 0 - no, otherwise refcount

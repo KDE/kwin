@@ -59,6 +59,13 @@ public:
     explicit GLTexture(const QString& fileName);
     GLTexture(GLenum internalFormat, int width, int height, int levels = 1);
     explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1);
+
+    /**
+     * Create a GLTexture wrapper around an existing texture.
+     * Management of the underlying texture remains the responsibility of the caller.
+     * @since 5.18
+     */
+    explicit GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels = 1);
     virtual ~GLTexture();
 
     GLTexture & operator = (const GLTexture& tex);

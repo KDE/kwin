@@ -239,6 +239,24 @@ GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels)
 {
 }
 
+GLTexture::GLTexture(GLuint textureId, GLenum internalFormat, const QSize &size, int levels)
+    : d_ptr(new GLTexturePrivate())
+{
+    Q_D(GLTexture);
+    d->m_foreign = true;
+    d->m_texture = textureId;
+    d->m_target = GL_TEXTURE_2D;
+    d->m_scale.setWidth(1.0 / size.width());
+    d->m_scale.setHeight(1.0 / size.height());
+    d->m_size = size;
+    d->m_canUseMipmaps = levels > 1;
+    d->m_mipLevels = levels;
+    d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
+    d->m_internalFormat = internalFormat;
+
+    d->updateMatrix();
+}
+
 GLTexture::~GLTexture()
 {
 }
@@ -261,6 +279,7 @@ GLTexturePrivate::GLTexturePrivate()
  , m_filterChanged(true)
  , m_wrapModeChanged(false)
  , m_immutable(false)
+ , m_foreign(false)
  , m_mipLevels(1)
  , m_unnormalizeActive(0)
  , m_normalizeActive(0)
@@ -272,7 +291,7 @@ GLTexturePrivate::GLTexturePrivate()
 GLTexturePrivate::~GLTexturePrivate()
 {
     delete m_vbo;
-    if (m_texture != 0) {
+    if (m_texture != 0 && !m_foreign) {
         glDeleteTextures(1, &m_texture);
     }
     // Delete the FBO if this is the last Texture
@@ -333,6 +352,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         return;
 
     Q_D(GLTexture);
+    Q_ASSERT(!d->m_foreign);
 
     bool useUnpack = !src.isNull() && d->s_supportsUnpack && d->s_supportsARGB32 && image.format() == QImage::Format_ARGB32_Premultiplied;
 
@@ -510,6 +530,7 @@ GLenum GLTexture::internalFormat() const
 void GLTexture::clear()
 {
     Q_D(GLTexture);
+    Q_ASSERT(!d->m_foreign);
     if (!GLTexturePrivate::s_fbo && GLRenderTarget::supported() &&
         GLPlatform::instance()->driver() != Driver_Catalyst) // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
