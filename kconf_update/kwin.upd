@@ -31,3 +31,9 @@ Id=auto-bordersize
 File=kwinrc
 Group=org.kde.kdecoration2
 Script=kwin-5.16-auto-bordersize.sh,sh
+
+# Move AnimationSpeed to kdeglobals as AnimationDurationFactor converting to a useful value
+Id=animation-speed
+File=kwinrc,kdeglobals
+Group=Compositing,KDE
+Script=kwin-5.18-move-animspeed.py,python
