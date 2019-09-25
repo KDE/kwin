@@ -29,6 +29,9 @@
 #include <kcmodule.h>
 #include <kservice.h>
 
+#include <algorithm>
+#include <functional>
+
 class KWinCompositingSettings : public KCModule
 {
     Q_OBJECT
@@ -45,6 +48,8 @@ private:
     KWin::Compositing::Compositing *m_compositing;
     Ui_CompositingForm m_form;
 };
+
+static const QVector<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
 
 KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
@@ -79,9 +84,22 @@ void KWinCompositingSettings::init()
     connect(m_form.compositingEnabled, &QCheckBox::toggled, m_compositing, &Compositing::setCompositingEnabled);
 
     // animation speed
-    m_form.animationSpeed->setValue(m_compositing->animationSpeed());
-    connect(m_compositing, &Compositing::animationSpeedChanged, m_form.animationSpeed, &QSlider::setValue);
-    connect(m_form.animationSpeed, &QSlider::valueChanged, m_compositing, &Compositing::setAnimationSpeed);
+    m_form.animationSpeed->setMaximum(s_animationMultipliers.size() - 1);
+    auto setSpeed = [this](const qreal multiplier) {
+        auto const it = std::lower_bound(s_animationMultipliers.begin(), s_animationMultipliers.end(), multiplier, std::greater<qreal>());
+        const int index = std::distance(s_animationMultipliers.begin(), it);
+        m_form.animationSpeed->setValue(index);
+    };
+    setSpeed(m_compositing->animationSpeed());
+    connect(m_compositing, &Compositing::animationSpeedChanged, m_form.animationSpeed, setSpeed);
+    connect(m_form.animationSpeed, &QSlider::valueChanged, m_compositing, [this](int index) {
+        m_compositing->setAnimationSpeed(s_animationMultipliers[index]);
+    });
+
+    if (Compositing::isRunningPlasma()) {
+        m_form.animationSpeedLabel->hide();
+        m_form.animationSpeedControls->hide();
+    }
 
     // gl scale filter
     m_form.glScaleFilter->setCurrentIndex(m_compositing->glScaleFilter());

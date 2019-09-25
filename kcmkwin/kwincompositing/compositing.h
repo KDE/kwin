@@ -24,6 +24,7 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
+#include <KSharedConfig>
 
 class OrgKdeKwinCompositingInterface;
 
@@ -53,7 +54,7 @@ public:
     Q_INVOKABLE bool OpenGLIsUnsafe() const;
     Q_INVOKABLE bool OpenGLIsBroken();
     Q_INVOKABLE void reenableOpenGLDetection();
-    int animationSpeed() const;
+    qreal animationSpeed() const;
     int windowThumbnail() const;
     int glScaleFilter() const;
     bool xrScaleFilter() const;
@@ -66,7 +67,7 @@ public:
 
     OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel() const;
 
-    void setAnimationSpeed(int speed);
+    void setAnimationSpeed(qreal speed);
     void setWindowThumbnail(int index);
     void setGlScaleFilter(int index);
     void setXrScaleFilter(bool filter);
@@ -78,13 +79,15 @@ public:
 
     void save();
 
+    static bool isRunningPlasma();
+
 public Q_SLOTS:
     void reset();
     void defaults();
 
 Q_SIGNALS:
     void changed();
-    void animationSpeedChanged(int);
+    void animationSpeedChanged(qreal);
     void windowThumbnailChanged(int);
     void glScaleFilterChanged(int);
     void xrScaleFilterChanged(int);
@@ -95,7 +98,7 @@ Q_SIGNALS:
     void windowsBlockCompositingChanged(bool);
 
 private:
-    int m_animationSpeed;
+    qreal m_animationSpeed;
     int m_windowThumbnail;
     int m_glScaleFilter;
     bool m_xrScaleFilter;
@@ -108,6 +111,7 @@ private:
     bool m_windowsBlockCompositing;
     bool m_windowsBlockingCompositing;
     OrgKdeKwinCompositingInterface *m_compositingInterface;
+    KSharedConfigPtr m_config;
 };
 
 

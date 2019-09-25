@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>462</width>
-    <height>349</height>
+    <width>526</width>
+    <height>395</height>
    </rect>
   </property>
   <layout class="QFormLayout" name="formLayout">
@@ -78,72 +78,21 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
+   <item row="3" column="0">
+    <widget class="QLabel" name="animationSpeedLabel">
      <property name="text">
       <string>Animation speed:</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <widget class="QSlider" name="animationSpeed">
-       <property name="maximum">
-        <number>6</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="tickPosition">
-        <enum>QSlider::TicksBelow</enum>
-       </property>
-       <property name="tickInterval">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Instant</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Very slow</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item row="4" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="glScaleFilterLabel">
      <property name="text">
       <string>Scale method:</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <widget class="QComboBox" name="glScaleFilter">
      <item>
       <property name="text">
@@ -162,14 +111,14 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <widget class="QLabel" name="xrScaleFilterLabel">
      <property name="text">
       <string>Scale method:</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
+   <item row="6" column="1">
     <widget class="QComboBox" name="xrScaleFilter">
      <item>
       <property name="text">
@@ -183,38 +132,38 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="7" column="0" colspan="2">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Rendering backend:</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
+   <item row="8" column="1">
     <widget class="QComboBox" name="type"/>
    </item>
-   <item row="8" column="0" colspan="2">
+   <item row="9" column="0" colspan="2">
     <widget class="Line" name="line_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="9" column="0">
+   <item row="10" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>Tearing prevention (&quot;vsync&quot;):</string>
      </property>
     </widget>
    </item>
-   <item row="9" column="1">
+   <item row="10" column="1">
     <widget class="QComboBox" name="tearingPrevention">
      <item>
       <property name="text">
@@ -243,14 +192,14 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </widget>
    </item>
-   <item row="10" column="0">
+   <item row="11" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>Keep window thumbnails:</string>
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="11" column="1">
     <widget class="QComboBox" name="windowThumbnail">
      <item>
       <property name="text">
@@ -269,7 +218,7 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </widget>
    </item>
-   <item row="12" column="1">
+   <item row="13" column="1">
     <widget class="QCheckBox" name="windowsBlockCompositing">
      <property name="toolTip">
       <string>Applications can set a hint to block compositing when the window is open.
@@ -279,6 +228,68 @@ Alternatively, you might want to use the XRender backend instead.</string>
      <property name="text">
       <string>Allow applications to block compositing</string>
      </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QWidget" name="animationSpeedControls" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QSlider" name="animationSpeed">
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>0</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="_3">
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Very slow</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Instant</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

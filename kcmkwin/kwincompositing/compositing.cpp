@@ -37,7 +37,7 @@ namespace Compositing {
 
 Compositing::Compositing(QObject *parent)
     : QObject(parent)
-    , m_animationSpeed(0)
+    , m_animationSpeed(1.0)
     , m_windowThumbnail(0)
     , m_glScaleFilter(0)
     , m_xrScaleFilter(false)
@@ -49,6 +49,7 @@ Compositing::Compositing(QObject *parent)
     , m_openGLPlatformInterface(0)
     , m_windowsBlockCompositing(true)
     , m_compositingInterface(new OrgKdeKwinCompositingInterface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"), QDBusConnection::sessionBus(), this))
+    , m_config(KSharedConfig::openConfig("kwinrc"))
 {
     reset();
     connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
@@ -68,8 +69,10 @@ Compositing::Compositing(QObject *parent)
 
 void Compositing::reset()
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), QStringLiteral("Compositing"));
-    setAnimationSpeed(kwinConfig.readEntry("AnimationSpeed", 3));
+    KConfigGroup globalConfig(m_config, QStringLiteral("KDE"));
+    setAnimationSpeed(globalConfig.readEntry("AnimationDurationFactor", 1.0));
+
+    KConfigGroup kwinConfig(m_config, QStringLiteral("Compositing"));
     setWindowThumbnail(kwinConfig.readEntry("HiddenPreviews", 5) - 4);
     setGlScaleFilter(kwinConfig.readEntry("GLTextureFilter", 2));
     setXrScaleFilter(kwinConfig.readEntry("XRenderSmoothScale", false));
@@ -119,7 +122,7 @@ void Compositing::reset()
 
 void Compositing::defaults()
 {
-    setAnimationSpeed(3);
+    setAnimationSpeed(1.0);
     setWindowThumbnail(1);
     setGlScaleFilter(2);
     setXrScaleFilter(false);
@@ -133,13 +136,13 @@ void Compositing::defaults()
 
 bool Compositing::OpenGLIsUnsafe() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    KConfigGroup kwinConfig(m_config, "Compositing");
     return kwinConfig.readEntry("OpenGLIsUnsafe", true);
 }
 
 bool Compositing::OpenGLIsBroken()
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    KConfigGroup kwinConfig(m_config, "Compositing");
 
     QString oldBackend = kwinConfig.readEntry("Backend", "OpenGL");
     kwinConfig.writeEntry("Backend", "OpenGL");
@@ -158,12 +161,12 @@ bool Compositing::OpenGLIsBroken()
 
 void Compositing::reenableOpenGLDetection()
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    KConfigGroup kwinConfig(m_config, "Compositing");
     kwinConfig.writeEntry("OpenGLIsUnsafe", false);
     kwinConfig.sync();
 }
 
-int Compositing::animationSpeed() const
+qreal Compositing::animationSpeed() const
 {
     return m_animationSpeed;
 }
@@ -198,7 +201,7 @@ bool Compositing::compositingEnabled() const
     return m_compositingEnabled;
 }
 
-void Compositing::setAnimationSpeed(int speed)
+void Compositing::setAnimationSpeed(qreal speed)
 {
     if (speed == m_animationSpeed) {
         return;
@@ -267,8 +270,14 @@ void Compositing::setCompositingEnabled(bool enabled)
 
 void Compositing::save()
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), "Compositing");
-    kwinConfig.writeEntry("AnimationSpeed", animationSpeed());
+    // this writes to the KDE group of the kwinrc, when loading we rely on kconfig cascading to
+    // load a global value, or allow a kwin override
+    KConfigGroup generalConfig(m_config, "KDE");
+    if (!isRunningPlasma()) {
+        generalConfig.writeEntry("AnimationDurationFactor", animationSpeed());
+    }
+    KConfigGroup kwinConfig(m_config, "Compositing");
+
     kwinConfig.writeEntry("HiddenPreviews", windowThumbnail() + 4);
     kwinConfig.writeEntry("GLTextureFilter", glScaleFilter());
     kwinConfig.writeEntry("XRenderSmoothScale", xrScaleFilter());
@@ -363,6 +372,11 @@ void Compositing::setWindowsBlockCompositing(bool set)
 bool Compositing::compositingRequired() const
 {
     return m_compositingInterface->platformRequiresCompositing();
+}
+
+bool Compositing::isRunningPlasma()
+{
+    return qgetenv("XDG_CURRENT_DESKTOP") == "KDE";
 }
 
 CompositingType::CompositingType(QObject *parent)
