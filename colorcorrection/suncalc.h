@@ -38,7 +38,7 @@ namespace ColorCorrect
  * @since 5.12
  */
 
-QPair<QTime, QTime> calculateSunTimings(QDate prompt, double latitude, double longitude, bool morning);
+QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning);
 
 
 }

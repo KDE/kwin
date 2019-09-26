@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "constants.h"
 
 #include <QDateTime>
+#include <QTimeZone>
 #include <QtMath>
 
 namespace KWin {
@@ -31,7 +32,14 @@ namespace ColorCorrect {
 #define SUN_RISE_SET         -0.833
 #define SUN_HIGH              2.0
 
-QPair<QTime, QTime> calculateSunTimings(QDate prompt, double latitude, double longitude, bool morning)
+static QTime convertToLocalTime(const QDateTime &when, const QTime &utcTime)
+{
+    const QTimeZone timeZone = QTimeZone::systemTimeZone();
+    const int utcOffset = timeZone.offsetFromUtc(when);
+    return utcTime.addSecs(utcOffset);
+}
+
+QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning)
 {
     // calculations based on https://aa.quae.nl/en/reken/zonpositie.html
     // accuracy: +/- 5min
@@ -44,7 +52,8 @@ QPair<QTime, QTime> calculateSunTimings(QDate prompt, double latitude, double lo
     const double lng = -longitude;  // lw
 
     // times
-    const double juPrompt = prompt.toJulianDay();   // J
+    const QDateTime utcDateTime = dateTime.toUTC();
+    const double juPrompt = utcDateTime.date().toJulianDay();   // J
     const double ju2000 = 2451545.;                 // J2000
 
     // geometry
@@ -141,22 +150,24 @@ QPair<QTime, QTime> calculateSunTimings(QDate prompt, double latitude, double lo
     begin += 0.5;
     end += 0.5;
 
-    QTime timeBegin, timeEnd;
+    QDateTime dateTimeBegin;
+    QDateTime dateTimeEnd;
 
-    if (std::isnan(begin)) {
-        timeBegin = QTime();
-    } else {
-        double timePart = begin - (int)begin;
-        timeBegin = QTime::fromMSecsSinceStartOfDay((int)( timePart * MSC_DAY ));
-    }
-    if (std::isnan(end)) {
-        timeEnd = QTime();
-    } else {
-        double timePart = end - (int)end;
-        timeEnd = QTime::fromMSecsSinceStartOfDay((int)( timePart * MSC_DAY ));
+    if (!std::isnan(begin)) {
+        const double dayFraction = begin - int(begin);
+        const QTime utcTime = QTime::fromMSecsSinceStartOfDay(dayFraction * MSC_DAY);
+        const QTime localTime = convertToLocalTime(dateTime, utcTime);
+        dateTimeBegin = QDateTime(dateTime.date(), localTime);
     }
 
-    return QPair<QTime,QTime> (timeBegin, timeEnd);
+    if (!std::isnan(end)) {
+        const double dayFraction = end - int(end);
+        const QTime utcTime = QTime::fromMSecsSinceStartOfDay(dayFraction * MSC_DAY);
+        const QTime localTime = convertToLocalTime(dateTime, utcTime);
+        dateTimeEnd = QDateTime(dateTime.date(), localTime);
+    }
+
+    return { dateTimeBegin, dateTimeEnd };
 }
 
 }
