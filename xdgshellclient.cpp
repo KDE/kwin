@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xdgshellclient.h"
 #include "composite.h"
 #include "cursor.h"
+#include "decorations/decoratedclient.h"
+#include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "placement.h"
 #include "screenedge.h"
@@ -32,23 +34,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "decorations/decorationbridge.h"
-#include "decorations/decoratedclient.h"
 
-#include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/clientconnection.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/plasmashell_interface.h>
-#include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/server_decoration_interface.h>
-#include <KWayland/Server/qtsurfaceextension_interface.h>
-#include <KWayland/Server/plasmawindowmanagement_interface.h>
+#include <KDecoration2/Decoration>
 #include <KWayland/Server/appmenu_interface.h>
+#include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/clientconnection.h>
+#include <KWayland/Server/display.h>
+#include <KWayland/Server/plasmashell_interface.h>
+#include <KWayland/Server/plasmawindowmanagement_interface.h>
+#include <KWayland/Server/qtsurfaceextension_interface.h>
+#include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/server_decoration_palette_interface.h>
+#include <KWayland/Server/shadow_interface.h>
+#include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
 
 #include <QFileInfo>
