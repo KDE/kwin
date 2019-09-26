@@ -201,6 +201,8 @@ public:
         AllReasonSuspend    = 0xff
     };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
+    Q_ENUM(SuspendReason)
+    Q_FLAG(SuspendReasons)
 
     static X11Compositor *create(QObject *parent = nullptr);
 
@@ -214,7 +216,7 @@ public:
      * @see resume
      * @see isActive
      */
-    Q_INVOKABLE void suspend(SuspendReason reason);
+    void suspend(SuspendReason reason);
 
     /**
      * @brief Resumes the Compositor if it is currently suspended.
@@ -233,7 +235,7 @@ public:
      * @see isCompositingPossible
      * @see isOpenGLBroken
      */
-    Q_INVOKABLE void resume(SuspendReason reason);
+    void resume(SuspendReason reason);
 
     void toggleCompositing() override;
     void reinitialize() override;
