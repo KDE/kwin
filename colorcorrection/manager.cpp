@@ -825,6 +825,8 @@ bool Manager::changeConfiguration(QHash<QString, QVariant> data)
 
 void Manager::autoLocationUpdate(double latitude, double longitude)
 {
+    qCDebug(KWIN_COLORCORRECTION, "Received new location (lat: %f, lng: %f)", latitude, longitude);
+
     if (!checkLocation(latitude, longitude)) {
         return;
     }
