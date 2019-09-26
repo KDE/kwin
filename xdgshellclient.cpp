@@ -470,18 +470,21 @@ void XdgShellClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t for
         // when the GeometryUpdateBlocker exits the current geom is passed to setGeometry
         // thus we need to set it here.
         geom = newGeometry;
-        if (pendingGeometryUpdate() == PendingGeometryForced)
-            {} // maximum, nothing needed
-        else if (force == ForceGeometrySet)
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            // maximum, nothing needed
+        } else if (force == ForceGeometrySet) {
             setPendingGeometryUpdate(PendingGeometryForced);
-        else
+        } else {
             setPendingGeometryUpdate(PendingGeometryNormal);
+        }
         return;
     }
+
     if (pendingGeometryUpdate() != PendingGeometryNone) {
         // reset geometry to the one before blocking, so that we can compare properly
         geom = geometryBeforeUpdateBlocking();
     }
+
     const QSize requestedClientSize = newGeometry.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
     const QSize requestedWindowGeometrySize = toWindowGeometry(newGeometry.size());
 
