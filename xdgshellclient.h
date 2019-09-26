@@ -142,7 +142,6 @@ protected:
 
 private Q_SLOTS:
     void handleConfigureAcknowledged(quint32 serial);
-    void handleSurfaceSizeChanged();
     void handleTransientForChanged();
     void handleWindowClassChanged(const QByteArray &windowClass);
     void handleWindowTitleChanged(const QString &title);
@@ -156,6 +155,7 @@ private Q_SLOTS:
     void handlePingDelayed(quint32 serial);
     void handlePingTimeout(quint32 serial);
     void handlePongReceived(quint32 serial);
+    void handleCommitted();
 
 private:
     /**

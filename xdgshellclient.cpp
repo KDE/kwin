@@ -100,7 +100,6 @@ void XdgShellClient::init()
         m_windowType = NET::OnScreenDisplay;
     }
 
-    connect(surface(), &SurfaceInterface::sizeChanged, this, &XdgShellClient::handleSurfaceSizeChanged);
     connect(surface(), &SurfaceInterface::unmapped, this, &XdgShellClient::unmap);
     connect(surface(), &SurfaceInterface::unbound, this, &XdgShellClient::destroyClient);
     connect(surface(), &SurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
@@ -179,6 +178,8 @@ void XdgShellClient::init()
 void XdgShellClient::finishInit()
 {
     disconnect(surface(), &SurfaceInterface::committed, this, &XdgShellClient::finishInit);
+
+    connect(surface(), &SurfaceInterface::committed, this, &XdgShellClient::handleCommitted);
 
     bool needsPlacement = !isInitialPositionSet();
 
@@ -383,14 +384,6 @@ void XdgShellClient::setOpacity(double opacity)
 
 void XdgShellClient::addDamage(const QRegion &damage)
 {
-    auto s = surface();
-    if (s->size().isValid()) {
-        m_clientSize = s->size();
-        updateWindowMargins();
-        updatePendingGeometry();
-    }
-    markAsMapped();
-    setDepth((s->buffer()->hasAlphaChannel() && !isDesktop()) ? 32 : 24);
     repaints_region += damage.translated(clientPos());
     Toplevel::addDamage(damage);
 }
@@ -1082,12 +1075,6 @@ void XdgShellClient::handleConfigureAcknowledged(quint32 serial)
     m_lastAckedConfigureRequest = serial;
 }
 
-void XdgShellClient::handleSurfaceSizeChanged()
-{
-    m_clientSize = surface()->size();
-    doSetGeometry(QRect(pos(), m_clientSize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
-}
-
 void XdgShellClient::handleTransientForChanged()
 {
     SurfaceInterface *transientSurface = nullptr;
@@ -1253,6 +1240,21 @@ void XdgShellClient::handlePongReceived(quint32 serial)
         setUnresponsive(false);
         m_pingSerials.erase(it);
     }
+}
+
+void XdgShellClient::handleCommitted()
+{
+    if (!surface()->buffer()) {
+        return;
+    }
+
+    m_clientSize = surface()->size();
+
+    updateWindowMargins();
+    updatePendingGeometry();
+
+    setDepth((surface()->buffer()->hasAlphaChannel() && !isDesktop()) ? 32 : 24);
+    markAsMapped();
 }
 
 void XdgShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
