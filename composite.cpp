@@ -885,7 +885,6 @@ X11Compositor::X11Compositor(QObject *parent)
     , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
     , m_xrrRefreshRate(0)
 {
-    qRegisterMetaType<X11Compositor::SuspendReason>("X11Compositor::SuspendReason");
 }
 
 void X11Compositor::toggleCompositing()
@@ -1014,25 +1013,27 @@ void X11Compositor::updateClientCompositeBlocking(Client *c)
         if (c->isBlockingCompositing()) {
             // Do NOT attempt to call suspend(true) from within the eventchain!
             if (!(m_suspended & BlockRuleSuspend))
-                QMetaObject::invokeMethod(this, "suspend", Qt::QueuedConnection,
-                                          Q_ARG(SuspendReason, BlockRuleSuspend));
+                QMetaObject::invokeMethod(this, [this]() {
+                        suspend(BlockRuleSuspend);
+                    }, Qt::QueuedConnection);
         }
     }
     else if (m_suspended & BlockRuleSuspend) {
         // If !c we just check if we can resume in case a blocking client was lost.
-        bool resume = true;
+        bool shouldResume = true;
 
         for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
              it != Workspace::self()->clientList().constEnd(); ++it) {
             if ((*it)->isBlockingCompositing()) {
-                resume = false;
+                shouldResume = false;
                 break;
             }
         }
-        if (resume) {
+        if (shouldResume) {
             // Do NOT attempt to call suspend(false) from within the eventchain!
-            QMetaObject::invokeMethod(this, "resume", Qt::QueuedConnection,
-                                      Q_ARG(SuspendReason, BlockRuleSuspend));
+                QMetaObject::invokeMethod(this, [this]() {
+                        resume(BlockRuleSuspend);
+                    }, Qt::QueuedConnection);
         }
     }
 }

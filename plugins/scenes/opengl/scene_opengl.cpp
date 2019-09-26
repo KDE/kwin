@@ -830,8 +830,10 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
     GLint limit[2];
     glGetIntegerv(GL_MAX_VIEWPORT_DIMS, limit);
     if (limit[0] < size.width() || limit[1] < size.height()) {
-        QMetaObject::invokeMethod(static_cast<X11Compositor*>(Compositor::self()), "suspend",
-                                  Qt::QueuedConnection, Q_ARG(X11Compositor::SuspendReason, X11Compositor::AllReasonSuspend));
+        auto compositor = static_cast<X11Compositor*>(Compositor::self());
+        QMetaObject::invokeMethod(compositor, [compositor]() {
+                compositor->suspend(X11Compositor::AllReasonSuspend);
+            }, Qt::QueuedConnection);
         return false;
     }
     return true;
