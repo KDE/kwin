@@ -1259,7 +1259,7 @@ void XdgShellClient::handleCommitted()
 
 void XdgShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
 {
-    QRect area = workspace()->clientArea(WorkArea, this);
+    const QRect area = workspace()->clientArea(WorkArea, this);
     // don't allow growing larger than workarea
     if (w > area.width()) {
         w = area.width();
