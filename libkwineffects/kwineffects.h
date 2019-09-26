@@ -2086,6 +2086,13 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(bool outline READ isOutline CONSTANT)
 
+    /**
+     * The PID of the application this window belongs to.
+     *
+     * @since 5.18
+     */
+    Q_PROPERTY(bool outline READ isOutline CONSTANT)
+
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -2384,6 +2391,11 @@ public:
      * @since 5.16
      */
     virtual bool isOutline() const = 0;
+
+    /**
+     * @since 5.18
+     */
+    virtual pid_t pid() const = 0;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

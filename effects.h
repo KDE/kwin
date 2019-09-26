@@ -462,6 +462,8 @@ public:
     bool isWaylandClient() const override;
     bool isX11Client() const override;
 
+    pid_t pid() const override;
+
     QRect decorationInnerRect() const override;
     QByteArray readProperty(long atom, long type, int format) const override;
     void deleteProperty(long atom) const override;

@@ -254,6 +254,9 @@ public:
     bool isOutline() const override {
         return false;
     }
+    pid_t pid() const override {
+        return 0;
+    }
 
 private:
     qreal m_opacity = 1.0;
