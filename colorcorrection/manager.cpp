@@ -213,7 +213,7 @@ void Manager::readConfig()
 
     m_active = s->active();
 
-    NightColorMode mode = s->mode();
+    const NightColorMode mode = s->mode();
     switch (s->mode()) {
     case NightColorMode::Automatic:
     case NightColorMode::Location:
@@ -332,7 +332,7 @@ void Manager::quickAdjust()
     }
 
     int nextTemp;
-    int targetTemp = currentTargetTemp();
+    const int targetTemp = currentTargetTemp();
 
     if (m_currentTemp < targetTemp) {
         nextTemp = qMin(m_currentTemp + TEMPERATURE_STEP, targetTemp);
@@ -387,9 +387,9 @@ void Manager::resetSlowUpdateTimer()
     delete m_slowUpdateTimer;
     m_slowUpdateTimer = nullptr;
 
-    QDateTime now = QDateTime::currentDateTime();
-    bool isDay = daylight();
-    int targetTemp = isDay ? m_dayTargetTemp : m_nightTargetTemp;
+    const QDateTime now = QDateTime::currentDateTime();
+    const bool isDay = daylight();
+    const int targetTemp = isDay ? m_dayTargetTemp : m_nightTargetTemp;
 
     // We've reached the target color temperature or the transition time is zero.
     if (m_prev.first == m_prev.second || m_currentTemp == targetTemp) {
@@ -437,13 +437,13 @@ void Manager::slowUpdate(int targetTemp)
 
 void Manager::updateSunTimings(bool force)
 {
-    QDateTime todayNow = QDateTime::currentDateTime();
+    const QDateTime todayNow = QDateTime::currentDateTime();
 
     if (m_mode == NightColorMode::Timings) {
-        QDateTime morB = QDateTime(todayNow.date(), m_morning);
-        QDateTime morE = morB.addSecs(m_trTime * 60);
-        QDateTime eveB = QDateTime(todayNow.date(), m_evening);
-        QDateTime eveE = eveB.addSecs(m_trTime * 60);
+        const QDateTime morB = QDateTime(todayNow.date(), m_morning);
+        const QDateTime morE = morB.addSecs(m_trTime * 60);
+        const QDateTime eveB = QDateTime(todayNow.date(), m_evening);
+        const QDateTime eveE = eveB.addSecs(m_trTime * 60);
 
         if (morB <= todayNow && todayNow < eveB) {
             m_next = DateTimes(eveB, eveE);
@@ -505,8 +505,8 @@ DateTimes Manager::getSunTimings(const QDateTime &dateTime, double latitude, dou
     // At locations near the poles it is possible, that we can't
     // calculate some or all sun timings (midnight sun).
     // In this case try to fallback to sensible default values.
-    bool beginDefined = !dateTimes.first.isNull();
-    bool endDefined = !dateTimes.second.isNull();
+    const bool beginDefined = !dateTimes.first.isNull();
+    const bool endDefined = !dateTimes.second.isNull();
     if (!beginDefined || !endDefined) {
         if (beginDefined) {
             dateTimes.second = dateTimes.first.addMSecs( FALLBACK_SLOW_UPDATE_TIME );
@@ -528,7 +528,7 @@ bool Manager::checkAutomaticSunTimings() const
 {
     if (m_prev.first.isValid() && m_prev.second.isValid() &&
             m_next.first.isValid() && m_next.second.isValid()) {
-        QDateTime todayNow = QDateTime::currentDateTime();
+        const QDateTime todayNow = QDateTime::currentDateTime();
         return m_prev.first <= todayNow && todayNow < m_next.first &&
                 m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23./24;
     }
@@ -550,7 +550,7 @@ int Manager::currentTargetTemp() const
        return m_nightTargetTemp;
     }
 
-    QDateTime todayNow = QDateTime::currentDateTime();
+    const QDateTime todayNow = QDateTime::currentDateTime();
 
     auto f = [this, todayNow](int target1, int target2) {
         if (todayNow <= m_prev.second) {
