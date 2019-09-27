@@ -74,8 +74,8 @@ public:
     void hideClient(bool hide) override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::setGeometry;
-    void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    using AbstractClient::setFrameGeometry;
+    void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     void setGeometryRestore(const QRect &rect) override;
     bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;

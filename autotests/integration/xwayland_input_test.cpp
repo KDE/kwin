@@ -186,15 +186,15 @@ void XWaylandInputTest::testPointerEnterLeave()
     QVERIFY(client->surface());
 
     // move pointer into the window, should trigger an enter
-    QVERIFY(!client->geometry().contains(Cursor::pos()));
+    QVERIFY(!client->frameGeometry().contains(Cursor::pos()));
     QVERIFY(enteredSpy.isEmpty());
-    Cursor::setPos(client->geometry().center());
+    Cursor::setPos(client->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
     QVERIFY(waylandServer()->seat()->focusedPointer());
     QVERIFY(enteredSpy.wait());
 
     // move out of window
-    Cursor::setPos(client->geometry().bottomRight() + QPoint(10, 10));
+    Cursor::setPos(client->frameGeometry().bottomRight() + QPoint(10, 10));
     QVERIFY(leftSpy.wait());
 
     // destroy window again

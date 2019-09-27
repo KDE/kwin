@@ -308,7 +308,7 @@ void TestXdgShellClient::testTransientPositionAfterRemap()
     QScopedPointer<XdgShellPopup> transientShellSurface(Test::createXdgShellStablePopup(transientSurface.data(), shellSurface.data(), positioner));
     auto transient = Test::renderAndWaitForShown(transientSurface.data(), positioner.initialSize(), Qt::blue);
     QVERIFY(transient);
-    QCOMPARE(transient->geometry(), QRect(c->geometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
+    QCOMPARE(transient->frameGeometry(), QRect(c->frameGeometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
 
     // unmap the transient
     QSignalSpy windowHiddenSpy(transient, &XdgShellClient::windowHidden);
@@ -318,14 +318,14 @@ void TestXdgShellClient::testTransientPositionAfterRemap()
     QVERIFY(windowHiddenSpy.wait());
 
     // now move the parent surface
-    c->setGeometry(c->geometry().translated(5, 10));
+    c->setFrameGeometry(c->frameGeometry().translated(5, 10));
 
     // now map the transient again
     QSignalSpy windowShownSpy(transient, &XdgShellClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
     Test::render(transientSurface.data(), QSize(50, 40), Qt::blue);
     QVERIFY(windowShownSpy.wait());
-    QCOMPARE(transient->geometry(), QRect(c->geometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
+    QCOMPARE(transient->frameGeometry(), QRect(c->frameGeometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
 }
 
 void TestXdgShellClient::testWindowOutputs_data()
@@ -348,7 +348,7 @@ void TestXdgShellClient::testWindowOutputs()
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
     //move to be in the first screen
-    c->setGeometry(QRect(QPoint(100,100), size));
+    c->setFrameGeometry(QRect(QPoint(100,100), size));
     //we don't don't know where the compositor first placed this window,
     //this might fire, it might not
     outputEnteredSpy.wait(5);
@@ -358,7 +358,7 @@ void TestXdgShellClient::testWindowOutputs()
     QCOMPARE(surface->outputs().first()->globalPosition(), QPoint(0,0));
 
     //move to overlapping both first and second screen
-    c->setGeometry(QRect(QPoint(1250,100), size));
+    c->setFrameGeometry(QRect(QPoint(1250,100), size));
     QVERIFY(outputEnteredSpy.wait());
     QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(outputLeftSpy.count(), 0);
@@ -366,7 +366,7 @@ void TestXdgShellClient::testWindowOutputs()
     QVERIFY(surface->outputs()[0] != surface->outputs()[1]);
 
     //move entirely into second screen
-    c->setGeometry(QRect(QPoint(1400,100), size));
+    c->setFrameGeometry(QRect(QPoint(1400,100), size));
     QVERIFY(outputLeftSpy.wait());
     QCOMPARE(outputEnteredSpy.count(), 1);
     QCOMPARE(outputLeftSpy.count(), 1);
@@ -451,7 +451,7 @@ void TestXdgShellClient::testFullscreen()
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->clientSize(), QSize(100, 50));
     QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
-    QCOMPARE(c->sizeForClientSize(c->clientSize()), c->geometry().size());
+    QCOMPARE(c->sizeForClientSize(c->clientSize()), c->frameGeometry().size());
     QSignalSpy fullscreenChangedSpy(c, &XdgShellClient::fullScreenChanged);
     QVERIFY(fullscreenChangedSpy.isValid());
     QSignalSpy geometryChangedSpy(c, &XdgShellClient::geometryChanged);
@@ -477,7 +477,7 @@ void TestXdgShellClient::testFullscreen()
     QCOMPARE(geometryChangedSpy.count(), 1);
     QVERIFY(c->isFullScreen());
     QVERIFY(!c->isDecorated());
-    QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
+    QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.first().first().toSize()));
     QCOMPARE(c->layer(), ActiveLayer);
 
     // swap back to normal
@@ -550,7 +550,7 @@ void TestXdgShellClient::testFullscreenRestore()
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(geometryChangedSpy.count(), 1);
     QVERIFY(!c->isFullScreen());
-    QCOMPARE(c->geometry().size(), QSize(100, 50));
+    QCOMPARE(c->frameGeometry().size(), QSize(100, 50));
 }
 
 void TestXdgShellClient::testUserCanSetFullscreen_data()
@@ -708,7 +708,7 @@ void TestXdgShellClient::testMaximizedToFullscreen()
 
     QVERIFY(c->isFullScreen());
     QVERIFY(!c->isDecorated());
-    QCOMPARE(c->geometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.last().first().toSize()));
+    QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), sizeChangeRequestedSpy.last().first().toSize()));
     sizeChangeRequestedSpy.clear();
 
     // swap back to normal
@@ -1287,7 +1287,7 @@ void TestXdgShellClient::testXdgWindowGeometry()
 
     QSignalSpy geometryChangedSpy(c, &XdgShellClient::geometryChanged);
     // resize to 300,200 in kwin terms
-    c->setGeometry(QRect(100, 100, 300, 200));
+    c->setFrameGeometry(QRect(100, 100, 300, 200));
     QVERIFY(configureRequestedSpy.wait());
     // requested geometry should not include the margins we had above
     const QSize requestedSize = configureRequestedSpy.last()[0].value<QSize>();
@@ -1297,7 +1297,7 @@ void TestXdgShellClient::testXdgWindowGeometry()
     geometryChangedSpy.wait();
 
     // kwin's concept of geometry should remain the same
-    QCOMPARE(c->geometry(), QRect(100, 100, 300, 200));
+    QCOMPARE(c->frameGeometry(), QRect(100, 100, 300, 200));
 
     c->setFullScreen(true);
     configureRequestedSpy.wait();

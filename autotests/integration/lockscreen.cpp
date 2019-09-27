@@ -239,7 +239,7 @@ void LockScreenTest::testPointer()
 
     // first move cursor into the center of the window
     quint32 timestamp = 1;
-    MOTION(c->geometry().center());
+    MOTION(c->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
 
     LOCK
@@ -248,24 +248,24 @@ void LockScreenTest::testPointer()
     QCOMPARE(leftSpy.count(), 1);
 
     // simulate moving out in and out again
-    MOTION(c->geometry().center());
-    MOTION(c->geometry().bottomRight() + QPoint(100, 100));
-    MOTION(c->geometry().bottomRight() + QPoint(100, 100));
+    MOTION(c->frameGeometry().center());
+    MOTION(c->frameGeometry().bottomRight() + QPoint(100, 100));
+    MOTION(c->frameGeometry().bottomRight() + QPoint(100, 100));
     QVERIFY(!leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     QCOMPARE(enteredSpy.count(), 1);
 
     // go back on the window
-    MOTION(c->geometry().center());
+    MOTION(c->frameGeometry().center());
     // and unlock
     UNLOCK
 
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     // move on the window
-    MOTION(c->geometry().center() + QPoint(100, 100));
+    MOTION(c->frameGeometry().center() + QPoint(100, 100));
     QVERIFY(leftSpy.wait());
-    MOTION(c->geometry().center());
+    MOTION(c->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 3);
 }
@@ -286,7 +286,7 @@ void LockScreenTest::testPointerButton()
 
     // first move cursor into the center of the window
     quint32 timestamp = 1;
-    MOTION(c->geometry().center());
+    MOTION(c->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     // and simulate a click
     PRESS;
@@ -329,7 +329,7 @@ void LockScreenTest::testPointerAxis()
 
     // first move cursor into the center of the window
     quint32 timestamp = 1;
-    MOTION(c->geometry().center());
+    MOTION(c->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     // and simulate axis
     kwinApp()->platform()->pointerAxisHorizontal(5.0, timestamp++);

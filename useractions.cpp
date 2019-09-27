@@ -1052,9 +1052,9 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
     if (!c)
         return;
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp)
-        Cursor::setPos(c->geometry().center());
+        Cursor::setPos(c->frameGeometry().center());
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp)
-        Cursor::setPos(c->geometry().bottomRight());
+        Cursor::setPos(c->frameGeometry().bottomRight());
     switch(op) {
     case Options::MoveOp:
         c->performMouseCommand(Options::MouseMove, Cursor::pos());
@@ -1510,8 +1510,7 @@ void Workspace::switchWindow(Direction direction)
     int desktopNumber = c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
 
     // Centre of the active window
-    QPoint curPos(c->pos().x() + c->geometry().width() / 2,
-                  c->pos().y() + c->geometry().height() / 2);
+    QPoint curPos(c->x() + c->width() / 2, c->y() + c->height() / 2);
 
     if (!switchWindow(c, direction, curPos, desktopNumber)) {
         auto opposite = [&] {
@@ -1547,8 +1546,7 @@ bool Workspace::switchWindow(AbstractClient *c, Direction direction, QPoint curP
         if (client->wantsTabFocus() && *i != c &&
                 client->isOnDesktop(d) && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
             // Centre of the other window
-            QPoint other(client->pos().x() + client->geometry().width() / 2,
-                         client->pos().y() + client->geometry().height() / 2);
+            const QPoint other(client->x() + client->width() / 2, client->y() + client->height() / 2);
 
             int distance;
             int offset;
@@ -1609,7 +1607,7 @@ void Workspace::showWindowMenu(const QRect &pos, AbstractClient* cl)
 
 void Workspace::showApplicationMenu(const QRect &pos, AbstractClient *c, int actionId)
 {
-    ApplicationMenu::self()->showApplicationMenu(c->geometry().topLeft() + pos.bottomLeft(), c, actionId);
+    ApplicationMenu::self()->showApplicationMenu(c->pos() + pos.bottomLeft(), c, actionId);
 }
 
 /**

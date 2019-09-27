@@ -150,7 +150,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 
     // now make windows overlap
     window2->move(window1->pos());
-    QCOMPARE(window1->geometry(), window2->geometry());
+    QCOMPARE(window1->frameGeometry(), window2->frameGeometry());
 
     // enter
     kwinApp()->platform()->pointerMotion(QPointF(25, 25), 1);

@@ -280,7 +280,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
         tempImage.fill(Qt::transparent);
         tempPainter.begin(&tempImage);
         tempPainter.save();
-        tempPainter.translate(toplevel->geometry().topLeft() - toplevel->visibleRect().topLeft());
+        tempPainter.translate(toplevel->frameGeometry().topLeft() - toplevel->visibleRect().topLeft());
         painter = &tempPainter;
     }
     renderShadow(painter);
@@ -313,7 +313,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
         tempPainter.fillRect(QRect(QPoint(0, 0), toplevel->visibleRect().size()), translucent);
         tempPainter.end();
         painter = scenePainter;
-        painter->drawImage(toplevel->visibleRect().topLeft() - toplevel->geometry().topLeft(), tempImage);
+        painter->drawImage(toplevel->visibleRect().topLeft() - toplevel->frameGeometry().topLeft(), tempImage);
     }
 
     painter->restore();

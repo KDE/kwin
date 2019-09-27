@@ -87,11 +87,11 @@ AbstractClient::AbstractClient()
     connect(this, &AbstractClient::geometryShapeChanged, this,
         [this] (Toplevel *c, const QRect &old) {
             Q_UNUSED(c)
-            if (isOnScreenDisplay() && !geometry().isEmpty() && old.size() != geometry().size() && !isInitialPositionSet()) {
+            if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && !isInitialPositionSet()) {
                 GeometryUpdatesBlocker blocker(this);
                 const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
                 Placement::self()->place(this, area);
-                setGeometryRestore(geometry());
+                setGeometryRestore(frameGeometry());
             }
         }
     );
@@ -728,11 +728,11 @@ void AbstractClient::keepInArea(QRect area, bool partial)
             resizeWithChecks(qMin(area.width(), width()), qMin(area.height(), height()));
     }
     int tx = x(), ty = y();
-    if (geometry().right() > area.right() && width() <= area.width())
+    if (frameGeometry().right() > area.right() && width() <= area.width())
         tx = area.right() - width() + 1;
-    if (geometry().bottom() > area.bottom() && height() <= area.height())
+    if (frameGeometry().bottom() > area.bottom() && height() <= area.height())
         ty = area.bottom() - height() + 1;
-    if (!area.contains(geometry().topLeft())) {
+    if (!area.contains(frameGeometry().topLeft())) {
         if (tx < area.x())
             tx = area.x();
         if (ty < area.y())
@@ -804,7 +804,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMovable(isMovable());
     w->setVirtualDesktopChangeable(true); // FIXME Matches X11Client::actionSupported(), but both should be implemented.
     w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
-    w->setGeometry(geometry());
+    w->setGeometry(frameGeometry());
     connect(this, &AbstractClient::skipTaskbarChanged, w,
         [w, this] {
             w->setSkipTaskbar(skipTaskbar());
@@ -844,19 +844,19 @@ void AbstractClient::setupWindowManagementInterface()
     );
     connect(this, &AbstractClient::geometryChanged, w,
         [w, this] {
-            w->setGeometry(geometry());
+            w->setGeometry(frameGeometry());
         }
     );
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
     connect(w, &PlasmaWindowInterface::moveRequested, this,
         [this] {
-            Cursor::setPos(geometry().center());
+            Cursor::setPos(frameGeometry().center());
             performMouseCommand(Options::MouseMove, Cursor::pos());
         }
     );
     connect(w, &PlasmaWindowInterface::resizeRequested, this,
         [this] {
-            Cursor::setPos(geometry().bottomRight());
+            Cursor::setPos(frameGeometry().bottomRight());
             performMouseCommand(Options::MouseResize, Cursor::pos());
         }
     );
@@ -1041,7 +1041,7 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
                 AbstractClient *c = qobject_cast<AbstractClient*>(*it);
                 if (!c || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow()))
                     continue; // can never raise above "it"
-                mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->geometry().intersects(geometry()));
+                mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->frameGeometry().intersects(frameGeometry()));
             }
         }
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
@@ -1308,7 +1308,7 @@ void AbstractClient::addRepaintDuringGeometryUpdates()
 
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
-    m_geometryBeforeUpdateBlocking = geometry();
+    m_geometryBeforeUpdateBlocking = frameGeometry();
 }
 
 void AbstractClient::doMove(int, int)
@@ -1317,7 +1317,7 @@ void AbstractClient::doMove(int, int)
 
 void AbstractClient::updateInitialMoveResizeGeometry()
 {
-    m_moveResize.initialGeometry = geometry();
+    m_moveResize.initialGeometry = frameGeometry();
     m_moveResize.geometry = m_moveResize.initialGeometry;
     m_moveResize.startScreen = screen();
 }
@@ -1796,13 +1796,13 @@ void AbstractClient::setVirtualKeyboardGeometry(const QRect &geo)
 {
     // No keyboard anymore
     if (geo.isEmpty() && !m_keyboardGeometryRestore.isEmpty()) {
-        setGeometry(m_keyboardGeometryRestore);
+        setFrameGeometry(m_keyboardGeometryRestore);
         m_keyboardGeometryRestore = QRect();
     } else if (geo.isEmpty()) {
         return;
     // The keyboard has just been opened (rather than resized) save client geometry for a restore
     } else if (m_keyboardGeometryRestore.isEmpty()) {
-        m_keyboardGeometryRestore = geometry();
+        m_keyboardGeometryRestore = frameGeometry();
     }
 
     m_virtualKeyboardGeometry = geo;
@@ -1821,7 +1821,7 @@ void AbstractClient::setVirtualKeyboardGeometry(const QRect &geo)
     newWindowGeometry.moveBottom(geo.top());
     newWindowGeometry.setTop(qMax(newWindowGeometry.top(), availableArea.top()));
 
-    setGeometry(newWindowGeometry);
+    setFrameGeometry(newWindowGeometry);
 }
 
 bool AbstractClient::dockWantsInput() const

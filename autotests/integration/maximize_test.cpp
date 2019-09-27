@@ -204,7 +204,7 @@ void TestMaximized::testInitiallyMaximized()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
-    QCOMPARE(client->geometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(client->frameGeometry(), QRect(0, 0, 100, 50));
     QEXPECT_FAIL("", "Should go out of maximzied", Continue);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
 
@@ -264,7 +264,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
 
     // Maximize the client.
-    const QRect maximizeRestoreGeometry = client->geometry();
+    const QRect maximizeRestoreGeometry = client->frameGeometry();
     workspace()->slotWindowMaximize();
     QVERIFY(configureRequestedSpy.wait());
     QCOMPARE(configureRequestedSpy.count(), 3);
@@ -278,7 +278,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(client->geometry(), QRect(0, 0, 1280, 1024));
+    QCOMPARE(client->frameGeometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(client->isDecorated(), false);
@@ -295,7 +295,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(client->geometry(), maximizeRestoreGeometry);
+    QCOMPARE(client->frameGeometry(), maximizeRestoreGeometry);
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(client->isDecorated(), true);

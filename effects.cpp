@@ -1261,7 +1261,7 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c
     if (const auto *cl = qobject_cast<const AbstractClient *>(t)) {
         return Workspace::self()->clientArea(opt, cl);
     } else {
-        return Workspace::self()->clientArea(opt, t->geometry().center(), VirtualDesktopManager::self()->current());
+        return Workspace::self()->clientArea(opt, t->frameGeometry().center(), VirtualDesktopManager::self()->current());
     }
 }
 
@@ -1820,7 +1820,7 @@ TOPLEVEL_HELPER(int, height, height)
 TOPLEVEL_HELPER(QPoint, pos, pos)
 TOPLEVEL_HELPER(QSize, size, size)
 TOPLEVEL_HELPER(int, screen, screen)
-TOPLEVEL_HELPER(QRect, geometry, geometry)
+TOPLEVEL_HELPER(QRect, geometry, frameGeometry)
 TOPLEVEL_HELPER(QRect, expandedGeometry, visibleRect)
 TOPLEVEL_HELPER(QRect, rect, rect)
 TOPLEVEL_HELPER(int, desktop, desktop)

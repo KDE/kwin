@@ -138,7 +138,7 @@ PlaceWindowResult TestPlacement::createAndPlaceWindow(const QSize &defaultSize, 
 
     auto c = Test::renderAndWaitForShown(surface, size, Qt::red);
 
-    rc.finalGeometry = c->geometry();
+    rc.finalGeometry = c->frameGeometry();
     return rc;
 }
 
@@ -217,7 +217,7 @@ void TestPlacement::testPlaceCentered()
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(client);
-    QCOMPARE(client->geometry(), QRect(590, 487, 100, 50));
+    QCOMPARE(client->frameGeometry(), QRect(590, 487, 100, 50));
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
@@ -239,7 +239,7 @@ void TestPlacement::testPlaceUnderMouse()
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
     QVERIFY(client);
-    QCOMPARE(client->geometry(), QRect(151, 276, 100, 50));
+    QCOMPARE(client->frameGeometry(), QRect(151, 276, 100, 50));
 
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));

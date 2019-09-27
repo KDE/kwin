@@ -38,7 +38,7 @@ namespace KWin
 
 Shadow::Shadow(Toplevel *toplevel)
     : m_topLevel(toplevel)
-    , m_cachedSize(toplevel->geometry().size())
+    , m_cachedSize(toplevel->size())
     , m_decorationShadow(nullptr)
 {
     connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
@@ -373,10 +373,10 @@ void Shadow::setToplevel(Toplevel *topLevel)
 }
 void Shadow::geometryChanged()
 {
-    if (m_cachedSize == m_topLevel->geometry().size()) {
+    if (m_cachedSize == m_topLevel->size()) {
         return;
     }
-    m_cachedSize = m_topLevel->geometry().size();
+    m_cachedSize = m_topLevel->size();
     updateShadowRegion();
     buildQuads();
 }

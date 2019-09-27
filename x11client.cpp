@@ -352,7 +352,7 @@ void X11Client::updateInputWindow()
     input_offset = bounds.topLeft();
 
     // Move the bounding rect to screen coordinates
-    bounds.translate(geometry().topLeft());
+    bounds.translate(frameGeometry().topLeft());
 
     // Move the region to input window coordinates
     region.translate(-input_offset);
@@ -383,7 +383,7 @@ void X11Client::updateDecoration(bool check_workspace_pos, bool force)
     if (!force &&
             ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder())))
         return;
-    QRect oldgeom = geometry();
+    QRect oldgeom = frameGeometry();
     QRect oldClientGeom = oldgeom.adjusted(borderLeft(), borderTop(), -borderRight(), -borderBottom());
     blockGeometryUpdates(true);
     if (force)
@@ -415,7 +415,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
                 // calculateGravitation(true) would have to operate on the old border sizes
 //                 move(calculateGravitation(true));
 //                 move(calculateGravitation(false));
-                QRect oldgeom = geometry();
+                QRect oldgeom = frameGeometry();
                 plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
                 if (!isShade())
                     checkWorkspacePosition(oldgeom);
@@ -437,7 +437,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
 
 void X11Client::destroyDecoration()
 {
-    QRect oldgeom = geometry();
+    QRect oldgeom = frameGeometry();
     if (isDecorated()) {
         QPoint grav = calculateGravitation(true);
         AbstractClient::destroyDecoration();
@@ -661,7 +661,7 @@ void X11Client::updateShape()
         addRepaintFull();
         addWorkspaceRepaint(visibleRect());   // In case shape change removes part of this window
     }
-    emit geometryShapeChanged(this, geometry());
+    emit geometryShapeChanged(this, frameGeometry());
 }
 
 static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
@@ -855,7 +855,7 @@ void X11Client::setShade(ShadeMode mode)
         QSize s(sizeForClientSize(clientSize()));
         shade_geometry_change = false;
         plainResize(s);
-        geom_restore = geometry();
+        setGeometryRestore(frameGeometry());
         if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
         if (shade_mode == ShadeHover) {

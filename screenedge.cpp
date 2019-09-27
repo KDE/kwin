@@ -538,7 +538,7 @@ void Edge::checkBlocking()
     }
     bool newValue = false;
     if (AbstractClient *client = Workspace::self()->activeClient()) {
-        newValue = client->isFullScreen() && client->geometry().contains(m_geometry.center());
+        newValue = client->isFullScreen() && client->frameGeometry().contains(m_geometry.center());
     }
     if (newValue == m_blocked) {
         return;
@@ -1262,7 +1262,7 @@ void ScreenEdges::createEdgeForClient(AbstractClient *client, ElectricBorder bor
     int x = 0;
     int width = 0;
     int height = 0;
-    const QRect geo = client->geometry();
+    const QRect geo = client->frameGeometry();
     const QRect fullArea = workspace()->clientArea(FullArea, 0, 1);
     for (int i = 0; i < screens()->count(); ++i) {
         const QRect screen = screens()->geometry(i);

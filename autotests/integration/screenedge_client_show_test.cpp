@@ -143,7 +143,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client);
     QVERIFY(!client->isDecorated());
-    QCOMPARE(client->geometry(), windowGeometry);
+    QCOMPARE(client->frameGeometry(), windowGeometry);
     QVERIFY(!client->hasStrut());
     QVERIFY(!client->isHiddenInternal());
 
@@ -183,7 +183,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QVERIFY(client->isHiddenInternal());
     QFETCH(QRect, resizedWindowGeometry);
     //resizewhile hidden
-    client->setGeometry(resizedWindowGeometry);
+    client->setFrameGeometry(resizedWindowGeometry);
     //triggerPos shouldn't be valid anymore
     Cursor::setPos(triggerPos);
     QVERIFY(client->isHiddenInternal());
@@ -247,7 +247,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client);
     QVERIFY(!client->isDecorated());
-    QCOMPARE(client->geometry(), windowGeometry);
+    QCOMPARE(client->frameGeometry(), windowGeometry);
     QVERIFY(!client->hasStrut());
     QVERIFY(!client->isHiddenInternal());
 

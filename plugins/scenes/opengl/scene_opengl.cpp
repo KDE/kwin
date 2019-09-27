@@ -2553,7 +2553,7 @@ void SceneOpenGLDecorationRenderer::render()
     QRect left, top, right, bottom;
     client()->client()->layoutDecorationRects(left, top, right, bottom);
 
-    const QRect geometry = dirty ? QRect(QPoint(0, 0), client()->client()->geometry().size()) : scheduled.boundingRect();
+    const QRect geometry = dirty ? QRect(QPoint(0, 0), client()->client()->size()) : scheduled.boundingRect();
 
     auto renderPart = [this](const QRect &geo, const QRect &partRect, const QPoint &offset, bool rotated = false) {
         if (!geo.isValid()) {

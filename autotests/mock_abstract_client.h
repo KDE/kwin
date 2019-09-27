@@ -38,14 +38,14 @@ public:
     bool isActive() const;
     bool isFullScreen() const;
     bool isHiddenInternal() const;
-    QRect geometry() const;
+    QRect frameGeometry() const;
     bool keepBelow() const;
 
     void setActive(bool active);
     void setScreen(int screen);
     void setFullScreen(bool set);
     void setHiddenInternal(bool set);
-    void setGeometry(const QRect &rect);
+    void setFrameGeometry(const QRect &rect);
     void setKeepBelow(bool);
     bool isResize() const;
     void setResize(bool set);
@@ -61,7 +61,7 @@ private:
     bool m_fullscreen;
     bool m_hiddenInternal;
     bool m_keepBelow;
-    QRect m_geometry;
+    QRect m_frameGeometry;
     bool m_resize;
 };
 

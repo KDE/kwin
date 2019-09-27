@@ -104,8 +104,8 @@ void DontCrashEmptyDecorationTest::testBug361551()
     QVERIFY(client->isDecorated());
 
     // let's set a stupid geometry
-    client->setGeometry(0, 0, 0, 0);
-    QCOMPARE(client->geometry(), QRect(0, 0, 0, 0));
+    client->setFrameGeometry(0, 0, 0, 0);
+    QCOMPARE(client->frameGeometry(), QRect(0, 0, 0, 0));
 
     // and destroy the window again
     xcb_unmap_window(c, w);

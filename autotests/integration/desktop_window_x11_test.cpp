@@ -156,7 +156,7 @@ void X11DesktopWindowTest::testDesktopWindow()
     QCOMPARE(client->window(), w);
     QVERIFY(!client->isDecorated());
     QCOMPARE(client->windowType(), NET::Desktop);
-    QCOMPARE(client->geometry(), windowGeometry);
+    QCOMPARE(client->frameGeometry(), windowGeometry);
     QVERIFY(client->isDesktop());
     QCOMPARE(client->depth(), 24);
     QVERIFY(!client->hasAlpha());

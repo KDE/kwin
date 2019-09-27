@@ -71,7 +71,21 @@ class KWIN_EXPORT Toplevel
 
     Q_PROPERTY(bool alpha READ hasAlpha NOTIFY hasAlphaChanged)
     Q_PROPERTY(qulonglong frameId READ frameId)
-    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+
+    /**
+     * This property holds the geometry of the Toplevel, excluding invisible
+     * portions, e.g. client-side and server-side drop-shadows, etc.
+     *
+     * @deprecated Use frameGeometry property instead.
+     */
+    Q_PROPERTY(QRect geometry READ frameGeometry NOTIFY geometryChanged)
+
+    /**
+     * This property holds the geometry of the Toplevel, excluding invisible
+     * portions, e.g. server-side and client-side drop-shadows, etc.
+     */
+    Q_PROPERTY(QRect frameGeometry READ frameGeometry NOTIFY geometryChanged)
+
     Q_PROPERTY(QRect visibleRect READ visibleRect)
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
@@ -261,7 +275,11 @@ public:
      * @return a unique identifier for the Toplevel. On X11 same as @ref window
      */
     virtual quint32 windowId() const;
-    QRect geometry() const;
+    /**
+     * Returns the geometry of the Toplevel, excluding invisible portions, e.g.
+     * server-side and client-side drop shadows, etc.
+     */
+    QRect frameGeometry() const;
     /**
      * The geometry of the Toplevel which accepts input events. This might be larger
      * than the actual geometry, e.g. to support resizing outside the window.
@@ -669,7 +687,7 @@ inline void Toplevel::setWindowHandles(xcb_window_t w)
     m_client.reset(w, false);
 }
 
-inline QRect Toplevel::geometry() const
+inline QRect Toplevel::frameGeometry() const
 {
     return geom;
 }

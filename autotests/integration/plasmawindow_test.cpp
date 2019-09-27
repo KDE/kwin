@@ -158,7 +158,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
     QCOMPARE(m_windowManagement->windows().count(), 1);
     auto pw = m_windowManagement->windows().first();
-    QCOMPARE(pw->geometry(), client->geometry());
+    QCOMPARE(pw->geometry(), client->frameGeometry());
     QSignalSpy geometryChangedSpy(pw, &PlasmaWindow::geometryChanged);
     QVERIFY(geometryChangedSpy.isValid());
 
@@ -168,18 +168,18 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QVERIFY(destroyedSpy.isValid());
 
     // now shade the window
-    const QRect geoBeforeShade = client->geometry();
+    const QRect geoBeforeShade = client->frameGeometry();
     QVERIFY(geoBeforeShade.isValid());
     QVERIFY(!geoBeforeShade.isEmpty());
     workspace()->slotWindowShade();
     QVERIFY(client->isShade());
-    QVERIFY(client->geometry() != geoBeforeShade);
+    QVERIFY(client->frameGeometry() != geoBeforeShade);
     QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(pw->geometry(), client->geometry());
+    QCOMPARE(pw->geometry(), client->frameGeometry());
     // and unshade again
     workspace()->slotWindowShade();
     QVERIFY(!client->isShade());
-    QCOMPARE(client->geometry(), geoBeforeShade);
+    QCOMPARE(client->frameGeometry(), geoBeforeShade);
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(pw->geometry(), geoBeforeShade);
 

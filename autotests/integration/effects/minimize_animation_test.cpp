@@ -137,7 +137,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     XdgShellClient *panel = Test::renderAndWaitForShown(panelSurface.data(), panelRect.size(), Qt::blue);
     QVERIFY(panel);
     QVERIFY(panel->isDock());
-    QCOMPARE(panel->geometry(), panelRect);
+    QCOMPARE(panel->frameGeometry(), panelRect);
     QVERIFY(plasmaWindowCreatedSpy.wait());
     QCOMPARE(plasmaWindowCreatedSpy.count(), 1);
 
@@ -158,7 +158,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     const QRect iconRect = QRect(0, 0, 42, 36);
     window->setMinimizedGeometry(panelSurface.data(), iconRect);
     Test::flushWaylandConnection();
-    QTRY_COMPARE(client->iconGeometry(), iconRect.translated(panel->geometry().topLeft()));
+    QTRY_COMPARE(client->iconGeometry(), iconRect.translated(panel->frameGeometry().topLeft()));
 
     // Load effect that will be tested.
     QFETCH(QString, effectName);

@@ -2114,7 +2114,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
         }
         const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
         foreach (Unmanaged *u, unmanaged) {
-            if (u->geometry().contains(pos) && acceptsInput(u, pos)) {
+            if (u->inputGeometry().contains(pos) && acceptsInput(u, pos)) {
                 return u;
             }
         }
@@ -2407,7 +2407,7 @@ QWindow* InputDeviceHandler::findInternalWindow(const QPoint &pos) const
         if (!w || !w->isVisible()) {
             continue;
         }
-        if (!(*it)->geometry().contains(pos)) {
+        if (!(*it)->frameGeometry().contains(pos)) {
             continue;
         }
         // check input mask

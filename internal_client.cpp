@@ -68,8 +68,8 @@ InternalClient::InternalClient(QWindow *window)
     blockGeometryUpdates(true);
     commitGeometry(m_internalWindow->geometry());
     updateDecoration(true);
-    setGeometry(mapFromClient(m_internalWindow->geometry()));
-    setGeometryRestore(geometry());
+    setFrameGeometry(mapFromClient(m_internalWindow->geometry()));
+    setGeometryRestore(frameGeometry());
     blockGeometryUpdates(false);
 
     m_internalWindow->installEventFilter(this);
@@ -323,10 +323,10 @@ void InternalClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
     if (h > area.height()) {
         h = area.height();
     }
-    setGeometry(QRect(x(), y(), w, h));
+    setFrameGeometry(QRect(x(), y(), w, h));
 }
 
-void InternalClient::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
+void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 {
     const QRect rect(x, y, w, h);
 
@@ -416,7 +416,7 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
         return;
     }
 
-    const QRect oldFrameGeometry = geometry();
+    const QRect oldFrameGeometry = frameGeometry();
     const QRect oldClientGeometry = oldFrameGeometry - frameMargins();
 
     GeometryUpdatesBlocker blocker(this);
@@ -537,9 +537,9 @@ void InternalClient::destroyDecoration()
         return;
     }
 
-    const QRect clientGeometry = mapToClient(geometry());
+    const QRect clientGeometry = mapToClient(frameGeometry());
     AbstractClient::destroyDecoration();
-    setGeometry(clientGeometry);
+    setFrameGeometry(clientGeometry);
 }
 
 void InternalClient::doMove(int x, int y)
@@ -591,7 +591,7 @@ void InternalClient::createDecoration(const QRect &rect)
         connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
                 GeometryUpdatesBlocker blocker(this);
-                const QRect oldGeometry = geometry();
+                const QRect oldGeometry = frameGeometry();
                 if (!isShade()) {
                     checkWorkspacePosition(oldGeometry);
                 }
@@ -600,10 +600,10 @@ void InternalClient::createDecoration(const QRect &rect)
         );
     }
 
-    const QRect oldFrameGeometry = geometry();
+    const QRect oldFrameGeometry = frameGeometry();
 
     setDecoration(decoration);
-    setGeometry(mapFromClient(rect));
+    setFrameGeometry(mapFromClient(rect));
 
     emit geometryShapeChanged(this, oldFrameGeometry);
 }
@@ -623,7 +623,7 @@ void InternalClient::commitGeometry(const QRect &rect)
 
     geom = rect;
 
-    m_clientSize = mapToClient(geometry()).size();
+    m_clientSize = mapToClient(frameGeometry()).size();
 
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
@@ -663,11 +663,11 @@ void InternalClient::markAsMapped()
 
 void InternalClient::syncGeometryToInternalWindow()
 {
-    if (m_internalWindow->geometry() == mapToClient(geometry())) {
+    if (m_internalWindow->geometry() == mapToClient(frameGeometry())) {
         return;
     }
 
-    QTimer::singleShot(0, this, [this] { requestGeometry(geometry()); });
+    QTimer::singleShot(0, this, [this] { requestGeometry(frameGeometry()); });
 }
 
 void InternalClient::updateInternalWindowGeometry()

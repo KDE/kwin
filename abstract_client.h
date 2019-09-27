@@ -222,7 +222,7 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
      * might be emitted at each resize step or only at the end of the resize operation.
      */
-    Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
+    Q_PROPERTY(QRect geometry READ frameGeometry WRITE setFrameGeometry)
 
     /**
      * Whether the Client is currently being moved by the user.
@@ -630,8 +630,8 @@ public:
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
-    virtual void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
-    void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet);
+    virtual void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet);
     /// How to resize the window in order to obey constains (mainly aspect ratios)
     enum Sizemode {
         SizemodeAny,
@@ -1293,9 +1293,9 @@ inline void AbstractClient::resizeWithChecks(const QSize& s, AbstractClient::For
     resizeWithChecks(s.width(), s.height(), force);
 }
 
-inline void AbstractClient::setGeometry(const QRect& r, ForceGeometry_t force)
+inline void AbstractClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 {
-    setGeometry(r.x(), r.y(), r.width(), r.height(), force);
+    setFrameGeometry(rect.x(), rect.y(), rect.width(), rect.height(), force);
 }
 
 inline const QList<AbstractClient*>& AbstractClient::transients() const

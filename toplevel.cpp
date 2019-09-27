@@ -149,7 +149,7 @@ QRect Toplevel::visibleRect() const
     if (shadow() && !shadow()->shadowRegion().isEmpty()) {
         r |= shadow()->shadowRegion().boundingRect();
     }
-    return r.translated(geometry().topLeft());
+    return r.translated(frameGeometry().topLeft());
 }
 
 Xcb::Property Toplevel::fetchWmClientLeader() const
@@ -523,7 +523,7 @@ void Toplevel::checkScreen()
             emit screenChanged();
         }
     } else {
-        const int s = screens()->number(geometry().center());
+        const int s = screens()->number(frameGeometry().center());
         if (s != m_screen) {
             m_screen = s;
             emit screenChanged();
@@ -566,7 +566,7 @@ qreal Toplevel::bufferScale() const
 
 bool Toplevel::isOnScreen(int screen) const
 {
-    return screens()->geometry(screen).intersects(geometry());
+    return screens()->geometry(screen).intersects(frameGeometry());
 }
 
 bool Toplevel::isOnActiveScreen() const
@@ -782,7 +782,7 @@ quint32 Toplevel::windowId() const
 
 QRect Toplevel::inputGeometry() const
 {
-    return geometry();
+    return frameGeometry();
 }
 
 bool Toplevel::isLocalhost() const

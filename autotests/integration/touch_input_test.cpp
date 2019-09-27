@@ -268,7 +268,7 @@ void TouchInputTest::testTouchMouseAction()
     QVERIFY(sequenceStartedSpy.isValid());
 
     quint32 timestamp = 1;
-    kwinApp()->platform()->touchDown(1, c1->geometry().center(), timestamp++);
+    kwinApp()->platform()->touchDown(1, c1->frameGeometry().center(), timestamp++);
     QVERIFY(c1->isActive());
 
     QVERIFY(sequenceStartedSpy.wait());

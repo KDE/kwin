@@ -115,16 +115,16 @@ void ShadeTest::testShadeGeometry()
     QVERIFY(client->isActive());
 
     // now shade the window
-    const QRect geoBeforeShade = client->geometry();
+    const QRect geoBeforeShade = client->frameGeometry();
     QVERIFY(geoBeforeShade.isValid());
     QVERIFY(!geoBeforeShade.isEmpty());
     workspace()->slotWindowShade();
     QVERIFY(client->isShade());
-    QVERIFY(client->geometry() != geoBeforeShade);
+    QVERIFY(client->frameGeometry() != geoBeforeShade);
     // and unshade again
     workspace()->slotWindowShade();
     QVERIFY(!client->isShade());
-    QCOMPARE(client->geometry(), geoBeforeShade);
+    QCOMPARE(client->frameGeometry(), geoBeforeShade);
 
     // and destroy the window again
     xcb_unmap_window(c.data(), w);

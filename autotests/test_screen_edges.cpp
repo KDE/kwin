@@ -706,7 +706,7 @@ void TestScreenEdges::testFullScreenBlocking()
     QVERIFY(spy.isEmpty());
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
 
-    client.setGeometry(screens()->geometry());
+    client.setFrameGeometry(screens()->geometry());
     client.setActive(true);
     client.setFullScreen(true);
     ws.setActiveClient(&client);
@@ -739,7 +739,7 @@ void TestScreenEdges::testFullScreenBlocking()
     // let's make the client fullscreen again, but with a geometry not intersecting the left edge
     QTest::qWait(351);
     client.setFullScreen(true);
-    client.setGeometry(client.geometry().translated(10, 0));
+    client.setFrameGeometry(client.frameGeometry().translated(10, 0));
     emit s->checkBlocking();
     spy.clear();
     Cursor::setPos(0, 50);
@@ -750,7 +750,7 @@ void TestScreenEdges::testFullScreenBlocking()
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
 
     // just to be sure, let's set geometry back
-    client.setGeometry(screens()->geometry());
+    client.setFrameGeometry(screens()->geometry());
     emit s->checkBlocking();
     Cursor::setPos(0, 50);
     QVERIFY(isEntered(&event));
@@ -782,7 +782,7 @@ void TestScreenEdges::testClientEdge()
 {
     using namespace KWin;
     X11Client client(workspace());
-    client.setGeometry(QRect(10, 50, 10, 50));
+    client.setFrameGeometry(QRect(10, 50, 10, 50));
     auto s = ScreenEdges::self();
     s->init();
 
@@ -796,7 +796,7 @@ void TestScreenEdges::testClientEdge()
 
     //remove old reserves and resize to be in the middle of the screen
     s->reserve(&client, KWin::ElectricNone);
-    client.setGeometry(QRect(2, 2, 20, 20));
+    client.setFrameGeometry(QRect(2, 2, 20, 20));
 
     // for none of the edges it should be able to be set
     for (int i = 0; i < ELECTRIC_COUNT; ++i) {
@@ -806,7 +806,7 @@ void TestScreenEdges::testClientEdge()
     }
 
     // now let's try to set it and activate it
-    client.setGeometry(screens()->geometry());
+    client.setFrameGeometry(screens()->geometry());
     client.setHiddenInternal(true);
     s->reserve(&client, KWin::ElectricLeft);
     QCOMPARE(client.isHiddenInternal(), true);
@@ -877,7 +877,7 @@ void TestScreenEdges::testClientEdge()
     QCOMPARE(Cursor::pos(), QPoint(50, 0));
 
     // set to windows can cover
-    client.setGeometry(screens()->geometry());
+    client.setFrameGeometry(screens()->geometry());
     client.setHiddenInternal(false);
     client.setKeepBelow(true);
     s->reserve(&client, KWin::ElectricLeft);

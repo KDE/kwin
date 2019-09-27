@@ -566,7 +566,7 @@ int Scene::Window::height() const
 inline
 QRect Scene::Window::geometry() const
 {
-    return toplevel->geometry();
+    return toplevel->frameGeometry();
 }
 
 inline

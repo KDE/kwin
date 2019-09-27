@@ -430,7 +430,7 @@ AbstractClient *Workspace::clientUnderMouse(int screen) const
                 client->isOnCurrentActivity() && client->isOnScreen(screen)))
             continue;
 
-        if (client->geometry().contains(Cursor::pos())) {
+        if (client->frameGeometry().contains(Cursor::pos())) {
             return client;
         }
     }

@@ -29,7 +29,7 @@ AbstractClient::AbstractClient(QObject *parent)
     , m_fullscreen(false)
     , m_hiddenInternal(false)
     , m_keepBelow(false)
-    , m_geometry()
+    , m_frameGeometry()
     , m_resize(false)
 {
 }
@@ -82,15 +82,15 @@ void AbstractClient::setHiddenInternal(bool set)
     m_hiddenInternal = set;
 }
 
-void AbstractClient::setGeometry(const QRect &rect)
+void AbstractClient::setFrameGeometry(const QRect &rect)
 {
-    m_geometry = rect;
+    m_frameGeometry = rect;
     emit geometryChanged();
 }
 
-QRect AbstractClient::geometry() const
+QRect AbstractClient::frameGeometry() const
 {
-    return m_geometry;
+    return m_frameGeometry;
 }
 
 bool AbstractClient::keepBelow() const
