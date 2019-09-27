@@ -236,6 +236,9 @@ protected:
     // the default is NOOP
     virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
+
+    virtual void paintEffectQuickView(EffectQuickView *w) = 0;
+
     // compute time since the last repaint
     void updateTimeDiff();
     // saved data for 2nd pass of optimized screen painting

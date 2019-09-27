@@ -29,6 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "platform.h"
 #include "wayland_server.h"
+
+#include <kwineffectquickview.h>
+
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -171,6 +174,16 @@ void SceneQPainter::paintCursor()
     const QPoint hotspot = kwinApp()->platform()->softwareCursorHotspot();
     m_painter->drawImage(cursorPos - hotspot, img);
     kwinApp()->platform()->markCursorAsRendered();
+}
+
+void SceneQPainter::paintEffectQuickView(EffectQuickView *w)
+{
+    QPainter *painter = effects->scenePainter();
+    const QImage buffer = w->bufferAsImage();
+    if (buffer.isNull()) {
+        return;
+    }
+    painter->drawImage(w->geometry(), buffer);
 }
 
 Scene::Window *SceneQPainter::createWindow(Toplevel *toplevel)

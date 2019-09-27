@@ -82,6 +82,7 @@ class EffectWindow;
 class EffectWindowGroup;
 class EffectFrame;
 class EffectFramePrivate;
+class EffectQuickView;
 class Effect;
 class WindowQuad;
 class GLShader;
@@ -187,7 +188,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 228
+#define KWIN_EFFECT_API_VERSION_MINOR 229
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1358,6 +1359,13 @@ public:
      * Returns if activeFullScreenEffect is set
      */
     virtual bool hasActiveFullScreenEffect() const = 0;
+
+    /**
+     * Render the supplied EffectQuickView onto the scene
+     * It can be called at any point during the scene rendering
+     * @since 5.18
+     */
+    virtual void renderEffectQuickView(EffectQuickView *effectQuickView) const = 0;
 
 Q_SIGNALS:
     /**

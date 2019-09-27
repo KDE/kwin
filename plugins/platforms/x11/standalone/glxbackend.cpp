@@ -38,11 +38,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
+#include <kwineffectquickview.h>
 #include <kwinxrenderutils.h>
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>
 #include <QX11Info>
+#include <QtPlatformHeaders/QGLXNativeContext>
 // system
 #include <unistd.h>
 
@@ -137,6 +139,7 @@ GlxBackend::~GlxBackend()
     // do cleanup after initBuffer()
     cleanupGL();
     doneCurrent();
+    EffectQuickView::setShareContext(nullptr);
 
     gs_tripleBufferUndetected = true;
     gs_tripleBufferNeedsDetection = false;
@@ -358,6 +361,12 @@ bool GlxBackend::initRenderingContext()
         ctx = nullptr;
         return false;
     }
+
+    auto qtContext = new QOpenGLContext;
+    QGLXNativeContext native(ctx, display());
+    qtContext->setNativeHandle(QVariant::fromValue(native));
+    qtContext->create();
+    EffectQuickView::setShareContext(std::unique_ptr<QOpenGLContext>(qtContext));
 
     return true;
 }

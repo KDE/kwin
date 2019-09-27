@@ -278,6 +278,9 @@ public:
 
     KSharedConfigPtr config() const override;
     KSharedConfigPtr inputConfig() const override;
+    void renderEffectQuickView(KWin::EffectQuickView *quickView) const override {
+        Q_UNUSED(quickView);
+    }
 
 private:
     bool m_animationsSuported = true;

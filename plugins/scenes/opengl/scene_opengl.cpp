@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platformsupport/scenes/opengl/texture.h"
 
 #include <kwinglplatform.h>
+#include <kwineffectquickview.h>
 
 #include "utils.h"
 #include "x11client.h"
@@ -856,6 +857,30 @@ void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, Scr
     glScissor(r.x(), screens()->size().height() - r.y() - r.height(), r.width(), r.height());
     KWin::Scene::paintDesktop(desktop, mask, region, data);
     glDisable(GL_SCISSOR_TEST);
+}
+
+void SceneOpenGL::paintEffectQuickView(EffectQuickView *w)
+{
+    GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+    const QRect rect = w->geometry();
+
+    GLTexture *t = w->bufferAsTexture();
+    if (!t) {
+        return;
+    }
+
+    QMatrix4x4 mvp(projectionMatrix());
+    mvp.translate(rect.x(), rect.y());
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    t->bind();
+    t->render(QRegion(infiniteRegion()), w->geometry());
+    t->unbind();
+    glDisable(GL_BLEND);
+    return;
 }
 
 bool SceneOpenGL::makeOpenGLContextCurrent()

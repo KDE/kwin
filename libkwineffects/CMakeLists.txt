@@ -40,6 +40,7 @@ install(TARGETS kwinxrenderutils EXPORT kdeworkspaceLibraryTargets ${INSTALL_TAR
 set(kwin_EFFECTSLIB_SRCS
     anidata.cpp
     kwinanimationeffect.cpp
+    kwineffectquickview.cpp
     kwineffects.cpp
     logging.cpp
 )
@@ -47,12 +48,14 @@ set(kwin_EFFECTSLIB_SRCS
 set(kwineffects_QT_LIBS
     Qt5::DBus
     Qt5::Widgets
+    Qt5::Quick
 )
 
 set(kwineffects_KDE_LIBS
     KF5::ConfigCore
     KF5::CoreAddons
     KF5::WindowSystem
+    KF5::Declarative
 )
 
 set(kwineffects_XCB_LIBS
@@ -66,6 +69,7 @@ target_link_libraries(kwineffects
         ${kwineffects_QT_LIBS}
         ${kwineffects_KDE_LIBS}
         ${kwineffects_XCB_LIBS}
+        kwinglutils
 )
 if (KWIN_HAVE_XRENDER_COMPOSITING)
     target_link_libraries(kwineffects PRIVATE kwinxrenderutils XCB::XFIXES)
@@ -112,6 +116,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinxrenderutils_export.h
     kwinanimationeffect.h
+    kwineffectquickview.h
     kwineffects.h
     kwinglobals.h
     kwinglplatform.h

@@ -273,6 +273,8 @@ public:
      */
     Effect *findEffect(const QString &name) const;
 
+    void renderEffectQuickView(EffectQuickView *effectQuickView) const override;
+
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);

@@ -36,8 +36,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "screens.h"
 #include "xcbutils.h"
-#include "kwinxrenderutils.h"
 #include "decorations/decoratedclient.h"
+
+#include <kwineffectquickview.h>
+#include <kwinxrenderutils.h>
 
 #include <xcb/xfixes.h>
 
@@ -1328,4 +1330,17 @@ Scene *XRenderFactory::create(QObject *parent) const
 void KWin::SceneXrender::paintCursor()
 {
 
+}
+
+void KWin::SceneXrender::paintEffectQuickView(KWin::EffectQuickView *w)
+{
+    const QImage buffer = w->bufferAsImage();
+    if (buffer.isNull()) {
+        return;
+    }
+    XRenderPicture picture(buffer);
+    xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
+                         effects->xrenderBufferPicture(),
+                         0, 0, 0, 0, w->geometry().x(), w->geometry().y(),
+                         w->geometry().width(), w->geometry().height());
 }

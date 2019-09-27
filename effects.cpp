@@ -46,9 +46,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "window_property_notify_x11_filter.h"
 #include "workspace.h"
 #include "kwinglutils.h"
+#include "kwineffectquickview.h"
 
 #include <QDebug>
-#include <QDesktopWidget>
 
 #include <Plasma/Theme>
 
@@ -1700,6 +1700,14 @@ Effect *EffectsHandlerImpl::findEffect(const QString &name) const
         return nullptr;
     }
     return (*it).second;
+}
+
+void EffectsHandlerImpl::renderEffectQuickView(EffectQuickView *w) const
+{
+    if (!w->isVisible()) {
+        return;
+    }
+    scene()->paintEffectQuickView(w);
 }
 
 //****************************************
