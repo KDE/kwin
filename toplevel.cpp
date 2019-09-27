@@ -804,5 +804,15 @@ bool Toplevel::isLocalhost() const
     return m_clientMachine->isLocal();
 }
 
+QMargins Toplevel::bufferMargins() const
+{
+    return QMargins();
+}
+
+QMargins Toplevel::frameMargins() const
+{
+    return QMargins();
+}
+
 } // namespace
 

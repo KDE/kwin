@@ -385,6 +385,7 @@ public:
 
     bool wantsTabFocus() const;
 
+    QMargins frameMargins() const override;
     QPoint clientPos() const override {
         return QPoint(borderLeft(), borderTop());
     }
@@ -834,14 +835,6 @@ public:
      * Default implementation returns @c true.
      */
     virtual bool supportsWindowRules() const;
-
-    /**
-     * Returns the extents of the server-side decoration.
-     *
-     * Note that the returned margins object will have all margins set to 0 if
-     * the client doesn't have a server-side decoration.
-     */
-    QMargins frameMargins() const;
 
 public Q_SLOTS:
     virtual void closeWindow() = 0;

@@ -315,10 +315,29 @@ public:
      */
     virtual QRect bufferGeometry() const = 0;
     /**
+     * Returns the extents of invisible portions in the pixmap.
+     *
+     * An X11 pixmap may contain invisible space around the actual contents of the
+     * client. That space is reserved for server-side decoration, which we usually
+     * want to skip when building contents window quads.
+     *
+     * Default implementation returns a margins object with all margins set to 0.
+     */
+    virtual QMargins bufferMargins() const;
+    /**
      * Returns the geometry of the Toplevel, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
      */
     QRect frameGeometry() const;
+    /**
+     * Returns the extents of the server-side decoration.
+     *
+     * Note that the returned margins object will have all margins set to 0 if
+     * the client doesn't have a server-side decoration.
+     *
+     * Default implementation returns a margins object with all margins set to 0.
+     */
+    virtual QMargins frameMargins() const;
     /**
      * The geometry of the Toplevel which accepts input events. This might be larger
      * than the actual geometry, e.g. to support resizing outside the window.

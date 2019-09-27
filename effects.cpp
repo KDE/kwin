@@ -1951,7 +1951,10 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 
 QRegion EffectWindowImpl::shape() const
 {
-    return sw ? sw->shape() : geometry();
+    if (isX11Client() && sceneWindow()) {
+        return sceneWindow()->bufferShape();
+    }
+    return geometry();
 }
 
 QRect EffectWindowImpl::decorationInnerRect() const

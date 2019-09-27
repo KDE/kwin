@@ -278,22 +278,14 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             if (client) {
                 opaqueFullscreen = client->isFullScreen();
             }
-            X11Client *cc = dynamic_cast<X11Client *>(client);
-            // the window is fully opaque
-            if (cc && cc->decorationHasAlpha()) {
-                // decoration uses alpha channel, so we may not exclude it in clipping
-                data.clip = window->clientShape().translated(window->x(), window->y());
-            } else {
-                // decoration is fully opaque
-                if (client && client->isShade()) {
-                    data.clip = QRegion();
-                } else {
-                    data.clip = window->shape().translated(window->x(), window->y());
-                }
+            if (!(client && client->decorationHasAlpha())) {
+                data.clip = window->decorationShape().translated(window->pos());
             }
+            data.clip |= window->clientShape().translated(window->pos() + window->bufferOffset());
         } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
-            // the window is partially opaque
-            data.clip = (window->clientShape() & toplevel->opaqueRegion().translated(toplevel->clientPos())).translated(window->x(), window->y());
+            const QRegion clientShape = window->clientShape().translated(window->pos() + window->bufferOffset());
+            const QRegion opaqueShape = toplevel->opaqueRegion().translated(window->pos() + toplevel->clientPos());
+            data.clip = clientShape & opaqueShape;
         } else {
             data.clip = QRegion();
         }
@@ -687,7 +679,6 @@ Scene::Window::Window(Toplevel * c)
     , m_previousPixmap()
     , m_referencePixmapCounter(0)
     , disable_painting(0)
-    , shape_valid(false)
     , cached_quad_list(nullptr)
 {
 }
@@ -731,47 +722,70 @@ void Scene::Window::discardShape()
 {
     // it is created on-demand and cached, simply
     // reset the flag
-    shape_valid = false;
+    m_bufferShapeIsValid = false;
     invalidateQuadsCache();
 }
 
-// Find out the shape of the window using the XShape extension
-// or if shape is not set then simply it's the window geometry.
-const QRegion &Scene::Window::shape() const
+QRegion Scene::Window::bufferShape() const
 {
-    if (!shape_valid) {
-        if (toplevel->shape()) {
-            auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->frameId(), XCB_SHAPE_SK_BOUNDING);
-            ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
-            if (!reply.isNull()) {
-                shape_region = QRegion();
-                auto *rects = xcb_shape_get_rectangles_rectangles(reply.data());
-                for (int i = 0;
-                        i < xcb_shape_get_rectangles_rectangles_length(reply.data());
-                        ++i)
-                    shape_region += QRegion(rects[ i ].x, rects[ i ].y,
-                                            rects[ i ].width, rects[ i ].height);
-                // make sure the shape is sane (X is async, maybe even XShape is broken)
-                shape_region &= QRegion(0, 0, width(), height());
-            } else
-                shape_region = QRegion();
-        } else
-            shape_region = QRegion(0, 0, width(), height());
-        shape_valid = true;
+    if (m_bufferShapeIsValid) {
+        return m_bufferShape;
     }
-    return shape_region;
+
+    const QRect bufferGeometry = toplevel->bufferGeometry();
+
+    if (toplevel->shape()) {
+        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->frameId(), XCB_SHAPE_SK_BOUNDING);
+        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
+        if (!reply.isNull()) {
+            m_bufferShape = QRegion();
+            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());
+            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.data());
+            for (int i = 0; i < rectCount; ++i) {
+                m_bufferShape += QRegion(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+            }
+            // make sure the shape is sane (X is async, maybe even XShape is broken)
+            m_bufferShape &= QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
+        } else {
+            m_bufferShape = QRegion();
+        }
+    } else {
+        m_bufferShape = QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
+    }
+
+    m_bufferShapeIsValid = true;
+
+    return m_bufferShape;
 }
 
 QRegion Scene::Window::clientShape() const
 {
-    if (AbstractClient *c = dynamic_cast< AbstractClient * > (toplevel)) {
-        if (c->isShade())
+    if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
+        if (client->isShade()) {
             return QRegion();
+        }
     }
 
-    // TODO: cache
-    const QRegion r = shape() & QRect(toplevel->clientPos(), toplevel->clientSize());
-    return r.isEmpty() ? QRegion() : r;
+    const QRegion shape = bufferShape();
+    const QMargins bufferMargins = toplevel->bufferMargins();
+    if (bufferMargins.isNull()) {
+        return shape;
+    }
+
+    const QRect clippingRect = QRect(QPoint(0, 0), toplevel->bufferGeometry().size()) - toplevel->bufferMargins();
+    return shape & clippingRect;
+}
+
+QRegion Scene::Window::decorationShape() const
+{
+    return QRegion(toplevel->decorationRect()) - toplevel->transparentRect();
+}
+
+QPoint Scene::Window::bufferOffset() const
+{
+    const QRect bufferGeometry = toplevel->bufferGeometry();
+    const QRect frameGeometry = toplevel->frameGeometry();
+    return bufferGeometry.topLeft() - frameGeometry.topLeft();
 }
 
 bool Scene::Window::isVisible() const
@@ -835,19 +849,14 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
 {
     if (cached_quad_list != nullptr && !force)
         return *cached_quad_list;
-    WindowQuadList ret;
 
-    const qreal scale = toplevel->bufferScale();
+    WindowQuadList ret = makeContentsQuads();
 
-    if (toplevel->clientPos() == QPoint(0, 0) && toplevel->clientSize() == toplevel->decorationRect().size())
-        ret = makeQuads(WindowQuadContents, shape(), QPoint(0,0), scale);  // has no decoration
-    else {
+    if (!toplevel->frameMargins().isNull()) {
         AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
-        QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
-        QRegion decoration = (client ? QRegion(client->decorationRect()) : shape()) - center;
+        const QRegion decoration = decorationShape();
         qreal decorationScale = 1.0;
-        ret = makeQuads(WindowQuadContents, contents, toplevel->clientContentPos(), scale);
 
         QRect rects[4];
         bool isShadedClient = false;
@@ -932,30 +941,46 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
     return list;
 }
 
+WindowQuadList Scene::Window::makeContentsQuads() const
+{
+    const QRegion contentsRegion = clientShape();
+    if (contentsRegion.isEmpty()) {
+        return WindowQuadList();
+    }
+
+    const QPointF geometryOffset = bufferOffset();
+    const qreal textureScale = toplevel->bufferScale();
+
+    WindowQuadList quads;
+    quads.reserve(contentsRegion.rectCount());
+
+    for (const QRectF &rect : contentsRegion) {
+        WindowQuad quad(WindowQuadContents);
+
+        const qreal x0 = rect.left() + geometryOffset.x();
+        const qreal y0 = rect.top() + geometryOffset.y();
+        const qreal x1 = rect.right() + geometryOffset.x();
+        const qreal y1 = rect.bottom() + geometryOffset.y();
+
+        const qreal u0 = rect.left() * textureScale;
+        const qreal v0 = rect.top() * textureScale;
+        const qreal u1 = rect.right() * textureScale;
+        const qreal v1 = rect.bottom() * textureScale;
+
+        quad[0] = WindowVertex(QPointF(x0, y0), QPointF(u0, v0));
+        quad[1] = WindowVertex(QPointF(x1, y0), QPointF(u1, v0));
+        quad[2] = WindowVertex(QPointF(x1, y1), QPointF(u1, v1));
+        quad[3] = WindowVertex(QPointF(x0, y1), QPointF(u0, v1));
+
+        quads << quad;
+    }
+
+    return quads;
+}
+
 void Scene::Window::invalidateQuadsCache()
 {
     cached_quad_list.reset();
-}
-
-WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset, qreal scale) const
-{
-    WindowQuadList ret;
-    ret.reserve(reg.rectCount());
-    for (const QRect &r : reg) {
-        WindowQuad quad(type);
-        // TODO asi mam spatne pravy dolni roh - bud tady, nebo v jinych castech
-        quad[ 0 ] = WindowVertex(QPointF(r.x(), r.y()),
-                                 QPointF(r.x() + textureOffset.x(), r.y() + textureOffset.y()) * scale);
-        quad[ 1 ] = WindowVertex(QPointF(r.x() + r.width(), r.y()),
-                                 QPointF(r.x() + r.width() + textureOffset.x(), r.y() + textureOffset.y()) * scale);
-        quad[ 2 ] = WindowVertex(QPointF(r.x() + r.width(), r.y() + r.height()),
-                                 QPointF(r.x() + r.width() + textureOffset.x(), r.y() + r.height() + textureOffset.y()) * scale);
-        quad[ 3 ] = WindowVertex(QPointF(r.x(), r.y() + r.height()),
-                                 QPointF(r.x() + textureOffset.x(), r.y() + r.height() + textureOffset.y()) * scale);
-
-        ret.append(quad);
-    }
-    return ret;
 }
 
 void Scene::Window::updateShadow(Shadow* shadow)
@@ -1029,14 +1054,14 @@ void WindowPixmap::create()
         xcb_free_pixmap(connection(), pix);
         return;
     }
-    if (!windowGeometry ||
-        windowGeometry->width != toplevel()->width() || windowGeometry->height != toplevel()->height()) {
+    const QRect bufferGeometry = toplevel()->bufferGeometry();
+    if (windowGeometry.size() != bufferGeometry.size()) {
         qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << this;
         xcb_free_pixmap(connection(), pix);
         return;
     }
     m_pixmap = pix;
-    m_pixmapSize = QSize(toplevel()->width(), toplevel()->height());
+    m_pixmapSize = bufferGeometry.size();
     m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
 }

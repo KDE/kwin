@@ -1976,6 +1976,11 @@ QRect X11Client::bufferGeometry() const
     return geom;
 }
 
+QMargins X11Client::bufferMargins() const
+{
+    return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
+}
+
 Xcb::Property X11Client::fetchShowOnScreenEdge() const
 {
     return Xcb::Property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);

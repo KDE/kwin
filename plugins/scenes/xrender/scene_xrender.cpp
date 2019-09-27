@@ -462,10 +462,10 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         if (toplevel->shape()) {
             // "xeyes" + decoration
             transformed_shape -= cr;
-            transformed_shape += shape();
+            transformed_shape += bufferShape();
         }
     } else {
-        transformed_shape = shape();
+        transformed_shape = bufferShape();
     }
     if (toplevel->shadow()) {
         transformed_shape |= toplevel->shadow()->shadowRegion();

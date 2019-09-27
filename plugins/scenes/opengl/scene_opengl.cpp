@@ -1512,7 +1512,8 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     // render sub-surfaces
     auto wp = windowPixmap<OpenGLWindowPixmap>();
     const auto &children = wp ? wp->children() : QVector<WindowPixmap*>();
-    windowMatrix.translate(toplevel->clientPos().x(), toplevel->clientPos().y());
+    const QPoint mainSurfaceOffset = bufferOffset();
+    windowMatrix.translate(mainSurfaceOffset.x(), mainSurfaceOffset.y());
     for (auto pixmap : children) {
         if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
             continue;

@@ -90,6 +90,7 @@ public:
     xcb_window_t frameId() const override;
 
     QRect bufferGeometry() const override;
+    QMargins bufferMargins() const override;
 
     bool isTransient() const override;
     bool groupTransient() const override;

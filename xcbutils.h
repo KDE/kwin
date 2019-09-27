@@ -566,6 +566,14 @@ public:
         }
         return QRect(geometry->x, geometry->y, geometry->width, geometry->height);
     }
+
+    inline QSize size() {
+        const xcb_get_geometry_reply_t *geometry = data();
+        if (!geometry) {
+            return QSize();
+        }
+        return QSize(geometry->width, geometry->height);
+    }
 };
 
 XCB_WRAPPER_DATA(TreeData, xcb_query_tree, xcb_window_t)

@@ -287,14 +287,17 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
     renderWindowDecorations(painter);
 
     // render content
-    const QRect target = QRect(toplevel->clientPos(), toplevel->clientSize());
-    QSize srcSize = pixmap->image().size();
-    if (pixmap->surface() && pixmap->surface()->scale() == 1 && srcSize != toplevel->clientSize()) {
+    QRect source;
+    QRect target;
+    if (toplevel->isClient()) {
         // special case for XWayland windows
-        srcSize = toplevel->clientSize();
+        source = QRect(toplevel->clientPos(), toplevel->clientSize());
+        target = source;
+    } else {
+        source = pixmap->image().rect();
+        target = toplevel->bufferGeometry().translated(-pos());
     }
-    const QRect src = QRect(toplevel->clientPos() + toplevel->clientContentPos(), srcSize);
-    painter->drawImage(target, pixmap->image(), src);
+    painter->drawImage(target, pixmap->image(), source);
 
     // render subsurfaces
     const auto &children = pixmap->children();
@@ -302,7 +305,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
         if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
             continue;
         }
-        paintSubSurface(painter, toplevel->clientPos(), static_cast<QPainterWindowPixmap*>(pixmap));
+        paintSubSurface(painter, bufferOffset(), static_cast<QPainterWindowPixmap*>(pixmap));
     }
 
     if (!opaque) {

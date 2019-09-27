@@ -44,6 +44,8 @@ public:
     void unrefWindow();
     void discard();
     QRect bufferGeometry() const override;
+    QMargins bufferMargins() const override;
+    QMargins frameMargins() const override;
     qreal bufferScale() const override;
     int desktop() const override;
     QStringList activities() const override;
@@ -200,6 +202,8 @@ private:
     void removeTransientFor(Deleted *parent);
 
     QRect m_bufferGeometry;
+    QMargins m_bufferMargins;
+    QMargins m_frameMargins;
 
     int delete_refcount;
     int desk;

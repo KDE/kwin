@@ -330,8 +330,10 @@ public:
     // is the window fully opaque
     bool isOpaque() const;
     // shape of the window
-    const QRegion &shape() const;
+    QRegion bufferShape() const;
     QRegion clientShape() const;
+    QRegion decorationShape() const;
+    QPoint bufferOffset() const;
     void discardShape();
     void updateToplevel(Toplevel* c);
     // creates initial quad list for the window
@@ -343,8 +345,8 @@ public:
     void unreferencePreviousPixmap();
     void invalidateQuadsCache();
 protected:
-    WindowQuadList makeQuads(WindowQuadType type, const QRegion& reg, const QPoint &textureOffset = QPoint(0, 0), qreal textureScale = 1.0) const;
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
+    WindowQuadList makeContentsQuads() const;
     /**
      * @brief Returns the WindowPixmap for this Window.
      *
@@ -377,8 +379,8 @@ private:
     QScopedPointer<WindowPixmap> m_previousPixmap;
     int m_referencePixmapCounter;
     int disable_painting;
-    mutable QRegion shape_region;
-    mutable bool shape_valid;
+    mutable QRegion m_bufferShape;
+    mutable bool m_bufferShapeIsValid = false;
     mutable QScopedPointer<WindowQuadList> cached_quad_list;
     Q_DISABLE_COPY(Window)
 };
