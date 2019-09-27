@@ -254,63 +254,63 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
     phase2data.reserve(stacking_order.size());
 
     QRegion dirtyArea = region;
-    bool opaqueFullscreen(false);
-    for (int i = 0;  // do prePaintWindow bottom to top
-            i < stacking_order.count();
-            ++i) {
-        Window* w = stacking_order[ i ];
-        Toplevel* topw = w->window();
+    bool opaqueFullscreen = false;
+
+    // Traverse the scene windows from bottom to top.
+    for (int i = 0; i < stacking_order.count(); ++i) {
+        Window *window = stacking_order[i];
+        Toplevel *toplevel = window->window();
         WindowPrePaintData data;
-        data.mask = orig_mask | (w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
-        w->resetPaintingEnabled();
+        data.mask = orig_mask | (window->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
+        window->resetPaintingEnabled();
         data.paint = region;
-        data.paint |= topw->repaints();
+        data.paint |= toplevel->repaints();
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
-        topw->resetRepaints();
+        toplevel->resetRepaints();
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         opaqueFullscreen = false; // TODO: do we care about unmanged windows here (maybe input windows?)
-        if (w->isOpaque()) {
-            AbstractClient *c = dynamic_cast<AbstractClient*>(topw);
-            if (c) {
-                opaqueFullscreen = c->isFullScreen();
+        if (window->isOpaque()) {
+            AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel);
+            if (client) {
+                opaqueFullscreen = client->isFullScreen();
             }
-            X11Client *cc = dynamic_cast<X11Client *>(c);
+            X11Client *cc = dynamic_cast<X11Client *>(client);
             // the window is fully opaque
             if (cc && cc->decorationHasAlpha()) {
                 // decoration uses alpha channel, so we may not exclude it in clipping
-                data.clip = w->clientShape().translated(w->x(), w->y());
+                data.clip = window->clientShape().translated(window->x(), window->y());
             } else {
                 // decoration is fully opaque
-                if (c && c->isShade()) {
+                if (client && client->isShade()) {
                     data.clip = QRegion();
                 } else {
-                    data.clip = w->shape().translated(w->x(), w->y());
+                    data.clip = window->shape().translated(window->x(), window->y());
                 }
             }
-        } else if (topw->hasAlpha() && topw->opacity() == 1.0) {
+        } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
             // the window is partially opaque
-            data.clip = (w->clientShape() & topw->opaqueRegion().translated(topw->clientPos())).translated(w->x(), w->y());
+            data.clip = (window->clientShape() & toplevel->opaqueRegion().translated(toplevel->clientPos())).translated(window->x(), window->y());
         } else {
             data.clip = QRegion();
         }
-        data.quads = w->buildQuads();
+        data.quads = window->buildQuads();
         // preparation step
-        effects->prePaintWindow(effectWindow(w), data, time_diff);
+        effects->prePaintWindow(effectWindow(window), data, time_diff);
 #if !defined(QT_NO_DEBUG)
         if (data.quads.isTransformed()) {
             qFatal("Pre-paint calls are not allowed to transform quads!");
         }
 #endif
-        if (!w->isPaintingEnabled()) {
+        if (!window->isPaintingEnabled()) {
             continue;
         }
         dirtyArea |= data.paint;
         // Schedule the window for painting
-        phase2data.append({w, data.paint, data.clip, data.mask, data.quads});
+        phase2data.append({ window, data.paint, data.clip, data.mask, data.quads });
     }
 
     // Save the part of the repaint region that's exclusively rendered to
@@ -334,10 +334,11 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
     for (int i = phase2data.count() - 1; i >= 0; --i) {
         Phase2Data *data = &phase2data[i];
 
-        if (fullRepaint)
+        if (fullRepaint) {
             data->region = displayRegion;
-        else
+        } else {
             data->region |= upperTranslucentDamage;
+        }
 
         // subtract the parts which will possibly been drawn as part of
         // a higher opaque window
@@ -349,8 +350,9 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             // clip away the opaque regions for all windows below this one
             allclips |= data->clip;
             // extend the translucent damage for windows below this by remaining (translucent) regions
-            if (!fullRepaint)
+            if (!fullRepaint) {
                 upperTranslucentDamage |= data->region - data->clip;
+            }
         } else if (!fullRepaint) {
             upperTranslucentDamage |= data->region;
         }
