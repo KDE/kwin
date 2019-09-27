@@ -86,16 +86,40 @@ class KWIN_EXPORT Toplevel
      */
     Q_PROPERTY(QRect frameGeometry READ frameGeometry NOTIFY geometryChanged)
 
-    Q_PROPERTY(QRect visibleRect READ visibleRect)
-    Q_PROPERTY(int height READ height)
-    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    /**
+     * This property holds the position of the Toplevel's frame geometry.
+     */
     Q_PROPERTY(QPoint pos READ pos)
-    Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
+
+    /**
+     * This property holds the size of the Toplevel's frame geometry.
+     */
     Q_PROPERTY(QSize size READ size)
-    Q_PROPERTY(int width READ width)
-    Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
+
+    /**
+     * This property holds the x position of the Toplevel's frame geometry.
+     */
     Q_PROPERTY(int x READ x)
+
+    /**
+     * This property holds the y position of the Toplevel's frame geometry.
+     */
     Q_PROPERTY(int y READ y)
+
+    /**
+     * This property holds the width of the Toplevel's frame geometry.
+     */
+    Q_PROPERTY(int width READ width)
+
+    /**
+     * This property holds the height of the Toplevel's frame geometry.
+     */
+    Q_PROPERTY(int height READ height)
+
+    Q_PROPERTY(QRect visibleRect READ visibleRect)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
+    Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
     Q_PROPERTY(int desktop READ desktop)
 
     /**
