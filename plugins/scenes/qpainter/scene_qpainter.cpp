@@ -223,7 +223,6 @@ SceneQPainter::Window::Window(SceneQPainter *scene, Toplevel *c)
 
 SceneQPainter::Window::~Window()
 {
-    discardShape();
 }
 
 static void paintSubSurface(QPainter *painter, const QPoint &pos, QPainterWindowPixmap *pixmap)

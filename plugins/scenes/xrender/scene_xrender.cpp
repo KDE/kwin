@@ -327,7 +327,6 @@ SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
 
 SceneXrender::Window::~Window()
 {
-    discardShape();
 }
 
 void SceneXrender::Window::cleanup()
