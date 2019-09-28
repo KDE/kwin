@@ -345,10 +345,10 @@ public:
     bool wasUserInteraction() const;
     bool sessionSaving() const;
 
-    int packPositionLeft(const AbstractClient* cl, int oldx, bool left_edge) const;
-    int packPositionRight(const AbstractClient* cl, int oldx, bool right_edge) const;
-    int packPositionUp(const AbstractClient* cl, int oldy, bool top_edge) const;
-    int packPositionDown(const AbstractClient* cl, int oldy, bool bottom_edge) const;
+    int packPositionLeft(const AbstractClient *client, int oldX, bool leftEdge) const;
+    int packPositionRight(const AbstractClient *client, int oldX, bool rightEdge) const;
+    int packPositionUp(const AbstractClient *client, int oldY, bool topEdge) const;
+    int packPositionDown(const AbstractClient *client, int oldY, bool bottomEdge) const;
 
     void cancelDelayFocus();
     void requestDelayFocus(AbstractClient*);
