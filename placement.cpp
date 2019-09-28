@@ -851,7 +851,7 @@ int Workspace::packPositionLeft(const AbstractClient *client, int oldX, bool lef
                           QPoint(client->frameGeometry().left() - 1, client->frameGeometry().center().y()), client->desktop()).left();
     }
     if (client->titlebarPosition() != AbstractClient::PositionLeft) {
-        const int right = newX - client->clientPos().x();
+        const int right = newX - client->frameMargins().left();
         QRect frameGeometry = client->frameGeometry();
         frameGeometry.moveRight(right);
         if (screens()->intersecting(frameGeometry) < 2) {
@@ -884,7 +884,7 @@ int Workspace::packPositionRight(const AbstractClient *client, int oldX, bool ri
                           QPoint(client->frameGeometry().right() + 1, client->frameGeometry().center().y()), client->desktop()).right();
     }
     if (client->titlebarPosition() != AbstractClient::PositionRight) {
-        const int right = newX + client->width() - (client->clientSize().width() + client->clientPos().x());
+        const int right = newX + client->frameMargins().right();
         QRect frameGeometry = client->frameGeometry();
         frameGeometry.moveRight(right);
         if (screens()->intersecting(frameGeometry) < 2) {
@@ -917,7 +917,7 @@ int Workspace::packPositionUp(const AbstractClient *client, int oldY, bool topEd
                           QPoint(client->frameGeometry().center().x(), client->frameGeometry().top() - 1), client->desktop()).top();
     }
     if (client->titlebarPosition() != AbstractClient::PositionTop) {
-        const int top = newY - client->clientPos().y();
+        const int top = newY - client->frameMargins().top();
         QRect frameGeometry = client->frameGeometry();
         frameGeometry.moveTop(top);
         if (screens()->intersecting(frameGeometry) < 2) {
@@ -950,7 +950,7 @@ int Workspace::packPositionDown(const AbstractClient *client, int oldY, bool bot
                           QPoint(client->frameGeometry().center().x(), client->frameGeometry().bottom() + 1), client->desktop()).bottom();
     }
     if (client->titlebarPosition() != AbstractClient::PositionBottom) {
-        const int bottom = newY + client->height() - (client->clientSize().height() + client->clientPos().y());
+        const int bottom = newY + client->frameMargins().bottom();
         QRect frameGeometry = client->frameGeometry();
         frameGeometry.moveBottom(bottom);
         if (screens()->intersecting(frameGeometry) < 2) {
