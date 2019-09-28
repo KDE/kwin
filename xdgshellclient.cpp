@@ -1789,9 +1789,9 @@ void XdgShellClient::doResizeSync()
 
 QMatrix4x4 XdgShellClient::inputTransformation() const
 {
-    QMatrix4x4 m = Toplevel::inputTransformation();
-    m.translate(-borderLeft(), -borderTop());
-    return m;
+    QMatrix4x4 matrix;
+    matrix.translate(-m_bufferGeometry.x(), -m_bufferGeometry.y());
+    return matrix;
 }
 
 void XdgShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *deco)
