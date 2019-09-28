@@ -2192,7 +2192,28 @@ public:
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      */
     virtual QSize basicUnit() const = 0;
+    /**
+     * @deprecated Use frameGeometry() instead.
+     */
     virtual QRect geometry() const = 0;
+    /**
+     * Returns the geometry of the window excluding server-side and client-side
+     * drop-shadows.
+     *
+     * @since 5.18
+     */
+    virtual QRect frameGeometry() const = 0;
+    /**
+     * Returns the geometry of the pixmap or buffer attached to this window.
+     *
+     * For X11 clients, this method returns server-side geometry of the Toplevel.
+     *
+     * For Wayland clients, this method returns rectangle that the main surface
+     * occupies on the screen, in global screen coordinates.
+     *
+     * @since 5.18
+     */
+    virtual QRect bufferGeometry() const = 0;
     /**
      * Geometry of the window including decoration and potentially shadows.
      * May be different from geometry() if the window has a shadow.

@@ -107,6 +107,12 @@ public:
     QRect expandedGeometry() const override {
         return QRect();
     }
+    QRect frameGeometry() const override {
+        return QRect();
+    }
+    QRect bufferGeometry() const override {
+        return QRect();
+    }
     int screen() const override {
         return 0;
     }
