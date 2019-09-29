@@ -30,6 +30,7 @@ Name[zh_TW]=視窗焦點行為
 
 Comment=Configure window activation policy
 Comment[ca]=Configura la política d'activació de les finestres
+Comment[cs]=Nastavení pravidel aktivování oken
 Comment[en_GB]=Configure window activation policy
 Comment[es]=Configurar la política de activación de ventanas
 Comment[eu]=Konfiguratu leihoa aktibatzeko gidalerroak
