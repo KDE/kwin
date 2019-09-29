@@ -391,17 +391,10 @@ public:
     void elevate(bool elevate);
 
     /**
-     * @returns Whether the Toplevel has a Shadow or not
-     * @see shadow
-     */
-    bool hasShadow() const;
-    /**
      * Returns the pointer to the Toplevel's Shadow. A Shadow
      * is only available if Compositing is enabled and the corresponding X window
      * has the Shadow property set.
-     * If a shadow is available hasShadow returns @c true.
-     * @returns The Shadow belonging to this Toplevel, may be @c NULL.
-     * @see hasShadow
+     * @returns The Shadow belonging to this Toplevel, @c null if there's no Shadow.
      */
     const Shadow *shadow() const;
     Shadow *shadow();

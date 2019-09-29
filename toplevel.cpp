@@ -146,7 +146,7 @@ void Toplevel::disownDataPassedToDeleted()
 QRect Toplevel::visibleRect() const
 {
     QRect r = decorationRect();
-    if (hasShadow() && !shadow()->shadowRegion().isEmpty()) {
+    if (shadow() && !shadow()->shadowRegion().isEmpty()) {
         r |= shadow()->shadowRegion().boundingRect();
     }
     return r.translated(geometry().topLeft());
@@ -578,7 +578,7 @@ void Toplevel::getShadow()
 {
     QRect dirtyRect;  // old & new shadow region
     const QRect oldVisibleRect = visibleRect();
-    if (hasShadow()) {
+    if (shadow()) {
         dirtyRect = shadow()->shadowRegion().boundingRect();
         if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
             effectWindow()->sceneWindow()->updateShadow(nullptr);
@@ -587,7 +587,7 @@ void Toplevel::getShadow()
     } else {
         Shadow::createShadow(this);
     }
-    if (hasShadow())
+    if (shadow())
         dirtyRect |= shadow()->shadowRegion().boundingRect();
     if (oldVisibleRect != visibleRect())
         emit paddingChanged(this, oldVisibleRect);
@@ -595,14 +595,6 @@ void Toplevel::getShadow()
         dirtyRect.translate(pos());
         addLayerRepaint(dirtyRect);
     }
-}
-
-bool Toplevel::hasShadow() const
-{
-    if (effectWindow() && effectWindow()->sceneWindow()) {
-        return effectWindow()->sceneWindow()->shadow() != nullptr;
-    }
-    return false;
 }
 
 Shadow *Toplevel::shadow()

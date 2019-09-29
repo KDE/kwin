@@ -468,8 +468,9 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     } else {
         transformed_shape = shape();
     }
-    if (toplevel->hasShadow())
+    if (toplevel->shadow()) {
         transformed_shape |= toplevel->shadow()->shadowRegion();
+    }
 
     xcb_render_transform_t xform = {
         DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
