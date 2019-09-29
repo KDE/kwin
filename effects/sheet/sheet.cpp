@@ -4,7 +4,7 @@
 
 Copyright (C) 2007 Philip Falkner <philip.falkner@gmail.com>
 Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2018 Vlad Zagorodniy <vladzzag@gmail.com>
+Copyright (C) 2018 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

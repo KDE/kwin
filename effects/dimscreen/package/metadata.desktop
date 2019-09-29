@@ -126,7 +126,7 @@ Name[zh_TW]=為管理員模式暗化螢幕
 
 Type=Service
 X-KDE-ParentApp=
-X-KDE-PluginInfo-Author=Martin Flöser, Vlad Zagorodniy
+X-KDE-PluginInfo-Author=Martin Flöser, Vlad Zahorodnii
 X-KDE-PluginInfo-Category=Focus
 X-KDE-PluginInfo-Email=mgraesslin@kde.org, vladzzag@gmail.com
 X-KDE-PluginInfo-License=GPL

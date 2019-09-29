@@ -5,7 +5,7 @@
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
-Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
+Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

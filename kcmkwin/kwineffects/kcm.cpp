@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Vlad Zagorodniy <vladzzag@gmail.com>
+ * Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const QVariantList &args)
         QString(),
         KAboutLicense::GPL
     );
-    about->addAuthor(i18n("Vlad Zagorodniy"), QString(), QStringLiteral("vladzzag@gmail.com"));
+    about->addAuthor(i18n("Vlad Zahorodnii"), QString(), QStringLiteral("vladzzag@gmail.com"));
     setAboutData(about);
 
     setButtons(Apply | Default);
