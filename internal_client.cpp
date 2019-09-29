@@ -431,7 +431,7 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     }
 
-    getShadow();
+    updateShadow();
 
     if (check_workspace_pos) {
         checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
@@ -587,7 +587,7 @@ void InternalClient::createDecoration(const QRect &rect)
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (decoration) {
         QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
         connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
                 GeometryUpdatesBlocker blocker(this);

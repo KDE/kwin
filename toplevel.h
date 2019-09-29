@@ -402,7 +402,7 @@ public:
      * Updates the Shadow associated with this Toplevel from X11 Property.
      * Call this method when the Property changes or Compositing is started.
      */
-    void getShadow();
+    void updateShadow();
     /**
      * Whether the Toplevel currently wants the shadow to be rendered. Default
      * implementation always returns @c true.

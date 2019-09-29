@@ -186,18 +186,18 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
 {
     if (m_decorationShadow) {
         // disconnect previous connections
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::updateShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::updateShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::updateShadow);
     }
     m_decorationShadow = decoration->shadow();
     if (!m_decorationShadow) {
         return false;
     }
     // setup connections - all just mapped to recreate
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::updateShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::updateShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::updateShadow);
 
     const QMargins &p = m_decorationShadow->padding();
     m_topOffset    = p.top();

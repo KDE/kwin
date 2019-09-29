@@ -574,7 +574,7 @@ bool Toplevel::isOnActiveScreen() const
     return isOnScreen(screens()->current());
 }
 
-void Toplevel::getShadow()
+void Toplevel::updateShadow()
 {
     QRect dirtyRect;  // old & new shadow region
     const QRect oldVisibleRect = visibleRect();

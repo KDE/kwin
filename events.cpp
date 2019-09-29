@@ -1322,7 +1322,7 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
         if (e->atom == atoms->wm_client_leader)
             getWmClientLeader();
         else if (e->atom == atoms->kde_net_wm_shadow)
-            getShadow();
+            updateShadow();
         else if (e->atom == atoms->kde_skip_close_animation)
             getSkipCloseAnimation();
         break;

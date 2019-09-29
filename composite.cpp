@@ -350,25 +350,25 @@ void Compositor::startupWithWorkspace()
 
     for (X11Client *c : Workspace::self()->clientList()) {
         c->setupCompositing();
-        c->getShadow();
+        c->updateShadow();
     }
     for (X11Client *c : Workspace::self()->desktopList()) {
         c->setupCompositing();
     }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
         c->setupCompositing();
-        c->getShadow();
+        c->updateShadow();
     }
     for (InternalClient *client : workspace()->internalClients()) {
         client->setupCompositing();
-        client->getShadow();
+        client->updateShadow();
     }
 
     if (auto *server = waylandServer()) {
         const auto clients = server->clients();
         for (XdgShellClient *c : clients) {
             c->setupCompositing();
-            c->getShadow();
+            c->updateShadow();
         }
     }
 

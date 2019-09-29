@@ -407,7 +407,7 @@ void Scene::addToplevel(Toplevel *c)
         }
     );
     c->effectWindow()->setSceneWindow(w);
-    c->getShadow();
+    c->updateShadow();
     w->updateShadow(c->shadow());
     connect(c, &Toplevel::shadowChanged, this,
         [w] {
