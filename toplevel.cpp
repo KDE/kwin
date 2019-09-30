@@ -419,10 +419,18 @@ void Toplevel::addDamageFull()
     if (!compositing())
         return;
 
-    damage_region = rect();
-    repaints_region |= rect();
+    const QRect bufferRect = bufferGeometry();
+    const QRect frameRect = frameGeometry();
 
-    emit damaged(this, rect());
+    const int offsetX = bufferRect.x() - frameRect.x();
+    const int offsetY = bufferRect.y() - frameRect.y();
+
+    const QRect damagedRect = QRect(0, 0, bufferRect.width(), bufferRect.height());
+
+    damage_region = damagedRect;
+    repaints_region |= damagedRect.translated(offsetX, offsetY);
+
+    emit damaged(this, damagedRect);
 }
 
 void Toplevel::resetDamage()
