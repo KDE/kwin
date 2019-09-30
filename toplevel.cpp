@@ -145,11 +145,14 @@ void Toplevel::disownDataPassedToDeleted()
 
 QRect Toplevel::visibleRect() const
 {
-    QRect r = decorationRect();
+    // There's no strict order between frame geometry and buffer geometry.
+    QRect rect = frameGeometry() | bufferGeometry();
+
     if (shadow() && !shadow()->shadowRegion().isEmpty()) {
-        r |= shadow()->shadowRegion().boundingRect();
+        rect |= shadow()->shadowRegion().boundingRect().translated(pos());
     }
-    return r.translated(frameGeometry().topLeft());
+
+    return rect;
 }
 
 Xcb::Property Toplevel::fetchWmClientLeader() const
