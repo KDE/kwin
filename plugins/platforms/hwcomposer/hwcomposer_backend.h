@@ -55,7 +55,6 @@ public:
     ~HwcomposerOutput() override;
     bool isValid() const;
 
-    QSize pixelSize() const override;
     void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) override;
 Q_SIGNALS:
     void dpmsModeRequested(KWayland::Server::OutputInterface::DpmsMode mode);
