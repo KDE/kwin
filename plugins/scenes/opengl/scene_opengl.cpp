@@ -880,7 +880,8 @@ void SceneOpenGL::paintEffectQuickView(EffectQuickView *w)
     t->render(QRegion(infiniteRegion()), w->geometry());
     t->unbind();
     glDisable(GL_BLEND);
-    return;
+
+    ShaderManager::instance()->popShader();
 }
 
 bool SceneOpenGL::makeOpenGLContextCurrent()
