@@ -874,8 +874,7 @@ void SceneOpenGL::paintEffectQuickView(EffectQuickView *w)
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     t->bind();
     t->render(QRegion(infiniteRegion()), w->geometry());
     t->unbind();
