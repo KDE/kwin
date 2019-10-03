@@ -58,6 +58,7 @@ public:
     XdgShellClient(KWayland::Server::XdgShellPopupInterface *surface);
     ~XdgShellClient() override;
 
+    QRect bufferGeometry() const override;
     QStringList activities() const override;
     QPoint clientContentPos() const override;
     QSize clientSize() const override;
@@ -139,11 +140,13 @@ protected:
     bool acceptsFocus() const override;
     void doMinimize() override;
     void updateCaption() override;
+    void doMove(int x, int y) override;
 
 private Q_SLOTS:
     void handleConfigureAcknowledged(quint32 serial);
     void handleTransientForChanged();
     void handleWindowClassChanged(const QByteArray &windowClass);
+    void handleWindowGeometryChanged(const QRect &windowGeometry);
     void handleWindowTitleChanged(const QString &title);
     void handleMoveRequested(KWayland::Server::SeatInterface *seat, quint32 serial);
     void handleResizeRequested(KWayland::Server::SeatInterface *seat, quint32 serial, Qt::Edges edges);
@@ -173,7 +176,6 @@ private:
     void updateIcon();
     bool shouldExposeToWindowManagement();
     void updateClientOutputs();
-    void updateWindowMargins();
     KWayland::Server::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
     void updateShowOnScreenEdge();
     void updateMaximizeMode(MaximizeMode maximizeMode);
@@ -184,15 +186,16 @@ private:
     void doSetGeometry(const QRect &rect);
     void unmap();
     void markAsMapped();
+    QRect determineBufferGeometry() const;
     static void deleteClient(XdgShellClient *c);
-
-    QSize toWindowGeometry(const QSize &geometry) const;
 
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellSurface;
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
 
-    // size of the last buffer
-    QSize m_clientSize;
+    QRect m_bufferGeometry;
+    QRect m_windowGeometry;
+    bool m_hasWindowGeometry = false;
+
     // last size we requested or empty if we haven't sent an explicit request to the client
     // if empty the client should choose their own default size
     QSize m_requestedClientSize = QSize(0, 0);
@@ -254,8 +257,6 @@ private:
     QString m_caption;
     QString m_captionSuffix;
     QHash<qint32, PingReason> m_pingSerials;
-
-    QMargins m_windowMargins;
 
     bool m_isInitialized = false;
 

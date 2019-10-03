@@ -128,6 +128,11 @@ bool Unmanaged::hasScheduledRelease() const
     return m_scheduledRelease;
 }
 
+QRect Unmanaged::bufferGeometry() const
+{
+    return geom;
+}
+
 int Unmanaged::desktop() const
 {
     return NET::OnAllDesktops; // TODO for some window types should be the current desktop?

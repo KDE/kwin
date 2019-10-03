@@ -80,6 +80,13 @@ class KWIN_EXPORT Toplevel : public QObject
     Q_PROPERTY(QRect geometry READ frameGeometry NOTIFY geometryChanged)
 
     /**
+     * This property holds rectangle that the pixmap or buffer of this Toplevel
+     * occupies on the screen. This rectangle includes invisible portions of the
+     * client, e.g. client-side drop shadows, etc.
+     */
+    Q_PROPERTY(QRect bufferGeometry READ bufferGeometry NOTIFY geometryChanged)
+
+    /**
      * This property holds the geometry of the Toplevel, excluding invisible
      * portions, e.g. server-side and client-side drop-shadows, etc.
      */
@@ -298,6 +305,15 @@ public:
      * @return a unique identifier for the Toplevel. On X11 same as @ref window
      */
     virtual quint32 windowId() const;
+    /**
+     * Returns the geometry of the pixmap or buffer attached to this Toplevel.
+     *
+     * For X11 clients, this method returns server-side geometry of the Toplevel.
+     *
+     * For Wayland clients, this method returns rectangle that the main surface
+     * occupies on the screen, in global screen coordinates.
+     */
+    virtual QRect bufferGeometry() const = 0;
     /**
      * Returns the geometry of the Toplevel, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.

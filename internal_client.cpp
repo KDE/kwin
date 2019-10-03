@@ -94,6 +94,11 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
+QRect InternalClient::bufferGeometry() const
+{
+    return frameGeometry() - frameMargins();
+}
+
 QStringList InternalClient::activities() const
 {
     return QStringList();

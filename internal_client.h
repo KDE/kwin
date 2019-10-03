@@ -35,6 +35,7 @@ public:
 
     bool eventFilter(QObject *watched, QEvent *event) override;
 
+    QRect bufferGeometry() const override;
     QStringList activities() const override;
     void blockActivityUpdates(bool b = true) override;
     qreal bufferScale() const override;
