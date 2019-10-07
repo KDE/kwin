@@ -320,13 +320,6 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         }
     }
 
-    if (m_geometryHints.hasMaxSize())
-        geom.setSize(geom.size().boundedTo(
-                         rules()->checkMaxSize(m_geometryHints.maxSize())));
-    if (m_geometryHints.hasMinSize())
-        geom.setSize(geom.size().expandedTo(
-                         rules()->checkMinSize(m_geometryHints.minSize())));
-
     if (isMovable() && (geom.x() > area.right() || geom.y() > area.bottom()))
         placementDone = false; // Weird, do not trust.
 
