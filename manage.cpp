@@ -319,11 +319,6 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             area = workspace()->clientArea(PlacementArea, geom.center(), desktop());
         }
     }
-    //if ( true ) // Size is always obeyed for now, only with constraints applied
-    //    if (( xSizeHint.flags & USSize ) || ( xSizeHint.flags & PSize ))
-    //        {
-    //        // Keep in mind that we now actually have a size :-)
-    //        }
 
     if (m_geometryHints.hasMaxSize())
         geom.setSize(geom.size().boundedTo(
