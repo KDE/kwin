@@ -861,7 +861,7 @@ bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visuali
 bool GlxTexture::loadTexture(WindowPixmap *pixmap)
 {
     Toplevel *t = pixmap->toplevel();
-    return loadTexture(pixmap->pixmap(), t->size(), t->visual());
+    return loadTexture(pixmap->pixmap(), t->bufferGeometry().size(), t->visual());
 }
 
 OpenGLBackend *GlxTexture::backend()

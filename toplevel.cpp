@@ -408,8 +408,11 @@ void Toplevel::getDamageRegionReply()
         region += QRect(reply->extents.x, reply->extents.y,
                         reply->extents.width, reply->extents.height);
 
+    const QRect bufferRect = bufferGeometry();
+    const QRect frameRect = frameGeometry();
+
     damage_region += region;
-    repaints_region += region;
+    repaints_region += region.translated(bufferRect.topLeft() - frameRect.topLeft());
 
     free(reply);
 }

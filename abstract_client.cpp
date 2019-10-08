@@ -2009,4 +2009,42 @@ QMargins AbstractClient::frameMargins() const
     return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
 }
 
+QPoint AbstractClient::framePosToClientPos(const QPoint &point) const
+{
+    return point + QPoint(borderLeft(), borderTop());
+}
+
+QPoint AbstractClient::clientPosToFramePos(const QPoint &point) const
+{
+    return point - QPoint(borderLeft(), borderTop());
+}
+
+QSize AbstractClient::frameSizeToClientSize(const QSize &size) const
+{
+    const int width = size.width() - borderLeft() - borderRight();
+    const int height = size.height() - borderTop() - borderBottom();
+    return QSize(width, height);
+}
+
+QSize AbstractClient::clientSizeToFrameSize(const QSize &size) const
+{
+    const int width = size.width() + borderLeft() + borderRight();
+    const int height = size.height() + borderTop() + borderBottom();
+    return QSize(width, height);
+}
+
+QRect AbstractClient::frameRectToClientRect(const QRect &rect) const
+{
+    const QPoint position = framePosToClientPos(rect.topLeft());
+    const QSize size = frameSizeToClientSize(rect.size());
+    return QRect(position, size);
+}
+
+QRect AbstractClient::clientRectToFrameRect(const QRect &rect) const
+{
+    const QPoint position = clientPosToFramePos(rect.topLeft());
+    const QSize size = clientSizeToFrameSize(rect.size());
+    return QRect(position, size);
+}
+
 }

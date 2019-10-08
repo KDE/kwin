@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "focuschain.h"
 #include "group.h"
+#include "screens.h"
 #include "shadow.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -130,7 +131,6 @@ X11Client::X11Client()
     , needsXWindowMove(false)
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
-    , m_clientSideDecorated(false)
 {
     // TODO: Do all as initialization
     syncRequest.counter = syncRequest.alarm = XCB_NONE;
@@ -158,7 +158,6 @@ X11Client::X11Client()
     //client constructed be connected to the workspace wrapper
 
     geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
-    client_size = QSize(100, 100);
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
@@ -256,7 +255,7 @@ void X11Client::releaseWindow(bool on_shutdown)
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
     m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
-    m_client.reparent(rootWindow(), x(), y());
+    m_client.reparent(rootWindow(), m_bufferGeometry.x(), m_bufferGeometry.y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
     m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown)
@@ -549,21 +548,29 @@ void X11Client::updateFrameExtents()
     info->setFrameExtents(strut);
 }
 
-Xcb::Property X11Client::fetchGtkFrameExtents() const
+void X11Client::setClientFrameExtents(const NETStrut &strut)
 {
-    return Xcb::Property(false, m_client, atoms->gtk_frame_extents, XCB_ATOM_CARDINAL, 0, 4);
-}
+    const QMargins clientFrameExtents(strut.left, strut.top, strut.right, strut.bottom);
+    if (m_clientFrameExtents == clientFrameExtents) {
+        return;
+    }
 
-void X11Client::readGtkFrameExtents(Xcb::Property &prop)
-{
-    m_clientSideDecorated = !prop.isNull() && prop->type != 0;
-    emit clientSideDecoratedChanged();
-}
+    const bool wasClientSideDecorated = isClientSideDecorated();
+    m_clientFrameExtents = clientFrameExtents;
 
-void X11Client::detectGtkFrameExtents()
-{
-    Xcb::Property prop = fetchGtkFrameExtents();
-    readGtkFrameExtents(prop);
+    // We should resize the client when its custom frame extents are changed so
+    // the logical bounds remain the same. This however means that we will send
+    // several configure requests to the application upon restoring it from the
+    // maximized or fullscreen state. Notice that a client-side decorated client
+    // cannot be shaded, therefore it's okay not to use the adjusted size here.
+    setFrameGeometry(frameGeometry());
+
+    if (wasClientSideDecorated != isClientSideDecorated()) {
+        emit clientSideDecoratedChanged();
+    }
+
+    // This will invalidate the window quads cache.
+    emit geometryShapeChanged(this, frameGeometry());
 }
 
 /**
@@ -607,6 +614,11 @@ bool X11Client::noBorder() const
 
 bool X11Client::userCanSetNoBorder() const
 {
+    // Client-side decorations and server-side decorations are mutually exclusive.
+    if (isClientSideDecorated()) {
+        return false;
+    }
+
     return !isFullScreen() && !isShade();
 }
 
@@ -1973,12 +1985,76 @@ xcb_window_t X11Client::frameId() const
 
 QRect X11Client::bufferGeometry() const
 {
-    return geom;
+    return m_bufferGeometry;
 }
 
 QMargins X11Client::bufferMargins() const
 {
     return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
+}
+
+QPoint X11Client::framePosToClientPos(const QPoint &point) const
+{
+    int x = point.x();
+    int y = point.y();
+
+    if (isDecorated()) {
+        x += borderLeft();
+        y += borderTop();
+    } else {
+        x -= m_clientFrameExtents.left();
+        y -= m_clientFrameExtents.top();
+    }
+
+    return QPoint(x, y);
+}
+
+QPoint X11Client::clientPosToFramePos(const QPoint &point) const
+{
+    int x = point.x();
+    int y = point.y();
+
+    if (isDecorated()) {
+        x -= borderLeft();
+        y -= borderTop();
+    } else {
+        x += m_clientFrameExtents.left();
+        y += m_clientFrameExtents.top();
+    }
+
+    return QPoint(x, y);
+}
+
+QSize X11Client::frameSizeToClientSize(const QSize &size) const
+{
+    int width = size.width();
+    int height = size.height();
+
+    if (isDecorated()) {
+        width -= borderLeft() + borderRight();
+        height -= borderTop() + borderBottom();
+    } else {
+        width += m_clientFrameExtents.left() + m_clientFrameExtents.right();
+        height += m_clientFrameExtents.top() + m_clientFrameExtents.bottom();
+    }
+
+    return QSize(width, height);
+}
+
+QSize X11Client::clientSizeToFrameSize(const QSize &size) const
+{
+    int width = size.width();
+    int height = size.height();
+
+    if (isDecorated()) {
+        width += borderLeft() + borderRight();
+        height += borderTop() + borderBottom();
+    } else {
+        width -= m_clientFrameExtents.left() + m_clientFrameExtents.right();
+        height -= m_clientFrameExtents.top() + m_clientFrameExtents.bottom();
+    }
+
+    return QSize(width, height);
 }
 
 Xcb::Property X11Client::fetchShowOnScreenEdge() const
@@ -2075,7 +2151,7 @@ void X11Client::addDamage(const QRegion &damage)
             setupWindowManagementInterface();
         }
     }
-    repaints_region += damage;
+    repaints_region += damage.translated(bufferGeometry().topLeft() - frameGeometry().topLeft());
     Toplevel::addDamage(damage);
 }
 
@@ -2138,6 +2214,85 @@ void X11Client::handleSync()
         performMoveResize();
     } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
         addRepaintFull();
+}
+
+bool X11Client::canUpdatePosition(const QPoint &frame, const QPoint &buffer, ForceGeometry_t force) const
+{
+    // Obey forced geometry updates.
+    if (force != NormalGeometrySet) {
+        return true;
+    }
+    // Server-side geometry and our geometry are out of sync.
+    if (bufferGeometry().topLeft() != buffer) {
+        return true;
+    }
+    if (frameGeometry().topLeft() != frame) {
+        return true;
+    }
+    return false;
+}
+
+bool X11Client::canUpdateSize(const QSize &frame, const QSize &buffer, ForceGeometry_t force) const
+{
+    // Obey forced geometry updates.
+    if (force != NormalGeometrySet) {
+        return true;
+    }
+    // Server-side geometry and our geometry are out of sync.
+    if (bufferGeometry().size() != buffer) {
+        return true;
+    }
+    if (frameGeometry().size() != frame) {
+        return true;
+    }
+    return false;
+}
+
+bool X11Client::canUpdateGeometry(const QRect &frame, const QRect &buffer, ForceGeometry_t force) const
+{
+    if (canUpdatePosition(frame.topLeft(), buffer.topLeft(), force)) {
+        return true;
+    }
+    if (canUpdateSize(frame.size(), buffer.size(), force)) {
+        return true;
+    }
+    return pendingGeometryUpdate() != PendingGeometryNone;
+}
+
+void X11Client::move(int x, int y, ForceGeometry_t force)
+{
+    const QPoint framePosition(x, y);
+    m_clientGeometry.moveTopLeft(framePosToClientPos(framePosition));
+    const QPoint bufferPosition = isDecorated() ? framePosition : m_clientGeometry.topLeft();
+    // resuming geometry updates is handled only in setGeometry()
+    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
+    if (!areGeometryUpdatesBlocked() && framePosition != rules()->checkPosition(framePosition)) {
+        qCDebug(KWIN_CORE) << "forced position fail:" << framePosition << ":" << rules()->checkPosition(framePosition);
+    }
+    if (!canUpdatePosition(framePosition, bufferPosition, force)) {
+        return;
+    }
+    m_bufferGeometry.moveTopLeft(bufferPosition);
+    geom.moveTopLeft(framePosition);
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            // Maximum, nothing needed.
+        } else if (force == ForceGeometrySet) {
+            setPendingGeometryUpdate(PendingGeometryForced);
+        } else {
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        }
+        return;
+    }
+    m_frame.move(m_bufferGeometry.topLeft());
+    sendSyntheticConfigureNotify();
+    updateWindowRules(Rules::Position);
+    screens()->setCurrent(this);
+    workspace()->updateStackingOrder();
+    // client itself is not damaged
+    addRepaintDuringGeometryUpdates();
+    updateGeometryBeforeUpdateBlocking();
+    emit geometryChanged();
 }
 
 } // namespace

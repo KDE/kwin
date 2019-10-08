@@ -624,7 +624,7 @@ public:
     void updateLayer();
 
     enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
+    virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
     void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
     virtual void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
     void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
@@ -654,6 +654,43 @@ public:
      */
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
+
+    /**
+     * Calculates the matching client position for the given frame position @p point.
+     */
+    virtual QPoint framePosToClientPos(const QPoint &point) const;
+    /**
+     * Calculates the matching frame position for the given client position @p point.
+     */
+    virtual QPoint clientPosToFramePos(const QPoint &point) const;
+    /**
+     * Calculates the matching client size for the given frame size @p size.
+     *
+     * Notice that size constraints won't be applied.
+     *
+     * Default implementation returns the frame size with frame margins being excluded.
+     */
+    virtual QSize frameSizeToClientSize(const QSize &size) const;
+    /**
+     * Calculates the matching frame size for the given client size @p size.
+     *
+     * Notice that size constraints won't be applied.
+     *
+     * Default implementation returns the client size with frame margins being included.
+     */
+    virtual QSize clientSizeToFrameSize(const QSize &size) const;
+    /**
+     * Calculates the matching client rect for the given frame rect @p rect.
+     *
+     * Notice that size constraints won't be applied.
+     */
+    QRect frameRectToClientRect(const QRect &rect) const;
+    /**
+     * Calculates the matching frame rect for the given client rect @p rect.
+     *
+     * Notice that size constraints won't be applied.
+     */
+    QRect clientRectToFrameRect(const QRect &rect) const;
 
     bool isMove() const {
         return isMoveResize() && moveResizePointerMode() == PositionCenter;

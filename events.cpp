@@ -482,6 +482,9 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2 & NET::WM2DesktopFileName) {
             setDesktopFileName(QByteArray(info->desktopFileName()));
         }
+        if (dirtyProperties2 & NET::WM2GTKFrameExtents) {
+            setClientFrameExtents(info->gtkFrameExtents());
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -754,8 +757,6 @@ void X11Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
             updateColorScheme();
         else if (e->atom == atoms->kde_screen_edge_show)
             updateShowOnScreenEdge();
-        else if (e->atom == atoms->gtk_frame_extents)
-            detectGtkFrameExtents();
         else if (e->atom == atoms->kde_net_wm_appmenu_service_name)
             checkApplicationMenuServiceName();
         else if (e->atom == atoms->kde_net_wm_appmenu_object_path)

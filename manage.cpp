@@ -95,11 +95,11 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2InitialMappingState |
         NET::WM2IconPixmap |
         NET::WM2OpaqueRegion |
-        NET::WM2DesktopFileName;
+        NET::WM2DesktopFileName |
+        NET::WM2GTKFrameExtents;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
-    auto gtkFrameExtentsCookie = fetchGtkFrameExtents();
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
     auto colorSchemeCookie = fetchColorScheme();
     auto firstInTabBoxCookie = fetchFirstInTabBox();
@@ -138,9 +138,9 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable())
         xcb_shape_select_input(connection(), window(), true);
     detectShape(window());
-    readGtkFrameExtents(gtkFrameExtentsCookie);
     detectNoBorder();
     fetchIconicName();
+    setClientFrameExtents(info->gtkFrameExtents());
 
     // Needs to be done before readTransient() because of reading the group
     checkGroup();
@@ -323,8 +323,14 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     if (isMovable() && (geom.x() > area.right() || geom.y() > area.bottom()))
         placementDone = false; // Weird, do not trust.
 
-    if (placementDone)
-        move(geom.x(), geom.y());   // Before gravitating
+    if (placementDone) {
+        QPoint position = geom.topLeft();
+        // Session contains the position of the frame geometry before gravitating.
+        if (!session) {
+            position = clientPosToFramePos(position);
+        }
+        move(position);
+    }
 
     // Create client group if the window will have a decoration
     bool dontKeepInArea = false;

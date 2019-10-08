@@ -92,6 +92,11 @@ public:
     QRect bufferGeometry() const override;
     QMargins bufferMargins() const override;
 
+    QPoint framePosToClientPos(const QPoint &point) const override;
+    QPoint clientPosToFramePos(const QPoint &point) const override;
+    QSize frameSizeToClientSize(const QSize &size) const override;
+    QSize clientSizeToFrameSize(const QSize &size) const override;
+
     bool isTransient() const override;
     bool groupTransient() const override;
     bool wasOriginallyGroupTransient() const;
@@ -176,6 +181,8 @@ public:
 
     void updateShape();
 
+    using AbstractClient::move;
+    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::setFrameGeometry;
     void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     /// plainResize() simply resizes
@@ -220,7 +227,8 @@ public:
     void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
 
-    const QPoint calculateGravitation(bool invert, int gravity = 0) const;   // FRAME public?
+    QPoint gravityAdjustment(xcb_gravity_t gravity) const;
+    const QPoint calculateGravitation(bool invert) const;
 
     void NETMoveResize(int x_root, int y_root, NET::Direction direction);
     void NETMoveResizeWindow(int flags, int x, int y, int width, int height);
@@ -360,7 +368,6 @@ protected:
     void doSetSkipSwitcher() override;
     bool belongsToDesktop() const override;
     void setGeometryRestore(const QRect &geo) override;
-    void doMove(int x, int y) override;
     bool doStartMoveResize() override;
     void doPerformMoveResize() override;
     bool isWaitingForMoveResizeSync() const override;
@@ -436,11 +443,12 @@ private:
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
-    Xcb::Property fetchGtkFrameExtents() const;
-    void readGtkFrameExtents(Xcb::Property &prop);
-    void detectGtkFrameExtents();
     void destroyDecoration() override;
     void updateFrameExtents();
+    void setClientFrameExtents(const NETStrut &strut);
+    bool canUpdatePosition(const QPoint &frame, const QPoint &buffer, ForceGeometry_t force) const;
+    bool canUpdateSize(const QSize &frame, const QSize &buffer, ForceGeometry_t force) const;
+    bool canUpdateGeometry(const QRect &frame, const QRect &buffer, ForceGeometry_t force) const;
 
     void internalShow();
     void internalHide();
@@ -514,6 +522,8 @@ private:
     } m_fullscreenMode;
 
     MaximizeMode max_mode;
+    QRect m_bufferGeometry = QRect(0, 0, 100, 100);
+    QRect m_clientGeometry = QRect(0, 0, 100, 100);
     QRect geom_restore;
     QRect geom_fs_restore;
     QTimer* shadeHoverTimer;
@@ -525,7 +535,6 @@ private:
     xcb_timestamp_t m_pingTimestamp;
     xcb_timestamp_t m_userTime;
     NET::Actions allowed_actions;
-    QSize client_size;
     bool shade_geometry_change;
     SyncRequest syncRequest;
     static bool check_active_modal; ///< \see X11Client::checkActiveModal()
@@ -548,10 +557,11 @@ private:
     QTimer *m_focusOutTimer;
 
     QList<QMetaObject::Connection> m_connections;
-    bool m_clientSideDecorated;
 
     QMetaObject::Connection m_edgeRemoveConnection;
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
+
+    QMargins m_clientFrameExtents;
 };
 
 inline xcb_window_t X11Client::wrapperId() const
@@ -561,7 +571,7 @@ inline xcb_window_t X11Client::wrapperId() const
 
 inline bool X11Client::isClientSideDecorated() const
 {
-    return m_clientSideDecorated;
+    return !m_clientFrameExtents.isNull();
 }
 
 inline bool X11Client::groupTransient() const
@@ -648,7 +658,7 @@ inline bool X11Client::isManaged() const
 
 inline QSize X11Client::clientSize() const
 {
-    return client_size;
+    return m_clientGeometry.size();
 }
 
 inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)
