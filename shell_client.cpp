@@ -805,6 +805,9 @@ bool ShellClient::isMinimizable() const
 
 bool ShellClient::isMovable() const
 {
+    if (isFullScreen()) {
+        return false;
+    }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
         return false;
     }
@@ -833,6 +836,9 @@ bool ShellClient::isMovableAcrossScreens() const
 
 bool ShellClient::isResizable() const
 {
+    if (isFullScreen()) {
+        return false;
+    }
     if (rules()->checkSize(QSize()).isValid()) {
         return false;
     }
