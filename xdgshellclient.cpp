@@ -634,6 +634,9 @@ bool XdgShellClient::isMinimizable() const
 
 bool XdgShellClient::isMovable() const
 {
+    if (isFullScreen()) {
+        return false;
+    }
     if (rules()->checkPosition(invalidPoint) != invalidPoint) {
         return false;
     }
@@ -662,6 +665,9 @@ bool XdgShellClient::isMovableAcrossScreens() const
 
 bool XdgShellClient::isResizable() const
 {
+    if (isFullScreen()) {
+        return false;
+    }
     if (rules()->checkSize(QSize()).isValid()) {
         return false;
     }
