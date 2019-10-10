@@ -225,10 +225,13 @@ public:
         const auto servicesFound = KServiceTypeTrader::self()->query(QStringLiteral("Application"), serviceQuery);
 
         if (servicesFound.isEmpty()) {
+            qCDebug(KWIN_CORE) << "Could not find the desktop file for" << client->executablePath();
             return {};
         }
 
-        return servicesFound.first()->property("X-KDE-Wayland-Interfaces").toStringList();
+        const auto interfaces = servicesFound.first()->property("X-KDE-Wayland-Interfaces").toStringList();
+        qCDebug(KWIN_CORE) << "Interfaces for" << client->executablePath() << interfaces;
+        return interfaces;
     }
 
     QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate"};
@@ -253,7 +256,6 @@ public:
                 requestedInterfaces = fetchRequestedInterfaces(client);
                 client->setProperty("requestedInterfaces", requestedInterfaces);
             }
-            qCDebug(KWIN_CORE) << "interfaces for" << client->executablePath() << requestedInterfaces << interfaceName << requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName));
             if (!requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName))) {
                 qCWarning(KWIN_CORE) << "Did not grant the interface" << interfaceName << "to" << client->executablePath() << ". Please request it under X-KDE-Wayland-Interfaces";
                 return false;
