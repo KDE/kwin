@@ -1000,6 +1000,7 @@ protected:
     };
     PendingGeometry_t pendingGeometryUpdate() const;
     void setPendingGeometryUpdate(PendingGeometry_t update);
+    QRect bufferGeometryBeforeUpdateBlocking() const;
     QRect frameGeometryBeforeUpdateBlocking() const;
     void updateGeometryBeforeUpdateBlocking();
     /**
@@ -1218,6 +1219,7 @@ private:
     PendingGeometry_t m_pendingGeometryUpdate = PendingGeometryNone;
     friend class GeometryUpdatesBlocker;
     QRect m_visibleRectBeforeGeometryUpdate;
+    QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_virtualKeyboardGeometry;
     QRect m_keyboardGeometryRestore;

@@ -1306,6 +1306,11 @@ void AbstractClient::addRepaintDuringGeometryUpdates()
     m_visibleRectBeforeGeometryUpdate = deco_rect;
 }
 
+QRect AbstractClient::bufferGeometryBeforeUpdateBlocking() const
+{
+    return m_bufferGeometryBeforeUpdateBlocking;
+}
+
 QRect AbstractClient::frameGeometryBeforeUpdateBlocking() const
 {
     return m_frameGeometryBeforeUpdateBlocking;
@@ -1313,6 +1318,7 @@ QRect AbstractClient::frameGeometryBeforeUpdateBlocking() const
 
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
+    m_bufferGeometryBeforeUpdateBlocking = bufferGeometry();
     m_frameGeometryBeforeUpdateBlocking = frameGeometry();
 }
 
