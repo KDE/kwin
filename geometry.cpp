@@ -1967,7 +1967,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
         return;
     }
     QSize oldClientSize = m_frame.geometry().size();
-    bool resized = (geometryBeforeUpdateBlocking().size() != geom.size() || pendingGeometryUpdate() == PendingGeometryForced);
+    bool resized = (frameGeometryBeforeUpdateBlocking().size() != geom.size() || pendingGeometryUpdate() == PendingGeometryForced);
     if (resized) {
         resizeDecoration();
         m_frame.setGeometry(x, y, w, h);
@@ -2008,7 +2008,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
         if (oldClientSize != QSize(w,h))
             discardWindowPixmap();
     }
-    emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
+    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
     // TODO: this signal is emitted too often
@@ -2065,7 +2065,7 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     workspace()->updateStackingOrder();
     if (oldClientSize != QSize(w,h))
         discardWindowPixmap();
-    emit geometryShapeChanged(this, geometryBeforeUpdateBlocking());
+    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
     // TODO: this signal is emitted too often

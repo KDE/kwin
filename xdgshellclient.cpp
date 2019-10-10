@@ -490,7 +490,7 @@ void XdgShellClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
 
     if (pendingGeometryUpdate() != PendingGeometryNone) {
         // reset geometry to the one before blocking, so that we can compare properly
-        geom = geometryBeforeUpdateBlocking();
+        geom = frameGeometryBeforeUpdateBlocking();
     }
 
     const QSize requestedClientSize = newGeometry.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
@@ -552,7 +552,7 @@ void XdgShellClient::doSetGeometry(const QRect &rect)
         updateWindowRules(Rules::Position | Rules::Size);
     }
 
-    const auto old = geometryBeforeUpdateBlocking();
+    const auto old = frameGeometryBeforeUpdateBlocking();
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
     emit geometryShapeChanged(this, old);

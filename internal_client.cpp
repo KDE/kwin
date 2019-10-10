@@ -349,7 +349,7 @@ void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
 
     if (pendingGeometryUpdate() != PendingGeometryNone) {
         // Reset geometry to the one before blocking, so that we can compare properly.
-        geom = geometryBeforeUpdateBlocking();
+        geom = frameGeometryBeforeUpdateBlocking();
     }
 
     if (geom == rect) {
@@ -633,7 +633,7 @@ void InternalClient::commitGeometry(const QRect &rect)
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
 
-    const QRect oldGeometry = geometryBeforeUpdateBlocking();
+    const QRect oldGeometry = frameGeometryBeforeUpdateBlocking();
     updateGeometryBeforeUpdateBlocking();
     emit geometryShapeChanged(this, oldGeometry);
 

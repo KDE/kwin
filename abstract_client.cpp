@@ -1306,9 +1306,14 @@ void AbstractClient::addRepaintDuringGeometryUpdates()
     m_visibleRectBeforeGeometryUpdate = deco_rect;
 }
 
+QRect AbstractClient::frameGeometryBeforeUpdateBlocking() const
+{
+    return m_frameGeometryBeforeUpdateBlocking;
+}
+
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
-    m_geometryBeforeUpdateBlocking = frameGeometry();
+    m_frameGeometryBeforeUpdateBlocking = frameGeometry();
 }
 
 void AbstractClient::doMove(int, int)
