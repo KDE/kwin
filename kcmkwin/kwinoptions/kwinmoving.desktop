@@ -28,6 +28,7 @@ Name[sk]=Presuny okien
 Name[sv]=Fönsterförflyttning
 Name[uk]=Пересування вікон
 Name[x-test]=xxWindow Movementxx
+Name[zh_CN]=窗口移动
 Name[zh_TW]=視窗移動
 
 Comment=Configure window movement options
@@ -49,6 +50,7 @@ Comment[sk]=Nastavenie spôsobu presunu okien
 Comment[sv]=Anpassa alternativ för fönsterförflyttning
 Comment[uk]=Налаштовування параметрів пересування вікон
 Comment[x-test]=xxConfigure window movement optionsxx
+Comment[zh_CN]=配置窗口移动选项
 Comment[zh_TW]=設定視窗移動選項
 
 X-KDE-Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border

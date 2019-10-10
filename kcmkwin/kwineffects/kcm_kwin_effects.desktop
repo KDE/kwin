@@ -80,6 +80,7 @@ Comment[sk]=Nastavenia kompozítora pre efekty plochy
 Comment[sv]=Anpassa sammansättningsinställningar för skrivbordseffekter
 Comment[uk]=Налаштовування параметрів засобу композиції для ефектів стільниці
 Comment[x-test]=xxConfigure compositor settings for desktop effectsxx
+Comment[zh_CN]=配置桌面特效混成器设置
 Comment[zh_TW]=設定桌面特效的合成器設定
 
 X-KDE-Keywords=kwin,window,manager,effect,3D effects,2D effects,graphical effects,desktop effects,animations,various animations,window management effects,window switching effect,desktop switching effect,animations,desktop animations,drivers,driver settings,rendering,render,invert effect,looking glass effect,magnifier effect,snap helper effect,track mouse effect,zoom effect,blur effect,fade effect,fade desktop effect,fall apart effect,glide effect,highlight window effect,login effect,logout effect,magic lamp effect,minimize animation effect,mouse mark effect,scale effect,screenshot effect,sheet effect,slide effect,sliding popups effect,thumbnail aside effect,translucency,translucency effect,transparency,window geometry effect,wobbly windows effect,startup feedback effect,dialog parent effect,dim inactive effect,dim screen effect,slide back effect,eye candy,candy,show FPS effect,show paint effect,cover switch effect,desktop cube effect,desktop cube animation effect,desktop grid effect,flip switch effect,present windows effect,resize window effect,background contrast effect
