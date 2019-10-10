@@ -28,6 +28,7 @@ Name[sk]=Pokročilé správanie okien
 Name[sv]=Avancerat fönsterbeteende
 Name[uk]=Додаткові параметри вікон
 Name[x-test]=xxAdvanced Window Behaviorxx
+Name[zh_CN]=高级窗口行为
 Name[zh_TW]=進階視窗行為
 
 Comment=Configure advanced window management options
@@ -50,6 +51,7 @@ Comment[sk]=Nastaviť pokročilé možnosti správy okien
 Comment[sv]=Anpassa avancerade fönsterhanteringsalternativ
 Comment[uk]=Налаштовування додаткових параметрів керування вікнами
 Comment[x-test]=xxConfigure advanced window management optionsxx
+Comment[zh_CN]=配置高级窗口管理选项
 Comment[zh_TW]=設定進階視窗管理選項
 
 X-KDE-Keywords=unshade,unshading,shade,shading,border,hover,active borders,tiling,tabs,tabbing,window,window tabbing,window grouping,window tiling,placement,window placement,placement of windows,window advanced behavior

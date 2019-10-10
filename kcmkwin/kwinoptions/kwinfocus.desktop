@@ -27,6 +27,7 @@ Name[sk]=Správanie zamerania okien
 Name[sv]=Fönsterfokusbeteende
 Name[uk]=Параметри фокусування вікон
 Name[x-test]=xxWindow Focus Behaviorxx
+Name[zh_CN]=窗口焦点行为
 Name[zh_TW]=視窗焦點行為
 
 Comment=Configure window activation policy
