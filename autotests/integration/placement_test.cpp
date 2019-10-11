@@ -58,6 +58,7 @@ private Q_SLOTS:
     void testPlaceSmart();
     void testPlaceZeroCornered();
     void testPlaceMaximized();
+    void testPlaceMaximizedLeavesFullscreen();
     void testPlaceCentered();
     void testPlaceUnderMouse();
     void testPlaceCascaded();
@@ -201,6 +202,41 @@ void TestPlacement::testPlaceMaximized()
         QVERIFY(windowPlacement.initiallyConfiguredStates & XdgShellSurface::State::Maximized);
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(1280, 1024 - 20));
         QCOMPARE(windowPlacement.finalGeometry, QRect(0, 20, 1280, 1024 - 20)); // under the panel
+    }
+}
+
+void TestPlacement::testPlaceMaximizedLeavesFullscreen()
+{
+    setPlacementPolicy(Placement::Maximizing);
+
+    // add a top panel
+    QScopedPointer<Surface> panelSurface(Test::createSurface());
+    QScopedPointer<QObject> panelShellSurface(Test::createXdgShellStableSurface(panelSurface.data()));
+    QScopedPointer<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.data()));
+    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setPosition(QPoint(0, 0));
+    Test::renderAndWaitForShown(panelSurface.data(), QSize(1280, 20), Qt::blue);
+
+    QScopedPointer<QObject> testParent(new QObject);
+
+    // all windows should be initially fullscreen with an initial configure size sent, despite the policy
+    for (int i = 0; i < 4; i++) {
+        auto surface = Test::createSurface(testParent.data());
+        auto shellSurface = Test::createXdgShellStableSurface(surface, surface, Test::CreationSetup::CreateOnly);
+        shellSurface->setFullscreen(true);
+        QSignalSpy configSpy(shellSurface, &XdgShellSurface::configureRequested);
+        surface->commit(Surface::CommitFlag::None);
+        configSpy.wait();
+
+        auto initiallyConfiguredSize = configSpy[0][0].toSize();
+        auto initiallyConfiguredStates = configSpy[0][1].value<KWayland::Client::XdgShellSurface::States>();
+        shellSurface->ackConfigure(configSpy[0][2].toUInt());
+
+        auto c = Test::renderAndWaitForShown(surface, initiallyConfiguredSize, Qt::red);
+
+        QVERIFY(initiallyConfiguredStates & XdgShellSurface::State::Fullscreen);
+        QCOMPARE(initiallyConfiguredSize, QSize(1280, 1024 ));
+        QCOMPARE(c->frameGeometry(), QRect(0, 0, 1280, 1024));
     }
 }
 

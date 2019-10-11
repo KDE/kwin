@@ -112,6 +112,7 @@ private Q_SLOTS:
     void testXdgNeverCommitted();
     void testXdgInitialState();
     void testXdgInitiallyMaximised();
+    void testXdgInitiallyFullscreen();
     void testXdgInitiallyMinimized();
     void testXdgWindowGeometry();
 };
@@ -1240,6 +1241,32 @@ void TestXdgShellClient::testXdgInitiallyMaximised()
 
     auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
     QCOMPARE(c->maximizeMode(), MaximizeFull);
+    QCOMPARE(c->size(), QSize(1280, 1024));
+}
+
+void TestXdgShellClient::testXdgInitiallyFullscreen()
+{
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+
+    shellSurface->setFullscreen(true);
+    surface->commit(Surface::CommitFlag::None);
+
+    configureRequestedSpy.wait();
+
+    QCOMPARE(configureRequestedSpy.count(), 1);
+
+    const auto size = configureRequestedSpy.first()[0].value<QSize>();
+    const auto state = configureRequestedSpy.first()[1].value<KWayland::Client::XdgShellSurface::States>();
+
+    QCOMPARE(size, QSize(1280, 1024));
+    QVERIFY(state & KWayland::Client::XdgShellSurface::State::Fullscreen);
+
+    shellSurface->ackConfigure(configureRequestedSpy.first()[2].toUInt());
+
+    auto c = Test::renderAndWaitForShown(surface.data(), size, Qt::blue);
+    QCOMPARE(c->isFullScreen(), true);
     QCOMPARE(c->size(), QSize(1280, 1024));
 }
 

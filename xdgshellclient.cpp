@@ -222,6 +222,10 @@ void XdgShellClient::finishInit()
         updateWindowRules(Rules::All);
     }
 
+    if (isFullScreen()) {
+        needsPlacement = false;
+    }
+
     if (needsPlacement) {
         const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
         placeIn(area);
