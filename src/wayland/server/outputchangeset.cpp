@@ -33,7 +33,7 @@ OutputChangeSet::Private::Private(OutputDeviceInterface *outputdevice, OutputCha
     , modeId(o->currentModeId())
     , transform(o->transform())
     , position(o->globalPosition())
-    , scale(o->scale())
+    , scale(o->scaleF())
     , colorCurves(o->colorCurves())
 {
 }
