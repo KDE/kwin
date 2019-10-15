@@ -109,7 +109,12 @@ public:
     QString eisaId() const;
     QSize pixelSize() const;
     int refreshRate() const;
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
+    /// @deprecated Since 5.50, use scaleF()
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputDeviceInterface::scaleF()")
     int scale() const;
+#endif
+    /// @since 5.50
     qreal scaleF() const;
     SubPixel subPixel() const;
     Transform transform() const;
@@ -127,7 +132,12 @@ public:
     void setModel(const QString &model);
     void setSerialNumber(const QString &serialNumber);
     void setEisaId(const QString &eisaId);
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
+    /// @deprecated Since 5.50, use setScale(qreal)
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputDeviceInterface::setScale(qreal)")
     void setScale(int scale);
+#endif
+    /// @since 5.50
     void setScaleF(qreal scale);
     void setSubPixel(SubPixel subPixel);
     void setTransform(Transform transform);
@@ -158,8 +168,12 @@ Q_SIGNALS:
     void eisaIdChanged(const QString &);
     void pixelSizeChanged(const QSize&);
     void refreshRateChanged(int);
-    //@deprecated see scaleChanged(real)
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
+    /// @deprecated Since 5.50, use scaleFChanged(qreal)
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputDeviceInterface::scaleFChanged(qreal)")
     void scaleChanged(int);
+#endif
+    /// @since 5.50
     void scaleFChanged(qreal);
     void subPixelChanged(SubPixel);
     void transformChanged(Transform);

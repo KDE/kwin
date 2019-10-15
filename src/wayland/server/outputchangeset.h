@@ -82,12 +82,15 @@ public:
     OutputDeviceInterface::Transform transform() const;
     /** The new value for globalPosition. */
     QPoint position() const;
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     /** The new value for scale.
-     @deprecated see scaleF
+     @deprecated Since 5.50, use scaleF
      */
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputChangeSet::scaleF()")
     int scale() const;
+#endif
     /** The new value for scale.
-     * @since 5.XX
+     * @since 5.50
      */
     qreal scaleF() const;
     /** The new value for colorCurves.

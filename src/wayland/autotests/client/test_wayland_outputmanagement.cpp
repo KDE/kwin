@@ -270,7 +270,10 @@ void TestWaylandOutputManagement::createOutputDevices()
     QCOMPARE(output->physicalSize(), QSize());
     QCOMPARE(output->pixelSize(), QSize());
     QCOMPARE(output->refreshRate(), 0);
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     QCOMPARE(output->scale(), 1);
+#endif
+    QCOMPARE(output->scaleF(), 1.0);
     QCOMPARE(output->colorCurves().red, QVector<quint16>());
     QCOMPARE(output->colorCurves().green, QVector<quint16>());
     QCOMPARE(output->colorCurves().blue, QVector<quint16>());
@@ -410,7 +413,7 @@ void TestWaylandOutputManagement::testMultipleSettings()
     config->setMode(output, m_modes.first().id);
     config->setTransform(output, OutputDevice::Transform::Rotated90);
     config->setPosition(output, QPoint(13, 37));
-    config->setScale(output, 2);
+    config->setScaleF(output, 2.0);
     const auto zeroVector = QVector<quint16>(256, 0);
     config->setColorCurves(output, zeroVector, zeroVector, zeroVector);
     config->setEnabled(output, OutputDevice::Enablement::Disabled);
@@ -430,7 +433,7 @@ void TestWaylandOutputManagement::testMultipleSettings()
     config->setMode(output, m_modes.at(1).id);
     config->setTransform(output, OutputDevice::Transform::Normal);
     config->setPosition(output, QPoint(0, 1920));
-    config->setScale(output, 1);
+    config->setScaleF(output, 1.0);
     const auto oneVector = QVector<quint16>(256, 1);
     config->setColorCurves(output, oneVector, oneVector, oneVector);
     config->setEnabled(output, OutputDevice::Enablement::Enabled);
@@ -525,9 +528,12 @@ void TestWaylandOutputManagement::testScale()
     QVERIFY(configAppliedSpy.isValid());
     QVERIFY(configAppliedSpy.wait(200));
 
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     QCOMPARE(output->scale(), 2); //test backwards compatibility
+#endif
     QCOMPARE(wl_fixed_from_double(output->scaleF()), wl_fixed_from_double(2.3));
 
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     config->setScale(output, 3);
     config->apply();
 
@@ -538,6 +544,7 @@ void TestWaylandOutputManagement::testScale()
 
     QCOMPARE(output->scale(), 3);
     QCOMPARE(output->scaleF(), 3.0); //test forward compatibility
+#endif
 }
 
 

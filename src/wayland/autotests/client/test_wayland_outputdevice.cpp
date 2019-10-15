@@ -44,7 +44,9 @@ private Q_SLOTS:
 
     void testRegistry();
     void testModeChanges();
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     void testScaleChange_legacy();
+#endif
     void testScaleChange();
     void testColorCurvesChange();
 
@@ -207,7 +209,10 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.physicalSize(), QSize());
     QCOMPARE(output.pixelSize(), QSize());
     QCOMPARE(output.refreshRate(), 0);
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     QCOMPARE(output.scale(), 1);
+#endif
+    QCOMPARE(output.scaleF(), 1.0);
     QCOMPARE(output.colorCurves().red, QVector<quint16>());
     QCOMPARE(output.colorCurves().green, QVector<quint16>());
     QCOMPARE(output.colorCurves().blue, QVector<quint16>());
@@ -233,7 +238,10 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.physicalSize(), QSize(200, 100));
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
     QCOMPARE(output.refreshRate(), 60000);
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     QCOMPARE(output.scale(), 1);
+#endif
+    QCOMPARE(output.scaleF(), 1.0);
     QCOMPARE(output.colorCurves().red, m_initColorCurves.red);
     QCOMPARE(output.colorCurves().green, m_initColorCurves.green);
     QCOMPARE(output.colorCurves().blue, m_initColorCurves.blue);
@@ -346,6 +354,7 @@ void TestWaylandOutputDevice::testModeChanges()
     QCOMPARE(output.pixelSize(), QSize(1280, 1024));
 }
 
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
 void TestWaylandOutputDevice::testScaleChange_legacy()
 {
     KWayland::Client::Registry registry;
@@ -366,6 +375,7 @@ void TestWaylandOutputDevice::testScaleChange_legacy()
     wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 1);
+    QCOMPARE(output.scaleF(), 1.0);
 
     // change the scale
     outputChanged.clear();
@@ -382,6 +392,7 @@ void TestWaylandOutputDevice::testScaleChange_legacy()
     QCOMPARE(output.scale(), 4);
     QCOMPARE(output.scaleF(), 4.0);
 }
+#endif
 
 void TestWaylandOutputDevice::testScaleChange()
 {
@@ -408,14 +419,18 @@ void TestWaylandOutputDevice::testScaleChange()
     outputChanged.clear();
     m_serverOutputDevice->setScaleF(2.2);
     QVERIFY(outputChanged.wait());
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     QCOMPARE(output.scale(), 2); //check backwards compatibility works
+#endif
     QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(2.2));
 
     // change once more
     outputChanged.clear();
     m_serverOutputDevice->setScaleF(4.9);
     QVERIFY(outputChanged.wait());
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
     QCOMPARE(output.scale(), 5);
+#endif
     QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(4.9));
 }
 

@@ -282,15 +282,20 @@ set(SERVER_GENERATED_SRCS
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
-generate_export_header(KF5WaylandServer
+add_library(KF5::WaylandServer ALIAS KF5WaylandServer)
+ecm_generate_export_header(KF5WaylandServer
     BASE_NAME
         KWaylandServer
     EXPORT_FILE_NAME
         KWayland/Server/kwaylandserver_export.h
+    GROUP_BASE_NAME KF
+    VERSION ${KF5_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    DEPRECATION_VERSIONS 5.5 5.28 5.50 5.52
 )
+# TODO: add support for EXCLUDE_DEPRECATED_BEFORE_AND_AT to all KWayland libs
+# needs fixing of undeprecated API being still implemented using own deprecated API
 
-
-add_library(KF5::WaylandServer ALIAS KF5WaylandServer)
 
 target_include_directories(KF5WaylandServer INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server>")
 

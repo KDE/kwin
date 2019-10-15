@@ -109,11 +109,12 @@ public:
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setPid(quint32 pid);
-#ifndef KWAYLANDSERVER_NO_DEPRECATED
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 52)
     /**
-     * @deprecated use addPlasmaVirtualDesktop and removePlasmaVirtualDesktop
+     * @deprecated Since 5.52, use addPlasmaVirtualDesktop and removePlasmaVirtualDesktop
      */
-    void KWAYLANDSERVER_DEPRECATED setVirtualDesktop(quint32 desktop);
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 52, "Use PlasmaWindowManagementInterface::addPlasmaVirtualDesktop(const QString&) and PlasmaWindowManagementInterface::removePlasmaVirtualDesktop(const QString&)")
+    void setVirtualDesktop(quint32 desktop);
 #endif
     void setActive(bool set);
     void setMinimized(bool set);
@@ -129,12 +130,12 @@ public:
     void setFullscreenable(bool set);
     void setSkipTaskbar(bool skip);
     void setSkipSwitcher(bool skip);
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 28)
     /**
      * @deprecated since 5.28 use setIcon
-     * @see setIcon
      **/
-#ifndef KWAYLANDSERVER_NO_DEPRECATED
-    void KWAYLANDSERVER_DEPRECATED setThemedIconName(const QString &iconName);
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 28, "Use PlasmaWindowManagementInterface::setIcon(const QIcon&)")
+    void setThemedIconName(const QString &iconName);
 #endif
     /**
      * @since 5.22
@@ -237,11 +238,12 @@ Q_SIGNALS:
      * @since 5.22
      */
     void resizeRequested();
-#ifndef KWAYLANDSERVER_NO_DEPRECATED
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 52)
     /**
-     * @deprecated use enterPlasmaVirtualDesktopRequested and leavePlasmaVirtualDesktopRequested instead
+     * @deprecated Since 5.52, use enterPlasmaVirtualDesktopRequested and leavePlasmaVirtualDesktopRequested instead
      */
-    void KWAYLANDSERVER_DEPRECATED virtualDesktopRequested(quint32 desktop);
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 52, "Use PlasmaWindowManagementInterface::enterPlasmaVirtualDesktopRequested(const QString&) and PlasmaWindowManagementInterface::leavePlasmaVirtualDesktopRequested(const QString&)")
+    void virtualDesktopRequested(quint32 desktop);
 #endif
     void activeRequested(bool set);
     void minimizedRequested(bool set);

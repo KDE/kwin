@@ -738,12 +738,10 @@ void PlasmaWindowInterface::setTitle(const QString &title)
     d->setTitle(title);
 }
 
-#ifndef KWAYLANDSERVER_NO_DEPRECATED
 void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 {
     d->setVirtualDesktop(desktop);
 }
-#endif
 
 void PlasmaWindowInterface::unmap()
 {
@@ -857,12 +855,10 @@ void PlasmaWindowInterface::setSkipSwitcher(bool skip)
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_SKIPSWITCHER, skip);
 }
 
-#ifndef KWAYLANDSERVER_NO_DEPRECATED
 void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
 {
     d->setThemedIconName(iconName);
 }
-#endif
 
 void PlasmaWindowInterface::setIcon(const QIcon &icon)
 {

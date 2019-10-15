@@ -132,7 +132,7 @@ class KWAYLANDSERVER_EXPORT SeatInterface : public Global
     Q_PROPERTY(bool keyboard READ hasKeyboard WRITE setHasKeyboard NOTIFY hasKeyboardChanged)
     /**
      * Whether the SeatInterface supports a touch device.
-     * @deprecated use touch
+     * @deprecated Since 5.5, use touch
      **/
     Q_PROPERTY(bool tourch READ hasTouch WRITE setHasTouch NOTIFY hasTouchChanged)
     /**

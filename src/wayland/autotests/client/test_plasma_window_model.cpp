@@ -46,6 +46,8 @@ typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowQuint32Sette
 Q_DECLARE_METATYPE(ServerWindowQuint32Setter)
 typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowVoidSetter)();
 Q_DECLARE_METATYPE(ServerWindowVoidSetter)
+typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowIconSetter)(const QIcon&);
+Q_DECLARE_METATYPE(ServerWindowIconSetter)
 
 class PlasmaWindowModelTest : public QObject
 {
@@ -881,7 +883,10 @@ void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy_data()
     QTest::newRow("onallDesktop")     << &PlasmaWindow::onAllDesktopsChanged            << QVariant::fromValue(&PlasmaWindowInterface::setOnAllDesktops)            << QVariant(true);
     QTest::newRow("title")            << &PlasmaWindow::titleChanged                    << QVariant::fromValue(&PlasmaWindowInterface::setTitle)                    << QVariant(QStringLiteral("foo"));
     QTest::newRow("appId")            << &PlasmaWindow::appIdChanged                    << QVariant::fromValue(&PlasmaWindowInterface::setAppId)                    << QVariant(QStringLiteral("foo"));
-    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setThemedIconName)           << QVariant(QStringLiteral("foo"));
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 28)
+    QTest::newRow("iconname" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setThemedIconName)           << QVariant(QStringLiteral("foo"));
+#endif
+    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setIcon)                     << QVariant::fromValue(QIcon::fromTheme(QStringLiteral("foo")));
     QTest::newRow("vd")               << &PlasmaWindow::virtualDesktopChanged           << QVariant::fromValue(&PlasmaWindowInterface::setVirtualDesktop)           << QVariant(2u);
     QTest::newRow("unmapped")         << &PlasmaWindow::unmapped                        << QVariant::fromValue(&PlasmaWindowInterface::unmap)                       << QVariant();
 }
