@@ -27,6 +27,7 @@ class QOffscreenSurface;
 class QOpenGLContext;
 class QOpenGLFramebufferObject;
 class QQmlComponent;
+class QQmlContext;
 class QQmlEngine;
 class QQuickItem;
 class QQuickRenderControl;
@@ -82,7 +83,8 @@ private:
     QImage m_buffer;
     QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
     QPointer<QQuickWindow> m_view;
-    QQuickItem *m_item;
+    QQuickItem *m_item = nullptr;
+    QQmlContext *m_qmlContext = nullptr;
     KWin::Borders *m_borders;
     KWin::Borders *m_maximizedBorders;
     KWin::Borders *m_extendedBorders;

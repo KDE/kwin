@@ -266,17 +266,19 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
 
 Decoration::~Decoration()
 {
-    Helper::instance().unref();
     if (m_context) {
         m_context->makeCurrent(m_offscreenSurface.data());
 
         delete m_renderControl;
         delete m_view.data();
         m_fbo.reset();
-        delete m_item;
 
         m_context->doneCurrent();
     }
+    // deleted explicitly before our own qobject destructor as "this" is a context property of m_qmlContext,
+    // and changing contextProperties is a bad idea
+    delete m_qmlContext;
+    Helper::instance().unref();
 }
 
 void Decoration::init()
@@ -285,9 +287,9 @@ void Decoration::init()
     auto s = settings();
     connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
 
-    QQmlContext *context = new QQmlContext(Helper::instance().rootContext(), this);
-    context->setContextProperty(QStringLiteral("decoration"), this);
-    context->setContextProperty(QStringLiteral("decorationSettings"), s.data());
+    m_qmlContext = new QQmlContext(Helper::instance().rootContext(), this);
+    m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
+    m_qmlContext->setContextProperty(QStringLiteral("decorationSettings"), s.data());
     auto component = Helper::instance().component(m_themeName);
     if (!component) {
         return;
@@ -310,9 +312,9 @@ void Decoration::init()
         connect(this, &Decoration::configChanged, theme, readButtonSize);
         readButtonSize();
 //         m_theme->setTabDragMimeType(tabDragMimeType());
-        context->setContextProperty(QStringLiteral("auroraeTheme"), theme);
+        m_qmlContext->setContextProperty(QStringLiteral("auroraeTheme"), theme);
     }
-    m_item = qobject_cast< QQuickItem* >(component->create(context));
+    m_item = qobject_cast< QQuickItem* >(component->create(m_qmlContext));
     if (!m_item) {
         if (component->isError()) {
             const auto errors = component->errors();
@@ -322,7 +324,7 @@ void Decoration::init()
         }
         return;
     }
-    m_item->setParent(this);
+    m_item->setParent(m_qmlContext);
 
     QVariant visualParent = property("visualParent");
     if (visualParent.isValid()) {
