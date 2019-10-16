@@ -402,7 +402,7 @@ void ActivationTest::testSwitchToWindowMaximized()
     Test::render(surface2.data(), configureRequestedSpy2.last().at(0).toSize(), Qt::red);
     QVERIFY(geometryChangedSpy2.wait());
 
-    const ToplevelList stackingOrder = workspace()->stackingOrder();
+    const QList<Toplevel *> stackingOrder = workspace()->stackingOrder();
     QVERIFY(stackingOrder.indexOf(client1) < stackingOrder.indexOf(client2));
     QCOMPARE(client1->maximizeMode(), MaximizeFull);
     QCOMPARE(client2->maximizeMode(), MaximizeFull);
@@ -487,7 +487,7 @@ void ActivationTest::testSwitchToWindowFullScreen()
     Test::render(surface2.data(), configureRequestedSpy2.last().at(0).toSize(), Qt::red);
     QVERIFY(geometryChangedSpy2.wait());
 
-    const ToplevelList stackingOrder = workspace()->stackingOrder();
+    const QList<Toplevel *> stackingOrder = workspace()->stackingOrder();
     QVERIFY(stackingOrder.indexOf(client1) < stackingOrder.indexOf(client2));
     QVERIFY(client1->isFullScreen());
     QVERIFY(client2->isFullScreen());

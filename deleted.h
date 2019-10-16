@@ -162,7 +162,7 @@ public:
      *
      * Because the window is Deleted, it can have only Deleted child transients.
      */
-    DeletedList transients() const {
+    QList<Deleted *> transients() const {
         return m_transients;
     }
 
@@ -236,8 +236,8 @@ private:
     bool m_wasX11Client;
     bool m_wasWaylandClient;
     bool m_wasGroupTransient;
-    ToplevelList m_transientFor;
-    DeletedList m_transients;
+    QList<Toplevel *> m_transientFor;
+    QList<Deleted *> m_transients;
     bool m_wasPopupWindow;
     bool m_wasOutline;
     qreal m_bufferScale = 1;

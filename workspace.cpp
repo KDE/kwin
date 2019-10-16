@@ -537,12 +537,12 @@ Workspace::~Workspace()
     // TODO: grabXServer();
 
     // Use stacking_order, so that kwin --replace keeps stacking order
-    const ToplevelList stack = stacking_order;
+    const QList<Toplevel *> stack = stacking_order;
     // "mutex" the stackingorder, since anything trying to access it from now on will find
     // many dangeling pointers and crash
     stacking_order.clear();
 
-    for (ToplevelList::const_iterator it = stack.constBegin(), end = stack.constEnd(); it != end; ++it) {
+    for (auto it = stack.constBegin(), end = stack.constEnd(); it != end; ++it) {
         X11Client *c = qobject_cast<X11Client *>(const_cast<Toplevel*>(*it));
         if (!c) {
             continue;
@@ -565,7 +565,7 @@ Workspace::~Workspace()
         }
     }
 
-    for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
+    for (auto it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(ReleaseReason::KWinShutsDown);
 
     for (InternalClient *client : m_internalClients) {
@@ -777,7 +777,7 @@ void Workspace::updateToolWindows(bool also_hide)
 {
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->isHideUtilityWindowsForInactive()) {
-        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
+        for (auto it = clients.constBegin(); it != clients.constEnd(); ++it)
             (*it)->hideClient(false);
         return;
     }
@@ -799,7 +799,7 @@ void Workspace::updateToolWindows(bool also_hide)
 
     // SELI TODO: But maybe it should - what if a new client has been added that's not in stacking order yet?
     QVector<AbstractClient*> to_show, to_hide;
-    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
+    for (auto it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
         auto c = qobject_cast<AbstractClient*>(*it);
@@ -934,7 +934,7 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
 
 void Workspace::updateClientVisibilityOnDesktopChange(uint newDesktop)
 {
-    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
+    for (auto it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
         X11Client *c = qobject_cast<X11Client *>(*it);
@@ -1002,7 +1002,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
     }
     // from actiavtion.cpp
     if (options->isNextFocusPrefersMouse()) {
-        ToplevelList::const_iterator it = stackingOrder().constEnd();
+        auto it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
             X11Client *client = qobject_cast<X11Client *>(*(--it));
             if (!client) {
@@ -1045,7 +1045,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     // mapping done from front to back => less exposure events
     //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
 
-    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
+    for (auto it = stacking_order.constBegin();
             it != stacking_order.constEnd();
             ++it) {
         X11Client *c = qobject_cast<X11Client *>(*it);
@@ -1332,7 +1332,7 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
 
     global_shortcuts_disabled_for_client = disable;
     // Update also Alt+LMB actions etc.
-    for (ClientList::ConstIterator it = clients.constBegin();
+    for (auto it = clients.constBegin();
             it != clients.constEnd();
             ++it)
         (*it)->updateMouseGrab();

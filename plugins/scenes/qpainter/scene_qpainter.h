@@ -36,7 +36,7 @@ public:
     ~SceneQPainter() override;
     bool usesOverlayWindow() const override;
     OverlayWindow* overlayWindow() const override;
-    qint64 paint(QRegion damage, ToplevelList windows) override;
+    qint64 paint(QRegion damage, QList<Toplevel *> windows) override;
     void paintGenericScreen(int mask, ScreenPaintData data) override;
     CompositingType compositingType() const override;
     bool initFailed() const override;

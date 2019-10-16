@@ -2132,7 +2132,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->isMouseInterception()) {
             return nullptr;
         }
-        const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
+        const QList<Unmanaged *> &unmanaged = Workspace::self()->unmanagedList();
         foreach (Unmanaged *u, unmanaged) {
             if (u->inputGeometry().contains(pos) && acceptsInput(u, pos)) {
                 return u;
@@ -2148,7 +2148,7 @@ Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
         return nullptr;
     }
     const bool isScreenLocked = waylandServer() && waylandServer()->isScreenLocked();
-    const ToplevelList &stacking = Workspace::self()->stackingOrder();
+    const QList<Toplevel *> &stacking = Workspace::self()->stackingOrder();
     if (stacking.isEmpty()) {
         return nullptr;
     }

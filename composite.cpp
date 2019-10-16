@@ -614,8 +614,8 @@ void Compositor::performCompositing()
     }
 
     // Create a list of all windows in the stacking order
-    ToplevelList windows = Workspace::self()->xStackingOrder();
-    ToplevelList damaged;
+    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+    QList<Toplevel *> damaged;
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
@@ -968,7 +968,7 @@ void X11Compositor::updateClientCompositeBlocking(X11Client *c)
         // If !c we just check if we can resume in case a blocking client was lost.
         bool shouldResume = true;
 
-        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
+        for (auto it = Workspace::self()->clientList().constBegin();
              it != Workspace::self()->clientList().constEnd(); ++it) {
             if ((*it)->isBlockingCompositing()) {
                 shouldResume = false;

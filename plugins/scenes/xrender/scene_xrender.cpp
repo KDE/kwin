@@ -249,7 +249,7 @@ bool SceneXrender::initFailed() const
 }
 
 // the entry point for painting
-qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
+qint64 SceneXrender::paint(QRegion damage, QList<Toplevel *> toplevels)
 {
     QElapsedTimer renderTimer;
     renderTimer.start();

@@ -76,7 +76,7 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual qint64 paint(QRegion damage, ToplevelList windows) = 0;
+    virtual qint64 paint(QRegion damage, QList<Toplevel *> windows) = 0;
 
     /**
      * Adds the Toplevel to the Scene.
@@ -207,7 +207,7 @@ public Q_SLOTS:
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
     virtual Window *createWindow(Toplevel *toplevel) = 0;
-    void createStackingOrder(ToplevelList toplevels);
+    void createStackingOrder(QList<Toplevel *> toplevels);
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,

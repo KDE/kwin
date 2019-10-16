@@ -50,14 +50,6 @@ class Deleted;
 class Group;
 class Options;
 
-typedef QList< Toplevel* > ToplevelList;
-typedef QList< X11Client *> ClientList;
-typedef QList< const X11Client *> ConstClientList;
-typedef QList< Unmanaged* > UnmanagedList;
-typedef QList< Deleted* > DeletedList;
-
-typedef QList< Group* > GroupList;
-
 extern Options* options;
 
 enum Layer {

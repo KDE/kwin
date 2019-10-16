@@ -417,7 +417,7 @@ void Workspace::clientHidden(AbstractClient* c)
 
 AbstractClient *Workspace::clientUnderMouse(int screen) const
 {
-    ToplevelList::const_iterator it = stackingOrder().constEnd();
+    auto it = stackingOrder().constEnd();
     while (it != stackingOrder().constBegin()) {
         AbstractClient *client = qobject_cast<AbstractClient*>(*(--it));
         if (!client) {
@@ -751,8 +751,8 @@ xcb_timestamp_t X11Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id
                         && cl != this && X11Client::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
             };
             if (isTransient()) {
-                auto clientMainClients = [this] () -> ClientList {
-                    ClientList ret;
+                auto clientMainClients = [this]() {
+                    QList<X11Client *> ret;
                     const auto mcs = mainClients();
                     for (auto mc: mcs) {
                         if (X11Client *c  = dynamic_cast<X11Client *>(mc)) {

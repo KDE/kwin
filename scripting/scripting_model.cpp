@@ -202,8 +202,8 @@ void ClientLevel::removeClient(AbstractClient *client)
 
 void ClientLevel::init()
 {
-    const ClientList &clients = Workspace::self()->clientList();
-    for (ClientList::const_iterator it = clients.begin(); it != clients.end(); ++it) {
+    const QList<X11Client *> &clients = Workspace::self()->clientList();
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
         X11Client *client = *it;
         setupClientConnections(client);
         if (!exclude(client) && shouldAdd(client)) {
@@ -214,8 +214,8 @@ void ClientLevel::init()
 
 void ClientLevel::reInit()
 {
-    const ClientList &clients = Workspace::self()->clientList();
-    for (ClientList::const_iterator it = clients.begin(); it != clients.end(); ++it) {
+    const QList<X11Client *> &clients = Workspace::self()->clientList();
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
         checkClient((*it));
     }
     if (waylandServer()) {

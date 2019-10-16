@@ -871,7 +871,7 @@ void X11Client::setShade(ShadeMode mode)
         if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
         if (shade_mode == ShadeHover) {
-            ToplevelList order = workspace()->stackingOrder();
+            QList<Toplevel *> order = workspace()->stackingOrder();
             // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
             shade_below = nullptr;
             // this is likely related to the index parameter?!

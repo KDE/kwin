@@ -164,8 +164,8 @@ void Activities::reallyStop(const QString &id)
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
-    const ClientList &clients = ws->clientList();
-    for (ClientList::const_iterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+    const QList<X11Client *> &clients = ws->clientList();
+    for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
         const X11Client *c = (*it);
         const QByteArray sessionId = c->sessionId();
         if (sessionId.isEmpty()) {

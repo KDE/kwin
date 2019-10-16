@@ -138,7 +138,7 @@ void Workspace::updateClientArea(bool force)
                 iS ++)
             new_sareas[ i ][ iS ] = screens[ iS ];
     }
-    for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
+    for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
         if (!(*it)->hasStrut())
             continue;
         QRect r = (*it)->adjustedClientArea(desktopArea, desktopArea);

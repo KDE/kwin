@@ -441,7 +441,7 @@ void Scene::windowGeometryShapeChanged(Toplevel *c)
     w->discardShape();
 }
 
-void Scene::createStackingOrder(ToplevelList toplevels)
+void Scene::createStackingOrder(QList<Toplevel *> toplevels)
 {
     // TODO: cache the stacking_order in case it has not changed
     foreach (Toplevel *c, toplevels) {

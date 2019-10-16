@@ -247,8 +247,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
 
             cxl = x; cxr = x + cw;
             cyt = y; cyb = y + ch;
-            ToplevelList::ConstIterator l;
-            for (l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
+            for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
                 AbstractClient *client = qobject_cast<AbstractClient*>(*l);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
@@ -296,8 +295,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
             if (possible - cw > x) possible -= cw;
 
             // compare to the position of each client on the same desk
-            ToplevelList::ConstIterator l;
-            for (l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
+            for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
                 AbstractClient *client = qobject_cast<AbstractClient*>(*l);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
@@ -327,8 +325,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
             if (possible - ch > y) possible -= ch;
 
             //test the position of each window on the desk
-            ToplevelList::ConstIterator l;
-            for (l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
+            for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
                 AbstractClient *client = qobject_cast<AbstractClient*>(*l);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;

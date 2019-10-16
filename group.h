@@ -39,7 +39,7 @@ public:
     xcb_window_t leader() const;
     const X11Client *leaderClient() const;
     X11Client *leaderClient();
-    const ClientList& members() const;
+    const QList<X11Client *> &members() const;
     QIcon icon() const;
     void addMember(X11Client *member);
     void removeMember(X11Client *member);
@@ -52,7 +52,7 @@ public:
     EffectWindowGroupImpl* effectGroup();
 private:
     void startupIdChanged();
-    ClientList _members;
+    QList<X11Client *> _members;
     X11Client *leader_client;
     xcb_window_t leader_wid;
     NETWinInfo* leader_info;
@@ -76,7 +76,7 @@ inline X11Client *Group::leaderClient()
     return leader_client;
 }
 
-inline const ClientList& Group::members() const
+inline const QList<X11Client *> &Group::members() const
 {
     return _members;
 }

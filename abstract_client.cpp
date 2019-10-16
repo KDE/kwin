@@ -1035,7 +1035,7 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         replay = isActive(); // for clickraise mode
         bool mustReplay = !rules()->checkAcceptFocus(acceptsFocus());
         if (mustReplay) {
-            ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
+            auto it = workspace()->stackingOrder().constEnd(),
                                      begin = workspace()->stackingOrder().constBegin();
             while (mustReplay && --it != begin && *it != this) {
                 AbstractClient *c = qobject_cast<AbstractClient*>(*it);

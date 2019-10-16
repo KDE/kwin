@@ -207,25 +207,25 @@ public:
     /**
      * @return List of clients currently managed by Workspace
      */
-    const ClientList &clientList() const {
+    const QList<X11Client *> &clientList() const {
         return clients;
     }
     /**
      * @return List of unmanaged "clients" currently registered in Workspace
      */
-    const UnmanagedList &unmanagedList() const {
+    const QList<Unmanaged *> &unmanagedList() const {
         return unmanaged;
     }
     /**
      * @return List of desktop "clients" currently managed by Workspace
      */
-    const ClientList &desktopList() const {
+    const QList<X11Client *> &desktopList() const {
         return desktops;
     }
     /**
      * @return List of deleted "clients" currently managed by Workspace
      */
-    const DeletedList &deletedList() const {
+    const QList<Deleted *> &deletedList() const {
         return deleted;
     }
     /**
@@ -269,9 +269,9 @@ public:
      * Returns the list of clients sorted in stacking order, with topmost client
      * at the last position
      */
-    const ToplevelList& stackingOrder() const;
-    ToplevelList xStackingOrder() const;
-    ClientList ensureStackingOrder(const ClientList& clients) const;
+    const QList<Toplevel *> &stackingOrder() const;
+    QList<Toplevel *> xStackingOrder() const;
+    QList<X11Client *> ensureStackingOrder(const QList<X11Client *> &clients) const;
     QList<AbstractClient*> ensureStackingOrder(const QList<AbstractClient*> &clients) const;
 
     AbstractClient* topClientOnDesktop(int desktop, int screen, bool unconstrained = false,
@@ -542,7 +542,7 @@ private:
     bool switchWindow(AbstractClient *c, Direction direction, QPoint curPos, int desktop);
 
     void propagateClients(bool propagate_new_clients);   // Called only from updateStackingOrder
-    ToplevelList constrainedStackingOrder();
+    QList<Toplevel *> constrainedStackingOrder();
     void raiseClientWithinApplication(AbstractClient* c);
     void lowerClientWithinApplication(AbstractClient* c);
     bool allowFullClientRaising(const AbstractClient* c, xcb_timestamp_t timestamp);
@@ -591,18 +591,18 @@ private:
     AbstractClient* delayfocus_client;
     QPoint focusMousePos;
 
-    ClientList clients;
+    QList<X11Client *> clients;
     QList<AbstractClient*> m_allClients;
-    ClientList desktops;
-    UnmanagedList unmanaged;
-    DeletedList deleted;
+    QList<X11Client *> desktops;
+    QList<Unmanaged *> unmanaged;
+    QList<Deleted *> deleted;
     QList<InternalClient *> m_internalClients;
 
-    ToplevelList unconstrained_stacking_order; // Topmost last
-    ToplevelList stacking_order; // Topmost last
+    QList<Toplevel *> unconstrained_stacking_order; // Topmost last
+    QList<Toplevel *> stacking_order; // Topmost last
     QVector<xcb_window_t> manual_overlays; //Topmost last
     bool force_restacking;
-    ToplevelList x_stacking; // From XQueryTree()
+    QList<Toplevel *> x_stacking; // From XQueryTree()
     std::unique_ptr<Xcb::Tree> m_xStackingQueryTree;
     bool m_xStackingDirty = false;
     QList<AbstractClient*> should_get_focus; // Last is most recent
@@ -610,7 +610,7 @@ private:
 
     bool showing_desktop;
 
-    GroupList groups;
+    QList<Group *> groups;
 
     bool was_user_interaction;
     QScopedPointer<X11EventFilter> m_wasUserInteractionFilter;
@@ -730,7 +730,7 @@ inline void Workspace::removeGroup(Group* group)
     groups.removeAll(group);
 }
 
-inline const ToplevelList& Workspace::stackingOrder() const
+inline const QList<Toplevel *> &Workspace::stackingOrder() const
 {
     // TODO: Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;

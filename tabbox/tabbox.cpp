@@ -283,7 +283,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
 
 TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
 {
-    ToplevelList stacking = Workspace::self()->stackingOrder();
+    QList<Toplevel *> stacking = Workspace::self()->stackingOrder();
     TabBoxClientList ret;
     foreach (Toplevel *toplevel, stacking) {
         if (auto client = qobject_cast<AbstractClient*>(toplevel)) {
