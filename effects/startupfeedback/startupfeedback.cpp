@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KIconLoader>
 #include <KStartupInfo>
 #include <KSelectionOwner>
 #include <KWindowSystem>
@@ -272,14 +271,6 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (!m_active)
         effects->startMousePolling();
     m_active = true;
-    // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
-    if (m_type == BouncingFeedback)
-        m_bounceSizesRatio = IconSize(KIconLoader::Small) / 16.0;
-    QPixmap iconPixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Small, 0,
-                         KIconLoader::DefaultState, QStringList(), nullptr, true);  // return null pixmap if not found
-    if (iconPixmap.isNull())
-        iconPixmap = SmallIcon(QStringLiteral("system-run"));
-    prepareTextures(iconPixmap);
     auto readCursorSize = []() -> int {
         // read details about the mouse-cursor theme define per default
         KConfigGroup mousecfg(effects->inputConfig(), "Mouse");
@@ -293,6 +284,12 @@ void StartupFeedbackEffect::start(const QString& icon)
         return cursorSize;
     };
     m_cursorSize = readCursorSize();
+    const int iconSize = m_cursorSize / 1.5;
+    // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
+    if (m_type == BouncingFeedback)
+        m_bounceSizesRatio = iconSize / 16.0;
+    const QPixmap iconPixmap = QIcon::fromTheme(icon, QIcon::fromTheme(QStringLiteral("system-run"))).pixmap(iconSize);
+    prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);
 }
