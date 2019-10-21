@@ -38,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQuickView>
 #include <QGraphicsObject>
 #include <QTimer>
-#include <QElapsedTimer>
 #include <QVector2D>
 #include <QVector4D>
 
@@ -1936,27 +1935,26 @@ void PresentWindowsEffect::reCreateGrids()
 
 CloseWindowView::CloseWindowView(QObject *parent)
     : EffectQuickScene(parent)
-    , m_armTimer(new QElapsedTimer())
 {
     setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
     if (QQuickItem *item = rootItem()) {
         connect(item, SIGNAL(clicked()), this, SLOT(clicked()));
         setGeometry(QRect(QPoint(), QSize(item->implicitWidth(), item->implicitHeight())));
     }
-    m_armTimer->restart();
+    m_armTimer.restart();
 }
 
 void CloseWindowView::clicked()
 {
     // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
-    if (m_armTimer->hasExpired(350)) {
+    if (m_armTimer.hasExpired(350)) {
         emit requestClose();
     }
 }
 
 void CloseWindowView::disarm()
 {
-    m_armTimer->restart();
+    m_armTimer.restart();
 }
 
 

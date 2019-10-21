@@ -27,8 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kwineffectquickview.h>
 
+#include <QElapsedTimer>
+
 class QMouseEvent;
-class QElapsedTimer;
 class QQuickView;
 
 namespace KWin
@@ -44,7 +45,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void clicked();
 private:
-    QElapsedTimer *m_armTimer;
+    QElapsedTimer m_armTimer;
 };
 
 /**
