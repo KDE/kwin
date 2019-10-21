@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define MESA_EGL_NO_X11_HEADERS
 #include <epoxy/egl.h>
 #include "fixqopengl.h"
+#include <fixx11h.h>
 
 #include <QSurfaceFormat>
 
