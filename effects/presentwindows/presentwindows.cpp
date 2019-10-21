@@ -60,7 +60,6 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_highlightedWindow(nullptr)
     , m_filterFrame(nullptr)
     , m_closeView(nullptr)
-    , m_closeWindow(nullptr)
     , m_exposeAction(new QAction(this))
     , m_exposeAllAction(new QAction(this))
     , m_exposeClassAction(new QAction(this))
@@ -152,7 +151,6 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     if (m_doNotCloseWindows) {
         delete m_closeView;
         m_closeView = nullptr;
-        m_closeWindow = nullptr;
     }
     m_ignoreMinimized = PresentWindowsConfig::ignoreMinimized();
     m_accuracy = PresentWindowsConfig::accuracy() * 20;
@@ -228,13 +226,16 @@ void PresentWindowsEffect::paintScreen(int mask, QRegion region, ScreenPaintData
     // Display the filter box
     if (!m_windowFilter.isEmpty())
         m_filterFrame->render(region);
+
+    if (m_closeView)
+        effects->renderEffectQuickView(m_closeView);
 }
 
 void PresentWindowsEffect::postPaintScreen()
 {
     if (m_motionManager.areWindowsMoving())
         effects->addRepaintFull();
-    else if (!m_activated && m_motionManager.managingWindows() && !(m_closeWindow && m_closeView->isVisible())) {
+    else if (!m_activated && m_motionManager.managingWindows() && !(m_closeView && m_closeView->isVisible())) {
         // We have finished moving them back, stop processing
         m_motionManager.unmanageAll();
 
@@ -281,7 +282,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
 {
     // TODO: We should also check to see if any windows are fading just in case fading takes longer
     //       than moving the windows when the effect is deactivated.
-    if (m_activated || m_motionManager.areWindowsMoving() || m_closeWindow) {
+    if (m_activated || m_motionManager.areWindowsMoving() || m_closeView) {
         DataHash::iterator winData = m_windowData.find(w);
         if (winData == m_windowData.end()) {
             effects->prePaintWindow(w, data, time);
@@ -309,7 +310,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
 
         const bool isInMotion = m_motionManager.isManaging(w);
         // Calculate window's brightness
-        if (w == m_highlightedWindow || w == m_closeWindow || !m_activated)
+        if (w == m_highlightedWindow || !m_activated)
             winData->highlight = qMin(1.0, winData->highlight + time / m_fadeDuration);
         else if (!isInMotion && w->isDesktop())
             winData->highlight = 0.3;
@@ -324,9 +325,6 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
                 // we have to keep the window in the list to prevent flickering
                 winData->referenced = false;
                 w->unrefWindow();
-                if (w == m_closeWindow) {
-                    m_closeWindow = nullptr;
-                }
             } else
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
         }
@@ -433,9 +431,6 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 winData->textFrame->render(region, 0.9 * data.opacity() * m_decalOpacity, 0.75);
             }
         } else {
-            if (w == m_closeWindow && m_closeView && !m_closeView->isVisible()) {
-                data.setOpacity(0);
-            }
             effects->paintWindow(w, mask, region, data);
         }
     } else
@@ -466,22 +461,6 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
         m_motionManager.manage(w);
         rearrangeWindows();
     }
-    if (m_closeView && w == effects->findWindow(m_closeView->winId())) {
-        if (m_closeWindow != w) {
-            DataHash::iterator winDataIt = m_windowData.find(m_closeWindow);
-            if (winDataIt != m_windowData.end()) {
-                if (winDataIt->referenced) {
-                    m_closeWindow->unrefWindow();
-                }
-                m_windowData.erase(winDataIt);
-            }
-        }
-        winData->visible = true;
-        winData->highlight = 1.0;
-        m_closeWindow = w;
-        w->setData(WindowForceBlurRole, QVariant(true));
-        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-    }
 }
 
 void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
@@ -498,9 +477,6 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
     }
     if (m_highlightedWindow == w)
         setHighlightedWindow(findFirstWindow());
-    if (m_closeWindow == w) {
-        return; // don't rearrange, get's nulled when unref'd
-    }
     rearrangeWindows();
 
     foreach (EffectWindow *w, m_motionManager.managedWindows()) {
@@ -529,7 +505,6 @@ void PresentWindowsEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const
         return;
     if (!m_windowData.contains(w))
         return;
-    if (w != m_closeWindow)
         rearrangeWindows();
 }
 
@@ -569,16 +544,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         if (!m_closeView->isVisible() && contains) {
             updateCloseWindow();
         }
-        if (m_closeView->isVisible()) {
-            const QPoint widgetPos = m_closeView->mapFromGlobal(me->pos());
-//             const QPointF scenePos = m_closeView->mapToScene(widgetPos);
-            QMouseEvent event(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
-            m_closeView->windowInputMouseEvent(&event);
-            if (contains) {
-                // filter out
-                return;
-            }
-        }
+        m_closeView->forwardMouseEvent(e);
     }
     inputEventUpdate(me->pos(), me->type(), me->button());
 }
@@ -1539,6 +1505,9 @@ void PresentWindowsEffect::setActive(bool active)
 
         if (!(m_doNotCloseWindows || m_closeView)) {
             m_closeView = new CloseWindowView();
+            connect(m_closeView, &EffectQuickView::repaintNeeded, this, []() {
+                effects->addRepaintFull();
+            });
             connect(m_closeView, &CloseWindowView::requestClose, this, &PresentWindowsEffect::closeWindow);
         }
 
@@ -1681,8 +1650,6 @@ bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
         return false;
     if (w->isSkipSwitcher())
         return false;
-    if (m_closeView && w == effects->findWindow(m_closeView->winId()))
-        return false;
     if (m_ignoreMinimized && w->isMinimized())
         return false;
     switch(m_mode) {
@@ -1702,7 +1669,7 @@ bool PresentWindowsEffect::isSelectableWindow(EffectWindow *w)
 
 bool PresentWindowsEffect::isVisibleWindow(EffectWindow *w)
 {
-    if (w->isDesktop() || w == m_closeWindow)
+    if (w->isDesktop())
         return true;
     return isSelectableWindow(w);
 }
@@ -1727,14 +1694,6 @@ void PresentWindowsEffect::setHighlightedWindow(EffectWindow *w)
     updateCloseWindow();
 }
 
-void PresentWindowsEffect::elevateCloseWindow()
-{
-    if (!m_closeView || !m_activated)
-        return;
-    if (EffectWindow *cw = effects->findWindow(m_closeView->winId()))
-        effects->setElevatedWindow(cw, true);
-}
-
 void PresentWindowsEffect::updateCloseWindow()
 {
     if (!m_closeView || m_doNotCloseWindows)
@@ -1748,7 +1707,7 @@ void PresentWindowsEffect::updateCloseWindow()
         return;
 
     const QRectF rect(m_motionManager.targetGeometry(m_highlightedWindow));
-    if (2*m_closeView->width() > rect.width() && 2*m_closeView->height() > rect.height()) {
+    if (2*m_closeView->geometry().width() > rect.width() && 2*m_closeView->geometry().height() > rect.height()) {
         // not for tiny windows (eg. with many windows) - they might become unselectable
         m_closeView->hide();
         return;
@@ -1770,9 +1729,6 @@ void PresentWindowsEffect::updateCloseWindow()
     if (rect.contains(effects->cursorPos())) {
         m_closeView->show();
         m_closeView->disarm();
-        // to wait for the next event cycle (or more if the show takes more time)
-        // TODO: make the closeWindow a graphicsviewitem? why should there be an extra scene to be used in an exiting scene??
-        QTimer::singleShot(50, this, SLOT(elevateCloseWindow()));
     }
     else
         m_closeView->hide();
@@ -1978,36 +1934,24 @@ void PresentWindowsEffect::reCreateGrids()
     rearrangeWindows();
 }
 
-/************************************************
-* CloseWindowView
-************************************************/
 CloseWindowView::CloseWindowView(QObject *parent)
-    : QObject(parent)
+    : EffectQuickScene(parent)
     , m_armTimer(new QElapsedTimer())
-    , m_window(new QQuickView())
-    , m_visible(false)
-    , m_posIsValid(false)
 {
-    m_window->setFlags(Qt::X11BypassWindowManagerHint | Qt::FramelessWindowHint);
-    m_window->setColor(Qt::transparent);
-
-    m_window->setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
-    if (QObject *item = m_window->rootObject()->findChild<QObject*>(QStringLiteral("closeButton"))) {
-        connect(item, SIGNAL(clicked()), SIGNAL(requestClose()));
+    setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
+    if (QQuickItem *item = rootItem()) {
+        connect(item, SIGNAL(clicked()), this, SLOT(clicked()));
+        setGeometry(QRect(QPoint(), QSize(item->implicitWidth(), item->implicitHeight())));
     }
-
     m_armTimer->restart();
 }
 
-void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
+void CloseWindowView::clicked()
 {
-    if (e->type() == QEvent::MouseMove) {
-        qApp->sendEvent(m_window.data(), e);
-    } else if (!m_armTimer->hasExpired(350)) {
-        // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
-        return;
+    // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
+    if (m_armTimer->hasExpired(350)) {
+        emit requestClose();
     }
-    qApp->sendEvent(m_window.data(), e);
 }
 
 void CloseWindowView::disarm()
@@ -2015,57 +1959,6 @@ void CloseWindowView::disarm()
     m_armTimer->restart();
 }
 
-bool CloseWindowView::isVisible() const
-{
-    return m_visible;
-}
-
-void CloseWindowView::show()
-{
-    if (!m_visible && m_posIsValid) {
-        m_window->setPosition(m_pos);
-        m_posIsValid = false;
-    }
-    m_visible = true;
-    m_window->show();
-}
-
-void CloseWindowView::hide()
-{
-    if (!m_posIsValid) {
-        m_pos = m_window->position();
-        m_posIsValid = true;
-        m_window->setPosition(-m_window->width(), -m_window->height());
-    }
-    m_visible = false;
-    QEvent event(QEvent::Leave);
-    qApp->sendEvent(m_window.data(), &event);
-}
-
-#define DELEGATE(type, name) \
-type CloseWindowView::name() const \
-{ \
-    return m_window->name(); \
-}
-
-DELEGATE(int, width)
-DELEGATE(int, height)
-DELEGATE(QSize, size)
-DELEGATE(QRect, geometry)
-DELEGATE(WId, winId)
-
-#undef DELEGATE
-
-void CloseWindowView::setGeometry(const QRect &geometry)
-{
-    m_posIsValid = false;
-    m_window->setGeometry(geometry);
-}
-
-QPoint CloseWindowView::mapFromGlobal(const QPoint &pos) const
-{
-    return m_window->mapFromGlobal(pos);
-}
 
 } // namespace
 

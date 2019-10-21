@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows_proxy.h"
 
 #include <kwineffects.h>
+#include <kwineffectquickview.h>
 
 class QMouseEvent;
 class QElapsedTimer;
@@ -32,36 +33,18 @@ class QQuickView;
 
 namespace KWin
 {
-class CloseWindowView : public QObject
+class CloseWindowView : public EffectQuickScene
 {
     Q_OBJECT
 public:
     explicit CloseWindowView(QObject *parent = nullptr);
-    void windowInputMouseEvent(QMouseEvent* e);
     void disarm();
-
-    void show();
-    void hide();
-    bool isVisible() const;
-
-    // delegate to QWindow
-    int width() const;
-    int height() const;
-    QSize size() const;
-    QRect geometry() const;
-    WId winId() const;
-    void setGeometry(const QRect &geometry);
-    QPoint mapFromGlobal(const QPoint &pos) const;
-
 Q_SIGNALS:
     void requestClose();
-
+private Q_SLOTS:
+    void clicked();
 private:
-    QScopedPointer<QElapsedTimer> m_armTimer;
-    QScopedPointer<QQuickView> m_window;
-    bool m_visible;
-    QPoint m_pos;
-    bool m_posIsValid;
+    QElapsedTimer *m_armTimer;
 };
 
 /**
@@ -230,7 +213,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void closeWindow();
-    void elevateCloseWindow();
 
 protected:
     // Window rearranging
@@ -335,7 +317,6 @@ private:
     DesktopMouseAction m_rightButtonDesktop;
 
     CloseWindowView* m_closeView;
-    EffectWindow* m_closeWindow;
     Qt::Corner m_closeButtonCorner;
     struct {
         qint32 id = 0;

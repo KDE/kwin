@@ -20,14 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import org.kde.plasma.components 2.0 as Plasma
 
-Item {
-    width: units.iconSizes.medium
-    height: width
-
-    Plasma.Button {
-        id: closeButton
-        objectName: "closeButton"
-        iconSource: "window-close"
-        anchors.fill: parent
-    }
+Plasma.Button {
+    id: closeButton
+    iconSource: "window-close"
+    anchors.fill: parent
+    implicitWidth: units.iconSizes.medium
+    implicitHeight: implicitWidth
 }
