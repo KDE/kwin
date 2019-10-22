@@ -349,7 +349,7 @@ bool TransferXtoWl::handleSelectionNotify(xcb_selection_notify_event_t *event)
         // second selection notify element - misbehaving source
 
         // TODO: cancel this transfer?
-        return True;
+        return true;
     }
 
     if (event->target == atoms->netscape_url) {
