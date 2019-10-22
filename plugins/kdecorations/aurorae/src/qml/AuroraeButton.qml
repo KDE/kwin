@@ -206,7 +206,7 @@ DecorationButton {
         }
     }
     Component.onCompleted: {
-        if (buttonType == DecorationOptions.DecorationButtonQuickHelp && !decoration.providesContextHelp) {
+        if (buttonType == DecorationOptions.DecorationButtonQuickHelp && !decoration.client.providesContextHelp) {
             visible = false;
         } else {
             visible = buttonSvg.imagePath != "";
