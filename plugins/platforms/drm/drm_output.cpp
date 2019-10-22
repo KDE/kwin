@@ -252,8 +252,6 @@ bool DrmOutput::init(drmModeConnector *connector)
         if (!initPrimaryPlane()) {
             return false;
         }
-    } else if (!m_crtc->blank()) {
-        return false;
     }
 
     setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP
@@ -269,6 +267,12 @@ bool DrmOutput::init(drmModeConnector *connector)
     }
 
     initOutputDevice(connector);
+
+    if (!m_backend->atomicModeSetting() && !m_crtc->blank()) {
+        // We use legacy mode and the initial output blank failed.
+        return false;
+    }
+
     updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
     return true;
 }
@@ -746,8 +750,10 @@ void DrmOutput::setWaylandMode()
 
 void DrmOutput::pageFlipped()
 {
-    Q_ASSERT(m_pageFlipPending);
+    // In legacy mode we might get a page flip through a blank.
+    Q_ASSERT(m_pageFlipPending || !m_backend->atomicModeSetting());
     m_pageFlipPending = false;
+
     if (m_deleted) {
         deleteLater();
         return;
