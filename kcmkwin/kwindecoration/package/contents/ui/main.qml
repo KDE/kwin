@@ -84,6 +84,9 @@ Kirigami.Page {
                     RowLayout {
                         Controls.CheckBox {
                             id: borderSizeAutoCheckbox
+                            // Let it elide but don't make it push the ComboBox away from it
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: implicitWidth
                             text: i18nc("checkbox label", "Use theme's default window border size")
                             checked: kcm.borderSizeAuto
                             onCheckedChanged: {
