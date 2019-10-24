@@ -123,6 +123,11 @@ void Unmanaged::deleteUnmanaged(Unmanaged* c)
     delete c;
 }
 
+bool Unmanaged::hasScheduledRelease() const
+{
+    return m_scheduledRelease;
+}
+
 int Unmanaged::desktop() const
 {
     return NET::OnAllDesktops; // TODO for some window types should be the current desktop?
