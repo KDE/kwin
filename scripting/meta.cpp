@@ -96,6 +96,20 @@ void Rect::fromScriptValue(const QScriptValue& obj, QRect &rect)
 }
 // End of meta for QRect object
 
+QScriptValue AbstractClient::toScriptValue(QScriptEngine *engine, const KAbstractClientRef &client)
+{
+    return engine->newQObject(client, QScriptEngine::QtOwnership,
+                              QScriptEngine::ExcludeChildObjects |
+                              QScriptEngine::ExcludeDeleteLater |
+                              QScriptEngine::PreferExistingWrapperObject |
+                              QScriptEngine::AutoCreateDynamicProperties);
+}
+
+void AbstractClient::fromScriptValue(const QScriptValue &value, KWin::AbstractClient *&client)
+{
+    client = qobject_cast<KWin::AbstractClient *>(value.toQObject());
+}
+
 QScriptValue Client::toScriptValue(QScriptEngine *eng, const KClientRef &client)
 {
     return eng->newQObject(client, QScriptEngine::QtOwnership,
@@ -130,6 +144,7 @@ void KWin::MetaScripting::registration(QScriptEngine* eng)
     qScriptRegisterMetaType<QPoint>(eng, Point::toScriptValue, Point::fromScriptValue);
     qScriptRegisterMetaType<QSize>(eng, Size::toScriptValue, Size::fromScriptValue);
     qScriptRegisterMetaType<QRect>(eng, Rect::toScriptValue, Rect::fromScriptValue);
+    qScriptRegisterMetaType<KAbstractClientRef>(eng, AbstractClient::toScriptValue, AbstractClient::fromScriptValue);
     qScriptRegisterMetaType<KClientRef>(eng, Client::toScriptValue, Client::fromScriptValue);
     qScriptRegisterMetaType<KToplevelRef>(eng, Toplevel::toScriptValue, Toplevel::fromScriptValue);
 
