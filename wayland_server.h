@@ -68,6 +68,8 @@ class XdgShellInterface;
 class XdgForeignInterface;
 class XdgOutputManagerInterface;
 class KeyStateInterface;
+class LinuxDmabufUnstableV1Interface;
+class LinuxDmabufUnstableV1Buffer;
 }
 }
 
@@ -122,6 +124,7 @@ public:
     KWayland::Server::XdgOutputManagerInterface *xdgOutputManager() const {
         return m_xdgOutputManager;
     }
+    KWayland::Server::LinuxDmabufUnstableV1Interface *linuxDmabuf();
 
     QList<ShellClient*> clients() const {
         return m_clients;
@@ -224,6 +227,16 @@ public:
     void simulateUserActivity();
     void updateKeyState(KWin::Xkb::LEDs leds);
 
+    QSet<KWayland::Server::LinuxDmabufUnstableV1Buffer*> linuxDmabufBuffers() const {
+        return m_linuxDmabufBuffers;
+    }
+    void addLinuxDmabufBuffer(KWayland::Server::LinuxDmabufUnstableV1Buffer *buffer) {
+        m_linuxDmabufBuffers << buffer;
+    }
+    void removeLinuxDmabufBuffer(KWayland::Server::LinuxDmabufUnstableV1Buffer *buffer) {
+        m_linuxDmabufBuffers.remove(buffer);
+    }
+
 Q_SIGNALS:
     void shellClientAdded(KWin::ShellClient*);
     void shellClientRemoved(KWin::ShellClient*);
@@ -256,6 +269,8 @@ private:
     KWayland::Server::IdleInterface *m_idle = nullptr;
     KWayland::Server::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
     KWayland::Server::XdgDecorationManagerInterface *m_xdgDecorationManager = nullptr;
+    KWayland::Server::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
+    QSet<KWayland::Server::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;
