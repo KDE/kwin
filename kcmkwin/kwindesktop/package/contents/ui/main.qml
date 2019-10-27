@@ -41,6 +41,8 @@ ScrollViewKCM {
             rowsSpinBox.value = kcm.desktopsModel.rows;
         }
     }
+    implicitWidth: Kirigami.Units.gridUnit * 35
+    implicitHeight: Kirigami.Units.gridUnit * 30
 
     Component {
         id: desktopsListItemComponent
