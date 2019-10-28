@@ -39,8 +39,8 @@ Kirigami.Page {
     rightPadding: leftPadding
     bottomPadding: leftPadding
 
-    implicitWidth: tabLayout.implicitWidth
-    implicitHeight: tabLayout.implicitHeight
+    implicitWidth: Kirigami.Units.gridUnit * 48
+    implicitHeight: Kirigami.Units.gridUnit * 33
 
     // TODO: replace this TabBar-plus-Frame-in-a-ColumnLayout with whatever shakes
     // out of https://bugs.kde.org/show_bug.cgi?id=394296
