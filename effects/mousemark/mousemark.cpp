@@ -111,7 +111,7 @@ void MouseMarkEffect::addRect(const QPoint &p1, const QPoint &p2, xcb_rectangle_
 }
 #endif
 
-void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);   // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty())

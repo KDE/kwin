@@ -89,7 +89,7 @@ void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     }
 }
 
-void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void ScreenEdgeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
     for (QHash<ElectricBorder, Glow*>::iterator it = m_borders.begin();

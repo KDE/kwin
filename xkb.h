@@ -56,10 +56,10 @@ public:
     Xkb(QObject *parent = nullptr);
     ~Xkb() override;
     void setConfig(KSharedConfigPtr config) {
-        m_config = config;
+        m_config = std::move(config);
     }
     void setNumLockConfig(KSharedConfigPtr config) {
-        m_numLockConfig = config;
+        m_numLockConfig = std::move(config);
     }
     void reconfigure();
 

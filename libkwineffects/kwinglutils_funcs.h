@@ -43,7 +43,7 @@ namespace KWin
 {
 
 typedef void (*resolveFuncPtr)();
-void KWINGLUTILS_EXPORT glResolveFunctions(std::function<resolveFuncPtr(const char*)> resolveFunction);
+void KWINGLUTILS_EXPORT glResolveFunctions(const std::function<resolveFuncPtr(const char*)> &resolveFunction);
 
 // GL_ARB_robustness / GL_EXT_robustness
 using glGetGraphicsResetStatus_func = GLenum (*)();

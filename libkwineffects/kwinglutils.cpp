@@ -61,7 +61,7 @@ static QList<QByteArray> glExtensions;
 
 // Functions
 
-void initGL(std::function<resolveFuncPtr(const char*)> resolveFunction)
+void initGL(const std::function<resolveFuncPtr(const char*)> &resolveFunction)
 {
     // Get list of supported OpenGL extensions
     if (hasGLVersion(3, 0)) {

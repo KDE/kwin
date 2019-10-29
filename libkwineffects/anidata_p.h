@@ -76,7 +76,7 @@ public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
-            FullScreenEffectLockPtr=FullScreenEffectLockPtr(),
+            FullScreenEffectLockPtr =FullScreenEffectLockPtr(),
             bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {});
 
     bool isActive() const;

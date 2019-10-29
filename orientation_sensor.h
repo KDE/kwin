@@ -61,7 +61,7 @@ public:
     }
 
     void setConfig(KSharedConfig::Ptr config) {
-        m_config = config;
+        m_config = std::move(config);
     }
 
     bool isUserEnabled() const {

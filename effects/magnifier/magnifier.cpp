@@ -138,7 +138,7 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         data.paint |= magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
 }
 
-void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);   // paint normal screen
     if (zoom != 1.0) {

@@ -58,7 +58,7 @@ ShowPaintEffect::ShowPaintEffect()
     connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
 }
 
-void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void ShowPaintEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_painted = QRegion();
     effects->paintScreen(mask, region, data);

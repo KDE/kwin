@@ -55,8 +55,8 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, int time) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
-    void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
-    void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity) override;
+    void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity) override;
 
     bool provides(Feature feature) override;
 

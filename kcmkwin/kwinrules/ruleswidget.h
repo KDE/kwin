@@ -107,7 +107,7 @@ private:
     int desktopToCombo(int d) const;
     int comboToDesktop(int val) const;
 #ifdef KWIN_BUILD_ACTIVITIES
-    int activityToCombo(QString d) const;
+    int activityToCombo(const QString &d) const;
     QString comboToActivity(int val) const;
     void updateActivitiesList();
     KActivities::Consumer *m_activities;

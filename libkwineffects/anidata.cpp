@@ -86,10 +86,10 @@ AniData::AniData(AnimationEffect::Attribute a, int meta_, const FPx2 &to_,
  , to(to_)
  , meta(meta_)
  , startTime(AnimationEffect::clock() + delay)
- , fullScreenEffectLock(fullScreenEffectLock_)
+ , fullScreenEffectLock(std::move(fullScreenEffectLock_))
  , waitAtSource(waitAtSource_)
  , keepAlive(keepAlive)
- , previousWindowPixmapLock(previousWindowPixmapLock_)
+ , previousWindowPixmapLock(std::move(previousWindowPixmapLock_))
 {
 }
 

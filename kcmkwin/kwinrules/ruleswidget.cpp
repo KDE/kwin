@@ -315,7 +315,7 @@ int RulesWidget::comboToDesktop(int val) const
 }
 
 #ifdef KWIN_BUILD_ACTIVITIES
-int RulesWidget::activityToCombo(QString d) const
+int RulesWidget::activityToCombo(const QString &d) const
 {
     // TODO: ivan - do a multiselection list
     for (int i = 0; i < activity->count(); i++) {

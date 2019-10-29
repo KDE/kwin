@@ -60,7 +60,7 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     painted = QRegion();
     effects->paintScreen(mask, region, data);

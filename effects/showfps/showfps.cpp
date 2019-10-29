@@ -151,7 +151,7 @@ void ShowFpsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Windo
     paint_size[ paints_pos ] += winsize;
 }
 
-void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);
     int fps = 0;

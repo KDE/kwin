@@ -128,7 +128,7 @@ inline QRegion buildClipRegion(const QPoint &pos, int w, int h)
     return r;
 }
 
-void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void SlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     const bool wrap = effects->optionRollOverDesktops();
     const int w = workspaceWidth();

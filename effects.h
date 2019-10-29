@@ -74,20 +74,20 @@ public:
     EffectsHandlerImpl(Compositor *compositor, Scene *scene);
     ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData& data, int time) override;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     /**
      * Special hook to perform a paintScreen but just with the windows on @p desktop.
      */
     void paintDesktop(int desktop, int mask, QRegion region, ScreenPaintData& data);
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void paintWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) override;
     void postPaintWindow(EffectWindow* w) override;
-    void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity) override;
+    void paintEffectFrame(EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity) override;
 
     Effect *provides(Effect::Feature ef);
 
-    void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
+    void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) override;
 
     void buildQuads(EffectWindow* w, WindowQuadList& quadList) override;
 
@@ -541,7 +541,7 @@ public:
     ~EffectFrameImpl() override;
 
     void free() override;
-    void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;
+    void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;
     Qt::Alignment alignment() const override;
     void setAlignment(Qt::Alignment alignment) override;
     const QFont& font() const override;

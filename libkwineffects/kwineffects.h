@@ -428,7 +428,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
+    virtual void paintScreen(int mask, const QRegion &region, ScreenPaintData& data);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -487,7 +487,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
+    virtual void paintEffectFrame(EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity);
 
     /**
      * Called on Transparent resizes.
@@ -516,7 +516,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data);
 
     /**
      * Define new window quads so that they can be transformed by other effects.
@@ -832,13 +832,13 @@ public:
     ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData& data, int time) = 0;
-    virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data) = 0;
+    virtual void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) = 0;
     virtual void postPaintScreen() = 0;
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) = 0;
-    virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) = 0;
+    virtual void paintWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) = 0;
     virtual void postPaintWindow(EffectWindow* w) = 0;
-    virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity) = 0;
-    virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) = 0;
+    virtual void paintEffectFrame(EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity) = 0;
+    virtual void drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) = 0;
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList) = 0;
     virtual QVariant kwinOption(KWinOption kwopt) = 0;
     /**
@@ -2140,7 +2140,7 @@ public:
     virtual bool hasAlpha() const = 0;
 
     bool isOnCurrentActivity() const;
-    Q_SCRIPTABLE bool isOnActivity(QString id) const;
+    Q_SCRIPTABLE bool isOnActivity(const QString &id) const;
     bool isOnAllActivities() const;
     virtual QStringList activities() const = 0;
 
@@ -3226,7 +3226,7 @@ public:
     /**
      * Register a list of windows for managing.
      */
-    inline void manage(EffectWindowList list) {
+    inline void manage(const EffectWindowList &list) {
         for (int i = 0; i < list.size(); i++)
             manage(list.at(i));
     }
@@ -3380,7 +3380,7 @@ public:
     /**
      * Render the frame.
      */
-    virtual void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
+    virtual void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
 
     virtual void setPosition(const QPoint& point) = 0;
     /**

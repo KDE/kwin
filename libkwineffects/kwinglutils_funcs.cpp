@@ -40,7 +40,7 @@ glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
 glReadnPixels_func            glReadnPixels;
 glGetnUniformfv_func          glGetnUniformfv;
 
-void glResolveFunctions(std::function<resolveFuncPtr(const char*)> resolveFunction)
+void glResolveFunctions(const std::function<resolveFuncPtr(const char*)> &resolveFunction)
 {
     const bool haveArbRobustness = hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"));
     const bool haveExtRobustness = hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"));

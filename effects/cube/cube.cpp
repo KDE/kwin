@@ -397,7 +397,7 @@ void CubeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void CubeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     if (activated) {
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());

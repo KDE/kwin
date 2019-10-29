@@ -59,7 +59,7 @@ public:
     ~CubeEffect() override;
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData& data, int time) override;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;

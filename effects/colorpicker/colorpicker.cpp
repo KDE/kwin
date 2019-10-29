@@ -61,7 +61,7 @@ ColorPickerEffect::ColorPickerEffect()
 
 ColorPickerEffect::~ColorPickerEffect() = default;
 
-void ColorPickerEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void ColorPickerEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_cachedOutputGeometry = data.outputGeometry();
     effects->paintScreen(mask, region, data);

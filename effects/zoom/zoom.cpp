@@ -271,7 +271,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     if (zoom != 1.0) {
         data *= QVector2D(zoom, zoom);

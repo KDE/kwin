@@ -682,7 +682,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     // Parse the Mesa version
     const int mesaIndex = versionTokens.indexOf("Mesa");
     if (mesaIndex != -1) {
-        const QByteArray version = versionTokens.at(mesaIndex + 1);
+        const QByteArray &version = versionTokens.at(mesaIndex + 1);
         m_mesaVersion = parseVersionString(version);
     }
 
@@ -720,7 +720,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     if (m_renderer.startsWith("Mesa DRI R")) {
         // Sample renderer string: Mesa DRI R600 (RV740 94B3) 20090101 x86/MMX/SSE2 TCL DRI2
         const QList<QByteArray> tokens = m_renderer.split(' ');
-        const QByteArray chipClass = tokens.at(2);
+        const QByteArray &chipClass = tokens.at(2);
         m_chipset = tokens.at(3).mid(1, -1); // Strip the leading '('
 
         if (chipClass == "R100")

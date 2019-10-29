@@ -120,7 +120,7 @@ void FlipSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void FlipSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);
     if (m_active) {

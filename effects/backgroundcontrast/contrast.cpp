@@ -431,7 +431,7 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
     return true;
 }
 
-void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     const QRect screen = GLRenderTarget::virtualScreenGeometry();
     if (shouldContrast(w, mask, data)) {
@@ -467,7 +467,7 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, Windo
     effects->drawWindow(w, mask, region, data);
 }
 
-void ContrastEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity)
+void ContrastEffect::paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity)
 {
     //FIXME: this is a no-op for now, it should figure out the right contrast, intensity, saturation
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);

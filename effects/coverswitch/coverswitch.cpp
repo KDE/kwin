@@ -129,7 +129,7 @@ void CoverSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void CoverSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);
 

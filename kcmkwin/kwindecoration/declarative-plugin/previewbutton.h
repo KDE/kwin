@@ -59,7 +59,7 @@ public:
     void setType(int type);
 
     const QColor &color() const { return m_color; }
-    void setColor(const QColor color);
+    void setColor(const QColor &color);
 
 Q_SIGNALS:
     void bridgeChanged();

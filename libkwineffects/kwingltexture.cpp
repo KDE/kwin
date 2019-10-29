@@ -467,7 +467,7 @@ void GLTexture::unbind()
     glBindTexture(d->m_target, 0);
 }
 
-void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
+void GLTexture::render(const QRegion &region, const QRect& rect, bool hardwareClipping)
 {
     Q_D(GLTexture);
     if (rect.isEmpty())

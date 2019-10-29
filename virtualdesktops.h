@@ -710,7 +710,7 @@ bool VirtualDesktopManager::isNavigationWrappingAround() const
 inline
 void VirtualDesktopManager::setConfig(KSharedConfig::Ptr config)
 {
-    m_config = config;
+    m_config = std::move(config);
 }
 
 inline

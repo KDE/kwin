@@ -138,7 +138,7 @@ void PreviewButtonItem::paint(QPainter *painter)
     painter->fillRect(size, m_color);
 }
 
-void PreviewButtonItem::setColor(const QColor color)
+void PreviewButtonItem::setColor(const QColor &color)
 {
     m_color = color;
     m_color.setAlpha(127);

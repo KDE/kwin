@@ -87,7 +87,7 @@ void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void CubeSlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void CubeSlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     if (isActive()) {
         glEnable(GL_CULL_FACE);

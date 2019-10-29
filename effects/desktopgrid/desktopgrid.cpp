@@ -181,7 +181,7 @@ void DesktopGridEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void DesktopGridEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     if (timeline.currentValue() == 0 && !isUsingPresentWindows()) {
         effects->paintScreen(mask, region, data);

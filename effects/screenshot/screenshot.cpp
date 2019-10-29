@@ -156,7 +156,7 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
     return pixmap;
 }
 
-void ScreenShotEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void ScreenShotEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_cachedOutputGeometry = data.outputGeometry();
     effects->paintScreen(mask, region, data);

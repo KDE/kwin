@@ -225,7 +225,7 @@ void LookingGlassEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, 
     }
 }
 
-void LookingGlassEffect::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void LookingGlassEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     // Call the next effect.
     effects->paintScreen(mask, region, data);

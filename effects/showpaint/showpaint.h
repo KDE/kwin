@@ -33,7 +33,7 @@ class ShowPaintEffect : public Effect
 public:
     ShowPaintEffect();
 
-    void paintScreen(int mask, QRegion region, ScreenPaintData &data) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     bool isActive() const override;

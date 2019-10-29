@@ -41,7 +41,7 @@ public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
     void prePaintScreen(ScreenPrePaintData& data, int time) override;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
     void reconfigure(ReconfigureFlags) override;
     bool isActive() const override;

@@ -40,7 +40,7 @@ public:
     MouseMarkEffect();
     ~MouseMarkEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void paintScreen(int mask, QRegion region, ScreenPaintData& data) override;
+    void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     bool isActive() const override;
 
     // for properties

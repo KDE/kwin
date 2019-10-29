@@ -258,7 +258,7 @@ protected:
      * @returns An ID that you can use to cancel a running animation.
      * @since 4.8
      */
-    quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false, bool keepAlive = true)
+    quint64 animate( EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
     { return p_animate(w, a, meta, ms, to, curve, delay, from, false, fullScreen, keepAlive); }
 
     /**
@@ -288,7 +288,7 @@ protected:
      * @returns An ID that you need to use to cancel this manipulation.
      * @since 4.11
      */
-    quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve = QEasingCurve(), int delay = 0, FPx2 from = FPx2(), bool fullScreen = false, bool keepAlive = true)
+    quint64 set( EffectWindow *w, Attribute a, uint meta, int ms, const FPx2 &to, const QEasingCurve &curve = QEasingCurve(), int delay = 0, const FPx2 &from = FPx2(), bool fullScreen = false, bool keepAlive = true)
     { return p_animate(w, a, meta, ms, to, curve, delay, from, true, fullScreen, keepAlive); }
 
     /**
@@ -386,7 +386,7 @@ protected:
     AniMap state() const;
 
 private:
-    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive);
+    quint64 p_animate(EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, const QEasingCurve &curve, int delay, FPx2 from, bool keepAtTarget, bool fullScreenEffect, bool keepAlive);
     QRect clipRect(const QRect &windowRect, const AniData&) const;
     void clipWindow(const EffectWindow *, const AniData &, WindowQuadList &) const;
     float interpolated( const AniData&, int i = 0 ) const;

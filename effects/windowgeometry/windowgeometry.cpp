@@ -92,7 +92,7 @@ void WindowGeometry::reconfigure(ReconfigureFlags)
     iHandleResizes = WindowGeometryConfiguration::resize();
 }
 
-void WindowGeometry::paintScreen(int mask, QRegion region, ScreenPaintData &data)
+void WindowGeometry::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     effects->paintScreen(mask, region, data);
     if (iAmActivated && iAmActive) {

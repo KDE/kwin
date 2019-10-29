@@ -397,7 +397,7 @@ void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData& data, int time)
     // no special final code
 }
 
-void EffectsHandlerImpl::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void EffectsHandlerImpl::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(mask, region, data);
@@ -440,7 +440,7 @@ void EffectsHandlerImpl::prePaintWindow(EffectWindow* w, WindowPrePaintData& dat
     // no special final code
 }
 
-void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->paintWindow(w, mask, region, data);
@@ -449,7 +449,7 @@ void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, 
         m_scene->finalPaintWindow(static_cast<EffectWindowImpl*>(w), mask, region, data);
 }
 
-void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity)
+void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity)
 {
     if (m_currentPaintEffectFrameIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintEffectFrameIterator++)->paintEffectFrame(frame, region, opacity, frameOpacity);
@@ -477,7 +477,7 @@ Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
     return nullptr;
 }
 
-void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentDrawWindowIterator++)->drawWindow(w, mask, region, data);
@@ -2280,7 +2280,7 @@ void EffectFrameImpl::plasmaThemeChanged()
     free();
 }
 
-void EffectFrameImpl::render(QRegion region, double opacity, double frameOpacity)
+void EffectFrameImpl::render(const QRegion &region, double opacity, double frameOpacity)
 {
     if (m_geometry.isEmpty()) {
         return; // Nothing to display

@@ -565,7 +565,7 @@ void Effect::prePaintScreen(ScreenPrePaintData& data, int time)
     effects->prePaintScreen(data, time);
 }
 
-void Effect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
+void Effect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);
 }
@@ -590,7 +590,7 @@ void Effect::postPaintWindow(EffectWindow* w)
     effects->postPaintWindow(w);
 }
 
-void Effect::paintEffectFrame(KWin::EffectFrame* frame, QRegion region, double opacity, double frameOpacity)
+void Effect::paintEffectFrame(KWin::EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity)
 {
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
@@ -610,7 +610,7 @@ QString Effect::debug(const QString &) const
     return QString();
 }
 
-void Effect::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
+void Effect::drawWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     effects->drawWindow(w, mask, region, data);
 }
@@ -778,7 +778,7 @@ EffectWindow::~EffectWindow()
 {
 }
 
-bool EffectWindow::isOnActivity(QString activity) const
+bool EffectWindow::isOnActivity(const QString &activity) const
 {
     const QStringList _activities = activities();
     return _activities.isEmpty() || _activities.contains(activity);
