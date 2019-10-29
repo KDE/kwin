@@ -78,6 +78,7 @@ void GLPlatformTest::testDriverToString_data()
     QTest::newRow("VirtualBox") << Driver_VirtualBox << QStringLiteral("VirtualBox (Chromium)");
     QTest::newRow("VMware") << Driver_VMware << QStringLiteral("VMware (SVGA3D)");
     QTest::newRow("Qualcomm") << Driver_Qualcomm << QStringLiteral("Qualcomm");
+    QTest::newRow("Virgl") << Driver_Virgl << QStringLiteral("Virgl (virtio-gpu, Qemu/KVM guest)");
     QTest::newRow("Unknown") << Driver_Unknown << QStringLiteral("Unknown");
 }
 
@@ -262,6 +263,7 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->isVirtualBox(), settingsGroup.readEntry("VirtualBox", false));
     QCOMPARE(gl->isVMware(), settingsGroup.readEntry("VMware", false));
     QCOMPARE(gl->isAdreno(), settingsGroup.readEntry("Adreno", false));
+    QCOMPARE(gl->isVirgl(), settingsGroup.readEntry("Virgl", false));
 
     QCOMPARE(gl->isSoftwareEmulation(), settingsGroup.readEntry("SoftwareEmulation", false));
     QCOMPARE(gl->isVirtualMachine(), settingsGroup.readEntry("VirtualMachine", false));

@@ -103,6 +103,7 @@ enum Driver {
     Driver_VMware,
     Driver_Qualcomm,
     Driver_RadeonSI,
+    Driver_Virgl,
     Driver_Unknown
 };
 
@@ -288,6 +289,12 @@ public:
      * @since 5.8
      */
     bool isAdreno() const;
+
+    /**
+     * @returns @c true if the "GPU" is a virtio-gpu (Qemu/KVM)
+     * @since 5.18
+     **/
+    bool isVirgl() const;
 
     /**
      * @returns the GL_VERSION string as provided by the driver.

@@ -524,6 +524,8 @@ QByteArray GLPlatform::driverToString8(Driver driver)
         return QByteArrayLiteral("VMware (SVGA3D)");
     case Driver_Qualcomm:
         return QByteArrayLiteral("Qualcomm");
+    case Driver_Virgl:
+        return QByteArrayLiteral("Virgl (virtio-gpu, Qemu/KVM guest)");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -899,6 +901,11 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         else if (m_vendor == "VMware, Inc." && m_chipset.contains("SVGA3D")) {
             m_driver = Driver_VMware;
         }
+
+        // virgl
+        else if (m_renderer == "virgl") {
+            m_driver = Driver_Virgl;
+        }
     }
 
     // Driver/GPU specific features
@@ -1013,6 +1020,11 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     if (isVMware()) {
+        m_virtualMachine = true;
+        m_recommendedCompositor = OpenGL2Compositing;
+    }
+
+    if (m_driver == Driver_Virgl) {
         m_virtualMachine = true;
         m_recommendedCompositor = OpenGL2Compositing;
     }
@@ -1169,6 +1181,11 @@ bool GLPlatform::isVirtualBox() const
 bool GLPlatform::isVMware() const
 {
     return m_driver == Driver_VMware;
+}
+
+bool GLPlatform::isVirgl() const
+{
+    return m_driver == Driver_Virgl;
 }
 
 bool GLPlatform::isSoftwareEmulation() const
