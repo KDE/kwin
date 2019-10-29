@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
-#include "linux_dmabuf.h"
+#include "egl_dmabuf.h"
 #include "texture.h"
 #include "composite.h"
 #include "egl_context_attribute_builder.h"
@@ -171,7 +171,7 @@ void AbstractEglBackend::initWayland()
         }
     }
 
-    LinuxDmabuf::factory(this);
+    EglDmabuf::factory(this);
 }
 
 void AbstractEglBackend::initClientExtensions()
@@ -383,7 +383,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         return;
     }
     auto s = pixmap->surface();
-    if (DmabufBuffer *dmabuf = static_cast<DmabufBuffer *>(buffer->linuxDmabufBuffer())) {
+    if (EglDmabufBuffer *dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer())) {
         q->bind();
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) dmabuf->images()[0]);   //TODO
         q->unbind();
@@ -538,7 +538,7 @@ bool AbstractEglTexture::loadEglTexture(const QPointer< KWayland::Server::Buffer
 
 bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWayland::Server::BufferInterface > &buffer)
 {
-    DmabufBuffer *dmabuf = static_cast<DmabufBuffer *>(buffer->linuxDmabufBuffer());
+    auto *dmabuf = static_cast<EglDmabufBuffer *>(buffer->linuxDmabufBuffer());
     if (!dmabuf || dmabuf->images()[0] == EGL_NO_IMAGE_KHR) {
         qCritical(KWIN_OPENGL) << "Invalid dmabuf-based wl_buffer";
         q->discard();

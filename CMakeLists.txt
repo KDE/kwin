@@ -440,6 +440,7 @@ set(kwin_KDEINIT_SRCS
     libinput/device.cpp
     libinput/events.cpp
     libinput/libinput_logging.cpp
+    linux_dmabuf.cpp
     logind.cpp
     main.cpp
     manage.cpp

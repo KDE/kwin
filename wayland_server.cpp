@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/dpms_interface.h>
 #include <KWayland/Server/idle_interface.h>
 #include <KWayland/Server/idleinhibit_interface.h>
+#include <KWayland/Server/linuxdmabuf_v1_interface.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/plasmavirtualdesktop_interface.h>
@@ -451,6 +452,15 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_keyState->create();
 
     return true;
+}
+
+KWayland::Server::LinuxDmabufUnstableV1Interface *WaylandServer::linuxDmabuf()
+{
+    if (!m_linuxDmabuf) {
+        m_linuxDmabuf = m_display->createLinuxDmabufInterface(m_display);
+        m_linuxDmabuf->create();
+    }
+    return m_linuxDmabuf;
 }
 
 SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface *surface)
