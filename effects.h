@@ -58,6 +58,7 @@ class AbstractClient;
 class Compositor;
 class Deleted;
 class EffectLoader;
+class Group;
 class Toplevel;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;

@@ -52,6 +52,7 @@ namespace KWin
 {
 
 class ClientMachine;
+class Deleted;
 class EffectWindowImpl;
 class Shadow;
 

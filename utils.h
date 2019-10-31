@@ -43,15 +43,6 @@ namespace KWin
 
 const QPoint invalidPoint(INT_MIN, INT_MIN);
 
-class Toplevel;
-class X11Client;
-class Unmanaged;
-class Deleted;
-class Group;
-class Options;
-
-extern Options* options;
-
 enum Layer {
     UnknownLayer = -1,
     FirstLayer = 0,

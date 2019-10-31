@@ -53,9 +53,13 @@ class Window;
 
 class AbstractClient;
 class Compositor;
+class Deleted;
+class Group;
 class InternalClient;
 class KillWindow;
 class ShortcutDialog;
+class Toplevel;
+class Unmanaged;
 class UserActionsMenu;
 class X11Client;
 class X11EventFilter;

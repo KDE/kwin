@@ -46,6 +46,7 @@ class Decoration;
 
 namespace KWin
 {
+class Group;
 
 namespace TabBox
 {
