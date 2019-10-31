@@ -100,9 +100,9 @@ bool MockTabBoxHandler::isInFocusChain(TabBox::TabBoxClient *client) const
     return false;
 }
 
-QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::createMockWindow(const QString &caption, WId id)
+QWeakPointer< TabBox::TabBoxClient > MockTabBoxHandler::createMockWindow(const QString &caption)
 {
-    QSharedPointer< TabBox::TabBoxClient > client(new MockTabBoxClient(caption, id));
+    QSharedPointer< TabBox::TabBoxClient > client(new MockTabBoxClient(caption));
     m_windows.append(client);
     m_activeClient = client;
     return QWeakPointer< TabBox::TabBoxClient >(client);

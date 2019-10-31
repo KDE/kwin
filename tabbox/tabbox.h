@@ -93,7 +93,6 @@ public:
 
     QString caption() const override;
     QIcon icon() const override;
-    WId window() const override;
     bool isMinimized() const override;
     int x() const override;
     int y() const override;

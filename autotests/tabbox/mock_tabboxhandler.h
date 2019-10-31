@@ -100,7 +100,7 @@ public:
     }
 
     // mock methods
-    QWeakPointer<TabBox::TabBoxClient> createMockWindow(const QString &caption, WId id);
+    QWeakPointer<TabBox::TabBoxClient> createMockWindow(const QString &caption);
     void closeWindow(TabBox::TabBoxClient *client);
 private:
     QList< QSharedPointer<TabBox::TabBoxClient> > m_windows;

@@ -30,7 +30,7 @@ namespace KWin
 class MockTabBoxClient : public TabBox::TabBoxClient
 {
 public:
-    explicit MockTabBoxClient(QString caption, WId id);
+    explicit MockTabBoxClient(QString caption);
     bool isMinimized() const override {
         return false;
     }
@@ -53,9 +53,6 @@ public:
     int width() const override {
         return 100;
     }
-    WId window() const override {
-        return m_wId;
-    }
     int x() const override {
         return 0;
     }
@@ -72,7 +69,6 @@ public:
 
 private:
     QString m_caption;
-    WId m_wId;
 };
 } // namespace KWin
 #endif

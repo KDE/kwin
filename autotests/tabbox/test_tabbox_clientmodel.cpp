@@ -38,7 +38,7 @@ void TestTabBoxClientModel::testLongestCaptionWithNullClient()
     clientModel->createClientList();
     QCOMPARE(clientModel->longestCaption(), QString());
     // add a window to the mock
-    tabboxhandler.createMockWindow(QString("test"), 1);
+    tabboxhandler.createMockWindow(QString("test"));
     clientModel->createClientList();
     QCOMPARE(clientModel->longestCaption(), QString("test"));
     // delete the one client in the list
@@ -59,8 +59,8 @@ void TestTabBoxClientModel::testCreateClientListNoActiveClient()
     clientModel->createClientList();
     QCOMPARE(clientModel->rowCount(), 0);
     // create two windows, rowCount() should go to two
-    QWeakPointer<TabBox::TabBoxClient> client = tabboxhandler.createMockWindow(QString("test"), 1);
-    tabboxhandler.createMockWindow(QString("test2"), 2);
+    QWeakPointer<TabBox::TabBoxClient> client = tabboxhandler.createMockWindow(QString("test"));
+    tabboxhandler.createMockWindow(QString("test2"));
     clientModel->createClientList();
     QCOMPARE(clientModel->rowCount(), 2);
     // let's ensure there is no active client
@@ -76,8 +76,8 @@ void TestTabBoxClientModel::testCreateClientListActiveClientNotInFocusChain()
     tabboxhandler.setConfig(TabBox::TabBoxConfig());
     TabBox::ClientModel *clientModel = new TabBox::ClientModel(&tabboxhandler);
     // create two windows, rowCount() should go to two
-    QWeakPointer<TabBox::TabBoxClient> client = tabboxhandler.createMockWindow(QString("test"), 1);
-    client = tabboxhandler.createMockWindow(QString("test2"), 2);
+    QWeakPointer<TabBox::TabBoxClient> client = tabboxhandler.createMockWindow(QString("test"));
+    client = tabboxhandler.createMockWindow(QString("test2"));
     clientModel->createClientList();
     QCOMPARE(clientModel->rowCount(), 2);
 

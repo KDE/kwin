@@ -23,10 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-MockTabBoxClient::MockTabBoxClient(QString caption, WId id)
+MockTabBoxClient::MockTabBoxClient(QString caption)
     : TabBoxClient()
     , m_caption(caption)
-    , m_wId(id)
 {
 }
 

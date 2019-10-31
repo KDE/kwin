@@ -378,10 +378,6 @@ public:
      */
     virtual QIcon icon() const = 0;
     /**
-     * @return The window Id of the client
-     */
-    virtual WId window() const = 0;
-    /**
      * @return Minimized state of the client
      */
     virtual bool isMinimized() const = 0;
