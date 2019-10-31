@@ -480,9 +480,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     a.start();
 
-    KWin::SessionSaveDoneHelper helper;
-    Q_UNUSED(helper); // The sessionsavedonehelper opens a side channel to the smserver,
-                      // listens for events and talks to it, so it needs to be created.
     return a.exec();
 }
 

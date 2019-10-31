@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+   <interface name="org.kde.KWin.Session">
+      <method name="setState">
+         <!-- Sets state of the session should be one of:
+                0 = normal
+                1 = saving
+                2= quitting
+            -->
+         <arg name="state" type="u" direction="in" />
+      </method>
+   </interface>
+</node>
+

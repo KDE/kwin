@@ -118,7 +118,6 @@ Workspace::Workspace(const QString &sessionKey)
     , force_restacking(false)
     , showing_desktop(false)
     , was_user_interaction(false)
-    , session_saving(false)
     , block_focus(0)
     , m_userActionsMenu(new UserActionsMenu(this))
     , client_keys_dialog(nullptr)
@@ -128,6 +127,7 @@ Workspace::Workspace(const QString &sessionKey)
     , startup(nullptr)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
+    , m_sessionManager(new SessionManager(this))
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
@@ -156,7 +156,6 @@ Workspace::Workspace(const QString &sessionKey)
 
     if (!sessionKey.isEmpty())
         loadSessionInfo(sessionKey);
-    connect(qApp, &QGuiApplication::commitDataRequest, this, &Workspace::commitData);
     connect(qApp, &QGuiApplication::saveStateRequest, this, &Workspace::saveState);
 
     RuleBook::create(this)->load();

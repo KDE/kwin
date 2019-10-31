@@ -121,7 +121,7 @@ void Activities::toggleClientOnActivity(X11Client *c, const QString &activity, b
 bool Activities::start(const QString &id)
 {
     Workspace *ws = Workspace::self();
-    if (ws->sessionSaving()) {
+    if (ws->sessionManager()->state() == SessionState::Saving) {
         return false; //ksmserver doesn't queue requests (yet)
     }
 
@@ -143,7 +143,7 @@ bool Activities::start(const QString &id)
 
 bool Activities::stop(const QString &id)
 {
-    if (Workspace::self()->sessionSaving()) {
+    if (Workspace::self()->sessionManager()->state() == SessionState::Saving) {
         return false; //ksmserver doesn't queue requests (yet)
         //FIXME what about session *loading*?
     }
@@ -157,7 +157,7 @@ bool Activities::stop(const QString &id)
 void Activities::reallyStop(const QString &id)
 {
     Workspace *ws = Workspace::self();
-    if (ws->sessionSaving())
+    if (ws->sessionManager()->state() == SessionState::Saving)
         return; //ksmserver doesn't queue requests (yet)
 
     qCDebug(KWIN_CORE) << id;

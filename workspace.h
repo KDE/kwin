@@ -244,6 +244,8 @@ public:
 
     void stackScreenEdgesUnderOverrideRedirect();
 
+    SessionManager *sessionManager() const;
+
 public:
     QPoint cascadeOffset(const AbstractClient *c) const;
 
@@ -339,11 +341,8 @@ public:
     bool globalShortcutsDisabled() const;
     void disableGlobalShortcutsForClient(bool disable);
 
-    void sessionSaveStarted();
-    void sessionSaveDone();
     void setWasUserInteraction();
     bool wasUserInteraction() const;
-    bool sessionSaving() const;
 
     int packPositionLeft(const AbstractClient *client, int oldX, bool leftEdge) const;
     int packPositionRight(const AbstractClient *client, int oldX, bool rightEdge) const;
@@ -492,7 +491,6 @@ private Q_SLOTS:
 
     // session management
     void saveState(QSessionManager &sm);
-    void commitData(QSessionManager &sm);
 
 Q_SIGNALS:
     /**
@@ -616,7 +614,7 @@ private:
 
     bool was_user_interaction;
     QScopedPointer<X11EventFilter> m_wasUserInteractionFilter;
-    bool session_saving;
+
     int session_active_client;
     int session_desktop;
 
@@ -666,6 +664,7 @@ private:
     QList<X11EventFilter *> m_genericEventFilters;
     QScopedPointer<X11EventFilter> m_movingClientFilter;
 
+    SessionManager *m_sessionManager;
 private:
     friend bool performTransiencyCheck();
     friend Workspace *workspace();
@@ -742,14 +741,9 @@ inline bool Workspace::wasUserInteraction() const
     return was_user_interaction;
 }
 
-inline void Workspace::sessionSaveStarted()
+inline SessionManager *Workspace::sessionManager() const
 {
-    session_saving = true;
-}
-
-inline bool Workspace::sessionSaving() const
-{
-    return session_saving;
+    return m_sessionManager;
 }
 
 inline bool Workspace::showingDesktop() const

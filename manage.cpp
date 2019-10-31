@@ -432,7 +432,8 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
                 init_minimize = false; // SELI TODO: Even e.g. for NET::Utility?
     }
     // If a dialog is shown for minimized window, minimize it too
-    if (!init_minimize && isTransient() && mainClients().count() > 0 && !workspace()->sessionSaving()) {
+    if (!init_minimize && isTransient() && mainClients().count() > 0 &&
+            workspace()->sessionManager()->state() != SessionState::Saving) {
         bool visible_parent = false;
         // Use allMainClients(), to include also main clients of group transients
         // that have been optimized out in X11Client::checkGroupTransients()
@@ -532,13 +533,15 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         else
             allow = workspace()->allowClientActivation(this, userTime(), false);
 
+        const bool isSessionSaving = workspace()->sessionManager()->state() == SessionState::Saving;
+
         // If session saving, force showing new windows (i.e. "save file?" dialogs etc.)
         // also force if activation is allowed
-        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || workspace()->sessionSaving() ))
+        if( !isOnCurrentDesktop() && !isMapped && !session && ( allow || isSessionSaving ))
             VirtualDesktopManager::self()->setCurrent( desktop());
 
         // If the window is on an inactive activity during session saving, temporarily force it to show.
-        if( !isMapped && !session && workspace()->sessionSaving() && !isOnCurrentActivity()) {
+        if( !isMapped && !session && isSessionSaving && !isOnCurrentActivity()) {
             setSessionActivityOverride( true );
             foreach( AbstractClient* c, mainClients()) {
                 if (X11Client *mc = dynamic_cast<X11Client *>(c)) {

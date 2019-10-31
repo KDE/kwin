@@ -28,15 +28,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm_def.h>
 #include <QRect>
 
-#include <X11/SM/SMlib.h>
-#include <fixx11h.h>
-
-class QSocketNotifier;
-
 namespace KWin
 {
 
 class X11Client;
+
+class SessionManager : public QObject
+{
+    Q_OBJECT
+public:
+    SessionManager(QObject *parent);
+    ~SessionManager() override;
+
+    SessionState state() const;
+
+Q_SIGNALS:
+    void stateChanged();
+
+public Q_SLOTS: // DBus API
+    void setState(uint state);
+
+private:
+    void setState(SessionState state);
+    SessionState m_sessionState;
+};
 
 struct SessionInfo {
     QByteArray sessionId;
@@ -75,25 +90,6 @@ enum SMSavePhase {
     SMSavePhase0,     // saving global state in "phase 0"
     SMSavePhase2,     // saving window state in phase 2
     SMSavePhase2Full  // complete saving in phase2, there was no phase 0
-};
-
-class KWIN_EXPORT SessionSaveDoneHelper
-    : public QObject
-{
-    Q_OBJECT
-public:
-    SessionSaveDoneHelper();
-    ~SessionSaveDoneHelper() override;
-    SmcConn connection() const {
-        return conn;
-    }
-    void saveDone();
-    void close();
-private Q_SLOTS:
-    void processData();
-private:
-    QSocketNotifier* notifier;
-    SmcConn conn;
 };
 
 } // namespace

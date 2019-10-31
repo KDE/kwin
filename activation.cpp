@@ -558,7 +558,7 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
     if (time == -1U)
         time = c->userTime();
     int level = c->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (session_saving && level <= FSP::Medium) { // <= normal
+    if (sessionManager()->state() == SessionState::Saving && level <= FSP::Medium) { // <= normal
         return true;
     }
     AbstractClient* ac = mostRecentlyActivatedClient();
@@ -635,7 +635,7 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
 bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timestamp_t time)
 {
     int level = c->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (session_saving && level <= 2) { // <= normal
+    if (sessionManager()->state() == SessionState::Saving && level <= 2) { // <= normal
         return true;
     }
     AbstractClient* ac = mostRecentlyActivatedClient();

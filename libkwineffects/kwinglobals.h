@@ -138,6 +138,16 @@ enum class SwipeDirection {
     Right
 };
 
+/**
+ * Represents the state of the session running outside kwin
+ * Under Plasma this is managed by ksmserver
+ */
+enum class SessionState {
+    Normal,
+    Saving,
+    Quitting
+};
+
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {
