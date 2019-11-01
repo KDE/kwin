@@ -38,6 +38,7 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(Anchor)
     Q_ENUMS(MetaType)
     Q_ENUMS(EasingCurve)
+    Q_ENUMS(SessionState)
     /**
      * True if we are the active fullscreen effect
      */

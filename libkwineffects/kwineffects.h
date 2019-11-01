@@ -826,6 +826,13 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     Q_PROPERTY(bool hasActiveFullScreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
+
+    /**
+     * The status of the session i.e if the user is logging out
+     * @since 5.18
+     */
+    Q_PROPERTY(KWin::SessionState sessionState READ sessionState NOTIFY sessionStateChanged)
+
     friend class Effect;
 public:
     explicit EffectsHandler(CompositingType type);
@@ -1367,6 +1374,11 @@ public:
      */
     virtual void renderEffectQuickView(EffectQuickView *effectQuickView) const = 0;
 
+    /**
+     * The status of the session i.e if the user is logging out
+     * @since 5.18
+     */
+    virtual SessionState sessionState() const = 0;
 Q_SIGNALS:
     /**
      * Signal emitted when the current desktop changed.
@@ -1798,6 +1810,12 @@ Q_SIGNALS:
      * @since 5.15
      */
     void windowFullScreenChanged(KWin::EffectWindow *w);
+
+    /**
+     * This signal is emitted when the session state was changed
+     * @since 5.18
+     */
+    void sessionStateChanged();
 
 protected:
     QVector< EffectPair > loaded_effects;

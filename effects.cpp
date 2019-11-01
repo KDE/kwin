@@ -196,6 +196,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             elevated_windows.removeAll(d->effectWindow());
         }
     );
+    connect(ws->sessionManager(), &SessionManager::stateChanged, this,
+            &KWin::EffectsHandler::sessionStateChanged);
     connect(vds, &VirtualDesktopManager::countChanged, this, &EffectsHandler::numberDesktopsChanged);
     connect(Cursor::self(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
     connect(screens(), &Screens::countChanged,    this, &EffectsHandler::numberScreensChanged);
@@ -1708,6 +1710,11 @@ void EffectsHandlerImpl::renderEffectQuickView(EffectQuickView *w) const
         return;
     }
     scene()->paintEffectQuickView(w);
+}
+
+SessionState EffectsHandlerImpl::sessionState() const
+{
+    return Workspace::self()->sessionManager()->state();
 }
 
 //****************************************

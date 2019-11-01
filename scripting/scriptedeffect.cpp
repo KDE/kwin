@@ -633,6 +633,8 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 #ifndef KWIN_UNIT_TEST
     m_engine->globalObject().setProperty(QStringLiteral("KWin"), m_engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));
 #endif
+    m_engine->globalObject().setProperty(QStringLiteral("Globals"), m_engine->newQMetaObject(&KWin::staticMetaObject));
+
     m_engine->globalObject().setProperty(QStringLiteral("QEasingCurve"), m_engine->newQMetaObject(&QEasingCurve::staticMetaObject));
     m_engine->globalObject().setProperty(QStringLiteral("effect"), m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
     MetaScripting::registration(m_engine);

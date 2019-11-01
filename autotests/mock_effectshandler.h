@@ -281,6 +281,9 @@ public:
     void renderEffectQuickView(KWin::EffectQuickView *quickView) const override {
         Q_UNUSED(quickView);
     }
+    KWin::SessionState sessionState() const override {
+        return KWin::SessionState::Normal;
+    }
 
 private:
     bool m_animationsSuported = true;

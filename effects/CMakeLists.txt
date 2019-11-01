@@ -157,6 +157,7 @@ install_scripted_effect(scale)
 install_scripted_effect(squash)
 install_scripted_effect(translucency)
 install_scripted_effect(windowaperture)
+install_scripted_effect(sessionquit)
 
 ###############################################################################
 # Built-in effects go here

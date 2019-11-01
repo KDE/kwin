@@ -1941,3 +1941,4 @@ TimeLine &TimeLine::operator=(const TimeLine &other)
 
 } // namespace
 
+#include "moc_kwinglobals.cpp"

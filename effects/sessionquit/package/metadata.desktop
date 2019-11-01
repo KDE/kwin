@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=Session Quit
+Icon=preferences-system-windows-effect-logout
+Comment=Keep the desktop background alive during logout until the end
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=David Edmundson
+X-KDE-PluginInfo-Email=davidedmundson@kde.org
+X-KDE-PluginInfo-Name=kwin4_effect_sessionquit
+X-KDE-PluginInfo-Version=0.2.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Ordering=40
+X-Plasma-API=javascript
+X-KWin-Internal=true
+X-Plasma-MainScript=code/main.js

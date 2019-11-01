@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-
+KWIN_EXPORT Q_NAMESPACE
 
 enum CompositingType {
     NoCompositing = 0,
@@ -147,6 +147,7 @@ enum class SessionState {
     Saving,
     Quitting
 };
+Q_ENUM_NS(SessionState)
 
 inline
 KWIN_EXPORT xcb_connection_t *connection()
