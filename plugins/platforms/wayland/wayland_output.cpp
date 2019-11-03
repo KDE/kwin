@@ -99,6 +99,8 @@ XdgShellOutput::XdgShellOutput(Surface *surface, XdgShell *xdgShell, WaylandBack
         }
         updateWindowTitle();
     });
+
+    surface->commit(Surface::CommitFlag::None);
 }
 
 XdgShellOutput::~XdgShellOutput()
