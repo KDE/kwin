@@ -1,7 +1,23 @@
 [Desktop Entry]
 Name=Session Quit
+Name[ca]=Sortida de la sessió
+Name[eu]=Saiotik irtetea
+Name[lt]=Seanso baigimas
+Name[nl]=Afsluiten van sessie
+Name[pt]=Saída da Sessão
+Name[pt_BR]=Saída da sessão
+Name[uk]=Вихід з сеансу
+Name[x-test]=xxSession Quitxx
 Icon=preferences-system-windows-effect-logout
 Comment=Keep the desktop background alive during logout until the end
+Comment[ca]=Manté viu el fons de l'escriptori durant la sortida de la sessió fins el final
+Comment[eu]=Eutsi mahaigaineko atzeko-planoa bizirik saio-ixtean bukaera arte
+Comment[lt]=Atsijungiant, išlaikyti darbalaukio foną reaguojantį iki pat galo
+Comment[nl]=De achtergrond van het bureaublad tot het einde levend houden gedurende afmelden
+Comment[pt]=Manter o fundo do ecrã activo durante a saída da sessão até ao fim
+Comment[pt_BR]=Mantém ativo o fundo da área de trabalho até o fim do fechamento da sessão
+Comment[uk]=Не вимикати тло стільниці до кінця процедури виходу із облікового запису
+Comment[x-test]=xxKeep the desktop background alive during logout until the endxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
