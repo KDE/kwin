@@ -653,7 +653,7 @@ void WaylandBackend::createOutputs()
             m_registry->createServerSideDecorationManager(ssdManagerIface.name, ssdManagerIface.version, this);
 
 
-    const auto xdgIface = m_registry->interface(Registry::Interface::XdgShellUnstableV6);
+    const auto xdgIface = m_registry->interface(Registry::Interface::XdgShellStable);
     if (xdgIface.name != 0) {
         m_xdgShell = m_registry->createXdgShell(xdgIface.name, xdgIface.version, this);
     }
