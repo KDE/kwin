@@ -112,12 +112,11 @@ XdgShellOutput::~XdgShellOutput()
 void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
 {
     Q_UNUSED(states);
-    if (size.width() == 0 || size.height() == 0) {
-        return;
+    if (size.width() > 0 && size.height() > 0) {
+        setGeometry(geometry().topLeft(), size);
+        emit sizeChanged(size);
     }
-    setGeometry(geometry().topLeft(), size);
     m_xdgShellSurface->ackConfigure(serial);
-    emit sizeChanged(size);
 }
 
 void XdgShellOutput::updateWindowTitle()
