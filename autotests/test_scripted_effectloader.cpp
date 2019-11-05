@@ -192,6 +192,7 @@ void TestScriptedEffectLoader::testKnownEffects()
                     << QStringLiteral("kwin4_effect_maximize")
                     << QStringLiteral("kwin4_effect_morphingpopups")
                     << QStringLiteral("kwin4_effect_scale")
+                    << QStringLiteral("kwin4_effect_sessionquit")
                     << QStringLiteral("kwin4_effect_squash")
                     << QStringLiteral("kwin4_effect_translucency")
                     << QStringLiteral("kwin4_effect_windowaperture");
@@ -225,9 +226,11 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")         << true;
     QTest::newRow("MorphingPopups")              << QStringLiteral("kwin4_effect_morphingpopups")   << true;
     QTest::newRow("Scale")                       << QStringLiteral("kwin4_effect_scale")            << true;
+    QTest::newRow("SessionQuit")              << QStringLiteral("kwin4_effect_sessionquit")   << true;
     QTest::newRow("Squash")                      << QStringLiteral("kwin4_effect_squash")           << true;
     QTest::newRow("Translucency")                << QStringLiteral("kwin4_effect_translucency")     << true;
     QTest::newRow("WindowAperture")              << QStringLiteral("kwin4_effect_windowaperture")   << true;
+
 }
 
 void TestScriptedEffectLoader::testLoadEffect()
@@ -386,6 +389,8 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("eyeonscreenEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("windowapertureEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("morphingpopupsEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("sessionquitEnabled"), false);
+
     plugins.sync();
 
     loader.setConfig(config);
