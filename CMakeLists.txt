@@ -14,7 +14,6 @@ find_package(ECM 5.38 REQUIRED NO_MODULE)
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
 include(GenerateExportHeader)
-include(KDEClangFormat)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
@@ -45,6 +44,7 @@ endif()
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
+include(KDEClangFormat)
 
 include(ECMInstallIcons)
 include(ECMOptionalAddSubdirectory)
