@@ -22,7 +22,6 @@
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/Decoration>
 // KDE
-#include <KPluginInfo>
 #include <KPluginLoader>
 #include <KPluginFactory>
 #include <KPluginTrader>

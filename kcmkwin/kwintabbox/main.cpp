@@ -38,8 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KPluginFactory>
-#include <KPluginInfo>
-#include <KPluginLoader>
 #include <KPluginTrader>
 #include <KTitleWidget>
 #include <KServiceTypeTrader>
