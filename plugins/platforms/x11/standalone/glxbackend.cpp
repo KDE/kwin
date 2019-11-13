@@ -206,11 +206,10 @@ void GlxBackend::init()
     m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
     m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
-    // only enable Intel swap event if env variable is set, see BUG 342582
-    m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
-                                && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1");
 
-    if (m_haveINTELSwapEvent) {
+    // only enable Intel swap event if env variable is set, see BUG 342582
+    if (hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event")) &&
+            qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1")) {
         m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
         glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
     }
@@ -668,8 +667,9 @@ void GlxBackend::present()
     const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint) {
-        if (m_haveINTELSwapEvent)
+        if (hasSwapEvent()) {
             Compositor::self()->aboutToSwapBuffers();
+        }
 
         glXSwapBuffers(display(), glxWindow);
 
@@ -780,6 +780,11 @@ OverlayWindow* GlxBackend::overlayWindow() const
 bool GlxBackend::usesOverlayWindow() const
 {
     return true;
+}
+
+bool GlxBackend::hasSwapEvent() const
+{
+    return m_swapEventFilter != nullptr;
 }
 
 /********************************************************
