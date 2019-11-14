@@ -201,12 +201,34 @@ void EffectQuickView::forwardMouseEvent(QEvent *e)
     if (!d->m_visible) {
         return;
     }
-    QMouseEvent *me = static_cast<QMouseEvent *>(e);
-    const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
-
-    QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
-    QCoreApplication::sendEvent(d->m_view, &cloneEvent);
-    e->setAccepted(cloneEvent.isAccepted());
+    switch (e->type()) {
+    case QEvent::MouseMove:
+    case QEvent::MouseButtonPress:
+    case QEvent::MouseButtonRelease:
+    case QEvent::MouseButtonDblClick:
+    {
+        QMouseEvent *me = static_cast<QMouseEvent *>(e);
+        const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
+        QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
+        QCoreApplication::sendEvent(d->m_view, &cloneEvent);
+        e->setAccepted(cloneEvent.isAccepted());
+        return;
+    }
+    case QEvent::HoverEnter:
+    case QEvent::HoverLeave:
+    case QEvent::HoverMove:
+    {
+        QHoverEvent *he = static_cast<QHoverEvent *>(e);
+        const QPointF widgetPos = d->m_view->mapFromGlobal(he->pos());
+        const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
+        QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers());
+        QCoreApplication::sendEvent(d->m_view, &cloneEvent);
+        e->setAccepted(cloneEvent.isAccepted());
+        return;
+    }
+    default:
+        return;
+    }
 }
 
 void EffectQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
