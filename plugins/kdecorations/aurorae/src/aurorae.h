@@ -23,21 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVariant>
 #include <KCModule>
 
-class QOffscreenSurface;
-class QOpenGLContext;
-class QOpenGLFramebufferObject;
 class QQmlComponent;
 class QQmlContext;
 class QQmlEngine;
 class QQuickItem;
-class QQuickRenderControl;
-class QQuickWindow;
 
 class KConfigLoader;
 
 namespace KWin
 {
 class Borders;
+class EffectQuickView;
 }
 
 namespace Aurorae
@@ -78,11 +74,7 @@ private:
     void setupBorders(QQuickItem *item);
     void updateBorders();
     void updateBuffer();
-    QMouseEvent translatedMouseEvent(QMouseEvent *orig);
-    QScopedPointer<QOpenGLFramebufferObject> m_fbo;
-    QImage m_buffer;
     QRect m_contentRect; //the geometry of the part of the buffer that is not a shadow when buffer was created.
-    QPointer<QQuickWindow> m_view;
     QQuickItem *m_item = nullptr;
     QQmlContext *m_qmlContext = nullptr;
     KWin::Borders *m_borders;
@@ -90,10 +82,8 @@ private:
     KWin::Borders *m_extendedBorders;
     KWin::Borders *m_padding;
     QString m_themeName;
-    QQuickRenderControl *m_renderControl = nullptr;
-    QScopedPointer<QTimer> m_updateTimer;
-    QScopedPointer<QOpenGLContext> m_context;
-    QScopedPointer<QOffscreenSurface> m_offscreenSurface;
+
+    KWin::EffectQuickView *m_view;
     QElapsedTimer m_doubleClickTimer;
 };
 

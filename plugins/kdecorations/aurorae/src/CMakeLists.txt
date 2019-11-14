@@ -17,6 +17,7 @@ set_target_properties(kwin5_aurorae PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE
 
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
+    kwineffects
     KF5::ConfigWidgets
     KF5::I18n
     KF5::Package
