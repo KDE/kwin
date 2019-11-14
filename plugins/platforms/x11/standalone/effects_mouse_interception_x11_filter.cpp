@@ -39,6 +39,42 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
     if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
         auto *me = reinterpret_cast<xcb_button_press_event_t*>(event);
         if (m_window == me->event) {
+            const bool isWheel = me->detail >= 4 || me->detail <= 7;
+            if (isWheel) {
+                if (eventType != XCB_BUTTON_PRESS) {
+                    return false;
+                }
+                QPoint angleDelta;
+                switch (me->detail) {
+                case 4:
+                    angleDelta.setY(120);
+                    break;
+                case 5:
+                    angleDelta.setY(-120);
+                    break;
+                case 6:
+                    angleDelta.setX(120);
+                    break;
+                case 7:
+                    angleDelta.setX(-120);
+                    break;
+                }
+
+                const Qt::MouseButtons buttons = x11ToQtMouseButtons(me->state);
+                const Qt::KeyboardModifiers modifiers = x11ToQtKeyboardModifiers(me->state);
+
+                if (modifiers & Qt::AltModifier) {
+                    angleDelta = angleDelta.transposed();
+                }
+
+                if (angleDelta.y()) {
+                    QWheelEvent ev(QPoint(me->event_x, me->event_y), angleDelta.y(), buttons, modifiers, Qt::Vertical);
+                    return m_effects->checkInputWindowEvent(&ev);
+                } else if (angleDelta.x()) {
+                    QWheelEvent ev(QPoint(me->event_x, me->event_y), angleDelta.x(), buttons, modifiers, Qt::Horizontal);
+                    return m_effects->checkInputWindowEvent(&ev);
+                }
+            }
             const Qt::MouseButton button = x11ToQtMouseButton(me->detail);
             Qt::MouseButtons buttons = x11ToQtMouseButtons(me->state);
             const QEvent::Type type = (eventType == XCB_BUTTON_PRESS) ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease;
