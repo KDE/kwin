@@ -64,7 +64,13 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
                 const Qt::KeyboardModifiers modifiers = x11ToQtKeyboardModifiers(me->state);
 
                 if (modifiers & Qt::AltModifier) {
-                    angleDelta = angleDelta.transposed();
+                    int x = angleDelta.x();
+                    int y = angleDelta.y();
+
+                    angleDelta.setX(y);
+                    angleDelta.setY(x);
+                    // After Qt > 5.14 simplify to
+                    // angleDelta = angleDelta.transposed();
                 }
 
                 if (angleDelta.y()) {
