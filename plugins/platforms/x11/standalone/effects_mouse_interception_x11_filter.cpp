@@ -39,7 +39,7 @@ bool EffectsMouseInterceptionX11Filter::event(xcb_generic_event_t *event)
     if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
         auto *me = reinterpret_cast<xcb_button_press_event_t*>(event);
         if (m_window == me->event) {
-            const bool isWheel = me->detail >= 4 || me->detail <= 7;
+            const bool isWheel = me->detail >= 4 && me->detail <= 7;
             if (isWheel) {
                 if (eventType != XCB_BUTTON_PRESS) {
                     return false;
