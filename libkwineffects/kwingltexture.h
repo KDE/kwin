@@ -115,7 +115,6 @@ public:
 
     /** @short
      * Make the texture fully transparent
-     * Warning: this clobbers the current framebuffer binding except on fglrx
      */
     void clear();
     bool isDirty() const;

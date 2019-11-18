@@ -210,7 +210,7 @@ public:
     }
 
     bool isTrustedOrigin(KWayland::Server::ClientConnection *client) const {
-        const auto fullPathSha = sha256(QStringLiteral("/proc/") + QString::number(client->processId()) + QLatin1String("/root") + client->executablePath());
+        const auto fullPathSha = sha256(client->executablePath());
         const auto localSha = sha256(QLatin1String("/proc/") + QString::number(client->processId()) + QLatin1String("/exe"));
         const bool trusted = !localSha.isEmpty() && fullPathSha == localSha;
 
