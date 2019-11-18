@@ -2621,7 +2621,7 @@ void AbstractClient::finishMoveResize(bool cancel)
             const bool restoreV = maximizeMode() == MaximizeVertical &&
                                     moveResizeGeom.height() != initialMoveResizeGeometry().height();
             if (restoreH || restoreV) {
-                changeMaximize(restoreV, restoreH, false);
+                changeMaximize(restoreH, restoreV, false);
             }
         }
         setFrameGeometry(moveResizeGeom);
