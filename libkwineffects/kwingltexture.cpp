@@ -516,11 +516,15 @@ void GLTexture::clear()
 
     if (GLTexturePrivate::s_fbo) {
         // Clear the texture
-        glBindFramebuffer(GL_FRAMEBUFFER, GLTexturePrivate::s_fbo);
+        GLuint previousFramebuffer = 0;
+        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&previousFramebuffer));
+        if (GLTexturePrivate::s_fbo != previousFramebuffer)
+            glBindFramebuffer(GL_FRAMEBUFFER, GLTexturePrivate::s_fbo);
         glClearColor(0, 0, 0, 0);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d->m_texture, 0);
         glClear(GL_COLOR_BUFFER_BIT);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        if (GLTexturePrivate::s_fbo != previousFramebuffer)
+            glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer);
     } else {
         if (const int size = width()*height()) {
             uint32_t *buffer = new uint32_t[size];
