@@ -188,6 +188,11 @@ Decoration {
             topMargin: parent.padding.top + parent.borders.top - margins.top
             bottomMargin: parent.padding.bottom + parent.borders.bottom - margins.bottom
         }
+        visible: parent.borders.left > fixedMargins.left
+            && parent.borders.right > fixedMargins.right
+            && parent.borders.top > fixedMargins.top
+            && parent.borders.bottom > fixedMargins.bottom
+
         imagePath: backgroundSvg.imagePath
         prefix: "innerborder"
         opacity: (decoration.client.active && !decoration.client.maximized && backgroundSvg.supportsInnerBorder) ? 1 : 0
@@ -207,6 +212,12 @@ Decoration {
             topMargin: parent.padding.top + parent.borders.top - margins.top
             bottomMargin: parent.padding.bottom + parent.borders.bottom - margins.bottom
         }
+
+        visible: parent.borders.left > fixedMargins.left
+            && parent.borders.right > fixedMargins.right
+            && parent.borders.top > fixedMargins.top
+            && parent.borders.bottom > fixedMargins.bottom
+
         imagePath: backgroundSvg.imagePath
         prefix: "innerborder-inactive"
         opacity: (!decoration.client.active && !decoration.client.maximized && backgroundSvg.supportsInnerBorderInactive) ? 1 : 0

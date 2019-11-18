@@ -208,63 +208,69 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
             break;
         }
     } else {
+        int minMargin;
+        int maxMargin;
         switch (d->borderSize) {
+        case KDecoration2::BorderSize::NoSides:
         case KDecoration2::BorderSize::Tiny:
-            // TODO: this looks wrong
-            if (isCompositingActive()) {
-                left = qMin(0, (int)left - d->themeConfig.borderLeft() - d->themeConfig.paddingLeft());
-                right = qMin(0, (int)right - d->themeConfig.borderRight() - d->themeConfig.paddingRight());
-                bottom = qMin(0, (int)bottom - d->themeConfig.borderBottom() - d->themeConfig.paddingBottom());
-            } else {
-                left = qMin(0, (int)left - d->themeConfig.borderLeft());
-                right = qMin(0, (int)right - d->themeConfig.borderRight());
-                bottom = qMin(0, (int)bottom - d->themeConfig.borderBottom());
-            }
-            break;
-        case KDecoration2::BorderSize::Large:
-            left = right = bottom = top = 4;
-            break;
-        case KDecoration2::BorderSize::VeryLarge:
-            left = right = bottom = top = 8;
-            break;
-        case KDecoration2::BorderSize::Huge:
-            left = right = bottom = top = 12;
-            break;
-        case KDecoration2::BorderSize::VeryHuge:
-            left = right = bottom = top = 23;
-            break;
-        case KDecoration2::BorderSize::Oversized:
-            left = right = bottom = top = 36;
+            minMargin = 1;
+            maxMargin = 4;
             break;
         case KDecoration2::BorderSize::Normal:
+            minMargin = 4;
+            maxMargin = 6;
+            break;
+        case KDecoration2::BorderSize::Large:
+            minMargin = 6;
+            maxMargin = 8;
+            break;
+        case KDecoration2::BorderSize::VeryLarge:
+            minMargin = 8;
+            maxMargin = 12;
+            break;
+        case KDecoration2::BorderSize::Huge:
+            minMargin = 12;
+            maxMargin = 20;
+            break;
+        case KDecoration2::BorderSize::VeryHuge:
+            minMargin = 23;
+            maxMargin = 30;
+            break;
+        case KDecoration2::BorderSize::Oversized:
+            minMargin = 36;
+            maxMargin = 48;
+            break;
         default:
-            left = right = bottom = top = 0;
+            minMargin = 0;
+            maxMargin = 0;
         }
+        
+        left = qBound(minMargin, d->themeConfig.borderLeft(), maxMargin);
+        right = qBound(minMargin, d->themeConfig.borderRight(), maxMargin);
+        bottom = qBound(minMargin, d->themeConfig.borderBottom(), maxMargin);
+
+        if (d->borderSize == KDecoration2::BorderSize::None) {
+            left = 0;
+            right = 0;
+            bottom = 0;
+        } else if (d->borderSize == KDecoration2::BorderSize::NoSides) {
+            left = 0;
+            right = 0;
+        }
+
         const qreal title = titleHeight + d->themeConfig.titleEdgeTop() + d->themeConfig.titleEdgeBottom();
         switch ((DecorationPosition)d->themeConfig.decorationPosition()) {
         case DecorationTop:
-            left   += d->themeConfig.borderLeft();
-            right  += d->themeConfig.borderRight();
-            bottom += d->themeConfig.borderBottom();
             top     = title;
             break;
         case DecorationBottom:
-            left   += d->themeConfig.borderLeft();
-            right  += d->themeConfig.borderRight();
             bottom  = title;
-            top    += d->themeConfig.borderTop();
             break;
         case DecorationLeft:
             left    = title;
-            right  += d->themeConfig.borderRight();
-            bottom += d->themeConfig.borderBottom();
-            top    += d->themeConfig.borderTop();
             break;
         case DecorationRight:
-            left   += d->themeConfig.borderLeft();
             right   = title;
-            bottom += d->themeConfig.borderBottom();
-            top    += d->themeConfig.borderTop();
             break;
         default:
             left = right = bottom = top = 0;

@@ -348,14 +348,11 @@ void Decoration::init()
     trackBorders(m_borders);
     trackBorders(m_maximizedBorders);
     if (m_extendedBorders) {
-        auto updateExtendedBorders = [this] {
-            setResizeOnlyBorders(*m_extendedBorders);
-        };
         updateExtendedBorders();
-        connect(m_extendedBorders, &KWin::Borders::leftChanged, this, updateExtendedBorders);
-        connect(m_extendedBorders, &KWin::Borders::rightChanged, this, updateExtendedBorders);
-        connect(m_extendedBorders, &KWin::Borders::topChanged, this, updateExtendedBorders);
-        connect(m_extendedBorders, &KWin::Borders::bottomChanged, this, updateExtendedBorders);
+        connect(m_extendedBorders, &KWin::Borders::leftChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &KWin::Borders::rightChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &KWin::Borders::topChanged, this, &Decoration::updateExtendedBorders);
+        connect(m_extendedBorders, &KWin::Borders::bottomChanged, this, &Decoration::updateExtendedBorders);
     }
     connect(client().data(), &KDecoration2::DecoratedClient::maximizedChanged, this, &Decoration::updateBorders, Qt::QueuedConnection);
     connect(client().data(), &KDecoration2::DecoratedClient::shadedChanged, this, &Decoration::updateBorders);
@@ -410,6 +407,8 @@ void Decoration::updateBorders()
         return;
     }
     setBorders(*b);
+
+    updateExtendedBorders();
 }
 
 void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
@@ -554,6 +553,31 @@ void Decoration::installTitleItem(QQuickItem *item)
     connect(item, &QQuickItem::heightChanged, this, update);
     connect(item, &QQuickItem::xChanged, this, update);
     connect(item, &QQuickItem::yChanged, this, update);
+}
+
+void Decoration::updateExtendedBorders()
+{
+    // extended sizes
+    const int extSize = settings()->largeSpacing();
+    int extLeft = m_extendedBorders->left();
+    int extRight = m_extendedBorders->right();
+    int extBottom = m_extendedBorders->bottom();
+
+    if (settings()->borderSize() == KDecoration2::BorderSize::None) {
+        if (!client().data()->isMaximizedHorizontally()) {
+            extLeft = qMax(m_extendedBorders->left(), extSize);
+            extRight = qMax(m_extendedBorders->right(), extSize);
+        }
+        if (!client().data()->isMaximizedVertically()) {
+            extBottom = qMax(m_extendedBorders->bottom(), extSize);
+        }
+
+    } else if (settings()->borderSize() == KDecoration2::BorderSize::NoSides && !client().data()->isMaximizedHorizontally() ) {
+        extLeft = qMax(m_extendedBorders->left(), extSize);
+        extRight = qMax(m_extendedBorders->right(), extSize);
+    }
+
+    setResizeOnlyBorders(QMargins(extLeft, 0, extRight, extBottom));
 }
 
 void Decoration::updateBuffer()
