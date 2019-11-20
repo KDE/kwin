@@ -53,6 +53,7 @@ Comment[sk]=Nastavenie spôsobu aktivácie okien
 Comment[sv]=Anpassa policy för fönsteraktivering
 Comment[uk]=Налаштовування правил активації вікон
 Comment[x-test]=xxConfigure window activation policyxx
+Comment[zh_CN]=配置窗口激活策略
 Comment[zh_TW]=設定視窗啟用策略
 
 X-KDE-Keywords=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
@@ -75,4 +76,5 @@ X-KDE-Keywords[sk]=zameranie,umiestnenie,automatické zdvihnutie,zdvihnutie,klik
 X-KDE-Keywords[sv]=fokus,fönsterbeteende,animering,höj,höj automatiskt,höj med klick,CDE,alt-tab,alla skrivbord,fokus följer musen,förhindra fokus,stjäla fokus,fokusprincip,fönsterfokusbeteende,fönsterskärmbeteende
 X-KDE-Keywords[uk]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior,фокус,фокусування,автопідняття,підняття,клацання,клавіатура,альт-таб,всі стільниці,фокус за мишею,запобігання,перехід фокуса,правила фокусування,поведінка вікон
 X-KDE-Keywords[x-test]=xxfocusxx,xxauto raisexx,xxraisexx,xxclick raisexx,xxkeyboardxx,xxCDExx,xxalt-tabxx,xxall desktopxx,xxfocus follows mousexx,xxfocus preventionxx,xxfocus stealingxx,xxfocus policyxx,xxwindow focus behaviorxx,xxwindow screen behaviorxx
+X-KDE-Keywords[zh_CN]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior,焦点,聚焦,自动升起,升起,点击升起,键盘,全部桌面,焦点跟随鼠标,偷取焦点,焦点策略,窗口焦点行为,窗口屏幕行为
 X-KDE-Keywords[zh_TW]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
