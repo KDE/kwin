@@ -25,6 +25,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-xdg-output-server-protocol.h>
 
+#include <QHash>
+
 namespace KWayland
 {
 namespace Server
