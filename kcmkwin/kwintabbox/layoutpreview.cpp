@@ -151,15 +151,15 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
     }
     switch (role) {
     case Qt::DisplayRole:
-    case Qt::UserRole:
+    case CaptionRole:
         return m_services.at(index.row())->name();
-    case Qt::UserRole+1:
+    case MinimizedRole:
         return false;
-    case Qt::UserRole+2:
+    case DesktopNameRole:
         return i18nc("An example Desktop Name", "Desktop 1");
-    case Qt::UserRole+3:
+    case IconRole:
         return m_services.at(index.row())->icon();
-    case Qt::UserRole+4:
+    case WindowIdRole:
         const auto s = m_services.at(index.row());
         if (s == m_browser) {
             return WindowThumbnailItem::Konqueror;
@@ -195,13 +195,12 @@ int ExampleClientModel::rowCount(const QModelIndex &parent) const
 
 QHash<int, QByteArray> ExampleClientModel::roleNames() const
 {
-    // FIXME: Use an enum.
     return {
-        { Qt::UserRole, QByteArrayLiteral("caption") },
-        { Qt::UserRole + 1, QByteArrayLiteral("minimized") },
-        { Qt::UserRole + 2, QByteArrayLiteral("desktopName") },
-        { Qt::UserRole + 3, QByteArrayLiteral("icon") },
-        { Qt::UserRole + 4, QByteArrayLiteral("windowId") },
+        { CaptionRole, QByteArrayLiteral("caption") },
+        { MinimizedRole, QByteArrayLiteral("minimized") },
+        { DesktopNameRole, QByteArrayLiteral("desktopName") },
+        { IconRole, QByteArrayLiteral("icon") },
+        { WindowIdRole, QByteArrayLiteral("windowId") },
     };
 }
 
