@@ -162,13 +162,6 @@ public:
     virtual QSize physicalSize() const;
 
     /**
-     * Returns the orientation of this output.
-     *
-     * Default implementation returns Qt::PrimaryOrientation.
-     */
-    virtual Qt::ScreenOrientation orientation() const;
-
-    /**
      * Returns the size of the gamma lookup table.
      *
      * Default implementation returns 0.

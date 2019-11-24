@@ -128,7 +128,8 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-int orientationToRotation(Qt::ScreenOrientation orientation)
+// TODO: Respect OR combinations of values
+int orientationToRotation(Qt::ScreenOrientations orientation)
 {
     switch (orientation) {
     case Qt::PrimaryOrientation:
@@ -182,6 +183,8 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
     const QMatrix4x4 hotspotMatrix = matrixDisplay(m_backend->softwareCursor().size());
 
     QPoint p = globalPos - AbstractWaylandOutput::globalPos();
+
+    // TODO: Respect OR combinations of values
     switch (orientation()) {
     case Qt::PrimaryOrientation:
     case Qt::LandscapeOrientation:

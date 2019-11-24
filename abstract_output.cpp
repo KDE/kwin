@@ -103,11 +103,6 @@ QSize AbstractOutput::physicalSize() const
     return QSize();
 }
 
-Qt::ScreenOrientation AbstractOutput::orientation() const
-{
-    return Qt::PrimaryOrientation;
-}
-
 int AbstractOutput::gammaRampSize() const
 {
     return 0;

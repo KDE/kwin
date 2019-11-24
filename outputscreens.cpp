@@ -95,14 +95,6 @@ float OutputScreens::refreshRate(int screen) const
     return 60.0;
 }
 
-Qt::ScreenOrientation OutputScreens::orientation(int screen) const
-{
-    if (AbstractOutput *output = findOutput(screen)) {
-        return output->orientation();
-    }
-    return Qt::PrimaryOrientation;
-}
-
 void OutputScreens::updateCount()
 {
     setCount(m_platform->enabledOutputs().size());

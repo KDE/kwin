@@ -308,4 +308,29 @@ QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
     return size;
 }
 
+Qt::ScreenOrientations AbstractWaylandOutput::orientation() const
+{
+    const DeviceInterface::Transform transform = m_waylandOutputDevice->transform();
+
+    switch (transform) {
+    case DeviceInterface::Transform::Rotated90:
+        return Qt::PortraitOrientation;
+    case DeviceInterface::Transform::Rotated180:
+        return Qt::InvertedLandscapeOrientation;
+    case DeviceInterface::Transform::Rotated270:
+        return Qt::InvertedPortraitOrientation;
+    case DeviceInterface::Transform::Flipped:
+        return Qt::LandscapeOrientation | Qt::InvertedPortraitOrientation;
+    case DeviceInterface::Transform::Flipped90:
+        return Qt::PortraitOrientation | Qt::InvertedLandscapeOrientation;
+    case DeviceInterface::Transform::Flipped180:
+        return Qt::InvertedLandscapeOrientation | Qt::InvertedPortraitOrientation;
+    case DeviceInterface::Transform::Flipped270:
+        return Qt::PortraitOrientation | Qt::InvertedLandscapeOrientation |
+                Qt::InvertedPortraitOrientation;
+    default:
+        return Qt::LandscapeOrientation;
+    }
+}
+
 }

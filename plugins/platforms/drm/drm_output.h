@@ -150,7 +150,7 @@ private:
     bool m_modesetRequested = true;
 
     struct {
-        Qt::ScreenOrientation orientation;
+        Qt::ScreenOrientations orientation;
         drmModeModeInfo mode;
         DrmPlane::Transformations planeTransformations;
         QPoint globalPos;
