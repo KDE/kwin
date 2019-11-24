@@ -107,7 +107,7 @@ QPoint WindowSystem::desktopToViewport(int desktop, bool absolute)
     return QPoint();
 }
 
-#ifndef KWINDOWSYSTEM_NO_DEPRECATED
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
 WId WindowSystem::groupLeader(WId window)
 {
     Q_UNUSED(window)
@@ -287,7 +287,7 @@ QList< WId > WindowSystem::stackingOrder()
     return {};
 }
 
-#ifndef KWINDOWSYSTEM_NO_DEPRECATED
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
 WId WindowSystem::transientFor(WId window)
 {
     Q_UNUSED(window)
