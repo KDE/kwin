@@ -70,9 +70,6 @@ public:
      */
     QRect geometry() const override;
     QSize physicalSize() const override;
-    Qt::ScreenOrientation orientation() const override {
-        return m_orientation;
-    }
 
     /**
      * Current refresh rate in 1/ms.
@@ -119,9 +116,6 @@ protected:
 
     QPoint globalPos() const;
 
-    void setOrientation(Qt::ScreenOrientation set) {
-        m_orientation = set;
-    }
     bool internal() const {
         return m_internal;
     }
@@ -147,6 +141,7 @@ protected:
 
     void setWaylandMode(const QSize &size, int refreshRate);
 
+    void setTransform(KWayland::Server::OutputDeviceInterface::Transform transform);
     QSize orientateSize(const QSize &size) const;
 
 private:
@@ -159,7 +154,6 @@ private:
 
     KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
 
-    Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     bool m_internal = false;
     bool m_supportsDpms = false;
 };

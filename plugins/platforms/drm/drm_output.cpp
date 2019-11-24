@@ -640,83 +640,49 @@ bool DrmOutput::dpmsLegacyApply()
 
 // TODO: Rotation is currently broken in the DRM backend for 90° and 270°. Disable all rotation for
 // now to not break user setups until it is possible again.
-#if 0
+#if 1
 void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
 {
-    waylandOutputDevice()->setTransform(transform);
     using KWayland::Server::OutputDeviceInterface;
-    using KWayland::Server::OutputInterface;
-    auto wlOutput = waylandOutput();
 
     switch (transform) {
     case OutputDeviceInterface::Transform::Normal:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
         }
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Normal);
-        }
-        setOrientation(Qt::PrimaryOrientation);
         break;
     case OutputDeviceInterface::Transform::Rotated90:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate90);
         }
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Rotated90);
-        }
-        setOrientation(Qt::PortraitOrientation);
         break;
     case OutputDeviceInterface::Transform::Rotated180:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate180);
         }
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Rotated180);
-        }
-        setOrientation(Qt::InvertedLandscapeOrientation);
         break;
     case OutputDeviceInterface::Transform::Rotated270:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate270);
         }
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Rotated270);
-        }
-        setOrientation(Qt::InvertedPortraitOrientation);
         break;
     case OutputDeviceInterface::Transform::Flipped:
         // TODO: what is this exactly?
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Flipped);
-        }
         break;
     case OutputDeviceInterface::Transform::Flipped90:
         // TODO: what is this exactly?
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Flipped90);
-        }
         break;
     case OutputDeviceInterface::Transform::Flipped180:
         // TODO: what is this exactly?
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Flipped180);
-        }
         break;
     case OutputDeviceInterface::Transform::Flipped270:
         // TODO: what is this exactly?
-        if (wlOutput) {
-            wlOutput->setTransform(OutputInterface::Transform::Flipped270);
-        }
         break;
     }
     m_modesetRequested = true;
     // the cursor might need to get rotated
     updateCursor();
     showCursor();
-
-    // TODO: are these calls not enough in updateMode already?
-    setWaylandMode();
 }
 #else
 void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
@@ -872,7 +838,10 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         // go back to previous state
         if (m_lastWorkingState.valid) {
             m_mode = m_lastWorkingState.mode;
-            setOrientation(m_lastWorkingState.orientation);
+
+            // TODO: Add API back to set orientation from backend
+//            setOrientation(m_lastWorkingState.orientation);
+
             setGlobalPos(m_lastWorkingState.globalPos);
             if (m_primaryPlane) {
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);

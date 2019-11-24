@@ -113,6 +113,44 @@ void AbstractWaylandOutput::setScale(qreal scale)
     }
 }
 
+using DeviceInterface = KWayland::Server::OutputDeviceInterface;
+
+KWayland::Server::OutputInterface::Transform toOutputTransform(DeviceInterface::Transform transform)
+{
+    using Transform = DeviceInterface::Transform;
+    using OutputTransform = KWayland::Server::OutputInterface::Transform;
+
+    switch (transform) {
+    case Transform::Rotated90:
+        return OutputTransform::Rotated90;
+    case Transform::Rotated180:
+        return OutputTransform::Rotated180;
+    case Transform::Rotated270:
+        return OutputTransform::Rotated270;
+    case Transform::Flipped:
+        return OutputTransform::Flipped;
+    case Transform::Flipped90:
+        return OutputTransform::Flipped90;
+    case Transform::Flipped180:
+        return OutputTransform::Flipped180;
+    case Transform::Flipped270:
+        return OutputTransform::Flipped270;
+    default:
+        return OutputTransform::Normal;
+    }
+}
+
+void AbstractWaylandOutput::setTransform(DeviceInterface::Transform transform)
+{
+    m_waylandOutputDevice->setTransform(transform);
+
+    if (isEnabled()) {
+        m_waylandOutput->setTransform(toOutputTransform(transform));
+        m_xdgOutput->setLogicalSize(pixelSize() / scale());
+        m_xdgOutput->done();
+    }
+}
+
 void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet *changeSet)
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
@@ -128,6 +166,7 @@ void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet
     if (changeSet->transformChanged()) {
         qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changeSet->transform());
         transform(changeSet->transform());
+        setTransform(changeSet->transform());
         emitModeChanged = true;
     }
     if (changeSet->positionChanged()) {
@@ -145,8 +184,6 @@ void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet
         emit modeChanged();
     }
 }
-
-using DeviceInterface = KWayland::Server::OutputDeviceInterface;
 
 bool AbstractWaylandOutput::isEnabled() const
 {
@@ -262,7 +299,10 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
 {
-    if (m_orientation == Qt::PortraitOrientation || m_orientation == Qt::InvertedPortraitOrientation) {
+    using Transform = DeviceInterface::Transform;
+    const Transform transform = m_waylandOutputDevice->transform();
+    if (transform == Transform::Rotated90 || transform == Transform::Rotated270 ||
+            transform == Transform::Flipped90 || transform == Transform::Flipped270) {
         return size.transposed();
     }
     return size;
