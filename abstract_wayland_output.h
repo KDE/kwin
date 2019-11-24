@@ -141,7 +141,7 @@ protected:
 
     void setWaylandMode(const QSize &size, int refreshRate);
 
-    void setTransform(KWayland::Server::OutputDeviceInterface::Transform transform);
+    void setOrientation(Qt::ScreenOrientations orientation);
     QSize orientateSize(const QSize &size) const;
 
     /**
@@ -158,6 +158,8 @@ protected:
 private:
     void createWaylandOutput();
     void createXdgOutput();
+
+    void setTransform(KWayland::Server::OutputDeviceInterface::Transform transform);
 
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
     QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;

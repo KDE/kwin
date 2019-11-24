@@ -841,10 +841,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         // go back to previous state
         if (m_lastWorkingState.valid) {
             m_mode = m_lastWorkingState.mode;
-
-            // TODO: Add API back to set orientation from backend
-//            setOrientation(m_lastWorkingState.orientation);
-
+            setOrientation(m_lastWorkingState.orientation);
             setGlobalPos(m_lastWorkingState.globalPos);
             if (m_primaryPlane) {
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
