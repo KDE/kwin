@@ -128,18 +128,21 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-// TODO: Respect OR combinations of values
-int orientationToRotation(Qt::ScreenOrientations orientation)
+// TODO: Do we need to handle the flipped cases differently?
+int transformToRotation(DrmOutput::Transform transform)
 {
-    switch (orientation) {
-    case Qt::PrimaryOrientation:
-    case Qt::LandscapeOrientation:
+    switch (transform) {
+    case DrmOutput::Transform::Normal:
+    case DrmOutput::Transform::Flipped:
         return 0;
-    case Qt::InvertedPortraitOrientation:
+    case DrmOutput::Transform::Rotated90:
+    case DrmOutput::Transform::Flipped90:
         return 90;
-    case Qt::InvertedLandscapeOrientation:
+    case DrmOutput::Transform::Rotated180:
+    case DrmOutput::Transform::Flipped180:
         return 180;
-    case Qt::PortraitOrientation:
+    case DrmOutput::Transform::Rotated270:
+    case DrmOutput::Transform::Flipped270:
         return 270;
     }
     Q_UNREACHABLE();
@@ -149,7 +152,7 @@ int orientationToRotation(Qt::ScreenOrientations orientation)
 QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 {
     QMatrix4x4 matrix;
-    const int angle = orientationToRotation(orientation());
+    const int angle = transformToRotation(transform());
     if (angle) {
         const QSize center = s / 2;
 
@@ -184,20 +187,25 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
 
     QPoint p = globalPos - AbstractWaylandOutput::globalPos();
 
-    // TODO: Respect OR combinations of values
-    switch (orientation()) {
-    case Qt::PrimaryOrientation:
-    case Qt::LandscapeOrientation:
+    // TODO: Do we need to handle the flipped cases differently?
+    switch (transform()) {
+    case Transform::Normal:
+    case Transform::Flipped:
         break;
-    case Qt::PortraitOrientation:
+    case Transform::Rotated90:
+    case Transform::Flipped90:
         p = QPoint(p.y(), pixelSize().height() - p.x());
         break;
-    case Qt::InvertedPortraitOrientation:
+    case Transform::Rotated270:
+    case Transform::Flipped270:
         p = QPoint(pixelSize().width() - p.y(), p.x());
         break;
-    case Qt::InvertedLandscapeOrientation:
+    case Transform::Rotated180:
+    case Transform::Flipped180:
         p = QPoint(pixelSize().width() - p.x(), pixelSize().height() - p.y());
         break;
+    default:
+        Q_UNREACHABLE();
     }
     p *= scale();
     p -= hotspotMatrix.map(m_backend->softwareCursorHotspot());
@@ -641,44 +649,39 @@ bool DrmOutput::dpmsLegacyApply()
     return true;
 }
 
-// TODO: Rotation is currently broken in the DRM backend for 90° and 270°. Disable all rotation for
-// now to not break user setups until it is possible again.
-#if 1
-void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
+void DrmOutput::updateTransform(Transform transform)
 {
-    using KWayland::Server::OutputDeviceInterface;
-
     switch (transform) {
-    case OutputDeviceInterface::Transform::Normal:
+    case Transform::Normal:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
         }
         break;
-    case OutputDeviceInterface::Transform::Rotated90:
+    case Transform::Rotated90:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate90);
         }
         break;
-    case OutputDeviceInterface::Transform::Rotated180:
+    case Transform::Rotated180:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate180);
         }
         break;
-    case OutputDeviceInterface::Transform::Rotated270:
+    case Transform::Rotated270:
         if (m_primaryPlane) {
             m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate270);
         }
         break;
-    case OutputDeviceInterface::Transform::Flipped:
+    case Transform::Flipped:
         // TODO: what is this exactly?
         break;
-    case OutputDeviceInterface::Transform::Flipped90:
+    case Transform::Flipped90:
         // TODO: what is this exactly?
         break;
-    case OutputDeviceInterface::Transform::Flipped180:
+    case Transform::Flipped180:
         // TODO: what is this exactly?
         break;
-    case OutputDeviceInterface::Transform::Flipped270:
+    case Transform::Flipped270:
         // TODO: what is this exactly?
         break;
     }
@@ -687,12 +690,6 @@ void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform tra
     updateCursor();
     showCursor();
 }
-#else
-void DrmOutput::transform(KWayland::Server::OutputDeviceInterface::Transform transform)
-{
-    Q_UNUSED(transform)
-}
-#endif
 
 void DrmOutput::updateMode(int modeIndex)
 {
@@ -841,7 +838,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         // go back to previous state
         if (m_lastWorkingState.valid) {
             m_mode = m_lastWorkingState.mode;
-            setOrientation(m_lastWorkingState.orientation);
+            setTransform(m_lastWorkingState.transform);
             setGlobalPos(m_lastWorkingState.globalPos);
             if (m_primaryPlane) {
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
@@ -865,7 +862,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
     if (wasModeset) {
         // store current mode set as new good state
         m_lastWorkingState.mode = m_mode;
-        m_lastWorkingState.orientation = orientation();
+        m_lastWorkingState.transform = transform();
         m_lastWorkingState.globalPos = globalPos();
         if (m_primaryPlane) {
             m_lastWorkingState.planeTransformations = m_primaryPlane->transformation();
@@ -1067,29 +1064,29 @@ void DrmOutput::automaticRotation()
     }
     const auto supportedTransformations = m_primaryPlane->supportedTransformations();
     const auto requestedTransformation = screens()->orientationSensor()->orientation();
-    using KWayland::Server::OutputDeviceInterface;
-    OutputDeviceInterface::Transform newTransformation = OutputDeviceInterface::Transform::Normal;
+
+    Transform newTransformation = Transform::Normal;
     switch (requestedTransformation) {
     case OrientationSensor::Orientation::TopUp:
-        newTransformation = OutputDeviceInterface::Transform::Normal;
+        newTransformation = Transform::Normal;
         break;
     case OrientationSensor::Orientation::TopDown:
         if (!supportedTransformations.testFlag(DrmPlane::Transformation::Rotate180)) {
             return;
         }
-        newTransformation = OutputDeviceInterface::Transform::Rotated180;
+        newTransformation = Transform::Rotated180;
         break;
     case OrientationSensor::Orientation::LeftUp:
         if (!supportedTransformations.testFlag(DrmPlane::Transformation::Rotate90)) {
             return;
         }
-        newTransformation = OutputDeviceInterface::Transform::Rotated90;
+        newTransformation = Transform::Rotated90;
         break;
     case OrientationSensor::Orientation::RightUp:
         if (!supportedTransformations.testFlag(DrmPlane::Transformation::Rotate270)) {
             return;
         }
-        newTransformation = OutputDeviceInterface::Transform::Rotated270;
+        newTransformation = Transform::Rotated270;
         break;
     case OrientationSensor::Orientation::FaceUp:
     case OrientationSensor::Orientation::FaceDown:
@@ -1097,7 +1094,7 @@ void DrmOutput::automaticRotation()
         // unsupported
         return;
     }
-    transform(newTransformation);
+    setTransform(newTransformation);
     emit screens()->changed();
 }
 

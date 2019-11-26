@@ -56,6 +56,17 @@ class KWIN_EXPORT AbstractWaylandOutput : public AbstractOutput
 {
     Q_OBJECT
 public:
+    enum class Transform {
+        Normal,
+        Rotated90,
+        Rotated180,
+        Rotated270,
+        Flipped,
+        Flipped90,
+        Flipped180,
+        Flipped270
+    };
+
     explicit AbstractWaylandOutput(QObject *parent = nullptr);
     ~AbstractWaylandOutput() override;
 
@@ -135,13 +146,13 @@ protected:
     virtual void updateMode(int modeIndex) {
         Q_UNUSED(modeIndex);
     }
-    virtual void transform(KWayland::Server::OutputDeviceInterface::Transform transform) {
+    virtual void updateTransform(Transform transform) {
         Q_UNUSED(transform);
     }
 
     void setWaylandMode(const QSize &size, int refreshRate);
+    void setTransform(Transform transform);
 
-    void setOrientation(Qt::ScreenOrientations orientation);
     QSize orientateSize(const QSize &size) const;
 
     /**
@@ -153,7 +164,7 @@ protected:
      * - Rotated 270° and flipped along the horizontal axis is inv. portrait + inv. landscape +
      *   portrait
      */
-    Qt::ScreenOrientations orientation() const;
+    Transform transform() const;
 
 private:
     void createWaylandOutput();

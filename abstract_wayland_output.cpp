@@ -151,6 +151,18 @@ void AbstractWaylandOutput::setTransform(DeviceInterface::Transform transform)
     }
 }
 
+inline
+AbstractWaylandOutput::Transform toTransform(DeviceInterface::Transform deviceTransform)
+{
+    return static_cast<AbstractWaylandOutput::Transform>(deviceTransform);
+}
+
+inline
+DeviceInterface::Transform toDeviceTransform(AbstractWaylandOutput::Transform transform)
+{
+    return static_cast<DeviceInterface::Transform>(transform);
+}
+
 void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet *changeSet)
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
@@ -165,7 +177,7 @@ void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet
     }
     if (changeSet->transformChanged()) {
         qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changeSet->transform());
-        transform(changeSet->transform());
+        updateTransform(toTransform(changeSet->transform()));
         setTransform(changeSet->transform());
         emitModeChanged = true;
     }
@@ -308,70 +320,19 @@ QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
     return size;
 }
 
-DeviceInterface::Transform toTransform(Qt::ScreenOrientations orientation)
+void AbstractWaylandOutput::setTransform(Transform transform)
 {
-    if (orientation | Qt::LandscapeOrientation) {
-        if (orientation | Qt::InvertedPortraitOrientation) {
-            return DeviceInterface::Transform::Flipped;
-        }
-        return DeviceInterface::Transform::Normal;
-    }
-
-    if (orientation | Qt::PortraitOrientation) {
-        if (orientation | Qt::InvertedLandscapeOrientation) {
-            if (orientation | Qt::InvertedPortraitOrientation) {
-                return DeviceInterface::Transform::Flipped270;
-            }
-            return DeviceInterface::Transform::Flipped90;
-        }
-        return DeviceInterface::Transform::Rotated90;
-    }
-
-    if (orientation | Qt::InvertedLandscapeOrientation) {
-        return DeviceInterface::Transform::Rotated180;
-    }
-
-    if (orientation | Qt::InvertedPortraitOrientation) {
-        return DeviceInterface::Transform::Rotated270;
-    }
-
-    Q_ASSERT(orientation == Qt::PrimaryOrientation);
-    return DeviceInterface::Transform::Normal;
-}
-
-void AbstractWaylandOutput::setOrientation(Qt::ScreenOrientations orientation)
-{
-    const auto transform = toTransform(orientation);
-    if (transform == m_waylandOutputDevice->transform()) {
+    const auto deviceTransform = toDeviceTransform(transform);
+    if (deviceTransform == m_waylandOutputDevice->transform()) {
         return;
     }
-    setTransform(transform);
+    setTransform(deviceTransform);
     emit modeChanged();
 }
 
-Qt::ScreenOrientations AbstractWaylandOutput::orientation() const
+AbstractWaylandOutput::Transform AbstractWaylandOutput::transform() const
 {
-    const DeviceInterface::Transform transform = m_waylandOutputDevice->transform();
-
-    switch (transform) {
-    case DeviceInterface::Transform::Rotated90:
-        return Qt::PortraitOrientation;
-    case DeviceInterface::Transform::Rotated180:
-        return Qt::InvertedLandscapeOrientation;
-    case DeviceInterface::Transform::Rotated270:
-        return Qt::InvertedPortraitOrientation;
-    case DeviceInterface::Transform::Flipped:
-        return Qt::LandscapeOrientation | Qt::InvertedPortraitOrientation;
-    case DeviceInterface::Transform::Flipped90:
-        return Qt::PortraitOrientation | Qt::InvertedLandscapeOrientation;
-    case DeviceInterface::Transform::Flipped180:
-        return Qt::InvertedLandscapeOrientation | Qt::InvertedPortraitOrientation;
-    case DeviceInterface::Transform::Flipped270:
-        return Qt::PortraitOrientation | Qt::InvertedLandscapeOrientation |
-                Qt::InvertedPortraitOrientation;
-    default:
-        return Qt::LandscapeOrientation;
-    }
+    return static_cast<Transform>(m_waylandOutputDevice->transform());
 }
 
 }

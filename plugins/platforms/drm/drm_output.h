@@ -123,7 +123,7 @@ private:
     void updateMode(int modeIndex) override;
     void setWaylandMode();
 
-    void transform(KWayland::Server::OutputDeviceInterface::Transform transform) override;
+    void updateTransform(Transform transform) override;
     void automaticRotation();
 
     int gammaRampSize() const override;
@@ -150,7 +150,7 @@ private:
     bool m_modesetRequested = true;
 
     struct {
-        Qt::ScreenOrientations orientation;
+        Transform transform;
         drmModeModeInfo mode;
         DrmPlane::Transformations planeTransformations;
         QPoint globalPos;
