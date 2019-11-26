@@ -264,7 +264,7 @@ bool EglGbmBackend::initBufferConfigs()
 
     qCDebug(KWIN_DRM) << "EGL buffer configs count:" << count;
 
-    // loop through all configs, chosing the first one that has suitable format
+    // loop through all configs, choosing the first one that has suitable format
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat;
         // query some configuration parameters, to show in debug log

@@ -494,7 +494,7 @@ public:
     /**
      * The maximise mode requested by the server.
      * For X this always matches maximizeMode, for wayland clients it
-     * is asyncronous
+     * is asynchronous
      */
     virtual MaximizeMode requestedMaximizeMode() const;
     void maximize(MaximizeMode);

@@ -142,7 +142,7 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     }
     if (originSurface->client() != waylandServer()->xWaylandConnection()) {
         // focused surface client is not Xwayland - do not allow drag to start
-        // TODO: can we make this stronger (window id comparision)?
+        // TODO: can we make this stronger (window id comparison)?
         return;
     }
     if (!seat->isPointerButtonPressed(Qt::LeftButton)) {

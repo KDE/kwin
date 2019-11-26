@@ -1515,7 +1515,7 @@ public:
     IndexBuffer();
     ~IndexBuffer();
 
-    void accomodate(int count);
+    void accommodate(int count);
     void bind();
 
 private:
@@ -1541,7 +1541,7 @@ IndexBuffer::~IndexBuffer()
     glDeleteBuffers(1, &m_buffer);
 }
 
-void IndexBuffer::accomodate(int count)
+void IndexBuffer::accommodate(int count)
 {
     // Check if we need to grow the buffer.
     if (count <= m_count)
@@ -2162,7 +2162,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
             indexBuffer = new IndexBuffer;
 
         indexBuffer->bind();
-        indexBuffer->accomodate(count / 4);
+        indexBuffer->accommodate(count / 4);
 
         count = count * 6 / 4;
 

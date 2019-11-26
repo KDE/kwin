@@ -319,7 +319,7 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
         return false;
     }
 
-    // Dont't animate the outline because it looks very sick.
+    // Don't animate the outline because it looks very sick.
     if (w->isOutline()) {
         return false;
     }

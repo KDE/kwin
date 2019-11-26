@@ -619,7 +619,7 @@ void Manager::commitGammaRamps(int temperature)
                 qCWarning(KWIN_COLORCORRECTION).nospace() << "Committing Gamma Ramp failed for output " << o->name() <<
                          ". Trying " << (10 - m_failedCommitAttempts) << " times more.";
             } else {
-                // TODO: On multi monitor setups we could try to rollback earlier changes for already commited outputs
+                // TODO: On multi monitor setups we could try to rollback earlier changes for already committed outputs
                 qCWarning(KWIN_COLORCORRECTION) << "Gamma Ramp commit failed too often. Deactivating color correction for now.";
                 m_failedCommitAttempts = 0; // reset so we can try again later (i.e. after suspend phase or config change)
                 m_running = false;

@@ -1083,7 +1083,7 @@ void RuleBook::save()
 {
     m_updateTimer->stop();
     if (!m_config) {
-        qCWarning(KWIN_CORE) << "RuleBook::save invoked without prior invokation of RuleBook::load";
+        qCWarning(KWIN_CORE) << "RuleBook::save invoked without prior invocation of RuleBook::load";
         return;
     }
     QStringList groups = m_config->groupList();

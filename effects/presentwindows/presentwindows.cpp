@@ -1378,7 +1378,7 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
                 int xDiff = widthDiff / 2;  // Also move a bit in the direction of the enlarge, allows the
                 int yDiff = heightDiff / 2; // center windows to be enlarged if there is gaps on the side.
 
-                // heightDiff (and yDiff) will be re-computed after each successfull enlargement attempt
+                // heightDiff (and yDiff) will be re-computed after each successful enlargement attempt
                 // so that the error introduced in the window's aspect ratio is minimized
 
                 // Attempt enlarging to the top-right
