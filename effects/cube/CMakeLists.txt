@@ -20,7 +20,6 @@ target_link_libraries(kwin_cube_config
     KF5::I18n
     KF5::XmlGui
     KF5::KIOWidgets
-    KF5::Service
 )
 
 kcoreaddons_desktop_to_json(kwin_cube_config cube_config.desktop SERVICE_TYPES kcmodule.desktop)

@@ -11,7 +11,6 @@ target_link_libraries(kwin_thumbnailaside_config
     KF5::ConfigWidgets
     KF5::GlobalAccel
     KF5::I18n
-    KF5::Service
     KF5::XmlGui
 )
 

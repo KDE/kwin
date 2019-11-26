@@ -11,7 +11,6 @@ target_link_libraries(kwin_showfps_config
     KF5::Completion
     KF5::ConfigWidgets
     KF5::I18n
-    KF5::Service
     Qt5::DBus
 )
 

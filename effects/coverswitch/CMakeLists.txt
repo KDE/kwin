@@ -13,7 +13,6 @@ add_library(kwin_coverswitch_config MODULE ${kwin_coverswitch_config_SRCS})
 target_link_libraries(kwin_coverswitch_config
     KF5::ConfigWidgets
     KF5::I18n
-    KF5::Service
     Qt5::DBus
 )
 

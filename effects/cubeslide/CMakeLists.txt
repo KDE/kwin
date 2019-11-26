@@ -11,7 +11,6 @@ add_library(kwin_cubeslide_config MODULE ${kwin_cubeslide_config_SRCS})
 target_link_libraries(kwin_cubeslide_config
     KF5::ConfigWidgets
     KF5::I18n
-    KF5::Service
     kwineffects
 )
 
