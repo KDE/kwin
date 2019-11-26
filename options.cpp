@@ -673,9 +673,9 @@ void Options::setWindowsBlockCompositing(bool value)
 void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
 {
     if (glPreferBufferSwap == 'a') {
-        // buffer cpying is very fast with the nvidia blob
+        // buffer copying is very fast with the nvidia blob
         // but due to restrictions in DRI2 *incredibly* slow for all MESA drivers
-        // see http://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
+        // see https://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
         if (GLPlatform::instance()->driver() == Driver_NVidia)
             glPreferBufferSwap = CopyFrontBuffer;
         else if (GLPlatform::instance()->driver() != Driver_Unknown) // undetected, finally resolved when context is initialized

@@ -186,7 +186,7 @@ set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for i
 
 find_package(UDev)
 set_package_properties(UDev PROPERTIES
-    URL "http://www.freedesktop.org/software/systemd/libudev/"
+    URL "https://www.freedesktop.org/wiki/Software/systemd/"
     DESCRIPTION "Linux device library."
     TYPE REQUIRED
     PURPOSE "Required for input handling on Wayland."

@@ -191,7 +191,7 @@ static void convertFromGLImage(QImage &img, int w, int h)
 {
     // from QtOpenGL/qgl.cpp
     // Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies)
-    // see http://qt.gitorious.org/qt/qt/blobs/master/src/opengl/qgl.cpp
+    // see https://github.com/qt/qtbase/blob/dev/src/opengl/qgl.cpp
     if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
         // OpenGL gives RGBA; Qt wants ARGB
         uint *p = (uint*)img.bits();
