@@ -24,7 +24,6 @@
 // KConfigSkeleton
 
 #include <QMatrix4x4>
-#include <QLinkedList>
 #include <QWindow>
 
 #include <KWayland/Server/surface_interface.h>

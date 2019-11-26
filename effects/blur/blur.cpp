@@ -26,7 +26,6 @@
 
 #include <QGuiApplication>
 #include <QMatrix4x4>
-#include <QLinkedList>
 #include <QScreen> // for QGuiApplication
 #include <QTime>
 #include <QWindow>
