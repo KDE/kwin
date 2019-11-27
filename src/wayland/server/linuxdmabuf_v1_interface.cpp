@@ -428,10 +428,7 @@ V1Iface::Private::Private(V1Iface *q, Display *display)
 {
 }
 
-V1Iface::Private::~Private()
-{
-    delete impl;
-}
+V1Iface::Private::~Private() = default;
 
 void V1Iface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {

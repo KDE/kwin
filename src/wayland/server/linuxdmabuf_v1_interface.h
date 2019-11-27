@@ -146,6 +146,8 @@ public:
 
     /**
      * Sets the compositor implementation for the dmabuf interface.
+     *
+     * The ownership is not transferred by this call.
      */
     void setImpl(Impl *impl);
 
