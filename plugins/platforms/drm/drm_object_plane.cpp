@@ -106,18 +106,20 @@ bool DrmPlane::initProps()
         } else if (j == int(PropertyIndex::Rotation)) {
             initProp(j, properties.data(), rotationNames);
             m_supportedTransformations = Transformations();
-            auto testTransform = [j, this] (uint64_t value, Transformation t) {
+            auto testTransform = [j, this] (uint64_t value, Transformation t, const QString &name) {
                 if (propHasEnum(j, value)) {
+                    qCDebug(KWIN_DRM) << name;
                     m_supportedTransformations |= t;
                 }
             };
-            testTransform(0, Transformation::Rotate0);
-            testTransform(1, Transformation::Rotate90);
-            testTransform(2, Transformation::Rotate180);
-            testTransform(3, Transformation::Rotate270);
-            testTransform(4, Transformation::ReflectX);
-            testTransform(5, Transformation::ReflectY);
-            qCDebug(KWIN_DRM) << "Supported Transformations: " << m_supportedTransformations << " on plane " << m_id;
+            qCDebug(KWIN_DRM).nospace() << "Supported Transformations on plane " << m_id << ":";
+            testTransform(0, Transformation::Rotate0, "rotate-0");
+            testTransform(1, Transformation::Rotate90, "rotate-90");
+            testTransform(2, Transformation::Rotate180, "rotate-180");
+            testTransform(3, Transformation::Rotate270, "rotate-270");
+            testTransform(4, Transformation::ReflectX, "reflect-x-axis");
+            testTransform(5, Transformation::ReflectY, "reflect-y-axis");
+            qCDebug(KWIN_DRM) << "";
         } else {
             initProp(j, properties.data());
         }
