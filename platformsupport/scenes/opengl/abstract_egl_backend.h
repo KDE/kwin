@@ -39,6 +39,8 @@ class BufferInterface;
 namespace KWin
 {
 
+class EglDmabuf;
+
 class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
 {
     Q_OBJECT
@@ -85,6 +87,7 @@ private:
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLConfig m_config = nullptr;
     QList<QByteArray> m_clientExtensions;
+    EglDmabuf *m_dmaBuf = nullptr;
 };
 
 class KWIN_EXPORT AbstractEglTexture : public SceneOpenGLTexturePrivate

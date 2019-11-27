@@ -66,7 +66,10 @@ AbstractEglBackend::AbstractEglBackend()
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::unbindWaylandDisplay);
 }
 
-AbstractEglBackend::~AbstractEglBackend() = default;
+AbstractEglBackend::~AbstractEglBackend()
+{
+    delete m_dmaBuf;
+}
 
 void AbstractEglBackend::unbindWaylandDisplay()
 {
@@ -171,7 +174,8 @@ void AbstractEglBackend::initWayland()
         }
     }
 
-    EglDmabuf::factory(this);
+    Q_ASSERT(!m_dmaBuf);
+    m_dmaBuf = EglDmabuf::factory(this);
 }
 
 void AbstractEglBackend::initClientExtensions()

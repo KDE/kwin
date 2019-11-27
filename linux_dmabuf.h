@@ -60,7 +60,7 @@ public:
     using Flags = KWayland::Server::LinuxDmabufUnstableV1Interface::Flags;
 
     explicit LinuxDmabuf();
-    ~LinuxDmabuf();
+    ~LinuxDmabuf() override;
 
     KWayland::Server::LinuxDmabufUnstableV1Buffer *importBuffer(const QVector<Plane> &planes,
                                                                 uint32_t format,
