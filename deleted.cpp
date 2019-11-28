@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -95,7 +96,6 @@ void Deleted::copyToDeleted(Toplevel* c)
     Q_ASSERT(dynamic_cast< Deleted* >(c) == nullptr);
     Toplevel::copyToDeleted(c);
     m_bufferGeometry = c->bufferGeometry();
-    m_bufferMargins = c->bufferMargins();
     m_frameMargins = c->frameMargins();
     m_bufferScale = c->bufferScale();
     desk = c->desktop();
@@ -169,11 +169,6 @@ void Deleted::unrefWindow()
 QRect Deleted::bufferGeometry() const
 {
     return m_bufferGeometry;
-}
-
-QMargins Deleted::bufferMargins() const
-{
-    return m_bufferMargins;
 }
 
 QMargins Deleted::frameMargins() const

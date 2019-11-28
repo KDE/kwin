@@ -581,7 +581,7 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
             detectShape(window());  // workaround for #19644
             updateShape();
         }
-        if (eventType == Xcb::Extensions::self()->damageNotifyEvent() && reinterpret_cast<xcb_damage_notify_event_t*>(e)->drawable == frameId())
+        if (eventType == Xcb::Extensions::self()->damageNotifyEvent() && reinterpret_cast<xcb_damage_notify_event_t *>(e)->drawable == windowId())
             damageNotifyEvent();
         break;
     }

@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -256,12 +257,13 @@ bool Toplevel::setupCompositing()
     if (damage_handle != XCB_NONE)
         return false;
 
-    if (kwinApp()->operationMode() == Application::OperationModeX11 && !surface()) {
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
         damage_handle = xcb_generate_id(connection());
-        xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+        xcb_damage_create(connection(), damage_handle, windowId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+        xcb_composite_redirect_window(connection(), windowId(), XCB_COMPOSITE_REDIRECT_MANUAL);
     }
 
-    damage_region = QRegion(0, 0, width(), height());
+    damage_region = QRegion(QRect(QPoint(), bufferGeometry().size()));
     effect_window = new EffectWindowImpl(this);
 
     Compositor::self()->scene()->addToplevel(this);
@@ -276,6 +278,10 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
     if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
         discardWindowPixmap();
         delete effect_window;
+    }
+
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        xcb_composite_unredirect_window(connection(), windowId(), XCB_COMPOSITE_REDIRECT_MANUAL);
     }
 
     if (damage_handle != XCB_NONE &&
@@ -789,11 +795,6 @@ bool Toplevel::isLocalhost() const
         return true;
     }
     return m_clientMachine->isLocal();
-}
-
-QMargins Toplevel::bufferMargins() const
-{
-    return QMargins();
 }
 
 QMargins Toplevel::frameMargins() const

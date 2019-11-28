@@ -1433,7 +1433,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     if (data.crossFadeProgress() != 1.0) {
         OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
         if (previous) {
-            const QRect &oldGeometry = previous->contentsRect();
             for (const WindowQuad &quad : quads[ContentLeaf]) {
                 // we need to create new window quads with normalize texture coordinates
                 // normal quads divide the x/y position by width/height. This would not work as the texture
@@ -1442,12 +1441,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
                 // the previous Client's content space.
                 WindowQuad newQuad(WindowQuadContents);
                 for (int i = 0; i < 4; ++i) {
-                    const qreal xFactor = qreal(quad[i].textureX() - toplevel->clientPos().x())/qreal(toplevel->clientSize().width());
-                    const qreal yFactor = qreal(quad[i].textureY() - toplevel->clientPos().y())/qreal(toplevel->clientSize().height());
-                    WindowVertex vertex(quad[i].x(), quad[i].y(),
-                                        (xFactor * oldGeometry.width() + oldGeometry.x())/qreal(previous->size().width()),
-                                        (yFactor * oldGeometry.height() + oldGeometry.y())/qreal(previous->size().height()));
-                    newQuad[i] = vertex;
+                    newQuad[i] = WindowVertex(quad[i].x(), quad[i].y(), quad[i].u(), quad[i].v());
                 }
                 quads[PreviousContentLeaf].append(newQuad);
             }

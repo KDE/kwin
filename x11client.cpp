@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -255,7 +256,7 @@ void X11Client::releaseWindow(bool on_shutdown)
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
     m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
-    m_client.reparent(rootWindow(), m_bufferGeometry.x(), m_bufferGeometry.y());
+    m_client.reparent(rootWindow(), m_serverGeometry.x(), m_serverGeometry.y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
     m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown)
@@ -1985,12 +1986,7 @@ xcb_window_t X11Client::frameId() const
 
 QRect X11Client::bufferGeometry() const
 {
-    return m_bufferGeometry;
-}
-
-QMargins X11Client::bufferMargins() const
-{
-    return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
+    return m_clientGeometry;
 }
 
 QPoint X11Client::framePosToClientPos(const QPoint &point) const
@@ -2216,64 +2212,21 @@ void X11Client::handleSync()
         addRepaintFull();
 }
 
-bool X11Client::canUpdatePosition(const QPoint &frame, const QPoint &buffer, ForceGeometry_t force) const
-{
-    // Obey forced geometry updates.
-    if (force != NormalGeometrySet) {
-        return true;
-    }
-    // Server-side geometry and our geometry are out of sync.
-    if (bufferGeometry().topLeft() != buffer) {
-        return true;
-    }
-    if (frameGeometry().topLeft() != frame) {
-        return true;
-    }
-    return false;
-}
-
-bool X11Client::canUpdateSize(const QSize &frame, const QSize &buffer, ForceGeometry_t force) const
-{
-    // Obey forced geometry updates.
-    if (force != NormalGeometrySet) {
-        return true;
-    }
-    // Server-side geometry and our geometry are out of sync.
-    if (bufferGeometry().size() != buffer) {
-        return true;
-    }
-    if (frameGeometry().size() != frame) {
-        return true;
-    }
-    return false;
-}
-
-bool X11Client::canUpdateGeometry(const QRect &frame, const QRect &buffer, ForceGeometry_t force) const
-{
-    if (canUpdatePosition(frame.topLeft(), buffer.topLeft(), force)) {
-        return true;
-    }
-    if (canUpdateSize(frame.size(), buffer.size(), force)) {
-        return true;
-    }
-    return pendingGeometryUpdate() != PendingGeometryNone;
-}
-
 void X11Client::move(int x, int y, ForceGeometry_t force)
 {
     const QPoint framePosition(x, y);
     m_clientGeometry.moveTopLeft(framePosToClientPos(framePosition));
-    const QPoint bufferPosition = isDecorated() ? framePosition : m_clientGeometry.topLeft();
+    const QPoint serverPosition = isDecorated() ? framePosition : m_clientGeometry.topLeft();
     // resuming geometry updates is handled only in setGeometry()
     Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     if (!areGeometryUpdatesBlocked() && framePosition != rules()->checkPosition(framePosition)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << framePosition << ":" << rules()->checkPosition(framePosition);
     }
-    if (!canUpdatePosition(framePosition, bufferPosition, force)) {
+    geom.moveTopLeft(framePosition);
+    if (force == NormalGeometrySet && m_serverGeometry.topLeft() == serverPosition) {
         return;
     }
-    m_bufferGeometry.moveTopLeft(bufferPosition);
-    geom.moveTopLeft(framePosition);
+    m_serverGeometry.moveTopLeft(serverPosition);
     if (areGeometryUpdatesBlocked()) {
         if (pendingGeometryUpdate() == PendingGeometryForced) {
             // Maximum, nothing needed.
@@ -2284,8 +2237,7 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
         }
         return;
     }
-    m_frame.move(m_bufferGeometry.topLeft());
-    sendSyntheticConfigureNotify();
+    updateServerGeometry();
     updateWindowRules(Rules::Position);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();

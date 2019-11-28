@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -735,7 +736,7 @@ QRegion Scene::Window::bufferShape() const
     const QRect bufferGeometry = toplevel->bufferGeometry();
 
     if (toplevel->shape()) {
-        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->frameId(), XCB_SHAPE_SK_BOUNDING);
+        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->windowId(), XCB_SHAPE_SK_BOUNDING);
         ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
         if (!reply.isNull()) {
             m_bufferShape = QRegion();
@@ -765,15 +766,7 @@ QRegion Scene::Window::clientShape() const
             return QRegion();
         }
     }
-
-    const QRegion shape = bufferShape();
-    const QMargins bufferMargins = toplevel->bufferMargins();
-    if (bufferMargins.isNull()) {
-        return shape;
-    }
-
-    const QRect clippingRect = QRect(QPoint(0, 0), toplevel->bufferGeometry().size()) - toplevel->bufferMargins();
-    return shape & clippingRect;
+    return bufferShape();
 }
 
 QRegion Scene::Window::decorationShape() const
@@ -1039,9 +1032,9 @@ void WindowPixmap::create()
     }
     XServerGrabber grabber;
     xcb_pixmap_t pix = xcb_generate_id(connection());
-    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), toplevel()->frameId(), pix);
-    Xcb::WindowAttributes windowAttributes(toplevel()->frameId());
-    Xcb::WindowGeometry windowGeometry(toplevel()->frameId());
+    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), toplevel()->windowId(), pix);
+    Xcb::WindowAttributes windowAttributes(toplevel()->windowId());
+    Xcb::WindowGeometry windowGeometry(toplevel()->windowId());
     if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
         qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << error->error_code;
         free(error);
@@ -1062,7 +1055,6 @@ void WindowPixmap::create()
     }
     m_pixmap = pix;
     m_pixmapSize = bufferGeometry.size();
-    m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
 }
 

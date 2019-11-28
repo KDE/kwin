@@ -319,8 +319,6 @@ void Compositor::setupX11Support()
         return;
     }
     claimCompositorSelection();
-    xcb_composite_redirect_subwindows(con, kwinApp()->x11RootWindow(),
-                                      XCB_COMPOSITE_REDIRECT_MANUAL);
 }
 
 void Compositor::startupWithWorkspace()
@@ -428,10 +426,6 @@ void Compositor::stop()
         }
         for (InternalClient *client : workspace()->internalClients()) {
             client->finishCompositing();
-        }
-        if (auto *con = kwinApp()->x11Connection()) {
-            xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
-                                                XCB_COMPOSITE_REDIRECT_MANUAL);
         }
         while (!workspace()->deletedList().isEmpty()) {
             workspace()->deletedList().first()->discard();
