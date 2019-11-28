@@ -30,7 +30,6 @@ EglHwcomposerBackend::EglHwcomposerBackend(HwcomposerBackend *backend)
 {
     // EGL is always direct rendering
     setIsDirectRendering(true);
-    setBlocksForRetrace(true);
 }
 
 EglHwcomposerBackend::~EglHwcomposerBackend()
