@@ -46,16 +46,16 @@ Kirigami.Page {
     // out of https://bugs.kde.org/show_bug.cgi?id=394296
     ColumnLayout {
         id: tabLayout
-
-        // Tab styles generally assume that they're touching the inner layout,
-        // not the frame, so we need to move the tab bar down a pixel and make
-        // sure it's drawn on top of the frame
-        Layout.bottomMargin: -1
-        z: 1
         anchors.fill: parent
         spacing: 0
+
         Controls.TabBar {
             id: tabBar
+            // Tab styles generally assume that they're touching the inner layout,
+            // not the frame, so we need to move the tab bar down a pixel and make
+            // sure it's drawn on top of the frame
+            z: 1
+            Layout.bottomMargin: -1
             Layout.fillWidth: true
 
             Controls.TabButton {
