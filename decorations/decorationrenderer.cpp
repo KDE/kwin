@@ -74,8 +74,13 @@ QImage Renderer::renderToImage(const QRect &geo)
     p.setRenderHint(QPainter::Antialiasing);
     p.setWindow(QRect(geo.topLeft(), geo.size() * dpr));
     p.setClipRect(geo);
-    client()->decoration()->paint(&p, geo);
+    renderToPainter(&p, geo);
     return image;
+}
+
+void Renderer::renderToPainter(QPainter *painter, const QRect &rect)
+{
+    client()->decoration()->paint(painter, rect);
 }
 
 void Renderer::reparent(Deleted *deleted)
