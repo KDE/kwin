@@ -880,11 +880,18 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
 {
     WindowQuadList list;
 
+    const int padding = 1;
+
+    const QPoint topSpritePosition(padding, padding);
+    const QPoint bottomSpritePosition(padding, topSpritePosition.y() + rects[1].height() + 2 * padding);
+    const QPoint leftSpritePosition(bottomSpritePosition.y() + rects[3].height() + 2 * padding, padding);
+    const QPoint rightSpritePosition(leftSpritePosition.x() + rects[0].width() + 2 * padding, padding);
+
     const QPoint offsets[4] = {
-        QPoint(-rects[0].x() + rects[1].height() + rects[3].height() + 2, -rects[0].y()),                    // Left
-        QPoint(-rects[1].x(), -rects[1].y()),                                                                // Top
-        QPoint(-rects[2].x() + rects[1].height() + rects[3].height() + rects[0].width() + 3, -rects[2].y()), // Right
-        QPoint(-rects[3].x(), -rects[3].y() + rects[1].height() + 1)                                         // Bottom
+        QPoint(-rects[0].x(), -rects[0].y()) + leftSpritePosition,
+        QPoint(-rects[1].x(), -rects[1].y()) + topSpritePosition,
+        QPoint(-rects[2].x(), -rects[2].y()) + rightSpritePosition,
+        QPoint(-rects[3].x(), -rects[3].y()) + bottomSpritePosition,
     };
 
     const Qt::Orientation orientations[4] = {
