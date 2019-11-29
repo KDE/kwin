@@ -158,11 +158,6 @@ public:
 protected:
     WindowPixmap* createWindowPixmap() override;
     Window(Toplevel* c);
-    enum TextureType {
-        Content,
-        Decoration,
-        Shadow
-    };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     GLTexture *getDecorationTexture() const;
