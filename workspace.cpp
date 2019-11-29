@@ -1720,6 +1720,15 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
     return nullptr;
 }
 
+void Workspace::forEachToplevel(std::function<void (Toplevel *)> func)
+{
+    std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
+    std::for_each(desktops.constBegin(), desktops.constEnd(), func);
+    std::for_each(deleted.constBegin(), deleted.constEnd(), func);
+    std::for_each(unmanaged.constBegin(), unmanaged.constEnd(), func);
+    std::for_each(m_internalClients.constBegin(), m_internalClients.constEnd(), func);
+}
+
 bool Workspace::hasClient(const AbstractClient *c)
 {
     if (auto cc = dynamic_cast<const X11Client *>(c)) {

@@ -394,18 +394,10 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
         delete m_offscreenTex;
         m_offscreenTarget = nullptr;
         m_offscreenTex = nullptr;
-        foreach (X11Client *c, Workspace::self()->clientList()) {
-            discardCacheTexture(c->effectWindow());
-        }
-        foreach (X11Client *c, Workspace::self()->desktopList()) {
-            discardCacheTexture(c->effectWindow());
-        }
-        foreach (Unmanaged *u, Workspace::self()->unmanagedList()) {
-            discardCacheTexture(u->effectWindow());
-        }
-        foreach (Deleted *d, Workspace::self()->deletedList()) {
-            discardCacheTexture(d->effectWindow());
-        }
+
+        workspace()->forEachToplevel([this](Toplevel *toplevel) {
+            discardCacheTexture(toplevel->effectWindow());
+        });
     }
 }
 
