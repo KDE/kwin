@@ -77,7 +77,7 @@ public:
     static EglDmabuf* factory(AbstractEglBackend *backend);
 
     explicit EglDmabuf(AbstractEglBackend *backend);
-    ~EglDmabuf();
+    ~EglDmabuf() override;
 
     KWayland::Server::LinuxDmabufUnstableV1Buffer *importBuffer(const QVector<Plane> &planes,
                                                                 uint32_t format,
