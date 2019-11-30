@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 
 #include <QEasingCurve>
+#include <QFont>
 #include <QIcon>
 #include <QPair>
 #include <QSet>
@@ -51,6 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <climits>
 #include <functional>
+
+#include "kwineffectquickview.h"
 
 class KConfigGroup;
 class QFont;
@@ -83,6 +86,7 @@ class EffectWindowGroup;
 class EffectFrame;
 class EffectFramePrivate;
 class EffectQuickView;
+class EffectQuickScene;
 class Effect;
 class WindowQuad;
 class GLShader;
@@ -1206,8 +1210,8 @@ public:
      * EffectFrame.
      * @since 4.6
      */
-    virtual EffectFrame* effectFrame(EffectFrameStyle style, bool staticSize = true,
-                                     const QPoint& position = QPoint(-1, -1), Qt::Alignment alignment = Qt::AlignCenter) const = 0;
+    virtual EffectFrame *effectFrame(EffectFrameStyle style, bool staticSize = true,
+                                     const QPoint& position = QPoint(-1, -1), Qt::Alignment alignment = Qt::AlignCenter) const;
 
     /**
      * Allows an effect to trigger a reload of itself.
@@ -3404,65 +3408,72 @@ private:
  * another that doesn't.
  * It is recommended to use this class whenever displaying text.
  */
-class KWINEFFECTS_EXPORT EffectFrame
+class KWINEFFECTS_EXPORT EffectFrame: public EffectQuickScene
 {
+    Q_OBJECT
+    Q_PROPERTY(QString text READ text NOTIFY textChanged)
+    Q_PROPERTY(QFont font READ font NOTIFY fontChanged)
+    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(QSize iconSize READ iconSize NOTIFY iconSizeChanged)
 public:
     EffectFrame();
-    virtual ~EffectFrame();
+    ~EffectFrame() override;
 
     /**
-     * Delete any existing textures to free up graphics memory. They will
-     * be automatically recreated the next time they are required.
+     * @deprecated
+     * Analogous to hide
      */
-    virtual void free() = 0;
+    void free();
 
     /**
      * Render the frame.
      */
-    virtual void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
+    void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0);
 
-    virtual void setPosition(const QPoint& point) = 0;
+    void setPosition(const QPoint& point);
     /**
      * Set the text alignment for static frames and the position alignment
      * for non-static.
      */
-    virtual void setAlignment(Qt::Alignment alignment) = 0;
-    virtual Qt::Alignment alignment() const = 0;
-    virtual void setGeometry(const QRect& geometry, bool force = false) = 0;
-    virtual const QRect& geometry() const = 0;
+    void setAlignment(Qt::Alignment alignment);
+    Qt::Alignment alignment() const;
 
-    virtual void setText(const QString& text) = 0;
-    virtual const QString& text() const = 0;
-    virtual void setFont(const QFont& font) = 0;
-    virtual const QFont& font() const = 0;
+    //just for compat with a pointless bool argument
+    void setGeometry(const QRect& geometry, bool force = false);
+
+    void setText(const QString& text);
+    QString text() const;
+    void setFont(const QFont& font);
+    QFont font() const;
     /**
      * Set the icon that will appear on the left-hand size of the frame.
      */
-    virtual void setIcon(const QIcon& icon) = 0;
-    virtual const QIcon& icon() const = 0;
-    virtual void setIconSize(const QSize& size) = 0;
-    virtual const QSize& iconSize() const = 0;
+    void setIcon(const QIcon& icon);
+    QIcon icon() const;
+    void setIconSize(const QSize& size);
+    QSize iconSize() const;
 
     /**
+      ?????
      * Sets the geometry of a selection.
      * To remove the selection set a null rect.
      * @param selection The geometry of the selection in screen coordinates.
      */
-    virtual void setSelection(const QRect& selection) = 0;
+    void setSelection(const QRect& selection);
 
     /**
      * @param shader The GLShader for rendering.
      */
-    virtual void setShader(GLShader* shader) = 0;
+    void setShader(GLShader* shader);
     /**
      * @returns The GLShader used for rendering or null if none.
      */
-    virtual GLShader* shader() const = 0;
+    GLShader *shader() const;
 
     /**
      * @returns The style of this EffectFrame.
      */
-    virtual EffectFrameStyle style() const = 0;
+    virtual EffectFrameStyle style() const;
 
     /**
      * If @p enable is @c true cross fading between icons and text is enabled
@@ -3480,27 +3491,15 @@ public:
      * @since 4.6
      */
     bool isCrossFade() const;
+
     /**
-     * Sets the current progress for cross fading the last used icon/text
-     * with current icon/text to @p progress.
-     * A value of 0.0 means completely old icon/text, a value of 1.0 means
-     * completely current icon/text.
-     * Default value is 1.0. You have to enable cross fade before using it.
-     * Cross Fading is currently only available if OpenGL is used.
-     * @see enableCrossFade
-     * @see isCrossFade
-     * @see crossFadeProgress
-     * @since 4.6
+     * @deprecated
      */
-    void setCrossFadeProgress(qreal progress);
+    void setCrossFadeProgress(qreal) {}
     /**
-     * @returns The current progress for cross fading
-     * @see setCrossFadeProgress
-     * @see enableCrossFade
-     * @see isCrossFade
-     * @since 4.6
+     * @deprecated
      */
-    qreal crossFadeProgress() const;
+    qreal crossFadeProgress() const {return 1;}
 
     /**
      * Returns The projection matrix as used by the current screen painting pass
@@ -3514,6 +3513,12 @@ public:
      * @see Effect::paintEffectFrame
      */
     QMatrix4x4 screenProjectionMatrix() const;
+
+Q_SIGNALS:
+    void textChanged();
+    void fontChanged();
+    void iconChanged();
+    void iconSizeChanged();
 
 protected:
     void setScreenProjectionMatrix(const QMatrix4x4 &projection);

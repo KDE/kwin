@@ -148,14 +148,12 @@ class SceneXrender
 {
     Q_OBJECT
 public:
-    class EffectFrame;
     ~SceneXrender() override;
     bool initFailed() const override;
     CompositingType compositingType() const override {
         return XRenderCompositing;
     }
     qint64 paint(QRegion damage, QList<Toplevel *> windows) override;
-    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t xrenderBufferPicture() const override;
@@ -221,34 +219,6 @@ public:
 private:
     xcb_render_picture_t m_picture;
     xcb_render_pictformat_t m_format;
-};
-
-class SceneXrender::EffectFrame
-    : public Scene::EffectFrame
-{
-public:
-    EffectFrame(EffectFrameImpl* frame);
-    ~EffectFrame() override;
-
-    void free() override;
-    void freeIconFrame() override;
-    void freeTextFrame() override;
-    void freeSelection() override;
-    void crossFadeIcon() override;
-    void crossFadeText() override;
-    void render(QRegion region, double opacity, double frameOpacity) override;
-    static void cleanup();
-
-private:
-    void updatePicture();
-    void updateTextPicture();
-    void renderUnstyled(xcb_render_picture_t pict, const QRect &rect, qreal opacity);
-
-    XRenderPicture* m_picture;
-    XRenderPicture* m_textPicture;
-    XRenderPicture* m_iconPicture;
-    XRenderPicture* m_selectionPicture;
-    static XRenderPicture* s_effectFrameCircle;
 };
 
 inline

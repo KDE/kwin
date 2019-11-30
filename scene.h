@@ -50,7 +50,6 @@ class Renderer;
 
 class AbstractThumbnailItem;
 class Deleted;
-class EffectFrameImpl;
 class EffectWindowImpl;
 class OverlayWindow;
 class Shadow;
@@ -97,12 +96,6 @@ public:
      */
     void removeToplevel(Toplevel *toplevel);
 
-    /**
-     * @brief Creates the Scene backend of an EffectFrame.
-     *
-     * @param frame The EffectFrame this Scene::EffectFrame belongs to.
-     */
-    virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) = 0;
     /**
      * @brief Creates the Scene specific Shadow subclass.
      *
@@ -520,23 +513,6 @@ private:
     WindowPixmap *m_parent = nullptr;
     QVector<WindowPixmap*> m_children;
     QPointer<KWayland::Server::SubSurfaceInterface> m_subSurface;
-};
-
-class Scene::EffectFrame
-{
-public:
-    EffectFrame(EffectFrameImpl* frame);
-    virtual ~EffectFrame();
-    virtual void render(QRegion region, double opacity, double frameOpacity) = 0;
-    virtual void free() = 0;
-    virtual void freeIconFrame() = 0;
-    virtual void freeTextFrame() = 0;
-    virtual void freeSelection() = 0;
-    virtual void crossFadeIcon() = 0;
-    virtual void crossFadeText() = 0;
-
-protected:
-    EffectFrameImpl* m_effectFrame;
 };
 
 inline

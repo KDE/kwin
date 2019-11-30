@@ -457,8 +457,8 @@ void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, const QRegion &reg
         (*m_currentPaintEffectFrameIterator++)->paintEffectFrame(frame, region, opacity, frameOpacity);
         --m_currentPaintEffectFrameIterator;
     } else {
-        const EffectFrameImpl* frameImpl = static_cast<const EffectFrameImpl*>(frame);
-        frameImpl->finalRender(region, opacity, frameOpacity);
+//        const EffectFrameImpl* frameImpl = static_cast<const EffectFrameImpl*>(frame);
+//        frameImpl->finalRender(region, opacity, frameOpacity);
     }
 }
 
@@ -1546,10 +1546,10 @@ KWayland::Server::Display *EffectsHandlerImpl::waylandDisplay() const
     return nullptr;
 }
 
-EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const
-{
-    return new EffectFrameImpl(style, staticSize, position, alignment);
-}
+//EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const
+//{
+//    return new EffectFrameImpl(style, staticSize, position, alignment);
+//}
 
 
 QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
@@ -2170,243 +2170,23 @@ EffectWindowList EffectWindowGroupImpl::members() const
     return ret;
 }
 
-//****************************************
-// EffectFrameImpl
-//****************************************
-
-EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint position, Qt::Alignment alignment)
-    : QObject(nullptr)
-    , EffectFrame()
-    , m_style(style)
-    , m_static(staticSize)
-    , m_point(position)
-    , m_alignment(alignment)
-    , m_shader(nullptr)
-    , m_theme(new Plasma::Theme(this))
-{
-    if (m_style == EffectFrameStyled) {
-        m_frame.setImagePath(QStringLiteral("widgets/background"));
-        m_frame.setCacheAllRenderedFrames(true);
-        connect(m_theme, SIGNAL(themeChanged()), this, SLOT(plasmaThemeChanged()));
-    }
-    m_selection.setImagePath(QStringLiteral("widgets/viewitem"));
-    m_selection.setElementPrefix(QStringLiteral("hover"));
-    m_selection.setCacheAllRenderedFrames(true);
-    m_selection.setEnabledBorders(Plasma::FrameSvg::AllBorders);
-
-    m_sceneFrame = Compositor::self()->scene()->createEffectFrame(this);
-}
-
-EffectFrameImpl::~EffectFrameImpl()
-{
-    delete m_sceneFrame;
-}
-
-const QFont& EffectFrameImpl::font() const
-{
-    return m_font;
-}
-
-void EffectFrameImpl::setFont(const QFont& font)
-{
-    if (m_font == font) {
-        return;
-    }
-    m_font = font;
-    QRect oldGeom = m_geometry;
-    if (!m_text.isEmpty()) {
-        autoResize();
-    }
-    if (oldGeom == m_geometry) {
-        // Wasn't updated in autoResize()
-        m_sceneFrame->freeTextFrame();
-    }
-}
-
-void EffectFrameImpl::free()
-{
-    m_sceneFrame->free();
-}
-
-const QRect& EffectFrameImpl::geometry() const
-{
-    return m_geometry;
-}
-
-void EffectFrameImpl::setGeometry(const QRect& geometry, bool force)
-{
-    QRect oldGeom = m_geometry;
-    m_geometry = geometry;
-    if (m_geometry == oldGeom && !force) {
-        return;
-    }
-    effects->addRepaint(oldGeom);
-    effects->addRepaint(m_geometry);
-    if (m_geometry.size() == oldGeom.size() && !force) {
-        return;
-    }
-
-    if (m_style == EffectFrameStyled) {
-        qreal left, top, right, bottom;
-        m_frame.getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
-        m_frame.resizeFrame(m_geometry.adjusted(-left, -top, right, bottom).size());
-    }
-
-    free();
-}
-
-const QIcon& EffectFrameImpl::icon() const
-{
-    return m_icon;
-}
-
-void EffectFrameImpl::setIcon(const QIcon& icon)
-{
-    m_icon = icon;
-    if (isCrossFade()) {
-        m_sceneFrame->crossFadeIcon();
-    }
-    if (m_iconSize.isEmpty() && !m_icon.availableSizes().isEmpty()) { // Set a size if we don't already have one
-        setIconSize(m_icon.availableSizes().first());
-    }
-    m_sceneFrame->freeIconFrame();
-}
-
-const QSize& EffectFrameImpl::iconSize() const
-{
-    return m_iconSize;
-}
-
-void EffectFrameImpl::setIconSize(const QSize& size)
-{
-    if (m_iconSize == size) {
-        return;
-    }
-    m_iconSize = size;
-    autoResize();
-    m_sceneFrame->freeIconFrame();
-}
-
-void EffectFrameImpl::plasmaThemeChanged()
-{
-    free();
-}
-
-void EffectFrameImpl::render(const QRegion &region, double opacity, double frameOpacity)
-{
-    if (m_geometry.isEmpty()) {
-        return; // Nothing to display
-    }
-    m_shader = nullptr;
-    setScreenProjectionMatrix(static_cast<EffectsHandlerImpl*>(effects)->scene()->screenProjectionMatrix());
-    effects->paintEffectFrame(this, region, opacity, frameOpacity);
-}
-
-void EffectFrameImpl::finalRender(QRegion region, double opacity, double frameOpacity) const
-{
-    region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
-
-    m_sceneFrame->render(region, opacity, frameOpacity);
-}
-
-Qt::Alignment EffectFrameImpl::alignment() const
-{
-    return m_alignment;
-}
 
 
-void
-EffectFrameImpl::align(QRect &geometry)
-{
-    if (m_alignment & Qt::AlignLeft)
-        geometry.moveLeft(m_point.x());
-    else if (m_alignment & Qt::AlignRight)
-        geometry.moveLeft(m_point.x() - geometry.width());
-    else
-        geometry.moveLeft(m_point.x() - geometry.width() / 2);
-    if (m_alignment & Qt::AlignTop)
-        geometry.moveTop(m_point.y());
-    else if (m_alignment & Qt::AlignBottom)
-        geometry.moveTop(m_point.y() - geometry.height());
-    else
-        geometry.moveTop(m_point.y() - geometry.height() / 2);
-}
-
-
-void EffectFrameImpl::setAlignment(Qt::Alignment alignment)
-{
-    m_alignment = alignment;
-    align(m_geometry);
-    setGeometry(m_geometry);
-}
-
-void EffectFrameImpl::setPosition(const QPoint& point)
-{
-    m_point = point;
-    QRect geometry = m_geometry; // this is important, setGeometry need call repaint for old & new geometry
-    align(geometry);
-    setGeometry(geometry);
-}
-
-const QString& EffectFrameImpl::text() const
-{
-    return m_text;
-}
-
-void EffectFrameImpl::setText(const QString& text)
-{
-    if (m_text == text) {
-        return;
-    }
-    if (isCrossFade()) {
-        m_sceneFrame->crossFadeText();
-    }
-    m_text = text;
-    QRect oldGeom = m_geometry;
-    autoResize();
-    if (oldGeom == m_geometry) {
-        // Wasn't updated in autoResize()
-        m_sceneFrame->freeTextFrame();
-    }
-}
-
-void EffectFrameImpl::setSelection(const QRect& selection)
-{
-    if (selection == m_selectionGeometry) {
-        return;
-    }
-    m_selectionGeometry = selection;
-    if (m_selectionGeometry.size() != m_selection.frameSize().toSize()) {
-        m_selection.resizeFrame(m_selectionGeometry.size());
-    }
-    // TODO; optimize to only recreate when resizing
-    m_sceneFrame->freeSelection();
-}
-
-void EffectFrameImpl::autoResize()
-{
-    if (m_static)
-        return; // Not automatically resizing
-
-    QRect geometry;
-    // Set size
-    if (!m_text.isEmpty()) {
-        QFontMetrics metrics(m_font);
-        geometry.setSize(metrics.size(0, m_text));
-    }
-    if (!m_icon.isNull() && !m_iconSize.isEmpty()) {
-        geometry.setLeft(-m_iconSize.width());
-        if (m_iconSize.height() > geometry.height())
-            geometry.setHeight(m_iconSize.height());
-    }
-
-    align(geometry);
-    setGeometry(geometry);
-}
-
-QColor EffectFrameImpl::styledTextColor()
-{
-    return m_theme->color(Plasma::Theme::TextColor);
-}
+//void
+//EffectFrameImpl::align(QRect &geometry)
+//{
+//    if (m_alignment & Qt::AlignLeft)
+//        geometry.moveLeft(m_point.x());
+//    else if (m_alignment & Qt::AlignRight)
+//        geometry.moveLeft(m_point.x() - geometry.width());
+//    else
+//        geometry.moveLeft(m_point.x() - geometry.width() / 2);
+//    if (m_alignment & Qt::AlignTop)
+//        geometry.moveTop(m_point.y());
+//    else if (m_alignment & Qt::AlignBottom)
+//        geometry.moveTop(m_point.y() - geometry.height());
+//    else
+//        geometry.moveTop(m_point.y() - geometry.height() / 2);
+//}
 
 } // namespace

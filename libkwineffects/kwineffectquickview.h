@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects_export.h>
 
-#include "kwineffects.h"
+//#include "kwineffects.h"
 
 #include <memory>
 

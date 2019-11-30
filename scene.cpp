@@ -1148,18 +1148,6 @@ KWayland::Server::SurfaceInterface *WindowPixmap::surface() const
     }
 }
 
-//****************************************
-// Scene::EffectFrame
-//****************************************
-Scene::EffectFrame::EffectFrame(EffectFrameImpl* frame)
-    : m_effectFrame(frame)
-{
-}
-
-Scene::EffectFrame::~EffectFrame()
-{
-}
-
 SceneFactory::SceneFactory(QObject *parent)
     : QObject(parent)
 {

@@ -40,7 +40,6 @@ public:
     void paintGenericScreen(int mask, ScreenPaintData data) override;
     CompositingType compositingType() const override;
     bool initFailed() const override;
-    EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
@@ -101,22 +100,6 @@ protected:
 private:
     explicit QPainterWindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
     QImage m_image;
-};
-
-class QPainterEffectFrame : public Scene::EffectFrame
-{
-public:
-    QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene);
-    ~QPainterEffectFrame() override;
-    void crossFadeIcon() override {}
-    void crossFadeText() override {}
-    void free() override {}
-    void freeIconFrame() override {}
-    void freeTextFrame() override {}
-    void freeSelection() override {}
-    void render(QRegion region, double opacity, double frameOpacity) override;
-private:
-    SceneQPainter *m_scene;
 };
 
 class SceneQPainterShadow : public Shadow

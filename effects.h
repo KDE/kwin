@@ -193,8 +193,6 @@ public:
 
     bool decorationSupportsBlurBehind() const override;
 
-    EffectFrame* effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const override;
-
     QVariant kwinOption(KWinOption kwopt) override;
     bool isScreenLocked() const override;
 
@@ -534,89 +532,6 @@ public:
     EffectWindowList members() const override;
 private:
     Group* group;
-};
-
-class KWIN_EXPORT EffectFrameImpl
-    : public QObject, public EffectFrame
-{
-    Q_OBJECT
-public:
-    explicit EffectFrameImpl(EffectFrameStyle style, bool staticSize = true, QPoint position = QPoint(-1, -1),
-                             Qt::Alignment alignment = Qt::AlignCenter);
-    ~EffectFrameImpl() override;
-
-    void free() override;
-    void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;
-    Qt::Alignment alignment() const override;
-    void setAlignment(Qt::Alignment alignment) override;
-    const QFont& font() const override;
-    void setFont(const QFont& font) override;
-    const QRect& geometry() const override;
-    void setGeometry(const QRect& geometry, bool force = false) override;
-    const QIcon& icon() const override;
-    void setIcon(const QIcon& icon) override;
-    const QSize& iconSize() const override;
-    void setIconSize(const QSize& size) override;
-    void setPosition(const QPoint& point) override;
-    const QString& text() const override;
-    void setText(const QString& text) override;
-    EffectFrameStyle style() const override {
-        return m_style;
-    };
-    Plasma::FrameSvg& frame() {
-        return m_frame;
-    }
-    bool isStatic() const {
-        return m_static;
-    };
-    void finalRender(QRegion region, double opacity, double frameOpacity) const;
-    void setShader(GLShader* shader) override {
-        m_shader = shader;
-    }
-    GLShader* shader() const override {
-        return m_shader;
-    }
-    void setSelection(const QRect& selection) override;
-    const QRect& selection() const {
-        return m_selectionGeometry;
-    }
-    Plasma::FrameSvg& selectionFrame() {
-        return m_selection;
-    }
-    /**
-     * The foreground text color as specified by the default Plasma theme.
-     */
-    QColor styledTextColor();
-
-private Q_SLOTS:
-    void plasmaThemeChanged();
-
-private:
-    Q_DISABLE_COPY(EffectFrameImpl)   // As we need to use Qt slots we cannot copy this class
-    void align(QRect &geometry);   // positions geometry around m_point respecting m_alignment
-    void autoResize(); // Auto-resize if not a static size
-
-    EffectFrameStyle m_style;
-    Plasma::FrameSvg m_frame; // TODO: share between all EffectFrames
-    Plasma::FrameSvg m_selection;
-
-    // Position
-    bool m_static;
-    QPoint m_point;
-    Qt::Alignment m_alignment;
-    QRect m_geometry;
-
-    // Contents
-    QString m_text;
-    QFont m_font;
-    QIcon m_icon;
-    QSize m_iconSize;
-    QRect m_selectionGeometry;
-
-    Scene::EffectFrame* m_sceneFrame;
-    GLShader* m_shader;
-
-    Plasma::Theme *m_theme;
 };
 
 inline

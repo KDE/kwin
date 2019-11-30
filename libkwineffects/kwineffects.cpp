@@ -38,6 +38,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGraphicsScale>
 #include <QtMath>
 
+#include <QQmlContext>
+
+
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 
@@ -746,6 +749,11 @@ CompositingType EffectsHandler::compositingType() const
 bool EffectsHandler::isOpenGLCompositing() const
 {
     return compositing_type & OpenGLCompositing;
+}
+
+EffectFrame *EffectsHandler::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint &position, Qt::Alignment alignment) const
+{
+    return new EffectFrame();
 }
 
 EffectsHandler* effects = nullptr;
@@ -1701,14 +1709,19 @@ public:
     EffectFramePrivate();
     ~EffectFramePrivate();
 
-    bool crossFading;
-    qreal crossFadeProgress;
+    QString text;
+    QFont font;
+    QIcon icon;
+    QSize iconSize;
+
+    Qt::Alignment alignment;
+    bool crossFading = false;
+
     QMatrix4x4 screenProjectionMatrix;
 };
 
 EffectFramePrivate::EffectFramePrivate()
-    : crossFading(false)
-    , crossFadeProgress(1.0)
+    : crossFading()
 {
 }
 
@@ -1720,8 +1733,12 @@ EffectFramePrivate::~EffectFramePrivate()
  EffectFrame
 ***************************************************************/
 EffectFrame::EffectFrame()
-    : d(new EffectFramePrivate)
+    : EffectQuickScene(nullptr)
+    , d(new EffectFramePrivate)
 {
+    setSource(QUrl::fromLocalFile("/home/david/style_frame.qml"));
+    setGeometry(QRect(400,400,400,400));
+    rootContext()->setContextProperty("frameData", this);
 }
 
 EffectFrame::~EffectFrame()
@@ -1729,14 +1746,116 @@ EffectFrame::~EffectFrame()
     delete d;
 }
 
-qreal EffectFrame::crossFadeProgress() const
+void EffectFrame::free()
 {
-    return d->crossFadeProgress;
+    hide();
 }
 
-void EffectFrame::setCrossFadeProgress(qreal progress)
+void EffectFrame::render(const QRegion &region, double opacity, double frameOpacity)
 {
-    d->crossFadeProgress = progress;
+    show();
+    Q_UNUSED(region)
+    Q_UNUSED(opacity)
+    Q_UNUSED(frameOpacity)
+    effects->renderEffectQuickView(this);
+}
+
+void EffectFrame::setPosition(const QPoint &point)
+{
+    QRect newGeometry = geometry();
+    newGeometry.moveTo(point);
+    setGeometry(newGeometry);
+}
+
+void EffectFrame::setAlignment(Qt::Alignment alignment)
+{
+    if (alignment == d->alignment) {
+        return;
+    }
+    d->alignment = alignment;
+    //setGeometry();
+}
+
+Qt::Alignment EffectFrame::alignment() const
+{
+    return d->alignment;
+}
+
+void EffectFrame::setGeometry(const QRect &geometry, bool force)
+{
+    Q_UNUSED(force)
+    EffectQuickScene::setGeometry(geometry);
+}
+
+void EffectFrame::setText(const QString &text)
+{
+    if (text == d->text) {
+        return;
+    }
+    d->text = text;
+    emit textChanged();
+}
+
+QString EffectFrame::text() const
+{
+    return d->text;
+}
+
+void EffectFrame::setFont(const QFont &font)
+{
+    if (font == d->font) {
+        return;
+    }
+    d->font = font;
+    emit fontChanged();
+}
+
+QFont EffectFrame::font() const
+{
+    return d->font;
+}
+
+void EffectFrame::setIcon(const QIcon &icon)
+{
+//    if (icon == d->icon) {
+//        return;
+//    }
+    d->icon = icon;
+    emit iconChanged();
+}
+
+QIcon EffectFrame::icon() const
+{
+    return d->icon;
+}
+
+void EffectFrame::setIconSize(const QSize &iconSize)
+{
+    if (iconSize == d->iconSize) {
+        return;
+    }
+    d->iconSize = iconSize;
+    emit iconSizeChanged();
+}
+
+QSize EffectFrame::iconSize() const
+{
+    return d->iconSize;
+}
+
+void EffectFrame::setShader(GLShader *shader)
+{
+    //    d->
+}
+
+GLShader *EffectFrame::shader() const
+{
+    return nullptr;
+}
+
+EffectFrameStyle EffectFrame::style() const
+{
+    return EffectFrameStyled;
 }
 
 bool EffectFrame::isCrossFade() const
@@ -1747,6 +1866,7 @@ bool EffectFrame::isCrossFade() const
 void EffectFrame::enableCrossFade(bool enable)
 {
     d->crossFading = enable;
+    //emit isCrossFadeChanged
 }
 
 QMatrix4x4 EffectFrame::screenProjectionMatrix() const

@@ -42,13 +42,11 @@ class KWIN_EXPORT SceneOpenGL
 {
     Q_OBJECT
 public:
-    class EffectFrame;
     class Window;
     ~SceneOpenGL() override;
     bool initFailed() const override;
     bool hasPendingFlush() const override;
     qint64 paint(QRegion damage, QList<Toplevel *> windows) override;
-    Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     OverlayWindow *overlayWindow() const override;
@@ -226,44 +224,6 @@ private:
     explicit OpenGLWindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent, SceneOpenGL *scene);
     QScopedPointer<SceneOpenGLTexture> m_texture;
     SceneOpenGL *m_scene;
-};
-
-class SceneOpenGL::EffectFrame
-    : public Scene::EffectFrame
-{
-public:
-    EffectFrame(EffectFrameImpl* frame, SceneOpenGL *scene);
-    ~EffectFrame() override;
-
-    void free() override;
-    void freeIconFrame() override;
-    void freeTextFrame() override;
-    void freeSelection() override;
-
-    void render(QRegion region, double opacity, double frameOpacity) override;
-
-    void crossFadeIcon() override;
-    void crossFadeText() override;
-
-    static void cleanup();
-
-private:
-    void updateTexture();
-    void updateTextTexture();
-
-    GLTexture *m_texture;
-    GLTexture *m_textTexture;
-    GLTexture *m_oldTextTexture;
-    QPixmap *m_textPixmap; // need to keep the pixmap around to workaround some driver problems
-    GLTexture *m_iconTexture;
-    GLTexture *m_oldIconTexture;
-    GLTexture *m_selectionTexture;
-    GLVertexBuffer *m_unstyledVBO;
-    SceneOpenGL *m_scene;
-
-    static GLTexture* m_unstyledTexture;
-    static QPixmap* m_unstyledPixmap; // need to keep the pixmap around to workaround some driver problems
-    static void updateUnstyledTexture(); // Update OpenGL unstyled frame texture
 };
 
 /**
