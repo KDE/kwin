@@ -651,41 +651,36 @@ bool DrmOutput::dpmsLegacyApply()
 
 void DrmOutput::updateTransform(Transform transform)
 {
+    DrmPlane::Transformation planeTransform;
+
+    // TODO: Do we want to support reflections (flips)?
+
     switch (transform) {
     case Transform::Normal:
-        if (m_primaryPlane) {
-            m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
-        }
+    case Transform::Flipped:
+        planeTransform = DrmPlane::Transformation::Rotate0;
         break;
     case Transform::Rotated90:
-        if (m_primaryPlane) {
-            m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate90);
-        }
+    case Transform::Flipped90:
+        planeTransform = DrmPlane::Transformation::Rotate90;
         break;
     case Transform::Rotated180:
-        if (m_primaryPlane) {
-            m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate180);
-        }
+    case Transform::Flipped180:
+        planeTransform = DrmPlane::Transformation::Rotate180;
         break;
     case Transform::Rotated270:
-        if (m_primaryPlane) {
-            m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate270);
-        }
-        break;
-    case Transform::Flipped:
-        // TODO: what is this exactly?
-        break;
-    case Transform::Flipped90:
-        // TODO: what is this exactly?
-        break;
-    case Transform::Flipped180:
-        // TODO: what is this exactly?
-        break;
     case Transform::Flipped270:
-        // TODO: what is this exactly?
+        planeTransform = DrmPlane::Transformation::Rotate270;
         break;
+    default:
+        Q_UNREACHABLE();
+    }
+
+    if (m_primaryPlane) {
+        m_primaryPlane->setTransformation(planeTransform);
     }
     m_modesetRequested = true;
+
     // the cursor might need to get rotated
     updateCursor();
     showCursor();
