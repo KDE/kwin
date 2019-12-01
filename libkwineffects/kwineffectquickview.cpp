@@ -137,6 +137,8 @@ EffectQuickView::EffectQuickView(QObject *parent, ExportMode exportMode)
     connect(t, &QTimer::timeout, this, &EffectQuickView::update);
     connect(d->m_renderControl, &QQuickRenderControl::renderRequested, t, [t]() { t->start(); });
     connect(d->m_renderControl, &QQuickRenderControl::sceneChanged, t, [t]() { t->start(); });
+
+    effects->makeOpenGLContextCurrent();
 }
 
 EffectQuickView::~EffectQuickView()
@@ -146,6 +148,7 @@ EffectQuickView::~EffectQuickView()
         d->m_renderControl->invalidate();
         d->m_glcontext->doneCurrent();
     }
+    effects->makeOpenGLContextCurrent();
 }
 
 void EffectQuickView::update()
@@ -340,6 +343,7 @@ void EffectQuickView::Private::releaseResources()
     } else {
         m_view->releaseResources();
     }
+    effects->makeOpenGLContextCurrent();
 }
 
 EffectQuickScene::EffectQuickScene(QObject *parent)
