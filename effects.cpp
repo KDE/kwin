@@ -1546,12 +1546,6 @@ KWayland::Server::Display *EffectsHandlerImpl::waylandDisplay() const
     return nullptr;
 }
 
-//EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const
-//{
-//    return new EffectFrameImpl(style, staticSize, position, alignment);
-//}
-
-
 QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
 {
     switch (kwopt) {
@@ -2169,24 +2163,5 @@ EffectWindowList EffectWindowGroupImpl::members() const
         [](auto toplevel) { return toplevel->effectWindow(); });
     return ret;
 }
-
-
-
-//void
-//EffectFrameImpl::align(QRect &geometry)
-//{
-//    if (m_alignment & Qt::AlignLeft)
-//        geometry.moveLeft(m_point.x());
-//    else if (m_alignment & Qt::AlignRight)
-//        geometry.moveLeft(m_point.x() - geometry.width());
-//    else
-//        geometry.moveLeft(m_point.x() - geometry.width() / 2);
-//    if (m_alignment & Qt::AlignTop)
-//        geometry.moveTop(m_point.y());
-//    else if (m_alignment & Qt::AlignBottom)
-//        geometry.moveTop(m_point.y() - geometry.height());
-//    else
-//        geometry.moveTop(m_point.y() - geometry.height() / 2);
-//}
 
 } // namespace

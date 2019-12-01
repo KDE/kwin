@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtMath>
 
 #include <QQmlContext>
-
+#include <QQuickItem>
 
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
@@ -1709,14 +1709,18 @@ public:
     EffectFramePrivate();
     ~EffectFramePrivate();
 
+    // exposed properties for the QtQuick implementation
     QString text;
     QFont font;
     QIcon icon;
     QSize iconSize;
-
-    Qt::Alignment alignment;
     bool crossFading = false;
 
+    // semantic positioning
+    QPoint point;
+    Qt::Alignment alignment;
+
+    // render manipulation
     QMatrix4x4 screenProjectionMatrix;
 };
 
@@ -1736,9 +1740,13 @@ EffectFrame::EffectFrame()
     : EffectQuickScene(nullptr)
     , d(new EffectFramePrivate)
 {
-    setSource(QUrl::fromLocalFile("/home/david/style_frame.qml"));
-    setGeometry(QRect(400,400,400,400));
     rootContext()->setContextProperty("frameData", this);
+    setSource(QUrl::fromLocalFile("/home/david/style_frame.qml"));
+
+    if (rootItem()) {
+        connect(rootItem(), &QQuickItem::implicitWidthChanged, this, &EffectFrame::reposition);
+        connect(rootItem(), &QQuickItem::implicitHeightChanged, this, &EffectFrame::reposition);
+    }
 }
 
 EffectFrame::~EffectFrame()
@@ -1762,9 +1770,11 @@ void EffectFrame::render(const QRegion &region, double opacity, double frameOpac
 
 void EffectFrame::setPosition(const QPoint &point)
 {
-    QRect newGeometry = geometry();
-    newGeometry.moveTo(point);
-    setGeometry(newGeometry);
+    if (point == d->point) {
+        return;
+    }
+    d->point = point;
+    reposition();
 }
 
 void EffectFrame::setAlignment(Qt::Alignment alignment)
@@ -1773,13 +1783,40 @@ void EffectFrame::setAlignment(Qt::Alignment alignment)
         return;
     }
     d->alignment = alignment;
-    //setGeometry();
+    reposition();
 }
 
 Qt::Alignment EffectFrame::alignment() const
 {
     return d->alignment;
 }
+
+void EffectFrame::reposition()
+{
+    if (!rootItem() || d->point.isNull()) {
+        return;
+    }
+    const QSizeF implicitSize(rootItem()->implicitWidth(), rootItem()->implicitHeight());
+    QRect geometry(QPoint(), implicitSize.toSize());
+
+    if (d->alignment & Qt::AlignLeft) {
+        geometry.moveLeft(d->point.x());
+    } else if (d->alignment & Qt::AlignRight) {
+        geometry.moveLeft(d->point.x() - geometry.width());
+    } else {
+        geometry.moveLeft(d->point.x() - geometry.width() / 2);
+    }
+
+    if (d->alignment & Qt::AlignTop) {
+        geometry.moveTop(d->point.y());
+    } else if (d->alignment & Qt::AlignBottom) {
+        geometry.moveTop(d->point.y() - geometry.height());
+    } else {
+        geometry.moveTop(d->point.y() - geometry.height() / 2);
+    }
+    setGeometry(geometry);
+}
+
 
 void EffectFrame::setGeometry(const QRect &geometry, bool force)
 {

@@ -62,7 +62,6 @@ class KWIN_EXPORT Scene : public QObject
 public:
     explicit Scene(QObject *parent = nullptr);
     ~Scene() override = 0;
-    class EffectFrame;
     class Window;
 
     // Returns true if the ctor failed to properly initialize.

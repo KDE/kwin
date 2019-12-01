@@ -3455,6 +3455,7 @@ public:
 
     /**
       ?????
+      I have literally no idea what this is trying to describe
      * Sets the geometry of a selection.
      * To remove the selection set a null rect.
      * @param selection The geometry of the selection in screen coordinates.
@@ -3524,6 +3525,7 @@ protected:
     void setScreenProjectionMatrix(const QMatrix4x4 &projection);
 
 private:
+    void reposition();
     EffectFramePrivate* const d;
 };
 
