@@ -191,6 +191,177 @@ private:
     libinput_event_switch *m_switchEvent;
 };
 
+class TabletToolEvent : public Event
+{
+public:
+    TabletToolEvent(libinput_event *event, libinput_event_type type);
+
+    bool xHasChanged() const {
+        return libinput_event_tablet_tool_x_has_changed(m_tabletToolEvent);
+    }
+    bool yHasChanged() const {
+        return libinput_event_tablet_tool_y_has_changed(m_tabletToolEvent);
+    }
+    bool pressureHasChanged() const {
+        return libinput_event_tablet_tool_pressure_has_changed(m_tabletToolEvent);
+    }
+    bool distanceHasChanged() const {
+        return libinput_event_tablet_tool_distance_has_changed(m_tabletToolEvent);
+    }
+    bool tiltXHasChanged() const {
+        return libinput_event_tablet_tool_tilt_x_has_changed(m_tabletToolEvent);
+    }
+    bool tiltYHasChanged() const {
+        return libinput_event_tablet_tool_tilt_y_has_changed(m_tabletToolEvent);
+    }
+    bool rotationHasChanged() const {
+        return libinput_event_tablet_tool_rotation_has_changed(m_tabletToolEvent);
+    }
+    bool sliderHasChanged() const {
+        return libinput_event_tablet_tool_slider_has_changed(m_tabletToolEvent);
+    }
+
+    // uncomment when depending on libinput 1.14 or when implementing totems
+    //     bool sizeMajorHasChanged() const { return
+    //     libinput_event_tablet_tool_size_major_has_changed(m_tabletToolEvent); } bool
+    //     sizeMinorHasChanged() const { return
+    //     libinput_event_tablet_tool_size_minor_has_changed(m_tabletToolEvent); }
+    bool wheelHasChanged() const {
+        return libinput_event_tablet_tool_wheel_has_changed(m_tabletToolEvent);
+    }
+    QPointF position() const {
+        return {libinput_event_tablet_tool_get_x(m_tabletToolEvent),
+                libinput_event_tablet_tool_get_y(m_tabletToolEvent)};
+    }
+    QPointF delta() const {
+        return {libinput_event_tablet_tool_get_dx(m_tabletToolEvent),
+                libinput_event_tablet_tool_get_dy(m_tabletToolEvent)};
+    }
+    qreal pressure() const {
+        return libinput_event_tablet_tool_get_pressure(m_tabletToolEvent);
+    }
+    qreal distance() const {
+        return libinput_event_tablet_tool_get_distance(m_tabletToolEvent);
+    }
+    int xTilt() const {
+        return libinput_event_tablet_tool_get_tilt_x(m_tabletToolEvent);
+    }
+    int yTilt() const {
+        return libinput_event_tablet_tool_get_tilt_y(m_tabletToolEvent);
+    }
+    qreal rotation() const {
+        return libinput_event_tablet_tool_get_rotation(m_tabletToolEvent);
+    }
+    qreal sliderPosition() const {
+        return libinput_event_tablet_tool_get_slider_position(m_tabletToolEvent);
+    }
+    // Uncomment when depending on libinput 1.14 or when implementing totems
+    // qreal sizeMajor() const { return
+    //     libinput_event_tablet_tool_get_size_major(m_tabletToolEvent); }
+    // qreal sizeMinor() const {
+    //     return libinput_event_tablet_tool_get_size_minor(m_tabletToolEvent); }
+    qreal wheelDelta() const {
+        return libinput_event_tablet_tool_get_wheel_delta(m_tabletToolEvent);
+    }
+    int wheelDeltaDiscrete() const {
+        return libinput_event_tablet_tool_get_wheel_delta_discrete(m_tabletToolEvent);
+    }
+
+    bool isTipDown() const {
+        const auto state = libinput_event_tablet_tool_get_tip_state(m_tabletToolEvent);
+        return state == LIBINPUT_TABLET_TOOL_TIP_DOWN;
+    }
+    bool isNearby() const {
+        const auto state = libinput_event_tablet_tool_get_proximity_state(m_tabletToolEvent);
+        return state == LIBINPUT_TABLET_TOOL_PROXIMITY_STATE_IN;
+    }
+
+    QPointF transformedPosition(const QSize &size) const {
+        return {libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, size.width()),
+                libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, size.height())};
+    }
+
+    struct libinput_tablet_tool *tool() {
+        return libinput_event_tablet_tool_get_tool(m_tabletToolEvent);
+    }
+
+private:
+    libinput_event_tablet_tool *m_tabletToolEvent;
+};
+
+class TabletToolButtonEvent : public Event
+{
+public:
+    TabletToolButtonEvent(libinput_event *event, libinput_event_type type);
+
+    uint buttonId() const {
+        return libinput_event_tablet_tool_get_button(m_tabletToolEvent);
+    }
+
+    bool isButtonPressed() const {
+        const auto state = libinput_event_tablet_tool_get_button_state(m_tabletToolEvent);
+        return state == LIBINPUT_BUTTON_STATE_PRESSED;
+    }
+
+private:
+    libinput_event_tablet_tool *m_tabletToolEvent;
+};
+
+class TabletPadRingEvent : public Event
+{
+public:
+    TabletPadRingEvent(libinput_event *event, libinput_event_type type);
+
+    int position() const {
+        return libinput_event_tablet_pad_get_ring_position(m_tabletPadEvent);
+    }
+    int number() const {
+        return libinput_event_tablet_pad_get_ring_number(m_tabletPadEvent);
+    }
+    libinput_tablet_pad_ring_axis_source source() const {
+        return libinput_event_tablet_pad_get_ring_source(m_tabletPadEvent);
+    }
+
+private:
+    libinput_event_tablet_pad *m_tabletPadEvent;
+};
+
+class TabletPadStripEvent : public Event
+{
+public:
+    TabletPadStripEvent(libinput_event *event, libinput_event_type type);
+
+    int position() const {
+        return libinput_event_tablet_pad_get_strip_position(m_tabletPadEvent);
+    }
+    int number() const {
+        return libinput_event_tablet_pad_get_strip_number(m_tabletPadEvent);
+    }
+    libinput_tablet_pad_strip_axis_source source() const {
+        return libinput_event_tablet_pad_get_strip_source(m_tabletPadEvent);
+    }
+
+private:
+    libinput_event_tablet_pad *m_tabletPadEvent;
+};
+
+class TabletPadButtonEvent : public Event
+{
+public:
+    TabletPadButtonEvent(libinput_event *event, libinput_event_type type);
+
+    uint buttonId() const {
+        return libinput_event_tablet_pad_get_button_number(m_tabletPadEvent);
+    }
+    bool isButtonPressed() const {
+        const auto state = libinput_event_tablet_pad_get_button_state(m_tabletPadEvent);
+        return state == LIBINPUT_BUTTON_STATE_PRESSED;
+    }
+
+private:
+    libinput_event_tablet_pad *m_tabletPadEvent;
+};
+
 inline
 libinput_event_type Event::type() const
 {

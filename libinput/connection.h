@@ -131,6 +131,15 @@ Q_SIGNALS:
     void switchToggledOn(quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
     void switchToggledOff(quint32 time, quint64 timeMicroseconds, KWin::LibInput::Device *device);
 
+    void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
+                         qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                         bool tipNear, quint64 serialId, quint64 toolId, LibInput::Device *device);
+    void tabletToolButtonEvent(uint button, bool isPressed);
+
+    void tabletPadButtonEvent(uint button, bool isPressed);
+    void tabletPadStripEvent(int number, int position, bool isFinger);
+    void tabletPadRingEvent(int number, int position, bool isFinger);
+
     void eventsRead();
 
 private Q_SLOTS:

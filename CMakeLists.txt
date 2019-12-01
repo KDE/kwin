@@ -479,6 +479,7 @@ set(kwin_KDEINIT_SRCS
     thumbnailitem.cpp
     toplevel.cpp
     touch_hide_cursor_spy.cpp
+    tablet_input.cpp
     touch_input.cpp
     udev.cpp
     unmanaged.cpp

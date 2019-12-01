@@ -121,4 +121,32 @@ void InputEventSpy::switchEvent(SwitchEvent *event)
     Q_UNUSED(event)
 }
 
+void InputEventSpy::tabletToolEvent(QTabletEvent *event)
+{
+    Q_UNUSED(event)
+}
+
+void InputEventSpy::tabletToolButtonEvent(const QSet<uint> &pressedButtons)
+{
+    Q_UNUSED(pressedButtons)
+}
+
+void InputEventSpy::tabletPadButtonEvent(const QSet<uint> &pressedButtons)
+{
+    Q_UNUSED(pressedButtons)
+}
+
+void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger)
+{
+    Q_UNUSED(number)
+    Q_UNUSED(position)
+    Q_UNUSED(isFinger)
+}
+
+void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger)
+{
+    Q_UNUSED(number)
+    Q_UNUSED(position)
+    Q_UNUSED(isFinger)
+}
 }

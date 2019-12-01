@@ -153,6 +153,12 @@ public:
 
     void switchEvent(SwitchEvent *event) override;
 
+    void tabletToolEvent(QTabletEvent *event) override;
+    void tabletToolButtonEvent(const QSet<uint> &pressedButtons) override;
+    void tabletPadButtonEvent(const QSet<uint> &pressedButtons) override;
+    void tabletPadStripEvent(int number, int position, bool isFinger) override;
+    void tabletPadRingEvent(int number, int position, bool isFinger) override;
+
 private:
     QTextEdit *m_textEdit;
 };

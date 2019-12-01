@@ -463,6 +463,62 @@ void Connection::processEvents()
                 }
                 break;
             }
+            case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
+            case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+            case LIBINPUT_EVENT_TABLET_TOOL_TIP: {
+                auto *tte = static_cast<TabletToolEvent *>(event.data());
+
+                KWin::InputRedirection::TabletEventType tabletEventType;
+                switch (event->type()) {
+                case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
+                    tabletEventType = KWin::InputRedirection::Axis;
+                    break;
+                case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+                    tabletEventType = KWin::InputRedirection::Proximity;
+                    break;
+                case LIBINPUT_EVENT_TABLET_TOOL_TIP:
+                default:
+                    tabletEventType = KWin::InputRedirection::Tip;
+                    break;
+                }
+                auto serial = libinput_tablet_tool_get_serial(tte->tool());
+                auto toolId = libinput_tablet_tool_get_tool_id(tte->tool());
+
+                emit tabletToolEvent(tabletEventType,
+                                     tte->transformedPosition(m_size), tte->pressure(),
+                                     tte->xTilt(), tte->yTilt(), tte->rotation(),
+                                     tte->isTipDown(), tte->isNearby(), serial,
+                                     toolId, event->device());
+                break;
+            }
+            case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
+                auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.data());
+                emit tabletToolButtonEvent(tabletEvent->buttonId(),
+                                           tabletEvent->isButtonPressed());
+                break;
+            }
+            case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
+                auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.data());
+                emit tabletPadButtonEvent(tabletEvent->buttonId(),
+                                          tabletEvent->isButtonPressed());
+                break;
+            }
+            case LIBINPUT_EVENT_TABLET_PAD_RING: {
+                auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.data());
+                emit tabletPadRingEvent(tabletEvent->number(),
+                                        tabletEvent->position(),
+                                        tabletEvent->source() ==
+                                            LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER);
+                break;
+            }
+            case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
+                auto *tabletEvent = static_cast<TabletPadStripEvent *>(event.data());
+                emit tabletPadStripEvent(tabletEvent->number(),
+                                         tabletEvent->position(),
+                                         tabletEvent->source() ==
+                                             LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER);
+                break;
+            }
             default:
                 // nothing
                 break;

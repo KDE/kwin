@@ -482,6 +482,83 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
+void DebugConsoleFilter::tabletToolEvent(QTabletEvent *event)
+{
+    QString typeString;
+    {
+        QDebug d(&typeString);
+        d << event->type();
+    }
+
+    QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool"))
+                 + tableRow(i18n("EventType"), typeString)
+                 + tableRow(i18n("Position"),
+                            QStringLiteral("%1,%2").arg(event->pos().x()).arg(event->pos().y()))
+                 + tableRow(i18n("Tilt"),
+                            QStringLiteral("%1,%2").arg(event->xTilt()).arg(event->yTilt()))
+                 + tableRow(i18n("Rotation"), QString::number(event->rotation()))
+                 + tableRow(i18n("Pressure"), QString::number(event->pressure()))
+                 + tableRow(i18n("Buttons"), QString::number(event->buttons()))
+                 + tableRow(i18n("Modifiers"), QString::number(event->modifiers()))
+                 + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::tabletToolButtonEvent(const QSet<uint> &pressedButtons)
+{
+    QString buttons;
+    for (uint b : pressedButtons) {
+        buttons += QString::number(b) + ' ';
+    }
+    QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
+                 + tableRow(i18n("Pressed Buttons"), buttons)
+                 + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::tabletPadButtonEvent(const QSet<uint> &pressedButtons)
+{
+    QString buttons;
+    for (uint b : pressedButtons) {
+        buttons += QString::number(b) + ' ';
+    }
+    QString text = s_hr + s_tableStart
+                 + tableHeaderRow(i18n("Tablet Pad Button"))
+                 + tableRow(i18n("Pressed Buttons"), buttons)
+                 + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger)
+{
+    QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Strip"))
+                 + tableRow(i18n("Number"), number)
+                 + tableRow(i18n("Position"), position)
+                 + tableRow(i18n("isFinger"), isFinger)
+                 + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
+void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger)
+{
+    QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Ring"))
+                 + tableRow(i18n("Number"), number)
+                 + tableRow(i18n("Position"), position)
+                 + tableRow(i18n("isFinger"), isFinger)
+                 + s_tableEnd;
+
+    m_textEdit->insertHtml(text);
+    m_textEdit->ensureCursorVisible();
+}
+
 DebugConsole::DebugConsole()
     : QWidget()
     , m_ui(new Ui::DebugConsole)

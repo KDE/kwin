@@ -20,18 +20,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
-#include "input_event.h"
-#include "input_event_spy.h"
-#include "keyboard_input.h"
-#include "pointer_input.h"
-#include "touch_input.h"
-#include "touch_hide_cursor_spy.h"
-#include "x11client.h"
 #include "effects.h"
 #include "gestures.h"
 #include "globalshortcuts.h"
+#include "input_event.h"
+#include "input_event_spy.h"
+#include "keyboard_input.h"
 #include "logind.h"
 #include "main.h"
+#include "pointer_input.h"
+#include "tablet_input.h"
+#include "touch_hide_cursor_spy.h"
+#include "touch_input.h"
+#include "x11client.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
@@ -173,6 +174,40 @@ bool InputEventFilter::swipeGestureCancelled(quint32 time)
 bool InputEventFilter::switchEvent(SwitchEvent *event)
 {
     Q_UNUSED(event)
+    return false;
+}
+
+bool InputEventFilter::tabletToolEvent(QTabletEvent *event)
+{
+    Q_UNUSED(event)
+    return false;
+}
+
+bool InputEventFilter::tabletToolButtonEvent(const QSet<uint> &pressedButtons)
+{
+    Q_UNUSED(pressedButtons)
+    return false;
+}
+
+bool InputEventFilter::tabletPadButtonEvent(const QSet<uint> &pressedButtons)
+{
+    Q_UNUSED(pressedButtons)
+    return false;
+}
+
+bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger)
+{
+    Q_UNUSED(number)
+    Q_UNUSED(position)
+    Q_UNUSED(isFinger)
+    return false;
+}
+
+bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger)
+{
+    Q_UNUSED(number)
+    Q_UNUSED(position)
+    Q_UNUSED(isFinger)
     return false;
 }
 
@@ -1623,6 +1658,7 @@ InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
     , m_keyboard(new KeyboardInputRedirection(this))
     , m_pointer(new PointerInputRedirection(this))
+    , m_tablet(new TabletInputRedirection(this))
     , m_touch(new TouchInputRedirection(this))
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
@@ -1807,6 +1843,7 @@ void InputRedirection::setupWorkspace()
         m_keyboard->init();
         m_pointer->init();
         m_touch->init();
+        m_tablet->init();
     }
     setupInputFilters();
 }
@@ -1934,6 +1971,18 @@ void InputRedirection::setupLibInput()
                 std::bind(handleSwitchEvent, SwitchEvent::State::On, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
         connect(conn, &LibInput::Connection::switchToggledOff, this,
                 std::bind(handleSwitchEvent, SwitchEvent::State::Off, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
+        connect(conn, &LibInput::Connection::tabletToolEvent,
+                m_tablet, &TabletInputRedirection::tabletToolEvent);
+        connect(conn, &LibInput::Connection::tabletToolButtonEvent,
+                m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
+        connect(conn, &LibInput::Connection::tabletPadButtonEvent,
+                m_tablet, &TabletInputRedirection::tabletPadButtonEvent);
+        connect(conn, &LibInput::Connection::tabletPadRingEvent,
+                m_tablet, &TabletInputRedirection::tabletPadRingEvent);
+        connect(conn, &LibInput::Connection::tabletPadStripEvent,
+                m_tablet, &TabletInputRedirection::tabletPadStripEvent);
+
         if (screens()) {
             setupLibInputWithScreens();
         } else {

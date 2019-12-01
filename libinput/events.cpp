@@ -57,6 +57,18 @@ Event *Event::create(libinput_event *event)
     case LIBINPUT_EVENT_GESTURE_PINCH_UPDATE:
     case LIBINPUT_EVENT_GESTURE_PINCH_END:
         return new PinchGestureEvent(event, t);
+    case LIBINPUT_EVENT_TABLET_TOOL_AXIS:
+    case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY:
+    case LIBINPUT_EVENT_TABLET_TOOL_TIP:
+        return new TabletToolEvent(event, t);
+    case LIBINPUT_EVENT_TABLET_TOOL_BUTTON:
+        return new TabletToolButtonEvent(event, t);
+    case LIBINPUT_EVENT_TABLET_PAD_RING:
+        return new TabletPadRingEvent(event, t);
+    case LIBINPUT_EVENT_TABLET_PAD_STRIP:
+        return new TabletPadStripEvent(event, t);
+    case LIBINPUT_EVENT_TABLET_PAD_BUTTON:
+        return new TabletPadButtonEvent(event, t);
     case LIBINPUT_EVENT_SWITCH_TOGGLE:
         return new SwitchEvent(event, t);
     default:
@@ -352,5 +364,34 @@ quint64 SwitchEvent::timeMicroseconds() const
     return libinput_event_switch_get_time_usec(m_switchEvent);
 }
 
+TabletToolEvent::TabletToolEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_tabletToolEvent(libinput_event_get_tablet_tool_event(event))
+{
+}
+
+TabletToolButtonEvent::TabletToolButtonEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_tabletToolEvent(libinput_event_get_tablet_tool_event(event))
+{
+}
+
+TabletPadButtonEvent::TabletPadButtonEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_tabletPadEvent(libinput_event_get_tablet_pad_event(event))
+{
+}
+
+TabletPadStripEvent::TabletPadStripEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_tabletPadEvent(libinput_event_get_tablet_pad_event(event))
+{
+}
+
+TabletPadRingEvent::TabletPadRingEvent(libinput_event *event, libinput_event_type type)
+    : Event(event, type)
+    , m_tabletPadEvent(libinput_event_get_tablet_pad_event(event))
+{
+}
 }
 }
