@@ -57,7 +57,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 
     layout->addWidget(m_ui);
 
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, qOverload<>(&ThumbnailAsideEffectConfig::changed));
+    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &ThumbnailAsideEffectConfig::markAsChanged);
 
     ThumbnailAsideConfig::instance(KWIN_CONFIG);
     addConfig(ThumbnailAsideConfig::self(), this);

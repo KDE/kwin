@@ -54,7 +54,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
-    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, qOverload<>(&MouseClickEffectConfig::changed));
+    connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &MouseClickEffectConfig::markAsChanged);
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));

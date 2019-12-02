@@ -76,7 +76,7 @@ void KWinCompositingSettings::init()
     using namespace KWin::Compositing;
     auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 
-    connect(m_compositing, &Compositing::changed, this, static_cast<void(KCModule::*)()>(&KWinCompositingSettings::changed));
+    connect(m_compositing, &Compositing::changed, this, &KWinCompositingSettings::markAsChanged);
 
     // enabled check box
     m_form.compositingEnabled->setChecked(m_compositing->compositingEnabled());

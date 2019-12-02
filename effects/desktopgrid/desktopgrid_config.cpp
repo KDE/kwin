@@ -87,8 +87,8 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     DesktopGridConfig::instance(KWIN_CONFIG);
     addConfig(DesktopGridConfig::self(), m_ui);
     connect(m_ui->kcfg_LayoutMode, qOverload<int>(&KComboBox::currentIndexChanged), this, &DesktopGridEffectConfig::layoutSelectionChanged);
-    connect(m_ui->desktopNameAlignmentCombo, qOverload<int>(&KComboBox::currentIndexChanged), this, qOverload<>(&DesktopGridEffectConfig::changed));
-    connect(m_ui->shortcutEditor, &KShortcutsEditor::keyChange, this, qOverload<>(&DesktopGridEffectConfig::changed));
+    connect(m_ui->desktopNameAlignmentCombo, qOverload<int>(&KComboBox::currentIndexChanged), this, &DesktopGridEffectConfig::markAsChanged);
+    connect(m_ui->shortcutEditor, &KShortcutsEditor::keyChange, this, &DesktopGridEffectConfig::markAsChanged);
 
     load();
     layoutSelectionChanged();
