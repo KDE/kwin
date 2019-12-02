@@ -3,7 +3,6 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -450,6 +449,12 @@ public:
      */
     const QSize &size() const;
     /**
+     * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
+     * pixmap also contains the decoration which is not rendered into this pixmap, though. This
+     * contentsRect tells where inside the complete pixmap the real content is.
+     */
+    const QRect &contentsRect() const;
+    /**
      * @brief Returns the Toplevel this WindowPixmap belongs to.
      * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
      */
@@ -508,6 +513,7 @@ private:
     xcb_pixmap_t m_pixmap;
     QSize m_pixmapSize;
     bool m_discarded;
+    QRect m_contentsRect;
     QPointer<KWayland::Server::BufferInterface> m_buffer;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_internalImage;
@@ -671,6 +677,12 @@ void WindowPixmap::markAsDiscarded()
 {
     m_discarded = true;
     m_window->referencePreviousPixmap();
+}
+
+inline
+const QRect &WindowPixmap::contentsRect() const
+{
+    return m_contentsRect;
 }
 
 inline

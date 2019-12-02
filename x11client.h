@@ -4,7 +4,6 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,25 +57,6 @@ enum class Predicate {
     InputIdMatch
 };
 
-/**
- * The X11Client class represents a managed X11 client.
- *
- * Note that override-redirect clients are represented by instances of the Unmanaged class.
- *
- * Each X11 client has three geometries associated with it - frame, client, and server. The frame
- * geometry is the most easiest one to understand, it specifies visible bounds of the window from
- * the user's perspective. The frame geometry doesn't include server-side and client-side drop
- * shadows. Window operations such resizing, snapping, tiling and so on must operate on this kind
- * of geometry. The client geometry specifies a rectangle on the screen occupied by the client
- * window. The server-side decoration, if any, must be put around the client geometry. The server
- * geometry specifies the server-side geometry of the frame window.
- *
- * There is no strict order between the frame and the client geometry. Either one of them can be
- * inside the other one. However, it's always guaranteed that both of them are inside the server
- * geometry.
- *
- * The buffer geometry is an alias for the client geometry.
- */
 class KWIN_EXPORT X11Client : public AbstractClient
 {
     Q_OBJECT
@@ -110,6 +90,7 @@ public:
     xcb_window_t frameId() const override;
 
     QRect bufferGeometry() const override;
+    QMargins bufferMargins() const override;
 
     QPoint framePosToClientPos(const QPoint &point) const override;
     QPoint clientPosToFramePos(const QPoint &point) const override;
@@ -465,6 +446,9 @@ private:
     void destroyDecoration() override;
     void updateFrameExtents();
     void setClientFrameExtents(const NETStrut &strut);
+    bool canUpdatePosition(const QPoint &frame, const QPoint &buffer, ForceGeometry_t force) const;
+    bool canUpdateSize(const QSize &frame, const QSize &buffer, ForceGeometry_t force) const;
+    bool canUpdateGeometry(const QRect &frame, const QRect &buffer, ForceGeometry_t force) const;
 
     void internalShow();
     void internalHide();
@@ -472,7 +456,7 @@ private:
     void map();
     void unmap();
     void updateHiddenPreview();
-    void updateServerGeometry();
+
     void updateInputShape();
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
@@ -538,7 +522,7 @@ private:
     } m_fullscreenMode;
 
     MaximizeMode max_mode;
-    QRect m_serverGeometry = QRect(0, 0, 100, 100);
+    QRect m_bufferGeometry = QRect(0, 0, 100, 100);
     QRect m_clientGeometry = QRect(0, 0, 100, 100);
     QRect geom_restore;
     QRect geom_fs_restore;

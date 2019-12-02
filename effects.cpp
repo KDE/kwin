@@ -4,7 +4,6 @@
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
 Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -1952,8 +1951,8 @@ void EffectWindowImpl::setSceneWindow(Scene::Window* w)
 
 QRegion EffectWindowImpl::shape() const
 {
-    if (sw) {
-        return sw->decorationShape() | sw->bufferShape().translated(toplevel->clientPos());
+    if (isX11Client() && sceneWindow()) {
+        return sceneWindow()->bufferShape();
     }
     return geometry();
 }

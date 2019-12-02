@@ -1946,7 +1946,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     // for example using X11Client::clientSize()
 
     QRect frameGeometry(x, y, w, h);
-    QRect serverGeometry;
+    QRect bufferGeometry;
 
     if (shade_geometry_change)
         ; // nothing
@@ -1961,18 +1961,18 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
         m_clientGeometry = frameRectToClientRect(frameGeometry);
     }
     if (isDecorated()) {
-        serverGeometry = frameGeometry;
+        bufferGeometry = frameGeometry;
     } else {
-        serverGeometry = m_clientGeometry;
+        bufferGeometry = m_clientGeometry;
     }
-    geom = frameGeometry;
     if (!areGeometryUpdatesBlocked() && frameGeometry != rules()->checkGeometry(frameGeometry)) {
         qCDebug(KWIN_CORE) << "forced geometry fail:" << frameGeometry << ":" << rules()->checkGeometry(frameGeometry);
     }
-    if (force == NormalGeometrySet && m_serverGeometry == serverGeometry && pendingGeometryUpdate() == PendingGeometryNone) {
+    if (!canUpdateGeometry(frameGeometry, bufferGeometry, force)) {
         return;
     }
-    m_serverGeometry = serverGeometry;
+    m_bufferGeometry = bufferGeometry;
+    geom = frameGeometry;
     if (areGeometryUpdatesBlocked()) {
         if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
@@ -1982,88 +1982,11 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
-    updateServerGeometry();
-    updateWindowRules(Rules::Position|Rules::Size);
-
-    // keep track of old maximize mode
-    // to detect changes
-    screens()->setCurrent(this);
-    workspace()->updateStackingOrder();
-
-    // Need to regenerate decoration pixmaps when the buffer size is changed.
-    if (bufferGeometryBeforeUpdateBlocking().size() != bufferGeometry().size()) {
-        discardWindowPixmap();
-    }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
-    addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
-    // TODO: this signal is emitted too often
-    emit geometryChanged();
-}
-
-void X11Client::plainResize(int w, int h, ForceGeometry_t force)
-{
-    QSize frameSize(w, h);
-    QSize serverSize;
-
-    // this code is also duplicated in X11Client::setGeometry(), and it's also commented there
-    if (shade_geometry_change)
-        ; // nothing
-    else if (isShade()) {
-        if (frameSize.height() == borderTop() + borderBottom()) {
-            qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
-        } else {
-            m_clientGeometry.setSize(frameSizeToClientSize(frameSize));
-            frameSize.setHeight(borderTop() + borderBottom());
-        }
-    } else {
-        m_clientGeometry.setSize(frameSizeToClientSize(frameSize));
-    }
-    if (isDecorated()) {
-        serverSize = frameSize;
-    } else {
-        serverSize = m_clientGeometry.size();
-    }
-    if (!areGeometryUpdatesBlocked() && frameSize != rules()->checkSize(frameSize)) {
-        qCDebug(KWIN_CORE) << "forced size fail:" << frameSize << ":" << rules()->checkSize(frameSize);
-    }
-    geom.setSize(frameSize);
-    // resuming geometry updates is handled only in setGeometry()
-    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
-    if (force == NormalGeometrySet && m_serverGeometry.size() == serverSize) {
-        return;
-    }
-    m_serverGeometry.setSize(serverSize);
-    if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced)
-            {} // maximum, nothing needed
-        else if (force == ForceGeometrySet)
-            setPendingGeometryUpdate(PendingGeometryForced);
-        else
-            setPendingGeometryUpdate(PendingGeometryNormal);
-        return;
-    }
-    updateServerGeometry();
-    updateWindowRules(Rules::Position|Rules::Size);
-    screens()->setCurrent(this);
-    workspace()->updateStackingOrder();
-    if (bufferGeometryBeforeUpdateBlocking().size() != bufferGeometry().size()) {
-        discardWindowPixmap();
-    }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
-    addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
-    // TODO: this signal is emitted too often
-    emit geometryChanged();
-}
-
-void X11Client::updateServerGeometry()
-{
-    const QRect previousServerGeometry = m_frame.geometry();
-    const bool resized = (previousServerGeometry.size() != m_serverGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced);
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    bool resized = (oldBufferGeometry.size() != m_bufferGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced);
     if (resized) {
         resizeDecoration();
-        m_frame.setGeometry(m_serverGeometry);
+        m_frame.setGeometry(m_bufferGeometry);
         if (!isShade()) {
             QSize cs = clientSize();
             m_wrapper.setGeometry(QRect(clientPos(), cs));
@@ -2079,15 +2002,96 @@ void X11Client::updateServerGeometry()
             if (compositing())  // Defer the X update until we leave this mode
                 needsXWindowMove = true;
             else
-                m_frame.move(m_serverGeometry.topLeft()); // sendSyntheticConfigureNotify() on finish shall be sufficient
+                m_frame.move(m_bufferGeometry.topLeft()); // sendSyntheticConfigureNotify() on finish shall be sufficient
         } else {
-            m_frame.move(m_serverGeometry.topLeft());
+            m_frame.move(m_bufferGeometry.topLeft());
             sendSyntheticConfigureNotify();
         }
 
         // Unconditionally move the input window: it won't affect rendering
-        m_decoInputExtent.move(pos() + inputPos());
+        m_decoInputExtent.move(QPoint(x, y) + inputPos());
     }
+    updateWindowRules(Rules::Position|Rules::Size);
+
+    // keep track of old maximize mode
+    // to detect changes
+    screens()->setCurrent(this);
+    workspace()->updateStackingOrder();
+
+    // Need to regenerate decoration pixmaps when the buffer size is changed.
+    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
+        discardWindowPixmap();
+    }
+    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    addRepaintDuringGeometryUpdates();
+    updateGeometryBeforeUpdateBlocking();
+    // TODO: this signal is emitted too often
+    emit geometryChanged();
+}
+
+void X11Client::plainResize(int w, int h, ForceGeometry_t force)
+{
+    QSize frameSize(w, h);
+    QSize bufferSize;
+
+    // this code is also duplicated in X11Client::setGeometry(), and it's also commented there
+    if (shade_geometry_change)
+        ; // nothing
+    else if (isShade()) {
+        if (frameSize.height() == borderTop() + borderBottom()) {
+            qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
+        } else {
+            m_clientGeometry.setSize(frameSizeToClientSize(frameSize));
+            frameSize.setHeight(borderTop() + borderBottom());
+        }
+    } else {
+        m_clientGeometry.setSize(frameSizeToClientSize(frameSize));
+    }
+    if (isDecorated()) {
+        bufferSize = frameSize;
+    } else {
+        bufferSize = m_clientGeometry.size();
+    }
+    if (!areGeometryUpdatesBlocked() && frameSize != rules()->checkSize(frameSize)) {
+        qCDebug(KWIN_CORE) << "forced size fail:" << frameSize << ":" << rules()->checkSize(frameSize);
+    }
+    // resuming geometry updates is handled only in setGeometry()
+    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
+    if (!canUpdateSize(frameSize, bufferSize, force)) {
+        return;
+    }
+    m_bufferGeometry.setSize(bufferSize);
+    geom.setSize(frameSize);
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced)
+            {} // maximum, nothing needed
+        else if (force == ForceGeometrySet)
+            setPendingGeometryUpdate(PendingGeometryForced);
+        else
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        return;
+    }
+    resizeDecoration();
+    m_frame.resize(m_bufferGeometry.size());
+    if (!isShade()) {
+        QSize cs = clientSize();
+        m_wrapper.setGeometry(QRect(clientPos(), cs));
+        m_client.setGeometry(0, 0, cs.width(), cs.height());
+    }
+    updateShape();
+
+    sendSyntheticConfigureNotify();
+    updateWindowRules(Rules::Position|Rules::Size);
+    screens()->setCurrent(this);
+    workspace()->updateStackingOrder();
+    if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
+        discardWindowPixmap();
+    }
+    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    addRepaintDuringGeometryUpdates();
+    updateGeometryBeforeUpdateBlocking();
+    // TODO: this signal is emitted too often
+    emit geometryChanged();
 }
 
 /**
@@ -2669,7 +2673,7 @@ void X11Client::leaveMoveResize()
 {
     if (needsXWindowMove) {
         // Do the deferred move
-        m_frame.move(m_serverGeometry.topLeft());
+        m_frame.move(m_bufferGeometry.topLeft());
         needsXWindowMove = false;
     }
     if (!isResize())

@@ -3,7 +3,6 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -316,6 +315,16 @@ public:
      * occupies on the screen, in global screen coordinates.
      */
     virtual QRect bufferGeometry() const = 0;
+    /**
+     * Returns the extents of invisible portions in the pixmap.
+     *
+     * An X11 pixmap may contain invisible space around the actual contents of the
+     * client. That space is reserved for server-side decoration, which we usually
+     * want to skip when building contents window quads.
+     *
+     * Default implementation returns a margins object with all margins set to 0.
+     */
+    virtual QMargins bufferMargins() const;
     /**
      * Returns the geometry of the Toplevel, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.

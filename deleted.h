@@ -3,7 +3,6 @@
  This file is part of the KDE project.
 
 Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vladzzag@gmail.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,6 +44,7 @@ public:
     void unrefWindow();
     void discard();
     QRect bufferGeometry() const override;
+    QMargins bufferMargins() const override;
     QMargins frameMargins() const override;
     qreal bufferScale() const override;
     int desktop() const override;
@@ -202,6 +202,7 @@ private:
     void removeTransientFor(Deleted *parent);
 
     QRect m_bufferGeometry;
+    QMargins m_bufferMargins;
     QMargins m_frameMargins;
 
     int delete_refcount;

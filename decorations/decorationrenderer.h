@@ -73,7 +73,6 @@ protected:
         m_imageSizesDirty = false;
     }
     QImage renderToImage(const QRect &geo);
-    void renderToPainter(QPainter *painter, const QRect &rect);
 
 private:
     DecoratedClientImpl *m_client;
