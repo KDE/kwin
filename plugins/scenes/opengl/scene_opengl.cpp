@@ -2628,7 +2628,7 @@ void SceneOpenGLDecorationRenderer::render()
         renderToPainter(&painter, geo);
         painter.end();
 
-        clamp(image, QRect(viewport.topLeft(), viewport.size() * devicePixelRatio));
+        clamp(image, QRect(viewport.topLeft() * devicePixelRatio, viewport.size() * devicePixelRatio));
 
         if (rotated) {
             // TODO: get this done directly when rendering to the image
