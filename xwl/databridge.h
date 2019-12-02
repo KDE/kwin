@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
-class xcb_xfixes_selection_notify_event_t;
+struct xcb_xfixes_selection_notify_event_t;
 
 namespace KWayland
 {

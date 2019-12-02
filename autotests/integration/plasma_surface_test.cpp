@@ -65,7 +65,6 @@ private Q_SLOTS:
 
 private:
     KWayland::Client::Compositor *m_compositor = nullptr;
-    Shell *m_shell = nullptr;
     PlasmaShell *m_plasmaShell = nullptr;
 };
 
