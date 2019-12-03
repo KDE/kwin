@@ -1968,11 +1968,11 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     if (!areGeometryUpdatesBlocked() && frameGeometry != rules()->checkGeometry(frameGeometry)) {
         qCDebug(KWIN_CORE) << "forced geometry fail:" << frameGeometry << ":" << rules()->checkGeometry(frameGeometry);
     }
-    if (!canUpdateGeometry(frameGeometry, bufferGeometry, force)) {
+    geom = frameGeometry;
+    if (force == NormalGeometrySet && m_bufferGeometry == bufferGeometry && pendingGeometryUpdate() == PendingGeometryNone) {
         return;
     }
     m_bufferGeometry = bufferGeometry;
-    geom = frameGeometry;
     if (areGeometryUpdatesBlocked()) {
         if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
@@ -1982,35 +1982,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
-    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
-    bool resized = (oldBufferGeometry.size() != m_bufferGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced);
-    if (resized) {
-        resizeDecoration();
-        m_frame.setGeometry(m_bufferGeometry);
-        if (!isShade()) {
-            QSize cs = clientSize();
-            m_wrapper.setGeometry(QRect(clientPos(), cs));
-            if (!isResize() || syncRequest.counter == XCB_NONE)
-                m_client.setGeometry(0, 0, cs.width(), cs.height());
-            // SELI - won't this be too expensive?
-            // THOMAS - yes, but gtk+ clients will not resize without ...
-            sendSyntheticConfigureNotify();
-        }
-        updateShape();
-    } else {
-        if (isMoveResize()) {
-            if (compositing())  // Defer the X update until we leave this mode
-                needsXWindowMove = true;
-            else
-                m_frame.move(m_bufferGeometry.topLeft()); // sendSyntheticConfigureNotify() on finish shall be sufficient
-        } else {
-            m_frame.move(m_bufferGeometry.topLeft());
-            sendSyntheticConfigureNotify();
-        }
-
-        // Unconditionally move the input window: it won't affect rendering
-        m_decoInputExtent.move(QPoint(x, y) + inputPos());
-    }
+    updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
 
     // keep track of old maximize mode
@@ -2019,7 +1991,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     workspace()->updateStackingOrder();
 
     // Need to regenerate decoration pixmaps when the buffer size is changed.
-    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
+    if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
     emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
@@ -2055,13 +2027,13 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     if (!areGeometryUpdatesBlocked() && frameSize != rules()->checkSize(frameSize)) {
         qCDebug(KWIN_CORE) << "forced size fail:" << frameSize << ":" << rules()->checkSize(frameSize);
     }
+    geom.setSize(frameSize);
     // resuming geometry updates is handled only in setGeometry()
     Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
-    if (!canUpdateSize(frameSize, bufferSize, force)) {
+    if (force == NormalGeometrySet && m_bufferGeometry.size() == bufferSize) {
         return;
     }
     m_bufferGeometry.setSize(bufferSize);
-    geom.setSize(frameSize);
     if (areGeometryUpdatesBlocked()) {
         if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed
@@ -2071,16 +2043,7 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
-    resizeDecoration();
-    m_frame.resize(m_bufferGeometry.size());
-    if (!isShade()) {
-        QSize cs = clientSize();
-        m_wrapper.setGeometry(QRect(clientPos(), cs));
-        m_client.setGeometry(0, 0, cs.width(), cs.height());
-    }
-    updateShape();
-
-    sendSyntheticConfigureNotify();
+    updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
@@ -2092,6 +2055,38 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     updateGeometryBeforeUpdateBlocking();
     // TODO: this signal is emitted too often
     emit geometryChanged();
+}
+
+void X11Client::updateServerGeometry()
+{
+    if (m_frame.geometry().size() != m_bufferGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced) {
+        resizeDecoration();
+        m_frame.setGeometry(m_bufferGeometry);
+        if (!isShade()) {
+            QSize cs = clientSize();
+            m_wrapper.setGeometry(QRect(clientPos(), cs));
+            if (!isResize() || syncRequest.counter == XCB_NONE) {
+                m_client.setGeometry(0, 0, cs.width(), cs.height());
+            }
+            // SELI - won't this be too expensive?
+            // THOMAS - yes, but gtk+ clients will not resize without ...
+            sendSyntheticConfigureNotify();
+        }
+        updateShape();
+    } else {
+        if (isMoveResize()) {
+            if (compositing()) { // Defer the X update until we leave this mode
+                needsXWindowMove = true;
+            } else {
+                m_frame.move(m_bufferGeometry.topLeft()); // sendSyntheticConfigureNotify() on finish shall be sufficient
+            }
+        } else {
+            m_frame.move(m_bufferGeometry.topLeft());
+            sendSyntheticConfigureNotify();
+        }
+        // Unconditionally move the input window: it won't affect rendering
+        m_decoInputExtent.move(pos() + inputPos());
+    }
 }
 
 /**

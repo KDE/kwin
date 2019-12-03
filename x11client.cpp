@@ -2864,49 +2864,6 @@ void X11Client::handleSync()
         addRepaintFull();
 }
 
-bool X11Client::canUpdatePosition(const QPoint &frame, const QPoint &buffer, ForceGeometry_t force) const
-{
-    // Obey forced geometry updates.
-    if (force != NormalGeometrySet) {
-        return true;
-    }
-    // Server-side geometry and our geometry are out of sync.
-    if (bufferGeometry().topLeft() != buffer) {
-        return true;
-    }
-    if (frameGeometry().topLeft() != frame) {
-        return true;
-    }
-    return false;
-}
-
-bool X11Client::canUpdateSize(const QSize &frame, const QSize &buffer, ForceGeometry_t force) const
-{
-    // Obey forced geometry updates.
-    if (force != NormalGeometrySet) {
-        return true;
-    }
-    // Server-side geometry and our geometry are out of sync.
-    if (bufferGeometry().size() != buffer) {
-        return true;
-    }
-    if (frameGeometry().size() != frame) {
-        return true;
-    }
-    return false;
-}
-
-bool X11Client::canUpdateGeometry(const QRect &frame, const QRect &buffer, ForceGeometry_t force) const
-{
-    if (canUpdatePosition(frame.topLeft(), buffer.topLeft(), force)) {
-        return true;
-    }
-    if (canUpdateSize(frame.size(), buffer.size(), force)) {
-        return true;
-    }
-    return pendingGeometryUpdate() != PendingGeometryNone;
-}
-
 void X11Client::move(int x, int y, ForceGeometry_t force)
 {
     const QPoint framePosition(x, y);
@@ -2917,11 +2874,11 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
     if (!areGeometryUpdatesBlocked() && framePosition != rules()->checkPosition(framePosition)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << framePosition << ":" << rules()->checkPosition(framePosition);
     }
-    if (!canUpdatePosition(framePosition, bufferPosition, force)) {
+    geom.moveTopLeft(framePosition);
+    if (force == NormalGeometrySet && m_bufferGeometry.topLeft() == bufferPosition) {
         return;
     }
     m_bufferGeometry.moveTopLeft(bufferPosition);
-    geom.moveTopLeft(framePosition);
     if (areGeometryUpdatesBlocked()) {
         if (pendingGeometryUpdate() == PendingGeometryForced) {
             // Maximum, nothing needed.
@@ -2932,8 +2889,7 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
         }
         return;
     }
-    m_frame.move(m_bufferGeometry.topLeft());
-    sendSyntheticConfigureNotify();
+    updateServerGeometry();
     updateWindowRules(Rules::Position);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();

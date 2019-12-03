@@ -446,9 +446,6 @@ private:
     void destroyDecoration() override;
     void updateFrameExtents();
     void setClientFrameExtents(const NETStrut &strut);
-    bool canUpdatePosition(const QPoint &frame, const QPoint &buffer, ForceGeometry_t force) const;
-    bool canUpdateSize(const QSize &frame, const QSize &buffer, ForceGeometry_t force) const;
-    bool canUpdateGeometry(const QRect &frame, const QRect &buffer, ForceGeometry_t force) const;
 
     void internalShow();
     void internalHide();
@@ -458,6 +455,7 @@ private:
     void updateHiddenPreview();
 
     void updateInputShape();
+    void updateServerGeometry();
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
                                   bool session) const;
