@@ -1830,4 +1830,107 @@ void Workspace::removeInternalClient(InternalClient *client)
     emit internalClientRemoved(client);
 }
 
+Group* Workspace::findGroup(xcb_window_t leader) const
+{
+    Q_ASSERT(leader != XCB_WINDOW_NONE);
+    for (auto it = groups.constBegin();
+            it != groups.constEnd();
+            ++it)
+        if ((*it)->leader() == leader)
+            return *it;
+    return nullptr;
+}
+
+// Client is group transient, but has no group set. Try to find
+// group with windows with the same client leader.
+Group* Workspace::findClientLeaderGroup(const X11Client *c) const
+{
+    Group* ret = nullptr;
+    for (auto it = clients.constBegin();
+            it != clients.constEnd();
+            ++it) {
+        if (*it == c)
+            continue;
+        if ((*it)->wmClientLeader() == c->wmClientLeader()) {
+            if (ret == nullptr || ret == (*it)->group())
+                ret = (*it)->group();
+            else {
+                // There are already two groups with the same client leader.
+                // This most probably means the app uses group transients without
+                // setting group for its windows. Merging the two groups is a bad
+                // hack, but there's no really good solution for this case.
+                QList<X11Client *> old_group = (*it)->group()->members();
+                // old_group autodeletes when being empty
+                for (int pos = 0;
+                        pos < old_group.count();
+                        ++pos) {
+                    X11Client *tmp = old_group[ pos ];
+                    if (tmp != c)
+                        tmp->changeClientLeaderGroup(ret);
+                }
+            }
+        }
+    }
+    return ret;
+}
+
+void Workspace::updateMinimizedOfTransients(AbstractClient* c)
+{
+    // if mainwindow is minimized or shaded, minimize transients too
+    if (c->isMinimized()) {
+        for (auto it = c->transients().constBegin();
+                it != c->transients().constEnd();
+                ++it) {
+            if ((*it)->isModal())
+                continue; // there's no reason to hide modal dialogs with the main client
+            // but to keep them to eg. watch progress or whatever
+            if (!(*it)->isMinimized()) {
+                (*it)->minimize();
+                updateMinimizedOfTransients((*it));
+            }
+        }
+        if (c->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
+            foreach (AbstractClient * c2, c->mainClients())
+            c2->minimize();
+        }
+    } else {
+        // else unmiminize the transients
+        for (auto it = c->transients().constBegin();
+                it != c->transients().constEnd();
+                ++it) {
+            if ((*it)->isMinimized()) {
+                (*it)->unminimize();
+                updateMinimizedOfTransients((*it));
+            }
+        }
+        if (c->isModal()) {
+            foreach (AbstractClient * c2, c->mainClients())
+            c2->unminimize();
+        }
+    }
+}
+
+
+/**
+ * Sets the client \a c's transient windows' on_all_desktops property to \a on_all_desktops.
+ */
+void Workspace::updateOnAllDesktopsOfTransients(AbstractClient* c)
+{
+    for (auto it = c->transients().constBegin();
+            it != c->transients().constEnd();
+            ++it) {
+        if ((*it)->isOnAllDesktops() != c->isOnAllDesktops())
+            (*it)->setOnAllDesktops(c->isOnAllDesktops());
+    }
+}
+
+// A new window has been mapped. Check if it's not a mainwindow for some already existing transient window.
+void Workspace::checkTransients(xcb_window_t w)
+{
+    for (auto it = clients.constBegin();
+            it != clients.constEnd();
+            ++it)
+        (*it)->checkTransient(w);
+}
+
 } // namespace

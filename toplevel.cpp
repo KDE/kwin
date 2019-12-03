@@ -228,6 +228,11 @@ void Toplevel::setResourceClass(const QByteArray &name, const QByteArray &classN
     emit windowClassChanged();
 }
 
+bool Toplevel::resourceMatch(const Toplevel *c1, const Toplevel *c2)
+{
+    return c1->resourceClass() == c2->resourceClass();
+}
+
 double Toplevel::opacity() const
 {
     if (info->opacity() == 0xffffffff)
