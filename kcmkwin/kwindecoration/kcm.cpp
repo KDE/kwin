@@ -202,8 +202,8 @@ void KCMKWinDecoration::save()
     config.writeEntry(s_configShowToolTips, m_currentSettings.showToolTips);
     config.writeEntry(s_configBorderSize, Utils::borderSizeToString(m_currentSettings.borderSize));
     config.writeEntry(s_configBorderSizeAuto, m_currentSettings.borderSizeAuto);
-    config.writeEntry(s_configDecoButtonsOnLeft, Utils::buttonsToString(m_currentSettings.buttonsOnLeft));
-    config.writeEntry(s_configDecoButtonsOnRight, Utils::buttonsToString(m_currentSettings.buttonsOnRight));
+    config.writeEntry(s_configDecoButtonsOnLeft, Utils::buttonsToString(m_currentSettings.buttonsOnLeft), KConfigGroup::Notify);
+    config.writeEntry(s_configDecoButtonsOnRight, Utils::buttonsToString(m_currentSettings.buttonsOnRight), KConfigGroup::Notify);
     config.sync();
 
     m_savedSettings = m_currentSettings;
