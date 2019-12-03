@@ -444,7 +444,6 @@ set(kwin_KDEINIT_SRCS
     linux_dmabuf.cpp
     logind.cpp
     main.cpp
-    manage.cpp
     modifier_only_shortcuts.cpp
     moving_client_x11_filter.cpp
     netinfo.cpp
