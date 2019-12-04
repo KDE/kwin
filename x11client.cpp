@@ -1348,7 +1348,7 @@ void X11Client::updateInputShape()
         // TODO: It seems there is, after all - XShapeGetRectangles() - but maybe this is better
         if (!shape_helper_window.isValid())
             shape_helper_window.create(QRect(0, 0, 1, 1));
-        shape_helper_window.resize(width(), height());
+        shape_helper_window.resize(m_bufferGeometry.size());
         xcb_connection_t *c = connection();
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window, 0, 0, frameId());
