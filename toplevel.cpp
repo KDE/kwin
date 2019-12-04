@@ -94,7 +94,7 @@ void Toplevel::detectShape(xcb_window_t id)
 void Toplevel::copyToDeleted(Toplevel* c)
 {
     m_internalId = c->internalId();
-    geom = c->geom;
+    m_frameGeometry = c->m_frameGeometry;
     m_visual = c->m_visual;
     bit_depth = c->bit_depth;
     info = c->info;

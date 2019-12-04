@@ -1968,7 +1968,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     if (!areGeometryUpdatesBlocked() && frameGeometry != rules()->checkGeometry(frameGeometry)) {
         qCDebug(KWIN_CORE) << "forced geometry fail:" << frameGeometry << ":" << rules()->checkGeometry(frameGeometry);
     }
-    geom = frameGeometry;
+    m_frameGeometry = frameGeometry;
     if (force == NormalGeometrySet && m_bufferGeometry == bufferGeometry && pendingGeometryUpdate() == PendingGeometryNone) {
         return;
     }
@@ -2027,7 +2027,7 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     if (!areGeometryUpdatesBlocked() && frameSize != rules()->checkSize(frameSize)) {
         qCDebug(KWIN_CORE) << "forced size fail:" << frameSize << ":" << rules()->checkSize(frameSize);
     }
-    geom.setSize(frameSize);
+    m_frameGeometry.setSize(frameSize);
     // resuming geometry updates is handled only in setGeometry()
     Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     if (force == NormalGeometrySet && m_bufferGeometry.size() == bufferSize) {
@@ -2100,9 +2100,9 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
     }
-    if (force == NormalGeometrySet && geom.topLeft() == p)
+    if (force == NormalGeometrySet && m_frameGeometry.topLeft() == p)
         return;
-    geom.moveTopLeft(p);
+    m_frameGeometry.moveTopLeft(p);
     if (areGeometryUpdatesBlocked()) {
         if (pendingGeometryUpdate() == PendingGeometryForced)
             {} // maximum, nothing needed

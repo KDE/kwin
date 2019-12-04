@@ -1308,13 +1308,13 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking(); // keep them on top
     QRect newgeom(e->x, e->y, e->width, e->height);
-    if (newgeom != geom) {
+    if (newgeom != m_frameGeometry) {
         addWorkspaceRepaint(visibleRect());  // damage old area
-        QRect old = geom;
-        geom = newgeom;
+        QRect old = m_frameGeometry;
+        m_frameGeometry = newgeom;
         emit geometryChanged(); // update shadow region
         addRepaintFull();
-        if (old.size() != geom.size())
+        if (old.size() != m_frameGeometry.size())
             discardWindowPixmap();
         emit geometryShapeChanged(this, old);
     }

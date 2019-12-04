@@ -696,7 +696,7 @@ protected:
     friend QDebug& operator<<(QDebug& stream, const Toplevel*);
     void deleteEffectWindow();
     void setDepth(int depth);
-    QRect geom;
+    QRect m_frameGeometry;
     xcb_visualid_t m_visual;
     int bit_depth;
     NETWinInfo* info;
@@ -748,37 +748,37 @@ inline void Toplevel::setWindowHandles(xcb_window_t w)
 
 inline QRect Toplevel::frameGeometry() const
 {
-    return geom;
+    return m_frameGeometry;
 }
 
 inline QSize Toplevel::size() const
 {
-    return geom.size();
+    return m_frameGeometry.size();
 }
 
 inline QPoint Toplevel::pos() const
 {
-    return geom.topLeft();
+    return m_frameGeometry.topLeft();
 }
 
 inline int Toplevel::x() const
 {
-    return geom.x();
+    return m_frameGeometry.x();
 }
 
 inline int Toplevel::y() const
 {
-    return geom.y();
+    return m_frameGeometry.y();
 }
 
 inline int Toplevel::width() const
 {
-    return geom.width();
+    return m_frameGeometry.width();
 }
 
 inline int Toplevel::height() const
 {
-    return geom.height();
+    return m_frameGeometry.height();
 }
 
 inline QRect Toplevel::rect() const

@@ -336,7 +336,7 @@ void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
     const QRect rect(x, y, w, h);
 
     if (areGeometryUpdatesBlocked()) {
-        geom = rect;
+        m_frameGeometry = rect;
         if (pendingGeometryUpdate() == PendingGeometryForced) {
             // Maximum, nothing needed.
         } else if (force == ForceGeometrySet) {
@@ -349,10 +349,10 @@ void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
 
     if (pendingGeometryUpdate() != PendingGeometryNone) {
         // Reset geometry to the one before blocking, so that we can compare properly.
-        geom = frameGeometryBeforeUpdateBlocking();
+        m_frameGeometry = frameGeometryBeforeUpdateBlocking();
     }
 
-    if (geom == rect) {
+    if (m_frameGeometry == rect) {
         return;
     }
 
@@ -622,11 +622,11 @@ void InternalClient::requestGeometry(const QRect &rect)
 
 void InternalClient::commitGeometry(const QRect &rect)
 {
-    if (geom == rect && pendingGeometryUpdate() == PendingGeometryNone) {
+    if (m_frameGeometry == rect && pendingGeometryUpdate() == PendingGeometryNone) {
         return;
     }
 
-    geom = rect;
+    m_frameGeometry = rect;
 
     m_clientSize = mapToClient(frameGeometry()).size();
 

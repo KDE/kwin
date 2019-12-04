@@ -95,7 +95,7 @@ void XdgShellClient::init()
     updateIcon();
 
     // TODO: Initialize with null rect.
-    geom = QRect(0, 0, -1, -1);
+    m_frameGeometry = QRect(0, 0, -1, -1);
     m_windowGeometry = QRect(0, 0, -1, -1);
 
     if (waylandServer()->inputMethodConnection() == surface()->client()) {
@@ -477,7 +477,7 @@ void XdgShellClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
     if (areGeometryUpdatesBlocked()) {
         // when the GeometryUpdateBlocker exits the current geom is passed to setGeometry
         // thus we need to set it here.
-        geom = newGeometry;
+        m_frameGeometry = newGeometry;
         if (pendingGeometryUpdate() == PendingGeometryForced) {
             // maximum, nothing needed
         } else if (force == ForceGeometrySet) {
@@ -490,7 +490,7 @@ void XdgShellClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
 
     if (pendingGeometryUpdate() != PendingGeometryNone) {
         // reset geometry to the one before blocking, so that we can compare properly
-        geom = frameGeometryBeforeUpdateBlocking();
+        m_frameGeometry = frameGeometryBeforeUpdateBlocking();
     }
 
     const QSize requestedClientSize = newGeometry.size() - QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
@@ -525,8 +525,8 @@ void XdgShellClient::doSetGeometry(const QRect &rect)
     bool frameGeometryIsChanged = false;
     bool bufferGeometryIsChanged = false;
 
-    if (geom != rect) {
-        geom = rect;
+    if (m_frameGeometry != rect) {
+        m_frameGeometry = rect;
         frameGeometryIsChanged = true;
     }
 
@@ -540,9 +540,9 @@ void XdgShellClient::doSetGeometry(const QRect &rect)
         return;
     }
 
-    if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !geom.isEmpty()) {
+    if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !m_frameGeometry.isEmpty()) {
         // use first valid geometry as restore geometry
-        m_geomMaximizeRestore = geom;
+        m_geomMaximizeRestore = m_frameGeometry;
     }
 
     if (frameGeometryIsChanged) {

@@ -159,7 +159,7 @@ X11Client::X11Client()
     //Client to workspace connections require that each
     //client constructed be connected to the workspace wrapper
 
-    geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
+    m_frameGeometry = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
@@ -2874,7 +2874,7 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
     if (!areGeometryUpdatesBlocked() && framePosition != rules()->checkPosition(framePosition)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << framePosition << ":" << rules()->checkPosition(framePosition);
     }
-    geom.moveTopLeft(framePosition);
+    m_frameGeometry.moveTopLeft(framePosition);
     if (force == NormalGeometrySet && m_bufferGeometry.topLeft() == bufferPosition) {
         return;
     }
