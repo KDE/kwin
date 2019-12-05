@@ -57,6 +57,8 @@ namespace LibInput
 class Device;
 }
 
+uint32_t qtMouseButtonToButton(Qt::MouseButton button);
+
 class KWIN_EXPORT PointerInputRedirection : public InputDeviceHandler
 {
     Q_OBJECT

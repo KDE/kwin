@@ -81,6 +81,11 @@ static const QHash<uint32_t, Qt::MouseButton> s_buttonToQtMouseButton = {
     { 0x11f , Qt::ExtraButton13 },
 };
 
+uint32_t qtMouseButtonToButton(Qt::MouseButton button)
+{
+    return s_buttonToQtMouseButton.key(button);
+}
+
 static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
 {
     // all other values get mapped to ExtraButton24
@@ -90,7 +95,6 @@ static Qt::MouseButton buttonToQtMouseButton(uint32_t button)
     // if multiple buttons are mapped to the value the evaluation whether
     // buttons are pressed is correct and that's all we care about.
     return s_buttonToQtMouseButton.value(button, Qt::ExtraButton24);
-}
 }
 
 static bool screenContainsPos(const QPointF &pos)

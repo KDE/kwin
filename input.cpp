@@ -1520,6 +1520,46 @@ public:
     }
 };
 
+/**
+ * Useful when there's no proper tablet support on the clients
+ */
+class FakeTabletInputFilter : public InputEventFilter
+{
+public:
+    FakeTabletInputFilter()
+    {
+    }
+
+    bool tabletToolEvent(QTabletEvent *event) override
+    {
+        if (!workspace()) {
+            return false;
+        }
+
+        switch (event->type()) {
+        case QEvent::TabletMove:
+        case QEvent::TabletEnterProximity:
+            input()->pointer()->processMotion(event->globalPosF(), event->timestamp());
+            break;
+        case QEvent::TabletPress:
+            input()->pointer()->processButton(KWin::qtMouseButtonToButton(Qt::LeftButton),
+                                              InputRedirection::PointerButtonPressed, event->timestamp());
+            break;
+        case QEvent::TabletRelease:
+            input()->pointer()->processButton(KWin::qtMouseButtonToButton(Qt::LeftButton),
+                                              InputRedirection::PointerButtonReleased, event->timestamp());
+            break;
+        case QEvent::TabletLeaveProximity:
+            break;
+        default:
+            qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
+            break;
+        }
+        waylandServer()->simulateUserActivity();
+        return true;
+    }
+};
+
 class DragAndDropInputFilter : public InputEventFilter
 {
 public:
@@ -1881,6 +1921,7 @@ void InputRedirection::setupInputFilters()
     if (waylandServer()) {
         installInputEventFilter(new WindowActionInputFilter);
         installInputEventFilter(new ForwardInputFilter);
+        installInputEventFilter(new FakeTabletInputFilter);
     }
 }
 
