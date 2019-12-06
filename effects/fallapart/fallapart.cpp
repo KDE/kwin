@@ -163,9 +163,6 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
         return;
     if (!c->isVisible())
         return;
-    const void* e = c->data(WindowClosedGrabRole).value<void*>();
-    if (e && e != this)
-        return;
     c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
     windows[ c ] = 0;
     c->refWindow();
