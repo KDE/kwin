@@ -1,0 +1,6 @@
+File=kwindecorationsettings.kcfgc
+ClassName=KWinDecorationSettings
+Mutators=true
+DefaultValueGetters=true
+GenerateProperties=true
+ParentInConstructor=true

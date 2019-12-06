@@ -31,6 +31,8 @@ ColumnLayout {
     Layout.fillHeight: true
     property int buttonIconSize: units.iconSizes.medium
     property int titleBarSpacing: units.smallSpacing * 2
+    readonly property bool draggingTitlebarButtons: leftButtonsView.dragging || rightButtonsView.dragging
+    readonly property bool hideDragHint: draggingTitlebarButtons || availableButtonsGrid.dragging
 
     KDecoration.Bridge {
         id: bridgeItem
@@ -122,12 +124,12 @@ ColumnLayout {
                             }
                             index = childIndex + 1
                         }
-                        if (drop.keys.indexOf("decoButtonAdd") != -1) {
+                        if (drop.keys.indexOf("decoButtonAdd") !== -1) {
                             view.model.add(index, drag.source.type);
-                        } else if (drop.keys.indexOf("decoButtonLeft") != -1) {
-                            if (view == leftButtonsView) {
+                        } else if (drop.keys.indexOf("decoButtonLeft") !== -1) {
+                            if (view === leftButtonsView) {
                                 // move in same view
-                                if (index != drag.source.itemIndex) {
+                                if (index !== drag.source.itemIndex) {
                                     drag.source.buttonsModel.move(drag.source.itemIndex, index);
                                 }
                             } else  {
@@ -135,10 +137,10 @@ ColumnLayout {
                                 view.model.add(index, drag.source.type);
                                 drag.source.buttonsModel.remove(drag.source.itemIndex);
                             }
-                        } else if (drop.keys.indexOf("decoButtonRight") != -1) {
-                            if (view == rightButtonsView) {
+                        } else if (drop.keys.indexOf("decoButtonRight") !== -1) {
+                            if (view === rightButtonsView) {
                                 // move in same view
-                                if (index != drag.source.itemIndex) {
+                                if (index !== drag.source.itemIndex) {
                                     drag.source.buttonsModel.move(drag.source.itemIndex, index);
                                 }
                             } else {
@@ -152,6 +154,7 @@ ColumnLayout {
             }
             GridView {
                 id: availableButtonsGrid
+                property bool dragging: false
                 Layout.fillWidth: true
                 Layout.minimumHeight: availableButtonsGrid.cellHeight * 2
                 Layout.margins: units.largeSpacing
@@ -162,7 +165,7 @@ ColumnLayout {
                     Layout.margins: units.largeSpacing
                     width: availableButtonsGrid.cellWidth
                     height: availableButtonsGrid.cellHeight
-                    opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.15 : 1.0
+                    opacity: draggingTitlebarButtons ? 0.15 : 1.0
                     Rectangle {
                         id: availableButtonFrame
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -181,6 +184,7 @@ ColumnLayout {
                             height: buttonIconSize
                             Drag.keys: [ "decoButtonAdd" ]
                             Drag.active: dragArea.drag.active
+                            Drag.onActiveChanged: availableButtonsGrid.dragging = Drag.active
                             color: palette.windowText
                         }
                         MouseArea {
@@ -225,14 +229,15 @@ ColumnLayout {
                         font.weight: Font.Bold
                         level: 2
                         anchors.centerIn: parent
-                        opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 1.0 : 0.0
+                        opacity: draggingTitlebarButtons ? 1.0 : 0.0
                     }
                 }
             }
             Text {
                 id: dragHint
+                readonly property real dragHintOpacitiy: enabled ? 1.0 : 0.3
                 color: palette.windowText
-                opacity: (leftButtonsView.dragging || rightButtonsView.dragging || availableButtonsGrid.dragging) ? 0.0 : 1.0
+                opacity: hideDragHint ? 0.0 : dragHintOpacitiy
                 Layout.fillWidth: true
                 Layout.topMargin: titleBarSpacing
                 Layout.bottomMargin: titleBarSpacing

@@ -80,19 +80,21 @@ QString buttonsToString(const DecorationButtonsList &buttons)
     return ret;
 }
 
-DecorationButtonsList readDecorationButtons(const KConfigGroup &config, const QString &key, const DecorationButtonsList &defaultValue)
+DecorationButtonsList buttonsFromString(const QString &buttons)
 {
-    auto buttonsFromString = [](const QString &buttons) -> DecorationButtonsList {
-        DecorationButtonsList ret;
-        for (auto it = buttons.begin(); it != buttons.end(); ++it) {
-            for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
-                if (it2.value() == (*it)) {
-                    ret << it2.key();
-                }
+    DecorationButtonsList ret;
+    for (auto it = buttons.begin(); it != buttons.end(); ++it) {
+        for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
+            if (it2.value() == (*it)) {
+                ret << it2.key();
             }
         }
-        return ret;
-    };
+    }
+    return ret;
+}
+
+DecorationButtonsList readDecorationButtons(const KConfigGroup &config, const QString &key, const DecorationButtonsList &defaultValue)
+{
     return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
 }
 

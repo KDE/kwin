@@ -30,6 +30,7 @@ namespace Utils
 {
 
 QString buttonsToString(const DecorationButtonsList &buttons);
+DecorationButtonsList buttonsFromString(const QString &buttons);
 DecorationButtonsList readDecorationButtons(const KConfigGroup &config, const QString &key, const DecorationButtonsList &defaultValue);
 
 KDecoration2::BorderSize stringToBorderSize(const QString &name);

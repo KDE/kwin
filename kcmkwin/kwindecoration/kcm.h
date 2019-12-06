@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
+ * Copyright (c) 2019 Cyril Rossi <cyril.rossi@enioka.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -20,7 +21,7 @@
 
 #include "utils.h"
 
-#include <KQuickAddons/ConfigModule>
+#include <KQuickAddons/ManagedConfigModule>
 
 
 class QAbstractItemModel;
@@ -46,24 +47,25 @@ class DecorationsModel;
 }
 }
 
-class KCMKWinDecoration : public KQuickAddons::ConfigModule
+class KWinDecorationSettings;
+
+class KCMKWinDecoration : public KQuickAddons::ManagedConfigModule
 {
     Q_OBJECT
+    Q_PROPERTY(KWinDecorationSettings *settings READ settings CONSTANT)
     Q_PROPERTY(QSortFilterProxyModel *themesModel READ themesModel CONSTANT)
     Q_PROPERTY(QStringList borderSizesModel READ borderSizesModel CONSTANT)
     Q_PROPERTY(int borderSize READ borderSize WRITE setBorderSize NOTIFY borderSizeChanged)
     Q_PROPERTY(int recommendedBorderSize READ recommendedBorderSize CONSTANT)
-    Q_PROPERTY(bool borderSizeAuto READ borderSizeAuto WRITE setBorderSizeAuto NOTIFY borderSizeAutoChanged)
     Q_PROPERTY(int theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(QAbstractListModel *leftButtonsModel READ leftButtonsModel NOTIFY buttonsChanged)
     Q_PROPERTY(QAbstractListModel *rightButtonsModel READ rightButtonsModel NOTIFY buttonsChanged)
     Q_PROPERTY(QAbstractListModel *availableButtonsModel READ availableButtonsModel CONSTANT)
-    Q_PROPERTY(bool closeOnDoubleClickOnMenu READ closeOnDoubleClickOnMenu WRITE setCloseOnDoubleClickOnMenu NOTIFY closeOnDoubleClickOnMenuChanged)
-    Q_PROPERTY(bool showToolTips READ showToolTips WRITE setShowToolTips NOTIFY showToolTipsChanged)
 
 public:
     KCMKWinDecoration(QObject *parent, const QVariantList &arguments);
 
+    KWinDecorationSettings *settings() const;
     QSortFilterProxyModel *themesModel() const;
     QAbstractListModel *leftButtonsModel();
     QAbstractListModel *rightButtonsModel();
@@ -71,17 +73,11 @@ public:
     QStringList borderSizesModel() const;
     int borderSize() const;
     int recommendedBorderSize() const;
-    bool borderSizeAuto() const;
     int theme() const;
-    bool closeOnDoubleClickOnMenu() const;
-    bool showToolTips() const;
 
     void setBorderSize(int index);
     void setBorderSize(KDecoration2::BorderSize size);
-    void setBorderSizeAuto(bool set);
     void setTheme(int index);
-    void setCloseOnDoubleClickOnMenu(bool enable);
-    void setShowToolTips(bool show);
 
     Q_INVOKABLE void getNewStuff(QQuickItem *context);
 
@@ -89,9 +85,6 @@ Q_SIGNALS:
     void themeChanged();
     void buttonsChanged();
     void borderSizeChanged();
-    void borderSizeAutoChanged();
-    void closeOnDoubleClickOnMenuChanged();
-    void showToolTipsChanged();
 
 public Q_SLOTS:
     void load() override;
@@ -99,10 +92,17 @@ public Q_SLOTS:
     void defaults() override;
 
 private Q_SLOTS:
-    void updateNeedsSave();
+    void onLeftButtonsChanged();
+    void onRightButtonsChanged();
     void reloadKWinSettings();
 
 private:
+    bool isSaveNeeded() const override;
+    bool isDefaults() const override;
+
+    int borderSizeIndexFromString(const QString &size) const;
+    QString borderSizeIndexToString(int index) const;
+
     KDecoration2::Configuration::DecorationsModel *m_themesModel;
     QSortFilterProxyModel *m_proxyThemesModel;
 
@@ -112,17 +112,6 @@ private:
 
     QPointer<KNS3::DownloadDialog> m_newStuffDialog;
 
-    struct Settings
-    {
-        KDecoration2::BorderSize borderSize;
-        bool borderSizeAuto;
-        int themeIndex;
-        bool closeOnDoubleClickOnMenu;
-        bool showToolTips;
-        DecorationButtonsList buttonsOnLeft;
-        DecorationButtonsList buttonsOnRight;
-    };
-
-    Settings m_savedSettings;
-    Settings m_currentSettings;
+    int m_borderSizeIndex = -1;
+    KWinDecorationSettings *m_settings;
 };

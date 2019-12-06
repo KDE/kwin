@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="kwinrc" />
+  <group name="org.kde.kdecoration2">
+    <entry name="pluginName" key="library" type="String">
+      <label>Plugin name</label>
+      <code>#if HAVE_BREEZE_DECO
+              const QString s_defaultPlugin { QStringLiteral(BREEZE_KDECORATION_PLUGIN_ID) };
+          #else
+              const QString s_defaultPlugin { QStringLiteral("org.kde.kwin.aurorae") };
+          #endif
+      </code>
+      <default code="true">s_defaultPlugin</default>
+    </entry>
+    <entry name="theme" key="theme" type="String">
+      <label>Theme name</label>
+      <code>#if HAVE_BREEZE_DECO
+                const QString s_defaultTheme { QStringLiteral("Breeze") };
+            #else
+                const QString s_defaultTheme { QStringLiteral("kwin4_decoration_qml_plastik") };
+            #endif
+      </code>
+      <default code="true">s_defaultTheme</default>
+    </entry>
+    <entry name="borderSize" key="BorderSize" type="String">
+      <label>Window border size</label>
+      <default>Normal</default>
+    </entry>
+    <entry name="borderSizeAuto" key="BorderSizeAuto" type="Bool">
+      <label>Use theme's default window border size</label>
+      <default>true</default>
+    </entry>
+    <entry name="closeOnDoubleClickOnMenu" key="CloseOnDoubleClickOnMenu" type="Bool">
+      <label>Close windows by double clicking the menu button</label>
+      <default>false</default>
+    </entry>
+    <entry name="showToolTips" key="ShowToolTips" type="Bool">
+      <label>Show titlebar button tooltips</label>
+      <default>true</default>
+    </entry>
+    <entry name="buttonsOnLeft" key="ButtonsOnLeft" type="String">
+      <label>Titlebar left buttons</label>
+      <default>MS</default>
+    </entry>
+    <entry name="buttonsOnRight" key="ButtonsOnRight" type="String">
+      <label>Titlebar right buttons</label>
+      <default>HIAX</default>
+    </entry>
+  </group>
+</kcfg>

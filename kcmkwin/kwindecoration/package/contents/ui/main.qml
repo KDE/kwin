@@ -25,7 +25,6 @@ import org.kde.kirigami 2.4 as Kirigami
 
 Kirigami.Page {
     KCM.ConfigModule.quickHelp: i18n("This module lets you configure the window decorations.")
-    KCM.ConfigModule.buttons: KCM.ConfigModule.Help | KCM.ConfigModule.Default | KCM.ConfigModule.Apply
     title: kcm.name
 
     SystemPalette {
@@ -79,6 +78,7 @@ Kirigami.Page {
                     Themes {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        enabled: !kcm.settings.isImmutable("pluginName") && !kcm.settings.isImmutable("theme")
                     }
 
                     RowLayout {
@@ -88,24 +88,24 @@ Kirigami.Page {
                             Layout.fillWidth: true
                             Layout.maximumWidth: implicitWidth
                             text: i18nc("checkbox label", "Use theme's default window border size")
-                            checked: kcm.borderSizeAuto
-                            onCheckedChanged: {
-                                kcm.borderSizeAuto = checked;
+                            enabled: !kcm.settings.isImmutable("borderSizeAuto")
+                            checked: kcm.settings.borderSizeAuto
+                            onToggled: {
+                                kcm.settings.borderSizeAuto = checked;
                                 borderSizeComboBox.autoBorderUpdate()
                             }
                         }
                         Controls.ComboBox {
                             id: borderSizeComboBox
-                            enabled: !borderSizeAutoCheckbox.checked
+                            enabled: !borderSizeAutoCheckbox.checked && !kcm.settings.isImmutable("borderSize")
                             model: kcm.borderSizesModel
+                            currentIndex: kcm.borderSize
                             onActivated: {
                                 kcm.borderSize = currentIndex
                             }
                             function autoBorderUpdate() {
                                 if (borderSizeAutoCheckbox.checked) {
-                                    currentIndex = kcm.recommendedBorderSize
-                                } else {
-                                    currentIndex = kcm.borderSize
+                                    kcm.borderSize = kcm.recommendedBorderSize
                                 }
                             }
 
@@ -130,14 +130,16 @@ Kirigami.Page {
                     Buttons {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        enabled: !kcm.settings.isImmutable("buttonsOnLeft") && !kcm.settings.isImmutable("buttonsOnRight")
                     }
 
                     Controls.CheckBox {
                         id: closeOnDoubleClickOnMenuCheckBox
                         text: i18nc("checkbox label", "Close windows by double clicking the menu button")
-                        checked: kcm.closeOnDoubleClickOnMenu
+                        enabled: !kcm.settings.isImmutable("closeOnDoubleClickOnMenu")
+                        checked: kcm.settings.closeOnDoubleClickOnMenu
                         onToggled: {
-                            kcm.closeOnDoubleClickOnMenu = checked
+                            kcm.settings.closeOnDoubleClickOnMenu = checked
                             infoLabel.visible = checked
                         }
                     }
@@ -154,8 +156,9 @@ Kirigami.Page {
                     Controls.CheckBox {
                         id: showToolTipsCheckBox
                         text: i18nc("checkbox label", "Show titlebar button tooltips")
-                        checked: kcm.showToolTips
-                        onToggled: kcm.showToolTips = checked
+                        enabled: !kcm.settings.isImmutable("showToolTips")
+                        checked: kcm.settings.showToolTips
+                        onToggled: kcm.settings.showToolTips = checked
                     }
                 }
             }
