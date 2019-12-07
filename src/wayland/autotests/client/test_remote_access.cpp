@@ -372,8 +372,10 @@ void RemoteAccessTest::testSendReleaseCrossScreen()
     QVERIFY(paramsObtainedSpy2.isValid());
 
     // wait for event loop
-    QVERIFY(paramsObtainedSpy1.wait());
-    if (paramsObtainedSpy2.size() == 0) {
+    if (paramsObtainedSpy1.isEmpty()) {
+        QVERIFY(paramsObtainedSpy1.wait());
+    }
+    if (paramsObtainedSpy2.isEmpty()) {
         QVERIFY(paramsObtainedSpy2.wait());
     }
     QCOMPARE(paramsObtainedSpy1.size(), 1);
