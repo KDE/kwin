@@ -40,7 +40,7 @@ class EglGbmBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglGbmBackend(DrmBackend *b);
+    EglGbmBackend(DrmBackend *drmBackend);
     ~EglGbmBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
@@ -72,11 +72,19 @@ private:
          */
         QList<QRegion> damageHistory;
     };
+
+    void createOutput(DrmOutput *drmOutput);
     bool resetOutput(Output &output, DrmOutput *drmOutput);
-    bool makeContextCurrent(const Output &output);
+    std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size) const;
+    EGLSurface createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const;
+
+    bool makeContextCurrent(const Output &output) const;
+    void setViewport(const Output &output) const;
     void presentOnOutput(Output &output);
+
+    void removeOutput(DrmOutput *drmOutput);
     void cleanupOutput(const Output &output);
-    void createOutput(DrmOutput *output);
+
     DrmBackend *m_backend;
     QVector<Output> m_outputs;
     QScopedPointer<RemoteAccessManager> m_remoteaccessManager;

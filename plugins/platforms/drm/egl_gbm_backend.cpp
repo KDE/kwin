@@ -36,27 +36,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-EglGbmBackend::EglGbmBackend(DrmBackend *b)
+EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
     : AbstractEglBackend()
-    , m_backend(b)
+    , m_backend(drmBackend)
 {
-    // Egl is always direct rendering
+    // Egl is always direct rendering.
     setIsDirectRendering(true);
+
     connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::createOutput);
-    connect(m_backend, &DrmBackend::outputRemoved, this,
-        [this] (DrmOutput *output) {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                [output] (const Output &o) {
-                    return o.output == output;
-                }
-            );
-            if (it == m_outputs.end()) {
-                return;
-            }
-            cleanupOutput(*it);
-            m_outputs.erase(it);
-        }
-    );
+    connect(m_backend, &DrmBackend::outputRemoved, this, &EglGbmBackend::removeOutput);
 }
 
 EglGbmBackend::~EglGbmBackend()
@@ -72,12 +60,12 @@ void EglGbmBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-void EglGbmBackend::cleanupOutput(const Output &o)
+void EglGbmBackend::cleanupOutput(const Output &output)
 {
-    o.output->releaseGbm();
+    output.output->releaseGbm();
 
-    if (o.eglSurface != EGL_NO_SURFACE) {
-        eglDestroySurface(eglDisplay(), o.eglSurface);
+    if (output.eglSurface != EGL_NO_SURFACE) {
+        eglDestroySurface(eglDisplay(), output.eglSurface);
     }
 }
 
@@ -95,7 +83,8 @@ bool EglGbmBackend::initializeEgl()
 
         if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base")) ||
                 (!hasMesaGBM && !hasKHRGBM)) {
-            setFailed("missing one or more extensions between EGL_EXT_platform_base,  EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
+            setFailed("Missing one or more extensions between EGL_EXT_platform_base, "
+                      "EGL_MESA_platform_gbm, EGL_KHR_platform_gbm");
             return false;
         }
 
@@ -109,8 +98,9 @@ bool EglGbmBackend::initializeEgl()
         display = eglGetPlatformDisplayEXT(platform, device, nullptr);
     }
 
-    if (display == EGL_NO_DISPLAY)
+    if (display == EGL_NO_DISPLAY) {
         return false;
+    }
     setEglDisplay(display);
     return initEglAPI();
 }
@@ -135,20 +125,22 @@ void EglGbmBackend::init()
 bool EglGbmBackend::initRenderingContext()
 {
     initBufferConfigs();
-
     if (!createContext()) {
         return false;
     }
 
     const auto outputs = m_backend->drmOutputs();
+
     for (DrmOutput *drmOutput: outputs) {
         createOutput(drmOutput);
     }
+
     if (m_outputs.isEmpty()) {
         qCCritical(KWIN_DRM) << "Create Window Surfaces failed";
         return false;
     }
-    // set our first surface as the one for the abstract backend, just to make it happy
+
+    // Set our first surface as the one for the abstract backend, just to make it happy.
     setSurface(m_outputs.first().eglSurface);
 
     return makeContextCurrent(m_outputs.first());
@@ -159,49 +151,69 @@ void EglGbmBackend::initRemotePresent()
     if (qEnvironmentVariableIsSet("KWIN_NO_REMOTE")) {
         return;
     }
-
     qCDebug(KWIN_DRM) << "Support for remote access enabled";
     m_remoteaccessManager.reset(new RemoteAccessManager);
 }
 
-bool EglGbmBackend::resetOutput(Output &o, DrmOutput *drmOutput)
+std::shared_ptr<GbmSurface> EglGbmBackend::createGbmSurface(const QSize &size) const
 {
-    o.output = drmOutput;
-    auto size = drmOutput->pixelSize();
-
-    auto gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(), size.width(), size.height(),
-                                        GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+    auto gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(),
+                                                   size.width(), size.height(),
+                                                   GBM_FORMAT_XRGB8888,
+                                                   GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     if (!gbmSurface) {
-        qCCritical(KWIN_DRM) << "Create gbm surface failed";
-        return false;
+        qCCritical(KWIN_DRM) << "Creating GBM surface failed";
+        return nullptr;
     }
-    auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)(gbmSurface->surface()), nullptr);
+    return gbmSurface;
+}
+
+EGLSurface EglGbmBackend::createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const
+{
+    auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(),
+                                                        (void *)(gbmSurface->surface()), nullptr);
     if (eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_DRM) << "Create Window Surface failed";
-        return false;
-    } else {
-        // destroy previous surface
-        if (o.eglSurface != EGL_NO_SURFACE) {
-            if (surface() == o.eglSurface) {
-                setSurface(eglSurface);
-            }
-            eglDestroySurface(eglDisplay(), o.eglSurface);
-        }
-        o.eglSurface = eglSurface;
-        o.gbmSurface = gbmSurface;
+        qCCritical(KWIN_DRM) << "Creating EGL surface failed";
+        return EGL_NO_SURFACE;
     }
+    return eglSurface;
+}
+
+bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
+{
+    output.output = drmOutput;
+    const QSize size = drmOutput->pixelSize();
+
+    auto gbmSurface = createGbmSurface(size);
+    if (!gbmSurface) {
+        return false;
+    }
+    auto eglSurface = createEglSurface(gbmSurface);
+    if (eglSurface == EGL_NO_SURFACE) {
+        return false;
+    }
+
+    // destroy previous surface
+    if (output.eglSurface != EGL_NO_SURFACE) {
+        if (surface() == output.eglSurface) {
+            setSurface(eglSurface);
+        }
+        eglDestroySurface(eglDisplay(), output.eglSurface);
+    }
+    output.eglSurface = eglSurface;
+    output.gbmSurface = gbmSurface;
     return true;
 }
 
 void EglGbmBackend::createOutput(DrmOutput *drmOutput)
 {
-    Output o;
-    if (resetOutput(o, drmOutput)) {
+    Output newOutput;
+    if (resetOutput(newOutput, drmOutput)) {
         connect(drmOutput, &DrmOutput::modeChanged, this,
             [drmOutput, this] {
                 auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                    [drmOutput] (const auto &o) {
-                        return o.output == drmOutput;
+                    [drmOutput] (const auto &output) {
+                        return output.output == drmOutput;
                     }
                 );
                 if (it == m_outputs.end()) {
@@ -210,11 +222,25 @@ void EglGbmBackend::createOutput(DrmOutput *drmOutput)
                 resetOutput(*it, drmOutput);
             }
         );
-        m_outputs << o;
+        m_outputs << newOutput;
     }
 }
 
-bool EglGbmBackend::makeContextCurrent(const Output &output)
+void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
+{
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+        [drmOutput] (const Output &output) {
+            return output.output == drmOutput;
+        }
+    );
+    if (it == m_outputs.end()) {
+        return;
+    }
+    cleanupOutput(*it);
+    m_outputs.erase(it);
+}
+
+bool EglGbmBackend::makeContextCurrent(const Output &output) const
 {
     const EGLSurface surface = output.eglSurface;
     if (surface == EGL_NO_SURFACE) {
@@ -224,21 +250,11 @@ bool EglGbmBackend::makeContextCurrent(const Output &output)
         qCCritical(KWIN_DRM) << "Make Context Current failed";
         return false;
     }
-
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
         qCWarning(KWIN_DRM) << "Error occurred while creating context " << error;
         return false;
     }
-    // TODO: ensure the viewport is set correctly each time
-    const QSize &overall = screens()->size();
-    const QRect &v = output.output->geometry();
-    // TODO: are the values correct?
-
-    qreal scale = output.output->scale();
-
-    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
-               overall.width() * scale, overall.height() * scale);
     return true;
 }
 
@@ -257,31 +273,35 @@ bool EglGbmBackend::initBufferConfigs()
 
     EGLint count;
     EGLConfig configs[1024];
-    if (!eglChooseConfig(eglDisplay(), config_attribs, configs, sizeof(configs)/sizeof(EGLConfig), &count)) {
+    if (!eglChooseConfig(eglDisplay(), config_attribs, configs,
+                         sizeof(configs) / sizeof(EGLConfig),
+                         &count)) {
         qCCritical(KWIN_DRM) << "choose config failed";
         return false;
     }
 
     qCDebug(KWIN_DRM) << "EGL buffer configs count:" << count;
 
-    // loop through all configs, choosing the first one that has suitable format
+    // Loop through all configs, choosing the first one that has suitable format.
     for (EGLint i = 0; i < count; i++) {
         EGLint gbmFormat;
-        // query some configuration parameters, to show in debug log
+        // Query some configuration parameters, to show in debug log.
         eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
 
         if (KWIN_DRM().isDebugEnabled()) {
-            // GBM formats are declared as FOURCC code (integer from ASCII chars, so use this fact)
+            // GBM formats are declared as FOURCC code (integer from ASCII chars, so use this fact).
             char gbmFormatStr[sizeof(EGLint) + 1] = {0};
             memcpy(gbmFormatStr, &gbmFormat, sizeof(EGLint));
-            // query number of bits for color channel
+
+            // Query number of bits for color channel.
             EGLint blueSize, redSize, greenSize, alphaSize;
             eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &redSize);
             eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &greenSize);
             eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blueSize);
             eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &alphaSize);
             qCDebug(KWIN_DRM) << "  EGL config #" << i << " has GBM FOURCC format:" << gbmFormatStr
-                              << "; color sizes (RGBA order):" << redSize << greenSize << blueSize << alphaSize;
+                              << "; color sizes (RGBA order):"
+                              << redSize << greenSize << blueSize << alphaSize;
         }
 
         if ((gbmFormat == GBM_FORMAT_XRGB8888) || (gbmFormat == GBM_FORMAT_ARGB8888)) {
@@ -290,33 +310,33 @@ bool EglGbmBackend::initBufferConfigs()
         }
     }
 
-    qCCritical(KWIN_DRM) << "choose EGL config did not return a suitable config" << count;
+    qCCritical(KWIN_DRM) << "Choosing EGL config did not return a suitable config. There were"
+                         << count << "configs.";
     return false;
 }
 
 void EglGbmBackend::present()
 {
-    for (auto &o: m_outputs) {
-        makeContextCurrent(o);
-        presentOnOutput(o);
-    }
+    Q_UNREACHABLE();
+    // Not in use. This backend does per-screen rendering.
 }
 
-void EglGbmBackend::presentOnOutput(EglGbmBackend::Output &o)
+void EglGbmBackend::presentOnOutput(Output &output)
 {
-    eglSwapBuffers(eglDisplay(), o.eglSurface);
-    o.buffer = m_backend->createBuffer(o.gbmSurface);
-    if(m_remoteaccessManager && gbm_surface_has_free_buffers(o.gbmSurface->surface())) {
+    eglSwapBuffers(eglDisplay(), output.eglSurface);
+    output.buffer = m_backend->createBuffer(output.gbmSurface);
+
+    if(m_remoteaccessManager && gbm_surface_has_free_buffers(output.gbmSurface->surface())) {
         // GBM surface is released on page flip so
-        // we should pass the buffer before it's presented
-        m_remoteaccessManager->passBuffer(o.output, o.buffer);
+        // we should pass the buffer before it's presented.
+        m_remoteaccessManager->passBuffer(output.output, output.buffer);
     }
-    m_backend->present(o.buffer, o.output);
+
+    m_backend->present(output.buffer, output.output);
 
     if (supportsBufferAge()) {
-        eglQuerySurface(eglDisplay(), o.eglSurface, EGL_BUFFER_AGE_EXT, &o.bufferAge);
+        eglQuerySurface(eglDisplay(), output.eglSurface, EGL_BUFFER_AGE_EXT, &output.bufferAge);
     }
-
 }
 
 void EglGbmBackend::screenGeometryChanged(const QSize &size)
@@ -336,19 +356,32 @@ QRegion EglGbmBackend::prepareRenderingFrame()
     return QRegion();
 }
 
+void EglGbmBackend::setViewport(const Output &output) const
+{
+    const QSize &overall = screens()->size();
+    const QRect &v = output.output->geometry();
+    qreal scale = output.output->scale();
+
+    glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
+               overall.width() * scale, overall.height() * scale);
+}
+
 QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
 {
-    const Output &o = m_outputs.at(screenId);
-    makeContextCurrent(o);
+    const Output &output = m_outputs.at(screenId);
+
+    makeContextCurrent(output);
+    setViewport(output);
+
     if (supportsBufferAge()) {
         QRegion region;
 
         // Note: An age of zero means the buffer contents are undefined
-        if (o.bufferAge > 0 && o.bufferAge <= o.damageHistory.count()) {
-            for (int i = 0; i < o.bufferAge - 1; i++)
-                region |= o.damageHistory[i];
+        if (output.bufferAge > 0 && output.bufferAge <= output.damageHistory.count()) {
+            for (int i = 0; i < output.bufferAge - 1; i++)
+                region |= output.damageHistory[i];
         } else {
-            region = o.output->geometry();
+            region = output.output->geometry();
         }
 
         return region;
@@ -362,10 +395,13 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
     Q_UNUSED(damagedRegion)
 }
 
-void EglGbmBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglGbmBackend::endRenderingFrameForScreen(int screenId,
+                                               const QRegion &renderedRegion,
+                                               const QRegion &damagedRegion)
 {
-    Output &o = m_outputs[screenId];
-    if (damagedRegion.intersected(o.output->geometry()).isEmpty() && screenId == 0) {
+    Output &output = m_outputs[screenId];
+
+    if (damagedRegion.intersected(output.output->geometry()).isEmpty() && screenId == 0) {
 
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
@@ -374,30 +410,29 @@ void EglGbmBackend::endRenderingFrameForScreen(int screenId, const QRegion &rend
         // In this case we won't post the back buffer. Instead we'll just
         // set the buffer age to 1, so the repaired regions won't be
         // rendered again in the next frame.
-        if (!renderedRegion.intersected(o.output->geometry()).isEmpty())
+        if (!renderedRegion.intersected(output.output->geometry()).isEmpty())
             glFlush();
 
-        for (auto &o: m_outputs) {
-            o.bufferAge = 1;
+        for (auto &output: m_outputs) {
+            output.bufferAge = 1;
         }
         return;
     }
-    presentOnOutput(o);
+    presentOnOutput(output);
 
     // Save the damaged region to history
-    // Note: damage history is only collected for the first screen. For any other screen full repaints
-    // are triggered. This is due to a limitation in Scene::paintGenericScreen which resets the Toplevel's
-    // repaint. So multiple calls to Scene::paintScreen as it's done in multi-output rendering only
-    // have correct damage information for the first screen. If we try to track damage nevertheless,
-    // it creates artifacts. So for the time being we work around the problem by only supporting buffer
-    // age on the first output. To properly support buffer age on all outputs the rendering needs to
-    // be refactored in general.
+    // Note: damage history is only collected for the first screen. For any other screen full
+    // repaints are triggered. This is due to a limitation in Scene::paintGenericScreen which resets
+    // the Toplevel's repaint. So multiple calls to Scene::paintScreen as it's done in multi-output
+    // rendering only have correct damage information for the first screen. If we try to track
+    // damage nevertheless, it creates artifacts. So for the time being we work around the problem
+    // by only supporting buffer age on the first output. To properly support buffer age on all
+    // outputs the rendering needs to be refactored in general.
     if (supportsBufferAge() && screenId == 0) {
-        if (o.damageHistory.count() > 10) {
-            o.damageHistory.removeLast();
+        if (output.damageHistory.count() > 10) {
+            output.damageHistory.removeLast();
         }
-
-        o.damageHistory.prepend(damagedRegion.intersected(o.output->geometry()));
+        output.damageHistory.prepend(damagedRegion.intersected(output.output->geometry()));
     }
 }
 
@@ -422,4 +457,4 @@ EglGbmTexture::EglGbmTexture(KWin::SceneOpenGLTexture *texture, EglGbmBackend *b
 
 EglGbmTexture::~EglGbmTexture() = default;
 
-} // namespace
+}
