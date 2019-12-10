@@ -19,6 +19,7 @@
 #include "virtualdesktops.h"
 #include "animationsmodel.h"
 #include "desktopsmodel.h"
+#include "virtualdesktopssettings.h"
 
 #include <KAboutApplicationDialog>
 #include <KAboutData>
@@ -32,7 +33,7 @@ namespace KWin
 
 VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
     : KQuickAddons::ConfigModule(parent, args)
-    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    , m_settings(new VirtualDesktopsSettings(this))
     , m_desktopsModel(new KWin::DesktopsModel(this))
     , m_navWraps(true)
     , m_osdEnabled(false)
@@ -135,15 +136,12 @@ QAbstractItemModel *VirtualDesktops::animationsModel() const
 
 void VirtualDesktops::load()
 {
-    KConfigGroup navConfig(m_kwinConfig, "Windows");
-    setNavWraps(navConfig.readEntry<bool>("RollOverDesktops", true));
+    setNavWraps(m_settings->rollOverDesktop());
 
-    KConfigGroup osdConfig(m_kwinConfig, "Plugins");
-    setOsdEnabled(osdConfig.readEntry("desktopchangeosdEnabled", false));
+    setOsdEnabled(m_settings->desktopChangeOsdEnabled());
 
-    KConfigGroup osdSettings(m_kwinConfig, "Script-desktopchangeosd");
-    setOsdDuration(osdSettings.readEntry("PopupHideDelay", 1000));
-    setOsdTextOnly(osdSettings.readEntry("TextOnly", false));
+    setOsdDuration(m_settings->popupHideDelay());
+    setOsdTextOnly(m_settings->textOnly());
 
     m_animationsModel->load();
 }
@@ -153,17 +151,12 @@ void VirtualDesktops::save()
     m_desktopsModel->syncWithServer();
     m_animationsModel->save();
 
-    KConfigGroup navConfig(m_kwinConfig, "Windows");
-    navConfig.writeEntry("RollOverDesktops", m_navWraps);
+    m_settings->setRollOverDesktop(m_navWraps);
+    m_settings->setDesktopChangeOsdEnabled(m_osdEnabled);
+    m_settings->setPopupHideDelay(m_osdDuration);
+    m_settings->setTextOnly(m_osdTextOnly);
 
-    KConfigGroup osdConfig(m_kwinConfig, "Plugins");
-    osdConfig.writeEntry("desktopchangeosdEnabled", m_osdEnabled);
-
-    KConfigGroup osdSettings(m_kwinConfig, "Script-desktopchangeosd");
-    osdSettings.writeEntry("PopupHideDelay", m_osdDuration);
-    osdSettings.writeEntry("TextOnly", m_osdTextOnly);
-
-    m_kwinConfig->sync();
+    m_settings->save();
 
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
         QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
@@ -254,25 +247,19 @@ void VirtualDesktops::updateNeedsSave()
         needsSave = true;
     }
 
-    KConfigGroup navConfig(m_kwinConfig, "Windows");
-
-    if (m_navWraps != navConfig.readEntry<bool>("RollOverDesktops", true)) {
+    if (m_navWraps != m_settings->rollOverDesktop()) {
         needsSave = true;
     }
 
-    KConfigGroup osdConfig(m_kwinConfig, "Plugins");
-
-    if (m_osdEnabled != osdConfig.readEntry("desktopchangeosdEnabled", false)) {
+    if (m_osdEnabled != m_settings->desktopChangeOsdEnabled()) {
         needsSave = true;
     }
 
-    KConfigGroup osdSettings(m_kwinConfig, "Script-desktopchangeosd");
-
-    if (m_osdDuration != osdSettings.readEntry("PopupHideDelay", 1000)) {
+    if (m_osdDuration != m_settings->popupHideDelay()) {
         needsSave = true;
     }
 
-    if (m_osdTextOnly != osdSettings.readEntry("TextOnly", false)) {
+    if (m_osdTextOnly != m_settings->textOnly()) {
         needsSave = true;
     }
 

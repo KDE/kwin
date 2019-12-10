@@ -22,6 +22,8 @@
 #include <KQuickAddons/ConfigModule>
 #include <KSharedConfig>
 
+class VirtualDesktopsSettings;
+
 namespace KWin
 {
 
@@ -77,7 +79,7 @@ private Q_SLOTS:
     void updateNeedsSave();
 
 private:
-    KSharedConfigPtr m_kwinConfig;
+    VirtualDesktopsSettings *m_settings;
     DesktopsModel *m_desktopsModel;
     bool m_navWraps;
     bool m_osdEnabled;
