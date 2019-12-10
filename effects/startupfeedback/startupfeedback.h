@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <kwineffects.h>
 #include <KStartupInfo>
+#include <KConfigWatcher>
 
 class KSelectionOwner;
 namespace KWin
@@ -87,6 +88,7 @@ private:
     QRect m_currentGeometry, m_dirtyRect;
     GLShader *m_blinkingShader;
     int m_cursorSize;
+    KConfigWatcher::Ptr m_configWatcher;
 };
 } // namespace
 

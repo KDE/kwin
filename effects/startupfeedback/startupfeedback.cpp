@@ -82,6 +82,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_type(BouncingFeedback)
     , m_blinkingShader(nullptr)
     , m_cursorSize(0)
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
 {
     for (int i = 0; i < 5; ++i) {
         m_bouncingTextures[i] = nullptr;
@@ -94,7 +95,11 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, &StartupFeedbackEffect::gotRemoveStartup);
     connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, &StartupFeedbackEffect::gotStartupChange);
     connect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
+    connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this]() {
+        reconfigure(ReconfigureAll);
+    });
     reconfigure(ReconfigureAll);
+
 }
 
 StartupFeedbackEffect::~StartupFeedbackEffect()
@@ -117,11 +122,10 @@ bool StartupFeedbackEffect::supported()
 void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
-    KConfig conf(QStringLiteral("klaunchrc"), KConfig::NoGlobals);
-    KConfigGroup c = conf.group("FeedbackStyle");
+    KConfigGroup c = m_configWatcher->config()->group("FeedbackStyle");
     const bool busyCursor = c.readEntry("BusyCursor", true);
 
-    c = conf.group("BusyCursorSettings");
+    c = m_configWatcher->config()->group("BusyCursorSettings");
     m_startupInfo->setTimeout(c.readEntry("Timeout", s_startupDefaultTimeout));
     const bool busyBlinking = c.readEntry("Blinking", false);
     const bool busyBouncing = c.readEntry("Bouncing", true);
