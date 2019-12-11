@@ -337,9 +337,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
         init_ok = false;
         return;
     }
-    if (!glPlatform->isGLES() && !m_backend->isSurfaceLessContext()) {
-        glDrawBuffer(GL_BACK);
-    }
 
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
     initDebugOutput();
