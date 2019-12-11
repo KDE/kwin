@@ -157,7 +157,7 @@ QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
         const QSize center = s / 2;
 
         matrix.translate(center.width(), center.height());
-        matrix.rotate(angle, 0, 0, 1);
+        matrix.rotate(-angle, 0, 0, 1);
         matrix.translate(-center.width(), -center.height());
     }
     matrix.scale(scale());
@@ -185,7 +185,8 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
 {
     const QMatrix4x4 hotspotMatrix = matrixDisplay(m_backend->softwareCursor().size());
 
-    QPoint p = globalPos - AbstractWaylandOutput::globalPos();
+    const QPoint localPos = globalPos - AbstractWaylandOutput::globalPos();
+    QPoint pos = localPos;
 
     // TODO: Do we need to handle the flipped cases differently?
     switch (transform()) {
@@ -194,22 +195,23 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
         break;
     case Transform::Rotated90:
     case Transform::Flipped90:
-        p = QPoint(p.y(), pixelSize().height() - p.x());
+        pos = QPoint(localPos.y(), pixelSize().width() / scale() - localPos.x());
         break;
     case Transform::Rotated270:
     case Transform::Flipped270:
-        p = QPoint(pixelSize().width() - p.y(), p.x());
+        pos = QPoint(pixelSize().height() / scale() - localPos.y(), localPos.x());
         break;
     case Transform::Rotated180:
     case Transform::Flipped180:
-        p = QPoint(pixelSize().width() - p.x(), pixelSize().height() - p.y());
+        pos = QPoint(pixelSize().width() / scale() - localPos.x(),
+                     pixelSize().height() / scale() - localPos.y());
         break;
     default:
         Q_UNREACHABLE();
     }
-    p *= scale();
-    p -= hotspotMatrix.map(m_backend->softwareCursorHotspot());
-    drmModeMoveCursor(m_backend->fd(), m_crtc->id(), p.x(), p.y());
+    pos *= scale();
+    pos -= hotspotMatrix.map(m_backend->softwareCursorHotspot());
+    drmModeMoveCursor(m_backend->fd(), m_crtc->id(), pos.x(), pos.y());
 }
 
 static QHash<int, QByteArray> s_connectorNames = {
