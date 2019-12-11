@@ -32,13 +32,9 @@ namespace KWin
 {
 
 VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
-    : KQuickAddons::ConfigModule(parent, args)
+    : KQuickAddons::ManagedConfigModule(parent, args)
     , m_settings(new VirtualDesktopsSettings(this))
     , m_desktopsModel(new KWin::DesktopsModel(this))
-    , m_navWraps(true)
-    , m_osdEnabled(false)
-    , m_osdDuration(1000)
-    , m_osdTextOnly(false)
     , m_animationsModel(new AnimationsModel(this))
 {
     KAboutData *about = new KAboutData(QStringLiteral("kcm_kwin_virtualdesktops"),
@@ -46,14 +42,16 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
         QStringLiteral("2.0"), QString(), KAboutLicense::GPL);
     setAboutData(about);
 
+    qmlRegisterType<VirtualDesktopsSettings>();
+
     setButtons(Apply | Default);
 
     QObject::connect(m_desktopsModel, &KWin::DesktopsModel::userModifiedChanged,
-        this, &VirtualDesktops::updateNeedsSave);
+        this, &VirtualDesktops::settingsChanged);
     connect(m_animationsModel, &AnimationsModel::enabledChanged,
-        this, &VirtualDesktops::updateNeedsSave);
+        this, &VirtualDesktops::settingsChanged);
     connect(m_animationsModel, &AnimationsModel::currentIndexChanged,
-        this, &VirtualDesktops::updateNeedsSave);
+        this, &VirtualDesktops::settingsChanged);
 }
 
 VirtualDesktops::~VirtualDesktops()
@@ -65,115 +63,47 @@ QAbstractItemModel *VirtualDesktops::desktopsModel() const
     return m_desktopsModel;
 }
 
-bool VirtualDesktops::navWraps() const
-{
-    return m_navWraps;
-}
-
-void VirtualDesktops::setNavWraps(bool wraps)
-{
-    if (m_navWraps != wraps) {
-        m_navWraps = wraps;
-
-        emit navWrapsChanged();
-
-        updateNeedsSave();
-    }
-}
-
-bool VirtualDesktops::osdEnabled() const
-{
-    return m_osdEnabled;
-}
-
-void VirtualDesktops::setOsdEnabled(bool enabled)
-{
-    if (m_osdEnabled != enabled) {
-        m_osdEnabled = enabled;
-
-        emit osdEnabledChanged();
-
-        updateNeedsSave();
-    }
-}
-
-int VirtualDesktops::osdDuration() const
-{
-    return m_osdDuration;
-}
-
-void VirtualDesktops::setOsdDuration(int duration)
-{
-    if (m_osdDuration != duration) {
-        m_osdDuration = duration;
-
-        emit osdDurationChanged();
-
-        updateNeedsSave();
-    }
-}
-
-int VirtualDesktops::osdTextOnly() const
-{
-    return m_osdTextOnly;
-}
-
-void VirtualDesktops::setOsdTextOnly(bool textOnly)
-{
-    if (m_osdTextOnly != textOnly) {
-        m_osdTextOnly = textOnly;
-
-        emit osdTextOnlyChanged();
-
-        updateNeedsSave();
-    }
-}
-
 QAbstractItemModel *VirtualDesktops::animationsModel() const
 {
     return m_animationsModel;
 }
 
+VirtualDesktopsSettings *VirtualDesktops::virtualDesktopsSettings() const
+{
+    return m_settings;
+}
+
 void VirtualDesktops::load()
 {
-    setNavWraps(m_settings->rollOverDesktop());
+    ManagedConfigModule::load();
 
-    setOsdEnabled(m_settings->desktopChangeOsdEnabled());
-
-    setOsdDuration(m_settings->popupHideDelay());
-    setOsdTextOnly(m_settings->textOnly());
-
+    m_desktopsModel->load();
     m_animationsModel->load();
 }
 
 void VirtualDesktops::save()
 {
+    ManagedConfigModule::save();
+
     m_desktopsModel->syncWithServer();
     m_animationsModel->save();
-
-    m_settings->setRollOverDesktop(m_navWraps);
-    m_settings->setDesktopChangeOsdEnabled(m_osdEnabled);
-    m_settings->setPopupHideDelay(m_osdDuration);
-    m_settings->setTextOnly(m_osdTextOnly);
-
-    m_settings->save();
 
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
         QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
     QDBusConnection::sessionBus().send(message);
-
-    setNeedsSave(false);
 }
 
 void VirtualDesktops::defaults()
 {
-    m_desktopsModel->setRows(1);
-    m_animationsModel->defaults();
+    ManagedConfigModule::defaults();
 
-    setNavWraps(true);
-    setOsdEnabled(false);
-    setOsdDuration(1000);
-    setOsdTextOnly(false);
+    m_desktopsModel->defaults();
+    m_animationsModel->defaults();
+}
+
+bool VirtualDesktops::isDefaults() const
+{
+    return m_animationsModel->isDefaults() && m_desktopsModel->isDefaults();
 }
 
 void VirtualDesktops::configureAnimation()
@@ -235,35 +165,9 @@ void VirtualDesktops::showAboutAnimation()
     delete aboutPlugin;
 }
 
-void VirtualDesktops::updateNeedsSave()
+bool VirtualDesktops::isSaveNeeded() const
 {
-    bool needsSave = false;
-
-    if (m_desktopsModel->userModified()) {
-        needsSave = true;
-    }
-
-    if (m_animationsModel->needsSave()) {
-        needsSave = true;
-    }
-
-    if (m_navWraps != m_settings->rollOverDesktop()) {
-        needsSave = true;
-    }
-
-    if (m_osdEnabled != m_settings->desktopChangeOsdEnabled()) {
-        needsSave = true;
-    }
-
-    if (m_osdDuration != m_settings->popupHideDelay()) {
-        needsSave = true;
-    }
-
-    if (m_osdTextOnly != m_settings->textOnly()) {
-        needsSave = true;
-    }
-
-    setNeedsSave(needsSave);
+    return m_animationsModel->needsSave() || m_desktopsModel->needsSave();
 }
 
 }

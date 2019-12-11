@@ -5,7 +5,7 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="kwinrc"/>
   <group name="Windows">
-    <entry name="rollOverDesktop" key="RollOverDesktops" type="bool">
+    <entry name="rollOverDesktops" key="RollOverDesktops" type="bool">
       <label>Whether or not, we circle through the virtual desktop when moving from one to the next</label>
       <default>true</default>
     </entry>
@@ -17,11 +17,11 @@
     </entry>
   </group>
   <group name="Script-desktopchangeosd">
-    <entry name="PopupHideDelay" key="PopupHideDelay" type="int">
+    <entry name="popupHideDelay" key="PopupHideDelay" type="int">
       <label>Duraton of the OSD</label>
       <default>1000</default>
     </entry>
-    <entry name="TextOnly" key="TextOnly" type="bool">
+    <entry name="textOnly" key="TextOnly" type="bool">
       <label>Whether or not to display desktop layout in the OSD</label>
       <default>false</default>
     </entry>

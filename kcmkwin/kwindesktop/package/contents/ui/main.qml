@@ -165,15 +165,6 @@ ScrollViewKCM {
         }
 
         Kirigami.FormLayout {
-            Connections {
-                target: kcm
-
-                onNavWrapsChanged: navWraps.checked = kcm.navWraps
-
-                onOsdEnabledChanged: osdEnabled.checked = kcm.osdEnabled
-                onOsdDurationChanged: osdDuration.value = kcm.osdDuration
-                onOsdTextOnlyChanged: osdTextOnly.checked = !kcm.osdTextOnly
-            }
 
             QQC2.CheckBox {
                 id: navWraps
@@ -181,10 +172,9 @@ ScrollViewKCM {
                 Kirigami.FormData.label: i18n("Options:")
 
                 text: i18n("Navigation wraps around")
-
-                checked: kcm.navWraps
-
-                onCheckedChanged: kcm.navWraps = checked
+                enabled: !kcm.virtualDesktopsSettings.isImmutable("rollOverDesktops")
+                checked: kcm.virtualDesktopsSettings.rollOverDesktops
+                onToggled: kcm.virtualDesktopsSettings.rollOverDesktops = checked
             }
 
             RowLayout {
@@ -200,7 +190,7 @@ ScrollViewKCM {
 
                     checked: kcm.animationsModel.enabled
 
-                    onCheckedChanged: kcm.animationsModel.enabled = checked
+                    onToggled: kcm.animationsModel.enabled = checked
                 }
 
                 QQC2.ComboBox {
@@ -241,15 +231,17 @@ ScrollViewKCM {
 
                     text: i18n("Show on-screen display when switching:")
 
-                    checked: kcm.osdEnabled
+                    enabled: !kcm.virtualDesktopsSettings.isImmutable("desktopChangeOsdEnabled")
 
-                    onToggled: kcm.osdEnabled = checked
+                    checked: kcm.virtualDesktopsSettings.desktopChangeOsdEnabled
+
+                    onToggled: kcm.virtualDesktopsSettings.desktopChangeOsdEnabled = checked
                 }
 
                 QQC2.SpinBox {
                     id: osdDuration
 
-                    enabled: osdEnabled.checked
+                    enabled: osdEnabled.checked && !kcm.virtualDesktopsSettings.isImmutable("popupHideDelay")
 
                     from: 0
                     to: 10000
@@ -257,9 +249,9 @@ ScrollViewKCM {
 
                     textFromValue: function(value, locale) { return i18n("%1 ms", value)}
 
-                    value: kcm.osdDuration
+                    value: kcm.virtualDesktopsSettings.popupHideDelay
 
-                    onValueChanged: kcm.osdDuration = value
+                    onValueModified: kcm.virtualDesktopsSettings.popupHideDelay = value
                 }
             }
 
@@ -272,14 +264,10 @@ ScrollViewKCM {
 
                 QQC2.CheckBox {
                     id: osdTextOnly
-
-                    enabled: osdEnabled.checked
-
+                    enabled: osdEnabled.checked && !kcm.virtualDesktopsSettings.isImmutable("textOnly")
                     text: i18n("Show desktop layout indicators")
-
-                    checked: !kcm.osdTextOnly
-
-                    onToggled: kcm.osdTextOnly = !checked
+                    checked: !kcm.virtualDesktopsSettings.textOnly
+                    onToggled: kcm.virtualDesktopsSettings.textOnly = !checked
                 }
             }
         }

@@ -135,6 +135,13 @@ void AnimationsModel::defaults()
     setCurrentIndex(modelCurrentIndex());
 }
 
+bool AnimationsModel::isDefaults() const
+{
+    // effect at m_currentIndex index may not be the current saved selected effect
+    const bool enabledByDefault = index(m_currentIndex, 0).data(EnabledByDefaultRole).toBool();
+    return enabledByDefault;
+}
+
 bool AnimationsModel::needsSave() const
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");

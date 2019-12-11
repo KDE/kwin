@@ -46,6 +46,7 @@ public:
     void load();
     void save();
     void defaults();
+    bool isDefaults() const;
     bool needsSave() const;
 
 Q_SIGNALS:

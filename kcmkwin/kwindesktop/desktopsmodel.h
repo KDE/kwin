@@ -93,6 +93,11 @@ public:
 
     Q_INVOKABLE void syncWithServer();
 
+    bool needsSave() const;
+    void load();
+    void defaults();
+    bool isDefaults() const;
+
 Q_SIGNALS:
     void readyChanged() const;
     void errorChanged() const;

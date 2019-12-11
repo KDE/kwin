@@ -376,6 +376,45 @@ void DesktopsModel::reset()
         SLOT(handleCallError()));
 }
 
+bool DesktopsModel::needsSave() const
+{
+    return m_userModified;
+}
+
+bool DesktopsModel::isDefaults() const
+{
+    return m_rows == 2 && m_desktops.count() == 1;
+}
+
+void DesktopsModel::defaults()
+{
+    beginResetModel();
+    // default is 1 desktop with 2 rows
+    // see kwin/virtualdesktops.cpp  VirtualDesktopGrid::VirtualDesktopGrid
+    while (m_desktops.count() > 1) {
+        const auto desktop = m_desktops.takeLast();
+        m_names.remove(desktop);
+    }
+    m_rows = 2;
+
+    endResetModel();
+
+    m_userModified = true;
+    updateModifiedState();
+}
+
+void DesktopsModel::load()
+{
+    beginResetModel();
+    m_desktops = m_serverSideDesktops;
+    m_names = m_serverSideNames;
+    m_rows = m_serverSideRows;
+    endResetModel();
+
+    m_userModified = true;
+    updateModifiedState();
+}
+
 void DesktopsModel::getAllAndConnect(const QDBusMessage &msg)
 {
     const QVariantMap &data = qdbus_cast<QVariantMap>(msg.arguments().at(0).value<QDBusArgument>());
