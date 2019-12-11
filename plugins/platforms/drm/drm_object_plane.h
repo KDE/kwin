@@ -52,9 +52,9 @@ public:
     };
 
     enum class TypeIndex {
-        Primary = 0,
+        Overlay = 0,
+        Primary,
         Cursor,
-        Overlay,
         Count
     };
 

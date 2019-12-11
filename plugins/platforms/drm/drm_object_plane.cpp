@@ -83,9 +83,9 @@ bool DrmPlane::initProps()
     });
 
     QVector<QByteArray> typeNames = {
-        QByteArrayLiteral("Primary"),
-        QByteArrayLiteral("Cursor"),
         QByteArrayLiteral("Overlay"),
+        QByteArrayLiteral("Primary"),
+        QByteArrayLiteral("Cursor")
     };
 
     const QVector<QByteArray> rotationNames{
