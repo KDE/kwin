@@ -17,11 +17,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_DRM_OBJECT_PLANE_H
-#define KWIN_DRM_OBJECT_PLANE_H
+#pragma once
 
 #include "drm_object.h"
-// drm
+
 #include <xf86drmMode.h>
 
 namespace KWin
@@ -60,12 +59,12 @@ public:
     };
 
     enum class Transformation {
-        Rotate0 = 1 << 0,
-        Rotate90 = 1 << 1,
-        Rotate180 = 1 << 2,
-        Rotate270 = 1 << 3,
-        ReflectX = 1 << 4,
-        ReflectY = 1 << 5
+        Rotate0     = 1 << 0,
+        Rotate90    = 1 << 1,
+        Rotate180   = 1 << 2,
+        Rotate270   = 1 << 3,
+        ReflectX    = 1 << 4,
+        ReflectY    = 1 << 5
     };
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
@@ -93,13 +92,14 @@ public:
     void setTransformation(Transformations t);
     Transformations transformation();
 
-    bool atomicPopulate(drmModeAtomicReq *req) override;
     void flipBuffer();
     void flipBufferWithDelete();
 
     Transformations supportedTransformations() const {
         return m_supportedTransformations;
     }
+
+    bool atomicPopulate(drmModeAtomicReq *req) const override;
 
 private:
     DrmBuffer *m_current = nullptr;
@@ -117,6 +117,4 @@ private:
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::DrmPlane::Transformations)
-
-#endif
 

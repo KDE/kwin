@@ -60,6 +60,11 @@ bool DrmPlane::atomicInit()
     return true;
 }
 
+bool DrmPlane::atomicPopulate(drmModeAtomicReq *req) const
+{
+    return doAtomicPopulate(req, 1);
+}
+
 bool DrmPlane::initProps()
 {
     setPropertyNames( {
@@ -106,20 +111,22 @@ bool DrmPlane::initProps()
         } else if (j == int(PropertyIndex::Rotation)) {
             initProp(j, properties.data(), rotationNames);
             m_supportedTransformations = Transformations();
-            auto testTransform = [j, this] (uint64_t value, Transformation t, const QString &name) {
+
+            auto checkSupport = [j, this] (uint64_t value, Transformation t, const QString &name) {
                 if (propHasEnum(j, value)) {
                     qCDebug(KWIN_DRM) << name;
                     m_supportedTransformations |= t;
                 }
             };
             qCDebug(KWIN_DRM).nospace() << "Supported Transformations on plane " << m_id << ":";
-            testTransform(0, Transformation::Rotate0, "rotate-0");
-            testTransform(1, Transformation::Rotate90, "rotate-90");
-            testTransform(2, Transformation::Rotate180, "rotate-180");
-            testTransform(3, Transformation::Rotate270, "rotate-270");
-            testTransform(4, Transformation::ReflectX, "reflect-x-axis");
-            testTransform(5, Transformation::ReflectY, "reflect-y-axis");
+            checkSupport(0, Transformation::Rotate0,   "rotate-0");
+            checkSupport(1, Transformation::Rotate90,  "rotate-90");
+            checkSupport(2, Transformation::Rotate180, "rotate-180");
+            checkSupport(3, Transformation::Rotate270, "rotate-270");
+            checkSupport(4, Transformation::ReflectX,  "reflect-x");
+            checkSupport(5, Transformation::ReflectY,  "reflect-y");
             qCDebug(KWIN_DRM) << "";
+
         } else {
             initProp(j, properties.data());
         }
@@ -153,6 +160,8 @@ void DrmPlane::setNext(DrmBuffer *b)
 
 void DrmPlane::setTransformation(Transformations t)
 {
+    // TODO: When being pedantic, this should go through the enum mapping. Just remember
+    //       that these are the shift distance, not the shifted value.
     if (auto property = m_props.at(int(PropertyIndex::Rotation))) {
         property->setValue(int(t));
     }
@@ -164,25 +173,6 @@ DrmPlane::Transformations DrmPlane::transformation()
         return Transformations(int(property->value()));
     }
     return Transformations(Transformation::Rotate0);
-}
-
-bool DrmPlane::atomicPopulate(drmModeAtomicReq *req)
-{
-    bool ret = true;
-
-    for (int i = 1; i < m_props.size(); i++) {
-        auto property = m_props.at(i);
-        if (!property) {
-            continue;
-        }
-        ret &= atomicAddProperty(req, property);
-    }
-
-    if (!ret) {
-        qCWarning(KWIN_DRM) << "Failed to populate atomic plane" << m_id;
-        return false;
-    }
-    return true;
 }
 
 void DrmPlane::flipBuffer()

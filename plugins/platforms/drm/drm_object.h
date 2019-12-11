@@ -17,8 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_DRM_OBJECT_H
-#define KWIN_DRM_OBJECT_H
+#pragma once
 
 #include <QVector>
 #include <QByteArray>
@@ -36,11 +35,18 @@ class DrmOutput;
 class DrmObject
 {
 public:
-    // creates drm object by its id delivered by the kernel
+    /**
+     * Create DRM object representation.
+     * @param object_id provided by the kernel
+     * @param fd of the DRM device
+     */
     DrmObject(uint32_t object_id, int fd);
-
     virtual ~DrmObject();
 
+    /**
+     * Must be called to query necessary data directly after creation.
+     * @return true when initializing was successful
+     */
     virtual bool atomicInit() = 0;
 
     uint32_t id() const {
@@ -54,32 +60,37 @@ public:
         m_output = output;
     }
 
-    bool propHasEnum(int prop, uint64_t value) const {
-        auto property = m_props.at(prop);
-        return property ? property->hasEnum(value) : false;
-    }
-
-    void setValue(int prop, uint64_t new_value)
-    {
-        Q_ASSERT(prop < m_props.size());
-        auto property = m_props.at(prop);
-        if (property) {
-            property->setValue(new_value);
-        }
-    }
-
     int fd() const {
         return m_fd;
     }
 
-    virtual bool atomicPopulate(drmModeAtomicReq *req);
+    /**
+     * Populate an atomic request with data of this object.
+     * @param req the atomic request
+     * @return true when the request was successfully populated
+     */
+    virtual bool atomicPopulate(drmModeAtomicReq *req) const;
+
+    void setValue(int prop, uint64_t new_value);
+    bool propHasEnum(int prop, uint64_t value) const;
 
 protected:
-    virtual bool initProps() = 0;           // only derived classes know names and quantity of properties
+    /**
+     * Initialize properties of object. Only derived classes know names and quantities of
+     * properties.
+     *
+     * @return true when properties have been initialized successfully
+     */
+    virtual bool initProps() = 0;
+
     void setPropertyNames(QVector<QByteArray> &&vector);
-    void initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames = QVector<QByteArray>(0));
+    void initProp(int n, drmModeObjectProperties *properties,
+                  QVector<QByteArray> enumNames = QVector<QByteArray>(0));
+
+    bool doAtomicPopulate(drmModeAtomicReq *req, int firstProperty) const;
+
     class Property;
-    bool atomicAddProperty(drmModeAtomicReq *req, Property *property);
+    bool atomicAddProperty(drmModeAtomicReq *req, Property *property) const;
 
     int m_fd;
     const uint32_t m_id;
@@ -96,7 +107,14 @@ protected:
 
         void initEnumMap(drmModePropertyRes *prop);
 
-        uint64_t enumMap(int n) {
+        /**
+         * For properties of enum type the enum map identifies the kernel runtime values,
+         * which must be queried beforehand.
+         *
+         * @param n the index to the enum
+         * @return the runtime enum value corresponding with enum index @param n
+         */
+        uint64_t enumMap(int n) const {
             return m_enumMap[n];    // TODO: test on index out of bounds?
         }
         bool hasEnum(uint64_t value) const {
@@ -129,8 +147,5 @@ private:
     QVector<QByteArray> m_propsNames;
 };
 
-
 }
-
-#endif
 
