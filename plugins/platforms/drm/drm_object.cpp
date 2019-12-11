@@ -61,8 +61,10 @@ void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QBy
             qCDebug(KWIN_DRM).nospace() << m_id << ": " << prop->name << "' (id " << prop->prop_id
                               << "): " << properties->prop_values[i];
             m_props[n] = new Property(prop.data(), properties->prop_values[i], enumNames);
+            return;
         }
     }
+    qCWarning(KWIN_DRM) << "Initializing property" << m_propsNames[n] << "failed";
 }
 
 bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
