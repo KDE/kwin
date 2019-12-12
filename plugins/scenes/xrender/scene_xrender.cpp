@@ -387,6 +387,16 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
     return pt;
 }
 
+QRect SceneXrender::Window::bufferToWindowRect(const QRect &rect) const
+{
+    return rect.translated(bufferOffset());
+}
+
+QRegion SceneXrender::Window::bufferToWindowRegion(const QRegion &region) const
+{
+    return region.translated(bufferOffset());
+}
+
 void SceneXrender::Window::prepareTempPixmap()
 {
     const QSize oldSize = temp_visibleRect.size();
@@ -447,7 +457,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         filter = ImageFilterFast;
     // do required transformations
     const QRect wr = mapToScreen(mask, data, QRect(0, 0, width(), height()));
-    QRect cr = QRect(toplevel->clientPos(), toplevel->clientSize()); // Client rect (in the window)
+    QRect cr = QRect(toplevel->clientPos(), toplevel->clientSize()); // Content rect (in the buffer)
     qreal xscale = 1;
     qreal yscale = 1;
     bool scaled = false;
@@ -461,11 +471,11 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         transformed_shape = decorationRect;
         if (toplevel->shape()) {
             // "xeyes" + decoration
-            transformed_shape -= cr;
-            transformed_shape += bufferShape();
+            transformed_shape -= bufferToWindowRect(cr);
+            transformed_shape += bufferToWindowRegion(bufferShape());
         }
     } else {
-        transformed_shape = bufferShape();
+        transformed_shape = bufferToWindowRegion(bufferShape());
     }
     if (toplevel->shadow()) {
         transformed_shape |= toplevel->shadow()->shadowRegion();
@@ -624,7 +634,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     if (blitInTempPixmap) {
         dr.translate(-temp_visibleRect.topLeft());
     } else {
-        dr = mapToScreen(mask, data, dr); // Destination rect
+        dr = mapToScreen(mask, data, bufferToWindowRect(dr)); // Destination rect
         if (scaled) {
             cr.moveLeft(cr.x() * xscale);
             cr.moveTop(cr.y() * yscale);
