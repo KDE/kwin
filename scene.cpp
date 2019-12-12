@@ -536,7 +536,7 @@ void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacit
         if (!item->window()) {
             continue;
         }
-        const QPointF point = item->mapToScene(item->position());
+        const QPointF point = item->mapToScene(QPointF(0,0));
         qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         x -= thumb->x();
