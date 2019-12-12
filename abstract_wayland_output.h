@@ -87,6 +87,17 @@ public:
     QSize physicalSize() const override;
 
     /**
+     * Returns the orientation of this output.
+     *
+     * - Flipped along the vertical axis is landscape + inv. portrait.
+     * - Rotated 90° and flipped along the horizontal axis is portrait + inv. landscape
+     * - Rotated 180° and flipped along the vertical axis is inv. landscape + inv. portrait
+     * - Rotated 270° and flipped along the horizontal axis is inv. portrait + inv. landscape +
+     *   portrait
+     */
+    Transform transform() const;
+
+    /**
      * Current refresh rate in 1/ms.
      */
     int refreshRate() const override;
@@ -158,17 +169,6 @@ protected:
     void setTransform(Transform transform);
 
     QSize orientateSize(const QSize &size) const;
-
-    /**
-     * Returns the orientation of this output.
-     *
-     * - Flipped along the vertical axis is landscape + inv. portrait.
-     * - Rotated 90° and flipped along the horizontal axis is portrait + inv. landscape
-     * - Rotated 180° and flipped along the vertical axis is inv. landscape + inv. portrait
-     * - Rotated 270° and flipped along the horizontal axis is inv. portrait + inv. landscape +
-     *   portrait
-     */
-    Transform transform() const;
 
 private:
     void createWaylandOutput();

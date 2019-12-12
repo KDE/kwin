@@ -21,9 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "context.h"
 #include "device.h"
 #include "events.h"
+
+// TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
+#include "../abstract_wayland_output.h"
+#include "../main.h"
+#include "../platform.h"
 #include "../screens.h"
 #endif
+
 #include "../logind.h"
 #include "../udev.h"
 #include "libinput_logging.h"
@@ -244,6 +250,37 @@ void Connection::handleEvent()
     }
 }
 
+#ifndef KWIN_BUILD_TESTING
+QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractWaylandOutput *output)
+{
+    using Transform = AbstractWaylandOutput::Transform;
+
+    QPointF pos = devicePos;
+    // TODO: Do we need to handle the flipped cases differently?
+    switch (output->transform()) {
+    case Transform::Normal:
+    case Transform::Flipped:
+        break;
+    case Transform::Rotated90:
+    case Transform::Flipped90:
+        pos = QPointF(output->modeSize().height() - devicePos.y(), devicePos.x());
+        break;
+    case Transform::Rotated180:
+    case Transform::Flipped180:
+        pos = QPointF(output->modeSize().width() - devicePos.x(),
+                      output->modeSize().height() - devicePos.y());
+        break;
+    case Transform::Rotated270:
+    case Transform::Flipped270:
+        pos = QPointF(devicePos.y(), output->modeSize().width() - devicePos.x());
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+    return output->geometry().topLeft() + pos / output->scale();
+}
+#endif
+
 void Connection::processEvents()
 {
     QMutexLocker locker(&m_mutex);
@@ -385,8 +422,12 @@ void Connection::processEvents()
             case LIBINPUT_EVENT_TOUCH_DOWN: {
 #ifndef KWIN_BUILD_TESTING
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                const auto &geo = screens()->geometry(te->device()->screenId());
-                emit touchDown(te->id(), geo.topLeft() + te->absolutePos(geo.size()), te->time(), te->device());
+                const auto *output = static_cast<AbstractWaylandOutput*>(
+                            kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
+                const QPointF globalPos =
+                        devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
+                                                    output);
+                emit touchDown(te->id(), globalPos, te->time(), te->device());
                 break;
 #endif
             }
@@ -398,8 +439,12 @@ void Connection::processEvents()
             case LIBINPUT_EVENT_TOUCH_MOTION: {
 #ifndef KWIN_BUILD_TESTING
                 TouchEvent *te = static_cast<TouchEvent*>(event.data());
-                const auto &geo = screens()->geometry(te->device()->screenId());
-                emit touchMotion(te->id(), geo.topLeft() + te->absolutePos(geo.size()), te->time(), te->device());
+                const auto *output = static_cast<AbstractWaylandOutput*>(
+                            kwinApp()->platform()->enabledOutputs()[te->device()->screenId()]);
+                const QPointF globalPos =
+                        devicePointToGlobalPosition(te->absolutePos(output->modeSize()),
+                                                    output);
+                emit touchMotion(te->id(), globalPos, te->time(), te->device());
                 break;
 #endif
             }
