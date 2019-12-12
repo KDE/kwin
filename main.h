@@ -231,6 +231,7 @@ protected:
         emit x11ConnectionChanged();
     }
     void destroyAtoms();
+    void destroyPlatform();
 
     void setTerminating() {
         m_terminating = true;

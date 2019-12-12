@@ -161,12 +161,19 @@ Application::~Application()
 {
     delete options;
     destroyAtoms();
+    destroyPlatform();
 }
 
 void Application::destroyAtoms()
 {
     delete atoms;
     atoms = nullptr;
+}
+
+void Application::destroyPlatform()
+{
+    delete m_platform;
+    m_platform = nullptr;
 }
 
 void Application::resetCrashesCount()
