@@ -384,8 +384,30 @@ void Compositor::startupWithWorkspace()
 
 void Compositor::scheduleRepaint()
 {
-    if (!compositeTimer.isActive())
+    if (m_state != State::On) {
+        return;
+    }
+
+    // Don't repaint if all outputs are disabled
+    if (!kwinApp()->platform()->areOutputsEnabled()) {
+        return;
+    }
+
+    // TODO: Make this distinction not on the question if there is a swap event but if per screen
+    //       rendering? On X we get swap events but they are aligned with the "wrong" screen if
+    //       it the primary/first one is not the one with the highest refresh rate.
+    //       But on the other side Present extension does not allow to sync with another screen
+    //       anyway.
+
+    if (m_scene->hasSwapEvent()) {
+        // TODO: If we don't call it back from the event loop we often crash on Wayland
+        //       in AnimationEffect::postPaintScreen. Why?
+        //       Theory is that effects call addRepaintFull in there and then performCompositing
+        //       is called again while still in the first paint. So queing it here makes sense!
+        QTimer::singleShot(0, this, [this]() { performCompositing(); });
+    } else {
         setCompositeTimer();
+    }
 }
 
 void Compositor::stop()
@@ -766,16 +788,7 @@ bool Compositor::windowRepaintsPending() const
 
 void Compositor::setCompositeTimer()
 {
-    if (m_state != State::On) {
-        return;
-    }
-
-    // Don't start the timer if we're waiting for a swap event
-    if (m_bufferSwapPending && m_composeAtSwapCompletion)
-        return;
-
-    // Don't start the timer if all outputs are disabled
-    if (!kwinApp()->platform()->areOutputsEnabled()) {
+    if (compositeTimer.isActive()) {
         return;
     }
 
