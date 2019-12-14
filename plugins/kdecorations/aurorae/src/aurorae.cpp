@@ -264,6 +264,7 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
 {
     m_themeName = findTheme(args);
     Helper::instance().ref();
+    Helper::instance().rootContext()->setContextProperty(QStringLiteral("decorationSettings"), settings().data());
 }
 
 Decoration::~Decoration()
@@ -281,7 +282,6 @@ void Decoration::init()
 
     m_qmlContext = new QQmlContext(Helper::instance().rootContext(), this);
     m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
-    m_qmlContext->setContextProperty(QStringLiteral("decorationSettings"), s.data());
     auto component = Helper::instance().component(m_themeName);
     if (!component) {
         return;
