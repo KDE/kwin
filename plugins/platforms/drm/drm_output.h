@@ -139,7 +139,6 @@ private:
     void setWaylandMode();
 
     void updateTransform(Transform transform) override;
-    void automaticRotation();
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;

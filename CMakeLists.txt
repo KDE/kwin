@@ -456,7 +456,6 @@ set(kwin_SRCS
     netinfo.cpp
     onscreennotification.cpp
     options.cpp
-    orientation_sensor.cpp
     osd.cpp
     outline.cpp
     outputscreens.cpp
@@ -562,7 +561,6 @@ qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterf
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.OrientationSensor.xml orientation_sensor.h KWin::OrientationSensor)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 

@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logind.h"
 #include "logging.h"
 #include "main.h"
-#include "orientation_sensor.h"
 #include "screens_drm.h"
 #include "wayland_server.h"
 // KWayland
@@ -270,15 +269,6 @@ bool DrmOutput::init(drmModeConnector *connector)
     setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP
                 || connector->connector_type == DRM_MODE_CONNECTOR_DSI);
     setDpmsSupported(true);
-
-    if (isInternal()) {
-        connect(kwinApp(), &Application::screensCreated, this,
-            [this] {
-                connect(screens()->orientationSensor(), &OrientationSensor::orientationChanged, this, &DrmOutput::automaticRotation);
-            }
-        );
-    }
-
     initOutputDevice(connector);
 
     if (!m_backend->atomicModeSetting() && !m_crtc->blank()) {
@@ -1085,47 +1075,6 @@ bool DrmOutput::supportsTransformations() const
     return transformations.testFlag(DrmPlane::Transformation::Rotate90)
         || transformations.testFlag(DrmPlane::Transformation::Rotate180)
         || transformations.testFlag(DrmPlane::Transformation::Rotate270);
-}
-
-void DrmOutput::automaticRotation()
-{
-    if (!m_primaryPlane) {
-        return;
-    }
-    const auto supportedTransformations = m_primaryPlane->supportedTransformations();
-    const auto requestedTransformation = screens()->orientationSensor()->orientation();
-
-    Transform newTransformation = Transform::Normal;
-    switch (requestedTransformation) {
-    case OrientationSensor::Orientation::TopUp:
-        newTransformation = Transform::Normal;
-        break;
-    case OrientationSensor::Orientation::TopDown:
-        if (!supportedTransformations.testFlag(DrmPlane::Transformation::Rotate180)) {
-            return;
-        }
-        newTransformation = Transform::Rotated180;
-        break;
-    case OrientationSensor::Orientation::LeftUp:
-        if (!supportedTransformations.testFlag(DrmPlane::Transformation::Rotate90)) {
-            return;
-        }
-        newTransformation = Transform::Rotated90;
-        break;
-    case OrientationSensor::Orientation::RightUp:
-        if (!supportedTransformations.testFlag(DrmPlane::Transformation::Rotate270)) {
-            return;
-        }
-        newTransformation = Transform::Rotated270;
-        break;
-    case OrientationSensor::Orientation::FaceUp:
-    case OrientationSensor::Orientation::FaceDown:
-    case OrientationSensor::Orientation::Undefined:
-        // unsupported
-        return;
-    }
-    setTransform(newTransformation);
-    emit screens()->changed();
 }
 
 int DrmOutput::gammaRampSize() const

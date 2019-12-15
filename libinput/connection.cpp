@@ -661,6 +661,8 @@ void Connection::applyScreenToDevice(Device *device)
         }
     }
     device->setScreenId(id);
+
+    // TODO: this is currently non-functional even on DRM. Needs orientation() override there.
     device->setOrientation(screens()->orientation(id));
 #else
     Q_UNUSED(device)

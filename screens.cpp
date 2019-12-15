@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <abstract_client.h>
 #include <x11client.h>
 #include "cursor.h"
-#include "orientation_sensor.h"
 #include "utils.h"
 #include "settings.h"
 #include <workspace.h>
@@ -55,21 +54,8 @@ Screens::Screens(QObject *parent)
     , m_current(0)
     , m_currentFollowsMouse(false)
     , m_changedTimer(new QTimer(this))
-    , m_orientationSensor(new OrientationSensor(this))
     , m_maxScale(1.0)
 {
-    connect(this, &Screens::changed, this,
-        [this] {
-            int internalIndex = -1;
-            for (int i = 0; i < m_count; i++) {
-                if (isInternal(i)) {
-                    internalIndex = i;
-                    break;
-                }
-            }
-            m_orientationSensor->setEnabled(internalIndex != -1 && supportsTransformations(internalIndex));
-        }
-    );
 }
 
 Screens::~Screens()
@@ -241,9 +227,6 @@ Qt::ScreenOrientation Screens::orientation(int screen) const
 void Screens::setConfig(KSharedConfig::Ptr config)
 {
     m_config = config;
-    if (m_orientationSensor) {
-        m_orientationSensor->setConfig(config);
-    }
 }
 
 } // namespace
