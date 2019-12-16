@@ -52,6 +52,7 @@ DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const QVariantList &args)
     setButtons(Apply | Default);
 
     connect(m_model, &EffectsModel::dataChanged, this, &DesktopEffectsKCM::updateNeedsSave);
+    connect(m_model, &EffectsModel::loaded, this, &DesktopEffectsKCM::updateNeedsSave);
 }
 
 DesktopEffectsKCM::~DesktopEffectsKCM()
@@ -115,6 +116,7 @@ void DesktopEffectsKCM::configure(const QString &pluginId, QQuickItem *context)
 void DesktopEffectsKCM::updateNeedsSave()
 {
     setNeedsSave(m_model->needsSave());
+    setRepresentsDefaults(m_model->isDefaults());
 }
 
 } // namespace KWin

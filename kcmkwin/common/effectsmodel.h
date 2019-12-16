@@ -190,6 +190,11 @@ public:
     void defaults();
 
     /**
+     * Whether the status of each effect is its default state.
+     */
+    bool isDefaults() const;
+
+    /**
      * Whether the model has unsaved changes.
      */
     bool needsSave() const;

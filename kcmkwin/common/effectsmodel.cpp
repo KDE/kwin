@@ -563,6 +563,19 @@ void EffectsModel::defaults()
     }
 }
 
+bool EffectsModel::isDefaults() const
+{
+    return std::all_of(m_effects.constBegin(), m_effects.constEnd(), [](const EffectData &effect) {
+        if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
+            return false;
+        }
+        if ((bool)effect.status != effect.enabledByDefault) {
+            return false;
+        }
+        return true;
+    });
+}
+
 bool EffectsModel::needsSave() const
 {
     return std::any_of(m_effects.constBegin(), m_effects.constEnd(),
@@ -647,6 +660,9 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
     connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked,
         module, &KCModule::defaults);
+    connect(module, &KCModule::defaulted, this, [=](bool defaulted) {
+        buttons->button(QDialogButtonBox::RestoreDefaults)->setEnabled(!defaulted);
+    });
 
     auto layout = new QVBoxLayout(dialog);
     layout->addWidget(module);
