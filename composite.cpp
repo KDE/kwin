@@ -404,7 +404,7 @@ void Compositor::scheduleRepaint()
         //       in AnimationEffect::postPaintScreen. Why?
         //       Theory is that effects call addRepaintFull in there and then performCompositing
         //       is called again while still in the first paint. So queing it here makes sense!
-        QTimer::singleShot(0, this, [this]() { performCompositing(); });
+        compositeTimer.start(0, this);
     } else {
         setCompositeTimer();
     }
@@ -471,6 +471,8 @@ void Compositor::stop()
 
     delete m_scene;
     m_scene = nullptr;
+    m_bufferSwapPending = false;
+    m_composeAtSwapCompletion = false;
     compositeTimer.stop();
     repaints_region = QRegion();
 
@@ -739,11 +741,8 @@ void Compositor::performCompositing()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // scheduleRepaint() would restart it again somewhen later, called from functions that
     // would again add something pending.
-    if (m_bufferSwapPending) {
-        m_composeAtSwapCompletion = true;
-    } else {
-        scheduleRepaint();
-    }
+    Q_ASSERT(!m_bufferSwapPending);
+    scheduleRepaint();
 }
 
 template <class T>
