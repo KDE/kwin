@@ -1409,6 +1409,11 @@ void XdgShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surf
             workspace()->updateClientArea();
         }
     };
+    connect(surface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged , this, [this, surface]() {
+        if (surface->panelTakesFocus()) {
+            workspace()->activateClient(this);
+        }
+    });
     connect(surface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
     connect(surface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(surface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this,
