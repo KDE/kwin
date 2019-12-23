@@ -167,7 +167,7 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
     }
     if (m_decoration) {
         // disconnect from existing decoration
-        disconnect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+        disconnect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
         auto s = m_decoration->settings();
         disconnect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
         disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
@@ -175,8 +175,8 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
         disconnect(m_paletteConnection);
     }
     m_decoration = decoration;
-    connect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
-    m_paletteConnection = connect(m_decoration->client().data(), &KDecoration2::DecoratedClient::paletteChanged, this,
+    connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+    m_paletteConnection = connect(m_decoration->client().toStrongRef().data(), &KDecoration2::DecoratedClient::paletteChanged, this,
         [this] (const QPalette &pal) {
             m_colors.update(pal);
             emit colorsChanged();
@@ -194,10 +194,10 @@ void DecorationOptions::slotActiveChanged()
     if (!m_decoration) {
         return;
     }
-    if (m_active == m_decoration->client().data()->isActive()) {
+    if (m_active == m_decoration->client().toStrongRef().data()->isActive()) {
         return;
     }
-    m_active = m_decoration->client().data()->isActive();
+    m_active = m_decoration->client().toStrongRef().data()->isActive();
     emit colorsChanged();
     emit fontChanged();
 }
