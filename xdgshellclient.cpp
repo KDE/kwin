@@ -1011,10 +1011,13 @@ bool XdgShellClient::acceptsFocus() const
     }
     if (m_plasmaShellSurface) {
         if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay ||
-            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip ||
-            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Notification ||
-            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::CriticalNotification) {
+            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
             return false;
+        }
+
+        if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::Notification ||
+            m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::CriticalNotification) {
+            return m_plasmaShellSurface->panelTakesFocus();
         }
     }
     if (m_closing) {
