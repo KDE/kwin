@@ -93,6 +93,7 @@ private:
     Display *display() const {
         return m_x11Display;
     }
+    bool supportsSwapEvents() const;
 
     int visualDepth(xcb_visualid_t visual) const;
     FBConfigInfo *infoForVisual(xcb_visualid_t visual);
@@ -112,6 +113,7 @@ private:
     bool m_haveMESACopySubBuffer = false;
     bool m_haveMESASwapControl = false;
     bool m_haveEXTSwapControl = false;
+    bool m_needsCompositeTimerStart = false;
     Display *m_x11Display;
     friend class GlxTexture;
 };

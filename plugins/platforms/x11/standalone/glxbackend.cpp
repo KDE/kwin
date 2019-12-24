@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffectquickview.h>
 #include <kwinxrenderutils.h>
 // Qt
-#include <QDebug>
 #include <QOpenGLContext>
 #include <QX11Info>
 #include <QtPlatformHeaders/QGLXNativeContext>
@@ -665,10 +664,12 @@ void GlxBackend::present()
 
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
-    const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
+    const bool canSwapBuffers = supportsBufferAge() || (lastDamage() == displayRegion);
+    m_needsCompositeTimerStart = true;
 
-    if (fullRepaint) {
-        if (hasSwapEvent()) {
+    if (canSwapBuffers) {
+        if (supportsSwapEvents()) {
+            m_needsCompositeTimerStart = false;
             Compositor::self()->aboutToSwapBuffers();
         }
 
@@ -683,7 +684,8 @@ void GlxBackend::present()
             int y = screenSize.height() - r.y() - r.height();
             glXCopySubBufferMESA(display(), glxWindow, r.x(), y, r.width(), r.height());
         }
-    } else { // Copy Pixels (horribly slow on Mesa)
+    } else {
+        // Copy Pixels (horribly slow on Mesa).
         glDrawBuffer(GL_FRONT);
         copyPixels(lastDamage());
         glDrawBuffer(GL_BACK);
@@ -783,9 +785,14 @@ bool GlxBackend::usesOverlayWindow() const
     return true;
 }
 
-bool GlxBackend::hasSwapEvent() const
+bool GlxBackend::supportsSwapEvents() const
 {
     return m_swapEventFilter != nullptr;
+}
+
+bool GlxBackend::hasSwapEvent() const
+{
+    return !m_needsCompositeTimerStart;
 }
 
 /********************************************************
