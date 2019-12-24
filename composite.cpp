@@ -603,7 +603,6 @@ void Compositor::timerEvent(QTimerEvent *te)
 void Compositor::aboutToSwapBuffers()
 {
     Q_ASSERT(!m_bufferSwapPending);
-
     m_bufferSwapPending = true;
 }
 
@@ -712,7 +711,16 @@ void Compositor::performCompositing()
     if (m_framesToTestForSafety > 0 && (m_scene->compositingType() & OpenGLCompositing)) {
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
+
+    Q_ASSERT(!m_bufferSwapPending);
+
+    // Start the actual painting process.
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+
+    // TODO: In case we have swap events the buffer swap should now be pending, but this is not
+    //       always the case on X11 standalone platform. Look into that.
+//    Q_ASSERT(m_scene->hasSwapEvent() ^ !m_bufferSwapPending);
+
     if (m_framesToTestForSafety > 0) {
         if (m_scene->compositingType() & OpenGLCompositing) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
@@ -741,7 +749,6 @@ void Compositor::performCompositing()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // scheduleRepaint() would restart it again somewhen later, called from functions that
     // would again add something pending.
-    Q_ASSERT(!m_bufferSwapPending);
     scheduleRepaint();
 }
 
