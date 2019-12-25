@@ -438,10 +438,10 @@ public:
     virtual QString supportInformation() const;
 
     /**
-     * The compositor plugin which got selected from @link{supportedCompositors}.
+     * The compositor plugin which got selected from @ref supportedCompositors.
      * Prior to selecting a compositor this returns @c NoCompositing.
      *
-     * This method allows the platforms to limit the offerings in @link{supportedCompositors}
+     * This method allows the platforms to limit the offerings in @ref supportedCompositors
      * in case they do not support runtime compositor switching
      */
     CompositingType selectedCompositor() const
