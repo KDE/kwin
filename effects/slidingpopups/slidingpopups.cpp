@@ -464,7 +464,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     animation.kind = AnimationKind::In;
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration((*dataIt).slideInDuration);
-    animation.timeLine.setEasingCurve(QEasingCurve::InOutSine);
+    animation.timeLine.setEasingCurve(QEasingCurve::OutQuad);
 
     // If the opposite animation (Out) was active and it had shorter duration,
     // at this point, the timeline can end up in the "done" state. Thus, we have
@@ -503,7 +503,8 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     animation.kind = AnimationKind::Out;
     animation.timeLine.setDirection(TimeLine::Backward);
     animation.timeLine.setDuration((*dataIt).slideOutDuration);
-    animation.timeLine.setEasingCurve(QEasingCurve::InOutSine);
+    // this is effectively InQuad because the direction is reversed
+    animation.timeLine.setEasingCurve(QEasingCurve::OutQuad);
 
     // If the opposite animation (In) was active and it had shorter duration,
     // at this point, the timeline can end up in the "done" state. Thus, we have
