@@ -438,6 +438,7 @@ void TestPlasmaShell::testPanelTakesFocus()
 {
     // this test verifies that whether a panel wants to take focus is passed through correctly
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+
     QVERIFY(plasmaSurfaceCreatedSpy.isValid());
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QScopedPointer<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.data()));
@@ -445,16 +446,22 @@ void TestPlasmaShell::testPanelTakesFocus()
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
     auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface*>();
+    QSignalSpy plasmaSurfaceTakesFocusSpy(sps, &PlasmaShellSurfaceInterface::panelTakesFocusChanged);
+
     QVERIFY(sps);
     QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Panel);
     QCOMPARE(sps->panelTakesFocus(), false);
 
     ps->setPanelTakesFocus(true);
     m_connection->flush();
-    QTRY_COMPARE(sps->panelTakesFocus(), true);
+    QVERIFY(plasmaSurfaceTakesFocusSpy.wait());
+    QCOMPARE(plasmaSurfaceTakesFocusSpy.count(), 1);
+    QCOMPARE(sps->panelTakesFocus(), true);
     ps->setPanelTakesFocus(false);
     m_connection->flush();
-    QTRY_COMPARE(sps->panelTakesFocus(), false);
+    QVERIFY(plasmaSurfaceTakesFocusSpy.wait());
+    QCOMPARE(plasmaSurfaceTakesFocusSpy.count(), 2);
+    QCOMPARE(sps->panelTakesFocus(), false);
 }
 
 void TestPlasmaShell::testDisconnect()

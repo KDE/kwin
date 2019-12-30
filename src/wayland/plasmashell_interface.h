@@ -234,6 +234,13 @@ Q_SIGNALS:
      **/
     void panelAutoHideShowRequested();
 
+    /*
+     * Emitted when panelTakesFocus changes
+     * @see panelTakesFocus
+     * @since 5.66
+     */
+    void panelTakesFocusChanged();
+
 private:
     friend class PlasmaShellInterface;
     explicit PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource);

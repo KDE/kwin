@@ -317,7 +317,11 @@ void PlasmaShellSurfaceInterface::Private::panelTakesFocusCallback(wl_client *cl
 {
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
+    if (s->panelTakesFocus == takesFocus) {
+        return;
+    }
     s->panelTakesFocus = takesFocus;
+    emit s->q_func()->panelTakesFocusChanged();
 }
 
 void PlasmaShellSurfaceInterface::Private::setPanelBehavior(org_kde_plasma_surface_panel_behavior behavior)
