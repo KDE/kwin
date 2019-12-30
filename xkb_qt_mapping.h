@@ -273,6 +273,11 @@ static inline Qt::Key xkbToQtKey(xkb_keysym_t keySym)
     return key;
 }
 
+static inline bool isKeypadKey(xkb_keysym_t keySym)
+{
+    return keySym >= XKB_KEY_KP_Space && keySym <= XKB_KEY_KP_9;
+}
+
 static inline xkb_keysym_t qtKeyToXkb(Qt::Key qtKey, Qt::KeyboardModifiers modifiers)
 {
     xkb_keysym_t sym = XKB_KEY_NoSymbol;
@@ -298,11 +303,11 @@ static inline xkb_keysym_t qtKeyToXkb(Qt::Key qtKey, Qt::KeyboardModifiers modif
             for (auto match : possibleMatches) {
                 // is the current match better than existing?
                 if (modifiers.testFlag(Qt::KeypadModifier)) {
-                    if (match >= XKB_KEY_KP_Space && match <= XKB_KEY_KP_9) {
+                    if (isKeypadKey(match)) {
                         sym = match;
                     }
                 } else {
-                    if (sym >= XKB_KEY_KP_Space && sym <= XKB_KEY_KP_9) {
+                    if (isKeypadKey(sym)) {
                         sym = match;
                     }
                 }

@@ -369,7 +369,7 @@ void Xkb::updateModifiers()
     if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::MetaModifier;
     }
-    if (xkb_state_mod_index_is_active(m_state, m_numModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+    if (isKeypadKey(m_keysym)) {
         mods |= Qt::KeypadModifier;
     }
     m_modifiers = mods;
