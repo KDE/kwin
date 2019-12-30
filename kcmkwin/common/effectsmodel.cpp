@@ -557,7 +557,7 @@ void EffectsModel::defaults()
         const auto &effect = m_effects.at(i);
         if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
             updateEffectStatus(index(i, 0), Status::EnabledUndeterminded);
-        } else if ((bool)effect.status != effect.enabledByDefault) {
+        } else if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
             updateEffectStatus(index(i, 0), effect.enabledByDefault ? Status::Enabled : Status::Disabled);
         }
     }
@@ -569,7 +569,7 @@ bool EffectsModel::isDefaults() const
         if (effect.enabledByDefaultFunction && effect.status != Status::EnabledUndeterminded) {
             return false;
         }
-        if ((bool)effect.status != effect.enabledByDefault) {
+        if (static_cast<bool>(effect.status) != effect.enabledByDefault) {
             return false;
         }
         return true;
