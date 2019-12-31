@@ -209,7 +209,7 @@ bool GLShader::link()
     glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
 
     if (status == 0) {
-        qCCritical(LIBKWINGLUTILS) << "Failed to link shader:" << endl << log;
+        qCCritical(LIBKWINGLUTILS) << "Failed to link shader:" << "\n" << log;
         mValid = false;
     } else if (length > 0) {
         qCDebug(LIBKWINGLUTILS) << "Shader link log:" << log;
@@ -261,7 +261,7 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 
     if (status == 0) {
         const char *typeName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
-        qCCritical(LIBKWINGLUTILS) << "Failed to compile" << typeName << "shader:" << endl << log;
+        qCCritical(LIBKWINGLUTILS) << "Failed to compile" << typeName << "shader:" << "\n" << log;
     } else if (length > 0)
         qCDebug(LIBKWINGLUTILS) << "Shader compile log:" << log;
 
