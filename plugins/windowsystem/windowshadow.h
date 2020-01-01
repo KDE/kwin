@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Martin Flöser <mgraesslin@kde.org>
+ * Copyright 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -17,22 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #pragma once
 
-#include <KWindowSystem/private/kwindowsystemplugininterface_p.h>
+#include <KWindowSystem/private/kwindowshadow_p.h>
 
-class KWindowSystemKWinPlugin : public KWindowSystemPluginInterface
+namespace KWin
 {
-    Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.kwindowsystem.KWindowSystemPluginInterface" FILE "kwindowsystem.json")
-    Q_INTERFACES(KWindowSystemPluginInterface)
 
+class WindowShadowTile final : public KWindowShadowTilePrivate
+{
 public:
-    explicit KWindowSystemKWinPlugin(QObject *parent = nullptr);
-    ~KWindowSystemKWinPlugin() override;
-
-    KWindowEffectsPrivate *createEffects() override;
-    KWindowSystemPrivate *createWindowSystem() override;
-    KWindowShadowTilePrivate *createWindowShadowTile() override;
-    KWindowShadowPrivate *createWindowShadow() override;
+    bool create() override;
+    void destroy() override;
 };
+
+class WindowShadow final : public KWindowShadowPrivate
+{
+public:
+    bool create() override;
+    void destroy() override;
+};
+
+} // namespace KWin
