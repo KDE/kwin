@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_wayland_output.h"
+
+#include "screens.h"
 #include "wayland_server.h"
 
 // KWayland
@@ -167,6 +169,7 @@ void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
     bool emitModeChanged = false;
+    bool overallSizeCheckNeeded = false;
 
     // Enablement changes are handled by platform.
     if (changeSet->modeChanged()) {
@@ -185,11 +188,17 @@ void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet
         qCDebug(KWIN_CORE) << "Server setting position: " << changeSet->position();
         setGlobalPos(changeSet->position());
         // may just work already!
+        overallSizeCheckNeeded = true;
     }
     if (changeSet->scaleChanged()) {
         qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scale();
         setScale(changeSet->scaleF());
         emitModeChanged = true;
+    }
+
+    overallSizeCheckNeeded |= emitModeChanged;
+    if (overallSizeCheckNeeded) {
+        emit screens()->changed();
     }
 
     if (emitModeChanged) {
