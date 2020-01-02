@@ -650,35 +650,64 @@ bool DrmOutput::dpmsLegacyApply()
     return true;
 }
 
+DrmPlane::Transformations outputToPlaneTransform(DrmOutput::Transform transform)
+ {
+    using OutTrans = DrmOutput::Transform;
+    using PlaneTrans = DrmPlane::Transformation;
+
+     // TODO: Do we want to support reflections (flips)?
+
+     switch (transform) {
+    case OutTrans::Normal:
+    case OutTrans::Flipped:
+        return PlaneTrans::Rotate0;
+    case OutTrans::Rotated90:
+    case OutTrans::Flipped90:
+        return PlaneTrans::Rotate90;
+    case OutTrans::Rotated180:
+    case OutTrans::Flipped180:
+        return PlaneTrans::Rotate180;
+    case OutTrans::Rotated270:
+    case OutTrans::Flipped270:
+        return PlaneTrans::Rotate270;
+     default:
+         Q_UNREACHABLE();
+     }
+}
+
+bool DrmOutput::hardwareTransforms() const
+{
+    if (!m_primaryPlane) {
+        return false;
+    }
+    return m_primaryPlane->transformation() == outputToPlaneTransform(transform());
+}
+
+int DrmOutput::rotation() const
+{
+    return transformToRotation(transform());
+}
+
 void DrmOutput::updateTransform(Transform transform)
 {
-    DrmPlane::Transformation planeTransform;
+    const auto planeTransform = outputToPlaneTransform(transform);
 
-    // TODO: Do we want to support reflections (flips)?
+     if (m_primaryPlane) {
+        // At the moment we have to exclude hardware transforms for vertical buffers.
+        // For that we need to support other buffers and graceful fallback from atomic tests.
+        // Reason is that standard linear buffers are not suitable.
+        const bool isPortrait = transform == Transform::Rotated90
+                                || transform == Transform::Flipped90
+                                || transform == Transform::Rotated270
+                                || transform == Transform::Flipped270;
 
-    switch (transform) {
-    case Transform::Normal:
-    case Transform::Flipped:
-        planeTransform = DrmPlane::Transformation::Rotate0;
-        break;
-    case Transform::Rotated90:
-    case Transform::Flipped90:
-        planeTransform = DrmPlane::Transformation::Rotate90;
-        break;
-    case Transform::Rotated180:
-    case Transform::Flipped180:
-        planeTransform = DrmPlane::Transformation::Rotate180;
-        break;
-    case Transform::Rotated270:
-    case Transform::Flipped270:
-        planeTransform = DrmPlane::Transformation::Rotate270;
-        break;
-    default:
-        Q_UNREACHABLE();
-    }
-
-    if (m_primaryPlane) {
-        m_primaryPlane->setTransformation(planeTransform);
+        if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY") &&
+                (m_primaryPlane->supportedTransformations() & planeTransform) &&
+                !isPortrait) {
+            m_primaryPlane->setTransformation(planeTransform);
+        } else {
+            m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
+        }
     }
     m_modesetRequested = true;
 
