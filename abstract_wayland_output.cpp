@@ -88,6 +88,11 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
     }
 }
 
+QSize AbstractWaylandOutput::modeSize() const
+{
+    return m_waylandOutputDevice->pixelSize();
+}
+
 QSize AbstractWaylandOutput::pixelSize() const
 {
     return orientateSize(m_waylandOutputDevice->pixelSize());

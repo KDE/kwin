@@ -73,7 +73,11 @@ public:
     QString name() const override;
     QByteArray uuid() const override;
 
+    QSize modeSize() const;
+
+    // TODO: The name is ambiguous. Rename this function.
     QSize pixelSize() const;
+
     qreal scale() const override;
 
     /**
