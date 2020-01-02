@@ -54,14 +54,26 @@ EglGbmBackend::~EglGbmBackend()
 
 void EglGbmBackend::cleanupSurfaces()
 {
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
         cleanupOutput(*it);
     }
     m_outputs.clear();
 }
 
-void EglGbmBackend::cleanupOutput(const Output &output)
+void EglGbmBackend::cleanupFramebuffer(Output &output)
 {
+    if (!output.render.framebuffer) {
+        return;
+    }
+    glDeleteTextures(1, &output.render.texture);
+    output.render.texture = 0;
+    glDeleteFramebuffers(1, &output.render.framebuffer);
+    output.render.framebuffer = 0;
+}
+
+void EglGbmBackend::cleanupOutput(Output &output)
+{
+    cleanupFramebuffer(output);
     output.output->releaseGbm();
 
     if (output.eglSurface != EGL_NO_SURFACE) {
@@ -182,7 +194,8 @@ EGLSurface EglGbmBackend::createEglSurface(std::shared_ptr<GbmSurface> gbmSurfac
 bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
 {
     output.output = drmOutput;
-    const QSize size = drmOutput->pixelSize();
+    const QSize size = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() :
+                                                         drmOutput->modeSize();
 
     auto gbmSurface = createGbmSurface(size);
     if (!gbmSurface) {
@@ -202,6 +215,8 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     }
     output.eglSurface = eglSurface;
     output.gbmSurface = gbmSurface;
+
+    resetFramebuffer(output);
     return true;
 }
 
@@ -238,6 +253,146 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
     }
     cleanupOutput(*it);
     m_outputs.erase(it);
+}
+
+const char *vertexShader = R"SHADER(
+    #version 130
+    uniform mat4 modelViewProjectionMatrix;
+    uniform mat4 rotationMatrix;
+
+    in vec2 vertex;
+    in vec2 texCoord;
+
+    out vec2 TexCoord;
+
+    void main() {
+        gl_Position = rotationMatrix * vec4(vertex.x, vertex.y, 0.0, 1.0);
+        TexCoord = texCoord;
+    }
+)SHADER";
+
+const char *fragmentShader = R"SHADER(
+    #version 130
+    uniform sampler2D sampler;
+
+    in vec2 TexCoord;
+    out vec4 fragColor;
+
+    void main() {
+        fragColor = texture(sampler, TexCoord);
+    }
+)SHADER";
+
+const float vertices[] = {
+   -1.0f,  1.0f,
+   -1.0f, -1.0f,
+    1.0f, -1.0f,
+
+   -1.0f,  1.0f,
+    1.0f, -1.0f,
+    1.0f,  1.0f,
+};
+
+const float texCoords[] = {
+    0.0f,  1.0f,
+    0.0f,  0.0f,
+    1.0f,  0.0f,
+
+    0.0f,  1.0f,
+    1.0f,  0.0f,
+    1.0f,  1.0f
+};
+
+bool EglGbmBackend::resetFramebuffer(Output &output)
+{
+    cleanupFramebuffer(output);
+
+    if (output.output->hardwareTransforms()) {
+        // No need for an extra render target.
+        return true;
+    }
+
+    makeContextCurrent(output);
+
+    glGenFramebuffers(1, &output.render.framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, output.render.framebuffer);
+    GLRenderTarget::setKWinFramebuffer(output.render.framebuffer);
+
+    glGenTextures(1, &output.render.texture);
+    glBindTexture(GL_TEXTURE_2D, output.render.texture);
+
+    const QSize texSize = output.output->pixelSize();
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSize.width(), texSize.height(),
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           output.render.texture, 0);
+
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        qCWarning(KWIN_DRM) << "Error: framebuffer not complete";
+        return false;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLRenderTarget::setKWinFramebuffer(0);
+    return true;
+}
+
+bool EglGbmBackend::initRenderTarget(Output &output)
+{
+    if (output.render.shader) {
+        // Already initialized.
+        return true;
+    }
+    std::shared_ptr<GLShader> shader(ShaderManager::instance()->loadShaderFromCode(vertexShader,
+                                                                                   fragmentShader));
+    if (!shader) {
+        qCWarning(KWIN_DRM) << "Error creating render shader.";
+        return false;
+    }
+
+    output.render.shader = shader;
+
+    std::shared_ptr<GLVertexBuffer> vbo(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
+    vbo->setData(6, 2, vertices, texCoords);
+    output.render.vbo = vbo;
+    return true;
+}
+
+void EglGbmBackend::renderFramebufferToSurface(Output &output)
+{
+    if (!output.render.framebuffer) {
+        // No additional render target.
+        return;
+    }
+    if (!initRenderTarget(output)) {
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    GLRenderTarget::setKWinFramebuffer(0);
+
+    const auto size = output.output->modeSize();
+    glViewport(0, 0, size.width(), size.height());
+
+    ShaderBinder binder(output.render.shader.get());
+    QMatrix4x4 rotationMatrix;
+    rotationMatrix.rotate(output.output->rotation(), 0, 0, 1);
+    output.render.shader->setUniform("rotationMatrix", rotationMatrix);
+
+    glBindTexture(GL_TEXTURE_2D, output.render.texture);
+    output.render.vbo->render(GL_TRIANGLES);
+}
+
+void EglGbmBackend::prepareRenderFramebuffer(const Output &output) const
+{
+    // When render.framebuffer is 0 we may just reset to the screen framebuffer.
+    glBindFramebuffer(GL_FRAMEBUFFER, output.render.framebuffer);
+    GLRenderTarget::setKWinFramebuffer(output.render.framebuffer);
 }
 
 bool EglGbmBackend::makeContextCurrent(const Output &output) const
@@ -371,6 +526,7 @@ QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
     const Output &output = m_outputs.at(screenId);
 
     makeContextCurrent(output);
+    prepareRenderFramebuffer(output);
     setViewport(output);
 
     if (supportsBufferAge()) {
@@ -400,6 +556,7 @@ void EglGbmBackend::endRenderingFrameForScreen(int screenId,
                                                const QRegion &damagedRegion)
 {
     Output &output = m_outputs[screenId];
+    renderFramebufferToSurface(output);
 
     if (damagedRegion.intersected(output.output->geometry()).isEmpty() && screenId == 0) {
 

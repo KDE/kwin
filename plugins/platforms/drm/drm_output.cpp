@@ -1037,12 +1037,15 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
 bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
 {
     if (enable) {
+        const QSize mSize = modeSize();
+        const QSize sourceSize = hardwareTransforms() ? pixelSize() : mSize;
+
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcX), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcY), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcW), m_mode.hdisplay << 16);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcH), m_mode.vdisplay << 16);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), m_mode.hdisplay);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), m_mode.vdisplay);
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcW), sourceSize.width() << 16);
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcH), sourceSize.height() << 16);
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), mSize.width());
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), mSize.height());
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), m_crtc->id());
     } else {
         if (m_backend->deleteBufferAfterPageFlip()) {
