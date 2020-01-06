@@ -311,9 +311,29 @@ QPoint XdgShellClient::clientContentPos() const
     return -1 * clientPos();
 }
 
+static QRect subSurfaceTreeRect(const SurfaceInterface *surface, const QPoint &position = QPoint())
+{
+    QRect rect(position, surface->size());
+
+    const QList<QPointer<SubSurfaceInterface>> subSurfaces = surface->childSubSurfaces();
+    for (const QPointer<SubSurfaceInterface> &subSurface : subSurfaces) {
+        if (Q_UNLIKELY(!subSurface)) {
+            continue;
+        }
+        const SurfaceInterface *child = subSurface->surface();
+        if (Q_UNLIKELY(!child)) {
+            continue;
+        }
+        rect |= subSurfaceTreeRect(child, position + subSurface->position());
+    }
+
+    return rect;
+}
+
 QSize XdgShellClient::clientSize() const
 {
-    return m_windowGeometry.size();
+    const QRect boundingRect = subSurfaceTreeRect(surface());
+    return m_windowGeometry.size().boundedTo(boundingRect.size());
 }
 
 void XdgShellClient::debug(QDebug &stream) const
@@ -1163,29 +1183,9 @@ void XdgShellClient::handleWindowClassChanged(const QByteArray &windowClass)
     setDesktopFileName(windowClass);
 }
 
-static QRect subSurfaceTreeRect(const SurfaceInterface *surface, const QPoint &position = QPoint())
-{
-    QRect rect(position, surface->size());
-
-    const QList<QPointer<SubSurfaceInterface>> subSurfaces = surface->childSubSurfaces();
-    for (const QPointer<SubSurfaceInterface> &subSurface : subSurfaces) {
-        if (Q_UNLIKELY(!subSurface)) {
-            continue;
-        }
-        const SurfaceInterface *child = subSurface->surface();
-        if (Q_UNLIKELY(!child)) {
-            continue;
-        }
-        rect |= subSurfaceTreeRect(child, position + subSurface->position());
-    }
-
-    return rect;
-}
-
 void XdgShellClient::handleWindowGeometryChanged(const QRect &windowGeometry)
 {
-    const QRect boundingRect = subSurfaceTreeRect(surface());
-    m_windowGeometry = windowGeometry & boundingRect;
+    m_windowGeometry = windowGeometry;
     m_hasWindowGeometry = true;
 }
 
