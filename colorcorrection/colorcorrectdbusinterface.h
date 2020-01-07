@@ -32,14 +32,17 @@ namespace ColorCorrect
 
 class Manager;
 
-class ColorCorrectDBusInterface : public QObject
+class ColorCorrectDBusInterface : public QObject, public QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.ColorCorrect")
+    Q_PROPERTY(bool inhibited READ isInhibited)
 
 public:
     explicit ColorCorrectDBusInterface(Manager *parent);
     ~ColorCorrectDBusInterface() override = default;
+
+    bool isInhibited() const;
 
 public Q_SLOTS:
     /**
@@ -101,6 +104,16 @@ public Q_SLOTS:
      * @since 5.12
      */
     void nightColorAutoLocationUpdate(double latitude, double longitude);
+    /**
+     * @brief Temporarily blocks Night Color.
+     * @since 5.18
+     */
+    uint inhibit();
+    /**
+     * @brief Cancels the previous call to inhibit().
+     * @since 5.18
+     */
+    void uninhibit(uint cookie);
 
 Q_SIGNALS:
     /**
@@ -115,8 +128,16 @@ Q_SIGNALS:
      */
     void nightColorConfigChanged(QHash<QString, QVariant> data);
 
+private Q_SLOTS:
+    void removeInhibitorService(const QString &serviceName);
+
 private:
+    void uninhibit(const QString &serviceName, uint cookie);
+
     Manager *m_manager;
+    QDBusServiceWatcher *m_inhibitorWatcher;
+    QMultiHash<QString, uint> m_inhibitors;
+    uint m_lastInhibitionCookie = 0;
 };
 
 }

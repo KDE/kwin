@@ -61,6 +61,27 @@ Manager::Manager(QObject *parent)
 {
     m_iface = new ColorCorrectDBusInterface(this);
     connect(kwinApp(), &Application::workspaceCreated, this, &Manager::init);
+
+    // Display a message when Night Color is (un)inhibited.
+    connect(this, &Manager::inhibitedChanged, this, [this] {
+        // TODO: Maybe use different icons?
+        const QString iconName = isInhibited()
+            ? QStringLiteral("preferences-desktop-display-nightcolor-off")
+            : QStringLiteral("preferences-desktop-display-nightcolor-on");
+
+        const QString text = isInhibited()
+            ? i18nc("Night Color was disabled", "Night Color Off")
+            : i18nc("Night Color was enabled", "Night Color On");
+
+        QDBusMessage message = QDBusMessage::createMethodCall(
+            QStringLiteral("org.kde.plasmashell"),
+            QStringLiteral("/org/kde/osdService"),
+            QStringLiteral("org.kde.osdService"),
+            QStringLiteral("showText"));
+        message.setArguments({ iconName, text });
+
+        QDBusConnection::sessionBus().asyncCall(message);
+    });
 }
 
 void Manager::init()
@@ -145,7 +166,7 @@ void Manager::hardReset()
         updateSunTimings(true);
     }
 
-    if (kwinApp()->platform()->supportsGammaControl() && m_active) {
+    if (kwinApp()->platform()->supportsGammaControl() && m_active && !isInhibited()) {
         m_running = true;
         commitGammaRamps(currentTargetTemp());
     }
@@ -159,41 +180,35 @@ void Manager::reparseConfigAndReset()
     hardReset();
 }
 
-// FIXME: The internal OSD service doesn't work on X11 right now. Once the QPA
-// is ported away from Wayland, drop this function in favor of the internal
-// OSD service.
-static void showStatusOsd(bool enabled)
-{
-    // TODO: Maybe use different icons?
-    const QString iconName = enabled
-        ? QStringLiteral("preferences-desktop-display-nightcolor-on")
-        : QStringLiteral("preferences-desktop-display-nightcolor-off");
-
-    const QString text = enabled
-        ? i18nc("Night Color was enabled", "Night Color On")
-        : i18nc("Night Color was disabled", "Night Color Off");
-
-    QDBusMessage message = QDBusMessage::createMethodCall(
-        QStringLiteral("org.kde.plasmashell"),
-        QStringLiteral("/org/kde/osdService"),
-        QStringLiteral("org.kde.osdService"),
-        QStringLiteral("showText"));
-    message.setArguments({ iconName, text });
-
-    QDBusConnection::sessionBus().asyncCall(message);
-}
-
 void Manager::toggle()
 {
-    if (!kwinApp()->platform()->supportsGammaControl()) {
-        return;
+    m_isGloballyInhibited = !m_isGloballyInhibited;
+    m_isGloballyInhibited ? inhibit() : uninhibit();
+}
+
+bool Manager::isInhibited() const
+{
+    return m_inhibitReferenceCount;
+}
+
+void Manager::inhibit()
+{
+    m_inhibitReferenceCount++;
+
+    if (m_inhibitReferenceCount == 1) {
+        resetAllTimers();
+        emit inhibitedChanged();
     }
+}
 
-    m_active = !m_active;
+void Manager::uninhibit()
+{
+    m_inhibitReferenceCount--;
 
-    showStatusOsd(m_active);
-
-    resetAllTimers();
+    if (!m_inhibitReferenceCount) {
+        resetAllTimers();
+        emit inhibitedChanged();
+    }
 }
 
 void Manager::initShortcuts()
@@ -279,9 +294,7 @@ void Manager::resetAllTimers()
 {
     cancelAllTimers();
     if (kwinApp()->platform()->supportsGammaControl()) {
-        if (m_active) {
-            m_running = true;
-        }
+        m_running = m_active && !isInhibited();
         // we do this also for active being false in order to reset the temperature back to the day value
         resetQuickAdjustTimer();
     } else {
@@ -542,7 +555,7 @@ bool Manager::daylight() const
 
 int Manager::currentTargetTemp() const
 {
-    if (!m_active) {
+    if (!m_running) {
         return NEUTRAL_TEMPERATURE;
     }
 

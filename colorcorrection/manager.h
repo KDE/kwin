@@ -126,6 +126,24 @@ public:
      */
     void toggle();
 
+    /**
+     * Returns @c true if the night color manager is blocked; otherwise @c false.
+     */
+    bool isInhibited() const;
+
+    /**
+     * Temporarily blocks the night color manager.
+     *
+     * After calling this method, the screen color temperature will be reverted
+     * back to 6500C. When you're done, call uninhibit() method.
+     */
+    void inhibit();
+
+    /**
+     * Attempts to unblock the night color manager.
+     */
+    void uninhibit();
+
     // for auto tests
     void reparseConfigAndReset();
 
@@ -135,6 +153,11 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void configChange(QHash<QString, QVariant> data);
+
+    /**
+     * Emitted whenever the night color manager is blocked or unblocked.
+     */
+    void inhibitedChanged();
 
 private:
     void initShortcuts();
@@ -162,8 +185,14 @@ private:
 
     ColorCorrectDBusInterface *m_iface;
 
+    // Specifies whether Night Color is enabled.
     bool m_active;
+
+    // Specifies whether Night Color is currently running.
     bool m_running = false;
+
+    // Specifies whether Night Color is inhibited globally.
+    bool m_isGloballyInhibited = false;
 
     NightColorMode m_mode = NightColorMode::Automatic;
 
@@ -192,6 +221,7 @@ private:
     int m_nightTargetTemp = DEFAULT_NIGHT_TEMPERATURE;
 
     int m_failedCommitAttempts = 0;
+    int m_inhibitReferenceCount = 0;
 
     // The Workspace class needs to call initShortcuts during initialization.
     friend class KWin::Workspace;

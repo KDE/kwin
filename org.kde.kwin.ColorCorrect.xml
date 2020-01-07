@@ -18,5 +18,39 @@
         <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QHash&lt;QString,QVariant&gt;"/>
         <arg type="a{sv}" direction="out"/>
     </signal>
+
+    <!--
+        Creates an inhibition lock for Night Color.
+
+        You can use this method to temporarily disable Night Color feature.
+        After calling this method, the screen color temperature will be set
+        back to the neutral temperature (6500K).
+
+        This method returns a cookie that uniquely identifies the inhibition
+        request. You must pass the cookie to uninhibit() when you're done.
+
+        Note that the inhibition lock will be released automatically when
+        the service, which requested it, is unregistered.
+
+        A client is allowed to hold more than just one inhibition lock.
+    -->
+    <method name="inhibit">
+        <arg name="cookie" type="u" direction="out"/>
+    </method>
+
+    <!--
+        Releases an inhibition lock identified by the given cookie.
+
+        Note that the inhibition lock will be released automatically when
+        the service, which requested it, is unregistered.
+    -->
+    <method name="uninhibit">
+        <arg name="cookie" type="u" direction="in"/>
+    </method>
+
+    <!--
+        This property holds a value to indicate whether Night Color is inhibited.
+    -->
+    <property name="inhibited" type="b" access="read"/>
   </interface>
 </node>
