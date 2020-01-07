@@ -104,8 +104,6 @@ protected:
     void updateCaption() override;
 
 private:
-    QRect mapFromClient(const QRect &rect) const;
-    QRect mapToClient(const QRect &rect) const;
     void createDecoration(const QRect &rect);
     void requestGeometry(const QRect &rect);
     void commitGeometry(const QRect &rect);

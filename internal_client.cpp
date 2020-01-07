@@ -68,7 +68,7 @@ InternalClient::InternalClient(QWindow *window)
     blockGeometryUpdates(true);
     commitGeometry(m_internalWindow->geometry());
     updateDecoration(true);
-    setFrameGeometry(mapFromClient(m_internalWindow->geometry()));
+    setFrameGeometry(clientRectToFrameRect(m_internalWindow->geometry()));
     setGeometryRestore(frameGeometry());
     blockGeometryUpdates(false);
 
@@ -356,7 +356,7 @@ void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
         return;
     }
 
-    const QRect newClientGeometry = mapToClient(rect);
+    const QRect newClientGeometry = frameRectToClientRect(rect);
 
     if (m_clientSize == newClientGeometry.size()) {
         commitGeometry(rect);
@@ -542,7 +542,7 @@ void InternalClient::destroyDecoration()
         return;
     }
 
-    const QRect clientGeometry = mapToClient(frameGeometry());
+    const QRect clientGeometry = frameRectToClientRect(frameGeometry());
     AbstractClient::destroyDecoration();
     setFrameGeometry(clientGeometry);
 }
@@ -577,16 +577,6 @@ void InternalClient::updateCaption()
     }
 }
 
-QRect InternalClient::mapFromClient(const QRect &rect) const
-{
-    return rect + frameMargins();
-}
-
-QRect InternalClient::mapToClient(const QRect &rect) const
-{
-    return rect - frameMargins();
-}
-
 void InternalClient::createDecoration(const QRect &rect)
 {
     KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
@@ -608,7 +598,7 @@ void InternalClient::createDecoration(const QRect &rect)
     const QRect oldFrameGeometry = frameGeometry();
 
     setDecoration(decoration);
-    setFrameGeometry(mapFromClient(rect));
+    setFrameGeometry(clientRectToFrameRect(rect));
 
     emit geometryShapeChanged(this, oldFrameGeometry);
 }
@@ -616,7 +606,7 @@ void InternalClient::createDecoration(const QRect &rect)
 void InternalClient::requestGeometry(const QRect &rect)
 {
     if (m_internalWindow) {
-        m_internalWindow->setGeometry(mapToClient(rect));
+        m_internalWindow->setGeometry(frameRectToClientRect(rect));
     }
 }
 
@@ -628,7 +618,7 @@ void InternalClient::commitGeometry(const QRect &rect)
 
     m_frameGeometry = rect;
 
-    m_clientSize = mapToClient(frameGeometry()).size();
+    m_clientSize = frameRectToClientRect(frameGeometry()).size();
 
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
@@ -668,7 +658,7 @@ void InternalClient::markAsMapped()
 
 void InternalClient::syncGeometryToInternalWindow()
 {
-    if (m_internalWindow->geometry() == mapToClient(frameGeometry())) {
+    if (m_internalWindow->geometry() == frameRectToClientRect(frameGeometry())) {
         return;
     }
 
@@ -681,7 +671,7 @@ void InternalClient::updateInternalWindowGeometry()
         return;
     }
 
-    commitGeometry(mapFromClient(m_internalWindow->geometry()));
+    commitGeometry(clientRectToFrameRect(m_internalWindow->geometry()));
 }
 
 }
