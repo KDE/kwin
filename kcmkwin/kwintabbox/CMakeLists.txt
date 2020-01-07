@@ -1,19 +1,19 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwintabbox\")
 
-include_directories(${KWIN_SOURCE_DIR}/effects ${KWIN_SOURCE_DIR}/tabbox ${KWIN_SOURCE_DIR})
+include_directories(${KWin_SOURCE_DIR}/effects ${KWin_SOURCE_DIR}/tabbox ${KWin_SOURCE_DIR})
 
 ########### next target ###############
 
 set(kcm_kwintabbox_PART_SRCS
-    ${KWIN_SOURCE_DIR}/tabbox/tabboxconfig.cpp
+    ${KWin_SOURCE_DIR}/tabbox/tabboxconfig.cpp
     layoutpreview.cpp
     main.cpp
     thumbnailitem.cpp
 )
 
 ki18n_wrap_ui(kcm_kwintabbox_PART_SRCS main.ui)
-qt5_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWIN_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
+qt5_add_dbus_interface(kcm_kwintabbox_PART_SRCS ${KWin_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 add_library(kcm_kwintabbox MODULE ${kcm_kwintabbox_PART_SRCS})
 

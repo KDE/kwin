@@ -10,13 +10,13 @@ add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
 target_link_libraries(screenedgeshowtest Qt5::Widgets Qt5::X11Extras KF5::ConfigCore KF5::WindowSystem KF5::WaylandClient ${XCB_XCB_LIBRARY})
 
 set(libinputtest_SRCS
-    ${KWIN_SOURCE_DIR}/libinput/connection.cpp
-    ${KWIN_SOURCE_DIR}/libinput/context.cpp
-    ${KWIN_SOURCE_DIR}/libinput/device.cpp
-    ${KWIN_SOURCE_DIR}/libinput/events.cpp
-    ${KWIN_SOURCE_DIR}/libinput/libinput_logging.cpp
-    ${KWIN_SOURCE_DIR}/logind.cpp
-    ${KWIN_SOURCE_DIR}/udev.cpp
+    ${KWin_SOURCE_DIR}/libinput/connection.cpp
+    ${KWin_SOURCE_DIR}/libinput/context.cpp
+    ${KWin_SOURCE_DIR}/libinput/device.cpp
+    ${KWin_SOURCE_DIR}/libinput/events.cpp
+    ${KWin_SOURCE_DIR}/libinput/libinput_logging.cpp
+    ${KWin_SOURCE_DIR}/logind.cpp
+    ${KWin_SOURCE_DIR}/udev.cpp
     libinputtest.cpp
 )
 add_executable(libinputtest ${libinputtest_SRCS})

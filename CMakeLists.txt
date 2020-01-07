@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-project(KWIN)
+project(KWin)
 set(PROJECT_VERSION "5.18.80")
 set(PROJECT_VERSION_MAJOR 5)
 
@@ -311,7 +311,6 @@ cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kacti
 set(KWIN_NAME "kwin")
 set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
 set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
-set(KWIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available: may be disabled
 if (KWIN_BUILD_XRENDER_COMPOSITING)

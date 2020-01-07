@@ -14,7 +14,7 @@ set(kwincomposing_SRC
 )
 
 qt5_add_dbus_interface(kwincomposing_SRC
-    ${KWIN_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface
+    ${KWin_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface
 )
 
 ki18n_wrap_ui(kwincomposing_SRC compositing.ui)
