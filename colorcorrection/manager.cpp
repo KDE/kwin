@@ -408,7 +408,7 @@ void Manager::resetSlowUpdateTimer()
         }
 
         // calculate interval such as temperature is changed by TEMPERATURE_STEP K per timer timeout
-        int interval = availTime / (qAbs(targetTemp - m_currentTemp) / TEMPERATURE_STEP);
+        int interval = availTime * TEMPERATURE_STEP / qAbs(targetTemp - m_currentTemp);
         if (interval == 0) {
             interval = 1;
         }
