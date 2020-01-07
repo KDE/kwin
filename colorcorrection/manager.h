@@ -144,6 +144,36 @@ public:
      */
     void uninhibit();
 
+    /**
+     * Returns @c true if Night Color is enabled; otherwise @c false.
+     */
+    bool isEnabled() const;
+
+    /**
+     * Returns @c true if Night Color is currently running; otherwise @c false.
+     */
+    bool isRunning() const;
+
+    /**
+     * Returns @c true if Night Color is supported by platform; otherwise @c false.
+     */
+    bool isAvailable() const;
+
+    /**
+     * Returns the current screen color temperature.
+     */
+    int currentTemperature() const;
+
+    /**
+     * Returns the target screen color temperature.
+     */
+    int targetTemperature() const;
+
+    /**
+     * Returns the mode in which Night Color is operating.
+     */
+    NightColorMode mode() const;
+
     // for auto tests
     void reparseConfigAndReset();
 
@@ -158,6 +188,31 @@ Q_SIGNALS:
      * Emitted whenever the night color manager is blocked or unblocked.
      */
     void inhibitedChanged();
+
+    /**
+     * Emitted whenever the night color manager is enabled or disabled.
+     */
+    void enabledChanged();
+
+    /**
+     * Emitted whenever the night color manager starts or stops running.
+     */
+    void runningChanged();
+
+    /**
+     * Emitted whenever the current screen color temperature has changed.
+     */
+    void currentTemperatureChanged();
+
+    /**
+     * Emitted whenever the target screen color temperature has changed.
+     */
+    void targetTemperatureChanged();
+
+    /**
+     * Emitted whenver the operation mode has changed.
+     */
+    void modeChanged();
 
 private:
     void initShortcuts();
@@ -176,12 +231,18 @@ private:
      */
     void resetSlowUpdateTimer();
 
+    void updateTargetTemperature();
     void updateSunTimings(bool force);
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
     bool checkAutomaticSunTimings() const;
     bool daylight() const;
 
     void commitGammaRamps(int temperature);
+
+    void setEnabled(bool enabled);
+    void setRunning(bool running);
+    void setCurrentTemperature(int temperature);
+    void setMode(NightColorMode mode);
 
     ColorCorrectDBusInterface *m_iface;
 
@@ -217,6 +278,7 @@ private:
     QTimer *m_quickAdjustTimer = nullptr;
 
     int m_currentTemp = NEUTRAL_TEMPERATURE;
+    int m_targetTemperature = NEUTRAL_TEMPERATURE;
     int m_dayTargetTemp = NEUTRAL_TEMPERATURE;
     int m_nightTargetTemp = DEFAULT_NIGHT_TEMPERATURE;
 

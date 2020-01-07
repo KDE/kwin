@@ -38,10 +38,104 @@ ColorCorrectDBusInterface::ColorCorrectDBusInterface(Manager *parent)
     connect(m_inhibitorWatcher, &QDBusServiceWatcher::serviceUnregistered,
             this, &ColorCorrectDBusInterface::removeInhibitorService);
 
-    // Argh, all this code is just to send one innocent signal...
     connect(m_manager, &Manager::inhibitedChanged, this, [this] {
         QVariantMap changedProperties;
         changedProperties.insert(QStringLiteral("inhibited"), m_manager->isInhibited());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
+    connect(m_manager, &Manager::enabledChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("enabled"), m_manager->isEnabled());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
+    connect(m_manager, &Manager::runningChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("running"), m_manager->isRunning());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
+    connect(m_manager, &Manager::currentTemperatureChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("currentTemperature"), m_manager->currentTemperature());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
+    connect(m_manager, &Manager::targetTemperatureChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("targetTemperature"), m_manager->targetTemperature());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
+    connect(m_manager, &Manager::modeChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("mode"), uint(m_manager->mode()));
 
         QDBusMessage message = QDBusMessage::createSignal(
             QStringLiteral("/ColorCorrect"),
@@ -66,6 +160,36 @@ ColorCorrectDBusInterface::ColorCorrectDBusInterface(Manager *parent)
 bool ColorCorrectDBusInterface::isInhibited() const
 {
     return m_manager->isInhibited();
+}
+
+bool ColorCorrectDBusInterface::isEnabled() const
+{
+    return m_manager->isEnabled();
+}
+
+bool ColorCorrectDBusInterface::isRunning() const
+{
+    return m_manager->isRunning();
+}
+
+bool ColorCorrectDBusInterface::isAvailable() const
+{
+    return m_manager->isAvailable();
+}
+
+int ColorCorrectDBusInterface::currentTemperature() const
+{
+    return m_manager->currentTemperature();
+}
+
+int ColorCorrectDBusInterface::targetTemperature() const
+{
+    return m_manager->targetTemperature();
+}
+
+int ColorCorrectDBusInterface::mode() const
+{
+    return m_manager->mode();
 }
 
 QHash<QString, QVariant> ColorCorrectDBusInterface::nightColorInfo()

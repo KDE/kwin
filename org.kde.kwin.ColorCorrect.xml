@@ -52,5 +52,37 @@
         This property holds a value to indicate whether Night Color is inhibited.
     -->
     <property name="inhibited" type="b" access="read"/>
+
+    <!--
+        This property holds a value to indicate whether Night Color is enabled.
+    -->
+    <property name="enabled" type="b" access="read"/>
+
+    <!--
+        This property holds a value to indicate whether Night Color is running.
+    -->
+    <property name="running" type="b" access="read"/>
+
+    <!--
+        This property holds a value to indicate whether Night Color is available.
+    -->
+    <property name="available" type="b" access="read"/>
+
+    <!--
+        This property holds a value to indicate the current screen color temperature.
+    -->
+    <property name="currentTemperature" type="u" access="read"/>
+
+    <!--
+        This property holds a value to indicate the target screen color temperature.
+    -->
+    <property name="targetTemperature" type="u" access="read"/>
+
+    <!--
+        This property holds a value to indicate the operating mode.
+
+        Valid modes: 0 - automatic, 1 - location, 2 - timings, 3 - constant.
+    -->
+    <property name="mode" type="u" access="read"/>
   </interface>
 </node>

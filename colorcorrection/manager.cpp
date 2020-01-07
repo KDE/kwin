@@ -90,7 +90,7 @@ void Manager::init()
     // we may always read in the current config
     readConfig();
 
-    if (!kwinApp()->platform()->supportsGammaControl()) {
+    if (!isAvailable()) {
         return;
     }
 
@@ -165,9 +165,10 @@ void Manager::hardReset()
     if (m_mode != NightColorMode::Constant) {
         updateSunTimings(true);
     }
+    updateTargetTemperature();
 
-    if (kwinApp()->platform()->supportsGammaControl() && m_active && !isInhibited()) {
-        m_running = true;
+    if (isAvailable() && isEnabled() && !isInhibited()) {
+        setRunning(true);
         commitGammaRamps(currentTargetTemp());
     }
     resetAllTimers();
@@ -211,6 +212,36 @@ void Manager::uninhibit()
     }
 }
 
+bool Manager::isEnabled() const
+{
+    return m_active;
+}
+
+bool Manager::isRunning() const
+{
+    return m_running;
+}
+
+bool Manager::isAvailable() const
+{
+    return kwinApp()->platform()->supportsGammaControl();
+}
+
+int Manager::currentTemperature() const
+{
+    return m_currentTemp;
+}
+
+int Manager::targetTemperature() const
+{
+    return m_targetTemperature;
+}
+
+NightColorMode Manager::mode() const
+{
+    return m_mode;
+}
+
 void Manager::initShortcuts()
 {
     QAction *toggleAction = new QAction(this);
@@ -226,7 +257,7 @@ void Manager::readConfig()
     Settings *s = Settings::self();
     s->load();
 
-    m_active = s->active();
+    setEnabled(s->active());
 
     const NightColorMode mode = s->mode();
     switch (s->mode()) {
@@ -234,11 +265,11 @@ void Manager::readConfig()
     case NightColorMode::Location:
     case NightColorMode::Timings:
     case NightColorMode::Constant:
-        m_mode = mode;
+        setMode(mode);
         break;
     default:
         // Fallback for invalid setting values.
-        m_mode = NightColorMode::Automatic;
+        setMode(NightColorMode::Automatic);
         break;
     }
 
@@ -293,12 +324,12 @@ void Manager::readConfig()
 void Manager::resetAllTimers()
 {
     cancelAllTimers();
-    if (kwinApp()->platform()->supportsGammaControl()) {
-        m_running = m_active && !isInhibited();
+    if (isAvailable()) {
+        setRunning(isEnabled() && !isInhibited());
         // we do this also for active being false in order to reset the temperature back to the day value
         resetQuickAdjustTimer();
     } else {
-        m_running = false;
+        setRunning(false);
     }
 }
 
@@ -319,6 +350,7 @@ void Manager::resetQuickAdjustTimer()
     if (m_mode != NightColorMode::Constant) {
         updateSunTimings(false);
     }
+    updateTargetTemperature();
 
     int tempDiff = qAbs(currentTargetTemp() - m_currentTemp);
     // allow tolerance of one TEMPERATURE_STEP to compensate if a slow update is coincidental
@@ -384,6 +416,8 @@ void Manager::resetSlowUpdateStartTimer()
     connect(m_slowUpdateStartTimer, &QTimer::timeout, this, &Manager::resetSlowUpdateStartTimer);
 
     updateSunTimings(false);
+    updateTargetTemperature();
+
     const int diff = QDateTime::currentDateTime().msecsTo(m_next.first);
     if (diff <= 0) {
         qCCritical(KWIN_COLORCORRECTION) << "Error in time calculation. Deactivating Night Color.";
@@ -446,6 +480,19 @@ void Manager::slowUpdate(int targetTemp)
         delete m_slowUpdateTimer;
         m_slowUpdateTimer = nullptr;
     }
+}
+
+void Manager::updateTargetTemperature()
+{
+    const int targetTemperature = mode() != NightColorMode::Constant && daylight() ? m_dayTargetTemp : m_nightTargetTemp;
+
+    if (m_targetTemperature == targetTemperature) {
+        return;
+    }
+
+    m_targetTemperature = targetTemperature;
+
+    emit targetTemperatureChanged();
 }
 
 void Manager::updateSunTimings(bool force)
@@ -624,7 +671,7 @@ void Manager::commitGammaRamps(int temperature)
         }
 
         if (o->setGammaRamp(ramp)) {
-            m_currentTemp = temperature;
+            setCurrentTemperature(temperature);
             m_failedCommitAttempts = 0;
         } else {
             m_failedCommitAttempts++;
@@ -635,7 +682,7 @@ void Manager::commitGammaRamps(int temperature)
                 // TODO: On multi monitor setups we could try to rollback earlier changes for already committed outputs
                 qCWarning(KWIN_COLORCORRECTION) << "Gamma Ramp commit failed too often. Deactivating color correction for now.";
                 m_failedCommitAttempts = 0; // reset so we can try again later (i.e. after suspend phase or config change)
-                m_running = false;
+                setRunning(false);
                 cancelAllTimers();
             }
         }
@@ -645,7 +692,7 @@ void Manager::commitGammaRamps(int temperature)
 QHash<QString, QVariant> Manager::info() const
 {
     return QHash<QString, QVariant> {
-        { QStringLiteral("Available"), kwinApp()->platform()->supportsGammaControl() },
+        { QStringLiteral("Available"), isAvailable() },
 
         { QStringLiteral("ActiveEnabled"), true},
         { QStringLiteral("Active"), m_active},
@@ -798,12 +845,12 @@ bool Manager::changeConfiguration(QHash<QString, QVariant> data)
 
     Settings *s = Settings::self();
     if (activeUpdate) {
-        m_active = active;
+        setEnabled(active);
         s->setActive(active);
     }
 
     if (modeUpdate) {
-        m_mode = mode;
+        setMode(mode);
         s->setMode(mode);
     }
 
@@ -859,6 +906,42 @@ void Manager::autoLocationUpdate(double latitude, double longitude)
 
     resetAllTimers();
     emit configChange(info());
+}
+
+void Manager::setEnabled(bool enabled)
+{
+    if (m_active == enabled) {
+        return;
+    }
+    m_active = enabled;
+    emit enabledChanged();
+}
+
+void Manager::setRunning(bool running)
+{
+    if (m_running == running) {
+        return;
+    }
+    m_running = running;
+    emit runningChanged();
+}
+
+void Manager::setCurrentTemperature(int temperature)
+{
+    if (m_currentTemp == temperature) {
+        return;
+    }
+    m_currentTemp = temperature;
+    emit currentTemperatureChanged();
+}
+
+void Manager::setMode(NightColorMode mode)
+{
+    if (m_mode == mode) {
+        return;
+    }
+    m_mode = mode;
+    emit modeChanged();
 }
 
 }
