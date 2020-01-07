@@ -32,6 +32,7 @@ class QTimer;
 namespace KWin
 {
 
+class ClockSkewNotifier;
 class Workspace;
 
 namespace ColorCorrect
@@ -245,6 +246,7 @@ private:
     void setMode(NightColorMode mode);
 
     ColorCorrectDBusInterface *m_iface;
+    ClockSkewNotifier *m_skewNotifier;
 
     // Specifies whether Night Color is enabled.
     bool m_active;

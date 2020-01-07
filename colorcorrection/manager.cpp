@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "manager.h"
+#include "clockskewnotifier.h"
 #include "colorcorrectdbusinterface.h"
 #include "suncalc.h"
 #include <colorcorrect_logging.h>
@@ -36,14 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QDBusConnection>
-#include <QSocketNotifier>
 #include <QTimer>
-
-#ifdef Q_OS_LINUX
-#include <sys/timerfd.h>
-#endif
-#include <unistd.h>
-#include <fcntl.h>
 
 namespace KWin {
 namespace ColorCorrect {
@@ -60,6 +54,8 @@ Manager::Manager(QObject *parent)
     : QObject(parent)
 {
     m_iface = new ColorCorrectDBusInterface(this);
+    m_skewNotifier = new ClockSkewNotifier(this);
+
     connect(kwinApp(), &Application::workspaceCreated, this, &Manager::init);
 
     // Display a message when Night Color is (un)inhibited.
@@ -106,26 +102,7 @@ void Manager::init()
             }
     );
 
-#ifdef Q_OS_LINUX
-    // monitor for system clock changes - from the time dataengine
-    auto timeChangedFd = ::timerfd_create(CLOCK_REALTIME, O_CLOEXEC | O_NONBLOCK);
-    ::itimerspec timespec;
-    //set all timers to 0, which creates a timer that won't do anything
-    ::memset(&timespec, 0, sizeof(timespec));
-
-    // Monitor for the time changing (flags == TFD_TIMER_ABSTIME | TFD_TIMER_CANCEL_ON_SET).
-    // However these are not exposed in glibc so value is hardcoded:
-    ::timerfd_settime(timeChangedFd, 3, &timespec, nullptr);
-
-    connect(this, &QObject::destroyed, [timeChangedFd]() {
-        ::close(timeChangedFd);
-    });
-
-    auto notifier = new QSocketNotifier(timeChangedFd, QSocketNotifier::Read, this);
-    connect(notifier, &QSocketNotifier::activated, this, [this](int fd) {
-        uint64_t c;
-        ::read(fd, &c, 8);
-
+    connect(m_skewNotifier, &ClockSkewNotifier::clockSkewed, this, [this]() {
         // check if we're resuming from suspend - in this case do a hard reset
         // Note: We're using the time clock to detect a suspend phase instead of connecting to the
         //       provided logind dbus signal, because this signal would be received way too late.
@@ -150,9 +127,6 @@ void Manager::init()
             resetAllTimers();
         }
     });
-#else
-    // TODO: Alternative method for BSD.
-#endif
 
     hardReset();
 }
@@ -914,6 +888,7 @@ void Manager::setEnabled(bool enabled)
         return;
     }
     m_active = enabled;
+    m_skewNotifier->setActive(enabled);
     emit enabledChanged();
 }
 

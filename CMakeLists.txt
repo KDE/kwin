@@ -401,6 +401,8 @@ set(kwin_KDEINIT_SRCS
     appmenu.cpp
     atoms.cpp
     client_machine.cpp
+    colorcorrection/clockskewnotifier.cpp
+    colorcorrection/clockskewnotifierengine.cpp
     colorcorrection/colorcorrectdbusinterface.cpp
     colorcorrection/manager.cpp
     colorcorrection/suncalc.cpp
@@ -501,6 +503,13 @@ set(kwin_KDEINIT_SRCS
     xkb.cpp
     xwl/xwayland_interface.cpp
 )
+
+if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+    set(kwin_KDEINIT_SRCS
+        ${kwin_KDEINIT_SRCS}
+        colorcorrection/clockskewnotifierengine_linux.cpp
+    )
+endif()
 
 include(ECMQtDeclareLoggingCategory)
 ecm_qt_declare_logging_category(kwin_KDEINIT_SRCS
