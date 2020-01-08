@@ -350,9 +350,7 @@ void DrmBackend::openDrm()
     updateOutputs();
 
     if (m_outputs.isEmpty()) {
-        qCWarning(KWIN_DRM) << "No outputs, cannot render, will terminate now";
-        emit initFailed();
-        return;
+        qCDebug(KWIN_DRM) << "No connected outputs found on startup.";
     }
 
     // setup udevMonitor
@@ -501,6 +499,7 @@ void DrmBackend::updateOutputs()
     m_outputs = connectedOutputs;
     m_enabledOutputs = connectedOutputs;
     readOutputsConfiguration();
+    updateOutputsEnabled();
     if (!m_outputs.isEmpty()) {
         emit screensQueried();
     }
@@ -754,9 +753,6 @@ DrmSurfaceBuffer *DrmBackend::createBuffer(const std::shared_ptr<GbmSurface> &su
 
 void DrmBackend::updateOutputsEnabled()
 {
-    if (m_enabledOutputs.isEmpty()) {
-        return;
-    }
     bool enabled = false;
     for (auto it = m_enabledOutputs.constBegin(); it != m_enabledOutputs.constEnd(); ++it) {
         enabled = enabled || (*it)->isDpmsEnabled();
