@@ -492,6 +492,11 @@ OverlayWindow *SceneOpenGL::overlayWindow() const
     return m_backend->overlayWindow();
 }
 
+bool SceneOpenGL::blocksForRetrace() const
+{
+    return m_backend->blocksForRetrace();
+}
+
 void SceneOpenGL::idle()
 {
     m_backend->idle();

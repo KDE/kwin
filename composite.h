@@ -187,8 +187,6 @@ protected:
 
 private:
     explicit WaylandCompositor(QObject *parent);
-
-    int m_refreshRate;
 };
 
 class KWIN_EXPORT X11Compositor : public Compositor

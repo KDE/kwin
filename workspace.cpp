@@ -1609,6 +1609,11 @@ QString Workspace::supportInformation() const
             }
 
             support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
+            support.append(QStringLiteral("Painting blocks for vertical retrace: "));
+            if (m_compositor->scene()->blocksForRetrace())
+                support.append(QStringLiteral(" yes\n"));
+            else
+                support.append(QStringLiteral(" no\n"));
             break;
         }
         case XRenderCompositing:

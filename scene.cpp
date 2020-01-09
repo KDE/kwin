@@ -621,6 +621,11 @@ void Scene::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     Q_UNUSED(opaqueFullscreen);
 }
 
+bool Scene::blocksForRetrace() const
+{
+    return false;
+}
+
 void Scene::screenGeometryChanged(const QSize &size)
 {
     if (!overlayWindow()) {

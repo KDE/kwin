@@ -52,6 +52,7 @@ public:
     void screenGeometryChanged(const QSize &size) override;
     OverlayWindow *overlayWindow() const override;
     bool usesOverlayWindow() const override;
+    bool blocksForRetrace() const override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;

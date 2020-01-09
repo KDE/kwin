@@ -121,6 +121,7 @@ void EglOnXBackend::init()
         }
     }
 
+    setBlocksForRetrace(true);
     if (surfaceHasSubPost) {
         qCDebug(KWIN_CORE) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
@@ -354,6 +355,8 @@ QRegion EglOnXBackend::prepareRenderingFrame()
 {
     QRegion repaint;
 
+    present();
+
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
@@ -383,7 +386,16 @@ void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
     }
 
     setLastDamage(renderedRegion);
-    present();
+
+    if (!blocksForRetrace()) {
+        // This also sets lastDamage to empty which prevents the frame from
+        // being posted again when prepareRenderingFrame() is called.
+        present();
+    } else {
+        // Make sure that the GPU begins processing the command stream
+        // now and not the next time prepareRenderingFrame() is called.
+        glFlush();
+    }
 
     if (m_overlayWindow && overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long

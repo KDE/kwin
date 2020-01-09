@@ -115,6 +115,11 @@ GlxBackend::GlxBackend(Display *display)
     , m_bufferAge(0)
     , m_x11Display(display)
 {
+     // Ensures calls to glXSwapBuffers will always block until the next
+     // retrace when using the proprietary NVIDIA driver. This must be
+     // set before libGL.so is loaded.
+     setenv("__GL_MaxFramesAllowed", "1", true);
+
      // Force initialization of GLX integration in the Qt's xcb backend
      // to make it call XESetWireToEvent callbacks, which is required
      // by Mesa when using DRI2.
@@ -223,6 +228,8 @@ void GlxBackend::init()
         if (useBufferAge != "0")
             setSupportsBufferAge(true);
     }
+
+    setBlocksForRetrace(true);
 
     if (m_haveEXTSwapControl) {
         glXSwapIntervalEXT(display(), glxWindow, 1);
@@ -719,10 +726,13 @@ QRegion GlxBackend::prepareRenderingFrame()
 {
     QRegion repaint;
 
+    present();
+
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
     startRenderTimer();
+    glXWaitX();
 
     return repaint;
 }
@@ -747,7 +757,16 @@ void GlxBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion 
     }
 
     setLastDamage(renderedRegion);
-    present();
+
+    if (!blocksForRetrace()) {
+        // This also sets lastDamage to empty which prevents the frame from
+        // being posted again when prepareRenderingFrame() is called.
+        present();
+    } else {
+        // Make sure that the GPU begins processing the command stream
+        // now and not the next time prepareRenderingFrame() is called.
+        glFlush();
+    }
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long
