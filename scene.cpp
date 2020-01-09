@@ -626,6 +626,11 @@ bool Scene::blocksForRetrace() const
     return false;
 }
 
+bool Scene::syncsToVBlank() const
+{
+    return false;
+}
+
 void Scene::screenGeometryChanged(const QSize &size)
 {
     if (!overlayWindow()) {

@@ -167,6 +167,11 @@ Alternatively, you might want to use the XRender backend instead.</string>
     <widget class="QComboBox" name="tearingPrevention">
      <item>
       <property name="text">
+       <string>Never</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>Automatic</string>
       </property>
      </item>

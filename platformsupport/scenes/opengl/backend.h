@@ -125,6 +125,16 @@ public:
         return m_failed;
     }
     /**
+     * @brief Whether the Backend provides VSync.
+     *
+     * Currently only the GLX backend can provide VSync.
+     *
+     * @return bool @c true if VSync support is available, @c false otherwise
+     */
+    bool syncsToVBlank() const {
+        return m_syncsToVBlank;
+    }
+    /**
      * @brief Whether VSync blocks execution until the screen is in the retrace
      *
      * Case for waitVideoSync and non triple buffering buffer swaps (triple buffering support
@@ -203,6 +213,16 @@ protected:
      */
     void setFailed(const QString &reason);
     /**
+     * @brief Sets whether the backend provides VSync.
+     *
+     * Should be called by the concrete subclass once it is determined whether VSync is supported.
+     * If the subclass does not call this method, the backend defaults to @c false.
+     * @param enabled @c true if VSync support available, @c false otherwise.
+     */
+    void setSyncsToVBlank(bool enabled) {
+        m_syncsToVBlank = enabled;
+    }
+    /**
      * @brief Sets whether the VSync iplementation blocks
      *
      * Should be called by the concrete subclass once it is determined how VSync works.
@@ -264,6 +284,10 @@ protected:
     }
 
 private:
+    /**
+     * @brief Whether VSync is available and used, defaults to @c false.
+     */
+    bool m_syncsToVBlank;
     /**
      * @brief Whether present() will block execution until the next vertical retrace @c false.
      */

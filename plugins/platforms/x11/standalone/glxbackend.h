@@ -89,6 +89,7 @@ private:
     bool initRenderingContext();
     bool initFbConfig();
     void initVisualDepthHashTable();
+    void setSwapInterval(int interval);
     Display *display() const {
         return m_x11Display;
     }
@@ -112,6 +113,7 @@ private:
     bool m_haveMESASwapControl = false;
     bool m_haveEXTSwapControl = false;
     bool m_haveINTELSwapEvent = false;
+    bool haveSwapInterval = false;
     Display *m_x11Display;
     friend class GlxTexture;
 };
