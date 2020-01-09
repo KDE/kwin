@@ -207,10 +207,9 @@ void GlxBackend::init()
     m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
 
-    // Allow to disable Intel swap event with env variable. There were problems in the past.
-    // See BUG 342582.
+    // only enable Intel swap event if env variable is set, see BUG 342582
     if (hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event")) &&
-            qgetenv("KWIN_USE_INTEL_SWAP_EVENT") != QByteArrayLiteral("0")) {
+            qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1")) {
         m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
         glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
     }
