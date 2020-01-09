@@ -24,6 +24,10 @@
 #include <sys/timerfd.h>
 #include <unistd.h>
 
+#ifndef TFD_TIMER_CANCEL_ON_SET // only available in newer glib
+#define TFD_TIMER_CANCEL_ON_SET (1 << 1)
+#endif
+
 namespace KWin
 {
 
