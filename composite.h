@@ -158,13 +158,15 @@ private:
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
+    qint64 vBlankInterval, fpsInterval;
     QRegion repaints_region;
 
-    // Compositing pause decrease through paint duration (in ms).
-    qint64 m_timerOffset;
-    bool m_bufferSwapPending;
+    qint64 m_timeSinceLastVBlank;
 
     Scene *m_scene;
+
+    bool m_bufferSwapPending;
+    bool m_composeAtSwapCompletion;
 
     int m_framesToTestForSafety = 3;
     QElapsedTimer m_monotonicClock;

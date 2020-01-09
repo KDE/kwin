@@ -123,9 +123,12 @@ Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
     , m_state(State::Off)
     , m_selectionOwner(nullptr)
-    , m_timerOffset(0)
-    , m_bufferSwapPending(false)
+    , vBlankInterval(0)
+    , fpsInterval(0)
+    , m_timeSinceLastVBlank(0)
     , m_scene(nullptr)
+    , m_bufferSwapPending(false)
+    , m_composeAtSwapCompletion(false)
 {
     connect(options, &Options::configChanged, this, &Compositor::configChanged);
     connect(options, &Options::animationSpeedChanged, this, &Compositor::configChanged);
@@ -329,6 +332,14 @@ void Compositor::startupWithWorkspace()
 
     connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
     setupX11Support();
+    fpsInterval = options->maxFpsInterval();
+
+    const auto rate = currentRefreshRate();
+    Q_ASSERT(rate != 0); // There is a fallback in options.cpp, so why check at all?
+
+    // If we do vsync, set the fps to the next multiple of the vblank rate.
+    vBlankInterval = milliToNano(1000) / currentRefreshRate();
+    fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
 
     // Sets also the 'effects' pointer.
     kwinApp()->platform()->createEffectsHandler(this, m_scene);
@@ -388,8 +399,15 @@ void Compositor::scheduleRepaint()
     //       But on the other side Present extension does not allow to sync with another screen
     //       anyway.
 
-    setCompositeTimer();
-
+    if (m_scene->hasSwapEvent()) {
+        // TODO: If we don't call it back from the event loop we often crash on Wayland
+        //       in AnimationEffect::postPaintScreen. Why?
+        //       Theory is that effects call addRepaintFull in there and then performCompositing
+        //       is called again while still in the first paint. So queing it here makes sense!
+        compositeTimer.start(0, this);
+    } else {
+        setCompositeTimer();
+    }
 }
 
 void Compositor::stop()
@@ -454,6 +472,7 @@ void Compositor::stop()
     delete m_scene;
     m_scene = nullptr;
     m_bufferSwapPending = false;
+    m_composeAtSwapCompletion = false;
     compositeTimer.stop();
     repaints_region = QRegion();
 
@@ -591,23 +610,29 @@ void Compositor::bufferSwapComplete()
 {
     Q_ASSERT(m_bufferSwapPending);
     m_bufferSwapPending = false;
+
     emit bufferSwapCompleted();
-    performCompositing();
+
+    if (m_composeAtSwapCompletion) {
+        m_composeAtSwapCompletion = false;
+        performCompositing();
+    }
 }
 
 void Compositor::performCompositing()
 {
-    compositeTimer.stop();
-
     // If a buffer swap is still pending, we return to the event loop and
     // continue processing events until the swap has completed.
     if (m_bufferSwapPending) {
+        m_composeAtSwapCompletion = true;
+        compositeTimer.stop();
         return;
     }
 
     // If outputs are disabled, we return to the event loop and
     // continue processing events until the outputs are enabled again
     if (!kwinApp()->platform()->areOutputsEnabled()) {
+        compositeTimer.stop();
         return;
     }
 
@@ -653,9 +678,12 @@ void Compositor::performCompositing()
 
     if (repaints_region.isEmpty() && !windowRepaintsPending()) {
         m_scene->idle();
-
-        // This means the next time we composite it is done without timer delay.
-        m_timerOffset = 1000 / refreshRate();
+        m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now"
+        // Note: It would seem here we should undo suspended unredirect, but when scenes need
+        // it for some reason, e.g. transformations or translucency, the next pass that does not
+        // need this anymore and paints normally will also reset the suspended unredirect.
+        // Otherwise the window would not be painted normally anyway.
+        compositeTimer.stop();
         return;
     }
 
@@ -687,11 +715,11 @@ void Compositor::performCompositing()
     Q_ASSERT(!m_bufferSwapPending);
 
     // Start the actual painting process.
-    m_timerOffset = m_scene->paint(repaints, windows) / 1000 / 1000;
+    m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
 
-    // Either the backend will provide a swap event and a buffer swap is pending now or there is no
-    // pending buffer swap and by that no swap event received later on for the current paint call.
-    Q_ASSERT(m_scene->hasSwapEvent() ^ !m_bufferSwapPending);
+    // TODO: In case we have swap events the buffer swap should now be pending, but this is not
+    //       always the case on X11 standalone platform. Look into that.
+//    Q_ASSERT(m_scene->hasSwapEvent() ^ !m_bufferSwapPending);
 
     if (m_framesToTestForSafety > 0) {
         if (m_scene->compositingType() & OpenGLCompositing) {
@@ -713,12 +741,15 @@ void Compositor::performCompositing()
         }
     }
 
+    // Stop here to ensure *we* cause the next repaint schedule - not some effect
+    // through m_scene->paint().
     compositeTimer.stop();
-    if (m_scene->hasSwapEvent()) {
-        m_timerOffset = 1000 / refreshRate();
-    } else {
-        setCompositeTimer();
-    }
+
+    // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
+    // is called the next time. If there would be nothing pending, it will not restart the timer and
+    // scheduleRepaint() would restart it again somewhen later, called from functions that
+    // would again add something pending.
+    scheduleRepaint();
 }
 
 template <class T>
@@ -767,7 +798,7 @@ void Compositor::setCompositeTimer()
         return;
     }
 
-    uint waitTime = 1000 / refreshRate() - m_timerOffset;
+    uint waitTime = 1000 / refreshRate();
     // Force 4fps minimum:
     compositeTimer.start(qMin(waitTime, 250u), this);
 }
