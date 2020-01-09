@@ -85,7 +85,6 @@ public:
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
     virtual bool usesOverlayWindow() const = 0;
-    virtual bool hasSwapEvent() const { return true; }
     /**
      * Whether the rendering needs to be split per screen.
      * Default implementation returns @c false.

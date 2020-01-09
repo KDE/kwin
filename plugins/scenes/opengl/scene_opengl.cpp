@@ -492,11 +492,6 @@ OverlayWindow *SceneOpenGL::overlayWindow() const
     return m_backend->overlayWindow();
 }
 
-bool SceneOpenGL::hasSwapEvent() const
-{
-    return m_backend->hasSwapEvent();
-}
-
 void SceneOpenGL::idle()
 {
     m_backend->idle();

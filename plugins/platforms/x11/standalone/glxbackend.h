@@ -77,7 +77,6 @@ public:
     void doneCurrent() override;
     OverlayWindow* overlayWindow() const override;
     bool usesOverlayWindow() const override;
-    bool hasSwapEvent() const override;
     void init() override;
 
 protected:
@@ -112,6 +111,7 @@ private:
     bool m_haveMESACopySubBuffer = false;
     bool m_haveMESASwapControl = false;
     bool m_haveEXTSwapControl = false;
+    bool m_haveINTELSwapEvent = false;
     Display *m_x11Display;
     friend class GlxTexture;
 };

@@ -629,11 +629,6 @@ void Scene::screenGeometryChanged(const QSize &size)
     overlayWindow()->resize(size);
 }
 
-bool Scene::hasSwapEvent() const
-{
-    return false;
-}
-
 bool Scene::makeOpenGLContextCurrent()
 {
     return false;

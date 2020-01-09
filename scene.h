@@ -146,7 +146,6 @@ public:
     // there's nothing to paint (adjust time_diff later)
     virtual void idle();
     virtual OverlayWindow* overlayWindow() const = 0;
-    virtual bool hasSwapEvent() const;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
