@@ -2,6 +2,7 @@ set(SCENE_OPENGL_BACKEND_SRCS
     abstract_egl_backend.cpp
     backend.cpp
     egl_dmabuf.cpp
+    swap_profiler.cpp
     texture.cpp
 )
 

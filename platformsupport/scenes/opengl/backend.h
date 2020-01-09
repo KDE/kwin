@@ -137,8 +137,7 @@ public:
     /**
      * @brief Whether VSync blocks execution until the screen is in the retrace
      *
-     * Case for waitVideoSync and non triple buffering buffer swaps (triple buffering support
-     * has been removed).
+     * Case for waitVideoSync and non triple buffering buffer swaps
      *
      */
     bool blocksForRetrace() const {
