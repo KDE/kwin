@@ -689,11 +689,9 @@ void Compositor::performCompositing()
     // Start the actual painting process.
     m_timerOffset = m_scene->paint(repaints, windows) / 1000 / 1000;
 
-    // TODO: This assert is still not always true for some reason. Happens on X11 and Wayland (see
-    //       also BUG 415750).
     // Either the backend will provide a swap event and a buffer swap is pending now or there is no
     // pending buffer swap and by that no swap event received later on for the current paint call.
-//    Q_ASSERT(m_scene->hasSwapEvent() ^ !m_bufferSwapPending);
+    Q_ASSERT(m_scene->hasSwapEvent() ^ !m_bufferSwapPending);
 
     if (m_framesToTestForSafety > 0) {
         if (m_scene->compositingType() & OpenGLCompositing) {
