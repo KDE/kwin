@@ -86,6 +86,7 @@ private:
     bool initBuffer();
     bool checkVersion();
     void initExtensions();
+    void waitSync();
     bool initRenderingContext();
     bool initFbConfig();
     void initVisualDepthHashTable();
@@ -112,8 +113,10 @@ private:
     bool m_haveMESACopySubBuffer = false;
     bool m_haveMESASwapControl = false;
     bool m_haveEXTSwapControl = false;
+    bool m_haveSGISwapControl = false;
     bool m_haveINTELSwapEvent = false;
     bool haveSwapInterval = false;
+    bool haveWaitSync = false;
     Display *m_x11Display;
     friend class GlxTexture;
 };
