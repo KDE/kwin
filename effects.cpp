@@ -1736,7 +1736,8 @@ EffectWindowImpl::EffectWindowImpl(Toplevel *toplevel)
     managed = toplevel->isClient();
 
     waylandClient = qobject_cast<KWin::XdgShellClient *>(toplevel) != nullptr;
-    x11Client = qobject_cast<KWin::X11Client *>(toplevel) != nullptr;
+    x11Client = qobject_cast<KWin::X11Client *>(toplevel) != nullptr ||
+        qobject_cast<KWin::Unmanaged *>(toplevel) != nullptr;
 }
 
 EffectWindowImpl::~EffectWindowImpl()
@@ -1954,7 +1955,7 @@ QRegion EffectWindowImpl::shape() const
     if (isX11Client() && sceneWindow()) {
         return sceneWindow()->bufferShape();
     }
-    return geometry();
+    return toplevel->rect();
 }
 
 QRect EffectWindowImpl::decorationInnerRect() const
