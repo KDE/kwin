@@ -222,8 +222,6 @@ void Application::setupCommandLine(QCommandLineParser *parser)
     QCommandLineOption crashesOption(s_crashesOption, i18n("Indicate that KWin has recently crashed n times"), QStringLiteral("n"));
 
     parser->setApplicationDescription(i18n("KDE window manager"));
-    parser->addVersionOption();
-    parser->addHelpOption();
     parser->addOption(lockOption);
     parser->addOption(crashesOption);
     KAboutData::applicationData().setupCommandLine(parser);
