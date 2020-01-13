@@ -41,7 +41,9 @@ public:
     void highlightWindows(WId controller, const QList<WId> &ids) override;
     void enableBlurBehind(WId window, bool enable = true, const QRegion &region = QRegion()) override;
     void enableBackgroundContrast(WId window, bool enable = true, qreal contrast = 1, qreal intensity = 1, qreal saturation = 1, const QRegion &region = QRegion()) override;
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 67)
     void markAsDashboard(WId window) override;
+#endif
 };
 
 }
