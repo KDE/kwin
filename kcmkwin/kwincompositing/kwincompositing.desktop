@@ -100,7 +100,7 @@ Comment[x-test]=xxCompositor Settings for Desktop Effectsxx
 Comment[zh_CN]=桌面特效混成器设置
 Comment[zh_TW]=桌面效果使用的組合器設定
 
-X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,animation speed
+X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
 X-KDE-Keywords[ca]=kwin,finestra,gestor,composició,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes de l'escriptori,velocitat de les animacions
 X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,composició,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes d'escriptori,velocitat de les animacions
 X-KDE-Keywords[da]=kwin,vindue,håndtering,window,manager,compositing,effekt,3D effekter,2D effekter,OpenGL,XRender,video-indstillinger,grafiske effekter,skrivebordseffekter,desktop effects,animationshastighed
