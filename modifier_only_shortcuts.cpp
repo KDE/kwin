@@ -59,7 +59,7 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
         m_pressedKeys.remove(event->nativeScanCode());
         if (m_pressedKeys.isEmpty() &&
             event->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier &&
-            !workspace()->globalShortcutsDisabled()) {
+            workspace() && !workspace()->globalShortcutsDisabled()) {
             if (m_modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modifier);
                 if (list.size() >= 4) {

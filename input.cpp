@@ -36,25 +36,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
-#include "unmanaged.h"
-#include "screenedge.h"
-#include "screens.h"
-#include "workspace.h"
+#include "internal_client.h"
 #include "libinput/connection.h"
 #include "libinput/device.h"
 #include "platform.h"
 #include "popup_input_filter.h"
-#include "xdgshellclient.h"
+#include "screenedge.h"
+#include "screens.h"
+#include "unmanaged.h"
 #include "wayland_server.h"
+#include "workspace.h"
+#include "xdgshellclient.h"
 #include "xwl/xwayland_interface.h"
-#include "internal_client.h"
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/fakeinput_interface.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/relativepointer_interface.h>
-#include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
+#include <KWayland/Server/display.h>
+#include <KWayland/Server/fakeinput_interface.h>
+#include <KWayland/Server/relativepointer_interface.h>
+#include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/tablet_interface.h>
+#include <KWayland/Server/surface_interface.h>
+#include <decorations/decoratedclient.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>
@@ -177,7 +179,7 @@ bool InputEventFilter::switchEvent(SwitchEvent *event)
     return false;
 }
 
-bool InputEventFilter::tabletToolEvent(QTabletEvent *event)
+bool InputEventFilter::tabletToolEvent(TabletEvent *event)
 {
     Q_UNUSED(event)
     return false;
@@ -1520,17 +1522,159 @@ public:
     }
 };
 
+static KWayland::Server::SeatInterface *findSeat()
+{
+    auto server = waylandServer();
+    if (!server) {
+        return nullptr;
+    }
+    return server->seat();
+}
+
 /**
  * Useful when there's no proper tablet support on the clients
  */
-class FakeTabletInputFilter : public InputEventFilter
+class TabletInputFilter : public QObject, public InputEventFilter
 {
 public:
-    FakeTabletInputFilter()
+    TabletInputFilter()
     {
     }
 
-    bool tabletToolEvent(QTabletEvent *event) override
+    static KWayland::Server::TabletSeatInterface *findTabletSeat()
+    {
+        auto server = waylandServer();
+        if (!server) {
+            return nullptr;
+        }
+        KWayland::Server::TabletManagerInterface* manager = server->tabletManager();
+        return manager->seat(findSeat());
+    }
+
+    void integrateDevice(LibInput::Device *device)
+    {
+        if (device->isTabletTool()) {
+            KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
+            struct udev_device * const udev_device = libinput_device_get_udev_device(device->device());
+            const char *devnode = udev_device_get_devnode(udev_device);
+            tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+        }
+    }
+    void removeDevice(const QString &sysname)
+    {
+        KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
+        tabletSeat->removeTablet(sysname);
+    }
+
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        if (!workspace()) {
+            return false;
+        }
+
+        KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
+        auto tool = tabletSeat->toolByHardwareId(event->serialId());
+        if (!tool) {
+            using namespace KWayland::Server;
+
+            const QVector<InputRedirection::Capability> capabilities = event->capabilities();
+            const auto f = [](InputRedirection::Capability cap) {
+                switch(cap) {
+                case InputRedirection::Tilt:
+                    return TabletToolInterface::Tilt;
+                case InputRedirection::Pressure:
+                    return TabletToolInterface::Pressure;
+                case InputRedirection::Distance:
+                    return TabletToolInterface::Distance;
+                case InputRedirection::Rotation:
+                    return TabletToolInterface::Rotation;
+                case InputRedirection::Slider:
+                    return TabletToolInterface::Slider;
+                case InputRedirection::Wheel:
+                    return TabletToolInterface::Wheel;
+                }
+                return TabletToolInterface::Wheel;
+            };
+            QVector<TabletToolInterface::Capability> ifaceCapabilities;
+            ifaceCapabilities.resize(capabilities.size());
+            std::transform(capabilities.constBegin(), capabilities.constEnd(),
+                           ifaceCapabilities.begin(), f);
+
+            TabletToolInterface::Type toolType = TabletToolInterface::Type::Pen;
+            switch(event->toolType()) {
+            case InputRedirection::Pen:
+                toolType = TabletToolInterface::Type::Pen;
+                break;
+            case InputRedirection::Eraser:
+                toolType = TabletToolInterface::Type::Eraser;
+                break;
+            case InputRedirection::Brush:
+                toolType = TabletToolInterface::Type::Brush;
+                break;
+            case InputRedirection::Pencil:
+                toolType = TabletToolInterface::Type::Pencil;
+                break;
+            case InputRedirection::Airbrush:
+                toolType = TabletToolInterface::Type::Airbrush;
+                break;
+            case InputRedirection::Finger:
+                toolType = TabletToolInterface::Type::Finger;
+                break;
+            case InputRedirection::Mouse:
+                toolType = TabletToolInterface::Type::Mouse;
+                break;
+            case InputRedirection::Lens:
+                toolType = TabletToolInterface::Type::Lens;
+                break;
+            case InputRedirection::Totem:
+                toolType = TabletToolInterface::Type::Totem;
+                break;
+            }
+            tool = tabletSeat->addTool(toolType, event->serialId(), event->uniqueId(), ifaceCapabilities);
+        }
+
+        KWayland::Server::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
+
+        Toplevel *toplevel = input()->findToplevel(event->globalPos());
+        if (!toplevel || !toplevel->surface()) {
+            return false;
+        }
+
+        KWayland::Server::SurfaceInterface* surface = toplevel->surface();
+        tool->setCurrentSurface(surface);
+
+        if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
+            return emulateTabletEvent(event);
+        }
+
+        switch (event->type()) {
+        case QEvent::TabletMove:
+            tool->sendMotion(event->globalPosF() - toplevel->pos());
+            break;
+        case QEvent::TabletEnterProximity:
+            tool->sendProximityIn(tablet);
+            break;
+        case QEvent::TabletLeaveProximity:
+            tool->sendProximityOut();
+            break;
+        case QEvent::TabletPress:
+            tool->sendDown();
+            break;
+        case QEvent::TabletRelease:
+            tool->sendUp();
+            break;
+        default:
+            qCWarning(KWIN_CORE) << "Unexpected tablet event type" << event;
+            break;
+        }
+        const quint32 MAX_VAL = 65535;
+        tool->sendPressure(MAX_VAL * event->pressure());
+        tool->sendFrame(event->timestamp());
+        waylandServer()->simulateUserActivity();
+        return true;
+    }
+
+    bool emulateTabletEvent(TabletEvent *event)
     {
         if (!workspace()) {
             return false;
@@ -1921,7 +2065,16 @@ void InputRedirection::setupInputFilters()
     if (waylandServer()) {
         installInputEventFilter(new WindowActionInputFilter);
         installInputEventFilter(new ForwardInputFilter);
-        installInputEventFilter(new FakeTabletInputFilter);
+
+        m_tabletSupport = new TabletInputFilter;
+        for (LibInput::Device* dev : m_libInput->devices()) {
+            m_tabletSupport->integrateDevice(dev);
+        }
+        connect(m_libInput, &LibInput::Connection::deviceAdded,
+                m_tabletSupport, &TabletInputFilter::integrateDevice);
+        connect(m_libInput, &LibInput::Connection::deviceRemovedSysName,
+                m_tabletSupport, &TabletInputFilter::removeDevice);
+        installInputEventFilter(m_tabletSupport);
     }
 }
 
@@ -1937,15 +2090,6 @@ void InputRedirection::reconfigure()
 
         waylandServer()->seat()->setKeyRepeatInfo(enabled ? rate : 0, delay);
     }
-}
-
-static KWayland::Server::SeatInterface *findSeat()
-{
-    auto server = waylandServer();
-    if (!server) {
-        return nullptr;
-    }
-    return server->seat();
 }
 
 void InputRedirection::setupLibInput()
@@ -2076,6 +2220,7 @@ void InputRedirection::setupLibInput()
             }
         );
     }
+
     setupTouchpadShortcuts();
 }
 

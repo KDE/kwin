@@ -315,6 +315,8 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
         }
     );
 
+    m_tabletManager = m_display->createTabletManagerInterface(m_display);
+
     m_xdgShell6 = m_display->createXdgShell(XdgShellInterfaceVersion::UnstableV6, m_display);
     m_xdgShell6->create();
     connect(m_xdgShell6, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
