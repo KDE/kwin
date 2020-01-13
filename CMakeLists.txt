@@ -422,7 +422,6 @@ set(kwin_KDEINIT_SRCS
     egl_context_attribute_builder.cpp
     events.cpp
     focuschain.cpp
-    geometry.cpp
     geometrytip.cpp
     gestures.cpp
     globalshortcuts.cpp

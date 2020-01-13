@@ -1938,4 +1938,844 @@ void Workspace::checkTransients(xcb_window_t w)
         (*it)->checkTransient(w);
 }
 
+/**
+ * Resizes the workspace after an XRANDR screen size change
+ */
+void Workspace::desktopResized()
+{
+    QRect geom = screens()->geometry();
+    if (rootInfo()) {
+        NETSize desktop_geometry;
+        desktop_geometry.width = geom.width();
+        desktop_geometry.height = geom.height();
+        rootInfo()->setDesktopGeometry(desktop_geometry);
+    }
+
+    updateClientArea();
+    saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
+
+    // TODO: emit a signal instead and remove the deep function calls into edges and effects
+    ScreenEdges::self()->recreateEdges();
+
+    if (effects) {
+        static_cast<EffectsHandlerImpl*>(effects)->desktopResized(geom.size());
+    }
+}
+
+void Workspace::saveOldScreenSizes()
+{
+    olddisplaysize = screens()->displaySize();
+    oldscreensizes.clear();
+    for( int i = 0;
+         i < screens()->count();
+         ++i )
+        oldscreensizes.append( screens()->geometry( i ));
+}
+
+/**
+ * Updates the current client areas according to the current clients.
+ *
+ * If the area changes or force is @c true, the new areas are propagated to the world.
+ *
+ * The client area is the area that is available for clients (that
+ * which is not taken by windows like panels, the top-of-screen menu
+ * etc).
+ *
+ * @see clientArea()
+ */
+void Workspace::updateClientArea(bool force)
+{
+    const Screens *s = Screens::self();
+    int nscreens = s->count();
+    const int numberOfDesktops = VirtualDesktopManager::self()->count();
+    QVector< QRect > new_wareas(numberOfDesktops + 1);
+    QVector< StrutRects > new_rmoveareas(numberOfDesktops + 1);
+    QVector< QVector< QRect > > new_sareas(numberOfDesktops + 1);
+    QVector< QRect > screens(nscreens);
+    QRect desktopArea;
+    for (int i = 0; i < nscreens; i++) {
+        desktopArea |= s->geometry(i);
+    }
+    for (int iS = 0;
+            iS < nscreens;
+            iS ++) {
+        screens [iS] = s->geometry(iS);
+    }
+    for (int i = 1;
+            i <= numberOfDesktops;
+            ++i) {
+        new_wareas[ i ] = desktopArea;
+        new_sareas[ i ].resize(nscreens);
+        for (int iS = 0;
+                iS < nscreens;
+                iS ++)
+            new_sareas[ i ][ iS ] = screens[ iS ];
+    }
+    for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
+        if (!(*it)->hasStrut())
+            continue;
+        QRect r = (*it)->adjustedClientArea(desktopArea, desktopArea);
+        // sanity check that a strut doesn't exclude a complete screen geometry
+        // this is a violation to EWMH, as KWin just ignores the strut
+        for (int i = 0; i < Screens::self()->count(); i++) {
+            if (!r.intersects(Screens::self()->geometry(i))) {
+                qCDebug(KWIN_CORE) << "Adjusted client area would exclude a complete screen, ignore";
+                r = desktopArea;
+                break;
+            }
+        }
+        StrutRects strutRegion = (*it)->strutRects();
+        const QRect clientsScreenRect = KWin::screens()->geometry((*it)->screen());
+        for (auto strut = strutRegion.begin(); strut != strutRegion.end(); strut++) {
+            *strut = StrutRect((*strut).intersected(clientsScreenRect), (*strut).area());
+        }
+
+        // Ignore offscreen xinerama struts. These interfere with the larger monitors on the setup
+        // and should be ignored so that applications that use the work area to work out where
+        // windows can go can use the entire visible area of the larger monitors.
+        // This goes against the EWMH description of the work area but it is a toss up between
+        // having unusable sections of the screen (Which can be quite large with newer monitors)
+        // or having some content appear offscreen (Relatively rare compared to other).
+        bool hasOffscreenXineramaStrut = (*it)->hasOffscreenXineramaStrut();
+
+        if ((*it)->isOnAllDesktops()) {
+            for (int i = 1;
+                    i <= numberOfDesktops;
+                    ++i) {
+                if (!hasOffscreenXineramaStrut)
+                    new_wareas[ i ] = new_wareas[ i ].intersected(r);
+                new_rmoveareas[ i ] += strutRegion;
+                for (int iS = 0;
+                        iS < nscreens;
+                        iS ++) {
+                    const auto geo = new_sareas[ i ][ iS ].intersected(
+                                                (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
+                    // ignore the geometry if it results in the screen getting removed completely
+                    if (!geo.isEmpty()) {
+                        new_sareas[ i ][ iS ] = geo;
+                    }
+                }
+            }
+        } else {
+            if (!hasOffscreenXineramaStrut)
+                new_wareas[(*it)->desktop()] = new_wareas[(*it)->desktop()].intersected(r);
+            new_rmoveareas[(*it)->desktop()] += strutRegion;
+            for (int iS = 0;
+                    iS < nscreens;
+                    iS ++) {
+//                            qDebug() << "adjusting new_sarea: " << screens[ iS ];
+                const auto geo = new_sareas[(*it)->desktop()][ iS ].intersected(
+                      (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
+                // ignore the geometry if it results in the screen getting removed completely
+                if (!geo.isEmpty()) {
+                    new_sareas[(*it)->desktop()][ iS ] = geo;
+                }
+            }
+        }
+    }
+    if (waylandServer()) {
+        auto updateStrutsForWaylandClient = [&] (XdgShellClient *c) {
+            // assuming that only docks have "struts" and that all docks have a strut
+            if (!c->hasStrut()) {
+                return;
+            }
+            auto margins = [c] (const QRect &geometry) {
+                QMargins margins;
+                if (!geometry.intersects(c->frameGeometry())) {
+                    return margins;
+                }
+                // figure out which areas of the overall screen setup it borders
+                const bool left = c->frameGeometry().left() == geometry.left();
+                const bool right = c->frameGeometry().right() == geometry.right();
+                const bool top = c->frameGeometry().top() == geometry.top();
+                const bool bottom = c->frameGeometry().bottom() == geometry.bottom();
+                const bool horizontal = c->frameGeometry().width() >= c->frameGeometry().height();
+                if (left && ((!top && !bottom) || !horizontal)) {
+                    margins.setLeft(c->frameGeometry().width());
+                }
+                if (right && ((!top && !bottom) || !horizontal)) {
+                    margins.setRight(c->frameGeometry().width());
+                }
+                if (top && ((!left && !right) || horizontal)) {
+                    margins.setTop(c->frameGeometry().height());
+                }
+                if (bottom && ((!left && !right) || horizontal)) {
+                    margins.setBottom(c->frameGeometry().height());
+                }
+                return margins;
+            };
+            auto marginsToStrutArea = [] (const QMargins &margins) {
+                if (margins.left() != 0) {
+                    return StrutAreaLeft;
+                }
+                if (margins.right() != 0) {
+                    return StrutAreaRight;
+                }
+                if (margins.top() != 0) {
+                    return StrutAreaTop;
+                }
+                if (margins.bottom() != 0) {
+                    return StrutAreaBottom;
+                }
+                return StrutAreaInvalid;
+            };
+            const auto strut = margins(KWin::screens()->geometry(c->screen()));
+            const StrutRects strutRegion = StrutRects{StrutRect(c->frameGeometry(), marginsToStrutArea(strut))};
+            QRect r = desktopArea - margins(KWin::screens()->geometry());
+            if (c->isOnAllDesktops()) {
+                for (int i = 1; i <= numberOfDesktops; ++i) {
+                    new_wareas[ i ] = new_wareas[ i ].intersected(r);
+                    for (int iS = 0; iS < nscreens; ++iS) {
+                        new_sareas[ i ][ iS ] = new_sareas[ i ][ iS ].intersected(screens[iS] - margins(screens[iS]));
+                    }
+                    new_rmoveareas[ i ] += strutRegion;
+                }
+            } else {
+                new_wareas[c->desktop()] = new_wareas[c->desktop()].intersected(r);
+                for (int iS = 0; iS < nscreens; iS++) {
+                    new_sareas[c->desktop()][ iS ] = new_sareas[c->desktop()][ iS ].intersected(screens[iS] - margins(screens[iS]));
+                }
+                new_rmoveareas[ c->desktop() ] += strutRegion;
+            }
+        };
+        const auto clients = waylandServer()->clients();
+        for (auto c : clients) {
+            updateStrutsForWaylandClient(c);
+        }
+    }
+#if 0
+    for (int i = 1;
+            i <= numberOfDesktops();
+            ++i) {
+        for (int iS = 0;
+                iS < nscreens;
+                iS ++)
+            qCDebug(KWIN_CORE) << "new_sarea: " << new_sareas[ i ][ iS ];
+    }
+#endif
+
+    bool changed = force;
+
+    if (screenarea.isEmpty())
+        changed = true;
+
+    for (int i = 1;
+            !changed && i <= numberOfDesktops;
+            ++i) {
+        if (workarea[ i ] != new_wareas[ i ])
+            changed = true;
+        if (restrictedmovearea[ i ] != new_rmoveareas[ i ])
+            changed = true;
+        if (screenarea[ i ].size() != new_sareas[ i ].size())
+            changed = true;
+        for (int iS = 0;
+                !changed && iS < nscreens;
+                iS ++)
+            if (new_sareas[ i ][ iS ] != screenarea [ i ][ iS ])
+                changed = true;
+    }
+
+    if (changed) {
+        workarea = new_wareas;
+        oldrestrictedmovearea = restrictedmovearea;
+        restrictedmovearea = new_rmoveareas;
+        screenarea = new_sareas;
+        if (rootInfo()) {
+            NETRect r;
+            for (int i = 1; i <= numberOfDesktops; i++) {
+                r.pos.x = workarea[ i ].x();
+                r.pos.y = workarea[ i ].y();
+                r.size.width = workarea[ i ].width();
+                r.size.height = workarea[ i ].height();
+                rootInfo()->setWorkArea(i, r);
+            }
+        }
+
+        for (auto it = m_allClients.constBegin();
+                it != m_allClients.constEnd();
+                ++it)
+            (*it)->checkWorkspacePosition();
+
+        oldrestrictedmovearea.clear(); // reset, no longer valid or needed
+    }
+}
+
+void Workspace::updateClientArea()
+{
+    updateClientArea(false);
+}
+
+
+/**
+ * Returns the area available for clients. This is the desktop
+ * geometry minus windows on the dock. Placement algorithms should
+ * refer to this rather than Screens::geometry.
+ */
+QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
+{
+    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
+        desktop = VirtualDesktopManager::self()->current();
+    if (screen == -1)
+        screen = screens()->current();
+    const QSize displaySize = screens()->displaySize();
+
+    QRect sarea, warea;
+
+    if (is_multihead) {
+        sarea = (!screenarea.isEmpty()
+                   && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
+                  ? screenarea[ desktop ][ screen_number ]
+                  : screens()->geometry(screen_number);
+        warea = workarea[ desktop ].isNull()
+                ? screens()->geometry(screen_number)
+                : workarea[ desktop ];
+    } else {
+        sarea = (!screenarea.isEmpty()
+                && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
+                ? screenarea[ desktop ][ screen ]
+                : screens()->geometry(screen);
+        warea = workarea[ desktop ].isNull()
+                ? QRect(0, 0, displaySize.width(), displaySize.height())
+                : workarea[ desktop ];
+    }
+
+    switch(opt) {
+    case MaximizeArea:
+    case PlacementArea:
+            return sarea;
+    case MaximizeFullArea:
+    case FullScreenArea:
+    case MovementArea:
+    case ScreenArea:
+        if (is_multihead)
+            return screens()->geometry(screen_number);
+        else
+            return screens()->geometry(screen);
+    case WorkArea:
+        if (is_multihead)
+            return sarea;
+        else
+            return warea;
+    case FullArea:
+        return QRect(0, 0, displaySize.width(), displaySize.height());
+    }
+    abort();
+}
+
+
+QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
+{
+    return clientArea(opt, screens()->number(p), desktop);
+}
+
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient* c) const
+{
+    return clientArea(opt, c->frameGeometry().center(), c->desktop());
+}
+
+QRegion Workspace::restrictedMoveArea(int desktop, StrutAreas areas) const
+{
+    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
+        desktop = VirtualDesktopManager::self()->current();
+    QRegion region;
+    foreach (const StrutRect & rect, restrictedmovearea[desktop])
+    if (areas & rect.area())
+        region += rect;
+    return region;
+}
+
+bool Workspace::inUpdateClientArea() const
+{
+    return !oldrestrictedmovearea.isEmpty();
+}
+
+QRegion Workspace::previousRestrictedMoveArea(int desktop, StrutAreas areas) const
+{
+    if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
+        desktop = VirtualDesktopManager::self()->current();
+    QRegion region;
+    foreach (const StrutRect & rect, oldrestrictedmovearea.at(desktop))
+    if (areas & rect.area())
+        region += rect;
+    return region;
+}
+
+QVector< QRect > Workspace::previousScreenSizes() const
+{
+    return oldscreensizes;
+}
+
+int Workspace::oldDisplayWidth() const
+{
+    return olddisplaysize.width();
+}
+
+int Workspace::oldDisplayHeight() const
+{
+    return olddisplaysize.height();
+}
+
+/**
+ * Client \a c is moved around to position \a pos. This gives the
+ * workspace the opportunity to interveniate and to implement
+ * snap-to-windows functionality.
+ *
+ * The parameter \a snapAdjust is a multiplier used to calculate the
+ * effective snap zones. When 1.0, it means that the snap zones will be
+ * used without change.
+ */
+QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust)
+{
+    QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
+    QRect maxRect;
+    int guideMaximized = MaximizeRestore;
+    if (c->maximizeMode() != MaximizeRestore) {
+        maxRect = clientArea(MaximizeArea, pos + c->rect().center(), c->desktop());
+        QRect geo = c->frameGeometry();
+        if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
+            guideMaximized |= MaximizeHorizontal;
+            borderSnapZone.setWidth(qMax(borderSnapZone.width() + 2, maxRect.width() / 16));
+        }
+        if (c->maximizeMode() & MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
+            guideMaximized |= MaximizeVertical;
+            borderSnapZone.setHeight(qMax(borderSnapZone.height() + 2, maxRect.height() / 16));
+        }
+    }
+
+    if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
+
+        const bool sOWO = options->isSnapOnlyWhenOverlapping();
+        const int screen = screens()->number(pos + c->rect().center());
+        if (maxRect.isNull())
+            maxRect = clientArea(MovementArea, screen, c->desktop());
+        const int xmin = maxRect.left();
+        const int xmax = maxRect.right() + 1;             //desk size
+        const int ymin = maxRect.top();
+        const int ymax = maxRect.bottom() + 1;
+
+        const int cx(pos.x());
+        const int cy(pos.y());
+        const int cw(c->width());
+        const int ch(c->height());
+        const int rx(cx + cw);
+        const int ry(cy + ch);               //these don't change
+
+        int nx(cx), ny(cy);                         //buffers
+        int deltaX(xmax);
+        int deltaY(ymax);   //minimum distance to other clients
+
+        int lx, ly, lrx, lry; //coords and size for the comparison client, l
+
+        // border snap
+        const int snapX = borderSnapZone.width() * snapAdjust; //snap trigger
+        const int snapY = borderSnapZone.height() * snapAdjust;
+        if (snapX || snapY) {
+            QRect geo = c->frameGeometry();
+            QMargins frameMargins = c->frameMargins();
+
+            // snap to titlebar / snap to window borders on inner screen edges
+            AbstractClient::Position titlePos = c->titlebarPosition();
+            if (frameMargins.left() && (titlePos == AbstractClient::PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
+                                        screens()->intersecting(geo.translated(maxRect.x() - (frameMargins.left() + geo.x()), 0)) > 1)) {
+                frameMargins.setLeft(0);
+            }
+            if (frameMargins.right() && (titlePos == AbstractClient::PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
+                                         screens()->intersecting(geo.translated(maxRect.right() + frameMargins.right() - geo.right(), 0)) > 1)) {
+                frameMargins.setRight(0);
+            }
+            if (frameMargins.top() && (titlePos == AbstractClient::PositionTop || (c->maximizeMode() & MaximizeVertical) ||
+                                       screens()->intersecting(geo.translated(0, maxRect.y() - (frameMargins.top() + geo.y()))) > 1)) {
+                frameMargins.setTop(0);
+            }
+            if (frameMargins.bottom() && (titlePos == AbstractClient::PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
+                                          screens()->intersecting(geo.translated(0, maxRect.bottom() + frameMargins.bottom() - geo.bottom())) > 1)) {
+                frameMargins.setBottom(0);
+            }
+            if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
+                deltaX = xmin - cx;
+                nx = xmin - frameMargins.left();
+            }
+            if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
+                deltaX = rx - xmax;
+                nx = xmax - cw + frameMargins.right();
+            }
+
+            if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
+                deltaY = ymin - cy;
+                ny = ymin - frameMargins.top();
+            }
+            if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
+                deltaY = ry - ymax;
+                ny = ymax - ch + frameMargins.bottom();
+            }
+        }
+
+        // windows snap
+        int snap = options->windowSnapZone() * snapAdjust;
+        if (snap) {
+            for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
+                if ((*l) == c)
+                    continue;
+                if ((*l)->isMinimized())
+                    continue; // is minimized
+                if (!(*l)->isShown(false))
+                    continue;
+                if (!((*l)->isOnDesktop(c->desktop()) || c->isOnDesktop((*l)->desktop())))
+                    continue; // wrong virtual desktop
+                if (!(*l)->isOnCurrentActivity())
+                    continue; // wrong activity
+                if ((*l)->isDesktop() || (*l)->isSplash())
+                    continue;
+
+                lx = (*l)->x();
+                ly = (*l)->y();
+                lrx = lx + (*l)->width();
+                lry = ly + (*l)->height();
+
+                if (!(guideMaximized & MaximizeHorizontal) &&
+                    (((cy <= lry) && (cy  >= ly)) || ((ry >= ly) && (ry  <= lry)) || ((cy <= ly) && (ry >= lry)))) {
+                    if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
+                        deltaX = qAbs(lrx - cx);
+                        nx = lrx;
+                    }
+                    if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < snap) && (qAbs(rx - lx) < deltaX)) {
+                        deltaX = qAbs(rx - lx);
+                        nx = lx - cw;
+                    }
+                }
+
+                if (!(guideMaximized & MaximizeVertical) &&
+                    (((cx <= lrx) && (cx  >= lx)) || ((rx >= lx) && (rx  <= lrx)) || ((cx <= lx) && (rx >= lrx)))) {
+                    if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
+                        deltaY = qAbs(lry - cy);
+                        ny = lry;
+                    }
+                    //if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
+                    if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < snap) && (qAbs(ry - ly) < deltaY)) {
+                        deltaY = qAbs(ry - ly);
+                        ny = ly - ch;
+                    }
+                }
+
+                // Corner snapping
+                if (!(guideMaximized & MaximizeVertical) && (nx == lrx || nx + cw == lx)) {
+                    if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
+                        deltaY = qAbs(lry - ry);
+                        ny = lry - ch;
+                    }
+                    if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < snap) && (qAbs(cy - ly) < deltaY)) {
+                        deltaY = qAbs(cy - ly);
+                        ny = ly;
+                    }
+                }
+                if (!(guideMaximized & MaximizeHorizontal) && (ny == lry || ny + ch == ly)) {
+                    if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
+                        deltaX = qAbs(lrx - rx);
+                        nx = lrx - cw;
+                    }
+                    if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < snap) && (qAbs(cx - lx) < deltaX)) {
+                        deltaX = qAbs(cx - lx);
+                        nx = lx;
+                    }
+                }
+            }
+        }
+
+        // center snap
+        snap = options->centerSnapZone() * snapAdjust; //snap trigger
+        if (snap) {
+            int diffX = qAbs((xmin + xmax) / 2 - (cx + cw / 2));
+            int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
+            if (diffX < snap && diffY < snap && diffX < deltaX && diffY < deltaY) {
+                // Snap to center of screen
+                nx = (xmin + xmax) / 2 - cw / 2;
+                ny = (ymin + ymax) / 2 - ch / 2;
+            } else if (options->borderSnapZone()) {
+                // Enhance border snap
+                if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
+                    // Snap to vertical center on screen edge
+                    ny = (ymin + ymax) / 2 - ch / 2;
+                } else if (((unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch) &&
+                          diffX < snap && diffX < deltaX) {
+                    // Snap to horizontal center on screen edge
+                    nx = (xmin + xmax) / 2 - cw / 2;
+                }
+            }
+        }
+
+        pos = QPoint(nx, ny);
+    }
+    return pos;
+}
+
+QRect Workspace::adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int mode)
+{
+    //adapted from adjustClientPosition on 29May2004
+    //this function is called when resizing a window and will modify
+    //the new dimensions to snap to other windows/borders if appropriate
+    if (options->windowSnapZone() || options->borderSnapZone()) {  // || options->centerSnapZone )
+        const bool sOWO = options->isSnapOnlyWhenOverlapping();
+
+        const QRect maxRect = clientArea(MovementArea, c->rect().center(), c->desktop());
+        const int xmin = maxRect.left();
+        const int xmax = maxRect.right();               //desk size
+        const int ymin = maxRect.top();
+        const int ymax = maxRect.bottom();
+
+        const int cx(moveResizeGeom.left());
+        const int cy(moveResizeGeom.top());
+        const int rx(moveResizeGeom.right());
+        const int ry(moveResizeGeom.bottom());
+
+        int newcx(cx), newcy(cy);                         //buffers
+        int newrx(rx), newry(ry);
+        int deltaX(xmax);
+        int deltaY(ymax);   //minimum distance to other clients
+
+        int lx, ly, lrx, lry; //coords and size for the comparison client, l
+
+        // border snap
+        int snap = options->borderSnapZone(); //snap trigger
+        if (snap) {
+            deltaX = int(snap);
+            deltaY = int(snap);
+
+#define SNAP_BORDER_TOP \
+    if ((sOWO?(newcy<ymin):true) && (qAbs(ymin-newcy)<deltaY)) \
+    { \
+        deltaY = qAbs(ymin-newcy); \
+        newcy = ymin; \
+    }
+
+#define SNAP_BORDER_BOTTOM \
+    if ((sOWO?(newry>ymax):true) && (qAbs(ymax-newry)<deltaY)) \
+    { \
+        deltaY = qAbs(ymax-newcy); \
+        newry = ymax; \
+    }
+
+#define SNAP_BORDER_LEFT \
+    if ((sOWO?(newcx<xmin):true) && (qAbs(xmin-newcx)<deltaX)) \
+    { \
+        deltaX = qAbs(xmin-newcx); \
+        newcx = xmin; \
+    }
+
+#define SNAP_BORDER_RIGHT \
+    if ((sOWO?(newrx>xmax):true) && (qAbs(xmax-newrx)<deltaX)) \
+    { \
+        deltaX = qAbs(xmax-newrx); \
+        newrx = xmax; \
+    }
+            switch(mode) {
+            case AbstractClient::PositionBottomRight:
+                SNAP_BORDER_BOTTOM
+                SNAP_BORDER_RIGHT
+                break;
+            case AbstractClient::PositionRight:
+                SNAP_BORDER_RIGHT
+                break;
+            case AbstractClient::PositionBottom:
+                SNAP_BORDER_BOTTOM
+                break;
+            case AbstractClient::PositionTopLeft:
+                SNAP_BORDER_TOP
+                SNAP_BORDER_LEFT
+                break;
+            case AbstractClient::PositionLeft:
+                SNAP_BORDER_LEFT
+                break;
+            case AbstractClient::PositionTop:
+                SNAP_BORDER_TOP
+                break;
+            case AbstractClient::PositionTopRight:
+                SNAP_BORDER_TOP
+                SNAP_BORDER_RIGHT
+                break;
+            case AbstractClient::PositionBottomLeft:
+                SNAP_BORDER_BOTTOM
+                SNAP_BORDER_LEFT
+                break;
+            default:
+                abort();
+                break;
+            }
+
+
+        }
+
+        // windows snap
+        snap = options->windowSnapZone();
+        if (snap) {
+            deltaX = int(snap);
+            deltaY = int(snap);
+            for (auto l = m_allClients.constBegin(); l != m_allClients.constEnd(); ++l) {
+                if ((*l)->isOnDesktop(VirtualDesktopManager::self()->current()) &&
+                        !(*l)->isMinimized()
+                        && (*l) != c) {
+                    lx = (*l)->x() - 1;
+                    ly = (*l)->y() - 1;
+                    lrx = (*l)->x() + (*l)->width();
+                    lry = (*l)->y() + (*l)->height();
+
+#define WITHIN_HEIGHT ((( newcy <= lry ) && ( newcy  >= ly  ))  || \
+                       (( newry >= ly  ) && ( newry  <= lry ))  || \
+                       (( newcy <= ly  ) && ( newry >= lry  )) )
+
+#define WITHIN_WIDTH  ( (( cx <= lrx ) && ( cx  >= lx  ))  || \
+                        (( rx >= lx  ) && ( rx  <= lrx ))  || \
+                        (( cx <= lx  ) && ( rx >= lrx  )) )
+
+#define SNAP_WINDOW_TOP  if ( (sOWO?(newcy<lry):true) \
+                              && WITHIN_WIDTH  \
+                              && (qAbs( lry - newcy ) < deltaY) ) {  \
+    deltaY = qAbs( lry - newcy ); \
+    newcy=lry; \
+}
+
+#define SNAP_WINDOW_BOTTOM  if ( (sOWO?(newry>ly):true)  \
+                                 && WITHIN_WIDTH  \
+                                 && (qAbs( ly - newry ) < deltaY) ) {  \
+    deltaY = qAbs( ly - newry );  \
+    newry=ly;  \
+}
+
+#define SNAP_WINDOW_LEFT  if ( (sOWO?(newcx<lrx):true)  \
+                               && WITHIN_HEIGHT  \
+                               && (qAbs( lrx - newcx ) < deltaX)) {  \
+    deltaX = qAbs( lrx - newcx );  \
+    newcx=lrx;  \
+}
+
+#define SNAP_WINDOW_RIGHT  if ( (sOWO?(newrx>lx):true)  \
+                                && WITHIN_HEIGHT  \
+                                && (qAbs( lx - newrx ) < deltaX))  \
+{  \
+    deltaX = qAbs( lx - newrx );  \
+    newrx=lx;  \
+}
+
+#define SNAP_WINDOW_C_TOP  if ( (sOWO?(newcy<ly):true)  \
+                                && (newcx == lrx || newrx == lx)  \
+                                && qAbs(ly-newcy) < deltaY ) {  \
+    deltaY = qAbs( ly - newcy + 1 ); \
+    newcy = ly + 1; \
+}
+
+#define SNAP_WINDOW_C_BOTTOM  if ( (sOWO?(newry>lry):true)  \
+                                   && (newcx == lrx || newrx == lx)  \
+                                   && qAbs(lry-newry) < deltaY ) {  \
+    deltaY = qAbs( lry - newry - 1 ); \
+    newry = lry - 1; \
+}
+
+#define SNAP_WINDOW_C_LEFT  if ( (sOWO?(newcx<lx):true)  \
+                                 && (newcy == lry || newry == ly)  \
+                                 && qAbs(lx-newcx) < deltaX ) {  \
+    deltaX = qAbs( lx - newcx + 1 ); \
+    newcx = lx + 1; \
+}
+
+#define SNAP_WINDOW_C_RIGHT  if ( (sOWO?(newrx>lrx):true)  \
+                                  && (newcy == lry || newry == ly)  \
+                                  && qAbs(lrx-newrx) < deltaX ) {  \
+    deltaX = qAbs( lrx - newrx - 1 ); \
+    newrx = lrx - 1; \
+}
+
+                    switch(mode) {
+                    case AbstractClient::PositionBottomRight:
+                        SNAP_WINDOW_BOTTOM
+                        SNAP_WINDOW_RIGHT
+                        SNAP_WINDOW_C_BOTTOM
+                        SNAP_WINDOW_C_RIGHT
+                        break;
+                    case AbstractClient::PositionRight:
+                        SNAP_WINDOW_RIGHT
+                        SNAP_WINDOW_C_RIGHT
+                        break;
+                    case AbstractClient::PositionBottom:
+                        SNAP_WINDOW_BOTTOM
+                        SNAP_WINDOW_C_BOTTOM
+                        break;
+                    case AbstractClient::PositionTopLeft:
+                        SNAP_WINDOW_TOP
+                        SNAP_WINDOW_LEFT
+                        SNAP_WINDOW_C_TOP
+                        SNAP_WINDOW_C_LEFT
+                        break;
+                    case AbstractClient::PositionLeft:
+                        SNAP_WINDOW_LEFT
+                        SNAP_WINDOW_C_LEFT
+                        break;
+                    case AbstractClient::PositionTop:
+                        SNAP_WINDOW_TOP
+                        SNAP_WINDOW_C_TOP
+                        break;
+                    case AbstractClient::PositionTopRight:
+                        SNAP_WINDOW_TOP
+                        SNAP_WINDOW_RIGHT
+                        SNAP_WINDOW_C_TOP
+                        SNAP_WINDOW_C_RIGHT
+                        break;
+                    case AbstractClient::PositionBottomLeft:
+                        SNAP_WINDOW_BOTTOM
+                        SNAP_WINDOW_LEFT
+                        SNAP_WINDOW_C_BOTTOM
+                        SNAP_WINDOW_C_LEFT
+                        break;
+                    default:
+                        abort();
+                        break;
+                    }
+                }
+            }
+        }
+
+        // center snap
+        //snap = options->centerSnapZone;
+        //if (snap)
+        //    {
+        //    // Don't resize snap to center as it interferes too much
+        //    // There are two ways of implementing this if wanted:
+        //    // 1) Snap only to the same points that the move snap does, and
+        //    // 2) Snap to the horizontal and vertical center lines of the screen
+        //    }
+
+        moveResizeGeom = QRect(QPoint(newcx, newcy), QPoint(newrx, newry));
+    }
+    return moveResizeGeom;
+}
+
+/**
+ * Marks the client as being moved or resized by the user.
+ */
+void Workspace::setMoveResizeClient(AbstractClient *c)
+{
+    Q_ASSERT(!c || !movingClient); // Catch attempts to move a second
+    // window while still moving the first one.
+    movingClient = c;
+    if (movingClient)
+        ++block_focus;
+    else
+        --block_focus;
+}
+
+// When kwin crashes, windows will not be gravitated back to their original position
+// and will remain offset by the size of the decoration. So when restarting, fix this
+// (the property with the size of the frame remains on the window after the crash).
+void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geometry)
+{
+    NETWinInfo i(connection(), w, rootWindow(), NET::WMFrameExtents, NET::Properties2());
+    NETStrut frame = i.frameExtents();
+
+    if (frame.left != 0 || frame.top != 0) {
+        // left and top needed due to narrowing conversations restrictions in C++11
+        const uint32_t left = frame.left;
+        const uint32_t top = frame.top;
+        const uint32_t values[] = { geometry->x - left, geometry->y - top };
+        xcb_configure_window(connection(), w, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
+    }
+}
+
 } // namespace
