@@ -175,6 +175,30 @@ public:
      */
     NightColorMode mode() const;
 
+    /**
+     * Returns the datetime that specifies when the previous screen color temperature transition
+     * had started. Notice that when Night Color operates in the Constant mode, the returned date
+     * time object is not valid.
+     */
+    QDateTime previousTransitionDateTime() const;
+
+    /**
+     * Returns the duration of the previous screen color temperature transition, in milliseconds.
+     */
+    qint64 previousTransitionDuration() const;
+
+    /**
+     * Returns the datetime that specifies when the next screen color temperature transition will
+     * start. Notice that when Night Color operates in the Constant mode, the returned date time
+     * object is not valid.
+     */
+    QDateTime scheduledTransitionDateTime() const;
+
+    /**
+     * Returns the duration of the next screen color temperature transition, in milliseconds.
+     */
+    qint64 scheduledTransitionDuration() const;
+
     // for auto tests
     void reparseConfigAndReset();
 
@@ -215,6 +239,16 @@ Q_SIGNALS:
      */
     void modeChanged();
 
+    /**
+     * Emitted whenever the timings of the previous color temperature transition have changed.
+     */
+    void previousTransitionTimingsChanged();
+
+    /**
+     * Emitted whenever the timings of the next color temperature transition have changed.
+     */
+    void scheduledTransitionTimingsChanged();
+
 private:
     void initShortcuts();
     void readConfig();
@@ -233,7 +267,7 @@ private:
     void resetSlowUpdateTimer();
 
     void updateTargetTemperature();
-    void updateSunTimings(bool force);
+    void updateTransitionTimings(bool force);
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
     bool checkAutomaticSunTimings() const;
     bool daylight() const;

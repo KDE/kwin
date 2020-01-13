@@ -84,5 +84,33 @@
         Valid modes: 0 - automatic, 1 - location, 2 - timings, 3 - constant.
     -->
     <property name="mode" type="u" access="read"/>
+
+    <!--
+        This property holds a Unix timestamp that specifies when the previous color
+        temperature transition had started. Note that when Night Color operates in
+        the constant mode, this property holds a value of 0.
+    -->
+    <property name="previousTransitionDateTime" type="t" access="read"/>
+
+    <!--
+        This property holds a value that specifies the duration of the previous color
+        temperature transition, in milliseconds. Note that when Night Color operates
+        in the constant mode, this property holds a value of 0.
+    -->
+    <property name="previousTransitionDuration" type="u" access="read"/>
+
+    <!--
+        This property holds a Unix timestamp that specifies when the next scheduled
+        color temperature transition will start. Note that when Night Color operates
+        in the constant mode, this property holds a value of 0.
+    -->
+    <property name="scheduledTransitionDateTime" type="t" access="read"/>
+
+    <!--
+        This property holds a value that specifies the duration of next scheduled
+        color transition, in milliseconds. Note that when Night Color operates in
+        the constant mode, this property holds a value of 0.
+    -->
+    <property name="scheduledTransitionDuration" type="u" access="read"/>
   </interface>
 </node>

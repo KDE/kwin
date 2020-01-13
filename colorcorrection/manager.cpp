@@ -135,10 +135,7 @@ void Manager::hardReset()
 {
     cancelAllTimers();
 
-    // Timings of the Sun are not used in the constant mode.
-    if (m_mode != NightColorMode::Constant) {
-        updateSunTimings(true);
-    }
+    updateTransitionTimings(true);
     updateTargetTemperature();
 
     if (isAvailable() && isEnabled() && !isInhibited()) {
@@ -214,6 +211,26 @@ int Manager::targetTemperature() const
 NightColorMode Manager::mode() const
 {
     return m_mode;
+}
+
+QDateTime Manager::previousTransitionDateTime() const
+{
+    return m_prev.first;
+}
+
+qint64 Manager::previousTransitionDuration() const
+{
+    return m_prev.first.msecsTo(m_prev.second);
+}
+
+QDateTime Manager::scheduledTransitionDateTime() const
+{
+    return m_next.first;
+}
+
+qint64 Manager::scheduledTransitionDuration() const
+{
+    return m_next.first.msecsTo(m_next.second);
 }
 
 void Manager::initShortcuts()
@@ -320,10 +337,7 @@ void Manager::cancelAllTimers()
 
 void Manager::resetQuickAdjustTimer()
 {
-    // We don't use timings of the Sun in the constant mode.
-    if (m_mode != NightColorMode::Constant) {
-        updateSunTimings(false);
-    }
+    updateTransitionTimings(false);
     updateTargetTemperature();
 
     int tempDiff = qAbs(currentTargetTemp() - m_currentTemp);
@@ -389,7 +403,7 @@ void Manager::resetSlowUpdateStartTimer()
     m_slowUpdateStartTimer->setSingleShot(true);
     connect(m_slowUpdateStartTimer, &QTimer::timeout, this, &Manager::resetSlowUpdateStartTimer);
 
-    updateSunTimings(false);
+    updateTransitionTimings(false);
     updateTargetTemperature();
 
     const int diff = QDateTime::currentDateTime().msecsTo(m_next.first);
@@ -469,8 +483,16 @@ void Manager::updateTargetTemperature()
     emit targetTemperatureChanged();
 }
 
-void Manager::updateSunTimings(bool force)
+void Manager::updateTransitionTimings(bool force)
 {
+    if (m_mode == NightColorMode::Constant) {
+        m_next = DateTimes();
+        m_prev = DateTimes();
+        emit previousTransitionTimingsChanged();
+        emit scheduledTransitionTimingsChanged();
+        return;
+    }
+
     const QDateTime todayNow = QDateTime::currentDateTime();
 
     if (m_mode == NightColorMode::Timings) {
@@ -489,6 +511,8 @@ void Manager::updateSunTimings(bool force)
             m_next = DateTimes(morB.addDays(1), morE.addDays(1));
             m_prev = DateTimes(eveB, eveE);
         }
+        emit previousTransitionTimingsChanged();
+        emit scheduledTransitionTimingsChanged();
         return;
     }
 
@@ -531,6 +555,9 @@ void Manager::updateSunTimings(bool force)
             }
         }
     }
+
+    emit previousTransitionTimingsChanged();
+    emit scheduledTransitionTimingsChanged();
 }
 
 DateTimes Manager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const

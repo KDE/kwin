@@ -152,6 +152,46 @@ ColorCorrectDBusInterface::ColorCorrectDBusInterface(Manager *parent)
         QDBusConnection::sessionBus().send(message);
     });
 
+    connect(m_manager, &Manager::previousTransitionTimingsChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("previousTransitionDateTime"), previousTransitionDateTime());
+        changedProperties.insert(QStringLiteral("previousTransitionDuration"), previousTransitionDuration());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
+    connect(m_manager, &Manager::scheduledTransitionTimingsChanged, this, [this] {
+        QVariantMap changedProperties;
+        changedProperties.insert(QStringLiteral("scheduledTransitionDateTime"), scheduledTransitionDateTime());
+        changedProperties.insert(QStringLiteral("scheduledTransitionDuration"), scheduledTransitionDuration());
+
+        QDBusMessage message = QDBusMessage::createSignal(
+            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("org.freedesktop.DBus.Properties"),
+            QStringLiteral("PropertiesChanged")
+        );
+
+        message.setArguments({
+            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            changedProperties,
+            QStringList(), // invalidated_properties
+        });
+
+        QDBusConnection::sessionBus().send(message);
+    });
+
     connect(m_manager, &Manager::configChange, this, &ColorCorrectDBusInterface::nightColorConfigChanged);
     new ColorCorrectAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ColorCorrect"), this);
@@ -190,6 +230,34 @@ int ColorCorrectDBusInterface::targetTemperature() const
 int ColorCorrectDBusInterface::mode() const
 {
     return m_manager->mode();
+}
+
+quint64 ColorCorrectDBusInterface::previousTransitionDateTime() const
+{
+    const QDateTime dateTime = m_manager->previousTransitionDateTime();
+    if (dateTime.isValid()) {
+        return quint64(dateTime.toSecsSinceEpoch());
+    }
+    return 0;
+}
+
+quint32 ColorCorrectDBusInterface::previousTransitionDuration() const
+{
+    return quint32(m_manager->previousTransitionDuration());
+}
+
+quint64 ColorCorrectDBusInterface::scheduledTransitionDateTime() const
+{
+    const QDateTime dateTime = m_manager->scheduledTransitionDateTime();
+    if (dateTime.isValid()) {
+        return quint64(dateTime.toSecsSinceEpoch());
+    }
+    return 0;
+}
+
+quint32 ColorCorrectDBusInterface::scheduledTransitionDuration() const
+{
+    return quint32(m_manager->scheduledTransitionDuration());
 }
 
 QHash<QString, QVariant> ColorCorrectDBusInterface::nightColorInfo()
