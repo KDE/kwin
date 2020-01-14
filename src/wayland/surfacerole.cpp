@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright 2019 Vlad Zagorodniy <vladzzag@gmail.com>
+Copyright 2019 Vlad Zagorodniy <vlad.zahorodnii@kde.org>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
