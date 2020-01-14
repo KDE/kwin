@@ -86,7 +86,7 @@ public:
 private Q_SLOTS:
     void toggleActiveCurrent();
     void toggleActiveAllDesktops();
-    void globalShortcutChanged(QAction *action, QKeySequence shortcut);
+    void globalShortcutChanged(QAction *action, const QKeySequence &shortcut);
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotTabBoxAdded(int mode);

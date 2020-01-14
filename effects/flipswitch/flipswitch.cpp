@@ -805,7 +805,7 @@ void FlipSwitchEffect::selectNextOrPreviousWindow(bool forward)
 //*************************************************************
 // Keyboard handling
 //*************************************************************
-void FlipSwitchEffect::globalShortcutChanged(QAction *action, QKeySequence shortcut)
+void FlipSwitchEffect::globalShortcutChanged(QAction *action, const QKeySequence &shortcut)
 {
     if (action->objectName() == QStringLiteral("FlipSwitchAll")) {
         m_shortcutAll.clear();
