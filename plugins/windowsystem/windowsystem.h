@@ -23,15 +23,6 @@
 
 #include <QObject>
 
-// Compat with KF < 5.64
-#ifndef KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE
-#ifndef KWINDOWSYSTEM_NO_DEPRECATED
-#define KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(x, y) 1
-#else
-#define KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(x, y) 0
-#endif
-#endif
-
 namespace KWin
 {
 
