@@ -1026,9 +1026,7 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
 
 Scene::Window *SceneOpenGL2::createWindow(Toplevel *t)
 {
-    SceneOpenGL2Window *w = new SceneOpenGL2Window(t);
-    w->setScene(this);
-    return w;
+    return new OpenGLWindow(t, this);
 }
 
 void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
@@ -1058,22 +1056,22 @@ void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion reg
 }
 
 //****************************************
-// SceneOpenGL::Window
+// OpenGLWindow
 //****************************************
 
-SceneOpenGL::Window::Window(Toplevel* c)
-    : Scene::Window(c)
-    , m_scene(nullptr)
+OpenGLWindow::OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene)
+    : Scene::Window(toplevel)
+    , m_scene(scene)
 {
 }
 
-SceneOpenGL::Window::~Window()
+OpenGLWindow::~OpenGLWindow()
 {
 }
 
 static SceneOpenGLTexture *s_frameTexture = nullptr;
 // Bind the window pixmap to an OpenGL texture.
-bool SceneOpenGL::Window::bindTexture()
+bool OpenGLWindow::bindTexture()
 {
     s_frameTexture = nullptr;
     OpenGLWindowPixmap *pixmap = windowPixmap<OpenGLWindowPixmap>();
@@ -1091,12 +1089,12 @@ bool SceneOpenGL::Window::bindTexture()
     return pixmap->bind();
 }
 
-QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &data) const
+QMatrix4x4 OpenGLWindow::transformation(int mask, const WindowPaintData &data) const
 {
     QMatrix4x4 matrix;
     matrix.translate(x(), y());
 
-    if (!(mask & PAINT_WINDOW_TRANSFORMED))
+    if (!(mask & Scene::PAINT_WINDOW_TRANSFORMED))
         return matrix;
 
     matrix.translate(data.translation());
@@ -1115,12 +1113,12 @@ QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &
     return matrix;
 }
 
-bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data)
+bool OpenGLWindow::beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data)
 {
     if (region.isEmpty())
         return false;
 
-    m_hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED) && !(mask & PAINT_SCREEN_TRANSFORMED);
+    m_hardwareClipping = region != infiniteRegion() && (mask & Scene::PAINT_WINDOW_TRANSFORMED) && !(mask & Scene::PAINT_SCREEN_TRANSFORMED);
     if (region != infiniteRegion() && !m_hardwareClipping) {
         WindowQuadList quads;
         quads.reserve(data.quads.count());
@@ -1159,16 +1157,16 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
 
     // Update the texture filter
     if (waylandServer()) {
-        filter = ImageFilterGood;
+        filter = Scene::ImageFilterGood;
         s_frameTexture->setFilter(GL_LINEAR);
     } else {
         if (options->glSmoothScale() != 0 &&
-            (mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
-            filter = ImageFilterGood;
+            (mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED)))
+            filter = Scene::ImageFilterGood;
         else
-            filter = ImageFilterFast;
+            filter = Scene::ImageFilterFast;
 
-        s_frameTexture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+        s_frameTexture->setFilter(filter == Scene::ImageFilterGood ? GL_LINEAR : GL_NEAREST);
     }
 
     const GLVertexAttrib attribs[] = {
@@ -1183,14 +1181,14 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
     return true;
 }
 
-void SceneOpenGL::Window::endRenderWindow()
+void OpenGLWindow::endRenderWindow()
 {
     if (m_hardwareClipping) {
         glDisable(GL_SCISSOR_TEST);
     }
 }
 
-GLTexture *SceneOpenGL::Window::getDecorationTexture() const
+GLTexture *OpenGLWindow::getDecorationTexture() const
 {
     if (AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel)) {
         if (client->noBorder()) {
@@ -1216,25 +1214,12 @@ GLTexture *SceneOpenGL::Window::getDecorationTexture() const
     return nullptr;
 }
 
-WindowPixmap* SceneOpenGL::Window::createWindowPixmap()
+WindowPixmap *OpenGLWindow::createWindowPixmap()
 {
     return new OpenGLWindowPixmap(this, m_scene);
 }
 
-//***************************************
-// SceneOpenGL2Window
-//***************************************
-SceneOpenGL2Window::SceneOpenGL2Window(Toplevel *c)
-    : SceneOpenGL::Window(c)
-    , m_blendingEnabled(false)
-{
-}
-
-SceneOpenGL2Window::~SceneOpenGL2Window()
-{
-}
-
-QVector4D SceneOpenGL2Window::modulate(float opacity, float brightness) const
+QVector4D OpenGLWindow::modulate(float opacity, float brightness) const
 {
     const float a = opacity;
     const float rgb = opacity * brightness;
@@ -1242,7 +1227,7 @@ QVector4D SceneOpenGL2Window::modulate(float opacity, float brightness) const
     return QVector4D(rgb, rgb, rgb, a);
 }
 
-void SceneOpenGL2Window::setBlendEnabled(bool enabled)
+void OpenGLWindow::setBlendEnabled(bool enabled)
 {
     if (enabled && !m_blendingEnabled)
         glEnable(GL_BLEND);
@@ -1252,7 +1237,7 @@ void SceneOpenGL2Window::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
-void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data)
+void OpenGLWindow::setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data)
 {
     if (!quads[ShadowLeaf].isEmpty()) {
         nodes[ShadowLeaf].texture = static_cast<SceneOpenGLShadow *>(m_shadow)->shadowTexture();
@@ -1289,7 +1274,7 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
     }
 }
 
-QMatrix4x4 SceneOpenGL2Window::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
+QMatrix4x4 OpenGLWindow::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
 {
     SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
 
@@ -1313,7 +1298,7 @@ QMatrix4x4 SceneOpenGL2Window::modelViewProjectionMatrix(int mask, const WindowP
     return scene->projectionMatrix() * mvMatrix;
 }
 
-void SceneOpenGL2Window::renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping)
+void OpenGLWindow::renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping)
 {
     QMatrix4x4 newWindowMatrix = windowMatrix;
     newWindowMatrix.translate(pixmap->subSurface()->position().x(), pixmap->subSurface()->position().y());
@@ -1342,7 +1327,7 @@ void SceneOpenGL2Window::renderSubSurface(GLShader *shader, const QMatrix4x4 &mv
     }
 }
 
-void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData data)
+void OpenGLWindow::performPaint(int mask, QRegion region, WindowPaintData data)
 {
     if (!beginRenderWindow(mask, region, data))
         return;

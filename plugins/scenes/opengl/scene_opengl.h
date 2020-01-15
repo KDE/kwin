@@ -43,7 +43,6 @@ class KWIN_EXPORT SceneOpenGL
     Q_OBJECT
 public:
     class EffectFrame;
-    class Window;
     ~SceneOpenGL() override;
     bool initFailed() const override;
     bool hasPendingFlush() const override;
@@ -143,34 +142,9 @@ private:
     GLuint vao;
 };
 
-class SceneOpenGL::Window
-    : public Scene::Window
-{
-public:
-    ~Window() override;
-    bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
-    void performPaint(int mask, QRegion region, WindowPaintData data) override = 0;
-    void endRenderWindow();
-    bool bindTexture();
-    void setScene(SceneOpenGL *scene) {
-        m_scene = scene;
-    }
-
-protected:
-    WindowPixmap* createWindowPixmap() override;
-    Window(Toplevel* c);
-
-    QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
-    GLTexture *getDecorationTexture() const;
-
-protected:
-    SceneOpenGL *m_scene;
-    bool m_hardwareClipping;
-};
-
 class OpenGLWindowPixmap;
 
-class SceneOpenGL2Window : public SceneOpenGL::Window
+class OpenGLWindow final : public Scene::Window
 {
 public:
     enum Leaf { ShadowLeaf = 0, DecorationLeaf, ContentLeaf, PreviousContentLeaf, LeafCount };
@@ -195,22 +169,28 @@ public:
         TextureCoordinateType coordinateType;
     };
 
-    explicit SceneOpenGL2Window(Toplevel *c);
-    ~SceneOpenGL2Window() override;
+    OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
+    ~OpenGLWindow() override;
 
-protected:
+    WindowPixmap *createWindowPixmap() override;
+    void performPaint(int mask, QRegion region, WindowPaintData data) override;
+
+private:
+    QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
+    GLTexture *getDecorationTexture() const;
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data);
-    void performPaint(int mask, QRegion region, WindowPaintData data) override;
+    void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix,
+                          OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping);
+    bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
+    void endRenderWindow();
+    bool bindTexture();
 
-private:
-    void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix, OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping);
-    /**
-     * Whether prepareStates enabled blending and restore states should disable again.
-     */
-    bool m_blendingEnabled;
+    SceneOpenGL *m_scene;
+    bool m_hardwareClipping = false;
+    bool m_blendingEnabled = false;
 };
 
 class OpenGLWindowPixmap : public WindowPixmap
