@@ -4944,4 +4944,10 @@ bool X11Client::hasOffscreenXineramaStrut() const
     return !region.isEmpty();
 }
 
+void X11Client::applyWindowRules()
+{
+    AbstractClient::applyWindowRules();
+    setBlockingCompositing(info->isBlockingCompositing());
+}
+
 } // namespace

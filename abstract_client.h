@@ -557,7 +557,7 @@ public:
     void removeRule(Rules* r);
     void setupWindowRules(bool ignore_temporary);
     void evaluateWindowRules();
-    void applyWindowRules();
+    virtual void applyWindowRules();
     virtual void takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     /**
