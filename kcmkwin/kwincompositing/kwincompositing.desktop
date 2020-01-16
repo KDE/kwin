@@ -102,6 +102,7 @@ Comment[zh_TW]=桌面效果使用的組合器設定
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
 X-KDE-Keywords[ca]=kwin,finestra,gestor,composició,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes de l'escriptori
+X-KDE-Keywords[es]=kwin,ventana,gestor,composición,efecto,efectos 3D,efectos 2D,OpenGL,XRender,preferencias de vídeo,efectos gráficos,efectos del escritorio
 X-KDE-Keywords[et]=kwin,aken,haldur,komposiit,komposiitor,efekt,3D efektid,ruumilised efektid,2D efektid,OpenGL,XRender,videoseadistused,graafilised efektid,töölauaefektid
 X-KDE-Keywords[fr]=Gestionnaire de fenêtres KWin, kwin,window,manager,compositeur, effet, effets 3D,effets 2D,OpenGL,XRender,paramétrage video,effets graphiques ,effects du bureau
 X-KDE-Keywords[lt]=kwin,langas,langai,tvarkytuvė,tvarkytuve,komponavimas,kompozicionavimas,efektas,efektai,3D efektai,2D efektai,trimačiai efektai,trimaciai efektai,dvimačiai efektai,dvimaciai efektai,OpenGL,XRender,vaizdo nustatymai,vaizdo nuostatos,video nustatymai,video nuostatos,grafiniai efektai,grafikos efektai,darbalaukio efektai,darbastalio efektai
@@ -110,3 +111,4 @@ X-KDE-Keywords[pt]=kwin,janela,gestor,composição,efeito,efeitos 3D,efeitos 2D,
 X-KDE-Keywords[pt_BR]=kwin,janela,gerenciador,composição,efeito,efeitos 3D,efeitos 2D,OpenGL,XRender,configurações de vídeo,efeitos gráficos,efeitos da área de trabalho
 X-KDE-Keywords[uk]=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,вікно,керування,композитне,композиція,ефект,просторовий,ефекти,плоскі,параметри відео,графічні ефекти,ефекти стільниці
 X-KDE-Keywords[x-test]=xxkwinxx,xxwindowxx,xxmanagerxx,xxcompositingxx,xxeffectxx,xx3D effectsxx,xx2D effectsxx,xxOpenGLxx,xxXRenderxx,xxvideo settingsxx,xxgraphical effectsxx,xxdesktop effectsxx
+X-KDE-Keywords[zh_TW]=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,桌面特效,圖形特效,視訊設定,特效,3D,2D,合成,視窗,管理器
