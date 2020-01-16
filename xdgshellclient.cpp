@@ -295,6 +295,15 @@ void XdgShellClient::deleteClient(XdgShellClient *c)
     delete c;
 }
 
+QRect XdgShellClient::inputGeometry() const
+{
+    if (isDecorated()) {
+        return AbstractClient::inputGeometry();
+    }
+    // TODO: What about sub-surfaces sticking outside the main surface?
+    return m_bufferGeometry;
+}
+
 QRect XdgShellClient::bufferGeometry() const
 {
     return m_bufferGeometry;
