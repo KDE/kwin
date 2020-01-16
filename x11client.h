@@ -109,6 +109,7 @@ public:
     void checkGroup(Group* gr = nullptr, bool force = false);
     void changeClientLeaderGroup(Group* gr);
     void updateWindowRules(Rules::Types selection) override;
+    void applyWindowRules() override;
     void updateFullscreenMonitors(NETFullscreenMonitors topology);
 
     bool hasNETSupport() const;
