@@ -1080,8 +1080,8 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
     bool update = false;
     if (isResize()) {
         QRect orig = initialMoveResizeGeometry();
-        Sizemode sizemode = SizemodeAny;
-        auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizemode, &mode]() {
+        SizeMode sizeMode = SizeModeAny;
+        auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizeMode, &mode]() {
             switch(mode) {
             case PositionTopLeft:
                 setMoveResizeGeometry(QRect(topleft, orig.bottomRight()));
@@ -1097,19 +1097,19 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 break;
             case PositionTop:
                 setMoveResizeGeometry(QRect(QPoint(orig.left(), topleft.y()), orig.bottomRight()));
-                sizemode = SizemodeFixedH; // try not to affect height
+                sizeMode = SizeModeFixedH; // try not to affect height
                 break;
             case PositionBottom:
                 setMoveResizeGeometry(QRect(orig.topLeft(), QPoint(orig.right(), bottomright.y())));
-                sizemode = SizemodeFixedH;
+                sizeMode = SizeModeFixedH;
                 break;
             case PositionLeft:
                 setMoveResizeGeometry(QRect(QPoint(topleft.x(), orig.top()), orig.bottomRight()));
-                sizemode = SizemodeFixedW;
+                sizeMode = SizeModeFixedW;
                 break;
             case PositionRight:
                 setMoveResizeGeometry(QRect(orig.topLeft(), QPoint(bottomright.x(), orig.bottom())));
-                sizemode = SizemodeFixedW;
+                sizeMode = SizeModeFixedW;
                 break;
             case PositionCenter:
             default:
@@ -1210,7 +1210,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         }
 
         // Always obey size hints, even when in "unrestricted" mode
-        QSize size = adjustedSize(moveResizeGeometry().size(), sizemode);
+        QSize size = adjustedSize(moveResizeGeometry().size(), sizeMode);
         // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
         topleft = QPoint(moveResizeGeometry().right() - size.width() + 1, moveResizeGeometry().bottom() - size.height() + 1);
         bottomright = QPoint(moveResizeGeometry().left() + size.width() - 1, moveResizeGeometry().top() + size.height() - 1);
@@ -1219,9 +1219,9 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         // if aspect ratios are specified, both dimensions may change.
         // Therefore grow to the right/bottom if needed.
         // TODO it should probably obey gravity rather than always using right/bottom ?
-        if (sizemode == SizemodeFixedH)
+        if (sizeMode == SizeModeFixedH)
             orig.setRight(bottomright.x());
-        else if (sizemode == SizemodeFixedW)
+        else if (sizeMode == SizeModeFixedW)
             orig.setBottom(bottomright.y());
 
         calculateMoveResizeGeom();
@@ -1237,7 +1237,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, screen, 0));
             else {
                 QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
-                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizemodeMax);
+                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizeModeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
                     moveResizeGeom.setSize(adjSize);
@@ -1881,7 +1881,7 @@ BORDER(Right)
 BORDER(Top)
 #undef BORDER
 
-QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool noframe) const
+QSize AbstractClient::sizeForClientSize(const QSize &wsize, SizeMode mode, bool noframe) const
 {
     Q_UNUSED(mode)
     Q_UNUSED(noframe)
@@ -3125,7 +3125,7 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
     }
 }
 
-QSize AbstractClient::adjustedSize(const QSize& frame, Sizemode mode) const
+QSize AbstractClient::adjustedSize(const QSize& frame, SizeMode mode) const
 {
     // first, get the window size for the given frame size s
     QSize wsize = frameSizeToClientSize(frame);

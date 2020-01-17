@@ -635,11 +635,11 @@ public:
     virtual void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet);
     /// How to resize the window in order to obey constains (mainly aspect ratios)
-    enum Sizemode {
-        SizemodeAny,
-        SizemodeFixedW, ///< Try not to affect width
-        SizemodeFixedH, ///< Try not to affect height
-        SizemodeMax ///< Try not to make it larger in either direction
+    enum SizeMode {
+        SizeModeAny,
+        SizeModeFixedW, ///< Try not to affect width
+        SizeModeFixedH, ///< Try not to affect height
+        SizeModeMax ///< Try not to make it larger in either direction
     };
     /**
      * Calculates the appropriate frame size for the given client size @p wsize.
@@ -648,12 +648,12 @@ public:
      *
      * Default implementation returns the passed in @p wsize.
      */
-    virtual QSize sizeForClientSize(const QSize &wsize, Sizemode mode = SizemodeAny, bool noframe = false) const;
+    virtual QSize sizeForClientSize(const QSize &wsize, SizeMode mode = SizeModeAny, bool noframe = false) const;
 
     /**
      * Adjust the frame size @p frame according to the window's size hints.
      */
-    QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
+    QSize adjustedSize(const QSize&, SizeMode mode = SizeModeAny) const;
     QSize adjustedSize() const;
 
     /**

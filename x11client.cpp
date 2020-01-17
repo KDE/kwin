@@ -1249,7 +1249,7 @@ bool X11Client::isFullScreenable() const
     if (rules()->checkStrictGeometry(true)) {
         // check geometry constraints (rule to obey is set)
         const QRect fsarea = workspace()->clientArea(FullScreenArea, this);
-        if (sizeForClientSize(fsarea.size(), SizemodeAny, true) != fsarea.size()) {
+        if (sizeForClientSize(fsarea.size(), SizeModeAny, true) != fsarea.size()) {
             return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
         }
     }
@@ -3551,7 +3551,7 @@ void X11Client::checkActiveModal()
  * \a wsize is adapted according to the window's size hints (minimum,
  * maximum and incremental size changes).
  */
-QSize X11Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe) const
+QSize X11Client::sizeForClientSize(const QSize& wsize, SizeMode mode, bool noframe) const
 {
     int w = wsize.width();
     int h = wsize.height();
@@ -3665,8 +3665,8 @@ QSize X11Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool nofra
         } \
     }
         switch(mode) {
-        case SizemodeAny:
-#if 0 // make SizemodeAny equal to SizemodeFixedW - prefer keeping fixed width,
+        case SizeModeAny:
+#if 0 // make SizeModeAny equal to SizeModeFixedW - prefer keeping fixed width,
             // so that changing aspect ratio to a different value and back keeps the same size (#87298)
             {
                 ASPECT_CHECK_SHRINK_H_GROW_W
@@ -3676,7 +3676,7 @@ QSize X11Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool nofra
                 break;
             }
 #endif
-        case SizemodeFixedW: {
+        case SizeModeFixedW: {
             // the checks are order so that attempts to modify height are first
             ASPECT_CHECK_GROW_H
             ASPECT_CHECK_SHRINK_H_GROW_W
@@ -3684,14 +3684,14 @@ QSize X11Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool nofra
             ASPECT_CHECK_GROW_W
             break;
         }
-        case SizemodeFixedH: {
+        case SizeModeFixedH: {
             ASPECT_CHECK_GROW_W
             ASPECT_CHECK_SHRINK_W_GROW_H
             ASPECT_CHECK_SHRINK_H_GROW_W
             ASPECT_CHECK_GROW_H
             break;
         }
-        case SizemodeMax: {
+        case SizeModeMax: {
             // first checks that try to shrink
             ASPECT_CHECK_SHRINK_H_GROW_W
             ASPECT_CHECK_SHRINK_W_GROW_H
@@ -4417,16 +4417,16 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (old_mode & MaximizeHorizontal) { // actually restoring from MaximizeFull
             if (geom_restore.width() == 0 || !clientArea.contains(geom_restore.center())) {
                 // needs placement
-                plainResize(adjustedSize(QSize(width() * 2 / 3, clientArea.height()), SizemodeFixedH), geom_mode);
+                plainResize(adjustedSize(QSize(width() * 2 / 3, clientArea.height()), SizeModeFixedH), geom_mode);
                 Placement::self()->placeSmart(this, clientArea);
             } else {
                 setFrameGeometry(QRect(QPoint(geom_restore.x(), clientArea.top()),
-                                       adjustedSize(QSize(geom_restore.width(), clientArea.height()), SizemodeFixedH)), geom_mode);
+                                       adjustedSize(QSize(geom_restore.width(), clientArea.height()), SizeModeFixedH)), geom_mode);
             }
         } else {
             QRect r(x(), clientArea.top(), width(), clientArea.height());
             r.setTopLeft(rules()->checkPosition(r.topLeft()));
-            r.setSize(adjustedSize(r.size(), SizemodeFixedH));
+            r.setSize(adjustedSize(r.size(), SizeModeFixedH));
             setFrameGeometry(r, geom_mode);
         }
         info->setState(NET::MaxVert, NET::Max);
@@ -4437,16 +4437,16 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (old_mode & MaximizeVertical) { // actually restoring from MaximizeFull
             if (geom_restore.height() == 0 || !clientArea.contains(geom_restore.center())) {
                 // needs placement
-                plainResize(adjustedSize(QSize(clientArea.width(), height() * 2 / 3), SizemodeFixedW), geom_mode);
+                plainResize(adjustedSize(QSize(clientArea.width(), height() * 2 / 3), SizeModeFixedW), geom_mode);
                 Placement::self()->placeSmart(this, clientArea);
             } else {
                 setFrameGeometry(QRect(QPoint(clientArea.left(), geom_restore.y()),
-                                       adjustedSize(QSize(clientArea.width(), geom_restore.height()), SizemodeFixedW)), geom_mode);
+                                       adjustedSize(QSize(clientArea.width(), geom_restore.height()), SizeModeFixedW)), geom_mode);
             }
         } else {
             QRect r(clientArea.left(), y(), clientArea.width(), height());
             r.setTopLeft(rules()->checkPosition(r.topLeft()));
-            r.setSize(adjustedSize(r.size(), SizemodeFixedW));
+            r.setSize(adjustedSize(r.size(), SizeModeFixedW));
             setFrameGeometry(r, geom_mode);
         }
         info->setState(NET::MaxHoriz, NET::Max);
@@ -4480,7 +4480,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
             geom_restore = restore; // relevant for mouse pos calculation, bug #298646
         }
         if (m_geometryHints.hasAspect()) {
-            restore.setSize(adjustedSize(restore.size(), SizemodeAny));
+            restore.setSize(adjustedSize(restore.size(), SizeModeAny));
         }
         setFrameGeometry(restore, geom_mode);
         if (!clientArea.contains(geom_restore.center()))    // Not restoring to the same screen
@@ -4493,7 +4493,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     case MaximizeFull: {
         QRect r(clientArea);
         r.setTopLeft(rules()->checkPosition(r.topLeft()));
-        r.setSize(adjustedSize(r.size(), SizemodeMax));
+        r.setSize(adjustedSize(r.size(), SizeModeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width()) {
                 r.moveLeft(qMax(clientArea.left(), Cursor::pos().x() - r.width()/2));
