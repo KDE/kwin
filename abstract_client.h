@@ -634,7 +634,10 @@ public:
     virtual QSize maxSize() const;
     virtual void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet);
-    /// How to resize the window in order to obey constains (mainly aspect ratios)
+
+    /**
+     * How to resize the window in order to obey constraints (mainly aspect ratios).
+     */
     enum SizeMode {
         SizeModeAny,
         SizeModeFixedW, ///< Try not to affect width
