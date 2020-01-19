@@ -279,7 +279,7 @@ uint ColorCorrectDBusInterface::inhibit()
 {
     const QString serviceName = QDBusContext::message().service();
 
-    if (m_inhibitors.values(serviceName).isEmpty()) {
+    if (!m_inhibitors.contains(serviceName)) {
         m_inhibitorWatcher->addWatchedService(serviceName);
     }
 
@@ -304,7 +304,7 @@ void ColorCorrectDBusInterface::uninhibit(const QString &serviceName, uint cooki
         return;
     }
 
-    if (m_inhibitors.values(serviceName).isEmpty()) {
+    if (!m_inhibitors.contains(serviceName)) {
         m_inhibitorWatcher->removeWatchedService(serviceName);
     }
 
