@@ -3,6 +3,7 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <include>config-kwin.h</include>
   <kcfgfile name="kwinrc" />
   <group name="org.kde.kdecoration2">
     <entry name="pluginName" key="library" type="String">
