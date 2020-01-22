@@ -25,34 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <QObject>
 #include <QTimeLine>
-#include <QQuickView>
+
+#include "kwineffectquickview.h"
 
 namespace KWin
 {
 
 class PresentWindowsEffectProxy;
-
-class DesktopButtonsView : public QQuickView
-{
-    Q_OBJECT
-public:
-    explicit DesktopButtonsView(QWindow *parent = nullptr);
-    void windowInputMouseEvent(QMouseEvent* e);
-    void setAddDesktopEnabled(bool enable);
-    void setRemoveDesktopEnabled(bool enable);
-    bool isVisible() const;
-    void show();
-    void hide();
-public:
-    EffectWindow *effectWindow;
-Q_SIGNALS:
-    void addDesktop();
-    void removeDesktop();
-private:
-    bool m_visible;
-    QPoint m_pos;
-    bool m_posIsValid;
-};
 
 class DesktopGridEffect
     : public Effect
@@ -182,7 +161,7 @@ private:
     QRect m_windowMoveGeometry;
     QPoint m_windowMoveStartPoint;
 
-    QVector<DesktopButtonsView*> m_desktopButtonsViews;
+    QVector<EffectQuickScene*> m_desktopButtons;
 
     QAction *m_activateAction;
 
