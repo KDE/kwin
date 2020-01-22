@@ -70,7 +70,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n
     IconThemes
     IdleTime
-    Init
     Notifications
     Package
     Plasma
@@ -392,7 +391,7 @@ add_subdirectory(helpers)
 
 ########### next target ###############
 
-set(kwin_KDEINIT_SRCS
+set(kwin_SRCS
     abstract_client.cpp
     abstract_opengl_context_attribute_builder.cpp
     abstract_output.cpp
@@ -504,14 +503,14 @@ set(kwin_KDEINIT_SRCS
 )
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set(kwin_KDEINIT_SRCS
-        ${kwin_KDEINIT_SRCS}
+    set(kwin_SRCS
+        ${kwin_SRCS}
         colorcorrection/clockskewnotifierengine_linux.cpp
     )
 endif()
 
 include(ECMQtDeclareLoggingCategory)
-ecm_qt_declare_logging_category(kwin_KDEINIT_SRCS
+ecm_qt_declare_logging_category(kwin_SRCS
     HEADER
         colorcorrect_logging.h
     IDENTIFIER
@@ -524,7 +523,7 @@ ecm_qt_declare_logging_category(kwin_KDEINIT_SRCS
 
 if (KWIN_BUILD_TABBOX)
     include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+    set(kwin_SRCS ${kwin_SRCS}
         tabbox/clientmodel.cpp
         tabbox/desktopchain.cpp
         tabbox/desktopmodel.cpp
@@ -538,33 +537,33 @@ if (KWIN_BUILD_TABBOX)
 endif()
 
 if (KWIN_BUILD_ACTIVITIES)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+    set(kwin_SRCS ${kwin_SRCS}
         activities.cpp
     )
 endif()
 
 if (HAVE_LINUX_VT_H)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+    set(kwin_SRCS ${kwin_SRCS}
         virtual_terminal.cpp
     )
 endif()
 
-kconfig_add_kcfg_files(kwin_KDEINIT_SRCS settings.kcfgc)
-kconfig_add_kcfg_files(kwin_KDEINIT_SRCS colorcorrection/colorcorrect_settings.kcfgc)
+kconfig_add_kcfg_files(kwin_SRCS settings.kcfgc)
+kconfig_add_kcfg_files(kwin_SRCS colorcorrection/colorcorrect_settings.kcfgc)
 
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface)
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS org.kde.kwin.OrientationSensor.xml orientation_sensor.h KWin::OrientationSensor)
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
-qt5_add_dbus_adaptor(kwin_KDEINIT_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface)
+qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.OrientationSensor.xml orientation_sensor.h KWin::OrientationSensor)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 
-qt5_add_dbus_interface(kwin_KDEINIT_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
-qt5_add_dbus_interface(kwin_KDEINIT_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
-qt5_add_dbus_interface(kwin_KDEINIT_SRCS org.kde.kappmenu.xml appmenu_interface)
+qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
+qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
+qt5_add_dbus_interface(kwin_SRCS org.kde.kappmenu.xml appmenu_interface)
 
-ki18n_wrap_ui(kwin_KDEINIT_SRCS
+ki18n_wrap_ui(kwin_SRCS
     debug_console.ui
     shortcutdialog.ui
 )
@@ -647,7 +646,7 @@ set(kwinLibs
     Libinput::Libinput
 )
 
-add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
+add_library(kwin SHARED ${kwin_SRCS})
 
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}
@@ -659,11 +658,10 @@ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
 
-kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
-target_link_libraries(kdeinit_kwin_x11 kwin KF5::Crash Qt5::X11Extras)
+add_executable(kwin_x11 main_x11.cpp)
+target_link_libraries(kwin_x11 kwin KF5::Crash Qt5::X11Extras)
 
 install(TARGETS kwin ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
-install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(kwin_XWAYLAND_SRCS
