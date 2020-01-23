@@ -2207,7 +2207,9 @@ static bool acceptsInput(Toplevel *t, const QPoint &pos)
     if (input.isEmpty()) {
         return true;
     }
-    return input.translated(t->pos()).contains(pos);
+    // TODO: What about sub-surfaces sticking outside the main surface?
+    const QPoint localPoint = pos - t->bufferGeometry().topLeft();
+    return input.contains(localPoint);
 }
 
 Toplevel *InputRedirection::findToplevel(const QPoint &pos)

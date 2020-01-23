@@ -1369,6 +1369,7 @@ void TestXdgShellClient::testXdgWindowGeometryAttachBuffer()
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->frameGeometry().topLeft(), oldPosition);
+    QEXPECT_FAIL("", "Ask on wayland-devel what effective window geometry should be here", Continue);
     QCOMPARE(client->frameGeometry().size(), QSize(180, 80));
     QCOMPARE(client->bufferGeometry().topLeft(), oldPosition - QPoint(10, 10));
     QCOMPARE(client->bufferGeometry().size(), QSize(100, 50));

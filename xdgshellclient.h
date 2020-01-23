@@ -58,6 +58,7 @@ public:
     XdgShellClient(KWayland::Server::XdgShellPopupInterface *surface);
     ~XdgShellClient() override;
 
+    QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
     QStringList activities() const override;
     QPoint clientContentPos() const override;
@@ -188,6 +189,9 @@ private:
     void markAsMapped();
     QRect determineBufferGeometry() const;
     static void deleteClient(XdgShellClient *c);
+
+    QRect adjustMoveGeometry(const QRect &rect) const;
+    QRect adjustResizeGeometry(const QRect &rect) const;
 
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellSurface;
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
