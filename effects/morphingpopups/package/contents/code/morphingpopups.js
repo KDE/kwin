@@ -38,6 +38,13 @@ var morphingEffect = {
         //don't cross the whole screen: ugly
         var distance = Math.abs(oldGeometry.x - newGeometry.x) + Math.abs(oldGeometry.y - newGeometry.y);
 
+        if (newGeometry.x == oldGeometry.x &&
+                newGeometry.y == oldGeometry.y &&
+                newGeometry.width == oldGeometry.width &&
+                newGeometry.height == oldGeometry.height) {
+            return;
+        }
+
         if (distance > (newGeometry.width + newGeometry.height) * 2) {
             if (window.moveAnimation) {
                 delete window.moveAnimation;
