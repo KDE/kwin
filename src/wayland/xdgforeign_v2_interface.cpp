@@ -61,7 +61,7 @@ private:
 
 const quint32 XdgExporterUnstableV2Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_exporter_v2_interface XdgExporterUnstableV2Interface::Private::s_interface = {
     destroyCallback,
     exportCallback
@@ -192,7 +192,7 @@ private:
 
 const quint32 XdgImporterUnstableV2Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_importer_v2_interface XdgImporterUnstableV2Interface::Private::s_interface = {
     destroyCallback,
     importCallback
@@ -367,7 +367,7 @@ private:
     static const struct zxdg_exported_v2_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_exported_v2_interface XdgExportedUnstableV2Interface::Private::s_interface = {
     resourceDestroyedCallback
 };
@@ -412,7 +412,7 @@ private:
     static const struct zxdg_imported_v2_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_imported_v2_interface XdgImportedUnstableV2Interface::Private::s_interface = {
     resourceDestroyedCallback,
     setParentOfCallback

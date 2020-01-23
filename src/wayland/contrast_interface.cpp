@@ -60,7 +60,7 @@ private:
 
 const quint32 ContrastManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_contrast_manager_interface ContrastManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback
@@ -165,7 +165,7 @@ private:
     static const struct org_kde_kwin_contrast_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_contrast_interface ContrastInterface::Private::s_interface = {
     commitCallback,
     setRegionCallback,

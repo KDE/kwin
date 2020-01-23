@@ -58,7 +58,7 @@ ShellInterface::Private::Private(ShellInterface *q, Display *d)
 {
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_shell_interface ShellInterface::Private::s_interface = {
     createSurfaceCallback
 };
@@ -167,7 +167,7 @@ ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface
     pingTimer->setInterval(1000);
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interface = {
     pongCallback,
     moveCallback,

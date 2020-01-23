@@ -78,7 +78,7 @@ private:
 
 const quint32 IdleInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_idle_interface IdleInterface::Private::s_interface = {
     getIdleTimeoutCallback
 };
@@ -170,7 +170,7 @@ IdleInterface::Private *IdleInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_idle_timeout_interface IdleTimeoutInterface::Private::s_interface = {
     resourceDestroyedCallback,
     simulateUserActivityCallback

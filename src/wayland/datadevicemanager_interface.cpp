@@ -58,7 +58,7 @@ const quint32 DataDeviceManagerInterface::Private::s_version = 3;
 const qint32 DataDeviceManagerInterface::Private::s_dataDeviceVersion = 3;
 const qint32 DataDeviceManagerInterface::Private::s_dataSourceVersion = 3;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_data_device_manager_interface DataDeviceManagerInterface::Private::s_interface = {
     createDataSourceCallback,
     getDataDeviceCallback

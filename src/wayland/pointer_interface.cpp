@@ -220,7 +220,7 @@ void PointerInterface::Private::sendFrame()
     wl_pointer_send_frame(resource);
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     setCursorCallback,
     resourceDestroyedCallback

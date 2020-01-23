@@ -174,7 +174,7 @@ void V1Iface::Private::Params::createImmed(wl_client *client, wl_resource *resou
     params->create(client, new_id, QSize(width, height), format, flags);
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_linux_dmabuf_v1_interface V1Iface::Private::s_implementation = {
     [](wl_client *, wl_resource *resource) { wl_resource_destroy(resource); }, // unbind
     createParamsCallback
@@ -184,7 +184,7 @@ const struct wl_buffer_interface V1Iface::Private::s_bufferImplementation = {
     [](wl_client *, wl_resource *resource) { wl_resource_destroy(resource); } // destroy
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_linux_buffer_params_v1_interface V1Iface::Private::Params::s_interface = {
     destroy,
     add,

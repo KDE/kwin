@@ -59,7 +59,7 @@ private:
 
 const quint32 BlurManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_blur_manager_interface BlurManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback
@@ -155,7 +155,7 @@ private:
     static const struct org_kde_kwin_blur_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_blur_interface BlurInterface::Private::s_interface = {
     commitCallback,
     setRegionCallback,

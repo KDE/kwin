@@ -32,7 +32,7 @@ namespace KWayland
 namespace Server
 {
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = {
     acceptCallback,
     receiveCallback,

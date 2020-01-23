@@ -70,7 +70,7 @@ private:
     void disable();
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_text_input_v2_interface TextInputUnstableV2Interface::Private::s_interface = {
     resourceDestroyedCallback,
     enableCallback,
@@ -349,7 +349,7 @@ private:
 };
 const quint32 TextInputManagerUnstableV2Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_text_input_manager_v2_interface TextInputManagerUnstableV2Interface::Private::s_interface = {
     destroyCallback,
     getTextInputCallback

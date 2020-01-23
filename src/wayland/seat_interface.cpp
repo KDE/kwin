@@ -57,7 +57,7 @@ SeatInterface::Private::Private(SeatInterface *q, Display *display)
 {
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_seat_interface SeatInterface::Private::s_interface = {
     getPointerCallback,
     getKeyboardCallback,

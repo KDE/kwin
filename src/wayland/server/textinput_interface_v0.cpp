@@ -75,7 +75,7 @@ private:
     quint32 latestState = 0;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_text_input_interface TextInputUnstableV0Interface::Private::s_interface = {
     activateCallback,
     deactivateCallback,
@@ -373,7 +373,7 @@ private:
 };
 const quint32 TextInputManagerUnstableV0Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_text_input_manager_interface TextInputManagerUnstableV0Interface::Private::s_interface = {
     createTextInputCallback
 };

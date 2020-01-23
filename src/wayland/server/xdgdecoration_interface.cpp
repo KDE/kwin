@@ -68,7 +68,7 @@ XdgDecorationManagerInterface::XdgDecorationManagerInterface(Display *display, X
 
 XdgDecorationManagerInterface::~XdgDecorationManagerInterface() {}
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_decoration_manager_v1_interface XdgDecorationManagerInterface::Private::s_interface = {
     destroyCallback,
     getToplevelDecorationCallback
@@ -153,7 +153,7 @@ private:
     static const struct zxdg_toplevel_decoration_v1_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_toplevel_decoration_v1_interface XdgDecorationInterface::Private::s_interface = {
     resourceDestroyedCallback,
     setModeCallback,

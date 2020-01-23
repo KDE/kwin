@@ -245,7 +245,7 @@ private:
 
 const quint32 XdgShellStableInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct xdg_wm_base_interface XdgShellStableInterface::Private::s_interface = {
     destroyCallback,
     createPositionerCallback,
@@ -457,7 +457,7 @@ Qt::Edges edgesToQtEdges(xdg_toplevel_resize_edge edges)
 }
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct xdg_surface_interface XdgSurfaceStableInterface::Private::s_interface = {
     destroyCallback,
     getTopLevelCallback,
@@ -611,7 +611,7 @@ XdgPositionerStableInterface::Private::Private(XdgPositionerStableInterface *q, 
 {
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct xdg_positioner_interface XdgPositionerStableInterface::Private::s_interface = {
     resourceDestroyedCallback,
     setSizeCallback,
@@ -929,7 +929,7 @@ void XdgTopLevelStableInterface::Private::setMinimizedCallback(wl_client *client
 
 XdgTopLevelStableInterface::Private::~Private() = default;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct xdg_popup_interface XdgPopupStableInterface::Private::s_interface = {
     resourceDestroyedCallback,
     grabCallback

@@ -928,7 +928,7 @@ void Generator::generateServerPrivateResourceClass(const Interface &interface)
 
 void Generator::generateServerPrivateInterfaceClass(const Interface &interface)
 {
-    *m_stream.localData() << QStringLiteral("#ifndef DOXYGEN_SHOULD_SKIP_THIS\n");
+    *m_stream.localData() << QStringLiteral("#ifndef K_DOXYGEN\n");
     *m_stream.localData() << QStringLiteral("const struct %2_interface %1::Private::s_interface = {\n").arg(interface.kwaylandServerName()).arg(interface.name());
     bool first = true;
     for (auto r: interface.requests()) {

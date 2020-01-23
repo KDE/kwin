@@ -54,7 +54,7 @@ private:
 
 const quint32 SubCompositorInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_subcompositor_interface SubCompositorInterface::Private::s_interface = {
     destroyCallback,
     subsurfaceCallback
@@ -127,7 +127,7 @@ SubCompositorInterface::SubCompositorInterface(Display *display, QObject *parent
 
 SubCompositorInterface::~SubCompositorInterface() = default;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface = {
     resourceDestroyedCallback,
     setPositionCallback,

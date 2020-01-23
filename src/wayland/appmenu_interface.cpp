@@ -55,7 +55,7 @@ private:
 
 const quint32 AppMenuManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_appmenu_manager_interface AppMenuManagerInterface::Private::s_interface = {
     createCallback
 };
@@ -127,7 +127,7 @@ private:
     static const struct org_kde_kwin_appmenu_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_appmenu_interface AppMenuInterface::Private::s_interface = {
     setAddressCallback,
     resourceDestroyedCallback

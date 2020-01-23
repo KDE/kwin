@@ -54,7 +54,7 @@ private:
 
 const quint32 PointerGesturesUnstableV1Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_pointer_gestures_v1_interface PointerGesturesUnstableV1Interface::Private::s_interface = {
     getSwipeGestureCallback,
     getPinchGestureCallback
@@ -135,7 +135,7 @@ private:
     static const struct zwp_pointer_gesture_swipe_v1_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_pointer_gesture_swipe_v1_interface PointerSwipeGestureUnstableV1Interface::Private::s_interface = {
     resourceDestroyedCallback
 };
@@ -222,7 +222,7 @@ private:
     static const struct zwp_pointer_gesture_pinch_v1_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_pointer_gesture_pinch_v1_interface PointerPinchGestureUnstableV1Interface::Private::s_interface = {
     resourceDestroyedCallback
 };

@@ -93,7 +93,7 @@ private:
 
 const quint32 PlasmaVirtualDesktopManagementInterface::Private::s_version = 2;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_plasma_virtual_desktop_management_interface PlasmaVirtualDesktopManagementInterface::Private::s_interface = {
     getVirtualDesktopCallback,
     requestCreateVirtualDesktopCallback,
@@ -289,7 +289,7 @@ void PlasmaVirtualDesktopManagementInterface::sendDone()
 
 //// PlasmaVirtualDesktopInterface
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_plasma_virtual_desktop_interface PlasmaVirtualDesktopInterface::Private::s_interface = {
     requestActivateCallback
 };

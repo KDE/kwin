@@ -87,7 +87,7 @@ private:
 
 const quint32 XdgShellV5Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_shell_v5_interface XdgShellV5Interface::Private::s_interface = {
     destroyCallback,
     useUnstableVersionCallback,
@@ -321,7 +321,7 @@ Qt::Edges edgesToQtEdges(zxdg_surface_v5_resize_edge edges)
 }
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_surface_v5_interface XdgSurfaceV5Interface::Private::s_interface = {
     resourceDestroyedCallback,
     setParentCallback,
@@ -501,7 +501,7 @@ quint32 XdgSurfaceV5Interface::Private::configure(States states, const QSize &si
     return serial;
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_popup_v5_interface XdgPopupV5Interface::Private::s_interface = {
     resourceDestroyedCallback
 };

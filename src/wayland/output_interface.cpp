@@ -91,7 +91,7 @@ OutputInterface::Private::~Private()
     s_privates.removeAll(this);
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_output_interface OutputInterface::Private::s_interface = {
     releaseCallback
 };

@@ -220,7 +220,7 @@ void RemoteAccessManagerInterface::Private::sendBufferReady(const OutputInterfac
     sentBuffers[buf->fd()] = holder;
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_remote_access_manager_interface RemoteAccessManagerInterface::Private::s_interface = {
     getBufferCallback,
     releaseCallback
@@ -344,7 +344,7 @@ private:
     const BufferHandle *wrapped;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_remote_buffer_interface RemoteBufferInterface::Private::s_interface = {
     resourceDestroyedCallback
 };

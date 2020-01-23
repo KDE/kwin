@@ -32,7 +32,7 @@ namespace Server
 
 const quint32 EglStreamControllerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_eglstream_controller_interface EglStreamControllerInterface::Private::s_interface = {
     attachStreamConsumer,
     attachStreamConsumerAttribs

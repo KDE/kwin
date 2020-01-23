@@ -59,7 +59,7 @@ CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
 {
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_compositor_interface CompositorInterface::Private::s_interface = {
     createSurfaceCallback,
     createRegionCallback

@@ -55,7 +55,7 @@ private:
 
 const quint32 ServerSideDecorationPaletteManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_server_decoration_palette_manager_interface ServerSideDecorationPaletteManagerInterface::Private::s_interface = {
     createCallback
 };
@@ -127,7 +127,7 @@ private:
     static const struct org_kde_kwin_server_decoration_palette_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_server_decoration_palette_interface ServerSideDecorationPaletteInterface::Private::s_interface = {
     setPaletteCallback,
     resourceDestroyedCallback

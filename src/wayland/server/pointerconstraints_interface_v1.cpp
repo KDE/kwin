@@ -76,7 +76,7 @@ private:
 
 const quint32 PointerConstraintsUnstableV1Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_pointer_constraints_v1_interface PointerConstraintsUnstableV1Interface::Private::s_interface = {
     destroyCallback,
     lockPointerCallback,
@@ -160,7 +160,7 @@ PointerConstraintsUnstableV1Interface::PointerConstraintsUnstableV1Interface(Dis
 
 PointerConstraintsUnstableV1Interface::~PointerConstraintsUnstableV1Interface() = default;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_locked_pointer_v1_interface LockedPointerUnstableV1Interface::Private::s_interface = {
     resourceDestroyedCallback,
     setCursorPositionHintCallback,
@@ -234,7 +234,7 @@ private:
     static const struct zwp_confined_pointer_v1_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_confined_pointer_v1_interface ConfinedPointerUnstableV1Interface::Private::s_interface = {
     resourceDestroyedCallback,
     setRegionCallback

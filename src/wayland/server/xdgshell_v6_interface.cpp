@@ -247,7 +247,7 @@ private:
 
 const quint32 XdgShellV6Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_shell_v6_interface XdgShellV6Interface::Private::s_interface = {
     destroyCallback,
     createPositionerCallback,
@@ -456,7 +456,7 @@ Qt::Edges edgesToQtEdges(zxdg_toplevel_v6_resize_edge edges)
 }
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_surface_v6_interface XdgSurfaceV6Interface::Private::s_interface = {
     destroyCallback,
     getTopLevelCallback,
@@ -613,7 +613,7 @@ XdgPositionerV6Interface::Private::Private(XdgPositionerV6Interface *q, XdgShell
 {
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_positioner_v6_interface XdgPositionerV6Interface::Private::s_interface = {
     resourceDestroyedCallback,
     setSizeCallback,
@@ -914,7 +914,7 @@ void XdgTopLevelV6Interface::Private::setMinimizedCallback(wl_client *client, wl
 
 XdgTopLevelV6Interface::Private::~Private() = default;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_popup_v6_interface XdgPopupV6Interface::Private::s_interface = {
     resourceDestroyedCallback,
     grabCallback

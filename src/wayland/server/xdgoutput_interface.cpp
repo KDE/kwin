@@ -56,7 +56,7 @@ private:
 
 const quint32 XdgOutputManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_output_manager_v1_interface XdgOutputManagerInterface::Private::s_interface = {
     destroyCallback,
     getXdgOutputCallback
@@ -292,7 +292,7 @@ void XdgOutputV1Interface::done()
     zxdg_output_v1_send_done(d->resource);
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zxdg_output_v1_interface XdgOutputV1Interface::Private::s_interface = {
     resourceDestroyedCallback
 };

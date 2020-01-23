@@ -60,7 +60,7 @@ private:
 
 const quint32 ServerSideDecorationManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_server_decoration_manager_interface ServerSideDecorationManagerInterface::Private::s_interface = {
     createCallback
 };
@@ -185,7 +185,7 @@ private:
     static QVector<Private*> s_all;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_server_decoration_interface ServerSideDecorationInterface::Private::s_interface = {
     resourceDestroyedCallback,
     requestModeCallback

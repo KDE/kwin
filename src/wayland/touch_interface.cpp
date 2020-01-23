@@ -47,7 +47,7 @@ private:
     static const struct wl_touch_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_touch_interface TouchInterface::Private::s_interface = {
     resourceDestroyedCallback
 };

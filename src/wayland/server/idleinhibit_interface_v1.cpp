@@ -48,7 +48,7 @@ private:
 
 const quint32 IdleInhibitManagerUnstableV1Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_idle_inhibit_manager_v1_interface IdleInhibitManagerUnstableV1Interface::Private::s_interface = {
     destroyCallback,
     createInhibitorCallback
@@ -104,7 +104,7 @@ IdleInhibitManagerUnstableV1Interface::IdleInhibitManagerUnstableV1Interface(Dis
 
 IdleInhibitManagerUnstableV1Interface::~IdleInhibitManagerUnstableV1Interface() = default;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_idle_inhibitor_v1_interface IdleInhibitorInterface::Private::s_interface = {
     resourceDestroyedCallback
 };

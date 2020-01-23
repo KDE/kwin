@@ -28,7 +28,7 @@ namespace Server
 
 const quint32 DpmsManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_dpms_manager_interface DpmsManagerInterface::Private::s_interface = {
     getDpmsCallback
 };
@@ -75,7 +75,7 @@ DpmsManagerInterface::DpmsManagerInterface(Display *display, QObject *parent)
 DpmsManagerInterface::~DpmsManagerInterface() = default;
 
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_dpms_interface DpmsInterface::Private::s_interface = {
     setCallback,
     resourceDestroyedCallback

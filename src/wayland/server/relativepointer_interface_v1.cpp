@@ -52,7 +52,7 @@ private:
 
 const quint32 RelativePointerManagerUnstableV1Interface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_relative_pointer_manager_v1_interface RelativePointerManagerUnstableV1Interface::Private::s_interface = {
     destroyCallback,
     getRelativePointerCallback
@@ -124,7 +124,7 @@ private:
     static const struct zwp_relative_pointer_v1_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct zwp_relative_pointer_v1_interface RelativePointerUnstableV1Interface::Private::s_interface = {
     resourceDestroyedCallback
 };

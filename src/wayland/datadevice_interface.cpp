@@ -75,7 +75,7 @@ private:
     static const struct wl_data_device_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_data_device_interface DataDeviceInterface::Private::s_interface = {
     startDragCallback,
     setSelectionCallback,

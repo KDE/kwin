@@ -265,7 +265,7 @@ void SurfaceInterface::Private::installIdleInhibitor(IdleInhibitorInterface *inh
     }
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     resourceDestroyedCallback,
     attachCallback,

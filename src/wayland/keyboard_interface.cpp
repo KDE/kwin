@@ -71,7 +71,7 @@ void KeyboardInterface::Private::sendEnter(SurfaceInterface *surface, quint32 se
     sendModifiers();
 }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
     resourceDestroyedCallback
 };

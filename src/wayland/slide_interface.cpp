@@ -57,7 +57,7 @@ private:
 
 const quint32 SlideManagerInterface::Private::s_version = 1;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_slide_manager_interface SlideManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback
@@ -148,7 +148,7 @@ private:
     static const struct org_kde_kwin_slide_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_slide_interface SlideInterface::Private::s_interface = {
     commitCallback,
     setLocationCallback,

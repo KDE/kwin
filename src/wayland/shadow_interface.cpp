@@ -56,7 +56,7 @@ private:
 
 const quint32 ShadowManagerInterface::Private::s_version = 2;
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_shadow_manager_interface ShadowManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback,
@@ -191,7 +191,7 @@ private:
     static const struct org_kde_kwin_shadow_interface s_interface;
 };
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_shadow_interface ShadowInterface::Private::s_interface = {
     commitCallback,
     attachLeftCallback,

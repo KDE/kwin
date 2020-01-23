@@ -79,7 +79,7 @@ private:
 const quint32 FakeInputInterface::Private::s_version = 4;
 QList<quint32> FakeInputInterface::Private::touchIds = QList<quint32>();
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#ifndef K_DOXYGEN
 const struct org_kde_kwin_fake_input_interface FakeInputInterface::Private::s_interface = {
     authenticateCallback,
     pointerMotionCallback,
