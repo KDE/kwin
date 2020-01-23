@@ -190,6 +190,9 @@ private:
     QRect determineBufferGeometry() const;
     static void deleteClient(XdgShellClient *c);
 
+    QRect adjustMoveGeometry(const QRect &rect) const;
+    QRect adjustResizeGeometry(const QRect &rect) const;
+
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellSurface;
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
 

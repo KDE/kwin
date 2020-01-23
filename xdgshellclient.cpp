@@ -1145,7 +1145,14 @@ void XdgShellClient::updatePendingGeometry()
         }
         //else serialId < m_lastAckedConfigureRequest and the state is now irrelevant and can be ignored
     }
-    doSetGeometry(QRect(position, m_windowGeometry.size() + QSize(borderLeft() + borderRight(), borderTop() + borderBottom())));
+    QRect geometry = QRect(position, adjustedSize());
+    if (isMove()) {
+        geometry = adjustMoveGeometry(geometry);
+    }
+    if (isResize()) {
+        geometry = adjustResizeGeometry(geometry);
+    }
+    doSetGeometry(geometry);
     updateMaximizeMode(maximizeMode);
 }
 
@@ -1992,6 +1999,48 @@ bool XdgShellClient::supportsWindowRules() const
         return false;
     }
     return m_xdgShellSurface;
+}
+
+QRect XdgShellClient::adjustMoveGeometry(const QRect &rect) const
+{
+    QRect geometry = rect;
+    geometry.moveTopLeft(moveResizeGeometry().topLeft());
+    return geometry;
+}
+
+QRect XdgShellClient::adjustResizeGeometry(const QRect &rect) const
+{
+    QRect geometry = rect;
+
+    // We need to adjust frame geometry because configure events carry the maximum window geometry
+    // size. A client that has aspect ratio can attach a buffer with smaller size than the one in
+    // a configure event.
+    switch (moveResizePointerMode()) {
+    case PositionTopLeft:
+        geometry.moveRight(moveResizeGeometry().right());
+        geometry.moveBottom(moveResizeGeometry().bottom());
+        break;
+    case PositionTop:
+    case PositionTopRight:
+        geometry.moveLeft(moveResizeGeometry().left());
+        geometry.moveBottom(moveResizeGeometry().bottom());
+        break;
+    case PositionRight:
+    case PositionBottomRight:
+    case PositionBottom:
+        geometry.moveLeft(moveResizeGeometry().left());
+        geometry.moveTop(moveResizeGeometry().top());
+        break;
+    case PositionBottomLeft:
+    case PositionLeft:
+        geometry.moveRight(moveResizeGeometry().right());
+        geometry.moveTop(moveResizeGeometry().top());
+        break;
+    case PositionCenter:
+        Q_UNREACHABLE();
+    }
+
+    return geometry;
 }
 
 }
