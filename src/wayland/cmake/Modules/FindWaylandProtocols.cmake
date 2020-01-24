@@ -14,7 +14,7 @@
 #     The wayland protocols data directory
 
 #=============================================================================
-# Copyright 2019 Vlad Zagorodniy <vlad.zahorodnii@kde.org>
+# Copyright 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
