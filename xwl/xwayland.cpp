@@ -155,7 +155,7 @@ void Xwayland::init()
                            QStringLiteral("-rootless"),
                            QStringLiteral("-wm"),
                            QString::number(fd)});
-    m_xwaylandFailConnection = connect(m_xwaylandProcess, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
+    m_xwaylandFailConnection = connect(m_xwaylandProcess, &QProcess::errorOccurred, this,
         [this] (QProcess::ProcessError error) {
             if (error == QProcess::FailedToStart) {
                 std::cerr << "FATAL ERROR: failed to start Xwayland" << std::endl;
