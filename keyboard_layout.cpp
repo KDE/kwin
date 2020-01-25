@@ -269,13 +269,11 @@ void KeyboardLayout::reinitNotifierMenu()
             p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
             p->setProgram(QStringLiteral("kcmshell5"));
             connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
-            connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
-                [] (QProcess::ProcessError e) {
-                    if (e == QProcess::FailedToStart) {
-                        qCDebug(KWIN_CORE) << "Failed to start kcmshell5";
-                    }
+            connect(p, &QProcess::errorOccurred, this, [](QProcess::ProcessError e) {
+                if (e == QProcess::FailedToStart) {
+                    qCDebug(KWIN_CORE) << "Failed to start kcmshell5";
                 }
-            );
+            });
             p->start();
         }
     );

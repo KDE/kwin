@@ -1051,13 +1051,11 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
     p->setProgram(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_RULES_DIALOG_BIN));
     p->setProcessChannelMode(QProcess::MergedChannels);
     connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
-    connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
-        [p] (QProcess::ProcessError e) {
-            if (e == QProcess::FailedToStart) {
-                qCDebug(KWIN_CORE) << "Failed to start" << p->program();
-            }
+    connect(p, &QProcess::errorOccurred, this, [p](QProcess::ProcessError e) {
+        if (e == QProcess::FailedToStart) {
+            qCDebug(KWIN_CORE) << "Failed to start" << p->program();
         }
-    );
+    });
     p->start();
 }
 
