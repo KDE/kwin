@@ -2562,11 +2562,10 @@ static void clamp(QImage &image, const QRect &viewport)
 void SceneOpenGLDecorationRenderer::render()
 {
     const QRegion scheduled = getScheduled();
-    const bool dirty = areImageSizesDirty();
-    if (scheduled.isEmpty() && !dirty) {
+    if (scheduled.isEmpty()) {
         return;
     }
-    if (dirty) {
+    if (areImageSizesDirty()) {
         resizeTexture();
         resetImageSizesDirty();
     }
@@ -2578,8 +2577,6 @@ void SceneOpenGLDecorationRenderer::render()
 
     QRect left, top, right, bottom;
     client()->client()->layoutDecorationRects(left, top, right, bottom);
-
-    const QRect geometry = dirty ? QRect(QPoint(0, 0), client()->client()->size()) : scheduled.boundingRect();
 
     // We pad each part in the decoration atlas in order to avoid texture bleeding.
     const int padding = 1;
@@ -2633,6 +2630,8 @@ void SceneOpenGLDecorationRenderer::render()
         const QPoint dirtyOffset = geo.topLeft() - partRect.topLeft();
         m_texture->update(image, (position + dirtyOffset - viewport.topLeft()) * image.devicePixelRatio());
     };
+
+    const QRect geometry = scheduled.boundingRect();
 
     const QPoint topPosition(padding, padding);
     const QPoint bottomPosition(padding, topPosition.y() + top.height() + 2 * padding);
