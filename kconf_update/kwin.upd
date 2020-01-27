@@ -36,4 +36,4 @@ Script=kwin-5.16-auto-bordersize.sh,sh
 Id=animation-speed
 File=kwinrc,kdeglobals
 Group=Compositing,KDE
-Script=kwin-5.18-move-animspeed.py,python
+Script=kwin-5.18-move-animspeed.py,python3
