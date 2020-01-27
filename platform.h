@@ -48,6 +48,7 @@ class Manager;
 class AbstractOutput;
 class Edge;
 class Compositor;
+class CursorImage;
 class OverlayWindow;
 class OpenGLBackend;
 class Outline;
@@ -456,6 +457,8 @@ public:
         m_selectedCompositor = type;
     }
 
+    void setCurrentCursor(CursorImage* cursor);
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -564,6 +567,7 @@ private:
     bool m_supportsGammaControl = false;
     bool m_supportsOutputChanges = false;
     CompositingType m_selectedCompositor = NoCompositing;
+    CursorImage *m_cursorImage = nullptr;
 };
 
 }

@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
+#include "cursorimage.h"
 #include "xwl/xwayland_interface.h"
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
@@ -2532,7 +2533,7 @@ void InputDeviceHandler::setDecoration(QPointer<Decoration::DecoratedClientImpl>
     auto oldDeco = m_focus.decoration;
     m_focus.decoration = decoration;
     cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    emit decorationChanged();
+    emit decorationChanged(decoration);
 }
 
 void InputDeviceHandler::setInternalWindow(QWindow *window)
@@ -2579,7 +2580,7 @@ bool InputDeviceHandler::updateDecoration()
         return false;
     }
     cleanupDecoration(oldDeco.data(), m_focus.decoration.data());
-    emit decorationChanged();
+    emit decorationChanged(m_focus.decoration);
     return true;
 }
 

@@ -80,9 +80,6 @@ public:
     }
     bool areButtonsPressed() const;
 
-    QImage cursorImage() const;
-    QPoint cursorHotSpot() const;
-    void markCursorAsRendered();
     void setEffectsOverrideCursor(Qt::CursorShape shape);
     void removeEffectsOverrideCursor();
     void setWindowSelectionCursor(const QByteArray &shape);
@@ -147,6 +144,9 @@ public:
      */
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
 
+    /// for testing purposes
+    CursorImage *cursor() const { return m_cursor; }
+
 private:
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
@@ -180,80 +180,6 @@ private:
     bool m_confined = false;
     bool m_locked = false;
     bool m_enableConstraints = true;
-};
-
-class CursorImage : public QObject
-{
-    Q_OBJECT
-public:
-    explicit CursorImage(PointerInputRedirection *parent = nullptr);
-    ~CursorImage() override;
-
-    void setEffectsOverrideCursor(Qt::CursorShape shape);
-    void removeEffectsOverrideCursor();
-    void setWindowSelectionCursor(const QByteArray &shape);
-    void removeWindowSelectionCursor();
-
-    QImage image() const;
-    QPoint hotSpot() const;
-    void markAsRendered();
-
-Q_SIGNALS:
-    void changed();
-
-private:
-    void reevaluteSource();
-    void update();
-    void updateServerCursor();
-    void updateDecoration();
-    void updateDecorationCursor();
-    void updateMoveResize();
-    void updateDrag();
-    void updateDragCursor();
-    void loadTheme();
-    struct Image {
-        QImage image;
-        QPoint hotSpot;
-    };
-    void loadThemeCursor(CursorShape shape, Image *image);
-    void loadThemeCursor(const QByteArray &shape, Image *image);
-    template <typename T>
-    void loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image);
-
-    enum class CursorSource {
-        LockScreen,
-        EffectsOverride,
-        MoveResize,
-        PointerSurface,
-        Decoration,
-        DragAndDrop,
-        Fallback,
-        WindowSelector
-    };
-    void setSource(CursorSource source);
-
-    PointerInputRedirection *m_pointer;
-    CursorSource m_currentSource = CursorSource::Fallback;
-    WaylandCursorTheme *m_cursorTheme = nullptr;
-    struct {
-        QMetaObject::Connection connection;
-        QImage image;
-        QPoint hotSpot;
-    } m_serverCursor;
-
-    Image m_effectsCursor;
-    Image m_decorationCursor;
-    QMetaObject::Connection m_decorationConnection;
-    Image m_fallbackCursor;
-    Image m_moveResizeCursor;
-    Image m_windowSelectionCursor;
-    QHash<CursorShape, Image> m_cursors;
-    QHash<QByteArray, Image> m_cursorsByName;
-    QElapsedTimer m_surfaceRenderedTimer;
-    struct {
-        Image cursor;
-        QMetaObject::Connection connection;
-    } m_drag;
 };
 
 }

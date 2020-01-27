@@ -1964,7 +1964,7 @@ void AbstractClient::updateCursor()
     if (c == m_moveResize.cursor)
         return;
     m_moveResize.cursor = c;
-    emit moveResizeCursorChanged(c);
+    emit moveResizeCursorChanged(c, m_decoration.client);
 }
 
 void AbstractClient::leaveMoveResize()

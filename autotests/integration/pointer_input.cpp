@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
+#include "cursorimage.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/buffer.h>
@@ -994,7 +995,7 @@ void PointerInputTest::testCursorImage()
     Cursor::setPos(800, 800);
     auto p = input()->pointer();
     // at the moment it should be the fallback cursor
-    const QImage fallbackCursor = p->cursorImage();
+    const QImage fallbackCursor = p->cursor()->image();
     QVERIFY(!fallbackCursor.isNull());
 
     // create a window
@@ -1012,7 +1013,7 @@ void PointerInputTest::testCursorImage()
     // move cursor to center of window, this should first set a null pointer, so we still show old cursor
     Cursor::setPos(window->frameGeometry().center());
     QCOMPARE(p->focus().data(), window);
-    QCOMPARE(p->cursorImage(), fallbackCursor);
+    QCOMPARE(p->cursor()->image(), fallbackCursor);
     QVERIFY(enteredSpy.wait());
 
     // create a cursor on the pointer
@@ -1027,13 +1028,13 @@ void PointerInputTest::testCursorImage()
     cursorSurface->commit();
     pointer->setCursor(cursorSurface, QPoint(5, 5));
     QVERIFY(cursorRenderedSpy.wait());
-    QCOMPARE(p->cursorImage(), red);
-    QCOMPARE(p->cursorHotSpot(), QPoint(5, 5));
+    QCOMPARE(p->cursor()->image(), red);
+    QCOMPARE(p->cursor()->hotSpot(), QPoint(5, 5));
     // change hotspot
     pointer->setCursor(cursorSurface, QPoint(6, 6));
     Test::flushWaylandConnection();
-    QTRY_COMPARE(p->cursorHotSpot(), QPoint(6, 6));
-    QCOMPARE(p->cursorImage(), red);
+    QTRY_COMPARE(p->cursor()->hotSpot(), QPoint(6, 6));
+    QCOMPARE(p->cursor()->image(), red);
 
     // change the buffer
     QImage blue = QImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
@@ -1043,8 +1044,8 @@ void PointerInputTest::testCursorImage()
     cursorSurface->damage(QRect(0, 0, 10, 10));
     cursorSurface->commit();
     QVERIFY(cursorRenderedSpy.wait());
-    QTRY_COMPARE(p->cursorImage(), blue);
-    QCOMPARE(p->cursorHotSpot(), QPoint(6, 6));
+    QTRY_COMPARE(p->cursor()->image(), blue);
+    QCOMPARE(p->cursor()->hotSpot(), QPoint(6, 6));
 
     // scaled cursor
     QImage blueScaled = QImage(QSize(20, 20), QImage::Format_ARGB32_Premultiplied);
@@ -1055,20 +1056,20 @@ void PointerInputTest::testCursorImage()
     cursorSurface->damage(QRect(0, 0, 20, 20));
     cursorSurface->commit();
     QVERIFY(cursorRenderedSpy.wait());
-    QTRY_COMPARE(p->cursorImage(), blueScaled);
-    QCOMPARE(p->cursorImage().devicePixelRatio(), 2.0);
-    QCOMPARE(p->cursorHotSpot(), QPoint(6, 6)); //surface-local (so not changed)
+    QTRY_COMPARE(p->cursor()->image(), blueScaled);
+    QCOMPARE(p->cursor()->image().devicePixelRatio(), 2.0);
+    QCOMPARE(p->cursor()->hotSpot(), QPoint(6, 6)); //surface-local (so not changed)
 
     // hide the cursor
     pointer->setCursor(nullptr);
     Test::flushWaylandConnection();
-    QTRY_VERIFY(p->cursorImage().isNull());
+    QTRY_VERIFY(p->cursor()->image().isNull());
 
     // move cursor somewhere else, should reset to fallback cursor
     Cursor::setPos(window->frameGeometry().bottomLeft() + QPoint(20, 20));
     QVERIFY(p->focus().isNull());
-    QVERIFY(!p->cursorImage().isNull());
-    QCOMPARE(p->cursorImage(), fallbackCursor);
+    QVERIFY(!p->cursor()->image().isNull());
+    QCOMPARE(p->cursor()->image(), fallbackCursor);
 }
 
 class HelperEffect : public Effect
@@ -1095,7 +1096,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
     Cursor::setPos(800, 800);
     auto p = input()->pointer();
     // here we should have the fallback cursor
-    const QImage fallback = p->cursorImage();
+    const QImage fallback = p->cursor()->image();
     QVERIFY(!fallback.isNull());
 
     // now let's create a window
@@ -1115,33 +1116,33 @@ void PointerInputTest::testEffectOverrideCursorImage()
     Cursor::setPos(window->frameGeometry().center());
     QVERIFY(enteredSpy.wait());
     // cursor image should still be fallback
-    QCOMPARE(p->cursorImage(), fallback);
+    QCOMPARE(p->cursor()->image(), fallback);
 
     // now create an effect and set an override cursor
     QScopedPointer<HelperEffect> effect(new HelperEffect);
     effects->startMouseInterception(effect.data(), Qt::SizeAllCursor);
-    const QImage sizeAll = p->cursorImage();
+    const QImage sizeAll = p->cursor()->image();
     QVERIFY(!sizeAll.isNull());
     QVERIFY(sizeAll != fallback);
     QVERIFY(leftSpy.wait());
 
     // let's change to arrow cursor, this should be our fallback
     effects->defineCursor(Qt::ArrowCursor);
-    QCOMPARE(p->cursorImage(), fallback);
+    QCOMPARE(p->cursor()->image(), fallback);
 
     // back to size all
     effects->defineCursor(Qt::SizeAllCursor);
-    QCOMPARE(p->cursorImage(), sizeAll);
+    QCOMPARE(p->cursor()->image(), sizeAll);
 
     // move cursor outside the window area
     Cursor::setPos(800, 800);
     // and end the override, which should switch to fallback
     effects->stopMouseInterception(effect.data());
-    QCOMPARE(p->cursorImage(), fallback);
+    QCOMPARE(p->cursor()->image(), fallback);
 
     // start mouse interception again
     effects->startMouseInterception(effect.data(), Qt::SizeAllCursor);
-    QCOMPARE(p->cursorImage(), sizeAll);
+    QCOMPARE(p->cursor()->image(), sizeAll);
 
     // move cursor to area of window
     Cursor::setPos(window->frameGeometry().center());
@@ -1151,7 +1152,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // after ending the interception we should get an enter event
     effects->stopMouseInterception(effect.data());
     QVERIFY(enteredSpy.wait());
-    QVERIFY(p->cursorImage().isNull());
+    QVERIFY(p->cursor()->image().isNull());
 }
 
 void PointerInputTest::testPopup()

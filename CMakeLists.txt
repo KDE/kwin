@@ -406,6 +406,7 @@ set(kwin_SRCS
     colorcorrection/suncalc.cpp
     composite.cpp
     cursor.cpp
+    cursorimage.cpp
     dbusinterface.cpp
     debug_console.cpp
     decorations/decoratedclient.cpp

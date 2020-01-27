@@ -463,7 +463,7 @@ public:
 
 Q_SIGNALS:
     void atChanged(Toplevel *old, Toplevel *now);
-    void decorationChanged();
+    void decorationChanged(Decoration::DecoratedClientImpl* decoration);
 
 protected:
     explicit InputDeviceHandler(InputRedirection *parent);

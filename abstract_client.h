@@ -909,7 +909,7 @@ Q_SIGNALS:
     void modalChanged();
     void quickTileModeChanged();
     void moveResizedChanged();
-    void moveResizeCursorChanged(CursorShape);
+    void moveResizeCursorChanged(CursorShape, Decoration::DecoratedClientImpl*);
     void clientStartUserMovedResized(KWin::AbstractClient*);
     void clientStepUserMovedResized(KWin::AbstractClient *, const QRect&);
     void clientFinishUserMovedResized(KWin::AbstractClient*);

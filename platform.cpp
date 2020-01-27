@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 #include "composite.h"
 #include "cursor.h"
+#include "cursorimage.h"
 #include "effects.h"
 #include <KCoreAddons>
 #include "overlaywindow.h"
@@ -55,14 +56,22 @@ Platform::~Platform()
     }
 }
 
+void Platform::setCurrentCursor(CursorImage* cursorImage)
+{
+    if (cursorImage != m_cursorImage) {
+        m_cursorImage = cursorImage;
+        Q_EMIT cursorChanged();
+    }
+}
+
 QImage Platform::softwareCursor() const
 {
-    return input()->pointer()->cursorImage();
+    return m_cursorImage ? m_cursorImage->image() : QImage();
 }
 
 QPoint Platform::softwareCursorHotspot() const
 {
-    return input()->pointer()->cursorHotSpot();
+    return m_cursorImage ? m_cursorImage->hotSpot() : QPoint();
 }
 
 PlatformCursorImage Platform::cursorImage() const
@@ -223,8 +232,8 @@ void Platform::markCursorAsRendered()
     if (m_softWareCursor) {
         m_cursor.lastRenderedGeometry = QRect(Cursor::pos() - softwareCursorHotspot(), softwareCursor().size());
     }
-    if (input()->pointer()) {
-        input()->pointer()->markCursorAsRendered();
+    if (m_cursorImage) {
+        m_cursorImage->markAsRendered();
     }
 }
 
