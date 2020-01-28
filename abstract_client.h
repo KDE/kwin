@@ -693,9 +693,15 @@ public:
      */
     QRect clientRectToFrameRect(const QRect &rect) const;
 
+    /**
+     * Returns @c true if the Client is being interactively moved; otherwise @c false.
+     */
     bool isMove() const {
         return isMoveResize() && moveResizePointerMode() == PositionCenter;
     }
+    /**
+     * Returns @c true if the Client is being interactively resized; otherwise @c false.
+     */
     bool isResize() const {
         return isMoveResize() && moveResizePointerMode() != PositionCenter;
     }
