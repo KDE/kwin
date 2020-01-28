@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #endif
 #include "atoms.h"
-#include "x11client.h"
 #include "client_machine.h"
 #include "composite.h"
 #include "effects.h"
@@ -317,24 +316,6 @@ bool Toplevel::compositing() const
         return false;
     }
     return Workspace::self()->compositing();
-}
-
-void X11Client::damageNotifyEvent()
-{
-    if (syncRequest.isPending && isResize()) {
-        emit damaged(this, QRect());
-        m_isDamaged = true;
-        return;
-    }
-
-    if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
-            setReadyForPainting();
-            setupWindowManagementInterface();
-        }
-    }
-
-    Toplevel::damageNotifyEvent();
 }
 
 bool Toplevel::resetAndFetchDamage()

@@ -319,8 +319,8 @@ public:
         QTimer *timeout, *failsafeTimeout;
         bool isPending;
     };
-    const SyncRequest &getSyncRequest() const {
-        return syncRequest;
+    const SyncRequest &syncRequest() const {
+        return m_syncRequest;
     }
     void handleSync();
 
@@ -535,7 +535,7 @@ private:
     xcb_timestamp_t m_userTime;
     NET::Actions allowed_actions;
     bool shade_geometry_change;
-    SyncRequest syncRequest;
+    SyncRequest m_syncRequest;
     static bool check_active_modal; ///< \see X11Client::checkActiveModal()
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
