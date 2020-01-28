@@ -188,6 +188,7 @@ private:
     void unmap();
     void markAsMapped();
     QRect determineBufferGeometry() const;
+    void ping(PingReason reason);
     static void deleteClient(XdgShellClient *c);
 
     QRect adjustMoveGeometry(const QRect &rect) const;
@@ -260,7 +261,7 @@ private:
     QRect m_blockedRequestGeometry;
     QString m_caption;
     QString m_captionSuffix;
-    QHash<qint32, PingReason> m_pingSerials;
+    QHash<quint32, PingReason> m_pingSerials;
 
     bool m_isInitialized = false;
 

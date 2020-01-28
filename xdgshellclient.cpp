@@ -652,8 +652,7 @@ void XdgShellClient::closeWindow()
 {
     if (m_xdgShellSurface && isCloseable()) {
         m_xdgShellSurface->close();
-        const qint32 pingSerial = static_cast<XdgShellInterface *>(m_xdgShellSurface->global())->ping(m_xdgShellSurface);
-        m_pingSerials.insert(pingSerial, PingReason::CloseWindow);
+        ping(PingReason::CloseWindow);
     }
 }
 
@@ -989,8 +988,7 @@ void XdgShellClient::takeFocus()
 {
     if (rules()->checkAcceptFocus(wantsInput())) {
         if (m_xdgShellSurface) {
-            const qint32 pingSerial = static_cast<XdgShellInterface *>(m_xdgShellSurface->global())->ping(m_xdgShellSurface);
-            m_pingSerials.insert(pingSerial, PingReason::FocusWindow);
+            ping(PingReason::FocusWindow);
         }
         setActive(true);
     }
@@ -2041,6 +2039,15 @@ QRect XdgShellClient::adjustResizeGeometry(const QRect &rect) const
     }
 
     return geometry;
+}
+
+void XdgShellClient::ping(PingReason reason)
+{
+    Q_ASSERT(m_xdgShellSurface);
+
+    XdgShellInterface *shell = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
+    const quint32 serial = shell->ping(m_xdgShellSurface);
+    m_pingSerials.insert(serial, reason);
 }
 
 }
