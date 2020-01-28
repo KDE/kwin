@@ -137,10 +137,10 @@ X11Client::X11Client()
     , m_focusOutTimer(nullptr)
 {
     // TODO: Do all as initialization
-    syncRequest.counter = syncRequest.alarm = XCB_NONE;
-    syncRequest.timeout = syncRequest.failsafeTimeout = nullptr;
-    syncRequest.lastTimestamp = xTime();
-    syncRequest.isPending = false;
+    m_syncRequest.counter = m_syncRequest.alarm = XCB_NONE;
+    m_syncRequest.timeout = m_syncRequest.failsafeTimeout = nullptr;
+    m_syncRequest.lastTimestamp = xTime();
+    m_syncRequest.isPending = false;
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
@@ -190,8 +190,9 @@ X11Client::~X11Client()
         ::kill(m_killHelperPID, SIGTERM);
         m_killHelperPID = 0;
     }
-    if (syncRequest.alarm != XCB_NONE)
-        xcb_sync_destroy_alarm(connection(), syncRequest.alarm);
+    if (m_syncRequest.alarm != XCB_NONE) {
+        xcb_sync_destroy_alarm(connection(), m_syncRequest.alarm);
+    }
     Q_ASSERT(!isMoveResize());
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
@@ -2329,24 +2330,24 @@ void X11Client::getSyncCounter()
     Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);
     const xcb_sync_counter_t counter = syncProp.value<xcb_sync_counter_t>(XCB_NONE);
     if (counter != XCB_NONE) {
-        syncRequest.counter = counter;
-        syncRequest.value.hi = 0;
-        syncRequest.value.lo = 0;
+        m_syncRequest.counter = counter;
+        m_syncRequest.value.hi = 0;
+        m_syncRequest.value.lo = 0;
         auto *c = connection();
-        xcb_sync_set_counter(c, syncRequest.counter, syncRequest.value);
-        if (syncRequest.alarm == XCB_NONE) {
+        xcb_sync_set_counter(c, m_syncRequest.counter, m_syncRequest.value);
+        if (m_syncRequest.alarm == XCB_NONE) {
             const uint32_t mask = XCB_SYNC_CA_COUNTER | XCB_SYNC_CA_VALUE_TYPE | XCB_SYNC_CA_TEST_TYPE | XCB_SYNC_CA_EVENTS;
             const uint32_t values[] = {
-                syncRequest.counter,
+                m_syncRequest.counter,
                 XCB_SYNC_VALUETYPE_RELATIVE,
                 XCB_SYNC_TESTTYPE_POSITIVE_TRANSITION,
                 1
             };
-            syncRequest.alarm = xcb_generate_id(c);
-            auto cookie = xcb_sync_create_alarm_checked(c, syncRequest.alarm, mask, values);
+            m_syncRequest.alarm = xcb_generate_id(c);
+            auto cookie = xcb_sync_create_alarm_checked(c, m_syncRequest.alarm, mask, values);
             ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(c, cookie));
             if (!error.isNull()) {
-                syncRequest.alarm = XCB_NONE;
+                m_syncRequest.alarm = XCB_NONE;
             } else {
                 xcb_sync_change_alarm_value_list_t value;
                 memset(&value, 0, sizeof(value));
@@ -2354,7 +2355,7 @@ void X11Client::getSyncCounter()
                 value.value.lo = 1;
                 value.delta.hi = 0;
                 value.delta.lo = 1;
-                xcb_sync_change_alarm_aux(c, syncRequest.alarm, XCB_SYNC_CA_DELTA | XCB_SYNC_CA_VALUE, &value);
+                xcb_sync_change_alarm_aux(c, m_syncRequest.alarm, XCB_SYNC_CA_DELTA | XCB_SYNC_CA_VALUE, &value);
             }
         }
     }
@@ -2365,12 +2366,13 @@ void X11Client::getSyncCounter()
  */
 void X11Client::sendSyncRequest()
 {
-    if (syncRequest.counter == XCB_NONE || syncRequest.isPending)
+    if (m_syncRequest.counter == XCB_NONE || m_syncRequest.isPending) {
         return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
+    }
 
-    if (!syncRequest.failsafeTimeout) {
-        syncRequest.failsafeTimeout = new QTimer(this);
-        connect(syncRequest.failsafeTimeout, &QTimer::timeout, this,
+    if (!m_syncRequest.failsafeTimeout) {
+        m_syncRequest.failsafeTimeout = new QTimer(this);
+        connect(m_syncRequest.failsafeTimeout, &QTimer::timeout, this,
             [this]() {
                 // client does not respond to XSYNC requests in reasonable time, remove support
                 if (!ready_for_painting) {
@@ -2380,35 +2382,39 @@ void X11Client::sendSyncRequest()
                     return;
                 }
                 // failed during resize
-                syncRequest.isPending = false;
-                syncRequest.counter = syncRequest.alarm = XCB_NONE;
-                delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
-                syncRequest.timeout = syncRequest.failsafeTimeout = nullptr;
-                syncRequest.lastTimestamp = XCB_CURRENT_TIME;
+                m_syncRequest.isPending = false;
+                m_syncRequest.counter = XCB_NONE;
+                m_syncRequest.alarm = XCB_NONE;
+                delete m_syncRequest.timeout;
+                delete m_syncRequest.failsafeTimeout;
+                m_syncRequest.timeout = nullptr;
+                m_syncRequest.failsafeTimeout = nullptr;
+                m_syncRequest.lastTimestamp = XCB_CURRENT_TIME;
             }
         );
-        syncRequest.failsafeTimeout->setSingleShot(true);
+        m_syncRequest.failsafeTimeout->setSingleShot(true);
     }
     // if there's no response within 10 seconds, sth. went wrong and we remove XSYNC support from this client.
     // see events.cpp X11Client::syncEvent()
-    syncRequest.failsafeTimeout->start(ready_for_painting ? 10000 : 1000);
+    m_syncRequest.failsafeTimeout->start(ready_for_painting ? 10000 : 1000);
 
     // We increment before the notify so that after the notify
     // syncCounterSerial will equal the value we are expecting
     // in the acknowledgement
-    const uint32_t oldLo = syncRequest.value.lo;
-    syncRequest.value.lo++;;
-    if (oldLo > syncRequest.value.lo) {
-        syncRequest.value.hi++;
+    const uint32_t oldLo = m_syncRequest.value.lo;
+    m_syncRequest.value.lo++;
+    if (oldLo > m_syncRequest.value.lo) {
+        m_syncRequest.value.hi++;
     }
-    if (syncRequest.lastTimestamp >= xTime()) {
+    if (m_syncRequest.lastTimestamp >= xTime()) {
         updateXTime();
     }
 
     // Send the message to client
-    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, syncRequest.value.lo, syncRequest.value.hi);
-    syncRequest.isPending = true;
-    syncRequest.lastTimestamp = xTime();
+    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request,
+                      m_syncRequest.value.lo, m_syncRequest.value.hi);
+    m_syncRequest.isPending = true;
+    m_syncRequest.lastTimestamp = xTime();
 }
 
 bool X11Client::wantsInput() const
@@ -2796,7 +2802,7 @@ void X11Client::showOnScreenEdge()
 void X11Client::addDamage(const QRegion &damage)
 {
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
+        if (m_syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
             setReadyForPainting();
             setupWindowManagementInterface();
         }
@@ -2855,12 +2861,14 @@ void X11Client::handleSync()
 {
     setReadyForPainting();
     setupWindowManagementInterface();
-    syncRequest.isPending = false;
-    if (syncRequest.failsafeTimeout)
-        syncRequest.failsafeTimeout->stop();
+    m_syncRequest.isPending = false;
+    if (m_syncRequest.failsafeTimeout) {
+        m_syncRequest.failsafeTimeout->stop();
+    }
     if (isResize()) {
-        if (syncRequest.timeout)
-            syncRequest.timeout->stop();
+        if (m_syncRequest.timeout) {
+            m_syncRequest.timeout->stop();
+        }
         performMoveResize();
     } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
         addRepaintFull();
@@ -4272,7 +4280,7 @@ void X11Client::updateServerGeometry()
         if (!isShade()) {
             QSize cs = clientSize();
             m_wrapper.setGeometry(QRect(clientPos(), cs));
-            if (!isResize() || syncRequest.counter == XCB_NONE) {
+            if (!isResize() || m_syncRequest.counter == XCB_NONE) {
                 m_client.setGeometry(0, 0, cs.width(), cs.height());
             }
             // SELI - won't this be too expensive?
@@ -4726,41 +4734,42 @@ void X11Client::leaveMoveResize()
     move_resize_has_keyboard_grab = false;
     xcb_ungrab_pointer(connection(), xTime());
     m_moveResizeGrabWindow.reset();
-    if (syncRequest.counter == XCB_NONE) // don't forget to sanitize since the timeout will no more fire
-        syncRequest.isPending = false;
-    delete syncRequest.timeout;
-    syncRequest.timeout = nullptr;
+    if (m_syncRequest.counter == XCB_NONE) { // don't forget to sanitize since the timeout will no more fire
+        m_syncRequest.isPending = false;
+    }
+    delete m_syncRequest.timeout;
+    m_syncRequest.timeout = nullptr;
     AbstractClient::leaveMoveResize();
 }
 
 bool X11Client::isWaitingForMoveResizeSync() const
 {
-    return syncRequest.isPending && isResize();
+    return m_syncRequest.isPending && isResize();
 }
 
 void X11Client::doResizeSync()
 {
-    if (!syncRequest.timeout) {
-        syncRequest.timeout = new QTimer(this);
-        connect(syncRequest.timeout, &QTimer::timeout, this, &X11Client::performMoveResize);
-        syncRequest.timeout->setSingleShot(true);
+    if (!m_syncRequest.timeout) {
+        m_syncRequest.timeout = new QTimer(this);
+        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Client::performMoveResize);
+        m_syncRequest.timeout->setSingleShot(true);
     }
-    if (syncRequest.counter != XCB_NONE) {
-        syncRequest.timeout->start(250);
+    if (m_syncRequest.counter != XCB_NONE) {
+        m_syncRequest.timeout->start(250);
         sendSyncRequest();
-    } else {                            // for clients not supporting the XSYNC protocol, we
-        syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
-        syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
-    }                                   // and no human can control faster resizes anyway
+    } else {                              // for clients not supporting the XSYNC protocol, we
+        m_syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
+        m_syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
+    }                                     // and no human can control faster resizes anyway
     const QRect moveResizeClientGeometry = frameRectToClientRect(moveResizeGeometry());
     m_client.setGeometry(0, 0, moveResizeClientGeometry.width(), moveResizeClientGeometry.height());
 }
 
 void X11Client::doPerformMoveResize()
 {
-    if (syncRequest.counter == XCB_NONE)   // client w/o XSYNC support. allow the next resize event
-        syncRequest.isPending = false; // NEVER do this for clients with a valid counter
-                                       // (leads to sync request races in some clients)
+    if (m_syncRequest.counter == XCB_NONE) { // client w/o XSYNC support. allow the next resize event
+        m_syncRequest.isPending = false;     // NEVER do this for clients with a valid counter
+    }                                        // (leads to sync request races in some clients)
 }
 
 /**

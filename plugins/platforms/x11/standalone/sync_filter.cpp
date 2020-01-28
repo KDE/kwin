@@ -35,7 +35,7 @@ bool SyncFilter::event(xcb_generic_event_t *event)
     auto e = reinterpret_cast< xcb_sync_alarm_notify_event_t* >(event);
     auto client = workspace()->findClient(
         [e] (const X11Client *c) {
-            const auto syncRequest = c->getSyncRequest();
+            const auto syncRequest = c->syncRequest();
             return e->alarm == syncRequest.alarm && e->counter_value.hi == syncRequest.value.hi && e->counter_value.lo == syncRequest.value.lo;
         }
     );

@@ -321,14 +321,14 @@ bool Toplevel::compositing() const
 
 void X11Client::damageNotifyEvent()
 {
-    if (syncRequest.isPending && isResize()) {
+    if (m_syncRequest.isPending && isResize()) {
         emit damaged(this, QRect());
         m_isDamaged = true;
         return;
     }
 
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
+        if (m_syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
             setReadyForPainting();
             setupWindowManagementInterface();
         }
