@@ -4959,4 +4959,22 @@ void X11Client::applyWindowRules()
     setBlockingCompositing(info->isBlockingCompositing());
 }
 
+void X11Client::damageNotifyEvent()
+{
+    if (m_syncRequest.isPending && isResize()) {
+        emit damaged(this, QRect());
+        m_isDamaged = true;
+        return;
+    }
+
+    if (!readyForPainting()) { // avoid "setReadyForPainting()" function calling overhead
+        if (m_syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
+            setReadyForPainting();
+            setupWindowManagementInterface();
+        }
+    }
+
+    AbstractClient::damageNotifyEvent();
+}
+
 } // namespace
