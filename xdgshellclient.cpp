@@ -67,7 +67,7 @@ namespace KWin
 
 XdgShellClient::XdgShellClient(XdgShellSurfaceInterface *surface)
     : AbstractClient()
-    , m_xdgShellSurface(surface)
+    , m_xdgShellToplevel(surface)
     , m_xdgShellPopup(nullptr)
 {
     setSurface(surface->surface());
@@ -76,7 +76,7 @@ XdgShellClient::XdgShellClient(XdgShellSurfaceInterface *surface)
 
 XdgShellClient::XdgShellClient(XdgShellPopupInterface *surface)
     : AbstractClient()
-    , m_xdgShellSurface(nullptr)
+    , m_xdgShellToplevel(nullptr)
     , m_xdgShellPopup(surface)
 {
     setSurface(surface->surface());
@@ -106,36 +106,36 @@ void XdgShellClient::init()
     connect(surface(), &SurfaceInterface::unbound, this, &XdgShellClient::destroyClient);
     connect(surface(), &SurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
 
-    if (m_xdgShellSurface) {
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::configureAcknowledged, this, &XdgShellClient::handleConfigureAcknowledged);
+    if (m_xdgShellToplevel) {
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::destroyed, this, &XdgShellClient::destroyClient);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::configureAcknowledged, this, &XdgShellClient::handleConfigureAcknowledged);
 
-        m_caption = m_xdgShellSurface->title().simplified();
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::titleChanged, this, &XdgShellClient::handleWindowTitleChanged);
+        m_caption = m_xdgShellToplevel->title().simplified();
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::titleChanged, this, &XdgShellClient::handleWindowTitleChanged);
         QTimer::singleShot(0, this, &XdgShellClient::updateCaption);
 
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::moveRequested, this, &XdgShellClient::handleMoveRequested);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::resizeRequested, this, &XdgShellClient::handleResizeRequested);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::moveRequested, this, &XdgShellClient::handleMoveRequested);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::resizeRequested, this, &XdgShellClient::handleResizeRequested);
 
         // Determine the resource name, this is inspired from ICCCM 4.1.2.5
         // the binary name of the invoked client.
-        QFileInfo info{m_xdgShellSurface->client()->executablePath()};
+        QFileInfo info{m_xdgShellToplevel->client()->executablePath()};
         QByteArray resourceName;
         if (info.exists()) {
             resourceName = info.fileName().toUtf8();
         }
-        setResourceClass(resourceName, m_xdgShellSurface->windowClass());
-        setDesktopFileName(m_xdgShellSurface->windowClass());
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowClassChanged, this, &XdgShellClient::handleWindowClassChanged);
+        setResourceClass(resourceName, m_xdgShellToplevel->windowClass());
+        setDesktopFileName(m_xdgShellToplevel->windowClass());
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::windowClassChanged, this, &XdgShellClient::handleWindowClassChanged);
 
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::minimizeRequested, this, &XdgShellClient::handleMinimizeRequested);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::maximizedChanged, this, &XdgShellClient::handleMaximizeRequested);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::fullscreenChanged, this, &XdgShellClient::handleFullScreenRequested);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowMenuRequested, this, &XdgShellClient::handleWindowMenuRequested);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::transientForChanged, this, &XdgShellClient::handleTransientForChanged);
-        connect(m_xdgShellSurface, &XdgShellSurfaceInterface::windowGeometryChanged, this, &XdgShellClient::handleWindowGeometryChanged);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::minimizeRequested, this, &XdgShellClient::handleMinimizeRequested);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::maximizedChanged, this, &XdgShellClient::handleMaximizeRequested);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::fullscreenChanged, this, &XdgShellClient::handleFullScreenRequested);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::windowMenuRequested, this, &XdgShellClient::handleWindowMenuRequested);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::transientForChanged, this, &XdgShellClient::handleTransientForChanged);
+        connect(m_xdgShellToplevel, &XdgShellSurfaceInterface::windowGeometryChanged, this, &XdgShellClient::handleWindowGeometryChanged);
 
-        auto global = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
+        auto global = static_cast<XdgShellInterface *>(m_xdgShellToplevel->global());
         connect(global, &XdgShellInterface::pingDelayed, this, &XdgShellClient::handlePingDelayed);
         connect(global, &XdgShellInterface::pingTimeout, this, &XdgShellClient::handlePingTimeout);
         connect(global, &XdgShellInterface::pongReceived, this, &XdgShellClient::handlePongReceived);
@@ -147,7 +147,7 @@ void XdgShellClient::init()
             if (m_requestGeometryBlockCounter != 0 || areGeometryUpdatesBlocked()) {
                 return;
             }
-            m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
+            m_xdgShellToplevel->configure(xdgSurfaceStates(), m_requestedClientSize);
         };
         connect(this, &AbstractClient::activeChanged, this, configure);
         connect(this, &AbstractClient::clientStartUserMovedResized, this, configure);
@@ -285,7 +285,7 @@ void XdgShellClient::destroyClient()
 
     deleted->unrefWindow();
 
-    m_xdgShellSurface = nullptr;
+    m_xdgShellToplevel = nullptr;
     m_xdgShellPopup = nullptr;
     deleteClient(this);
 }
@@ -490,7 +490,7 @@ void XdgShellClient::updateDecoration(bool check_workspace_pos, bool force)
         auto mode = isDecorated() || m_userNoBorder ? XdgDecorationInterface::Mode::ServerSide: XdgDecorationInterface::Mode::ClientSide;
         m_xdgDecoration->configure(mode);
         if (m_requestGeometryBlockCounter == 0) {
-            m_xdgShellSurface->configure(xdgSurfaceStates(), m_requestedClientSize);
+            m_xdgShellToplevel->configure(xdgSurfaceStates(), m_requestedClientSize);
         }
     }
     updateShadow();
@@ -650,8 +650,8 @@ void XdgShellClient::updateCaption()
 
 void XdgShellClient::closeWindow()
 {
-    if (m_xdgShellSurface && isCloseable()) {
-        m_xdgShellSurface->close();
+    if (m_xdgShellToplevel && isCloseable()) {
+        m_xdgShellToplevel->close();
         ping(PingReason::CloseWindow);
     }
 }
@@ -667,7 +667,7 @@ bool XdgShellClient::isCloseable() const
     if (m_windowType == NET::Desktop || m_windowType == NET::Dock) {
         return false;
     }
-    if (m_xdgShellSurface) {
+    if (m_xdgShellToplevel) {
         return true;
     }
     return false;
@@ -987,7 +987,7 @@ void XdgShellClient::setOnAllActivities(bool set)
 void XdgShellClient::takeFocus()
 {
     if (rules()->checkAcceptFocus(wantsInput())) {
-        if (m_xdgShellSurface) {
+        if (m_xdgShellToplevel) {
             ping(PingReason::FocusWindow);
         }
         setActive(true);
@@ -1009,7 +1009,7 @@ void XdgShellClient::doSetActive()
 
 bool XdgShellClient::userCanSetFullScreen() const
 {
-    if (m_xdgShellSurface) {
+    if (m_xdgShellToplevel) {
         return true;
     }
     return false;
@@ -1055,7 +1055,7 @@ bool XdgShellClient::acceptsFocus() const
         // an unmapped window does not accept focus
         return false;
     }
-    if (m_xdgShellSurface) {
+    if (m_xdgShellToplevel) {
         // TODO: proper
         return true;
     }
@@ -1099,8 +1099,8 @@ void XdgShellClient::requestGeometry(const QRect &rect)
 
     quint64 serialId = 0;
 
-    if (m_xdgShellSurface) {
-        serialId = m_xdgShellSurface->configure(xdgSurfaceStates(), size);
+    if (m_xdgShellToplevel) {
+        serialId = m_xdgShellToplevel->configure(xdgSurfaceStates(), size);
     }
     if (m_xdgShellPopup) {
         auto parent = transientFor();
@@ -1162,8 +1162,8 @@ void XdgShellClient::handleConfigureAcknowledged(quint32 serial)
 void XdgShellClient::handleTransientForChanged()
 {
     SurfaceInterface *transientSurface = nullptr;
-    if (m_xdgShellSurface) {
-        if (auto transient = m_xdgShellSurface->transientFor().data()) {
+    if (m_xdgShellToplevel) {
+        if (auto transient = m_xdgShellToplevel->transientFor().data()) {
             transientSurface = transient->surface();
         }
     }
@@ -1847,7 +1847,7 @@ void XdgShellClient::installServerSideDecoration(KWayland::Server::ServerSideDec
 
 void XdgShellClient::installXdgDecoration(XdgDecorationInterface *deco)
 {
-    Q_ASSERT(m_xdgShellSurface);
+    Q_ASSERT(m_xdgShellToplevel);
 
     m_xdgDecoration = deco;
 
@@ -1996,7 +1996,7 @@ bool XdgShellClient::supportsWindowRules() const
     if (m_plasmaShellSurface) {
         return false;
     }
-    return m_xdgShellSurface;
+    return m_xdgShellToplevel;
 }
 
 QRect XdgShellClient::adjustMoveGeometry(const QRect &rect) const
@@ -2043,10 +2043,10 @@ QRect XdgShellClient::adjustResizeGeometry(const QRect &rect) const
 
 void XdgShellClient::ping(PingReason reason)
 {
-    Q_ASSERT(m_xdgShellSurface);
+    Q_ASSERT(m_xdgShellToplevel);
 
-    XdgShellInterface *shell = static_cast<XdgShellInterface *>(m_xdgShellSurface->global());
-    const quint32 serial = shell->ping(m_xdgShellSurface);
+    XdgShellInterface *shell = static_cast<XdgShellInterface *>(m_xdgShellToplevel->global());
+    const quint32 serial = shell->ping(m_xdgShellToplevel);
     m_pingSerials.insert(serial, reason);
 }
 
