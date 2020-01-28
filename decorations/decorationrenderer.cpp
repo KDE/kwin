@@ -40,12 +40,12 @@ Renderer::Renderer(DecoratedClientImpl *client)
     , m_imageSizesDirty(true)
 {
     auto markImageSizesDirty = [this]{
+        schedule(m_client->client()->rect());
         m_imageSizesDirty = true;
     };
     connect(client->client(), &AbstractClient::screenScaleChanged, this, markImageSizesDirty);
     connect(client->decoration(), &KDecoration2::Decoration::bordersChanged, this, markImageSizesDirty);
-    connect(client->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, markImageSizesDirty);
-    connect(client->decoratedClient(), &KDecoration2::DecoratedClient::heightChanged, this, markImageSizesDirty);
+    connect(client->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, markImageSizesDirty);
 }
 
 Renderer::~Renderer() = default;

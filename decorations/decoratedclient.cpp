@@ -67,6 +67,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             if (oldSize.height() != m_clientSize.height()) {
                 emit decoratedClient->heightChanged(m_clientSize.height());
             }
+            emit decoratedClient->sizeChanged(m_clientSize);
         }
     );
     connect(client, &AbstractClient::desktopChanged, this,
@@ -271,6 +272,11 @@ int DecoratedClientImpl::width() const
 int DecoratedClientImpl::height() const
 {
     return m_clientSize.height();
+}
+
+QSize DecoratedClientImpl::size() const
+{
+    return m_clientSize;
 }
 
 bool DecoratedClientImpl::isMaximizedVertically() const

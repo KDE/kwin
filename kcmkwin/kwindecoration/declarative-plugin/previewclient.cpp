@@ -111,6 +111,11 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersRightEdgeChanged,  this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersBottomEdgeChanged, this, emitEdgesChanged);
+    auto emitSizeChanged = [this, c]() {
+        emit c->sizeChanged(c->size());
+    };
+    connect(this, &PreviewClient::widthChanged, this, emitSizeChanged);
+    connect(this, &PreviewClient::heightChanged, this, emitSizeChanged);
 
     qApp->installEventFilter(this);
 }
@@ -131,6 +136,11 @@ int PreviewClient::width() const
 int PreviewClient::height() const
 {
     return m_height;
+}
+
+QSize PreviewClient::size() const
+{
+    return QSize(m_width, m_height);
 }
 
 QString PreviewClient::caption() const
