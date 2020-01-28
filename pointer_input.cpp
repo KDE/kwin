@@ -290,7 +290,6 @@ void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &de
     }
 
     PositionUpdateBlocker blocker(this);
-    kwinApp()->platform()->setCurrentCursor(m_cursor);
     updatePosition(pos);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      input()->keyboardModifiers(), time,
@@ -300,6 +299,7 @@ void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &de
     update();
     input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
     input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
+    kwinApp()->platform()->setCurrentCursor(m_cursor);
 }
 
 void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, LibInput::Device *device)

@@ -1537,6 +1537,27 @@ static KWayland::Server::SeatInterface *findSeat()
  */
 class TabletInputFilter : public QObject, public InputEventFilter
 {
+    class TabletCursorImage : public KWin::CursorImage {
+    public:
+        TabletCursorImage(KWayland::Server::TabletCursor *cursor, QObject *parent)
+            : KWin::CursorImage(parent)
+            , m_cursor(cursor)
+        {
+            m_currentSource = CursorSource::PointerSurface;
+        }
+
+        QPointer<KWayland::Server::SurfaceInterface> cursorSurface() override {
+            return m_cursor ? m_cursor->surface() : nullptr;
+        }
+
+        QPoint cursorHotspot() override {
+            return m_cursor ? m_cursor->hotspot() : QPoint();
+        }
+
+        KWayland::Server::TabletCursor * m_cursor;
+    };
+
+    TabletCursorImage *m_cursor = nullptr;
 public:
     TabletInputFilter()
     {
@@ -1575,6 +1596,11 @@ public:
 
         KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
         auto tool = tabletSeat->toolByHardwareId(event->serialId());
+
+        if (!m_cursor) {
+            m_cursor = new TabletCursorImage(nullptr, this);
+        }
+
         if (!tool) {
             using namespace KWayland::Server;
 
@@ -1632,6 +1658,7 @@ public:
                 break;
             }
             tool = tabletSeat->addTool(toolType, event->serialId(), event->uniqueId(), ifaceCapabilities);
+            connect(tool, &TabletToolInterface::cursorChanged, m_cursor, &TabletCursorImage::changed);
         }
 
         KWayland::Server::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
@@ -1648,8 +1675,15 @@ public:
             return emulateTabletEvent(event);
         }
 
+        auto currentCursor = tool->cursor(surface->client());
+        if (m_cursor->m_cursor != currentCursor) {
+            m_cursor->m_cursor = currentCursor;
+            Q_EMIT m_cursor->changed();
+        }
+
         switch (event->type()) {
         case QEvent::TabletMove:
+            kwinApp()->platform()->setCurrentCursor(m_cursor);
             tool->sendMotion(event->globalPosF() - toplevel->pos());
             break;
         case QEvent::TabletEnterProximity:
