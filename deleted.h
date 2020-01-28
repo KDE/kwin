@@ -62,7 +62,6 @@ public:
         return no_border;
     }
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
-    QRect decorationRect() const override;
     Layer layer() const override {
         return m_layer;
     }

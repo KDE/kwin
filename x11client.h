@@ -271,9 +271,6 @@ public:
      */
     bool hasOffscreenXineramaStrut() const;
 
-    // Decorations <-> Effects
-    QRect decorationRect() const override;
-
     QRect transparentRect() const override;
 
     bool isClientSideDecorated() const;

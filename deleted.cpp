@@ -224,11 +224,6 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
     bottom = decoration_bottom;
 }
 
-QRect Deleted::decorationRect() const
-{
-    return rect();
-}
-
 QRect Deleted::transparentRect() const
 {
     return transparent_rect;
