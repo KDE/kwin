@@ -331,6 +331,11 @@ public Q_SLOTS:
     void slotWindowToDesktopDown();
 
     /**
+     * Sends the AbstractClient to the given @p screen.
+     */
+    void sendClientToScreen(KWin::AbstractClient *client, int screen);
+
+    /**
      * Shows an outline at the specified @p geometry.
      * If an outline is already shown the outline is moved to the new position.
      * Use hideOutline to remove the outline again.
