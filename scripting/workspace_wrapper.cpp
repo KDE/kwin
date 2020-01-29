@@ -347,6 +347,14 @@ QSize WorkspaceWrapper::virtualScreenSize() const
     return screens()->size();
 }
 
+void WorkspaceWrapper::sendClientToScreen(AbstractClient *client, int screen)
+{
+    if (screen < 0 || screen >= screens()->count()) {
+        return;
+    }
+    workspace()->sendClientToScreen(client, screen);
+}
+
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject* parent)
     : WorkspaceWrapper(parent) {}
 
