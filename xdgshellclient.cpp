@@ -1969,11 +1969,11 @@ void XdgShellClient::popupDone()
 
 void XdgShellClient::updateClientOutputs()
 {
-    QVector<OutputInterface*> clientOutputs;
+    QVector<OutputInterface *> clientOutputs;
     const auto outputs = waylandServer()->display()->outputs();
-    for (OutputInterface* output: qAsConst(outputs)) {
-        const QRect outputGeom(output->globalPosition(), output->pixelSize() / output->scale());
-        if (frameGeometry().intersects(outputGeom)) {
+    for (OutputInterface *output : outputs) {
+        const QRect outputGeometry(output->globalPosition(), output->pixelSize() / output->scale());
+        if (frameGeometry().intersects(outputGeometry)) {
             clientOutputs << output;
         }
     }
