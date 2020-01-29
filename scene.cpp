@@ -788,7 +788,7 @@ QRegion Scene::Window::clientShape() const
 
 QRegion Scene::Window::decorationShape() const
 {
-    return QRegion(toplevel->decorationRect()) - toplevel->transparentRect();
+    return QRegion(toplevel->rect()) - toplevel->transparentRect();
 }
 
 QPoint Scene::Window::bufferOffset() const

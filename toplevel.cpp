@@ -75,11 +75,6 @@ QDebug& operator<<(QDebug& stream, const Toplevel* cl)
     return stream;
 }
 
-QRect Toplevel::decorationRect() const
-{
-    return rect();
-}
-
 void Toplevel::detectShape(xcb_window_t id)
 {
     const bool wasShape = is_shape;

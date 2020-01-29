@@ -376,8 +376,10 @@ public:
      */
     virtual QPoint clientContentPos() const;
     virtual QSize clientSize() const = 0;
-    virtual QRect visibleRect() const; // the area the window occupies on the screen
-    virtual QRect decorationRect() const; // rect including the decoration shadows
+    /**
+     * Returns a rectangle that the window occupies on the screen, including drop-shadows.
+     */
+    virtual QRect visibleRect() const;
     virtual QRect transparentRect() const = 0;
     virtual bool isClient() const;
     virtual bool isDeleted() const;

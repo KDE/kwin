@@ -464,7 +464,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
 
     X11Client *client = dynamic_cast<X11Client *>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
-    const QRect decorationRect = toplevel->decorationRect();
+    const QRect decorationRect = toplevel->rect();
     if (((client && !client->noBorder()) || (deleted && !deleted->noBorder())) &&
                                                         true) {
         // decorated client
