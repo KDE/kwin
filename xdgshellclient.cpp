@@ -1712,8 +1712,18 @@ QRect XdgShellClient::transientPlacement(const QRect &bounds) const
         }
     }
     if (constraintAdjustments & PositionerConstraint::ResizeX) {
-        //TODO
-        //but we need to sort out when this is run as resize should only happen before first configure
+        QRect unconstrainedRect = popupPosition;
+
+        if (!inBounds(unconstrainedRect, Qt::LeftEdge)) {
+            unconstrainedRect.setLeft(bounds.left());
+        }
+        if (!inBounds(unconstrainedRect, Qt::RightEdge)) {
+            unconstrainedRect.setRight(bounds.right());
+        }
+
+        if (unconstrainedRect.isValid()) {
+            popupPosition = unconstrainedRect;
+        }
     }
 
     if (constraintAdjustments & PositionerConstraint::FlipY) {
@@ -1744,7 +1754,18 @@ QRect XdgShellClient::transientPlacement(const QRect &bounds) const
         }
     }
     if (constraintAdjustments & PositionerConstraint::ResizeY) {
-        //TODO
+        QRect unconstrainedRect = popupPosition;
+
+        if (!inBounds(unconstrainedRect, Qt::TopEdge)) {
+            unconstrainedRect.setTop(bounds.top());
+        }
+        if (!inBounds(unconstrainedRect, Qt::BottomEdge)) {
+            unconstrainedRect.setBottom(bounds.bottom());
+        }
+
+        if (unconstrainedRect.isValid()) {
+            popupPosition = unconstrainedRect;
+        }
     }
 
     return popupPosition;
