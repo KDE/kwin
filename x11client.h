@@ -365,6 +365,7 @@ protected:
     void doSetSkipPager() override;
     void doSetSkipTaskbar() override;
     void doSetSkipSwitcher() override;
+    void doSetDemandsAttention() override;
     bool belongsToDesktop() const override;
     void setGeometryRestore(const QRect &geo) override;
     bool doStartMoveResize() override;

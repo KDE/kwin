@@ -984,6 +984,7 @@ protected:
     virtual void doSetSkipTaskbar();
     virtual void doSetSkipPager();
     virtual void doSetSkipSwitcher();
+    virtual void doSetDemandsAttention();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();

@@ -1922,6 +1922,11 @@ void X11Client::doSetDesktop(int desktop, int was_desk)
     updateVisibility();
 }
 
+void X11Client::doSetDemandsAttention()
+{
+    info->setState(isDemandingAttention() ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
+}
+
 /**
  * Sets whether the client is on @p activity.
  * If you remove it from its last activity, then it's on all activities.

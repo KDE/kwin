@@ -407,11 +407,13 @@ void AbstractClient::demandAttention(bool set)
     if (m_demandsAttention == set)
         return;
     m_demandsAttention = set;
-    if (info) {
-        info->setState(set ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
-    }
+    doSetDemandsAttention();
     workspace()->clientAttentionChanged(this, set);
     emit demandsAttentionChanged();
+}
+
+void AbstractClient::doSetDemandsAttention()
+{
 }
 
 void AbstractClient::setDesktop(int desktop)
