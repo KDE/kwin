@@ -1427,6 +1427,10 @@ bool X11Client::isMinimizable() const
 
 void X11Client::doMinimize()
 {
+    if (isShade()) {
+        // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
+        info->setState(isMinimized() ? NET::States() : NET::Shaded, NET::Shaded);
+    }
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);

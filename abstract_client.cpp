@@ -615,11 +615,7 @@ void AbstractClient::minimize(bool avoid_animation)
     if (!isMinimizable() || isMinimized())
         return;
 
-    if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(NET::States(), NET::Shaded);
-
     m_minimized = true;
-
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
@@ -638,11 +634,7 @@ void AbstractClient::unminimize(bool avoid_animation)
         return;
     }
 
-    if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(NET::Shaded, NET::Shaded);
-
     m_minimized = false;
-
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
