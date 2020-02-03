@@ -1925,10 +1925,8 @@ void X11Client::doSetSkipSwitcher()
     info->setState(skipSwitcher() ? NET::SkipSwitcher : NET::States(), NET::SkipSwitcher);
 }
 
-void X11Client::doSetDesktop(int desktop, int was_desk)
+void X11Client::doSetDesktop()
 {
-    Q_UNUSED(desktop)
-    Q_UNUSED(was_desk)
     updateVisibility();
 }
 

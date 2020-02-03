@@ -968,10 +968,8 @@ protected:
      * is emitted.
      *
      * Default implementation does nothing.
-     * @param desktop The new desktop the Client is on
-     * @param was_desk The desktop the Client was on before
      */
-    virtual void doSetDesktop(int desktop, int was_desk);
+    virtual void doSetDesktop();
     /**
      * Called from @ref minimize and @ref unminimize once the minimized value got updated, but before the
      * changed signal is emitted.

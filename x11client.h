@@ -360,7 +360,7 @@ protected:
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
-    void doSetDesktop(int desktop, int was_desk) override;
+    void doSetDesktop() override;
     void doMinimize() override;
     void doSetSkipPager() override;
     void doSetSkipTaskbar() override;

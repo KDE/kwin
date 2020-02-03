@@ -475,7 +475,7 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
         c2->setDesktops(desktops);
     }
 
-    doSetDesktop(desktop(), was_desk);
+    doSetDesktop();
 
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Desktop);
@@ -486,10 +486,8 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
     emit x11DesktopIdsChanged();
 }
 
-void AbstractClient::doSetDesktop(int desktop, int was_desk)
+void AbstractClient::doSetDesktop()
 {
-    Q_UNUSED(desktop)
-    Q_UNUSED(was_desk)
 }
 
 void AbstractClient::enterDesktop(VirtualDesktop *virtualDesktop)
