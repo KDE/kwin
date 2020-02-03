@@ -1632,6 +1632,8 @@ bool XdgShellClient::hasTransientPlacementHint() const
 
 QRect XdgShellClient::transientPlacement(const QRect &bounds) const
 {
+    Q_ASSERT(m_xdgShellPopup);
+
     QRect anchorRect;
     Qt::Edges anchorEdge;
     Qt::Edges gravity;
@@ -1660,19 +1662,14 @@ QRect XdgShellClient::transientPlacement(const QRect &bounds) const
         return true;
     };
 
-    if (m_xdgShellPopup) {
-        anchorRect = m_xdgShellPopup->anchorRect();
-        anchorEdge = m_xdgShellPopup->anchorEdge();
-        gravity = m_xdgShellPopup->gravity();
-        offset = m_xdgShellPopup->anchorOffset();
-        constraintAdjustments = m_xdgShellPopup->constraintAdjustments();
-        if (!size.isValid()) {
-            size = m_xdgShellPopup->initialSize();
-        }
-    } else {
-        Q_UNREACHABLE();
+    anchorRect = m_xdgShellPopup->anchorRect();
+    anchorEdge = m_xdgShellPopup->anchorEdge();
+    gravity = m_xdgShellPopup->gravity();
+    offset = m_xdgShellPopup->anchorOffset();
+    constraintAdjustments = m_xdgShellPopup->constraintAdjustments();
+    if (!size.isValid()) {
+        size = m_xdgShellPopup->initialSize();
     }
-
 
     //initial position
     popupPosition = QRect(popupOffset(anchorRect, anchorEdge, gravity, size) + offset + parentClientPos, size);
