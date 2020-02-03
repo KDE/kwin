@@ -96,6 +96,7 @@ public:
     QPoint clientPosToFramePos(const QPoint &point) const override;
     QSize frameSizeToClientSize(const QSize &size) const override;
     QSize clientSizeToFrameSize(const QSize &size) const override;
+    QRect frameRectToBufferRect(const QRect &rect) const;
 
     bool isTransient() const override;
     bool groupTransient() const override;
@@ -454,6 +455,7 @@ private:
 
     void updateInputShape();
     void updateServerGeometry();
+    void updateWindowPixmap();
 
     xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
                                   bool session) const;

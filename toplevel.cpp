@@ -292,7 +292,7 @@ void Toplevel::discardWindowPixmap()
 {
     addDamageFull();
     if (effectWindow() != nullptr && effectWindow()->sceneWindow() != nullptr)
-        effectWindow()->sceneWindow()->pixmapDiscarded();
+        effectWindow()->sceneWindow()->discardPixmap();
 }
 
 void Toplevel::damageNotifyEvent()
