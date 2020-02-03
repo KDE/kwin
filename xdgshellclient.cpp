@@ -1707,8 +1707,7 @@ QRect XdgShellClient::transientPlacement(const QRect &bounds) const
             popupPosition.moveLeft(bounds.x());
         }
         if (!inBounds(popupPosition, Qt::RightEdge)) {
-            // moveRight suffers from the classic QRect off by one issue
-            popupPosition.moveLeft(bounds.x() + bounds.width() - size.width());
+            popupPosition.moveRight(bounds.right());
         }
     }
     if (constraintAdjustments & PositionerConstraint::ResizeX) {
@@ -1750,7 +1749,7 @@ QRect XdgShellClient::transientPlacement(const QRect &bounds) const
             popupPosition.moveTop(bounds.y());
         }
         if (!inBounds(popupPosition, Qt::BottomEdge)) {
-            popupPosition.moveTop(bounds.y() + bounds.height() - size.height());
+            popupPosition.moveBottom(bounds.bottom());
         }
     }
     if (constraintAdjustments & PositionerConstraint::ResizeY) {
