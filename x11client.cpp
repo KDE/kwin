@@ -2708,6 +2708,14 @@ QSize X11Client::clientSizeToFrameSize(const QSize &size) const
     return QSize(width, height);
 }
 
+QRect X11Client::frameRectToBufferRect(const QRect &rect) const
+{
+    if (isDecorated()) {
+        return rect;
+    }
+    return frameRectToClientRect(rect);
+}
+
 Xcb::Property X11Client::fetchShowOnScreenEdge() const
 {
     return Xcb::Property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
@@ -2865,6 +2873,7 @@ void X11Client::handleSync()
             m_syncRequest.timeout->stop();
         }
         performMoveResize();
+        updateWindowPixmap();
     } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
         addRepaintFull();
 }
@@ -4156,7 +4165,6 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     // for example using X11Client::clientSize()
 
     QRect frameGeometry(x, y, w, h);
-    QRect bufferGeometry;
 
     if (shade_geometry_change)
         ; // nothing
@@ -4170,11 +4178,7 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     } else {
         m_clientGeometry = frameRectToClientRect(frameGeometry);
     }
-    if (isDecorated()) {
-        bufferGeometry = frameGeometry;
-    } else {
-        bufferGeometry = m_clientGeometry;
-    }
+    const QRect bufferGeometry = frameRectToBufferRect(frameGeometry);
     if (!areGeometryUpdatesBlocked() && frameGeometry != rules()->checkGeometry(frameGeometry)) {
         qCDebug(KWIN_CORE) << "forced geometry fail:" << frameGeometry << ":" << rules()->checkGeometry(frameGeometry);
     }
@@ -4269,14 +4273,21 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
 
 void X11Client::updateServerGeometry()
 {
-    if (m_frame.geometry().size() != m_bufferGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced) {
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+
+    if (oldBufferGeometry.size() != m_bufferGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced) {
         resizeDecoration();
-        m_frame.setGeometry(m_bufferGeometry);
+        // If the client is being interactively resized, then the frame window, the wrapper window,
+        // and the client window have correct geometry at this point, so we don't have to configure
+        // them again. If the client doesn't support frame counters, always update geometry.
+        const bool needsGeometryUpdate = !isResize() || m_syncRequest.counter == XCB_NONE;
+        if (needsGeometryUpdate) {
+            m_frame.setGeometry(m_bufferGeometry);
+        }
         if (!isShade()) {
-            QSize cs = clientSize();
-            m_wrapper.setGeometry(QRect(clientPos(), cs));
-            if (!isResize() || m_syncRequest.counter == XCB_NONE) {
-                m_client.setGeometry(0, 0, cs.width(), cs.height());
+            if (needsGeometryUpdate) {
+                m_wrapper.setGeometry(QRect(clientPos(), clientSize()));
+                m_client.resize(clientSize());
             }
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
@@ -4757,7 +4768,15 @@ void X11Client::doResizeSync()
         m_syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
     }                                     // and no human can control faster resizes anyway
     const QRect moveResizeClientGeometry = frameRectToClientRect(moveResizeGeometry());
-    m_client.setGeometry(0, 0, moveResizeClientGeometry.width(), moveResizeClientGeometry.height());
+    const QRect moveResizeBufferGeometry = frameRectToBufferRect(moveResizeGeometry());
+
+    // According to the Composite extension spec, a window will get a new pixmap allocated each time
+    // it is mapped or resized. Given that we redirect frame windows and not client windows, we have
+    // to resize the frame window in order to forcefully reallocate offscreen storage. If we don't do
+    // this, then we might render partially updated client window. I know, it sucks.
+    m_frame.setGeometry(moveResizeBufferGeometry);
+    m_wrapper.setGeometry(QRect(clientPos(), moveResizeClientGeometry.size()));
+    m_client.resize(moveResizeClientGeometry.size());
 }
 
 void X11Client::doPerformMoveResize()
@@ -4970,6 +4989,13 @@ void X11Client::damageNotifyEvent()
     }
 
     AbstractClient::damageNotifyEvent();
+}
+
+void X11Client::updateWindowPixmap()
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        effectWindow()->sceneWindow()->updatePixmap();
+    }
 }
 
 } // namespace

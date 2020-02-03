@@ -297,7 +297,8 @@ public:
     // perform the actual painting of the window
     virtual void performPaint(int mask, QRegion region, WindowPaintData data) = 0;
     // do any cleanup needed when the window's composite pixmap is discarded
-    void pixmapDiscarded();
+    void discardPixmap();
+    void updatePixmap();
     int x() const;
     int y() const;
     int width() const;
