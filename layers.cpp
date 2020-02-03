@@ -853,14 +853,6 @@ void X11Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource
         sendSyntheticConfigureNotify();
 }
 
-void X11Client::doSetKeepAbove()
-{
-}
-
-void X11Client::doSetKeepBelow()
-{
-}
-
 bool X11Client::belongsToDesktop() const
 {
     foreach (const X11Client *c, group()->members()) {

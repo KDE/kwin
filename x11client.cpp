@@ -1900,6 +1900,16 @@ void X11Client::killProcess(bool ask, xcb_timestamp_t timestamp)
     }
 }
 
+void X11Client::doSetKeepAbove()
+{
+    info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
+}
+
+void X11Client::doSetKeepBelow()
+{
+    info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
+}
+
 void X11Client::doSetSkipTaskbar()
 {
     info->setState(skipTaskbar() ? NET::SkipTaskbar : NET::States(), NET::SkipTaskbar);
