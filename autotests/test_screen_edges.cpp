@@ -468,7 +468,7 @@ void TestScreenEdges::testCallback()
     event.time = QDateTime::currentMSecsSinceEpoch();
     setPos(QPoint(0, 50));
     auto isEntered = [s] (xcb_enter_notify_event_t *event) {
-        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time, Qt::UTC));
     };
     QVERIFY(isEntered(&event));
     // doesn't trigger as the edge was not triggered yet
@@ -574,12 +574,12 @@ void TestScreenEdges::testCallbackWithCheck()
     s->reserve(ElectricLeft, &callback, "callback");
 
     // check activating a different edge doesn't do anything
-    s->check(QPoint(50, 0), QDateTime::currentDateTime(), true);
+    s->check(QPoint(50, 0), QDateTime::currentDateTimeUtc(), true);
     QVERIFY(spy.isEmpty());
 
     // try a direct activate without pushback
     Cursor::setPos(0, 50);
-    s->check(QPoint(0, 50), QDateTime::currentDateTime(), true);
+    s->check(QPoint(0, 50), QDateTime::currentDateTimeUtc(), true);
     QCOMPARE(spy.count(), 1);
     QEXPECT_FAIL("", "Argument says force no pushback, but it gets pushed back. Needs investigation", Continue);
     QCOMPARE(Cursor::pos(), QPoint(0, 50));
@@ -587,14 +587,14 @@ void TestScreenEdges::testCallbackWithCheck()
     // use a different edge, this time with pushback
     s->reserve(KWin::ElectricRight, &callback, "callback");
     Cursor::setPos(99, 50);
-    s->check(QPoint(99, 50), QDateTime::currentDateTime());
+    s->check(QPoint(99, 50), QDateTime::currentDateTimeUtc());
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricLeft);
     QCOMPARE(Cursor::pos(), QPoint(98, 50));
     // and trigger it again
     QTest::qWait(160);
     Cursor::setPos(99, 50);
-    s->check(QPoint(99, 50), QDateTime::currentDateTime());
+    s->check(QPoint(99, 50), QDateTime::currentDateTimeUtc());
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricRight);
     QCOMPARE(Cursor::pos(), QPoint(98, 50));
@@ -658,7 +658,7 @@ void TestScreenEdges::testPushBack()
 
     // do the same without the event, but the check method
     Cursor::setPos(trigger);
-    s->check(trigger, QDateTime::currentDateTime());
+    s->check(trigger, QDateTime::currentDateTimeUtc());
     QVERIFY(spy.isEmpty());
     QTEST(Cursor::pos(), "expected");
 }
@@ -863,7 +863,7 @@ void TestScreenEdges::testClientEdge()
     s->reserve(&client, KWin::ElectricTop);
     QCOMPARE(client.isHiddenInternal(), true);
     Cursor::setPos(50, 0);
-    s->check(QPoint(50, 0), QDateTime::currentDateTime());
+    s->check(QPoint(50, 0), QDateTime::currentDateTimeUtc());
     QCOMPARE(client.isHiddenInternal(), false);
     QCOMPARE(Cursor::pos(), QPoint(50, 1));
 
@@ -872,7 +872,7 @@ void TestScreenEdges::testClientEdge()
     // check on previous edge again, should fail
     client.setHiddenInternal(true);
     Cursor::setPos(50, 0);
-    s->check(QPoint(50, 0), QDateTime::currentDateTime());
+    s->check(QPoint(50, 0), QDateTime::currentDateTimeUtc());
     QCOMPARE(client.isHiddenInternal(), true);
     QCOMPARE(Cursor::pos(), QPoint(50, 0));
 
@@ -960,12 +960,12 @@ void TestScreenEdges::testTouchEdge()
     event.time = QDateTime::currentMSecsSinceEpoch();
     setPos(QPoint(0, 50));
     auto isEntered = [s] (xcb_enter_notify_event_t *event) {
-        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time));
+        return s->handleEnterNotifiy(event->event, QPoint(event->root_x, event->root_y), QDateTime::fromMSecsSinceEpoch(event->time, Qt::UTC));
     };
     QCOMPARE(isEntered(&event), false);
     QVERIFY(approachingSpy.isEmpty());
     // let's also verify the check
-    s->check(QPoint(0, 50), QDateTime::currentDateTime(), false);
+    s->check(QPoint(0, 50), QDateTime::currentDateTimeUtc(), false);
     QVERIFY(approachingSpy.isEmpty());
 
     s->gestureRecognizer()->startSwipeGesture(QPoint(0, 50));
