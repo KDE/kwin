@@ -91,5 +91,8 @@ KWin uses [KDE's phabricator instance](https://phabricator.kde.org) for code rev
 
 More complete documentation can be found in [KDE's wiki](https://community.kde.org/Infrastructure/Phabricator). Please add "#KWin" as reviewers. Please run KWin's automated test suite prior to uploading a patch to ensure that the change does not break existing code.
 
+# Coding conventions
+KWin's coding conventions are explained in document [coding-conventions.md](doc/coding-conventions.md).
+
 # Coding style
 KWin code follows the [Frameworks coding style](https://techbase.kde.org/Policies/Frameworks_Coding_Style).
