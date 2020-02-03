@@ -1394,7 +1394,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
             }
         }
         if (edge->geometry().contains(event->globalPos())) {
-            if (edge->check(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp()))) {
+            if (edge->check(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC))) {
                 if (edge->client()) {
                     activatedForClient = true;
                 }
@@ -1404,7 +1404,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     if (activatedForClient) {
         for (auto it = m_edges.constBegin(); it != m_edges.constEnd(); ++it) {
             if ((*it)->client()) {
-                (*it)->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp()));
+                (*it)->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC));
             }
         }
     }
@@ -1460,7 +1460,7 @@ bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
         }
         if (edge->isReserved() && edge->window() == window) {
             updateXTime();
-            edge->check(point, QDateTime::fromMSecsSinceEpoch(xTime()), true);
+            edge->check(point, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC), true);
             return true;
         }
     }

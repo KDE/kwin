@@ -1330,7 +1330,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         performMoveResize();
 
     if (isMove()) {
-        ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime()));
+        ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
     }
 }
 
