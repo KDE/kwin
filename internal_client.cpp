@@ -213,11 +213,6 @@ bool InternalClient::isMaximizable() const
     return false;
 }
 
-bool InternalClient::isMinimizable() const
-{
-    return false;
-}
-
 bool InternalClient::isMovable() const
 {
     return true;

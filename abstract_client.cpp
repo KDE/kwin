@@ -3162,4 +3162,14 @@ void AbstractClient::setFullScreen(bool set, bool user)
     Q_UNUSED(user)
 }
 
+/**
+ * Returns @c true if the AbstractClient can be minimized; otherwise @c false.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isMinimizable() const
+{
+    return false;
+}
+
 }

@@ -544,7 +544,7 @@ public:
      * Returns whether the window is maximizable or not.
      */
     virtual bool isMaximizable() const = 0;
-    virtual bool isMinimizable() const = 0;
+    virtual bool isMinimizable() const;
     virtual QRect iconGeometry() const;
     virtual bool userCanSetFullScreen() const;
     virtual bool userCanSetNoBorder() const = 0;

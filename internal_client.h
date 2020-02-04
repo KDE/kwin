@@ -54,7 +54,6 @@ public:
     void closeWindow() override;
     bool isCloseable() const override;
     bool isMaximizable() const override;
-    bool isMinimizable() const override;
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
