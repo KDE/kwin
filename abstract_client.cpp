@@ -131,11 +131,6 @@ void AbstractClient::setClientShown(bool shown)
     Q_UNUSED(shown)
 }
 
-MaximizeMode AbstractClient::requestedMaximizeMode() const
-{
-    return maximizeMode();
-}
-
 xcb_timestamp_t AbstractClient::userTime() const
 {
     return XCB_TIME_CURRENT_TIME;
@@ -3170,6 +3165,68 @@ void AbstractClient::setFullScreen(bool set, bool user)
 bool AbstractClient::isMinimizable() const
 {
     return false;
+}
+
+/**
+ * Returns @c true if the AbstractClient can be maximized; otherwise @c false.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isMaximizable() const
+{
+    return false;
+}
+
+/**
+ * Returns the currently applied maximize mode.
+ *
+ * Default implementation returns MaximizeRestore.
+ */
+MaximizeMode AbstractClient::maximizeMode() const
+{
+    return MaximizeRestore;
+}
+
+/**
+ * Returns the last requested maximize mode.
+ *
+ * On X11, this method always matches maximizeMode(). On Wayland, it is asynchronous.
+ *
+ * Default implementation matches maximizeMode().
+ */
+MaximizeMode AbstractClient::requestedMaximizeMode() const
+{
+    return maximizeMode();
+}
+
+/**
+ * Returns the geometry of the AbstractClient before it was maximized or quick tiled.
+ */
+QRect AbstractClient::geometryRestore() const
+{
+    return m_maximizeGeometryRestore;
+}
+
+/**
+ * Sets the geometry of the AbstractClient before it was maximized or quick tiled to @p rect.
+ */
+void AbstractClient::setGeometryRestore(const QRect &rect)
+{
+    m_maximizeGeometryRestore = rect;
+}
+
+/**
+ * Toggles the maximized state along specified dimensions @p horizontal and @p vertical.
+ *
+ * If @p adjust is @c true, only frame geometry will be updated to match requestedMaximizeMode().
+ *
+ * Default implementation does nothing.
+ */
+void AbstractClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
+{
+    Q_UNUSED(horizontal)
+    Q_UNUSED(vertical)
+    Q_UNUSED(adjust)
 }
 
 }

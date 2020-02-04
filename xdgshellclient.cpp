@@ -569,9 +569,9 @@ void XdgShellClient::doSetGeometry(const QRect &rect)
         return;
     }
 
-    if (m_unmapped && m_geomMaximizeRestore.isEmpty() && !m_frameGeometry.isEmpty()) {
+    if (m_unmapped && geometryRestore().isEmpty() && !m_frameGeometry.isEmpty()) {
         // use first valid geometry as restore geometry
-        m_geomMaximizeRestore = m_frameGeometry;
+        setGeometryRestore(m_frameGeometry);
     }
 
     if (frameGeometryIsChanged) {
@@ -834,7 +834,7 @@ void XdgShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     const auto oldQuickTileMode = quickTileMode();
     if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
         if (oldMode == MaximizeFull &&
-                !clientArea.contains(m_geomMaximizeRestore.center())) {
+                !clientArea.contains(geometryRestore().center())) {
             // Not restoring on the same screen
             // TODO: The following doesn't work for some reason
             //quick_tile_mode = QuickTileNone; // And exit quick tile mode manually
@@ -846,7 +846,7 @@ void XdgShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 
     if (m_requestedMaximizeMode == MaximizeFull) {
-        m_geomMaximizeRestore = oldGeometry;
+        setGeometryRestore(oldGeometry);
         // TODO: Client has more checks
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
@@ -866,17 +866,12 @@ void XdgShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
             emit quickTileModeChanged();
         }
 
-        if (m_geomMaximizeRestore.isValid()) {
-            setFrameGeometry(m_geomMaximizeRestore);
+        if (geometryRestore().isValid()) {
+            setFrameGeometry(geometryRestore());
         } else {
             setFrameGeometry(workspace()->clientArea(PlacementArea, this));
         }
     }
-}
-
-void XdgShellClient::setGeometryRestore(const QRect &geo)
-{
-    m_geomMaximizeRestore = geo;
 }
 
 MaximizeMode XdgShellClient::maximizeMode() const
@@ -887,11 +882,6 @@ MaximizeMode XdgShellClient::maximizeMode() const
 MaximizeMode XdgShellClient::requestedMaximizeMode() const
 {
     return m_requestedMaximizeMode;
-}
-
-QRect XdgShellClient::geometryRestore() const
-{
-    return m_geomMaximizeRestore;
 }
 
 bool XdgShellClient::noBorder() const

@@ -208,11 +208,6 @@ bool InternalClient::isCloseable() const
     return true;
 }
 
-bool InternalClient::isMaximizable() const
-{
-    return false;
-}
-
 bool InternalClient::isMovable() const
 {
     return true;
@@ -275,16 +270,6 @@ bool InternalClient::isOutline() const
 quint32 InternalClient::windowId() const
 {
     return m_windowId;
-}
-
-MaximizeMode InternalClient::maximizeMode() const
-{
-    return MaximizeRestore;
-}
-
-QRect InternalClient::geometryRestore() const
-{
-    return m_maximizeRestoreGeometry;
 }
 
 bool InternalClient::isShown(bool shaded_is_shown) const
@@ -353,11 +338,6 @@ void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
     } else {
         requestGeometry(rect);
     }
-}
-
-void InternalClient::setGeometryRestore(const QRect &rect)
-{
-    m_maximizeRestoreGeometry = rect;
 }
 
 bool InternalClient::supportsWindowRules() const
@@ -504,15 +484,6 @@ bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameA
     Q_UNUSED(checks)
 
     return qobject_cast<const InternalClient *>(other) != nullptr;
-}
-
-void InternalClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
-{
-    Q_UNUSED(horizontal)
-    Q_UNUSED(vertical)
-    Q_UNUSED(adjust)
-
-    // Internal clients are not maximizable.
 }
 
 void InternalClient::destroyDecoration()

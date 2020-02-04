@@ -488,16 +488,8 @@ public:
 
     virtual void setClientShown(bool shown);
 
-    virtual QRect geometryRestore() const = 0;
-    /**
-     * The currently applied maximize mode
-     */
-    virtual MaximizeMode maximizeMode() const = 0;
-    /**
-     * The maximise mode requested by the server.
-     * For X this always matches maximizeMode, for wayland clients it
-     * is asynchronous
-     */
+    QRect geometryRestore() const;
+    virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
     void maximize(MaximizeMode);
     /**
@@ -540,10 +532,7 @@ public:
      * Whether the Client can be shaded. Default implementation returns @c false.
      */
     virtual bool isShadeable() const;
-    /**
-     * Returns whether the window is maximizable or not.
-     */
-    virtual bool isMaximizable() const = 0;
+    virtual bool isMaximizable() const;
     virtual bool isMinimizable() const;
     virtual QRect iconGeometry() const;
     virtual bool userCanSetFullScreen() const;
@@ -1027,8 +1016,8 @@ protected:
     int borderRight() const;
     int borderTop() const;
     int borderBottom() const;
-    virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
-    virtual void setGeometryRestore(const QRect &geo) = 0;
+    virtual void changeMaximize(bool horizontal, bool vertical, bool adjust);
+    void setGeometryRestore(const QRect &rect);
 
     /**
      * Called from move after updating the geometry. Can be reimplemented to perform specific tasks.
@@ -1269,6 +1258,7 @@ private:
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_virtualKeyboardGeometry;
     QRect m_keyboardGeometryRestore;
+    QRect m_maximizeGeometryRestore;
 
     struct {
         bool enabled = false;

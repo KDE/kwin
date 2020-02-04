@@ -144,7 +144,6 @@ public:
     bool isShadeable() const override;
 
     bool isMaximizable() const override;
-    QRect geometryRestore() const override;
     MaximizeMode maximizeMode() const override;
 
     bool isMinimizable() const override;
@@ -367,7 +366,6 @@ protected:
     void doSetSkipSwitcher() override;
     void doSetDemandsAttention() override;
     bool belongsToDesktop() const override;
-    void setGeometryRestore(const QRect &geo) override;
     bool doStartMoveResize() override;
     void doPerformMoveResize() override;
     bool isWaitingForMoveResizeSync() const override;
@@ -523,7 +521,6 @@ private:
     MaximizeMode max_mode;
     QRect m_bufferGeometry = QRect(0, 0, 100, 100);
     QRect m_clientGeometry = QRect(0, 0, 100, 100);
-    QRect geom_restore;
     QRect geom_fs_restore;
     QTimer* shadeHoverTimer;
     xcb_colormap_t m_colormap;
@@ -613,16 +610,6 @@ inline bool X11Client::isHiddenInternal() const
 inline ShadeMode X11Client::shadeMode() const
 {
     return shade_mode;
-}
-
-inline QRect X11Client::geometryRestore() const
-{
-    return geom_restore;
-}
-
-inline void X11Client::setGeometryRestore(const QRect &geo)
-{
-    geom_restore = geo;
 }
 
 inline MaximizeMode X11Client::maximizeMode() const
