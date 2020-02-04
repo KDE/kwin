@@ -3116,4 +3116,50 @@ QSize AbstractClient::adjustedSize() const
     return sizeForClientSize(clientSize());
 }
 
+/**
+ * Returns @c true if the AbstractClient can be shown in full screen mode; otherwise @c false.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isFullScreenable() const
+{
+    return false;
+}
+
+/**
+ * Returns @c true if the AbstractClient is currently being shown in full screen mode; otherwise @c false.
+ *
+ * A client in full screen mode occupies the entire screen with no window frame around it.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isFullScreen() const
+{
+    return false;
+}
+
+/**
+ * Returns whether requests initiated by the user to enter or leave full screen mode are honored.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::userCanSetFullScreen() const
+{
+    return false;
+}
+
+/**
+ * Asks the AbstractClient to enter or leave full screen mode.
+ *
+ * Default implementation does nothing.
+ *
+ * @param set @c true if the AbstractClient has to be shown in full screen mode, otherwise @c false
+ * @param user @c true if the request is initiated by the user, otherwise @c false
+ */
+void AbstractClient::setFullScreen(bool set, bool user)
+{
+    Q_UNUSED(set)
+    Q_UNUSED(user)
+}
+
 }

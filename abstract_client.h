@@ -416,8 +416,8 @@ public:
     virtual bool isHiddenInternal() const = 0;
     // TODO: remove boolean trap
     virtual void hideClient(bool hide) = 0;
-    virtual bool isFullScreenable() const = 0;
-    virtual bool isFullScreen() const = 0;
+    virtual bool isFullScreenable() const;
+    virtual bool isFullScreen() const;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
@@ -484,7 +484,7 @@ public:
     bool isMinimized() const {
         return m_minimized;
     }
-    virtual void setFullScreen(bool set, bool user = true) = 0;
+    virtual void setFullScreen(bool set, bool user = true);
 
     virtual void setClientShown(bool shown);
 
@@ -546,7 +546,7 @@ public:
     virtual bool isMaximizable() const = 0;
     virtual bool isMinimizable() const = 0;
     virtual QRect iconGeometry() const;
-    virtual bool userCanSetFullScreen() const = 0;
+    virtual bool userCanSetFullScreen() const;
     virtual bool userCanSetNoBorder() const = 0;
     virtual void checkNoBorder();
     virtual void setOnActivities(QStringList newActivitiesList);

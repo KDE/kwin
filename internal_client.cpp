@@ -208,16 +208,6 @@ bool InternalClient::isCloseable() const
     return true;
 }
 
-bool InternalClient::isFullScreenable() const
-{
-    return false;
-}
-
-bool InternalClient::isFullScreen() const
-{
-    return false;
-}
-
 bool InternalClient::isMaximizable() const
 {
     return false;
@@ -395,17 +385,6 @@ void InternalClient::setOnAllActivities(bool set)
 
 void InternalClient::takeFocus()
 {
-}
-
-bool InternalClient::userCanSetFullScreen() const
-{
-    return false;
-}
-
-void InternalClient::setFullScreen(bool set, bool user)
-{
-    Q_UNUSED(set)
-    Q_UNUSED(user)
 }
 
 void InternalClient::setNoBorder(bool set)

@@ -53,8 +53,6 @@ public:
     QByteArray windowRole() const override;
     void closeWindow() override;
     bool isCloseable() const override;
-    bool isFullScreenable() const override;
-    bool isFullScreen() const override;
     bool isMaximizable() const override;
     bool isMinimizable() const override;
     bool isMovable() const override;
@@ -82,8 +80,6 @@ public:
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
     void takeFocus() override;
-    bool userCanSetFullScreen() const override;
-    void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
