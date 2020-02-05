@@ -43,15 +43,11 @@
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
-#define KWIN_PLACEMENT             "Placement"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
 #define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
 #define KWIN_CLICKRAISE            "ClickRaise"
-#define KWIN_SHADEHOVER            "ShadeHover"
-#define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
-#define KWIN_HIDE_UTILITY          "HideUtilityWindowsForInactive"
 #define KWIN_INACTIVE_SKIP_TASKBAR "InactiveTabsSkipTaskbar"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
@@ -357,51 +353,22 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
 
 KAdvancedConfig::~KAdvancedConfig()
 {
-    if (standAlone)
-        delete config;
 }
 
-KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, QWidget *parent)
-    : KCModule(parent), config(_config), standAlone(_standAlone)
+KAdvancedConfig::KAdvancedConfig(bool _standAlone, QWidget *parent)
+    : KCModule(parent), m_config(KWinOptionsSettings::self()), standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(this))
 {
-    m_ui->placementCombo->setItemData(0, "Smart");
-    m_ui->placementCombo->setItemData(1, "Maximizing");
-    m_ui->placementCombo->setItemData(2, "Cascade");
-    m_ui->placementCombo->setItemData(3, "Random");
-    m_ui->placementCombo->setItemData(4, "Centered");
-    m_ui->placementCombo->setItemData(5, "ZeroCornered");
-    m_ui->placementCombo->setItemData(6, "UnderMouse");
+    addConfig(m_config, this);
 
-    connect(m_ui->shadeHoverOn, SIGNAL(toggled(bool)), this, SLOT(shadeHoverChanged(bool)));
-    connect(m_ui->shadeHoverOn, SIGNAL(toggled(bool)), SLOT(changed()));
-    connect(m_ui->shadeHover, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(m_ui->placementCombo, SIGNAL(activated(int)), SLOT(changed()));
-    connect(m_ui->hideUtilityWindowsForInactive, SIGNAL(toggled(bool)), SLOT(changed()));
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Smart, "Smart");
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Maximizing, "Maximizing");
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Cascade, "Cascade");
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Random, "Random");
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Centered, "Centered");
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::ZeroCornered, "ZeroCornered");
+    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::UnderMouse, "UnderMouse");
     load();
-
-}
-
-void KAdvancedConfig::setShadeHover(bool on)
-{
-    m_ui->shadeHoverOn->setChecked(on);
-    m_ui->shadeHover->setEnabled(on);
-}
-
-void KAdvancedConfig::setShadeHoverInterval(int k)
-{
-    m_ui->shadeHover->setValue(k);
-}
-
-int KAdvancedConfig::getShadeHoverInterval()
-{
-
-    return m_ui->shadeHover->value();
-}
-
-void KAdvancedConfig::shadeHoverChanged(bool a)
-{
-    m_ui->shadeHover->setEnabled(a);
 }
 
 void KAdvancedConfig::showEvent(QShowEvent *ev)
@@ -413,62 +380,17 @@ void KAdvancedConfig::showEvent(QShowEvent *ev)
     KCModule::showEvent(ev);
 }
 
-void KAdvancedConfig::load(void)
-{
-    KConfigGroup cg(config, "Windows");
-
-    setShadeHover(cg.readEntry(KWIN_SHADEHOVER, false));
-    setShadeHoverInterval(cg.readEntry(KWIN_SHADEHOVER_INTERVAL, 250));
-
-    QString key;
-    key = cg.readEntry(KWIN_PLACEMENT);
-    int idx = m_ui->placementCombo->findData(key);
-    if (idx < 0)
-        idx = m_ui->placementCombo->findData("Smart");
-    m_ui->placementCombo->setCurrentIndex(idx);
-
-    setHideUtilityWindowsForInactive(cg.readEntry(KWIN_HIDE_UTILITY, true));
-
-    emit KCModule::changed(false);
-}
-
 void KAdvancedConfig::save(void)
 {
-    int v;
-
-    KConfigGroup cg(config, "Windows");
-    cg.writeEntry(KWIN_SHADEHOVER, m_ui->shadeHoverOn->isChecked());
-
-    v = getShadeHoverInterval();
-    if (v < 0) v = 0;
-    cg.writeEntry(KWIN_SHADEHOVER_INTERVAL, v);
-    cg.writeEntry(KWIN_PLACEMENT, m_ui->placementCombo->itemData(m_ui->placementCombo->currentIndex()).toString());
-    cg.writeEntry(KWIN_HIDE_UTILITY, m_ui->hideUtilityWindowsForInactive->isChecked());
+    KCModule::save();
 
     if (standAlone) {
-        config->sync();
         // Send signal to all kwin instances
         QDBusMessage message =
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
 
     }
-    emit KCModule::changed(false);
-}
-
-void KAdvancedConfig::defaults()
-{
-    setShadeHover(false);
-    setShadeHoverInterval(250);
-    m_ui->placementCombo->setCurrentIndex(0); // default to Smart
-    setHideUtilityWindowsForInactive(true);
-    emit KCModule::changed(true);
-}
-
-
-void KAdvancedConfig::setHideUtilityWindowsForInactive(bool s)
-{
-    m_ui->hideUtilityWindowsForInactive->setChecked(s);
 }
 
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
@@ -485,7 +407,7 @@ KMovingConfig::KMovingConfig(bool _standAlone, QWidget *parent)
     : KCModule(parent), m_config(KWinOptionsSettings::self()), standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(this))
 {
-    addConfig(m_config, m_ui);
+    addConfig(m_config, this);
     load();
 }
 

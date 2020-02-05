@@ -59,7 +59,7 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, new KConfig("kwinrc"), parent)
+        : KAdvancedConfig(true, parent)
     {}
 };
 
@@ -76,27 +76,29 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     mFocus = new KFocusConfig(false, mConfig, this);
     mFocus->setObjectName(QLatin1String("KWin Focus Config"));
     tab->addTab(mFocus, i18n("&Focus"));
-    connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
 
     mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
-    connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
 
     mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
-    connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
 
     mMoving = new KMovingConfig(false, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("Mo&vement"));
-    connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mMoving, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mAdvanced = new KAdvancedConfig(false, mConfig, this);
+    mAdvanced = new KAdvancedConfig(false, this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
-    connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mAdvanced, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
     KAboutData *about =
         new KAboutData(QStringLiteral("kcmkwinoptions"), i18n("Window Behavior Configuration Module"),
@@ -189,12 +191,12 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
-    connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
 
     mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("Window Actio&ns"));
-    connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
+    connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
 }
 
 KActionsOptions::~KActionsOptions()

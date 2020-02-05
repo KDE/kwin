@@ -137,34 +137,19 @@ class KAdvancedConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KAdvancedConfig(bool _standAlone, KConfig *config, QWidget *parent);
+    KAdvancedConfig(bool _standAlone, QWidget *parent);
     ~KAdvancedConfig() override;
 
-    void load() override;
     void save() override;
-    void defaults() override;
 
 protected:
     void showEvent(QShowEvent *ev) override;
 
-private Q_SLOTS:
-    void shadeHoverChanged(bool);
-
-    void changed() {
-        emit KCModule::changed(true);
-    }
-
 private:
 
-    int getShadeHoverInterval(void);
-    void setShadeHover(bool);
-    void setShadeHoverInterval(int);
-
-    KConfig *config;
+    KWinOptionsSettings *m_config;
     bool     standAlone;
     KWinAdvancedConfigForm *m_ui;
-
-    void setHideUtilityWindowsForInactive(bool);
 };
 
 #endif // KKWMWINDOWS_H

@@ -32,5 +32,31 @@
         <default>false</default>
     </entry>
 
+    <entry key="ShadeHover" type="Bool">
+        <default>false</default>
+    </entry>
+
+    <entry key="ShadeHoverInterval" type="Int">
+        <default>250</default>
+        <min>0</min>
+    </entry>
+
+    <entry name="Placement" type="Enum">
+        <choices name="PlacementChoices">
+            <choice name="Smart"></choice>
+            <choice name="Maximizing"></choice>
+            <choice name="Cascade"></choice>
+            <choice name="Random"></choice>
+            <choice name="Centered"></choice>
+            <choice name="ZeroCornered"></choice>
+            <choice name="UnderMouse"></choice>
+        </choices>
+        <default>0</default>
+    </entry>
+
+    <entry key="HideUtilityWindowsForInactive" type="Bool">
+        <default>true</default>
+    </entry>
+
     </group>
 </kcfg>
