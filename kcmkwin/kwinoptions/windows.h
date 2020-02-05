@@ -41,6 +41,7 @@ class QSpinBox;
 
 class KColorButton;
 
+class KWinOptionsSettings;
 
 class KWinFocusConfigForm : public QWidget, public Ui::KWinFocusConfigForm
 {
@@ -118,37 +119,18 @@ class KMovingConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KMovingConfig(bool _standAlone, KConfig *config, QWidget *parent);
+    KMovingConfig(bool _standAlone, QWidget *parent);
     ~KMovingConfig() override;
 
-    void load() override;
     void save() override;
-    void defaults() override;
 
 protected:
     void showEvent(QShowEvent *ev) override;
 
-private Q_SLOTS:
-    void changed() {
-        emit KCModule::changed(true);
-    }
-
 private:
-    bool getGeometryTip(void);   //KS
-
-    void setGeometryTip(bool); //KS
-
-    KConfig *config;
+    KWinOptionsSettings *m_config;
     bool     standAlone;
     KWinMovingConfigForm *m_ui;
-
-    int getBorderSnapZone();
-    void setBorderSnapZone(int);
-    int getWindowSnapZone();
-    void setWindowSnapZone(int);
-    int getCenterSnapZone();
-    void setCenterSnapZone(int);
-
 };
 
 class KAdvancedConfig : public KCModule

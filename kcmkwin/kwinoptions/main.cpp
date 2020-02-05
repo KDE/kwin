@@ -50,7 +50,7 @@ class KMovingConfigStandalone : public KMovingConfig
     Q_OBJECT
 public:
     KMovingConfigStandalone(QWidget* parent, const QVariantList &)
-        : KMovingConfig(true, new KConfig("kwinrc"), parent)
+        : KMovingConfig(true, parent)
     {}
 };
 
@@ -88,7 +88,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
     connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mMoving = new KMovingConfig(false, mConfig, this);
+    mMoving = new KMovingConfig(false, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("Mo&vement"));
     connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
@@ -230,6 +230,8 @@ void KActionsOptions::defaults()
 {
     mTitleBarActions->defaults();
     mWindowActions->defaults();
+
+    emit defaulted(true);
 }
 
 void KActionsOptions::moduleChanged(bool state)

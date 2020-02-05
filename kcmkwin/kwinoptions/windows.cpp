@@ -37,13 +37,13 @@
 #include <KLocalizedString>
 
 #include "windows.h"
+#include "kwinoptions_settings.h"
 #include <effect_builtins.h>
 #include <kwin_effects_interface.h>
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
 #define KWIN_PLACEMENT             "Placement"
-#define KWIN_GEOMETRY              "GeometryTip"
 #define KWIN_AUTORAISE_INTERVAL    "AutoRaiseInterval"
 #define KWIN_AUTORAISE             "AutoRaise"
 #define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
@@ -55,19 +55,6 @@
 #define KWIN_INACTIVE_SKIP_TASKBAR "InactiveTabsSkipTaskbar"
 #define KWIN_SEPARATE_SCREEN_FOCUS "SeparateScreenFocus"
 #define KWIN_ACTIVE_MOUSE_SCREEN   "ActiveMouseScreen"
-
-//CT 15mar 98 - magics
-#define KWM_BRDR_SNAP_ZONE                   "BorderSnapZone"
-#define KWM_BRDR_SNAP_ZONE_DEFAULT           10
-#define KWM_WNDW_SNAP_ZONE                   "WindowSnapZone"
-#define KWM_WNDW_SNAP_ZONE_DEFAULT           10
-#define KWM_CNTR_SNAP_ZONE                   "CenterSnapZone"
-#define KWM_CNTR_SNAP_ZONE_DEFAULT           0
-
-#define MAX_BRDR_SNAP                          100
-#define MAX_WNDW_SNAP                          100
-#define MAX_CNTR_SNAP                          100
-#define MAX_EDGE_RES                          1000
 
 #define  CLICK_TO_FOCUS               0
 #define  FOCUS_FOLLOWS_MOUSE          2
@@ -492,32 +479,14 @@ KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
 
 KMovingConfig::~KMovingConfig()
 {
-    if (standAlone)
-        delete config;
 }
 
-KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, QWidget *parent)
-    : KCModule(parent), config(_config), standAlone(_standAlone)
+KMovingConfig::KMovingConfig(bool _standAlone, QWidget *parent)
+    : KCModule(parent), m_config(KWinOptionsSettings::self()), standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(this))
 {
-    // Any changes goes to slotChanged()
-    connect(m_ui->geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
-    connect(m_ui->borderSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(m_ui->windowSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(m_ui->centerSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
-    connect(m_ui->OverlapSnap, SIGNAL(clicked()), SLOT(changed()));
-
+    addConfig(m_config, m_ui);
     load();
-}
-
-void KMovingConfig::setGeometryTip(bool showGeometryTip)
-{
-    m_ui->geometryTipOn->setChecked(showGeometryTip);
-}
-
-bool KMovingConfig::getGeometryTip()
-{
-    return m_ui->geometryTipOn->isChecked();
 }
 
 void KMovingConfig::showEvent(QShowEvent *ev)
@@ -529,54 +498,11 @@ void KMovingConfig::showEvent(QShowEvent *ev)
     KCModule::showEvent(ev);
 }
 
-void KMovingConfig::load(void)
-{
-    QString key;
-
-    KConfigGroup cg(config, "Windows");
-
-    //KS 10Jan2003 - Geometry Tip during window move/resize
-    bool showGeomTip = cg.readEntry(KWIN_GEOMETRY, false);
-    setGeometryTip(showGeomTip);
-
-
-    int v;
-
-    v = cg.readEntry(KWM_BRDR_SNAP_ZONE, KWM_BRDR_SNAP_ZONE_DEFAULT);
-    if (v > MAX_BRDR_SNAP) setBorderSnapZone(MAX_BRDR_SNAP);
-    else if (v < 0) setBorderSnapZone(0);
-    else setBorderSnapZone(v);
-
-    v = cg.readEntry(KWM_WNDW_SNAP_ZONE, KWM_WNDW_SNAP_ZONE_DEFAULT);
-    if (v > MAX_WNDW_SNAP) setWindowSnapZone(MAX_WNDW_SNAP);
-    else if (v < 0) setWindowSnapZone(0);
-    else setWindowSnapZone(v);
-
-    v = cg.readEntry(KWM_CNTR_SNAP_ZONE, KWM_CNTR_SNAP_ZONE_DEFAULT);
-    if (v > MAX_CNTR_SNAP) setCenterSnapZone(MAX_CNTR_SNAP);
-    else if (v < 0) setCenterSnapZone(0);
-    else setCenterSnapZone(v);
-
-    m_ui->OverlapSnap->setChecked(cg.readEntry("SnapOnlyWhenOverlapping", false));
-    emit KCModule::changed(false);
-}
-
 void KMovingConfig::save(void)
 {
-    KConfigGroup cg(config, "Windows");
-    cg.writeEntry(KWIN_GEOMETRY, getGeometryTip());
-
-
-    cg.writeEntry(KWM_BRDR_SNAP_ZONE, getBorderSnapZone());
-    cg.writeEntry(KWM_WNDW_SNAP_ZONE, getWindowSnapZone());
-    cg.writeEntry(KWM_CNTR_SNAP_ZONE, getCenterSnapZone());
-    cg.writeEntry("SnapOnlyWhenOverlapping", m_ui->OverlapSnap->isChecked());
-
-    const bool geometryTip = getGeometryTip();
-    KConfigGroup(config, "Plugins").writeEntry("windowgeometryEnabled", geometryTip);
+    m_config->save();
 
     if (standAlone) {
-        config->sync();
         // Send signal to all kwin instances
         QDBusMessage message =
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
@@ -586,54 +512,9 @@ void KMovingConfig::save(void)
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    if (geometryTip) {
+    if (m_config->geometryTip()) {
         interface.loadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
     } else {
         interface.unloadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
     }
-    emit KCModule::changed(false);
 }
-
-void KMovingConfig::defaults()
-{
-    setGeometryTip(false);
-
-    //copied from kcontrol/konq/kwindesktop, aleXXX
-    setWindowSnapZone(KWM_WNDW_SNAP_ZONE_DEFAULT);
-    setBorderSnapZone(KWM_BRDR_SNAP_ZONE_DEFAULT);
-    setCenterSnapZone(KWM_CNTR_SNAP_ZONE_DEFAULT);
-    m_ui->OverlapSnap->setChecked(false);
-
-    emit KCModule::changed(true);
-}
-
-int KMovingConfig::getBorderSnapZone()
-{
-    return m_ui->borderSnap->value();
-}
-
-void KMovingConfig::setBorderSnapZone(int pxls)
-{
-    m_ui->borderSnap->setValue(pxls);
-}
-
-int KMovingConfig::getWindowSnapZone()
-{
-    return m_ui->windowSnap->value();
-}
-
-void KMovingConfig::setWindowSnapZone(int pxls)
-{
-    m_ui->windowSnap->setValue(pxls);
-}
-
-int KMovingConfig::getCenterSnapZone()
-{
-    return m_ui->centerSnap->value();
-}
-
-void KMovingConfig::setCenterSnapZone(int pxls)
-{
-    m_ui->centerSnap->setValue(pxls);
-}
-

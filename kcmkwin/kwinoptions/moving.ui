@@ -20,12 +20,12 @@
       <string>Window &amp;geometry:</string>
      </property>
      <property name="buddy">
-      <cstring>geometryTipOn</cstring>
+      <cstring>kcfg_GeometryTip</cstring>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QCheckBox" name="geometryTipOn">
+    <widget class="QCheckBox" name="kcfg_GeometryTip">
      <property name="whatsThis">
       <string>Enable this option if you want a window's geometry to be displayed while it is being moved or resized. The window position relative to the top-left corner of the screen is displayed together with its size.</string>
      </property>
@@ -40,12 +40,12 @@
       <string>Screen &amp;edge snap zone:</string>
      </property>
      <property name="buddy">
-      <cstring>borderSnap</cstring>
+      <cstring>kcfg_BorderSnapZone</cstring>
      </property>
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QSpinBox" name="borderSnap">
+    <widget class="QSpinBox" name="kcfg_BorderSnapZone">
      <property name="whatsThis">
       <string>Here you can set the snap zone for screen edges, i.e. the 'strength' of the magnetic field which will make windows snap to the border when moved near it.</string>
      </property>
@@ -67,7 +67,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QSpinBox" name="windowSnap">
+    <widget class="QSpinBox" name="kcfg_WindowSnapZone">
      <property name="whatsThis">
       <string>Here you can set the snap zone for windows, i.e. the 'strength' of the magnetic field which will make windows snap to each other when they are moved near another window.</string>
      </property>
@@ -89,7 +89,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QSpinBox" name="centerSnap">
+    <widget class="QSpinBox" name="kcfg_CenterSnapZone">
      <property name="whatsThis">
       <string>Here you can set the snap zone for the screen center, i.e. the 'strength' of the magnetic field which will make windows snap to the center of the screen when moved near it.</string>
      </property>
@@ -108,7 +108,7 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QCheckBox" name="OverlapSnap">
+    <widget class="QCheckBox" name="kcfg_SnapOnlyWhenOverlapping">
      <property name="whatsThis">
       <string>Here you can set that windows will be only snapped if you try to overlap them, i.e. they will not be snapped if the windows comes only near another window or border.</string>
      </property>
@@ -123,7 +123,7 @@
       <string>&amp;Window snap zone:</string>
      </property>
      <property name="buddy">
-      <cstring>windowSnap</cstring>
+      <cstring>kcfg_WindowSnapZone</cstring>
      </property>
     </widget>
    </item>
@@ -133,7 +133,7 @@
       <string>&amp;Center snap zone:</string>
      </property>
      <property name="buddy">
-      <cstring>centerSnap</cstring>
+      <cstring>kcfg_CenterSnapZone</cstring>
      </property>
     </widget>
    </item>
@@ -143,7 +143,7 @@
       <string>&amp;Snap windows:</string>
      </property>
      <property name="buddy">
-      <cstring>OverlapSnap</cstring>
+      <cstring>kcfg_SnapOnlyWhenOverlapping</cstring>
      </property>
     </widget>
    </item>
