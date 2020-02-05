@@ -123,6 +123,7 @@ enum ChipClass {
     VolcanicIslands,        // GL4.5  CL2.0  DX12      SM 6.0      2015
     ArcticIslands,          // GL4.5  CL2.0  DX12      SM 6.0      2016
     Vega,                   // GL4.6  CL2.0  DX12      SM 6.0      2017
+    Navi,                   // GL4.6  CL2.0  DX12.1    SM 6.4      2019
     UnknownRadeon = 999,
 
     // NVIDIA
