@@ -220,8 +220,8 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
 
     /**
-     * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
-     * might be emitted at each resize step or only at the end of the resize operation.
+     * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
+     * signal might be emitted at each resize step or only at the end of the resize operation.
      */
     Q_PROPERTY(QRect geometry READ frameGeometry WRITE setFrameGeometry)
 

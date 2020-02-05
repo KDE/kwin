@@ -64,10 +64,6 @@ AbstractClient::AbstractClient()
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
 {
-    connect(this, &AbstractClient::geometryShapeChanged, this, &AbstractClient::geometryChanged);
-    auto signalMaximizeChanged = static_cast<void (AbstractClient::*)(KWin::AbstractClient*, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged);
-    connect(this, signalMaximizeChanged, this, &AbstractClient::geometryChanged);
-    connect(this, &AbstractClient::clientStepUserMovedResized,   this, &AbstractClient::geometryChanged);
     connect(this, &AbstractClient::clientStartUserMovedResized,  this, &AbstractClient::moveResizedChanged);
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::moveResizedChanged);
     connect(this, &AbstractClient::clientStartUserMovedResized,  this, &AbstractClient::removeCheckScreenConnection);
@@ -89,7 +85,7 @@ AbstractClient::AbstractClient()
     });
 
     // replace on-screen-display on size changes
-    connect(this, &AbstractClient::geometryShapeChanged, this,
+    connect(this, &AbstractClient::frameGeometryChanged, this,
         [this] (Toplevel *c, const QRect &old) {
             Q_UNUSED(c)
             if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && !isInitialPositionSet()) {
@@ -821,9 +817,9 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
+    emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-    emit geometryChanged();
 }
 
 bool AbstractClient::startMoveResize()
@@ -1430,7 +1426,7 @@ void AbstractClient::setupWindowManagementInterface()
             w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
         }
     );
-    connect(this, &AbstractClient::geometryChanged, w,
+    connect(this, &AbstractClient::frameGeometryChanged, w,
         [w, this] {
             w->setGeometry(frameGeometry());
         }

@@ -340,10 +340,10 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     parent->setFullScreen(true);
     QVERIFY(fullscreenSpy.wait());
     parentShellSurface->ackConfigure(fullscreenSpy.first().at(2).value<quint32>());
-    QSignalSpy geometryShapeChangedSpy{parent, &XdgShellClient::geometryShapeChanged};
-    QVERIFY(geometryShapeChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy{parent, &XdgShellClient::frameGeometryChanged};
+    QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(parentSurface, fullscreenSpy.first().at(0).toSize(), Qt::red);
-    QVERIFY(geometryShapeChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(parent->frameGeometry(), screens()->geometry(0));
     QVERIFY(parent->isFullScreen());
 

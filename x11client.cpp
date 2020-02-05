@@ -2762,7 +2762,7 @@ void X11Client::readShowOnScreenEdge(Xcb::Property &property)
             hideClient(true);
             successfullyHidden = isHiddenInternal();
 
-            m_edgeGeometryTrackingConnection = connect(this, &X11Client::geometryChanged, this, [this, border](){
+            m_edgeGeometryTrackingConnection = connect(this, &X11Client::frameGeometryChanged, this, [this, border](){
                 hideClient(true);
                 ScreenEdges::self()->reserve(this, border);
             });
@@ -2908,9 +2908,11 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
+    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
+        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    }
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-    emit geometryChanged();
 }
 
 bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)
@@ -4208,11 +4210,12 @@ void X11Client::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t for
     if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
+    if (frameGeometryBeforeUpdateBlocking() != m_frameGeometry) {
+        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    }
     emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-    // TODO: this signal is emitted too often
-    emit geometryChanged();
 }
 
 void X11Client::plainResize(int w, int h, ForceGeometry_t force)
@@ -4264,11 +4267,12 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
+    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
+        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    }
     emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-    // TODO: this signal is emitted too often
-    emit geometryChanged();
 }
 
 void X11Client::updateServerGeometry()

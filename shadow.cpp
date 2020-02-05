@@ -47,7 +47,7 @@ Shadow::Shadow(Toplevel *toplevel)
     , m_cachedSize(toplevel->size())
     , m_decorationShadow(nullptr)
 {
-    connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
+    connect(m_topLevel, &Toplevel::frameGeometryChanged, this, &Shadow::geometryChanged);
 }
 
 Shadow::~Shadow()
@@ -445,7 +445,7 @@ bool Shadow::updateShadow()
 void Shadow::setToplevel(Toplevel *topLevel)
 {
     m_topLevel = topLevel;
-    connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
+    connect(m_topLevel, &Toplevel::frameGeometryChanged, this, &Shadow::geometryChanged);
 }
 void Shadow::geometryChanged()
 {

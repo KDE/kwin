@@ -153,7 +153,7 @@ void XdgShellClient::init()
         connect(this, &AbstractClient::clientStartUserMovedResized, this, configure);
         connect(this, &AbstractClient::clientFinishUserMovedResized, this, configure);
 
-        connect(this, &XdgShellClient::geometryChanged, this, &XdgShellClient::updateClientOutputs);
+        connect(this, &XdgShellClient::frameGeometryChanged, this, &XdgShellClient::updateClientOutputs);
         connect(screens(), &Screens::changed, this, &XdgShellClient::updateClientOutputs);
     } else if (m_xdgShellPopup) {
         connect(m_xdgShellPopup, &XdgShellPopupInterface::configureAcknowledged, this, &XdgShellClient::handleConfigureAcknowledged);
@@ -579,12 +579,13 @@ void XdgShellClient::doSetGeometry(const QRect &rect)
             workspace()->updateClientArea();
         }
         updateWindowRules(Rules::Position | Rules::Size);
+        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     }
 
-    const auto old = frameGeometryBeforeUpdateBlocking();
+    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-    emit geometryShapeChanged(this, old);
 
     if (isResize()) {
         performMoveResize();
@@ -1443,7 +1444,7 @@ void XdgShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surf
     updatePosition();
     updateRole();
     updateShowOnScreenEdge();
-    connect(this, &XdgShellClient::geometryChanged, this, &XdgShellClient::updateShowOnScreenEdge);
+    connect(this, &XdgShellClient::frameGeometryChanged, this, &XdgShellClient::updateShowOnScreenEdge);
 
     setSkipTaskbar(surface->skipTaskbar());
     connect(surface, &PlasmaShellSurfaceInterface::skipTaskbarChanged, this, [this] {

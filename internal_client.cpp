@@ -628,9 +628,11 @@ void InternalClient::commitGeometry(const QRect &rect)
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
 
-    const QRect oldGeometry = frameGeometryBeforeUpdateBlocking();
+    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
+        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    }
+    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     updateGeometryBeforeUpdateBlocking();
-    emit geometryShapeChanged(this, oldGeometry);
 
     if (isResize()) {
         performMoveResize();

@@ -503,7 +503,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
     now->client()->processDecorationMove(pos.toPoint(), m_pos.toPoint());
 
-    m_decorationGeometryConnection = connect(decoration()->client(), &AbstractClient::geometryChanged, this,
+    m_decorationGeometryConnection = connect(decoration()->client(), &AbstractClient::frameGeometryChanged, this,
         [this] {
             // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
             const auto oldDeco = decoration();
@@ -565,7 +565,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
     seat->setPointerPos(m_pos.toPoint());
     seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
 
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::geometryChanged, this,
+    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
         [this] {
             // TODO: why no assert possible?
             if (!focus()) {
