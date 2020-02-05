@@ -1341,8 +1341,6 @@ void AbstractClient::performMoveResize()
         setFrameGeometry(moveResizeGeom);
     }
     doPerformMoveResize();
-    if (isResize())
-        addRepaintFull();
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
