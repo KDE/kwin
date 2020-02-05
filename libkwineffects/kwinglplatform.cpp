@@ -225,6 +225,12 @@ static ChipClass detectRadeonClass(const QByteArray &chipset)
         return Vega;
     }
 
+    if (chipset.contains("NAVI10") ||
+        chipset.contains("NAVI12") ||
+        chipset.contains("NAVI14")) {
+        return Navi;
+    }
+
     const QString chipset16 = QString::fromLatin1(chipset);
     QString name = extract(chipset16, QStringLiteral("HD [0-9]{4}")); // HD followed by a space and 4 digits
     if (!name.isEmpty()) {
@@ -567,6 +573,8 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
         return QByteArrayLiteral("Arctic Islands");
     case Vega:
         return QByteArrayLiteral("Vega");
+    case Navi:
+        return QByteArrayLiteral("Navi");
 
     case NV10:
         return QByteArrayLiteral("NV10");
@@ -876,7 +884,10 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
                  m_renderer.contains("VEGA10")    ||
                  m_renderer.contains("VEGA12")    ||
                  m_renderer.contains("VEGA20")    ||
-                 m_renderer.contains("RAVEN"))) {
+                 m_renderer.contains("RAVEN")     ||
+                 m_renderer.contains("NAVI10")    ||
+                 m_renderer.contains("NAVI12")    ||
+                 m_renderer.contains("NAVI14"))) {
             m_chipClass = detectRadeonClass(m_renderer);
             m_driver = Driver_RadeonSI;
         }
