@@ -759,7 +759,16 @@ public:
         return input()->shortcuts()->processAxis(event->modifiers(), direction);
     }
     bool keyEvent(QKeyEvent *event) override {
-        if (event->type() == QEvent::KeyPress) {
+        if (event->key() == Qt::Key_PowerOff) {
+            if (event->type() == QEvent::KeyPress) {
+                m_powerOffPress = event->timestamp();
+            } else if (event->type() == QEvent::KeyRelease) {
+                const uint duration = (event->timestamp() - m_powerOffPress);
+                const Qt::Key key = duration > 1000 ? Qt::Key_PowerDown : Qt::Key_PowerOff;
+                const auto shortcuts = static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts();
+                return input()->shortcuts()->processKey(shortcuts, key | (event->key() & ~Qt::KeyboardModifierMask));
+            }
+        } else if (event->type() == QEvent::KeyPress) {
             return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
         }
         return false;
@@ -784,6 +793,9 @@ public:
         input()->shortcuts()->processSwipeEnd();
         return false;
     }
+
+private:
+    uint m_powerOffPress;
 };
 
 
