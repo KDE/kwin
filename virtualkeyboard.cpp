@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "xkb.h"
 #include "xdgshellclient.h"
+#include "screenlockerwatcher.h"
 
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
@@ -86,6 +87,8 @@ void VirtualKeyboard::init()
         return;
     }
     m_inputWindow->setProperty("__kwin_input_method", true);
+
+    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &VirtualKeyboard::hide);
 
     if (waylandServer()) {
         m_enabled = !input()->hasAlphaNumericKeyboard();
@@ -289,6 +292,7 @@ void VirtualKeyboard::hide()
     if (m_inputWindow.isNull()) {
         return;
     }
+    m_inputWindow->hide();
     qApp->inputMethod()->hide();
 }
 
