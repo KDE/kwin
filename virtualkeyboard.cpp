@@ -29,7 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xdgshellclient.h"
 #include "screenlockerwatcher.h"
 
+#include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/inputmethod_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/textinput_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -127,6 +129,47 @@ void VirtualKeyboard::init()
         t->create();
         auto t2 = waylandServer()->display()->createTextInputManager(TextInputInterfaceVersion::UnstableV2, waylandServer()->display());
         t2->create();
+
+        const auto *comp = waylandServer()->compositor();
+//         connect(comp, &KWayland::Server::CompositorInterface::surfaceCreated, this,
+//                  [this, dc](KWayland::Server::SurfaceInterface *si) {
+//                     // TODO: how to make sure that it is the iface of m_surface?
+//                     qDebug() << "xxx";
+//                     if (m_surfaceIface || si->client() != waylandServer()->internalConnection()) {
+//                         return;
+//                     }
+//                     m_surfaceIface = si;
+//                     connect(workspace(), &Workspace::clientActivated, this,
+//                         [this](AbstractClient *ac) {
+//                             if (!ac || !ac->inherits("KWin::X11Client")) {
+//                                 return;
+//                             }
+//                             auto *surface = ac->surface();
+//                             if (surface) {
+//                                 surface->setDataProxy(m_surfaceIface);
+//                             } else {
+//                                 auto *dc = new QMetaObject::Connection();
+//                                 *dc = connect(ac, &AbstractClient::surfaceChanged, this, [this, ac, dc] {
+//                                         if (auto *surface = ac->surface()) {
+//                                             surface->setDataProxy(m_surfaceIface);
+//                                             QObject::disconnect(*dc);
+//                                             delete dc;
+//                                         }
+//                                       }
+//                                 );
+//                             }
+//                     });
+//                 }
+
+        connect(waylandServer()->inputPanel(), &InputPanelInterface::inputPanelSurfaceAdded,
+            [] (uint32_t, InputPanelSurfaceInterface *surface) {
+                qDebug() << "fuuuuuuu" << surface << waylandServer()->findClient(surface->surface());
+                if (XdgShellClient *client = waylandServer()->findClient(surface->surface())) {
+                    client->installInputPanelSurface(surface);
+                }
+            }
+        );
+
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputChanged, this,
             [this] {
                 disconnect(m_waylandShowConnection);
@@ -151,7 +194,11 @@ void VirtualKeyboard::init()
                     );
                     m_waylandResetConnection = connect(t, &TextInputInterface::requestReset, qApp->inputMethod(), &QInputMethod::reset);
                     m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this,
-                        [] {
+                        [t] {
+                            if (t->isEnabled())
+                                waylandServer()->inputMethod()->sendActivate();
+                            else
+                                waylandServer()->inputMethod()->sendDeactivate();
                             qApp->inputMethod()->update(Qt::ImQueryAll);
                         }
                     );

@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/inputmethod_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
@@ -1454,6 +1455,14 @@ void XdgShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surf
     connect(surface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
         setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
     });
+}
+
+
+void XdgShellClient::installInputPanelSurface(KWayland::Server::InputPanelSurfaceInterface *surface)
+{
+    m_inputPanelSurface = surface;
+    setSkipPager(true);
+    setSkipTaskbar(true);
 }
 
 void XdgShellClient::updateShowOnScreenEdge()

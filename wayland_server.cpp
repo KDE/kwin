@@ -66,6 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/xdgoutput_interface.h>
 #include <KWayland/Server/keystate_interface.h>
 #include <KWayland/Server/filtered_display.h>
+#include <KWayland/Server/inputmethod_interface.h>
 
 // KF
 #include <KServiceTypeTrader>
@@ -190,6 +191,14 @@ void WaylandServer::createSurface(T *surface)
     });
 }
 
+class OnlySurfaceClient : public AbstractClient
+{};
+
+void WaylandServer::createNakedSurface(KWayland::Server::SurfaceInterface *surface)
+{
+
+}
+
 class KWinDisplay : public KWayland::Server::FilteredDisplay
 {
 public:
@@ -296,6 +305,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_compositor->create();
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,
         [this] (SurfaceInterface *surface) {
+            qDebug() << "XXX" << surface;
             // check whether we have a Toplevel with the Surface's id
             Workspace *ws = Workspace::self();
             if (!ws) {
@@ -450,6 +460,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
 
     m_keyState = m_display->createKeyStateInterface(m_display);
     m_keyState->create();
+
+    m_inputMethod = m_display->createInputMethodInterface(m_display);
+    m_inputPanel = m_display->createInputPanelInterface(m_display);
 
     return true;
 }

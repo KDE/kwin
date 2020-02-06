@@ -35,6 +35,7 @@ class ServerSideDecorationPaletteInterface;
 class AppMenuInterface;
 class PlasmaShellSurfaceInterface;
 class XdgDecorationInterface;
+class InputPanelSurfaceInterface;
 }
 }
 
@@ -126,6 +127,7 @@ public:
     void installAppMenu(KWayland::Server::AppMenuInterface *appmenu);
     void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWayland::Server::XdgDecorationInterface *decoration);
+    void installInputPanelSurface(KWayland::Server::InputPanelSurfaceInterface *surface);
 
     void placeIn(const QRect &area);
 
@@ -227,6 +229,7 @@ private:
     bool m_unmapped = true;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;
+    QPointer<KWayland::Server::InputPanelSurfaceInterface> m_inputPanelSurface;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::AppMenuInterface> m_appMenuInterface;
     QPointer<KWayland::Server::ServerSideDecorationPaletteInterface> m_paletteInterface;

@@ -49,6 +49,8 @@ class CompositorInterface;
 class Display;
 class DataDeviceInterface;
 class IdleInterface;
+class InputMethodInterface;
+class InputPanelInterface;
 class SeatInterface;
 class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
@@ -121,6 +123,12 @@ public:
         return m_xdgOutputManager;
     }
     KWayland::Server::LinuxDmabufUnstableV1Interface *linuxDmabuf();
+    KWayland::Server::InputMethodInterface *inputMethod() const {
+        return m_inputMethod;
+    }
+    KWayland::Server::InputPanelInterface *inputPanel() const {
+        return m_inputPanel;
+    }
 
     QList<XdgShellClient *> clients() const {
         return m_clients;
@@ -242,6 +250,7 @@ private:
     void destroyInternalConnection();
     template <class T>
     void createSurface(T *surface);
+    void createNakedSurface(KWayland::Server::SurfaceInterface *surface);
     void initScreenLocker();
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
@@ -260,6 +269,8 @@ private:
     KWayland::Server::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
     KWayland::Server::XdgDecorationManagerInterface *m_xdgDecorationManager = nullptr;
     KWayland::Server::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
+    KWayland::Server::InputMethodInterface* m_inputMethod = nullptr;
+    KWayland::Server::InputPanelInterface* m_inputPanel = nullptr;
     QSet<KWayland::Server::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
     struct {
         KWayland::Server::ClientConnection *client = nullptr;
