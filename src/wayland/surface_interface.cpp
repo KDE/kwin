@@ -374,6 +374,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     // copy values
     if (bufferChanged) {
         target->buffer = buffer;
+        target->offset = source->offset;
         target->damage = source->damage;
         target->bufferDamage = source->bufferDamage;
         target->bufferIsSet = source->bufferIsSet;

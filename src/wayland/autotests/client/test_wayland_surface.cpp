@@ -289,10 +289,11 @@ void TestWaylandSurface::testDamage()
     QImage img(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::black);
     auto b = m_shm->createBuffer(img);
-    s->attachBuffer(b);
+    s->attachBuffer(b, QPoint(55, 55));
     s->damage(QRect(0, 0, 10, 10));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(damageSpy.wait());
+    QCOMPARE(serverSurface->offset(), QPoint(55, 55)); // offset is surface local so scale doesn't change this
     QCOMPARE(serverSurface->damage(), QRegion(0, 0, 5, 5)); // scale is 2
     QCOMPARE(damageSpy.first().first().value<QRegion>(), QRegion(0, 0, 5, 5));
     QVERIFY(serverSurface->isMapped());
