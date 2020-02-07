@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name="kwinrc">
+        <parameter name="TabBoxGroup"/>
+    </kcfgfile>
+    <group name="$(TabBoxGroup)">
+       <entry key="DesktopMode" type="Int">
+           <default code="true">TabBoxConfig::defaultDesktopMode()</default>
+       </entry>
+       <entry key="ActivitiesMode" type="Int">
+           <default code="true">TabBoxConfig::defaultActivitiesMode()</default>
+       </entry>
+       <entry key="ApplicationsMode" type="Int">
+           <default code="true">TabBoxConfig::defaultApplicationsMode()</default>
+       </entry>
+       <entry key="MinimizedMode" type="Int">
+           <default code="true">TabBoxConfig::defaultMinimizedMode()</default>
+       </entry>
+       <entry key="ShowDesktopMode" type="Int">
+           <default code="true">TabBoxConfig::defaultShowDesktopMode()</default>
+       </entry>
+       <entry key="MultiScreenMode" type="Int">
+           <default code="true">TabBoxConfig::defaultMultiScreenMode()</default>
+       </entry>
+       <entry key="SwitchingMode" type="Int">
+           <default code="true">TabBoxConfig::defaultSwitchingMode()</default>
+       </entry>
+       <entry key="LayoutName" type="String">
+           <default code="true">TabBoxConfig::defaultLayoutName()</default>
+       </entry>
+       <entry key="ShowTabBox" type="Bool">
+           <default code="true">TabBoxConfig::defaultShowTabBox()</default>
+       </entry>
+       <entry key="HighlightWindows" type="Bool">
+           <default code="true">TabBoxConfig::defaultHighlightWindow()</default>
+       </entry>
+    </group>
+</kcfg>
