@@ -52,6 +52,7 @@ Name[zh_CN]=触摸屏
 Name[zh_TW]=觸控螢幕
 Comment=Configure touch screen swipe gestures
 Comment[ca]=Configura els gestos de lliscament en la pantalla tàctil
+Comment[da]=Indstil strygegestusser til touchskærme
 Comment[de]=Wischgesten für Touchscreens einrichten
 Comment[en_GB]=Configure touch screen swipe gestures
 Comment[es]=Configurar los gestos de deslizamiento en pantalla táctil
