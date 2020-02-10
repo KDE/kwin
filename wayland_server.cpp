@@ -191,12 +191,20 @@ void WaylandServer::createSurface(T *surface)
     });
 }
 
-class OnlySurfaceClient : public AbstractClient
-{};
-
-void WaylandServer::createNakedSurface(KWayland::Server::SurfaceInterface *surface)
+void WaylandServer::createInputPanelSurface(KWayland::Server::InputPanelSurfaceInterface *surface)
 {
+    XdgShellClient *client = new XdgShellClient(surface);
+    m_clients << client;
+    if (client->readyForPainting()) {
+        emit shellClientAdded(client);
+    } else {
+        connect(client, &XdgShellClient::windowShown, this, &WaylandServer::shellClientShown);
+    }
 
+    //not directly connected as the connection is tied to client instead of this
+    connect(m_XdgForeign, &KWayland::Server::XdgForeignInterface::transientChanged, client, [this](KWayland::Server::SurfaceInterface *child) {
+        emit foreignTransientChanged(child);
+    });
 }
 
 class KWinDisplay : public KWayland::Server::FilteredDisplay
@@ -305,7 +313,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
     m_compositor->create();
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,
         [this] (SurfaceInterface *surface) {
-            qDebug() << "XXX" << surface;
             // check whether we have a Toplevel with the Surface's id
             Workspace *ws = Workspace::self();
             if (!ws) {

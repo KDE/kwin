@@ -84,6 +84,29 @@ XdgShellClient::XdgShellClient(XdgShellPopupInterface *surface)
     init();
 }
 
+XdgShellClient::XdgShellClient(InputPanelSurfaceInterface *panelSurface)
+    : AbstractClient()
+    , m_xdgShellToplevel(nullptr)
+    , m_xdgShellPopup(nullptr)
+    , m_inputPanelSurface(panelSurface)
+{
+    setSurface(panelSurface->surface());
+    init();
+    setSkipPager(true);
+    setSkipTaskbar(true);
+    setKeepAbove(true);
+
+    setObjectName(QStringLiteral("Input Panel"));
+
+    connect(panelSurface, &KWayland::Server::InputPanelSurfaceInterface::topLevel, this, [this, panelSurface] (OutputInterface *output, KWayland::Server::InputPanelSurfaceInterface::Position position) {
+        const QRect geo = {output->globalPosition(), panelSurface->surface()->size()};
+        finishInit();
+        doSetGeometry(geo);
+        markAsMapped();
+        qDebug() << "setting keyboard" << this->surface()->buffer() << frameGeometry() << geo << position << output;
+    });
+}
+
 XdgShellClient::~XdgShellClient() = default;
 
 void XdgShellClient::init()
@@ -1455,14 +1478,6 @@ void XdgShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surf
     connect(surface, &PlasmaShellSurfaceInterface::skipSwitcherChanged, this, [this] {
         setSkipSwitcher(m_plasmaShellSurface->skipSwitcher());
     });
-}
-
-
-void XdgShellClient::installInputPanelSurface(KWayland::Server::InputPanelSurfaceInterface *surface)
-{
-    m_inputPanelSurface = surface;
-    setSkipPager(true);
-    setSkipTaskbar(true);
 }
 
 void XdgShellClient::updateShowOnScreenEdge()

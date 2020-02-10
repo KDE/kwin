@@ -51,6 +51,7 @@ class DataDeviceInterface;
 class IdleInterface;
 class InputMethodInterface;
 class InputPanelInterface;
+class InputPanelSurfaceInterface;
 class SeatInterface;
 class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
@@ -236,6 +237,7 @@ public:
     void removeLinuxDmabufBuffer(KWayland::Server::LinuxDmabufUnstableV1Buffer *buffer) {
         m_linuxDmabufBuffers.remove(buffer);
     }
+    void createInputPanelSurface(KWayland::Server::InputPanelSurfaceInterface *surface);
 
 Q_SIGNALS:
     void shellClientAdded(KWin::XdgShellClient *);
@@ -250,7 +252,6 @@ private:
     void destroyInternalConnection();
     template <class T>
     void createSurface(T *surface);
-    void createNakedSurface(KWayland::Server::SurfaceInterface *surface);
     void initScreenLocker();
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;

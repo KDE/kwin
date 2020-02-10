@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 
 #include <KWayland/Server/xdgshell_interface.h>
+#include <KWayland/Server/inputmethod_interface.h>
 
 namespace KWayland
 {
@@ -35,7 +36,6 @@ class ServerSideDecorationPaletteInterface;
 class AppMenuInterface;
 class PlasmaShellSurfaceInterface;
 class XdgDecorationInterface;
-class InputPanelSurfaceInterface;
 }
 }
 
@@ -55,6 +55,7 @@ class KWIN_EXPORT XdgShellClient : public AbstractClient
     Q_OBJECT
 
 public:
+    XdgShellClient(KWayland::Server::InputPanelSurfaceInterface *surface);
     XdgShellClient(KWayland::Server::XdgShellSurfaceInterface *surface);
     XdgShellClient(KWayland::Server::XdgShellPopupInterface *surface);
     ~XdgShellClient() override;
@@ -127,7 +128,6 @@ public:
     void installAppMenu(KWayland::Server::AppMenuInterface *appmenu);
     void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWayland::Server::XdgDecorationInterface *decoration);
-    void installInputPanelSurface(KWayland::Server::InputPanelSurfaceInterface *surface);
 
     void placeIn(const QRect &area);
 
@@ -198,6 +198,7 @@ private:
 
     KWayland::Server::XdgShellSurfaceInterface *m_xdgShellToplevel;
     KWayland::Server::XdgShellPopupInterface *m_xdgShellPopup;
+    KWayland::Server::InputPanelSurfaceInterface *m_inputPanelSurface = nullptr;
 
     QRect m_bufferGeometry;
     QRect m_windowGeometry;
@@ -229,7 +230,6 @@ private:
     bool m_unmapped = true;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;
-    QPointer<KWayland::Server::InputPanelSurfaceInterface> m_inputPanelSurface;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::AppMenuInterface> m_appMenuInterface;
     QPointer<KWayland::Server::ServerSideDecorationPaletteInterface> m_paletteInterface;

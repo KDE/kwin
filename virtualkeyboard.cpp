@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/textinput_interface.h>
 #include <KWayland/Server/surface_interface.h>
+#include <wayland-server.h>
 
 #include <KStatusNotifierItem>
 #include <KLocalizedString>
@@ -131,42 +132,10 @@ void VirtualKeyboard::init()
         t2->create();
 
         const auto *comp = waylandServer()->compositor();
-//         connect(comp, &KWayland::Server::CompositorInterface::surfaceCreated, this,
-//                  [this, dc](KWayland::Server::SurfaceInterface *si) {
-//                     // TODO: how to make sure that it is the iface of m_surface?
-//                     qDebug() << "xxx";
-//                     if (m_surfaceIface || si->client() != waylandServer()->internalConnection()) {
-//                         return;
-//                     }
-//                     m_surfaceIface = si;
-//                     connect(workspace(), &Workspace::clientActivated, this,
-//                         [this](AbstractClient *ac) {
-//                             if (!ac || !ac->inherits("KWin::X11Client")) {
-//                                 return;
-//                             }
-//                             auto *surface = ac->surface();
-//                             if (surface) {
-//                                 surface->setDataProxy(m_surfaceIface);
-//                             } else {
-//                                 auto *dc = new QMetaObject::Connection();
-//                                 *dc = connect(ac, &AbstractClient::surfaceChanged, this, [this, ac, dc] {
-//                                         if (auto *surface = ac->surface()) {
-//                                             surface->setDataProxy(m_surfaceIface);
-//                                             QObject::disconnect(*dc);
-//                                             delete dc;
-//                                         }
-//                                       }
-//                                 );
-//                             }
-//                     });
-//                 }
 
         connect(waylandServer()->inputPanel(), &InputPanelInterface::inputPanelSurfaceAdded,
             [] (uint32_t, InputPanelSurfaceInterface *surface) {
-                qDebug() << "fuuuuuuu" << surface << waylandServer()->findClient(surface->surface());
-                if (XdgShellClient *client = waylandServer()->findClient(surface->surface())) {
-                    client->installInputPanelSurface(surface);
-                }
+                waylandServer()->createInputPanelSurface(surface);
             }
         );
 
@@ -195,9 +164,27 @@ void VirtualKeyboard::init()
                     m_waylandResetConnection = connect(t, &TextInputInterface::requestReset, qApp->inputMethod(), &QInputMethod::reset);
                     m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this,
                         [t] {
-                            if (t->isEnabled())
-                                waylandServer()->inputMethod()->sendActivate();
-                            else
+                            if (t->isEnabled()) {
+                                auto inputContext = waylandServer()->inputMethod()->sendActivate();
+                                TextInputInterface *ti = waylandServer()->seat()->focusedTextInput();
+                                inputContext->sendSurroundingText(QString::fromUtf8(ti->surroundingText()), ti->surroundingTextCursorPosition(), ti->surroundingTextSelectionAnchor());
+                                inputContext->sendPreferredLanguage(QString::fromUtf8(ti->preferredLanguage()));
+
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::keysym, waylandServer(),
+                                    [] (uint32_t serial, uint32_t time, uint32_t sym, uint32_t state, uint32_t modifiers) {
+                                        if (sym != 0) {
+                                            auto t = waylandServer()->seat()->focusedTextInput();
+                                            if (t && t->isEnabled()) {
+                                                if (state == WL_KEYBOARD_KEY_STATE_PRESSED) {
+                                                    t->keysymPressed(sym);
+                                                } else {
+                                                    t->keysymReleased(sym);
+                                                }
+                                            }
+                                        }
+                                    }
+                                );
+                            } else
                                 waylandServer()->inputMethod()->sendDeactivate();
                             qApp->inputMethod()->update(Qt::ImQueryAll);
                         }
