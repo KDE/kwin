@@ -99,11 +99,14 @@ XdgShellClient::XdgShellClient(InputPanelSurfaceInterface *panelSurface)
     setObjectName(QStringLiteral("Input Panel"));
 
     connect(panelSurface, &KWayland::Server::InputPanelSurfaceInterface::topLevel, this, [this, panelSurface] (OutputInterface *output, KWayland::Server::InputPanelSurfaceInterface::Position position) {
-        const QRect geo = {output->globalPosition(), panelSurface->surface()->size()};
+        const QSize panelSize = panelSurface->surface()->size();
+        QRect geo = {output->globalPosition(), panelSize};
+        if (position == KWayland::Server::InputPanelSurfaceInterface::CenterBottom) {
+            geo.translate((output->pixelSize().width() - panelSize.width())/2, output->pixelSize().height() - panelSize.height());
+        }
         finishInit();
-        doSetGeometry(geo);
         markAsMapped();
-        qDebug() << "setting keyboard" << this->surface()->buffer() << frameGeometry() << geo << position << output;
+        doSetGeometry(geo);
     });
 }
 

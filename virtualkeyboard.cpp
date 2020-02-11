@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/textinput_interface.h>
 #include <KWayland/Server/surface_interface.h>
-#include <wayland-server.h>
 
 #include <KStatusNotifierItem>
 #include <KLocalizedString>
@@ -171,19 +170,67 @@ void VirtualKeyboard::init()
                                 inputContext->sendPreferredLanguage(QString::fromUtf8(ti->preferredLanguage()));
 
                                 connect(inputContext, &KWayland::Server::InputMethodContextInterface::keysym, waylandServer(),
-                                    [] (uint32_t serial, uint32_t time, uint32_t sym, uint32_t state, uint32_t modifiers) {
-                                        if (sym != 0) {
-                                            auto t = waylandServer()->seat()->focusedTextInput();
-                                            if (t && t->isEnabled()) {
-                                                if (state == WL_KEYBOARD_KEY_STATE_PRESSED) {
-                                                    t->keysymPressed(sym);
-                                                } else {
-                                                    t->keysymReleased(sym);
-                                                }
+                                    [] (uint32_t serial, uint32_t time, uint32_t sym, bool pressed, Qt::KeyboardModifiers modifiers) {
+                                        auto t = waylandServer()->seat()->focusedTextInput();
+                                        if (t && t->isEnabled()) {
+                                            if (pressed) {
+                                                t->keysymPressed(sym, modifiers);
+                                            } else {
+                                                t->keysymReleased(sym, modifiers);
                                             }
                                         }
                                     }
                                 );
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::commitString, waylandServer(),
+                                    [] (qint32 serial, const QString &text) {
+                                        auto t = waylandServer()->seat()->focusedTextInput();
+                                        if (t && t->isEnabled()) {
+                                            t->commit(text.toUtf8());
+                                        }
+                                    }
+                                );
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::preeditCursor, waylandServer(),
+                                    [] (qint32 index) {
+                                        auto t = waylandServer()->seat()->focusedTextInput();
+                                        if (t && t->isEnabled()) {
+                                            t->setPreEditCursor(index);
+                                        }
+                                    }
+                                );
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::preeditString, waylandServer(),
+                                    [] (uint32_t serial, const QString &text, const QString &commit) {
+                                        auto t = waylandServer()->seat()->focusedTextInput();
+                                        if (t && t->isEnabled()) {
+                                            t->preEdit(text.toUtf8(), commit.toUtf8());
+                                        }
+                                    }
+                                );
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::deleteSurroundingText, waylandServer(),
+                                    [] (int32_t index, uint32_t length) {
+                                        auto t = waylandServer()->seat()->focusedTextInput();
+                                        if (t && t->isEnabled()) {
+                                            t->deleteSurroundingText(index, length);
+                                        }
+                                    }
+                                );
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::cursorPosition, waylandServer(), [] (qint32 index, qint32 anchor) {
+                                    auto t = waylandServer()->seat()->focusedTextInput();
+                                    if (t && t->isEnabled()) {
+                                        t->setCursorPosition(index, anchor);
+                                    }
+                                });
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::language, waylandServer(), [] (uint32_t serial, const QString &language) {
+                                    auto t = waylandServer()->seat()->focusedTextInput();
+                                    if (t && t->isEnabled()) {
+                                        t->setLanguage(language.toUtf8());
+                                    }
+                                });
+                                connect(inputContext, &KWayland::Server::InputMethodContextInterface::textDirection, waylandServer(), [] (uint32_t serial, Qt::LayoutDirection direction) {
+                                    auto t = waylandServer()->seat()->focusedTextInput();
+                                    if (t && t->isEnabled()) {
+                                        t->setTextDirection(direction);
+                                    }
+                                });
                             } else
                                 waylandServer()->inputMethod()->sendDeactivate();
                             qApp->inputMethod()->update(Qt::ImQueryAll);
