@@ -221,7 +221,10 @@ static ChipClass detectRadeonClass(const QByteArray &chipset)
     if (chipset.contains("VEGA10") ||
         chipset.contains("VEGA12") ||
         chipset.contains("VEGA20") ||
-        chipset.contains("RAVEN")) {
+        chipset.contains("RAVEN")  ||
+        chipset.contains("RAVEN2") ||
+        chipset.contains("RENOIR") ||
+        chipset.contains("ARCTURUS")) {
         return Vega;
     }
 
@@ -885,6 +888,9 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
                  m_renderer.contains("VEGA12")    ||
                  m_renderer.contains("VEGA20")    ||
                  m_renderer.contains("RAVEN")     ||
+                 m_renderer.contains("RAVEN2")    ||
+                 m_renderer.contains("RENOIR")    ||
+                 m_renderer.contains("ARCTURUS")  ||
                  m_renderer.contains("NAVI10")    ||
                  m_renderer.contains("NAVI12")    ||
                  m_renderer.contains("NAVI14"))) {
