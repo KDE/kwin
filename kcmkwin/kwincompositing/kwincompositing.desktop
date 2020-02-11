@@ -13,6 +13,7 @@ X-KDE-System-Settings-Parent-Category=display
 X-KDE-Weight=60
 
 Name=Compositor
+Name[ast]=Compositor
 Name[bs]=Compositor
 Name[ca]=Compositor
 Name[ca@valencia]=Compositor
