@@ -94,7 +94,7 @@ private Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotNumberDesktopsChanged(uint old);
-    void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
+    void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const QRect &old);
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;

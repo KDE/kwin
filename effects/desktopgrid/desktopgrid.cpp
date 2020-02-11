@@ -85,7 +85,7 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, &EffectsHandler::windowClosed, this, &DesktopGridEffect::slotWindowClosed);
     connect(effects, &EffectsHandler::windowDeleted, this, &DesktopGridEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::numberDesktopsChanged, this, &DesktopGridEffect::slotNumberDesktopsChanged);
-    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &DesktopGridEffect::slotWindowGeometryShapeChanged);
+    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &DesktopGridEffect::slotWindowFrameGeometryChanged);
     connect(effects, &EffectsHandler::numberScreensChanged, this, &DesktopGridEffect::setup);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
@@ -431,7 +431,7 @@ void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
     }
 }
 
-void DesktopGridEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QRect& old)
+void DesktopGridEffect::slotWindowFrameGeometryChanged(EffectWindow* w, const QRect& old)
 {
     Q_UNUSED(old)
     if (!activated)
