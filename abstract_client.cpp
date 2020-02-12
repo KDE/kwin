@@ -719,11 +719,17 @@ void AbstractClient::keepInArea(QRect area, bool partial)
         move(tx, ty);
 }
 
+/**
+ * Returns the maximum client size, not the maximum frame size.
+ */
 QSize AbstractClient::maxSize() const
 {
     return rules()->checkMaxSize(QSize(INT_MAX, INT_MAX));
 }
 
+/**
+ * Returns the minimum client size, not the minimum frame size.
+ */
 QSize AbstractClient::minSize() const
 {
     return rules()->checkMinSize(QSize(0, 0));
