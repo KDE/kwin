@@ -65,7 +65,14 @@ set(SERVER_LIB_SRCS
     xdgshell_v6_interface.cpp
 )
 
-ecm_qt_declare_logging_category(SERVER_LIB_SRCS HEADER logging.h IDENTIFIER KWAYLAND_SERVER CATEGORY_NAME kwayland-server DEFAULT_SEVERITY Critical)
+ecm_qt_declare_logging_category(SERVER_LIB_SRCS
+    HEADER logging.h
+    IDENTIFIER KWAYLAND_SERVER
+    CATEGORY_NAME kwayland-server
+    DEFAULT_SEVERITY Critical
+    DESCRIPTION "KWayland Server Library"
+    EXPORT KWAYLAND
+)
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWayland_SOURCE_DIR}/src/client/protocols/output-management.xml
