@@ -144,6 +144,16 @@ QSize InternalClient::clientSize() const
     return m_clientSize;
 }
 
+QSize InternalClient::minSize() const
+{
+    return m_internalWindow->minimumSize();
+}
+
+QSize InternalClient::maxSize() const
+{
+    return m_internalWindow->maximumSize();
+}
+
 void InternalClient::debug(QDebug &stream) const
 {
     stream.nospace() << "\'InternalClient:" << m_internalWindow << "\'";
