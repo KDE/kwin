@@ -3625,8 +3625,11 @@ QSize X11Client::constrainClientSize(const QSize &size, SizeMode mode) const
     w = qMax(min_size.width(), w);
     h = qMax(min_size.height(), h);
 
-    int w1 = w;
-    int h1 = h;
+    if (!rules()->checkStrictGeometry(!isFullScreen())) {
+        // Disobey increments and aspect by explicit rule.
+        return QSize(w, h);
+    }
+
     int width_inc = m_geometryHints.resizeIncrements().width();
     int height_inc = m_geometryHints.resizeIncrements().height();
     int basew_inc = m_geometryHints.baseSize().width();
@@ -3749,11 +3752,6 @@ QSize X11Client::constrainClientSize(const QSize &size, SizeMode mode) const
 #undef ASPECT_CHECK_GROW_H
         w += baseSize.width();
         h += baseSize.height();
-    }
-    if (!rules()->checkStrictGeometry(!isFullScreen())) {
-        // disobey increments and aspect by explicit rule
-        w = w1;
-        h = h1;
     }
 
     return QSize(w, h);
