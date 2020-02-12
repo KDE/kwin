@@ -633,19 +633,9 @@ public:
         SizeModeFixedH, ///< Try not to affect height
         SizeModeMax ///< Try not to make it larger in either direction
     };
-    /**
-     * Calculates the appropriate frame size for the given client size @p wsize.
-     *
-     * @p wsize is adapted according to the window's size hints (minimum, maximum and incremental size changes).
-     *
-     * Default implementation returns the passed in @p wsize.
-     */
-    virtual QSize sizeForClientSize(const QSize &wsize, SizeMode mode = SizeModeAny, bool noframe = false) const;
 
-    /**
-     * Adjust the frame size @p frame according to the window's size hints.
-     */
-    QSize adjustedSize(const QSize&, SizeMode mode = SizeModeAny) const;
+    virtual QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const;
+    QSize constrainFrameSize(const QSize &size, SizeMode mode = SizeModeAny) const;
     QSize adjustedSize() const;
 
     /**

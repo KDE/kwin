@@ -1182,7 +1182,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         }
 
         // Always obey size hints, even when in "unrestricted" mode
-        QSize size = adjustedSize(moveResizeGeometry().size(), sizeMode);
+        QSize size = constrainFrameSize(moveResizeGeometry().size(), sizeMode);
         // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
         topleft = QPoint(moveResizeGeometry().right() - size.width() + 1, moveResizeGeometry().bottom() - size.height() + 1);
         bottomright = QPoint(moveResizeGeometry().left() + size.width() - 1, moveResizeGeometry().top() + size.height() - 1);
@@ -1209,7 +1209,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, screen, 0));
             else {
                 QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
-                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizeModeMax);
+                QSize adjSize = constrainFrameSize(moveResizeGeom.size(), SizeModeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
                     moveResizeGeom.setSize(adjSize);
@@ -1850,13 +1850,6 @@ BORDER(Left)
 BORDER(Right)
 BORDER(Top)
 #undef BORDER
-
-QSize AbstractClient::sizeForClientSize(const QSize &wsize, SizeMode mode, bool noframe) const
-{
-    Q_UNUSED(mode)
-    Q_UNUSED(noframe)
-    return wsize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
-}
 
 void AbstractClient::addRepaintDuringGeometryUpdates()
 {
@@ -3075,7 +3068,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     checkOffscreenPosition(&newGeom, screenArea);
     // Obey size hints. TODO: We really should make sure it stays in the right place
     if (!isShade())
-        newGeom.setSize(adjustedSize(newGeom.size()));
+        newGeom.setSize(constrainFrameSize(newGeom.size()));
 
     if (newGeom != frameGeometry())
         setFrameGeometry(newGeom);
@@ -3095,21 +3088,46 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
     }
 }
 
-QSize AbstractClient::adjustedSize(const QSize& frame, SizeMode mode) const
-{
-    // first, get the window size for the given frame size s
-    QSize wsize = frameSizeToClientSize(frame);
-    if (wsize.isEmpty())
-        wsize = QSize(qMax(wsize.width(), 1), qMax(wsize.height(), 1));
-
-    return sizeForClientSize(wsize, mode, false);
-}
-
-// this helper returns proper size even if the window is shaded
-// see also the comment in X11Client::setGeometry()
+/**
+ * Returns the appropriate frame size for the current client size.
+ *
+ * This is equivalent to clientSizeToFrameSize(constrainClientSize(clientSize())).
+ */
 QSize AbstractClient::adjustedSize() const
 {
-    return sizeForClientSize(clientSize());
+    return clientSizeToFrameSize(constrainClientSize(clientSize()));
+}
+
+/**
+ * Constrains the client size @p size according to a set of the window's size hints.
+ */
+QSize AbstractClient::constrainClientSize(const QSize &size, SizeMode mode) const
+{
+    Q_UNUSED(mode)
+
+    int width = size.width();
+    int height = size.height();
+
+    // When user is resizing the window, the move resize geometry may have negative width or
+    // height. In which case, we need to set negative dimensions to reasonable values.
+    if (width < 1) {
+        width = 1;
+    }
+    if (height < 1) {
+        height = 1;
+    }
+
+    return QSize(width, height);
+}
+
+/**
+ * Constrains the frame size @p size according to a set of the window's size hints.
+ */
+QSize AbstractClient::constrainFrameSize(const QSize &size, SizeMode mode) const
+{
+    const QSize unconstrainedClientSize = frameSizeToClientSize(size);
+    const QSize constrainedClientSize = constrainClientSize(unconstrainedClientSize, mode);
+    return clientSizeToFrameSize(constrainedClientSize);
 }
 
 /**

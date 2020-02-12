@@ -458,7 +458,7 @@ void TestXdgShellClient::testFullscreen()
     QVERIFY(!c->isFullScreen());
     QCOMPARE(c->clientSize(), QSize(100, 50));
     QCOMPARE(c->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
-    QCOMPARE(c->sizeForClientSize(c->clientSize()), c->frameGeometry().size());
+    QCOMPARE(c->clientSizeToFrameSize(c->clientSize()), c->frameGeometry().size());
     QSignalSpy fullscreenChangedSpy(c, &XdgShellClient::fullScreenChanged);
     QVERIFY(fullscreenChangedSpy.isValid());
     QSignalSpy frameGeometryChangedSpy(c, &XdgShellClient::frameGeometryChanged);

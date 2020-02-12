@@ -624,7 +624,8 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     updateDecoration(false);   // Also gravitates
     // TODO: Is CentralGravity right here, when resizing is done after gravitating?
-    plainResize(rules()->checkSize(sizeForClientSize(geom.size()), !isMapped));
+    const QSize constrainedClientSize = constrainClientSize(geom.size());
+    plainResize(rules()->checkSize(clientSizeToFrameSize(constrainedClientSize), !isMapped));
 
     QPoint forced_pos = rules()->checkPosition(invalidPoint, !isMapped);
     if (forced_pos != invalidPoint) {
@@ -1069,7 +1070,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
 //                 move(calculateGravitation(true));
 //                 move(calculateGravitation(false));
                 QRect oldgeom = frameGeometry();
-                plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
+                plainResize(adjustedSize(), ForceGeometrySet);
                 if (!isShade())
                     checkWorkspacePosition(oldgeom);
                 emit geometryShapeChanged(this, oldgeom);
@@ -1081,7 +1082,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     setDecoration(decoration);
 
     move(calculateGravitation(false));
-    plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
+    plainResize(adjustedSize(), ForceGeometrySet);
     if (Compositor::compositing()) {
         discardWindowPixmap();
     }
@@ -1094,7 +1095,7 @@ void X11Client::destroyDecoration()
     if (isDecorated()) {
         QPoint grav = calculateGravitation(true);
         AbstractClient::destroyDecoration();
-        plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
+        plainResize(adjustedSize(), ForceGeometrySet);
         move(grav);
         if (compositing())
             discardWindowPixmap();
@@ -1252,8 +1253,9 @@ bool X11Client::isFullScreenable() const
     }
     if (rules()->checkStrictGeometry(true)) {
         // check geometry constraints (rule to obey is set)
-        const QRect fsarea = workspace()->clientArea(FullScreenArea, this);
-        if (sizeForClientSize(fsarea.size(), SizeModeAny, true) != fsarea.size()) {
+        const QRect fullScreenArea = workspace()->clientArea(FullScreenArea, this);
+        const QSize constrainedClientSize = constrainClientSize(fullScreenArea.size());
+        if (rules()->checkSize(constrainedClientSize) != fullScreenArea.size()) {
             return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
         }
     }
@@ -1501,7 +1503,7 @@ void X11Client::setShade(ShadeMode mode)
         addWorkspaceRepaint(visibleRect());
         // Shade
         shade_geometry_change = true;
-        QSize s(sizeForClientSize(QSize(clientSize())));
+        QSize s(adjustedSize());
         s.setHeight(borderTop() + borderBottom());
         m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
         m_wrapper.unmap();
@@ -1522,7 +1524,7 @@ void X11Client::setShade(ShadeMode mode)
         shade_geometry_change = true;
         if (decoratedClient())
             decoratedClient()->signalShadeChange();
-        QSize s(sizeForClientSize(clientSize()));
+        QSize s(adjustedSize());
         shade_geometry_change = false;
         plainResize(s);
         setGeometryRestore(frameGeometry());
@@ -3594,20 +3596,11 @@ void X11Client::checkActiveModal()
     }
 }
 
-/**
- * Calculate the appropriate frame size for the given client size \a
- * wsize.
- *
- * \a wsize is adapted according to the window's size hints (minimum,
- * maximum and incremental size changes).
- */
-QSize X11Client::sizeForClientSize(const QSize& wsize, SizeMode mode, bool noframe) const
+QSize X11Client::constrainClientSize(const QSize &size, SizeMode mode) const
 {
-    int w = wsize.width();
-    int h = wsize.height();
-    if (w < 1 || h < 1) {
-        qCWarning(KWIN_CORE) << "sizeForClientSize() with empty size!" ;
-    }
+    int w = size.width();
+    int h = size.height();
+
     if (w < 1) w = 1;
     if (h < 1) h = 1;
 
@@ -3763,11 +3756,7 @@ QSize X11Client::sizeForClientSize(const QSize& wsize, SizeMode mode, bool nofra
         h = h1;
     }
 
-    QSize size(w, h);
-    if (!noframe) {
-        size = clientSizeToFrameSize(size);
-    }
-    return rules()->checkSize(size);
+    return QSize(w, h);
 }
 
 /**
@@ -3991,16 +3980,18 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
         if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
             nh = rh;
         }
-        QSize ns = sizeForClientSize(QSize(nw, nh));     // enforces size if needed
+        const QSize requestedClientSize = constrainClientSize(QSize(nw, nh));
+        QSize requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
+        requestedFrameSize = rules()->checkSize(requestedFrameSize);
         new_pos = rules()->checkPosition(new_pos);
-        int newScreen = screens()->number(QRect(new_pos, ns).center());
+        int newScreen = screens()->number(QRect(new_pos, requestedFrameSize).center());
         if (newScreen != rules()->checkScreen(newScreen))
             return; // not allowed by rule
 
         QRect origClientGeometry = m_clientGeometry;
         GeometryUpdatesBlocker blocker(this);
         move(new_pos);
-        plainResize(ns);
+        plainResize(requestedFrameSize);
         QRect area = workspace()->clientArea(WorkArea, this);
         if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
                 && area.contains(origClientGeometry))
@@ -4023,12 +4014,15 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
         if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
             nh = rh;
         }
-        QSize ns = sizeForClientSize(QSize(nw, nh));
 
-        if (ns != size()) { // don't restore if some app sets its own size again
+        const QSize requestedClientSize = constrainClientSize(QSize(nw, nh));
+        QSize requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
+        requestedFrameSize = rules()->checkSize(requestedFrameSize);
+
+        if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
             QRect origClientGeometry = m_clientGeometry;
             GeometryUpdatesBlocker blocker(this);
-            resizeWithChecks(ns, xcb_gravity_t(gravity));
+            resizeWithChecks(requestedFrameSize, xcb_gravity_t(gravity));
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
@@ -4063,7 +4057,7 @@ void X11Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeome
         w = area.width();
     if (h > area.height())
         h = area.height();
-    QSize tmp = adjustedSize(QSize(w, h));    // checks size constraints, including min/max size
+    QSize tmp = constrainFrameSize(QSize(w, h));    // checks size constraints, including min/max size
     w = tmp.width();
     h = tmp.height();
     if (gravity == 0) {
@@ -4410,7 +4404,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     // save sizes for restoring, if maximalizing
     QSize sz;
     if (isShade())
-        sz = sizeForClientSize(clientSize());
+        sz = adjustedSize();
     else
         sz = size();
 
@@ -4473,16 +4467,16 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (old_mode & MaximizeHorizontal) { // actually restoring from MaximizeFull
             if (geometryRestore().width() == 0 || !clientArea.contains(geometryRestore().center())) {
                 // needs placement
-                plainResize(adjustedSize(QSize(width() * 2 / 3, clientArea.height()), SizeModeFixedH), geom_mode);
+                plainResize(constrainFrameSize(QSize(width() * 2 / 3, clientArea.height()), SizeModeFixedH), geom_mode);
                 Placement::self()->placeSmart(this, clientArea);
             } else {
                 setFrameGeometry(QRect(QPoint(geometryRestore().x(), clientArea.top()),
-                                       adjustedSize(QSize(geometryRestore().width(), clientArea.height()), SizeModeFixedH)), geom_mode);
+                                       constrainFrameSize(QSize(geometryRestore().width(), clientArea.height()), SizeModeFixedH)), geom_mode);
             }
         } else {
             QRect r(x(), clientArea.top(), width(), clientArea.height());
             r.setTopLeft(rules()->checkPosition(r.topLeft()));
-            r.setSize(adjustedSize(r.size(), SizeModeFixedH));
+            r.setSize(constrainFrameSize(r.size(), SizeModeFixedH));
             setFrameGeometry(r, geom_mode);
         }
         info->setState(NET::MaxVert, NET::Max);
@@ -4493,16 +4487,16 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (old_mode & MaximizeVertical) { // actually restoring from MaximizeFull
             if (geometryRestore().height() == 0 || !clientArea.contains(geometryRestore().center())) {
                 // needs placement
-                plainResize(adjustedSize(QSize(clientArea.width(), height() * 2 / 3), SizeModeFixedW), geom_mode);
+                plainResize(constrainFrameSize(QSize(clientArea.width(), height() * 2 / 3), SizeModeFixedW), geom_mode);
                 Placement::self()->placeSmart(this, clientArea);
             } else {
                 setFrameGeometry(QRect(QPoint(clientArea.left(), geometryRestore().y()),
-                                       adjustedSize(QSize(clientArea.width(), geometryRestore().height()), SizeModeFixedW)), geom_mode);
+                                       constrainFrameSize(QSize(clientArea.width(), geometryRestore().height()), SizeModeFixedW)), geom_mode);
             }
         } else {
             QRect r(clientArea.left(), y(), clientArea.width(), height());
             r.setTopLeft(rules()->checkPosition(r.topLeft()));
-            r.setSize(adjustedSize(r.size(), SizeModeFixedW));
+            r.setSize(constrainFrameSize(r.size(), SizeModeFixedW));
             setFrameGeometry(r, geom_mode);
         }
         info->setState(NET::MaxHoriz, NET::Max);
@@ -4528,7 +4522,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
             if (geometryRestore().height() > 0) {
                 s.setHeight(geometryRestore().height());
             }
-            plainResize(adjustedSize(s));
+            plainResize(constrainFrameSize(s));
             Placement::self()->placeSmart(this, clientArea);
             restore = frameGeometry();
             if (geometryRestore().width() > 0) {
@@ -4540,7 +4534,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
             setGeometryRestore(restore); // relevant for mouse pos calculation, bug #298646
         }
         if (m_geometryHints.hasAspect()) {
-            restore.setSize(adjustedSize(restore.size(), SizeModeAny));
+            restore.setSize(constrainFrameSize(restore.size(), SizeModeAny));
         }
         setFrameGeometry(restore, geom_mode);
         if (!clientArea.contains(geometryRestore().center())) { // Not restoring to the same screen
@@ -4554,7 +4548,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     case MaximizeFull: {
         QRect r(clientArea);
         r.setTopLeft(rules()->checkPosition(r.topLeft()));
-        r.setSize(adjustedSize(r.size(), SizeModeMax));
+        r.setSize(constrainFrameSize(r.size(), SizeModeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width()) {
                 r.moveLeft(qMax(clientArea.left(), Cursor::pos().x() - r.width()/2));
@@ -4663,7 +4657,7 @@ void X11Client::setFullScreen(bool set, bool user)
     } else {
         Q_ASSERT(!geom_fs_restore.isNull());
         const int currentScreen = screen();
-        setFrameGeometry(QRect(geom_fs_restore.topLeft(), adjustedSize(geom_fs_restore.size())));
+        setFrameGeometry(QRect(geom_fs_restore.topLeft(), constrainFrameSize(geom_fs_restore.size())));
         if(currentScreen != screen()) {
             workspace()->sendClientToScreen(this, currentScreen);
         }

@@ -197,7 +197,7 @@ public:
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
-    QSize sizeForClientSize(const QSize&, SizeMode mode = SizeModeAny, bool noframe = false) const override;
+    QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
 

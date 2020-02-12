@@ -436,7 +436,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 
     const QSize bufferSize = fbo->size() / bufferScale();
 
-    commitGeometry(QRect(pos(), sizeForClientSize(bufferSize)));
+    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
     if (m_internalFBO != fbo) {
@@ -455,7 +455,7 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
 
     const QSize bufferSize = image.size() / bufferScale();
 
-    commitGeometry(QRect(pos(), sizeForClientSize(bufferSize)));
+    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
     if (m_internalImage.size() != image.size()) {

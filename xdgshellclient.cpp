@@ -192,7 +192,7 @@ void XdgShellClient::finishInit()
     if (supportsWindowRules()) {
         setupWindowRules(false);
 
-        const QRect originalGeometry = QRect(pos(), sizeForClientSize(clientSize()));
+        const QRect originalGeometry = frameGeometry();
         const QRect ruledGeometry = rules()->checkGeometry(originalGeometry, true);
         if (originalGeometry != ruledGeometry) {
             setFrameGeometry(ruledGeometry);
@@ -942,7 +942,7 @@ void XdgShellClient::setFullScreen(bool set, bool user)
     } else {
         if (m_geomFsRestore.isValid()) {
             int currentScreen = screen();
-            setFrameGeometry(QRect(m_geomFsRestore.topLeft(), adjustedSize(m_geomFsRestore.size())));
+            setFrameGeometry(QRect(m_geomFsRestore.topLeft(), constrainFrameSize(m_geomFsRestore.size())));
             if( currentScreen != screen())
                 workspace()->sendClientToScreen( this, currentScreen );
         } else {
