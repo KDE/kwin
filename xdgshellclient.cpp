@@ -345,6 +345,22 @@ QSize XdgShellClient::clientSize() const
     return m_windowGeometry.size().boundedTo(boundingRect.size());
 }
 
+QSize XdgShellClient::minSize() const
+{
+    if (m_xdgShellToplevel) {
+        return rules()->checkMinSize(m_xdgShellToplevel->minimumSize());
+    }
+    return QSize(0, 0);
+}
+
+QSize XdgShellClient::maxSize() const
+{
+    if (m_xdgShellToplevel) {
+        return rules()->checkMaxSize(m_xdgShellToplevel->maximumSize());
+    }
+    return QSize(INT_MAX, INT_MAX);
+}
+
 void XdgShellClient::debug(QDebug &stream) const
 {
     stream.nospace();

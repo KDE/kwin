@@ -3106,6 +3106,8 @@ QSize AbstractClient::adjustedSize() const
 
 /**
  * Constrains the client size @p size according to a set of the window's size hints.
+ *
+ * Default implementation applies only minimum and maximum size constraints.
  */
 QSize AbstractClient::constrainClientSize(const QSize &size, SizeMode mode) const
 {
@@ -3122,6 +3124,12 @@ QSize AbstractClient::constrainClientSize(const QSize &size, SizeMode mode) cons
     if (height < 1) {
         height = 1;
     }
+
+    const QSize minimumSize = minSize();
+    const QSize maximumSize = maxSize();
+
+    width = qBound(minimumSize.width(), width, maximumSize.width());
+    height = qBound(minimumSize.height(), height, maximumSize.height());
 
     return QSize(width, height);
 }
