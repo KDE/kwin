@@ -5,45 +5,46 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "display.h"
+#include "appmenu_interface.h"
+#include "blur_interface.h"
 #include "compositor_interface.h"
+#include "contrast_interface.h"
 #include "datadevicemanager_interface.h"
 #include "dpms_interface.h"
-#include "outputconfiguration_interface.h"
-#include "outputmanagement_interface.h"
-#include "outputdevice_interface.h"
+#include "eglstream_controller_interface.h"
+#include "fakeinput_interface.h"
 #include "idle_interface.h"
 #include "idleinhibit_interface_p.h"
-#include "remote_access_interface.h"
-#include "fakeinput_interface.h"
+#include "keystate_interface.h"
+#include "linuxdmabuf_v1_interface.h"
 #include "logging.h"
 #include "output_interface.h"
+#include "outputconfiguration_interface.h"
+#include "outputdevice_interface.h"
+#include "outputmanagement_interface.h"
 #include "plasmashell_interface.h"
+#include "plasmavirtualdesktop_interface.h"
 #include "plasmawindowmanagement_interface.h"
 #include "pointerconstraints_interface_p.h"
 #include "pointergestures_interface_p.h"
 #include "qtsurfaceextension_interface.h"
-#include "seat_interface.h"
-#include "shadow_interface.h"
-#include "blur_interface.h"
-#include "contrast_interface.h"
 #include "relativepointer_interface_p.h"
+#include "remote_access_interface.h"
+#include "seat_interface.h"
 #include "server_decoration_interface.h"
-#include "slide_interface.h"
-#include "shell_interface.h"
-#include "subcompositor_interface.h"
-#include "textinput_interface_p.h"
-#include "xdgshell_v5_interface_p.h"
-#include "xdgforeign_interface.h"
-#include "xdgshell_v6_interface_p.h"
-#include "xdgshell_stable_interface_p.h"
-#include "appmenu_interface.h"
 #include "server_decoration_palette_interface.h"
-#include "plasmavirtualdesktop_interface.h"
-#include "xdgoutput_interface.h"
+#include "shadow_interface.h"
+#include "shell_interface.h"
+#include "slide_interface.h"
+#include "subcompositor_interface.h"
+#include "tablet_interface.h"
+#include "textinput_interface_p.h"
 #include "xdgdecoration_interface.h"
-#include "eglstream_controller_interface.h"
-#include "keystate_interface.h"
-#include "linuxdmabuf_v1_interface.h"
+#include "xdgforeign_interface.h"
+#include "xdgoutput_interface.h"
+#include "xdgshell_stable_interface_p.h"
+#include "xdgshell_v5_interface_p.h"
+#include "xdgshell_v6_interface_p.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -519,6 +520,13 @@ EglStreamControllerInterface *Display::createEglStreamControllerInterface(QObjec
 KeyStateInterface *Display::createKeyStateInterface(QObject *parent)
 {
     auto d = new KeyStateInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
+    return d;
+}
+
+TabletManagerInterface *Display::createTabletManagerInterface(QObject *parent)
+{
+    auto d = new TabletManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
 }

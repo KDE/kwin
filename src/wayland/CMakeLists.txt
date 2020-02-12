@@ -50,6 +50,7 @@ set(SERVER_LIB_SRCS
     subcompositor_interface.cpp
     surface_interface.cpp
     surfacerole.cpp
+    tablet_interface.cpp
     textinput_interface.cpp
     textinput_interface_v0.cpp
     textinput_interface_v2.cpp
@@ -228,6 +229,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME linux-dmabuf-unstable-v1
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml
+    BASENAME tablet-unstable-v2
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -285,6 +291,8 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.cpp
 )
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
@@ -369,6 +377,7 @@ set(SERVER_LIB_HEADERS
   slide_interface.h
   subcompositor_interface.h
   surface_interface.h
+  tablet_interface.h
   textinput_interface.h
   touch_interface.h
   xdgdecoration_interface.h

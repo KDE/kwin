@@ -79,6 +79,7 @@ class XdgDecorationManagerInterface;
 class EglStreamControllerInterface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
+class TabletManagerInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -309,6 +310,13 @@ public:
      * @since 5.58
      */
     EglStreamControllerInterface *createEglStreamControllerInterface(QObject *parent = nullptr);
+
+    /**
+     * Creates the entry point to support wacom-like tablets and pens.
+     *
+     * @since 5.67
+     */
+    TabletManagerInterface *createTabletManagerInterface(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

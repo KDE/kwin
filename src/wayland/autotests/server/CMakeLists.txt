@@ -45,3 +45,15 @@ add_executable(testNoXdgRuntimeDir test_no_xdg_runtime_dir.cpp)
 target_link_libraries( testNoXdgRuntimeDir Qt5::Test KF5::WaylandServer)
 add_test(NAME kwayland-testNoXdgRuntimeDir COMMAND testNoXdgRuntimeDir)
 ecm_mark_as_test(testNoXdgRuntimeDir)
+
+########################################################
+# Test Tablet Interface
+########################################################
+ecm_add_qtwayland_client_protocol(TABLET_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml
+    BASENAME tablet-unstable-v2
+)
+add_executable(testTabletInterface test_tablet_interface.cpp ${TABLET_SRCS})
+target_link_libraries( testTabletInterface Qt5::Test KF5::WaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testTabletInterface COMMAND testTabletInterface)
+ecm_mark_as_test(testTabletInterface)
