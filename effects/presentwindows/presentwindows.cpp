@@ -538,12 +538,16 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
     if (!me) {
         return;
     }
+    me->setAccepted(false);
     if (m_closeView) {
         const bool contains = m_closeView->geometry().contains(me->pos());
         if (!m_closeView->isVisible() && contains) {
             updateCloseWindow();
         }
         m_closeView->forwardMouseEvent(e);
+    }
+    if (e->isAccepted()) {
+        return;
     }
     inputEventUpdate(me->pos(), me->type(), me->button());
 }
