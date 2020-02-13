@@ -2634,6 +2634,15 @@ xcb_window_t X11Client::frameId() const
     return m_frame;
 }
 
+QRect X11Client::inputGeometry() const
+{
+    // Notice that the buffer geometry corresponds to the geometry of the frame window.
+    if (isDecorated()) {
+        return m_bufferGeometry + decoration()->resizeOnlyBorders();
+    }
+    return m_bufferGeometry;
+}
+
 QRect X11Client::bufferGeometry() const
 {
     return m_bufferGeometry;
@@ -2714,6 +2723,13 @@ QRect X11Client::frameRectToBufferRect(const QRect &rect) const
         return rect;
     }
     return frameRectToClientRect(rect);
+}
+
+QMatrix4x4 X11Client::inputTransformation() const
+{
+    QMatrix4x4 matrix;
+    matrix.translate(-m_bufferGeometry.x(), -m_bufferGeometry.y());
+    return matrix;
 }
 
 Xcb::Property X11Client::fetchShowOnScreenEdge() const

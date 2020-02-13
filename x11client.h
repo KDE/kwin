@@ -89,6 +89,7 @@ public:
     xcb_window_t inputId() const { return m_decoInputExtent; }
     xcb_window_t frameId() const override;
 
+    QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
     QMargins bufferMargins() const override;
 
@@ -97,6 +98,8 @@ public:
     QSize frameSizeToClientSize(const QSize &size) const override;
     QSize clientSizeToFrameSize(const QSize &size) const override;
     QRect frameRectToBufferRect(const QRect &rect) const;
+
+    QMatrix4x4 inputTransformation() const override;
 
     bool isTransient() const override;
     bool groupTransient() const override;
