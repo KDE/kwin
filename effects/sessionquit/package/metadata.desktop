@@ -51,6 +51,7 @@ Comment[sv]=Behåll skrivbordets bakgrund levande under utloggning till slutet
 Comment[uk]=Не вимикати тло стільниці до кінця процедури виходу із облікового запису
 Comment[x-test]=xxKeep the desktop background alive during logout until the endxx
 Comment[zh_CN]=注销时保持桌面背景，直到完全退出
+Comment[zh_TW]=直到登出完成前皆保留桌面背景圖片
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
