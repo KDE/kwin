@@ -62,8 +62,6 @@ class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
-class XdgDecorationManagerInterface;
-class XdgShellInterface;
 class XdgForeignInterface;
 class XdgOutputManagerInterface;
 class KeyStateInterface;
@@ -71,15 +69,19 @@ class LinuxDmabufUnstableV1Interface;
 class LinuxDmabufUnstableV1Buffer;
 class TabletManagerInterface;
 class KeyboardShortcutsInhibitManagerV1Interface;
+class XdgDecorationManagerV1Interface;
+class XdgShellInterface;
+class XdgToplevelInterface;
+class XdgPopupInterface;
 }
 
 
 namespace KWin
 {
-class XdgShellClient;
 
 class AbstractClient;
 class Toplevel;
+class XdgToplevelClient;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -148,7 +150,7 @@ public:
     void removeClient(AbstractClient *c);
     AbstractClient *findClient(quint32 id) const;
     AbstractClient *findClient(KWaylandServer::SurfaceInterface *surface) const;
-    XdgShellClient *findXdgShellClient(KWaylandServer::SurfaceInterface *surface) const;
+    XdgToplevelClient *findXdgToplevelClient(KWaylandServer::SurfaceInterface *surface) const;
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any
@@ -261,9 +263,10 @@ private:
     void shellClientShown(Toplevel *t);
     quint16 createClientId(KWaylandServer::ClientConnection *c);
     void destroyInternalConnection();
-    template <class T>
-    void createSurface(T *surface);
     void initScreenLocker();
+    void createXdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
+    void createXdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
+    void registerClient(AbstractClient *client);
     KWaylandServer::Display *m_display = nullptr;
     KWaylandServer::CompositorInterface *m_compositor = nullptr;
     KWaylandServer::SeatInterface *m_seat = nullptr;
@@ -279,7 +282,7 @@ private:
     KWaylandServer::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
     KWaylandServer::IdleInterface *m_idle = nullptr;
     KWaylandServer::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
-    KWaylandServer::XdgDecorationManagerInterface *m_xdgDecorationManager = nullptr;
+    KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
     KWaylandServer::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;

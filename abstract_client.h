@@ -1129,6 +1129,7 @@ protected:
      * Base implementation returns @c true.
      */
     virtual bool doStartMoveResize();
+    virtual void doFinishMoveResize();
     void finishMoveResize(bool cancel);
     /**
      * Leaves the move resize mode.

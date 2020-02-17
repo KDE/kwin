@@ -210,7 +210,7 @@ void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/
      * with ideas from xfce.
      */
 
-    if (!c->size().isValid()) {
+    if (!c->frameGeometry().isValid()) {
         return;
     }
 
@@ -385,7 +385,7 @@ void Placement::placeCascaded(AbstractClient *c, const QRect &area, Policy nextP
 {
     Q_ASSERT(area.isValid());
 
-    if (!c->size().isValid()) {
+    if (!c->frameGeometry().isValid()) {
         return;
     }
 

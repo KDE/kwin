@@ -192,7 +192,6 @@ void QuickTilingTest::testQuickTiling()
 
     // but we got requested a new geometry
     QVERIFY(configureRequestedSpy.wait());
-    QEXPECT_FAIL("maximize", "Two configure events are sent for maximized", Continue);
     QCOMPARE(configureRequestedSpy.count(), 2);
     QCOMPARE(configureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
 
@@ -272,7 +271,6 @@ void QuickTilingTest::testQuickMaximizing()
 
     // but we got requested a new geometry
     QVERIFY(configureRequestedSpy.wait());
-    QEXPECT_FAIL("", "Two configure events are sent for maximized", Continue);
     QCOMPARE(configureRequestedSpy.count(), 2);
     QCOMPARE(configureRequestedSpy.last().at(0).toSize(), QSize(1280, 1024));
 
@@ -305,7 +303,6 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
     // we got requested a new geometry
     QVERIFY(configureRequestedSpy.wait());
-    QEXPECT_FAIL("", "Two configure events are sent for maximized", Continue);
     QCOMPARE(configureRequestedSpy.count(), 3);
     QCOMPARE(configureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
 

@@ -22,243 +22,275 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "abstract_client.h"
+#include "waylandclient.h"
 
 #include <KWaylandServer/xdgshell_interface.h>
 
+#include <QQueue>
+#include <QTimer>
+
 namespace KWaylandServer
 {
-class ServerSideDecorationInterface;
-class ServerSideDecorationPaletteInterface;
 class AppMenuInterface;
 class PlasmaShellSurfaceInterface;
-class XdgDecorationInterface;
+class ServerSideDecorationInterface;
+class ServerSideDecorationPaletteInterface;
+class XdgToplevelDecorationV1Interface;
 }
 
 namespace KWin
 {
 
-/**
- * @brief The reason for which the server pinged a client surface
- */
-enum class PingReason {
-    CloseWindow = 0,
-    FocusWindow
+class XdgSurfaceConfigure
+{
+public:
+    enum ConfigureField {
+        PositionField = 0x1,
+        SizeField = 0x2,
+    };
+    Q_DECLARE_FLAGS(ConfigureFields, ConfigureField)
+
+    ConfigureFields presentFields;
+    QPoint position;
+    QSize size;
+    qreal serial;
 };
 
-class KWIN_EXPORT XdgShellClient : public AbstractClient
+class XdgSurfaceClient : public WaylandClient
 {
     Q_OBJECT
 
 public:
-    XdgShellClient(KWaylandServer::XdgShellSurfaceInterface *surface);
-    XdgShellClient(KWaylandServer::XdgShellPopupInterface *surface);
-    ~XdgShellClient() override;
+    explicit XdgSurfaceClient(KWaylandServer::XdgSurfaceInterface *shellSurface);
+    ~XdgSurfaceClient() override;
 
     QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
-    QStringList activities() const override;
-    QPoint clientContentPos() const override;
     QSize clientSize() const override;
-    QSize minSize() const override;
-    QSize maxSize() const override;
-    QRect transparentRect() const override;
-    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
-    void debug(QDebug &stream) const override;
-    double opacity() const override;
-    void setOpacity(double opacity) override;
-    QByteArray windowRole() const override;
-    void blockActivityUpdates(bool b = true) override;
-    QString captionNormal() const override;
-    QString captionSuffix() const override;
-    void closeWindow() override;
-    AbstractClient *findModal(bool allow_itself = false) override;
-    bool isCloseable() const override;
-    bool isFullScreenable() const override;
-    bool isFullScreen() const override;
-    bool isMaximizable() const override;
-    bool isMinimizable() const override;
-    bool isMovable() const override;
-    bool isMovableAcrossScreens() const override;
-    bool isResizable() const override;
+    QMatrix4x4 inputTransformation() const override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
+    using AbstractClient::move;
+    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
-    MaximizeMode maximizeMode() const override;
-    MaximizeMode requestedMaximizeMode() const override;
-    bool noBorder() const override;
-    void setFullScreen(bool set, bool user = true) override;
-    void setNoBorder(bool set) override;
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
-    void setOnAllActivities(bool set) override;
-    void takeFocus() override;
-    bool userCanSetFullScreen() const override;
-    bool userCanSetNoBorder() const override;
-    bool wantsInput() const override;
-    bool dockWantsInput() const override;
-    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
-    bool hasStrut() const override;
-    quint32 windowId() const override;
-    pid_t pid() const override;
-    bool isLockScreen() const override;
-    bool isInputMethod() const override;
-    bool isInitialPositionSet() const override;
-    bool isTransient() const override;
-    bool hasTransientPlacementHint() const override;
-    QRect transientPlacement(const QRect &bounds) const override;
-    QMatrix4x4 inputTransformation() const override;
-    void showOnScreenEdge() override;
-    bool hasPopupGrab() const override;
-    void popupDone() override;
-    void updateColorScheme() override;
-    bool isPopupWindow() const override;
-    void killWindow() override;
-    bool isLocalhost() const override;
-    bool supportsWindowRules() const override;
     void destroyClient() override;
 
-    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *surface);
-    void installServerSideDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
-    void installAppMenu(KWaylandServer::AppMenuInterface *appmenu);
-    void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
-    void installXdgDecoration(KWaylandServer::XdgDecorationInterface *decoration);
+    QRect frameRectToBufferRect(const QRect &rect) const;
+    QRect requestedFrameGeometry() const;
+    QPoint requestedPos() const;
+    QSize requestedSize() const;
+    QRect requestedClientGeometry() const;
+    QSize requestedClientSize() const;
+    QRect clientGeometry() const;
+    bool isClosing() const;
+    bool isHidden() const;
+    bool isUnmapped() const;
+
+Q_SIGNALS:
+    void windowMapped();
+    void windowUnmapped();
 
 protected:
     void addDamage(const QRegion &damage) override;
-    bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
-    void doSetActive() override;
-    bool belongsToDesktop() const override;
-    Layer layerForDock() const override;
-    void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
-    void doResizeSync() override;
-    bool acceptsFocus() const override;
-    void doMinimize() override;
-    void updateCaption() override;
-    void doMove(int x, int y) override;
 
-private Q_SLOTS:
-    void handleConfigureAcknowledged(quint32 serial);
-    void handleTransientForChanged();
-    void handleWindowClassChanged(const QByteArray &windowClass);
-    void handleWindowGeometryChanged(const QRect &windowGeometry);
-    void handleWindowTitleChanged(const QString &title);
-    void handleMoveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
-    void handleResizeRequested(KWaylandServer::SeatInterface *seat, quint32 serial, Qt::Edges edges);
-    void handleMinimizeRequested();
-    void handleMaximizeRequested(bool maximized);
-    void handleFullScreenRequested(bool fullScreen, KWaylandServer::OutputInterface *output);
-    void handleWindowMenuRequested(KWaylandServer::SeatInterface *seat, quint32 serial, const QPoint &surfacePos);
-    void handleGrabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
-    void handlePingDelayed(quint32 serial);
-    void handlePingTimeout(quint32 serial);
-    void handlePongReceived(quint32 serial);
-    void handleCommitted();
+    virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
+    virtual void handleRoleCommit();
+    virtual bool stateCompare() const;
+
+    XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
+    void scheduleConfigure();
+    void sendConfigure();
+    void requestGeometry(const QRect &rect);
+    void updateGeometry(const QRect &rect);
 
 private:
-    /**
-     *  Called when the shell is created.
-     */
-    void init();
-    /**
-     * Called for the XDG case when the shell surface is committed to the surface.
-     * At this point all initial properties should have been set by the client.
-     */
-    void finishInit();
-    void createWindowId();
-    void updateIcon();
-    bool shouldExposeToWindowManagement();
-    void updateClientOutputs();
-    KWaylandServer::XdgShellSurfaceInterface::States xdgSurfaceStates() const;
-    void updateShowOnScreenEdge();
-    void updateMaximizeMode(MaximizeMode maximizeMode);
-    // called on surface commit and processes all m_pendingConfigureRequests up to m_lastAckedConfigureReqest
-    void updatePendingGeometry();
-    QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge, const Qt::Edges gravity, const QSize popupSize) const;
-    void requestGeometry(const QRect &rect);
-    void doSetGeometry(const QRect &rect);
-    void unmap();
-    void markAsMapped();
-    QRect determineBufferGeometry() const;
-    void ping(PingReason reason);
-    static void deleteClient(XdgShellClient *c);
+    void handleConfigureAcknowledged(quint32 serial);
+    void handleCommit();
+    void handleNextWindowGeometry();
+    bool haveNextWindowGeometry() const;
+    void setHaveNextWindowGeometry();
+    void resetHaveNextWindowGeometry();
+    QRect adjustMoveResizeGeometry(const QRect &rect) const;
+    void updateGeometryRestoreHack();
+    void updateDepth();
+    void internalShow();
+    void internalHide();
+    void internalMap();
+    void internalUnmap();
+    void cleanGrouping();
+    void cleanTabBox();
 
-    QRect adjustMoveGeometry(const QRect &rect) const;
-    QRect adjustResizeGeometry(const QRect &rect) const;
-
-    KWaylandServer::XdgShellSurfaceInterface *m_xdgShellToplevel;
-    KWaylandServer::XdgShellPopupInterface *m_xdgShellPopup;
-
-    QRect m_bufferGeometry;
+    KWaylandServer::XdgSurfaceInterface *m_shellSurface;
+    QTimer *m_configureTimer;
+    QQueue<XdgSurfaceConfigure *> m_configureEvents;
+    QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     QRect m_windowGeometry;
-    bool m_hasWindowGeometry = false;
+    QRect m_requestedFrameGeometry;
+    QRect m_bufferGeometry;
+    QRect m_requestedClientGeometry;
+    QRect m_clientGeometry;
+    bool m_isClosing = false;
+    bool m_isHidden = false;
+    bool m_isUnmapped = true;
+    bool m_haveNextWindowGeometry = false;
+};
 
-    // last size we requested or empty if we haven't sent an explicit request to the client
-    // if empty the client should choose their own default size
-    QSize m_requestedClientSize = QSize(0, 0);
+class XdgToplevelConfigure final : public XdgSurfaceConfigure
+{
+public:
+    KWaylandServer::XdgToplevelInterface::States states;
+};
 
-    struct PendingConfigureRequest {
-        //note for wl_shell we have no serial, so serialId and m_lastAckedConfigureRequest will always be 0
-        //meaning we treat a surface commit as having processed all requests
-        quint32 serialId = 0;
-        // position to apply after a resize operation has been completed
-        QPoint positionAfterResize;
-        MaximizeMode maximizeMode;
-    };
-    QVector<PendingConfigureRequest> m_pendingConfigureRequests;
-    quint32 m_lastAckedConfigureRequest = 0;
+class XdgToplevelClient final : public XdgSurfaceClient
+{
+    Q_OBJECT
 
-    //mode in use by the current buffer
-    MaximizeMode m_maximizeMode = MaximizeRestore;
-    //mode we currently want to be, could be pending on client updating, could be not sent yet
-    MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
+    enum class PingReason { CloseWindow, FocusWindow };
 
-    QRect m_geomFsRestore; //size and position of the window before it was set to fullscreen
-    bool m_closing = false;
-    quint32 m_windowId = 0;
-    bool m_unmapped = true;
-    NET::WindowType m_windowType = NET::Normal;
+public:
+    explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
+    ~XdgToplevelClient() override;
+
+    void debug(QDebug &stream) const override;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
+    MaximizeMode maximizeMode() const override;
+    MaximizeMode requestedMaximizeMode() const override;
+    QSize minSize() const override;
+    QSize maxSize() const override;
+    bool isFullScreen() const override;
+    bool isMovableAcrossScreens() const override;
+    bool isMovable() const override;
+    bool isResizable() const override;
+    bool isCloseable() const override;
+    bool isFullScreenable() const override;
+    bool isMaximizable() const override;
+    bool isMinimizable() const override;
+    bool isTransient() const override;
+    bool userCanSetFullScreen() const override;
+    bool userCanSetNoBorder() const override;
+    bool noBorder() const override;
+    void setNoBorder(bool set) override;
+    void updateDecoration(bool check_workspace_pos, bool force = false) override;
+    void updateColorScheme() override;
+    bool supportsWindowRules() const override;
+    void takeFocus() override;
+    bool wantsInput() const override;
+    bool dockWantsInput() const override;
+    bool hasStrut() const override;
+    void showOnScreenEdge() override;
+    bool isInitialPositionSet() const override;
+    void setFullScreen(bool set, bool user) override;
+    void closeWindow() override;
+
+    void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
+    void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
+    void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
+    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface);
+    void installXdgDecoration(KWaylandServer::XdgToplevelDecorationV1Interface *decoration);
+
+protected:
+    XdgSurfaceConfigure *sendRoleConfigure() const override;
+    void handleRoleCommit() override;
+    void doMinimize() override;
+    void doResizeSync() override;
+    void doSetActive() override;
+    void doSetFullScreen();
+    void doSetMaximized();
+    bool doStartMoveResize() override;
+    void doFinishMoveResize() override;
+    bool acceptsFocus() const override;
+    void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
+    Layer layerForDock() const override;
+    bool stateCompare() const override;
+
+private:
+    void handleWindowTitleChanged();
+    void handleWindowClassChanged();
+    void handleWindowMenuRequested(KWaylandServer::SeatInterface *seat,
+                                   const QPoint &surfacePos, quint32 serial);
+    void handleMoveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
+    void handleResizeRequested(KWaylandServer::SeatInterface *seat, Qt::Edges, quint32 serial);
+    void handleStatesAcknowledged(const KWaylandServer::XdgToplevelInterface::States &states);
+    void handleMaximizeRequested();
+    void handleUnmaximizeRequested();
+    void handleFullscreenRequested(KWaylandServer::OutputInterface *output);
+    void handleUnfullscreenRequested();
+    void handleMinimizeRequested();
+    void handleTransientForChanged();
+    void handleForeignTransientForChanged(KWaylandServer::SurfaceInterface *child);
+    void handlePingTimeout(quint32 serial);
+    void handlePingDelayed(quint32 serial);
+    void handlePongReceived(quint32 serial);
+    void initialize();
+    void updateMaximizeMode(MaximizeMode maximizeMode);
+    void updateFullScreenMode(bool set);
+    void updateShowOnScreenEdge();
+    void setupWindowManagementIntegration();
+    void setupPlasmaShellIntegration();
+    void sendPing(PingReason reason);
+
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
-    KWaylandServer::ServerSideDecorationInterface *m_serverDecoration = nullptr;
-    KWaylandServer::XdgDecorationInterface *m_xdgDecoration = nullptr;
+    QPointer<KWaylandServer::ServerSideDecorationInterface> m_serverDecoration;
+    QPointer<KWaylandServer::XdgToplevelDecorationV1Interface> m_xdgDecoration;
+    KWaylandServer::XdgToplevelInterface *m_shellSurface;
+    KWaylandServer::XdgToplevelInterface::States m_requestedStates;
+    KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
+    QMap<quint32, PingReason> m_pings;
+    QRect m_fullScreenGeometryRestore;
+    NET::WindowType m_windowType = NET::Normal;
+    MaximizeMode m_maximizeMode = MaximizeRestore;
+    MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
+    bool m_isFullScreen = false;
     bool m_userNoBorder = false;
-    bool m_fullScreen = false;
-    bool m_transient = false;
-    bool m_hidden = false;
-    bool m_hasPopupGrab = false;
-    qreal m_opacity = 1.0;
-
-    class RequestGeometryBlocker { //TODO rename ConfigureBlocker when this class is Xdg only
-    public:
-        RequestGeometryBlocker(XdgShellClient *client)
-            : m_client(client)
-        {
-            m_client->m_requestGeometryBlockCounter++;
-        }
-        ~RequestGeometryBlocker()
-        {
-            m_client->m_requestGeometryBlockCounter--;
-            if (m_client->m_requestGeometryBlockCounter == 0) {
-                m_client->requestGeometry(m_client->m_blockedRequestGeometry);
-            }
-        }
-    private:
-        XdgShellClient *m_client;
-    };
-    friend class RequestGeometryBlocker;
-    int m_requestGeometryBlockCounter = 0;
-    QRect m_blockedRequestGeometry;
-    QString m_caption;
-    QString m_captionSuffix;
-    QHash<quint32, PingReason> m_pingSerials;
-
-    bool m_isInitialized = false;
-
-    friend class Workspace;
+    bool m_isTransient = false;
 };
 
-}
+class XdgPopupClient final : public XdgSurfaceClient
+{
+    Q_OBJECT
 
-Q_DECLARE_METATYPE(KWin::XdgShellClient *)
+public:
+    explicit XdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
+    ~XdgPopupClient() override;
+
+    void debug(QDebug &stream) const override;
+    NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
+    bool hasPopupGrab() const override;
+    void popupDone() override;
+    bool isPopupWindow() const override;
+    bool isTransient() const override;
+    bool isResizable() const override;
+    bool isMovable() const override;
+    bool isMovableAcrossScreens() const override;
+    bool hasTransientPlacementHint() const override;
+    QRect transientPlacement(const QRect &bounds) const override;
+    bool isCloseable() const override;
+    void closeWindow() override;
+    void updateColorScheme() override;
+    bool noBorder() const override;
+    bool userCanSetNoBorder() const override;
+    void setNoBorder(bool set) override;
+    void updateDecoration(bool check_workspace_pos, bool force = false) override;
+    void showOnScreenEdge() override;
+    bool wantsInput() const override;
+    void takeFocus() override;
+    bool supportsWindowRules() const override;
+
+protected:
+    bool acceptsFocus() const override;
+    XdgSurfaceConfigure *sendRoleConfigure() const override;
+
+private:
+    void handleGrabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
+    void initialize();
+
+    KWaylandServer::XdgPopupInterface *m_shellSurface;
+    bool m_haveExplicitGrab = false;
+};
+
+} // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::XdgSurfaceConfigure::ConfigureFields)

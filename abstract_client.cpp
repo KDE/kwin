@@ -942,6 +942,8 @@ void AbstractClient::finishMoveResize(bool cancel)
     const bool wasResize = isResize(); // store across leaveMoveResize
     leaveMoveResize();
 
+    doFinishMoveResize();
+
     if (cancel)
         setFrameGeometry(initialMoveResizeGeometry());
     else {
@@ -2065,6 +2067,10 @@ void AbstractClient::updateHaveResizeEffect()
 bool AbstractClient::doStartMoveResize()
 {
     return true;
+}
+
+void AbstractClient::doFinishMoveResize()
+{
 }
 
 void AbstractClient::positionGeometryTip()

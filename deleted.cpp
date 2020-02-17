@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "netinfo.h"
 #include "shadow.h"
-#include "xdgshellclient.h"
+#include "waylandclient.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationrenderer.h"
 
@@ -149,7 +149,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         });
     }
 
-    m_wasWaylandClient = qobject_cast<XdgShellClient *>(c) != nullptr;
+    m_wasWaylandClient = qobject_cast<WaylandClient *>(c) != nullptr;
     m_wasX11Client = qobject_cast<X11Client *>(c) != nullptr;
     m_wasPopupWindow = c->isPopupWindow();
     m_wasOutline = c->isOutline();

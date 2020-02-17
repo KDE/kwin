@@ -502,10 +502,10 @@ set(kwin_SRCS
     sm.cpp
     subsurfacemonitor.cpp
     syncalarmx11filter.cpp
+    tablet_input.cpp
     thumbnailitem.cpp
     toplevel.cpp
     touch_hide_cursor_spy.cpp
-    tablet_input.cpp
     touch_input.cpp
     udev.cpp
     unmanaged.cpp
@@ -518,6 +518,7 @@ set(kwin_SRCS
     was_user_interaction_x11_filter.cpp
     wayland_cursor_theme.cpp
     wayland_server.cpp
+    waylandclient.cpp
     window_property_notify_x11_filter.cpp
     workspace.cpp
     x11client.cpp
