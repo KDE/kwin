@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm_def.h>
 #include <QRect>
 #include <QVector>
-#include <kconfiggroup.h>
 
 #include "placement.h"
 #include "options.h"
@@ -40,6 +39,7 @@ namespace KWin
 
 class AbstractClient;
 class Rules;
+class RuleSettings;
 
 #ifndef KCMRULES // only for kwin core
 
@@ -101,7 +101,7 @@ class Rules
 {
 public:
     Rules();
-    explicit Rules(const KConfigGroup&);
+    explicit Rules(const RuleSettings*);
     Rules(const QString&, bool temporary);
     enum Type {
         Position = 1<<0, Size = 1<<1, Desktop = 1<<2,
@@ -130,7 +130,15 @@ public:
         RegExpMatch,
         LastStringMatch = RegExpMatch
     };
-    void write(KConfigGroup&) const;
+    enum SetRule {
+        UnusedSetRule = Unused,
+        SetRuleDummy = 256   // so that it's at least short int
+    };
+    enum ForceRule {
+        UnusedForceRule = Unused,
+        ForceRuleDummy = 256   // so that it's at least short int
+    };
+    void write(RuleSettings*) const;
     bool isEmpty() const;
 #ifndef KCMRULES
     bool discardUsed(bool withdrawn);
@@ -183,19 +191,9 @@ private:
     bool matchRole(const QByteArray& match_role) const;
     bool matchTitle(const QString& match_title) const;
     bool matchClientMachine(const QByteArray& match_machine, bool local) const;
-    enum SetRule {
-        UnusedSetRule = Unused,
-        SetRuleDummy = 256   // so that it's at least short int
-    };
-    enum ForceRule {
-        UnusedForceRule = Unused,
-        ForceRuleDummy = 256   // so that it's at least short int
-    };
-    void readFromCfg(const KConfigGroup& cfg);
-    static SetRule readSetRule(const KConfigGroup&, const QString& key);
-    static ForceRule readForceRule(const KConfigGroup&, const QString& key);
-    static NET::WindowType readType(const KConfigGroup&, const QString& key);
-    static QString readDecoColor(const KConfigGroup &cfg);
+    void readFromSettings(const RuleSettings *settings);
+    static ForceRule convertForceRule(int v);
+    static QString getDecoColor(const QString &themeName);
 #ifndef KCMRULES
     static bool checkSetRule(SetRule rule, bool init);
     static bool checkForceRule(ForceRule rule);

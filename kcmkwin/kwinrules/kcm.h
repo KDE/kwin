@@ -44,7 +44,6 @@ protected Q_SLOTS:
     void moduleChanged(bool state);
 private:
     KCMRulesList* widget;
-    KConfig config;
 };
 
 } // namespace

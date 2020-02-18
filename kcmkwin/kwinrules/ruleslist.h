@@ -20,12 +20,12 @@
 #ifndef __RULESLIST_H__
 #define __RULESLIST_H__
 
-#include "../../rules.h"
-
 #include "ui_ruleslist.h"
+#include "rulebooksettings.h"
 
 namespace KWin
 {
+class Rules;
 
 class KCMRulesList
     : public QWidget, Ui_KCMRulesList
@@ -49,7 +49,8 @@ private Q_SLOTS:
     void importClicked();
     void activeChanged();
 private:
-    QVector< Rules* > rules;
+    QVector<Rules *> m_rules;
+    RuleBookSettings m_settings;
 };
 
 } // namespace

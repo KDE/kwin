@@ -1,0 +1,7 @@
+File=rulesettings.kcfg
+IncludeFiles=\"rules.h\",\"placement.h\",netwm_def.h
+NameSpace=KWin
+ClassName=RuleSettings
+UseEnumTypes=true
+Mutators=true
+ParentInConstructor=true
