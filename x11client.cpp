@@ -4327,7 +4327,7 @@ void X11Client::updateServerGeometry()
         if (!isShade()) {
             if (needsGeometryUpdate) {
                 m_wrapper.setGeometry(QRect(clientPos(), clientSize()));
-                m_client.resize(clientSize());
+                m_client.setGeometry(QRect(QPoint(0, 0), clientSize()));
             }
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
@@ -4823,7 +4823,7 @@ void X11Client::doResizeSync()
     // this, then we might render partially updated client window. I know, it sucks.
     m_frame.setGeometry(moveResizeBufferGeometry);
     m_wrapper.setGeometry(QRect(clientPos(), moveResizeClientGeometry.size()));
-    m_client.resize(moveResizeClientGeometry.size());
+    m_client.setGeometry(QRect(QPoint(0, 0), moveResizeClientGeometry.size()));
 }
 
 void X11Client::doPerformMoveResize()
