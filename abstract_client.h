@@ -787,6 +787,7 @@ public:
      * Implementing subclasses can perform a windowing system solution for terminating.
      */
     virtual void killWindow() = 0;
+    virtual void destroyClient() = 0;
 
     enum class SameApplicationCheck {
         RelaxedForActive = 1 << 0,

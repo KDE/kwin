@@ -129,7 +129,7 @@ public:
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
-    void destroyClient();
+    void destroyClient() override;
 
     QStringList activities() const override;
     void setOnActivity(const QString &activity, bool enable);

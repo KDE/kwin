@@ -56,7 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
-#include "xdgshellclient.h"
 #include "was_user_interaction_x11_filter.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
@@ -473,12 +472,9 @@ Workspace::~Workspace()
     X11Client::cleanupX11();
 
     if (waylandServer()) {
-        // TODO: Introduce AbstractClient::destroy().
         const QList<AbstractClient *> shellClients = waylandServer()->clients();
         for (AbstractClient *client : shellClients) {
-            if (XdgShellClient *shellClient = qobject_cast<XdgShellClient *>(client)) {
-                shellClient->destroyClient();
-            }
+            client->destroyClient();
         }
     }
 

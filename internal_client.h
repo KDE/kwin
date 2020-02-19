@@ -81,8 +81,8 @@ public:
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
     void showOnScreenEdge() override;
+    void destroyClient() override;
 
-    void destroyClient();
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);
     QWindow *internalWindow() const;

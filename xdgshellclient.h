@@ -121,6 +121,7 @@ public:
     void killWindow() override;
     bool isLocalhost() const override;
     bool supportsWindowRules() const override;
+    void destroyClient() override;
 
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
@@ -170,7 +171,6 @@ private:
      */
     void finishInit();
     void createDecoration(const QRect &oldgeom);
-    void destroyClient();
     void createWindowId();
     void updateIcon();
     bool shouldExposeToWindowManagement();
