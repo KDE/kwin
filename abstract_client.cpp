@@ -629,6 +629,7 @@ void AbstractClient::minimize(bool avoid_animation)
     updateWindowRules(Rules::Minimize);
     FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
     // TODO: merge signal with s_minimized
+    addWorkspaceRepaint(visibleRect());
     emit clientMinimized(this, !avoid_animation);
     emit minimizedChanged();
 }
