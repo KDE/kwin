@@ -76,7 +76,6 @@ Decoration {
             root.titleAlignment = Text.AlignLeft;
         }
         root.animateButtons = decoration.readConfig("animateButtons", true);
-        root.titleShadow = decoration.readConfig("titleShadow", true);
         if (decoration.animationsSupported) {
             root.animationDuration = 150;
             root.animateButtons = false;
@@ -96,7 +95,6 @@ Decoration {
     // set by readConfig after Component completed, ensures that buttons do not flicker
     property int animationDuration: 0
     property bool animateButtons: true
-    property bool titleShadow: true
     Behavior on titleBarColor {
         ColorAnimation {
             duration: root.animationDuration
@@ -276,8 +274,6 @@ Decoration {
                     }
                     text: decoration.client.caption
                     font: options.titleFont
-                    style: root.titleShadow ? Text.Raised : Text.Normal
-                    styleColor: colorHelper.shade(color, ColorHelper.ShadowShade)
                     elide: Text.ElideMiddle
                     renderType: Text.NativeRendering
                 }

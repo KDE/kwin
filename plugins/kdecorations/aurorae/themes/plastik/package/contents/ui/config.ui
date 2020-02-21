@@ -61,16 +61,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="kcfg_titleShadow">
-     <property name="whatsThis">
-      <string>Check this option if you want the titlebar text to have a 3D look with a shadow behind it.</string>
-     </property>
-     <property name="text">
-      <string>Use shadowed &amp;text</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QCheckBox" name="kcfg_animateButtons">
      <property name="whatsThis">
       <string>Check this option if you want the buttons to fade in when the mouse pointer hovers over them and fade out again when it moves away.</string>
@@ -92,7 +82,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>kcfg_animateButtons</tabstop>
-  <tabstop>kcfg_titleShadow</tabstop>
  </tabstops>
  <resources/>
  <connections/>
