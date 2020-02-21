@@ -330,6 +330,16 @@ Q_SIGNALS:
      * @since 5.22
      **/
     void subSurfaceTreeChanged();
+    /**
+     * Emitted whenever a new child sub-surface @p subSurface is added.
+     * @since 5.70
+     */
+    void childSubSurfaceAdded(SubSurfaceInterface *subSurface);
+    /**
+     * Emitted whenver the child sub-surface @p subSurface is removed.
+     * @since 5.70
+     */
+    void childSubSurfaceRemoved(SubSurfaceInterface *subSurface);
 
     /**
      * Emitted whenever a pointer constraint get (un)installed on this SurfaceInterface.

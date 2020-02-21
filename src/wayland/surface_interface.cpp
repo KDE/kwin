@@ -43,6 +43,7 @@ void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
     subSurfacePending.children.append(child);
     current.children.append(child);
     Q_Q(SurfaceInterface);
+    emit q->childSubSurfaceAdded(child);
     emit q->subSurfaceTreeChanged();
     QObject::connect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
     QObject::connect(child->surface().data(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
@@ -57,6 +58,7 @@ void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > chil
     subSurfacePending.children.removeAll(child);
     current.children.removeAll(child);
     Q_Q(SurfaceInterface);
+    emit q->childSubSurfaceRemoved(child);
     emit q->subSurfaceTreeChanged();
     QObject::disconnect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
     if (!child->surface().isNull()) {
