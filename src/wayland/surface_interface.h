@@ -112,6 +112,14 @@ public:
      * @since 5.3
      **/
     QSize size() const;
+    /**
+     * Returns the rectangle that bounds this surface and all of its sub-surfaces.
+     *
+     * QPoint(0, 0) corresponds to the upper left corner of this surface.
+     *
+     * @since 5.69
+     */
+    QRect boundingRect() const;
 
     /**
      * @returns The SubSurface for this Surface in case there is one.

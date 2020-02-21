@@ -772,6 +772,19 @@ QSize SurfaceInterface::size() const
     return QSize();
 }
 
+QRect SurfaceInterface::boundingRect() const
+{
+    QRect rect(QPoint(0, 0), size());
+
+    const QList<QPointer<SubSurfaceInterface>> subSurfaces = childSubSurfaces();
+    for (const SubSurfaceInterface *subSurface : subSurfaces) {
+        const SurfaceInterface *childSurface = subSurface->surface();
+        rect |= childSurface->boundingRect().translated(subSurface->position());
+    }
+
+    return rect;
+}
+
 QPointer< ShadowInterface > SurfaceInterface::shadow() const
 {
     Q_D();
