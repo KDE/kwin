@@ -534,7 +534,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QCheckBox" name="showTabBox">
+         <widget class="QCheckBox" name="kcfg_ShowTabBox">
           <property name="text">
            <string/>
           </property>
@@ -544,7 +544,7 @@
          </widget>
         </item>
         <item row="0" column="0" colspan="2">
-         <widget class="QCheckBox" name="highlightWindowCheck">
+         <widget class="QCheckBox" name="kcfg_HighlightWindows">
           <property name="toolTip">
            <string>The currently selected window will be highlighted by fading out all other windows. This option requires desktop effects to be active.</string>
           </property>
@@ -593,8 +593,8 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>highlightWindowCheck</tabstop>
-  <tabstop>showTabBox</tabstop>
+  <tabstop>kcfg_HighlightWindows</tabstop>
+  <tabstop>kcfg_ShowTabBox</tabstop>
   <tabstop>effectCombo</tabstop>
   <tabstop>effectConfigButton</tabstop>
   <tabstop>switchingModeCombo</tabstop>
@@ -680,7 +680,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>showTabBox</sender>
+   <sender>kcfg_ShowTabBox</sender>
    <signal>toggled(bool)</signal>
    <receiver>widget_6</receiver>
    <slot>setEnabled(bool)</slot>
