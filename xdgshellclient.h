@@ -87,7 +87,6 @@ public:
     void hideClient(bool hide) override;
     MaximizeMode maximizeMode() const override;
     MaximizeMode requestedMaximizeMode() const override;
-    QRect geometryRestore() const override;
     bool noBorder() const override;
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
@@ -136,7 +135,6 @@ protected:
     bool belongsToDesktop() const override;
     Layer layerForDock() const override;
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
-    void setGeometryRestore(const QRect &geo) override;
     void doResizeSync() override;
     bool acceptsFocus() const override;
     void doMinimize() override;
@@ -225,7 +223,6 @@ private:
     bool m_closing = false;
     quint32 m_windowId = 0;
     bool m_unmapped = true;
-    QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWayland::Server::AppMenuInterface> m_appMenuInterface;

@@ -101,7 +101,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, &EffectsHandler::windowAdded, this, &PresentWindowsEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &PresentWindowsEffect::slotWindowClosed);
     connect(effects, &EffectsHandler::windowDeleted, this, &PresentWindowsEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &PresentWindowsEffect::slotWindowGeometryShapeChanged);
+    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &PresentWindowsEffect::slotWindowFrameGeometryChanged);
     connect(effects, &EffectsHandler::propertyNotify, this, &PresentWindowsEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::numberScreensChanged, this,
         [this] {
@@ -497,7 +497,7 @@ void PresentWindowsEffect::slotWindowDeleted(EffectWindow *w)
     m_motionManager.unmanage(w);
 }
 
-void PresentWindowsEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QRect& old)
+void PresentWindowsEffect::slotWindowFrameGeometryChanged(EffectWindow* w, const QRect& old)
 {
     Q_UNUSED(old)
     if (!m_activated)

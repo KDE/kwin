@@ -180,8 +180,8 @@ void QuickTilingTest::testQuickTiling()
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
-    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
 
     QFETCH(QuickTileMode, mode);
     QFETCH(QRect, expectedGeometry);
@@ -202,9 +202,8 @@ void QuickTilingTest::testQuickTiling()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), expectedGeometry.size(), Qt::red);
 
-    QVERIFY(geometryChangedSpy.wait());
-    QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
-    QCOMPARE(geometryChangedSpy.count(), 1);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(c->frameGeometry(), expectedGeometry);
 
     // send window to other screen
@@ -257,8 +256,8 @@ void QuickTilingTest::testQuickMaximizing()
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
-    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
     QSignalSpy maximizeChangedSpy1(c, qOverload<AbstractClient *, MaximizeMode>(&AbstractClient::clientMaximizedStateChanged));
     QVERIFY(maximizeChangedSpy1.isValid());
     QSignalSpy maximizeChangedSpy2(c, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged));
@@ -283,8 +282,8 @@ void QuickTilingTest::testQuickMaximizing()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(1280, 1024), Qt::red);
 
-    QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(geometryChangedSpy.count(), 2);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
 
@@ -316,8 +315,8 @@ void QuickTilingTest::testQuickMaximizing()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::yellow);
 
-    QVERIFY(geometryChangedSpy.wait());
-    QCOMPARE(geometryChangedSpy.count(), 4);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(c->geometryRestore(), QRect(0, 0, 100, 50));
     QCOMPARE(maximizeChangedSpy1.count(), 2);
@@ -782,14 +781,14 @@ void QuickTilingTest::testShortcut()
     QCOMPARE(configureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
 
     // attach a new image
-    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), expectedGeometry.size(), Qt::red);
 
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
-    QCOMPARE(geometryChangedSpy.count(), 1);
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(c->frameGeometry(), expectedGeometry);
 }
 
@@ -837,8 +836,8 @@ void QuickTilingTest::testScript()
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
-    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
 
     QVERIFY(Scripting::self());
     QTemporaryFile tmpFile;
@@ -881,9 +880,9 @@ void QuickTilingTest::testScript()
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
     Test::render(surface.data(), expectedGeometry.size(), Qt::red);
 
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
-    QCOMPARE(geometryChangedSpy.count(), 1);
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(c->frameGeometry(), expectedGeometry);
 }
 

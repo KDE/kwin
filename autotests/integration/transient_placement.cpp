@@ -209,6 +209,27 @@ void TransientPlacementTest::testXdgPopup_data()
     positioner.setGravity(Qt::TopEdge);
     positioner.setInitialSize(QSize(300, 200));
     QTest::newRow("constraintFlipRightNoGravity") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(700 + 50 - 150, 130, 300, 200);
+
+    // ----------------------------------------------------------------
+    // resize
+    positioner.setConstraints(XdgPositioner::Constraint::ResizeX | XdgPositioner::Constraint::ResizeY);
+    positioner.setInitialSize(QSize(200, 200));
+
+    positioner.setAnchorEdge(Qt::TopEdge);
+    positioner.setGravity(Qt::TopEdge);
+    QTest::newRow("resizeTop") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(80 + 250 - 100, 0, 200, 130);
+
+    positioner.setAnchorEdge(Qt::LeftEdge);
+    positioner.setGravity(Qt::LeftEdge);
+    QTest::newRow("resizeLeft") << QSize(500, 500) << QPoint(80, 80) << positioner << QRect(0, 80 + 250 - 100, 130, 200);
+
+    positioner.setAnchorEdge(Qt::RightEdge);
+    positioner.setGravity(Qt::RightEdge);
+    QTest::newRow("resizeRight") << QSize(500, 500) << QPoint(700, 80) << positioner << QRect(700 + 50 + 400, 80 + 250 - 100, 130, 200);
+
+    positioner.setAnchorEdge(Qt::BottomEdge);
+    positioner.setGravity(Qt::BottomEdge);
+    QTest::newRow("resizeBottom") << QSize(500, 500) << QPoint(80, 500) << positioner << QRect(80 + 250 - 100, 500 + 50 + 400, 200, 74);
 }
 
 void TransientPlacementTest::testXdgPopup()
@@ -249,7 +270,7 @@ void TransientPlacementTest::testXdgPopup()
     QCOMPARE(configureRequestedSpy.first()[0].value<QRect>(), expectedRelativeGeometry);
     popup->ackConfigure(configureRequestedSpy.first()[1].toUInt());
 
-    auto transient = Test::renderAndWaitForShown(transientSurface, positioner.initialSize(), Qt::red);
+    auto transient = Test::renderAndWaitForShown(transientSurface, expectedRelativeGeometry.size(), Qt::red);
     QVERIFY(transient);
 
     QVERIFY(!transient->isDecorated());
@@ -319,10 +340,10 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     parent->setFullScreen(true);
     QVERIFY(fullscreenSpy.wait());
     parentShellSurface->ackConfigure(fullscreenSpy.first().at(2).value<quint32>());
-    QSignalSpy geometryShapeChangedSpy{parent, &XdgShellClient::geometryShapeChanged};
-    QVERIFY(geometryShapeChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy{parent, &XdgShellClient::frameGeometryChanged};
+    QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(parentSurface, fullscreenSpy.first().at(0).toSize(), Qt::red);
-    QVERIFY(geometryShapeChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(parent->frameGeometry(), screens()->geometry(0));
     QVERIFY(parent->isFullScreen());
 

@@ -220,8 +220,8 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
 
     /**
-     * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
-     * might be emitted at each resize step or only at the end of the resize operation.
+     * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
+     * signal might be emitted at each resize step or only at the end of the resize operation.
      */
     Q_PROPERTY(QRect geometry READ frameGeometry WRITE setFrameGeometry)
 
@@ -416,8 +416,8 @@ public:
     virtual bool isHiddenInternal() const = 0;
     // TODO: remove boolean trap
     virtual void hideClient(bool hide) = 0;
-    virtual bool isFullScreenable() const = 0;
-    virtual bool isFullScreen() const = 0;
+    virtual bool isFullScreenable() const;
+    virtual bool isFullScreen() const;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
@@ -484,20 +484,12 @@ public:
     bool isMinimized() const {
         return m_minimized;
     }
-    virtual void setFullScreen(bool set, bool user = true) = 0;
+    virtual void setFullScreen(bool set, bool user = true);
 
     virtual void setClientShown(bool shown);
 
-    virtual QRect geometryRestore() const = 0;
-    /**
-     * The currently applied maximize mode
-     */
-    virtual MaximizeMode maximizeMode() const = 0;
-    /**
-     * The maximise mode requested by the server.
-     * For X this always matches maximizeMode, for wayland clients it
-     * is asynchronous
-     */
+    QRect geometryRestore() const;
+    virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
     void maximize(MaximizeMode);
     /**
@@ -540,13 +532,10 @@ public:
      * Whether the Client can be shaded. Default implementation returns @c false.
      */
     virtual bool isShadeable() const;
-    /**
-     * Returns whether the window is maximizable or not.
-     */
-    virtual bool isMaximizable() const = 0;
-    virtual bool isMinimizable() const = 0;
+    virtual bool isMaximizable() const;
+    virtual bool isMinimizable() const;
     virtual QRect iconGeometry() const;
-    virtual bool userCanSetFullScreen() const = 0;
+    virtual bool userCanSetFullScreen() const;
     virtual bool userCanSetNoBorder() const = 0;
     virtual void checkNoBorder();
     virtual void setOnActivities(QStringList newActivitiesList);
@@ -634,12 +623,15 @@ public:
     virtual QSize maxSize() const;
     virtual void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet);
-    /// How to resize the window in order to obey constains (mainly aspect ratios)
-    enum Sizemode {
-        SizemodeAny,
-        SizemodeFixedW, ///< Try not to affect width
-        SizemodeFixedH, ///< Try not to affect height
-        SizemodeMax ///< Try not to make it larger in either direction
+
+    /**
+     * How to resize the window in order to obey constraints (mainly aspect ratios).
+     */
+    enum SizeMode {
+        SizeModeAny,
+        SizeModeFixedW, ///< Try not to affect width
+        SizeModeFixedH, ///< Try not to affect height
+        SizeModeMax ///< Try not to make it larger in either direction
     };
     /**
      * Calculates the appropriate frame size for the given client size @p wsize.
@@ -648,12 +640,12 @@ public:
      *
      * Default implementation returns the passed in @p wsize.
      */
-    virtual QSize sizeForClientSize(const QSize &wsize, Sizemode mode = SizemodeAny, bool noframe = false) const;
+    virtual QSize sizeForClientSize(const QSize &wsize, SizeMode mode = SizeModeAny, bool noframe = false) const;
 
     /**
      * Adjust the frame size @p frame according to the window's size hints.
      */
-    QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
+    QSize adjustedSize(const QSize&, SizeMode mode = SizeModeAny) const;
     QSize adjustedSize() const;
 
     /**
@@ -965,10 +957,8 @@ protected:
      * is emitted.
      *
      * Default implementation does nothing.
-     * @param desktop The new desktop the Client is on
-     * @param was_desk The desktop the Client was on before
      */
-    virtual void doSetDesktop(int desktop, int was_desk);
+    virtual void doSetDesktop();
     /**
      * Called from @ref minimize and @ref unminimize once the minimized value got updated, but before the
      * changed signal is emitted.
@@ -981,6 +971,7 @@ protected:
     virtual void doSetSkipTaskbar();
     virtual void doSetSkipPager();
     virtual void doSetSkipSwitcher();
+    virtual void doSetDemandsAttention();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();
@@ -1025,8 +1016,8 @@ protected:
     int borderRight() const;
     int borderTop() const;
     int borderBottom() const;
-    virtual void changeMaximize(bool horizontal, bool vertical, bool adjust) = 0;
-    virtual void setGeometryRestore(const QRect &geo) = 0;
+    virtual void changeMaximize(bool horizontal, bool vertical, bool adjust);
+    void setGeometryRestore(const QRect &rect);
 
     /**
      * Called from move after updating the geometry. Can be reimplemented to perform specific tasks.
@@ -1267,6 +1258,7 @@ private:
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_virtualKeyboardGeometry;
     QRect m_keyboardGeometryRestore;
+    QRect m_maximizeGeometryRestore;
 
     struct {
         bool enabled = false;

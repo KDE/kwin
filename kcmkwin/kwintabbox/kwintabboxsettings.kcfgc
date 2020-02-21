@@ -1,0 +1,7 @@
+File=kwintabboxsettings.kcfg
+NameSpace=KWin::TabBox
+ClassName=TabBoxSettings
+IncludeFiles=\"tabboxconfig.h\"
+Mutators=true
+DefaultValueGetters=true
+ParentInConstructor=true

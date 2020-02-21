@@ -64,10 +64,6 @@ AbstractClient::AbstractClient()
 #endif
     , m_colorScheme(QStringLiteral("kdeglobals"))
 {
-    connect(this, &AbstractClient::geometryShapeChanged, this, &AbstractClient::geometryChanged);
-    auto signalMaximizeChanged = static_cast<void (AbstractClient::*)(KWin::AbstractClient*, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged);
-    connect(this, signalMaximizeChanged, this, &AbstractClient::geometryChanged);
-    connect(this, &AbstractClient::clientStepUserMovedResized,   this, &AbstractClient::geometryChanged);
     connect(this, &AbstractClient::clientStartUserMovedResized,  this, &AbstractClient::moveResizedChanged);
     connect(this, &AbstractClient::clientFinishUserMovedResized, this, &AbstractClient::moveResizedChanged);
     connect(this, &AbstractClient::clientStartUserMovedResized,  this, &AbstractClient::removeCheckScreenConnection);
@@ -89,7 +85,7 @@ AbstractClient::AbstractClient()
     });
 
     // replace on-screen-display on size changes
-    connect(this, &AbstractClient::geometryShapeChanged, this,
+    connect(this, &AbstractClient::frameGeometryChanged, this,
         [this] (Toplevel *c, const QRect &old) {
             Q_UNUSED(c)
             if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && !isInitialPositionSet()) {
@@ -133,11 +129,6 @@ bool AbstractClient::isTransient() const
 void AbstractClient::setClientShown(bool shown)
 {
     Q_UNUSED(shown)
-}
-
-MaximizeMode AbstractClient::requestedMaximizeMode() const
-{
-    return maximizeMode();
 }
 
 xcb_timestamp_t AbstractClient::userTime() const
@@ -326,19 +317,13 @@ void AbstractClient::setKeepAbove(bool b)
     if (b && !rules()->checkKeepBelow(false))
         setKeepBelow(false);
     if (b == keepAbove()) {
-        // force hint change if different
-        if (info && bool(info->state() & NET::KeepAbove) != keepAbove())
-            info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
         return;
     }
     m_keepAbove = b;
-    if (info) {
-        info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
-    }
+    doSetKeepAbove();
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Above);
 
-    doSetKeepAbove();
     emit keepAboveChanged(m_keepAbove);
 }
 
@@ -352,19 +337,13 @@ void AbstractClient::setKeepBelow(bool b)
     if (b && !rules()->checkKeepAbove(false))
         setKeepAbove(false);
     if (b == keepBelow()) {
-        // force hint change if different
-        if (info && bool(info->state() & NET::KeepBelow) != keepBelow())
-            info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
         return;
     }
     m_keepBelow = b;
-    if (info) {
-        info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
-    }
+    doSetKeepBelow();
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Below);
 
-    doSetKeepBelow();
     emit keepBelowChanged(m_keepBelow);
 }
 
@@ -411,11 +390,13 @@ void AbstractClient::demandAttention(bool set)
     if (m_demandsAttention == set)
         return;
     m_demandsAttention = set;
-    if (info) {
-        info->setState(set ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
-    }
+    doSetDemandsAttention();
     workspace()->clientAttentionChanged(this, set);
     emit demandsAttentionChanged();
+}
+
+void AbstractClient::doSetDemandsAttention()
+{
 }
 
 void AbstractClient::setDesktop(int desktop)
@@ -489,7 +470,7 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
         c2->setDesktops(desktops);
     }
 
-    doSetDesktop(desktop(), was_desk);
+    doSetDesktop();
 
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Desktop);
@@ -500,10 +481,8 @@ void AbstractClient::setDesktops(QVector<VirtualDesktop*> desktops)
     emit x11DesktopIdsChanged();
 }
 
-void AbstractClient::doSetDesktop(int desktop, int was_desk)
+void AbstractClient::doSetDesktop()
 {
-    Q_UNUSED(desktop)
-    Q_UNUSED(was_desk)
 }
 
 void AbstractClient::enterDesktop(VirtualDesktop *virtualDesktop)
@@ -619,11 +598,7 @@ void AbstractClient::minimize(bool avoid_animation)
     if (!isMinimizable() || isMinimized())
         return;
 
-    if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(NET::States(), NET::Shaded);
-
     m_minimized = true;
-
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
@@ -643,11 +618,7 @@ void AbstractClient::unminimize(bool avoid_animation)
         return;
     }
 
-    if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(NET::Shaded, NET::Shaded);
-
     m_minimized = false;
-
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
@@ -822,9 +793,9 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
+    emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
-    emit geometryChanged();
 }
 
 bool AbstractClient::startMoveResize()
@@ -1081,8 +1052,8 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
     bool update = false;
     if (isResize()) {
         QRect orig = initialMoveResizeGeometry();
-        Sizemode sizemode = SizemodeAny;
-        auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizemode, &mode]() {
+        SizeMode sizeMode = SizeModeAny;
+        auto calculateMoveResizeGeom = [this, &topleft, &bottomright, &orig, &sizeMode, &mode]() {
             switch(mode) {
             case PositionTopLeft:
                 setMoveResizeGeometry(QRect(topleft, orig.bottomRight()));
@@ -1098,19 +1069,19 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 break;
             case PositionTop:
                 setMoveResizeGeometry(QRect(QPoint(orig.left(), topleft.y()), orig.bottomRight()));
-                sizemode = SizemodeFixedH; // try not to affect height
+                sizeMode = SizeModeFixedH; // try not to affect height
                 break;
             case PositionBottom:
                 setMoveResizeGeometry(QRect(orig.topLeft(), QPoint(orig.right(), bottomright.y())));
-                sizemode = SizemodeFixedH;
+                sizeMode = SizeModeFixedH;
                 break;
             case PositionLeft:
                 setMoveResizeGeometry(QRect(QPoint(topleft.x(), orig.top()), orig.bottomRight()));
-                sizemode = SizemodeFixedW;
+                sizeMode = SizeModeFixedW;
                 break;
             case PositionRight:
                 setMoveResizeGeometry(QRect(orig.topLeft(), QPoint(bottomright.x(), orig.bottom())));
-                sizemode = SizemodeFixedW;
+                sizeMode = SizeModeFixedW;
                 break;
             case PositionCenter:
             default:
@@ -1211,7 +1182,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         }
 
         // Always obey size hints, even when in "unrestricted" mode
-        QSize size = adjustedSize(moveResizeGeometry().size(), sizemode);
+        QSize size = adjustedSize(moveResizeGeometry().size(), sizeMode);
         // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
         topleft = QPoint(moveResizeGeometry().right() - size.width() + 1, moveResizeGeometry().bottom() - size.height() + 1);
         bottomright = QPoint(moveResizeGeometry().left() + size.width() - 1, moveResizeGeometry().top() + size.height() - 1);
@@ -1220,9 +1191,9 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         // if aspect ratios are specified, both dimensions may change.
         // Therefore grow to the right/bottom if needed.
         // TODO it should probably obey gravity rather than always using right/bottom ?
-        if (sizemode == SizemodeFixedH)
+        if (sizeMode == SizeModeFixedH)
             orig.setRight(bottomright.x());
-        else if (sizemode == SizemodeFixedW)
+        else if (sizeMode == SizeModeFixedW)
             orig.setBottom(bottomright.y());
 
         calculateMoveResizeGeom();
@@ -1238,7 +1209,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, screen, 0));
             else {
                 QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
-                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizemodeMax);
+                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizeModeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
                     moveResizeGeom.setSize(adjSize);
@@ -1342,8 +1313,6 @@ void AbstractClient::performMoveResize()
         setFrameGeometry(moveResizeGeom);
     }
     doPerformMoveResize();
-    if (isResize())
-        addRepaintFull();
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
@@ -1433,7 +1402,7 @@ void AbstractClient::setupWindowManagementInterface()
             w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
         }
     );
-    connect(this, &AbstractClient::geometryChanged, w,
+    connect(this, &AbstractClient::frameGeometryChanged, w,
         [w, this] {
             w->setGeometry(frameGeometry());
         }
@@ -1882,7 +1851,7 @@ BORDER(Right)
 BORDER(Top)
 #undef BORDER
 
-QSize AbstractClient::sizeForClientSize(const QSize &wsize, Sizemode mode, bool noframe) const
+QSize AbstractClient::sizeForClientSize(const QSize &wsize, SizeMode mode, bool noframe) const
 {
     Q_UNUSED(mode)
     Q_UNUSED(noframe)
@@ -3126,7 +3095,7 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
     }
 }
 
-QSize AbstractClient::adjustedSize(const QSize& frame, Sizemode mode) const
+QSize AbstractClient::adjustedSize(const QSize& frame, SizeMode mode) const
 {
     // first, get the window size for the given frame size s
     QSize wsize = frameSizeToClientSize(frame);
@@ -3141,6 +3110,124 @@ QSize AbstractClient::adjustedSize(const QSize& frame, Sizemode mode) const
 QSize AbstractClient::adjustedSize() const
 {
     return sizeForClientSize(clientSize());
+}
+
+/**
+ * Returns @c true if the AbstractClient can be shown in full screen mode; otherwise @c false.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isFullScreenable() const
+{
+    return false;
+}
+
+/**
+ * Returns @c true if the AbstractClient is currently being shown in full screen mode; otherwise @c false.
+ *
+ * A client in full screen mode occupies the entire screen with no window frame around it.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isFullScreen() const
+{
+    return false;
+}
+
+/**
+ * Returns whether requests initiated by the user to enter or leave full screen mode are honored.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::userCanSetFullScreen() const
+{
+    return false;
+}
+
+/**
+ * Asks the AbstractClient to enter or leave full screen mode.
+ *
+ * Default implementation does nothing.
+ *
+ * @param set @c true if the AbstractClient has to be shown in full screen mode, otherwise @c false
+ * @param user @c true if the request is initiated by the user, otherwise @c false
+ */
+void AbstractClient::setFullScreen(bool set, bool user)
+{
+    Q_UNUSED(set)
+    Q_UNUSED(user)
+}
+
+/**
+ * Returns @c true if the AbstractClient can be minimized; otherwise @c false.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isMinimizable() const
+{
+    return false;
+}
+
+/**
+ * Returns @c true if the AbstractClient can be maximized; otherwise @c false.
+ *
+ * Default implementation returns @c false.
+ */
+bool AbstractClient::isMaximizable() const
+{
+    return false;
+}
+
+/**
+ * Returns the currently applied maximize mode.
+ *
+ * Default implementation returns MaximizeRestore.
+ */
+MaximizeMode AbstractClient::maximizeMode() const
+{
+    return MaximizeRestore;
+}
+
+/**
+ * Returns the last requested maximize mode.
+ *
+ * On X11, this method always matches maximizeMode(). On Wayland, it is asynchronous.
+ *
+ * Default implementation matches maximizeMode().
+ */
+MaximizeMode AbstractClient::requestedMaximizeMode() const
+{
+    return maximizeMode();
+}
+
+/**
+ * Returns the geometry of the AbstractClient before it was maximized or quick tiled.
+ */
+QRect AbstractClient::geometryRestore() const
+{
+    return m_maximizeGeometryRestore;
+}
+
+/**
+ * Sets the geometry of the AbstractClient before it was maximized or quick tiled to @p rect.
+ */
+void AbstractClient::setGeometryRestore(const QRect &rect)
+{
+    m_maximizeGeometryRestore = rect;
+}
+
+/**
+ * Toggles the maximized state along specified dimensions @p horizontal and @p vertical.
+ *
+ * If @p adjust is @c true, only frame geometry will be updated to match requestedMaximizeMode().
+ *
+ * Default implementation does nothing.
+ */
+void AbstractClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
+{
+    Q_UNUSED(horizontal)
+    Q_UNUSED(vertical)
+    Q_UNUSED(adjust)
 }
 
 }
