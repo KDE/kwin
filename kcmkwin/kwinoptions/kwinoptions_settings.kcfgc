@@ -1,6 +1,0 @@
-File=kwinoptions_settings.kcfg
-ClassName=KWinOptionsSettings
-Mutators=true
-DefaultValueGetters=true
-ParentInConstructor=true
-Singleton=true

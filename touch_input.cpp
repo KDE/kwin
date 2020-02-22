@@ -118,7 +118,7 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
 
     // FIXME: add input transformation API to KWayland::Server::SeatInterface for touch input
     seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
+    m_focusGeometryConnection = connect(focusNow, &Toplevel::geometryChanged, this,
         [this] {
             if (focus().isNull()) {
                 return;

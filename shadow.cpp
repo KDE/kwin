@@ -3,7 +3,6 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "composite.h"
 #include "effects.h"
-#include "internal_client.h"
 #include "toplevel.h"
 #include "wayland_server.h"
 
@@ -35,10 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/surface_interface.h>
 
-#include <QWindow>
-
-Q_DECLARE_METATYPE(QMargins)
-
 namespace KWin
 {
 
@@ -47,7 +41,7 @@ Shadow::Shadow(Toplevel *toplevel)
     , m_cachedSize(toplevel->size())
     , m_decorationShadow(nullptr)
 {
-    connect(m_topLevel, &Toplevel::frameGeometryChanged, this, &Shadow::geometryChanged);
+    connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
 }
 
 Shadow::~Shadow()
@@ -65,9 +59,6 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     }
     if (!shadow && kwinApp()->x11Connection()) {
         shadow = createShadowFromX11(toplevel);
-    }
-    if (!shadow) {
-        shadow = createShadowFromInternalWindow(toplevel);
     }
     if (!shadow) {
         return nullptr;
@@ -124,24 +115,6 @@ Shadow *Shadow::createShadowFromWayland(Toplevel *toplevel)
     }
     Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
     if (!shadow->init(s)) {
-        delete shadow;
-        return nullptr;
-    }
-    return shadow;
-}
-
-Shadow *Shadow::createShadowFromInternalWindow(Toplevel *toplevel)
-{
-    const InternalClient *client = qobject_cast<InternalClient *>(toplevel);
-    if (!client) {
-        return nullptr;
-    }
-    const QWindow *window = client->internalWindow();
-    if (!window) {
-        return nullptr;
-    }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
-    if (!shadow->init(window)) {
         delete shadow;
         return nullptr;
     }
@@ -267,49 +240,6 @@ bool Shadow::init(const QPointer< KWayland::Server::ShadowInterface > &shadow)
     return true;
 }
 
-bool Shadow::init(const QWindow *window)
-{
-    const bool isEnabled = window->property("kwin_shadow_enabled").toBool();
-    if (!isEnabled) {
-        return false;
-    }
-
-    const QImage leftTile = window->property("kwin_shadow_left_tile").value<QImage>();
-    const QImage topLeftTile = window->property("kwin_shadow_top_left_tile").value<QImage>();
-    const QImage topTile = window->property("kwin_shadow_top_tile").value<QImage>();
-    const QImage topRightTile = window->property("kwin_shadow_top_right_tile").value<QImage>();
-    const QImage rightTile = window->property("kwin_shadow_right_tile").value<QImage>();
-    const QImage bottomRightTile = window->property("kwin_shadow_bottom_right_tile").value<QImage>();
-    const QImage bottomTile = window->property("kwin_shadow_bottom_tile").value<QImage>();
-    const QImage bottomLeftTile = window->property("kwin_shadow_bottom_left_tile").value<QImage>();
-
-    m_shadowElements[ShadowElementLeft] = QPixmap::fromImage(leftTile);
-    m_shadowElements[ShadowElementTopLeft] = QPixmap::fromImage(topLeftTile);
-    m_shadowElements[ShadowElementTop] = QPixmap::fromImage(topTile);
-    m_shadowElements[ShadowElementTopRight] = QPixmap::fromImage(topRightTile);
-    m_shadowElements[ShadowElementRight] = QPixmap::fromImage(rightTile);
-    m_shadowElements[ShadowElementBottomRight] = QPixmap::fromImage(bottomRightTile);
-    m_shadowElements[ShadowElementBottom] = QPixmap::fromImage(bottomTile);
-    m_shadowElements[ShadowElementBottomLeft] = QPixmap::fromImage(bottomLeftTile);
-
-    const QMargins padding = window->property("kwin_shadow_padding").value<QMargins>();
-
-    m_leftOffset = padding.left();
-    m_topOffset = padding.top();
-    m_rightOffset = padding.right();
-    m_bottomOffset = padding.bottom();
-
-    updateShadowRegion();
-
-    if (!prepareBackend()) {
-        return false;
-    }
-
-    buildQuads();
-
-    return true;
-}
-
 void Shadow::updateShadowRegion()
 {
     const QRect top(0, - m_topOffset, m_topLevel->width(), m_topOffset);
@@ -426,12 +356,6 @@ bool Shadow::updateShadow()
         }
     }
 
-    if (InternalClient *client = qobject_cast<InternalClient *>(m_topLevel)) {
-        if (init(client->internalWindow())) {
-            return true;
-        }
-    }
-
     auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
         return false;
@@ -445,7 +369,7 @@ bool Shadow::updateShadow()
 void Shadow::setToplevel(Toplevel *topLevel)
 {
     m_topLevel = topLevel;
-    connect(m_topLevel, &Toplevel::frameGeometryChanged, this, &Shadow::geometryChanged);
+    connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
 }
 void Shadow::geometryChanged()
 {

@@ -18,20 +18,32 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
-import QtQuick.Layouts 1.2
-import org.kde.plasma.components 3.0 as Plasma
+import org.kde.plasma.components 2.0 as Plasma
 
-RowLayout {
-    Plasma.Button {
-        objectName: "removeButton"
-        enabled: effects.desktops > 1
-        icon.name: "list-remove"
-        onClicked: effects.desktops--
-    }
-    Plasma.Button {
-        objectName: "addButton"
-        enabled: effects.desktops < 20
-        icon.name: "list-add"
-        onClicked: effects.desktops++
+Item {
+    width: childrenRect.width
+    height: childrenRect.height
+    Plasma.ButtonRow {
+        exclusive: false
+        width: childrenRect.width
+        height: childrenRect.height
+        Plasma.Button {
+            id: removeButton
+            objectName: "removeButton"
+            enabled: remove
+            width: height
+            font.bold: true
+            font.pointSize: 20
+            text: "-"
+        }
+        Plasma.Button {
+            id: addButton
+            objectName: "addButton"
+            enabled: add
+            font.bold: true
+            font.pointSize: 20
+            width: height
+            text: "+"
+        }
     }
 }

@@ -62,7 +62,7 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
     myUi->shortcuts->addCollection(myActionCollection);
 
-    connect(myUi->shortcuts, &KShortcutsEditor::keyChange, this, &WindowGeometryConfig::markAsChanged);
+    connect(myUi->shortcuts, &KShortcutsEditor::keyChange, this, qOverload<>(&WindowGeometryConfig::changed));
 
     addConfig(WindowGeometryConfiguration::self(), myUi);
 

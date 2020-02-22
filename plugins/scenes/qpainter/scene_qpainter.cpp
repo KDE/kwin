@@ -243,19 +243,6 @@ static void paintSubSurface(QPainter *painter, const QPoint &pos, QPainterWindow
     }
 }
 
-static bool isXwaylandClient(Toplevel *toplevel)
-{
-    X11Client *client = qobject_cast<X11Client *>(toplevel);
-    if (client) {
-        return true;
-    }
-    Deleted *deleted = qobject_cast<Deleted *>(toplevel);
-    if (deleted) {
-        return deleted->wasX11Client();
-    }
-    return false;
-}
-
 void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
     if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
@@ -302,7 +289,7 @@ void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintDa
     // render content
     QRect source;
     QRect target;
-    if (isXwaylandClient(toplevel)) {
+    if (toplevel->isClient()) {
         // special case for XWayland windows
         source = QRect(toplevel->clientPos(), toplevel->clientSize());
         target = source;

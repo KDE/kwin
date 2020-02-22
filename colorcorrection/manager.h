@@ -283,7 +283,7 @@ private:
     ClockSkewNotifier *m_skewNotifier;
 
     // Specifies whether Night Color is enabled.
-    bool m_active = false;
+    bool m_active;
 
     // Specifies whether Night Color is currently running.
     bool m_running = false;

@@ -579,10 +579,10 @@ void TestXdgShellClientRules::testPositionApplyNow()
     RuleBook::self()->setConfig(config);
 
     // The client should be moved to the position specified by the rule.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     workspace()->slotReconfigure();
-    QCOMPARE(frameGeometryChangedSpy.count(), 1);
+    QCOMPARE(geometryChangedSpy.count(), 1);
     QCOMPARE(client->pos(), QPoint(42, 42));
 
     // We still have to be able to move the client around.
@@ -792,8 +792,8 @@ void TestXdgShellClientRules::testSizeApply()
     QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
 
     // One still should be able to resize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
     QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
@@ -832,7 +832,7 @@ void TestXdgShellClientRules::testSizeApply()
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(488, 640), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(488, 640));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
@@ -930,8 +930,8 @@ void TestXdgShellClientRules::testSizeRemember()
     QVERIFY(!states.testFlag(XdgShellSurface::State::Resizing));
 
     // One should still be able to resize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     QSignalSpy clientStartMoveResizedSpy(client, &AbstractClient::clientStartUserMovedResized);
     QVERIFY(clientStartMoveResizedSpy.isValid());
     QSignalSpy clientStepUserMovedResizedSpy(client, &AbstractClient::clientStepUserMovedResized);
@@ -970,7 +970,7 @@ void TestXdgShellClientRules::testSizeRemember()
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(488, 640), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(488, 640));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
 
@@ -1154,11 +1154,11 @@ void TestXdgShellClientRules::testSizeApplyNow()
     QCOMPARE(configureRequestedSpy->last().first().toSize(), QSize(480, 640));
 
     // Draw the surface with the new size.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(480, 640), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(480, 640));
     QVERIFY(!configureRequestedSpy->wait(100));
 
@@ -1387,11 +1387,11 @@ void TestXdgShellClientRules::testMaximizeApply()
     QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
     QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(100, 50));
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
@@ -1499,11 +1499,11 @@ void TestXdgShellClientRules::testMaximizeRemember()
     QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
     QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
 
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(100, 50));
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
@@ -1713,11 +1713,11 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
     QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
 
     // Draw contents of the maximized client.
-    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(1280, 1024));
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeFull);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeFull);
@@ -1736,7 +1736,7 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
 
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(geometryChangedSpy.wait());
     QCOMPARE(client->size(), QSize(100, 50));
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
     QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);

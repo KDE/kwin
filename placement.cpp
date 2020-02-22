@@ -748,7 +748,7 @@ void AbstractClient::growHorizontal()
         return;
     QRect geom = frameGeometry();
     geom.setRight(workspace()->packPositionRight(this, geom.right(), true));
-    QSize adjsize = adjustedSize(geom.size(), SizeModeFixedW);
+    QSize adjsize = adjustedSize(geom.size(), SizemodeFixedW);
     if (frameGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().width() > 1) { // take care of size increments
         int newright = workspace()->packPositionRight(this, geom.right() + resizeIncrements().width() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
@@ -757,8 +757,8 @@ void AbstractClient::growHorizontal()
                                    QPoint((x() + newright) / 2, frameGeometry().center().y()), desktop()).right() >= newright)
             geom.setRight(newright);
     }
-    geom.setSize(adjustedSize(geom.size(), SizeModeFixedW));
-    geom.setSize(adjustedSize(geom.size(), SizeModeFixedH));
+    geom.setSize(adjustedSize(geom.size(), SizemodeFixedW));
+    geom.setSize(adjustedSize(geom.size(), SizemodeFixedH));
     workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
     setFrameGeometry(geom);
 }
@@ -777,7 +777,7 @@ void AbstractClient::shrinkHorizontal()
     geom.setRight(workspace()->packPositionLeft(this, geom.right(), false));
     if (geom.width() <= 1)
         return;
-    geom.setSize(adjustedSize(geom.size(), SizeModeFixedW));
+    geom.setSize(adjustedSize(geom.size(), SizemodeFixedW));
     if (geom.width() > 20) {
         workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
         setFrameGeometry(geom);
@@ -796,7 +796,7 @@ void AbstractClient::growVertical()
         return;
     QRect geom = frameGeometry();
     geom.setBottom(workspace()->packPositionDown(this, geom.bottom(), true));
-    QSize adjsize = adjustedSize(geom.size(), SizeModeFixedH);
+    QSize adjsize = adjustedSize(geom.size(), SizemodeFixedH);
     if (frameGeometry().size() == adjsize && geom.size() != adjsize && resizeIncrements().height() > 1) { // take care of size increments
         int newbottom = workspace()->packPositionDown(this, geom.bottom() + resizeIncrements().height() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
@@ -804,7 +804,7 @@ void AbstractClient::growVertical()
                                    QPoint(frameGeometry().center().x(), (y() + newbottom) / 2), desktop()).bottom() >= newbottom)
             geom.setBottom(newbottom);
     }
-    geom.setSize(adjustedSize(geom.size(), SizeModeFixedH));
+    geom.setSize(adjustedSize(geom.size(), SizemodeFixedH));
     workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
     setFrameGeometry(geom);
 }
@@ -824,7 +824,7 @@ void AbstractClient::shrinkVertical()
     geom.setBottom(workspace()->packPositionUp(this, geom.bottom(), false));
     if (geom.height() <= 1)
         return;
-    geom.setSize(adjustedSize(geom.size(), SizeModeFixedH));
+    geom.setSize(adjustedSize(geom.size(), SizemodeFixedH));
     if (geom.height() > 20) {
         workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
         setFrameGeometry(geom);

@@ -86,8 +86,6 @@ ScrollViewKCM {
 
         property var _buttonGroups: []
 
-        clip: true
-
         model: Private.EffectsFilterProxyModel {
             id: searchModel
 

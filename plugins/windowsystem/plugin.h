@@ -33,6 +33,4 @@ public:
 
     KWindowEffectsPrivate *createEffects() override;
     KWindowSystemPrivate *createWindowSystem() override;
-    KWindowShadowTilePrivate *createWindowShadowTile() override;
-    KWindowShadowPrivate *createWindowShadow() override;
 };

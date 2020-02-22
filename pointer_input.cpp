@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QHoverEvent>
 #include <QWindow>
-#include <QPainter>
 // Wayland
 #include <wayland-cursor.h>
 
@@ -503,7 +502,7 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
     QCoreApplication::instance()->sendEvent(now->decoration(), &event);
     now->client()->processDecorationMove(pos.toPoint(), m_pos.toPoint());
 
-    m_decorationGeometryConnection = connect(decoration()->client(), &AbstractClient::frameGeometryChanged, this,
+    m_decorationGeometryConnection = connect(decoration()->client(), &AbstractClient::geometryChanged, this,
         [this] {
             // ensure maximize button gets the leave event when maximizing/restore a window, see BUG 385140
             const auto oldDeco = decoration();
@@ -565,7 +564,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
     seat->setPointerPos(m_pos.toPoint());
     seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
 
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
+    m_focusGeometryConnection = connect(focusNow, &Toplevel::geometryChanged, this,
         [this] {
             // TODO: why no assert possible?
             if (!focus()) {
@@ -1222,7 +1221,6 @@ void CursorImage::updateDragCursor()
         if (auto dragIcon = ddi->icon()) {
             if (auto buffer = dragIcon->buffer()) {
                 additionalIcon = buffer->data().copy();
-                additionalIcon.setOffset(dragIcon->offset());
             }
         }
     }
@@ -1255,32 +1253,7 @@ void CursorImage::updateDragCursor()
         return;
     }
     m_drag.cursor.hotSpot = c->hotspot();
-
-    if (additionalIcon.isNull()) {
-        m_drag.cursor.image = buffer->data().copy();
-    } else {
-        QRect cursorRect = buffer->data().rect();
-        QRect iconRect = additionalIcon.rect();
-
-        if (-m_drag.cursor.hotSpot.x() < additionalIcon.offset().x()) {
-            iconRect.moveLeft(m_drag.cursor.hotSpot.x() - additionalIcon.offset().x());
-        } else {
-            cursorRect.moveLeft(-additionalIcon.offset().x() - m_drag.cursor.hotSpot.x());
-        }
-        if (-m_drag.cursor.hotSpot.y() < additionalIcon.offset().y()) {
-            iconRect.moveTop(m_drag.cursor.hotSpot.y() - additionalIcon.offset().y());
-        } else {
-            cursorRect.moveTop(-additionalIcon.offset().y() - m_drag.cursor.hotSpot.y());
-        }
-
-        m_drag.cursor.image = QImage(cursorRect.united(iconRect).size(), QImage::Format_ARGB32_Premultiplied);
-        m_drag.cursor.image.fill(Qt::transparent);
-        QPainter p(&m_drag.cursor.image);
-        p.drawImage(iconRect, additionalIcon);
-        p.drawImage(cursorRect, buffer->data());
-        p.end();
-    }
-
+    m_drag.cursor.image = buffer->data().copy();
     if (needsEmit) {
         emit changed();
     }

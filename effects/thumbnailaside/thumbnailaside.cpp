@@ -44,7 +44,7 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     connect(a, &QAction::triggered, this, &ThumbnailAsideEffect::toggleCurrentThumbnail);
 
     connect(effects, &EffectsHandler::windowClosed, this, &ThumbnailAsideEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowFrameGeometryChanged, this, &ThumbnailAsideEffect::slotWindowFrameGeometryChanged);
+    connect(effects, &EffectsHandler::windowGeometryShapeChanged, this, &ThumbnailAsideEffect::slotWindowGeometryShapeChanged);
     connect(effects, &EffectsHandler::windowDamaged, this, &ThumbnailAsideEffect::slotWindowDamaged);
     connect(effects, &EffectsHandler::screenLockingChanged, this, &ThumbnailAsideEffect::repaintAll);
     reconfigure(ReconfigureAll);
@@ -92,7 +92,7 @@ void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow* w, const QRect&)
     }
 }
 
-void ThumbnailAsideEffect::slotWindowFrameGeometryChanged(EffectWindow* w, const QRect& old)
+void ThumbnailAsideEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QRect& old)
 {
     foreach (const Data & d, windows) {
         if (d.window == w) {

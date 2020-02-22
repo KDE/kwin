@@ -346,14 +346,12 @@ EffectQuickScene::EffectQuickScene(QObject *parent)
     : EffectQuickView(parent)
     , d(new EffectQuickScene::Private)
 {
-    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
 EffectQuickScene::EffectQuickScene(QObject *parent, EffectQuickView::ExportMode exportMode)
     : EffectQuickView(parent, exportMode)
     , d(new EffectQuickScene::Private)
 {
-    d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
 }
 
 EffectQuickScene::~EffectQuickScene()
@@ -362,6 +360,9 @@ EffectQuickScene::~EffectQuickScene()
 
 void EffectQuickScene::setSource(const QUrl &source)
 {
+    if (!d->qmlObject) {
+        d->qmlObject = new KDeclarative::QmlObjectSharedEngine(this);
+    }
     d->qmlObject->setSource(source);
 
     QQuickItem *item = rootItem();
