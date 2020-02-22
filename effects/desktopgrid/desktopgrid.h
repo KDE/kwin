@@ -25,13 +25,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <QObject>
 #include <QTimeLine>
-
-#include "kwineffectquickview.h"
+#include <QQuickView>
 
 namespace KWin
 {
 
 class PresentWindowsEffectProxy;
+
+class DesktopButtonsView : public QQuickView
+{
+    Q_OBJECT
+public:
+    explicit DesktopButtonsView(QWindow *parent = nullptr);
+    void windowInputMouseEvent(QMouseEvent* e);
+    void setAddDesktopEnabled(bool enable);
+    void setRemoveDesktopEnabled(bool enable);
+    bool isVisible() const;
+    void show();
+    void hide();
+public:
+    EffectWindow *effectWindow;
+Q_SIGNALS:
+    void addDesktop();
+    void removeDesktop();
+private:
+    bool m_visible;
+    QPoint m_pos;
+    bool m_posIsValid;
+};
 
 class DesktopGridEffect
     : public Effect
@@ -94,7 +115,7 @@ private Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotNumberDesktopsChanged(uint old);
-    void slotWindowFrameGeometryChanged(KWin::EffectWindow *w, const QRect &old);
+    void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);
 
 private:
     QPointF scalePos(const QPoint& pos, int desktop, int screen = -1) const;
@@ -161,7 +182,7 @@ private:
     QRect m_windowMoveGeometry;
     QPoint m_windowMoveStartPoint;
 
-    QVector<EffectQuickScene*> m_desktopButtons;
+    QVector<DesktopButtonsView*> m_desktopButtonsViews;
 
     QAction *m_activateAction;
 

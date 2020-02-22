@@ -18,9 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "plugin.h"
-#include "windoweffects.h"
-#include "windowshadow.h"
 #include "windowsystem.h"
+#include "windoweffects.h"
 
 KWindowSystemKWinPlugin::KWindowSystemKWinPlugin(QObject *parent)
     : KWindowSystemPluginInterface(parent)
@@ -39,14 +38,4 @@ KWindowEffectsPrivate *KWindowSystemKWinPlugin::createEffects()
 KWindowSystemPrivate *KWindowSystemKWinPlugin::createWindowSystem()
 {
     return new KWin::WindowSystem();
-}
-
-KWindowShadowTilePrivate *KWindowSystemKWinPlugin::createWindowShadowTile()
-{
-    return new KWin::WindowShadowTile();
-}
-
-KWindowShadowPrivate *KWindowSystemKWinPlugin::createWindowShadow()
-{
-    return new KWin::WindowShadow();
 }

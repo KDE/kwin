@@ -59,9 +59,6 @@ Toplevel::Toplevel()
     connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
     connect(screens(), SIGNAL(countChanged(int,int)), SLOT(checkScreen()));
     setupCheckScreenConnection();
-
-    // Only for compatibility reasons, drop in the next major release.
-    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::geometryChanged);
 }
 
 Toplevel::~Toplevel()
@@ -520,13 +517,15 @@ void Toplevel::checkScreen()
 
 void Toplevel::setupCheckScreenConnection()
 {
-    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkScreen);
+    connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(checkScreen()));
+    connect(this, SIGNAL(geometryChanged()), SLOT(checkScreen()));
     checkScreen();
 }
 
 void Toplevel::removeCheckScreenConnection()
 {
-    disconnect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::checkScreen);
+    disconnect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(checkScreen()));
+    disconnect(this, SIGNAL(geometryChanged()), this, SLOT(checkScreen()));
 }
 
 int Toplevel::screen() const

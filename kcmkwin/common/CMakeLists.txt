@@ -1,14 +1,14 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwincommon\")
 
-include_directories(${KWin_SOURCE_DIR}/effects)
+include_directories(${KWIN_SOURCE_DIR}/effects)
 
 set(kcmkwincommon_SRC
     effectsmodel.cpp
 )
 
 qt5_add_dbus_interface(kcmkwincommon_SRC
-    ${KWin_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface
+    ${KWIN_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface
 )
 
 add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})

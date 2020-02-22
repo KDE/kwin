@@ -1,7 +1,0 @@
-File=kwinpluginssettings.kcfg
-NameSpace=KWin::TabBox
-ClassName=PluginsSettings
-IncludeFiles=effect_builtins.h
-Mutators=true
-DefaultValueGetters=true
-ParentInConstructor=true

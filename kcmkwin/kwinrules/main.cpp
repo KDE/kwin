@@ -233,7 +233,8 @@ static void edit(const QVariantMap &data, bool whole_app)
 
 } // namespace
 
-int main(int argc, char* argv[])
+extern "C"
+KWIN_EXPORT int kdemain(int argc, char* argv[])
 {
     QApplication app(argc, argv);
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);

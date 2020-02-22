@@ -50,7 +50,7 @@ class KMovingConfigStandalone : public KMovingConfig
     Q_OBJECT
 public:
     KMovingConfigStandalone(QWidget* parent, const QVariantList &)
-        : KMovingConfig(true, parent)
+        : KMovingConfig(true, new KConfig("kwinrc"), parent)
     {}
 };
 
@@ -59,7 +59,7 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, parent)
+        : KAdvancedConfig(true, new KConfig("kwinrc"), parent)
     {}
 };
 
@@ -76,29 +76,27 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     mFocus = new KFocusConfig(false, mConfig, this);
     mFocus->setObjectName(QLatin1String("KWin Focus Config"));
     tab->addTab(mFocus, i18n("&Focus"));
-    connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
-    connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
-    connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mMoving = new KMovingConfig(false, this);
+    mMoving = new KMovingConfig(false, mConfig, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("Mo&vement"));
-    connect(mMoving, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
-    connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mAdvanced = new KAdvancedConfig(false, this);
+    mAdvanced = new KAdvancedConfig(false, mConfig, this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
-    connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
-    connect(mAdvanced, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     KAboutData *about =
         new KAboutData(QStringLiteral("kcmkwinoptions"), i18n("Window Behavior Configuration Module"),
@@ -191,12 +189,12 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
-    connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("Window Actio&ns"));
-    connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 }
 
 KActionsOptions::~KActionsOptions()
@@ -232,8 +230,6 @@ void KActionsOptions::defaults()
 {
     mTitleBarActions->defaults();
     mWindowActions->defaults();
-
-    emit defaulted(true);
 }
 
 void KActionsOptions::moduleChanged(bool state)

@@ -6,11 +6,13 @@ add_definitions(-DKCMRULES)
 include_directories(../../)
 set(kwinrules_MOC_HDRS yesnobox.h ../../cursor.h ../../plugins/platforms/x11/standalone/x11cursor.h)
 qt5_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
-set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp main.cpp ${kwinrules_MOC_SRCS})
+set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp ${kwinrules_MOC_SRCS})
 
 ki18n_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
 
-add_executable(kwin_rules_dialog ${kwinrules_SRCS})
+set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
+
+kf5_add_kdeinit_executable(kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 
 set(kwin_kcm_rules_XCB_LIBS
     XCB::CURSOR
@@ -34,8 +36,9 @@ if (KWIN_BUILD_ACTIVITIES)
     set(kcm_libs ${kcm_libs} KF5::Activities)
 endif()
 
-target_link_libraries(kwin_rules_dialog ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
+target_link_libraries(kdeinit_kwin_rules_dialog ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
+install(TARGETS kdeinit_kwin_rules_dialog ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS kwin_rules_dialog DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 ########### next target ###############

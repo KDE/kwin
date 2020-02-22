@@ -3,7 +3,6 @@
  This file is part of the KDE project.
 
 Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2020 Cyril Rossi <cyril.rossi@enioka.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcmodule.h>
 #include <ksharedconfig.h>
+#include "tabboxconfig.h"
 
 #include "ui_main.h"
 
@@ -35,9 +35,7 @@ namespace KWin
 enum class BuiltInEffect;
 namespace TabBox
 {
-class TabBoxSettings;
-class SwitchEffectSettings;
-class PluginsSettings;
+
 }
 
 
@@ -70,8 +68,10 @@ private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
     void slotGHNS();
 private:
-    void updateUiFromConfig(KWinTabBoxConfigForm *ui, const TabBox::TabBoxSettings *config);
-    void updateConfigFromUi(const KWinTabBoxConfigForm *ui, TabBox::TabBoxSettings *config);
+    void updateUiFromConfig(KWinTabBoxConfigForm* ui, const TabBox::TabBoxConfig& config);
+    void updateConfigFromUi(const KWinTabBoxConfigForm* ui, TabBox::TabBoxConfig& config);
+    void loadConfig(const KConfigGroup& config, KWin::TabBox::TabBoxConfig& tabBoxConfig);
+    void saveConfig(KConfigGroup& config, const KWin::TabBox::TabBoxConfig& tabBoxConfig);
     void initLayoutLists();
 
 private:
@@ -85,12 +85,10 @@ private:
     KSharedConfigPtr m_config;
     KActionCollection* m_actionCollection;
     KShortcutsEditor* m_editor;
-    TabBox::TabBoxSettings *m_tabBoxConfig;
-    TabBox::TabBoxSettings *m_tabBoxAlternativeConfig;
-    TabBox::SwitchEffectSettings *m_coverSwitchConfig;
-    TabBox::SwitchEffectSettings *m_flipSwitchConfig;
-    TabBox::PluginsSettings *m_pluginsConfig;
+    TabBox::TabBoxConfig m_tabBoxConfig;
+    TabBox::TabBoxConfig m_tabBoxAlternativeConfig;
 
+    bool effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const;
 };
 
 } // namespace

@@ -340,7 +340,8 @@ void ApplicationX11::crashHandler(int signal)
 
 } // namespace
 
-int main(int argc, char * argv[])
+extern "C"
+KWIN_EXPORT int kdemain(int argc, char * argv[])
 {
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();

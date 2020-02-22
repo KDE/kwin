@@ -45,6 +45,7 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask |
 Unmanaged::Unmanaged()
     : Toplevel()
 {
+    connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
     QTimer::singleShot(50, this, SLOT(setReadyForPainting()));
 }
 

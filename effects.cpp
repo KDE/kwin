@@ -334,7 +334,6 @@ void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
     );
     connect(c, &AbstractClient::modalChanged,         this, &EffectsHandlerImpl::slotClientModalityChanged);
     connect(c, &AbstractClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
-    connect(c, &AbstractClient::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
     connect(c, &AbstractClient::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(c, &AbstractClient::unresponsiveChanged, this,
         [this, c](bool unresponsive) {
@@ -381,7 +380,6 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, &Unmanaged::windowClosed,         this, &EffectsHandlerImpl::slotWindowClosed);
     connect(u, &Unmanaged::opacityChanged,       this, &EffectsHandlerImpl::slotOpacityChanged);
     connect(u, &Unmanaged::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
-    connect(u, &Unmanaged::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
     connect(u, &Unmanaged::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
     connect(u, &Unmanaged::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
 }
@@ -637,14 +635,6 @@ void EffectsHandlerImpl::slotGeometryShapeChanged(Toplevel* t, const QRect& old)
     if (t == nullptr || t->effectWindow() == nullptr)
         return;
     emit windowGeometryShapeChanged(t->effectWindow(), old);
-}
-
-void EffectsHandlerImpl::slotFrameGeometryChanged(Toplevel *toplevel, const QRect &oldGeometry)
-{
-    // effectWindow() might be nullptr during tear down of the client.
-    if (toplevel->effectWindow()) {
-        emit windowFrameGeometryChanged(toplevel->effectWindow(), oldGeometry);
-    }
 }
 
 void EffectsHandlerImpl::slotPaddingChanged(Toplevel* t, const QRect& old)

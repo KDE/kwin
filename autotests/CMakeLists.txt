@@ -164,7 +164,7 @@ ecm_mark_as_test(testBuiltInEffectLoader)
 ########################################################
 # Test ScriptedEffectLoader
 ########################################################
-include_directories(${KWin_SOURCE_DIR})
+include_directories(${KWIN_SOURCE_DIR})
 set(testScriptedEffectLoader_SRCS
     ../effectloader.cpp
     ../orientation_sensor.cpp

@@ -3,7 +3,6 @@
  This file is part of the KDE project.
 
 Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -169,12 +168,10 @@ private:
     static Shadow *createShadowFromX11(Toplevel *toplevel);
     static Shadow *createShadowFromDecoration(Toplevel *toplevel);
     static Shadow *createShadowFromWayland(Toplevel *toplevel);
-    static Shadow *createShadowFromInternalWindow(Toplevel *toplevel);
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
     bool init(KDecoration2::Decoration *decoration);
     bool init(const QPointer<KWayland::Server::ShadowInterface> &shadow);
-    bool init(const QWindow *window);
     Toplevel *m_topLevel;
     // shadow pixmaps
     QPixmap m_shadowElements[ShadowElementsCount];

@@ -53,6 +53,10 @@ public:
     QByteArray windowRole() const override;
     void closeWindow() override;
     bool isCloseable() const override;
+    bool isFullScreenable() const override;
+    bool isFullScreen() const override;
+    bool isMaximizable() const override;
+    bool isMinimizable() const override;
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
@@ -64,6 +68,8 @@ public:
     bool isInputMethod() const override;
     bool isOutline() const override;
     quint32 windowId() const override;
+    MaximizeMode maximizeMode() const override;
+    QRect geometryRestore() const override;
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
@@ -71,10 +77,13 @@ public:
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::setFrameGeometry;
     void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void setGeometryRestore(const QRect &rect) override;
     bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
     void takeFocus() override;
+    bool userCanSetFullScreen() const override;
+    void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
@@ -88,6 +97,7 @@ public:
 protected:
     bool acceptsFocus() const override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
+    void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
     void destroyDecoration() override;
     void doMove(int x, int y) override;
     void doResizeSync() override;
@@ -103,6 +113,7 @@ private:
     void updateInternalWindowGeometry();
 
     QWindow *m_internalWindow = nullptr;
+    QRect m_maximizeRestoreGeometry;
     QSize m_clientSize = QSize(0, 0);
     QString m_captionNormal;
     QString m_captionSuffix;

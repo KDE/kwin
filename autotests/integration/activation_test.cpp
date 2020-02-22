@@ -381,11 +381,11 @@ void ActivationTest::testSwitchToWindowMaximized()
     QVERIFY(configureRequestedSpy1.wait());
     workspace()->slotWindowMaximize();
     QVERIFY(configureRequestedSpy1.wait());
-    QSignalSpy frameGeometryChangedSpy1(client1, &XdgShellClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy1.isValid());
+    QSignalSpy geometryChangedSpy1(client1, &XdgShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy1.isValid());
     shellSurface1->ackConfigure(configureRequestedSpy1.last().at(2).value<quint32>());
     Test::render(surface1.data(), configureRequestedSpy1.last().at(0).toSize(), Qt::red);
-    QVERIFY(frameGeometryChangedSpy1.wait());
+    QVERIFY(geometryChangedSpy1.wait());
 
     QScopedPointer<Surface> surface2(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
@@ -396,11 +396,11 @@ void ActivationTest::testSwitchToWindowMaximized()
     QVERIFY(configureRequestedSpy2.wait());
     workspace()->slotWindowMaximize();
     QVERIFY(configureRequestedSpy2.wait());
-    QSignalSpy frameGeometryChangedSpy2(client2, &XdgShellClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy2.isValid());
+    QSignalSpy geometryChangedSpy2(client2, &XdgShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy2.isValid());
     shellSurface2->ackConfigure(configureRequestedSpy2.last().at(2).value<quint32>());
     Test::render(surface2.data(), configureRequestedSpy2.last().at(0).toSize(), Qt::red);
-    QVERIFY(frameGeometryChangedSpy2.wait());
+    QVERIFY(geometryChangedSpy2.wait());
 
     const QList<Toplevel *> stackingOrder = workspace()->stackingOrder();
     QVERIFY(stackingOrder.indexOf(client1) < stackingOrder.indexOf(client2));
@@ -466,11 +466,11 @@ void ActivationTest::testSwitchToWindowFullScreen()
     QVERIFY(configureRequestedSpy1.wait());
     workspace()->slotWindowFullScreen();
     QVERIFY(configureRequestedSpy1.wait());
-    QSignalSpy frameGeometryChangedSpy1(client1, &XdgShellClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy1.isValid());
+    QSignalSpy geometryChangedSpy1(client1, &XdgShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy1.isValid());
     shellSurface1->ackConfigure(configureRequestedSpy1.last().at(2).value<quint32>());
     Test::render(surface1.data(), configureRequestedSpy1.last().at(0).toSize(), Qt::red);
-    QVERIFY(frameGeometryChangedSpy1.wait());
+    QVERIFY(geometryChangedSpy1.wait());
 
     QScopedPointer<Surface> surface2(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
@@ -481,11 +481,11 @@ void ActivationTest::testSwitchToWindowFullScreen()
     QVERIFY(configureRequestedSpy2.wait());
     workspace()->slotWindowFullScreen();
     QVERIFY(configureRequestedSpy2.wait());
-    QSignalSpy frameGeometryChangedSpy2(client2, &XdgShellClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy2.isValid());
+    QSignalSpy geometryChangedSpy2(client2, &XdgShellClient::geometryChanged);
+    QVERIFY(geometryChangedSpy2.isValid());
     shellSurface2->ackConfigure(configureRequestedSpy2.last().at(2).value<quint32>());
     Test::render(surface2.data(), configureRequestedSpy2.last().at(0).toSize(), Qt::red);
-    QVERIFY(frameGeometryChangedSpy2.wait());
+    QVERIFY(geometryChangedSpy2.wait());
 
     const QList<Toplevel *> stackingOrder = workspace()->stackingOrder();
     QVERIFY(stackingOrder.indexOf(client1) < stackingOrder.indexOf(client2));

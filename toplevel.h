@@ -78,20 +78,20 @@ class KWIN_EXPORT Toplevel : public QObject
      *
      * @deprecated Use frameGeometry property instead.
      */
-    Q_PROPERTY(QRect geometry READ frameGeometry NOTIFY frameGeometryChanged)
+    Q_PROPERTY(QRect geometry READ frameGeometry NOTIFY geometryChanged)
 
     /**
      * This property holds rectangle that the pixmap or buffer of this Toplevel
      * occupies on the screen. This rectangle includes invisible portions of the
      * client, e.g. client-side drop shadows, etc.
      */
-    Q_PROPERTY(QRect bufferGeometry READ bufferGeometry)
+    Q_PROPERTY(QRect bufferGeometry READ bufferGeometry NOTIFY geometryChanged)
 
     /**
      * This property holds the geometry of the Toplevel, excluding invisible
      * portions, e.g. server-side and client-side drop-shadows, etc.
      */
-    Q_PROPERTY(QRect frameGeometry READ frameGeometry NOTIFY frameGeometryChanged)
+    Q_PROPERTY(QRect frameGeometry READ frameGeometry NOTIFY geometryChanged)
 
     /**
      * This property holds the position of the Toplevel's frame geometry.
@@ -589,10 +589,6 @@ public:
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
-    /**
-     * This signal is emitted when the Toplevel's frame geometry changes.
-     * @deprecated since 5.19, use frameGeometryChanged instead
-     */
     void geometryChanged();
     void geometryShapeChanged(KWin::Toplevel* toplevel, const QRect& old);
     void paddingChanged(KWin::Toplevel* toplevel, const QRect& old);
@@ -655,11 +651,6 @@ Q_SIGNALS:
      * @since 5.15
      */
     void shadowChanged();
-
-    /**
-     * This signal is emitted when the Toplevel's frame geometry changes.
-     */
-    void frameGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
 
 protected Q_SLOTS:
     /**

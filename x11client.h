@@ -147,6 +147,7 @@ public:
     bool isShadeable() const override;
 
     bool isMaximizable() const override;
+    QRect geometryRestore() const override;
     MaximizeMode maximizeMode() const override;
 
     bool isMinimizable() const override;
@@ -197,7 +198,7 @@ public:
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
-    QSize sizeForClientSize(const QSize&, SizeMode mode = SizeModeAny, bool noframe = false) const override;
+    QSize sizeForClientSize(const QSize&, Sizemode mode = SizemodeAny, bool noframe = false) const override;
 
     bool providesContextHelp() const override;
 
@@ -362,13 +363,13 @@ protected:
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
-    void doSetDesktop() override;
+    void doSetDesktop(int desktop, int was_desk) override;
     void doMinimize() override;
     void doSetSkipPager() override;
     void doSetSkipTaskbar() override;
     void doSetSkipSwitcher() override;
-    void doSetDemandsAttention() override;
     bool belongsToDesktop() const override;
+    void setGeometryRestore(const QRect &geo) override;
     bool doStartMoveResize() override;
     void doPerformMoveResize() override;
     bool isWaitingForMoveResizeSync() const override;
@@ -524,6 +525,7 @@ private:
     MaximizeMode max_mode;
     QRect m_bufferGeometry = QRect(0, 0, 100, 100);
     QRect m_clientGeometry = QRect(0, 0, 100, 100);
+    QRect geom_restore;
     QRect geom_fs_restore;
     QTimer* shadeHoverTimer;
     xcb_colormap_t m_colormap;
@@ -613,6 +615,16 @@ inline bool X11Client::isHiddenInternal() const
 inline ShadeMode X11Client::shadeMode() const
 {
     return shade_mode;
+}
+
+inline QRect X11Client::geometryRestore() const
+{
+    return geom_restore;
+}
+
+inline void X11Client::setGeometryRestore(const QRect &geo)
+{
+    geom_restore = geo;
 }
 
 inline MaximizeMode X11Client::maximizeMode() const

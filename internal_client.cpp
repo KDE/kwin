@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Q_DECLARE_METATYPE(NET::WindowType)
 
 static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
-static const QByteArray s_shadowEnabledPropertyName = QByteArrayLiteral("kwin_shadow_enabled");
 
 namespace KWin
 {
@@ -63,7 +62,6 @@ InternalClient::InternalClient(QWindow *window)
     setOpacity(m_internalWindow->opacity());
     setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
 
-    // Create scene window, effect window, and update server-side shadow.
     setupCompositing();
     updateColorScheme();
 
@@ -87,9 +85,6 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent*>(event);
         if (pe->propertyName() == s_skipClosePropertyName) {
             setSkipCloseAnimation(m_internalWindow->property(s_skipClosePropertyName).toBool());
-        }
-        if (pe->propertyName() == s_shadowEnabledPropertyName) {
-            updateShadow();
         }
         if (pe->propertyName() == "kwin_windowType") {
             m_windowType = m_internalWindow->property("kwin_windowType").value<NET::WindowType>();
@@ -208,6 +203,26 @@ bool InternalClient::isCloseable() const
     return true;
 }
 
+bool InternalClient::isFullScreenable() const
+{
+    return false;
+}
+
+bool InternalClient::isFullScreen() const
+{
+    return false;
+}
+
+bool InternalClient::isMaximizable() const
+{
+    return false;
+}
+
+bool InternalClient::isMinimizable() const
+{
+    return false;
+}
+
 bool InternalClient::isMovable() const
 {
     return true;
@@ -270,6 +285,16 @@ bool InternalClient::isOutline() const
 quint32 InternalClient::windowId() const
 {
     return m_windowId;
+}
+
+MaximizeMode InternalClient::maximizeMode() const
+{
+    return MaximizeRestore;
+}
+
+QRect InternalClient::geometryRestore() const
+{
+    return m_maximizeRestoreGeometry;
 }
 
 bool InternalClient::isShown(bool shaded_is_shown) const
@@ -340,6 +365,11 @@ void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_
     }
 }
 
+void InternalClient::setGeometryRestore(const QRect &rect)
+{
+    m_maximizeRestoreGeometry = rect;
+}
+
 bool InternalClient::supportsWindowRules() const
 {
     return false;
@@ -360,6 +390,17 @@ void InternalClient::setOnAllActivities(bool set)
 
 void InternalClient::takeFocus()
 {
+}
+
+bool InternalClient::userCanSetFullScreen() const
+{
+    return false;
+}
+
+void InternalClient::setFullScreen(bool set, bool user)
+{
+    Q_UNUSED(set)
+    Q_UNUSED(user)
 }
 
 void InternalClient::setNoBorder(bool set)
@@ -486,6 +527,15 @@ bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameA
     return qobject_cast<const InternalClient *>(other) != nullptr;
 }
 
+void InternalClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
+{
+    Q_UNUSED(horizontal)
+    Q_UNUSED(vertical)
+    Q_UNUSED(adjust)
+
+    // Internal clients are not maximizable.
+}
+
 void InternalClient::destroyDecoration()
 {
     if (!isDecorated()) {
@@ -573,11 +623,9 @@ void InternalClient::commitGeometry(const QRect &rect)
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
 
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
-    }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    const QRect oldGeometry = frameGeometryBeforeUpdateBlocking();
     updateGeometryBeforeUpdateBlocking();
+    emit geometryShapeChanged(this, oldGeometry);
 
     if (isResize()) {
         performMoveResize();

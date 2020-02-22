@@ -57,7 +57,7 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList
     m_ui->shortcutsEditor->addCollection(actionCollection);
 
     connect(m_ui->shortcutsEditor, &KShortcutsEditor::keyChange,
-            this, &ShowPaintEffectConfig::markAsChanged);
+            this, qOverload<>(&ShowPaintEffectConfig::changed));
 
     load();
 }
