@@ -1,6 +1,7 @@
 set(kwindowsystem_plugin_SRCS
     plugin.cpp
     windoweffects.cpp
+    windowshadow.cpp
     windowsystem.cpp
 )
 

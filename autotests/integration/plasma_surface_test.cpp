@@ -241,10 +241,10 @@ void PlasmaSurfaceTest::testOSDPlacement()
     QCOMPARE(c->frameGeometry(), QRect(590, 649, 100, 50));
 
     // change size of window
-    QSignalSpy geometryChangedSpy(c, &AbstractClient::geometryShapeChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(c, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(surface.data(), QSize(200, 100), Qt::red);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(c->frameGeometry(), QRect(540, 616, 200, 100));
 }
 

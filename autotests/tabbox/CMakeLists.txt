@@ -1,4 +1,4 @@
-include_directories(${KWIN_SOURCE_DIR})
+include_directories(${KWin_SOURCE_DIR})
 add_definitions(-DKWIN_UNIT_TEST)
 ########################################################
 # Test TabBox::ClientModel

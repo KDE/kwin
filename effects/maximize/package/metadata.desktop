@@ -47,6 +47,7 @@ Comment[zh_CN]=窗口最大化/从最大化恢复时显示动画
 Comment[zh_TW]=視窗最大化/回復時的動畫
 Icon=preferences-system-windows-effect-maximize
 Name=Maximize
+Name[ast]=Maximización
 Name[bs]=Maksimiziraj
 Name[ca]=Maximitza
 Name[ca@valencia]=Maximitza

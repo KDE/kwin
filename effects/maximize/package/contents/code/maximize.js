@@ -93,7 +93,7 @@ var maximizeEffect = {
     },
     init: function () {
         effect.configChanged.connect(maximizeEffect.loadConfig);
-        effects.windowGeometryShapeChanged.connect(maximizeEffect.geometryChange);
+        effects.windowFrameGeometryChanged.connect(maximizeEffect.geometryChange);
         effects.windowMaximizedStateChanged.connect(maximizeEffect.maximizeChanged);
         effect.animationEnded.connect(maximizeEffect.restoreForceBlurState);
     }

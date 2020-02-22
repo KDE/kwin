@@ -222,8 +222,10 @@ void Workspace::propagateClients(bool propagate_new_clients)
     cl = new xcb_window_t[ manual_overlays.count() + stacking_order.count()];
     pos = 0;
     for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        if ((*it)->isClient())
-            cl[pos++] = (*it)->window();
+        X11Client *client = qobject_cast<X11Client *>(*it);
+        if (client) {
+            cl[pos++] = client->window();
+        }
     }
     for (const auto win : manual_overlays) {
         cl[pos++] = win;
@@ -849,14 +851,6 @@ void X11Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource
 
     if (send_event)
         sendSyntheticConfigureNotify();
-}
-
-void X11Client::doSetKeepAbove()
-{
-}
-
-void X11Client::doSetKeepBelow()
-{
 }
 
 bool X11Client::belongsToDesktop() const

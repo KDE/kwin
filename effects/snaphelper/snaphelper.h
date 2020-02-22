@@ -47,7 +47,7 @@ private Q_SLOTS:
     void slotWindowClosed(EffectWindow *w);
     void slotWindowStartUserMovedResized(EffectWindow *w);
     void slotWindowFinishUserMovedResized(EffectWindow *w);
-    void slotWindowGeometryShapeChanged(EffectWindow *w, const QRect &old);
+    void slotWindowFrameGeometryChanged(EffectWindow *w, const QRect &old);
 
 private:
     QRect m_geometry;

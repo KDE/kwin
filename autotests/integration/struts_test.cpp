@@ -246,10 +246,10 @@ void StrutsTest::testMoveWaylandPanel()
     QCOMPARE(workspace()->clientArea(MaximizeArea, 1, 1), QRect(1280, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(WorkArea, 0, 1), QRect(0, 0, 2560, 1000));
 
-    QSignalSpy geometryChangedSpy(c, &XdgShellClient::geometryShapeChanged);
-    QVERIFY(geometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(c, &XdgShellClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
     plasmaSurface->setPosition(QPoint(1280, 1000));
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(c->frameGeometry(), QRect(1280, 1000, 1280, 24));
     QCOMPARE(workspace()->clientArea(PlacementArea, 0, 1), QRect(0, 0, 1280, 1024));
     QCOMPARE(workspace()->clientArea(MaximizeArea, 0, 1), QRect(0, 0, 1280, 1024));
