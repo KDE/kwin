@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=eye On Screen
+Name=Eye on Screen
 Name[ca]=Ull a la pantalla
 Name[ca@valencia]=Ull en la pantalla
 Name[cs]=oko na obrazovce
@@ -42,7 +42,7 @@ Name[x-test]=xxeye On Screenxx
 Name[zh_CN]=注视屏幕
 Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
-Comment=Suck windows into desktop to show the latter. This might remind you of something.
+Comment=Suck windows into the desktop
 Comment[ca]=Enganxa les finestres a l'escriptori per a mostrar la darrera. Això podria recordar-vos quelcom.
 Comment[ca@valencia]=Apega les finestres a l'escriptori per a mostrar l'última. Això podria recordar-vos alguna cosa.
 Comment[da]=Sug vinduer ind i skrivebordet for at vise dette. Måske minder det dig om noget.
