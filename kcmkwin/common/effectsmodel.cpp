@@ -50,7 +50,6 @@ static QString translatedCategory(const QString &category)
     static const QVector<QString> knownCategories = {
         QStringLiteral("Accessibility"),
         QStringLiteral("Appearance"),
-        QStringLiteral("Candy"),
         QStringLiteral("Focus"),
         QStringLiteral("Show Desktop Animation"),
         QStringLiteral("Tools"),
@@ -62,7 +61,6 @@ static QString translatedCategory(const QString &category)
     static const QVector<QString> translatedCategories = {
         i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
         i18nc("Category of Desktop Effects, used as section header", "Appearance"),
-        i18nc("Category of Desktop Effects, used as section header", "Candy"),
         i18nc("Category of Desktop Effects, used as section header", "Focus"),
         i18nc("Category of Desktop Effects, used as section header", "Show Desktop Animation"),
         i18nc("Category of Desktop Effects, used as section header", "Tools"),
