@@ -496,17 +496,6 @@ bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameA
     return qobject_cast<const InternalClient *>(other) != nullptr;
 }
 
-void InternalClient::destroyDecoration()
-{
-    if (!isDecorated()) {
-        return;
-    }
-
-    const QRect clientGeometry = frameRectToClientRect(frameGeometry());
-    AbstractClient::destroyDecoration();
-    setFrameGeometry(clientGeometry);
-}
-
 void InternalClient::doMove(int x, int y)
 {
     Q_UNUSED(x)
@@ -535,32 +524,6 @@ void InternalClient::updateCaption()
     if (m_captionSuffix != oldSuffix) {
         emit captionChanged();
     }
-}
-
-void InternalClient::createDecoration(const QRect &rect)
-{
-    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
-    if (decoration) {
-        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
-            [this]() {
-                GeometryUpdatesBlocker blocker(this);
-                const QRect oldGeometry = frameGeometry();
-                if (!isShade()) {
-                    checkWorkspacePosition(oldGeometry);
-                }
-                emit geometryShapeChanged(this, oldGeometry);
-            }
-        );
-    }
-
-    const QRect oldFrameGeometry = frameGeometry();
-
-    setDecoration(decoration);
-    setFrameGeometry(clientRectToFrameRect(rect));
-
-    emit geometryShapeChanged(this, oldFrameGeometry);
 }
 
 void InternalClient::requestGeometry(const QRect &rect)

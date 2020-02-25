@@ -170,7 +170,6 @@ private:
      * At this point all initial properties should have been set by the client.
      */
     void finishInit();
-    void createDecoration(const QRect &oldgeom);
     void createWindowId();
     void updateIcon();
     bool shouldExposeToWindowManagement();

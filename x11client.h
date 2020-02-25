@@ -433,7 +433,7 @@ private:
     void grabButton(int mod);
     void ungrabButton(int mod);
     void resizeDecoration();
-    void createDecoration(const QRect &oldgeom);
+    void createDecoration(const QRect &oldgeom) override;
 
     void pingWindow();
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);

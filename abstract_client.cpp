@@ -2137,6 +2137,27 @@ void AbstractClient::endMoveResize()
     updateCursor();
 }
 
+void AbstractClient::createDecoration(const QRect &oldGeometry)
+{
+    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
+    if (decoration) {
+        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            GeometryUpdatesBlocker blocker(this);
+            const QRect oldGeometry = frameGeometry();
+            if (!isShade()) {
+                checkWorkspacePosition(oldGeometry);
+            }
+            emit geometryShapeChanged(this, oldGeometry);
+        });
+    }
+    setDecoration(decoration);
+    setFrameGeometry(QRect(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
+
+    emit geometryShapeChanged(this, oldGeometry);
+}
+
 void AbstractClient::destroyDecoration()
 {
     delete m_decoration.decoration;

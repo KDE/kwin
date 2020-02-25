@@ -460,31 +460,6 @@ void XdgShellClient::markAsMapped()
     updateShowOnScreenEdge();
 }
 
-void XdgShellClient::createDecoration(const QRect &oldGeom)
-{
-    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
-    if (decoration) {
-        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
-            [this]() {
-                GeometryUpdatesBlocker blocker(this);
-                RequestGeometryBlocker requestBlocker(this);
-                const QRect oldGeometry = frameGeometry();
-                if (!isShade()) {
-                    checkWorkspacePosition(oldGeometry);
-                }
-                emit geometryShapeChanged(this, oldGeometry);
-            }
-        );
-    }
-    setDecoration(decoration);
-    // TODO: ensure the new geometry still fits into the client area (e.g. maximized windows)
-    doSetGeometry(QRect(oldGeom.topLeft(), m_windowGeometry.size() + QSize(borderLeft() + borderRight(), borderBottom() + borderTop())));
-
-    emit geometryShapeChanged(this, oldGeom);
-}
-
 void XdgShellClient::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force &&

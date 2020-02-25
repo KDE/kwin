@@ -1176,6 +1176,7 @@ protected:
     void setDecoration(KDecoration2::Decoration *decoration) {
         m_decoration.decoration = decoration;
     }
+    virtual void createDecoration(const QRect &oldGeometry);
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
