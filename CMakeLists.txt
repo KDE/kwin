@@ -287,6 +287,14 @@ set_package_properties(Libcap PROPERTIES
 )
 set(HAVE_LIBCAP ${Libcap_FOUND})
 
+find_package(hwdata)
+set_package_properties(hwdata PROPERTIES
+    TYPE RUNTIME
+    PURPOSE "Runtime-only dependency needed for mapping monitor hardware vendor IDs to full names"
+    URL "https://github.com/vcrhonek/hwdata"
+)
+set(HAVE_HWDATA ${hwdata_FOUND})
+
 include(ECMQMLModules)
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 1.2)

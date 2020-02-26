@@ -301,7 +301,9 @@ void DrmOutput::initUuid()
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
 {
     QString manufacturer;
-    if (!m_edid.eisaId().isEmpty()) {
+    if (!m_edid.vendor().isEmpty()) {
+        manufacturer = QString::fromLatin1(m_edid.vendor());
+    } else if (!m_edid.eisaId().isEmpty()) {
         manufacturer = QString::fromLatin1(m_edid.eisaId());
     }
 
@@ -379,7 +381,6 @@ bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
         && mode->type        == m_mode.type
         && qstrcmp(mode->name, m_mode.name) == 0;
 }
-
 void DrmOutput::initEdid(drmModeConnector *connector)
 {
     DrmScopedPointer<drmModePropertyBlobRes> edid;
