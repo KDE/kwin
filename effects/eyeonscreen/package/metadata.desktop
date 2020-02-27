@@ -1,7 +1,21 @@
 [Desktop Entry]
 Name=Eye on Screen
+Name[ca]=Ull a la pantalla
+Name[et]=Eye on Screen
+Name[nl]=Oog op scherm
+Name[pt]=Olho no Ecrã
+Name[sv]=Ögat på skärmen
+Name[uk]=Око на екрані
+Name[x-test]=xxEye on Screenxx
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
+Comment[ca]=Enganxa les finestres a l'escriptori
+Comment[et]=Akende imemine töölauale
+Comment[nl]=Zuig vensters in het bureaublad
+Comment[pt]=Aspira as janelas para o ecrã
+Comment[sv]=Sug in fönster i skrivbordet
+Comment[uk]=Засмоктування вікон до стільниці
+Comment[x-test]=xxSuck windows into the desktopxx
 
 Type=Service
 X-Plasma-API=javascript

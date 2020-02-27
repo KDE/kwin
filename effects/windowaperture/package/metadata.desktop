@@ -42,6 +42,13 @@ Name[zh_CN]=窗口光圈
 Name[zh_TW]=視窗光圈
 Icon=preferences-system-windows-effect-windowaperture
 Comment=Move windows into screen corners
+Comment[ca]=Mou les finestres cap a les cantonades de la pantalla
+Comment[et]=Akende liigutamine ekraani nurkadesse
+Comment[nl]=Verplaats vensters in de hoeken van het scherm
+Comment[pt]=Mover as janelas para os cantos do ecrã
+Comment[sv]=Flytta fönster till skärmhörn
+Comment[uk]=Пересування вікон до кутів екрана
+Comment[x-test]=xxMove windows into screen cornersxx
 
 Type=Service
 X-Plasma-API=javascript
