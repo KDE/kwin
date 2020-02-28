@@ -7,6 +7,7 @@ Name[pt]=Olho no Ecrã
 Name[sv]=Ögat på skärmen
 Name[uk]=Око на екрані
 Name[x-test]=xxEye on Screenxx
+Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
 Comment[ca]=Enganxa les finestres a l'escriptori
@@ -16,6 +17,7 @@ Comment[pt]=Aspira as janelas para o ecrã
 Comment[sv]=Sug in fönster i skrivbordet
 Comment[uk]=Засмоктування вікон до стільниці
 Comment[x-test]=xxSuck windows into the desktopxx
+Comment[zh_TW]=將視窗吸進桌面
 
 Type=Service
 X-Plasma-API=javascript

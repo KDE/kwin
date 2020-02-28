@@ -49,6 +49,7 @@ Comment[pt]=Mover as janelas para os cantos do ecrã
 Comment[sv]=Flytta fönster till skärmhörn
 Comment[uk]=Пересування вікон до кутів екрана
 Comment[x-test]=xxMove windows into screen cornersxx
+Comment[zh_TW]=將視窗移至螢幕角落
 
 Type=Service
 X-Plasma-API=javascript
