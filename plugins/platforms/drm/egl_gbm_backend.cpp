@@ -255,34 +255,6 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
     m_outputs.erase(it);
 }
 
-const char *vertexShader = R"SHADER(
-    #version 130
-    uniform mat4 modelViewProjectionMatrix;
-    uniform mat4 rotationMatrix;
-
-    in vec2 vertex;
-    in vec2 texCoord;
-
-    out vec2 TexCoord;
-
-    void main() {
-        gl_Position = rotationMatrix * vec4(vertex.x, vertex.y, 0.0, 1.0);
-        TexCoord = texCoord;
-    }
-)SHADER";
-
-const char *fragmentShader = R"SHADER(
-    #version 130
-    uniform sampler2D sampler;
-
-    in vec2 TexCoord;
-    out vec4 fragColor;
-
-    void main() {
-        fragColor = texture(sampler, TexCoord);
-    }
-)SHADER";
-
 const float vertices[] = {
    -1.0f,  1.0f,
    -1.0f, -1.0f,
@@ -342,25 +314,15 @@ bool EglGbmBackend::resetFramebuffer(Output &output)
     return true;
 }
 
-bool EglGbmBackend::initRenderTarget(Output &output)
+void EglGbmBackend::initRenderTarget(Output &output)
 {
-    if (output.render.shader) {
+    if (output.render.vbo) {
         // Already initialized.
-        return true;
+        return;
     }
-    std::shared_ptr<GLShader> shader(ShaderManager::instance()->loadShaderFromCode(vertexShader,
-                                                                                   fragmentShader));
-    if (!shader) {
-        qCWarning(KWIN_DRM) << "Error creating render shader.";
-        return false;
-    }
-
-    output.render.shader = shader;
-
     std::shared_ptr<GLVertexBuffer> vbo(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
     vbo->setData(6, 2, vertices, texCoords);
     output.render.vbo = vbo;
-    return true;
 }
 
 void EglGbmBackend::renderFramebufferToSurface(Output &output)
@@ -369,9 +331,7 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
         // No additional render target.
         return;
     }
-    if (!initRenderTarget(output)) {
-        return;
-    }
+    initRenderTarget(output);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     GLRenderTarget::setKWinFramebuffer(0);
@@ -379,13 +339,15 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
     const auto size = output.output->modeSize();
     glViewport(0, 0, size.width(), size.height());
 
-    ShaderBinder binder(output.render.shader.get());
+    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+
     QMatrix4x4 rotationMatrix;
     rotationMatrix.rotate(output.output->rotation(), 0, 0, 1);
-    output.render.shader->setUniform("rotationMatrix", rotationMatrix);
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, rotationMatrix);
 
     glBindTexture(GL_TEXTURE_2D, output.render.texture);
     output.render.vbo->render(GL_TRIANGLES);
+    ShaderManager::instance()->popShader();
 }
 
 void EglGbmBackend::prepareRenderFramebuffer(const Output &output) const

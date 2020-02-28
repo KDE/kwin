@@ -76,7 +76,6 @@ private:
             GLuint framebuffer = 0;
             GLuint texture = 0;
             std::shared_ptr<GLVertexBuffer> vbo;
-            std::shared_ptr<GLShader> shader;
         } render;
     };
 
@@ -89,7 +88,7 @@ private:
     void setViewport(const Output &output) const;
 
     bool resetFramebuffer(Output &output);
-    bool initRenderTarget(Output &output);
+    void initRenderTarget(Output &output);
 
     void prepareRenderFramebuffer(const Output &output) const;
     void renderFramebufferToSurface(Output &output);
