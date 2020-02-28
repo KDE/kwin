@@ -518,7 +518,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
                 desk = asn_data.desktop();
         }
 #ifdef KWIN_BUILD_ACTIVITIES
-        if (Activities::self() && !isMapped && !noborder && isNormalWindow() && !activitiesDefined) {
+        if (Activities::self() && !isMapped && !skipTaskbar() && isNormalWindow() && !activitiesDefined) {
             //a new, regular window, when we're not recovering from a crash,
             //and it hasn't got an activity. let's try giving it the current one.
             //TODO: decide whether to keep this before the 4.6 release
