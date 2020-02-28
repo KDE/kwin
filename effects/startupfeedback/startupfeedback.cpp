@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 // KDE
 #include <KConfigGroup>
-#include <KIconLoader>
 #include <KSharedConfig>
 #include <KStartupInfo>
 #include <KSelectionOwner>
@@ -291,7 +290,7 @@ void StartupFeedbackEffect::start(const QString& icon)
     m_cursorSize = readCursorSize();
     int iconSize = m_cursorSize / 1.5;
     if (!iconSize) {
-        iconSize = IconSize(KIconLoader::Small);
+        iconSize = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
     }
     // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
     if (m_type == BouncingFeedback)
