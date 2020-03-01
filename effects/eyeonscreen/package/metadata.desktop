@@ -2,6 +2,7 @@
 Name=Eye on Screen
 Name[ca]=Ull a la pantalla
 Name[et]=Eye on Screen
+Name[eu]=Begirada pantailan
 Name[nl]=Oog op scherm
 Name[pt]=Olho no Ecrã
 Name[pt_BR]=Olho na tela
@@ -13,6 +14,7 @@ Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
 Comment[ca]=Enganxa les finestres a l'escriptori
 Comment[et]=Akende imemine töölauale
+Comment[eu]=Mahaigainak leihoak xurgatu
 Comment[nl]=Zuig vensters in het bureaublad
 Comment[pt]=Aspira as janelas para o ecrã
 Comment[pt_BR]=Suga as janelas para a área de trabalho
