@@ -471,16 +471,16 @@ void KeyboardLayoutTest::testNumLock()
     QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // by default not set
-    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
     quint32 timestamp = 0;
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
     // now it should be on
-    QVERIFY(xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(xkb->leds().testFlag(Xkb::LED::NumLock));
     // and back to off
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
-    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
 
     // let's reconfigure to enable through config
     auto group = kwinApp()->inputConfig()->group("Keyboard");
@@ -488,22 +488,22 @@ void KeyboardLayoutTest::testNumLock()
     group.sync();
     xkb->reconfigure();
     // now it should be on
-    QVERIFY(xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(xkb->leds().testFlag(Xkb::LED::NumLock));
     // pressing should result in it being off
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
-    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
 
     // pressing again should enable it
     kwinApp()->platform()->keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
     kwinApp()->platform()->keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
-    QVERIFY(xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(xkb->leds().testFlag(Xkb::LED::NumLock));
 
     // now reconfigure to disable on load
     group.writeEntry("NumLock", 1);
     group.sync();
     xkb->reconfigure();
-    QVERIFY(!xkb->modifiers().testFlag(Qt::KeypadModifier));
+    QVERIFY(!xkb->leds().testFlag(Xkb::LED::NumLock));
 }
 
 
