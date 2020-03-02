@@ -117,14 +117,6 @@ protected:
                         const QByteArray &uuid, const QSize &physicalSize,
                         const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
 
-    QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
-        return m_xdgOutput;
-    }
-
-    QPointer<KWayland::Server::OutputDeviceInterface> waylandOutputDevice() const {
-        return m_waylandOutputDevice;
-    }
-
     QPoint globalPos() const;
 
     bool internal() const {
@@ -134,7 +126,7 @@ protected:
         m_internal = set;
     }
     void setDpmsSupported(bool set) {
-        m_supportsDpms = set;
+        m_waylandOutput->setDpmsSupported(set);
     }
 
     virtual void updateEnablement(bool enable) {
@@ -167,19 +159,14 @@ protected:
     Transform transform() const;
 
 private:
-    void createWaylandOutput();
-    void createXdgOutput();
-
     void setTransform(KWayland::Server::OutputDeviceInterface::Transform transform);
 
-    QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
-    QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
-    QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
-
+    KWayland::Server::OutputInterface *m_waylandOutput;
+    KWayland::Server::XdgOutputInterface *m_xdgOutput;
+    KWayland::Server::OutputDeviceInterface *m_waylandOutputDevice;
     KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
 
     bool m_internal = false;
-    bool m_supportsDpms = false;
 };
 
 }
