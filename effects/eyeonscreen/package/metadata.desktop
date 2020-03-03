@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Eye on Screen
 Name[ca]=Ull a la pantalla
+Name[es]=Ojo a la pantalla
 Name[et]=Eye on Screen
 Name[eu]=Begirada pantailan
 Name[id]=Mata di Layar
@@ -16,6 +17,7 @@ Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
 Comment[ca]=Enganxa les finestres a l'escriptori
+Comment[es]=Aspirar las ventanas en el escritorio
 Comment[et]=Akende imemine töölauale
 Comment[eu]=Mahaigainak leihoak xurgatu
 Comment[id]=Sedot window ke desktop
