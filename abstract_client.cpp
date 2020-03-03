@@ -1421,6 +1421,11 @@ void AbstractClient::setupWindowManagementInterface()
             w->setGeometry(frameGeometry());
         }
     );
+    connect(this, &AbstractClient::applicationMenuChanged, w,
+        [w, this] {
+            w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
+        }
+    );
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
     connect(w, &PlasmaWindowInterface::moveRequested, this,
         [this] {
@@ -2465,6 +2470,7 @@ void AbstractClient::updateApplicationMenuServiceName(const QString &serviceName
 
     const bool new_hasApplicationMenu = hasApplicationMenu();
 
+    emit applicationMenuChanged();
     if (old_hasApplicationMenu != new_hasApplicationMenu) {
         emit hasApplicationMenuChanged(new_hasApplicationMenu);
     }
@@ -2478,6 +2484,7 @@ void AbstractClient::updateApplicationMenuObjectPath(const QString &objectPath)
 
     const bool new_hasApplicationMenu = hasApplicationMenu();
 
+    emit applicationMenuChanged();
     if (old_hasApplicationMenu != new_hasApplicationMenu) {
         emit hasApplicationMenuChanged(new_hasApplicationMenu);
     }
