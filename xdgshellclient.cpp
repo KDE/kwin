@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/server_decoration_palette_interface.h>
 #include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
 
@@ -320,28 +319,9 @@ QPoint XdgShellClient::clientContentPos() const
     return -1 * clientPos();
 }
 
-static QRect subSurfaceTreeRect(const SurfaceInterface *surface, const QPoint &position = QPoint())
-{
-    QRect rect(position, surface->size());
-
-    const QList<QPointer<SubSurfaceInterface>> subSurfaces = surface->childSubSurfaces();
-    for (const QPointer<SubSurfaceInterface> &subSurface : subSurfaces) {
-        if (Q_UNLIKELY(!subSurface)) {
-            continue;
-        }
-        const SurfaceInterface *child = subSurface->surface();
-        if (Q_UNLIKELY(!child)) {
-            continue;
-        }
-        rect |= subSurfaceTreeRect(child, position + subSurface->position());
-    }
-
-    return rect;
-}
-
 QSize XdgShellClient::clientSize() const
 {
-    const QRect boundingRect = subSurfaceTreeRect(surface());
+    const QRect boundingRect = surface()->boundingRect();
     return m_windowGeometry.size().boundedTo(boundingRect.size());
 }
 
@@ -1321,7 +1301,7 @@ void XdgShellClient::handleCommitted()
     }
 
     if (!m_hasWindowGeometry) {
-        m_windowGeometry = subSurfaceTreeRect(surface());
+        m_windowGeometry = surface()->boundingRect();
     }
 
     updatePendingGeometry();
