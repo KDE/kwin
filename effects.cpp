@@ -258,20 +258,18 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         setupAbstractClientConnections(client);
     }
     if (auto w = waylandServer()) {
-        connect(w, &WaylandServer::shellClientAdded, this,
-            [this](XdgShellClient *c) {
-                if (c->readyForPainting())
-                    slotXdgShellClientShown(c);
-                else
-                    connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotXdgShellClientShown);
-            }
-        );
+        connect(w, &WaylandServer::shellClientAdded, this, [this](AbstractClient *c) {
+            if (c->readyForPainting())
+                slotWaylandClientShown(c);
+            else
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotWaylandClientShown);
+        });
         const auto clients = waylandServer()->clients();
-        for (XdgShellClient *c : clients) {
+        for (AbstractClient *c : clients) {
             if (c->readyForPainting()) {
                 setupAbstractClientConnections(c);
             } else {
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotXdgShellClientShown);
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotWaylandClientShown);
             }
         }
     }
@@ -578,11 +576,11 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     emit windowAdded(c->effectWindow());
 }
 
-void EffectsHandlerImpl::slotXdgShellClientShown(Toplevel *t)
+void EffectsHandlerImpl::slotWaylandClientShown(Toplevel *toplevel)
 {
-    XdgShellClient *c = static_cast<XdgShellClient *>(t);
-    setupAbstractClientConnections(c);
-    emit windowAdded(t->effectWindow());
+    AbstractClient *client = static_cast<AbstractClient *>(toplevel);
+    setupAbstractClientConnections(client);
+    emit windowAdded(toplevel->effectWindow());
 }
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
@@ -1090,7 +1088,7 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
     if (waylandServer()) {
-        if (XdgShellClient *w = waylandServer()->findClient(id)) {
+        if (AbstractClient *w = waylandServer()->findClient(id)) {
             return w->effectWindow();
         }
     }
@@ -1100,7 +1098,7 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 EffectWindow* EffectsHandlerImpl::findWindow(KWayland::Server::SurfaceInterface *surf) const
 {
     if (waylandServer()) {
-        if (XdgShellClient *w = waylandServer()->findClient(surf)) {
+        if (AbstractClient *w = waylandServer()->findClient(surf)) {
             return w->effectWindow();
         }
     }

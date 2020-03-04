@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 #include "deleted.h"
 
 #include <KWayland/Client/connection_thread.h>
@@ -94,7 +93,6 @@ void MoveResizeWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::Deleted *>();
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -814,7 +812,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
     QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
 
     // and close
-    QSignalSpy windowClosedSpy(testWindow, &XdgShellClient::windowClosed);
+    QSignalSpy windowClosedSpy(testWindow, &AbstractClient::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();
@@ -880,7 +878,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
 
     // and destroy the panel again
-    QSignalSpy panelClosedSpy(panel, &XdgShellClient::windowClosed);
+    QSignalSpy panelClosedSpy(panel, &AbstractClient::windowClosed);
     QVERIFY(panelClosedSpy.isValid());
     plasmaSurface.reset();
     panelShellSurface.reset();
@@ -891,7 +889,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     QCOMPARE(Workspace::self()->adjustClientPosition(testWindow, targetPoint, false), targetPoint);
 
     // and close
-    QSignalSpy windowClosedSpy(testWindow, &XdgShellClient::windowClosed);
+    QSignalSpy windowClosedSpy(testWindow, &AbstractClient::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();
@@ -918,7 +916,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
     QVERIFY(configureRequestedSpy.wait());
 
     client->move(100, 300);
-    QSignalSpy frameGeometryChangedSpy(client, &XdgShellClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
 
     QCOMPARE(client->frameGeometry(), QRect(100, 300, 500, 800));
@@ -961,7 +959,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
     QVERIFY(configureRequestedSpy.wait());
 
     client->move(100, 300);
-    QSignalSpy frameGeometryChangedSpy(client, &XdgShellClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
 
     QCOMPARE(client->frameGeometry(), QRect(100, 300, 500, 800));
@@ -1012,7 +1010,7 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithFullScreen()
     QVERIFY(configureRequestedSpy.wait());
 
     client->move(100, 300);
-    QSignalSpy frameGeometryChangedSpy(client, &XdgShellClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
 
     QCOMPARE(client->frameGeometry(), QRect(100, 300, 500, 800));
@@ -1053,7 +1051,7 @@ void MoveResizeWindowTest::testDestroyMoveClient()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // Start moving the client.
@@ -1090,7 +1088,7 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // Start resizing the client.
@@ -1127,7 +1125,7 @@ void MoveResizeWindowTest::testUnmapMoveClient()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // Start resizing the client.
@@ -1146,7 +1144,7 @@ void MoveResizeWindowTest::testUnmapMoveClient()
     QCOMPARE(client->isResize(), false);
 
     // Unmap the client while we're moving it.
-    QSignalSpy hiddenSpy(client, &XdgShellClient::windowHidden);
+    QSignalSpy hiddenSpy(client, &AbstractClient::windowHidden);
     QVERIFY(hiddenSpy.isValid());
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
@@ -1173,7 +1171,7 @@ void MoveResizeWindowTest::testUnmapResizeClient()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
 
     // Start resizing the client.
@@ -1192,7 +1190,7 @@ void MoveResizeWindowTest::testUnmapResizeClient()
     QCOMPARE(client->isResize(), true);
 
     // Unmap the client while we're resizing it.
-    QSignalSpy hiddenSpy(client, &XdgShellClient::windowHidden);
+    QSignalSpy hiddenSpy(client, &AbstractClient::windowHidden);
     QVERIFY(hiddenSpy.isValid());
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);

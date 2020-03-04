@@ -288,95 +288,9 @@ void Workspace::init()
 
     Scripting::create(this);
 
-    if (auto w = waylandServer()) {
-        connect(w, &WaylandServer::shellClientAdded, this,
-            [this] (XdgShellClient *c) {
-                setupClientConnections(c);
-                c->updateDecoration(false);
-                updateClientLayer(c);
-                if (!c->isInternal()) {
-                    const QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
-                    bool placementDone = false;
-                    if (c->isInitialPositionSet()) {
-                        placementDone = true;
-                    }
-                    if (c->isFullScreen()) {
-                        placementDone = true;
-                    }
-                    if (c->maximizeMode() == MaximizeMode::MaximizeFull) {
-                        placementDone = true;
-                    }
-                    if (c->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
-                        placementDone = true;
-                    }
-                    if (!placementDone) {
-                        c->placeIn(area);
-                    }
-                    m_allClients.append(c);
-                    if (!unconstrained_stacking_order.contains(c))
-                        unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
-                    if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
-                        stacking_order.append(c);      // c to be in stacking_order
-                }
-                markXStackingOrderAsDirty();
-                updateStackingOrder(true);
-                updateClientArea();
-                if (c->wantsInput() && !c->isMinimized()) {
-                    activateClient(c);
-                }
-                updateTabbox();
-                connect(c, &XdgShellClient::windowShown, this,
-                    [this, c] {
-                        updateClientLayer(c);
-                        // TODO: when else should we send the client through placement?
-                        if (c->hasTransientPlacementHint()) {
-                            const QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
-                            c->placeIn(area);
-                        }
-                        markXStackingOrderAsDirty();
-                        updateStackingOrder(true);
-                        updateClientArea();
-                        if (c->wantsInput()) {
-                            activateClient(c);
-                        }
-                    }
-                );
-                connect(c, &XdgShellClient::windowHidden, this,
-                    [this] {
-                        // TODO: update tabbox if it's displayed
-                        markXStackingOrderAsDirty();
-                        updateStackingOrder(true);
-                        updateClientArea();
-                    }
-                );
-            }
-        );
-        connect(w, &WaylandServer::shellClientRemoved, this,
-            [this] (XdgShellClient *c) {
-                m_allClients.removeAll(c);
-                if (c == most_recently_raised) {
-                    most_recently_raised = nullptr;
-                }
-                if (c == delayfocus_client) {
-                    cancelDelayFocus();
-                }
-                if (c == last_active_client) {
-                    last_active_client = nullptr;
-                }
-                if (client_keys_client == c) {
-                    setupWindowShortcutDone(false);
-                }
-                if (!c->shortcut().isEmpty()) {
-                    c->setShortcut(QString());   // Remove from client_keys
-                }
-                clientHidden(c);
-                emit clientRemoved(c);
-                markXStackingOrderAsDirty();
-                updateStackingOrder(true);
-                updateClientArea();
-                updateTabbox();
-            }
-        );
+    if (auto server = waylandServer()) {
+        connect(server, &WaylandServer::shellClientAdded, this, &Workspace::addShellClient);
+        connect(server, &WaylandServer::shellClientRemoved, this, &Workspace::removeShellClient);
     }
 
     // SELI TODO: This won't work with unreasonable focus policies,
@@ -559,9 +473,12 @@ Workspace::~Workspace()
     X11Client::cleanupX11();
 
     if (waylandServer()) {
-        const QList<XdgShellClient *> shellClients = waylandServer()->clients();
-        for (XdgShellClient *shellClient : shellClients) {
-            shellClient->destroyClient();
+        // TODO: Introduce AbstractClient::destroy().
+        const QList<AbstractClient *> shellClients = waylandServer()->clients();
+        for (AbstractClient *client : shellClients) {
+            if (XdgShellClient *shellClient = qobject_cast<XdgShellClient *>(client)) {
+                shellClient->destroyClient();
+            }
         }
     }
 
@@ -771,6 +688,92 @@ void Workspace::removeDeleted(Deleted* c)
     if (X11Compositor *compositor = X11Compositor::self()) {
         compositor->updateClientCompositeBlocking();
     }
+}
+
+void Workspace::addShellClient(AbstractClient *client)
+{
+    setupClientConnections(client);
+    client->updateDecoration(false);
+    updateClientLayer(client);
+
+    const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
+    bool placementDone = false;
+    if (client->isInitialPositionSet()) {
+        placementDone = true;
+    }
+    if (client->isFullScreen()) {
+        placementDone = true;
+    }
+    if (client->maximizeMode() == MaximizeMode::MaximizeFull) {
+        placementDone = true;
+    }
+    if (client->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
+        placementDone = true;
+    }
+    if (!placementDone) {
+        client->placeIn(area);
+    }
+    m_allClients.append(client);
+    if (!unconstrained_stacking_order.contains(client)) {
+        unconstrained_stacking_order.append(client); // Raise if it hasn't got any stacking position yet
+    }
+    if (!stacking_order.contains(client)) { // It'll be updated later, and updateToolWindows() requires
+        stacking_order.append(client);      // client to be in stacking_order
+    }
+
+    markXStackingOrderAsDirty();
+    updateStackingOrder(true);
+    updateClientArea();
+    if (client->wantsInput() && !client->isMinimized()) {
+        activateClient(client);
+    }
+    updateTabbox();
+    connect(client, &AbstractClient::windowShown, this, [this, client] {
+        updateClientLayer(client);
+        // TODO: when else should we send the client through placement?
+        if (client->hasTransientPlacementHint()) {
+            const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
+            client->placeIn(area);
+        }
+        markXStackingOrderAsDirty();
+        updateStackingOrder(true);
+        updateClientArea();
+        if (client->wantsInput()) {
+            activateClient(client);
+        }
+    });
+    connect(client, &AbstractClient::windowHidden, this, [this] {
+        // TODO: update tabbox if it's displayed
+        markXStackingOrderAsDirty();
+        updateStackingOrder(true);
+        updateClientArea();
+    });
+}
+
+void Workspace::removeShellClient(AbstractClient *client)
+{
+    m_allClients.removeAll(client);
+    if (client == most_recently_raised) {
+        most_recently_raised = nullptr;
+    }
+    if (client == delayfocus_client) {
+        cancelDelayFocus();
+    }
+    if (client == last_active_client) {
+        last_active_client = nullptr;
+    }
+    if (client_keys_client == client) {
+        setupWindowShortcutDone(false);
+    }
+    if (!client->shortcut().isEmpty()) {
+        client->setShortcut(QString());   // Remove from client_keys
+    }
+    clientHidden(client);
+    emit clientRemoved(client);
+    markXStackingOrderAsDirty();
+    updateStackingOrder(true);
+    updateClientArea();
+    updateTabbox();
 }
 
 void Workspace::updateToolWindows(bool also_hide)
@@ -2074,7 +2077,7 @@ void Workspace::updateClientArea(bool force)
         }
     }
     if (waylandServer()) {
-        auto updateStrutsForWaylandClient = [&] (XdgShellClient *c) {
+        auto updateStrutsForWaylandClient = [&] (AbstractClient *c) {
             // assuming that only docks have "struts" and that all docks have a strut
             if (!c->hasStrut()) {
                 return;

@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput/device.h"
 #include "platform.h"
 #include "popup_input_filter.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "xwl/xwayland_interface.h"
 #include "internal_client.h"

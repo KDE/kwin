@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11client.h"
 #include "screens.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 
 namespace KWin {

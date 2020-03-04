@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwin_wayland_test.h"
 
+#include "abstract_client.h"
 #include "platform.h"
 #include "screens.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 
 #include <KPackage/PackageLoader>
 #include <KWayland/Client/surface.h>
@@ -55,7 +55,6 @@ void MinimizeAllScriptTest::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
     qRegisterMetaType<AbstractClient *>();
-    qRegisterMetaType<XdgShellClient *>();
 
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -122,14 +121,14 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
     // Create a couple of test clients.
     QScopedPointer<Surface> surface1(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface1(Test::createXdgShellStableSurface(surface1.data()));
-    XdgShellClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client1 = Test::renderAndWaitForShown(surface1.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client1);
     QVERIFY(client1->isActive());
     QVERIFY(client1->isMinimizable());
 
     QScopedPointer<Surface> surface2(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface2(Test::createXdgShellStableSurface(surface2.data()));
-    XdgShellClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
+    AbstractClient *client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::red);
     QVERIFY(client2);
     QVERIFY(client2->isActive());
     QVERIFY(client2->isMinimizable());

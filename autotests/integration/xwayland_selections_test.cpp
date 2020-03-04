@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "platform.h"
-#include "xdgshellclient.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -52,7 +52,6 @@ private:
 void XwaylandSelectionsTest::initTestCase()
 {
     QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<QProcess::ExitStatus>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);

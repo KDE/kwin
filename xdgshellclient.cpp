@@ -373,7 +373,7 @@ bool XdgShellClient::belongsToDesktop() const
     const auto clients = waylandServer()->clients();
 
     return std::any_of(clients.constBegin(), clients.constEnd(),
-        [this](const XdgShellClient *client) {
+        [this](const AbstractClient *client) {
             if (belongsToSameApplication(client, SameApplicationChecks())) {
                 return client->isDesktop();
             }
@@ -1180,7 +1180,7 @@ void XdgShellClient::handleTransientForChanged()
     if (!transientSurface) {
         transientSurface = waylandServer()->findForeignTransientForSurface(surface());
     }
-    XdgShellClient *transientClient = waylandServer()->findClient(transientSurface);
+    AbstractClient *transientClient = waylandServer()->findClient(transientSurface);
     if (transientClient != transientFor()) {
         // Remove from main client.
         if (transientFor()) {
@@ -1932,12 +1932,6 @@ void XdgShellClient::doMinimize()
         emit windowShown(this);
     }
     workspace()->updateMinimizedOfTransients(this);
-}
-
-void XdgShellClient::placeIn(const QRect &area)
-{
-    Placement::self()->place(this, area);
-    setGeometryRestore(frameGeometry());
 }
 
 void XdgShellClient::showOnScreenEdge()

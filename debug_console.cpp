@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "internal_client.h"
 #include "main.h"
 #include "scene.h"
-#include "xdgshellclient.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -876,17 +875,17 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     if (waylandServer()) {
         const auto clients = waylandServer()->clients();
         for (auto c : clients) {
-            m_shellClients.append(c);
+            m_waylandClients.append(c);
         }
         // TODO: that only includes windows getting shown, not those which are only created
         connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-            [this] (XdgShellClient *c) {
-                add(s_waylandClientId -1, m_shellClients, c);
+            [this] (AbstractClient *c) {
+                add(s_waylandClientId -1, m_waylandClients, c);
             }
         );
         connect(waylandServer(), &WaylandServer::shellClientRemoved, this,
-            [this] (XdgShellClient *c) {
-                remove(s_waylandClientId -1, m_shellClients, c);
+            [this] (AbstractClient *c) {
+                remove(s_waylandClientId -1, m_waylandClients, c);
             }
         );
     }
@@ -976,7 +975,7 @@ int DebugConsoleModel::rowCount(const QModelIndex &parent) const
     case s_x11UnmanagedId:
         return m_unmanageds.count();
     case s_waylandClientId:
-        return m_shellClients.count();
+        return m_waylandClients.count();
     case s_workspaceInternalId:
         return m_internalClients.count();
     default:
@@ -993,7 +992,7 @@ int DebugConsoleModel::rowCount(const QModelIndex &parent) const
     } else if (parent.internalId() < s_idDistance * (s_x11UnmanagedId + 1)) {
         return propertyCount(parent, &DebugConsoleModel::unmanaged);
     } else if (parent.internalId() < s_idDistance * (s_waylandClientId + 1)) {
-        return propertyCount(parent, &DebugConsoleModel::shellClient);
+        return propertyCount(parent, &DebugConsoleModel::waylandClient);
     } else if (parent.internalId() < s_idDistance * (s_workspaceInternalId + 1)) {
         return propertyCount(parent, &DebugConsoleModel::internalClient);
     }
@@ -1045,7 +1044,7 @@ QModelIndex DebugConsoleModel::index(int row, int column, const QModelIndex &par
     case s_x11UnmanagedId:
         return indexForClient(row, column, m_unmanageds, s_x11UnmanagedId);
     case s_waylandClientId:
-        return indexForClient(row, column, m_shellClients, s_waylandClientId);
+        return indexForClient(row, column, m_waylandClients, s_waylandClientId);
     case s_workspaceInternalId:
         return indexForClient(row, column, m_internalClients, s_workspaceInternalId);
     default:
@@ -1058,7 +1057,7 @@ QModelIndex DebugConsoleModel::index(int row, int column, const QModelIndex &par
     } else if (parent.internalId() < s_idDistance * (s_x11UnmanagedId + 1)) {
         return indexForProperty(row, column, parent, &DebugConsoleModel::unmanaged);
     } else if (parent.internalId() < s_idDistance * (s_waylandClientId + 1)) {
-        return indexForProperty(row, column, parent, &DebugConsoleModel::shellClient);
+        return indexForProperty(row, column, parent, &DebugConsoleModel::waylandClient);
     } else if (parent.internalId() < s_idDistance * (s_workspaceInternalId + 1)) {
         return indexForProperty(row, column, parent, &DebugConsoleModel::internalClient);
     }
@@ -1195,7 +1194,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         if (index.column() >= 2 || role != Qt::DisplayRole) {
             return QVariant();
         }
-        if (XdgShellClient *c = shellClient(index)) {
+        if (AbstractClient *c = waylandClient(index)) {
             return propertyData(c, index, role);
         } else if (InternalClient *c = internalClient(index)) {
             return propertyData(c, index, role);
@@ -1222,7 +1221,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             break;
         }
         case s_waylandClientId:
-            return clientData(index, role, m_shellClients);
+            return clientData(index, role, m_waylandClients);
         case s_workspaceInternalId:
             return clientData(index, role, m_internalClients);
         default:
@@ -1243,9 +1242,9 @@ static T *clientForIndex(const QModelIndex &index, const QVector<T*> &clients, i
     return clients.at(row);
 }
 
-XdgShellClient *DebugConsoleModel::shellClient(const QModelIndex &index) const
+AbstractClient *DebugConsoleModel::waylandClient(const QModelIndex &index) const
 {
-    return clientForIndex(index, m_shellClients, s_waylandClientId);
+    return clientForIndex(index, m_waylandClients, s_waylandClientId);
 }
 
 InternalClient *DebugConsoleModel::internalClient(const QModelIndex &index) const
@@ -1295,7 +1294,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     }
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-            [this, reset] (XdgShellClient *c) {
+            [this, reset] (AbstractClient *c) {
                 connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
                 reset();
             }

@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwin_wayland_test.h"
 
+#include "abstract_client.h"
 #include "cursor.h"
 #include "platform.h"
 #include "rules.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -224,7 +224,6 @@ private Q_SLOTS:
 
 void TestXdgShellClientRules::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient *>();
 
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -270,7 +269,7 @@ void TestXdgShellClientRules::name##_data() \
     QTest::newRow("XdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable; \
 }
 
-std::tuple<XdgShellClient *, Surface *, XdgShellSurface *> createWindow(Test::XdgShellSurfaceType type, const QByteArray &appId)
+std::tuple<AbstractClient *, Surface *, XdgShellSurface *> createWindow(Test::XdgShellSurfaceType type, const QByteArray &appId)
 {
     // Create an xdg surface.
     Surface *surface = Test::createSurface();
@@ -286,7 +285,7 @@ std::tuple<XdgShellClient *, Surface *, XdgShellSurface *> createWindow(Test::Xd
 
     // Draw content of the surface.
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
     return {client, surface, shellSurface};
 }
@@ -310,7 +309,7 @@ void TestXdgShellClientRules::testPositionDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -348,7 +347,7 @@ void TestXdgShellClientRules::testPositionApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -427,7 +426,7 @@ void TestXdgShellClientRules::testPositionRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -506,7 +505,7 @@ void TestXdgShellClientRules::testPositionForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -553,7 +552,7 @@ void TestXdgShellClientRules::testPositionApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     QObject *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -647,7 +646,7 @@ void TestXdgShellClientRules::testPositionForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -723,7 +722,7 @@ void TestXdgShellClientRules::testSizeDontAffect()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isResizable());
@@ -778,7 +777,7 @@ void TestXdgShellClientRules::testSizeApply()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isResizable());
@@ -916,7 +915,7 @@ void TestXdgShellClientRules::testSizeRemember()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isResizable());
@@ -1050,7 +1049,7 @@ void TestXdgShellClientRules::testSizeForce()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(!client->isResizable());
@@ -1125,7 +1124,7 @@ void TestXdgShellClientRules::testSizeApplyNow()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isResizable());
@@ -1207,7 +1206,7 @@ void TestXdgShellClientRules::testSizeForceTemporarily()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(480, 640), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(!client->isResizable());
@@ -1301,7 +1300,7 @@ void TestXdgShellClientRules::testMaximizeDontAffect()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isMaximizable());
@@ -1363,7 +1362,7 @@ void TestXdgShellClientRules::testMaximizeApply()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isMaximizable());
@@ -1475,7 +1474,7 @@ void TestXdgShellClientRules::testMaximizeRemember()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isMaximizable());
@@ -1587,7 +1586,7 @@ void TestXdgShellClientRules::testMaximizeForce()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(!client->isMaximizable());
@@ -1674,7 +1673,7 @@ void TestXdgShellClientRules::testMaximizeApplyNow()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(client->isMaximizable());
@@ -1796,7 +1795,7 @@ void TestXdgShellClientRules::testMaximizeForceTemporarily()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(!client->isMaximizable());
@@ -1882,7 +1881,7 @@ void TestXdgShellClientRules::testDesktopDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -1923,7 +1922,7 @@ void TestXdgShellClientRules::testDesktopApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -1980,7 +1979,7 @@ void TestXdgShellClientRules::testDesktopRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2033,7 +2032,7 @@ void TestXdgShellClientRules::testDesktopForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2077,7 +2076,7 @@ void TestXdgShellClientRules::testDesktopApplyNow()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2143,7 +2142,7 @@ void TestXdgShellClientRules::testDesktopForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2202,7 +2201,7 @@ void TestXdgShellClientRules::testMinimizeDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2237,7 +2236,7 @@ void TestXdgShellClientRules::testMinimizeApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2285,7 +2284,7 @@ void TestXdgShellClientRules::testMinimizeRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2331,7 +2330,7 @@ void TestXdgShellClientRules::testMinimizeForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2366,7 +2365,7 @@ void TestXdgShellClientRules::testMinimizeApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2425,7 +2424,7 @@ void TestXdgShellClientRules::testMinimizeForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2473,7 +2472,7 @@ void TestXdgShellClientRules::testSkipTaskbarDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2507,7 +2506,7 @@ void TestXdgShellClientRules::testSkipTaskbarApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2553,7 +2552,7 @@ void TestXdgShellClientRules::testSkipTaskbarRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2601,7 +2600,7 @@ void TestXdgShellClientRules::testSkipTaskbarForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2636,7 +2635,7 @@ void TestXdgShellClientRules::testSkipTaskbarApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2692,7 +2691,7 @@ void TestXdgShellClientRules::testSkipTaskbarForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2742,7 +2741,7 @@ void TestXdgShellClientRules::testSkipPagerDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2776,7 +2775,7 @@ void TestXdgShellClientRules::testSkipPagerApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2822,7 +2821,7 @@ void TestXdgShellClientRules::testSkipPagerRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2870,7 +2869,7 @@ void TestXdgShellClientRules::testSkipPagerForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2905,7 +2904,7 @@ void TestXdgShellClientRules::testSkipPagerApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -2961,7 +2960,7 @@ void TestXdgShellClientRules::testSkipPagerForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3011,7 +3010,7 @@ void TestXdgShellClientRules::testSkipSwitcherDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3045,7 +3044,7 @@ void TestXdgShellClientRules::testSkipSwitcherApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3091,7 +3090,7 @@ void TestXdgShellClientRules::testSkipSwitcherRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3139,7 +3138,7 @@ void TestXdgShellClientRules::testSkipSwitcherForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3174,7 +3173,7 @@ void TestXdgShellClientRules::testSkipSwitcherApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3230,7 +3229,7 @@ void TestXdgShellClientRules::testSkipSwitcherForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3280,7 +3279,7 @@ void TestXdgShellClientRules::testKeepAboveDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3314,7 +3313,7 @@ void TestXdgShellClientRules::testKeepAboveApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3360,7 +3359,7 @@ void TestXdgShellClientRules::testKeepAboveRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3406,7 +3405,7 @@ void TestXdgShellClientRules::testKeepAboveForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3439,7 +3438,7 @@ void TestXdgShellClientRules::testKeepAboveApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3495,7 +3494,7 @@ void TestXdgShellClientRules::testKeepAboveForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3547,7 +3546,7 @@ void TestXdgShellClientRules::testKeepBelowDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3581,7 +3580,7 @@ void TestXdgShellClientRules::testKeepBelowApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3627,7 +3626,7 @@ void TestXdgShellClientRules::testKeepBelowRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3673,7 +3672,7 @@ void TestXdgShellClientRules::testKeepBelowForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3706,7 +3705,7 @@ void TestXdgShellClientRules::testKeepBelowApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3762,7 +3761,7 @@ void TestXdgShellClientRules::testKeepBelowForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3814,7 +3813,7 @@ void TestXdgShellClientRules::testShortcutDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3861,7 +3860,7 @@ void TestXdgShellClientRules::testShortcutApply()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -3946,7 +3945,7 @@ void TestXdgShellClientRules::testShortcutRemember()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4019,7 +4018,7 @@ void TestXdgShellClientRules::testShortcutForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4077,7 +4076,7 @@ void TestXdgShellClientRules::testShortcutApplyNow()
 {
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4158,7 +4157,7 @@ void TestXdgShellClientRules::testShortcutForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4287,7 +4286,7 @@ void TestXdgShellClientRules::testActiveOpacityDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4322,7 +4321,7 @@ void TestXdgShellClientRules::testActiveOpacityForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4355,7 +4354,7 @@ void TestXdgShellClientRules::testActiveOpacityForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4397,7 +4396,7 @@ void TestXdgShellClientRules::testInactiveOpacityDontAffect()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4436,7 +4435,7 @@ void TestXdgShellClientRules::testInactiveOpacityForce()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");
@@ -4476,7 +4475,7 @@ void TestXdgShellClientRules::testInactiveOpacityForceTemporarily()
 
     // Create the test client.
     QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellClient *client;
+    AbstractClient *client;
     Surface *surface;
     XdgShellSurface *shellSurface;
     std::tie(client, surface, shellSurface) = createWindow(type, "org.kde.foo");

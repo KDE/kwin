@@ -252,6 +252,14 @@ void AbstractClient::updateLayer()
         (*it)->updateLayer();
 }
 
+void AbstractClient::placeIn(const QRect &area)
+{
+    // TODO: Get rid of this method eventually. We need to call setGeometryRestore() because
+    // checkWorkspacePosition() operates on geometryRestore() and because of quick tiling.
+    Placement::self()->place(this, area);
+    setGeometryRestore(frameGeometry());
+}
+
 void AbstractClient::invalidateLayer()
 {
     m_layer = UnknownLayer;
@@ -2332,7 +2340,7 @@ QRect AbstractClient::iconGeometry() const
     QRect candidateGeom;
 
     for (auto i = windowManagementInterface()->minimizedGeometries().constBegin(), end = windowManagementInterface()->minimizedGeometries().constEnd(); i != end; ++i) {
-        AbstractClient *client = waylandServer()->findAbstractClient(i.key());
+        AbstractClient *client = waylandServer()->findClient(i.key());
         if (!client) {
             continue;
         }

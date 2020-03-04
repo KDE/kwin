@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "platform.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "scripting/scripting.h"
 

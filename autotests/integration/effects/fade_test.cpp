@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "composite.h"
 #include "effects.h"
 #include "effectloader.h"
 #include "cursor.h"
 #include "platform.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "effect_builtins.h"
@@ -55,7 +55,6 @@ private:
 void FadeTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Effect*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);

@@ -128,8 +128,6 @@ public:
     void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWayland::Server::XdgDecorationInterface *decoration);
 
-    void placeIn(const QRect &area);
-
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;

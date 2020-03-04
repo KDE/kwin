@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "screens.h"
 #include "shadow.h"
-#include "xdgshellclient.h"
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils.h"
@@ -366,7 +365,7 @@ void Compositor::startupWithWorkspace()
 
     if (auto *server = waylandServer()) {
         const auto clients = server->clients();
-        for (XdgShellClient *c : clients) {
+        for (AbstractClient *c : clients) {
             c->setupCompositing();
             c->updateShadow();
         }
@@ -441,10 +440,10 @@ void Compositor::stop()
     }
 
     if (waylandServer()) {
-        for (XdgShellClient *c : waylandServer()->clients()) {
+        for (AbstractClient *c : waylandServer()->clients()) {
             m_scene->removeToplevel(c);
         }
-        for (XdgShellClient *c : waylandServer()->clients()) {
+        for (AbstractClient *c : waylandServer()->clients()) {
             c->finishCompositing();
         }
     }
@@ -749,7 +748,7 @@ bool Compositor::windowRepaintsPending() const
     }
     if (auto *server = waylandServer()) {
         const auto &clients = server->clients();
-        auto test = [](XdgShellClient *c) {
+        auto test = [](AbstractClient *c) {
             return c->readyForPainting() && !c->repaints().isEmpty();
         };
         if (std::any_of(clients.begin(), clients.end(), test)) {

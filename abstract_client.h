@@ -440,6 +440,7 @@ public:
      */
     virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
     const QList<AbstractClient*>& transients() const; // Is not indirect
+    virtual void addTransient(AbstractClient *client);
     virtual void removeTransient(AbstractClient* cl);
     virtual QList<AbstractClient*> mainClients() const; // Call once before loop , is not indirect
     QList<AbstractClient*> allMainClients() const; // Call once before loop , is indirect
@@ -612,6 +613,8 @@ public:
     }
     Layer layer() const override;
     void updateLayer();
+
+    void placeIn(const QRect &area);
 
     enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
@@ -970,7 +973,6 @@ protected:
     virtual void updateColorScheme() = 0;
 
     void setTransientFor(AbstractClient *transientFor);
-    virtual void addTransient(AbstractClient* cl);
     /**
      * Just removes the @p cl from the transients without any further checks.
      */

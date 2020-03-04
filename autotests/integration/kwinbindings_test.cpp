@@ -18,11 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "cursor.h"
 #include "input.h"
 #include "platform.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -57,7 +57,6 @@ private Q_SLOTS:
 
 void KWinBindingsTest::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

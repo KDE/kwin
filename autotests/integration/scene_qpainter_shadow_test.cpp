@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwin_wayland_test.h"
 
+#include "abstract_client.h"
 #include "composite.h"
 #include "effect_builtins.h"
 #include "effectloader.h"
@@ -49,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "plugins/scenes/qpainter/scene_qpainter.h"
 #include "shadow.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -116,7 +116,6 @@ void SceneQPainterShadowTest::initTestCase()
 {
     // Copied from scene_qpainter_test.cpp
 
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

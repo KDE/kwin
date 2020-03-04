@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/connection_thread.h>
@@ -63,7 +62,6 @@ private Q_SLOTS:
 
 void TransientPlacementTest::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -340,7 +338,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     parent->setFullScreen(true);
     QVERIFY(fullscreenSpy.wait());
     parentShellSurface->ackConfigure(fullscreenSpy.first().at(2).value<quint32>());
-    QSignalSpy frameGeometryChangedSpy{parent, &XdgShellClient::frameGeometryChanged};
+    QSignalSpy frameGeometryChangedSpy{parent, &AbstractClient::frameGeometryChanged};
     QVERIFY(frameGeometryChangedSpy.isValid());
     Test::render(parentSurface, fullscreenSpy.first().at(0).toSize(), Qt::red);
     QVERIFY(frameGeometryChangedSpy.wait());

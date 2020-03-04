@@ -122,13 +122,13 @@ public:
     }
     KWayland::Server::LinuxDmabufUnstableV1Interface *linuxDmabuf();
 
-    QList<XdgShellClient *> clients() const {
+    QList<AbstractClient *> clients() const {
         return m_clients;
     }
-    void removeClient(XdgShellClient *c);
-    XdgShellClient *findClient(quint32 id) const;
-    XdgShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
-    AbstractClient *findAbstractClient(KWayland::Server::SurfaceInterface *surface) const;
+    void removeClient(AbstractClient *c);
+    AbstractClient *findClient(quint32 id) const;
+    AbstractClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
+    XdgShellClient *findXdgShellClient(KWayland::Server::SurfaceInterface *surface) const;
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any
@@ -230,8 +230,8 @@ public:
     }
 
 Q_SIGNALS:
-    void shellClientAdded(KWin::XdgShellClient *);
-    void shellClientRemoved(KWin::XdgShellClient *);
+    void shellClientAdded(KWin::AbstractClient *);
+    void shellClientRemoved(KWin::AbstractClient *);
     void terminatingInternalClientConnection();
     void initialized();
     void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
@@ -281,7 +281,7 @@ private:
     } m_internalConnection;
     KWayland::Server::XdgForeignInterface *m_XdgForeign = nullptr;
     KWayland::Server::KeyStateInterface *m_keyState = nullptr;
-    QList<XdgShellClient *> m_clients;
+    QList<AbstractClient *> m_clients;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     InitalizationFlags m_initFlags;
     QVector<KWayland::Server::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
