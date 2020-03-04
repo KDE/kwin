@@ -5,10 +5,10 @@ effects.windowAdded.connect(function(w) {
         animations: [{
             type: Effect.Scale,
             to: 1.4,
-            curve: QEasingCurve.OutQuad
+            curve: QEasingCurve.OutCubic
         }, {
             type: Effect.Opacity,
-            curve: QEasingCurve.OutQuad,
+            curve: QEasingCurve.OutCubic,
             to: 0.0
         }]
     });

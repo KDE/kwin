@@ -162,7 +162,7 @@ var badBadWindowsEffect = {
                 w.offToCornerId = set({
                     window: w,
                     duration: badBadWindowsEffect.duration,
-                    curve: QEasingCurve.InOutQuad,
+                    curve: QEasingCurve.InOutCubic,
                     animations: [{
                         type: Effect.Position,
                         targetAnchor: anchor,
@@ -180,7 +180,7 @@ var badBadWindowsEffect = {
                     animate({
                         window: w,
                         duration: badBadWindowsEffect.duration,
-                        curve: QEasingCurve.InOutQuad,
+                        curve: QEasingCurve.InOutCubic,
                         animations: [{
                             type: Effect.Position,
                             sourceAnchor: anchor,

@@ -3684,7 +3684,7 @@ public:
     /**
      * Sets new easing curve by providing its type.
      *
-     * @param type Type of the easing curve(e.g. QEasingCurve::InQuad, etc)
+     * @param type Type of the easing curve(e.g. QEasingCurve::InCubic, etc)
      * @see easingCurve
      * @since 5.14
      */
