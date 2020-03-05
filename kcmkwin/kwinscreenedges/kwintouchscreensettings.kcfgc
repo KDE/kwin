@@ -1,0 +1,7 @@
+File=kwintouchscreensettings.kcfg
+NameSpace=KWin
+ClassName=KWinTouchScreenSettings
+IncludeFiles=kwinglobals.h
+Mutators=true
+DefaultValueGetters=true
+ParentInConstructor=true

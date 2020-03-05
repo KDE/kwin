@@ -4,6 +4,7 @@
 
 Copyright (C) 2008 Martin Gräßlin <mgraesslin@kde.org>
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2020 Cyril Rossi <cyril.rossi@enioka.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,31 +31,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <QtDBus>
+#include <QVBoxLayout>
+
+#include "kwintouchscreenedgeconfigform.h"
+#include "kwintouchscreensettings.h"
+#include "kwintouchscreenscriptsettings.h"
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>();)
 
 namespace KWin
 {
 
-KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget* parent)
-    : QWidget(parent)
-{
-    setupUi(this);
-}
-
-KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget* parent, const QVariantList& args)
+KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
+    , m_form(new KWinTouchScreenEdgeConfigForm(this))
     , m_config(KSharedConfig::openConfig("kwinrc"))
+    , m_settings(new KWinTouchScreenSettings(this))
 {
-    m_ui = new KWinScreenEdgesConfigForm(this);
     QVBoxLayout* layout = new QVBoxLayout(this);
-    layout->addWidget(m_ui);
+    layout->addWidget(m_form);
 
     monitorInit();
 
-    connect(m_ui->monitor, SIGNAL(changed()), this, SLOT(changed()));
-
-    load();
+    connect(m_form, &KWinTouchScreenEdgeConfigForm::saveNeededChanged, this, &KWinScreenEdgesConfig::unmanagedWidgetChangeState);
+    connect(m_form, &KWinTouchScreenEdgeConfigForm::defaultChanged, this, &KWinScreenEdgesConfig::unmanagedWidgetDefaultState);
 }
 
 KWinScreenEdgesConfig::~KWinScreenEdgesConfig()
@@ -64,17 +64,27 @@ KWinScreenEdgesConfig::~KWinScreenEdgesConfig()
 void KWinScreenEdgesConfig::load()
 {
     KCModule::load();
+    m_settings->load();
+    for (KWinTouchScreenScriptSettings *setting : qAsConst(m_scriptSettings)) {
+        setting->load();
+    }
 
-    monitorLoad();
-
-    emit changed(false);
+    monitorLoadSettings();
+    monitorLoadDefaultSettings();
+    m_form->reload();
 }
 
 void KWinScreenEdgesConfig::save()
 {
-    KCModule::save();
+    monitorSaveSettings();
+    m_settings->save();
+    for (KWinTouchScreenScriptSettings *setting : qAsConst(m_scriptSettings)) {
+        setting->save();
+    }
 
-    monitorSave();
+    // Reload saved settings to ScreenEdge UI
+    monitorLoadSettings();
+    m_form->reload();
 
     // Reload KWin.
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
@@ -87,14 +97,14 @@ void KWinScreenEdgesConfig::save()
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::DesktopGrid));
     interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Cube));
 
-    emit changed(false);
+    KCModule::save();
 }
 
 void KWinScreenEdgesConfig::defaults()
 {
-    monitorDefaults();
+    m_form->setDefaults();
 
-    emit changed(true);
+    KCModule::defaults();
 }
 
 void KWinScreenEdgesConfig::showEvent(QShowEvent* e)
@@ -113,40 +123,33 @@ bool KWinScreenEdgesConfig::effectEnabled(const BuiltInEffect& effect, const KCo
 //-----------------------------------------------------------------------------
 // Monitor
 
-void KWinScreenEdgesConfig::monitorAddItem(const QString& item)
-{
-    for (int i = 0; i < 8; i++)
-        m_ui->monitor->addEdgeItem(i, item);
-}
-
-void KWinScreenEdgesConfig::monitorItemSetEnabled(int index, bool enabled)
-{
-    for (int i = 0; i < 8; i++)
-        m_ui->monitor->setEdgeItemEnabled(i, index, enabled);
-}
-
 void KWinScreenEdgesConfig::monitorInit()
 {
-    monitorAddItem(i18n("No Action"));
-    monitorAddItem(i18n("Show Desktop"));
-    monitorAddItem(i18n("Lock Screen"));
-    monitorAddItem(i18n("Show KRunner"));
-    monitorAddItem(i18n("Activity Manager"));
-    monitorAddItem(i18n("Application Launcher"));
+    m_form->monitorHideEdge(ElectricTopLeft, true);
+    m_form->monitorHideEdge(ElectricTopRight, true);
+    m_form->monitorHideEdge(ElectricBottomRight, true);
+    m_form->monitorHideEdge(ElectricBottomLeft, true);
+
+    m_form->monitorAddItem(i18n("No Action"));
+    m_form->monitorAddItem(i18n("Show Desktop"));
+    m_form->monitorAddItem(i18n("Lock Screen"));
+    m_form->monitorAddItem(i18n("Show KRunner"));
+    m_form->monitorAddItem(i18n("Activity Manager"));
+    m_form->monitorAddItem(i18n("Application Launcher"));
 
     // Add the effects
     const QString presentWindowsName = BuiltInEffects::effectData(BuiltInEffect::PresentWindows).displayName;
-    monitorAddItem(i18n("%1 - All Desktops", presentWindowsName));
-    monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
-    monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
-    monitorAddItem(BuiltInEffects::effectData(BuiltInEffect::DesktopGrid).displayName);
+    m_form->monitorAddItem(i18n("%1 - All Desktops", presentWindowsName));
+    m_form->monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
+    m_form->monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
+    m_form->monitorAddItem(BuiltInEffects::effectData(BuiltInEffect::DesktopGrid).displayName);
     const QString cubeName = BuiltInEffects::effectData(BuiltInEffect::Cube).displayName;
-    monitorAddItem(i18n("%1 - Cube", cubeName));
-    monitorAddItem(i18n("%1 - Cylinder", cubeName));
-    monitorAddItem(i18n("%1 - Sphere", cubeName));
+    m_form->monitorAddItem(i18n("%1 - Cube", cubeName));
+    m_form->monitorAddItem(i18n("%1 - Cylinder", cubeName));
+    m_form->monitorAddItem(i18n("%1 - Sphere", cubeName));
 
-    monitorAddItem(i18n("Toggle window switching"));
-    monitorAddItem(i18n("Toggle alternative window switching"));
+    m_form->monitorAddItem(i18n("Toggle window switching"));
+    m_form->monitorAddItem(i18n("Toggle alternative window switching"));
 
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
     const auto scripts = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
@@ -161,193 +164,114 @@ void KWinScreenEdgesConfig::monitorInit()
             continue;
         }
         m_scripts << script.pluginId();
-        monitorAddItem(script.name());
+        m_form->monitorAddItem(script.name());
+        m_scriptSettings[script.pluginId()] = new KWinTouchScreenScriptSettings(script.pluginId(), this);
     }
-
-    monitorHideEdge(ElectricTopLeft, true);
-    monitorHideEdge(ElectricTopRight, true);
-    monitorHideEdge(ElectricBottomRight, true);
-    monitorHideEdge(ElectricBottomLeft, true);
 
     monitorShowEvent();
 }
 
-void KWinScreenEdgesConfig::monitorLoadAction(ElectricBorder edge, const QString& configName)
-{
-    KConfigGroup config(m_config, "TouchEdges");
-    QString lowerName = config.readEntry(configName, "None").toLower();
-    if (lowerName == "showdesktop") monitorChangeEdge(edge, int(ElectricActionShowDesktop));
-    else if (lowerName == "lockscreen") monitorChangeEdge(edge, int(ElectricActionLockScreen));
-    else if (lowerName == "krunner") monitorChangeEdge(edge, int(ElectricActionKRunner));
-    else if (lowerName == "activitymanager") monitorChangeEdge(edge, int(ElectricActionActivityManager));
-    else if (lowerName == "applicationlauncher") monitorChangeEdge(edge, int(ElectricActionApplicationLauncher));
-}
-
-void KWinScreenEdgesConfig::monitorLoad()
+void KWinScreenEdgesConfig::monitorLoadSettings()
 {
     // Load ElectricBorderActions
-    monitorLoadAction(ElectricTop,         "Top");
-    monitorLoadAction(ElectricRight,       "Right");
-    monitorLoadAction(ElectricBottom,      "Bottom");
-    monitorLoadAction(ElectricLeft,        "Left");
+    m_form->monitorChangeEdge(ElectricTop, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->top()));
+    m_form->monitorChangeEdge(ElectricRight, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->right()));
+    m_form->monitorChangeEdge(ElectricBottom, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->bottom()));
+    m_form->monitorChangeEdge(ElectricLeft, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->left()));
 
     // Load effect-specific actions:
 
-    // Present Windows
-    KConfigGroup presentWindowsConfig(m_config, "Effect-PresentWindows");
-    QList<int> list = QList<int>();
-    // PresentWindows BorderActivateAll
-    list.append(int(ElectricTopLeft));
-    list = presentWindowsConfig.readEntry("TouchBorderActivateAll", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(PresentWindowsAll));
-    }
+    // Present Windows BorderActivateAll
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateAll(), PresentWindowsAll);
     // PresentWindows BorderActivate
-    list.clear();
-    list.append(int(ElectricNone));
-    list = presentWindowsConfig.readEntry("TouchBorderActivate", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(PresentWindowsCurrent));
-    }
+    m_form->monitorChangeEdge(m_settings->touchBorderActivatePresentWindows(), PresentWindowsCurrent);
     // PresentWindows BorderActivateClass
-    list.clear();
-    list.append(int(ElectricNone));
-    list = presentWindowsConfig.readEntry("TouchBorderActivateClass", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(PresentWindowsClass));
-    }
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateClass(), PresentWindowsClass);
 
-    // Desktop Grid
-    KConfigGroup gridConfig(m_config, "Effect-DesktopGrid");
-    list.clear();
-    list.append(int(ElectricNone));
-    list = gridConfig.readEntry("TouchBorderActivate", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(DesktopGrid));
-    }
+    // Desktop Grid BorderActivate
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateDesktopGrid(), DesktopGrid);
 
-    // Desktop Cube
-    KConfigGroup cubeConfig(m_config, "Effect-Cube");
-    list.clear();
-    list.append(int(ElectricNone));
-    list = cubeConfig.readEntry("TouchBorderActivate", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(Cube));
-    }
-    list.clear();
-    list.append(int(ElectricNone));
-    list = cubeConfig.readEntry("TouchBorderActivateCylinder", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(Cylinder));
-    }
-    list.clear();
-    list.append(int(ElectricNone));
-    list = cubeConfig.readEntry("TouchBorderActivateSphere", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(Sphere));
-    }
+    // Desktop Cube BorderActivate
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateCube(), Cube);
+    // Desktop Cube BorderActivateCylinder
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateCylinder(), Cylinder);
+    // Desktop Cube BorderActivateSphere
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateSphere(), Sphere);
 
-    // TabBox
-    KConfigGroup tabBoxConfig(m_config, "TabBox");
-    list.clear();
-    // TabBox
-    list.append(int(ElectricLeft));
-    list = tabBoxConfig.readEntry("TouchBorderActivate", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(TabBox));
-    }
+    // TabBox BorderActivate
+    m_form->monitorChangeEdge(m_settings->touchBorderActivateTabBox(), TabBox);
     // Alternative TabBox
-    list.clear();
-    list.append(int(ElectricNone));
-    list = tabBoxConfig.readEntry("TouchBorderAlternativeActivate", list);
-    foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(TabBoxAlternative));
-    }
+    m_form->monitorChangeEdge(m_settings->touchBorderAlternativeActivate(), TabBoxAlternative);
 
+    // Scripts
     for (int i=0; i < m_scripts.size(); i++) {
         int index = EffectCount + i;
-        KConfigGroup scriptConfig(m_config, "Script-"+m_scripts[i]);
-        list.append(int(ElectricNone));
-        list = scriptConfig.readEntry("TouchBorderActivate", list);
-        for (int i: list) {
-            monitorChangeEdge(ElectricBorder(i), index);
-        }
+        m_form->monitorChangeEdge(m_scriptSettings[m_scripts[i]]->touchBorderActivate(), index);
     }
 }
 
-void KWinScreenEdgesConfig::monitorSaveAction(int edge, const QString& configName)
+void KWinScreenEdgesConfig::monitorLoadDefaultSettings()
 {
-    KConfigGroup config(m_config, "TouchEdges");
-    int item = m_ui->monitor->selectedEdgeItem(edge);
-    if (item == 1)
-        config.writeEntry(configName, "ShowDesktop");
-    else if (item == 2)
-        config.writeEntry(configName, "LockScreen");
-    else if (item == 3)
-        config.writeEntry(configName, "KRunner");
-    else if (item == 4)
-        config.writeEntry(configName, "ActivityManager");
-    else if (item == 5)
-        config.writeEntry(configName, "ApplicationLauncher");
-    else // Anything else
-        config.writeEntry(configName, "None");
+    m_form->monitorChangeDefaultEdge(ElectricTop, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->defaultTopValue()));
+    m_form->monitorChangeDefaultEdge(ElectricRight, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->defaultRightValue()));
+    m_form->monitorChangeDefaultEdge(ElectricBottom, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->defaultBottomValue()));
+    m_form->monitorChangeDefaultEdge(ElectricLeft, KWinScreenEdgesConfig::electricBorderActionFromString(m_settings->defaultLeftValue()));
+
+    // Present Windows BorderActivateAll
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateAllValue(), PresentWindowsAll);
+    // PresentWindows BorderActivate
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivatePresentWindowsValue(), PresentWindowsCurrent);
+    // PresentWindows BorderActivateClass
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateClassValue(), PresentWindowsClass);
+
+    // Desktop Grid BorderActivate
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateDesktopGridValue(), DesktopGrid);
+
+    // Desktop Cube BorderActivate
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateCubeValue(), Cube);
+    // Desktop Cube BorderActivateCylinder
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateCylinderValue(), Cylinder);
+    // Desktop Cube BorderActivateSphere
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateSphereValue(), Sphere);
+
+    // TabBox BorderActivate
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderActivateTabBoxValue(), TabBox);
+    // Alternative TabBox
+    m_form->monitorChangeDefaultEdge(m_settings->defaultTouchBorderAlternativeActivateValue(), TabBoxAlternative);
 }
 
-void KWinScreenEdgesConfig::monitorSave()
+void KWinScreenEdgesConfig::monitorSaveSettings()
 {
     // Save ElectricBorderActions
-    monitorSaveAction(int(Monitor::Top),         "Top");
-    monitorSaveAction(int(Monitor::Right),       "Right");
-    monitorSaveAction(int(Monitor::Bottom),      "Bottom");
-    monitorSaveAction(int(Monitor::Left),        "Left");
+    m_settings->setTop(KWinScreenEdgesConfig::electricBorderActionToString(m_form->selectedEdgeItem(ElectricTop)));
+    m_settings->setRight(KWinScreenEdgesConfig::electricBorderActionToString(m_form->selectedEdgeItem(ElectricRight)));
+    m_settings->setBottom(KWinScreenEdgesConfig::electricBorderActionToString(m_form->selectedEdgeItem(ElectricBottom)));
+    m_settings->setLeft(KWinScreenEdgesConfig::electricBorderActionToString(m_form->selectedEdgeItem(ElectricLeft)));
 
     // Save effect-specific actions:
 
     // Present Windows
-    KConfigGroup presentWindowsConfig(m_config, "Effect-PresentWindows");
-    presentWindowsConfig.writeEntry("TouchBorderActivate",
-                                    monitorCheckEffectHasEdge(int(PresentWindowsAll)));
-    presentWindowsConfig.writeEntry("TouchBorderActivateAll",
-                                    monitorCheckEffectHasEdge(int(PresentWindowsCurrent)));
-    presentWindowsConfig.writeEntry("TouchBorderActivateClass",
-                                    monitorCheckEffectHasEdge(int(PresentWindowsClass)));
+    m_settings->setTouchBorderActivateAll(m_form->monitorCheckEffectHasEdge(PresentWindowsAll));
+    m_settings->setTouchBorderActivatePresentWindows(m_form->monitorCheckEffectHasEdge(PresentWindowsCurrent));
+    m_settings->setTouchBorderActivateClass(m_form->monitorCheckEffectHasEdge(PresentWindowsClass));
 
     // Desktop Grid
-    KConfigGroup gridConfig(m_config, "Effect-DesktopGrid");
-    gridConfig.writeEntry("TouchBorderActivate",
-                          monitorCheckEffectHasEdge(int(DesktopGrid)));
+    m_settings->setTouchBorderActivateDesktopGrid(m_form->monitorCheckEffectHasEdge(DesktopGrid));
 
     // Desktop Cube
-    KConfigGroup cubeConfig(m_config, "Effect-Cube");
-    cubeConfig.writeEntry("TouchBorderActivate",
-                          monitorCheckEffectHasEdge(int(Cube)));
-    cubeConfig.writeEntry("TouchBorderActivateCylinder",
-                          monitorCheckEffectHasEdge(int(Cylinder)));
-    cubeConfig.writeEntry("TouchBorderActivateSphere",
-                          monitorCheckEffectHasEdge(int(Sphere)));
+    m_settings->setTouchBorderActivateCube(m_form->monitorCheckEffectHasEdge(Cube));
+    m_settings->setTouchBorderActivateCylinder(m_form->monitorCheckEffectHasEdge(Cylinder));
+    m_settings->setTouchBorderActivateSphere(m_form->monitorCheckEffectHasEdge(Sphere));
 
     // TabBox
-    KConfigGroup tabBoxConfig(m_config, "TabBox");
-    tabBoxConfig.writeEntry("TouchBorderActivate",
-                                monitorCheckEffectHasEdge(int(TabBox)));
-    tabBoxConfig.writeEntry("TouchBorderAlternativeActivate",
-                                monitorCheckEffectHasEdge(int(TabBoxAlternative)));
+    m_settings->setTouchBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
+    m_settings->setTouchBorderAlternativeActivate(m_form->monitorCheckEffectHasEdge(TabBoxAlternative));
 
-    for (int i=0; i < m_scripts.size(); i++) {
+    // Scripts
+    for (int i = 0; i < m_scripts.size(); i++) {
         int index = EffectCount + i;
-        KConfigGroup scriptConfig(m_config, "Script-"+m_scripts[i]);
-            scriptConfig.writeEntry("TouchBorderActivate",
-                                monitorCheckEffectHasEdge(index));
+        m_scriptSettings[m_scripts[i]]->setTouchBorderActivate(m_form->monitorCheckEffectHasEdge(index));
     }
-}
-
-void KWinScreenEdgesConfig::monitorDefaults()
-{
-    // Clear all edges
-    for (int i = 0; i < 8; i++)
-        m_ui->monitor->selectEdgeItem(i, 0);
-    // select TabBox
-    m_ui->monitor->selectEdgeItem(int(Monitor::Left), int(TabBox));
 }
 
 void KWinScreenEdgesConfig::monitorShowEvent()
@@ -357,113 +281,63 @@ void KWinScreenEdgesConfig::monitorShowEvent()
 
     // Present Windows
     bool enabled = effectEnabled(BuiltInEffect::PresentWindows, config);
-    monitorItemSetEnabled(int(PresentWindowsCurrent), enabled);
-    monitorItemSetEnabled(int(PresentWindowsAll), enabled);
+    m_form->monitorItemSetEnabled(PresentWindowsCurrent, enabled);
+    m_form->monitorItemSetEnabled(PresentWindowsAll, enabled);
 
     // Desktop Grid
     enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
-    monitorItemSetEnabled(int(DesktopGrid), enabled);
+    m_form->monitorItemSetEnabled(DesktopGrid, enabled);
 
     // Desktop Cube
     enabled = effectEnabled(BuiltInEffect::Cube, config);
-    monitorItemSetEnabled(int(Cube), enabled);
-    monitorItemSetEnabled(int(Cylinder), enabled);
-    monitorItemSetEnabled(int(Sphere), enabled);
+    m_form->monitorItemSetEnabled(Cube, enabled);
+    m_form->monitorItemSetEnabled(Cylinder, enabled);
+    m_form->monitorItemSetEnabled(Sphere, enabled);
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, "Windows");
     QString focusPolicy = config2.readEntry("FocusPolicy", QString());
     bool reasonable = focusPolicy != "FocusStrictlyUnderMouse" && focusPolicy != "FocusUnderMouse";
-    monitorItemSetEnabled(int(TabBox), reasonable);
-    monitorItemSetEnabled(int(TabBoxAlternative), reasonable);
+    m_form->monitorItemSetEnabled(TabBox, reasonable);
+    m_form->monitorItemSetEnabled(TabBoxAlternative, reasonable);
 }
 
-void KWinScreenEdgesConfig::monitorChangeEdge(ElectricBorder border, int index)
+ElectricBorderAction KWinScreenEdgesConfig::electricBorderActionFromString(const QString &string)
 {
-    switch(border) {
-    case ElectricTop:
-        m_ui->monitor->selectEdgeItem(int(Monitor::Top), index);
-        break;
-    case ElectricTopRight:
-        m_ui->monitor->selectEdgeItem(int(Monitor::TopRight), index);
-        break;
-    case ElectricRight:
-        m_ui->monitor->selectEdgeItem(int(Monitor::Right), index);
-        break;
-    case ElectricBottomRight:
-        m_ui->monitor->selectEdgeItem(int(Monitor::BottomRight), index);
-        break;
-    case ElectricBottom:
-        m_ui->monitor->selectEdgeItem(int(Monitor::Bottom), index);
-        break;
-    case ElectricBottomLeft:
-        m_ui->monitor->selectEdgeItem(int(Monitor::BottomLeft), index);
-        break;
-    case ElectricLeft:
-        m_ui->monitor->selectEdgeItem(int(Monitor::Left), index);
-        break;
-    case ElectricTopLeft:
-        m_ui->monitor->selectEdgeItem(int(Monitor::TopLeft), index);
-        break;
-    default: // Nothing
-        break;
+    QString lowerName = string.toLower();
+    if (lowerName == QStringLiteral("showdesktop")) {
+        return ElectricActionShowDesktop;
     }
-}
-
-void KWinScreenEdgesConfig::monitorHideEdge(ElectricBorder border, bool hidden)
-{
-    switch(border) {
-    case ElectricTop:
-        m_ui->monitor->setEdgeHidden(int(Monitor::Top), hidden);
-        break;
-    case ElectricTopRight:
-        m_ui->monitor->setEdgeHidden(int(Monitor::TopRight), hidden);
-        break;
-    case ElectricRight:
-        m_ui->monitor->setEdgeHidden(int(Monitor::Right), hidden);
-        break;
-    case ElectricBottomRight:
-        m_ui->monitor->setEdgeHidden(int(Monitor::BottomRight), hidden);
-        break;
-    case ElectricBottom:
-        m_ui->monitor->setEdgeHidden(int(Monitor::Bottom), hidden);
-        break;
-    case ElectricBottomLeft:
-        m_ui->monitor->setEdgeHidden(int(Monitor::BottomLeft), hidden);
-        break;
-    case ElectricLeft:
-        m_ui->monitor->setEdgeHidden(int(Monitor::Left), hidden);
-        break;
-    case ElectricTopLeft:
-        m_ui->monitor->setEdgeHidden(int(Monitor::TopLeft), hidden);
-        break;
-    default: // Nothing
-        break;
+    if (lowerName == QStringLiteral("lockscreen")) {
+        return ElectricActionLockScreen;
     }
+    if (lowerName == QStringLiteral("krunner")) {
+        return ElectricActionKRunner;
+    }
+    if (lowerName == QStringLiteral("activitymanager")) {
+        return ElectricActionActivityManager;
+    }
+    if (lowerName == QStringLiteral("applicationlauncher")) {
+        return ElectricActionApplicationLauncher;
+    }
+    return ElectricActionNone;
 }
 
-QList<int> KWinScreenEdgesConfig::monitorCheckEffectHasEdge(int index) const
+QString KWinScreenEdgesConfig::electricBorderActionToString(int action)
 {
-    QList<int> list = QList<int>();
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::Top)) == index)
-        list.append(int(ElectricTop));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::TopRight)) == index)
-        list.append(int(ElectricTopRight));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::Right)) == index)
-        list.append(int(ElectricRight));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::BottomRight)) == index)
-        list.append(int(ElectricBottomRight));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::Bottom)) == index)
-        list.append(int(ElectricBottom));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::BottomLeft)) == index)
-        list.append(int(ElectricBottomLeft));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::Left)) == index)
-        list.append(int(ElectricLeft));
-    if (m_ui->monitor->selectedEdgeItem(int(Monitor::TopLeft)) == index)
-        list.append(int(ElectricTopLeft));
-
-    if (list.isEmpty())
-        list.append(int(ElectricNone));
-    return list;
+    switch (action) {
+    case 1:
+        return QStringLiteral("ShowDesktop");
+    case 2:
+        return QStringLiteral("LockScreen");
+    case 3:
+        return QStringLiteral("KRunner");
+    case 4:
+        return QStringLiteral("ActivityManager");
+    case 5:
+        return QStringLiteral("ApplicationLauncher");
+    default:
+        return QStringLiteral("None");
+    }
 }
 
 } // namespace
