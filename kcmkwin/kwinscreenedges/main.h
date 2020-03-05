@@ -3,6 +3,7 @@
  This file is part of the KDE project.
 
 Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
+Copyright (C) 2020 Cyril Rossi <cyril.rossi@enioka.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,43 +27,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglobals.h"
 
-#include "ui_main.h"
-
 class QShowEvent;
 
 namespace KWin
 {
+class KWinScreenEdgesConfigForm;
+class KWinScreenEdgeSettings;
+class KWinScreenEdgeScriptSettings;
 enum class BuiltInEffect;
-
-class KWinScreenEdgesConfigForm : public QWidget, public Ui::KWinScreenEdgesConfigForm
-{
-    Q_OBJECT
-
-public:
-    explicit KWinScreenEdgesConfigForm(QWidget* parent);
-};
 
 class KWinScreenEdgesConfig : public KCModule
 {
     Q_OBJECT
 
 public:
-    explicit KWinScreenEdgesConfig(QWidget* parent, const QVariantList& args);
+    explicit KWinScreenEdgesConfig(QWidget *parent, const QVariantList &args);
     ~KWinScreenEdgesConfig() override;
 
 public Q_SLOTS:
-    virtual void groupChanged();
     void save() override;
     void load() override;
     void defaults() override;
+
 protected:
-    void showEvent(QShowEvent* e) override;
-private Q_SLOTS:
-    void sanitizeCooldown();
+    void showEvent(QShowEvent *e) override;
+
 private:
-    KWinScreenEdgesConfigForm* m_ui;
+    KWinScreenEdgesConfigForm *m_form;
     KSharedConfigPtr m_config;
     QStringList m_scripts; //list of script IDs ordered in the list they are presented in the menu
+    QHash<QString, KWinScreenEdgeScriptSettings*> m_scriptSettings;
+    KWinScreenEdgeSettings *m_settings;
 
     enum EffectActions {
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
@@ -77,20 +72,16 @@ private:
         EffectCount
     };
 
-    bool effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const;
+    bool effectEnabled(const BuiltInEffect &effect, const KConfigGroup &cfg) const;
 
-    void monitorAddItem(const QString& item);
-    void monitorItemSetEnabled(int index, bool enabled);
     void monitorInit();
-    void monitorLoadAction(ElectricBorder edge, const QString& configName);
-    void monitorLoad();
-    void monitorSaveAction(int edge, const QString& configName);
-    void monitorSave();
-    void monitorDefaults();
+    void monitorLoadSettings();
+    void monitorLoadDefaultSettings();
+    void monitorSaveSettings();
     void monitorShowEvent();
-    void monitorChangeEdge(ElectricBorder border, int index);
-    void monitorHideEdge(ElectricBorder border, bool hidden);
-    QList<int> monitorCheckEffectHasEdge(int index) const;
+
+    static ElectricBorderAction electricBorderActionFromString(const QString &string);
+    static QString electricBorderActionToString(int action);
 };
 
 } // namespace

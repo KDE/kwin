@@ -54,9 +54,9 @@ public:
     void monitorChangeDefaultEdge(const QList<int> &borderList, int index);
 
     // revert to reference settings and assess for saveNeeded and default changed
-    void reload();
+    virtual void reload();
     // reset to default settings and assess for saveNeeded and default changed
-    void setDefaults();
+    virtual void setDefaults();
 
 private Q_SLOTS:
     void onChanged();
@@ -68,6 +68,8 @@ Q_SIGNALS:
 
 private:
     virtual Monitor *monitor() const = 0;
+    virtual bool isSaveNeeded() const;
+    virtual bool isDefault() const;
 
     // internal use, assert if border equals ELECTRIC_COUNT or ElectricNone
     static int electricBorderToMonitorEdge(ElectricBorder border);

@@ -193,17 +193,17 @@ ElectricBorder KWinScreenEdge::monitorEdgeToElectricBorder(int edge)
 
 void KWinScreenEdge::onChanged()
 {
-    bool needSave = false;
+    bool needSave = isSaveNeeded();
     for (auto it = m_reference.begin(); it != m_reference.cend(); ++it) {
         needSave |= it.value() != monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
     }
     emit saveNeededChanged(needSave);
 
-    bool isDefault = true;
+    bool defaults = isDefault();
     for (auto it = m_default.begin(); it != m_default.cend(); ++it) {
-        isDefault &= it.value() == monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
+        defaults &= it.value() == monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
     }
-    emit defaultChanged(isDefault);
+    emit defaultChanged(defaults);
 }
 
 void KWinScreenEdge::createConnection()
@@ -212,6 +212,16 @@ void KWinScreenEdge::createConnection()
                 &Monitor::changed,
                 this,
                 &KWinScreenEdge::onChanged);
+}
+
+bool KWinScreenEdge::isSaveNeeded() const
+{
+    return false;
+}
+
+bool KWinScreenEdge::isDefault() const
+{
+    return true;
 }
 
 } // namespace

@@ -6,11 +6,13 @@ set(kcm_screenedges_SRCS
     monitor.cpp
     screenpreviewwidget.cpp
     kwinscreenedge.cpp
+    kwinscreenedgeconfigform.cpp
 )
 qt5_add_dbus_interface(kcm_screenedges_SRCS ${KWin_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 set(kcm_kwinscreenedges_PART_SRCS main.cpp ${kcm_screenedges_SRCS})
 ki18n_wrap_ui(kcm_kwinscreenedges_PART_SRCS main.ui)
+kconfig_add_kcfg_files(kcm_kwinscreenedges_PART_SRCS kwinscreenedgesettings.kcfgc kwinscreenedgescriptsettings.kcfgc)
 add_library(kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS})
 set(kcm_screenedges_LIBS
     Qt5::DBus

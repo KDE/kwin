@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>KWinScreenEdgesConfigForm</class>
- <widget class="QWidget" name="KWinScreenEdgesConfigForm">
+ <class>KWinScreenEdgesConfigUI</class>
+ <widget class="QWidget" name="KWinScreenEdgesConfigUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -67,12 +67,12 @@
         <string>&amp;Maximize:</string>
        </property>
        <property name="buddy">
-        <cstring>quickMaximizeBox</cstring>
+        <cstring>kcfg_ElectricBorderMaximize</cstring>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QCheckBox" name="quickMaximizeBox">
+      <widget class="QCheckBox" name="kcfg_ElectricBorderMaximize">
        <property name="text">
         <string>Windows dragged to top edge</string>
        </property>
@@ -89,7 +89,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QCheckBox" name="quickTileBox">
+      <widget class="QCheckBox" name="kcfg_ElectricBorderTiling">
        <property name="text">
         <string>Windows dragged to left or right edge</string>
        </property>
@@ -147,12 +147,12 @@
         <string>&amp;Switch desktop on edge:</string>
        </property>
        <property name="buddy">
-        <cstring>desktopSwitchCombo</cstring>
+        <cstring>kcfg_ElectricBorders</cstring>
        </property>
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="KComboBox" name="desktopSwitchCombo">
+      <widget class="KComboBox" name="kcfg_ElectricBorders">
        <item>
         <property name="text">
          <string comment="Switch desktop on edge">Disabled</string>
@@ -179,12 +179,12 @@
         <string>Activation &amp;delay:</string>
        </property>
        <property name="buddy">
-        <cstring>activationDelaySpin</cstring>
+        <cstring>kcfg_ElectricBorderDelay</cstring>
        </property>
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QSpinBox" name="activationDelaySpin">
+      <widget class="QSpinBox" name="kcfg_ElectricBorderDelay">
        <property name="suffix">
         <string> ms</string>
        </property>
@@ -211,12 +211,12 @@
         <string>&amp;Reactivation delay:</string>
        </property>
        <property name="buddy">
-        <cstring>triggerCooldownSpin</cstring>
+        <cstring>kcfg_ElectricBorderCooldown</cstring>
        </property>
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QSpinBox" name="triggerCooldownSpin">
+      <widget class="QSpinBox" name="kcfg_ElectricBorderCooldown">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -280,7 +280,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>quickTileBox</sender>
+   <sender>kcfg_ElectricBorderTiling</sender>
    <signal>toggled(bool)</signal>
    <receiver>label_1</receiver>
    <slot>setEnabled(bool)</slot>
@@ -296,7 +296,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>quickTileBox</sender>
+   <sender>kcfg_ElectricBorderTiling</sender>
    <signal>toggled(bool)</signal>
    <receiver>electricBorderCornerRatioSpin</receiver>
    <slot>setEnabled(bool)</slot>
@@ -312,7 +312,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>quickTileBox</sender>
+   <sender>kcfg_ElectricBorderTiling</sender>
    <signal>toggled(bool)</signal>
    <receiver>electricBorderCornerRatioLabel</receiver>
    <slot>setEnabled(bool)</slot>
