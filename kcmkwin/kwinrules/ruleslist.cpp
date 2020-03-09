@@ -229,10 +229,5 @@ void KCMRulesList::save()
     m_settings.save();
 }
 
-void KCMRulesList::defaults()
-{
-    load();
-}
-
 } // namespace
 

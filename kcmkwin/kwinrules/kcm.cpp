@@ -51,6 +51,7 @@ KCMRules::KCMRules(QWidget *parent, const QVariantList &)
                                        QString(), QString(), KAboutLicense::GPL, i18n("(c) 2004 KWin and KControl Authors"));
     about->addAuthor(i18n("Lubos Lunak"), QString(), "l.lunak@kde.org");
     setAboutData(about);
+    setButtons(KCModule::Help | KCModule::Apply);
 }
 
 void KCMRules::load()
@@ -68,11 +69,6 @@ void KCMRules::save()
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
 
-}
-
-void KCMRules::defaults()
-{
-    widget->defaults();
 }
 
 QString KCMRules::quickHelp() const

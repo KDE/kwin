@@ -36,7 +36,6 @@ public:
     ~KCMRulesList() override;
     void load();
     void save();
-    void defaults();
 Q_SIGNALS:
     void changed(bool);
 private Q_SLOTS:
