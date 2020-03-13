@@ -65,8 +65,9 @@ Module::Module(QWidget *parent, const QVariantList &args) :
         }
     });
 
-    connect(ui->scriptSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
-    connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
+    connect(ui->scriptSelector, &KPluginSelector::changed, this, qOverload<bool>(&KCModule::changed));
+    connect(ui->scriptSelector, &KPluginSelector::defaulted, this, qOverload<bool>(&KCModule::defaulted));
+    connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
 
     updateListViewContents();
 }
@@ -140,7 +141,6 @@ void Module::updateListViewContents()
 void Module::defaults()
 {
     ui->scriptSelector->defaults();
-    emit changed(true);
 }
 
 void Module::load()
