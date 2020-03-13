@@ -126,10 +126,7 @@ void Module::importScriptInstallFinished(KJob *job)
 void Module::updateListViewContents()
 {
     auto filter =  [](const KPluginMetaData &md) {
-        if (md.value(QStringLiteral("X-KWin-Exclude-Listing")) == QLatin1String("true") ) {
-            return false;
-        }
-        return true;
+        return !md.rawData().value("X-KWin-Exclude-Listing").toBool();
     };
 
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
