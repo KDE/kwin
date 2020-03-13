@@ -46,7 +46,7 @@ public:
     ~SceneOpenGL() override;
     bool initFailed() const override;
     bool hasPendingFlush() const override;
-    qint64 paint(QRegion damage, QList<Toplevel *> windows) override;
+    qint64 paint(const QRegion &damage, const QList<Toplevel *> &windows) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
@@ -85,7 +85,7 @@ public:
 
 protected:
     SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
-    void paintBackground(QRegion region) override;
+    void paintBackground(const QRegion &region) override;
     void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
@@ -123,16 +123,16 @@ public:
     QMatrix4x4 screenProjectionMatrix() const override { return m_screenProjectionMatrix; }
 
 protected:
-    void paintSimpleScreen(int mask, QRegion region) override;
-    void paintGenericScreen(int mask, ScreenPaintData data) override;
+    void paintSimpleScreen(int mask, const QRegion &region) override;
+    void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     void doPaintBackground(const QVector< float >& vertices) override;
     Scene::Window *createWindow(Toplevel *t) override;
-    void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data) override;
+    void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
     void updateProjectionMatrix() override;
     void paintCursor() override;
 
 private:
-    void performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     QMatrix4x4 createProjectionMatrix() const;
 
 private:
@@ -174,7 +174,7 @@ public:
     ~OpenGLWindow() override;
 
     WindowPixmap *createWindowPixmap() override;
-    void performPaint(int mask, QRegion region, WindowPaintData data) override;
+    void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
 
 private:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
@@ -222,7 +222,7 @@ public:
     void freeTextFrame() override;
     void freeSelection() override;
 
-    void render(QRegion region, double opacity, double frameOpacity) override;
+    void render(const QRegion &region, double opacity, double frameOpacity) override;
 
     void crossFadeIcon() override;
     void crossFadeText() override;

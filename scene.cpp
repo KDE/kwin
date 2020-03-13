@@ -191,7 +191,7 @@ void Scene::idle()
 }
 
 // the function that'll be eventually called by paintScreen() above
-void Scene::finalPaintScreen(int mask, QRegion region, ScreenPaintData& data)
+void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS))
         paintGenericScreen(mask, data);
@@ -201,7 +201,7 @@ void Scene::finalPaintScreen(int mask, QRegion region, ScreenPaintData& data)
 
 // The generic painting code that can handle even transformations.
 // It simply paints bottom-to-top.
-void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
+void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
 {
     if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST)) {
         paintBackground(infiniteRegion());
@@ -246,7 +246,7 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
 // The optimized case without any transformations at all.
 // It can paint only the requested region and can use clipping
 // to reduce painting and improve performance.
-void Scene::paintSimpleScreen(int orig_mask, QRegion region)
+void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
 {
     Q_ASSERT((orig_mask & (PAINT_SCREEN_TRANSFORMED
                          | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) == 0);
@@ -441,7 +441,7 @@ void Scene::windowGeometryShapeChanged(Toplevel *c)
     w->discardShape();
 }
 
-void Scene::createStackingOrder(QList<Toplevel *> toplevels)
+void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
 {
     // TODO: cache the stacking_order in case it has not changed
     foreach (Toplevel *c, toplevels) {
@@ -457,11 +457,10 @@ void Scene::clearStackingOrder()
 
 static Scene::Window *s_recursionCheck = nullptr;
 
-void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads)
+void Scene::paintWindow(Window* w, int mask, const QRegion &_region, const WindowQuadList &quads)
 {
     // no painting outside visible screen (and no transformations)
-    const QSize &screenSize = screens()->size();
-    region &= QRect(0, 0, screenSize.width(), screenSize.height());
+    const QRegion region = _region & QRect({0, 0}, screens()->size());
     if (region.isEmpty())  // completely clipped
         return;
     if (w->window()->isDeleted() && w->window()->skipsCloseAnimation()) {
@@ -504,7 +503,7 @@ static void adjustClipRegion(AbstractThumbnailItem *item, QRegion &clippingRegio
     }
 }
 
-void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation)
+void Scene::paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation)
 {
     EffectWindowImpl *wImpl = static_cast<EffectWindowImpl*>(effectWindow(w));
     for (QHash<WindowThumbnailItem*, QPointer<EffectWindowImpl> >::const_iterator it = wImpl->thumbnails().constBegin();
@@ -601,13 +600,13 @@ void Scene::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPai
 }
 
 // the function that'll be eventually called by paintWindow() above
-void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     effects->drawWindow(w, mask, region, data);
 }
 
 // will be eventually called from drawWindow()
-void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
         return;
