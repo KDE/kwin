@@ -1,22 +1,8 @@
-/****************************************************************************
-Copyright 2016  Oleg Chernovskiy <kanedias@xaker.ru>
+/*
+    SPDX-FileCopyrightText: 2016 Oleg Chernovskiy <kanedias@xaker.ru>
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) version 3, or any
-later version accepted by the membership of KDE e.V. (or its
-successor approved by the membership of KDE e.V.), which shall
-act as a proxy defined in Section 6 of version 3 of the license.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-****************************************************************************/
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+*/
 #ifndef KWAYLAND_SERVER_REMOTE_ACCESS_INTERFACE_H
 #define KWAYLAND_SERVER_REMOTE_ACCESS_INTERFACE_H
 
@@ -35,11 +21,11 @@ class OutputInterface;
  * Lifecycle:
  *  1. BufferHandle is filled and passed to RemoteAccessManager
  *     (stored in manager's sent list)
- *  2. Clients confirm that they wants this buffer, the RemoteBuffer 
+ *  2. Clients confirm that they wants this buffer, the RemoteBuffer
  *     interfaces are then created and wrapped around BufferHandle.
  *  3. Once all clients are done with buffer (or disconnected),
  *     RemoteBuffer notifies manager and release signal is emitted.
- * 
+ *
  *     It's the responsibility of your process to delete this BufferHandle
  *     and release its' fd afterwards.
  **/
@@ -52,7 +38,7 @@ public:
     void setSize(quint32 width, quint32 height);
     void setStride(quint32 stride);
     void setFormat(quint32 format);
-  
+
     qint32 fd() const;
     quint32 height() const;
     quint32 width() const;

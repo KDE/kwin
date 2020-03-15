@@ -1,23 +1,9 @@
-/********************************************************************
-Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
-Copyright 2017  Marco Martin <mart@kde.org>
+/*
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2017 Marco Martin <mart@kde.org>
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) version 3, or any
-later version accepted by the membership of KDE e.V. (or its
-successor approved by the membership of KDE e.V.), which shall
-act as a proxy defined in Section 6 of version 3 of the license.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+*/
 // Qt
 #include <QtTest>
 // KWin
@@ -147,7 +133,7 @@ void TestForeign::init()
     m_foreignInterface = m_display->createXdgForeignInterface(m_display);
     m_foreignInterface->create();
     QVERIFY(m_foreignInterface->isValid());
-    
+
     QVERIFY(exporterSpy.wait());
     //Both importer and exporter should have been triggered by now
     QCOMPARE(exporterSpy.count(), 1);
@@ -250,7 +236,7 @@ void TestForeign::testDeleteImported()
     doExport();
 
     QSignalSpy transientSpy(m_foreignInterface, &KWayland::Server::XdgForeignInterface::transientChanged);
- 
+
     QVERIFY(transientSpy.isValid());
     m_imported->deleteLater();
     m_imported = nullptr;
@@ -267,7 +253,7 @@ void TestForeign::testDeleteChildSurface()
     doExport();
 
     QSignalSpy transientSpy(m_foreignInterface, &KWayland::Server::XdgForeignInterface::transientChanged);
- 
+
     QVERIFY(transientSpy.isValid());
     m_childSurface->deleteLater();
 
@@ -278,7 +264,7 @@ void TestForeign::testDeleteChildSurface()
     QVERIFY(surfaceDestroyedSpy.wait());
 
     QVERIFY(!transientSpy.first().at(0).value<KWayland::Server::SurfaceInterface *>());
-    QCOMPARE(transientSpy.first().at(1).value<KWayland::Server::SurfaceInterface *>(), m_exportedSurfaceInterface.data());    
+    QCOMPARE(transientSpy.first().at(1).value<KWayland::Server::SurfaceInterface *>(), m_exportedSurfaceInterface.data());
 }
 
 void TestForeign::testDeleteParentSurface()
@@ -286,7 +272,7 @@ void TestForeign::testDeleteParentSurface()
     doExport();
 
     QSignalSpy transientSpy(m_foreignInterface, &KWayland::Server::XdgForeignInterface::transientChanged);
- 
+
     QVERIFY(transientSpy.isValid());
     m_exportedSurface->deleteLater();
 
@@ -307,7 +293,7 @@ void TestForeign::testDeleteExported()
 
     QSignalSpy transientSpy(m_foreignInterface, &KWayland::Server::XdgForeignInterface::transientChanged);
     QSignalSpy destroyedSpy(m_imported.data(), &KWayland::Client::XdgImported::importedDestroyed);
- 
+
     QVERIFY(transientSpy.isValid());
     m_exported->deleteLater();
     m_exported = nullptr;
@@ -351,7 +337,7 @@ void TestForeign::testExportTwoTimes()
 
     imported2->setParentOf(childSurface2);
     QVERIFY(transientSpy.wait());
-    
+
     QCOMPARE(transientSpy.first().first().value<KWayland::Server::SurfaceInterface *>(), childSurface2Interface);
     QCOMPARE(transientSpy.first().at(1).value<KWayland::Server::SurfaceInterface *>(), m_exportedSurfaceInterface.data());
 
@@ -384,7 +370,7 @@ void TestForeign::testImportTwoTimes()
 
     imported2->setParentOf(childSurface2);
     QVERIFY(transientSpy.wait());
-    
+
     QCOMPARE(transientSpy.first().first().value<KWayland::Server::SurfaceInterface *>(), childSurface2Interface);
     QCOMPARE(transientSpy.first().at(1).value<KWayland::Server::SurfaceInterface *>(), m_exportedSurfaceInterface.data());
 
