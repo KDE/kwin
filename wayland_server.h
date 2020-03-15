@@ -242,6 +242,7 @@ Q_SIGNALS:
     void foreignTransientChanged(KWayland::Server::SurfaceInterface *child);
 
 private:
+    int createScreenLockerConnection();
     void shellClientShown(Toplevel *t);
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     void destroyInternalConnection();
