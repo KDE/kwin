@@ -196,7 +196,7 @@ void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet
         overallSizeCheckNeeded = true;
     }
     if (changeSet->scaleChanged()) {
-        qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scale();
+        qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scaleF();
         setScale(changeSet->scaleF());
         emitModeChanged = true;
     }

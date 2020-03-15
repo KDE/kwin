@@ -424,7 +424,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
                 c->installServerSideDecoration(deco);
             }
             connect(deco, &ServerSideDecorationInterface::modeRequested, this,
-                [this, deco] (ServerSideDecorationManagerInterface::Mode mode) {
+                [deco] (ServerSideDecorationManagerInterface::Mode mode) {
                     // always acknowledge the requested mode
                     deco->setMode(mode);
                 }
@@ -435,7 +435,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 
     m_outputManagement = m_display->createOutputManagement(m_display);
     connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
-            this, [this](KWayland::Server::OutputConfigurationInterface *config) {
+            this, [](KWayland::Server::OutputConfigurationInterface *config) {
                 kwinApp()->platform()->requestOutputsChange(config);
     });
     m_outputManagement->create();
@@ -731,7 +731,7 @@ quint32 WaylandServer::createWindowId(SurfaceInterface *surface)
 
 quint16 WaylandServer::createClientId(ClientConnection *c)
 {
-    auto ids = m_clientIds.values().toSet();
+    const QSet<unsigned short> ids(m_clientIds.constBegin(), m_clientIds.constEnd());
     quint16 id = 1;
     if (!ids.isEmpty()) {
         for (quint16 i = ids.count() + 1; i >= 1 ; i--) {

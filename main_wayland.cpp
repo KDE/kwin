@@ -225,9 +225,8 @@ void ApplicationWayland::startSession()
             environment.remove("WAYLAND_DISPLAY");
             QProcess *p = new Process(this);
             p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-            auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
-            connect(p, finishedSignal, this,
-                [this, p] {
+            connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
+                [p] {
                     if (waylandServer()) {
                         waylandServer()->destroyInputMethodConnection();
                     }
@@ -235,8 +234,9 @@ void ApplicationWayland::startSession()
                 }
             );
             p->setProcessEnvironment(environment);
-            p->start(m_inputMethodServerToStart);
-            p->waitForStarted();
+            p->setProgram(m_inputMethodServerToStart);
+            p->start();
+            p->waitForStarted(); //do we really need to wait?
         }
     }
 
@@ -245,8 +245,8 @@ void ApplicationWayland::startSession()
         QProcess *p = new Process(this);
         p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
         p->setProcessEnvironment(processStartupEnvironment());
-        auto finishedSignal = static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished);
-        connect(p, finishedSignal, this, [](int code, QProcess::ExitStatus status) {
+        connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, [p] (int code, QProcess::ExitStatus status) {
+            p->deleteLater();
             if (status == QProcess::CrashExit) {
                 qWarning() << "Session process has crashed";
                 QCoreApplication::exit(-1);
@@ -259,7 +259,8 @@ void ApplicationWayland::startSession()
 
             QCoreApplication::exit(code);
         });
-        p->start(m_sessionArgument);
+        p->setProgram(m_sessionArgument);
+        p->start();
     }
     // start the applications passed to us as command line arguments
     if (!m_applicationsToStart.isEmpty()) {
@@ -269,7 +270,9 @@ void ApplicationWayland::startSession()
             QProcess *p = new Process(this);
             p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
             p->setProcessEnvironment(processStartupEnvironment());
-            p->start(application);
+            p->setProgram(application);
+            p->startDetached();
+            p->deleteLater();
         }
     }
 }

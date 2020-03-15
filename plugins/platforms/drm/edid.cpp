@@ -155,6 +155,8 @@ static QByteArray parseVendor(const uint8_t *data)
             }
         }
     }
+#else
+    Q_UNUSED(data)
 #endif
     return {};
 }

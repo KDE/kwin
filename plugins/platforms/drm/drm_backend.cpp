@@ -781,11 +781,11 @@ QString DrmBackend::supportInformation() const
     QString supportInfo;
     QDebug s(&supportInfo);
     s.nospace();
-    s << "Name: " << "DRM" << endl;
-    s << "Active: " << m_active << endl;
-    s << "Atomic Mode Setting: " << m_atomicModeSetting << endl;
+    s << "Name: " << "DRM" << Qt::endl;
+    s << "Active: " << m_active << Qt::endl;
+    s << "Atomic Mode Setting: " << m_atomicModeSetting << Qt::endl;
 #if HAVE_EGL_STREAMS
-    s << "Using EGL Streams: " << m_useEglStreams << endl;
+    s << "Using EGL Streams: " << m_useEglStreams << Qt::endl;
 #endif
     return supportInfo;
 }

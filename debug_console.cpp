@@ -709,7 +709,7 @@ DebugConsoleDelegate::~DebugConsoleDelegate() = default;
 
 QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &locale) const
 {
-    switch (value.type()) {
+    switch (value.userType()) {
     case QMetaType::QPoint: {
         const QPoint p = value.toPoint();
         return QStringLiteral("%1,%2").arg(p.x()).arg(p.y());

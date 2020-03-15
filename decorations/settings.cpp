@@ -56,9 +56,7 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
     );
     // prevent changes in Decoration due to Compositor being destroyed
     connect(Compositor::self(), &Compositor::aboutToDestroy, this,
-        [this, c] {
-            disconnect(c);
-        }
+        [c] { disconnect(c); }
     );
     connect(Workspace::self(), &Workspace::configChanged, this, &SettingsImpl::readSettings);
     connect(DecorationBridge::self(), &DecorationBridge::metaDataLoaded, this, &SettingsImpl::readSettings);

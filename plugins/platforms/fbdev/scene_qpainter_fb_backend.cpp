@@ -45,7 +45,7 @@ FramebufferQPainterBackend::FramebufferQPainterBackend(FramebufferBackend *backe
     m_backBuffer.fill(Qt::black);
 
     connect(VirtualTerminal::self(), &VirtualTerminal::activeChanged, this,
-        [this] (bool active) {
+        [] (bool active) {
             if (active) {
                 Compositor::self()->bufferSwapComplete();
                 Compositor::self()->addRepaintFull();

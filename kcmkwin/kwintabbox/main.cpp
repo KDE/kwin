@@ -490,7 +490,7 @@ void KWinTabBoxConfig::tabBoxToggled(bool on)
     CHECK_CURRENT_TABBOX_UI
     on = !on || ui->effectCombo->currentIndex() >= Layout;
     ui->highlightWindowCheck->setEnabled(on);
-    emit changed();
+    markAsChanged();
 }
 
 void KWinTabBoxConfig::configureEffectClicked()

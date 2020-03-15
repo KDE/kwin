@@ -111,7 +111,7 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersRightEdgeChanged,  this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersBottomEdgeChanged, this, emitEdgesChanged);
-    auto emitSizeChanged = [this, c]() {
+    auto emitSizeChanged = [c]() {
         emit c->sizeChanged(c->size());
     };
     connect(this, &PreviewClient::widthChanged, this, emitSizeChanged);
