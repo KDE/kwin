@@ -731,7 +731,11 @@ quint32 WaylandServer::createWindowId(SurfaceInterface *surface)
 
 quint16 WaylandServer::createClientId(ClientConnection *c)
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     const QSet<unsigned short> ids(m_clientIds.constBegin(), m_clientIds.constEnd());
+#else
+    const auto ids = m_clientIds.toSet();
+#endif
     quint16 id = 1;
     if (!ids.isEmpty()) {
         for (quint16 i = ids.count() + 1; i >= 1 ; i--) {
