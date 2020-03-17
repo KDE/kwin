@@ -51,6 +51,8 @@ class TabletInputRedirection;
 class TouchInputRedirection;
 class WindowSelectorFilter;
 class SwitchEvent;
+class TabletEvent;
+class TabletInputFilter;
 
 namespace Decoration
 {
@@ -100,6 +102,26 @@ public:
         Proximity,
         Tip
     };
+    enum TabletToolType {
+        Pen,
+        Eraser,
+        Brush,
+        Pencil,
+        Airbrush,
+        Finger,
+        Mouse,
+        Lens,
+        Totem,
+    };
+    enum Capability {
+        Tilt,
+        Pressure,
+        Distance,
+        Rotation,
+        Slider,
+        Wheel,
+    };
+
     ~InputRedirection() override;
     void init();
 
@@ -297,6 +319,7 @@ private:
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
     TouchInputRedirection *m_touch;
+    TabletInputFilter *m_tabletSupport = nullptr;
 
     GlobalShortcutsManager *m_shortcuts;
 
@@ -382,7 +405,7 @@ public:
 
     virtual bool switchEvent(SwitchEvent *event);
 
-    virtual bool tabletToolEvent(QTabletEvent *event);
+    virtual bool tabletToolEvent(TabletEvent *event);
     virtual bool tabletToolButtonEvent(const QSet<uint> &buttons);
     virtual bool tabletPadButtonEvent(const QSet<uint> &buttons);
     virtual bool tabletPadStripEvent(int number, int position, bool isFinger);

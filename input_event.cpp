@@ -65,4 +65,17 @@ SwitchEvent::SwitchEvent(State state, quint32 timestamp, quint64 timestampMicros
     setTimestamp(timestamp);
 }
 
+TabletEvent::TabletEvent(Type t, const QPointF &pos, const QPointF &globalPos,
+                 int device, int pointerType, qreal pressure, int xTilt, int yTilt,
+                 qreal tangentialPressure, qreal rotation, int z,
+                 Qt::KeyboardModifiers keyState, qint64 uniqueID,
+                 Qt::MouseButton button, Qt::MouseButtons buttons, InputRedirection::TabletToolType toolType, const QVector<InputRedirection::Capability> &capabilities, quint64 serialId, const QString &tabletSysName)
+    : QTabletEvent(t, pos, globalPos, device, pointerType, pressure, xTilt, yTilt, tangentialPressure, rotation, z, keyState, uniqueID, button, buttons)
+    , m_toolType(toolType)
+    , m_capabilities(capabilities)
+    , m_serialId(serialId)
+    , m_tabletSysName(tabletSysName)
+{
+}
+
 }

@@ -33,7 +33,7 @@ class KeyEvent;
 class MouseEvent;
 class WheelEvent;
 class SwitchEvent;
-
+class TabletEvent;
 
 /**
  * Base class for spying on input events inside InputRedirection.
@@ -85,7 +85,7 @@ public:
 
     virtual void switchEvent(SwitchEvent *event);
 
-    virtual void tabletToolEvent(QTabletEvent *event);
+    virtual void tabletToolEvent(TabletEvent *event);
     virtual void tabletToolButtonEvent(const QSet<uint> &pressedButtons);
     virtual void tabletPadButtonEvent(const QSet<uint> &pressedButtons);
     virtual void tabletPadStripEvent(int number, int position, bool isFinger);

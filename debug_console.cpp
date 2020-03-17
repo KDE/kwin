@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "keyboard_input.h"
+#include "input_event.h"
 #include "libinput/connection.h"
 #include "libinput/device.h"
 #include <kwinglplatform.h>
@@ -486,7 +487,7 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolEvent(QTabletEvent *event)
+void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
 {
     QString typeString;
     {

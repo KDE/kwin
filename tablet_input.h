@@ -26,11 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QPointF>
 #include <QPointer>
-#include <QTabletEvent>
 
 namespace KWin
 {
-class InputRedirection;
 class Toplevel;
 
 namespace Decoration
@@ -54,7 +52,9 @@ public:
 
     void tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                         bool tipNear, quint64 serialId, quint64 toolId, LibInput::Device *device);
+                         bool tipNear, quint64 serialId, quint64 toolId,
+                         InputRedirection::TabletToolType toolType, const QVector<InputRedirection::Capability> &capabilities,
+                         quint32 time, LibInput::Device *device);
     void tabletToolButtonEvent(uint button, bool isPressed);
 
     void tabletPadButtonEvent(uint button, bool isPressed);
