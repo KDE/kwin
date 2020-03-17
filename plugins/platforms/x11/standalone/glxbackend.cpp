@@ -572,8 +572,11 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     const xcb_render_pictformat_t format = XRenderUtils::findPictFormat(visual);
     const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+        using Qt::hex;
+#endif
     if (!direct) {
-        qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a picture format for visual 0x" << Qt::hex << visual;
+        qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a picture format for visual 0x" << hex << visual;
         return info;
     }
 
@@ -607,7 +610,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
     if (count < 1) {
-        qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a framebuffer configuration for visual 0x" << Qt::hex << visual;
+        qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
         return info;
     }
 
@@ -689,7 +692,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID,   &visual_id);
 
-        qCDebug(KWIN_X11STANDALONE).nospace() << "Using FBConfig 0x" << Qt::hex << fbc_id << " for visual 0x" << Qt::hex << visual_id;
+        qCDebug(KWIN_X11STANDALONE).nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
     }
 
     return info;
