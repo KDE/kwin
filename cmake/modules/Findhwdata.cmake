@@ -34,7 +34,7 @@
 if (UNIX AND NOT APPLE)
     find_path(hwdata_DIR NAMES hwdata/pnp.ids HINTS /usr/share ENV XDG_DATA_DIRS)
     find_file(hwdata_PNPIDS_FILE NAMES hwdata/pnp.ids HINTS /usr/share)
-    if (hwdata_DIR-NOTFOUND OR hwdata_PNPIDS_FILE-NOTFOUND)
+    if (NOT hwdata_DIR OR NOT hwdata_PNPIDS_FILE)
         set(hwdata_FOUND FALSE)
     else()
         set(hwdata_FOUND TRUE)

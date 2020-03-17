@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config-kwin.h"
 
 #include <QFile>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -142,11 +143,10 @@ static QByteArray parseSerialNumber(const uint8_t *data)
 
 static QByteArray parseVendor(const uint8_t *data)
 {
-#if HAVE_HWDATA
     const auto pnpId = parsePnpId(data);
 
     // Map to vendor name
-    QFile pnpFile(QStringLiteral(HWDATA_PNPIDS_FILE));
+    QFile pnpFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("hwdata/pnp.ids")));
     if (pnpFile.exists() && pnpFile.open(QIODevice::ReadOnly)) {
         while (!pnpFile.atEnd()) {
             const auto line = pnpFile.readLine();
@@ -155,9 +155,7 @@ static QByteArray parseVendor(const uint8_t *data)
             }
         }
     }
-#else
-    Q_UNUSED(data)
-#endif
+
     return {};
 }
 

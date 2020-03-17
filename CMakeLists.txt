@@ -293,7 +293,6 @@ set_package_properties(hwdata PROPERTIES
     PURPOSE "Runtime-only dependency needed for mapping monitor hardware vendor IDs to full names"
     URL "https://github.com/vcrhonek/hwdata"
 )
-set(HAVE_HWDATA ${hwdata_FOUND})
 
 include(ECMQMLModules)
 ecm_find_qmlmodule(QtQuick 2.3)
