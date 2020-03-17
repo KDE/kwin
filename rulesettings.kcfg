@@ -66,12 +66,12 @@
     </entry>
 
     <entry name="placement" type="Enum">
-      <label>Inital placement</label>
+      <label>Initial placement</label>
       <choices name="Placement::Policy"/>
       <default code="true">Placement::Smart</default>
     </entry>
     <entry name="placementrule" type="Int">
-      <label>Inital placement rule type</label>
+      <label>Initial placement rule type</label>
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
 

@@ -279,7 +279,7 @@ public:
     }
 };
 
-bool WaylandServer::init(const QByteArray &socketName, InitalizationFlags flags)
+bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags)
 {
     m_initFlags = flags;
     m_display = new KWinDisplay(this);
@@ -525,7 +525,7 @@ void WaylandServer::initScreenLocker()
         }
     );
 
-    if (m_initFlags.testFlag(InitalizationFlag::LockScreen)) {
+    if (m_initFlags.testFlag(InitializationFlag::LockScreen)) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
     emit initialized();
@@ -762,12 +762,12 @@ bool WaylandServer::isScreenLocked() const
 
 bool WaylandServer::hasScreenLockerIntegration() const
 {
-    return !m_initFlags.testFlag(InitalizationFlag::NoLockScreenIntegration);
+    return !m_initFlags.testFlag(InitializationFlag::NoLockScreenIntegration);
 }
 
 bool WaylandServer::hasGlobalShortcutSupport() const
 {
-    return !m_initFlags.testFlag(InitalizationFlag::NoGlobalShortcuts);
+    return !m_initFlags.testFlag(InitializationFlag::NoGlobalShortcuts);
 }
 
 void WaylandServer::simulateUserActivity()

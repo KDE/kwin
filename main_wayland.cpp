@@ -637,14 +637,14 @@ int main(int argc, char * argv[])
     // TODO: create backend without having the server running
     KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
 
-    KWin::WaylandServer::InitalizationFlags flags;
+    KWin::WaylandServer::InitializationFlags flags;
     if (parser.isSet(screenLockerOption)) {
-        flags = KWin::WaylandServer::InitalizationFlag::LockScreen;
+        flags = KWin::WaylandServer::InitializationFlag::LockScreen;
     } else if (parser.isSet(noScreenLockerOption)) {
-        flags = KWin::WaylandServer::InitalizationFlag::NoLockScreenIntegration;
+        flags = KWin::WaylandServer::InitializationFlag::NoLockScreenIntegration;
     }
     if (parser.isSet(noGlobalShortcutsOption)) {
-        flags |= KWin::WaylandServer::InitalizationFlag::NoGlobalShortcuts;
+        flags |= KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts;
     }
     if (!server->init(parser.value(waylandSocketOption).toUtf8(), flags)) {
         std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
