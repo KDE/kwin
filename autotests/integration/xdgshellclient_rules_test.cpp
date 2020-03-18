@@ -265,7 +265,6 @@ void TestXdgShellClientRules::cleanup()
 void TestXdgShellClientRules::name##_data() \
 { \
     QTest::addColumn<Test::XdgShellSurfaceType>("type"); \
-    QTest::newRow("XdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6; \
     QTest::newRow("XdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable; \
 }
 
@@ -4524,7 +4523,7 @@ void TestXdgShellClientRules::testMatchAfterNameChange()
     workspace()->slotReconfigure();
 
     QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellV6Surface(surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
 
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);

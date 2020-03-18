@@ -415,7 +415,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
 
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellV6Surface(
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(
         surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 
@@ -487,7 +487,7 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QVERIFY(!surface.isNull());
     QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
 
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellV6Surface(
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(
         surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
     QVERIFY(!shellSurface.isNull());
 

@@ -133,7 +133,6 @@ KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
 enum class XdgShellSurfaceType {
-    XdgShellV6,
     XdgShellStable
 };
 
@@ -147,9 +146,6 @@ KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType typ
                                                          QObject *parent = nullptr,
                                                          CreationSetup creationSetup = CreationSetup::CreateAndConfigure);
 
-KWayland::Client::XdgShellSurface *createXdgShellV6Surface(KWayland::Client::Surface *surface,
-                                                           QObject *parent = nullptr,
-                                                           CreationSetup = CreationSetup::CreateAndConfigure);
 KWayland::Client::XdgShellSurface *createXdgShellStableSurface(KWayland::Client::Surface *surface,
                                                                QObject *parent = nullptr,
                                                                CreationSetup = CreationSetup::CreateAndConfigure);

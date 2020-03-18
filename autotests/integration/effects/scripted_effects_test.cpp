@@ -211,7 +211,7 @@ void ScriptedEffectsTest::testEffectsHandler()
     using namespace KWayland::Client;
     auto *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
+    auto *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
     shellSurface->setTitle("WindowA");
     auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
@@ -290,7 +290,7 @@ void ScriptedEffectsTest::testAnimations()
     using namespace KWayland::Client;
     auto *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
+    auto *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
     shellSurface->setTitle("Window 1");
     auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
@@ -398,7 +398,7 @@ void ScriptedEffectsTest::testFullScreenEffect()
     using namespace KWayland::Client;
     auto *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
+    auto *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
     shellSurface->setTitle("Window 1");
     auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
@@ -462,7 +462,7 @@ void ScriptedEffectsTest::testKeepAlive()
     using namespace KWayland::Client;
     auto *surface = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface);
-    auto *shellSurface = Test::createXdgShellV6Surface(surface, surface);
+    auto *shellSurface = Test::createXdgShellStableSurface(surface, surface);
     QVERIFY(shellSurface);
     auto *c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
     QVERIFY(c);
