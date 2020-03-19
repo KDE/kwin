@@ -49,12 +49,6 @@ public:
     void defaults() override;
     QString quickHelp() const override;
 
-
-protected Q_SLOTS:
-
-    void moduleChanged(bool state);
-
-
 private:
 
     QTabWidget   *tab;

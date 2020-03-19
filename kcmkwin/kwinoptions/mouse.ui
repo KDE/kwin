@@ -26,12 +26,12 @@
          <string>&amp;Double-click:</string>
         </property>
         <property name="buddy">
-         <cstring>coTiDbl</cstring>
+         <cstring>kcfg_TitlebarDoubleClickCommand</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="coTiDbl">
+       <widget class="KComboBox" name="kcfg_TitlebarDoubleClickCommand">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;double&lt;/em&gt; click into the titlebar.</string>
         </property>
@@ -88,12 +88,12 @@
          <string>Mouse &amp;wheel:</string>
         </property>
         <property name="buddy">
-         <cstring>coTiAct4</cstring>
+         <cstring>kcfg_CommandTitlebarWheel</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="coTiAct4">
+       <widget class="KComboBox" name="kcfg_CommandTitlebarWheel">
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;mouse wheel&lt;/em&gt; scroll over the titlebar.</string>
         </property>
@@ -180,7 +180,7 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coTiAct1</cstring>
+           <cstring>kcfg_CommandActiveTitlebar1</cstring>
           </property>
          </widget>
         </item>
@@ -203,7 +203,7 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coTiAct2</cstring>
+           <cstring>kcfg_CommandActiveTitlebar2</cstring>
           </property>
          </widget>
         </item>
@@ -216,12 +216,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coTiAct3</cstring>
+           <cstring>kcfg_CommandActiveTitlebar3</cstring>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="KComboBox" name="coTiAct1">
+         <widget class="KComboBox" name="kcfg_CommandActiveTitlebar1">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -274,7 +274,7 @@
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="KComboBox" name="coTiInAct1">
+         <widget class="KComboBox" name="kcfg_CommandInactiveTitlebar1">
           <property name="whatsThis">
            <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
           </property>
@@ -336,7 +336,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="KComboBox" name="coTiAct2">
+         <widget class="KComboBox" name="kcfg_CommandActiveTitlebar2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -389,7 +389,7 @@
          </widget>
         </item>
         <item row="2" column="2">
-         <widget class="KComboBox" name="coTiInAct2">
+         <widget class="KComboBox" name="kcfg_CommandInactiveTitlebar2">
           <property name="whatsThis">
            <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
           </property>
@@ -451,7 +451,7 @@
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="KComboBox" name="coTiAct3">
+         <widget class="KComboBox" name="kcfg_CommandActiveTitlebar3">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -504,7 +504,7 @@
          </widget>
         </item>
         <item row="3" column="2">
-         <widget class="KComboBox" name="coTiInAct3">
+         <widget class="KComboBox" name="kcfg_CommandInactiveTitlebar3">
           <property name="whatsThis">
            <string>Behavior on &lt;em&gt;left&lt;/em&gt; click into the titlebar or frame of an &lt;em&gt;inactive&lt;/em&gt; window.</string>
           </property>
@@ -601,12 +601,12 @@
          <string>L&amp;eft click:</string>
         </property>
         <property name="buddy">
-         <cstring>leftClickMaximizeButton</cstring>
+         <cstring>kcfg_MaximizeButtonLeftClickCommand</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="leftClickMaximizeButton">
+       <widget class="KComboBox" name="kcfg_MaximizeButtonLeftClickCommand">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -627,12 +627,12 @@
          <string>Middle c&amp;lick:</string>
         </property>
         <property name="buddy">
-         <cstring>middleClickMaximizeButton</cstring>
+         <cstring>kcfg_MaximizeButtonMiddleClickCommand</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="middleClickMaximizeButton">
+       <widget class="KComboBox" name="kcfg_MaximizeButtonMiddleClickCommand">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -653,12 +653,12 @@
          <string>Right clic&amp;k:</string>
         </property>
         <property name="buddy">
-         <cstring>rightClickMaximizeButton</cstring>
+         <cstring>kcfg_MaximizeButtonRightClickCommand</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="rightClickMaximizeButton">
+       <widget class="KComboBox" name="kcfg_MaximizeButtonRightClickCommand">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -696,17 +696,17 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>coTiDbl</tabstop>
-  <tabstop>coTiAct4</tabstop>
-  <tabstop>coTiAct1</tabstop>
-  <tabstop>coTiInAct1</tabstop>
-  <tabstop>coTiAct2</tabstop>
-  <tabstop>coTiInAct2</tabstop>
-  <tabstop>coTiAct3</tabstop>
-  <tabstop>coTiInAct3</tabstop>
-  <tabstop>leftClickMaximizeButton</tabstop>
-  <tabstop>middleClickMaximizeButton</tabstop>
-  <tabstop>rightClickMaximizeButton</tabstop>
+  <tabstop>kcfg_TitlebarDoubleClickCommand</tabstop>
+  <tabstop>kcfg_CommandTitlebarWheel</tabstop>
+  <tabstop>kcfg_CommandActiveTitlebar1</tabstop>
+  <tabstop>kcfg_CommandInactiveTitlebar1</tabstop>
+  <tabstop>kcfg_CommandActiveTitlebar2</tabstop>
+  <tabstop>kcfg_CommandInactiveTitlebar2</tabstop>
+  <tabstop>kcfg_CommandActiveTitlebar3</tabstop>
+  <tabstop>kcfg_CommandInactiveTitlebar3</tabstop>
+  <tabstop>kcfg_MaximizeButtonLeftClickCommand</tabstop>
+  <tabstop>kcfg_MaximizeButtonMiddleClickCommand</tabstop>
+  <tabstop>kcfg_MaximizeButtonRightClickCommand</tabstop>
  </tabstops>
  <resources/>
  <connections/>

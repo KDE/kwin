@@ -58,5 +58,265 @@
         <default>true</default>
     </entry>
 
+    <entry key="TitlebarDoubleClickCommand" type="Enum">
+        <default>Maximize</default>
+        <choices>
+            <choice name="Maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
+            <choice name="Minimize"></choice>
+            <choice name="Shade"></choice>
+            <choice name="Lower"></choice>
+            <choice name="Close"></choice>
+            <choice name="OnAllDesktops"></choice>
+            <choice name="Nothing"></choice>
+        </choices>
+    </entry>
+
+    <entry key="MaximizeButtonLeftClickCommand" type="Enum">
+        <default>Maximize</default>
+        <choices>
+            <choice name="Maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
+        </choices>
+    </entry>
+
+    <entry key="MaximizeButtonMiddleClickCommand" type="Enum">
+        <default>MaximizeVerticalOnly</default>
+        <choices>
+            <choice name="Maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
+        </choices>
+    </entry>
+
+    <entry key="MaximizeButtonRightClickCommand" type="Enum">
+        <default>MaximizeVerticalOnly</default>
+        <choices>
+            <choice name="Maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
+        </choices>
+    </entry>
+
+    </group>
+
+    <group name="MouseBindings">
+
+    <entry key="CommandActiveTitlebar1" type="Enum">
+     <default>Raise</default>
+     <choices>
+         <choice name="Raise"></choice>
+         <choice name="Lower"></choice>
+         <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+         <choice name="Minimize"></choice>
+         <choice name="Shade"></choice>
+         <choice name="Close"></choice>
+         <choice name="OperationsMenu" value="Operations menu"></choice>
+         <choice name="Nothing"></choice>
+     </choices>
+    </entry>
+
+    <entry key="CommandActiveTitlebar2" type="Enum">
+        <default>Nothing</default>
+        <choices>
+            <choice name="Raise"></choice>
+            <choice name="Lower"></choice>
+            <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+            <choice name="Minimize"></choice>
+            <choice name="Shade"></choice>
+            <choice name="Close"></choice>
+            <choice name="OperationsMenu" value="Operations menu"></choice>
+            <choice name="Nothing"></choice>
+        </choices>
+    </entry>
+
+    <entry key="CommandActiveTitlebar3" type="Enum">
+        <default>OperationsMenu</default>
+        <choices>
+            <choice name="Raise"></choice>
+            <choice name="Lower"></choice>
+            <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+            <choice name="Minimize"></choice>
+            <choice name="Shade"></choice>
+            <choice name="Close"></choice>
+            <choice name="OperationsMenu" value="Operations menu"></choice>
+            <choice name="Nothing"></choice>
+        </choices>
+    </entry>
+
+    <entry key="CommandTitlebarWheel" type="Enum">
+        <default>Nothing</default>
+        <choices>
+        <choice name="RaiseLower" value="Raise/Lower"></choice>
+        <choice name="ShadeUnshade" value="Shade/Unshade"></choice>
+        <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
+        <choice name="AboveBelow" value="Above/Below"></choice>
+        <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
+        <choice name="ChangeOpacity" value="Change Opacity"></choice>
+        <choice name="Nothing"></choice>
+        </choices>
+    </entry>
+
+    <entry key="CommandInactiveTitlebar1" type="Enum">
+        <default>ActivateAndRaise</default>
+        <choices>
+            <choice name="ActivateAndRaise" value="Activate and raise"></choice>
+            <choice name="ActivateAndLower" value="Activate and lower"></choice>
+            <choice name="Activate"></choice>
+            <choice name="Raise"></choice>
+            <choice name="Lower"></choice>
+            <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+            <choice name="Minimize"></choice>
+            <choice name="Shade"></choice>
+            <choice name="Close"></choice>
+            <choice name="OperationsMenu" value="Operations menu"></choice>
+            <choice name="Nothing"></choice>
+        </choices>
+    </entry>
+
+    <entry key="CommandInactiveTitlebar2" type="Enum">
+        <default>Nothing</default>
+        <choices>
+            <choice name="ActivateAndRaise" value="Activate and raise"></choice>
+            <choice name="ActivateAndLower" value="Activate and lower"></choice>
+            <choice name="Activate"></choice>
+            <choice name="Raise"></choice>
+            <choice name="Lower"></choice>
+            <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+            <choice name="Minimize"></choice>
+            <choice name="Shade"></choice>
+            <choice name="Close"></choice>
+            <choice name="OperationsMenu" value="Operations menu"></choice>
+            <choice name="Nothing"></choice>
+        </choices>
+    </entry>
+
+    <entry key="CommandInactiveTitlebar3" type="Enum">
+      <default>OperationsMenu</default>
+      <choices>
+          <choice name="ActivateAndRaise" value="Activate and raise"></choice>
+          <choice name="ActivateAndLower" value="Activate and lower"></choice>
+          <choice name="Activate"></choice>
+          <choice name="Raise"></choice>
+          <choice name="Lower"></choice>
+          <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+          <choice name="Minimize"></choice>
+          <choice name="Shade"></choice>
+          <choice name="Close"></choice>
+          <choice name="OperationsMenu" value="Operations menu"></choice>
+          <choice name="Nothing"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandWindow1" type="Enum">
+      <default>ActivateRaisePassClick</default>
+      <choices>
+          <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
+          <choice name="ActivatePassClick" value="Activate and pass click"></choice>
+          <choice name="Activate"></choice>
+          <choice name="ActivateRaise" value="Activate and raise"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandWindow2" type="Enum">
+      <default>ActivatePassClick</default>
+      <choices>
+          <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
+          <choice name="ActivatePassClick" value="Activate and pass click"></choice>
+          <choice name="Activate"></choice>
+          <choice name="ActivateRaise" value="Activate and raise"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandWindow3" type="Enum">
+      <default>ActivatePassClick</default>
+      <choices>
+          <choice name="ActivateRaisePassClick" value="Activate, raise and pass click"></choice>
+          <choice name="ActivatePassClick" value="Activate and pass click"></choice>
+          <choice name="Activate"></choice>
+          <choice name="ActivateRaise" value="Activate and raise"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandWindowWheel" type="Enum">
+      <default>Scroll</default>
+      <choices>
+          <choice name="Scroll"></choice>
+          <choice name="ActivateScroll" value="Activate and scroll"></choice>
+          <choice name="ActivateRaiseAndScroll" value="Activate, raise and scroll"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandAllKey" type="Enum">
+      <default>Alt</default>
+      <choices>
+          <choice name="Alt"></choice>
+          <choice name="Meta"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandAll1" type="Enum">
+      <default>Move</default>
+      <choices>
+          <choice name="Move"></choice>
+          <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
+          <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+          <choice name="Resize"></choice>
+          <choice name="Raise"></choice>
+          <choice name="Lower"></choice>
+          <choice name="Minimize"></choice>
+          <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
+          <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="Nothing"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandAll2" type="Enum">
+      <default>ToggleRaiseAndLower</default>
+      <choices>
+          <choice name="Move"></choice>
+          <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
+          <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+          <choice name="Resize"></choice>
+          <choice name="Raise"></choice>
+          <choice name="Lower"></choice>
+          <choice name="Minimize"></choice>
+          <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
+          <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="Nothing"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandAll3" type="Enum">
+      <default>Resize</default>
+      <choices>
+          <choice name="Move"></choice>
+          <choice name="ActivateRaiseAndMove" value="Activate, raise and move"></choice>
+          <choice name="ToggleRaiseAndLower" value="Toggle raise and lower"></choice>
+          <choice name="Resize"></choice>
+          <choice name="Raise"></choice>
+          <choice name="Lower"></choice>
+          <choice name="Minimize"></choice>
+          <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
+          <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="Nothing"></choice>
+      </choices>
+    </entry>
+
+    <entry key="CommandAllWheel" type="Enum">
+      <default>Nothing</default>
+      <choices>
+          <choice name="RaiseLower" value="Raise/Lower"></choice>
+          <choice name="ShadeUnshade" value="Shade/Unshade"></choice>
+          <choice name="MaxmizeRestore" value="Maximize/Restore"></choice>
+          <choice name="AboveBelow" value="Above/Below"></choice>
+          <choice name="PreviousNextDesktop" value="Previous/Next Desktop"></choice>
+          <choice name="ChangeOpacity" value="Change Opacity"></choice>
+          <choice name="Nothing"></choice>
+      </choices>
+    </entry>
+
     </group>
 </kcfg>

@@ -78,15 +78,17 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab->addTab(mFocus, i18n("&Focus"));
     connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mWindowActions = new KWindowActionsConfig(false, mConfig, this);
+    mWindowActions = new KWindowActionsConfig(false, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
     connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
     mMoving = new KMovingConfig(false, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
@@ -149,8 +151,6 @@ void KWinOptions::save()
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
-
-
 }
 
 
@@ -173,11 +173,6 @@ QString KWinOptions::quickHelp() const
                 " for how to customize window behavior.</p>");
 }
 
-void KWinOptions::moduleChanged(bool state)
-{
-    emit KCModule::changed(state);
-}
-
 KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     : KCModule(parent)
 {
@@ -188,15 +183,17 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     tab = new QTabWidget(this);
     layout->addWidget(tab);
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mWindowActions = new KWindowActionsConfig(false, mConfig, this);
+    mWindowActions = new KWindowActionsConfig(false, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("Window Actio&ns"));
     connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 }
 
 KActionsOptions::~KActionsOptions()
@@ -208,9 +205,7 @@ void KActionsOptions::load()
 {
     mTitleBarActions->load();
     mWindowActions->load();
-    emit KCModule::changed(false);
 }
-
 
 void KActionsOptions::save()
 {
@@ -224,16 +219,12 @@ void KActionsOptions::save()
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
-
 }
-
 
 void KActionsOptions::defaults()
 {
     mTitleBarActions->defaults();
     mWindowActions->defaults();
-
-    emit defaulted(true);
 }
 
 void KActionsOptions::moduleChanged(bool state)
