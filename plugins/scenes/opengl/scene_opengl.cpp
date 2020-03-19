@@ -800,8 +800,9 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
     if (limit[0] < size.width() || limit[1] < size.height()) {
         auto compositor = static_cast<X11Compositor*>(Compositor::self());
         QMetaObject::invokeMethod(compositor, [compositor]() {
-                compositor->suspend(X11Compositor::AllReasonSuspend);
-            }, Qt::QueuedConnection);
+            qCDebug(KWIN_OPENGL) << "Suspending compositing because viewport limits are not met";
+            compositor->suspend(X11Compositor::AllReasonSuspend);
+        }, Qt::QueuedConnection);
         return false;
     }
     return true;
