@@ -546,10 +546,6 @@ void SurfaceInterface::Private::damage(const QRect &rect)
 
 void SurfaceInterface::Private::damageBuffer(const QRect &rect)
 {
-    if (!pending.bufferIsSet || (pending.bufferIsSet && !pending.buffer)) {
-        // TODO: should we send an error?
-        return;
-    }
     pending.bufferDamage = pending.bufferDamage.united(rect);
 }
 
