@@ -1039,6 +1039,8 @@ WindowPixmap::WindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface>
 
 WindowPixmap::~WindowPixmap()
 {
+    qDeleteAll(m_children);
+
     if (m_pixmap != XCB_WINDOW_NONE) {
         xcb_free_pixmap(connection(), m_pixmap);
     }
