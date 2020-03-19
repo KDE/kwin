@@ -10,6 +10,8 @@
 
 #include <QPointer>
 
+class QTemporaryFile;
+
 namespace KWayland
 {
 namespace Server
@@ -31,6 +33,7 @@ public:
     SurfaceInterface *focusedSurface = nullptr;
     QPointer<SurfaceInterface> focusedChildSurface;
     QMetaObject::Connection destroyConnection;
+    QScopedPointer<QTemporaryFile> keymap;
 
 private:
     static const struct wl_keyboard_interface s_interface;

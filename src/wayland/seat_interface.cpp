@@ -14,6 +14,8 @@
 #include "pointer_interface_p.h"
 #include "surface_interface.h"
 #include "textinput_interface_p.h"
+// Qt
+#include <QFile>
 // Wayland
 #ifndef WL_SEAT_NAME_SINCE_VERSION
 #define WL_SEAT_NAME_SINCE_VERSION 2
@@ -522,7 +524,7 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
     }
     keyboard->repeatInfo(keys.keyRepeat.charactersPerSecond, keys.keyRepeat.delay);
     if (keys.keymap.xkbcommonCompatible) {
-        keyboard->setKeymap(keys.keymap.fd, keys.keymap.size);
+        keyboard->setKeymap(keys.keymap.content);
     }
     keyboards << keyboard;
     if (keys.focus.surface && keys.focus.surface->client() == clientConnection) {
@@ -1147,14 +1149,28 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
     }
 }
 
+#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
 void SeatInterface::setKeymap(int fd, quint32 size)
+{
+    QFile file;
+    if (!file.open(fd, QIODevice::ReadOnly)) {
+        return;
+    }
+    const char *address = reinterpret_cast<char*>(file.map(0, size));
+    if (!address) {
+        return;
+    }
+    setKeymapData(QByteArray(address, size));
+}
+#endif
+
+void SeatInterface::setKeymapData(const QByteArray &content)
 {
     Q_D();
     d->keys.keymap.xkbcommonCompatible = true;
-    d->keys.keymap.fd = fd;
-    d->keys.keymap.size = size;
+    d->keys.keymap.content = content;
     for (auto it = d->keyboards.constBegin(); it != d->keyboards.constEnd(); ++it) {
-        (*it)->setKeymap(fd, size);
+        (*it)->setKeymap(content);
     }
 }
 
@@ -1211,17 +1227,19 @@ bool SeatInterface::isKeymapXkbCompatible() const
     return d->keys.keymap.xkbcommonCompatible;
 }
 
+#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
 int SeatInterface::keymapFileDescriptor() const
 {
-    Q_D();
-    return d->keys.keymap.fd;
+    return -1;
 }
+#endif
 
+#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
 quint32 SeatInterface::keymapSize() const
 {
-    Q_D();
-    return d->keys.keymap.size;
+    return 0;
 }
+#endif
 
 quint32 SeatInterface::depressedModifiers() const
 {

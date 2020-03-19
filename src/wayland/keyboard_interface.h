@@ -36,6 +36,7 @@ public:
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
     void setKeymap(int fd, quint32 size);
+    void setKeymap(const QByteArray &content);
     void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
     void keyPressed(quint32 key, quint32 serial);
     void keyReleased(quint32 key, quint32 serial);

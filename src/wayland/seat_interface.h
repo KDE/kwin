@@ -546,7 +546,19 @@ public:
      * @name keyboard related methods
      **/
     ///@{
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 69)
+    /**
+     * @deprecated since 5.69, use setKeymapData
+     **/
+    KWAYLANDSERVER_DEPRECATED_VERSION(5, 69, "Use SeatInterface::setKeymapData()")
     void setKeymap(int fd, quint32 size);
+#endif
+    /**
+     * Sets the xkb keymap with @p content for this Seat.
+     * The content gets sent to all registered KeyboardInterfaces
+     * @since 5.69
+     **/
+    void setKeymapData(const QByteArray &content);
     void keyPressed(quint32 key);
     void keyReleased(quint32 key);
     void updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
@@ -568,8 +580,16 @@ public:
     quint32 lockedModifiers() const;
     quint32 groupModifiers() const;
     quint32 lastModifiersSerial() const;
-    int keymapFileDescriptor() const;
-    quint32 keymapSize() const;
+#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 69)
+    /**
+     * @deprecated since 5.69
+     **/
+    int KWAYLANDSERVER_DEPRECATED keymapFileDescriptor() const;
+    /**
+     * @deprecated since 5.69
+     **/
+    quint32 KWAYLANDSERVER_DEPRECATED keymapSize() const;
+#endif
     bool isKeymapXkbCompatible() const;
     QVector<quint32> pressedKeys() const;
     /**

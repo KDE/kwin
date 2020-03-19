@@ -86,9 +86,8 @@ public:
         };
         QHash<quint32, State> states;
         struct Keymap {
-            int fd = -1;
-            quint32 size = 0;
             bool xkbcommonCompatible = false;
+            QByteArray content;
         };
         Keymap keymap;
         struct Modifiers {

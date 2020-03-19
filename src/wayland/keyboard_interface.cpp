@@ -9,9 +9,12 @@
 #include "seat_interface.h"
 #include "surface_interface.h"
 // Qt
+#include <QTemporaryFile>
 #include <QVector>
 // Wayland
 #include <wayland-server.h>
+
+#include <unistd.h>
 
 namespace KWayland
 {
@@ -74,6 +77,29 @@ void KeyboardInterface::setKeymap(int fd, quint32 size)
 {
     Q_D();
     d->sendKeymap(fd, size);
+}
+
+void KeyboardInterface::setKeymap(const QByteArray &content)
+{
+    QScopedPointer<QTemporaryFile> tmp{new QTemporaryFile(this)};
+    if (!tmp->open()) {
+        return;
+    }
+    unlink(tmp->fileName().toUtf8().constData());
+    if (!tmp->resize(content.size())) {
+        return;
+    }
+    uchar *address = tmp->map(0, content.size());
+    if (!address) {
+        return;
+    }
+    if (qstrncpy(reinterpret_cast<char*>(address), content.constData(), content.size() + 1) == nullptr) {
+        return;
+    }
+    tmp->unmap(address);
+    Q_D();
+    d->sendKeymap(tmp->handle(), content.size());
+    d->keymap.swap(tmp);
 }
 
 void KeyboardInterface::Private::sendKeymap(int fd, quint32 size)

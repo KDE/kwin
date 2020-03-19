@@ -77,7 +77,8 @@ private Q_SLOTS:
     void testTouch();
     void testDisconnect();
     void testPointerEnterOnUnboundSurface();
-    // TODO: add test for keymap
+    void testKeymap();
+    void testKeymapThroughFd();
 
 private:
     KWayland::Server::Display *m_display;
@@ -1699,7 +1700,6 @@ void TestWaylandSeat::testKeyboard()
     m_seatInterface->setKeyRepeatInfo(30, 560);
     m_seatInterface->setKeyRepeatInfo(25, 660);
     m_seatInterface->updateKeyboardModifiers(5, 6, 7, 8);
-    m_seatInterface->setKeymap(open("/dev/null", O_RDONLY), 0);
     m_seatInterface->setFocusedKeyboardSurface(nullptr);
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
@@ -2390,6 +2390,98 @@ void TestWaylandSeat::testPointerEnterOnUnboundSurface()
     QVERIFY(clientErrorSpy.isValid());
     m_seatInterface->setFocusedPointerSurface(serverSurface);
     QVERIFY(!clientErrorSpy.wait(100));
+}
+
+void TestWaylandSeat::testKeymap()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    m_seatInterface->setHasKeyboard(true);
+    QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
+    QVERIFY(keyboardChangedSpy.isValid());
+    QVERIFY(keyboardChangedSpy.wait());
+
+    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+    QSignalSpy keymapChangedSpy(keyboard.data(), &Keyboard::keymapChanged);
+    QVERIFY(keymapChangedSpy.isValid());
+
+    m_seatInterface->setKeymapData(QByteArrayLiteral("foo"));
+    QVERIFY(keymapChangedSpy.wait());
+    int fd = keymapChangedSpy.first().first().toInt();
+    QVERIFY(fd != -1);
+    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 3u);
+    QFile file;
+    QVERIFY(file.open(fd, QIODevice::ReadOnly));
+    const char *address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
+    QVERIFY(address);
+    QCOMPARE(qstrcmp(address, "foo"), 0);
+    file.close();
+
+    // change the keymap
+    keymapChangedSpy.clear();
+    m_seatInterface->setKeymapData(QByteArrayLiteral("bar"));
+    QVERIFY(keymapChangedSpy.wait());
+    fd = keymapChangedSpy.first().first().toInt();
+    QVERIFY(fd != -1);
+    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 3u);
+    QVERIFY(file.open(fd, QIODevice::ReadWrite));address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
+    QVERIFY(address);
+    QCOMPARE(qstrcmp(address, "bar"), 0);
+}
+
+void TestWaylandSeat::testKeymapThroughFd()
+{
+#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    m_seatInterface->setHasKeyboard(true);
+    QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
+    QVERIFY(keyboardChangedSpy.isValid());
+    QVERIFY(keyboardChangedSpy.wait());
+
+    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+    QSignalSpy keymapChangedSpy(keyboard.data(), &Keyboard::keymapChanged);
+    QVERIFY(keymapChangedSpy.isValid());
+
+    QTemporaryFile serverFile;
+    QVERIFY(serverFile.open());
+    QByteArray data = QByteArrayLiteral("foobar");
+    QVERIFY(serverFile.resize(data.size() + 1));
+    uchar *serverAddress = serverFile.map(0, data.size() + 1);
+    QVERIFY(serverAddress);
+    QVERIFY(qstrncpy(reinterpret_cast<char *>(serverAddress), data.constData(), data.size() + 1));
+    m_seatInterface->setKeymap(serverFile.handle(), data.size());
+
+
+    QVERIFY(keymapChangedSpy.wait());
+    int fd = keymapChangedSpy.first().first().toInt();
+    QVERIFY(fd != -1);
+    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 6u);
+    QFile file;
+    QVERIFY(file.open(fd, QIODevice::ReadOnly));
+    const char *address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
+    QVERIFY(address);
+    QCOMPARE(qstrcmp(address, "foobar"), 0);
+
+    QScopedPointer<Keyboard> keyboard2(m_seat->createKeyboard());
+    QSignalSpy keymapChangedSpy2(keyboard2.data(), &Keyboard::keymapChanged);
+    QVERIFY(keymapChangedSpy2.isValid());
+    QVERIFY(keymapChangedSpy2.wait());
+
+    int fd2 = keymapChangedSpy2.first().first().toInt();
+    QVERIFY(fd2 != -1);
+    QCOMPARE(keymapChangedSpy2.first().last().value<quint32>(), 6u);
+    QFile file2;
+    QVERIFY(file2.open(fd2, QIODevice::ReadWrite));
+    char *address2 = reinterpret_cast<char*>(file2.map(0, keymapChangedSpy2.first().last().value<quint32>()));
+    QVERIFY(address2);
+    QCOMPARE(qstrcmp(address2, "foobar"), 0);
+    address2[0] = 'g';
+    QCOMPARE(qstrcmp(address2, "goobar"), 0);
+    QCOMPARE(qstrcmp(address, "foobar"), 0);
+#endif
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSeat)
