@@ -55,6 +55,7 @@ private Q_SLOTS:
     void testGeometry();
     void testIcon();
     void testPid();
+    void testApplicationMenu();
 
     void cleanup();
 
@@ -636,6 +637,23 @@ void TestWindowManagement::testPid()
     QVERIFY(newWindow->pid() == 0);
 
 
+}
+
+void TestWindowManagement::testApplicationMenu()
+{
+    using namespace KWayland::Client;
+
+    const auto serviceName = QStringLiteral("org.kde.foo");
+    const auto objectPath = QStringLiteral("/org/kde/bar");
+
+    m_windowInterface->setApplicationMenuPaths(serviceName, objectPath);
+
+    QSignalSpy applicationMenuChangedSpy(m_window, &PlasmaWindow::applicationMenuChanged);
+    QVERIFY(applicationMenuChangedSpy.isValid());
+    QVERIFY(applicationMenuChangedSpy.wait());
+
+    QCOMPARE(m_window->applicationMenuServiceName(), serviceName);
+    QCOMPARE(m_window->applicationMenuObjectPath(), objectPath);
 }
 
 QTEST_MAIN(TestWindowManagement)
