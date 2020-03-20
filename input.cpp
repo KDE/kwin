@@ -1643,20 +1643,6 @@ public:
                 break;
             }
             tool = tabletSeat->addTool(toolType, event->serialId(), event->uniqueId(), ifaceCapabilities);
-
-            const auto cursor = new Cursor(tool);
-            Cursors::self()->addCursor(cursor);
-            m_cursorByTool[tool] = cursor;
-
-            connect(tool->cursor(), &TabletCursor::changed, cursor, &Cursor::cursorChanged);
-            connect(tool->cursor(), &TabletCursor::changed, cursor, [cursor, tool] {
-//                 cursor->setImage(tool->cursor()->image());
-                QPixmap redRect(20, 20);
-                redRect.fill(Qt::red);
-                cursor->setImage(redRect.toImage());
-                cursor->setHotspot(tool->cursor()->hotspot());
-            });
-            emit cursor->cursorChanged();
         }
 
         KWayland::Server::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
@@ -1677,7 +1663,6 @@ public:
         case QEvent::TabletMove: {
             const auto pos = event->globalPosF() - toplevel->pos();
             tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(pos.toPoint());
             break;
         } case QEvent::TabletEnterProximity: {
             tool->sendProximityIn(tablet);
@@ -1730,7 +1715,6 @@ public:
         waylandServer()->simulateUserActivity();
         return true;
     }
-    QHash<KWayland::Server::TabletToolInterface*, Cursor*> m_cursorByTool;
 };
 
 class DragAndDropInputFilter : public InputEventFilter
