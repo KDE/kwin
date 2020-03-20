@@ -1,0 +1,5 @@
+File=kwincompositing_setting.kcfg
+ClassName=KWinCompositingSetting
+Mutators=true
+DefaultValueGetters=true
+ParentInConstructor=true

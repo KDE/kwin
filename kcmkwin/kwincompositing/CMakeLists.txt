@@ -8,18 +8,20 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FR
 
 ################# configure checks and create the configured files #################
 
-set(kwincomposing_SRC
+set(kwincompositing_SRC
     main.cpp
     compositing.cpp
 )
 
-qt5_add_dbus_interface(kwincomposing_SRC
+kconfig_add_kcfg_files(kwincompositing_SRC kwincompositing_setting.kcfgc GENERATE_MOC)
+
+qt5_add_dbus_interface(kwincompositing_SRC
     ${KWin_SOURCE_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface
 )
 
-ki18n_wrap_ui(kwincomposing_SRC compositing.ui)
+ki18n_wrap_ui(kwincompositing_SRC compositing.ui)
 
-add_library(kwincompositing MODULE ${kwincomposing_SRC})
+add_library(kwincompositing MODULE ${kwincompositing_SRC})
 
 target_link_libraries(kwincompositing
     Qt5::DBus
