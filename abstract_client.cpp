@@ -1364,6 +1364,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMaximizeable(isMaximizable());
     w->setMinimizeable(isMinimizable());
     w->setFullscreenable(isFullScreenable());
+    w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
     w->setIcon(icon());
     auto updateAppId = [this, w] {
         w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName));
