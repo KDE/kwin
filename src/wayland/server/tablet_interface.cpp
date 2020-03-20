@@ -155,6 +155,9 @@ public:
 
     wl_resource *targetResource()
     {
+        if (!m_surface)
+            return nullptr;
+
         ClientConnection *client = m_surface->client();
         const Resource *r = resourceMap().value(*client);
         return r ? r->handle : nullptr;
