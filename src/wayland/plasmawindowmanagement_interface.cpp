@@ -105,6 +105,8 @@ private:
     QString m_appId;
     quint32 m_pid = 0;
     QString m_themedIconName;
+    QString m_appServiceName;
+    QString m_appObjectPath;
     QIcon m_icon;
     quint32 m_virtualDesktop = 0;
     quint32 m_state = 0;
@@ -357,6 +359,9 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_
     if (!m_title.isEmpty()) {
         org_kde_plasma_window_send_title_changed(resource, m_title.toUtf8().constData());
     }
+    if (!m_appObjectPath.isEmpty() || !m_appServiceName.isEmpty()) {
+        org_kde_plasma_window_send_application_menu(resource, m_appServiceName.toUtf8().constData(), m_appObjectPath.toUtf8().constData());
+    }
     org_kde_plasma_window_send_state_changed(resource, m_state);
     if (!m_themedIconName.isEmpty()) {
         org_kde_plasma_window_send_themed_icon_name_changed(resource, m_themedIconName.toUtf8().constData());
@@ -577,6 +582,11 @@ void PlasmaWindowInterface::Private::setGeometry(const QRect &geo)
 
 void PlasmaWindowInterface::Private::setApplicationMenuPaths(const QString &service, const QString &object)
 {
+    if (m_appServiceName == service && m_appObjectPath == object) {
+        return;
+    }
+    m_appServiceName = service;
+    m_appObjectPath = object;
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         auto resource = *it;
         if (wl_resource_get_version(resource) < ORG_KDE_PLASMA_WINDOW_APPLICATION_MENU_SINCE_VERSION) {
