@@ -229,4 +229,14 @@ void Screens::setConfig(KSharedConfig::Ptr config)
     m_config = config;
 }
 
+int Screens::physicalDpiX(int screen) const
+{
+    return size(screen).width() / physicalSize(screen).width() * qreal(25.4);
+}
+
+int Screens::physicalDpiY(int screen) const
+{
+    return size(screen).height() / physicalSize(screen).height() * qreal(25.4);
+}
+
 } // namespace

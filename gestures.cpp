@@ -46,6 +46,9 @@ void SwipeGesture::setStartGeometry(const QRect &geometry)
     setMinimumY(geometry.y());
     setMaximumX(geometry.x() + geometry.width());
     setMaximumY(geometry.y() + geometry.height());
+
+    Q_ASSERT(m_maximumX >= m_minimumX);
+    Q_ASSERT(m_maximumY >= m_minimumY);
 }
 
 qreal SwipeGesture::minimumDeltaReachedProgress(const QSizeF &delta) const

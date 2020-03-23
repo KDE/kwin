@@ -146,6 +146,9 @@ public:
 
     virtual Qt::ScreenOrientation orientation(int screen) const;
 
+    int physicalDpiX(int screen) const;
+    int physicalDpiY(int screen) const;
+
 public Q_SLOTS:
     void reconfigure();
 
