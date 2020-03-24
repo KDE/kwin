@@ -510,6 +510,7 @@ void TestWaylandSurface::testMultipleSurfaces()
     using namespace KWayland::Client;
     using namespace KWayland::Server;
     Registry registry;
+    registry.setEventQueue(m_queue);
     QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
