@@ -234,8 +234,12 @@ void XdgOutputInterface::Private::resourceConnected(XdgOutputV1Interface *resour
 {
     resource->setLogicalPosition(pos);
     resource->setLogicalSize(size);
-    resource->setName(name);
-    resource->setDescription(description);
+    if (!name.isEmpty()) {
+        resource->setName(name);
+    }
+    if (!description.isEmpty()) {
+        resource->setDescription(description);
+    }
     if (doneOnce) {
         resource->done();
     }
