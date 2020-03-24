@@ -277,6 +277,7 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
 
     // start off enabled
     m_waylandOutput->create();
+    m_waylandOutputDevice->create();
     m_xdgOutput->setLogicalSize(pixelSize() / scale());
     m_xdgOutput->done();
 }
