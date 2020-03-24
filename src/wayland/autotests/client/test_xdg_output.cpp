@@ -68,6 +68,9 @@ void TestXdgOutput::init()
     m_serverXdgOutput =  m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
     m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); //a 1.5 scale factor
     m_serverXdgOutput->setLogicalPosition(QPoint(11,12)); //not a sensible value for one monitor, but works for this test
+    m_serverXdgOutput->setName("testName");
+    m_serverXdgOutput->setDescription("testDescription");
+
     m_serverXdgOutput->done();
 
     // setup connection
@@ -144,10 +147,15 @@ void TestXdgOutput::testChanges()
     xdgOutputChanged.clear();
     QCOMPARE(xdgOutput->logicalPosition(), QPoint(11,12));
     QCOMPARE(xdgOutput->logicalSize(), QSize(1280,720));
+    QCOMPARE(xdgOutput->name(), "testName");
+    QCOMPARE(xdgOutput->description(), "testDescription");
 
-    //dynamic updates
+
+    // dynamic updates
     m_serverXdgOutput->setLogicalPosition(QPoint(1000, 2000));
     m_serverXdgOutput->setLogicalSize(QSize(100,200));
+    // names cannot dynamically change according to the spec
+
     m_serverXdgOutput->done();
 
     QVERIFY(xdgOutputChanged.wait());

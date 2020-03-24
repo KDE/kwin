@@ -40,7 +40,7 @@ private:
     static const quint32 s_version;
 };
 
-const quint32 XdgOutputManagerInterface::Private::s_version = 1;
+const quint32 XdgOutputManagerInterface::Private::s_version = 2;
 
 #ifndef K_DOXYGEN
 const struct zxdg_output_manager_v1_interface XdgOutputManagerInterface::Private::s_interface = {
@@ -56,6 +56,8 @@ public:
     ~XdgOutputV1Interface();
     void setLogicalSize(const QSize &size);
     void setLogicalPosition(const QPoint &pos);
+    void setName(const QString &name);
+    void setDescription(const QString &description);
     void done();
 private:
     class Private;
@@ -68,6 +70,8 @@ public:
     void resourceDisconnected(XdgOutputV1Interface *resource);
     QPoint pos;
     QSize size;
+    QString name;
+    QString description;
     bool dirty = false;
     bool doneOnce = false;
     QList<XdgOutputV1Interface*> resources;
@@ -204,6 +208,16 @@ QPoint XdgOutputInterface::logicalPosition() const
     return d->pos;
 }
 
+void XdgOutputInterface::setName(const QString &name)
+{
+    d->name = name;
+}
+
+void XdgOutputInterface::setDescription(const QString &description)
+{
+    d->description = description;
+}
+
 void XdgOutputInterface::done()
 {
     d->doneOnce = true;
@@ -220,6 +234,8 @@ void XdgOutputInterface::Private::resourceConnected(XdgOutputV1Interface *resour
 {
     resource->setLogicalPosition(pos);
     resource->setLogicalSize(size);
+    resource->setName(name);
+    resource->setDescription(description);
     if (doneOnce) {
         resource->done();
     }
@@ -268,6 +284,28 @@ void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
         return;
     }
     zxdg_output_v1_send_logical_position(d->resource, pos.x(), pos.y());
+}
+
+void XdgOutputV1Interface::setName(const QString &name)
+{
+    if (!d->resource) {
+        return;
+    }
+    if (wl_resource_get_version(d->resource) < ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {
+        return;
+    }
+    zxdg_output_v1_send_name(d->resource, name.toUtf8().constData());
+}
+
+void XdgOutputV1Interface::setDescription(const QString &description)
+{
+    if (!d->resource) {
+        return;
+    }
+    if (wl_resource_get_version(d->resource) < ZXDG_OUTPUT_V1_DESCRIPTION_SINCE_VERSION) {
+        return;
+    }
+    zxdg_output_v1_send_description(d->resource, description.toUtf8().constData());
 }
 
 void XdgOutputV1Interface::done()

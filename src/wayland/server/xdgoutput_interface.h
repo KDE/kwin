@@ -88,6 +88,32 @@ public:
     QPoint logicalPosition() const;
 
     /**
+     * @brief Sets a short name of the output
+     * This should be consistent across reboots for the same monitor
+     * It should be set once before the first done call
+     * @since 5.XDGOUTPUT
+     */
+    void setName(const QString &name);
+    /**
+     * The last set name
+     * @since 5.XDGOUTPUT
+     */
+    void name() const;
+
+    /**
+     * @brief Sets a longer description of the output
+     * This should be consistent across reboots for the same monitor
+     * It should be set once before the first done call
+     * @since 5.XDGOUTPUT
+     */
+    void setDescription(const QString &description);
+    /**
+     * The last set description
+     * @since 5.XDGOUTPUT
+     */
+    void description() const;
+
+    /**
      * Submit changes to all clients
      */
     void done();
