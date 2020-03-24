@@ -504,7 +504,7 @@ void PresentWindowsEffect::slotWindowFrameGeometryChanged(EffectWindow* w, const
         return;
     if (!m_windowData.contains(w))
         return;
-        rearrangeWindows();
+    rearrangeWindows();
 }
 
 bool PresentWindowsEffect::borderActivated(ElectricBorder border)
