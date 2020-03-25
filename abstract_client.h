@@ -619,13 +619,11 @@ public:
     enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
     void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
-    virtual void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
-    void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
+    virtual void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet) = 0;
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
-    virtual void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet);
+    virtual void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) = 0;
 
     /**
      * How to resize the window in order to obey constraints (mainly aspect ratios).
@@ -1310,16 +1308,6 @@ private:
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
 {
     move(p.x(), p.y(), force);
-}
-
-inline void AbstractClient::resizeWithChecks(const QSize& s, AbstractClient::ForceGeometry_t force)
-{
-    resizeWithChecks(s.width(), s.height(), force);
-}
-
-inline void AbstractClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
-{
-    setFrameGeometry(rect.x(), rect.y(), rect.width(), rect.height(), force);
 }
 
 inline const QList<AbstractClient*>& AbstractClient::transients() const

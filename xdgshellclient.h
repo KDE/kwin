@@ -99,10 +99,8 @@ public:
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
-    using AbstractClient::resizeWithChecks;
-    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::setFrameGeometry;
-    void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
     quint32 windowId() const override;
     pid_t pid() const override;

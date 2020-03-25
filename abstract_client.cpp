@@ -710,7 +710,7 @@ void AbstractClient::keepInArea(QRect area, bool partial)
     if (!partial) {
         // resize to fit into area
         if (area.width() < width() || area.height() < height())
-            resizeWithChecks(qMin(area.width(), width()), qMin(area.height(), height()));
+            resizeWithChecks(size().boundedTo(area.size()));
     }
     int tx = x(), ty = y();
     if (frameGeometry().right() > area.right() && width() <= area.width())

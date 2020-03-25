@@ -187,14 +187,12 @@ public:
 
     using AbstractClient::move;
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::setFrameGeometry;
-    void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     /// plainResize() simply resizes
     void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    using AbstractClient::resizeWithChecks;
-    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const override;
@@ -655,9 +653,9 @@ inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)
     plainResize(s.width(), s.height(), force);
 }
 
-inline void X11Client::resizeWithChecks(int w, int h, AbstractClient::ForceGeometry_t force)
+inline void X11Client::resizeWithChecks(const QSize &s, AbstractClient::ForceGeometry_t force)
 {
-    resizeWithChecks(w, h, XCB_GRAVITY_BIT_FORGET, force);
+    resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET, force);
 }
 
 inline void X11Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)
