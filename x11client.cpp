@@ -1856,7 +1856,7 @@ void X11Client::pingWindow()
     // and the second time we'll show the "do you want to kill" prompt
     ping_timer->start(options->killPingTimeout() / 2);
     m_pingTimestamp = xTime();
-    workspace()->sendPingToWindow(window(), m_pingTimestamp);
+    rootInfo()->sendPing(window(), m_pingTimestamp);
 }
 
 void X11Client::gotPing(xcb_timestamp_t timestamp)

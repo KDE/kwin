@@ -324,8 +324,6 @@ public:
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;
 
-    void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from X11Client::pingWindow()
-
     void removeClient(X11Client *);   // Only called from X11Client::destroyClient() or X11Client::releaseWindow()
     void setActiveClient(AbstractClient*);
     Group* findGroup(xcb_window_t leader) const;

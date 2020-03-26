@@ -1240,13 +1240,6 @@ void Workspace::sendClientToScreen(AbstractClient* c, int screen)
     c->sendToScreen(screen);
 }
 
-void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
-{
-    if (rootInfo()) {
-        rootInfo()->sendPing(window, timestamp);
-    }
-}
-
 /**
  * Delayed focus functions
  */
