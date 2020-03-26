@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils_funcs.h"
 #include <epoxy/gl.h>
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QDebug>
 #include <QOpenGLContext>
@@ -94,14 +94,13 @@ static qint64 getKernelVersion()
 }
 
 // Extracts the portion of a string that matches a regular expression
-static QString extract(const QString &string, const QString &match, int offset = 0)
+static QString extract(const QString &text, const QString &pattern)
 {
-    QString result;
-    QRegExp rx(match);
-    int pos = rx.indexIn(string, offset);
-    if (pos != -1)
-        result = string.mid(pos, rx.matchedLength());
-    return result;
+    const QRegularExpression regexp(pattern);
+    const QRegularExpressionMatch match = regexp.match(text);
+    if (!match.hasMatch())
+        return QString();
+    return match.captured();
 }
 
 static ChipClass detectRadeonClass(const QByteArray &chipset)
