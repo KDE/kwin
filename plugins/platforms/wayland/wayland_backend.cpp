@@ -463,6 +463,7 @@ WaylandBackend::~WaylandBackend()
     }
     delete m_waylandCursor;
 
+    m_eventQueue->release();
     qDeleteAll(m_outputs);
 
     if (m_xdgShell) {
@@ -473,11 +474,10 @@ WaylandBackend::~WaylandBackend()
     m_registry->release();
     delete m_seat;
     m_shm->release();
-    m_eventQueue->release();
 
-    m_connectionThreadObject->deleteLater();
     m_connectionThread->quit();
     m_connectionThread->wait();
+    m_connectionThreadObject->deleteLater();
 
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
