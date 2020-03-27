@@ -124,6 +124,7 @@ private Q_SLOTS:
     void testMiddleEmulation();
     void testNaturalScroll_data();
     void testNaturalScroll();
+    void testScrollFactor();
     void testScrollTwoFinger_data();
     void testScrollTwoFinger();
     void testScrollEdge_data();
@@ -1351,6 +1352,29 @@ void TestLibinputDevice::testNaturalScroll()
     QCOMPARE(d.property("naturalScroll").toBool(), expectedValue);
     QCOMPARE(naturalScrollChangedSpy.isEmpty(), initValue == expectedValue);
     QCOMPARE(dbusProperty<bool>(d.sysName(), "naturalScroll"), expectedValue);
+}
+
+void TestLibinputDevice::testScrollFactor()
+{
+    libinput_device device;
+
+    qreal initValue = 1.0;
+
+    Device d(&device);
+    QCOMPARE(d.scrollFactor(), initValue);
+    QCOMPARE(d.property("scrollFactor").toReal(), initValue);
+    QCOMPARE(dbusProperty<qreal>(d.sysName(), "scrollFactor"), initValue);
+
+    QSignalSpy scrollFactorChangedSpy(&d, &Device::scrollFactorChanged);
+    QVERIFY(scrollFactorChangedSpy.isValid());
+
+    qreal expectedValue = 2.0;
+
+    d.setScrollFactor(expectedValue);
+    QCOMPARE(d.scrollFactor(), expectedValue);
+    QCOMPARE(d.property("scrollFactor").toReal(), expectedValue);
+    QCOMPARE(scrollFactorChangedSpy.isEmpty(), false);
+    QCOMPARE(dbusProperty<qreal>(d.sysName(), "scrollFactor"), expectedValue);
 }
 
 void TestLibinputDevice::testScrollTwoFinger_data()

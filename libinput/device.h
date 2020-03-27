@@ -125,6 +125,8 @@ class KWIN_EXPORT Device : public QObject
     Q_PROPERTY(bool scrollOnButtonDown READ isScrollOnButtonDown WRITE setScrollOnButtonDown NOTIFY scrollMethodChanged)
     Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
 
+    Q_PROPERTY(qreal scrollFactor READ scrollFactor WRITE setScrollFactor NOTIFY scrollFactorChanged)
+
     // switches
     Q_PROPERTY(bool switchDevice READ isSwitch CONSTANT)
     Q_PROPERTY(bool lidSwitch READ isLidSwitch CONSTANT)
@@ -330,6 +332,14 @@ public:
     }
     void setScrollButton(quint32 button);
 
+    qreal scrollFactorDefault() const {
+        return 1.0;
+    }
+    qreal scrollFactor() const {
+        return m_scrollFactor;
+    }
+    void setScrollFactor(qreal factor);
+
     void setDisableWhileTyping(bool set);
     bool isDisableWhileTyping() const {
         return m_disableWhileTyping;
@@ -500,6 +510,7 @@ Q_SIGNALS:
     void naturalScrollChanged();
     void scrollMethodChanged();
     void scrollButtonChanged();
+    void scrollFactorChanged();
     void clickMethodChanged();
 
 private:
@@ -559,6 +570,7 @@ private:
     quint32 m_scrollButton;
     qreal m_defaultPointerAcceleration;
     qreal m_pointerAcceleration;
+    qreal m_scrollFactor;
     quint32 m_supportedPointerAccelerationProfiles;
     enum libinput_config_accel_profile m_defaultPointerAccelerationProfile;
     enum libinput_config_accel_profile m_pointerAccelerationProfile;
