@@ -501,8 +501,7 @@ Workspace::~Workspace()
     delete startup;
     delete Placement::self();
     delete client_keys_dialog;
-    foreach (SessionInfo * s, session)
-    delete s;
+    qDeleteAll(session);
 
     // TODO: ungrabXServer();
 
