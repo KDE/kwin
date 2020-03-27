@@ -226,9 +226,6 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() < kVersionNumber(3, 0)) {
         ba.append("precision highp float;\n");
     }
-    if (ShaderManager::instance()->isShaderDebug()) {
-        ba.append("#define KWIN_SHADER_DEBUG 1\n");
-    }
     ba.append(source);
     if (GLPlatform::instance()->isGLES() && GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0)) {
         ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
@@ -557,8 +554,6 @@ void ShaderManager::cleanup()
 
 ShaderManager::ShaderManager()
 {
-    m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
-
     const qint64 coreVersionNumber = GLPlatform::instance()->isGLES() ? kVersionNumber(3, 0) : kVersionNumber(1, 40);
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
         m_resourcePath = QStringLiteral(":/effect-shaders-1.40/");
@@ -993,11 +988,6 @@ GLShader *ShaderManager::getBoundShader() const
 bool ShaderManager::isShaderBound() const
 {
     return !m_boundShaders.isEmpty();
-}
-
-bool ShaderManager::isShaderDebug() const
-{
-    return m_debug;
 }
 
 GLShader *ShaderManager::pushShader(ShaderTraits traits)
