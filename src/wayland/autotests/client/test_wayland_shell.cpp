@@ -879,7 +879,7 @@ void TestWaylandShell::testClientDisconnecting()
     QVERIFY(serverShellSurface2);
 
     connect(serverShellSurface, &Resource::unbound, this,
-        [serverShellSurface, serverShellSurface2] {
+        [serverShellSurface2] {
             serverShellSurface2->requestSize(QSize(100, 200));
         }
     );

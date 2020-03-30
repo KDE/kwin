@@ -71,7 +71,6 @@ private:
 
     QSignalSpy *m_announcedSpy;
     QSignalSpy *m_omSpy;
-    QSignalSpy *m_configSpy;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-output-0");

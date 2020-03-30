@@ -114,7 +114,8 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
 {
     Q_D();
     connect(this, &OutputInterface::currentModeChanged, this,
-        [this, d] {
+        [this] {
+            Q_D();
             auto currentModeIt = std::find_if(d->modes.constBegin(), d->modes.constEnd(), [](const Mode &mode) { return mode.flags.testFlag(ModeFlag::Current); });
             if (currentModeIt == d->modes.constEnd()) {
                 return;
@@ -126,12 +127,12 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
             wl_display_flush_clients(*(d->display));
         }
     );
-    connect(this, &OutputInterface::subPixelChanged,       this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputInterface::transformChanged,      this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputInterface::globalPositionChanged, this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputInterface::modelChanged,          this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputInterface::manufacturerChanged,   this, [this, d] { d->updateGeometry(); });
-    connect(this, &OutputInterface::scaleChanged,          this, [this, d] { d->updateScale(); });
+    connect(this, &OutputInterface::subPixelChanged,       this, [d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::transformChanged,      this, [d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::globalPositionChanged, this, [d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::modelChanged,          this, [d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::manufacturerChanged,   this, [d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::scaleChanged,          this, [d] { d->updateScale(); });
 }
 
 OutputInterface::~OutputInterface() = default;

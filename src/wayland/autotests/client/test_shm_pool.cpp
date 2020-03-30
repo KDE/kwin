@@ -37,7 +37,6 @@ private Q_SLOTS:
 
 private:
     KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shmPool;
@@ -49,7 +48,6 @@ static const QString s_socketName = QStringLiteral("kwin-test-wayland-surface-0"
 TestShmPool::TestShmPool(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_shmPool(nullptr)

@@ -265,7 +265,7 @@ QImage::Format BufferInterface::Private::format() const
 
 QImage BufferInterface::data()
 {
-    return std::move(d->createImage());
+    return d->createImage();
 }
 
 QImage BufferInterface::Private::createImage()
@@ -283,12 +283,12 @@ QImage BufferInterface::Private::createImage()
     s_accessedBuffer = this;
     s_accessCounter++;
     wl_shm_buffer_begin_access(shmBuffer);
-    return std::move(QImage((const uchar*)wl_shm_buffer_get_data(shmBuffer),
-                            size.width(),
-                            size.height(),
-                            wl_shm_buffer_get_stride(shmBuffer),
-                            imageFormat,
-                            &imageBufferCleanupHandler, this));
+    return QImage((const uchar*)wl_shm_buffer_get_data(shmBuffer),
+                  size.width(),
+                  size.height(),
+                  wl_shm_buffer_get_stride(shmBuffer),
+                  imageFormat,
+                  &imageBufferCleanupHandler, this);
 }
 
 bool BufferInterface::isReferenced() const

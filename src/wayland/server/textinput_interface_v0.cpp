@@ -376,7 +376,7 @@ void TextInputManagerUnstableV0Interface::Private::createTextInputCallback(wl_cl
         }
     );
     QObject::connect(t, &TextInputUnstableV0Interface::requestActivate, m->q,
-        [t, m] (SeatInterface *seat) {
+        [t] (SeatInterface *seat) {
             // TODO: disallow for other seat
             seat->d_func()->registerTextInput(t);
             t->d_func()->seat = seat;

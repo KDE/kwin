@@ -128,7 +128,7 @@ void WaylandClientTest::setupRegistry(Registry *registry)
                     }
                     Keyboard *k = s->createKeyboard(this);
                     connect(k, &Keyboard::keyChanged, this,
-                        [this](quint32 key, Keyboard::KeyState state) {
+                        [] (quint32 key, Keyboard::KeyState state) {
                             if (key == KEY_Q && state == Keyboard::KeyState::Released) {
                                 QCoreApplication::instance()->quit();
                             }

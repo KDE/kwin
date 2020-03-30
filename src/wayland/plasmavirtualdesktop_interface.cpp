@@ -42,7 +42,6 @@ private:
         return reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
     }
 
-    wl_listener listener;
     static const struct org_kde_plasma_virtual_desktop_interface s_interface;
 };
 

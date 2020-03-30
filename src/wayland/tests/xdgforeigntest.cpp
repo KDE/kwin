@@ -130,6 +130,7 @@ void XdgForeignTest::setupRegistry(Registry *registry)
             m_surface = m_compositor->createSurface(this);
             Q_ASSERT(m_surface);
             auto parentDeco = m_decoration->create(m_surface, this);
+            Q_UNUSED(parentDeco)
             m_shellSurface = m_shell->createSurface(m_surface, this);
             Q_ASSERT(m_shellSurface);
             connect(m_shellSurface, &XdgShellSurface::sizeChanged, this, &XdgForeignTest::render);
@@ -137,6 +138,7 @@ void XdgForeignTest::setupRegistry(Registry *registry)
             m_childSurface = m_compositor->createSurface(this);
             Q_ASSERT(m_childSurface);
             auto childDeco = m_decoration->create(m_childSurface, this);
+            Q_UNUSED(childDeco)
             m_childShellSurface = m_shell->createSurface(m_childSurface, this);
             Q_ASSERT(m_childShellSurface);
             connect(m_childShellSurface, &XdgShellSurface::sizeChanged, this, &XdgForeignTest::render);

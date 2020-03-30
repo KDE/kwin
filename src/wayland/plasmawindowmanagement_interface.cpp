@@ -110,7 +110,6 @@ private:
     QIcon m_icon;
     quint32 m_virtualDesktop = 0;
     quint32 m_state = 0;
-    wl_listener listener;
     static const struct org_kde_plasma_window_interface s_interface;
 };
 

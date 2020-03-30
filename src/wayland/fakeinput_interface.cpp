@@ -53,13 +53,10 @@ private:
 class FakeInputDevice::Private
 {
 public:
-    Private(wl_resource *resource, FakeInputInterface *interface, FakeInputDevice *q);
+    Private(wl_resource *resource, FakeInputInterface *interface);
     wl_resource *resource;
     FakeInputInterface *interface;
     bool authenticated = false;
-
-private:
-    FakeInputDevice *q;
 };
 
 const quint32 FakeInputInterface::Private::s_version = 4;
@@ -280,16 +277,15 @@ FakeInputInterface::FakeInputInterface(Display *display, QObject *parent)
 
 FakeInputInterface::~FakeInputInterface() = default;
 
-FakeInputDevice::Private::Private(wl_resource *resource, FakeInputInterface *interface, FakeInputDevice *q)
+FakeInputDevice::Private::Private(wl_resource *resource, FakeInputInterface *interface)
     : resource(resource)
     , interface(interface)
-    , q(q)
 {
 }
 
 FakeInputDevice::FakeInputDevice(wl_resource *resource, FakeInputInterface *parent)
     : QObject(parent)
-    , d(new Private(resource, parent, this))
+    , d(new Private(resource, parent))
 {
 }
 

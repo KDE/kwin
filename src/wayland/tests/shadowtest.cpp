@@ -123,7 +123,7 @@ void ShadowTest::setupShadow()
     Shadow *shadow = m_shadowManager->createShadow(m_surface, this);
     Q_ASSERT(shadow);
 
-    auto addElement = [shadow, this](const QColor color) {
+    auto addElement = [this] (const QColor color) {
         const QSize size = QSize(10, 10);
         auto buffer = m_shm->getBuffer(size, size.width() * 4).toStrongRef();
         buffer->setUsed(true);

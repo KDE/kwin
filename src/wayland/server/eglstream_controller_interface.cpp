@@ -48,8 +48,8 @@ void EglStreamControllerInterface::Private::attachStreamConsumerAttribs(wl_clien
 EglStreamControllerInterface::Private::Private(EglStreamControllerInterface *q, Display *display)
     // libnvidia-egl-wayland.so.1 may not be present on all systems, so we load it dynamically
     : Global::Private(display,
-                      (wl_interface *)QLibrary::resolve(QLatin1String("libnvidia-egl-wayland.so.1"),
-                                                        "wl_eglstream_controller_interface"),
+                      reinterpret_cast<wl_interface *>(QLibrary::resolve(QLatin1String("libnvidia-egl-wayland.so.1"),
+                                                        "wl_eglstream_controller_interface")),
                       s_version)
     , q(q)
 {
