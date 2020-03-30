@@ -159,6 +159,7 @@ ScrollViewKCM {
                 editable: true
 
                 textFromValue: function(value, locale) { return i18np("1 Row", "%1 Rows", value)}
+                valueFromText: function(text, locale) { return parseInt(text, 10); }
 
                 onValueModified: kcm.desktopsModel.rows = value
             }
