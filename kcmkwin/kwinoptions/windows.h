@@ -71,56 +71,36 @@ class KFocusConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KFocusConfig(bool _standAlone, KConfig *_config, QWidget *parent);
-    ~KFocusConfig() override;
+    KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent);
 
     void load() override;
     void save() override;
     void defaults() override;
 
+Q_SIGNALS:
+    void unmanagedWidgetDefaulted(bool defaulted);
+    void unmanagedWidgetStateChanged(bool changed);
+
 protected:
     void showEvent(QShowEvent *ev) override;
 
 private Q_SLOTS:
-    void setDelayFocusEnabled();
     void focusPolicyChanged();
-    void autoRaiseOnTog(bool);//CT 23Oct1998
-    void delayFocusOnTog(bool);
-    void updateActiveMouseScreen();
     void updateMultiScreen();
-    void changed() {
-        emit KCModule::changed(true);
-    }
-
 
 private:
 
-    int getFocus(void);
-    int getAutoRaiseInterval(void);
-    int getDelayFocusInterval(void);
-
-    void setFocus(int);
-    void setAutoRaiseInterval(int);
-    void setAutoRaise(bool);
-    void setDelayFocusInterval(int);
-    void setClickRaise(bool);
-    void setSeparateScreenFocus(bool);
-    void setActiveMouseScreen(bool);
-
-    void setFocusStealing(int);
-
-    KConfig *config;
     bool     standAlone;
 
     KWinFocusConfigForm *m_ui;
+    KWinOptionsSettings *m_settings;
 };
 
 class KMovingConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KMovingConfig(bool _standAlone, QWidget *parent);
-    ~KMovingConfig() override;
+    KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent);
 
     void save() override;
 
@@ -137,8 +117,7 @@ class KAdvancedConfig : public KCModule
 {
     Q_OBJECT
 public:
-    KAdvancedConfig(bool _standAlone, QWidget *parent);
-    ~KAdvancedConfig() override;
+    KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent);
 
     void save() override;
 
@@ -147,9 +126,9 @@ protected:
 
 private:
 
-    KWinOptionsSettings *m_config;
     bool     standAlone;
     KWinAdvancedConfigForm *m_ui;
+    KWinOptionsSettings *m_settings;
 };
 
 #endif // KKWMWINDOWS_H

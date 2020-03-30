@@ -136,11 +136,12 @@ void KTitleBarActionsConfig::paletteChanged()
 
 }
 
-KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, QWidget *parent)
+KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinMouseConfigForm(this))
+    , m_settings(settings)
 {
-    addConfig(KWinOptionsSettings::self(), this);
+    addConfig(m_settings, this);
 
     // create the items for the maximize button actions
     createMaxButtonPixmaps();
@@ -193,11 +194,12 @@ void KTitleBarActionsConfig::save()
     }
 }
 
-KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, QWidget *parent)
+KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(this))
+    , m_settings(settings)
 {
-    addConfig(KWinOptionsSettings::self(), this);
+    addConfig(m_settings, this);
     load();
 }
 

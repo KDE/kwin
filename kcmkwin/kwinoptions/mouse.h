@@ -31,6 +31,8 @@ class KConfig;
 #include "ui_actions.h"
 #include "ui_mouse.h"
 
+class KWinOptionsSettings;
+
 class KWinMouseConfigForm : public QWidget, public Ui::KWinMouseConfigForm
 {
     Q_OBJECT
@@ -53,7 +55,7 @@ class KTitleBarActionsConfig : public KCModule
 
 public:
 
-    KTitleBarActionsConfig(bool _standAlone, QWidget *parent);
+    KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent);
 
     void save() override;
 
@@ -65,6 +67,7 @@ private:
     bool standAlone;
 
     KWinMouseConfigForm *m_ui;
+    KWinOptionsSettings *m_settings;
 
     void createMaximizeButtonTooltips(KComboBox* combo);
 
@@ -79,7 +82,7 @@ class KWindowActionsConfig : public KCModule
 
 public:
 
-    KWindowActionsConfig(bool _standAlone, QWidget *parent);
+    KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent);
 
     void save() override;
 
@@ -90,6 +93,7 @@ private:
     bool standAlone;
 
     KWinActionsConfigForm *m_ui;
+    KWinOptionsSettings *m_settings;
 };
 
 #endif

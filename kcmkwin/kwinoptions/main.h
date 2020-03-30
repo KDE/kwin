@@ -28,7 +28,7 @@
 #include <QTabWidget>
 #include <kcmodule.h>
 
-class KConfig;
+class KWinOptionsSettings;
 class KFocusConfig;
 class KTitleBarActionsConfig;
 class KWindowActionsConfig;
@@ -42,7 +42,6 @@ class KWinOptions : public KCModule
 public:
 
     KWinOptions(QWidget *parent, const QVariantList &args);
-    ~KWinOptions() override;
 
     void load() override;
     void save() override;
@@ -59,7 +58,7 @@ private:
     KMovingConfig *mMoving;
     KAdvancedConfig *mAdvanced;
 
-    KConfig *mConfig;
+    KWinOptionsSettings *mSettings;
 };
 
 class KActionsOptions : public KCModule
@@ -69,7 +68,6 @@ class KActionsOptions : public KCModule
 public:
 
     KActionsOptions(QWidget *parent, const QVariantList &args);
-    ~KActionsOptions() override;
 
     void load() override;
     void save() override;
@@ -79,7 +77,6 @@ protected Q_SLOTS:
 
     void moduleChanged(bool state);
 
-
 private:
 
     QTabWidget   *tab;
@@ -87,7 +84,7 @@ private:
     KTitleBarActionsConfig *mTitleBarActions;
     KWindowActionsConfig *mWindowActions;
 
-    KConfig *mConfig;
+    KWinOptionsSettings *mSettings;
 };
 
 #endif

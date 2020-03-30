@@ -100,6 +100,52 @@
         </choices>
     </entry>
 
+    <entry key="FocusPolicy" type="Enum">
+        <default>ClickToFocus</default>
+        <choices>
+            <choice name="ClickToFocus"/>
+            <choice name="FocusFollowsMouse"/>
+            <choice name="FocusUnderMouse"/>
+            <choice name="FocusStrictlyUnderMouse"/>
+        </choices>
+    </entry>
+
+    <entry key="NextFocusPrefersMouse" type="Bool">
+        <default>false</default>
+    </entry>
+
+    <entry key="AutoRaiseInterval" type="Int">
+        <default>750</default>
+        <min>0</min>
+    </entry>
+
+    <entry key="DelayFocusInterval" type="Int">
+        <default>300</default>
+        <min>0</min>
+    </entry>
+
+    <entry key="AutoRaise" type="Bool">
+        <default>false</default>
+    </entry>
+
+    <entry key="ClickRaise" type="Bool">
+        <default>true</default>
+    </entry>
+
+    <entry key="SeparateScreenFocus" type="Bool">
+        <default>false</default>
+    </entry>
+
+    <entry key="ActiveMouseScreen" type="Bool">
+        <default>true</default>
+    </entry>
+
+    <entry key="FocusStealingPreventionLevel" type="Int">
+        <default>1</default>
+        <min>0</min>
+        <max>4</max>
+    </entry>
+
     </group>
 
     <group name="MouseBindings">

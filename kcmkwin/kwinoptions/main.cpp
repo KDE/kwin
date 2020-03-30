@@ -33,6 +33,7 @@
 
 #include "mouse.h"
 #include "windows.h"
+#include "kwinoptions_settings.h"
 
 K_PLUGIN_FACTORY_DECLARATION(KWinOptionsFactory)
 
@@ -41,7 +42,7 @@ class KFocusConfigStandalone : public KFocusConfig
     Q_OBJECT
 public:
     KFocusConfigStandalone(QWidget* parent, const QVariantList &)
-        : KFocusConfig(true, new KConfig("kwinrc"), parent)
+        : KFocusConfig(true, new KWinOptionsSettings(this), parent)
     {}
 };
 
@@ -50,7 +51,7 @@ class KMovingConfigStandalone : public KMovingConfig
     Q_OBJECT
 public:
     KMovingConfigStandalone(QWidget* parent, const QVariantList &)
-        : KMovingConfig(true, parent)
+        : KMovingConfig(true, new KWinOptionsSettings(this), parent)
     {}
 };
 
@@ -59,44 +60,49 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, parent)
+        : KAdvancedConfig(true, new KWinOptionsSettings(this), parent)
     {}
 };
 
 KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     : KCModule(parent)
 {
-    mConfig = new KConfig("kwinrc");
+    mSettings = new KWinOptionsSettings(this);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     tab = new QTabWidget(this);
     layout->addWidget(tab);
 
-    mFocus = new KFocusConfig(false, mConfig, this);
+    mFocus = new KFocusConfig(false, mSettings, this);
     mFocus->setObjectName(QLatin1String("KWin Focus Config"));
     tab->addTab(mFocus, i18n("&Focus"));
     connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
+    connect(mFocus, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, this);
+    // Need to relay unmanagedWidgetDefaultState and unmanagedWidgetChangeState to wrapping KCModule
+    connect(mFocus, &KFocusConfig::unmanagedWidgetDefaulted, this, &KWinOptions::unmanagedWidgetDefaultState);
+    connect(mFocus, &KFocusConfig::unmanagedWidgetStateChanged, this, &KWinOptions::unmanagedWidgetChangeState);
+
+    mTitleBarActions = new KTitleBarActionsConfig(false, mSettings, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mWindowActions = new KWindowActionsConfig(false, this);
+    mWindowActions = new KWindowActionsConfig(false, mSettings, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
     connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mMoving = new KMovingConfig(false, this);
+    mMoving = new KMovingConfig(false, mSettings, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("Mo&vement"));
     connect(mMoving, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mAdvanced = new KAdvancedConfig(false, this);
+    mAdvanced = new KAdvancedConfig(false, mSettings, this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
     connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
@@ -119,22 +125,16 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     setAboutData(about);
 }
 
-KWinOptions::~KWinOptions()
-{
-    delete mConfig;
-}
-
 void KWinOptions::load()
 {
-    mConfig->reparseConfiguration();
-    mFocus->load();
     mTitleBarActions->load();
     mWindowActions->load();
     mMoving->load();
     mAdvanced->load();
-    emit KCModule::changed(false);
+    // mFocus is last because it may send unmanagedWidgetStateChanged
+    // that need to have the final word
+    mFocus->load();
 }
-
 
 void KWinOptions::save()
 {
@@ -145,8 +145,7 @@ void KWinOptions::save()
     mAdvanced->save();
 
     emit KCModule::changed(false);
-    // Send signal to kwin
-    mConfig->sync();
+
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
@@ -156,11 +155,13 @@ void KWinOptions::save()
 
 void KWinOptions::defaults()
 {
-    mFocus->defaults();
     mTitleBarActions->defaults();
     mWindowActions->defaults();
     mMoving->defaults();
     mAdvanced->defaults();
+    // mFocus is last because it may send unmanagedWidgetDefaulted
+    // that need to have the final word
+    mFocus->defaults();
 }
 
 QString KWinOptions::quickHelp() const
@@ -176,29 +177,24 @@ QString KWinOptions::quickHelp() const
 KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     : KCModule(parent)
 {
-    mConfig = new KConfig("kwinrc");
+    mSettings = new KWinOptionsSettings(this);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     tab = new QTabWidget(this);
     layout->addWidget(tab);
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, mSettings, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
 
-    mWindowActions = new KWindowActionsConfig(false, this);
+    mWindowActions = new KWindowActionsConfig(false, mSettings, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("Window Actio&ns"));
     connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
-}
-
-KActionsOptions::~KActionsOptions()
-{
-    delete mConfig;
 }
 
 void KActionsOptions::load()
@@ -213,8 +209,6 @@ void KActionsOptions::save()
     mWindowActions->save();
 
     emit KCModule::changed(false);
-    // Send signal to kwin
-    mConfig->sync();
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
