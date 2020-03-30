@@ -634,7 +634,7 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
         return;
     }
 
-    QPointer<QDialog> dialog = new QDialog();
+    auto dialog = new QDialog();
 
     KCModule *module = index.data(ScriptedRole).toBool()
         ? findScriptedConfig(index.data(ServiceNameRole).toString(), dialog)
@@ -666,11 +666,13 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     layout->addWidget(module);
     layout->addWidget(buttons);
 
-    if (dialog->exec() == QDialog::Accepted) {
+    connect(dialog, &QDialog::accepted, module, [module]() {
         module->save();
-    }
+    });
 
-    delete dialog;
+    dialog->setModal(true);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }
 
 bool EffectsModel::shouldStore(const EffectData &data) const
