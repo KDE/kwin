@@ -22,12 +22,12 @@
         <string>Window &amp;activation policy:</string>
        </property>
        <property name="buddy">
-        <cstring>windowFocusPolicyCombo</cstring>
+        <cstring>windowFocusPolicy</cstring>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QComboBox" name="windowFocusPolicyCombo">
+      <widget class="QComboBox" name="windowFocusPolicy">
        <property name="whatsThis">
         <string>With this option you can specify how and when windows will be focused.</string>
        </property>
@@ -72,12 +72,12 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
-        <cstring>delayFocus</cstring>
+        <cstring>kcfg_DelayFocusInterval</cstring>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QSpinBox" name="delayFocus">
+      <widget class="QSpinBox" name="kcfg_DelayFocusInterval">
        <property name="whatsThis">
         <string>This is the delay after which the window the mouse pointer is over will automatically receive focus.</string>
        </property>
@@ -104,12 +104,12 @@
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
        <property name="buddy">
-        <cstring>focusStealing</cstring>
+        <cstring>kcfg_FocusStealingPreventionLevel</cstring>
        </property>
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="KComboBox" name="focusStealing">
+      <widget class="KComboBox" name="kcfg_FocusStealingPreventionLevel">
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This option specifies how much KWin will try to prevent unwanted focus stealing caused by unexpected activation of new windows. (Note: This feature does not work with the &lt;span style=&quot; font-style:italic;&quot;&gt;Focus under mouse&lt;/span&gt; or &lt;span style=&quot; font-style:italic;&quot;&gt;Focus strictly under mouse&lt;/span&gt; focus policies.) &lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;None:&lt;/span&gt; Prevention is turned off and new windows always become activated.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Low:&lt;/span&gt; Prevention is enabled; when some window does not have support for the underlying mechanism and KWin cannot reliably decide whether to activate the window or not, it will be activated. This setting may have both worse and better results than the medium level, depending on the applications.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Medium:&lt;/span&gt; Prevention is enabled.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;High:&lt;/span&gt; New windows get activated only if no window is currently active or if they belong to the currently active application. This setting is probably not really usable when not using mouse focus policy.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Extreme:&lt;/span&gt; All windows must be explicitly activated by the user.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Windows that are prevented from stealing focus are marked as demanding attention, which by default means their taskbar entry will be highlighted. This can be changed in the Notifications control module.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -148,7 +148,7 @@
       </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QCheckBox" name="clickRaiseOn">
+      <widget class="QCheckBox" name="kcfg_ClickRaise">
        <property name="whatsThis">
         <string>When this option is enabled, the active window will be brought to the front when you click somewhere into the window contents. To change it for inactive windows, you need to change the settings in the Actions tab.</string>
        </property>
@@ -160,7 +160,7 @@
      <item row="5" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_1">
        <item>
-        <widget class="QCheckBox" name="autoRaiseOn">
+        <widget class="QCheckBox" name="kcfg_AutoRaise">
          <property name="whatsThis">
           <string>When this option is enabled, a window in the background will automatically come to the front when the mouse pointer has been over it for some time.</string>
          </property>
@@ -170,7 +170,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="autoRaise">
+        <widget class="QSpinBox" name="kcfg_AutoRaiseInterval">
          <property name="whatsThis">
           <string>This is the delay after which the window that the mouse pointer is over will automatically come to the front.</string>
          </property>
@@ -198,7 +198,7 @@
       </widget>
      </item>
      <item row="6" column="1">
-      <widget class="QCheckBox" name="activeMouseScreen">
+      <widget class="QCheckBox" name="kcfg_ActiveMouseScreen">
        <property name="whatsThis">
         <string>When this option is enabled, the active Xinerama screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active Xinerama screen is the screen containing the focused window. By default this option is disabled for Click to focus and enabled for other focus policies.</string>
        </property>
@@ -208,7 +208,7 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QCheckBox" name="separateScreenFocus">
+      <widget class="QCheckBox" name="kcfg_SeparateScreenFocus">
        <property name="whatsThis">
         <string>When this option is enabled, focus operations are limited only to the active Xinerama screen</string>
        </property>
@@ -261,5 +261,38 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>kcfg_AutoRaise</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_AutoRaiseInterval</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>338</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>485</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_AutoRaise</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ClickRaise</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>338</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>333</x>
+     <y>155</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

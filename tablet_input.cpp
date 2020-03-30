@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "decorations/decoratedclient.h"
 #include "input.h"
+#include "input_event.h"
 #include "input_event_spy.h"
 #include "libinput/device.h"
 #include "pointer_input.h"
@@ -60,10 +61,11 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
                                              const QPointF &pos, qreal pressure,
                                              int xTilt, int yTilt, qreal rotation,
                                              bool tipDown, bool tipNear, quint64 serialId,
-                                             quint64 toolId, LibInput::Device *device)
+                                             quint64 toolId,
+                                             InputRedirection::TabletToolType toolType,
+                                             const QVector<InputRedirection::Capability> &capabilities,
+                                             quint32 time, LibInput::Device *device)
 {
-    Q_UNUSED(device)
-    Q_UNUSED(toolId)
     if (!inited()) {
         return;
     }
@@ -83,13 +85,14 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     }
 
     const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
-    QTabletEvent ev(t, pos, pos, QTabletEvent::Stylus, QTabletEvent::Pen, pressure,
+    TabletEvent ev(t, pos, pos, QTabletEvent::Stylus, QTabletEvent::Pen, pressure,
                     xTilt, yTilt,
                     0, // tangentialPressure
                     rotation,
                     0, // z
-                    Qt::NoModifier, serialId, button, button);
+                    Qt::NoModifier, toolId, button, button, toolType, capabilities, serialId, device->sysName());
 
+    ev.setTimestamp(time);
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
     input()->processFilters(
         std::bind(&InputEventFilter::tabletToolEvent, std::placeholders::_1, &ev));

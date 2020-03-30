@@ -82,7 +82,7 @@ bool SceneQPainter::initFailed() const
     return false;
 }
 
-void SceneQPainter::paintGenericScreen(int mask, ScreenPaintData data)
+void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
 {
     m_painter->save();
     m_painter->translate(data.xTranslation(), data.yTranslation());
@@ -91,12 +91,13 @@ void SceneQPainter::paintGenericScreen(int mask, ScreenPaintData data)
     m_painter->restore();
 }
 
-qint64 SceneQPainter::paint(QRegion damage, QList<Toplevel *> toplevels)
+qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &toplevels)
 {
     QElapsedTimer renderTimer;
     renderTimer.start();
 
     createStackingOrder(toplevels);
+    QRegion damage = _damage;
 
     int mask = 0;
     m_backend->prepareRenderingFrame();
@@ -153,7 +154,7 @@ qint64 SceneQPainter::paint(QRegion damage, QList<Toplevel *> toplevels)
     return renderTimer.nsecsElapsed();
 }
 
-void SceneQPainter::paintBackground(QRegion region)
+void SceneQPainter::paintBackground(const QRegion &region)
 {
     m_painter->setBrush(Qt::black);
     for (const QRect &rect : region) {
@@ -256,8 +257,9 @@ static bool isXwaylandClient(Toplevel *toplevel)
     return false;
 }
 
-void SceneQPainter::Window::performPaint(int mask, QRegion region, WindowPaintData data)
+void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const WindowPaintData &data)
 {
+    QRegion region = _region;
     if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
         region &= toplevel->visibleRect();
 
@@ -489,7 +491,7 @@ QPainterEffectFrame::~QPainterEffectFrame()
 {
 }
 
-void QPainterEffectFrame::render(QRegion region, double opacity, double frameOpacity)
+void QPainterEffectFrame::render(const QRegion &region, double opacity, double frameOpacity)
 {
     Q_UNUSED(region)
     Q_UNUSED(opacity)

@@ -63,6 +63,8 @@ public:
     QStringList activities() const override;
     QPoint clientContentPos() const override;
     QSize clientSize() const override;
+    QSize minSize() const override;
+    QSize maxSize() const override;
     QRect transparentRect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     void debug(QDebug &stream) const override;
@@ -97,10 +99,8 @@ public:
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
-    using AbstractClient::resizeWithChecks;
-    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::setFrameGeometry;
-    void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
     quint32 windowId() const override;
     pid_t pid() const override;
@@ -119,14 +119,13 @@ public:
     void killWindow() override;
     bool isLocalhost() const override;
     bool supportsWindowRules() const override;
+    void destroyClient() override;
 
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
     void installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *decoration);
     void installAppMenu(KWayland::Server::AppMenuInterface *appmenu);
     void installPalette(KWayland::Server::ServerSideDecorationPaletteInterface *palette);
     void installXdgDecoration(KWayland::Server::XdgDecorationInterface *decoration);
-
-    void placeIn(const QRect &area);
 
 protected:
     void addDamage(const QRegion &damage) override;
@@ -169,8 +168,6 @@ private:
      * At this point all initial properties should have been set by the client.
      */
     void finishInit();
-    void createDecoration(const QRect &oldgeom);
-    void destroyClient();
     void createWindowId();
     void updateIcon();
     bool shouldExposeToWindowManagement();

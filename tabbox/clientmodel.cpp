@@ -164,12 +164,12 @@ void ClientModel::createClientList(bool partialReset)
 
 void ClientModel::createClientList(int desktop, bool partialReset)
 {
-    TabBoxClient* start = tabBox->activeClient().toStrongRef().data();
+    auto start = tabBox->activeClient().toStrongRef();
     // TODO: new clients are not added at correct position
     if (partialReset && !m_clientList.isEmpty()) {
-        QSharedPointer<TabBoxClient> firstClient = m_clientList.first().toStrongRef();
+        QSharedPointer<TabBoxClient> firstClient = m_clientList.constFirst();
         if (firstClient) {
-            start = firstClient.data();
+            start = firstClient;
         }
     }
 
@@ -179,34 +179,34 @@ void ClientModel::createClientList(int desktop, bool partialReset)
 
     switch(tabBox->config().clientSwitchingMode()) {
     case TabBoxConfig::FocusChainSwitching: {
-        TabBoxClient* c = start;
-        if (!tabBox->isInFocusChain(c)) {
+        auto c = start;
+        if (!tabBox->isInFocusChain(c.data())) {
             QSharedPointer<TabBoxClient> firstClient = tabBox->firstClientFocusChain().toStrongRef();
             if (firstClient) {
-                c = firstClient.data();
+                c = firstClient;
             }
         }
-        TabBoxClient* stop = c;
+        auto stop = c;
         do {
-            QWeakPointer<TabBoxClient> add = tabBox->clientToAddToList(c, desktop);
+            QSharedPointer<TabBoxClient> add = tabBox->clientToAddToList(c.data(), desktop);
             if (!add.isNull()) {
                 m_clientList += add;
                 if (add.data()->isFirstInTabBox()) {
                     stickyClients << add;
                 }
             }
-            c = tabBox->nextClientFocusChain(c).data();
+            c = tabBox->nextClientFocusChain(c.data());
         } while (c && c != stop);
         break;
     }
     case TabBoxConfig::StackingOrderSwitching: {
         // TODO: needs improvement
-        TabBoxClientList stacking = tabBox->stackingOrder();
-        TabBoxClient* c = stacking.first().data();
-        TabBoxClient* stop = c;
+        const TabBoxClientList stacking = tabBox->stackingOrder();
+        auto c = stacking.first().toStrongRef();
+        auto stop = c;
         int index = 0;
         while (c) {
-            QWeakPointer<TabBoxClient> add = tabBox->clientToAddToList(c, desktop);
+            QSharedPointer<TabBoxClient> add = tabBox->clientToAddToList(c.data(), desktop);
             if (!add.isNull()) {
                 if (start == add.data()) {
                     m_clientList.removeAll(add);
@@ -220,7 +220,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
             if (index >= stacking.size() - 1) {
                 c = nullptr;
             } else {
-                c = stacking[++index].data();
+                c = stacking[++index];
             }
 
             if (c == stop)

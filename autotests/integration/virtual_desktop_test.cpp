@@ -18,10 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "main.h"
 #include "platform.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "virtualdesktops.h"
 
@@ -51,7 +51,6 @@ private Q_SLOTS:
 
 void VirtualDesktopTest::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -134,7 +133,6 @@ void VirtualDesktopTest::testLastDesktopRemoved_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
@@ -157,7 +155,7 @@ void VirtualDesktopTest::testLastDesktopRemoved()
 
     QVERIFY(client);
     QCOMPARE(client->desktop(), 2);
-    QSignalSpy desktopPresenceChangedSpy(client, &XdgShellClient::desktopPresenceChanged);
+    QSignalSpy desktopPresenceChangedSpy(client, &AbstractClient::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
     QCOMPARE(client->desktops().count(), 1u);
@@ -178,7 +176,6 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
@@ -201,7 +198,7 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
 
     QVERIFY(client);
     QCOMPARE(client->desktop(), 3u);
-    QSignalSpy desktopPresenceChangedSpy(client, &XdgShellClient::desktopPresenceChanged);
+    QSignalSpy desktopPresenceChangedSpy(client, &AbstractClient::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
     QCOMPARE(client->desktops().count(), 1u);
@@ -266,7 +263,6 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
@@ -289,7 +285,7 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
 
     QVERIFY(client);
     QCOMPARE(client->desktop(), 3u);
-    QSignalSpy desktopPresenceChangedSpy(client, &XdgShellClient::desktopPresenceChanged);
+    QSignalSpy desktopPresenceChangedSpy(client, &AbstractClient::desktopPresenceChanged);
     QVERIFY(desktopPresenceChangedSpy.isValid());
 
     QCOMPARE(client->desktops().count(), 1u);

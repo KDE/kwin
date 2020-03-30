@@ -43,6 +43,8 @@ public:
     QString captionSuffix() const override;
     QPoint clientContentPos() const override;
     QSize clientSize() const override;
+    QSize minSize() const override;
+    QSize maxSize() const override;
     void debug(QDebug &stream) const override;
     QRect transparentRect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
@@ -67,10 +69,8 @@ public:
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
-    using AbstractClient::resizeWithChecks;
-    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::setFrameGeometry;
-    void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
@@ -79,8 +79,8 @@ public:
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
     void showOnScreenEdge() override;
+    void destroyClient() override;
 
-    void destroyClient();
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);
     QWindow *internalWindow() const;
@@ -88,13 +88,11 @@ public:
 protected:
     bool acceptsFocus() const override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
-    void destroyDecoration() override;
     void doMove(int x, int y) override;
     void doResizeSync() override;
     void updateCaption() override;
 
 private:
-    void createDecoration(const QRect &rect);
     void requestGeometry(const QRect &rect);
     void commitGeometry(const QRect &rect);
     void setCaption(const QString &caption);

@@ -68,7 +68,7 @@ XToWlDrag::XToWlDrag(X11Source *source)
     connect(DataBridge::self()->dnd(), &Dnd::transferFinished, this, [this](xcb_timestamp_t eventTime) {
         // we use this mechanism, because the finished call is not
         // reliable done by Wayland clients
-        auto it = std::find_if(m_dataRequests.begin(), m_dataRequests.end(), [this, eventTime](QPair<xcb_timestamp_t, bool> req) {
+        auto it = std::find_if(m_dataRequests.begin(), m_dataRequests.end(), [eventTime](const QPair<xcb_timestamp_t, bool> &req) {
             return req.first == eventTime;
         });
         if (it == m_dataRequests.end()) {

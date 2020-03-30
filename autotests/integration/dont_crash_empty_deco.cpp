@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 #include <kwineffects.h>
 
 #include <KDecoration2/Decoration>
@@ -50,7 +49,6 @@ private Q_SLOTS:
 
 void DontCrashEmptyDecorationTest::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -104,7 +102,7 @@ void DontCrashEmptyDecorationTest::testBug361551()
     QVERIFY(client->isDecorated());
 
     // let's set a stupid geometry
-    client->setFrameGeometry(0, 0, 0, 0);
+    client->setFrameGeometry({0, 0, 0, 0});
     QCOMPARE(client->frameGeometry(), QRect(0, 0, 0, 0));
 
     // and destroy the window again

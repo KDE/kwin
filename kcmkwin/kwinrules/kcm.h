@@ -38,13 +38,11 @@ public:
     KCMRules(QWidget *parent, const QVariantList &args);
     void load() override;
     void save() override;
-    void defaults() override;
     QString quickHelp() const override;
 protected Q_SLOTS:
     void moduleChanged(bool state);
 private:
     KCMRulesList* widget;
-    KConfig config;
 };
 
 } // namespace

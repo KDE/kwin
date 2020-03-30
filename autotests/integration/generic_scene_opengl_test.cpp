@@ -18,12 +18,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "generic_scene_opengl_test.h"
+#include "abstract_client.h"
 #include "composite.h"
 #include "effectloader.h"
 #include "cursor.h"
 #include "platform.h"
 #include "scene.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "effect_builtins.h"
 
@@ -49,7 +49,6 @@ void GenericSceneOpenGLTest::cleanup()
 
 void GenericSceneOpenGLTest::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());

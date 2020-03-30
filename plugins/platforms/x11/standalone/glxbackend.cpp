@@ -572,6 +572,9 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     const xcb_render_pictformat_t format = XRenderUtils::findPictFormat(visual);
     const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+        using Qt::hex;
+#endif
     if (!direct) {
         qCCritical(KWIN_X11STANDALONE).nospace() << "Could not find a picture format for visual 0x" << hex << visual;
         return info;

@@ -916,3 +916,21 @@ libinput_event_get_tablet_tool_event(struct libinput_event *event)
     }
     return nullptr;
 }
+
+int
+libinput_device_tablet_pad_get_num_strips(struct libinput_device *device)
+{
+    return device->stripCount;
+}
+
+int
+libinput_device_tablet_pad_get_num_rings(struct libinput_device *device)
+{
+    return device->ringCount;
+}
+
+int
+libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
+{
+    return device->buttonCount;
+}

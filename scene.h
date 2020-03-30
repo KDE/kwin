@@ -76,7 +76,7 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual qint64 paint(QRegion damage, QList<Toplevel *> windows) = 0;
+    virtual qint64 paint(const QRegion &damage, const QList<Toplevel *> &windows) = 0;
 
     /**
      * Adds the Toplevel to the Scene.
@@ -209,7 +209,7 @@ public Q_SLOTS:
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
     virtual Window *createWindow(Toplevel *toplevel) = 0;
-    void createStackingOrder(QList<Toplevel *> toplevels);
+    void createStackingOrder(const QList<Toplevel *> &toplevels);
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
@@ -218,20 +218,20 @@ protected:
     virtual void paintCursor() = 0;
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
-    void finalPaintScreen(int mask, QRegion region, ScreenPaintData& data);
+    void finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data);
     // shared implementation of painting the screen in the generic
     // (unoptimized) way
-    virtual void paintGenericScreen(int mask, ScreenPaintData data);
+    virtual void paintGenericScreen(int mask, const ScreenPaintData &data);
     // shared implementation of painting the screen in an optimized way
-    virtual void paintSimpleScreen(int mask, QRegion region);
+    virtual void paintSimpleScreen(int mask, const QRegion &region);
     // paint the background (not the desktop background - the whole background)
-    virtual void paintBackground(QRegion region) = 0;
+    virtual void paintBackground(const QRegion &region) = 0;
     // called after all effects had their paintWindow() called
-    void finalPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window
-    virtual void paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads);
+    virtual void paintWindow(Window* w, int mask, const QRegion &region, const WindowQuadList &quads);
     // called after all effects had their drawWindow() called
-    virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    virtual void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // let the scene decide whether it's better to paint more of the screen, eg. in order to allow a buffer swap
     // the default is NOOP
     virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
@@ -263,7 +263,7 @@ protected:
     int time_diff;
     QElapsedTimer last_time;
 private:
-    void paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation);
+    void paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
     QHash< Toplevel*, Window* > m_windows;
     // windows in their stacking order
@@ -295,7 +295,7 @@ public:
     Window(Toplevel* c);
     virtual ~Window();
     // perform the actual painting of the window
-    virtual void performPaint(int mask, QRegion region, WindowPaintData data) = 0;
+    virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
     // do any cleanup needed when the window's composite pixmap is discarded
     void discardPixmap();
     void updatePixmap();
@@ -530,7 +530,7 @@ class Scene::EffectFrame
 public:
     EffectFrame(EffectFrameImpl* frame);
     virtual ~EffectFrame();
-    virtual void render(QRegion region, double opacity, double frameOpacity) = 0;
+    virtual void render(const QRegion &region, double opacity, double frameOpacity) = 0;
     virtual void free() = 0;
     virtual void freeIconFrame() = 0;
     virtual void freeTextFrame() = 0;

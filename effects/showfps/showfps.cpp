@@ -123,11 +123,7 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
 
 void ShowFpsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (time == 0) {
-        // TODO optimized away
-    }
-    t.start();
-    frames[ frames_pos ] = t.minute() * 60000 + t.second() * 1000 + t.msec();
+    frames[ frames_pos ] = t.restart();
     if (++frames_pos == MAX_FPS)
         frames_pos = 0;
     effects->prePaintScreen(data, time);
@@ -158,7 +154,7 @@ void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData
     for (int i = 0;
             i < MAX_FPS;
             ++i)
-        if (abs(t.minute() * 60000 + t.second() * 1000 + t.msec() - frames[ i ]) < 1000)
+        if (abs(t.elapsed() - frames[ i ]) < 1000)
             ++fps; // count all frames in the last second
     if (fps > MAX_TIME)
         fps = MAX_TIME; // keep it the same height

@@ -89,6 +89,7 @@ public:
     xcb_window_t inputId() const { return m_decoInputExtent; }
     xcb_window_t frameId() const override;
 
+    QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
     QMargins bufferMargins() const override;
 
@@ -97,6 +98,8 @@ public:
     QSize frameSizeToClientSize(const QSize &size) const override;
     QSize clientSizeToFrameSize(const QSize &size) const override;
     QRect frameRectToBufferRect(const QRect &rect) const;
+
+    QMatrix4x4 inputTransformation() const override;
 
     bool isTransient() const override;
     bool groupTransient() const override;
@@ -126,7 +129,7 @@ public:
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
-    void destroyClient();
+    void destroyClient() override;
 
     QStringList activities() const override;
     void setOnActivity(const QString &activity, bool enable);
@@ -184,17 +187,15 @@ public:
 
     using AbstractClient::move;
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::setFrameGeometry;
-    void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     /// plainResize() simply resizes
     void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    using AbstractClient::resizeWithChecks;
-    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
-    QSize sizeForClientSize(const QSize&, SizeMode mode = SizeModeAny, bool noframe = false) const override;
+    QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
 
@@ -430,7 +431,7 @@ private:
     void grabButton(int mod);
     void ungrabButton(int mod);
     void resizeDecoration();
-    void createDecoration(const QRect &oldgeom);
+    void createDecoration(const QRect &oldgeom) override;
 
     void pingWindow();
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);
@@ -652,9 +653,9 @@ inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)
     plainResize(s.width(), s.height(), force);
 }
 
-inline void X11Client::resizeWithChecks(int w, int h, AbstractClient::ForceGeometry_t force)
+inline void X11Client::resizeWithChecks(const QSize &s, AbstractClient::ForceGeometry_t force)
 {
-    resizeWithChecks(w, h, XCB_GRAVITY_BIT_FORGET, force);
+    resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET, force);
 }
 
 inline void X11Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)

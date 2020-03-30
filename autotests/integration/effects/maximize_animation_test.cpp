@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "platform.h"
 #include "scene.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -57,7 +56,6 @@ void MaximizeAnimationTest::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
     qRegisterMetaType<KWin::AbstractClient *>();
-    qRegisterMetaType<KWin::XdgShellClient *>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
@@ -99,7 +97,6 @@ void MaximizeAnimationTest::testMaximizeRestore_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase")  << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
@@ -133,7 +130,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Draw contents of the surface.
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
@@ -157,9 +154,9 @@ void MaximizeAnimationTest::testMaximizeRestore()
     QVERIFY(!effect->isActive());
 
     // Maximize the client.
-    QSignalSpy frameGeometryChangedSpy(client, &XdgShellClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy maximizeChangedSpy(client, qOverload<AbstractClient *, bool, bool>(&XdgShellClient::clientMaximizedStateChanged));
+    QSignalSpy maximizeChangedSpy(client, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged));
     QVERIFY(maximizeChangedSpy.isValid());
 
     workspace()->slotWindowMaximize();

@@ -61,7 +61,7 @@ void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& 
     if (!m_highlightedWindows.isEmpty()) {
         // Initial fade out and changing highlight animation
         if (opacity == m_windowOpacity.end())
-            opacity = m_windowOpacity.insertMulti(w, 0.0f);
+            opacity = m_windowOpacity.insert(w, 0.0f);
         float oldOpacity = *opacity;
         if (m_highlightedWindows.contains(w))
             *opacity = qMin(1.0f, oldOpacity + time / m_fadeDuration);
@@ -250,7 +250,7 @@ void HighlightWindowEffect::prepareHighlighting()
     m_finishing = false;
     foreach (EffectWindow * w, effects->stackingOrder()) {
         if (!m_windowOpacity.contains(w))    // Just in case we are still finishing from last time
-            m_windowOpacity.insertMulti(w, isInitiallyHidden(w) ? 0.0 : 1.0);
+            m_windowOpacity.insert(w, isInitiallyHidden(w) ? 0.0 : 1.0);
         if (!m_highlightedWindows.isEmpty())
             m_highlightedWindows.at(0)->addRepaintFull();
     }

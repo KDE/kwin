@@ -19,8 +19,8 @@
  *
  */
 #include "popup_input_filter.h"
+#include "abstract_client.h"
 #include "deleted.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 
 #include <QMouseEvent>

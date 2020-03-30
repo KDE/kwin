@@ -472,6 +472,9 @@ public:
         return m_tabletSwitch;
     }
 
+    int stripsCount() const;
+    int ringsCount() const;
+
     /**
      * All created Devices
      */

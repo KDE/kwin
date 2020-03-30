@@ -19,7 +19,6 @@
 // Include some code from kwin core in order to avoid
 // double implementation.
 
-#include "ruleslist.h"
 #include "../../cursor.cpp"
 #include "../../plugins/platforms/x11/standalone/x11cursor.cpp"
 #include "../../rules.cpp"

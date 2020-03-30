@@ -158,12 +158,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_pointer(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_POINTER))
     , m_touch(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_TOUCH))
     , m_tabletTool(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_TABLET_TOOL))
-#if 0
-    // next libinput version
     , m_tabletPad(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_TABLET_PAD))
-#else
-    , m_tabletPad(false)
-#endif
     , m_supportsGesture(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_GESTURE))
     , m_switch(libinput_device_has_capability(m_device, LIBINPUT_DEVICE_CAP_SWITCH))
     , m_lidSwitch(m_switch ? libinput_device_switch_has_switch(m_device, LIBINPUT_SWITCH_LID) : false)
@@ -425,6 +420,16 @@ void Device::setLmrTapButtonMap(bool set)
             emit tapButtonMapChanged();
         }
     }
+}
+
+int Device::stripsCount() const
+{
+    return libinput_device_tablet_pad_get_num_strips(m_device);
+}
+
+int Device::ringsCount() const
+{
+    return libinput_device_tablet_pad_get_num_rings(m_device);
 }
 
 #define CONFIG(method, condition, function, variable, key) \

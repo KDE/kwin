@@ -210,7 +210,7 @@ void OnScreenNotification::createInputSpy()
             m_animation->setStartValue(1.0);
             m_animation->setEndValue(0.0);
             m_animation->setDuration(250);
-            m_animation->setEasingCurve(QEasingCurve::InOutQuad);
+            m_animation->setEasingCurve(QEasingCurve::InOutCubic);
         }
     }
 }

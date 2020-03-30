@@ -118,7 +118,7 @@ TabletModeManager::TabletModeManager(QObject *parent)
                                                  QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals
     );
 
-    connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::tabletModeAvailableChanged);
+    connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::hasTabletModeInputChanged);
 }
 
 void KWin::TabletModeManager::hasTabletModeInputChanged(bool set)

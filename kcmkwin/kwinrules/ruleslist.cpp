@@ -22,6 +22,8 @@
 #include <kconfig.h>
 #include <QFileDialog>
 
+#include "../../rules.h"
+#include "rulesettings.h"
 #include "ruleswidget.h"
 
 namespace KWin
@@ -57,11 +59,8 @@ KCMRulesList::KCMRulesList(QWidget* parent)
 
 KCMRulesList::~KCMRulesList()
 {
-    for (QVector< Rules* >::Iterator it = rules.begin();
-            it != rules.end();
-            ++it)
-        delete *it;
-    rules.clear();
+    qDeleteAll(m_rules);
+    m_rules.clear();
 }
 
 void KCMRulesList::activeChanged()
@@ -87,7 +86,7 @@ void KCMRulesList::newClicked()
     int pos = rules_listbox->currentRow() + 1;
     rules_listbox->insertItem(pos , rule->description);
     rules_listbox->setCurrentRow(pos, QItemSelectionModel::ClearAndSelect);
-    rules.insert(rules.begin() + pos, rule);
+    m_rules.insert(m_rules.begin() + pos, rule);
     emit changed(true);
 }
 
@@ -97,11 +96,11 @@ void KCMRulesList::modifyClicked()
     if (pos == -1)
         return;
     RulesDialog dlg(this);
-    Rules* rule = dlg.edit(rules[ pos ], {}, false);
-    if (rule == rules[ pos ])
+    Rules *rule = dlg.edit(m_rules[pos], {}, false);
+    if (rule == m_rules[pos])
         return;
-    delete rules[ pos ];
-    rules[ pos ] = rule;
+    delete m_rules[pos];
+    m_rules[pos] = rule;
     rules_listbox->item(pos)->setText(rule->description);
     emit changed(true);
 }
@@ -111,7 +110,7 @@ void KCMRulesList::deleteClicked()
     int pos = rules_listbox->currentRow();
     Q_ASSERT(pos != -1);
     delete rules_listbox->takeItem(pos);
-    rules.erase(rules.begin() + pos);
+    m_rules.erase(m_rules.begin() + pos);
     emit changed(true);
 }
 
@@ -123,9 +122,9 @@ void KCMRulesList::moveupClicked()
         QListWidgetItem * item = rules_listbox->takeItem(pos);
         rules_listbox->insertItem(pos - 1 , item);
         rules_listbox->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
-        Rules* rule = rules[ pos ];
-        rules[ pos ] = rules[ pos - 1 ];
-        rules[ pos - 1 ] = rule;
+        Rules *rule = m_rules[pos];
+        m_rules[pos] = m_rules[pos - 1];
+        m_rules[pos - 1] = rule;
     }
     emit changed(true);
 }
@@ -138,9 +137,9 @@ void KCMRulesList::movedownClicked()
         QListWidgetItem * item = rules_listbox->takeItem(pos);
         rules_listbox->insertItem(pos + 1 , item);
         rules_listbox->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
-        Rules* rule = rules[ pos ];
-        rules[ pos ] = rules[ pos + 1 ];
-        rules[ pos + 1 ] = rule;
+        Rules *rule = m_rules[pos];
+        m_rules[pos] = m_rules[pos + 1];
+        m_rules[pos + 1] = rule;
     }
     emit changed(true);
 }
@@ -153,10 +152,11 @@ void KCMRulesList::exportClicked()
                                                 i18n("KWin Rules (*.kwinrule)"));
     if (path.isEmpty())
         return;
-    KConfig config(path, KConfig::SimpleConfig);
-    KConfigGroup group(&config, rules[pos]->description);
-    group.deleteGroup();
-    rules[pos]->write(group);
+    const auto cfg = KSharedConfig::openConfig(path, KConfig::SimpleConfig);
+    RuleSettings settings(cfg, m_rules[pos]->description);
+    settings.setDefaults();
+    m_rules[pos]->write(&settings);
+    settings.save();
 }
 
 void KCMRulesList::importClicked()
@@ -165,29 +165,28 @@ void KCMRulesList::importClicked()
                                                 i18n("KWin Rules (*.kwinrule)"));
     if (path.isEmpty())
         return;
-    KConfig config(path, KConfig::SimpleConfig);
-    QStringList groups = config.groupList();
+    const auto config = KSharedConfig::openConfig(path, KConfig::SimpleConfig);
+    QStringList groups = config->groupList();
     if (groups.isEmpty())
         return;
 
     int pos = qMax(0, rules_listbox->currentRow());
-    foreach (const QString &group, groups) {
-        KConfigGroup grp(&config, group);
-        const bool remove = grp.readEntry("DeleteRule", false);
-        Rules* new_rule = new Rules(grp);
+    for (const QString &group : groups) {
+        RuleSettings settings(config, group);
+        const bool remove = settings.deleteRule();
+        Rules *new_rule = new Rules(&settings);
 
         // try to replace existing rule first
-        for (int i = 0; i < rules.count(); ++i) {
-            if (rules[i]->description == new_rule->description) {
-                delete rules[i];
+        for (int i = 0; i < m_rules.count(); ++i) {
+            if (m_rules[i]->description == new_rule->description) {
+                delete m_rules[i];
                 if (remove) {
-                    rules.remove(i);
+                    m_rules.remove(i);
                     delete rules_listbox->takeItem(i);
                     delete new_rule;
                     pos = qMax(0, rules_listbox->currentRow()); // might have changed!
-                }
-                else
-                    rules[i] = new_rule;
+                } else
+                    m_rules[i] = new_rule;
                 new_rule = nullptr;
                 break;
             }
@@ -201,7 +200,7 @@ void KCMRulesList::importClicked()
 
         // plain insertion
         if (new_rule) {
-            rules.insert(pos, new_rule);
+            m_rules.insert(pos, new_rule);
             rules_listbox->insertItem(pos++, new_rule->description);
         }
     }
@@ -211,24 +210,13 @@ void KCMRulesList::importClicked()
 void KCMRulesList::load()
 {
     rules_listbox->clear();
-    for (QVector< Rules* >::Iterator it = rules.begin();
-            it != rules.end();
-            ++it)
-        delete *it;
-    rules.clear();
-    KConfig _cfg("kwinrulesrc");
-    KConfigGroup cfg(&_cfg, "General");
-    int count = cfg.readEntry("count", 0);
-    rules.reserve(count);
-    for (int i = 1;
-            i <= count;
-            ++i) {
-        cfg = KConfigGroup(&_cfg, QString::number(i));
-        Rules* rule = new Rules(cfg);
-        rules.append(rule);
+    m_settings.load();
+    m_rules = m_settings.rules();
+    for (const auto rule : qAsConst(m_rules)) {
         rules_listbox->addItem(rule->description);
     }
-    if (rules.count() > 0)
+
+    if (m_rules.count() > 0)
         rules_listbox->setCurrentItem(rules_listbox->item(0));
     else
         rules_listbox->setCurrentItem(nullptr);
@@ -237,26 +225,8 @@ void KCMRulesList::load()
 
 void KCMRulesList::save()
 {
-    KConfig cfg(QLatin1String("kwinrulesrc"));
-    QStringList groups = cfg.groupList();
-    for (QStringList::ConstIterator it = groups.constBegin();
-            it != groups.constEnd();
-            ++it)
-        cfg.deleteGroup(*it);
-    cfg.group("General").writeEntry("count", rules.count());
-    int i = 1;
-    for (QVector< Rules* >::ConstIterator it = rules.constBegin();
-            it != rules.constEnd();
-            ++it) {
-        KConfigGroup cg(&cfg, QString::number(i));
-        (*it)->write(cg);
-        ++i;
-    }
-}
-
-void KCMRulesList::defaults()
-{
-    load();
+    m_settings.setRules(m_rules);
+    m_settings.save();
 }
 
 } // namespace

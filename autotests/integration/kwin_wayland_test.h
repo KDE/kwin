@@ -58,7 +58,6 @@ class Xwayland;
 }
 
 class AbstractClient;
-class XdgShellClient;
 
 class WaylandTestApplication : public ApplicationWaylandAbstract
 {
@@ -134,7 +133,6 @@ KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
 enum class XdgShellSurfaceType {
-    XdgShellV6,
     XdgShellStable
 };
 
@@ -148,9 +146,6 @@ KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType typ
                                                          QObject *parent = nullptr,
                                                          CreationSetup creationSetup = CreationSetup::CreateAndConfigure);
 
-KWayland::Client::XdgShellSurface *createXdgShellV6Surface(KWayland::Client::Surface *surface,
-                                                           QObject *parent = nullptr,
-                                                           CreationSetup = CreationSetup::CreateAndConfigure);
 KWayland::Client::XdgShellSurface *createXdgShellStableSurface(KWayland::Client::Surface *surface,
                                                                QObject *parent = nullptr,
                                                                CreationSetup = CreationSetup::CreateAndConfigure);
@@ -181,15 +176,15 @@ void render(KWayland::Client::Surface *surface, const QSize &size, const QColor 
 void render(KWayland::Client::Surface *surface, const QImage &img);
 
 /**
- * Waits till a new XdgShellClient is shown and returns the created XdgShellClient.
- * If no XdgShellClient gets shown during @p timeout @c null is returned.
+ * Waits till a new AbstractClient is shown and returns the created AbstractClient.
+ * If no AbstractClient gets shown during @p timeout @c null is returned.
  */
-XdgShellClient *waitForWaylandWindowShown(int timeout = 5000);
+AbstractClient *waitForWaylandWindowShown(int timeout = 5000);
 
 /**
  * Combination of @link{render} and @link{waitForWaylandWindowShown}.
  */
-XdgShellClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
+AbstractClient *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
 /**
  * Waits for the @p client to be destroyed.

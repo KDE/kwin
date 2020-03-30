@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "platform.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "scripting/scripting.h"
 
@@ -327,7 +326,7 @@ void UserActionsMenu::init()
                 p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
                 p->setProgram(QStringLiteral("kcmshell5"));
                 connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
-                connect(p, &QProcess::errorOccurred, this, [p](QProcess::ProcessError e) {
+                connect(p, &QProcess::errorOccurred, this, [] (QProcess::ProcessError e) {
                     if (e == QProcess::FailedToStart) {
                         qCDebug(KWIN_CORE) << "Failed to start kcmshell5";
                     }

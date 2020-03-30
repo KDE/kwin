@@ -215,6 +215,9 @@ xcb_window_t Toplevel::wmClientLeader() const
 
 void Toplevel::getResourceClass()
 {
+    if (!info) {
+        return;
+    }
     setResourceClass(QByteArray(info->windowClassName()).toLower(), QByteArray(info->windowClassClass()).toLower());
 }
 
@@ -232,6 +235,9 @@ bool Toplevel::resourceMatch(const Toplevel *c1, const Toplevel *c2)
 
 double Toplevel::opacity() const
 {
+    if (!info) {
+        return 1.0;
+    }
     if (info->opacity() == 0xffffffff)
         return 1.0;
     return info->opacity() * 1.0 / 0xffffffff;
@@ -239,6 +245,10 @@ double Toplevel::opacity() const
 
 void Toplevel::setOpacity(double new_opacity)
 {
+    if (!info) {
+        return;
+    }
+
     double old_opacity = opacity();
     new_opacity = qBound(0.0, new_opacity, 1.0);
     if (old_opacity == new_opacity)
@@ -602,6 +612,10 @@ bool Toplevel::wantsShadowToBeRendered() const
 
 void Toplevel::getWmOpaqueRegion()
 {
+    if (!info) {
+        return;
+    }
+
     const auto rects = info->opaqueRegion();
     QRegion new_opaque_region;
     for (const auto &r : rects) {
@@ -644,6 +658,9 @@ void Toplevel::elevate(bool elevate)
 
 pid_t Toplevel::pid() const
 {
+    if (!info) {
+        return -1;
+    }
     return info->pid();
 }
 
@@ -723,6 +740,9 @@ void Toplevel::addDamage(const QRegion &damage)
 
 QByteArray Toplevel::windowRole() const
 {
+    if (!info) {
+        return {};
+    }
     return QByteArray(info->windowRole());
 }
 

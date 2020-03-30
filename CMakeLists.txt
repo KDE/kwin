@@ -5,7 +5,7 @@ set(PROJECT_VERSION "5.18.80")
 set(PROJECT_VERSION_MAJOR 5)
 
 set(QT_MIN_VERSION "5.12.0")
-set(KF5_MIN_VERSION "5.66.0")
+set(KF5_MIN_VERSION "5.68.0")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
@@ -287,6 +287,13 @@ set_package_properties(Libcap PROPERTIES
 )
 set(HAVE_LIBCAP ${Libcap_FOUND})
 
+find_package(hwdata)
+set_package_properties(hwdata PROPERTIES
+    TYPE RUNTIME
+    PURPOSE "Runtime-only dependency needed for mapping monitor hardware vendor IDs to full names"
+    URL "https://github.com/vcrhonek/hwdata"
+)
+
 include(ECMQMLModules)
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 1.2)
@@ -448,7 +455,6 @@ set(kwin_SRCS
     netinfo.cpp
     onscreennotification.cpp
     options.cpp
-    orientation_sensor.cpp
     osd.cpp
     outline.cpp
     outputscreens.cpp
@@ -459,6 +465,7 @@ set(kwin_SRCS
     popup_input_filter.cpp
     rootinfo_filter.cpp
     rules.cpp
+    rulebooksettings.cpp
     scene.cpp
     screenedge.cpp
     screenlockerwatcher.cpp
@@ -549,12 +556,13 @@ endif()
 
 kconfig_add_kcfg_files(kwin_SRCS settings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS colorcorrection/colorcorrect_settings.kcfgc)
+kconfig_add_kcfg_files(kwin_SRCS rulesettings.kcfgc)
+kconfig_add_kcfg_files(kwin_SRCS rulebooksettingsbase.kcfgc)
 
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.OrientationSensor.xml orientation_sensor.h KWin::OrientationSensor)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 
@@ -646,6 +654,9 @@ set(kwinLibs
 )
 
 add_library(kwin SHARED ${kwin_SRCS})
+if (Libinput_VERSION_STRING VERSION_GREATER 1.14)
+    target_compile_definitions(kwin PRIVATE -DLIBINPUT_HAS_TOTEM)
+endif ()
 
 set_target_properties(kwin PROPERTIES
    VERSION ${PROJECT_VERSION}

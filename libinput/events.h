@@ -196,6 +196,10 @@ class TabletToolEvent : public Event
 public:
     TabletToolEvent(libinput_event *event, libinput_event_type type);
 
+    uint32_t time() const
+    {
+        return libinput_event_tablet_tool_get_time(m_tabletToolEvent);
+    }
     bool xHasChanged() const {
         return libinput_event_tablet_tool_x_has_changed(m_tabletToolEvent);
     }

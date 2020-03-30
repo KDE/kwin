@@ -39,7 +39,6 @@ namespace KWin
 
 KCMRules::KCMRules(QWidget *parent, const QVariantList &)
     : KCModule(parent)
-    , config("kwinrulesrc", KConfig::NoGlobals)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -52,11 +51,11 @@ KCMRules::KCMRules(QWidget *parent, const QVariantList &)
                                        QString(), QString(), KAboutLicense::GPL, i18n("(c) 2004 KWin and KControl Authors"));
     about->addAuthor(i18n("Lubos Lunak"), QString(), "l.lunak@kde.org");
     setAboutData(about);
+    setButtons(KCModule::Help | KCModule::Apply);
 }
 
 void KCMRules::load()
 {
-    config.reparseConfiguration();
     widget->load();
     emit KCModule::changed(false);
 }
@@ -65,18 +64,11 @@ void KCMRules::save()
 {
     widget->save();
     emit KCModule::changed(false);
-    // Send signal to kwin
-    config.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
 
-}
-
-void KCMRules::defaults()
-{
-    widget->defaults();
 }
 
 QString KCMRules::quickHelp() const

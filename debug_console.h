@@ -39,9 +39,9 @@ class DebugConsole;
 namespace KWin
 {
 
+class AbstractClient;
 class X11Client;
 class InternalClient;
-class XdgShellClient;
 class Unmanaged;
 class DebugConsoleFilter;
 
@@ -73,13 +73,13 @@ private:
     void add(int parentRow, QVector<T*> &clients, T *client);
     template <class T>
     void remove(int parentRow, QVector<T*> &clients, T *client);
-    XdgShellClient *shellClient(const QModelIndex &index) const;
+    AbstractClient *waylandClient(const QModelIndex &index) const;
     InternalClient *internalClient(const QModelIndex &index) const;
     X11Client *x11Client(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
-    QVector<XdgShellClient *> m_shellClients;
+    QVector<AbstractClient *> m_waylandClients;
     QVector<InternalClient*> m_internalClients;
     QVector<X11Client *> m_x11Clients;
     QVector<Unmanaged*> m_unmanageds;
@@ -153,7 +153,7 @@ public:
 
     void switchEvent(SwitchEvent *event) override;
 
-    void tabletToolEvent(QTabletEvent *event) override;
+    void tabletToolEvent(TabletEvent *event) override;
     void tabletToolButtonEvent(const QSet<uint> &pressedButtons) override;
     void tabletPadButtonEvent(const QSet<uint> &pressedButtons) override;
     void tabletPadStripEvent(int number, int position, bool isFinger) override;

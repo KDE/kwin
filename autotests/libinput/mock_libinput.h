@@ -105,6 +105,9 @@ struct libinput_device {
     enum libinput_config_click_method defaultClickMethod = LIBINPUT_CONFIG_CLICK_METHOD_NONE;
     enum libinput_config_click_method clickMethod = LIBINPUT_CONFIG_CLICK_METHOD_NONE;
     bool setClickMethodReturnValue = 0;
+    uint32_t buttonCount = 0;
+    uint32_t stripCount = 0;
+    uint32_t ringCount = 0;
 };
 
 struct libinput_event {

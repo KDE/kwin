@@ -727,8 +727,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionLeft(ElectricActionNone)
     , m_gestureRecognizer(new GestureRecognizer(this))
 {
-    QWidget w;
-    m_cornerOffset = (w.physicalDpiX() + w.physicalDpiY() + 5) / 6;
+    m_cornerOffset = (Screens::self()->physicalDpiX(0) + Screens::self()->physicalDpiX(0) + 5) / 6;
 
     connect(workspace(), &Workspace::clientRemoved, this, &ScreenEdges::deleteEdgeForClient);
 }

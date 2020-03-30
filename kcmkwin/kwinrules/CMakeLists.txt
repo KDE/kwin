@@ -6,9 +6,12 @@ add_definitions(-DKCMRULES)
 include_directories(../../)
 set(kwinrules_MOC_HDRS yesnobox.h ../../cursor.h ../../plugins/platforms/x11/standalone/x11cursor.h)
 qt5_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
-set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp main.cpp ${kwinrules_MOC_SRCS})
+set(kwinrules_SRCS ../../rulebooksettings.cpp ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp main.cpp ${kwinrules_MOC_SRCS})
 
 ki18n_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
+
+kconfig_add_kcfg_files(kwinrules_SRCS ../../rulesettings.kcfgc)
+kconfig_add_kcfg_files(kwinrules_SRCS ../../rulebooksettingsbase.kcfgc)
 
 add_executable(kwin_rules_dialog ${kwinrules_SRCS})
 

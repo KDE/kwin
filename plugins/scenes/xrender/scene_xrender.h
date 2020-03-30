@@ -154,7 +154,7 @@ public:
     CompositingType compositingType() const override {
         return XRenderCompositing;
     }
-    qint64 paint(QRegion damage, QList<Toplevel *> windows) override;
+    qint64 paint(const QRegion &damage, const QList<Toplevel *> &windows) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
@@ -174,8 +174,8 @@ public:
     static SceneXrender *createScene(QObject *parent);
 protected:
     Scene::Window *createWindow(Toplevel *toplevel) override;
-    void paintBackground(QRegion region) override;
-    void paintGenericScreen(int mask, ScreenPaintData data) override;
+    void paintBackground(const QRegion &region) override;
+    void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintCursor() override;
     void paintEffectQuickView(EffectQuickView *w) override;
@@ -192,7 +192,7 @@ class SceneXrender::Window
 public:
     Window(Toplevel* c, SceneXrender *scene);
     ~Window() override;
-    void performPaint(int mask, QRegion region, WindowPaintData data) override;
+    void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
     QRegion transformedShape() const;
     void setTransformedShape(const QRegion& shape);
     static void cleanup();
@@ -238,7 +238,7 @@ public:
     void freeSelection() override;
     void crossFadeIcon() override;
     void crossFadeText() override;
-    void render(QRegion region, double opacity, double frameOpacity) override;
+    void render(const QRegion &region, double opacity, double frameOpacity) override;
     static void cleanup();
 
 private:

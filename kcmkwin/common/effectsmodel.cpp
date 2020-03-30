@@ -50,7 +50,6 @@ static QString translatedCategory(const QString &category)
     static const QVector<QString> knownCategories = {
         QStringLiteral("Accessibility"),
         QStringLiteral("Appearance"),
-        QStringLiteral("Candy"),
         QStringLiteral("Focus"),
         QStringLiteral("Show Desktop Animation"),
         QStringLiteral("Tools"),
@@ -62,7 +61,6 @@ static QString translatedCategory(const QString &category)
     static const QVector<QString> translatedCategories = {
         i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
         i18nc("Category of Desktop Effects, used as section header", "Appearance"),
-        i18nc("Category of Desktop Effects, used as section header", "Candy"),
         i18nc("Category of Desktop Effects, used as section header", "Focus"),
         i18nc("Category of Desktop Effects, used as section header", "Show Desktop Animation"),
         i18nc("Category of Desktop Effects, used as section header", "Tools"),
@@ -636,7 +634,7 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
         return;
     }
 
-    QPointer<QDialog> dialog = new QDialog();
+    auto dialog = new QDialog();
 
     KCModule *module = index.data(ScriptedRole).toBool()
         ? findScriptedConfig(index.data(ServiceNameRole).toString(), dialog)
@@ -668,11 +666,13 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     layout->addWidget(module);
     layout->addWidget(buttons);
 
-    if (dialog->exec() == QDialog::Accepted) {
+    connect(dialog, &QDialog::accepted, module, [module]() {
         module->save();
-    }
+    });
 
-    delete dialog;
+    dialog->setModal(true);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->show();
 }
 
 bool EffectsModel::shouldStore(const EffectData &data) const

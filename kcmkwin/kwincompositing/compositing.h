@@ -28,6 +28,8 @@
 
 class OrgKdeKwinCompositingInterface;
 
+class KWinCompositingSetting;
+
 namespace KWin {
 namespace Compositing {
 
@@ -82,11 +84,12 @@ public:
     static bool isRunningPlasma();
 
 public Q_SLOTS:
-    void reset();
+    void load();
     void defaults();
 
 Q_SIGNALS:
-    void changed();
+    void changed(bool changed);
+    void defaulted(bool defaulted);
     void animationSpeedChanged(qreal);
     void windowThumbnailChanged(int);
     void glScaleFilterChanged(int);
@@ -97,7 +100,12 @@ Q_SIGNALS:
     void openGLPlatformInterfaceChanged(int);
     void windowsBlockCompositingChanged(bool);
 
+private Q_SLOTS:
+    void updateSettings();
+
 private:
+    void applyValues();
+
     qreal m_animationSpeed;
     int m_windowThumbnail;
     int m_glScaleFilter;
@@ -105,13 +113,13 @@ private:
     int m_glSwapStrategy;
     int m_compositingType;
     bool m_compositingEnabled;
-    bool m_changed;
     OpenGLPlatformInterfaceModel *m_openGLPlatformInterfaceModel;
     int m_openGLPlatformInterface;
     bool m_windowsBlockCompositing;
     bool m_windowsBlockingCompositing;
     OrgKdeKwinCompositingInterface *m_compositingInterface;
     KSharedConfigPtr m_config;
+    KWinCompositingSetting *m_settings;
 };
 
 

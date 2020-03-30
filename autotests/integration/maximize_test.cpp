@@ -18,11 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
 #include "platform.h"
-#include "xdgshellclient.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -61,7 +61,6 @@ private Q_SLOTS:
 
 void TestMaximized::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
     QVERIFY(workspaceCreatedSpy.isValid());
@@ -202,7 +201,7 @@ void TestMaximized::testInitiallyMaximized()
 
     // Now let's render in an incorrect size.
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QCOMPARE(client->frameGeometry(), QRect(0, 0, 100, 50));
     QEXPECT_FAIL("", "Should go out of maximzied", Continue);
@@ -249,7 +248,7 @@ void TestMaximized::testBorderlessMaximizedWindow()
 
     // Map the client.
     shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
-    XdgShellClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
@@ -326,7 +325,7 @@ void TestMaximized::testBorderlessMaximizedWindowNoClientSideDecoration()
 
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
-    QSignalSpy frameGeometryChangedSpy(client, &XdgShellClient::frameGeometryChanged);
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
     QSignalSpy sizeChangeRequestedSpy(xdgShellSurface.data(), &XdgShellSurface::sizeChanged);
     QVERIFY(sizeChangeRequestedSpy.isValid());

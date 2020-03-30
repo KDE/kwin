@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_cursor_theme.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/buffer.h>
@@ -140,7 +139,6 @@ private:
 
 void PointerInputTest::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Deleted*>();
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -1048,6 +1046,7 @@ void PointerInputTest::testCursorImage()
 
     // scaled cursor
     QImage blueScaled = QImage(QSize(20, 20), QImage::Format_ARGB32_Premultiplied);
+    blueScaled.setDevicePixelRatio(2);
     blueScaled.fill(Qt::blue);
     auto bs = Test::waylandShmPool()->createBuffer(blueScaled);
     cursorSurface->attachBuffer(bs);
@@ -1056,7 +1055,6 @@ void PointerInputTest::testCursorImage()
     cursorSurface->commit();
     QVERIFY(cursorRenderedSpy.wait());
     QTRY_COMPARE(p->cursorImage(), blueScaled);
-    QCOMPARE(p->cursorImage().devicePixelRatio(), 2.0);
     QCOMPARE(p->cursorHotSpot(), QPoint(6, 6)); //surface-local (so not changed)
 
     // hide the cursor
@@ -1209,7 +1207,7 @@ void PointerInputTest::testPopup()
     popupShellSurface->requestGrab(Test::waylandSeat(), 0); // FIXME: Serial.
     render(popupSurface, positioner.initialSize());
     QVERIFY(clientAddedSpy.wait());
-    auto popupClient = clientAddedSpy.last().first().value<XdgShellClient *>();
+    auto popupClient = clientAddedSpy.last().first().value<AbstractClient *>();
     QVERIFY(popupClient);
     QVERIFY(popupClient != window);
     QCOMPARE(window, workspace()->activeClient());
@@ -1300,7 +1298,7 @@ void PointerInputTest::testDecoCancelsPopup()
     popupShellSurface->requestGrab(Test::waylandSeat(), 0); // FIXME: Serial.
     render(popupSurface, positioner.initialSize());
     QVERIFY(clientAddedSpy.wait());
-    auto popupClient = clientAddedSpy.last().first().value<XdgShellClient *>();
+    auto popupClient = clientAddedSpy.last().first().value<AbstractClient *>();
     QVERIFY(popupClient);
     QVERIFY(popupClient != window);
     QCOMPARE(window, workspace()->activeClient());
@@ -1362,7 +1360,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(popupShellSurface);
     render(popupSurface, positioner.initialSize());
     QVERIFY(clientAddedSpy.wait());
-    auto popupClient = clientAddedSpy.last().first().value<XdgShellClient *>();
+    auto popupClient = clientAddedSpy.last().first().value<AbstractClient *>();
     QVERIFY(popupClient);
     QVERIFY(popupClient != window);
     QVERIFY(window->frameGeometry().contains(Cursor::pos()));
@@ -1501,7 +1499,7 @@ void PointerInputTest::testResizeCursor()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    XdgShellClient *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
 
     // move the cursor to the test position
@@ -1571,7 +1569,7 @@ void PointerInputTest::testMoveCursor()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
-    XdgShellClient *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    AbstractClient *c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
 
     // move cursor to the test position

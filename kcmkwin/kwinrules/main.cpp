@@ -23,6 +23,7 @@
 #include <kwindowsystem.h>
 
 #include "ruleswidget.h"
+#include "rulebooksettings.h"
 #include "../../rules.h"
 #include <QByteArray>
 
@@ -37,40 +38,7 @@ Q_DECLARE_METATYPE(NET::WindowType)
 namespace KWin
 {
 
-static void loadRules(QList< Rules* >& rules)
-{
-    KConfig _cfg("kwinrulesrc", KConfig::NoGlobals);
-    KConfigGroup cfg(&_cfg, "General");
-    int count = cfg.readEntry("count", 0);
-    for (int i = 1;
-            i <= count;
-            ++i) {
-        cfg = KConfigGroup(&_cfg, QString::number(i));
-        Rules* rule = new Rules(cfg);
-        rules.append(rule);
-    }
-}
-
-static void saveRules(const QList< Rules* >& rules)
-{
-    KConfig cfg("kwinrulesrc", KConfig::NoGlobals);
-    QStringList groups = cfg.groupList();
-    for (QStringList::ConstIterator it = groups.constBegin();
-            it != groups.constEnd();
-            ++it)
-        cfg.deleteGroup(*it);
-    cfg.group("General").writeEntry("count", rules.count());
-    int i = 1;
-    for (QList< Rules* >::ConstIterator it = rules.constBegin();
-            it != rules.constEnd();
-            ++it) {
-        KConfigGroup cg(&cfg, QString::number(i));
-        (*it)->write(cg);
-        ++i;
-    }
-}
-
-static Rules* findRule(const QList< Rules* >& rules, const QVariantMap &data, bool whole_app)
+static Rules *findRule(const QVector<Rules *> &rules, const QVariantMap &data, bool whole_app)
 {
     QByteArray wmclass_class = data.value("resourceClass").toByteArray().toLower();
     QByteArray wmclass_name = data.value("resourceName").toByteArray().toLower();
@@ -80,11 +48,8 @@ static Rules* findRule(const QList< Rules* >& rules, const QVariantMap &data, bo
     QByteArray machine = data.value("clientMachine").toByteArray();
     Rules* best_match = nullptr;
     int match_quality = 0;
-    for (QList< Rules* >::ConstIterator it = rules.constBegin();
-            it != rules.constEnd();
-            ++it) {
+    for (const auto rule : rules) {
         // try to find an exact match, i.e. not a generic rule
-        Rules* rule = *it;
         int quality = 0;
         bool generic = true;
         if (rule->wmclassmatch != Rules::ExactMatch)
@@ -202,9 +167,9 @@ static Rules* findRule(const QList< Rules* >& rules, const QVariantMap &data, bo
 
 static void edit(const QVariantMap &data, bool whole_app)
 {
-    QList< Rules* > rules;
-    loadRules(rules);
-    Rules* orig_rule = findRule(rules, data, whole_app);
+    RuleBookSettings settings(KConfig::NoGlobals);
+    QVector<Rules *> rules = settings.rules();
+    Rules *orig_rule = findRule(rules, data, whole_app);
     RulesDialog dlg;
     if (whole_app)
         dlg.setWindowTitle(i18nc("Window caption for the application wide rules dialog", "Edit Application-Specific Settings"));
@@ -223,7 +188,8 @@ static void edit(const QVariantMap &data, bool whole_app)
             rules.prepend(edited_rule);
         delete orig_rule;
     }
-    saveRules(rules);
+    settings.setRules(rules);
+    settings.save();
     // Send signal to all kwin instances
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");

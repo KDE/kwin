@@ -296,7 +296,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void slotClientShown(KWin::Toplevel*);
-    void slotXdgShellClientShown(KWin::Toplevel*);
+    void slotWaylandClientShown(KWin::Toplevel*);
     void slotUnmanagedShown(KWin::Toplevel*);
     void slotWindowClosed(KWin::Toplevel *c, KWin::Deleted *d);
     void slotClientMaximized(KWin::AbstractClient *c, MaximizeMode maxMode);

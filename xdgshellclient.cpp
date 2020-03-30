@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/server_decoration_interface.h>
 #include <KWayland/Server/server_decoration_palette_interface.h>
 #include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/subcompositor_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/xdgdecoration_interface.h>
 
@@ -192,7 +191,7 @@ void XdgShellClient::finishInit()
     if (supportsWindowRules()) {
         setupWindowRules(false);
 
-        const QRect originalGeometry = QRect(pos(), sizeForClientSize(clientSize()));
+        const QRect originalGeometry = frameGeometry();
         const QRect ruledGeometry = rules()->checkGeometry(originalGeometry, true);
         if (originalGeometry != ruledGeometry) {
             setFrameGeometry(ruledGeometry);
@@ -320,29 +319,26 @@ QPoint XdgShellClient::clientContentPos() const
     return -1 * clientPos();
 }
 
-static QRect subSurfaceTreeRect(const SurfaceInterface *surface, const QPoint &position = QPoint())
-{
-    QRect rect(position, surface->size());
-
-    const QList<QPointer<SubSurfaceInterface>> subSurfaces = surface->childSubSurfaces();
-    for (const QPointer<SubSurfaceInterface> &subSurface : subSurfaces) {
-        if (Q_UNLIKELY(!subSurface)) {
-            continue;
-        }
-        const SurfaceInterface *child = subSurface->surface();
-        if (Q_UNLIKELY(!child)) {
-            continue;
-        }
-        rect |= subSurfaceTreeRect(child, position + subSurface->position());
-    }
-
-    return rect;
-}
-
 QSize XdgShellClient::clientSize() const
 {
-    const QRect boundingRect = subSurfaceTreeRect(surface());
+    const QRect boundingRect = surface()->boundingRect();
     return m_windowGeometry.size().boundedTo(boundingRect.size());
+}
+
+QSize XdgShellClient::minSize() const
+{
+    if (m_xdgShellToplevel) {
+        return rules()->checkMinSize(m_xdgShellToplevel->minimumSize());
+    }
+    return QSize(0, 0);
+}
+
+QSize XdgShellClient::maxSize() const
+{
+    if (m_xdgShellToplevel) {
+        return rules()->checkMaxSize(m_xdgShellToplevel->maximumSize());
+    }
+    return QSize(INT_MAX, INT_MAX);
 }
 
 void XdgShellClient::debug(QDebug &stream) const
@@ -357,7 +353,7 @@ bool XdgShellClient::belongsToDesktop() const
     const auto clients = waylandServer()->clients();
 
     return std::any_of(clients.constBegin(), clients.constEnd(),
-        [this](const XdgShellClient *client) {
+        [this](const AbstractClient *client) {
             if (belongsToSameApplication(client, SameApplicationChecks())) {
                 return client->isDesktop();
             }
@@ -444,31 +440,6 @@ void XdgShellClient::markAsMapped()
     updateShowOnScreenEdge();
 }
 
-void XdgShellClient::createDecoration(const QRect &oldGeom)
-{
-    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
-    if (decoration) {
-        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
-            [this]() {
-                GeometryUpdatesBlocker blocker(this);
-                RequestGeometryBlocker requestBlocker(this);
-                const QRect oldGeometry = frameGeometry();
-                if (!isShade()) {
-                    checkWorkspacePosition(oldGeometry);
-                }
-                emit geometryShapeChanged(this, oldGeometry);
-            }
-        );
-    }
-    setDecoration(decoration);
-    // TODO: ensure the new geometry still fits into the client area (e.g. maximized windows)
-    doSetGeometry(QRect(oldGeom.topLeft(), m_windowGeometry.size() + QSize(borderLeft() + borderRight(), borderBottom() + borderTop())));
-
-    emit geometryShapeChanged(this, oldGeom);
-}
-
 void XdgShellClient::updateDecoration(bool check_workspace_pos, bool force)
 {
     if (!force &&
@@ -499,9 +470,9 @@ void XdgShellClient::updateDecoration(bool check_workspace_pos, bool force)
     blockGeometryUpdates(false);
 }
 
-void XdgShellClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force)
+void XdgShellClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 {
-    const QRect newGeometry = rules()->checkGeometry(QRect(x, y, w, h));
+    const QRect newGeometry = rules()->checkGeometry(rect);
 
     if (areGeometryUpdatesBlocked()) {
         // when the GeometryUpdateBlocker exits the current geom is passed to setGeometry
@@ -809,7 +780,7 @@ void XdgShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = decoration()->client().data();
+        const auto c = decoration()->client().toStrongRef();
         if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
             emit c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
         }
@@ -942,7 +913,7 @@ void XdgShellClient::setFullScreen(bool set, bool user)
     } else {
         if (m_geomFsRestore.isValid()) {
             int currentScreen = screen();
-            setFrameGeometry(QRect(m_geomFsRestore.topLeft(), adjustedSize(m_geomFsRestore.size())));
+            setFrameGeometry(QRect(m_geomFsRestore.topLeft(), constrainFrameSize(m_geomFsRestore.size())));
             if( currentScreen != screen())
                 workspace()->sendClientToScreen( this, currentScreen );
         } else {
@@ -1164,7 +1135,7 @@ void XdgShellClient::handleTransientForChanged()
     if (!transientSurface) {
         transientSurface = waylandServer()->findForeignTransientForSurface(surface());
     }
-    XdgShellClient *transientClient = waylandServer()->findClient(transientSurface);
+    AbstractClient *transientClient = waylandServer()->findClient(transientSurface);
     if (transientClient != transientFor()) {
         // Remove from main client.
         if (transientFor()) {
@@ -1330,7 +1301,7 @@ void XdgShellClient::handleCommitted()
     }
 
     if (!m_hasWindowGeometry) {
-        m_windowGeometry = subSurfaceTreeRect(surface());
+        m_windowGeometry = surface()->boundingRect();
     }
 
     updatePendingGeometry();
@@ -1339,17 +1310,11 @@ void XdgShellClient::handleCommitted()
     markAsMapped();
 }
 
-void XdgShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
+void XdgShellClient::resizeWithChecks(const QSize &size, ForceGeometry_t force)
 {
-    const QRect area = workspace()->clientArea(WorkArea, this);
     // don't allow growing larger than workarea
-    if (w > area.width()) {
-        w = area.width();
-    }
-    if (h > area.height()) {
-        h = area.height();
-    }
-    setFrameGeometry(x(), y(), w, h, force);
+    const QRect area = workspace()->clientArea(WorkArea, this);
+    setFrameGeometry(QRect{pos(), size.boundedTo(area.size())}, force);
 }
 
 void XdgShellClient::unmap()
@@ -1409,6 +1374,11 @@ void XdgShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surf
             workspace()->updateClientArea();
         }
     };
+    connect(surface, &PlasmaShellSurfaceInterface::panelTakesFocusChanged , this, [this, surface]() {
+        if (surface->panelTakesFocus()) {
+            workspace()->activateClient(this);
+        }
+    });
     connect(surface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
     connect(surface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
     connect(surface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this,
@@ -1431,7 +1401,8 @@ void XdgShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surf
             m_plasmaShellSurface->showAutoHidingPanel();
         }
     );
-    updatePosition();
+    if (surface->isPositionSet())
+        updatePosition();
     updateRole();
     updateShowOnScreenEdge();
     connect(this, &XdgShellClient::frameGeometryChanged, this, &XdgShellClient::updateShowOnScreenEdge);
@@ -1911,12 +1882,6 @@ void XdgShellClient::doMinimize()
         emit windowShown(this);
     }
     workspace()->updateMinimizedOfTransients(this);
-}
-
-void XdgShellClient::placeIn(const QRect &area)
-{
-    Placement::self()->place(this, area);
-    setGeometryRestore(frameGeometry());
 }
 
 void XdgShellClient::showOnScreenEdge()

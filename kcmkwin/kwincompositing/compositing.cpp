@@ -32,6 +32,8 @@
 #include <QHash>
 #include <QDebug>
 
+#include "kwincompositing_setting.h"
+
 namespace KWin {
 namespace Compositing {
 
@@ -44,63 +46,50 @@ Compositing::Compositing(QObject *parent)
     , m_glSwapStrategy(0)
     , m_compositingType(0)
     , m_compositingEnabled(true)
-    , m_changed(false)
     , m_openGLPlatformInterfaceModel(new OpenGLPlatformInterfaceModel(this))
     , m_openGLPlatformInterface(0)
     , m_windowsBlockCompositing(true)
     , m_compositingInterface(new OrgKdeKwinCompositingInterface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"), QDBusConnection::sessionBus(), this))
-    , m_config(KSharedConfig::openConfig("kwinrc"))
+    , m_settings(new KWinCompositingSetting(this))
 {
-    reset();
-    connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
-    connect(this, &Compositing::windowThumbnailChanged,      this, &Compositing::changed);
-    connect(this, &Compositing::glScaleFilterChanged,        this, &Compositing::changed);
-    connect(this, &Compositing::xrScaleFilterChanged,        this, &Compositing::changed);
-    connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
-    connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
-    connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::changed);
-    connect(this, &Compositing::openGLPlatformInterfaceChanged, this, &Compositing::changed);
-    connect(this, &Compositing::windowsBlockCompositingChanged, this, &Compositing::changed);
-
-    connect(this, &Compositing::changed, [this]{
-        m_changed = true;
-    });
+    load();
+    connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::updateSettings);
+    connect(this, &Compositing::windowThumbnailChanged,      this, &Compositing::updateSettings);
+    connect(this, &Compositing::glScaleFilterChanged,        this, &Compositing::updateSettings);
+    connect(this, &Compositing::xrScaleFilterChanged,        this, &Compositing::updateSettings);
+    connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::updateSettings);
+    connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::updateSettings);
+    connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::updateSettings);
+    connect(this, &Compositing::openGLPlatformInterfaceChanged, this, &Compositing::updateSettings);
+    connect(this, &Compositing::windowsBlockCompositingChanged, this, &Compositing::updateSettings);
 }
 
-void Compositing::reset()
+void Compositing::load()
 {
-    KConfigGroup globalConfig(m_config, QStringLiteral("KDE"));
-    setAnimationSpeed(globalConfig.readEntry("AnimationDurationFactor", 1.0));
+    m_settings->load();
 
-    KConfigGroup kwinConfig(m_config, QStringLiteral("Compositing"));
-    setWindowThumbnail(kwinConfig.readEntry("HiddenPreviews", 5) - 4);
-    setGlScaleFilter(kwinConfig.readEntry("GLTextureFilter", 2));
-    setXrScaleFilter(kwinConfig.readEntry("XRenderSmoothScale", false));
-    setCompositingEnabled(kwinConfig.readEntry("Enabled", true));
+    applyValues();
 
-    auto swapStrategy = [&kwinConfig]() {
-        const QString glSwapStrategyValue = kwinConfig.readEntry("GLPreferBufferSwap", "a");
+    emit changed(false);
+    emit defaulted(m_settings->isDefaults());
+}
 
-        if (glSwapStrategyValue == "n") {
-            return 0;
-        } else if (glSwapStrategyValue == "a") {
-            return 1;
-        } else if (glSwapStrategyValue == "e") {
-            return 2;
-        } else if (glSwapStrategyValue == "p") {
-            return 3;
-        } else if (glSwapStrategyValue == "c") {
-            return 4;
-        }
-        return 0;
-    };
-    setGlSwapStrategy(swapStrategy());
+void Compositing::applyValues()
+{
+    setAnimationSpeed(m_settings->animationDurationFactor());
+    // from options.cpp Options::reloadCompositingSettings
+    // 4 - off, 5 - shown, 6 - always, other are old values
+    setWindowThumbnail(m_settings->hiddenPreviews() - 4);
+    setGlScaleFilter(m_settings->glTextureFilter());
+    setXrScaleFilter(m_settings->xRenderSmoothScale());
+    setCompositingEnabled(m_settings->enabled());
+    setGlSwapStrategy(m_settings->glPreferBufferSwap());
 
-    auto type = [&kwinConfig]{
-        const QString backend = kwinConfig.readEntry("Backend", "OpenGL");
-        const bool glCore = kwinConfig.readEntry("GLCore", false);
+    const auto type = [this]{
+        const int backend = m_settings->backend();
+        const bool glCore = m_settings->glCore();
 
-        if (backend == QStringLiteral("OpenGL")) {
+        if (backend == KWinCompositingSetting::EnumBackend::OpenGL) {
             if (glCore) {
                 return CompositingType::OPENGL31_INDEX;
             } else {
@@ -112,58 +101,48 @@ void Compositing::reset()
     };
     setCompositingType(type());
 
-    const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(kwinConfig.readEntry("GLPlatformInterface", "glx"));
+    const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(m_settings->glPlatformInterface());
     setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
 
-    setWindowsBlockCompositing(kwinConfig.readEntry("WindowsBlockCompositing", true));
-
-    m_changed = false;
+    setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
 }
 
 void Compositing::defaults()
 {
-    setAnimationSpeed(1.0);
-    setWindowThumbnail(1);
-    setGlScaleFilter(2);
-    setXrScaleFilter(false);
-    setGlSwapStrategy(1);
-    setCompositingType(CompositingType::OPENGL20_INDEX);
-    const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(QStringLiteral("glx"));
-    setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
-    setWindowsBlockCompositing(true);
-    m_changed = true;
+    m_settings->setDefaults();
+
+    applyValues();
+
+    emit changed(m_settings->isSaveNeeded());
+    emit defaulted(m_settings->isDefaults());
 }
 
 bool Compositing::OpenGLIsUnsafe() const
 {
-    KConfigGroup kwinConfig(m_config, "Compositing");
-    return kwinConfig.readEntry("OpenGLIsUnsafe", true);
+    return m_settings->openGLIsUnsafe();
 }
 
 bool Compositing::OpenGLIsBroken()
 {
-    KConfigGroup kwinConfig(m_config, "Compositing");
-
-    QString oldBackend = kwinConfig.readEntry("Backend", "OpenGL");
-    kwinConfig.writeEntry("Backend", "OpenGL");
-    kwinConfig.sync();
+    const int oldBackend = m_settings->backend();
+    m_settings->setBackend(KWinCompositingSetting::EnumBackend::OpenGL);
+    m_settings->save();
 
     if (m_compositingInterface->openGLIsBroken()) {
-        kwinConfig.writeEntry("Backend", oldBackend);
-        kwinConfig.sync();
+        m_settings->setBackend(oldBackend);
+        m_settings->save();
         return true;
     }
 
-    kwinConfig.writeEntry("OpenGLIsUnsafe", false);
-    kwinConfig.sync();
+    m_settings->setOpenGLIsUnsafe(false);
+    m_settings->save();
     return false;
 }
 
 void Compositing::reenableOpenGLDetection()
 {
-    KConfigGroup kwinConfig(m_config, "Compositing");
-    kwinConfig.writeEntry("OpenGLIsUnsafe", false);
-    kwinConfig.sync();
+    m_settings->setOpenGLIsUnsafe(false);
+    m_settings->save();
 }
 
 qreal Compositing::animationSpeed() const
@@ -268,68 +247,58 @@ void Compositing::setCompositingEnabled(bool enabled)
     emit compositingEnabledChanged(enabled);
 }
 
-void Compositing::save()
+void Compositing::updateSettings()
 {
     // this writes to the KDE group of the kwinrc, when loading we rely on kconfig cascading to
     // load a global value, or allow a kwin override
-    KConfigGroup generalConfig(m_config, "KDE");
     if (!isRunningPlasma()) {
-        generalConfig.writeEntry("AnimationDurationFactor", animationSpeed());
+        m_settings->setAnimationDurationFactor(animationSpeed());
     }
-    KConfigGroup kwinConfig(m_config, "Compositing");
 
-    kwinConfig.writeEntry("HiddenPreviews", windowThumbnail() + 4);
-    kwinConfig.writeEntry("GLTextureFilter", glScaleFilter());
-    kwinConfig.writeEntry("XRenderSmoothScale", xrScaleFilter());
+    m_settings->setHiddenPreviews(windowThumbnail() + 4);
+    m_settings->setGlTextureFilter(glScaleFilter());
+    m_settings->setXRenderSmoothScale(xrScaleFilter());
     if (!compositingRequired()) {
-        kwinConfig.writeEntry("Enabled", compositingEnabled());
+        m_settings->setEnabled(compositingEnabled());
     }
-    auto swapStrategy = [this] {
-        switch (glSwapStrategy()) {
-            case 0:
-                return QStringLiteral("n");
-            case 2:
-                return QStringLiteral("e");
-            case 3:
-                return QStringLiteral("p");
-            case 4:
-                return QStringLiteral("c");
-            case 1:
-            default:
-                return QStringLiteral("a");
-        }
-    };
-    kwinConfig.writeEntry("GLPreferBufferSwap", swapStrategy());
-    QString backend;
+    m_settings->setGlPreferBufferSwap(glSwapStrategy());
+    int backend = KWinCompositingSetting::EnumBackend::OpenGL;
     bool glCore = false;
     switch (compositingType()) {
     case CompositingType::OPENGL31_INDEX:
-        backend = "OpenGL";
+        backend = KWinCompositingSetting::EnumBackend::OpenGL;
         glCore = true;
         break;
     case CompositingType::OPENGL20_INDEX:
-        backend = "OpenGL";
+        backend = KWinCompositingSetting::EnumBackend::OpenGL;
         glCore = false;
         break;
     case CompositingType::XRENDER_INDEX:
-        backend = "XRender";
+        backend = KWinCompositingSetting::EnumBackend::XRender;
         glCore = false;
         break;
     }
-    kwinConfig.writeEntry("Backend", backend);
-    kwinConfig.writeEntry("GLCore", glCore);
+    m_settings->setBackend(backend);
+    m_settings->setGlCore(glCore);
     if (!compositingRequired()) {
-        kwinConfig.writeEntry("WindowsBlockCompositing", windowsBlockCompositing());
+        m_settings->setWindowsBlockCompositing(windowsBlockCompositing());
     }
-    kwinConfig.sync();
 
-    if (m_changed) {
+    emit changed(m_settings->isSaveNeeded());
+    emit defaulted(m_settings->isDefaults());
+}
+
+void Compositing::save()
+{
+    if (m_settings->isSaveNeeded()) {
+
+        m_settings->save();
+
         // Send signal to all kwin instances
         QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"),
                                                           QStringLiteral("org.kde.kwin.Compositing"),
                                                           QStringLiteral("reinit"));
         QDBusConnection::sessionBus().send(message);
-        m_changed = false;
     }
 }
 
@@ -404,7 +373,7 @@ void CompositingType::generateCompositing()
     }
 
     std::sort(m_compositingList.begin(), m_compositingList.end(), [](const CompositingData &a, const CompositingData &b) {
-            return a.type < b.type;
+        return a.type < b.type;
     });
     endResetModel();
 }
@@ -419,8 +388,7 @@ QHash< int, QByteArray > CompositingType::roleNames() const
 
 QModelIndex CompositingType::index(int row, int column, const QModelIndex &parent) const
 {
-
-if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_compositingList.count()) {
+    if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_compositingList.count()) {
         return QModelIndex();
     }
 

@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "edid.h"
+#include "config-kwin.h"
+
+#include <QFile>
+#include <QStandardPaths>
 
 namespace KWin
 {
@@ -40,25 +44,9 @@ static QSize parsePhysicalSize(const uint8_t *data)
     return QSize(data[0x15], data[0x16]) * 10;
 }
 
-static QByteArray parseEisaId(const uint8_t *data)
+static QByteArray parsePnpId(const uint8_t *data)
 {
-    for (int i = 72; i <= 108; i += 18) {
-        // Skip the block if it isn't used as monitor descriptor.
-        if (data[i]) {
-            continue;
-        }
-        if (data[i + 1]) {
-            continue;
-        }
-
-        // We have found the EISA ID, it's stored as ASCII.
-        if (data[i + 3] == 0xfe) {
-            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 12).trimmed();
-        }
-    }
-
-    // If there isn't an ASCII EISA ID descriptor, try to decode PNP ID from
-    // three 5 bit words packed into 2 bytes:
+    // Decode PNP ID from three 5 bit words packed into 2 bytes:
     //
     // | Byte |        Bit                    |
     // |      | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
@@ -78,6 +66,28 @@ static QByteArray parseEisaId(const uint8_t *data)
     pnpId[3] = '\0';
 
     return QByteArray(pnpId);
+}
+
+
+static QByteArray parseEisaId(const uint8_t *data)
+{
+    for (int i = 72; i <= 108; i += 18) {
+        // Skip the block if it isn't used as monitor descriptor.
+        if (data[i]) {
+            continue;
+        }
+        if (data[i + 1]) {
+            continue;
+        }
+
+        // We have found the EISA ID, it's stored as ASCII.
+        if (data[i + 3] == 0xfe) {
+            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 12).trimmed();
+        }
+    }
+
+    // If there isn't an ASCII EISA ID descriptor, try to decode PNP ID
+    return parsePnpId(data);
 }
 
 static QByteArray parseMonitorName(const uint8_t *data)
@@ -131,6 +141,24 @@ static QByteArray parseSerialNumber(const uint8_t *data)
     return QByteArray();
 }
 
+static QByteArray parseVendor(const uint8_t *data)
+{
+    const auto pnpId = parsePnpId(data);
+
+    // Map to vendor name
+    QFile pnpFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("hwdata/pnp.ids")));
+    if (pnpFile.exists() && pnpFile.open(QIODevice::ReadOnly)) {
+        while (!pnpFile.atEnd()) {
+            const auto line = pnpFile.readLine();
+            if (line.startsWith(pnpId)) {
+                return line.mid(4).trimmed();
+            }
+        }
+    }
+
+    return {};
+}
+
 Edid::Edid()
 {
 }
@@ -151,6 +179,7 @@ Edid::Edid(const void *data, uint32_t size)
     m_eisaId = parseEisaId(bytes);
     m_monitorName = parseMonitorName(bytes);
     m_serialNumber = parseSerialNumber(bytes);
+    m_vendor = parseVendor(bytes);
 
     m_isValid = true;
 }
@@ -178,6 +207,11 @@ QByteArray Edid::monitorName() const
 QByteArray Edid::serialNumber() const
 {
     return m_serialNumber;
+}
+
+QByteArray Edid::vendor() const
+{
+    return m_vendor;
 }
 
 } // namespace KWin

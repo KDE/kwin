@@ -27,12 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event_spy.h"
 #include "osd.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "wayland_cursor_theme.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "decorations/decoratedclient.h"
-#include "screens.h"
 // KDecoration
 #include <KDecoration2/Decoration>
 // KWayland

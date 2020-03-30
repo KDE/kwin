@@ -249,7 +249,7 @@ bool SceneXrender::initFailed() const
 }
 
 // the entry point for painting
-qint64 SceneXrender::paint(QRegion damage, QList<Toplevel *> toplevels)
+qint64 SceneXrender::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
     QElapsedTimer renderTimer;
     renderTimer.start();
@@ -269,7 +269,7 @@ qint64 SceneXrender::paint(QRegion damage, QList<Toplevel *> toplevels)
     return renderTimer.nsecsElapsed();
 }
 
-void SceneXrender::paintGenericScreen(int mask, ScreenPaintData data)
+void SceneXrender::paintGenericScreen(int mask, const ScreenPaintData &data)
 {
     screen_paint = data; // save, transformations will be done when painting windows
     Scene::paintGenericScreen(mask, data);
@@ -283,7 +283,7 @@ void SceneXrender::paintDesktop(int desktop, int mask, const QRegion &region, Sc
 }
 
 // fill the screen background
-void SceneXrender::paintBackground(QRegion region)
+void SceneXrender::paintBackground(const QRegion &region)
 {
     xcb_render_color_t col = { 0, 0, 0, 0xffff }; // black
     const QVector<xcb_rectangle_t> &rects = Xcb::regionToRects(region);
@@ -418,8 +418,9 @@ void SceneXrender::Window::prepareTempPixmap()
 }
 
 // paint the window
-void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintData data)
+void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const WindowPaintData &data)
 {
+    QRegion region = _region;
     setTransformedShape(QRegion());  // maybe nothing will be painted
     // check if there is something to paint
     bool opaque = isOpaque() && qFuzzyCompare(data.opacity(), 1.0);
@@ -894,7 +895,7 @@ void SceneXrender::EffectFrame::crossFadeText()
     // TODO: implement me
 }
 
-void SceneXrender::EffectFrame::render(QRegion region, double opacity, double frameOpacity)
+void SceneXrender::EffectFrame::render(const QRegion &region, double opacity, double frameOpacity)
 {
     Q_UNUSED(region)
     if (m_effectFrame->geometry().isEmpty()) {

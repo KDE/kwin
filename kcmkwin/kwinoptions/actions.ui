@@ -29,12 +29,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>coWin1</cstring>
+         <cstring>kcfg_CommandWindow1</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KComboBox" name="coWin1">
+       <widget class="KComboBox" name="kcfg_CommandWindow1">
         <property name="whatsThis">
          <string>In this row you can customize left click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -69,12 +69,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>coWin2</cstring>
+         <cstring>kcfg_CommandWindow2</cstring>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KComboBox" name="coWin2">
+       <widget class="KComboBox" name="kcfg_CommandWindow2">
         <property name="whatsThis">
          <string>In this row you can customize middle click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -109,12 +109,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>coWin3</cstring>
+         <cstring>kcfg_CommandWindow3</cstring>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="KComboBox" name="coWin3">
+       <widget class="KComboBox" name="kcfg_CommandWindow3">
         <property name="whatsThis">
          <string>In this row you can customize right click behavior when clicking into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -149,12 +149,12 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
-         <cstring>coWinWheel</cstring>
+         <cstring>kcfg_CommandWindowWheel</cstring>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="KComboBox" name="coWinWheel">
+       <widget class="KComboBox" name="kcfg_CommandWindowWheel">
         <property name="whatsThis">
          <string>In this row you can customize behavior when scrolling into an inactive inner window ('inner' means: not titlebar, not frame).</string>
         </property>
@@ -195,12 +195,12 @@
            <string>Mo&amp;difier key:</string>
           </property>
           <property name="buddy">
-           <cstring>coAllKey</cstring>
+           <cstring>kcfg_CommandAllKey</cstring>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="KComboBox" name="coAllKey">
+         <widget class="KComboBox" name="kcfg_CommandAllKey">
           <property name="whatsThis">
            <string>Here you select whether holding the Meta key or Alt key will allow you to perform the following actions.</string>
           </property>
@@ -251,12 +251,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coAll1</cstring>
+           <cstring>kcfg_CommandAll1</cstring>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="KComboBox" name="coAll1">
+         <widget class="KComboBox" name="kcfg_CommandAll1">
           <property name="whatsThis">
            <string>In this row you can customize left click behavior when clicking into the titlebar or the frame.</string>
           </property>
@@ -321,12 +321,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coAll2</cstring>
+           <cstring>kcfg_CommandAll2</cstring>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="KComboBox" name="coAll2">
+         <widget class="KComboBox" name="kcfg_CommandAll2">
           <property name="whatsThis">
            <string>In this row you can customize middle click behavior when clicking into the titlebar or the frame.</string>
           </property>
@@ -391,12 +391,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coAll3</cstring>
+           <cstring>kcfg_CommandAll3</cstring>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="KComboBox" name="coAll3">
+         <widget class="KComboBox" name="kcfg_CommandAll3">
           <property name="whatsThis">
            <string>In this row you can customize right click behavior when clicking into the titlebar or the frame.</string>
           </property>
@@ -461,12 +461,12 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
           <property name="buddy">
-           <cstring>coAllW</cstring>
+           <cstring>kcfg_CommandAllWheel</cstring>
           </property>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="KComboBox" name="coAllW">
+         <widget class="KComboBox" name="kcfg_CommandAllWheel">
           <property name="whatsThis">
            <string>Here you can customize KDE's behavior when scrolling with the mouse wheel in a window while pressing the modifier key.</string>
           </property>

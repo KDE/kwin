@@ -252,6 +252,14 @@ void AbstractClient::updateLayer()
         (*it)->updateLayer();
 }
 
+void AbstractClient::placeIn(const QRect &area)
+{
+    // TODO: Get rid of this method eventually. We need to call setGeometryRestore() because
+    // checkWorkspacePosition() operates on geometryRestore() and because of quick tiling.
+    Placement::self()->place(this, area);
+    setGeometryRestore(frameGeometry());
+}
+
 void AbstractClient::invalidateLayer()
 {
     m_layer = UnknownLayer;
@@ -604,6 +612,7 @@ void AbstractClient::minimize(bool avoid_animation)
     updateWindowRules(Rules::Minimize);
     FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
     // TODO: merge signal with s_minimized
+    addWorkspaceRepaint(visibleRect());
     emit clientMinimized(this, !avoid_animation);
     emit minimizedChanged();
 }
@@ -701,7 +710,7 @@ void AbstractClient::keepInArea(QRect area, bool partial)
     if (!partial) {
         // resize to fit into area
         if (area.width() < width() || area.height() < height())
-            resizeWithChecks(qMin(area.width(), width()), qMin(area.height(), height()));
+            resizeWithChecks(size().boundedTo(area.size()));
     }
     int tx = x(), ty = y();
     if (frameGeometry().right() > area.right() && width() <= area.width())
@@ -718,11 +727,17 @@ void AbstractClient::keepInArea(QRect area, bool partial)
         move(tx, ty);
 }
 
+/**
+ * Returns the maximum client size, not the maximum frame size.
+ */
 QSize AbstractClient::maxSize() const
 {
     return rules()->checkMaxSize(QSize(INT_MAX, INT_MAX));
 }
 
+/**
+ * Returns the minimum client size, not the minimum frame size.
+ */
 QSize AbstractClient::minSize() const
 {
     return rules()->checkMinSize(QSize(0, 0));
@@ -1181,7 +1196,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
         }
 
         // Always obey size hints, even when in "unrestricted" mode
-        QSize size = adjustedSize(moveResizeGeometry().size(), sizeMode);
+        QSize size = constrainFrameSize(moveResizeGeometry().size(), sizeMode);
         // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
         topleft = QPoint(moveResizeGeometry().right() - size.width() + 1, moveResizeGeometry().bottom() - size.height() + 1);
         bottomright = QPoint(moveResizeGeometry().left() + size.width() - 1, moveResizeGeometry().top() + size.height() - 1);
@@ -1208,7 +1223,7 @@ void AbstractClient::handleMoveResize(int x, int y, int x_root, int y_root)
                 setMoveResizeGeometry(workspace()->clientArea(FullScreenArea, screen, 0));
             else {
                 QRect moveResizeGeom = workspace()->clientArea(MaximizeArea, screen, 0);
-                QSize adjSize = adjustedSize(moveResizeGeom.size(), SizeModeMax);
+                QSize adjSize = constrainFrameSize(moveResizeGeom.size(), SizeModeMax);
                 if (adjSize != moveResizeGeom.size()) {
                     QRect r(moveResizeGeom);
                     moveResizeGeom.setSize(adjSize);
@@ -1349,6 +1364,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMaximizeable(isMaximizable());
     w->setMinimizeable(isMinimizable());
     w->setFullscreenable(isFullScreenable());
+    w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
     w->setIcon(icon());
     auto updateAppId = [this, w] {
         w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName));
@@ -1404,6 +1420,11 @@ void AbstractClient::setupWindowManagementInterface()
     connect(this, &AbstractClient::frameGeometryChanged, w,
         [w, this] {
             w->setGeometry(frameGeometry());
+        }
+    );
+    connect(this, &AbstractClient::applicationMenuChanged, w,
+        [w, this] {
+            w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
         }
     );
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
@@ -1850,13 +1871,6 @@ BORDER(Right)
 BORDER(Top)
 #undef BORDER
 
-QSize AbstractClient::sizeForClientSize(const QSize &wsize, SizeMode mode, bool noframe) const
-{
-    Q_UNUSED(mode)
-    Q_UNUSED(noframe)
-    return wsize + QSize(borderLeft() + borderRight(), borderTop() + borderBottom());
-}
-
 void AbstractClient::addRepaintDuringGeometryUpdates()
 {
     const QRect deco_rect = visibleRect();
@@ -2129,6 +2143,27 @@ void AbstractClient::endMoveResize()
     updateCursor();
 }
 
+void AbstractClient::createDecoration(const QRect &oldGeometry)
+{
+    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
+    if (decoration) {
+        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
+        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            GeometryUpdatesBlocker blocker(this);
+            const QRect oldGeometry = frameGeometry();
+            if (!isShade()) {
+                checkWorkspacePosition(oldGeometry);
+            }
+            emit geometryShapeChanged(this, oldGeometry);
+        });
+    }
+    setDecoration(decoration);
+    setFrameGeometry(QRect(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
+
+    emit geometryShapeChanged(this, oldGeometry);
+}
+
 void AbstractClient::destroyDecoration()
 {
     delete m_decoration.decoration;
@@ -2332,7 +2367,7 @@ QRect AbstractClient::iconGeometry() const
     QRect candidateGeom;
 
     for (auto i = windowManagementInterface()->minimizedGeometries().constBegin(), end = windowManagementInterface()->minimizedGeometries().constEnd(); i != end; ++i) {
-        AbstractClient *client = waylandServer()->findAbstractClient(i.key());
+        AbstractClient *client = waylandServer()->findClient(i.key());
         if (!client) {
             continue;
         }
@@ -2436,6 +2471,7 @@ void AbstractClient::updateApplicationMenuServiceName(const QString &serviceName
 
     const bool new_hasApplicationMenu = hasApplicationMenu();
 
+    emit applicationMenuChanged();
     if (old_hasApplicationMenu != new_hasApplicationMenu) {
         emit hasApplicationMenuChanged(new_hasApplicationMenu);
     }
@@ -2449,6 +2485,7 @@ void AbstractClient::updateApplicationMenuObjectPath(const QString &objectPath)
 
     const bool new_hasApplicationMenu = hasApplicationMenu();
 
+    emit applicationMenuChanged();
     if (old_hasApplicationMenu != new_hasApplicationMenu) {
         emit hasApplicationMenuChanged(new_hasApplicationMenu);
     }
@@ -3074,7 +3111,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     checkOffscreenPosition(&newGeom, screenArea);
     // Obey size hints. TODO: We really should make sure it stays in the right place
     if (!isShade())
-        newGeom.setSize(adjustedSize(newGeom.size()));
+        newGeom.setSize(constrainFrameSize(newGeom.size()));
 
     if (newGeom != frameGeometry())
         setFrameGeometry(newGeom);
@@ -3094,21 +3131,54 @@ void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea
     }
 }
 
-QSize AbstractClient::adjustedSize(const QSize& frame, SizeMode mode) const
-{
-    // first, get the window size for the given frame size s
-    QSize wsize = frameSizeToClientSize(frame);
-    if (wsize.isEmpty())
-        wsize = QSize(qMax(wsize.width(), 1), qMax(wsize.height(), 1));
-
-    return sizeForClientSize(wsize, mode, false);
-}
-
-// this helper returns proper size even if the window is shaded
-// see also the comment in X11Client::setGeometry()
+/**
+ * Returns the appropriate frame size for the current client size.
+ *
+ * This is equivalent to clientSizeToFrameSize(constrainClientSize(clientSize())).
+ */
 QSize AbstractClient::adjustedSize() const
 {
-    return sizeForClientSize(clientSize());
+    return clientSizeToFrameSize(constrainClientSize(clientSize()));
+}
+
+/**
+ * Constrains the client size @p size according to a set of the window's size hints.
+ *
+ * Default implementation applies only minimum and maximum size constraints.
+ */
+QSize AbstractClient::constrainClientSize(const QSize &size, SizeMode mode) const
+{
+    Q_UNUSED(mode)
+
+    int width = size.width();
+    int height = size.height();
+
+    // When user is resizing the window, the move resize geometry may have negative width or
+    // height. In which case, we need to set negative dimensions to reasonable values.
+    if (width < 1) {
+        width = 1;
+    }
+    if (height < 1) {
+        height = 1;
+    }
+
+    const QSize minimumSize = minSize();
+    const QSize maximumSize = maxSize();
+
+    width = qBound(minimumSize.width(), width, maximumSize.width());
+    height = qBound(minimumSize.height(), height, maximumSize.height());
+
+    return QSize(width, height);
+}
+
+/**
+ * Constrains the frame size @p size according to a set of the window's size hints.
+ */
+QSize AbstractClient::constrainFrameSize(const QSize &size, SizeMode mode) const
+{
+    const QSize unconstrainedClientSize = frameSizeToClientSize(size);
+    const QSize constrainedClientSize = constrainClientSize(unconstrainedClientSize, mode);
+    return clientSizeToFrameSize(constrainedClientSize);
 }
 
 /**

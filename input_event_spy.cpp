@@ -121,7 +121,7 @@ void InputEventSpy::switchEvent(SwitchEvent *event)
     Q_UNUSED(event)
 }
 
-void InputEventSpy::tabletToolEvent(QTabletEvent *event)
+void InputEventSpy::tabletToolEvent(TabletEvent *event)
 {
     Q_UNUSED(event)
 }

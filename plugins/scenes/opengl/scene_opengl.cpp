@@ -614,7 +614,7 @@ void SceneOpenGL2::paintCursor()
     glDisable(GL_BLEND);
 }
 
-qint64 SceneOpenGL::paint(QRegion damage, QList<Toplevel *> toplevels)
+qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
     createStackingOrder(toplevels);
@@ -734,7 +734,7 @@ QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) co
     return matrix;
 }
 
-void SceneOpenGL::paintBackground(QRegion region)
+void SceneOpenGL::paintBackground(const QRegion &region)
 {
     PaintClipper pc(region);
     if (!PaintClipper::clip()) {
@@ -800,8 +800,9 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
     if (limit[0] < size.width() || limit[1] < size.height()) {
         auto compositor = static_cast<X11Compositor*>(Compositor::self());
         QMetaObject::invokeMethod(compositor, [compositor]() {
-                compositor->suspend(X11Compositor::AllReasonSuspend);
-            }, Qt::QueuedConnection);
+            qCDebug(KWIN_OPENGL) << "Suspending compositing because viewport limits are not met";
+            compositor->suspend(X11Compositor::AllReasonSuspend);
+        }, Qt::QueuedConnection);
         return false;
     }
     return true;
@@ -1000,14 +1001,14 @@ void SceneOpenGL2::updateProjectionMatrix()
     m_projectionMatrix = createProjectionMatrix();
 }
 
-void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
+void SceneOpenGL2::paintSimpleScreen(int mask, const QRegion &region)
 {
     m_screenProjectionMatrix = m_projectionMatrix;
 
     Scene::paintSimpleScreen(mask, region);
 }
 
-void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
+void SceneOpenGL2::paintGenericScreen(int mask, const ScreenPaintData &data)
 {
     const QMatrix4x4 screenMatrix = transformation(mask, data);
 
@@ -1034,7 +1035,7 @@ Scene::Window *SceneOpenGL2::createWindow(Toplevel *t)
     return new OpenGLWindow(t, this);
 }
 
-void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (waylandServer() && waylandServer()->isScreenLocked() && !w->window()->isLockScreen() && !w->window()->isInputMethod()) {
         return;
@@ -1042,7 +1043,7 @@ void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region
     performPaintWindow(w, mask, region, data);
 }
 
-void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
+void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data)
 {
     if (mask & PAINT_WINDOW_LANCZOS) {
         if (!m_lanczosFilter) {
@@ -1332,8 +1333,9 @@ void OpenGLWindow::renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, con
     }
 }
 
-void OpenGLWindow::performPaint(int mask, QRegion region, WindowPaintData data)
+void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPaintData &_data)
 {
+    WindowPaintData data = _data;
     if (!beginRenderWindow(mask, region, data))
         return;
 
@@ -1710,12 +1712,13 @@ void SceneOpenGL::EffectFrame::crossFadeText()
     m_textTexture = nullptr;
 }
 
-void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double frameOpacity)
+void SceneOpenGL::EffectFrame::render(const QRegion &_region, double opacity, double frameOpacity)
 {
     if (m_effectFrame->geometry().isEmpty())
         return; // Nothing to display
 
-    region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
+    Q_UNUSED(_region);
+    const QRegion region = infiniteRegion(); // TODO: Old region doesn't seem to work with OpenGL
 
     GLShader* shader = m_effectFrame->shader();
     if (!shader) {
@@ -2108,7 +2111,7 @@ QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLSh
 {
     Q_ASSERT(shadow->hasDecorationShadow());
     unregister(shadow);
-    const auto &decoShadow = shadow->decorationShadow();
+    const auto &decoShadow = shadow->decorationShadow().toStrongRef();
     Q_ASSERT(!decoShadow.isNull());
     auto it = m_cache.find(decoShadow.data());
     if (it != m_cache.end()) {

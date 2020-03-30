@@ -36,6 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #endif
 
+#include "rulesettings.h"
+#include "rulebooksettings.h"
+
 namespace KWin
 {
 
@@ -95,105 +98,92 @@ Rules::Rules(const QString& str, bool temporary)
         file.write(s.data(), s.length());
     }
     file.flush();
-    KConfig cfg(file.fileName(), KConfig::SimpleConfig);
-    readFromCfg(cfg.group(QString()));
+    auto cfg = KSharedConfig::openConfig(file.fileName(), KConfig::SimpleConfig);
+    RuleSettings settings(cfg, QString());
+    readFromSettings(&settings);
     if (description.isEmpty())
         description = QStringLiteral("temporary");
 }
 
-#define READ_MATCH_STRING( var, func ) \
-    var = cfg.readEntry( #var ) func; \
-    var##match = (StringMatch) qMax( FirstStringMatch, \
-                                     qMin( LastStringMatch, static_cast< StringMatch >( cfg.readEntry( #var "match",0 ))));
+#define READ_MATCH_STRING(var, func) \
+    var = settings->var() func; \
+    var##match = static_cast<StringMatch>(settings->var##match())
 
-#define READ_SET_RULE( var, func, def ) \
-    var = func ( cfg.readEntry( #var, def)); \
-    var##rule = readSetRule( cfg, QStringLiteral( #var "rule" ) );
+#define READ_SET_RULE(var) \
+    var = settings->var(); \
+    var##rule = static_cast<SetRule>(settings->var##rule())
 
-#define READ_SET_RULE_DEF( var , func, def ) \
-    var = func ( cfg.readEntry( #var, def )); \
-    var##rule = readSetRule( cfg, QStringLiteral( #var "rule" ) );
-
-#define READ_FORCE_RULE( var, func, def) \
-    var = func ( cfg.readEntry( #var, def)); \
-    var##rule = readForceRule( cfg, QStringLiteral( #var "rule" ) );
-
-#define READ_FORCE_RULE2( var, def, func, funcarg ) \
-    var = func ( cfg.readEntry( #var, def),funcarg ); \
-    var##rule = readForceRule( cfg, QStringLiteral( #var "rule" ) );
+#define READ_FORCE_RULE(var, func) \
+    var = func(settings->var()); \
+    var##rule = convertForceRule(settings->var##rule())
 
 
-
-Rules::Rules(const KConfigGroup& cfg)
+Rules::Rules(const RuleSettings *settings)
     : temporary_state(0)
 {
-    readFromCfg(cfg);
+    readFromSettings(settings);
 }
 
-static int limit0to4(int i)
+void Rules::readFromSettings(const RuleSettings *settings)
 {
-    return qMax(0, qMin(4, i));
-}
-
-void Rules::readFromCfg(const KConfigGroup& cfg)
-{
-    description = cfg.readEntry("Description");
-    if (description.isEmpty())  // capitalized first, lowercase for backwards compatibility
-        description = cfg.readEntry("description");
+    description = settings->description();
+    if (description.isEmpty()) {
+        description = settings->descriptionLegacy();
+    }
     READ_MATCH_STRING(wmclass, .toLower().toLatin1());
-    wmclasscomplete = cfg.readEntry("wmclasscomplete" , false);
+    wmclasscomplete = settings->wmclasscomplete();
     READ_MATCH_STRING(windowrole, .toLower().toLatin1());
     READ_MATCH_STRING(title,);
     READ_MATCH_STRING(clientmachine, .toLower().toLatin1());
-    types = NET::WindowTypeMask(cfg.readEntry<uint>("types", NET::AllTypesMask));
-    READ_FORCE_RULE2(placement, QString(), Placement::policyFromString, false);
-    READ_SET_RULE_DEF(position, , invalidPoint);
-    READ_SET_RULE(size, , QSize());
-    if (size.isEmpty() && sizerule != (SetRule)Remember)
+    types = NET::WindowTypeMask(settings->types());
+    READ_FORCE_RULE(placement,);
+    READ_SET_RULE(position);
+    READ_SET_RULE(size);
+    if (size.isEmpty() && sizerule != static_cast<SetRule>(Remember))
         sizerule = UnusedSetRule;
-    READ_FORCE_RULE(minsize, , QSize());
+    READ_FORCE_RULE(minsize,);
     if (!minsize.isValid())
         minsize = QSize(1, 1);
-    READ_FORCE_RULE(maxsize, , QSize());
+    READ_FORCE_RULE(maxsize,);
     if (maxsize.isEmpty())
         maxsize = QSize(32767, 32767);
-    READ_FORCE_RULE(opacityactive, , 0);
-    if (opacityactive < 0 || opacityactive > 100)
-        opacityactive = 100;
-    READ_FORCE_RULE(opacityinactive, , 0);
-    if (opacityinactive < 0 || opacityinactive > 100)
-        opacityinactive = 100;
-    READ_SET_RULE(ignoregeometry, , false);
-    READ_SET_RULE(desktop, , 0);
-    READ_SET_RULE(screen, , 0);
-    READ_SET_RULE(activity, , QString());
-    type = readType(cfg, QStringLiteral("type"));
-    typerule = type != NET::Unknown ? readForceRule(cfg, QStringLiteral("typerule")) : UnusedForceRule;
-    READ_SET_RULE(maximizevert, , false);
-    READ_SET_RULE(maximizehoriz, , false);
-    READ_SET_RULE(minimize, , false);
-    READ_SET_RULE(shade, , false);
-    READ_SET_RULE(skiptaskbar, , false);
-    READ_SET_RULE(skippager, , false);
-    READ_SET_RULE(skipswitcher, , false);
-    READ_SET_RULE(above, , false);
-    READ_SET_RULE(below, , false);
-    READ_SET_RULE(fullscreen, , false);
-    READ_SET_RULE(noborder, , false);
-    decocolor = readDecoColor(cfg);
-    decocolorrule = decocolor.isEmpty() ? UnusedForceRule : readForceRule(cfg, QStringLiteral("decocolorrule"));
-    READ_FORCE_RULE(blockcompositing, , false);
-    READ_FORCE_RULE(fsplevel, limit0to4, 0); // fsp is 0-4
-    READ_FORCE_RULE(fpplevel, limit0to4, 0); // fpp is 0-4
-    READ_FORCE_RULE(acceptfocus, , false);
-    READ_FORCE_RULE(closeable, , false);
-    READ_FORCE_RULE(autogroup, , false);
-    READ_FORCE_RULE(autogroupfg, , true);
-    READ_FORCE_RULE(autogroupid, , QString());
-    READ_FORCE_RULE(strictgeometry, , false);
-    READ_SET_RULE(shortcut, , QString());
-    READ_FORCE_RULE(disableglobalshortcuts, , false);
-    READ_SET_RULE(desktopfile, , QString());
+    READ_FORCE_RULE(opacityactive,);
+    READ_FORCE_RULE(opacityinactive,);
+    READ_SET_RULE(ignoregeometry);
+    READ_SET_RULE(desktop);
+    READ_SET_RULE(screen);
+    READ_SET_RULE(activity);
+    READ_FORCE_RULE(type, static_cast<NET::WindowType>);
+    if (type == NET::Unknown)
+        typerule = UnusedForceRule;
+    READ_SET_RULE(maximizevert);
+    READ_SET_RULE(maximizehoriz);
+    READ_SET_RULE(minimize);
+    READ_SET_RULE(shade);
+    READ_SET_RULE(skiptaskbar);
+    READ_SET_RULE(skippager);
+    READ_SET_RULE(skipswitcher);
+    READ_SET_RULE(above);
+    READ_SET_RULE(below);
+    READ_SET_RULE(fullscreen);
+    READ_SET_RULE(noborder);
+
+    READ_FORCE_RULE(decocolor, getDecoColor);
+    if (decocolor.isEmpty())
+        decocolorrule = UnusedForceRule;
+
+    READ_FORCE_RULE(blockcompositing,);
+    READ_FORCE_RULE(fsplevel,);
+    READ_FORCE_RULE(fpplevel,);
+    READ_FORCE_RULE(acceptfocus,);
+    READ_FORCE_RULE(closeable,);
+    READ_FORCE_RULE(autogroup,);
+    READ_FORCE_RULE(autogroupfg,);
+    READ_FORCE_RULE(autogroupid,);
+    READ_FORCE_RULE(strictgeometry,);
+    READ_SET_RULE(shortcut);
+    READ_FORCE_RULE(disableglobalshortcuts,);
+    READ_SET_RULE(desktopfile);
 }
 
 #undef READ_MATCH_STRING
@@ -201,78 +191,60 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
 #undef READ_FORCE_RULE
 #undef READ_FORCE_RULE2
 
-#define WRITE_MATCH_STRING( var, force ) \
-    if ( !var.isEmpty() || force ) \
+#define WRITE_MATCH_STRING(var, capital, force) \
+    settings->set##capital##match(var##match); \
+    if (!var.isEmpty() || force) \
     { \
-        cfg.writeEntry( #var, var ); \
-        cfg.writeEntry( #var "match", (int)var##match ); \
-    } \
-    else \
-    { \
-        cfg.deleteEntry( #var ); \
-        cfg.deleteEntry( #var "match" ); \
+        settings->set##capital(var); \
     }
 
-#define WRITE_SET_RULE( var, func ) \
-    if ( var##rule != UnusedSetRule ) \
+#define WRITE_SET_RULE(var, capital, func) \
+    settings->set##capital##rule(var##rule); \
+    if (var##rule != UnusedSetRule) \
     { \
-        cfg.writeEntry( #var, func ( var )); \
-        cfg.writeEntry( #var "rule", (int)var##rule ); \
-    } \
-    else \
-    { \
-        cfg.deleteEntry( #var ); \
-        cfg.deleteEntry( #var "rule" ); \
+        settings->set##capital(func(var)); \
     }
 
-#define WRITE_FORCE_RULE( var, func ) \
+#define WRITE_FORCE_RULE(var, capital, func) \
+    settings->set##capital##rule(var##rule); \
     if ( var##rule != UnusedForceRule ) \
     { \
-        cfg.writeEntry( #var, func ( var )); \
-        cfg.writeEntry( #var "rule", (int)var##rule ); \
-    } \
-    else \
-    { \
-        cfg.deleteEntry( #var ); \
-        cfg.deleteEntry( #var "rule" ); \
+        settings->set##capital(func(var)); \
     }
 
-void Rules::write(KConfigGroup& cfg) const
+void Rules::write(RuleSettings *settings) const
 {
-    cfg.writeEntry("Description", description);
+    settings->setDescription(description);
     // always write wmclass
-    WRITE_MATCH_STRING(wmclass, true);
-    cfg.writeEntry("wmclasscomplete", wmclasscomplete);
-    WRITE_MATCH_STRING(windowrole, false);
-    WRITE_MATCH_STRING(title, false);
-    WRITE_MATCH_STRING(clientmachine, false);
-    if (types != NET::AllTypesMask)
-        cfg.writeEntry("types", uint(types));
-    else
-        cfg.deleteEntry("types");
-    WRITE_FORCE_RULE(placement, Placement::policyToString);
-    WRITE_SET_RULE(position,);
-    WRITE_SET_RULE(size,);
-    WRITE_FORCE_RULE(minsize,);
-    WRITE_FORCE_RULE(maxsize,);
-    WRITE_FORCE_RULE(opacityactive,);
-    WRITE_FORCE_RULE(opacityinactive,);
-    WRITE_SET_RULE(ignoregeometry,);
-    WRITE_SET_RULE(desktop,);
-    WRITE_SET_RULE(screen,);
-    WRITE_SET_RULE(activity,);
-    WRITE_FORCE_RULE(type, int);
-    WRITE_SET_RULE(maximizevert,);
-    WRITE_SET_RULE(maximizehoriz,);
-    WRITE_SET_RULE(minimize,);
-    WRITE_SET_RULE(shade,);
-    WRITE_SET_RULE(skiptaskbar,);
-    WRITE_SET_RULE(skippager,);
-    WRITE_SET_RULE(skipswitcher,);
-    WRITE_SET_RULE(above,);
-    WRITE_SET_RULE(below,);
-    WRITE_SET_RULE(fullscreen,);
-    WRITE_SET_RULE(noborder,);
+    WRITE_MATCH_STRING(wmclass, Wmclass, true);
+    settings->setWmclasscomplete(wmclasscomplete);
+    WRITE_MATCH_STRING(windowrole, Windowrole, false);
+    WRITE_MATCH_STRING(title, Title, false);
+    WRITE_MATCH_STRING(clientmachine, Clientmachine, false);
+    settings->setTypes(types);
+    WRITE_FORCE_RULE(placement, Placement,);
+    WRITE_SET_RULE(position, Position,);
+    WRITE_SET_RULE(size, Size,);
+    WRITE_FORCE_RULE(minsize, Minsize,);
+    WRITE_FORCE_RULE(maxsize, Maxsize,);
+    WRITE_FORCE_RULE(opacityactive, Opacityactive,);
+    WRITE_FORCE_RULE(opacityinactive, Opacityinactive,);
+    WRITE_SET_RULE(ignoregeometry, Ignoregeometry,);
+    WRITE_SET_RULE(desktop, Desktop,);
+    WRITE_SET_RULE(screen, Screen,);
+    WRITE_SET_RULE(activity, Activity,);
+    WRITE_FORCE_RULE(type, Type,);
+    WRITE_SET_RULE(maximizevert, Maximizevert,);
+    WRITE_SET_RULE(maximizehoriz, Maximizehoriz,);
+    WRITE_SET_RULE(minimize, Minimize,);
+    WRITE_SET_RULE(shade, Shade,);
+    WRITE_SET_RULE(skiptaskbar, Skiptaskbar,);
+    WRITE_SET_RULE(skippager, Skippager,);
+    WRITE_SET_RULE(skipswitcher, Skipswitcher,);
+    WRITE_SET_RULE(above, Above,);
+    WRITE_SET_RULE(below, Below,);
+    WRITE_SET_RULE(fullscreen, Fullscreen,);
+    WRITE_SET_RULE(noborder, Noborder,);
     auto colorToString = [](const QString &value) -> QString {
         if (value.endsWith(QLatin1String(".colors"))) {
             return QFileInfo(value).baseName();
@@ -280,19 +252,19 @@ void Rules::write(KConfigGroup& cfg) const
             return value;
         }
     };
-    WRITE_FORCE_RULE(decocolor, colorToString);
-    WRITE_FORCE_RULE(blockcompositing,);
-    WRITE_FORCE_RULE(fsplevel,);
-    WRITE_FORCE_RULE(fpplevel,);
-    WRITE_FORCE_RULE(acceptfocus,);
-    WRITE_FORCE_RULE(closeable,);
-    WRITE_FORCE_RULE(autogroup,);
-    WRITE_FORCE_RULE(autogroupfg,);
-    WRITE_FORCE_RULE(autogroupid,);
-    WRITE_FORCE_RULE(strictgeometry,);
-    WRITE_SET_RULE(shortcut,);
-    WRITE_FORCE_RULE(disableglobalshortcuts,);
-    WRITE_SET_RULE(desktopfile,);
+    WRITE_FORCE_RULE(decocolor, Decocolor, colorToString);
+    WRITE_FORCE_RULE(blockcompositing, Blockcompositing,);
+    WRITE_FORCE_RULE(fsplevel, Fsplevel,);
+    WRITE_FORCE_RULE(fpplevel, Fpplevel,);
+    WRITE_FORCE_RULE(acceptfocus, Acceptfocus,);
+    WRITE_FORCE_RULE(closeable, Closeable,);
+    WRITE_FORCE_RULE(autogroup, Autogroup,);
+    WRITE_FORCE_RULE(autogroupfg, Autogroupfg,);
+    WRITE_FORCE_RULE(autogroupid, Autogroupid,);
+    WRITE_FORCE_RULE(strictgeometry, Strictgeometry,);
+    WRITE_SET_RULE(shortcut, Shortcut,);
+    WRITE_FORCE_RULE(disableglobalshortcuts, Disableglobalshortcuts,);
+    WRITE_SET_RULE(desktopfile, Desktopfile,);
 }
 
 #undef WRITE_MATCH_STRING
@@ -340,33 +312,15 @@ bool Rules::isEmpty() const
            && desktopfilerule == UnusedSetRule);
 }
 
-Rules::SetRule Rules::readSetRule(const KConfigGroup& cfg, const QString& key)
+Rules::ForceRule Rules::convertForceRule(int v)
 {
-    int v = cfg.readEntry(key, 0);
-    if (v >= DontAffect && v <= ForceTemporarily)
-        return static_cast< SetRule >(v);
-    return UnusedSetRule;
-}
-
-Rules::ForceRule Rules::readForceRule(const KConfigGroup& cfg, const QString& key)
-{
-    int v = cfg.readEntry(key, 0);
     if (v == DontAffect || v == Force || v == ForceTemporarily)
-        return static_cast< ForceRule >(v);
+        return static_cast<ForceRule>(v);
     return UnusedForceRule;
 }
 
-NET::WindowType Rules::readType(const KConfigGroup& cfg, const QString& key)
+QString Rules::getDecoColor(const QString &themeName)
 {
-    int v = cfg.readEntry(key, 0);
-    if (v >= NET::Normal && v <= NET::Splash)
-        return static_cast< NET::WindowType >(v);
-    return NET::Unknown;
-}
-
-QString Rules::readDecoColor(const KConfigGroup &cfg)
-{
-    QString themeName = cfg.readEntry("decocolor", QString());
     if (themeName.isEmpty()) {
         return QString();
     }
@@ -905,7 +859,7 @@ void AbstractClient::applyWindowRules()
     // Placement - does need explicit update, just like some others below
     // Geometry : setGeometry() doesn't check rules
     auto client_rules = rules();
-    QRect orig_geom = QRect(pos(), sizeForClientSize(clientSize()));   // handle shading
+    QRect orig_geom = QRect(pos(), adjustedSize());   // handle shading
     QRect geom = client_rules->checkGeometry(orig_geom);
     if (geom != orig_geom)
         setFrameGeometry(geom);
@@ -1067,14 +1021,7 @@ void RuleBook::load()
     } else {
         m_config->reparseConfiguration();
     }
-    int count = m_config->group("General").readEntry("count", 0);
-    for (int i = 1;
-            i <= count;
-            ++i) {
-        KConfigGroup cg(m_config, QString::number(i));
-        Rules* rule = new Rules(cg);
-        m_rules.append(rule);
-    }
+    m_rules = RuleBookSettings(m_config).rules().toList();
 }
 
 void RuleBook::save()
@@ -1084,23 +1031,15 @@ void RuleBook::save()
         qCWarning(KWIN_CORE) << "RuleBook::save invoked without prior invocation of RuleBook::load";
         return;
     }
-    QStringList groups = m_config->groupList();
-    for (QStringList::ConstIterator it = groups.constBegin();
-            it != groups.constEnd();
-            ++it)
-        m_config->deleteGroup(*it);
-    m_config->group("General").writeEntry("count", m_rules.count());
-    int i = 1;
-    for (QList< Rules* >::ConstIterator it = m_rules.constBegin();
-            it != m_rules.constEnd();
-            ++it) {
-        if ((*it)->isTemporary())
-            continue;
-        KConfigGroup cg(m_config, QString::number(i));
-        (*it)->write(cg);
-        ++i;
+    QVector<Rules *> filteredRules;
+    for (const auto &rule : qAsConst(m_rules)) {
+        if (!rule->isTemporary()) {
+            filteredRules.append(rule);
+        }
     }
-    m_config->sync();
+    RuleBookSettings settings(m_config);
+    settings.setRules(filteredRules);
+    settings.save();
 }
 
 void RuleBook::temporaryRulesMessage(const QString& message)

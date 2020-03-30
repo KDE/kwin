@@ -62,8 +62,14 @@ public:
      */
     QByteArray serialNumber() const;
 
+    /**
+     * Returns the name of the vendor.
+     */
+    QByteArray vendor() const;
+
 private:
     QSize m_physicalSize;
+    QByteArray m_vendor;
     QByteArray m_eisaId;
     QByteArray m_monitorName;
     QByteArray m_serialNumber;

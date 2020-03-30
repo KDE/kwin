@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "platform.h"
-#include "xdgshellclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -54,7 +54,6 @@ private Q_SLOTS:
 
 void TestIdleInhibition::initTestCase()
 {
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
 
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -86,7 +85,6 @@ void TestIdleInhibition::testInhibit_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase")  << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
@@ -268,7 +266,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QCOMPARE(inhibitedSpy.count(), 1);
 
     // Unmap the client.
-    QSignalSpy hiddenSpy(c, &XdgShellClient::windowHidden);
+    QSignalSpy hiddenSpy(c, &AbstractClient::windowHidden);
     QVERIFY(hiddenSpy.isValid());
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
@@ -280,7 +278,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QCOMPARE(inhibitedSpy.count(), 2);
 
     // Map the client.
-    QSignalSpy windowShownSpy(c, &XdgShellClient::windowShown);
+    QSignalSpy windowShownSpy(c, &AbstractClient::windowShown);
     QVERIFY(windowShownSpy.isValid());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(windowShownSpy.wait());

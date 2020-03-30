@@ -311,17 +311,21 @@ QString settingsProperty(const QVariant &variant)
 QString DecorationBridge::supportInformation() const
 {
     QString b;
-    b.append(QStringLiteral("Plugin: %1\n").arg(m_plugin));
-    b.append(QStringLiteral("Theme: %1\n").arg(m_theme));
-    b.append(QStringLiteral("Plugin recommends border size: %1\n").arg(m_recommendedBorderSize.isNull() ? "No" : m_recommendedBorderSize));
-    b.append(QStringLiteral("Blur: %1\n").arg(m_blur));
-    const QMetaObject *metaOptions = m_settings->metaObject();
-    for (int i=0; i<metaOptions->propertyCount(); ++i) {
-        const QMetaProperty property = metaOptions->property(i);
-        if (QLatin1String(property.name()) == QLatin1String("objectName")) {
-            continue;
+    if (m_noPlugin) {
+        b.append(QStringLiteral("Decorations are disabled"));
+    } else {
+        b.append(QStringLiteral("Plugin: %1\n").arg(m_plugin));
+        b.append(QStringLiteral("Theme: %1\n").arg(m_theme));
+        b.append(QStringLiteral("Plugin recommends border size: %1\n").arg(m_recommendedBorderSize.isNull() ? "No" : m_recommendedBorderSize));
+        b.append(QStringLiteral("Blur: %1\n").arg(m_blur));
+        const QMetaObject *metaOptions = m_settings->metaObject();
+        for (int i=0; i<metaOptions->propertyCount(); ++i) {
+            const QMetaProperty property = metaOptions->property(i);
+            if (QLatin1String(property.name()) == QLatin1String("objectName")) {
+                continue;
+            }
+            b.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(settingsProperty(m_settings->property(property.name()))));
         }
-        b.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(settingsProperty(m_settings->property(property.name()))));
     }
     return b;
 }

@@ -73,7 +73,11 @@ public:
     QString name() const override;
     QByteArray uuid() const override;
 
+    QSize modeSize() const;
+
+    // TODO: The name is ambiguous. Rename this function.
     QSize pixelSize() const;
+
     qreal scale() const override;
 
     /**
@@ -81,6 +85,17 @@ public:
      */
     QRect geometry() const override;
     QSize physicalSize() const override;
+
+    /**
+     * Returns the orientation of this output.
+     *
+     * - Flipped along the vertical axis is landscape + inv. portrait.
+     * - Rotated 90° and flipped along the horizontal axis is portrait + inv. landscape
+     * - Rotated 180° and flipped along the vertical axis is inv. landscape + inv. portrait
+     * - Rotated 270° and flipped along the horizontal axis is inv. portrait + inv. landscape +
+     *   portrait
+     */
+    Transform transform() const;
 
     /**
      * Current refresh rate in 1/ms.
@@ -117,14 +132,6 @@ protected:
                         const QByteArray &uuid, const QSize &physicalSize,
                         const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
 
-    QPointer<KWayland::Server::XdgOutputInterface> xdgOutput() const {
-        return m_xdgOutput;
-    }
-
-    QPointer<KWayland::Server::OutputDeviceInterface> waylandOutputDevice() const {
-        return m_waylandOutputDevice;
-    }
-
     QPoint globalPos() const;
 
     bool internal() const {
@@ -134,7 +141,7 @@ protected:
         m_internal = set;
     }
     void setDpmsSupported(bool set) {
-        m_supportsDpms = set;
+        m_waylandOutput->setDpmsSupported(set);
     }
 
     virtual void updateEnablement(bool enable) {
@@ -155,31 +162,15 @@ protected:
 
     QSize orientateSize(const QSize &size) const;
 
-    /**
-     * Returns the orientation of this output.
-     *
-     * - Flipped along the vertical axis is landscape + inv. portrait.
-     * - Rotated 90° and flipped along the horizontal axis is portrait + inv. landscape
-     * - Rotated 180° and flipped along the vertical axis is inv. landscape + inv. portrait
-     * - Rotated 270° and flipped along the horizontal axis is inv. portrait + inv. landscape +
-     *   portrait
-     */
-    Transform transform() const;
-
 private:
-    void createWaylandOutput();
-    void createXdgOutput();
-
     void setTransform(KWayland::Server::OutputDeviceInterface::Transform transform);
 
-    QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
-    QPointer<KWayland::Server::XdgOutputInterface> m_xdgOutput;
-    QPointer<KWayland::Server::OutputDeviceInterface> m_waylandOutputDevice;
-
+    KWayland::Server::OutputInterface *m_waylandOutput;
+    KWayland::Server::XdgOutputInterface *m_xdgOutput;
+    KWayland::Server::OutputDeviceInterface *m_waylandOutputDevice;
     KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
 
     bool m_internal = false;
-    bool m_supportsDpms = false;
 };
 
 }

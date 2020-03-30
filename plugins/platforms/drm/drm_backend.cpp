@@ -781,6 +781,11 @@ QString DrmBackend::supportInformation() const
     QString supportInfo;
     QDebug s(&supportInfo);
     s.nospace();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    using Qt::endl;
+#endif
+
     s << "Name: " << "DRM" << endl;
     s << "Active: " << m_active << endl;
     s << "Atomic Mode Setting: " << m_atomicModeSetting << endl;

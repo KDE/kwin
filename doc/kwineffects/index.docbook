@@ -32,7 +32,7 @@ for Plasma.</para>
 
 <para>The main part of this page is a list of all available effects grouped 
 by <guilabel>Accessibility</guilabel>, <guilabel>Appearance</guilabel>, 
-<guilabel>Focus</guilabel>, <guilabel>Tools</guilabel>, <guilabel>Candy</guilabel> 
+<guilabel>Focus</guilabel>, <guilabel>Tools</guilabel>,
 and <guilabel>Window Management</guilabel>.</para>
 <para>Use the incremental search bar above the list window to find items in the list.</para>
 
@@ -79,7 +79,6 @@ functionality from KWin Core or provide interaction with other elements of the d
 39 effects + 7 internal (XRender compositor)
 Internal effects
 Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
-Candy (Startup feedback)
 Window Management (Cover Switch)
 -->
 

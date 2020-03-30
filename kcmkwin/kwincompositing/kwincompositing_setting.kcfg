@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+   <kcfgfile name="kwinrc"/>
+
+   <group name="KDE">
+       <entry name="AnimationDurationFactor" type="Double">
+          <default>1.0</default>
+       </entry>
+   </group>
+
+   <group name="Compositing">
+
+       <entry name="HiddenPreviews" type="Int">
+           <default>5</default>
+       </entry>
+
+       <entry name="glTextureFilter" key="GLTextureFilter" type="Int">
+        <default>2</default>
+       </entry>
+
+       <entry name="XRenderSmoothScale" type="Bool">
+        <default>false</default>
+       </entry>
+
+       <entry name="Enabled" type="Bool">
+        <default>true</default>
+       </entry>
+
+       <entry name="OpenGLIsUnsafe" type="Bool">
+        <default>true</default>
+       </entry>
+
+       <entry name="glPreferBufferSwap" key="GLPreferBufferSwap" type="Enum">
+           <default>a</default>
+           <choices>
+               <choice name="n" />
+               <choice name="a" />
+               <choice name="e" />
+               <choice name="p" />
+               <choice name="c" />
+           </choices>
+       </entry>
+
+       <entry name="Backend" type="Enum">
+           <default>OpenGL</default>
+           <choices>
+               <choice name="OpenGL" />
+               <choice name="XRender" />
+           </choices>
+       </entry>
+
+       <entry name="glCore" key="GLCore" type="Bool">
+           <default>false</default>
+       </entry>
+
+       <entry name="WindowsBlockCompositing" type="Bool">
+           <default>true</default>
+       </entry>
+
+       <entry name="glPlatformInterface" key="GLPlatformInterface" type="String">
+           <default>glx</default>
+           <choices>
+               <choice name="glx" />
+               <choice name="egl" />
+           </choices>
+       </entry>
+
+    </group>
+
+</kcfg>

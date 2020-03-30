@@ -3,4 +3,3 @@ ClassName=KWinOptionsSettings
 Mutators=true
 DefaultValueGetters=true
 ParentInConstructor=true
-Singleton=true

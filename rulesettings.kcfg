@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile arg="true">
+    <parameter name="ruleDescriptionOrNumber"/>
+  </kcfgfile>
+  <group name="$(ruleDescriptionOrNumber)">
+    <entry name="description" key="Description" type="String">
+      <label>Rule description</label>
+    </entry>
+    <entry name="descriptionLegacy" key="description" type="String">
+      <label>Rule description (legacy)</label>
+    </entry>
+    <entry name="DeleteRule" key="deleteRule" type="Bool">
+      <label>Delete this rule (for use in imports)</label>
+      <default>false</default>
+    </entry>
+    <entry name="wmclass" type="String">
+      <label>Window class (application)</label>
+    </entry>
+    <entry name="wmclassmatch" type="Int">
+      <label>Window class string match type</label>
+      <default code="true">Rules::UnimportantMatch</default>
+      <min code="true">Rules::FirstStringMatch</min>
+      <max code="true">Rules::LastStringMatch</max>
+    </entry>
+    <entry name="wmclasscomplete" type="Bool">
+      <label>Match whole window class</label>
+      <default code="true">Rules::UnimportantMatch</default>
+    </entry>
+
+    <entry name="windowrole" type="String">
+      <label>Window role</label>
+    </entry>
+    <entry name="windowrolematch" type="Int">
+      <label>Window role string match type</label>
+      <default code="true">Rules::UnimportantMatch</default>
+      <min code="true">Rules::FirstStringMatch</min>
+      <max code="true">Rules::LastStringMatch</max>
+    </entry>
+
+    <entry name="title" type="String">
+      <label>Window title</label>
+    </entry>
+    <entry name="titlematch" type="Int">
+      <label>Window title string match type</label>
+      <default code="true">Rules::UnimportantMatch</default>
+      <min code="true">Rules::FirstStringMatch</min>
+      <max code="true">Rules::LastStringMatch</max>
+    </entry>
+
+    <entry name="clientmachine" type="String">
+      <label>Machine (hostname)</label>
+    </entry>
+    <entry name="clientmachinematch" type="Int">
+      <label>Machine string match type</label>
+      <default code="true">Rules::UnimportantMatch</default>
+      <min code="true">Rules::FirstStringMatch</min>
+      <max code="true">Rules::LastStringMatch</max>
+    </entry>
+
+    <entry name="types" type="UInt">
+      <label>Window types that match</label>
+      <default>NET::AllTypesMask</default>
+    </entry>
+
+    <entry name="placement" type="Enum">
+      <label>Initial placement</label>
+      <choices name="Placement::Policy"/>
+      <default code="true">Placement::Smart</default>
+    </entry>
+    <entry name="placementrule" type="Int">
+      <label>Initial placement rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="position" type="Point">
+      <label>Window position</label>
+      <default>invalidPoint</default>
+    </entry>
+    <entry name="positionrule" type="Int">
+      <label>Window position rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="size" type="Size">
+      <label>Window size</label>
+    </entry>
+    <entry name="sizerule" type="Int">
+      <label>Window size rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="minsize" type="Size">
+      <label>Window minimum size</label>
+      <!-- <default>QSize(1, 1)</default> -->
+    </entry>
+    <entry name="minsizerule" type="Int">
+      <label>Window minimum size rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="maxsize" type="Size">
+      <label>Window maximum size</label>
+      <!-- <default>QSize(32767, 32767)</default> -->
+    </entry>
+    <entry name="maxsizerule" type="Int">
+      <label>Window maximum size rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="opacityactive" type="Int">
+      <label>Active opacity</label>
+      <min>0</min>
+      <max>100</max>
+      <default>0</default>
+    </entry>
+    <entry name="opacityactiverule" type="Int">
+      <label>Active opacity rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="opacityinactive" type="Int">
+      <label>Inactive opacity</label>
+      <min>0</min>
+      <max>100</max>
+      <default>0</default>
+    </entry>
+    <entry name="opacityinactiverule" type="Int">
+      <label>Inactive opacity rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="ignoregeometry" type="Bool">
+      <label>Ignore requested geometry</label>
+      <default>false</default>
+    </entry>
+    <entry name="ignoregeometryrule" type="Int">
+      <label>Ignore requested geometry rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="desktop" type="Int">
+      <label>Desktop number</label>
+      <default>0</default>
+    </entry>
+    <entry name="desktoprule" type="Int">
+      <label>Desktop number rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="screen" type="Int">
+      <label>Screen number</label>
+      <default>0</default>
+    </entry>
+    <entry name="screenrule" type="Int">
+      <label>Screen number rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="activity" type="String">
+      <label>Activity</label>
+    </entry>
+    <entry name="activityrule" type="Int">
+      <label>Activity rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="type" type="Int">
+      <label>Set window type to</label>
+      <min code="true">NET::Normal</min>
+      <max code="true">NET::Splash</max>
+      <default code="true">NET::Unknown</default>
+    </entry>
+    <entry name="typerule" type="Int">
+      <label>Set window type rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="maximizevert" type="Bool">
+      <label>Maximized vertically</label>
+      <default>false</default>
+    </entry>
+    <entry name="maximizevertrule" type="Int">
+      <label>Maximized vertically rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="maximizehoriz" type="Bool">
+      <label>Maximized horizontally</label>
+      <default>false</default>
+    </entry>
+    <entry name="maximizehorizrule" type="Int">
+      <label>Maximized horizontally rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="minimize" type="Bool">
+      <label>Minimized</label>
+      <default>false</default>
+    </entry>
+    <entry name="minimizerule" type="Int">
+      <label>Minimized rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="shade" type="Bool">
+      <label>Shaded</label>
+      <default>false</default>
+    </entry>
+    <entry name="shaderule" type="Int">
+      <label>Shaded rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="skiptaskbar" type="Bool">
+      <label>Skip taskbar</label>
+      <default>false</default>
+    </entry>
+    <entry name="skiptaskbarrule" type="Int">
+      <label>Skip taskbar rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="skippager" type="Bool">
+      <label>Skip pager</label>
+      <default>false</default>
+    </entry>
+    <entry name="skippagerrule" type="Int">
+      <label>Skip pager rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="skipswitcher" type="Bool">
+      <label>Skip switcher</label>
+      <default>false</default>
+    </entry>
+    <entry name="skipswitcherrule" type="Int">
+      <label>Skip switcher rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="above" type="Bool">
+      <label>Keep above</label>
+      <default>false</default>
+    </entry>
+    <entry name="aboverule" type="Int">
+      <label>Keep above rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="below" type="Bool">
+      <label>Keep below</label>
+      <default>false</default>
+    </entry>
+    <entry name="belowrule" type="Int">
+      <label>Keep below rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="fullscreen" type="Bool">
+      <label>Fullscreen</label>
+      <default>false</default>
+    </entry>
+    <entry name="fullscreenrule" type="Int">
+      <label>Fullscreen rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="noborder" type="Bool">
+      <label>No titlebar and frame</label>
+      <default>false</default>
+    </entry>
+    <entry name="noborderrule" type="Int">
+      <label>No titlebar rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="decocolor" type="String">
+      <label>Titlebar color and scheme</label>
+    </entry>
+    <entry name="decocolorrule" type="Int">
+      <label>Titlebar color rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="blockcompositing" type="Bool">
+      <label>Block Compositing</label>
+      <default>false</default>
+    </entry>
+    <entry name="blockcompositingrule" type="Int">
+      <label>Block Compositing rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="fsplevel" type="Int">
+      <label>Focus stealing prevention</label>
+      <default>0</default>
+      <min>0</min>
+      <max>4</max>
+    </entry>
+    <entry name="fsplevelrule" type="Int">
+      <label>Focus stealing prevention rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="fpplevel" type="Int">
+      <label>Focus protection</label>
+      <default>0</default>
+      <min>0</min>
+      <max>4</max>
+    </entry>
+    <entry name="fpplevelrule" type="Int">
+      <label>Focus protection rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="acceptfocus" type="Bool">
+      <label>Accept Focus</label>
+      <default>false</default>
+    </entry>
+    <entry name="acceptfocusrule" type="Int">
+      <label>Accept Focus rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="closeable" type="Bool">
+      <label>Closeable</label>
+      <default>false</default>
+    </entry>
+    <entry name="closeablerule" type="Int">
+      <label>Closeable rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="autogroup" type="Bool">
+      <label>Autogroup with identical</label>
+      <default>false</default>
+    </entry>
+    <entry name="autogrouprule" type="Int">
+      <label>Autogroup with identical rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="autogroupfg" type="Bool">
+      <label>Autogroup in foreground</label>
+      <default>true</default>
+    </entry>
+    <entry name="autogroupfgrule" type="Int">
+      <label>Autogroup in foreground rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="autogroupid" type="String">
+      <label>Autogroup by ID</label>
+    </entry>
+    <entry name="autogroupidrule" type="Int">
+      <label>Autogroup by ID rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="strictgeometry" type="Bool">
+      <label>Obey geometry restrictions</label>
+      <default>false</default>
+    </entry>
+    <entry name="strictgeometryrule" type="Int">
+      <label>Obey geometry restrictions rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="shortcut" type="String">
+      <label>Shortcut</label>
+    </entry>
+    <entry name="shortcutrule" type="Int">
+      <label>Shortcut rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+
+    <entry name="disableglobalshortcuts" type="Bool">
+      <label>Ignore global shortcuts</label>
+      <default>false</default>
+    </entry>
+    <entry name="disableglobalshortcutsrule" type="Int">
+      <label>Ignore global shortcuts rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
+
+    <entry name="desktopfile" type="String">
+      <label>Desktop file name</label>
+    </entry>
+    <entry name="desktopfilerule" type="Int">
+      <label>Desktop file name rule type</label>
+      <min code="true">Rules::UnusedSetRule</min>
+      <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
+      <default code="true">Rules::UnusedSetRule</default>
+    </entry>
+  </group>
+</kcfg>

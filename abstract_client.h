@@ -440,6 +440,7 @@ public:
      */
     virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
     const QList<AbstractClient*>& transients() const; // Is not indirect
+    virtual void addTransient(AbstractClient *client);
     virtual void removeTransient(AbstractClient* cl);
     virtual QList<AbstractClient*> mainClients() const; // Call once before loop , is not indirect
     QList<AbstractClient*> allMainClients() const; // Call once before loop , is indirect
@@ -613,16 +614,16 @@ public:
     Layer layer() const override;
     void updateLayer();
 
+    void placeIn(const QRect &area);
+
     enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
     void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
-    virtual void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
-    void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
+    virtual void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet) = 0;
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
-    virtual void setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet);
+    virtual void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) = 0;
 
     /**
      * How to resize the window in order to obey constraints (mainly aspect ratios).
@@ -633,19 +634,9 @@ public:
         SizeModeFixedH, ///< Try not to affect height
         SizeModeMax ///< Try not to make it larger in either direction
     };
-    /**
-     * Calculates the appropriate frame size for the given client size @p wsize.
-     *
-     * @p wsize is adapted according to the window's size hints (minimum, maximum and incremental size changes).
-     *
-     * Default implementation returns the passed in @p wsize.
-     */
-    virtual QSize sizeForClientSize(const QSize &wsize, SizeMode mode = SizeModeAny, bool noframe = false) const;
 
-    /**
-     * Adjust the frame size @p frame according to the window's size hints.
-     */
-    QSize adjustedSize(const QSize&, SizeMode mode = SizeModeAny) const;
+    virtual QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const;
+    QSize constrainFrameSize(const QSize &size, SizeMode mode = SizeModeAny) const;
     QSize adjustedSize() const;
 
     /**
@@ -794,6 +785,7 @@ public:
      * Implementing subclasses can perform a windowing system solution for terminating.
      */
     virtual void killWindow() = 0;
+    virtual void destroyClient() = 0;
 
     enum class SameApplicationCheck {
         RelaxedForActive = 1 << 0,
@@ -913,6 +905,7 @@ Q_SIGNALS:
     void shadeableChanged(bool);
     void maximizeableChanged(bool);
     void desktopFileNameChanged();
+    void applicationMenuChanged();
     void hasApplicationMenuChanged(bool);
     void applicationMenuActiveChanged(bool);
     void unresponsiveChanged(bool);
@@ -980,7 +973,6 @@ protected:
     virtual void updateColorScheme() = 0;
 
     void setTransientFor(AbstractClient *transientFor);
-    virtual void addTransient(AbstractClient* cl);
     /**
      * Just removes the @p cl from the transients without any further checks.
      */
@@ -1183,6 +1175,7 @@ protected:
     void setDecoration(KDecoration2::Decoration *decoration) {
         m_decoration.decoration = decoration;
     }
+    virtual void createDecoration(const QRect &oldGeometry);
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
@@ -1315,16 +1308,6 @@ private:
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
 {
     move(p.x(), p.y(), force);
-}
-
-inline void AbstractClient::resizeWithChecks(const QSize& s, AbstractClient::ForceGeometry_t force)
-{
-    resizeWithChecks(s.width(), s.height(), force);
-}
-
-inline void AbstractClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
-{
-    setFrameGeometry(rect.x(), rect.y(), rect.width(), rect.height(), force);
 }
 
 inline const QList<AbstractClient*>& AbstractClient::transients() const

@@ -83,6 +83,21 @@ public:
 
     bool supportsTransformations() const;
 
+    /**
+     * Drm planes might be capable of realizing the current output transform without usage
+     * of compositing. This is a getter to query the current state of that
+     *
+     * @return true if the hardware realizes the transform without further assistance
+     */
+    bool hardwareTransforms() const;
+
+    /**
+     * The current rotation of the output
+     *
+     * @return rotation in degree
+     */
+    int rotation() const;
+
 private:
     friend class DrmBackend;
     friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc
@@ -124,7 +139,6 @@ private:
     void setWaylandMode();
 
     void updateTransform(Transform transform) override;
-    void automaticRotation();
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;

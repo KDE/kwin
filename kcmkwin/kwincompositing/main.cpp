@@ -32,11 +32,11 @@
 #include <algorithm>
 #include <functional>
 
-class KWinCompositingSettings : public KCModule
+class KWinCompositingKCM : public KCModule
 {
     Q_OBJECT
 public:
-    explicit KWinCompositingSettings(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    explicit KWinCompositingKCM(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
 
 public Q_SLOTS:
     void load() override;
@@ -51,7 +51,7 @@ private:
 
 static const QVector<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
 
-KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariantList &args)
+KWinCompositingKCM::KWinCompositingKCM(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_compositing(new KWin::Compositing::Compositing(this))
 {
@@ -71,12 +71,13 @@ KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariant
     init();
 }
 
-void KWinCompositingSettings::init()
+void KWinCompositingKCM::init()
 {
     using namespace KWin::Compositing;
     auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 
-    connect(m_compositing, &Compositing::changed, this, &KWinCompositingSettings::markAsChanged);
+    connect(m_compositing, &Compositing::changed, this, qOverload<bool>(&KCModule::changed));
+    connect(m_compositing, &Compositing::defaulted, this, qOverload<bool>(&KCModule::defaulted));
 
     // enabled check box
     m_form.compositingEnabled->setChecked(m_compositing->compositingEnabled());
@@ -202,26 +203,26 @@ void KWinCompositingSettings::init()
     }
 }
 
-void KWinCompositingSettings::load()
+void KWinCompositingKCM::load()
 {
     KCModule::load();
-    m_compositing->reset();
+    m_compositing->load();
 }
 
-void KWinCompositingSettings::defaults()
+void KWinCompositingKCM::defaults()
 {
     KCModule::defaults();
     m_compositing->defaults();
 }
 
-void KWinCompositingSettings::save()
+void KWinCompositingKCM::save()
 {
     KCModule::save();
     m_compositing->save();
 }
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
-                 registerPlugin<KWinCompositingSettings>("compositing");
+                 registerPlugin<KWinCompositingKCM>("compositing");
                 )
 
 #include "main.moc"

@@ -21,13 +21,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "kwin_wayland_test.h"
+#include "abstract_client.h"
 #include "atoms.h"
 #include "x11client.h"
 #include "deleted.h"
 #include "platform.h"
 #include "rules.h"
 #include "screens.h"
-#include "xdgshellclient.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -69,7 +69,6 @@ private Q_SLOTS:
 void TestDbusInterface::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted*>();
-    qRegisterMetaType<KWin::XdgShellClient *>();
     qRegisterMetaType<KWin::AbstractClient*>();
 
     QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
@@ -116,7 +115,6 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient_data()
 {
     QTest::addColumn<Test::XdgShellSurfaceType>("type");
 
-    QTest::newRow("xdgShellV6") << Test::XdgShellSurfaceType::XdgShellV6;
     QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
 }
 
@@ -135,7 +133,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<XdgShellClient *>();
+    auto client = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(client);
 
     // let's get the window info
@@ -226,7 +224,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 
     // finally close window
     const auto id = client->internalId();
-    QSignalSpy windowClosedSpy(client, &XdgShellClient::windowClosed);
+    QSignalSpy windowClosedSpy(client, &AbstractClient::windowClosed);
     QVERIFY(windowClosedSpy.isValid());
     shellSurface.reset();
     surface.reset();

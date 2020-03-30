@@ -144,6 +144,16 @@ QSize InternalClient::clientSize() const
     return m_clientSize;
 }
 
+QSize InternalClient::minSize() const
+{
+    return m_internalWindow->minimumSize();
+}
+
+QSize InternalClient::maxSize() const
+{
+    return m_internalWindow->maximumSize();
+}
+
 void InternalClient::debug(QDebug &stream) const
 {
     stream.nospace() << "\'InternalClient:" << m_internalWindow << "\'";
@@ -289,27 +299,18 @@ void InternalClient::hideClient(bool hide)
     Q_UNUSED(hide)
 }
 
-void InternalClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
+void InternalClient::resizeWithChecks(const QSize &size, ForceGeometry_t force)
 {
     Q_UNUSED(force)
     if (!m_internalWindow) {
         return;
     }
-    QRect area = workspace()->clientArea(WorkArea, this);
-    // don't allow growing larger than workarea
-    if (w > area.width()) {
-        w = area.width();
-    }
-    if (h > area.height()) {
-        h = area.height();
-    }
-    setFrameGeometry(QRect(x(), y(), w, h));
+    const QRect area = workspace()->clientArea(WorkArea, this);
+    setFrameGeometry(QRect{pos(), size.boundedTo(area.size())}, force);
 }
 
-void InternalClient::setFrameGeometry(int x, int y, int w, int h, ForceGeometry_t force)
+void InternalClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 {
-    const QRect rect(x, y, w, h);
-
     if (areGeometryUpdatesBlocked()) {
         m_frameGeometry = rect;
         if (pendingGeometryUpdate() == PendingGeometryForced) {
@@ -436,7 +437,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 
     const QSize bufferSize = fbo->size() / bufferScale();
 
-    commitGeometry(QRect(pos(), sizeForClientSize(bufferSize)));
+    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
     if (m_internalFBO != fbo) {
@@ -455,7 +456,7 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
 
     const QSize bufferSize = image.size() / bufferScale();
 
-    commitGeometry(QRect(pos(), sizeForClientSize(bufferSize)));
+    commitGeometry(QRect(pos(), clientSizeToFrameSize(bufferSize)));
     markAsMapped();
 
     if (m_internalImage.size() != image.size()) {
@@ -486,17 +487,6 @@ bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameA
     return qobject_cast<const InternalClient *>(other) != nullptr;
 }
 
-void InternalClient::destroyDecoration()
-{
-    if (!isDecorated()) {
-        return;
-    }
-
-    const QRect clientGeometry = frameRectToClientRect(frameGeometry());
-    AbstractClient::destroyDecoration();
-    setFrameGeometry(clientGeometry);
-}
-
 void InternalClient::doMove(int x, int y)
 {
     Q_UNUSED(x)
@@ -525,32 +515,6 @@ void InternalClient::updateCaption()
     if (m_captionSuffix != oldSuffix) {
         emit captionChanged();
     }
-}
-
-void InternalClient::createDecoration(const QRect &rect)
-{
-    KDecoration2::Decoration *decoration = Decoration::DecorationBridge::self()->createDecoration(this);
-    if (decoration) {
-        QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
-            [this]() {
-                GeometryUpdatesBlocker blocker(this);
-                const QRect oldGeometry = frameGeometry();
-                if (!isShade()) {
-                    checkWorkspacePosition(oldGeometry);
-                }
-                emit geometryShapeChanged(this, oldGeometry);
-            }
-        );
-    }
-
-    const QRect oldFrameGeometry = frameGeometry();
-
-    setDecoration(decoration);
-    setFrameGeometry(clientRectToFrameRect(rect));
-
-    emit geometryShapeChanged(this, oldFrameGeometry);
 }
 
 void InternalClient::requestGeometry(const QRect &rect)

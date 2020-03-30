@@ -221,13 +221,6 @@ public:
      * @return @c true if a shader is bound, @c false otherwise
      */
     bool isShaderBound() const;
-    /**
-     * Is @c true if the environment variable KWIN_GL_DEBUG is set to 1.
-     * In that case shaders are compiled with KWIN_SHADER_DEBUG defined.
-     * @returns @c true if shaders are compiled with debug information
-     * @since 4.8
-     */
-    bool isShaderDebug() const;
 
     /**
      * Pushes the current shader onto the stack and binds a shader
@@ -332,7 +325,6 @@ private:
 
     QStack<GLShader*> m_boundShaders;
     QHash<ShaderTraits, GLShader *> m_shaderHash;
-    bool m_debug;
     QString m_resourcePath;
     static ShaderManager *s_shaderManager;
 };
@@ -546,6 +538,15 @@ public:
         return s_virtualScreenScale;
     }
 
+    /**
+     * The framebuffer of KWin's OpenGL window or other object currently being rendered to
+     *
+     * @since 5.18
+     */
+    static void setKWinFramebuffer(GLuint fb) {
+        s_kwinFramebuffer = fb;
+    }
+
 
 protected:
     void initFBO();
@@ -561,6 +562,7 @@ private:
     static QRect s_virtualScreenGeometry;
     static qreal s_virtualScreenScale;
     static GLint s_virtualScreenViewport[4];
+    static GLuint s_kwinFramebuffer;
 
     GLTexture mTexture;
     bool mValid;
