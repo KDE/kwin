@@ -48,6 +48,7 @@ include(KDEClangFormat)
 
 include(ECMInstallIcons)
 include(ECMOptionalAddSubdirectory)
+include(ECMConfiguredInstall)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -DQT_USE_QSTRINGBUILDER -DQT_NO_URL_CAST_FROM_STRING)
 
@@ -771,11 +772,5 @@ configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
-
-configure_file(kwin_x11.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/kwin_x11.service @ONLY)
-configure_file(kwin_wayland.service.cmake ${CMAKE_CURRENT_BINARY_DIR}/kwin_wayland.service @ONLY)
-
-install( FILES  ${CMAKE_CURRENT_BINARY_DIR}/kwin_x11.service DESTINATION
-        ${SYSTEMD_USER_UNIT_INSTALL_DIR})
-install( FILES  ${CMAKE_CURRENT_BINARY_DIR}/kwin_wayland.service DESTINATION
-        ${SYSTEMD_USER_UNIT_INSTALL_DIR})
+ecm_install_configured_files( TEMPLATES plasma-kwin_x11.service plasma-kwin_wayland.service @ONLY
+            DESTINATION ${SYSTEMD_USER_UNIT_INSTALL_DIR})
