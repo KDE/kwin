@@ -666,9 +666,7 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
     layout->addWidget(module);
     layout->addWidget(buttons);
 
-    connect(dialog, &QDialog::accepted, module, [module]() {
-        module->save();
-    });
+    connect(dialog, &QDialog::accepted, module, &KCModule::save);
 
     dialog->setModal(true);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
