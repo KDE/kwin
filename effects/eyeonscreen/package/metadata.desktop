@@ -2,6 +2,7 @@
 Name=Eye on Screen
 Name[ca]=Ull a la pantalla
 Name[cs]=Oko na obrazovce
+Name[en_GB]=Eye on Screen
 Name[es]=Ojo a la pantalla
 Name[et]=Eye on Screen
 Name[eu]=Begirada pantailan
@@ -23,6 +24,7 @@ Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
 Comment[ca]=Enganxa les finestres a l'escriptori
+Comment[en_GB]=Suck windows into the desktop
 Comment[es]=Aspirar las ventanas en el escritorio
 Comment[et]=Akende imemine töölauale
 Comment[eu]=Mahaigainak leihoak xurgatu
