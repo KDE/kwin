@@ -29,5 +29,3 @@ void PlastikPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
     engine->addImageProvider(QLatin1String("plastik"), new KWin::PlastikButtonProvider());
     QQmlExtensionPlugin::initializeEngine(engine, uri);
 }
-
-#include "moc_plastikplugin.cpp"

@@ -1,6 +1,6 @@
 add_subdirectory(helper)
 
-add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp ${kwin_XWAYLAND_SRCS})
+add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp generic_scene_opengl_test.cpp ${kwin_XWAYLAND_SRCS})
 target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test)
 
 function(integrationTest)
@@ -36,9 +36,9 @@ integrationTest(WAYLAND_ONLY NAME testMaximized SRCS maximize_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testXdgShellClient SRCS xdgshellclient_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testDontCrashNoBorder SRCS dont_crash_no_border.cpp)
 integrationTest(NAME testXwaylandSelections SRCS xwayland_selections_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testSceneOpenGL SRCS scene_opengl_test.cpp generic_scene_opengl_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testSceneOpenGL SRCS scene_opengl_test.cpp )
 integrationTest(WAYLAND_ONLY NAME testSceneOpenGLShadow SRCS scene_opengl_shadow_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testSceneOpenGLES SRCS scene_opengl_es_test.cpp generic_scene_opengl_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testSceneOpenGLES SRCS scene_opengl_es_test.cpp )
 integrationTest(WAYLAND_ONLY NAME testNoXdgRuntimeDir SRCS no_xdg_runtime_dir_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testScreenChanges SRCS screen_changes_test.cpp)
 integrationTest(NAME testModiferOnlyShortcut SRCS modifier_only_shortcut_test.cpp)
@@ -57,7 +57,7 @@ integrationTest(WAYLAND_ONLY NAME testColorCorrectNightColor SRCS colorcorrect_n
 integrationTest(WAYLAND_ONLY NAME testDontCrashCursorPhysicalSizeEmpty SRCS dont_crash_cursor_physical_size_empty.cpp)
 integrationTest(WAYLAND_ONLY NAME testDontCrashReinitializeCompositor SRCS dont_crash_reinitialize_compositor.cpp)
 integrationTest(WAYLAND_ONLY NAME testNoGlobalShortcuts SRCS no_global_shortcuts_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testBufferSizeChange SRCS buffer_size_change_test.cpp generic_scene_opengl_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testBufferSizeChange SRCS buffer_size_change_test.cpp )
 integrationTest(WAYLAND_ONLY NAME testPlacement SRCS placement_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testActivation SRCS activation_test.cpp)
 

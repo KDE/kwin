@@ -16,15 +16,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-// Include some code from kwin core in order to avoid
-// double implementation.
-
-#include "../../cursor.cpp"
-#include "../../plugins/platforms/x11/standalone/x11cursor.cpp"
-#include "../../rules.cpp"
-#include "../../placement.cpp"
-#include "../../options.cpp"
-#include "../../utils.cpp"
+#include <input.h>
 
 KWin::InputRedirection *KWin::InputRedirection::s_self = nullptr;
 

@@ -77,6 +77,13 @@ StrutRect &StrutRect::operator=(const StrutRect &other)
 
 #endif
 
+Process::Process(QObject *parent)
+    : QProcess(parent)
+{
+}
+
+Process::~Process() = default;
+
 #ifndef KCMRULES
 void updateXTime()
 {
@@ -134,13 +141,6 @@ void ungrabXKeyboard()
     keyboard_grabbed = false;
     xcb_ungrab_keyboard(connection(), XCB_TIME_CURRENT_TIME);
 }
-
-Process::Process(QObject *parent)
-    : QProcess(parent)
-{
-}
-
-Process::~Process() = default;
 
 void Process::setupChildProcess()
 {

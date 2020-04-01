@@ -235,4 +235,3 @@ K_PLUGIN_FACTORY_DEFINITION(KWinOptionsFactory,
                            )
 
 #include "main.moc"
-#include "moc_main.cpp"

@@ -16,31 +16,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include "yesnobox.h"
 
-#ifndef YESNOBOX_H
-#define YESNOBOX_H
-
-#include <QHBoxLayout>
-#include <QRadioButton>
-
-#include <KLocalizedString>
-
-class YesNoBox : public QWidget {
-    Q_OBJECT
-public:
-    explicit YesNoBox( QWidget *parent );
-    bool isChecked() { return yes->isChecked(); }
-public Q_SLOTS:
-    void setChecked(bool b) { yes->setChecked(b); }
-    void toggle() { yes->toggle(); }
-
-Q_SIGNALS:
-    void clicked(bool checked = false);
-    void toggled(bool checked);
-private Q_SLOTS:
-    void noClicked(bool checked) { emit clicked(!checked); }
-private:
-    QRadioButton *yes, *no;
-};
-
-#endif // YESNOBOX_H
+YesNoBox::YesNoBox( QWidget *parent )
+    : QWidget(parent)
+{
+    QHBoxLayout *l = new QHBoxLayout(this);
+    l->setContentsMargins(0, 0, 0, 0);
+    l->addWidget(yes = new QRadioButton(i18n("Yes"), this));
+    l->addWidget(no = new QRadioButton(i18n("No"), this));
+    l->addStretch(100);
+    no->setChecked(true);
+    connect(yes, SIGNAL(clicked(bool)), this, SIGNAL(clicked(bool)));
+    connect(yes, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
+    connect(no, SIGNAL(clicked(bool)), this, SLOT(noClicked(bool)));
+}
