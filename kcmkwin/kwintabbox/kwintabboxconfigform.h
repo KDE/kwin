@@ -86,6 +86,16 @@ public:
     void loadShortcuts();
     void resetShortcuts();
 
+    void setHighlightWindowsEnabled(bool enabled);
+    void setFilterScreenEnabled(bool enabled);
+    void setFilterDesktopEnabled(bool enabled);
+    void setFilterActivitiesEnabled(bool enabled);
+    void setFilterMinimizationEnabled(bool enabled);
+    void setApplicationModeEnabled(bool enabled);
+    void setShowDesktopModeEnabled(bool enabled);
+    void setSwitchingModeEnabled(bool enabled);
+    void setLayoutNameEnabled(bool enabled);
+
 Q_SIGNALS:
     void filterScreenChanged(int value);
     void filterDesktopChanged(int value);
@@ -113,6 +123,7 @@ private:
     KActionCollection *m_actionCollection = nullptr;
     KShortcutsEditor *m_editor = nullptr;
 
+    bool m_isHighlightWindowsEnabled = true;
     TabboxType m_type;
     Ui::KWinTabBoxConfigForm *ui;
 };

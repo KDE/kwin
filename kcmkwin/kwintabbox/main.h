@@ -61,7 +61,8 @@ private:
     void updateConfigFromUi(const KWinTabBoxConfigForm *form, TabBox::TabBoxSettings *config);
     void updateUiFromDefaultConfig(KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
     void initLayoutLists();
-    void createConnections(KWinTabBoxConfigForm *form, TabBox::TabBoxSettings *config);
+    void setEnabledUi(KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
+    void createConnections(KWinTabBoxConfigForm *form);
     bool updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
     bool updateUnmanagedIsDefault(const KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
 

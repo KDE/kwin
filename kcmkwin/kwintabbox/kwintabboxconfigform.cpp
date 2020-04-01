@@ -281,12 +281,66 @@ void KWinTabBoxConfigForm::resetShortcuts()
     m_actionCollection->writeSettings();
 }
 
+void KWinTabBoxConfigForm::setHighlightWindowsEnabled(bool enabled)
+{
+    m_isHighlightWindowsEnabled = enabled;
+    ui->kcfg_HighlightWindows->setEnabled(m_isHighlightWindowsEnabled);
+}
+
+void KWinTabBoxConfigForm::setFilterScreenEnabled(bool enabled)
+{
+    ui->filterScreens->setEnabled(enabled);
+    ui->currentScreen->setEnabled(enabled);
+    ui->otherScreens->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setFilterDesktopEnabled(bool enabled)
+{
+    ui->filterDesktops->setEnabled(enabled);
+    ui->currentDesktop->setEnabled(enabled);
+    ui->otherDesktops->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setFilterActivitiesEnabled(bool enabled)
+{
+    ui->filterActivities->setEnabled(enabled);
+    ui->currentActivity->setEnabled(enabled);
+    ui->otherActivities->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setFilterMinimizationEnabled(bool enabled)
+{
+    ui->filterMinimization->setEnabled(enabled);
+    ui->visibleWindows->setEnabled(enabled);
+    ui->hiddenWindows->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setApplicationModeEnabled(bool enabled)
+{
+    ui->oneAppWindow->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setShowDesktopModeEnabled(bool enabled)
+{
+    ui->showDesktop->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setSwitchingModeEnabled(bool enabled)
+{
+    ui->switchingModeCombo->setEnabled(enabled);
+}
+
+void KWinTabBoxConfigForm::setLayoutNameEnabled(bool enabled)
+{
+    ui->effectCombo->setEnabled(enabled);
+}
+
 void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 {
     // Highlight Windows options is availabled if no TabBox effect is selected
     // or if Tabbox is not builtin effet.
     on = !on || ui->effectCombo->currentData(AddonEffect).toBool();
-    ui->kcfg_HighlightWindows->setEnabled(on);
+    ui->kcfg_HighlightWindows->setEnabled(on && m_isHighlightWindowsEnabled);
 }
 
 void KWinTabBoxConfigForm::onFilterScreen()
@@ -331,7 +385,7 @@ void KWinTabBoxConfigForm::onEffectCombo()
     if (!ui->kcfg_ShowTabBox->isChecked()) {
         return;
     }
-    ui->kcfg_HighlightWindows->setEnabled(isAddonEffect);
+    ui->kcfg_HighlightWindows->setEnabled(isAddonEffect && m_isHighlightWindowsEnabled);
 
     emit layoutNameChanged(layoutName());
 }

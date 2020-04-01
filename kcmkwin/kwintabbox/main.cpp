@@ -98,8 +98,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     addConfig(m_tabBoxConfig, m_primaryTabBoxUi);
     addConfig(m_tabBoxAlternativeConfig, m_alternativeTabBoxUi);
 
-    createConnections(m_primaryTabBoxUi, m_tabBoxConfig);
-    createConnections(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    createConnections(m_primaryTabBoxUi);
+    createConnections(m_alternativeTabBoxUi);
 
     initLayoutLists();
 
@@ -112,6 +112,9 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     } else {
         infoLabel->hide();
     }
+
+    setEnabledUi(m_primaryTabBoxUi, m_tabBoxConfig);
+    setEnabledUi(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
 }
 
 KWinTabBoxConfig::~KWinTabBoxConfig()
@@ -213,7 +216,20 @@ void KWinTabBoxConfig::initLayoutLists()
     }
 }
 
-void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form, TabBoxSettings *config)
+void KWinTabBoxConfig::setEnabledUi(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
+{
+    form->setHighlightWindowsEnabled(!config->isHighlightWindowsImmutable());
+    form->setFilterScreenEnabled(!config->isMultiScreenModeImmutable());
+    form->setFilterDesktopEnabled(!config->isDesktopModeImmutable());
+    form->setFilterActivitiesEnabled(!config->isActivitiesModeImmutable());
+    form->setFilterMinimizationEnabled(!config->isMinimizedModeImmutable());
+    form->setApplicationModeEnabled(!config->isApplicationsModeImmutable());
+    form->setShowDesktopModeEnabled(!config->isShowDesktopModeImmutable());
+    form->setSwitchingModeEnabled(!config->isSwitchingModeImmutable());
+    form->setLayoutNameEnabled(!config->isLayoutNameImmutable());
+}
+
+void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
 {
     connect(form, SIGNAL(effectConfigButtonClicked()), this, SLOT(configureEffectClicked()));
 
