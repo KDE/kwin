@@ -21,7 +21,7 @@ ki18n_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui rulesw
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulesettings.kcfgc)
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulebooksettingsbase.kcfgc)
 
-add_library(KWinRulesObjects OBJECT ${kwinrules_SRCS})
+add_library(KWinRulesObjects STATIC ${kwinrules_SRCS})
 
 set(kwin_kcm_rules_XCB_LIBS
     XCB::CURSOR

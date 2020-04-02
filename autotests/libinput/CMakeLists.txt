@@ -1,7 +1,7 @@
 include_directories(${Libinput_INCLUDE_DIRS})
 include_directories(${UDEV_INCLUDE_DIR})
 
-add_library(LibInputTestObjects OBJECT ../../libinput/device.cpp ../../libinput/events.cpp mock_libinput.cpp)
+add_library(LibInputTestObjects STATIC ../../libinput/device.cpp ../../libinput/events.cpp mock_libinput.cpp)
 target_link_libraries(LibInputTestObjects Qt5::Test Qt5::Widgets Qt5::DBus Qt5::Gui KF5::ConfigCore)
 
 ########################################################
