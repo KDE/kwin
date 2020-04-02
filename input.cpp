@@ -736,6 +736,15 @@ private:
 
 class GlobalShortcutFilter : public InputEventFilter {
 public:
+    GlobalShortcutFilter() {
+        m_powerDown = new QTimer;
+        m_powerDown->setSingleShot(true);
+        m_powerDown->setInterval(1000);
+    }
+    ~GlobalShortcutFilter() {
+        delete m_powerDown;
+    }
+
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
         Q_UNUSED(nativeButton);
         if (event->type() == QEvent::MouseButtonPress) {
@@ -763,13 +772,19 @@ public:
     }
     bool keyEvent(QKeyEvent *event) override {
         if (event->key() == Qt::Key_PowerOff) {
-            if (event->type() == QEvent::KeyPress) {
-                m_powerOffPress = event->timestamp();
+            const auto modifiers = static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts();
+            if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
+                QObject::connect(m_powerDown, &QTimer::timeout, input()->shortcuts(), [this, modifiers] {
+                    QObject::disconnect(m_powerDown, &QTimer::timeout, input()->shortcuts(), nullptr);
+                    m_powerDown->stop();
+                    input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown);
+                });
+                m_powerDown->start();
+                return true;
             } else if (event->type() == QEvent::KeyRelease) {
-                const uint duration = (event->timestamp() - m_powerOffPress);
-                const Qt::Key key = duration > 1000 ? Qt::Key_PowerDown : Qt::Key_PowerOff;
-                const auto shortcuts = static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts();
-                return input()->shortcuts()->processKey(shortcuts, key | (event->key() & ~Qt::KeyboardModifierMask));
+                const bool ret = !m_powerDown->isActive() || input()->shortcuts()->processKey(modifiers, event->key());
+                m_powerDown->stop();
+                return ret;
             }
         } else if (event->type() == QEvent::KeyPress) {
             return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
@@ -798,7 +813,7 @@ public:
     }
 
 private:
-    uint m_powerOffPress;
+    QTimer* m_powerDown = nullptr;
 };
 
 
