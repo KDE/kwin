@@ -47,6 +47,8 @@ public:
     // return value between 0. and 1.
     double electricBorderCornerRatio() const;
 
+    void setElectricBorderCornerRatioEnabled(bool enable);
+
     void reload() override;
     void setDefaults() override;
 

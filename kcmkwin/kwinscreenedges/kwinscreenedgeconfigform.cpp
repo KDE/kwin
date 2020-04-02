@@ -62,6 +62,11 @@ double KWinScreenEdgesConfigForm::electricBorderCornerRatio() const
     return ui->electricBorderCornerRatioSpin->value() / 100.;
 }
 
+void KWinScreenEdgesConfigForm::setElectricBorderCornerRatioEnabled(bool enable)
+{
+    return ui->electricBorderCornerRatioSpin->setEnabled(enable);
+}
+
 void KWinScreenEdgesConfigForm::reload()
 {
     ui->electricBorderCornerRatioSpin->setValue(m_referenceCornerRatio * 100.);
