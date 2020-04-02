@@ -42,6 +42,12 @@ void KWinScreenEdge::monitorHideEdge(ElectricBorder border, bool hidden)
     monitor()->setEdgeHidden(edge, hidden);
 }
 
+void KWinScreenEdge::monitorEnableEdge(ElectricBorder border, bool enabled)
+{
+    const int edge = KWinScreenEdge::electricBorderToMonitorEdge(border);
+    monitor()->setEdgeEnabled(edge, enabled);
+}
+
 void KWinScreenEdge::monitorAddItem(const QString &item)
 {
     for (int i = 0; i < 8; i++) {

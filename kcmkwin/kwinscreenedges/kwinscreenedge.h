@@ -40,6 +40,7 @@ public:
     ~KWinScreenEdge() override;
 
     void monitorHideEdge(ElectricBorder border, bool hidden);
+    void monitorEnableEdge(ElectricBorder border, bool enabled);
 
     void monitorAddItem(const QString &item);
     void monitorItemSetEnabled(int index, bool enabled);

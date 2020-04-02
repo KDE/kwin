@@ -138,6 +138,13 @@ bool Monitor::edge(int edge) const
     return items[ edge ]->brush() == Qt::green;
 }
 
+void Monitor::setEdgeEnabled(int edge, bool enabled)
+{
+    for (QAction *action : qAsConst(popup_actions[edge])) {
+        action->setEnabled(enabled);
+    }
+}
+
 void Monitor::setEdgeHidden(int edge, bool set)
 {
     hidden[ edge ] = set;

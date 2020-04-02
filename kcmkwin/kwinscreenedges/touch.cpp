@@ -299,6 +299,12 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     bool reasonable = focusPolicy != "FocusStrictlyUnderMouse" && focusPolicy != "FocusUnderMouse";
     m_form->monitorItemSetEnabled(TabBox, reasonable);
     m_form->monitorItemSetEnabled(TabBoxAlternative, reasonable);
+
+    // Disable Edge if TouchEdges group entries are immutable
+    m_form->monitorEnableEdge(ElectricTop, !m_settings->isTopImmutable());
+    m_form->monitorEnableEdge(ElectricRight, !m_settings->isRightImmutable());
+    m_form->monitorEnableEdge(ElectricBottom, !m_settings->isBottomImmutable());
+    m_form->monitorEnableEdge(ElectricLeft, !m_settings->isLeftImmutable());
 }
 
 ElectricBorderAction KWinScreenEdgesConfig::electricBorderActionFromString(const QString &string)
