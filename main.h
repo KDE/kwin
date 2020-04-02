@@ -238,7 +238,6 @@ protected:
     }
 
 protected:
-    QString m_originalSessionKey;
     static int crashes;
 
 private Q_SLOTS:
