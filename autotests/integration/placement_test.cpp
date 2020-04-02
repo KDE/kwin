@@ -80,7 +80,7 @@ void TestPlacement::init()
                                          Test::AdditionalWaylandInterface::PlasmaShell));
 
     screens()->setCurrent(0);
-    KWin::Cursor::setPos(QPoint(512, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
 }
 
 void TestPlacement::cleanup()
@@ -267,8 +267,8 @@ void TestPlacement::testPlaceUnderMouse()
     group.sync();
     workspace()->slotReconfigure();
 
-    KWin::Cursor::setPos(QPoint(200, 300));
-    QCOMPARE(KWin::Cursor::pos(), QPoint(200, 300));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(200, 300));
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), QPoint(200, 300));
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));

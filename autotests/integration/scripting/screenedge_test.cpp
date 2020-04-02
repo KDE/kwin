@@ -92,7 +92,7 @@ void ScreenEdgeTest::initTestCase()
 
 void ScreenEdgeTest::init()
 {
-    KWin::Cursor::setPos(640, 512);
+    KWin::Cursors::self()->mouse()->setPos(640, 512);
     if (workspace()->showingDesktop()) {
         workspace()->slotToggleShowDesktop();
     }
@@ -160,7 +160,7 @@ void ScreenEdgeTest::testEdge()
 
     // trigger the edge
     QFETCH(QPoint, triggerPos);
-    KWin::Cursor::setPos(triggerPos);
+    KWin::Cursors::self()->mouse()->setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
     QVERIFY(workspace()->showingDesktop());
 }
@@ -243,27 +243,27 @@ void ScreenEdgeTest::testEdgeUnregister()
     QVERIFY(showDesktopSpy.isValid());
 
     //trigger the edge
-    KWin::Cursor::setPos(triggerPos);
+    KWin::Cursors::self()->mouse()->setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
 
     //reset
-    KWin::Cursor::setPos(500,500);
+    KWin::Cursors::self()->mouse()->setPos(500,500);
     workspace()->slotToggleShowDesktop();
     showDesktopSpy.clear();
 
     //trigger again, to show that retriggering works
-    KWin::Cursor::setPos(triggerPos);
+    KWin::Cursors::self()->mouse()->setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
 
     //reset
-    KWin::Cursor::setPos(500,500);
+    KWin::Cursors::self()->mouse()->setPos(500,500);
     workspace()->slotToggleShowDesktop();
     showDesktopSpy.clear();
 
     //make the script unregister the edge
     configGroup.writeEntry("mode", "unregister");
     triggerConfigReload();
-    KWin::Cursor::setPos(triggerPos);
+    KWin::Cursors::self()->mouse()->setPos(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 0); //not triggered
 
     //force the script to unregister a non-registered edge to prove it doesn't explode

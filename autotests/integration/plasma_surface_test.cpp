@@ -85,7 +85,7 @@ void PlasmaSurfaceTest::init()
     m_compositor = Test::waylandCompositor();
     m_plasmaShell = Test::waylandPlasmaShell();
 
-    KWin::Cursor::setPos(640, 512);
+    KWin::Cursors::self()->mouse()->setPos(640, 512);
 }
 
 void PlasmaSurfaceTest::cleanup()
@@ -391,7 +391,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QVERIFY(stackingOrderChangedSpy.isValid());
     // trigger screenedge
     QFETCH(QPoint, triggerPoint);
-    KWin::Cursor::setPos(triggerPoint);
+    KWin::Cursors::self()->mouse()->setPos(triggerPoint);
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     stackingOrder = workspace()->stackingOrder();
     QCOMPARE(stackingOrder.count(), 2);

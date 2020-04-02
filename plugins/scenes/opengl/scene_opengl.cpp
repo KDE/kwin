@@ -567,10 +567,12 @@ void SceneOpenGL::insertWait()
  */
 void SceneOpenGL2::paintCursor()
 {
+    Cursor* cursor = Cursors::self()->currentCursor();
+
     // don't paint if we use hardware cursor or the cursor is hidden
     if (!kwinApp()->platform()->usesSoftwareCursor() ||
         kwinApp()->platform()->isCursorHidden() ||
-        kwinApp()->platform()->softwareCursor().isNull()) {
+        cursor->image().isNull()) {
         return;
     }
 
@@ -578,7 +580,7 @@ void SceneOpenGL2::paintCursor()
     if (!m_cursorTexture) {
         auto updateCursorTexture = [this] {
             // don't paint if no image for cursor is set
-            const QImage img = kwinApp()->platform()->softwareCursor();
+            const QImage img = Cursors::self()->currentCursor()->image();
             if (img.isNull()) {
                 return;
             }
@@ -589,11 +591,11 @@ void SceneOpenGL2::paintCursor()
         updateCursorTexture();
 
         // handle shape update on case cursor image changed
-        connect(kwinApp()->platform(), &Platform::cursorChanged, this, updateCursorTexture);
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, updateCursorTexture);
     }
 
     // get cursor position in projection coordinates
-    const QPoint cursorPos = Cursor::pos() - kwinApp()->platform()->softwareCursorHotspot();
+    const QPoint cursorPos = cursor->pos() - cursor->hotspot();
     const QRect cursorRect(0, 0, m_cursorTexture->width(), m_cursorTexture->height());
     QMatrix4x4 mvp = m_projectionMatrix;
     mvp.translate(cursorPos.x(), cursorPos.y());
@@ -609,7 +611,7 @@ void SceneOpenGL2::paintCursor()
     m_cursorTexture->render(QRegion(cursorRect), cursorRect);
     m_cursorTexture->unbind();
 
-    kwinApp()->platform()->markCursorAsRendered();
+    cursor->markAsRendered();
 
     glDisable(GL_BLEND);
 }

@@ -123,7 +123,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
                 int fallAsleepDelay = QApplication::style()->styleHint(QStyle::SH_ToolTip_FallAsleepDelay);
                 this->m_toolTipFallAsleep.setRemainingTime(fallAsleepDelay);
 
-                QToolTip::showText(Cursor::pos(), this->m_toolTipText);
+                QToolTip::showText(Cursors::self()->mouse()->pos(), this->m_toolTipText);
                 m_toolTipShowing = true;
             }
     );
@@ -241,7 +241,7 @@ void DecoratedClientImpl::requestHideToolTip()
 void DecoratedClientImpl::requestShowWindowMenu()
 {
     // TODO: add rect to requestShowWindowMenu
-    Workspace::self()->showWindowMenu(QRect(Cursor::pos(), Cursor::pos()), m_client);
+    Workspace::self()->showWindowMenu(QRect(Cursors::self()->mouse()->pos(), Cursors::self()->mouse()->pos()), m_client);
 }
 
 void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)

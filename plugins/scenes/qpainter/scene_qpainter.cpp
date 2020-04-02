@@ -167,14 +167,16 @@ void SceneQPainter::paintCursor()
     if (!kwinApp()->platform()->usesSoftwareCursor()) {
         return;
     }
-    const QImage img = kwinApp()->platform()->softwareCursor();
+
+    Cursor* cursor = Cursors::self()->currentCursor();
+    const QImage img = cursor->image();
     if (img.isNull()) {
         return;
     }
-    const QPoint cursorPos = Cursor::pos();
-    const QPoint hotspot = kwinApp()->platform()->softwareCursorHotspot();
+    const QPoint cursorPos = cursor->pos();
+    const QPoint hotspot = cursor->hotspot();
     m_painter->drawImage(cursorPos - hotspot, img);
-    kwinApp()->platform()->markCursorAsRendered();
+    cursor->markAsRendered();
 }
 
 void SceneQPainter::paintEffectQuickView(EffectQuickView *w)

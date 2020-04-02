@@ -1181,7 +1181,7 @@ void X11Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         // move cursor to the provided position to prevent the window jumping there on first movement
         // the expectation is that the cursor is already at the provided position,
         // thus it's more a safety measurement
-        Cursor::setPos(QPoint(x_root, y_root));
+        Cursors::self()->mouse()->setPos(QPoint(x_root, y_root));
         performMouseCommand(Options::MouseMove, QPoint(x_root, y_root));
     } else if (isMoveResize() && direction == NET::MoveResizeCancel) {
         finishMoveResize(true);
@@ -1212,11 +1212,11 @@ void X11Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         updateCursor();
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
-        Cursor::setPos(frameGeometry().center());
+        Cursors::self()->mouse()->setPos(frameGeometry().center());
         performMouseCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
-        Cursor::setPos(frameGeometry().bottomRight());
+        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
         performMouseCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
     }
 }
@@ -1258,7 +1258,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         release(ReleaseReason::Destroyed);
         break;
     case XCB_UNMAP_NOTIFY:{
-        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
+        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
 
         // unmap notify might have been emitted due to a destroy notify
         // but unmap notify gets emitted before the destroy notify, nevertheless at this

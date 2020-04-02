@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "egl_x11_backend.h"
 #include "outputscreens.h"
 #include <kwinxrenderutils.h>
+#include <cursor.h>
+#include <pointer_input.h>
 // KDE
 #include <KLocalizedString>
 #include <QAbstractEventDispatcher>
@@ -94,9 +96,10 @@ void X11WindowedBackend::init()
         XRenderUtils::init(m_connection, m_screen->root);
         createOutputs();
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
-        connect(this, &X11WindowedBackend::cursorChanged, this,
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this,
             [this] {
-                createCursor(softwareCursor(), softwareCursorHotspot());
+                KWin::Cursor* c = KWin::Cursors::self()->currentCursor();
+                createCursor(c->image(), c->hotspot());
             }
         );
         setReady(true);
@@ -489,7 +492,7 @@ void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hots
     }
     m_cursor = cid;
     xcb_flush(m_connection);
-    markCursorAsRendered();
+    Cursors::self()->currentCursor()->markAsRendered();
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const

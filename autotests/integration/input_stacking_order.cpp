@@ -84,7 +84,7 @@ void InputStackingOrderTest::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void InputStackingOrderTest::cleanup()

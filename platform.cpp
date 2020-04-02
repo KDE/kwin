@@ -45,7 +45,8 @@ Platform::Platform(QObject *parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
     setSoftWareCursor(false);
-     m_colorCorrect = new ColorCorrect::Manager(this);
+    m_colorCorrect = new ColorCorrect::Manager(this);
+    connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
 }
 
 Platform::~Platform()
@@ -55,19 +56,10 @@ Platform::~Platform()
     }
 }
 
-QImage Platform::softwareCursor() const
-{
-    return input()->pointer()->cursorImage();
-}
-
-QPoint Platform::softwareCursorHotspot() const
-{
-    return input()->pointer()->cursorHotSpot();
-}
-
 PlatformCursorImage Platform::cursorImage() const
 {
-    return PlatformCursorImage(softwareCursor(), softwareCursorHotspot());
+    Cursor* cursor = Cursors::self()->currentCursor();
+    return PlatformCursorImage(cursor->image(), cursor->hotspot());
 }
 
 void Platform::hideCursor()
@@ -201,11 +193,11 @@ void Platform::setSoftWareCursor(bool set)
     }
     m_softWareCursor = set;
     if (m_softWareCursor) {
-        connect(Cursor::self(), &Cursor::posChanged, this, &Platform::triggerCursorRepaint);
-        connect(this, &Platform::cursorChanged, this, &Platform::triggerCursorRepaint);
+        connect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
+        connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
     } else {
-        disconnect(Cursor::self(), &Cursor::posChanged, this, &Platform::triggerCursorRepaint);
-        disconnect(this, &Platform::cursorChanged, this, &Platform::triggerCursorRepaint);
+        disconnect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
+        disconnect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
     }
 }
 
@@ -215,16 +207,13 @@ void Platform::triggerCursorRepaint()
         return;
     }
     Compositor::self()->addRepaint(m_cursor.lastRenderedGeometry);
-    Compositor::self()->addRepaint(QRect(Cursor::pos() - softwareCursorHotspot(), softwareCursor().size()));
+    Compositor::self()->addRepaint(Cursors::self()->currentCursor()->geometry());
 }
 
-void Platform::markCursorAsRendered()
+void Platform::cursorRendered(const QRect &geometry)
 {
     if (m_softWareCursor) {
-        m_cursor.lastRenderedGeometry = QRect(Cursor::pos() - softwareCursorHotspot(), softwareCursor().size());
-    }
-    if (input()->pointer()) {
-        input()->pointer()->markCursorAsRendered();
+        m_cursor.lastRenderedGeometry = geometry;
     }
 }
 

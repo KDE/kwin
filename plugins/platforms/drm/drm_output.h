@@ -41,6 +41,7 @@ class DrmDumbBuffer;
 class DrmPlane;
 class DrmConnector;
 class DrmCrtc;
+class Cursor;
 
 class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
 {
@@ -55,7 +56,7 @@ public:
     bool showCursor();
     bool hideCursor();
     void updateCursor();
-    void moveCursor(const QPoint &globalPos);
+    void moveCursor(Cursor* cursor, const QPoint &globalPos);
     bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);
     void pageFlipped();

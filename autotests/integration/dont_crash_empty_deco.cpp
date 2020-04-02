@@ -74,7 +74,7 @@ void DontCrashEmptyDecorationTest::initTestCase()
 void DontCrashEmptyDecorationTest::init()
 {
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void DontCrashEmptyDecorationTest::testBug361551()

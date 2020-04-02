@@ -1430,14 +1430,14 @@ void AbstractClient::setupWindowManagementInterface()
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
     connect(w, &PlasmaWindowInterface::moveRequested, this,
         [this] {
-            Cursor::setPos(frameGeometry().center());
-            performMouseCommand(Options::MouseMove, Cursor::pos());
+            Cursors::self()->mouse()->setPos(frameGeometry().center());
+            performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
         }
     );
     connect(w, &PlasmaWindowInterface::resizeRequested, this,
         [this] {
-            Cursor::setPos(frameGeometry().bottomRight());
-            performMouseCommand(Options::MouseResize, Cursor::pos());
+            Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
+            performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
         }
     );
     connect(w, &PlasmaWindowInterface::virtualDesktopRequested, this,
@@ -2060,7 +2060,7 @@ void AbstractClient::keyPressEvent(uint key_code)
     bool is_alt = key_code & Qt::ALT;
     key_code = key_code & ~Qt::KeyboardModifierMask;
     int delta = is_control ? 1 : is_alt ? 32 : 8;
-    QPoint pos = Cursor::pos();
+    QPoint pos = Cursors::self()->mouse()->pos();
     switch(key_code) {
     case Qt::Key_Left:
         pos.rx() -= delta;
@@ -2089,7 +2089,7 @@ void AbstractClient::keyPressEvent(uint key_code)
     default:
         return;
     }
-    Cursor::setPos(pos);
+    Cursors::self()->mouse()->setPos(pos);
 }
 
 QSize AbstractClient::resizeIncrements() const
@@ -2659,7 +2659,7 @@ void AbstractClient::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing)
-        outline()->show(electricBorderMaximizeGeometry(Cursor::pos(), desktop()), moveResizeGeometry());
+        outline()->show(electricBorderMaximizeGeometry(Cursors::self()->mouse()->pos(), desktop()), moveResizeGeometry());
     else
         outline()->hide();
     elevate(maximizing);
@@ -2694,7 +2694,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         return;
     }
 
-    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
+    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
 
     GeometryUpdatesBlocker blocker(this);
 
@@ -2736,7 +2736,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
             setMaximize(false, false);
 
-            setFrameGeometry(electricBorderMaximizeGeometry(keyboard ? frameGeometry().center() : Cursor::pos(), desktop()), geom_mode);
+            setFrameGeometry(electricBorderMaximizeGeometry(keyboard ? frameGeometry().center() : Cursors::self()->mouse()->pos(), desktop()), geom_mode);
             // Store the mode change
             m_quickTileMode = mode;
         } else {
@@ -2750,7 +2750,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     }
 
     if (mode != QuickTileMode(QuickTileFlag::None)) {
-        QPoint whichScreen = keyboard ? frameGeometry().center() : Cursor::pos();
+        QPoint whichScreen = keyboard ? frameGeometry().center() : Cursors::self()->mouse()->pos();
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)

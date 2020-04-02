@@ -87,7 +87,7 @@ void DontCrashNoBorder::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void DontCrashNoBorder::cleanup()

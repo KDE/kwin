@@ -238,7 +238,7 @@ void Workspace::setActiveClient(AbstractClient* c)
     }
     StackingUpdatesBlocker blocker(this);
     ++set_active_client_recursion;
-    updateFocusMousePosition(Cursor::pos());
+    updateFocusMousePosition(Cursors::self()->mouse()->pos());
     if (active_client != nullptr) {
         // note that this may call setActiveClient( NULL ), therefore the recursion counter
         active_client->setActive(false);
@@ -430,7 +430,7 @@ AbstractClient *Workspace::clientUnderMouse(int screen) const
                 client->isOnCurrentActivity() && client->isOnScreen(screen)))
             continue;
 
-        if (client->frameGeometry().contains(Cursor::pos())) {
+        if (client->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
             return client;
         }
     }

@@ -142,46 +142,46 @@ void X11ClientTest::testMinimumSize()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(client->isResize());
 
-    const QPoint cursorPos = KWin::Cursor::pos();
+    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     client->keyPressEvent(Qt::Key_Left);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(-8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QCOMPARE(client->clientSize().width(), 100);
 
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos);
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QCOMPARE(client->clientSize().width(), 100);
 
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize().width(), 108);
 
     client->keyPressEvent(Qt::Key_Up);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, -8));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, -8));
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize().height(), 200);
 
     client->keyPressEvent(Qt::Key_Down);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize().height(), 200);
 
     client->keyPressEvent(Qt::Key_Down);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 8));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(client->clientSize().height(), 208);
@@ -249,46 +249,46 @@ void X11ClientTest::testMaximumSize()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(client->isResize());
 
-    const QPoint cursorPos = KWin::Cursor::pos();
+    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QCOMPARE(client->clientSize().width(), 100);
 
     client->keyPressEvent(Qt::Key_Left);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos);
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
     QCOMPARE(client->clientSize().width(), 100);
 
     client->keyPressEvent(Qt::Key_Left);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(-8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize().width(), 92);
 
     client->keyPressEvent(Qt::Key_Down);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(-8, 8));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 8));
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize().height(), 200);
 
     client->keyPressEvent(Qt::Key_Up);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(-8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QVERIFY(!clientStepUserMovedResizedSpy.wait(1000));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize().height(), 200);
 
     client->keyPressEvent(Qt::Key_Up);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(-8, -8));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, -8));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(client->clientSize().height(), 192);
@@ -357,18 +357,18 @@ void X11ClientTest::testResizeIncrements()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(client->isResize());
 
-    const QPoint cursorPos = KWin::Cursor::pos();
+    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize(), QSize(106, 200));
 
     client->keyPressEvent(Qt::Key_Down);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 8));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(client->clientSize(), QSize(106, 205));
@@ -435,18 +435,18 @@ void X11ClientTest::testResizeIncrementsNoBaseSize()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(client->isResize());
 
-    const QPoint cursorPos = KWin::Cursor::pos();
+    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     client->keyPressEvent(Qt::Key_Right);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 0));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(client->clientSize(), QSize(106, 200));
 
     client->keyPressEvent(Qt::Key_Down);
-    client->updateMoveResize(KWin::Cursor::pos());
-    QCOMPARE(KWin::Cursor::pos(), cursorPos + QPoint(8, 8));
+    client->updateMoveResize(KWin::Cursors::self()->mouse()->pos());
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QVERIFY(clientStepUserMovedResizedSpy.wait());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(client->clientSize(), QSize(106, 205));

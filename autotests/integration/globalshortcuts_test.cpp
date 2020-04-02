@@ -82,7 +82,7 @@ void GlobalShortcutsTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
     screens()->setCurrent(0);
-    KWin::Cursor::setPos(QPoint(640, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void GlobalShortcutsTest::cleanup()

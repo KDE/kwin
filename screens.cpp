@@ -176,7 +176,7 @@ void Screens::setCurrentFollowsMouse(bool follows)
 int Screens::current() const
 {
     if (m_currentFollowsMouse) {
-        return number(Cursor::pos());
+        return number(Cursors::self()->mouse()->pos());
     }
     AbstractClient *client = Workspace::self()->activeClient();
     if (client && !client->isOnScreen(m_current)) {

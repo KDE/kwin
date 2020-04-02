@@ -49,30 +49,6 @@ namespace KWin
 Atoms* atoms;
 int screen_number = 0;
 
-Cursor *Cursor::s_self = nullptr;
-static QPoint s_cursorPos = QPoint();
-QPoint Cursor::pos()
-{
-    return s_cursorPos;
-}
-
-void Cursor::setPos(const QPoint &pos)
-{
-    s_cursorPos = pos;
-}
-
-void Cursor::setPos(int x, int y)
-{
-    setPos(QPoint(x, y));
-}
-
-void Cursor::startMousePolling()
-{
-}
-void Cursor::stopMousePolling()
-{
-}
-
 InputRedirection *InputRedirection::s_self = nullptr;
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
@@ -149,6 +125,8 @@ void TestScreenEdges::cleanupTestCase()
 
 void TestScreenEdges::init()
 {
+    KWin::Cursors::self()->setMouse(new KWin::Cursor(this));
+
     using namespace KWin;
     new MockWorkspace;
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -455,7 +433,7 @@ void TestScreenEdges::testCallback()
 
     xcb_enter_notify_event_t event;
     auto setPos = [&event] (const QPoint &pos) {
-        Cursor::setPos(pos);
+        Cursors::self()->mouse()->setPos(pos);
         event.root_x = pos.x();
         event.root_y = pos.y();
         event.event_x = pos.x();
@@ -473,7 +451,7 @@ void TestScreenEdges::testCallback()
     QVERIFY(isEntered(&event));
     // doesn't trigger as the edge was not triggered yet
     QVERIFY(spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 50));
 
     // test doesn't trigger due to too much offset
     QTest::qWait(160);
@@ -481,7 +459,7 @@ void TestScreenEdges::testCallback()
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 100));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 100));
 
     // doesn't trigger as we are waiting too long already
     QTest::qWait(200);
@@ -489,7 +467,7 @@ void TestScreenEdges::testCallback()
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 101));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 101));
 
     // doesn't activate as we are waiting too short
     QTest::qWait(50);
@@ -497,7 +475,7 @@ void TestScreenEdges::testCallback()
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 100));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 100));
 
     // and this one triggers
     QTest::qWait(110);
@@ -505,7 +483,7 @@ void TestScreenEdges::testCallback()
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(!spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 101));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 101));
 
     // now let's try to trigger again
     QTest::qWait(351);
@@ -513,14 +491,14 @@ void TestScreenEdges::testCallback()
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(Cursor::pos(), QPoint(1, 100));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 100));
     // it's still under the reactivation
     QTest::qWait(50);
     setPos(QPoint(0, 100));
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(Cursor::pos(), QPoint(1, 100));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 100));
     // now it should trigger again
     QTest::qWait(250);
     setPos(QPoint(0, 100));
@@ -529,7 +507,7 @@ void TestScreenEdges::testCallback()
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.first().first().value<ElectricBorder>(), ElectricLeft);
     QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricLeft);
-    QCOMPARE(Cursor::pos(), QPoint(1, 100));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 100));
 
     // let's disable pushback
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -545,7 +523,7 @@ void TestScreenEdges::testCallback()
     QCOMPARE(spy.at(0).first().value<ElectricBorder>(), ElectricLeft);
     QCOMPARE(spy.at(1).first().value<ElectricBorder>(), ElectricLeft);
     QCOMPARE(spy.at(2).first().value<ElectricBorder>(), ElectricLeft);
-    QCOMPARE(Cursor::pos(), QPoint(0, 100));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(0, 100));
 
     // now let's unreserve again
     s->unreserve(ElectricTopLeft, &callback);
@@ -578,26 +556,26 @@ void TestScreenEdges::testCallbackWithCheck()
     QVERIFY(spy.isEmpty());
 
     // try a direct activate without pushback
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     s->check(QPoint(0, 50), QDateTime::currentDateTimeUtc(), true);
     QCOMPARE(spy.count(), 1);
     QEXPECT_FAIL("", "Argument says force no pushback, but it gets pushed back. Needs investigation", Continue);
-    QCOMPARE(Cursor::pos(), QPoint(0, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(0, 50));
 
     // use a different edge, this time with pushback
     s->reserve(KWin::ElectricRight, &callback, "callback");
-    Cursor::setPos(99, 50);
+    Cursors::self()->mouse()->setPos(99, 50);
     s->check(QPoint(99, 50), QDateTime::currentDateTimeUtc());
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricLeft);
-    QCOMPARE(Cursor::pos(), QPoint(98, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(98, 50));
     // and trigger it again
     QTest::qWait(160);
-    Cursor::setPos(99, 50);
+    Cursors::self()->mouse()->setPos(99, 50);
     s->check(QPoint(99, 50), QDateTime::currentDateTimeUtc());
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricRight);
-    QCOMPARE(Cursor::pos(), QPoint(98, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(98, 50));
 }
 
 void TestScreenEdges::testPushBack_data()
@@ -638,7 +616,7 @@ void TestScreenEdges::testPushBack()
     s->reserve(border, &callback, "callback");
 
     QFETCH(QPoint, trigger);
-    Cursor::setPos(trigger);
+    Cursors::self()->mouse()->setPos(trigger);
     xcb_enter_notify_event_t event;
     event.root_x = trigger.x();
     event.root_y = trigger.y();
@@ -654,13 +632,13 @@ void TestScreenEdges::testPushBack()
     };
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
-    QTEST(Cursor::pos(), "expected");
+    QTEST(Cursors::self()->mouse()->pos(), "expected");
 
     // do the same without the event, but the check method
-    Cursor::setPos(trigger);
+    Cursors::self()->mouse()->setPos(trigger);
     s->check(trigger, QDateTime::currentDateTimeUtc());
     QVERIFY(spy.isEmpty());
-    QTEST(Cursor::pos(), "expected");
+    QTEST(Cursors::self()->mouse()->pos(), "expected");
 }
 
 void TestScreenEdges::testFullScreenBlocking()
@@ -689,7 +667,7 @@ void TestScreenEdges::testFullScreenBlocking()
     }
 
     xcb_enter_notify_event_t event;
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     event.root_x = 0;
     event.root_y = 50;
     event.event_x = 0;
@@ -704,7 +682,7 @@ void TestScreenEdges::testFullScreenBlocking()
     };
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 50));
 
     client.setFrameGeometry(screens()->geometry());
     client.setActive(true);
@@ -718,12 +696,12 @@ void TestScreenEdges::testFullScreenBlocking()
     }
     // calling again should not trigger
     QTest::qWait(160);
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and no pushback
-    QCOMPARE(Cursor::pos(), QPoint(0, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(0, 50));
 
     // let's make the client not fullscreen, which should trigger
     client.setFullScreen(false);
@@ -734,7 +712,7 @@ void TestScreenEdges::testFullScreenBlocking()
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(!spy.isEmpty());
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 50));
 
     // let's make the client fullscreen again, but with a geometry not intersecting the left edge
     QTest::qWait(351);
@@ -742,21 +720,21 @@ void TestScreenEdges::testFullScreenBlocking()
     client.setFrameGeometry(client.frameGeometry().translated(10, 0));
     emit s->checkBlocking();
     spy.clear();
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and a pushback
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 50));
 
     // just to be sure, let's set geometry back
     client.setFrameGeometry(screens()->geometry());
     emit s->checkBlocking();
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and no pushback
-    QCOMPARE(Cursor::pos(), QPoint(0, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(0, 50));
 
     // the corner should always trigger
     s->unreserve(KWin::ElectricLeft, &callback);
@@ -766,14 +744,14 @@ void TestScreenEdges::testFullScreenBlocking()
     event.root_y = 99;
     event.event = s->windows().first();
     event.time = QDateTime::currentMSecsSinceEpoch();
-    Cursor::setPos(99, 99);
+    Cursors::self()->mouse()->setPos(99, 99);
     QVERIFY(isEntered(&event));
     QVERIFY(spy.isEmpty());
     // and pushback
-    QCOMPARE(Cursor::pos(), QPoint(98, 98));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(98, 98));
     QTest::qWait(160);
     event.time = QDateTime::currentMSecsSinceEpoch();
-    Cursor::setPos(99, 99);
+    Cursors::self()->mouse()->setPos(99, 99);
     QVERIFY(isEntered(&event));
     QVERIFY(!spy.isEmpty());
 }
@@ -812,7 +790,7 @@ void TestScreenEdges::testClientEdge()
     QCOMPARE(client.isHiddenInternal(), true);
 
     xcb_enter_notify_event_t event;
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     event.root_x = 0;
     event.root_y = 50;
     event.event_x = 0;
@@ -828,7 +806,7 @@ void TestScreenEdges::testClientEdge()
     QVERIFY(isEntered(&event));
     // autohiding panels shall activate instantly
     QCOMPARE(client.isHiddenInternal(), false);
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 50));
 
     // now let's reserve the client for each of the edges, in the end for the right one
     client.setHiddenInternal(true);
@@ -862,19 +840,19 @@ void TestScreenEdges::testClientEdge()
     // now let's try to trigger the client showing with the check method instead of enter notify
     s->reserve(&client, KWin::ElectricTop);
     QCOMPARE(client.isHiddenInternal(), true);
-    Cursor::setPos(50, 0);
+    Cursors::self()->mouse()->setPos(50, 0);
     s->check(QPoint(50, 0), QDateTime::currentDateTimeUtc());
     QCOMPARE(client.isHiddenInternal(), false);
-    QCOMPARE(Cursor::pos(), QPoint(50, 1));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 1));
 
     // unreserve by setting to none edge
     s->reserve(&client, KWin::ElectricNone);
     // check on previous edge again, should fail
     client.setHiddenInternal(true);
-    Cursor::setPos(50, 0);
+    Cursors::self()->mouse()->setPos(50, 0);
     s->check(QPoint(50, 0), QDateTime::currentDateTimeUtc());
     QCOMPARE(client.isHiddenInternal(), true);
-    QCOMPARE(Cursor::pos(), QPoint(50, 0));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 0));
 
     // set to windows can cover
     client.setFrameGeometry(screens()->geometry());
@@ -885,7 +863,7 @@ void TestScreenEdges::testClientEdge()
     QCOMPARE(client.isHiddenInternal(), false);
 
     xcb_enter_notify_event_t event2;
-    Cursor::setPos(0, 50);
+    Cursors::self()->mouse()->setPos(0, 50);
     event2.root_x = 0;
     event2.root_y = 50;
     event2.event_x = 0;
@@ -898,7 +876,7 @@ void TestScreenEdges::testClientEdge()
     QVERIFY(isEntered(&event2));
     QCOMPARE(client.keepBelow(), false);
     QCOMPARE(client.isHiddenInternal(), false);
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 50));
 }
 
 void TestScreenEdges::testTouchEdge()
@@ -947,7 +925,7 @@ void TestScreenEdges::testTouchEdge()
 
     xcb_enter_notify_event_t event;
     auto setPos = [&event] (const QPoint &pos) {
-        Cursor::setPos(pos);
+        Cursors::self()->mouse()->setPos(pos);
         event.root_x = pos.x();
         event.root_y = pos.y();
         event.event_x = pos.x();

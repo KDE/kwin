@@ -98,7 +98,7 @@ WaylandCursor::~WaylandCursor()
 
 void WaylandCursor::installImage()
 {
-    const QImage image = m_backend->softwareCursor();
+    const QImage image = Cursors::self()->currentCursor()->image();
     if (image.isNull() || image.size().isEmpty()) {
         doInstallImage(nullptr, QSize());
         return;
@@ -115,7 +115,7 @@ void WaylandCursor::doInstallImage(wl_buffer *image, const QSize &size)
     if (!pointer || !pointer->isValid()) {
         return;
     }
-    pointer->setCursor(m_surface, image ? m_backend->softwareCursorHotspot() : QPoint());
+    pointer->setCursor(m_surface, image ? Cursors::self()->currentCursor()->hotspot() : QPoint());
     drawSurface(image, size);
 }
 
@@ -184,8 +184,7 @@ void WaylandSubSurfaceCursor::doInstallImage(wl_buffer *image, const QSize &size
 
 QPointF WaylandSubSurfaceCursor::absoluteToRelativePosition(const QPointF &position)
 {
-    auto ret = position - m_output->geometry().topLeft() - backend()->softwareCursorHotspot();
-    return ret;
+    return position - m_output->geometry().topLeft() - Cursors::self()->currentCursor()->hotspot();
 }
 
 void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
@@ -204,7 +203,7 @@ void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
         return;
     }
     // place the sub-surface relative to the output it is on and factor in the hotspot
-    const auto relativePosition = globalPosition.toPoint() - backend()->softwareCursorHotspot() - m_output->geometry().topLeft();
+    const auto relativePosition = globalPosition.toPoint() - Cursors::self()->currentCursor()->hotspot() - m_output->geometry().topLeft();
     m_subSurface->setPosition(relativePosition);
     Compositor::self()->addRepaintFull();
 }
@@ -548,16 +547,17 @@ void WaylandBackend::init()
     if (!deviceIdentifier().isEmpty()) {
         m_connectionThreadObject->setSocketName(deviceIdentifier());
     }
-    connect(this, &WaylandBackend::cursorChanged, this,
+    connect(Cursors::self(), &Cursors::currentCursorChanged, this,
         [this] {
             if (!m_seat) {
                 return;
             }
             m_waylandCursor->installImage();
-            markCursorAsRendered();
+            auto c = Cursors::self()->currentCursor();
+            c->rendered(c->geometry());
         }
     );
-    connect(this, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
+    connect(this, &WaylandBackend::pointerLockChanged, this, [this] (bool locked) {
         delete m_waylandCursor;
         if (locked) {
             Q_ASSERT(!m_relativePointer);

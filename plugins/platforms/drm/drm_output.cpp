@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_object_connector.h"
 
 #include "composite.h"
+#include "cursor.h"
 #include "logind.h"
 #include "logging.h"
 #include "main.h"
@@ -165,7 +166,7 @@ QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 
 void DrmOutput::updateCursor()
 {
-    QImage cursorImage = m_backend->softwareCursor();
+    QImage cursorImage = Cursors::self()->currentCursor()->image();
     if (cursorImage.isNull()) {
         return;
     }
@@ -180,9 +181,9 @@ void DrmOutput::updateCursor()
     p.end();
 }
 
-void DrmOutput::moveCursor(const QPoint &globalPos)
+void DrmOutput::moveCursor(Cursor* cursor, const QPoint &globalPos)
 {
-    const QMatrix4x4 hotspotMatrix = matrixDisplay(m_backend->softwareCursor().size());
+    const QMatrix4x4 hotspotMatrix = matrixDisplay(cursor->image().size());
 
     const QPoint localPos = globalPos - AbstractWaylandOutput::globalPos();
     QPoint pos = localPos;
@@ -209,7 +210,7 @@ void DrmOutput::moveCursor(const QPoint &globalPos)
         Q_UNREACHABLE();
     }
     pos *= scale();
-    pos -= hotspotMatrix.map(m_backend->softwareCursorHotspot());
+    pos -= hotspotMatrix.map(cursor->hotspot());
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), pos.x(), pos.y());
 }
 

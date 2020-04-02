@@ -287,9 +287,6 @@ public:
     bool usesSoftwareCursor() const {
         return m_softWareCursor;
     }
-    QImage softwareCursor() const;
-    QPoint softwareCursorHotspot() const;
-    void markCursorAsRendered();
 
     /**
      * Returns a PlatformCursorImage. By default this is created by softwareCursor and
@@ -483,10 +480,11 @@ public Q_SLOTS:
     void processPinchGestureEnd(quint32 time);
     void processPinchGestureCancelled(quint32 time);
 
+    void cursorRendered(const QRect &geometry);
+
 Q_SIGNALS:
     void screensQueried();
     void initFailed();
-    void cursorChanged();
     void readyChanged(bool);
     /**
      * Emitted by backends using a one screen (nested window) approach and when the size of that changes.

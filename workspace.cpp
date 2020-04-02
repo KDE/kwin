@@ -1011,7 +1011,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
                 client->isOnCurrentActivity() && client->isOnActiveScreen()))
                 continue;
 
-            if (client->frameGeometry().contains(Cursor::pos())) {
+            if (client->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
                 if (!client->isDesktop())
                     return client;
             break; // unconditional break  - we do not pass the focus to some client below an unusable one

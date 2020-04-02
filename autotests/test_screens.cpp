@@ -29,16 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
 // Mock
-namespace KWin
-{
-
-static QPoint s_cursorPos = QPoint();
-QPoint Cursor::pos()
-{
-    return s_cursorPos;
-}
-
-}
 
 class TestScreens : public QObject
 {
@@ -64,7 +54,7 @@ private Q_SLOTS:
 
 void TestScreens::init()
 {
-    KWin::s_cursorPos = QPoint();
+    KWin::Cursors::self()->setMouse(new KWin::Cursor(this));
 }
 
 void TestScreens::testCurrentFollowsMouse()
@@ -325,7 +315,7 @@ void TestScreens::testCurrentWithFollowsMouse()
     QVERIFY(changedSpy.wait());
 
     QFETCH(QPoint, cursorPos);
-    KWin::s_cursorPos = cursorPos;
+    KWin::Cursors::self()->mouse()->setPos(cursorPos);
     QTEST(screens()->current(), "expected");
 }
 

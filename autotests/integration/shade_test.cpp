@@ -67,7 +67,7 @@ void ShadeTest::initTestCase()
 void ShadeTest::init()
 {
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void ShadeTest::testShadeGeometry()

@@ -194,14 +194,15 @@ void DrmBackend::reactivate()
     }
     m_active = true;
     if (!usesSoftwareCursor()) {
-        const QPoint cp = Cursor::pos() - softwareCursorHotspot();
+        Cursor* cursor = Cursors::self()->mouse();
+        const QPoint cp = cursor->pos() - cursor->hotspot();
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
             // only relevant in atomic mode
             o->m_modesetRequested = true;
             o->m_crtc->blank();
             o->showCursor();
-            o->moveCursor(cp);
+            o->moveCursor(cursor, cp);
         }
     }
     // restart compositor
@@ -647,8 +648,8 @@ void DrmBackend::initCursor()
     }
     m_cursorSize = cursorSize;
     // now we have screens and can set cursors, so start tracking
-    connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
-    connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
+    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmBackend::updateCursor);
+    connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
 }
 
 void DrmBackend::setCursor()
@@ -660,7 +661,8 @@ void DrmBackend::setCursor()
             }
         }
     }
-    markCursorAsRendered();
+
+    Cursors::self()->currentCursor()->markAsRendered();
 }
 
 void DrmBackend::updateCursor()
@@ -671,7 +673,9 @@ void DrmBackend::updateCursor()
     if (isCursorHidden()) {
         return;
     }
-    const QImage &cursorImage = softwareCursor();
+
+    auto cursor = Cursors::self()->currentCursor();
+    const QImage &cursorImage = cursor->image();
     if (cursorImage.isNull()) {
         doHideCursor();
         return;
@@ -681,7 +685,8 @@ void DrmBackend::updateCursor()
     }
 
     setCursor();
-    moveCursor();
+
+    moveCursor(cursor, cursor->pos());
 }
 
 void DrmBackend::doShowCursor()
@@ -699,13 +704,13 @@ void DrmBackend::doHideCursor()
     }
 }
 
-void DrmBackend::moveCursor()
+void DrmBackend::moveCursor(Cursor *cursor, const QPoint &pos)
 {
     if (!m_cursorEnabled || isCursorHidden() || usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->moveCursor(Cursor::pos());
+        (*it)->moveCursor(cursor, pos);
     }
 }
 

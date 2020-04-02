@@ -53,6 +53,7 @@ class DrmPlane;
 class DrmCrtc;
 class DrmConnector;
 class GbmSurface;
+class Cursor;
 
 
 class KWIN_EXPORT DrmBackend : public Platform
@@ -158,7 +159,7 @@ private:
     void updateOutputs();
     void setCursor();
     void updateCursor();
-    void moveCursor();
+    void moveCursor(Cursor *cursor, const QPoint &pos);
     void initCursor();
     void readOutputsConfiguration();
     void writeOutputsConfiguration();

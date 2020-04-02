@@ -56,7 +56,7 @@ void DontCrashCursorPhysicalSizeEmpty::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration));
 
     screens()->setCurrent(0);
-    KWin::Cursor::setPos(QPoint(640, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void DontCrashCursorPhysicalSizeEmpty::cleanup()
@@ -110,9 +110,9 @@ void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
     auto output = display->outputs().first();
     output->setPhysicalSize(QSize(0, 0));
     // and fake a cursor theme change, so that the theme gets recreated
-    emit KWin::Cursor::self()->themeChanged();
+    emit KWin::Cursors::self()->mouse()->themeChanged();
 
-    KWin::Cursor::setPos(QPoint(c->frameGeometry().center().x(), c->clientPos().y() / 2));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->clientPos().y() / 2));
 }
 
 WAYLANDTEST_MAIN(DontCrashCursorPhysicalSizeEmpty)

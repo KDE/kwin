@@ -113,9 +113,11 @@ void SceneQPainterTest::testStartFrame()
     QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
     referenceImage.fill(Qt::black);
     QPainter p(&referenceImage);
-    const QImage cursorImage = kwinApp()->platform()->softwareCursor();
+
+    auto cursor = KWin::Cursors::self()->mouse();
+    const QImage cursorImage = cursor->image();
     QVERIFY(!cursorImage.isNull());
-    p.drawImage(KWin::Cursor::pos() - kwinApp()->platform()->softwareCursorHotspot(), cursorImage);
+    p.drawImage(cursor->pos() - cursor->hotspot(), cursorImage);
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
 }
 
@@ -126,25 +128,27 @@ void SceneQPainterTest::testCursorMoving()
     QVERIFY(scene);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.isValid());
-    KWin::Cursor::setPos(0, 0);
+    KWin::Cursors::self()->mouse()->setPos(0, 0);
     QVERIFY(frameRenderedSpy.wait());
-    KWin::Cursor::setPos(10, 0);
+    KWin::Cursors::self()->mouse()->setPos(10, 0);
     QVERIFY(frameRenderedSpy.wait());
-    KWin::Cursor::setPos(10, 12);
+    KWin::Cursors::self()->mouse()->setPos(10, 12);
     QVERIFY(frameRenderedSpy.wait());
-    KWin::Cursor::setPos(12, 14);
+    KWin::Cursors::self()->mouse()->setPos(12, 14);
     QVERIFY(frameRenderedSpy.wait());
-    KWin::Cursor::setPos(50, 60);
+    KWin::Cursors::self()->mouse()->setPos(50, 60);
     QVERIFY(frameRenderedSpy.wait());
-    KWin::Cursor::setPos(45, 45);
+    KWin::Cursors::self()->mouse()->setPos(45, 45);
     QVERIFY(frameRenderedSpy.wait());
     // now let's render a reference image for comparison
     QImage referenceImage(QSize(1280, 1024), QImage::Format_RGB32);
     referenceImage.fill(Qt::black);
     QPainter p(&referenceImage);
-    const QImage cursorImage = kwinApp()->platform()->softwareCursor();
+
+    auto cursor = Cursors::self()->currentCursor();
+    const QImage cursorImage = cursor->image();
     QVERIFY(!cursorImage.isNull());
-    p.drawImage(QPoint(45, 45) - kwinApp()->platform()->softwareCursorHotspot(), cursorImage);
+    p.drawImage(QPoint(45, 45) - cursor->hotspot(), cursorImage);
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
 }
 
@@ -157,7 +161,7 @@ void SceneQPainterTest::testWindow_data()
 
 void SceneQPainterTest::testWindow()
 {
-    KWin::Cursor::setPos(45, 45);
+    KWin::Cursors::self()->mouse()->setPos(45, 45);
     // this test verifies that a window is rendered correctly
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
@@ -190,10 +194,10 @@ void SceneQPainterTest::testWindow()
     Test::render(cs.data(), QSize(10, 10), Qt::red);
     p->setCursor(cs.data(), QPoint(5, 5));
     QVERIFY(frameRenderedSpy.wait());
-    painter.fillRect(KWin::Cursor::pos().x() - 5, KWin::Cursor::pos().y() - 5, 10, 10, Qt::red);
+    painter.fillRect(KWin::Cursors::self()->mouse()->pos().x() - 5, KWin::Cursors::self()->mouse()->pos().y() - 5, 10, 10, Qt::red);
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
     // let's move the cursor again
-    KWin::Cursor::setPos(10, 10);
+    KWin::Cursors::self()->mouse()->setPos(10, 10);
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(0, 0, 200, 300, Qt::blue);
     painter.fillRect(5, 5, 10, 10, Qt::red);
@@ -202,7 +206,7 @@ void SceneQPainterTest::testWindow()
 
 void SceneQPainterTest::testWindowScaled()
 {
-    KWin::Cursor::setPos(10, 10);
+    KWin::Cursors::self()->mouse()->setPos(10, 10);
     // this test verifies that a window is rendered correctly
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
@@ -260,7 +264,7 @@ void SceneQPainterTest::testCompositorRestart_data()
 void SceneQPainterTest::testCompositorRestart()
 {
     // this test verifies that the compositor/SceneQPainter survive a restart of the compositor and still render correctly
-    KWin::Cursor::setPos(400, 400);
+    KWin::Cursors::self()->mouse()->setPos(400, 400);
 
     // first create a window
     using namespace KWayland::Client;
@@ -294,9 +298,11 @@ void SceneQPainterTest::testCompositorRestart()
     referenceImage.fill(Qt::black);
     QPainter painter(&referenceImage);
     painter.fillRect(0, 0, 200, 300, Qt::blue);
-    const QImage cursorImage = kwinApp()->platform()->softwareCursor();
+
+    auto cursor = Cursors::self()->mouse();
+    const QImage cursorImage = cursor->image();
     QVERIFY(!cursorImage.isNull());
-    painter.drawImage(QPoint(400, 400) - kwinApp()->platform()->softwareCursorHotspot(), cursorImage);
+    painter.drawImage(QPoint(400, 400) - cursor->hotspot(), cursorImage);
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
 }
 

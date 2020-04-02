@@ -39,7 +39,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-Cursor *Cursor::s_self = nullptr;
+Cursors *Cursors::s_self = nullptr;
+Cursors *Cursors::self() {
+    if (!s_self)
+        s_self = new Cursors;
+    return s_self;
+}
+
+void Cursors::addCursor(Cursor* cursor)
+{
+    Q_ASSERT(!m_cursors.contains(cursor));
+    m_cursors += cursor;
+
+    connect(cursor, &Cursor::posChanged, this, [this, cursor] (const QPoint &pos) {
+        setCurrentCursor(cursor);
+        Q_EMIT positionChanged(cursor, pos);
+    });
+}
+
+void Cursors::removeCursor(Cursor* cursor)
+{
+    m_cursors.removeOne(cursor);
+    if (m_currentCursor == cursor) {
+        if (m_cursors.isEmpty())
+            m_currentCursor = nullptr;
+        else
+            setCurrentCursor(m_cursors.constFirst());
+    }
+    if (m_mouse == cursor) {
+        m_mouse = nullptr;
+    }
+}
+
+void Cursors::setCurrentCursor(Cursor* cursor)
+{
+    if (m_currentCursor == cursor)
+        return;
+
+    Q_ASSERT(m_cursors.contains(cursor) || !cursor);
+
+    if (m_currentCursor) {
+        disconnect(m_currentCursor, &Cursor::rendered, this, &Cursors::currentCursorRendered);
+        disconnect(m_currentCursor, &Cursor::cursorChanged, this, &Cursors::emitCurrentCursorChanged);
+    }
+    m_currentCursor = cursor;
+    connect(m_currentCursor, &Cursor::rendered, this, &Cursors::currentCursorRendered);
+    connect(m_currentCursor, &Cursor::cursorChanged, this, &Cursors::emitCurrentCursorChanged);
+
+    Q_EMIT currentCursorChanged(m_currentCursor);
+}
+
+void Cursors::emitCurrentCursorChanged()
+{
+    Q_EMIT currentCursorChanged(m_currentCursor);
+}
 
 Cursor::Cursor(QObject *parent)
     : QObject(parent)
@@ -48,7 +101,6 @@ Cursor::Cursor(QObject *parent)
     , m_themeName("default")
     , m_themeSize(24)
 {
-    s_self = this;
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
@@ -56,7 +108,7 @@ Cursor::Cursor(QObject *parent)
 
 Cursor::~Cursor()
 {
-    s_self = nullptr;
+    Cursors::self()->removeCursor(this);
 }
 
 void Cursor::loadThemeSettings()
@@ -102,25 +154,37 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
     }
 }
 
+QRect Cursor::geometry() const
+{
+    return QRect(m_pos - hotspot(), image().size());
+}
+
 QPoint Cursor::pos()
 {
-    s_self->doGetPos();
-    return s_self->m_pos;
+    doGetPos();
+    return m_pos;
 }
 
 void Cursor::setPos(const QPoint &pos)
 {
     // first query the current pos to not warp to the already existing pos
-    if (pos == Cursor::pos()) {
+    if (pos == m_pos) {
         return;
     }
-    s_self->m_pos = pos;
-    s_self->doSetPos();
+    m_pos = pos;
+    doSetPos();
 }
 
 void Cursor::setPos(int x, int y)
 {
-    Cursor::setPos(QPoint(x, y));
+    setPos(QPoint(x, y));
+}
+
+void Cursor::updateCursor(const QImage &image, const QPoint &hotspot)
+{
+    m_image = image;
+    m_hotspot = hotspot;
+    Q_EMIT cursorChanged();
 }
 
 xcb_cursor_t Cursor::getX11Cursor(CursorShape shape)
@@ -137,12 +201,12 @@ xcb_cursor_t Cursor::getX11Cursor(const QByteArray &name)
 
 xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
 {
-    return s_self->getX11Cursor(shape);
+    return getX11Cursor(shape);
 }
 
 xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
 {
-    return s_self->getX11Cursor(name);
+    return getX11Cursor(name);
 }
 
 void Cursor::doSetPos()
@@ -409,67 +473,6 @@ QByteArray CursorShape::name() const
     default:
         return QByteArray();
     }
-}
-
-InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
-    : Cursor(parent)
-    , m_currentButtons(Qt::NoButton)
-{
-    connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(slotPosChanged(QPointF)));
-    connect(input(), SIGNAL(pointerButtonStateChanged(uint32_t,InputRedirection::PointerButtonState)),
-            SLOT(slotPointerButtonChanged()));
-#ifndef KCMRULES
-    connect(input(), &InputRedirection::keyboardModifiersChanged,
-            this, &InputRedirectionCursor::slotModifiersChanged);
-#endif
-}
-
-InputRedirectionCursor::~InputRedirectionCursor()
-{
-}
-
-void InputRedirectionCursor::doSetPos()
-{
-    if (input()->supportsPointerWarping()) {
-        input()->warpPointer(currentPos());
-    }
-    slotPosChanged(input()->globalPointer());
-    emit posChanged(currentPos());
-}
-
-void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
-{
-    const QPoint oldPos = currentPos();
-    updatePos(pos.toPoint());
-    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
-                      input()->keyboardModifiers(), input()->keyboardModifiers());
-}
-
-void InputRedirectionCursor::slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods)
-{
-    emit mouseChanged(currentPos(), currentPos(), m_currentButtons, m_currentButtons, mods, oldMods);
-}
-
-void InputRedirectionCursor::slotPointerButtonChanged()
-{
-    const Qt::MouseButtons oldButtons = m_currentButtons;
-    m_currentButtons = input()->qtButtonStates();
-    const QPoint pos = currentPos();
-    emit mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
-}
-
-void InputRedirectionCursor::doStartCursorTracking()
-{
-#ifndef KCMRULES
-    connect(kwinApp()->platform(), &Platform::cursorChanged, this, &Cursor::cursorChanged);
-#endif
-}
-
-void InputRedirectionCursor::doStopCursorTracking()
-{
-#ifndef KCMRULES
-    disconnect(kwinApp()->platform(), &Platform::cursorChanged, this, &Cursor::cursorChanged);
-#endif
 }
 
 } // namespace

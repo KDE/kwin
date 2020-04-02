@@ -213,7 +213,7 @@ void LockScreenTest::init()
     m_seat = Test::waylandSeat();
 
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void LockScreenTest::cleanup()

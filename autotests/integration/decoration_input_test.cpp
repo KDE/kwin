@@ -165,7 +165,7 @@ void DecorationInputTest::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void DecorationInputTest::cleanup()
@@ -556,7 +556,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     default:
         break;
     }
-    QVERIFY(!c->frameGeometry().contains(KWin::Cursor::pos()));
+    QVERIFY(!c->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
 
     // pressing should trigger resize
     PRESS;
@@ -641,7 +641,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QVERIFY(!c->noBorder());
     c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
     // move cursor on window
-    Cursor::setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
+    Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
 
     // simulate modifier+click
     quint32 timestamp = 1;
@@ -711,7 +711,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     QVERIFY(!c->noBorder());
     c->move(screens()->geometry(0).center() - QPoint(c->width()/2, c->height()/2));
     // move cursor on window
-    Cursor::setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
+    Cursors::self()->mouse()->setPos(QPoint(c->frameGeometry().center().x(), c->y() + c->clientPos().y() / 2));
     // set the opacity to 0.5
     c->setOpacity(0.5);
     QCOMPARE(c->opacity(), 0.5);
@@ -797,7 +797,7 @@ void DecorationInputTest::testTouchEvents()
     QCOMPARE(c->isMove(), false);
 
     // let's check that a hover motion is sent if the pointer is on deco, when touch release
-    Cursor::setPos(tapPoint);
+    Cursors::self()->mouse()->setPos(tapPoint);
     QCOMPARE(hoverMoveSpy.count(), 2);
     kwinApp()->platform()->touchDown(0, tapPoint, timestamp++);
     QCOMPARE(hoverMoveSpy.count(), 3);

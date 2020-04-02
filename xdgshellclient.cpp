@@ -755,7 +755,7 @@ void XdgShellClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     }
 
     const QRect clientArea = isElectricBorderMaximizing() ?
-        workspace()->clientArea(MaximizeArea, Cursor::pos(), desktop()) :
+        workspace()->clientArea(MaximizeArea, Cursors::self()->mouse()->pos(), desktop()) :
         workspace()->clientArea(MaximizeArea, this);
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
@@ -892,7 +892,7 @@ void XdgShellClient::setFullScreen(bool set, bool user)
     }
 
     if (wasFullscreen) {
-        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event
+        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
     } else {
         m_geomFsRestore = frameGeometry();
     }
@@ -1181,7 +1181,7 @@ void XdgShellClient::handleMoveRequested(SeatInterface *seat, quint32 serial)
     // FIXME: Check the seat and serial.
     Q_UNUSED(seat)
     Q_UNUSED(serial)
-    performMouseCommand(Options::MouseMove, Cursor::pos());
+    performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
 }
 
 void XdgShellClient::handleResizeRequested(SeatInterface *seat, quint32 serial, Qt::Edges edges)
@@ -1196,7 +1196,7 @@ void XdgShellClient::handleResizeRequested(SeatInterface *seat, quint32 serial, 
         finishMoveResize(false);
     }
     setMoveResizePointerButtonDown(true);
-    setMoveOffset(Cursor::pos() - pos());  // map from global
+    setMoveOffset(Cursors::self()->mouse()->pos() - pos());  // map from global
     setInvertedMoveOffset(rect().bottomRight() - moveOffset());
     setUnrestrictedMoveResize(false);
     auto toPosition = [edges] {
@@ -1222,7 +1222,7 @@ void XdgShellClient::handleResizeRequested(SeatInterface *seat, quint32 serial, 
 
 void XdgShellClient::handleMinimizeRequested()
 {
-    performMouseCommand(Options::MouseMinimize, Cursor::pos());
+    performMouseCommand(Options::MouseMinimize, Cursors::self()->mouse()->pos());
 }
 
 void XdgShellClient::handleMaximizeRequested(bool maximized)

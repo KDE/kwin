@@ -55,6 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/fakeinput_interface.h>
 #include <KWayland/Server/relativepointer_interface.h>
 #include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/tablet_interface.h>
 #include <decorations/decoratedclient.h>
@@ -1658,6 +1659,42 @@ public:
                 break;
             }
             tool = tabletSeat->addTool(toolType, event->serialId(), event->uniqueId(), ifaceCapabilities);
+
+            const auto cursor = new Cursor(tool);
+            Cursors::self()->addCursor(cursor);
+            m_cursorByTool[tool] = cursor;
+
+            connect(tool, &TabletToolInterface::cursorChanged, cursor, &Cursor::cursorChanged);
+            connect(tool, &TabletToolInterface::cursorChanged, cursor, [cursor] (TabletCursor* tcursor) {
+                static const auto createDefaultCursor = [] {
+                    WaylandCursorImage defaultCursor;
+                    WaylandCursorImage::Image ret;
+                    defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), &ret);
+                    return ret;
+                };
+                static const auto defaultCursor = createDefaultCursor();
+                if (!tcursor) {
+                    cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
+                    return;
+                }
+                auto cursorSurface = tcursor->surface();
+                if (!cursorSurface) {
+                    cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
+                    return;
+                }
+                auto buffer = cursorSurface->buffer();
+                if (!buffer) {
+                    cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
+                    return;
+                }
+
+                QImage cursorImage;
+                cursorImage = buffer->data().copy();
+                cursorImage.setDevicePixelRatio(cursorSurface->scale());
+
+                cursor->updateCursor(cursorImage, tcursor->hotspot());
+            });
+            emit cursor->cursorChanged();
         }
 
         KWayland::Server::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
@@ -1678,6 +1715,7 @@ public:
         case QEvent::TabletMove: {
             const auto pos = event->globalPosF() - toplevel->pos();
             tool->sendMotion(pos);
+            m_cursorByTool[tool]->setPos(event->globalPos());
             break;
         } case QEvent::TabletEnterProximity: {
             tool->sendProximityIn(tablet);
@@ -1730,6 +1768,7 @@ public:
         waylandServer()->simulateUserActivity();
         return true;
     }
+    QHash<KWayland::Server::TabletToolInterface*, Cursor*> m_cursorByTool;
 };
 
 class DragAndDropInputFilter : public InputEventFilter

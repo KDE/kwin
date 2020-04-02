@@ -98,7 +98,7 @@ void StrutsTest::init()
     m_plasmaShell = Test::waylandPlasmaShell();
 
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
     QVERIFY(waylandServer()->clients().isEmpty());
 }
 
@@ -944,7 +944,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QCOMPARE(client2->pos(), QPoint(1500, 400));
 
     const QRect origGeo = client2->frameGeometry();
-    Cursor::setPos(origGeo.center());
+    Cursors::self()->mouse()->setPos(origGeo.center());
     workspace()->performWindowOperation(client2, Options::MoveOp);
     QTRY_COMPARE(workspace()->moveResizeClient(), client2);
     QVERIFY(client2->isMove());

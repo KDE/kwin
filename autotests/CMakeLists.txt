@@ -167,6 +167,7 @@ ecm_mark_as_test(testBuiltInEffectLoader)
 include_directories(${KWin_SOURCE_DIR})
 set(testScriptedEffectLoader_SRCS
     ../effectloader.cpp
+    ../cursor.cpp
     ../screens.cpp
     ../scripting/scriptedeffect.cpp
     ../scripting/scripting_logging.cpp
@@ -244,6 +245,7 @@ target_link_libraries(effectversionplugin kwineffects)
 ########################################################
 set(testScreens_SRCS
     ../screens.cpp
+    ../cursor.cpp
     ../x11eventfilter.cpp
     mock_abstract_client.cpp
     mock_screens.cpp
@@ -282,6 +284,7 @@ set(testScreenEdges_SRCS
     ../screenedge.cpp
     ../screens.cpp
     ../virtualdesktops.cpp
+    ../cursor.cpp
     ../xcbutils.cpp # init of extensions
     mock_abstract_client.cpp
     mock_screens.cpp

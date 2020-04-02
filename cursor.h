@@ -1,4 +1,4 @@
-/********************************************************************
+    /********************************************************************
  KWin - the KDE window manager
  This file is part of the KDE project.
 
@@ -97,6 +97,7 @@ class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 public:
+    Cursor(QObject* parent);
     ~Cursor() override;
     void startMousePolling();
     void stopMousePolling();
@@ -147,21 +148,30 @@ public:
      * Implementing subclasses should prefer to use currentPos which is not performing a check
      * for update.
      */
-    static QPoint pos();
+    QPoint pos();
     /**
      * Warps the mouse cursor to new @p pos.
      */
-    static void setPos(const QPoint &pos);
-    static void setPos(int x, int y);
-    static xcb_cursor_t x11Cursor(CursorShape shape);
+    void setPos(const QPoint &pos);
+    void setPos(int x, int y);
+    xcb_cursor_t x11Cursor(CursorShape shape);
     /**
      * Notice: if available always use the CursorShape variant to avoid cache duplicates for
      * ambiguous cursor names in the non existing cursor name specification
      */
-    static xcb_cursor_t x11Cursor(const QByteArray &name);
+    xcb_cursor_t x11Cursor(const QByteArray &name);
+
+    QImage image() const { return m_image; }
+    QPoint hotspot() const { return m_hotspot; }
+    QRect geometry() const;
+
+    void updateCursor(const QImage &image, const QPoint &hotspot);
+    void markAsRendered() {
+        Q_EMIT rendered(geometry());
+    }
 
 Q_SIGNALS:
-    void posChanged(QPoint pos);
+    void posChanged(const QPoint& pos);
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
@@ -175,6 +185,8 @@ Q_SIGNALS:
      */
     void cursorChanged();
     void themeChanged();
+
+    void rendered(const QRect &geometry);
 
 protected:
     /**
@@ -240,36 +252,55 @@ private:
     void updateTheme(const QString &name, int size);
     void loadThemeFromKConfig();
     QPoint m_pos;
+    QPoint m_hotspot;
+    QImage m_image;
     int m_mousePollingCounter;
     int m_cursorTrackingCounter;
     QString m_themeName;
     int m_themeSize;
-
-    KWIN_SINGLETON(Cursor)
 };
 
-/**
- * @brief Implementation using the InputRedirection framework to get pointer positions.
- *
- * Does not support warping of cursor.
- */
-class InputRedirectionCursor : public Cursor
+
+class KWIN_EXPORT Cursors : public QObject
 {
     Q_OBJECT
 public:
-    explicit InputRedirectionCursor(QObject *parent);
-    ~InputRedirectionCursor() override;
-protected:
-    void doSetPos() override;
-    void doStartCursorTracking() override;
-    void doStopCursorTracking() override;
-private Q_SLOTS:
-    void slotPosChanged(const QPointF &pos);
-    void slotPointerButtonChanged();
-    void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
+    Cursor* mouse() const {
+        return m_mouse;
+    }
+
+    void setMouse(Cursor* mouse) {
+        if (m_mouse != mouse) {
+            m_mouse = mouse;
+
+            addCursor(m_mouse);
+            setCurrentCursor(m_mouse);
+        }
+    }
+
+    void addCursor(Cursor* cursor);
+    void removeCursor(Cursor* cursor);
+
+    ///@returns the last cursor that moved
+    Cursor* currentCursor() const {
+        return m_currentCursor;
+    }
+    
+    static Cursors* self();
+
+Q_SIGNALS:
+    void currentCursorChanged(Cursor* cursor);
+    void currentCursorRendered(const QRect &geometry);
+    void positionChanged(Cursor* cursor, const QPoint &position);
+
 private:
-    Qt::MouseButtons m_currentButtons;
-    friend class Cursor;
+    void emitCurrentCursorChanged();
+    void setCurrentCursor(Cursor* cursor);
+
+    static Cursors* s_self;
+    Cursor* m_currentCursor = nullptr;
+    Cursor* m_mouse = nullptr;
+    QVector<Cursor*> m_cursors;
 };
 
 inline const QPoint &Cursor::currentPos() const

@@ -162,7 +162,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     workspace()->sendClientToDesktop(client, 2, false);
     effects->setCurrentDesktop(2);
     QVERIFY(!m_translucencyEffect->isActive());
-    KWin::Cursor::setPos(client->frameGeometry().center());
+    KWin::Cursors::self()->mouse()->setPos(client->frameGeometry().center());
     workspace()->performWindowOperation(client, Options::MoveOp);
     QVERIFY(m_translucencyEffect->isActive());
     QTest::qWait(200);

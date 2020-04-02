@@ -63,13 +63,6 @@ void registration(QScriptEngine *)
 }
 }
 
-static QPoint s_cursorPos = QPoint();
-QPoint Cursor::pos()
-{
-    return s_cursorPos;
-}
-
-
 }
 
 class TestScriptedEffectLoader : public QObject
@@ -93,6 +86,8 @@ void TestScriptedEffectLoader::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     QCoreApplication::instance()->setProperty("config", QVariant::fromValue(config));
+
+    KWin::Cursors::self()->setMouse(new KWin::Cursor(this));
 }
 
 void TestScriptedEffectLoader::testHasEffect_data()

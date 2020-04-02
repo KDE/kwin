@@ -537,7 +537,7 @@ void Placement::placeUnderMouse(AbstractClient *c, const QRect &area, Policy /*n
     Q_ASSERT(area.isValid());
 
     QRect geom = c->frameGeometry();
-    geom.moveCenter(Cursor::pos());
+    geom.moveCenter(Cursors::self()->mouse()->pos());
     c->move(geom.topLeft());
     c->keepInArea(area);   // make sure it's kept inside workarea
 }
@@ -694,7 +694,7 @@ const char* Placement::policyToString(Policy policy)
 
 void AbstractClient::packTo(int left, int top)
 {
-    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
+    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
     const int oldScreen = screen();
     move(left, top);
@@ -759,7 +759,7 @@ void AbstractClient::growHorizontal()
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
-    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
+    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
     setFrameGeometry(geom);
 }
 
@@ -779,7 +779,7 @@ void AbstractClient::shrinkHorizontal()
         return;
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     if (geom.width() > 20) {
-        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
+        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
         setFrameGeometry(geom);
     }
 }
@@ -805,7 +805,7 @@ void AbstractClient::growVertical()
             geom.setBottom(newbottom);
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
-    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
+    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
     setFrameGeometry(geom);
 }
 
@@ -826,7 +826,7 @@ void AbstractClient::shrinkVertical()
         return;
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     if (geom.height() > 20) {
-        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
+        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
         setFrameGeometry(geom);
     }
 }

@@ -78,7 +78,7 @@ void ScreenEdgeClientShowTest::initTestCase()
 void ScreenEdgeClientShowTest::init()
 {
     screens()->setCurrent(0);
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
     QVERIFY(waylandServer()->clients().isEmpty());
 }
 
@@ -166,7 +166,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
     QVERIFY(effectsWindowShownSpy.isValid());
     QFETCH(QPoint, triggerPos);
-    Cursor::setPos(triggerPos);
+    Cursors::self()->mouse()->setPos(triggerPos);
     QVERIFY(!client->isHiddenInternal());
     QCOMPARE(effectsWindowShownSpy.count(), 1);
 
@@ -174,7 +174,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QTest::qWait(1);
 
     //hide window again
-    Cursor::setPos(QPoint(640, 512));
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
     xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
     xcb_flush(c.data());
     QVERIFY(clientHiddenSpy.wait());
@@ -183,7 +183,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     //resizewhile hidden
     client->setFrameGeometry(resizedWindowGeometry);
     //triggerPos shouldn't be valid anymore
-    Cursor::setPos(triggerPos);
+    Cursors::self()->mouse()->setPos(triggerPos);
     QVERIFY(client->isHiddenInternal());
 
     // destroy window again

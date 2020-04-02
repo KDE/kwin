@@ -117,7 +117,7 @@ void NoGlobalShortcutsTest::initTestCase()
 void NoGlobalShortcutsTest::init()
 {
     screens()->setCurrent(0);
-    KWin::Cursor::setPos(QPoint(640, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void NoGlobalShortcutsTest::cleanup()
