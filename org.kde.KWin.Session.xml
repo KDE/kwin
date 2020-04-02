@@ -10,6 +10,15 @@
             -->
          <arg name="state" type="u" direction="in" />
       </method>
+      <method name="loadSession">
+          <arg name="name" type="s" direction="in" />
+      </method>
+      <method name="aboutToSaveSession">
+          <arg name="name" type="s" direction="in" />
+      </method>
+      <method name="finishSaveSession">
+          <arg name="name" type="s" direction="in" />
+      </method>
    </interface>
 </node>
 
