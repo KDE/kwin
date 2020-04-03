@@ -269,6 +269,8 @@ target_link_libraries(testScreens
     KF5::I18n
     KF5::Notifications
     KF5::WindowSystem
+
+    XCB::XCB #for xcbutils.h
 )
 
 add_test(NAME kwin_testScreens COMMAND testScreens)
