@@ -1306,9 +1306,10 @@ void WaylandCursorImage::loadThemeCursor(const T &shape, QHash<T, Image> &cursor
     auto it = cursors.constFind(shape);
     if (it == cursors.constEnd()) {
         loadThemeCursor(shape, image);
-        it = cursors.insert(shape, *image);
+        cursors.insert(shape, *image);
+    } else {
+        *image = it.value();
     }
-    *image = it.value();
 }
 
 void CursorImage::reevaluteSource()
