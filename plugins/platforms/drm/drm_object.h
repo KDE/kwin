@@ -149,3 +149,4 @@ private:
 
 }
 
+QDebug& operator<<(QDebug& stream, const KWin::DrmObject*);

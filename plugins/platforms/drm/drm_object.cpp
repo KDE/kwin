@@ -184,3 +184,8 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
 }
 
 }
+
+QDebug& operator<<(QDebug& s, const KWin::DrmObject* obj)
+{
+    return s.nospace() << "DrmObject(" << obj->id() << ", output:" << obj->output() << ", fd: "<< obj->fd() << ')';
+}
