@@ -320,34 +320,9 @@ void DrmBackend::openDrm()
         }
     }
 
-    DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
-    if (!resources) {
-        qCWarning(KWIN_DRM) << "drmModeGetResources failed";
-        return;
-    }
-
-    for (int i = 0; i < resources->count_connectors; ++i) {
-        m_connectors << new DrmConnector(resources->connectors[i], m_fd);
-    }
-    for (int i = 0; i < resources->count_crtcs; ++i) {
-        m_crtcs << new DrmCrtc(resources->crtcs[i], this, i);
-    }
-
-    if (m_atomicModeSetting) {
-        auto tryAtomicInit = [] (DrmObject *obj) -> bool {
-            if (obj->atomicInit()) {
-                return false;
-            } else {
-                delete obj;
-                return true;
-            }
-        };
-        m_connectors.erase(std::remove_if(m_connectors.begin(), m_connectors.end(), tryAtomicInit), m_connectors.end());
-        m_crtcs.erase(std::remove_if(m_crtcs.begin(), m_crtcs.end(), tryAtomicInit), m_crtcs.end());
-    }
-
     initCursor();
-    updateOutputs();
+    if (!updateOutputs())
+        return;
 
     if (m_outputs.isEmpty()) {
         qCDebug(KWIN_DRM) << "No connected outputs found on startup.";
@@ -381,16 +356,55 @@ void DrmBackend::openDrm()
     setReady(true);
 }
 
-void DrmBackend::updateOutputs()
+bool DrmBackend::updateOutputs()
 {
     if (m_fd < 0) {
-        return;
+        return false;
     }
 
     DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
-        return;
+        return false;
+    }
+
+    auto oldConnectors = m_connectors;
+    for (int i = 0; i < resources->count_connectors; ++i) {
+        const uint32_t currentConnector = resources->connectors[i];
+        auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
+        if (it == m_connectors.constEnd()) {
+            auto c = new DrmConnector(currentConnector, m_fd);
+            if (m_atomicModeSetting && !c->atomicInit()) {
+                delete c;
+                continue;
+            }
+            m_connectors << c;
+        } else {
+            oldConnectors.removeOne(*it);
+        }
+    }
+
+    auto oldCrtcs = m_crtcs;
+    for (int i = 0; i < resources->count_crtcs; ++i) {
+        const uint32_t currentCrtc = resources->crtcs[i];
+        auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc] (DrmCrtc *c) { return c->id() == currentCrtc; });
+        if (it == m_crtcs.constEnd()) {
+            auto c = new DrmCrtc(currentCrtc, this, i);
+            if (m_atomicModeSetting && !c->atomicInit()) {
+                delete c;
+                continue;
+            }
+            m_crtcs << c;
+        } else {
+            oldCrtcs.removeOne(*it);
+        }
+    }
+
+    for (auto c : qAsConst(oldConnectors)) {
+        m_connectors.removeOne(c);
+    }
+    for (auto c : qAsConst(oldCrtcs)) {
+        m_crtcs.removeOne(c);
     }
 
     QVector<DrmOutput*> connectedOutputs;
@@ -503,6 +517,10 @@ void DrmBackend::updateOutputs()
     if (!m_outputs.isEmpty()) {
         emit screensQueried();
     }
+
+    qDeleteAll(oldConnectors);
+    qDeleteAll(oldCrtcs);
+    return true;
 }
 
 void DrmBackend::readOutputsConfiguration()

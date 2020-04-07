@@ -156,7 +156,7 @@ private:
     void activate(bool active);
     void reactivate();
     void deactivate();
-    void updateOutputs();
+    bool updateOutputs();
     void setCursor();
     void updateCursor();
     void moveCursor(Cursor *cursor, const QPoint &pos);
