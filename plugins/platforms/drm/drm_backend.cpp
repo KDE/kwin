@@ -321,17 +321,16 @@ void DrmBackend::openDrm()
     }
 
     DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
-    drmModeRes *res = resources.data();
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return;
     }
 
-    for (int i = 0; i < res->count_connectors; ++i) {
-        m_connectors << new DrmConnector(res->connectors[i], m_fd);
+    for (int i = 0; i < resources->count_connectors; ++i) {
+        m_connectors << new DrmConnector(resources->connectors[i], m_fd);
     }
-    for (int i = 0; i < res->count_crtcs; ++i) {
-        m_crtcs << new DrmCrtc(res->crtcs[i], this, i);
+    for (int i = 0; i < resources->count_crtcs; ++i) {
+        m_crtcs << new DrmCrtc(resources->crtcs[i], this, i);
     }
 
     if (m_atomicModeSetting) {
