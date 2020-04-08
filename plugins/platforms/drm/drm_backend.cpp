@@ -298,7 +298,7 @@ void DrmBackend::openDrm()
 
                 // create the plane objects
                 for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
-                    drmModePlane *kplane = drmModeGetPlane(m_fd, planeResources->planes[i]);
+                    DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
                     DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
                     if (p->atomicInit()) {
                         m_planes << p;
