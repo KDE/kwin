@@ -54,8 +54,7 @@ AbstractWaylandOutput::~AbstractWaylandOutput()
 
 QString AbstractWaylandOutput::name() const
 {
-    return QStringLiteral("%1 %2").arg(m_waylandOutputDevice->manufacturer()).arg(
-                m_waylandOutputDevice->model());
+    return m_name;
 }
 
 QByteArray AbstractWaylandOutput::uuid() const
@@ -234,6 +233,12 @@ void AbstractWaylandOutput::setEnabled(bool enable)
     }
 }
 
+QString AbstractWaylandOutput::description() const
+{
+    return QStringLiteral("%1 %2").arg(m_waylandOutputDevice->manufacturer()).arg(
+                m_waylandOutputDevice->model());
+}
+
 void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 {
     m_waylandOutput->setCurrentMode(size, refreshRate);
@@ -275,9 +280,13 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
         m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }
 
-    // start off enabled
-    m_waylandOutput->create();
     m_waylandOutputDevice->create();
+
+    // start off enabled
+
+    m_waylandOutput->create();
+    m_xdgOutput->setName(name());
+    m_xdgOutput->setDescription(description());
     m_xdgOutput->setLogicalSize(pixelSize() / scale());
     m_xdgOutput->done();
 }

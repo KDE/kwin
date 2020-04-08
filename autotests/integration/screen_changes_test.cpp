@@ -155,6 +155,10 @@ void ScreenChangesTest::testScreenAddRemove()
     QCOMPARE(xdgO2->logicalPosition(), geometries.at(1).topLeft());
     QCOMPARE(xdgO2->logicalSize(), geometries.at(1).size());
 
+    QVERIFY(xdgO1->name().startsWith("Virtual-"));
+    QVERIFY(xdgO1->name() != xdgO2->name());
+    QVERIFY(!xdgO1->description().isEmpty());
+
     // now let's try to remove one output again
     outputAnnouncedSpy.clear();
     outputRemovedSpy.clear();

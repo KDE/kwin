@@ -34,7 +34,7 @@ class FramebufferOutput : public AbstractWaylandOutput
     Q_OBJECT
 
 public:
-    FramebufferOutput(QObject *parent = nullptr) : AbstractWaylandOutput(parent) {}
+    FramebufferOutput(QObject *parent = nullptr);
     ~FramebufferOutput() override = default;
 
     void init(const QSize &pixelSize, const QSize &physicalSize);

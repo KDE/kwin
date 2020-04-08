@@ -41,6 +41,10 @@ WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     , m_surface(surface)
     , m_backend(backend)
 {
+    static int identifier = -1;
+    identifier++;
+    setName("WL-" + QString::number(identifier));
+
     connect(surface, &Surface::frameRendered, [this] {
         m_rendered = true;
         emit frameRendered();

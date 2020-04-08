@@ -124,6 +124,8 @@ public:
      */
     void setEnabled(bool enable) override;
 
+    QString description() const;
+
 Q_SIGNALS:
     void modeChanged();
 
@@ -136,6 +138,9 @@ protected:
 
     bool internal() const {
         return m_internal;
+    }
+    void setName(const QString &name) {
+        m_name = name;
     }
     void setInternal(bool set) {
         m_internal = set;
@@ -170,6 +175,7 @@ private:
     KWayland::Server::OutputDeviceInterface *m_waylandOutputDevice;
     KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
 
+    QString m_name;
     bool m_internal = false;
 };
 

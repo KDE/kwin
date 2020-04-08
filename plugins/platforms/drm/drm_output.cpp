@@ -300,7 +300,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         manufacturer = QString::fromLatin1(m_edid.eisaId());
     }
 
-    QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown"));
+    QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown")) + QStringLiteral("-") + QString::number(connector->connector_type_id);
     QString modelName;
 
     if (!m_edid.monitorName().isEmpty()) {
@@ -316,7 +316,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         modelName = i18n("unknown");
     }
 
-    const QString model = connectorName + QStringLiteral("-") + QString::number(connector->connector_type_id) + QStringLiteral("-") + modelName;
+    const QString model = connectorName + QStringLiteral("-") + modelName;
 
     // read in mode information
     QVector<KWayland::Server::OutputDeviceInterface::Mode> modes;
@@ -352,7 +352,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << physicalSize << "to " << overwriteSize;
         physicalSize = overwriteSize;
     }
-
+    setName(connectorName);
     initInterfaces(model, manufacturer, m_uuid, physicalSize, modes);
 }
 

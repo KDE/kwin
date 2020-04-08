@@ -26,6 +26,9 @@ VirtualOutput::VirtualOutput(QObject *parent)
     : AbstractWaylandOutput()
 {
     Q_UNUSED(parent);
+    static int identifier = -1;
+    identifier++;
+    setName("Virtual-" + QString::number(identifier));
 }
 
 VirtualOutput::~VirtualOutput()

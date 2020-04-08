@@ -104,7 +104,7 @@ public:
     ~AbstractOutput() override;
 
     /**
-     * Returns the human readable name of this output.
+     * Returns a short identifiable name of this output.
      */
     virtual QString name() const = 0;
 

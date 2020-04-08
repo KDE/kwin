@@ -37,6 +37,10 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());
+
+    static int identifier = -1;
+    identifier++;
+    setName("X11-" + QString::number(identifier));
 }
 
 X11WindowedOutput::~X11WindowedOutput()
