@@ -68,13 +68,24 @@ public:
         Suspend = DRM_MODE_DPMS_SUSPEND,
         Off = DRM_MODE_DPMS_OFF
     };
+    Q_ENUM(DpmsMode);
     bool isDpmsEnabled() const {
         // We care for current as well as pending mode in order to allow first present in AMS.
         return m_dpmsModePending == DpmsMode::On;
     }
 
+    DpmsMode dpmsMode() const {
+        return m_dpmsMode;
+    }
+    DpmsMode dpmsModePending() const {
+        return m_dpmsModePending;
+    }
+
     const DrmCrtc *crtc() const {
         return m_crtc;
+    }
+    const DrmConnector *connector() const {
+        return m_conn;
     }
     const DrmPlane *primaryPlane() const {
         return m_primaryPlane;
@@ -180,6 +191,8 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWin::DrmOutput*)
+
+QDebug& operator<<(QDebug& stream, const KWin::DrmOutput *);
 
 #endif
 
