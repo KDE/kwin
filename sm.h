@@ -45,8 +45,15 @@ public:
 Q_SIGNALS:
     void stateChanged();
 
+    void loadSessionRequested(const QString &name);
+    void prepareSessionSaveRequested(const QString &name);
+    void finishSessionSaveRequested(const QString &name);
+
 public Q_SLOTS: // DBus API
     void setState(uint state);
+    void loadSession(const QString &name);
+    void aboutToSaveSession(const QString &name);
+    void finishSaveSession(const QString &name);
 
 private:
     void setState(SessionState state);

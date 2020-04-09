@@ -276,7 +276,7 @@ void Application::createWorkspace()
     // critical startup section where x errors cause kwin to abort.
 
     // create workspace.
-    (void) new Workspace(m_originalSessionKey);
+    (void) new Workspace();
     emit workspaceCreated();
 }
 
