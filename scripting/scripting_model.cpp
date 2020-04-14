@@ -39,6 +39,12 @@ static quint32 nextId() {
 ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     : AbstractLevel(model, parent)
 {
+#if KWIN_BUILD_ACTIVITIES
+    if (Activities *activities = Activities::self()) {
+        connect(activities, &Activities::currentChanged, this, &ClientLevel::reInit);
+    }
+#endif
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &ClientLevel::reInit);
     connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
     connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
     connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
