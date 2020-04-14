@@ -370,7 +370,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
 
     if (fullRepaint) {
         painted_region = displayRegion;
-        damaged_region = displayRegion;
+        damaged_region = displayRegion - repaintClip;
     } else {
         painted_region |= paintedArea;
 
