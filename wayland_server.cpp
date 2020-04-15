@@ -605,7 +605,7 @@ void WaylandServer::createInternalConnection()
     connect(m_internalConnection.client, &ConnectionThread::connected, this,
         [this] {
             Registry *registry = new Registry(this);
-            EventQueue *eventQueue = new EventQueue(this);
+            EventQueue *eventQueue = new EventQueue(registry);
             eventQueue->setup(m_internalConnection.client);
             registry->setEventQueue(eventQueue);
             registry->create(m_internalConnection.client);
