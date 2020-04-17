@@ -80,12 +80,17 @@ void DrmOutput::teardown()
         }
         m_primaryPlane->setCurrent(nullptr);
     }
+    if (m_cursorPlane) {
+        m_cursorPlane->setOutput(nullptr);
+    }
 
     m_crtc->setOutput(nullptr);
     m_conn->setOutput(nullptr);
 
     delete m_cursor[0];
+    m_cursor[0] = nullptr;
     delete m_cursor[1];
+    m_cursor[1] = nullptr;
     if (!m_pageFlipPending) {
         deleteLater();
     } //else will be deleted in the page flip handler

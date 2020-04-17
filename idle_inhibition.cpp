@@ -101,7 +101,7 @@ void IdleInhibition::update(AbstractClient *client)
     // TODO: Don't honor the idle inhibitor object if the shell client is not
     // on the current activity (currently, activities are not supported).
     const bool visible = client->isShown(true) && client->isOnCurrentDesktop();
-    if (visible && client->surface()->inhibitsIdle()) {
+    if (visible && client->surface() && client->surface()->inhibitsIdle()) {
         inhibit(client);
     } else {
         uninhibit(client);
