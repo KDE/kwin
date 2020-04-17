@@ -242,11 +242,6 @@ void RemoteAccessTest::testSendReleaseMultiple()
     m_display->dispatchEvents();
     QVERIFY(m_remoteAccessInterface->isBound()); // now we have 2 clients
 
-    QSignalSpy bufferReadySpy1(client1->remoteAccess, &RemoteAccessManager::bufferReady);
-    QVERIFY(bufferReadySpy1.isValid());
-    QSignalSpy bufferReadySpy2(client2->remoteAccess, &RemoteAccessManager::bufferReady);
-    QVERIFY(bufferReadySpy2.isValid());
-
     BufferHandle *buf = new BufferHandle();
     QTemporaryFile *tmpFile = new QTemporaryFile(this);
     tmpFile->open();
@@ -255,36 +250,51 @@ void RemoteAccessTest::testSendReleaseMultiple()
     buf->setSize(50, 50);
     buf->setFormat(100500);
     buf->setStride(7800);
-    m_remoteAccessInterface->sendBufferReady(m_outputInterface[0], buf);
 
-    // wait for event loop
-    QVERIFY(bufferReadySpy1.wait());
-    // receive buffer at client 1
-    QCOMPARE(bufferReadySpy1.size(), 1);
-    auto rbuf1 = bufferReadySpy1.takeFirst()[1].value<const RemoteBuffer *>();
-    QSignalSpy paramsObtainedSpy1(rbuf1, &RemoteBuffer::parametersObtained);
-    QVERIFY(paramsObtainedSpy1.isValid());
+    bool buffer1ParametersReceived = false;
+    bool buffer2ParametersReceived = false;
 
-    if (bufferReadySpy2.size() == 0) {
-        QVERIFY(bufferReadySpy2.wait());
+    const RemoteBuffer *rbuf1 = nullptr;
+    const RemoteBuffer *rbuf2 = nullptr;
+
+    client1->connection->flush();
+    client2->connection->flush();
+
+    {
+        QEventLoop e;
+        QTimer::singleShot(1000, &e, &QEventLoop::quit); //safety timer
+        connect(client1->remoteAccess, &RemoteAccessManager::bufferReady, [&] (const void*, const RemoteBuffer *buffer) {
+                rbuf1 = buffer;
+                connect(rbuf1, &RemoteBuffer::parametersObtained, [&]() {
+                    buffer1ParametersReceived = true;
+                    if (buffer1ParametersReceived && buffer2ParametersReceived) {
+                        e.quit();
+                    }
+                });
+        });
+
+        connect(client2->remoteAccess, &RemoteAccessManager::bufferReady, [&] (const void*, const RemoteBuffer *buffer) {
+            rbuf2 = buffer;
+            connect(rbuf2, &RemoteBuffer::parametersObtained, [&]() {
+                buffer2ParametersReceived = true;
+                if (buffer1ParametersReceived && buffer2ParametersReceived) {
+                    e.quit();
+                }
+            });
+        });
+        m_remoteAccessInterface->sendBufferReady(m_outputInterface[0], buf);
+
+        e.exec();
     }
-    // receive buffer at client 2
-    QCOMPARE(bufferReadySpy2.size(), 1);
-    auto rbuf2 = bufferReadySpy2.takeFirst()[1].value<const RemoteBuffer *>();
-    QSignalSpy paramsObtainedSpy2(rbuf2, &RemoteBuffer::parametersObtained);
-    QVERIFY(paramsObtainedSpy2.isValid());
 
-    // wait for event loop
-    QVERIFY(paramsObtainedSpy1.size() == 1 || paramsObtainedSpy1.wait());
-    QCOMPARE(paramsObtainedSpy1.size(), 1);
-    if (paramsObtainedSpy2.size() == 0) {
-        QVERIFY(paramsObtainedSpy2.wait());
-    }
-    QCOMPARE(paramsObtainedSpy2.size(), 1);
+
+    QVERIFY(rbuf1);
+    QVERIFY(rbuf2);
+    QVERIFY(buffer1ParametersReceived);
+    QVERIFY(buffer2ParametersReceived);
 
     // release
     QSignalSpy bufferReleasedSpy(m_remoteAccessInterface, &RemoteAccessManagerInterface::bufferReleased);
-    QVERIFY(bufferReleasedSpy.isValid());
     delete rbuf1;
     QVERIFY(!bufferReleasedSpy.wait(1000)); // one client released, second still holds buffer!
 
