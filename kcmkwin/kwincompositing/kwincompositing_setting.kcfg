@@ -13,16 +13,25 @@
 
    <group name="Compositing">
 
-       <entry name="HiddenPreviews" type="Int">
-           <default>5</default>
+       <entry name="HiddenPreviews" type="Enum">
+           <default>Shown</default>
+           <choices>
+               <choice name="Off" value="4"/>
+               <choice name="Shown" value="5"/>
+               <choice name="Always" value="6"/>
+           </choices>
        </entry>
 
        <entry name="glTextureFilter" key="GLTextureFilter" type="Int">
-        <default>2</default>
+           <default>2</default>
        </entry>
 
-       <entry name="XRenderSmoothScale" type="Bool">
-        <default>false</default>
+       <entry name="XRenderSmoothScale" type="Enum">
+        <default>Crisp</default>
+        <choices>
+            <choice name="Crisp" value="false" />
+            <choice name="Smooth" value="true" />
+        </choices>
        </entry>
 
        <entry name="Enabled" type="Bool">
@@ -34,13 +43,13 @@
        </entry>
 
        <entry name="glPreferBufferSwap" key="GLPreferBufferSwap" type="Enum">
-           <default>a</default>
+           <default>AutoSwapStrategy</default>
            <choices>
-               <choice name="n" />
-               <choice name="a" />
-               <choice name="e" />
-               <choice name="p" />
-               <choice name="c" />
+               <choice name="NoSwapEncourage" value="n" />
+               <choice name="AutoSwapStrategy" value="a" />
+               <choice name="ExtendDamage" value="e" />
+               <choice name="PaintFullScreen" value="p" />
+               <choice name="CopyFrontBuffer" value="c" />
            </choices>
        </entry>
 
@@ -58,14 +67,6 @@
 
        <entry name="WindowsBlockCompositing" type="Bool">
            <default>true</default>
-       </entry>
-
-       <entry name="glPlatformInterface" key="GLPlatformInterface" type="String">
-           <default>glx</default>
-           <choices>
-               <choice name="glx" />
-               <choice name="egl" />
-           </choices>
        </entry>
 
     </group>

@@ -74,155 +74,17 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </item>
     </layout>
    </item>
+   <item row="2" column="1">
+    <widget class="QCheckBox" name="kcfg_Enabled">
+     <property name="text">
+      <string>Enable compositor on startup</string>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="0">
     <widget class="QLabel" name="animationSpeedLabel">
      <property name="text">
       <string>Animation speed:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="glScaleFilterLabel">
-     <property name="text">
-      <string>Scale method:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QComboBox" name="glScaleFilter">
-     <item>
-      <property name="text">
-       <string>Crisp</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Smooth</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Accurate</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="xrScaleFilterLabel">
-     <property name="text">
-      <string>Scale method:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QComboBox" name="xrScaleFilter">
-     <item>
-      <property name="text">
-       <string>Crisp</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Smooth (slower)</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="7" column="0" colspan="2">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Rendering backend:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QComboBox" name="type"/>
-   </item>
-   <item row="9" column="0" colspan="2">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Tearing prevention (&quot;vsync&quot;):</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QComboBox" name="tearingPrevention">
-     <item>
-      <property name="text">
-       <string>Never</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Automatic</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Only when cheap</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Full screen repaints</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Re-use screen content</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Keep window thumbnails:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="1">
-    <widget class="QComboBox" name="windowThumbnail">
-     <item>
-      <property name="text">
-       <string>Never</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Only for Shown Windows</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Always</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="13" column="1">
-    <widget class="QCheckBox" name="windowsBlockCompositing">
-     <property name="toolTip">
-      <string>Applications can set a hint to block compositing when the window is open.
- This brings performance improvements for e.g. games.
- The setting can be overruled by window-specific rules.</string>
-     </property>
-     <property name="text">
-      <string>Allow applications to block compositing</string>
      </property>
     </widget>
    </item>
@@ -236,7 +98,7 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QSlider" name="animationSpeed">
+       <widget class="QSlider" name="animationDurationFactor">
         <property name="minimum">
          <number>0</number>
         </property>
@@ -288,10 +150,145 @@ Alternatively, you might want to use the XRender backend instead.</string>
      </layout>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QCheckBox" name="compositingEnabled">
+   <item row="5" column="0">
+    <widget class="QLabel" name="scaleMethodLabel">
      <property name="text">
-      <string>Enable compositor on startup</string>
+      <string>Scale method:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QComboBox" name="kcfg_XRenderSmoothScale">
+       <item>
+        <property name="text">
+         <string>Crisp</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Smooth (slower)</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="kcfg_glTextureFilter">
+       <item>
+        <property name="text">
+         <string>Crisp</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Smooth</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Accurate</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Rendering backend:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QComboBox" name="backend"/>
+   </item>
+   <item row="9" column="0" colspan="2">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Tearing prevention (&quot;vsync&quot;):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QComboBox" name="kcfg_glPreferBufferSwap">
+     <item>
+      <property name="text">
+       <string>Never</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Automatic</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Only when cheap</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Full screen repaints</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Re-use screen content</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Keep window thumbnails:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="1">
+    <widget class="QComboBox" name="kcfg_HiddenPreviews">
+     <item>
+      <property name="text">
+       <string>Never</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Only for Shown Windows</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Always</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="13" column="1">
+    <widget class="QCheckBox" name="kcfg_WindowsBlockCompositing">
+     <property name="toolTip">
+      <string>Applications can set a hint to block compositing when the window is open.
+ This brings performance improvements for e.g. games.
+ The setting can be overruled by window-specific rules.</string>
+     </property>
+     <property name="text">
+      <string>Allow applications to block compositing</string>
      </property>
     </widget>
    </item>

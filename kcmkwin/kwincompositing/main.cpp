@@ -20,8 +20,9 @@
  **************************************************************************/
 
 
-#include "compositing.h"
 #include "ui_compositing.h"
+#include <kwin_compositing_interface.h>
+
 #include <QAction>
 #include <QApplication>
 #include <QLayout>
@@ -32,10 +33,23 @@
 #include <algorithm>
 #include <functional>
 
+#include "kwincompositing_setting.h"
+
+static bool isRunningPlasma()
+{
+    return qgetenv("XDG_CURRENT_DESKTOP") == "KDE";
+}
+
 class KWinCompositingKCM : public KCModule
 {
     Q_OBJECT
 public:
+    enum CompositingTypeIndex {
+        OPENGL31_INDEX = 0,
+        OPENGL20_INDEX,
+        XRENDER_INDEX
+    };
+
     explicit KWinCompositingKCM(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
 
 public Q_SLOTS:
@@ -43,70 +57,80 @@ public Q_SLOTS:
     void save() override;
     void defaults() override;
 
+private Q_SLOTS:
+    void onBackendChanged();
+    void reenableGl();
+
 private:
     void init();
-    KWin::Compositing::Compositing *m_compositing;
+    void updateUnmanagedItemStatus();
+    bool compositingRequired() const;
+
     Ui_CompositingForm m_form;
+
+    OrgKdeKwinCompositingInterface *m_compositingInterface;
+    KWinCompositingSetting *m_settings;
+
+    // unmanaged states
+    int m_backend;
+    bool m_glCore;
+    double m_animationDurationFactor;
 };
 
 static const QVector<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
 
+bool KWinCompositingKCM::compositingRequired() const
+{
+    return m_compositingInterface->platformRequiresCompositing();
+}
+
 KWinCompositingKCM::KWinCompositingKCM(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
-    , m_compositing(new KWin::Compositing::Compositing(this))
+    , m_compositingInterface(new OrgKdeKwinCompositingInterface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"), QDBusConnection::sessionBus(), this))
+    , m_settings(new KWinCompositingSetting(this))
 {
     m_form.setupUi(this);
+    addConfig(m_settings, this);
+
     m_form.glCrashedWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
-    QAction *reenableGLAction = new QAction(i18n("Re-enable OpenGL detection"), this);
-    connect(reenableGLAction, &QAction::triggered, m_compositing, &KWin::Compositing::Compositing::reenableOpenGLDetection);
-    connect(reenableGLAction, &QAction::triggered, m_form.glCrashedWarning, &KMessageWidget::animatedHide);
-    m_form.glCrashedWarning->addAction(reenableGLAction);
+    QAction *reenableGlAction = new QAction(i18n("Re-enable OpenGL detection"), this);
+    connect(reenableGlAction, &QAction::triggered, this, &KWinCompositingKCM::reenableGl);
+    connect(reenableGlAction, &QAction::triggered, m_form.glCrashedWarning, &KMessageWidget::animatedHide);
+    m_form.glCrashedWarning->addAction(reenableGlAction);
     m_form.scaleWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.tearingWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     m_form.windowThumbnailWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
 
-    m_form.compositingEnabled->setVisible(!m_compositing->compositingRequired());
-    m_form.windowsBlockCompositing->setVisible(!m_compositing->compositingRequired());
+    m_form.kcfg_Enabled->setVisible(!compositingRequired());
+    m_form.kcfg_WindowsBlockCompositing->setVisible(!compositingRequired());
 
     init();
 }
 
+void KWinCompositingKCM::reenableGl()
+{
+    m_settings->setOpenGLIsUnsafe(false);
+    m_settings->save();
+}
+
 void KWinCompositingKCM::init()
 {
-    using namespace KWin::Compositing;
     auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
 
-    connect(m_compositing, &Compositing::changed, this, qOverload<bool>(&KCModule::changed));
-    connect(m_compositing, &Compositing::defaulted, this, qOverload<bool>(&KCModule::defaulted));
-
-    // enabled check box
-    m_form.compositingEnabled->setChecked(m_compositing->compositingEnabled());
-    connect(m_compositing, &Compositing::compositingEnabledChanged, m_form.compositingEnabled, &QCheckBox::setChecked);
-    connect(m_form.compositingEnabled, &QCheckBox::toggled, m_compositing, &Compositing::setCompositingEnabled);
-
     // animation speed
-    m_form.animationSpeed->setMaximum(s_animationMultipliers.size() - 1);
-    auto setSpeed = [this](const qreal multiplier) {
-        auto const it = std::lower_bound(s_animationMultipliers.begin(), s_animationMultipliers.end(), multiplier, std::greater<qreal>());
-        const int index = std::distance(s_animationMultipliers.begin(), it);
-        m_form.animationSpeed->setValue(index);
-    };
-    setSpeed(m_compositing->animationSpeed());
-    connect(m_compositing, &Compositing::animationSpeedChanged, m_form.animationSpeed, setSpeed);
-    connect(m_form.animationSpeed, &QSlider::valueChanged, m_compositing, [this](int index) {
-        m_compositing->setAnimationSpeed(s_animationMultipliers[index]);
+    m_form.animationDurationFactor->setMaximum(s_animationMultipliers.size() - 1);
+    connect(m_form.animationDurationFactor, &QSlider::valueChanged, this, [this]() {
+        m_settings->setAnimationDurationFactor(s_animationMultipliers[m_form.animationDurationFactor->value()]);
+        updateUnmanagedItemStatus();
     });
 
-    if (Compositing::isRunningPlasma()) {
+    if (isRunningPlasma()) {
         m_form.animationSpeedLabel->hide();
         m_form.animationSpeedControls->hide();
     }
 
     // gl scale filter
-    m_form.glScaleFilter->setCurrentIndex(m_compositing->glScaleFilter());
-    connect(m_compositing, &Compositing::glScaleFilterChanged, m_form.glScaleFilter, &QComboBox::setCurrentIndex);
-    connect(m_form.glScaleFilter, currentIndexChangedSignal, m_compositing, &Compositing::setGlScaleFilter);
-    connect(m_form.glScaleFilter, currentIndexChangedSignal,
+    connect(m_form.kcfg_glTextureFilter, currentIndexChangedSignal, this,
         [this](int index) {
             if (index == 2) {
                 m_form.scaleWarning->animatedShow();
@@ -116,23 +140,8 @@ void KWinCompositingKCM::init()
         }
     );
 
-    // xrender scale filter
-    m_form.xrScaleFilter->setCurrentIndex(m_compositing->xrScaleFilter());
-    connect(m_compositing, &Compositing::xrScaleFilterChanged, m_form.xrScaleFilter, &QComboBox::setCurrentIndex);
-    connect(m_form.xrScaleFilter, currentIndexChangedSignal,
-            [this](int index) {
-        if (index == 0) {
-            m_compositing->setXrScaleFilter(false);
-        } else {
-            m_compositing->setXrScaleFilter(true);
-        }
-    });
-
     // tearing prevention
-    m_form.tearingPrevention->setCurrentIndex(m_compositing->glSwapStrategy());
-    connect(m_compositing, &Compositing::glSwapStrategyChanged, m_form.tearingPrevention, &QComboBox::setCurrentIndex);
-    connect(m_form.tearingPrevention, currentIndexChangedSignal, m_compositing, &Compositing::setGlSwapStrategy);
-    connect(m_form.tearingPrevention, currentIndexChangedSignal,
+    connect(m_form.kcfg_glPreferBufferSwap, currentIndexChangedSignal, this,
         [this](int index) {
             if (index == 2) {
                 // only when cheap - tearing
@@ -153,10 +162,7 @@ void KWinCompositingKCM::init()
     );
 
     // windowThumbnail
-    m_form.windowThumbnail->setCurrentIndex(m_compositing->windowThumbnail());
-    connect(m_compositing, &Compositing::windowThumbnailChanged, m_form.windowThumbnail, &QComboBox::setCurrentIndex);
-    connect(m_form.windowThumbnail, currentIndexChangedSignal, m_compositing, &Compositing::setWindowThumbnail);
-    connect(m_form.windowThumbnail, currentIndexChangedSignal,
+    connect(m_form.kcfg_HiddenPreviews, currentIndexChangedSignal, this,
         [this](int index) {
             if (index == 2) {
                 m_form.windowThumbnailWarning->animatedShow();
@@ -166,59 +172,136 @@ void KWinCompositingKCM::init()
         }
     );
 
-    // windows blocking compositing
-    m_form.windowsBlockCompositing->setChecked(m_compositing->windowsBlockCompositing());
-    connect(m_compositing, &Compositing::windowsBlockCompositingChanged, m_form.windowsBlockCompositing, &QCheckBox::setChecked);
-    connect(m_form.windowsBlockCompositing, &QCheckBox::toggled, m_compositing, &Compositing::setWindowsBlockCompositing);
-
     // compositing type
-    CompositingType *type = new CompositingType(this);
-    m_form.type->setModel(type);
-    auto updateCompositingType = [this, type]() {
-        m_form.type->setCurrentIndex(type->indexForCompositingType(m_compositing->compositingType()));
-    };
-    updateCompositingType();
-    connect(m_compositing, &Compositing::compositingTypeChanged,
-        [updateCompositingType]() {
-            updateCompositingType();
-        }
-    );
-    auto showHideBasedOnType = [this, type]() {
-        const int currentType = type->compositingTypeForIndex(m_form.type->currentIndex());
-        m_form.glScaleFilter->setVisible(currentType != CompositingType::XRENDER_INDEX);
-        m_form.glScaleFilterLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
-        m_form.xrScaleFilter->setVisible(currentType == CompositingType::XRENDER_INDEX);
-        m_form.xrScaleFilterLabel->setVisible(currentType == CompositingType::XRENDER_INDEX);
-    };
-    showHideBasedOnType();
-    connect(m_form.type, currentIndexChangedSignal,
-        [this, type, showHideBasedOnType]() {
-            m_compositing->setCompositingType(type->compositingTypeForIndex(m_form.type->currentIndex()));
-            showHideBasedOnType();
-        }
-    );
+    m_form.backend->addItem(i18n("OpenGL 3.1"), CompositingTypeIndex::OPENGL31_INDEX);
+    m_form.backend->addItem(i18n("OpenGL 2.0"), CompositingTypeIndex::OPENGL20_INDEX);
+    m_form.backend->addItem(i18n("XRender"), CompositingTypeIndex::XRENDER_INDEX);
 
-    if (m_compositing->OpenGLIsUnsafe()) {
+    connect(m_form.backend, currentIndexChangedSignal, this, &KWinCompositingKCM::onBackendChanged);
+
+    if (m_settings->openGLIsUnsafe()) {
         m_form.glCrashedWarning->animatedShow();
     }
+}
+
+void KWinCompositingKCM::onBackendChanged()
+{
+    const int currentType = m_form.backend->currentData().toInt();
+    
+    m_form.kcfg_glTextureFilter->setVisible(currentType != CompositingTypeIndex::XRENDER_INDEX);
+    m_form.kcfg_XRenderSmoothScale->setVisible(currentType == CompositingTypeIndex::XRENDER_INDEX);
+
+    updateUnmanagedItemStatus();
+}
+
+void KWinCompositingKCM::updateUnmanagedItemStatus()
+{
+    int backend = KWinCompositingSetting::EnumBackend::OpenGL;
+    bool glCore = true;
+    const int currentType = m_form.backend->currentData().toInt();
+    switch (currentType) {
+    case CompositingTypeIndex::OPENGL31_INDEX:
+        // default already set
+        break;
+    case CompositingTypeIndex::OPENGL20_INDEX:
+        glCore = false;
+        break;
+    case CompositingTypeIndex::XRENDER_INDEX:
+        backend = KWinCompositingSetting::EnumBackend::XRender;
+        glCore = false;
+        break;
+    }
+    const auto animationDuration = s_animationMultipliers[m_form.animationDurationFactor->value()];
+
+    const bool inPlasma = isRunningPlasma();
+
+    bool changed = glCore != m_glCore;
+    changed |= backend != m_backend;
+    if (!inPlasma) {
+      changed |= (animationDuration != m_animationDurationFactor);
+    }
+    unmanagedWidgetChangeState(changed);
+
+    bool defaulted = glCore == m_settings->defaultGlCoreValue();
+    defaulted &= backend == m_settings->defaultBackendValue();
+    if (!inPlasma) {
+        defaulted &= animationDuration == m_settings->defaultAnimationDurationFactorValue();
+    }
+    unmanagedWidgetDefaultState(defaulted);
 }
 
 void KWinCompositingKCM::load()
 {
     KCModule::load();
-    m_compositing->load();
+
+    // unmanaged items
+    m_settings->findItem("AnimationDurationFactor")->readConfig(m_settings->config());
+    const double multiplier = m_settings->animationDurationFactor();
+    auto const it = std::lower_bound(s_animationMultipliers.begin(), s_animationMultipliers.end(), multiplier, std::greater<qreal>());
+    const int index = static_cast<int>(std::distance(s_animationMultipliers.begin(), it));
+    m_form.animationDurationFactor->setValue(index);
+    m_form.animationDurationFactor->setDisabled(m_settings->isAnimationDurationFactorImmutable());
+
+    m_settings->findItem("Backend")->readConfig(m_settings->config());
+    m_settings->findItem("glCore")->readConfig(m_settings->config());
+    m_backend = m_settings->backend();
+    m_glCore = m_settings->glCore();
+    if (m_backend == KWinCompositingSetting::EnumBackend::OpenGL) {
+        if (m_glCore) {
+            m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL31_INDEX);
+        } else {
+            m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL20_INDEX);
+        }
+    } else {
+        m_form.backend->setCurrentIndex(CompositingTypeIndex::XRENDER_INDEX);
+    }
+    m_form.backend->setDisabled(m_settings->isBackendImmutable());
+
+    onBackendChanged();
 }
 
 void KWinCompositingKCM::defaults()
 {
     KCModule::defaults();
-    m_compositing->defaults();
+
+    // unmanaged widgets
+    m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL20_INDEX);
+    // corresponds to 1.0 seconds in s_animationMultipliers
+    m_form.animationDurationFactor->setValue(3);
 }
 
 void KWinCompositingKCM::save()
 {
+    int backend = KWinCompositingSetting::EnumBackend::OpenGL;
+    bool glCore = true;
+    const int currentType = m_form.backend->currentData().toInt();
+    switch (currentType) {
+    case CompositingTypeIndex::OPENGL31_INDEX:
+        // default already set
+        break;
+    case CompositingTypeIndex::OPENGL20_INDEX:
+        backend = KWinCompositingSetting::EnumBackend::OpenGL;
+        glCore = false;
+        break;
+    case CompositingTypeIndex::XRENDER_INDEX:
+        backend = KWinCompositingSetting::EnumBackend::XRender;
+        glCore = false;
+        break;
+    }
+    m_settings->setBackend(backend);
+    m_settings->setGlCore(glCore);
+
+    const auto animationDuration = s_animationMultipliers[m_form.animationDurationFactor->value()];
+    m_settings->setAnimationDurationFactor(animationDuration);
+    m_settings->save();
+
     KCModule::save();
-    m_compositing->save();
+
+    // Send signal to all kwin instances
+    QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"),
+                                                      QStringLiteral("org.kde.kwin.Compositing"),
+                                                      QStringLiteral("reinit"));
+    QDBusConnection::sessionBus().send(message);
 }
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
