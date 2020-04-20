@@ -2991,7 +2991,7 @@ class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
-    ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry = QRect());
+    ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry = QRect(), const qreal screenScale = 1.0);
     ScreenPaintData(const ScreenPaintData &other);
     ~ScreenPaintData() override;
     /**
@@ -3053,6 +3053,13 @@ public:
      * @since 5.9
      */
     QRect outputGeometry() const;
+
+    /**
+     * The scale factor for the output
+     *
+     * @since 5.19
+     */
+    qreal screenScale() const;
 private:
     class Private;
     QScopedPointer<Private> d;

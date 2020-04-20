@@ -159,6 +159,7 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
 void ScreenShotEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_cachedOutputGeometry = data.outputGeometry();
+    m_cachedScale = data.screenScale();
     effects->paintScreen(mask, region, data);
 }
 
@@ -287,12 +288,13 @@ void ScreenShotEffect::postPaintScreen()
                 // doesn't intersect, not going onto this screenshot
                 return;
             }
-            const QImage img = blitScreenshot(intersection);
-            if (img.size() == m_scheduledGeometry.size()) {
+            QImage img = blitScreenshot(intersection, m_cachedScale);
+            if (img.size() == (m_scheduledGeometry.size() * m_cachedScale)) {
                 // we are done
                 sendReplyImage(img);
                 return;
             }
+            img.setDevicePixelRatio(m_cachedScale);
             if (m_multipleOutputsImage.isNull()) {
                 m_multipleOutputsImage = QImage(m_scheduledGeometry.size(), QImage::Format_ARGB32);
                 m_multipleOutputsImage.fill(Qt::transparent);
@@ -604,24 +606,31 @@ QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height, bo
     return QString();
 }
 
-QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
+QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, const qreal scale)
 {
     QImage img;
     if (effects->isOpenGLCompositing())
     {
-        img = QImage(geometry.size(), QImage::Format_ARGB32);
+        int width = geometry.width();
+        int height = geometry.height();
         if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
-            GLTexture tex(GL_RGBA8, geometry.width(), geometry.height());
+
+            width = static_cast<int>(width * scale);
+            height = static_cast<int>(height * scale);
+
+            img = QImage(width, height, QImage::Format_ARGB32);
+            GLTexture tex(GL_RGBA8, width, height);
             GLRenderTarget target(tex);
             target.blitFromFramebuffer(geometry);
             // copy content from framebuffer into image
             tex.bind();
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, static_cast<GLvoid*>(img.bits()));
             tex.unbind();
         } else {
-            glReadPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+            img = QImage(width, height, QImage::Format_ARGB32);
+            glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
         }
-        ScreenShotEffect::convertFromGLImage(img, geometry.width(), geometry.height());
+        ScreenShotEffect::convertFromGLImage(img, width, height);
     }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -635,7 +644,7 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry)
 #endif
 
     if (m_captureCursor) {
-        grabPointerImage(img, geometry.x(), geometry.y());
+        grabPointerImage(img, geometry.x() * scale, geometry.y() * scale);
     }
 
     return img;

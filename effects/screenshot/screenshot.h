@@ -141,7 +141,7 @@ private Q_SLOTS:
 
 private:
     void grabPointerImage(QImage& snapshot, int offsetx, int offsety);
-    QImage blitScreenshot(const QRect &geometry);
+    QImage blitScreenshot(const QRect &geometry, const qreal scale = 1.0);
     QString saveTempImage(const QImage &img);
     void sendReplyImage(const QImage &img);
     enum class InfoMessageMode {
@@ -167,6 +167,7 @@ private:
     };
     WindowMode m_windowMode = WindowMode::NoCapture;
     int m_fd = -1;
+    qreal m_cachedScale;
 };
 
 } // namespace

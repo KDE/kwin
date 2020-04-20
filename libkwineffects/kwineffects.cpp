@@ -423,6 +423,7 @@ class ScreenPaintData::Private
 public:
     QMatrix4x4 projectionMatrix;
     QRect outputGeometry;
+    qreal screenScale;
 };
 
 ScreenPaintData::ScreenPaintData()
@@ -431,12 +432,13 @@ ScreenPaintData::ScreenPaintData()
 {
 }
 
-ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry)
+ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry, const qreal screenScale)
     : PaintData()
     , d(new Private())
 {
     d->projectionMatrix = projectionMatrix;
     d->outputGeometry = outputGeometry;
+    d->screenScale = screenScale;
 }
 
 ScreenPaintData::~ScreenPaintData() = default;
@@ -524,6 +526,11 @@ QMatrix4x4 ScreenPaintData::projectionMatrix() const
 QRect ScreenPaintData::outputGeometry() const
 {
     return d->outputGeometry;
+}
+
+qreal ScreenPaintData::screenScale() const
+{
+    return d->screenScale;
 }
 
 //****************************************
