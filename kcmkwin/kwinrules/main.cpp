@@ -22,8 +22,8 @@
 #include <KLocalizedString>
 #include <kwindowsystem.h>
 
-#include "ruleswidget.h"
 #include "rulebooksettings.h"
+#include "rulesdialog.h"
 #include "../../rules.h"
 #include <QByteArray>
 

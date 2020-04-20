@@ -1,15 +1,16 @@
 [Desktop Entry]
 Exec=kcmshell5 kwinrules
 Icon=preferences-system-windows-actions
+Categories=Qt;KDE;X-KDE-settings-looknfeel;
 Type=Service
-X-KDE-ServiceTypes=KCModule
-X-DocPath=kcontrol/windowspecific/index.html
 
+X-KDE-ServiceTypes=KCModule
 X-KDE-Library=kcm_kwinrules
 X-KDE-ParentApp=kcontrol
-
 X-KDE-System-Settings-Parent-Category=windowmanagement
 X-KDE-Weight=120
+
+X-KDE-FormFactors=desktop,tablet
 
 Name=Window Rules
 Name[ar]=قواعد النوافذ

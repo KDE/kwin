@@ -1,0 +1,19 @@
+[Desktop Entry]
+Icon=preferences-system-windows-actions
+Type=Service
+Keywords=
+X-KDE-ParentApp=
+X-KDE-System-Settings-Parent-Category=applicationstyle
+X-KDE-PluginInfo-Author=Ismael Asensio
+X-KDE-PluginInfo-Email=isma.af@gmail.com
+X-KDE-PluginInfo-License=GPL-2.0+
+X-KDE-PluginInfo-Name=kcm_kwinrules
+X-KDE-PluginInfo-Version=
+X-KDE-PluginInfo-Website=https://www.kde.org/plasma-desktop
+X-KDE-ServiceTypes=Plasma/Generic
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/RulesList.qml
+X-KDE-FormFactors=desktop,tablet
+
+Name=Window Rules
+Comment=Individual Window Behavior

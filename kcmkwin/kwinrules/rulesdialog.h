@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2011 Thomas Lübking <thomas.luebking@web.de>
+ * Copyright (c) 2004 Lubos Lunak <l.lunak@kde.org>
+ * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,31 +17,37 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#ifndef KWIN_RULESDIALOG_H
+#define KWIN_RULESDIALOG_H
 
-#ifndef YESNOBOX_H
-#define YESNOBOX_H
+#include "rulesmodel.h"
+#include "../../rules.h"
 
-#include <QHBoxLayout>
-#include <QRadioButton>
+#include <QDialog>
 
-#include <KLocalizedString>
+namespace KWin
+{
 
-class YesNoBox : public QWidget {
+class Rules;
+
+class RulesDialog : public QDialog
+{
     Q_OBJECT
-public:
-    explicit YesNoBox( QWidget *parent );
-    bool isChecked() { return yes->isChecked(); }
-public Q_SLOTS:
-    void setChecked(bool b) { yes->setChecked(b); }
-    void toggle() { yes->toggle(); }
 
-Q_SIGNALS:
-    void clicked(bool checked = false);
-    void toggled(bool checked);
-private Q_SLOTS:
-    void noClicked(bool checked) { emit clicked(!checked); }
+public:
+    explicit RulesDialog(QWidget* parent = nullptr, const char* name = nullptr);
+
+    Rules* edit(Rules* r, const QVariantMap& info, bool show_hints);
+
+protected:
+    void accept() override;
+
 private:
-    QRadioButton *yes, *no;
+    RulesModel* m_rulesModel;
+    QWidget *m_quickWidget;
+    Rules* m_rules;
 };
 
-#endif // YESNOBOX_H
+} // namespace
+
+#endif // KWIN_RULESDIALOG_H
