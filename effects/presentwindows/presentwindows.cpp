@@ -495,12 +495,18 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
 
     rearrangeWindows();
 
-    foreach (EffectWindow *w, m_motionManager.managedWindows()) {
+    uint nbWindowNotDeleted = 0;
+    const auto managedWindows = m_motionManager.managedWindows();
+    for (EffectWindow *w : managedWindows) {
         winData = m_windowData.find(w);
-        if (winData != m_windowData.end() && !winData->deleted)
-           return; // found one that is not deleted? then we go on
+        if (winData != m_windowData.end() && !winData->deleted) {
+           ++nbWindowNotDeleted;
+        }
     }
-    setActive(false);     //else no need to keep this open
+    // found one that is not deleted? then we go on
+    if (nbWindowNotDeleted < 2) {
+        setActive(false);     //else no need to keep this open
+    }
 }
 
 void PresentWindowsEffect::slotWindowDeleted(EffectWindow *w)
