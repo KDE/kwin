@@ -787,11 +787,8 @@ QRegion Scene::Window::bufferShape() const
 
 QRegion Scene::Window::clientShape() const
 {
-    if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
-        if (client->isShade()) {
-            return QRegion();
-        }
-    }
+    if (isShaded())
+        return QRegion();
 
     const QRegion shape = bufferShape();
     const QMargins bufferMargins = toplevel->bufferMargins();
@@ -831,6 +828,13 @@ bool Scene::Window::isVisible() const
 bool Scene::Window::isOpaque() const
 {
     return toplevel->opacity() == 1.0 && !toplevel->hasAlpha();
+}
+
+bool Scene::Window::isShaded() const
+{
+    if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel))
+        return client->isShade();
+    return false;
 }
 
 bool Scene::Window::isPaintingEnabled() const
@@ -877,7 +881,11 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     if (cached_quad_list != nullptr && !force)
         return *cached_quad_list;
 
-    WindowQuadList ret = makeContentsQuads();
+    WindowQuadList ret;
+
+    if (!isShaded()) {
+        ret += makeContentsQuads();
+    }
 
     if (!toplevel->frameMargins().isNull()) {
         AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
@@ -977,36 +985,66 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
 
 WindowQuadList Scene::Window::makeContentsQuads() const
 {
-    const QRegion contentsRegion = clientShape();
-    if (contentsRegion.isEmpty()) {
-        return WindowQuadList();
-    }
+    // TODO(vlad): What about the case where we need to build window quads for a deleted
+    // window? Presumably, the current window will be invalid so no window quads will be
+    // generated. Is it okay?
 
-    const QPointF geometryOffset = bufferOffset();
-    const qreal textureScale = toplevel->bufferScale();
+    WindowPixmap *currentPixmap = windowPixmap<WindowPixmap>();
+    if (!currentPixmap)
+        return WindowQuadList();
 
     WindowQuadList quads;
-    quads.reserve(contentsRegion.rectCount());
+    int id = 0;
 
-    for (const QRectF &rect : contentsRegion) {
-        WindowQuad quad(WindowQuadContents);
+    // We need to assign an id to each generated window quad in order to be able to match
+    // a list of window quads against a particular window pixmap. We traverse the window
+    // pixmap tree in the depth-first search manner and assign an id to each window quad.
+    // The id is the time when we visited the window pixmap.
 
-        const qreal x0 = rect.left() + geometryOffset.x();
-        const qreal y0 = rect.top() + geometryOffset.y();
-        const qreal x1 = rect.right() + geometryOffset.x();
-        const qreal y1 = rect.bottom() + geometryOffset.y();
+    QStack<WindowPixmap *> stack;
+    stack.push(currentPixmap);
 
-        const qreal u0 = rect.left() * textureScale;
-        const qreal v0 = rect.top() * textureScale;
-        const qreal u1 = rect.right() * textureScale;
-        const qreal v1 = rect.bottom() * textureScale;
+    while (!stack.isEmpty()) {
+        WindowPixmap *windowPixmap = stack.pop();
 
-        quad[0] = WindowVertex(QPointF(x0, y0), QPointF(u0, v0));
-        quad[1] = WindowVertex(QPointF(x1, y0), QPointF(u1, v0));
-        quad[2] = WindowVertex(QPointF(x1, y1), QPointF(u1, v1));
-        quad[3] = WindowVertex(QPointF(x0, y1), QPointF(u0, v1));
+        // If it's an unmapped sub-surface, don't generate window quads for it.
+        if (!windowPixmap->isValid())
+            continue;
 
-        quads << quad;
+        const QRegion region = windowPixmap->shape();
+        const QPoint position = windowPixmap->framePosition();
+        const qreal scale = windowPixmap->scale();
+        const int quadId = id++;
+
+        for (const QRect &rect : region) {
+            // Note that the window quad id is not unique if the window is shaped, i.e. the
+            // region contains more than just one rectangle. We assume that the "source" quad
+            // had been subdivided.
+            WindowQuad quad(WindowQuadContents, quadId);
+
+            const qreal x0 = rect.x() + position.x();
+            const qreal y0 = rect.y() + position.y();
+            const qreal x1 = rect.x() + rect.width() + position.x();
+            const qreal y1 = rect.y() + rect.height() + position.y();
+
+            const qreal u0 = rect.x() * scale;
+            const qreal v0 = rect.y() * scale;
+            const qreal u1 = (rect.x() + rect.width()) * scale;
+            const qreal v1 = (rect.y() + rect.height()) * scale;
+
+            quad[0] = WindowVertex(QPointF(x0, y0), QPointF(u0, v0));
+            quad[1] = WindowVertex(QPointF(x1, y0), QPointF(u1, v0));
+            quad[2] = WindowVertex(QPointF(x1, y1), QPointF(u1, v1));
+            quad[3] = WindowVertex(QPointF(x0, y1), QPointF(u0, v1));
+
+            quads << quad;
+        }
+
+        // Push the child window pixmaps onto the stack, remember we're visiting the pixmaps
+        // in the depth-first search manner.
+        const auto children = windowPixmap->children();
+        for (WindowPixmap *child : children)
+            stack.push(child);
     }
 
     return quads;
@@ -1197,6 +1235,39 @@ KWaylandServer::SurfaceInterface *WindowPixmap::surface() const
     } else {
         return toplevel()->surface();
     }
+}
+
+QPoint WindowPixmap::position() const
+{
+    if (subSurface())
+        return subSurface()->position();
+    return m_window->bufferOffset();
+}
+
+QPoint WindowPixmap::framePosition() const
+{
+    return position() + (m_parent ? m_parent->framePosition() : QPoint());
+}
+
+qreal WindowPixmap::scale() const
+{
+    if (surface())
+        return surface()->scale();
+    return toplevel()->bufferScale();
+}
+
+QRegion WindowPixmap::shape() const
+{
+    if (subSurface())
+        return QRect(QPoint(), surface()->size());
+    return m_window->clientShape();
+}
+
+bool WindowPixmap::hasAlphaChannel() const
+{
+    if (buffer())
+        return buffer()->hasAlphaChannel();
+    return toplevel()->hasAlpha();
 }
 
 //****************************************

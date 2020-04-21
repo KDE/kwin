@@ -329,6 +329,8 @@ public:
     bool isVisible() const;
     // is the window fully opaque
     bool isOpaque() const;
+    // is the window shaded
+    bool isShaded() const;
     // shape of the window
     QRegion bufferShape() const;
     QRegion clientShape() const;
@@ -454,9 +456,37 @@ public:
      */
     void markAsDiscarded();
     /**
+     * Returns the position of the WindowPixmap relative to the upper left corner of the parent.
+     *
+     * This method returns the position of the WindowPixmap relative to the upper left corner
+     * of the window pixmap if parent() is @c null.
+     *
+     * The upper left corner of the parent window pixmap corresponds to (0, 0).
+     */
+    QPoint position() const;
+    /**
+     * Returns the position of the WindowPixmap relative to the upper left corner of the window
+     * frame. Note that position() returns the position relative to the parent WindowPixmap.
+     *
+     * The upper left corner of the window frame corresponds to (0, 0).
+     */
+    QPoint framePosition() const;
+    /**
      * The size of the pixmap.
      */
     const QSize &size() const;
+    /**
+     * Returns the device pixel ratio for the attached buffer. This is the ratio between device
+     * pixels and logical pixels.
+     */
+    qreal scale() const;
+    /**
+     * Returns the region that specifies the area inside the attached buffer with the actual
+     * client's contents.
+     *
+     * The upper left corner of the attached buffer corresponds to (0, 0).
+     */
+    QRegion shape() const;
     /**
      * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
      * pixmap also contains the decoration which is not rendered into this pixmap, though. This
@@ -468,6 +498,10 @@ public:
      * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
      */
     Toplevel *toplevel() const;
+    /**
+     * Returns @c true if the attached buffer has an alpha channel; otherwise returns @c false.
+     */
+    bool hasAlphaChannel() const;
 
     /**
      * @returns the parent WindowPixmap in the sub-surface tree

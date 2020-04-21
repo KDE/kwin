@@ -148,26 +148,38 @@ class OpenGLWindowPixmap;
 class OpenGLWindow final : public Scene::Window
 {
 public:
-    enum Leaf { ShadowLeaf = 0, DecorationLeaf, ContentLeaf, PreviousContentLeaf, LeafCount };
+    enum Leaf { ShadowLeaf, DecorationLeaf, ContentLeaf, PreviousContentLeaf };
 
-    struct LeafNode
+    struct RenderNode
     {
-        LeafNode()
-            : texture(nullptr),
-              firstVertex(0),
-              vertexCount(0),
-              opacity(1.0),
-              hasAlpha(false),
-              coordinateType(UnnormalizedCoordinates)
+        RenderNode()
+            : texture(nullptr)
+            , firstVertex(0)
+            , vertexCount(0)
+            , opacity(1.0)
+            , hasAlpha(false)
+            , coordinateType(UnnormalizedCoordinates)
         {
         }
 
         GLTexture *texture;
+        WindowQuadList quads;
         int firstVertex;
         int vertexCount;
         float opacity;
         bool hasAlpha;
         TextureCoordinateType coordinateType;
+        Leaf leafType;
+    };
+
+    struct RenderContext
+    {
+        QVector<RenderNode> renderNodes;
+        int shadowOffset = 0;
+        int decorationOffset = 0;
+        int contentOffset = 0;
+        int previousContentOffset = 0;
+        int quadCount = 0;
     };
 
     OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
@@ -182,9 +194,7 @@ private:
     QMatrix4x4 modelViewProjectionMatrix(int mask, const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
-    void setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data);
-    void renderSubSurface(GLShader *shader, const QMatrix4x4 &mvp, const QMatrix4x4 &windowMatrix,
-                          OpenGLWindowPixmap *pixmap, const QRegion &region, bool hardwareClipping);
+    void initializeRenderContext(RenderContext &context, const WindowPaintData &data);
     bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
     void endRenderWindow();
     bool bindTexture();
