@@ -73,6 +73,13 @@ public:
      */
     PlasmaVirtualDesktopManagementInterface *plasmaVirtualDesktopManagementInterface() const;
 
+
+    /**
+     * Associate stacking order to this window management
+     * @since 5.70
+     */
+    void setStackingOrder(const QVector<quint32> &stackingOrder);
+
 Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
 
@@ -220,6 +227,13 @@ public:
      * @since 5.69
      */
     void setApplicationMenuPaths(const QString &serviceName, const QString &objectPath);
+
+    /**
+     * Return the window internal id
+     *
+     * @since 5.70
+     */
+    quint32 internalId() const;
 
 Q_SIGNALS:
     void closeRequested();

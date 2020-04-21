@@ -31,12 +31,14 @@ class PlasmaWindowManagementInterface::Private : public Global::Private
 public:
     Private(PlasmaWindowManagementInterface *q, Display *d);
     void sendShowingDesktopState();
+    void sendStackingOrderChanged();
 
     ShowingDesktopState state = ShowingDesktopState::Disabled;
     QVector<wl_resource*> resources;
     QList<PlasmaWindowInterface*> windows;
     QPointer<PlasmaVirtualDesktopManagementInterface> plasmaVirtualDesktopManagementInterface = nullptr;
     quint32 windowIdCounter = 0;
+    QVector<quint32> stackingOrder;
 
 private:
     static void unbind(wl_resource *resource);
@@ -45,6 +47,7 @@ private:
 
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendShowingDesktopState(wl_resource *r);
+    void sendStackingOrderChanged(wl_resource *r);
 
     PlasmaWindowManagementInterface *q;
     static const struct org_kde_plasma_window_management_interface s_interface;
@@ -113,7 +116,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 10;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 11;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -150,6 +153,30 @@ void PlasmaWindowManagementInterface::Private::sendShowingDesktopState(wl_resour
         break;
     }
     org_kde_plasma_window_management_send_show_desktop_changed(r, s);
+}
+
+void PlasmaWindowManagementInterface::Private::sendStackingOrderChanged()
+{
+    for (wl_resource *r : resources) {
+        sendStackingOrderChanged(r);
+    }
+}
+
+void PlasmaWindowManagementInterface::Private::sendStackingOrderChanged(wl_resource *r)
+{
+    if (wl_resource_get_version(r) < ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STACKING_ORDER_CHANGED_SINCE_VERSION) {
+        return;
+    }
+
+    wl_array wlIds;
+    wl_array_init(&wlIds);
+    const size_t memLength = sizeof(uint32_t) * stackingOrder.size();
+    void *s = wl_array_add(&wlIds, memLength);
+    memcpy(s, stackingOrder.data(), memLength);
+
+    org_kde_plasma_window_management_send_stacking_order_changed(r, &wlIds);
+
+    wl_array_release(&wlIds);
 }
 
 void PlasmaWindowManagementInterface::Private::showDesktopCallback(wl_client *client, wl_resource *resource, uint32_t state)
@@ -207,6 +234,7 @@ void PlasmaWindowManagementInterface::Private::bind(wl_client *client, uint32_t 
     for (auto it = windows.constBegin(); it != windows.constEnd(); ++it) {
         org_kde_plasma_window_management_send_window(shell, (*it)->d->windowId);
     }
+    sendStackingOrderChanged();
 }
 
 void PlasmaWindowManagementInterface::Private::unbind(wl_resource *resource)
@@ -264,6 +292,16 @@ void PlasmaWindowManagementInterface::unmapWindow(PlasmaWindowInterface *window)
     d->windows.removeOne(window);
     Q_ASSERT(!d->windows.contains(window));
     window->d->unmap();
+}
+
+void PlasmaWindowManagementInterface::setStackingOrder(const QVector<quint32>& stackingOrder)
+{
+    Q_D();
+    if (d->stackingOrder == stackingOrder) {
+        return;
+    }
+    d->stackingOrder = stackingOrder;
+    d->sendStackingOrderChanged();
 }
 
 void PlasmaWindowManagementInterface::setPlasmaVirtualDesktopManagementInterface(PlasmaVirtualDesktopManagementInterface *manager)
@@ -956,6 +994,11 @@ void PlasmaWindowInterface::setGeometry(const QRect &geometry)
 void PlasmaWindowInterface::setApplicationMenuPaths(const QString &serviceName, const QString &objectPath)
 {
     d->setApplicationMenuPaths(serviceName, objectPath);
+}
+
+quint32 PlasmaWindowInterface::internalId() const
+{
+    return d->windowId;
 }
 
 }
