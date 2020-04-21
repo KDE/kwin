@@ -1078,7 +1078,7 @@ void WindowPixmap::create()
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         // use Buffer
         update();
-        if ((m_buffer || !m_fbo.isNull()) && m_subSurface.isNull()) {
+        if (!isRoot() && isValid()) {
             m_window->unreferencePreviousPixmap();
         }
         return;
@@ -1183,6 +1183,11 @@ bool WindowPixmap::isValid() const
         return true;
     }
     return m_pixmap != XCB_PIXMAP_NONE;
+}
+
+bool WindowPixmap::isRoot() const
+{
+    return !m_parent;
 }
 
 KWaylandServer::SurfaceInterface *WindowPixmap::surface() const

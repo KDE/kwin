@@ -425,6 +425,10 @@ public:
      */
     virtual bool isValid() const;
     /**
+     * Returns @c true if this is the root window pixmap; otherwise returns @c false.
+     */
+    bool isRoot() const;
+    /**
      * @return The native X11 pixmap handle
      */
     xcb_pixmap_t pixmap() const;
