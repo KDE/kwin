@@ -404,7 +404,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         }
     );
 
-
     m_virtualDesktopManagement = m_display->createPlasmaVirtualDesktopManagement(m_display);
     m_virtualDesktopManagement->create();
     m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
@@ -490,6 +489,21 @@ void WaylandServer::initWorkspace()
                 );
             }
         );
+
+        connect(workspace(), &Workspace::workspaceInitialized, this, [this] {
+            auto f = [this] () {
+                QVector<quint32> ids;
+                for (Toplevel *toplevel : workspace()->stackingOrder()) {
+                    auto *client = qobject_cast<AbstractClient *>(toplevel);
+                    if (client && client->windowManagementInterface()) {
+                        ids << client->windowManagementInterface()->internalId();
+                    }
+                }
+                m_windowManagement->setStackingOrder(ids);
+            };
+            f();
+            connect(workspace(), &Workspace::stackingOrderChanged, this, f);
+        });
     }
 
     if (hasScreenLockerIntegration()) {

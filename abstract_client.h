@@ -864,6 +864,13 @@ public:
      */
     virtual bool supportsWindowRules() const;
 
+    /**
+     * Return window management interface
+     */
+    KWayland::Server::PlasmaWindowInterface *windowManagementInterface() const {
+        return m_windowManagementInterface;
+    }
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -996,10 +1003,6 @@ protected:
     QRect electricBorderMaximizeGeometry(QPoint pos, int desktop);
     void updateQuickTileMode(QuickTileMode newMode) {
         m_quickTileMode = newMode;
-    }
-
-    KWayland::Server::PlasmaWindowInterface *windowManagementInterface() const {
-        return m_windowManagementInterface;
     }
 
     // geometry handling
