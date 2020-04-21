@@ -91,9 +91,9 @@ public:
     explicit QPainterWindowPixmap(Scene::Window *window);
     ~QPainterWindowPixmap() override;
     void create() override;
+    void update() override;
     bool isValid() const override;
 
-    void updateBuffer() override;
     const QImage &image();
 
 protected:

@@ -1569,10 +1569,6 @@ static bool needsPixmapUpdate(const OpenGLWindowPixmap *pixmap)
 bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
-        // always call updateBuffer to get the sub-surface tree updated
-        if (subSurface().isNull() && !toplevel()->damage().isEmpty()) {
-            updateBuffer();
-        }
         if (needsPixmapUpdate(this)) {
             m_texture->updateFromPixmap(this);
             // mipmaps need to be updated
@@ -1586,11 +1582,6 @@ bool OpenGLWindowPixmap::bind()
             static_cast<OpenGLWindowPixmap*>(*it)->bind();
         }
         return true;
-    }
-    // also bind all children, needs to be done before checking isValid
-    // as there might be valid children to render, see https://bugreports.qt.io/browse/QTBUG-52192
-    if (subSurface().isNull()) {
-        updateBuffer();
     }
     for (auto it = children().constBegin(); it != children().constEnd(); ++it) {
         static_cast<OpenGLWindowPixmap*>(*it)->bind();

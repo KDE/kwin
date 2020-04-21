@@ -271,10 +271,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     if (!pixmap || !pixmap->isValid()) {
         return;
     }
-    if (!toplevel->damage().isEmpty()) {
-        pixmap->updateBuffer();
-        toplevel->resetDamage();
-    }
+    toplevel->resetDamage();
 
     QPainter *scenePainter = m_scene->scenePainter();
     QPainter *painter = scenePainter;
@@ -451,10 +448,10 @@ WindowPixmap *QPainterWindowPixmap::createChild(const QPointer<KWaylandServer::S
     return new QPainterWindowPixmap(subSurface, this);
 }
 
-void QPainterWindowPixmap::updateBuffer()
+void QPainterWindowPixmap::update()
 {
     const auto oldBuffer = buffer();
-    WindowPixmap::updateBuffer();
+    WindowPixmap::update();
     const auto &b = buffer();
     if (!surface()) {
         // That's an internal client.

@@ -344,6 +344,7 @@ public:
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
     void invalidateQuadsCache();
+    void preprocess();
 protected:
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
     WindowQuadList makeContentsQuads() const;
@@ -362,8 +363,8 @@ protected:
      *
      * @return The WindowPixmap casted to T* or @c NULL if there is no valid window pixmap.
      */
-    template<typename T> T *windowPixmap();
-    template<typename T> T *previousWindowPixmap();
+    template<typename T> T *windowPixmap() const;
+    template<typename T> T *previousWindowPixmap() const;
     /**
      * @brief Factory method to create a WindowPixmap.
      *
@@ -415,6 +416,10 @@ public:
      * native pixmap to the rendering format.
      */
     virtual void create();
+    /**
+     * @brief Recursively updates the mapping between the WindowPixmap and the buffer.
+     */
+    virtual void update();
     /**
      * @return @c true if the pixmap has been created and is valid, @c false otherwise
      */
@@ -494,12 +499,6 @@ protected:
      * @return The Window this WindowPixmap belongs to
      */
     Scene::Window *window();
-
-    /**
-     * Should be called by the implementing subclasses when the Wayland Buffer changed and needs
-     * updating.
-     */
-    virtual void updateBuffer();
 
     /**
      * Sets the sub-surface tree to @p children.
@@ -631,15 +630,8 @@ QImage WindowPixmap::internalImage() const
 
 template <typename T>
 inline
-T* Scene::Window::windowPixmap()
+T *Scene::Window::windowPixmap() const
 {
-    if (m_currentPixmap.isNull()) {
-        m_currentPixmap.reset(createWindowPixmap());
-    }
-    if (m_currentPixmap->isValid()) {
-        return static_cast<T*>(m_currentPixmap.data());
-    }
-    m_currentPixmap->create();
     if (m_currentPixmap->isValid()) {
         return static_cast<T*>(m_currentPixmap.data());
     } else {
@@ -649,7 +641,7 @@ T* Scene::Window::windowPixmap()
 
 template <typename T>
 inline
-T* Scene::Window::previousWindowPixmap()
+T *Scene::Window::previousWindowPixmap() const
 {
     return static_cast<T*>(m_previousPixmap.data());
 }

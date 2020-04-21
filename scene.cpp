@@ -211,6 +211,9 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
     foreach (Window * w, stacking_order) { // bottom to top
         Toplevel* topw = w->window();
 
+        // Let the scene window update the window pixmap tree.
+        w->preprocess();
+
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
@@ -265,6 +268,9 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         window->resetPaintingEnabled();
         data.paint = region;
         data.paint |= toplevel->repaints();
+
+        // Let the scene window update the window pixmap tree.
+        window->preprocess();
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
@@ -732,7 +738,9 @@ void Scene::Window::updatePixmap()
     if (m_currentPixmap.isNull()) {
         m_currentPixmap.reset(createWindowPixmap());
     }
-    if (!m_currentPixmap->isValid()) {
+    if (m_currentPixmap->isValid()) {
+        m_currentPixmap->update();
+    } else {
         m_currentPixmap->create();
     }
 }
@@ -1018,6 +1026,16 @@ void Scene::Window::updateShadow(Shadow* shadow)
     m_shadow = shadow;
 }
 
+void Scene::Window::preprocess()
+{
+    // The tracked damage will be reset after the scene is done with copying buffer's data.
+    // Note that we have to be prepared for the case where no damage has occurred since kwin
+    // core may discard the current window pixmap at any moment.
+    if (!m_currentPixmap || !window()->damage().isEmpty()) {
+        updatePixmap();
+    }
+}
+
 //****************************************
 // WindowPixmap
 //****************************************
@@ -1059,7 +1077,7 @@ void WindowPixmap::create()
     // always update from Buffer on Wayland, don't try using XPixmap
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         // use Buffer
-        updateBuffer();
+        update();
         if ((m_buffer || !m_fbo.isNull()) && m_subSurface.isNull()) {
             m_window->unreferencePreviousPixmap();
         }
@@ -1094,21 +1112,7 @@ void WindowPixmap::create()
     m_window->unreferencePreviousPixmap();
 }
 
-WindowPixmap *WindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface)
-{
-    Q_UNUSED(subSurface)
-    return nullptr;
-}
-
-bool WindowPixmap::isValid() const
-{
-    if (!m_buffer.isNull() || !m_fbo.isNull() || !m_internalImage.isNull()) {
-        return true;
-    }
-    return m_pixmap != XCB_PIXMAP_NONE;
-}
-
-void WindowPixmap::updateBuffer()
+void WindowPixmap::update()
 {
     using namespace KWaylandServer;
     if (SurfaceInterface *s = surface()) {
@@ -1123,7 +1127,7 @@ void WindowPixmap::updateBuffer()
             auto it = std::find_if(oldTree.begin(), oldTree.end(), [subSurface] (WindowPixmap *p) { return p->m_subSurface == subSurface; });
             if (it != oldTree.end()) {
                 children << *it;
-                (*it)->updateBuffer();
+                (*it)->update();
                 oldTree.erase(it);
             } else {
                 WindowPixmap *p = createChild(subSurface);
@@ -1165,6 +1169,20 @@ void WindowPixmap::updateBuffer()
             m_buffer.clear();
         }
     }
+}
+
+WindowPixmap *WindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface)
+{
+    Q_UNUSED(subSurface)
+    return nullptr;
+}
+
+bool WindowPixmap::isValid() const
+{
+    if (!m_buffer.isNull() || !m_fbo.isNull() || !m_internalImage.isNull()) {
+        return true;
+    }
+    return m_pixmap != XCB_PIXMAP_NONE;
 }
 
 KWaylandServer::SurfaceInterface *WindowPixmap::surface() const
