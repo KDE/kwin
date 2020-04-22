@@ -77,6 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "screens.h"
 #include "shadow.h"
+#include "subsurfacemonitor.h"
 #include "wayland_server.h"
 
 #include "thumbnailitem.h"
@@ -395,25 +396,38 @@ void Scene::addToplevel(Toplevel *c)
     Q_ASSERT(!m_windows.contains(c));
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
+
+    auto discardPixmap = [w]() { w->discardPixmap(); };
+    auto discardQuads = [w]() { w->invalidateQuadsCache(); };
+
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
-    //A change of scale won't affect the geometry in compositor co-ordinates, but will affect the window quads.
     if (c->surface()) {
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, std::bind(&Scene::windowGeometryShapeChanged, this, c));
+        // We generate window quads for sub-surfaces so it's quite important to discard
+        // the pixmap tree and cached window quads when the sub-surface tree is changed.
+        SubSurfaceMonitor *monitor = new SubSurfaceMonitor(c->surface(), this);
+
+        // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardPixmap);
+
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMoved, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
+
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, discardQuads);
     }
-    connect(c, &Toplevel::screenScaleChanged, this,
-        [this, c] {
-            windowGeometryShapeChanged(c);
-        }
-    );
+    connect(c, &Toplevel::screenScaleChanged, this, discardQuads);
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
     w->updateShadow(c->shadow());
-    connect(c, &Toplevel::shadowChanged, this,
-        [w] {
-            w->invalidateQuadsCache();
-        }
-    );
+    connect(c, &Toplevel::shadowChanged, this, discardQuads);
 }
 
 void Scene::removeToplevel(Toplevel *toplevel)

@@ -491,6 +491,7 @@ set(kwin_SRCS
     scripting/workspace_wrapper.cpp
     shadow.cpp
     sm.cpp
+    subsurfacemonitor.cpp
     syncalarmx11filter.cpp
     thumbnailitem.cpp
     toplevel.cpp
