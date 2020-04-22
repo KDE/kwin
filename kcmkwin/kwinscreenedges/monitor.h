@@ -67,7 +67,8 @@ public:
         TopLeft,
         TopRight,
         BottomLeft,
-        BottomRight
+        BottomRight,
+        None
     };
 Q_SIGNALS:
     void changed();

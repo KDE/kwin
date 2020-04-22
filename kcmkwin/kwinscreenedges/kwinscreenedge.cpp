@@ -168,7 +168,7 @@ int KWinScreenEdge::electricBorderToMonitorEdge(ElectricBorder border)
     case ElectricTopLeft:
         return Monitor::TopLeft;
     default: // ELECTRIC_COUNT and ElectricNone
-        Q_ASSERT(false);
+        return Monitor::None;
     }
 }
 

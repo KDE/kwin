@@ -72,7 +72,7 @@ private:
     virtual bool isSaveNeeded() const;
     virtual bool isDefault() const;
 
-    // internal use, assert if border equals ELECTRIC_COUNT or ElectricNone
+    // internal use, return Monitor::None if border equals ELECTRIC_COUNT or ElectricNone
     static int electricBorderToMonitorEdge(ElectricBorder border);
     static ElectricBorder monitorEdgeToElectricBorder(int edge);
 
