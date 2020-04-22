@@ -427,12 +427,6 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
     if (image.isNull() || !s) {
         return;
     }
-    if (image.size() != m_size) {
-        // buffer size has changed, reload shm texture
-        if (!loadTexture(pixmap)) {
-            return;
-        }
-    }
     Q_ASSERT(image.size() == m_size);
     const QRegion damage = s->trackedDamage();
     s->resetTrackedDamage();
