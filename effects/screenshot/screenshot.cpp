@@ -31,11 +31,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QMatrix4x4>
 #include <xcb/xcb_image.h>
+#include <QPoint>
 
 #include <KLocalizedString>
 #include <KNotification>
 
 #include <unistd.h>
+
+class ComparableQPoint : public QPoint
+{
+public:
+    ComparableQPoint(QPoint& point): QPoint(point.x(), point.y())
+    {}
+
+    ComparableQPoint(QPoint point): QPoint(point.x(), point.y())
+    {}
+
+    ComparableQPoint(): QPoint()
+    {}
+
+    // utility class that allows using QMap to sort its keys when they are QPoint
+    // so that the bottom and right points are after the top left ones
+    bool operator<(const ComparableQPoint &other) const {
+        return x() < other.x() || y() < other.y();
+    }
+};
+
 
 namespace KWin
 {
@@ -159,8 +180,60 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
 void ScreenShotEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_cachedOutputGeometry = data.outputGeometry();
-    m_cachedScale = data.screenScale();
+    // When taking a non-nativeSize fullscreenshot, pretend we have a uniform 1.0 ratio
+    // so the screenshot size will match the virtualGeometry
+    m_cachedScale = m_nativeSize ? data.screenScale() : 1.0;
     effects->paintScreen(mask, region, data);
+}
+
+/**
+ * Translates the Point coordinates in m_cacheOutputsImages keys from the virtualGeometry
+ * To a new geometry taking into account the real size of the images (virtualSize * dpr),
+ * moving the siblings images on the right bottom of the image as necessary
+ */
+void ScreenShotEffect::computeCoordinatesAfterScaling()
+{
+    // prepare a translation table that will store oldPoint -> newPoint in the new coordinates
+    QMap<ComparableQPoint, ComparableQPoint> translationMap;
+    for (auto i = m_cacheOutputsImages.keyBegin(); i != m_cacheOutputsImages.keyEnd(); ++i) {
+        translationMap.insert(*i, *i);
+    }
+
+    for (auto i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
+        const auto p = i.key();
+        const auto img = i.value();
+        const auto dpr = img.devicePixelRatio();
+        if (!qFuzzyCompare(dpr, 1.0)) {
+            // must update all coordinates of next rects
+            const int deltaX = img.width() - (img.width() / dpr);
+            const int deltaY = img.height() - (img.height() / dpr);
+
+            // for the next images on the right or bottom
+            // thanks to ComparableQPoint
+            for (auto i2 = m_cacheOutputsImages.constFind(p);
+                 i2 != m_cacheOutputsImages.constEnd(); ++i2) {
+
+                const auto point = i2.key();
+                auto finalPoint = translationMap.value(point);
+
+                if (point.x() >= img.width() + p.x() - deltaX) {
+                    finalPoint.setX(finalPoint.x() + deltaX);
+                }
+                if (point.y() >= img.height() + p.y() - deltaY) {
+                    finalPoint.setY(finalPoint.y() + deltaY);
+                }
+                // update final position point with the necessary deltas
+                translationMap.insert(point, finalPoint);
+            }
+        }
+    }
+
+    // make the new coordinates effective
+    for (auto i = translationMap.keyBegin(); i != translationMap.keyEnd(); ++i) {
+        const auto key = *i;
+        const auto img = m_cacheOutputsImages.take(key);
+        m_cacheOutputsImages.insert(translationMap.value(key), img);
+    }
 }
 
 void ScreenShotEffect::postPaintScreen()
@@ -295,17 +368,45 @@ void ScreenShotEffect::postPaintScreen()
                 return;
             }
             img.setDevicePixelRatio(m_cachedScale);
-            if (m_multipleOutputsImage.isNull()) {
-                m_multipleOutputsImage = QImage(m_scheduledGeometry.size(), QImage::Format_ARGB32);
-                m_multipleOutputsImage.fill(Qt::transparent);
-            }
-            QPainter p;
-            p.begin(&m_multipleOutputsImage);
-            p.drawImage(intersection.topLeft() - m_scheduledGeometry.topLeft(), img);
-            p.end();
+
+            m_cacheOutputsImages.insert(ComparableQPoint(m_cachedOutputGeometry.topLeft()), img);
+
             m_multipleOutputsRendered = m_multipleOutputsRendered.united(intersection);
             if (m_multipleOutputsRendered.boundingRect() == m_scheduledGeometry) {
-                sendReplyImage(m_multipleOutputsImage);
+
+                // Recompute coordinates
+                if (m_nativeSize) {
+                    computeCoordinatesAfterScaling();
+                }
+
+                // find the output image size
+                int width = 0;
+                int height = 0;
+                QMap<ComparableQPoint, QImage>::const_iterator i;
+                for (i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
+                    const auto pos = i.key();
+                    const auto img = i.value();
+
+                    width = qMax(width, pos.x() + img.width());
+                    height = qMax(height, pos.y() + img.height());
+                }
+
+                QImage multipleOutputsImage = QImage(width, height, QImage::Format_ARGB32);
+
+                QPainter p;
+                p.begin(&multipleOutputsImage);
+
+                // reassemble images together
+                for (i = m_cacheOutputsImages.begin(); i != m_cacheOutputsImages.end(); ++i) {
+                    auto pos = i.key();
+                    auto img = i.value();
+                    // disable dpr rendering, we already took care of this
+                    img.setDevicePixelRatio(1.0);
+                    p.drawImage(pos, img);
+                }
+                p.end();
+
+                sendReplyImage(multipleOutputsImage);
             }
 
         } else {
@@ -334,10 +435,11 @@ void ScreenShotEffect::sendReplyImage(const QImage &img)
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(saveTempImage(img)));
     }
     m_scheduledGeometry = QRect();
-    m_multipleOutputsImage = QImage();
     m_multipleOutputsRendered = QRegion();
     m_captureCursor = false;
     m_windowMode = WindowMode::NoCapture;
+    m_cacheOutputsImages.clear();
+    m_cachedOutputGeometry = QRect();
 }
 
 QString ScreenShotEffect::saveTempImage(const QImage &img)
@@ -494,7 +596,7 @@ QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
     return QString();
 }
 
-void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor)
+void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor, bool shouldReturnNativeSize)
 {
     if (!calledFromDBus()) {
         return;
@@ -509,6 +611,7 @@ void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool cap
         return;
     }
     m_captureCursor = captureCursor;
+    m_nativeSize = shouldReturnNativeSize;
 
     showInfoMessage(InfoMessageMode::Screen);
     effects->startInteractivePositionSelection(

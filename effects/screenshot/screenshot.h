@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QImage>
 
+class ComparableQPoint;
 namespace KWin
 {
 
@@ -98,8 +99,9 @@ public Q_SLOTS:
      *
      * @param fd File descriptor into which the screenshot should be saved
      * @param captureCursor Whether to include the mouse cursor
+     * @param shouldReturnNativeSize Whether to return an image according to the virtualGeometry, or according to pixel on screen size
      */
-    Q_SCRIPTABLE void screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor = false);
+    Q_SCRIPTABLE void screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor = false, bool shouldReturnNativeSize = false);
     /**
      * Saves a screenshot of the screen identified by @p screen into a file and returns the path to the file.
      * Functionality requires hardware support, if not available a null string is returned.
@@ -151,14 +153,17 @@ private:
     void showInfoMessage(InfoMessageMode mode);
     void hideInfoMessage();
     bool isTakingScreenshot() const;
+    void computeCoordinatesAfterScaling();
+
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
     QRect m_scheduledGeometry;
     QDBusMessage m_replyMessage;
     QRect m_cachedOutputGeometry;
-    QImage m_multipleOutputsImage;
     QRegion m_multipleOutputsRendered;
+    QMap<ComparableQPoint, QImage> m_cacheOutputsImages;
     bool m_captureCursor = false;
+    bool m_nativeSize = false;
     enum class WindowMode {
         NoCapture,
         Xpixmap,
