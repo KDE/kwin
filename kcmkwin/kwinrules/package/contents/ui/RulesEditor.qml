@@ -21,7 +21,7 @@
 import QtQuick 2.14
 import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14 as QQC2
-import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kirigami 2.12 as Kirigami
 import org.kde.kcm 1.2
 import org.kde.kitemmodels 1.0
 import org.kde.kcms.kwinrules 1.0
@@ -45,7 +45,7 @@ ScrollViewKCM {
             delegate: Kirigami.ListSectionHeader { label: section }
         }
 
-        Item {
+        Kirigami.PlaceholderMessage {
             id: hintArea
             visible: rulesView.count <= 4
             anchors {
@@ -54,11 +54,10 @@ ScrollViewKCM {
                 right: parent.right
                 bottom: parent.bottom
             }
-            QQC2.Button {
-                anchors.centerIn: parent
+            helpfulAction: QQC2.Action {
                 text: i18n("Add Properties...")
                 icon.name: "list-add-symbolic"
-                onClicked: {
+                onTriggered: {
                     propertySheet.open();
                 }
             }

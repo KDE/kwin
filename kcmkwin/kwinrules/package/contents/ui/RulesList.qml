@@ -23,7 +23,7 @@ import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14 as QQC2
 import QtQml.Models 2.14
 import org.kde.kcm 1.2
-import org.kde.kirigami 2.5 as Kirigami
+import org.kde.kirigami 2.12 as Kirigami
 
 ScrollViewKCM {
     id: rulesListKCM
@@ -66,14 +66,9 @@ ScrollViewKCM {
             NumberAnimation { properties: "y"; duration: Kirigami.Units.longDuration }
         }
 
-        Kirigami.Heading {
-            level: 3
-            enabled: false
+        Kirigami.PlaceholderMessage {
             visible: ruleBookView.count == 0
             anchors.fill: parent
-            horizontalAlignment: Qt.AlignHCenter
-            verticalAlignment: Qt.AlignVCenter
-            wrapMode: Text.WordWrap
             text: i18n("No rules for specific windows are currently set");
         }
     }
