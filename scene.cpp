@@ -423,11 +423,13 @@ void Scene::addToplevel(Toplevel *c)
 
         connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, discardQuads);
     }
+
     connect(c, &Toplevel::screenScaleChanged, this, discardQuads);
+    connect(c, &Toplevel::shadowChanged, this, discardQuads);
+
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
     w->updateShadow(c->shadow());
-    connect(c, &Toplevel::shadowChanged, this, discardQuads);
 }
 
 void Scene::removeToplevel(Toplevel *toplevel)
