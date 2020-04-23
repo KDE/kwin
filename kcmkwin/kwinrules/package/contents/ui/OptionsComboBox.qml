@@ -29,15 +29,7 @@ QQC2.ComboBox {
     id: optionsCombo
 
     textRole: "display"
-    //TODO: After KF5 (qqc2-desktop-style) depends on Qt 5.15 this can be simplified using newer API
-    //      (https://bugs.kde.org/show_bug.cgi?id=419521)
-    //      valueRole: "value"
-    property var currentValue
-
-    onActivated: (index) => {
-        var modelIndex = model.index(index, 0);
-        currentValue = model.data(modelIndex, Qt.UserRole);
-    }
+    valueRole: "value"
 
     property bool multipleChoice: false
     property int selectionMask: 0
