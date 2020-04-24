@@ -217,6 +217,13 @@ protected:
     virtual void paintSimpleScreen(int mask, const QRegion &region);
     // paint the background (not the desktop background - the whole background)
     virtual void paintBackground(const QRegion &region) = 0;
+
+    /**
+     * Notifies about starting to paint.
+     *
+     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
+     */
+    virtual void aboutToStartPainting(const QRegion &damage);
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window
@@ -259,6 +266,8 @@ private:
     QHash< Toplevel*, Window* > m_windows;
     // windows in their stacking order
     QVector< Window* > stacking_order;
+    // how many times finalPaintScreen() has been called
+    int m_paintScreenCount = 0;
 };
 
 /**

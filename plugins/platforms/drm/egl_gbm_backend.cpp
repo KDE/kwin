@@ -417,9 +417,54 @@ void EglGbmBackend::present()
     // Not in use. This backend does per-screen rendering.
 }
 
+static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
+{
+    const int height = output->modeSize().height();
+
+    const QMatrix4x4 matrix = output->transformation();
+
+    QVector<EGLint> rects;
+    rects.reserve(region.rectCount() * 4);
+    for (const QRect &_rect : region) {
+        const QRect rect = matrix.mapRect(_rect);
+
+        rects << rect.left();
+        rects << height - (rect.y() + rect.height());
+        rects << rect.width();
+        rects << rect.height();
+    }
+    return rects;
+}
+
+void EglGbmBackend::aboutToStartPainting(const QRegion &damagedRegion)
+{
+    // See EglGbmBackend::endRenderingFrameForScreen comment for the reason why we only support screenId=0
+    if (m_outputs.count() > 1) {
+        return;
+    }
+
+    const Output &output = m_outputs.at(0);
+    if (output.bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
+        const QRegion region = damagedRegion & output.output->geometry();
+
+        QVector<EGLint> rects = regionToRects(region, output.output);
+        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.eglSurface,
+                                                   rects.data(), rects.count()/4);
+        if (!correct) {
+            qCWarning(KWIN_DRM) << "failed eglSetDamageRegionKHR" << eglGetError();
+        }
+    }
+}
+
 void EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
-    eglSwapBuffers(eglDisplay(), output.eglSurface);
+    if (supportsSwapBuffersWithDamage()) {
+        QVector<EGLint> rects = regionToRects(output.damageHistory.constFirst(), output.output);
+        eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
+                                    rects.data(), rects.count()/4);
+    } else {
+        eglSwapBuffers(eglDisplay(), output.eglSurface);
+    }
     output.buffer = m_backend->createBuffer(output.gbmSurface);
 
     Q_EMIT output.output->outputChange(damagedRegion);

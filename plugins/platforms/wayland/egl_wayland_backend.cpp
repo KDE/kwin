@@ -286,6 +286,39 @@ void EglWaylandBackend::present()
     }
 }
 
+static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
+{
+    const int height = output->modeSize().height();
+    const QMatrix4x4 matrix = output->transformation();
+
+    QVector<EGLint> rects;
+    rects.reserve(region.rectCount() * 4);
+    for (const QRect &_rect : region) {
+        const QRect rect = matrix.mapRect(_rect);
+
+        rects << rect.left();
+        rects << height - (rect.y() + rect.height());
+        rects << rect.width();
+        rects << rect.height();
+    }
+    return rects;
+}
+
+void EglWaylandBackend::aboutToStartPainting(const QRegion &damagedRegion)
+{
+    EglWaylandOutput* output = m_outputs.at(0);
+    if (output->m_bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
+        const QRegion region = damagedRegion & output->m_waylandOutput->geometry();
+
+        QVector<EGLint> rects = regionToRects(region, output->m_waylandOutput);
+        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output->m_eglSurface,
+                                                   rects.data(), rects.count()/4);
+        if (!correct) {
+            qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
+        }
+    }
+}
+
 void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion &damage)
 {
     output->m_waylandOutput->surface()->setupFrameCallback();
@@ -296,11 +329,16 @@ void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion
 
     Q_EMIT output->m_waylandOutput->outputChange(damage);
 
-    if (supportsBufferAge()) {
-        eglSwapBuffers(eglDisplay(), output->m_eglSurface);
-        eglQuerySurface(eglDisplay(), output->m_eglSurface, EGL_BUFFER_AGE_EXT, &output->m_bufferAge);
+    if (supportsSwapBuffersWithDamage() && !output->m_damageHistory.isEmpty()) {
+        QVector<EGLint> rects = regionToRects(output->m_damageHistory.constFirst(), output->m_waylandOutput);
+        eglSwapBuffersWithDamageEXT(eglDisplay(), output->m_eglSurface,
+                                    rects.data(), rects.count()/4);
     } else {
         eglSwapBuffers(eglDisplay(), output->m_eglSurface);
+    }
+
+    if (supportsBufferAge()) {
+        eglQuerySurface(eglDisplay(), output->m_eglSurface, EGL_BUFFER_AGE_EXT, &output->m_bufferAge);
     }
 
 }

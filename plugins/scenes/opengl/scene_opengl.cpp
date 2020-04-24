@@ -606,6 +606,11 @@ void SceneOpenGL2::paintCursor()
     glDisable(GL_BLEND);
 }
 
+void SceneOpenGL::aboutToStartPainting(const QRegion &damage)
+{
+    m_backend->aboutToStartPainting(damage);
+}
+
 qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame

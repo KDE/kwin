@@ -76,6 +76,7 @@ public:
 protected:
     SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     void paintBackground(const QRegion &region) override;
+    void aboutToStartPainting(const QRegion &damage) override;
     void extendPaintRegion(QRegion &region, bool opaqueFullscreen) override;
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
