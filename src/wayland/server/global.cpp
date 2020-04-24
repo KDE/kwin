@@ -26,12 +26,14 @@ Global::Private::~Private() = default;
 void Global::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
 {
     auto d = reinterpret_cast<Private*>(data);
+    if (!d) {
+        return;
+    }
     d->bind(client, version, id);
 }
 
 void Global::Private::create()
 {
-    Q_ASSERT(!global);
     global = wl_global_create(*display, m_interface, m_version, this, bind);
 }
 
@@ -49,6 +51,14 @@ Global::~Global()
 void Global::create()
 {
     d->create();
+}
+
+void Global::remove()
+{
+    if (!d->global) {
+        return;
+    }
+    wl_global_remove(d->global);
 }
 
 void Global::destroy()
