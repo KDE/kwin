@@ -62,8 +62,6 @@ public:
     void setupActionForGlobalAccel(QAction *action) override;
 
     OverlayWindow *createOverlayWindow() override;
-
-    void updateXTime() override;
     OutlineVisual *createOutline(Outline *outline) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
 

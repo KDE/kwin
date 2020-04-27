@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/outputconfiguration_interface.h>
 #include <KWayland/Server/outputchangeset.h>
 
+#include <QX11Info>
+
 namespace KWin
 {
 
@@ -501,8 +503,32 @@ OverlayWindow *Platform::createOverlayWindow()
     return nullptr;
 }
 
+static quint32 monotonicTime()
+{
+    timespec ts;
+
+    const int result = clock_gettime(CLOCK_MONOTONIC, &ts);
+    if (result)
+        qCWarning(KWIN_CORE, "Failed to query monotonic time: %s", strerror(errno));
+
+    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000L;
+}
+
 void Platform::updateXTime()
 {
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeX11:
+        kwinApp()->setX11Time(QX11Info::getTimestamp(), Application::TimestampUpdate::Always);
+        break;
+
+    case Application::OperationModeXwayland:
+        kwinApp()->setX11Time(monotonicTime(), Application::TimestampUpdate::Always);
+        break;
+
+    default:
+        // Do not update the current X11 time stamp if it's the Wayland only session.
+        break;
+    }
 }
 
 OutlineVisual *Platform::createOutline(Outline *outline)

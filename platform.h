@@ -364,13 +364,9 @@ public:
     virtual OverlayWindow *createOverlayWindow();
 
     /**
-     * Allows a platform to update the X11 timestamp.
-     * Mostly for the X11 standalone platform to interact with QX11Info.
-     *
-     * Default implementation does nothing. This means code relying on the X timestamp being up to date,
-     * might not be working. E.g. synced X11 window resizing
+     * Queries the current X11 time stamp of the X server.
      */
-    virtual void updateXTime();
+    void updateXTime();
 
     /**
      * Creates the OutlineVisual for the given @p outline.
