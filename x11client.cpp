@@ -2342,9 +2342,19 @@ void X11Client::getIcons()
     setIcon(icon);
 }
 
+/**
+ * Returns \c true if X11Client wants to throttle resizes; otherwise returns \c false.
+ */
+bool X11Client::wantsSyncCounter() const
+{
+    return true;
+}
+
 void X11Client::getSyncCounter()
 {
     if (!Xcb::Extensions::self()->isSyncAvailable())
+        return;
+    if (!wantsSyncCounter())
         return;
 
     Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);

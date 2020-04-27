@@ -62,6 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include "main.h"
 #include "decorations/decorationbridge.h"
+#include "xwaylandclient.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -528,7 +529,12 @@ void Workspace::setupClientConnections(AbstractClient *c)
 X11Client *Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
-    X11Client *c = new X11Client();
+    X11Client *c = nullptr;
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        c = new X11Client();
+    } else {
+        c = new XwaylandClient();
+    }
     setupClientConnections(c);
     if (X11Compositor *compositor = X11Compositor::self()) {
         connect(c, &X11Client::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);

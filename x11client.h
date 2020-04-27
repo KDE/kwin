@@ -85,6 +85,8 @@ class KWIN_EXPORT X11Client : public AbstractClient
     Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
 public:
     explicit X11Client();
+    ~X11Client() override; ///< Use destroyClient() or releaseWindow()
+
     xcb_window_t wrapperId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }
     xcb_window_t frameId() const override;
@@ -320,6 +322,7 @@ public:
     const SyncRequest &syncRequest() const {
         return m_syncRequest;
     }
+    virtual bool wantsSyncCounter() const;
     void handleSync();
 
     static void cleanupX11();
@@ -333,9 +336,6 @@ private Q_SLOTS:
     void shadeUnhover();
 
 private:
-    // Use Workspace::createClient()
-    ~X11Client() override; ///< Use destroyClient() or releaseWindow()
-
     // Handlers for X11 events
     bool mapRequestEvent(xcb_map_request_event_t *e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
