@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class SyncFilter;
 class XInputIntegration;
 class WindowSelector;
 class X11EventFilter;
@@ -101,7 +100,6 @@ private:
     Display *m_x11Display;
     QScopedPointer<WindowSelector> m_windowSelector;
     QScopedPointer<X11EventFilter> m_screenEdgesFilter;
-    std::unique_ptr<SyncFilter> m_syncFilter;
 
     QVector<X11Output*> m_outputs;
 };

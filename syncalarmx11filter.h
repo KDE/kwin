@@ -17,22 +17,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_SYNC_FILTER_H
-#define KWIN_SYNC_FILTER_H
+
+#pragma once
+
 #include "x11eventfilter.h"
 
 namespace KWin
 {
-class X11Cursor;
 
-class SyncFilter : public X11EventFilter
+class SyncAlarmX11Filter : public X11EventFilter
 {
 public:
-    explicit SyncFilter();
+    SyncAlarmX11Filter();
 
     bool event(xcb_generic_event_t *event) override;
 };
 
-}
-
-#endif
+} // namespace KWin

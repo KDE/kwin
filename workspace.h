@@ -668,6 +668,7 @@ private:
     QList<X11EventFilter *> m_eventFilters;
     QList<X11EventFilter *> m_genericEventFilters;
     QScopedPointer<X11EventFilter> m_movingClientFilter;
+    QScopedPointer<X11EventFilter> m_syncAlarmFilter;
 
     SessionManager *m_sessionManager;
 private:

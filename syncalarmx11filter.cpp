@@ -17,32 +17,31 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "sync_filter.h"
-#include "x11client.h"
+
+#include "syncalarmx11filter.h"
 #include "workspace.h"
+#include "x11client.h"
 #include "xcbutils.h"
 
 namespace KWin
 {
 
-SyncFilter::SyncFilter()
+SyncAlarmX11Filter::SyncAlarmX11Filter()
     : X11EventFilter(QVector<int>{Xcb::Extensions::self()->syncAlarmNotifyEvent()})
 {
 }
 
-bool SyncFilter::event(xcb_generic_event_t *event)
+bool SyncAlarmX11Filter::event(xcb_generic_event_t *event)
 {
-    auto e = reinterpret_cast< xcb_sync_alarm_notify_event_t* >(event);
-    auto client = workspace()->findClient(
-        [e] (const X11Client *c) {
-            const auto syncRequest = c->syncRequest();
-            return e->alarm == syncRequest.alarm && e->counter_value.hi == syncRequest.value.hi && e->counter_value.lo == syncRequest.value.lo;
-        }
-    );
+    auto alarmEvent = reinterpret_cast<xcb_sync_alarm_notify_event_t *>(event);
+    auto client = workspace()->findClient([alarmEvent](const X11Client *client) {
+        const auto syncRequest = client->syncRequest();
+        return alarmEvent->alarm == syncRequest.alarm && alarmEvent->counter_value.hi == syncRequest.value.hi && alarmEvent->counter_value.lo == syncRequest.value.lo;
+    });
     if (client) {
         client->handleSync();
     }
     return false;
 }
 
-}
+} // namespace KWin

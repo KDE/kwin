@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "platform.h"
 #include "scripting/scripting.h"
+#include "syncalarmx11filter.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -339,6 +340,9 @@ void Workspace::initWithX11()
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         m_wasUserInteractionFilter.reset(new WasUserInteractionX11Filter);
         m_movingClientFilter.reset(new MovingClientX11Filter);
+    }
+    if (Xcb::Extensions::self()->isSyncAvailable()) {
+        m_syncAlarmFilter.reset(new SyncAlarmX11Filter);
     }
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
