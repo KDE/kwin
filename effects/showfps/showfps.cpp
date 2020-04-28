@@ -123,13 +123,14 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
 
 void ShowFpsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    frames[ frames_pos ] = t.restart();
+    frames[ frames_pos ] = QDateTime::currentMSecsSinceEpoch();
     if (++frames_pos == MAX_FPS)
         frames_pos = 0;
     effects->prePaintScreen(data, time);
     data.paint += fps_rect;
 
     paint_size[ paints_pos ] = 0;
+    t.restart();
 }
 
 void ShowFpsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
@@ -150,11 +151,15 @@ void ShowFpsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Windo
 void ShowFpsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
     effects->paintScreen(mask, region, data);
+    int lastFrame = frames_pos - 1;
+    if (lastFrame < 0)
+        lastFrame = MAX_FPS - 1;
+    const qint64 lastTimestamp = frames[lastFrame];
     int fps = 0;
     for (int i = 0;
             i < MAX_FPS;
             ++i)
-        if (abs(t.elapsed() - frames[ i ]) < 1000)
+        if (abs(lastTimestamp - frames[ i ]) < 1000)
             ++fps; // count all frames in the last second
     if (fps > MAX_TIME)
         fps = MAX_TIME; // keep it the same height

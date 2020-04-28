@@ -89,7 +89,7 @@ private:
     int paint_size[ NUM_PAINTS ]; // number of pixels painted
     int paints_pos;  // position in the queue
     enum { MAX_FPS = 200 };
-    int frames[ MAX_FPS ]; // (sec*1000+msec) of the time the frame was done
+    qint64 frames[ MAX_FPS ]; // the time when the frame was done
     int frames_pos; // position in the queue
     double alpha;
     int x;
