@@ -501,9 +501,9 @@ void Placement::placeOnScreenDisplay(AbstractClient *c, const QRect &area)
 {
     Q_ASSERT(area.isValid());
 
-    // place at lower 1/3 of the screen
+    // place at lower area of the screen
     const int x = area.left() + (area.width() -  c->width())  / 2;
-    const int y = area.top()  + 2 * (area.height() - c->height()) / 3;
+    const int y = area.top() + 2 * area.height() / 3 - c->height() / 2;
 
     c->move(QPoint(x, y));
 }
