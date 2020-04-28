@@ -221,7 +221,25 @@ bool Compositor::setupStart()
 
     const auto availablePlugins = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.scenes"));
 
+    for (const KPluginMetaData &pluginMetaData : availablePlugins) {
+        qCDebug(KWIN_CORE) << "Available scene plugin:" << pluginMetaData.fileName();
+    }
+
     for (auto type : qAsConst(supportedCompositors)) {
+        switch (type) {
+        case XRenderCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the XRender scene";
+            break;
+        case OpenGLCompositing:
+        case OpenGL2Compositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
+            break;
+        case QPainterCompositing:
+            qCDebug(KWIN_CORE) << "Attempting to load the QPainter scene";
+            break;
+        case NoCompositing:
+            Q_UNREACHABLE();
+        }
         const auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
             [type] (const auto &plugin) {
                 const auto &metaData = plugin.rawData();
