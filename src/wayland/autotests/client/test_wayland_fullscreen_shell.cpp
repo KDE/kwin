@@ -6,9 +6,9 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/fullscreen_shell.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/fullscreen_shell.h"
 // Wayland
 #include <wayland-client-protocol.h>
 

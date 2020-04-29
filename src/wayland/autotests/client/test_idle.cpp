@@ -6,11 +6,11 @@
 // Qt
 #include <QtTest>
 // client
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/idle.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/seat.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/idle.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/seat.h"
 // server
 #include "../../src/server/display.h"
 #include "../../src/server/idle_interface.h"

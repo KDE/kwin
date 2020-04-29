@@ -6,24 +6,24 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/client/blur.h"
-#include "../../src/client/contrast.h"
-#include "../../src/client/compositor.h"
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/dpms.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/output.h"
-#include "../../src/client/pointerconstraints.h"
-#include "../../src/client/pointergestures.h"
-#include "../../src/client/idleinhibit.h"
-#include "../../src/client/seat.h"
-#include "../../src/client/relativepointer.h"
-#include "../../src/client/server_decoration.h"
-#include "../../src/client/shell.h"
-#include "../../src/client/surface.h"
-#include "../../src/client/subcompositor.h"
-#include "../../src/client/xdgshell.h"
+#include "KWayland/Client/blur.h"
+#include "KWayland/Client/contrast.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/dpms.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/output.h"
+#include "KWayland/Client/pointerconstraints.h"
+#include "KWayland/Client/pointergestures.h"
+#include "KWayland/Client/idleinhibit.h"
+#include "KWayland/Client/seat.h"
+#include "KWayland/Client/relativepointer.h"
+#include "KWayland/Client/server_decoration.h"
+#include "KWayland/Client/shell.h"
+#include "KWayland/Client/surface.h"
+#include "KWayland/Client/subcompositor.h"
+#include "KWayland/Client/xdgshell.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/display.h"
@@ -48,9 +48,9 @@
 #include <wayland-client-protocol.h>
 #include <wayland-dpms-client-protocol.h>
 #include <wayland-idle-inhibit-unstable-v1-client-protocol.h>
-#include <wayland-server-decoration-client-protocol.h>
-#include <wayland-text-input-v0-client-protocol.h>
-#include <wayland-text-input-v2-client-protocol.h>
+// #include <wayland-server-decoration-client-protocol.h>
+// #include <wayland-text-input-v0-client-protocol.h>
+// #include <wayland-text-input-v2-client-protocol.h>
 #include <wayland-relativepointer-unstable-v1-client-protocol.h>
 #include <wayland-pointer-gestures-unstable-v1-client-protocol.h>
 #include <wayland-pointer-constraints-unstable-v1-client-protocol.h>
@@ -77,9 +77,6 @@ private Q_SLOTS:
     void testBindContrastManager();
     void testBindSlideManager();
     void testBindDpmsManager();
-    void testBindServerSideDecorationManager();
-    void testBindTextInputManagerUnstableV0();
-    void testBindTextInputManagerUnstableV2();
     void testBindXdgShellUnstableV5();
     void testBindRelativePointerManagerUnstableV1();
     void testBindPointerGesturesUnstableV1();
@@ -314,21 +311,6 @@ void TestWaylandRegistry::testBindSlideManager()
 void TestWaylandRegistry::testBindDpmsManager()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::Dpms, SIGNAL(dpmsAnnounced(quint32,quint32)), bindDpmsManager, org_kde_kwin_dpms_manager_destroy)
-}
-
-void TestWaylandRegistry::testBindServerSideDecorationManager()
-{
-    TEST_BIND(KWayland::Client::Registry::Interface::ServerSideDecorationManager, SIGNAL(serverSideDecorationManagerAnnounced(quint32,quint32)), bindServerSideDecorationManager, org_kde_kwin_server_decoration_manager_destroy)
-}
-
-void TestWaylandRegistry::testBindTextInputManagerUnstableV0()
-{
-    TEST_BIND(KWayland::Client::Registry::Interface::TextInputManagerUnstableV0, SIGNAL(textInputManagerUnstableV0Announced(quint32,quint32)), bindTextInputManagerUnstableV0, wl_text_input_manager_destroy)
-}
-
-void TestWaylandRegistry::testBindTextInputManagerUnstableV2()
-{
-    TEST_BIND(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2, SIGNAL(textInputManagerUnstableV2Announced(quint32,quint32)), bindTextInputManagerUnstableV2, zwp_text_input_manager_v2_destroy)
 }
 
 void TestWaylandRegistry::testBindXdgShellUnstableV5()

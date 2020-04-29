@@ -4,15 +4,15 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "../src/client/compositor.h"
-#include "../src/client/connection_thread.h"
-#include "../src/client/event_queue.h"
-#include "../src/client/registry.h"
-#include "../src/client/shell.h"
-#include "../src/client/shm_pool.h"
-#include "../src/client/server_decoration.h"
-#include "../src/client/xdgshell.h"
-#include "../src/client/xdgforeign.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/shell.h"
+#include "KWayland/Client/shm_pool.h"
+#include "KWayland/Client/server_decoration.h"
+#include "KWayland/Client/xdgshell.h"
+#include "KWayland/Client/xdgforeign.h"
 // Qt
 #include <QCommandLineParser>
 #include <QGuiApplication>

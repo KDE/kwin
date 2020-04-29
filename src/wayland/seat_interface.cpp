@@ -21,7 +21,7 @@
 #define WL_SEAT_NAME_SINCE_VERSION 2
 #endif
 // linux
-#include <config-kwayland.h>
+#include <config-kwaylandserver.h>
 #if HAVE_LINUX_INPUT_H
 #include <linux/input.h>
 #endif

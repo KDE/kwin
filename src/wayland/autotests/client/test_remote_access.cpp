@@ -7,11 +7,11 @@
 // Qt
 #include <QtTest>
 // client
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/remote_access.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/output.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/remote_access.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/output.h"
 // server
 #include "../../src/server/display.h"
 #include "../../src/server/output_interface.h"

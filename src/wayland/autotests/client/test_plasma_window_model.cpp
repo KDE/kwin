@@ -6,11 +6,11 @@
 // Qt
 #include <QtTest>
 // client
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/plasmawindowmanagement.h"
-#include "../../src/client/plasmawindowmodel.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/plasmawindowmanagement.h"
+#include "KWayland/Client/plasmawindowmodel.h"
 // server
 #include "../../src/server/display.h"
 #include "../../src/server/plasmawindowmanagement_interface.h"

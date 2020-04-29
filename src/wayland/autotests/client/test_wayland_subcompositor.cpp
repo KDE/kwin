@@ -6,10 +6,10 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/subcompositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/subcompositor.h"
 #include "../../src/server/display.h"
 #include "../../src/server/subcompositor_interface.h"
 

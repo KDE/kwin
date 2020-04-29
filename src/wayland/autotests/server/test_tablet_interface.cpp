@@ -27,11 +27,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/tablet_interface.h"
 
-#include "../../src/client/compositor.h"
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/seat.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/seat.h"
 
 #include "qwayland-tablet-unstable-v2.h"
 

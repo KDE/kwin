@@ -10,10 +10,10 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QWidget>
-#include "../src/client/connection_thread.h"
-#include "../src/client/dpms.h"
-#include "../src/client/registry.h"
-#include "../src/client/output.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/dpms.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/output.h"
 
 using namespace KWayland::Client;
 

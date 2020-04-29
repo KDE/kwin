@@ -6,19 +6,19 @@
 // Qt
 #include <QtTest>
 // KWin
-#include "../../src/client/compositor.h"
-#include "../../src/client/connection_thread.h"
-#include "../../src/client/event_queue.h"
-#include "../../src/client/region.h"
-#include "../../src/client/registry.h"
-#include "../../src/client/surface.h"
-#include "../../src/client/plasmavirtualdesktop.h"
+#include "KWayland/Client/compositor.h"
+#include "KWayland/Client/connection_thread.h"
+#include "KWayland/Client/event_queue.h"
+#include "KWayland/Client/region.h"
+#include "KWayland/Client/registry.h"
+#include "KWayland/Client/surface.h"
+#include "KWayland/Client/plasmavirtualdesktop.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/region_interface.h"
 #include "../../src/server/plasmavirtualdesktop_interface.h"
 #include "../../src/server/plasmawindowmanagement_interface.h"
-#include "../../src/client/plasmawindowmanagement.h"
+#include "KWayland/Client/plasmawindowmanagement.h"
 
 using namespace KWayland::Client;
 
