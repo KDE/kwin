@@ -51,24 +51,6 @@ public:
      * to the clients.
      **/
     void create();
-
-    /**
-     * Removes the Global from the registry, but does not delete the underlying wl_global
-     *
-     * Removal of a global is racey. A client could be trying to bind at that moment.
-     * Typically globals are static for the lifespan of the compositor, however there are exceptions
-     *
-     * For those cases this call will remove the global from the registry, but keep the wl_global instance alive
-     * and handling bind requests.
-     *
-     * The compositor can then remove the Global wrapper (this object) deleting the wl_global after an arbitrary delay or
-     * keep it around for re-use for the duration of the compositor.
-     *
-     * See https://gitlab.freedesktop.org/wayland/wayland/issues/10
-     *
-     * @since 5.70
-     */
-    void remove();
     /**
      * Destroys the low level wl_global. Afterwards the Global is no longer shown to clients.
      **/

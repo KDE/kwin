@@ -31,7 +31,6 @@ private Q_SLOTS:
 
     void testCreate();
     void testSurfaceDestroy();
-    void testGlobalDestroy();
 
 private:
     KWaylandServer::Display *m_display;
@@ -196,42 +195,6 @@ void TestBlur::testSurfaceDestroy()
     // destroy the blur
     blur.reset();
     QVERIFY(blurDestroyedSpy.wait());
-}
-
-
-void TestBlur::testGlobalDestroy()
-{
-    Registry registry;
-    QSignalSpy blurAnnouncedSpy(&registry, &Registry::blurAnnounced);
-    QSignalSpy blurRemovedSpy(&registry, &Registry::blurRemoved);
-
-    registry.setEventQueue(m_queue);
-
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-
-    QVERIFY(blurAnnouncedSpy.wait());
-
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
-    QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
-    QVERIFY(serverSurfaceCreated.wait());
-
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
-    QSignalSpy blurChanged(serverSurface, &KWaylandServer::SurfaceInterface::blurChanged);
-
-    m_blurManagerInterface->remove();
-
-    // we've deleted our global, but the clients have some operations in flight as they haven't processed this yet
-    // when we process them, we should not throw an error and kill the client
-
-    QScopedPointer<KWayland::Client::Blur> blur(m_blurManager->createBlur(surface.data()));
-    blur->setRegion(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
-    blur->commit();
-    surface->commit(KWayland::Client::Surface::CommitFlag::None);
-
-    // client finally sees the blur is gone
-    QVERIFY(blurRemovedSpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestBlur)
