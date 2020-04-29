@@ -226,7 +226,7 @@
         </size>
        </property>
        <property name="text">
-        <string notr="true">Window activation policy description</string>
+        <string>Window activation policy description</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
