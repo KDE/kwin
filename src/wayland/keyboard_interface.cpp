@@ -16,10 +16,7 @@
 
 #include <unistd.h>
 
-namespace KWayland
-{
-
-namespace Server
+namespace KWaylandServer
 {
 
 KeyboardInterface::Private::Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q)
@@ -200,5 +197,4 @@ KeyboardInterface::Private *KeyboardInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

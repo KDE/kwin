@@ -11,9 +11,7 @@
 
 #include <QByteArray>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class FilteredDisplay::Private
@@ -52,5 +50,4 @@ FilteredDisplay::~FilteredDisplay()
 {
 }
 
-}
 }

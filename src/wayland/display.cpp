@@ -56,9 +56,7 @@
 
 #include <EGL/egl.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display::Private
@@ -646,5 +644,4 @@ void *Display::eglDisplay() const
     return d->eglDisplay;
 }
 
-}
 }

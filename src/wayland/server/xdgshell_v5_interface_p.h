@@ -10,13 +10,11 @@
 #include "resource.h"
 #include "xdgshell_interface.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include <QSize>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -76,7 +74,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

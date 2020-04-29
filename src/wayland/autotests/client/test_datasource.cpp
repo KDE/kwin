@@ -35,8 +35,8 @@ private Q_SLOTS:
     void testDestroy();
 
 private:
-    KWayland::Server::Display *m_display = nullptr;
-    KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
+    KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::DataDeviceManager *m_dataDeviceManager = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
@@ -47,7 +47,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-dataso
 
 void TestDataSource::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -116,10 +116,10 @@ void TestDataSource::cleanup()
 void TestDataSource::testOffer()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    qRegisterMetaType<KWayland::Server::DataSourceInterface*>();
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    qRegisterMetaType<KWaylandServer::DataSourceInterface*>();
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataSourceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -180,9 +180,9 @@ void TestDataSource::testTargetAccepts_data()
 void TestDataSource::testTargetAccepts()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataSourceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -205,9 +205,9 @@ void TestDataSource::testTargetAccepts()
 void TestDataSource::testRequestSend()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataSourceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -238,7 +238,7 @@ void TestDataSource::testRequestSendOnUnbound()
 {
     // this test verifies that the server doesn't crash when requesting a send on an unbound DataSource
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataSourceCreated);
     QVERIFY(dataSourceCreatedSpy.isValid());
 
@@ -259,9 +259,9 @@ void TestDataSource::testRequestSendOnUnbound()
 void TestDataSource::testCancel()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataSourceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -281,9 +281,9 @@ void TestDataSource::testCancel()
 void TestDataSource::testServerGet()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataSourceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());

@@ -9,9 +9,7 @@
 #include <wayland-relativepointer-unstable-v1-server-protocol.h>
 #include <QSizeF>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class RelativePointerManagerUnstableV1Interface::Private : public RelativePointerManagerInterface::Private
@@ -142,5 +140,4 @@ RelativePointerUnstableV1Interface::RelativePointerUnstableV1Interface(RelativeP
 
 RelativePointerUnstableV1Interface::~RelativePointerUnstableV1Interface() = default;
 
-}
 }

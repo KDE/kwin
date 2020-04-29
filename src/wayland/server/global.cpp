@@ -9,9 +9,7 @@
 // wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 Global::Private::Private(Display *d, const wl_interface *interface, quint32 version)
@@ -91,5 +89,4 @@ Display *Global::display()
     return d->display;
 }
 
-}
 }

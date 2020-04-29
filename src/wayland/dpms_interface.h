@@ -8,12 +8,10 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -44,7 +42,7 @@ class Display;
  * To connect to Dpms change requests use:
  * @code
  * connect(output, &OutputInterface::dpmsModeRequested,
- *         [] (KWayland::Server::OutputInterface::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
+ *         [] (KWaylandServer::OutputInterface::DpmsMode requestedMode) { qDebug() << "Mode change requested"; });
  * @endcode
  *
  * @see Display
@@ -63,7 +61,6 @@ private:
     class Private;
 };
 
-}
 }
 
 #endif

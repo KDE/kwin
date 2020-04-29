@@ -5,9 +5,7 @@
 */
 #include "pointergestures_interface_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 PointerGesturesInterface::Private::Private(PointerGesturesInterfaceVersion interfaceVersion, PointerGesturesInterface *q, Display *d, const wl_interface *interface, quint32 version)
@@ -87,5 +85,4 @@ PointerPinchGestureInterface::Private *PointerPinchGestureInterface::d_func() co
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

@@ -6,13 +6,11 @@
 #ifndef WAYLAND_SERVER_POINTER_INTERFACE_H
 #define WAYLAND_SERVER_POINTER_INTERFACE_H
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Cursor;
@@ -113,8 +111,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::PointerInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::PointerInterface*)
 
 #endif

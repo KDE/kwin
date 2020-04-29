@@ -33,9 +33,9 @@ private Q_SLOTS:
     void testCreateAndSet();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
-    KWayland::Server::ServerSideDecorationPaletteManagerInterface *m_paletteManagerInterface;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositorInterface;
+    KWaylandServer::ServerSideDecorationPaletteManagerInterface *m_paletteManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ServerSideDecorationPaletteManager *m_paletteManager;
@@ -58,7 +58,7 @@ TestServerSideDecorationPalette::TestServerSideDecorationPalette(QObject *parent
 
 void TestServerSideDecorationPalette::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -140,25 +140,25 @@ void TestServerSideDecorationPalette::cleanup()
 
 void TestServerSideDecorationPalette::testCreateAndSet()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(serverSurfaceCreated.isValid());
 
     QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
-    QSignalSpy paletteCreatedSpy(m_paletteManagerInterface, &KWayland::Server::ServerSideDecorationPaletteManagerInterface::paletteCreated);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    QSignalSpy paletteCreatedSpy(m_paletteManagerInterface, &KWaylandServer::ServerSideDecorationPaletteManagerInterface::paletteCreated);
 
     QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 
     auto palette = m_paletteManager->create(surface.data(), surface.data());
     QVERIFY(paletteCreatedSpy.wait());
-    auto paletteInterface = paletteCreatedSpy.first().first().value<KWayland::Server::ServerSideDecorationPaletteInterface*>();
+    auto paletteInterface = paletteCreatedSpy.first().first().value<KWaylandServer::ServerSideDecorationPaletteInterface*>();
     QCOMPARE(m_paletteManagerInterface->paletteForSurface(serverSurface), paletteInterface);
 
     QCOMPARE(paletteInterface->palette(), QString());
 
-    QSignalSpy changedSpy(paletteInterface, &KWayland::Server::ServerSideDecorationPaletteInterface::paletteChanged);
+    QSignalSpy changedSpy(paletteInterface, &KWaylandServer::ServerSideDecorationPaletteInterface::paletteChanged);
 
     palette->setPalette("foobar");
 

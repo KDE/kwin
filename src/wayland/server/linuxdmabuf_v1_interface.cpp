@@ -14,7 +14,7 @@
 #include "wayland-linux-dmabuf-unstable-v1-server-protocol.h"
 #include "wayland-server-protocol.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include <QVector>
 
@@ -22,9 +22,7 @@
 #include <assert.h>
 #include <unistd.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class LinuxDmabufBuffer::Private
@@ -492,5 +490,4 @@ V1Iface::Private *V1Iface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

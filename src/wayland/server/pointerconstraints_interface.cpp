@@ -7,9 +7,7 @@
 
 #include <functional>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 PointerConstraintsInterface::Private::Private(PointerConstraintsInterfaceVersion interfaceVersion, PointerConstraintsInterface *q, Display *d, const wl_interface *interface, quint32 version)
@@ -196,5 +194,4 @@ ConfinedPointerInterface::Private *ConfinedPointerInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

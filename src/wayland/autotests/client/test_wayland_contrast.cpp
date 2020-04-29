@@ -36,9 +36,9 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
-    KWayland::Server::ContrastManagerInterface *m_contrastManagerInterface;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositorInterface;
+    KWaylandServer::ContrastManagerInterface *m_contrastManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ContrastManager *m_contrastManager;
@@ -61,7 +61,7 @@ TestContrast::TestContrast(QObject *parent)
 
 void TestContrast::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -142,13 +142,13 @@ void TestContrast::cleanup()
 
 void TestContrast::testCreate()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(serverSurfaceCreated.isValid());
 
     QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
     QSignalSpy contrastChanged(serverSurface, SIGNAL(contrastChanged()));
 
     auto contrast = m_contrastManager->createContrast(surface.data(), surface.data());
@@ -176,14 +176,14 @@ void TestContrast::testCreate()
 
 void TestContrast::testSurfaceDestroy()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWayland::Server::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
     QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
-    QSignalSpy contrastChanged(serverSurface, &KWayland::Server::SurfaceInterface::contrastChanged);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    QSignalSpy contrastChanged(serverSurface, &KWaylandServer::SurfaceInterface::contrastChanged);
     QVERIFY(contrastChanged.isValid());
 
     QScopedPointer<KWayland::Client::Contrast> contrast(m_contrastManager->createContrast(surface.data()));

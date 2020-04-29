@@ -10,9 +10,7 @@
 #include <wayland-server.h>
 #include <type_traits>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Resource::Private
@@ -79,5 +77,5 @@ private:
 };
 
 }
-}
+
 #endif

@@ -18,9 +18,7 @@
 
 #include <functional>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class BufferHandle::Private // @see gbm_import_fd_data
@@ -367,5 +365,4 @@ void RemoteBufferInterface::passFd()
     d_func()->passFd();
 }
 
-}
 }

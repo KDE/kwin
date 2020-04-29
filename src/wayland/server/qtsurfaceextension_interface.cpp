@@ -15,9 +15,7 @@
 #include <wayland-server.h>
 #include <wayland-qt-surface-extension-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class QtSurfaceExtensionInterface::Private : public Global::Private
@@ -216,5 +214,4 @@ void QtExtendedSurfaceInterface::close()
     d->client->flush();
 }
 
-}
 }

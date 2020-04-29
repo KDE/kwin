@@ -20,7 +20,7 @@
 #include <linux/input.h>
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(const BufferHandle *)
 Q_DECLARE_METATYPE(const RemoteBuffer *)

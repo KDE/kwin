@@ -13,9 +13,7 @@
 #include <wayland-server.h>
 #include <wayland-keystate-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class KeyStateInterface::Private : public Global::Private
@@ -75,8 +73,6 @@ void KeyStateInterface::setState(KeyStateInterface::Key key, KeyStateInterface::
     for(auto r : qAsConst(dptr->m_resources)) {
         org_kde_kwin_keystate_send_stateChanged(r, int(key), int(state));
     }
-}
-
 }
 
 }

@@ -7,9 +7,7 @@
 #include "outputchangeset.h"
 #include "outputchangeset_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 OutputChangeSet::Private::Private(OutputDeviceInterface *outputdevice, OutputChangeSet *parent)
@@ -116,5 +114,4 @@ OutputDeviceInterface::ColorCurves OutputChangeSet::colorCurves() const
     return d->colorCurves;
 }
 
-}
 }

@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "global.h"
 #include "resource.h"
@@ -16,9 +16,7 @@
 class QSize;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -47,7 +45,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a PlasmaShellSurfaceInterface got created.
      **/
-    void surfaceCreated(KWayland::Server::PlasmaShellSurfaceInterface*);
+    void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface*);
 
 private:
     friend class Display;
@@ -236,9 +234,8 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::PlasmaShellSurfaceInterface::Role)
-Q_DECLARE_METATYPE(KWayland::Server::PlasmaShellSurfaceInterface::PanelBehavior)
+Q_DECLARE_METATYPE(KWaylandServer::PlasmaShellSurfaceInterface::Role)
+Q_DECLARE_METATYPE(KWaylandServer::PlasmaShellSurfaceInterface::PanelBehavior)
 
 #endif

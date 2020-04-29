@@ -11,9 +11,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class SubCompositorInterface::Private : public Global::Private
@@ -360,5 +358,4 @@ SubSurfaceInterface::Private *SubSurfaceInterface::d_func() const
     return reinterpret_cast<SubSurfaceInterface::Private*>(d.data());
 }
 
-}
 }

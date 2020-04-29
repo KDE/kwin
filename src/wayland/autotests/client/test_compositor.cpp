@@ -29,8 +29,8 @@ private Q_SLOTS:
     void testCast();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     QThread *m_thread;
@@ -50,7 +50,7 @@ TestCompositor::TestCompositor(QObject *parent)
 
 void TestCompositor::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);

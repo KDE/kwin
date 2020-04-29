@@ -6,13 +6,11 @@
 #ifndef WAYLAND_SERVER_TOUCH_INTERFACE_H
 #define WAYLAND_SERVER_TOUCH_INTERFACE_H
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class SeatInterface;
@@ -40,8 +38,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::TouchInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::TouchInterface*)
 
 #endif

@@ -10,16 +10,14 @@
 #include <QPoint>
 #include <QSize>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 
 struct wl_global;
 struct wl_client;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class ClientConnection;
@@ -140,7 +138,7 @@ Q_SIGNALS:
      * A server is free to ignore this request.
      * @since 5.5
      **/
-    void dpmsModeRequested(KWayland::Server::OutputInterface::DpmsMode mode);
+    void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
 
 private:
     friend class Display;
@@ -150,11 +148,10 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::OutputInterface::ModeFlags)
-Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::SubPixel)
-Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::Transform)
-Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::DpmsMode)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::OutputInterface::ModeFlags)
+Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::SubPixel)
+Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::Transform)
+Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::DpmsMode)
 
 #endif

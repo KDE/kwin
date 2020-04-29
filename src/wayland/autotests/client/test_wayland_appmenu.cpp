@@ -21,7 +21,7 @@
 
 using namespace KWayland::Client;
 
-Q_DECLARE_METATYPE(KWayland::Server::AppMenuInterface::InterfaceAddress)
+Q_DECLARE_METATYPE(KWaylandServer::AppMenuInterface::InterfaceAddress)
 
 class TestAppmenu : public QObject
 {
@@ -35,9 +35,9 @@ private Q_SLOTS:
     void testCreateAndSet();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
-    KWayland::Server::AppMenuManagerInterface *m_appmenuManagerInterface;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositorInterface;
+    KWaylandServer::AppMenuManagerInterface *m_appmenuManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::AppMenuManager *m_appmenuManager;
@@ -60,7 +60,7 @@ TestAppmenu::TestAppmenu(QObject *parent)
 
 void TestAppmenu::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     qRegisterMetaType<AppMenuInterface::InterfaceAddress>();
     delete m_display;
     m_display = new Display(this);
@@ -143,26 +143,26 @@ void TestAppmenu::cleanup()
 
 void TestAppmenu::testCreateAndSet()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(serverSurfaceCreated.isValid());
 
     QScopedPointer<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
-    auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
-    QSignalSpy appMenuCreated(m_appmenuManagerInterface, &KWayland::Server::AppMenuManagerInterface::appMenuCreated);
+    auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
+    QSignalSpy appMenuCreated(m_appmenuManagerInterface, &KWaylandServer::AppMenuManagerInterface::appMenuCreated);
 
     QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));
 
     auto appmenu = m_appmenuManager->create(surface.data(), surface.data());
     QVERIFY(appMenuCreated.wait());
-    auto appMenuInterface = appMenuCreated.first().first().value<KWayland::Server::AppMenuInterface*>();
+    auto appMenuInterface = appMenuCreated.first().first().value<KWaylandServer::AppMenuInterface*>();
     QCOMPARE(m_appmenuManagerInterface->appMenuForSurface(serverSurface), appMenuInterface);
 
     QCOMPARE(appMenuInterface->address().serviceName, QString());
     QCOMPARE(appMenuInterface->address().objectPath, QString());
 
-    QSignalSpy appMenuChangedSpy(appMenuInterface, &KWayland::Server::AppMenuInterface::addressChanged);
+    QSignalSpy appMenuChangedSpy(appMenuInterface, &KWaylandServer::AppMenuInterface::addressChanged);
 
     appmenu->setAddress("net.somename", "/test/path");
 

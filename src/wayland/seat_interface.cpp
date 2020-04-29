@@ -28,10 +28,7 @@
 
 #include <functional>
 
-namespace KWayland
-{
-
-namespace Server
+namespace KWaylandServer
 {
 
 const quint32 SeatInterface::Private::s_version = 5;
@@ -1615,5 +1612,4 @@ void SeatInterface::setSelection(DataDeviceInterface *dataDevice)
     emit selectionChanged(dataDevice);
 }
 
-}
 }

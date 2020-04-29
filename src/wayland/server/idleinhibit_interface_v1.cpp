@@ -7,9 +7,7 @@
 #include "display.h"
 #include "surface_interface_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Q_DECL_HIDDEN IdleInhibitManagerUnstableV1Interface::Private : public IdleInhibitManagerInterface::Private
@@ -121,5 +119,4 @@ IdleInhibitorInterface::Private *IdleInhibitorInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

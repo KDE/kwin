@@ -18,9 +18,7 @@
 #include <QDebug>
 #include <QSize>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 
@@ -321,6 +319,4 @@ void OutputConfigurationInterface::Private::clearPendingChanges()
     changes.clear();
 }
 
-
-}
 }

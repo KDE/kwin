@@ -81,12 +81,12 @@ private Q_SLOTS:
     void testKeymapThroughFd();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
-    KWayland::Server::SeatInterface *m_seatInterface;
-    KWayland::Server::SubCompositorInterface *m_subCompositorInterface;
-    KWayland::Server::RelativePointerManagerInterface *m_relativePointerManagerInterface;
-    KWayland::Server::PointerGesturesInterface *m_pointerGesturesInterface;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositorInterface;
+    KWaylandServer::SeatInterface *m_seatInterface;
+    KWaylandServer::SubCompositorInterface *m_subCompositorInterface;
+    KWaylandServer::RelativePointerManagerInterface *m_relativePointerManagerInterface;
+    KWaylandServer::PointerGesturesInterface *m_pointerGesturesInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Seat *m_seat;
@@ -122,7 +122,7 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
 
 void TestWaylandSeat::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -354,18 +354,18 @@ void TestWaylandSeat::testCapabilities()
 void TestWaylandSeat::testPointer()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy pointerSpy(m_seat, SIGNAL(hasPointerChanged(bool)));
     QVERIFY(pointerSpy.isValid());
     m_seatInterface->setHasPointer(true);
     QVERIFY(pointerSpy.wait());
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     QSignalSpy focusedPointerChangedSpy(m_seatInterface, &SeatInterface::focusedPointerChanged);
@@ -386,7 +386,7 @@ void TestWaylandSeat::testPointer()
     QVERIFY(p->isValid());
     QScopedPointer<RelativePointer> relativePointer(m_relativePointerManager->createRelativePointer(p));
     QVERIFY(relativePointer->isValid());
-    QSignalSpy pointerCreatedSpy(m_seatInterface, SIGNAL(pointerCreated(KWayland::Server::PointerInterface*)));
+    QSignalSpy pointerCreatedSpy(m_seatInterface, SIGNAL(pointerCreated(KWaylandServer::PointerInterface*)));
     QVERIFY(pointerCreatedSpy.isValid());
     // once the pointer is created it should be set as the focused pointer
     QVERIFY(pointerCreatedSpy.wait());
@@ -627,7 +627,7 @@ void TestWaylandSeat::testPointerTransformation_data()
 void TestWaylandSeat::testPointerTransformation()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy pointerSpy(m_seat, &Seat::hasPointerChanged);
     QVERIFY(pointerSpy.isValid());
@@ -638,7 +638,7 @@ void TestWaylandSeat::testPointerTransformation()
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     m_seatInterface->setPointerPos(QPoint(20, 18));
@@ -744,18 +744,18 @@ void TestWaylandSeat::testPointerButton_data()
 void TestWaylandSeat::testPointerButton()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy pointerSpy(m_seat, SIGNAL(hasPointerChanged(bool)));
     QVERIFY(pointerSpy.isValid());
     m_seatInterface->setHasPointer(true);
     QVERIFY(pointerSpy.wait());
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
     m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     QScopedPointer<Pointer> p(m_seat->createPointer());
@@ -809,7 +809,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
 {
     // this test verifies that pointer motion on a surface with sub-surfaces sends motion enter/leave to the sub-surface
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // first create the pointer
     QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
@@ -916,7 +916,7 @@ void TestWaylandSeat::testPointerSwipeGesture_data()
 void TestWaylandSeat::testPointerSwipeGesture()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // first create the pointer and pointer swipe gesture
     QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
@@ -1032,7 +1032,7 @@ void TestWaylandSeat::testPointerPinchGesture_data()
 void TestWaylandSeat::testPointerPinchGesture()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // first create the pointer and pointer swipe gesture
     QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
@@ -1142,7 +1142,7 @@ void TestWaylandSeat::testPointerPinchGesture()
 void TestWaylandSeat::testPointerAxis()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // first create the pointer
     QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
@@ -1240,7 +1240,7 @@ void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()
 {
     // this test verifies that when clicking on a sub-surface the keyboard focus passes to it
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // first create the pointer
     QSignalSpy hasPointerChangedSpy(m_seat, &Seat::hasPointerChanged);
@@ -1341,18 +1341,18 @@ void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()
 void TestWaylandSeat::testCursor()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy pointerSpy(m_seat, SIGNAL(hasPointerChanged(bool)));
     QVERIFY(pointerSpy.isValid());
     m_seatInterface->setHasPointer(true);
     QVERIFY(pointerSpy.wait());
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
     m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     QScopedPointer<Pointer> p(m_seat->createPointer());
@@ -1451,7 +1451,7 @@ void TestWaylandSeat::testCursorDamage()
 {
     // this test verifies that damaging a cursor surface triggers a cursor changed on the server
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy pointerSpy(m_seat, &Seat::hasPointerChanged);
     QVERIFY(pointerSpy.isValid());
@@ -1468,7 +1468,7 @@ void TestWaylandSeat::testCursorDamage()
     QVERIFY(surfaceCreatedSpy.isValid());
     m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     // send enter to the surface
@@ -1505,7 +1505,7 @@ void TestWaylandSeat::testCursorDamage()
 void TestWaylandSeat::testKeyboard()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy keyboardSpy(m_seat, SIGNAL(hasKeyboardChanged(bool)));
     QVERIFY(keyboardSpy.isValid());
@@ -1513,11 +1513,11 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(keyboardSpy.wait());
 
     // create the surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
@@ -1817,7 +1817,7 @@ void TestWaylandSeat::testDestroy()
 void TestWaylandSeat::testSelection()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
     ddmi->create();
     Registry registry;
@@ -1840,7 +1840,7 @@ void TestWaylandSeat::testSelection()
     QSignalSpy selectionClearedSpy(dd1.data(), SIGNAL(selectionCleared()));
     QVERIFY(selectionClearedSpy.isValid());
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
@@ -1931,7 +1931,7 @@ void TestWaylandSeat::testSelectionNoDataSource()
     // this test verifies that the server doesn't crash when using setSelection with
     // a DataDevice which doesn't have a DataSource yet
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     // first create the DataDevice
     QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
     ddmi->create();
@@ -1977,7 +1977,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     // and the currentSelection does not have a DataSource.
     // to properly test the functionality this test requires a second client
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     // create the DataDeviceManager
     QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
     ddmi->create();
@@ -2071,7 +2071,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
 void TestWaylandSeat::testTouch()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QSignalSpy touchSpy(m_seat, SIGNAL(hasTouchChanged(bool)));
     QVERIFY(touchSpy.isValid());
@@ -2079,11 +2079,11 @@ void TestWaylandSeat::testTouch()
     QVERIFY(touchSpy.wait());
 
     // create the surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
     Surface *s = m_compositor->createSurface(m_compositor);
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     m_seatInterface->setFocusedTouchSurface(serverSurface);
@@ -2091,14 +2091,14 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(m_seatInterface->focusedTouchSurface(), serverSurface);
     QVERIFY(!m_seatInterface->focusedTouch());
 
-    QSignalSpy touchCreatedSpy(m_seatInterface, SIGNAL(touchCreated(KWayland::Server::TouchInterface*)));
+    QSignalSpy touchCreatedSpy(m_seatInterface, SIGNAL(touchCreated(KWaylandServer::TouchInterface*)));
     QVERIFY(touchCreatedSpy.isValid());
     Touch *touch = m_seat->createTouch(m_seat);
     QVERIFY(touch->isValid());
     QVERIFY(touchCreatedSpy.wait());
     auto serverTouch = m_seatInterface->focusedTouch();
     QVERIFY(serverTouch);
-    QCOMPARE(touchCreatedSpy.first().first().value<KWayland::Server::TouchInterface*>(), m_seatInterface->focusedTouch());
+    QCOMPARE(touchCreatedSpy.first().first().value<KWaylandServer::TouchInterface*>(), m_seatInterface->focusedTouch());
 
     QSignalSpy sequenceStartedSpy(touch, SIGNAL(sequenceStarted(KWayland::Client::TouchPoint*)));
     QVERIFY(sequenceStartedSpy.isValid());
@@ -2287,7 +2287,7 @@ void TestWaylandSeat::testDisconnect()
 {
     // this test verifies that disconnecting the client cleans up correctly
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QSignalSpy keyboardCreatedSpy(m_seatInterface, &SeatInterface::keyboardCreated);
     QVERIFY(keyboardCreatedSpy.isValid());
     QSignalSpy pointerCreatedSpy(m_seatInterface, &SeatInterface::pointerCreated);
@@ -2360,7 +2360,7 @@ void TestWaylandSeat::testDisconnect()
 void TestWaylandSeat::testPointerEnterOnUnboundSurface()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // create the things we need
     m_seatInterface->setHasKeyboard(true);
@@ -2378,7 +2378,7 @@ void TestWaylandSeat::testPointerEnterOnUnboundSurface()
     QVERIFY(surfaceCreatedSpy.isValid());
     QScopedPointer<Surface> s(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
     // unbind the surface again
@@ -2395,7 +2395,7 @@ void TestWaylandSeat::testPointerEnterOnUnboundSurface()
 void TestWaylandSeat::testKeymap()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     m_seatInterface->setHasKeyboard(true);
     QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
@@ -2434,7 +2434,7 @@ void TestWaylandSeat::testKeymapThroughFd()
 {
 #if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     m_seatInterface->setHasKeyboard(true);
     QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);

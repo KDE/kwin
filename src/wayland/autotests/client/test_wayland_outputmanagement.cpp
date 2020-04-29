@@ -25,7 +25,7 @@
 #include <wayland-client-protocol.h>
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class TestWaylandOutputManagement : public QObject
 {
@@ -51,11 +51,11 @@ private Q_SLOTS:
 private:
     void createOutputDevices();
     void testEnable();
-    void applyPendingChanges(KWayland::Server::OutputConfigurationInterface *configurationInterface);
+    void applyPendingChanges(KWaylandServer::OutputConfigurationInterface *configurationInterface);
 
-    KWayland::Server::Display *m_display;
-    KWayland::Server::OutputManagementInterface *m_outputManagementInterface;
-    QList<KWayland::Server::OutputDeviceInterface *> m_serverOutputs;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::OutputManagementInterface *m_outputManagementInterface;
+    QList<KWaylandServer::OutputDeviceInterface *> m_serverOutputs;
 
 
     KWayland::Client::Registry *m_registry = nullptr;
@@ -63,7 +63,7 @@ private:
     KWayland::Client::OutputManagement *m_outputManagement = nullptr;
     KWayland::Client::OutputConfiguration *m_outputConfiguration = nullptr;
     QList<KWayland::Client::OutputDevice *> m_clientOutputs;
-    QList<KWayland::Server::OutputDeviceInterface::Mode> m_modes;
+    QList<KWaylandServer::OutputDeviceInterface::Mode> m_modes;
 
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
@@ -84,12 +84,12 @@ TestWaylandOutputManagement::TestWaylandOutputManagement(QObject *parent)
     , m_thread(nullptr)
     , m_announcedSpy(nullptr)
 {
-    qRegisterMetaType<KWayland::Server::OutputConfigurationInterface*>();
+    qRegisterMetaType<KWaylandServer::OutputConfigurationInterface*>();
 }
 
 void TestWaylandOutputManagement::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -215,7 +215,7 @@ void TestWaylandOutputManagement::cleanup()
     m_clientOutputs.clear();
 }
 
-void TestWaylandOutputManagement::applyPendingChanges(KWayland::Server::OutputConfigurationInterface *configurationInterface)
+void TestWaylandOutputManagement::applyPendingChanges(KWaylandServer::OutputConfigurationInterface *configurationInterface)
 {
     auto changes = configurationInterface->changes();
     for (auto outputdevice: changes.keys()) {
@@ -289,8 +289,8 @@ void TestWaylandOutputManagement::testBasicMemoryManagement()
     createConfig();
 
     QSignalSpy serverApplySpy(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested);
-    KWayland::Server::OutputConfigurationInterface *configurationInterface = nullptr;
-    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=, &configurationInterface](KWayland::Server::OutputConfigurationInterface *c) {
+    KWaylandServer::OutputConfigurationInterface *configurationInterface = nullptr;
+    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=, &configurationInterface](KWaylandServer::OutputConfigurationInterface *c) {
         configurationInterface = c;
     });
     m_outputConfiguration->apply();
@@ -329,7 +329,7 @@ void TestWaylandOutputManagement::testApplied()
     QSignalSpy appliedSpy(m_outputConfiguration, &KWayland::Client::OutputConfiguration::applied);
 
     connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested,
-            [=](KWayland::Server::OutputConfigurationInterface *configurationInterface) {
+            [=](KWaylandServer::OutputConfigurationInterface *configurationInterface) {
                 configurationInterface->setApplied();
         });
     m_outputConfiguration->apply();
@@ -344,7 +344,7 @@ void TestWaylandOutputManagement::testFailed()
     QSignalSpy failedSpy(m_outputConfiguration, &KWayland::Client::OutputConfiguration::failed);
 
     connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested,
-            [=](KWayland::Server::OutputConfigurationInterface *configurationInterface) {
+            [=](KWaylandServer::OutputConfigurationInterface *configurationInterface) {
                 configurationInterface->setFailed();
         });
     m_outputConfiguration->apply();
@@ -387,8 +387,8 @@ void TestWaylandOutputManagement::testMultipleSettings()
     KWayland::Client::OutputDevice *output = m_clientOutputs.first();
     QSignalSpy outputChangedSpy(output, &KWayland::Client::OutputDevice::changed);
 
-    KWayland::Server::OutputConfigurationInterface *configurationInterface;
-    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=, &configurationInterface](KWayland::Server::OutputConfigurationInterface *c) {
+    KWaylandServer::OutputConfigurationInterface *configurationInterface;
+    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=, &configurationInterface](KWaylandServer::OutputConfigurationInterface *c) {
         applyPendingChanges(c);
         configurationInterface = c;
     });
@@ -461,7 +461,7 @@ void TestWaylandOutputManagement::testConfigFailed()
 
     config->apply();
 
-    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=](KWayland::Server::OutputConfigurationInterface *c) {
+    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=](KWaylandServer::OutputConfigurationInterface *c) {
         c->setFailed();
     });
 
@@ -485,7 +485,7 @@ void TestWaylandOutputManagement::testExampleConfig()
     config->setPosition(output, QPoint(-1, -1));
 
     QSignalSpy configAppliedSpy(config, &OutputConfiguration::applied);
-    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=](KWayland::Server::OutputConfigurationInterface *c) {
+    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=](KWaylandServer::OutputConfigurationInterface *c) {
         c->setApplied();
     });
     config->apply();
@@ -506,7 +506,7 @@ void TestWaylandOutputManagement::testScale()
     config->apply();
 
     QSignalSpy configAppliedSpy(config, &OutputConfiguration::applied);
-    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=](KWayland::Server::OutputConfigurationInterface *c) {
+    connect(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested, [=](KWaylandServer::OutputConfigurationInterface *c) {
         applyPendingChanges(c);
         c->setApplied();
     });

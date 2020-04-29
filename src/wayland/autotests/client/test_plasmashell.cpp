@@ -18,7 +18,7 @@
 
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 
 class TestPlasmaShell : public QObject
@@ -140,7 +140,7 @@ void TestPlasmaShell::cleanup()
 void TestPlasmaShell::testRole_data()
 {
     QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("clientRole");
-    QTest::addColumn<KWayland::Server::PlasmaShellSurfaceInterface::Role>("serverRole");
+    QTest::addColumn<KWaylandServer::PlasmaShellSurfaceInterface::Role>("serverRole");
 
     QTest::newRow("desktop") << PlasmaShellSurface::Role::Desktop << PlasmaShellSurfaceInterface::Role::Desktop;
     QTest::newRow("osd") << PlasmaShellSurface::Role::OnScreenDisplay << PlasmaShellSurfaceInterface::Role::OnScreenDisplay;

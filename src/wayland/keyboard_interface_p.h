@@ -12,9 +12,7 @@
 
 class QTemporaryFile;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class KeyboardInterface::Private : public Resource::Private
@@ -39,7 +37,6 @@ private:
     static const struct wl_keyboard_interface s_interface;
 };
 
-}
 }
 
 #endif

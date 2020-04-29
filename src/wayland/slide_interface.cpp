@@ -13,9 +13,7 @@
 #include <wayland-server.h>
 #include <wayland-slide-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class SlideManagerInterface::Private : public Global::Private
@@ -197,6 +195,5 @@ SlideInterface::Private *SlideInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }
 

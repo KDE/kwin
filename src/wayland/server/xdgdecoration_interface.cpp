@@ -17,9 +17,7 @@
 #include <QtDebug>
 #include <QPointer>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class XdgDecorationManagerInterface::Private : public Global::Private
@@ -28,7 +26,7 @@ public:
     Private(XdgDecorationManagerInterface *q, XdgShellInterface *shellInterface, Display *d);
 
     QHash<XdgShellSurfaceInterface*, XdgDecorationInterface*> m_decorations;
-    KWayland::Server::XdgShellStableInterface *m_shellInterface;
+    KWaylandServer::XdgShellStableInterface *m_shellInterface;
 private:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
 
@@ -232,7 +230,4 @@ XdgDecorationInterface::Private *XdgDecorationInterface::d_func() const
     return reinterpret_cast<XdgDecorationInterface::Private*>(d.data());
 }
 
-
 }
-}
-

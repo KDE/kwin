@@ -8,7 +8,7 @@
 // WaylandServer
 #include "../../src/server/display.h"
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class NoXdgRuntimeDirTest : public QObject
 {

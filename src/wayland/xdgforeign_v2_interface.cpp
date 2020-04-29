@@ -16,9 +16,7 @@
 #include <QUuid>
 #include <QDebug>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Q_DECL_HIDDEN XdgExporterUnstableV2Interface::Private : public Global::Private
@@ -280,7 +278,7 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
                         s->q, [s, child]() {
                             auto it = s->parents.find(child);
                             if (it != s->parents.end()) {
-                                KWayland::Server::XdgImportedUnstableV2Interface* parent = *it;
+                                KWaylandServer::XdgImportedUnstableV2Interface* parent = *it;
                                 s->children.remove(*it);
                                 s->parents.erase(it);
                                 emit s->q->transientChanged(nullptr, SurfaceInterface::get(parent->parentResource()));
@@ -296,7 +294,7 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
 
                 auto it = s->children.find(imp);
                 if (it != s->children.end()) {
-                    KWayland::Server::SurfaceInterface* child = *it;
+                    KWaylandServer::SurfaceInterface* child = *it;
                     s->parents.remove(*it);
                     s->children.erase(it);
                     emit s->q->transientChanged(child, nullptr);
@@ -448,5 +446,3 @@ XdgImportedUnstableV2Interface::Private::~Private()
 {}
 
 }
-}
-

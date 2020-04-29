@@ -15,9 +15,7 @@
 #include <wayland-text-server-protocol.h>
 #include <wayland-text-input-unstable-v2-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 void TextInputInterface::Private::showInputPanelCallback(wl_client *client, wl_resource *resource)
@@ -255,5 +253,4 @@ TextInputManagerInterface::Private *TextInputManagerInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

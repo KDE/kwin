@@ -8,9 +8,7 @@
 #include "surface_interface_p.h"
 #include "surface_interface.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 SurfaceRole::SurfaceRole(SurfaceInterface *surface)
@@ -27,5 +25,4 @@ SurfaceRole::~SurfaceRole()
     }
 }
 
-}
 }

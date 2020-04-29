@@ -8,16 +8,14 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "global.h"
 #include "resource.h"
 
 class QSize;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -319,8 +317,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::PlasmaWindowManagementInterface::ShowingDesktopState)
+Q_DECLARE_METATYPE(KWaylandServer::PlasmaWindowManagementInterface::ShowingDesktopState)
 
 #endif

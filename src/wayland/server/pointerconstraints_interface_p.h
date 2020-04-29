@@ -11,9 +11,7 @@
 
 #include <QRegion>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class PointerConstraintsInterface::Private : public Global::Private
@@ -120,7 +118,6 @@ private:
     friend class PointerConstraintsUnstableV1Interface;
 };
 
-}
 }
 
 #endif

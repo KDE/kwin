@@ -9,11 +9,9 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -413,13 +411,12 @@ private:
 
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::TextInputInterfaceVersion)
-Q_DECLARE_METATYPE(KWayland::Server::TextInputInterface *)
-Q_DECLARE_METATYPE(KWayland::Server::TextInputInterface::ContentHint)
-Q_DECLARE_METATYPE(KWayland::Server::TextInputInterface::ContentHints)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::TextInputInterface::ContentHints)
-Q_DECLARE_METATYPE(KWayland::Server::TextInputInterface::ContentPurpose)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputInterfaceVersion)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface *)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface::ContentHint)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface::ContentHints)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::TextInputInterface::ContentHints)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface::ContentPurpose)
 
 #endif

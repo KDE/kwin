@@ -16,9 +16,7 @@
 #include <QUuid>
 #include <QDebug>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 XdgForeignInterface::Private::Private(Display *display, XdgForeignInterface *q)
@@ -61,5 +59,3 @@ SurfaceInterface *XdgForeignInterface::transientFor(SurfaceInterface *surface)
 }
 
 }
-}
-

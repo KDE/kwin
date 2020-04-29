@@ -11,9 +11,7 @@
 struct wl_client;
 struct wl_interface;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Global::Private
@@ -36,7 +34,6 @@ protected:
     const quint32 m_version;
 };
 
-}
 }
 
 #endif

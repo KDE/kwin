@@ -9,14 +9,12 @@
 #include <QImage>
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_resource;
 struct wl_shm_buffer;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class SurfaceInterface;
 class LinuxDmabufBuffer;
@@ -157,7 +155,7 @@ public:
     static BufferInterface *get(wl_resource *r);
 
 Q_SIGNALS:
-    void aboutToBeDestroyed(KWayland::Server::BufferInterface*);
+    void aboutToBeDestroyed(KWaylandServer::BufferInterface*);
     /**
      * Emitted when the size of the Buffer changes.
      * @since 5.3
@@ -172,8 +170,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::BufferInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::BufferInterface*)
 
 #endif

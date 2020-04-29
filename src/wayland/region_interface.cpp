@@ -9,9 +9,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class RegionInterface::Private : public Resource::Private
@@ -101,5 +99,4 @@ RegionInterface::Private *RegionInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

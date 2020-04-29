@@ -5,9 +5,7 @@
 */
 #include "idleinhibit_interface_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 IdleInhibitManagerInterface::Private::Private(IdleInhibitManagerInterface *q, Display *d, const wl_interface *interface, quint32 version, IdleInhibitManagerInterfaceVersion interfaceVersion)
@@ -35,5 +33,4 @@ IdleInhibitManagerInterface::Private *IdleInhibitManagerInterface::d_func() cons
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

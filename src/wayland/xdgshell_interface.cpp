@@ -5,9 +5,7 @@
 */
 #include "xdgshell_interface_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 XdgShellInterface::Private::Private(XdgShellInterfaceVersion interfaceVersion, XdgShellInterface *q, Display *d, const wl_interface *interface, quint32 version)
@@ -279,5 +277,4 @@ XdgShellPopupInterface::Private *XdgShellPopupInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

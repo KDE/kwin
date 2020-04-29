@@ -10,11 +10,9 @@
 #include "global.h"
 #include "display.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 /**
@@ -45,7 +43,6 @@ private:
     QScopedPointer<Private> d;
 };
 
-}
 }
 
 #endif

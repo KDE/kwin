@@ -17,7 +17,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class TestWaylandServerDisplay : public QObject
 {
@@ -104,9 +104,9 @@ void TestWaylandServerDisplay::testClientConnection()
     Display display;
     display.setSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
-    QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWayland::Server::ClientConnection*)));
+    QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWaylandServer::ClientConnection*)));
     QVERIFY(connectedSpy.isValid());
-    QSignalSpy disconnectedSpy(&display, SIGNAL(clientDisconnected(KWayland::Server::ClientConnection*)));
+    QSignalSpy disconnectedSpy(&display, SIGNAL(clientDisconnected(KWaylandServer::ClientConnection*)));
     QVERIFY(disconnectedSpy.isValid());
 
     int sv[2];

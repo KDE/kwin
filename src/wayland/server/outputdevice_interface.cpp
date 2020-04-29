@@ -12,9 +12,7 @@
 #include "wayland-org_kde_kwin_outputdevice-server-protocol.h"
 #include <QDebug>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class OutputDeviceInterface::Private : public Global::Private
@@ -431,7 +429,7 @@ void OutputDeviceInterface::Private::sendColorCurves(const ResourceData &data)
     wl_array_release(&wlBlue);
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::sendSerialNumber(const ResourceData &data)
+void KWaylandServer::OutputDeviceInterface::Private::sendSerialNumber(const ResourceData &data)
 {
     if (wl_resource_get_version(data.resource) >= ORG_KDE_KWIN_OUTPUTDEVICE_SERIAL_NUMBER_SINCE_VERSION) {
         org_kde_kwin_outputdevice_send_serial_number(data.resource,
@@ -439,7 +437,7 @@ void KWayland::Server::OutputDeviceInterface::Private::sendSerialNumber(const Re
     }
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::sendEisaId(const ResourceData &data)
+void KWaylandServer::OutputDeviceInterface::Private::sendEisaId(const ResourceData &data)
 {
     if (wl_resource_get_version(data.resource) >= ORG_KDE_KWIN_OUTPUTDEVICE_EISA_ID_SINCE_VERSION) {
         org_kde_kwin_outputdevice_send_eisa_id(data.resource,
@@ -675,13 +673,13 @@ QByteArray OutputDeviceInterface::uuid() const
     return d->uuid;
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::sendEdid(const ResourceData &data)
+void KWaylandServer::OutputDeviceInterface::Private::sendEdid(const ResourceData &data)
 {
     org_kde_kwin_outputdevice_send_edid(data.resource,
                                         edid.toBase64().constData());
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::sendEnabled(const ResourceData &data)
+void KWaylandServer::OutputDeviceInterface::Private::sendEnabled(const ResourceData &data)
 {
     int _enabled = 0;
     if (enabled == OutputDeviceInterface::Enablement::Enabled) {
@@ -695,28 +693,28 @@ void OutputDeviceInterface::Private::sendUuid(const ResourceData &data)
     org_kde_kwin_outputdevice_send_uuid(data.resource, uuid.constData());
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::updateEnabled()
+void KWaylandServer::OutputDeviceInterface::Private::updateEnabled()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         sendEnabled(*it);
     }
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::updateEdid()
+void KWaylandServer::OutputDeviceInterface::Private::updateEdid()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         sendEdid(*it);
     }
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::updateUuid()
+void KWaylandServer::OutputDeviceInterface::Private::updateUuid()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         sendUuid(*it);
     }
 }
 
-void KWayland::Server::OutputDeviceInterface::Private::updateEisaId()
+void KWaylandServer::OutputDeviceInterface::Private::updateEisaId()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         sendEisaId(*it);
@@ -724,5 +722,4 @@ void KWayland::Server::OutputDeviceInterface::Private::updateEisaId()
 }
 
 
-}
 }

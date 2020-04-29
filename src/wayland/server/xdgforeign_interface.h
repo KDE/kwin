@@ -9,11 +9,9 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -67,7 +65,7 @@ Q_SIGNALS:
      * valid anymore and either one of the surfaces has been unmapped, or the parent surface
      * is not exported anymore.
      */
-    void transientChanged(KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent);
+    void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 private:
     friend class Display;
@@ -77,7 +75,6 @@ private:
     Private *d;
 };
 
-}
 }
 
 #endif

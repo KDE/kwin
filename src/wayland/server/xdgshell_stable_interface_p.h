@@ -10,13 +10,11 @@
 #include "resource.h"
 #include "xdgshell_interface.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include <QSize>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -58,7 +56,7 @@ private:
     Private *d_func() const;
 };
 
-class XdgSurfaceStableInterface : public KWayland::Server::Resource
+class XdgSurfaceStableInterface : public KWaylandServer::Resource
 {
     Q_OBJECT
 public:
@@ -111,7 +109,7 @@ private:
  * This is a private internal class that keeps track of sent data
  * At the time of PopupCreation these values are copied to the popup
  */
-class XdgPositionerStableInterface: public KWayland::Server::Resource
+class XdgPositionerStableInterface: public KWaylandServer::Resource
 {
 public:
     QSize initialSize() const;
@@ -128,7 +126,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

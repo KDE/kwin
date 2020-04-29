@@ -24,7 +24,7 @@
 #include <errno.h>  // For EPROTO
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class ErrorTest : public QObject
 {

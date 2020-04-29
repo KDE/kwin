@@ -26,8 +26,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "qwayland-server-tablet-unstable-v2.h"
 #include <QHash>
 
-using namespace KWayland;
-using namespace Server;
+using namespace KWaylandServer;
 
 static int s_version = 1;
 

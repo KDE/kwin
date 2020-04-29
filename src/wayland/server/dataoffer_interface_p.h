@@ -10,9 +10,7 @@
 #include "resource_p.h"
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Q_DECL_HIDDEN DataOfferInterface::Private : public Resource::Private
@@ -41,7 +39,6 @@ private:
     static const struct wl_data_offer_interface s_interface;
 };
 
-}
 }
 
 #endif

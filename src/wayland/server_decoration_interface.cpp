@@ -14,9 +14,7 @@
 
 #include <wayland-server_decoration-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class ServerSideDecorationManagerInterface::Private : public Global::Private
@@ -259,5 +257,4 @@ ServerSideDecorationInterface *ServerSideDecorationInterface::get(SurfaceInterfa
     return Private::get(s);
 }
 
-}
 }

@@ -21,7 +21,7 @@
 #include "../../src/server/textinput_interface.h"
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class TextInputTest : public QObject
 {

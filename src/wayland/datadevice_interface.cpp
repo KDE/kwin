@@ -15,9 +15,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataDeviceInterface::Private : public Resource::Private
@@ -381,5 +379,4 @@ DataDeviceInterface::Private *DataDeviceInterface::d_func() const
     return reinterpret_cast<DataDeviceInterface::Private*>(d.data());
 }
 
-}
 }

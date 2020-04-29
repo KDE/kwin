@@ -11,9 +11,7 @@
 
 #include <wayland-eglstream-controller-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Q_DECL_HIDDEN EglStreamControllerInterface::Private : public Global::Private
@@ -38,7 +36,6 @@ private:
     EglStreamControllerInterface *q;
 };
 
-}
 }
 
 #endif

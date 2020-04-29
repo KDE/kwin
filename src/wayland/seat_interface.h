@@ -10,7 +10,7 @@
 #include <QPoint>
 #include <QMatrix4x4>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 #include "keyboard_interface.h"
 #include "pointer_interface.h"
@@ -19,9 +19,7 @@
 struct wl_client;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataDeviceInterface;
@@ -722,15 +720,15 @@ Q_SIGNALS:
     void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
     void timestampChanged(quint32);
 
-    void pointerCreated(KWayland::Server::PointerInterface*);
-    void keyboardCreated(KWayland::Server::KeyboardInterface*);
-    void touchCreated(KWayland::Server::TouchInterface*);
+    void pointerCreated(KWaylandServer::PointerInterface*);
+    void keyboardCreated(KWaylandServer::KeyboardInterface*);
+    void touchCreated(KWaylandServer::TouchInterface*);
 
     /**
      * Emitted whenever the focused pointer changes
      * @since 5.6
      **/
-    void focusedPointerChanged(KWayland::Server::PointerInterface*);
+    void focusedPointerChanged(KWaylandServer::PointerInterface*);
 
     /**
      * Emitted whenever the selection changes
@@ -777,8 +775,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::SeatInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::SeatInterface*)
 
 #endif

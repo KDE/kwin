@@ -11,9 +11,7 @@
 
 #include <wayland-text-input-unstable-v2-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class TextInputUnstableV2Interface::Private : public TextInputInterface::Private
@@ -399,5 +397,4 @@ TextInputManagerUnstableV2Interface::TextInputManagerUnstableV2Interface(Display
 
 TextInputManagerUnstableV2Interface::~TextInputManagerUnstableV2Interface() = default;
 
-}
 }

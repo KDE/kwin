@@ -11,9 +11,7 @@
 
 #include <wayland-pointer-constraints-unstable-v1-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class PointerConstraintsUnstableV1Interface::Private : public PointerConstraintsInterface::Private
@@ -267,5 +265,4 @@ ConfinedPointerUnstableV1Interface::Private *ConfinedPointerUnstableV1Interface:
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

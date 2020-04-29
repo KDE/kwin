@@ -12,9 +12,7 @@
 
 #include <wayland-pointer-gestures-unstable-v1-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class PointerGesturesUnstableV1Interface::Private : public PointerGesturesInterface::Private
@@ -279,5 +277,4 @@ PointerPinchGestureUnstableV1Interface::Private *PointerPinchGestureUnstableV1In
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

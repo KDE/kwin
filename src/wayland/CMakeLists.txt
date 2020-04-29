@@ -303,7 +303,7 @@ ecm_generate_export_header(KWaylandServer
     BASE_NAME
         KWaylandServer
     EXPORT_FILE_NAME
-        KWayland/Server/kwaylandserver_export.h
+        KWaylandServer/kwaylandserver_export.h
     GROUP_BASE_NAME KF
     VERSION ${PROJECT_VERSION}
     DEPRECATED_BASE_VERSION 0
@@ -330,7 +330,7 @@ set_target_properties(KWaylandServer PROPERTIES VERSION   ${KWAYLANDSERVER_VERSI
 install(TARGETS KWaylandServer EXPORT KWaylandServerTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 
 set(SERVER_LIB_HEADERS
-  ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/KWaylandServer/kwaylandserver_export.h
   appmenu_interface.h
   blur_interface.h
   buffer_interface.h

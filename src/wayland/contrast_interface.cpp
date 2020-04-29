@@ -14,9 +14,7 @@
 #include <wayland-server.h>
 #include <wayland-contrast-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class ContrastManagerInterface::Private : public Global::Private
@@ -252,5 +250,4 @@ ContrastInterface::Private *ContrastInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

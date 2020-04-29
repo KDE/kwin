@@ -9,9 +9,7 @@
 
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 QList<Resource::Private*> Resource::Private::s_allResources;
@@ -103,5 +101,4 @@ quint32 Resource::id() const
     return wl_resource_get_id(d->resource);
 }
 
-}
 }

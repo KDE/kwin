@@ -14,9 +14,7 @@
 
 #include <QHash>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class OutputManagementInterface::Private : public Global::Private
@@ -102,5 +100,4 @@ void OutputManagementInterface::Private::unbind(wl_resource *resource)
     // TODO: implement?
 }
 
-}
 }

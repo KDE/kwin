@@ -17,7 +17,7 @@
 #include "../../src/server/seat_interface.h"
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class IdleTest : public QObject
 {

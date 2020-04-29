@@ -7,13 +7,11 @@
 #ifndef KWAYLAND_KEYSTATE_INTERFACE_H
 #define KWAYLAND_KEYSTATE_INTERFACE_H
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -51,7 +49,6 @@ private:
     class Private;
 };
 
-}
 }
 
 #endif

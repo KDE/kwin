@@ -43,11 +43,11 @@ private Q_SLOTS:
     void testRemoveRequested();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositorInterface;
-    KWayland::Server::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface;
-    KWayland::Server::PlasmaWindowManagementInterface *m_windowManagementInterface;
-    KWayland::Server::PlasmaWindowInterface *m_windowInterface;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositorInterface;
+    KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface;
+    KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
+    KWaylandServer::PlasmaWindowInterface *m_windowInterface;
 
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -74,7 +74,7 @@ TestVirtualDesktop::TestVirtualDesktop(QObject *parent)
 
 void TestVirtualDesktop::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -183,7 +183,7 @@ void TestVirtualDesktop::testCreate()
 
 
     //on this createDesktop bind() isn't called already, the desktopadded signals will be sent after bind happened
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-1"));
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-1"));
     desktop1Int->setName("Desktop 1");
 
     desktopCreatedSpy.wait();
@@ -206,7 +206,7 @@ void TestVirtualDesktop::testCreate()
 
 
     //on those createDesktop the bind will already be done
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktop2Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-2"));
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktop2Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-2"));
     desktop2Int->setName("Desktop 2");
     desktopCreatedSpy.wait();
     arguments = desktopCreatedSpy.takeFirst();
@@ -214,7 +214,7 @@ void TestVirtualDesktop::testCreate()
     QCOMPARE(arguments.at(1).toUInt(), (quint32)1);
     QCOMPARE(m_plasmaVirtualDesktopManagement->desktops().length(), 2);
 
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktop3Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-3"));
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktop3Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-3"));
     desktop3Int->setName("Desktop 3");
     desktopCreatedSpy.wait();
     arguments = desktopCreatedSpy.takeFirst();
@@ -300,7 +300,7 @@ void TestVirtualDesktop::testDestroy()
     //rebuild some desktops
     testCreate();
 
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->desktops().first();
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->desktops().first();
     KWayland::Client::PlasmaVirtualDesktop *desktop1 = m_plasmaVirtualDesktopManagement->desktops().first();
 
 
@@ -337,16 +337,16 @@ void TestVirtualDesktop::testActivate()
     //rebuild some desktops
     testCreate();
 
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->desktops().first();
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->desktops().first();
     KWayland::Client::PlasmaVirtualDesktop *desktop1 = m_plasmaVirtualDesktopManagement->desktops().first();
     QVERIFY(desktop1->isActive());
     QVERIFY(desktop1Int->isActive());
 
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktop2Int = m_plasmaVirtualDesktopManagementInterface->desktops()[1];
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktop2Int = m_plasmaVirtualDesktopManagementInterface->desktops()[1];
     KWayland::Client::PlasmaVirtualDesktop *desktop2 = m_plasmaVirtualDesktopManagement->desktops()[1];
     QVERIFY(!desktop2Int->isActive());
 
-    QSignalSpy requestActivateSpy(desktop2Int, &KWayland::Server::PlasmaVirtualDesktopInterface::activateRequested);
+    QSignalSpy requestActivateSpy(desktop2Int, &KWaylandServer::PlasmaVirtualDesktopInterface::activateRequested);
     QSignalSpy activatedSpy(desktop2, &KWayland::Client::PlasmaVirtualDesktop::activated);
 
     desktop2->requestActivate();
@@ -386,7 +386,7 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
 {
     testCreate();
 
-    QSignalSpy enterRequestedSpy(m_windowInterface, &KWayland::Server::PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested);
+    QSignalSpy enterRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested);
     m_window->requestEnterVirtualDesktop(QStringLiteral("0-1"));
     enterRequestedSpy.wait();
 
@@ -420,7 +420,7 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 2);
 
     //remove a desktop
-    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWayland::Server::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
+    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
     m_window->requestLeaveVirtualDesktop(QStringLiteral("0-1"));
     leaveRequestedSpy.wait();
 
@@ -484,7 +484,7 @@ void TestVirtualDesktop::testCreateRequested()
     //rebuild some desktops
     testCreate();
 
-    QSignalSpy desktopCreateRequestedSpy(m_plasmaVirtualDesktopManagementInterface, &KWayland::Server::PlasmaVirtualDesktopManagementInterface::desktopCreateRequested);
+    QSignalSpy desktopCreateRequestedSpy(m_plasmaVirtualDesktopManagementInterface, &KWaylandServer::PlasmaVirtualDesktopManagementInterface::desktopCreateRequested);
     QSignalSpy desktopCreatedSpy(m_plasmaVirtualDesktopManagement, &PlasmaVirtualDesktopManagement::desktopCreated);
 
     //listen for createdRequested
@@ -495,7 +495,7 @@ void TestVirtualDesktop::testCreateRequested()
 
     //actually create
     m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-4"), 1);
-    KWayland::Server::PlasmaVirtualDesktopInterface *desktopInt = m_plasmaVirtualDesktopManagementInterface->desktops().at(1);
+    KWaylandServer::PlasmaVirtualDesktopInterface *desktopInt = m_plasmaVirtualDesktopManagementInterface->desktops().at(1);
 
     QCOMPARE(desktopInt->id(), QStringLiteral("0-4"));
     desktopInt->setName(QStringLiteral("Desktop"));
@@ -521,7 +521,7 @@ void TestVirtualDesktop::testRemoveRequested()
     //rebuild some desktops
     testCreate();
 
-    QSignalSpy desktopRemoveRequestedSpy(m_plasmaVirtualDesktopManagementInterface, &KWayland::Server::PlasmaVirtualDesktopManagementInterface::desktopRemoveRequested);
+    QSignalSpy desktopRemoveRequestedSpy(m_plasmaVirtualDesktopManagementInterface, &KWaylandServer::PlasmaVirtualDesktopManagementInterface::desktopRemoveRequested);
 
     //request a remove, just check the request arrived, ignore the request.
     m_plasmaVirtualDesktopManagement->requestRemoveVirtualDesktop(QStringLiteral("0-1"));

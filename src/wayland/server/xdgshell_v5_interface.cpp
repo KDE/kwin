@@ -16,9 +16,7 @@
 
 #include "../compat/wayland-xdg-shell-v5-server-protocol.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class XdgShellV5Interface::Private : public XdgShellInterface::Private
@@ -527,7 +525,7 @@ XdgShellV5Interface::XdgShellV5Interface(Display *display, QObject *parent)
 XdgShellV5Interface::~XdgShellV5Interface() = default;
 
 XdgSurfaceV5Interface::XdgSurfaceV5Interface(XdgShellV5Interface *parent, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::XdgShellSurfaceInterface(new Private(this, parent, surface, parentResource))
+    : KWaylandServer::XdgShellSurfaceInterface(new Private(this, parent, surface, parentResource))
 {
 }
 
@@ -545,6 +543,5 @@ XdgPopupV5Interface::Private *XdgPopupV5Interface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }
 

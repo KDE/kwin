@@ -11,9 +11,7 @@
 
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class OutputInterface::Private : public Global::Private
@@ -529,5 +527,4 @@ OutputInterface::Private *OutputInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

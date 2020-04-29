@@ -10,9 +10,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class CompositorInterface::Private : public Global::Private
@@ -111,5 +109,4 @@ void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *
     emit q->regionCreated(region);
 }
 
-}
 }

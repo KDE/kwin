@@ -20,14 +20,12 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAYLAND_SERVER_TABLET_INTERFACE_H
 #define WAYLAND_SERVER_TABLET_INTERFACE_H
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include <QVector>
 
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class TabletSeatInterface;
 class Display;
@@ -187,8 +185,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::TabletSeatInterface *)
+Q_DECLARE_METATYPE(KWaylandServer::TabletSeatInterface *)
 
 #endif

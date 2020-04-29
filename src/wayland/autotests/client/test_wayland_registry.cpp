@@ -91,25 +91,25 @@ private Q_SLOTS:
     void testAnnounceMultipleOutputDevices();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::CompositorInterface *m_compositor;
-    KWayland::Server::OutputInterface *m_output;
-    KWayland::Server::OutputDeviceInterface *m_outputDevice;
-    KWayland::Server::SeatInterface *m_seat;
-    KWayland::Server::ShellInterface *m_shell;
-    KWayland::Server::SubCompositorInterface *m_subcompositor;
-    KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManager;
-    KWayland::Server::OutputManagementInterface *m_outputManagement;
-    KWayland::Server::ServerSideDecorationManagerInterface *m_serverSideDecorationManager;
-    KWayland::Server::TextInputManagerInterface *m_textInputManagerV0;
-    KWayland::Server::TextInputManagerInterface *m_textInputManagerV2;
-    KWayland::Server::XdgShellInterface *m_xdgShellUnstableV5;
-    KWayland::Server::RelativePointerManagerInterface *m_relativePointerV1;
-    KWayland::Server::PointerGesturesInterface *m_pointerGesturesV1;
-    KWayland::Server::PointerConstraintsInterface *m_pointerConstraintsV1;
-    KWayland::Server::BlurManagerInterface *m_blur;
-    KWayland::Server::ContrastManagerInterface *m_contrast;
-    KWayland::Server::IdleInhibitManagerInterface *m_idleInhibit;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::CompositorInterface *m_compositor;
+    KWaylandServer::OutputInterface *m_output;
+    KWaylandServer::OutputDeviceInterface *m_outputDevice;
+    KWaylandServer::SeatInterface *m_seat;
+    KWaylandServer::ShellInterface *m_shell;
+    KWaylandServer::SubCompositorInterface *m_subcompositor;
+    KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManager;
+    KWaylandServer::OutputManagementInterface *m_outputManagement;
+    KWaylandServer::ServerSideDecorationManagerInterface *m_serverSideDecorationManager;
+    KWaylandServer::TextInputManagerInterface *m_textInputManagerV0;
+    KWaylandServer::TextInputManagerInterface *m_textInputManagerV2;
+    KWaylandServer::XdgShellInterface *m_xdgShellUnstableV5;
+    KWaylandServer::RelativePointerManagerInterface *m_relativePointerV1;
+    KWaylandServer::PointerGesturesInterface *m_pointerGesturesV1;
+    KWaylandServer::PointerConstraintsInterface *m_pointerConstraintsV1;
+    KWaylandServer::BlurManagerInterface *m_blur;
+    KWaylandServer::ContrastManagerInterface *m_contrast;
+    KWaylandServer::IdleInhibitManagerInterface *m_idleInhibit;
 
 };
 
@@ -141,7 +141,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
 
 void TestWaylandRegistry::init()
 {
-    m_display = new KWayland::Server::Display();
+    m_display = new KWaylandServer::Display();
     m_display->setSocketName(s_socketName);
     m_display->start();
     m_display->createShm();
@@ -170,27 +170,27 @@ void TestWaylandRegistry::init()
     m_display->createDpmsManager()->create();
     m_serverSideDecorationManager = m_display->createServerSideDecorationManager();
     m_serverSideDecorationManager->create();
-    m_textInputManagerV0 = m_display->createTextInputManager(KWayland::Server::TextInputInterfaceVersion::UnstableV0);
-    QCOMPARE(m_textInputManagerV0->interfaceVersion(), KWayland::Server::TextInputInterfaceVersion::UnstableV0);
+    m_textInputManagerV0 = m_display->createTextInputManager(KWaylandServer::TextInputInterfaceVersion::UnstableV0);
+    QCOMPARE(m_textInputManagerV0->interfaceVersion(), KWaylandServer::TextInputInterfaceVersion::UnstableV0);
     m_textInputManagerV0->create();
-    m_textInputManagerV2 = m_display->createTextInputManager(KWayland::Server::TextInputInterfaceVersion::UnstableV2);
-    QCOMPARE(m_textInputManagerV2->interfaceVersion(), KWayland::Server::TextInputInterfaceVersion::UnstableV2);
+    m_textInputManagerV2 = m_display->createTextInputManager(KWaylandServer::TextInputInterfaceVersion::UnstableV2);
+    QCOMPARE(m_textInputManagerV2->interfaceVersion(), KWaylandServer::TextInputInterfaceVersion::UnstableV2);
     m_textInputManagerV2->create();
-    m_xdgShellUnstableV5 = m_display->createXdgShell(KWayland::Server::XdgShellInterfaceVersion::UnstableV5);
+    m_xdgShellUnstableV5 = m_display->createXdgShell(KWaylandServer::XdgShellInterfaceVersion::UnstableV5);
     m_xdgShellUnstableV5->create();
-    QCOMPARE(m_xdgShellUnstableV5->interfaceVersion(), KWayland::Server::XdgShellInterfaceVersion::UnstableV5);
-    m_relativePointerV1 = m_display->createRelativePointerManager(KWayland::Server::RelativePointerInterfaceVersion::UnstableV1);
+    QCOMPARE(m_xdgShellUnstableV5->interfaceVersion(), KWaylandServer::XdgShellInterfaceVersion::UnstableV5);
+    m_relativePointerV1 = m_display->createRelativePointerManager(KWaylandServer::RelativePointerInterfaceVersion::UnstableV1);
     m_relativePointerV1->create();
-    QCOMPARE(m_relativePointerV1->interfaceVersion(), KWayland::Server::RelativePointerInterfaceVersion::UnstableV1);
-    m_pointerGesturesV1 = m_display->createPointerGestures(KWayland::Server::PointerGesturesInterfaceVersion::UnstableV1);
+    QCOMPARE(m_relativePointerV1->interfaceVersion(), KWaylandServer::RelativePointerInterfaceVersion::UnstableV1);
+    m_pointerGesturesV1 = m_display->createPointerGestures(KWaylandServer::PointerGesturesInterfaceVersion::UnstableV1);
     m_pointerGesturesV1->create();
-    QCOMPARE(m_pointerGesturesV1->interfaceVersion(), KWayland::Server::PointerGesturesInterfaceVersion::UnstableV1);
-    m_pointerConstraintsV1 = m_display->createPointerConstraints(KWayland::Server::PointerConstraintsInterfaceVersion::UnstableV1);
+    QCOMPARE(m_pointerGesturesV1->interfaceVersion(), KWaylandServer::PointerGesturesInterfaceVersion::UnstableV1);
+    m_pointerConstraintsV1 = m_display->createPointerConstraints(KWaylandServer::PointerConstraintsInterfaceVersion::UnstableV1);
     m_pointerConstraintsV1->create();
-    QCOMPARE(m_pointerConstraintsV1->interfaceVersion(), KWayland::Server::PointerConstraintsInterfaceVersion::UnstableV1);
-    m_idleInhibit = m_display->createIdleInhibitManager(KWayland::Server::IdleInhibitManagerInterfaceVersion::UnstableV1);
+    QCOMPARE(m_pointerConstraintsV1->interfaceVersion(), KWaylandServer::PointerConstraintsInterfaceVersion::UnstableV1);
+    m_idleInhibit = m_display->createIdleInhibitManager(KWaylandServer::IdleInhibitManagerInterfaceVersion::UnstableV1);
     m_idleInhibit->create();
-    QCOMPARE(m_idleInhibit->interfaceVersion(), KWayland::Server::IdleInhibitManagerInterfaceVersion::UnstableV1);
+    QCOMPARE(m_idleInhibit->interfaceVersion(), KWaylandServer::IdleInhibitManagerInterfaceVersion::UnstableV1);
 }
 
 void TestWaylandRegistry::cleanup()

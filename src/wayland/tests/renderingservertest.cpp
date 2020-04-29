@@ -79,9 +79,9 @@ public:
     explicit CompositorWindow(QWidget *parent = nullptr);
     virtual ~CompositorWindow();
 
-    void surfaceCreated(KWayland::Server::ShellSurfaceInterface *surface);
+    void surfaceCreated(KWaylandServer::ShellSurfaceInterface *surface);
 
-    void setSeat(const QPointer<KWayland::Server::SeatInterface> &seat);
+    void setSeat(const QPointer<KWaylandServer::SeatInterface> &seat);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -94,8 +94,8 @@ protected:
 
 private:
     void updateFocus();
-    QList<KWayland::Server::ShellSurfaceInterface*> m_stackingOrder;
-    QPointer<KWayland::Server::SeatInterface> m_seat;
+    QList<KWaylandServer::ShellSurfaceInterface*> m_stackingOrder;
+    QPointer<KWaylandServer::SeatInterface> m_seat;
 };
 
 CompositorWindow::CompositorWindow(QWidget *parent)
@@ -106,9 +106,9 @@ CompositorWindow::CompositorWindow(QWidget *parent)
 
 CompositorWindow::~CompositorWindow() = default;
 
-void CompositorWindow::surfaceCreated(KWayland::Server::ShellSurfaceInterface *surface)
+void CompositorWindow::surfaceCreated(KWaylandServer::ShellSurfaceInterface *surface)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     m_stackingOrder << surface;
     connect(surface, &ShellSurfaceInterface::fullscreenChanged, this,
         [surface, this](bool fullscreen) {
@@ -137,7 +137,7 @@ void CompositorWindow::surfaceCreated(KWayland::Server::ShellSurfaceInterface *s
 
 void CompositorWindow::updateFocus()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     if (!m_seat || m_stackingOrder.isEmpty()) {
         return;
     }
@@ -153,7 +153,7 @@ void CompositorWindow::updateFocus()
     m_seat->setFocusedKeyboardSurface((*it)->surface());
 }
 
-void CompositorWindow::setSeat(const QPointer< KWayland::Server::SeatInterface > &seat)
+void CompositorWindow::setSeat(const QPointer< KWaylandServer::SeatInterface > &seat)
 {
     m_seat = seat;
 }
@@ -237,7 +237,7 @@ void CompositorWindow::wheelEvent(QWheelEvent *event)
 
 int main(int argc, char **argv)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QApplication app(argc, argv);
 
     QCommandLineParser parser;

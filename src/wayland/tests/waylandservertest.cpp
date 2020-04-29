@@ -65,7 +65,7 @@ static void readDisplayFromPipe(int pipe)
 
 int main(int argc, char **argv)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // set our own event dispatcher to be able to dispatch events before the event loop is started
     QAbstractEventDispatcher *eventDispatcher = new QEventDispatcherGlib();

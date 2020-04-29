@@ -14,9 +14,7 @@
 
 #include <wayland-appmenu-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class AppMenuManagerInterface::Private : public Global::Private
 {
@@ -198,5 +196,3 @@ SurfaceInterface* AppMenuInterface::surface() const {
 }
 
 }//namespace
-}
-

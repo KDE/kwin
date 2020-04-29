@@ -9,11 +9,9 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -42,7 +40,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationPaletteInterface is created.
      **/
-    void paletteCreated(KWayland::Server::ServerSideDecorationPaletteInterface*);
+    void paletteCreated(KWaylandServer::ServerSideDecorationPaletteInterface*);
 
 private:
     explicit ServerSideDecorationPaletteManagerInterface(Display *display, QObject *parent = nullptr);
@@ -86,7 +84,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

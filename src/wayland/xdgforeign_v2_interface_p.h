@@ -9,9 +9,7 @@
 #include "global.h"
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -61,7 +59,7 @@ public:
 Q_SIGNALS:
     void surfaceImported(const QString &handle, XdgImportedUnstableV2Interface *imported);
     void surfaceUnimported(const QString &handle);
-    void transientChanged(KWayland::Server::SurfaceInterface *child, KWayland::Server::SurfaceInterface *parent);
+    void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 private:
     explicit XdgImporterUnstableV2Interface(Display *display, XdgForeignInterface *parent = nullptr);
@@ -94,7 +92,7 @@ public:
     SurfaceInterface *child() const;
 
 Q_SIGNALS:
-    void childChanged(KWayland::Server::SurfaceInterface *child);
+    void childChanged(KWaylandServer::SurfaceInterface *child);
 
 private:
     explicit XdgImportedUnstableV2Interface(XdgImporterUnstableV2Interface *parent, wl_resource *parentResource);
@@ -104,7 +102,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

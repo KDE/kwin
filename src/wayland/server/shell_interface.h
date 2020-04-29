@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "seat_interface.h"
 
 #include "global.h"
@@ -17,9 +17,7 @@
 class QSize;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -45,7 +43,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new ShellSurfaceInterface gets created for a SurfaceInterface.
      **/
-    void surfaceCreated(KWayland::Server::ShellSurfaceInterface*);
+    void surfaceCreated(KWaylandServer::ShellSurfaceInterface*);
 
 private:
     friend class Display;
@@ -279,7 +277,7 @@ Q_SIGNALS:
      * @param serial The serial of the implicit mouse grab which triggered the move
      * @since 5.5
      **/
-    void moveRequested(KWayland::Server::SeatInterface *seat, quint32 serial);
+    void moveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
     /**
      * The surface requested a window resize.
      *
@@ -288,7 +286,7 @@ Q_SIGNALS:
      * @param edges A hint which edges are involved in the resize
      * @since 5.5
      **/
-    void resizeRequested(KWayland::Server::SeatInterface *seat, quint32 serial, Qt::Edges edges);
+    void resizeRequested(KWaylandServer::SeatInterface *seat, quint32 serial, Qt::Edges edges);
 
 private:
     friend class ShellInterface;
@@ -298,7 +296,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

@@ -22,11 +22,11 @@
 #include "../../src/server/surface_interface.h"
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(KWayland::Client::PointerConstraints::LifeTime)
-Q_DECLARE_METATYPE(KWayland::Server::ConfinedPointerInterface::LifeTime)
-Q_DECLARE_METATYPE(KWayland::Server::LockedPointerInterface::LifeTime)
+Q_DECLARE_METATYPE(KWaylandServer::ConfinedPointerInterface::LifeTime)
+Q_DECLARE_METATYPE(KWaylandServer::LockedPointerInterface::LifeTime)
 
 class TestPointerConstraints : public QObject
 {

@@ -14,9 +14,7 @@
 #include <wayland-server.h>
 #include <wayland-blur-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class BlurManagerInterface::Private : public Global::Private
@@ -197,5 +195,4 @@ BlurInterface::Private *BlurInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

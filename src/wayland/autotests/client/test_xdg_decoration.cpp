@@ -31,10 +31,10 @@ private Q_SLOTS:
     void testDecoration();
 
 private:
-    KWayland::Server::Display *m_display = nullptr;
-    KWayland::Server::CompositorInterface *m_compositorInterface = nullptr;
-    KWayland::Server::XdgShellInterface *m_xdgShellInterface = nullptr;
-    KWayland::Server::XdgDecorationManagerInterface *m_xdgDecorationManagerInterface = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
+    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
+    KWaylandServer::XdgShellInterface *m_xdgShellInterface = nullptr;
+    KWaylandServer::XdgDecorationManagerInterface *m_xdgDecorationManagerInterface = nullptr;
 
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -55,7 +55,7 @@ TestXdgDecoration::TestXdgDecoration(QObject *parent)
 
 void TestXdgDecoration::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     using namespace KWayland::Client;
 
     qRegisterMetaType<XdgDecoration::Mode>();
@@ -159,11 +159,11 @@ void TestXdgDecoration::cleanup()
 void TestXdgDecoration::testDecoration_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
-    QTest::addColumn<KWayland::Server::XdgDecorationInterface::Mode>("configuredMode");
+    using namespace KWaylandServer;
+    QTest::addColumn<KWaylandServer::XdgDecorationInterface::Mode>("configuredMode");
     QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("configuredModeExp");
     QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("setMode");
-    QTest::addColumn<KWayland::Server::XdgDecorationInterface::Mode>("setModeExp");
+    QTest::addColumn<KWaylandServer::XdgDecorationInterface::Mode>("setModeExp");
 
     const auto serverClient = XdgDecorationInterface::Mode::ClientSide;
     const auto serverServer = XdgDecorationInterface::Mode::ServerSide;
@@ -179,12 +179,12 @@ void TestXdgDecoration::testDecoration_data()
 void TestXdgDecoration::testDecoration()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    QFETCH(KWayland::Server::XdgDecorationInterface::Mode, configuredMode);
+    QFETCH(KWaylandServer::XdgDecorationInterface::Mode, configuredMode);
     QFETCH(KWayland::Client::XdgDecoration::Mode, configuredModeExp);
     QFETCH(KWayland::Client::XdgDecoration::Mode, setMode);
-    QFETCH(KWayland::Server::XdgDecorationInterface::Mode, setModeExp);
+    QFETCH(KWaylandServer::XdgDecorationInterface::Mode, setModeExp);
 
 
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);

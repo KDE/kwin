@@ -8,14 +8,12 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "resource.h"
 #include "datadevicemanager_interface.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataDeviceInterface;
@@ -68,8 +66,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::DataOfferInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataOfferInterface*)
 
 #endif

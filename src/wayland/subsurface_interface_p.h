@@ -13,9 +13,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class SubSurfaceInterface::Private : public Resource::Private
@@ -53,7 +51,6 @@ private:
     static const struct wl_subsurface_interface s_interface;
 };
 
-}
 }
 
 #endif

@@ -12,9 +12,7 @@
 
 #include <QTimer>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class XdgShellInterface::Private : public Global::Private
@@ -91,7 +89,6 @@ protected:
 
 };
 
-}
 }
 
 #endif

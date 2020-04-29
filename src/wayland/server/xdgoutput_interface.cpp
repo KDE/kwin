@@ -13,9 +13,7 @@
 
 #include <QHash>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class XdgOutputManagerInterface::Private : public Global::Private
@@ -340,5 +338,3 @@ XdgOutputV1Interface::Private::~Private()
 }
 
 }
-}
-

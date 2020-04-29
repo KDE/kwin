@@ -8,11 +8,9 @@
 
 #include "global.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class OutputConfigurationInterface;
@@ -50,7 +48,7 @@ Q_SIGNALS:
      * @see OutputDeviceInterface
      * @see OutputInterface
      */
-    void configurationChangeRequested(KWayland::Server::OutputConfigurationInterface *configurationInterface);
+    void configurationChangeRequested(KWaylandServer::OutputConfigurationInterface *configurationInterface);
 
 private:
     explicit OutputManagementInterface(Display *display, QObject *parent = nullptr);
@@ -58,7 +56,6 @@ private:
     class Private;
 };
 
-}
 }
 
 #endif

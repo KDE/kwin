@@ -14,9 +14,7 @@
 // system
 #include <unistd.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataSourceInterface::Private : public Resource::Private
@@ -188,5 +186,4 @@ void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action
     wl_data_source_send_action(d->resource, wlAction);
 }
 
-}
 }

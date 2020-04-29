@@ -9,16 +9,14 @@
 #include <QObject>
 #include <QPointer>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "global.h"
 #include "resource.h"
 
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -35,7 +33,7 @@ public:
     virtual ~SubCompositorInterface();
 
 Q_SIGNALS:
-    void subSurfaceCreated(KWayland::Server::SubSurfaceInterface*);
+    void subSurfaceCreated(KWaylandServer::SubSurfaceInterface*);
 
 private:
     explicit SubCompositorInterface(Display *display, QObject *parent = nullptr);
@@ -50,7 +48,7 @@ class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public Resource
 {
     Q_OBJECT
     Q_PROPERTY(QPoint position READ position NOTIFY positionChanged)
-    Q_PROPERTY(KWayland::Server::SubSurfaceInterface::Mode mode READ mode NOTIFY modeChanged)
+    Q_PROPERTY(KWaylandServer::SubSurfaceInterface::Mode mode READ mode NOTIFY modeChanged)
 public:
     virtual ~SubSurfaceInterface();
 
@@ -97,7 +95,7 @@ public:
 
 Q_SIGNALS:
     void positionChanged(const QPoint&);
-    void modeChanged(KWayland::Server::SubSurfaceInterface::Mode);
+    void modeChanged(KWaylandServer::SubSurfaceInterface::Mode);
 
 private:
     friend class SubCompositorInterface;
@@ -109,8 +107,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::SubSurfaceInterface::Mode)
+Q_DECLARE_METATYPE(KWaylandServer::SubSurfaceInterface::Mode)
 
 #endif

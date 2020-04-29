@@ -11,9 +11,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataDeviceManagerInterface::Private : public Global::Private
@@ -117,5 +115,4 @@ DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display, QObject
 
 DataDeviceManagerInterface::~DataDeviceManagerInterface() = default;
 
-}
 }

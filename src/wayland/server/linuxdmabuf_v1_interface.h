@@ -10,7 +10,7 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include <QHash>
 #include <QSet>
@@ -18,9 +18,7 @@
 
 struct wl_buffer_interface;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class BufferInterface;
 
@@ -163,9 +161,8 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::LinuxDmabufUnstableV1Interface*)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::LinuxDmabufUnstableV1Interface::Flags)
+Q_DECLARE_METATYPE(KWaylandServer::LinuxDmabufUnstableV1Interface*)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::LinuxDmabufUnstableV1Interface::Flags)
 
 #endif // WAYLAND_SERVER_LINUXDMABUF_INTERFACE_H

@@ -9,13 +9,11 @@
 #include "global.h"
 #include "surface_interface.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include <wayland-util.h>
 #include <QObject>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -47,7 +45,6 @@ private:
     friend class Display;
 };
 
-}
 }
 
 #endif

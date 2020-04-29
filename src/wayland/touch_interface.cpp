@@ -11,10 +11,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-
-namespace Server
+namespace KWaylandServer
 {
 
 class TouchInterface::Private : public Resource::Private
@@ -112,5 +109,4 @@ TouchInterface::Private *TouchInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

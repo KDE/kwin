@@ -11,10 +11,7 @@
 #include "surfacerole_p.h"
 #include <wayland-server.h>
 
-namespace KWayland
-{
-
-namespace Server
+namespace KWaylandServer
 {
 
 template <class T>
@@ -111,7 +108,6 @@ void GenericShellSurface<T>::resizeCallback(wl_client *client, wl_resource *reso
     emit s->q_func()->resizeRequested(SeatInterface::get(seat), serial, edgesToQtEdges(U(edges)));
 }
 
-}
 }
 
 #endif

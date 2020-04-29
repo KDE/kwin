@@ -13,9 +13,7 @@
 #include <wayland-server.h>
 #include <wayland-shadow-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class ShadowManagerInterface::Private : public Global::Private
@@ -391,5 +389,4 @@ ShadowInterface::Private *ShadowInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

@@ -10,7 +10,7 @@
 #include "../../src/server/pointer_interface.h"
 #include "../../src/server/seat_interface.h"
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 
 class TestWaylandServerSeat : public QObject

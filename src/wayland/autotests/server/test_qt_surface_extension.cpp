@@ -14,7 +14,7 @@
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/shell_interface.h"
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 
 class TestQtSurfaceExtension : public QObject

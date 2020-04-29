@@ -10,9 +10,7 @@
 #include "resource_p.h"
 #include "global_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class PointerInterface;
@@ -145,7 +143,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

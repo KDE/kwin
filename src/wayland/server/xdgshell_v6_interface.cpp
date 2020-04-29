@@ -17,9 +17,7 @@
 
 #include <wayland-xdg-shell-v6-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class XdgShellV6Interface::Private : public XdgShellInterface::Private
@@ -104,7 +102,7 @@ private:
     friend class XdgSurfaceV6Interface;
 };
 
-class XdgSurfaceV6Interface::Private : public KWayland::Server::Resource::Private
+class XdgSurfaceV6Interface::Private : public KWaylandServer::Resource::Private
 {
 public:
     Private(XdgSurfaceV6Interface* q, XdgShellV6Interface* c, SurfaceInterface* surface, wl_resource* parentResource);
@@ -562,7 +560,7 @@ void XdgSurfaceV6Interface::Private::setWindowGeometryCallback(wl_client *client
 }
 
 XdgSurfaceV6Interface::Private::Private(XdgSurfaceV6Interface *q, XdgShellV6Interface *c, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::Resource::Private(q, c, parentResource, &zxdg_surface_v6_interface, &s_interface),
+    : KWaylandServer::Resource::Private(q, c, parentResource, &zxdg_surface_v6_interface, &s_interface),
     m_shell(c),
     m_surface(surface)
 {
@@ -571,7 +569,7 @@ XdgSurfaceV6Interface::Private::Private(XdgSurfaceV6Interface *q, XdgShellV6Inte
 XdgSurfaceV6Interface::Private::~Private() = default;
 
 
-class XdgPositionerV6Interface::Private : public KWayland::Server::Resource::Private
+class XdgPositionerV6Interface::Private : public KWaylandServer::Resource::Private
 {
 public:
     Private(XdgPositionerV6Interface *q,  XdgShellV6Interface *c, wl_resource* parentResource);
@@ -595,7 +593,7 @@ private:
 };
 
 XdgPositionerV6Interface::Private::Private(XdgPositionerV6Interface *q, XdgShellV6Interface *c, wl_resource *parentResource)
-    : KWayland::Server::Resource::Private(q, c, parentResource, &zxdg_positioner_v6_interface, &s_interface)
+    : KWaylandServer::Resource::Private(q, c, parentResource, &zxdg_positioner_v6_interface, &s_interface)
 {
 }
 
@@ -985,7 +983,7 @@ Display* XdgShellV6Interface::display() const
 XdgShellV6Interface::~XdgShellV6Interface() = default;
 
 XdgSurfaceV6Interface::XdgSurfaceV6Interface(XdgShellV6Interface *parent, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::Resource(new Private(this, parent, surface, parentResource))
+    : KWaylandServer::Resource(new Private(this, parent, surface, parentResource))
 {
 }
 
@@ -998,7 +996,7 @@ SurfaceInterface* XdgSurfaceV6Interface::surface() const
 }
 
 XdgPositionerV6Interface::XdgPositionerV6Interface(XdgShellV6Interface *parent, wl_resource *parentResource)
-    : KWayland::Server::Resource(new Private(this, parent, parentResource))
+    : KWaylandServer::Resource(new Private(this, parent, parentResource))
 {
 }
 
@@ -1064,7 +1062,7 @@ XdgSurfaceV6Interface::Private *XdgSurfaceV6Interface::d_func() const
 
 
 XdgTopLevelV6Interface::XdgTopLevelV6Interface(XdgShellV6Interface *parent, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::XdgShellSurfaceInterface(new Private(this, parent, surface, parentResource))
+    : KWaylandServer::XdgShellSurfaceInterface(new Private(this, parent, surface, parentResource))
 {
 }
 
@@ -1088,5 +1086,3 @@ XdgPopupV6Interface::Private *XdgPopupV6Interface::d_func() const
 }
 
 }
-}
-

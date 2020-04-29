@@ -17,7 +17,7 @@
 #include <wayland-client-protocol.h>
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class TestWaylandOutputDevice : public QObject
 {
@@ -48,13 +48,13 @@ private Q_SLOTS:
     void testDone();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::OutputDeviceInterface *m_serverOutputDevice;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::OutputDeviceInterface *m_serverOutputDevice;
     QByteArray m_edid;
     QString m_serialNumber;
     QString m_eidaId;
 
-    KWayland::Server::OutputDeviceInterface::ColorCurves m_initColorCurves;
+    KWaylandServer::OutputDeviceInterface::ColorCurves m_initColorCurves;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -75,7 +75,7 @@ TestWaylandOutputDevice::TestWaylandOutputDevice(QObject *parent)
 
 void TestWaylandOutputDevice::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -445,7 +445,7 @@ void TestWaylandOutputDevice::testColorCurvesChange()
 
     // change the color curves
     outputChanged.clear();
-    KWayland::Server::OutputDeviceInterface::ColorCurves cc;
+    KWaylandServer::OutputDeviceInterface::ColorCurves cc;
     cc.red = QVector<quint16>(256, 0);
     cc.green = QVector<quint16>(256, UINT16_MAX);
     cc.blue = QVector<quint16>(320, 1);
@@ -470,9 +470,9 @@ void TestWaylandOutputDevice::testColorCurvesChange()
 void TestWaylandOutputDevice::testSubPixel_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::OutputDevice::SubPixel>("expected");
-    QTest::addColumn<KWayland::Server::OutputDeviceInterface::SubPixel>("actual");
+    QTest::addColumn<KWaylandServer::OutputDeviceInterface::SubPixel>("actual");
 
     QTest::newRow("none") << OutputDevice::SubPixel::None << OutputDeviceInterface::SubPixel::None;
     QTest::newRow("horizontal/rgb") << OutputDevice::SubPixel::HorizontalRGB << OutputDeviceInterface::SubPixel::HorizontalRGB;
@@ -484,7 +484,7 @@ void TestWaylandOutputDevice::testSubPixel_data()
 void TestWaylandOutputDevice::testSubPixel()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QFETCH(OutputDeviceInterface::SubPixel, actual);
     m_serverOutputDevice->setSubPixel(actual);
 
@@ -518,9 +518,9 @@ void TestWaylandOutputDevice::testSubPixel()
 void TestWaylandOutputDevice::testTransform_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::OutputDevice::Transform>("expected");
-    QTest::addColumn<KWayland::Server::OutputDeviceInterface::Transform>("actual");
+    QTest::addColumn<KWaylandServer::OutputDeviceInterface::Transform>("actual");
 
     QTest::newRow("90")          << OutputDevice::Transform::Rotated90  << OutputDeviceInterface::Transform::Rotated90;
     QTest::newRow("180")         << OutputDevice::Transform::Rotated180 << OutputDeviceInterface::Transform::Rotated180;
@@ -534,7 +534,7 @@ void TestWaylandOutputDevice::testTransform_data()
 void TestWaylandOutputDevice::testTransform()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QFETCH(OutputDeviceInterface::Transform, actual);
     m_serverOutputDevice->setTransform(actual);
 

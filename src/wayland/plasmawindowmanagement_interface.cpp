@@ -21,9 +21,7 @@
 #include <wayland-server.h>
 #include <wayland-plasma-window-management-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class PlasmaWindowManagementInterface::Private : public Global::Private
@@ -1001,5 +999,4 @@ quint32 PlasmaWindowInterface::internalId() const
     return d->windowId;
 }
 
-}
 }

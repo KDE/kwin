@@ -12,7 +12,7 @@ class XdgShellTestV6 : public XdgShellTest {
     Q_OBJECT
 public:
     XdgShellTestV6() :
-        XdgShellTest(KWayland::Server::XdgShellInterfaceVersion::UnstableV6) {}
+        XdgShellTest(KWaylandServer::XdgShellInterfaceVersion::UnstableV6) {}
 
 private Q_SLOTS:
     void testMaxSize();

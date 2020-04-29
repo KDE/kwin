@@ -8,13 +8,11 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_global;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class Display;
 
@@ -108,7 +106,6 @@ protected:
     QScopedPointer<Private> d;
 };
 
-}
 }
 
 #endif

@@ -11,11 +11,9 @@
 #include "outputdevice_interface.h"
 #include "outputchangeset.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 /** @class OutputConfigurationInterface
  *
@@ -89,8 +87,7 @@ private:
 
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::OutputConfigurationInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::OutputConfigurationInterface*)
 
 #endif

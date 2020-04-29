@@ -13,9 +13,7 @@
 #include <wayland-server.h>
 #include <wayland-fake-input-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class FakeInputInterface::Private : public Global::Private
@@ -306,5 +304,4 @@ bool FakeInputDevice::isAuthenticated() const
     return d->authenticated;
 }
 
-}
 }

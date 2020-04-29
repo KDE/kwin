@@ -9,11 +9,9 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -65,7 +63,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationInterface is created.
      **/
-    void decorationCreated(KWayland::Server::ServerSideDecorationInterface*);
+    void decorationCreated(KWaylandServer::ServerSideDecorationInterface*);
 
 private:
     explicit ServerSideDecorationManagerInterface(Display *display, QObject *parent = nullptr);
@@ -118,7 +116,7 @@ Q_SIGNALS:
      * @see setMode
      * @see mode
      **/
-    void modeRequested(KWayland::Server::ServerSideDecorationManagerInterface::Mode);
+    void modeRequested(KWaylandServer::ServerSideDecorationManagerInterface::Mode);
 
 private:
     explicit ServerSideDecorationInterface(ServerSideDecorationManagerInterface *parent, SurfaceInterface *surface, wl_resource *parentResource);
@@ -129,9 +127,8 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::ServerSideDecorationInterface*)
-Q_DECLARE_METATYPE(KWayland::Server::ServerSideDecorationManagerInterface::Mode)
+Q_DECLARE_METATYPE(KWaylandServer::ServerSideDecorationInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::ServerSideDecorationManagerInterface::Mode)
 
 #endif

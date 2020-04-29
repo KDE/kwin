@@ -27,7 +27,7 @@
 #include "../../src/server/xdgshell_interface.h"
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
 

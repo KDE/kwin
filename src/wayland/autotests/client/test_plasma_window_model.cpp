@@ -19,20 +19,20 @@
 #include <linux/input.h>
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
 typedef void (KWayland::Client::PlasmaWindow::*ClientWindowSignal)();
 Q_DECLARE_METATYPE(ClientWindowSignal)
-typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowBoolSetter)(bool);
+typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowBoolSetter)(bool);
 Q_DECLARE_METATYPE(ServerWindowBoolSetter)
-typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowStringSetter)(const QString&);
+typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowStringSetter)(const QString&);
 Q_DECLARE_METATYPE(ServerWindowStringSetter)
-typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowQuint32Setter)(quint32);
+typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowQuint32Setter)(quint32);
 Q_DECLARE_METATYPE(ServerWindowQuint32Setter)
-typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowVoidSetter)();
+typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowVoidSetter)();
 Q_DECLARE_METATYPE(ServerWindowVoidSetter)
-typedef void (KWayland::Server::PlasmaWindowInterface::*ServerWindowIconSetter)(const QIcon&);
+typedef void (KWaylandServer::PlasmaWindowInterface::*ServerWindowIconSetter)(const QIcon&);
 Q_DECLARE_METATYPE(ServerWindowIconSetter)
 
 class PlasmaWindowModelTest : public QObject
@@ -84,7 +84,7 @@ private:
     Display *m_display = nullptr;
     PlasmaWindowManagementInterface *m_pwInterface = nullptr;
     PlasmaWindowManagement *m_pw = nullptr;
-    KWayland::Server::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface = nullptr;
+    KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;

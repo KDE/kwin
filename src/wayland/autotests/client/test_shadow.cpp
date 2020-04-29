@@ -20,7 +20,7 @@
 #include "../../src/server/shadow_interface.h"
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class ShadowTest : public QObject
 {
@@ -256,7 +256,7 @@ void ShadowTest::testShadowElements()
 void ShadowTest::testSurfaceDestroy()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 

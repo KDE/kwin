@@ -8,9 +8,7 @@
 
 #include "global.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -79,7 +77,6 @@ private:
     class Private;
 };
 
-}
 }
 
 #endif

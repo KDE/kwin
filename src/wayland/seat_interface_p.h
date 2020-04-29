@@ -16,9 +16,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataDeviceInterface;
@@ -185,7 +183,6 @@ private:
     SeatInterface *q;
 };
 
-}
 }
 
 #endif

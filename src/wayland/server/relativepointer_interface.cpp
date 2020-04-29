@@ -5,9 +5,7 @@
 */
 #include "relativepointer_interface_p.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 RelativePointerManagerInterface::Private::Private(RelativePointerInterfaceVersion interfaceVersion, RelativePointerManagerInterface *q, Display *d, const wl_interface *interface, quint32 version)
@@ -66,5 +64,4 @@ RelativePointerInterface::Private *RelativePointerInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

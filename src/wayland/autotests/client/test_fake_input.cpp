@@ -17,7 +17,7 @@
 #include <linux/input.h>
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
 

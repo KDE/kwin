@@ -9,13 +9,11 @@
 #include <QObject>
 #include <QRegion>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class CompositorInterface;
 
@@ -58,7 +56,7 @@ private:
 };
 
 }
-}
-Q_DECLARE_METATYPE(KWayland::Server::RegionInterface*)
+
+Q_DECLARE_METATYPE(KWaylandServer::RegionInterface*)
 
 #endif

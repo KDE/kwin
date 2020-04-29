@@ -13,9 +13,7 @@
 #include <QRect>
 #include <QVector>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class TextInputManagerUnstableV0Interface;
@@ -95,7 +93,7 @@ Q_SIGNALS:
     /**
      * @internal
      **/
-    void requestActivate(KWayland::Server::SeatInterface *seat, KWayland::Server::SurfaceInterface *surface);
+    void requestActivate(KWaylandServer::SeatInterface *seat, KWaylandServer::SurfaceInterface *surface);
 
 private:
     explicit TextInputUnstableV0Interface(TextInputManagerUnstableV0Interface *parent, wl_resource *parentResource);
@@ -137,7 +135,6 @@ private:
     class Private;
 };
 
-}
 }
 
 #endif

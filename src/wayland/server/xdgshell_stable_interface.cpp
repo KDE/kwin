@@ -17,9 +17,7 @@
 
 #include <wayland-xdg-shell-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class XdgShellStableInterface::Private : public XdgShellInterface::Private
@@ -103,7 +101,7 @@ private:
     friend class XdgSurfaceStableInterface;
 };
 
-class XdgSurfaceStableInterface::Private : public KWayland::Server::Resource::Private
+class XdgSurfaceStableInterface::Private : public KWaylandServer::Resource::Private
 {
 public:
     Private(XdgSurfaceStableInterface* q, XdgShellStableInterface* c, SurfaceInterface* surface, wl_resource* parentResource);
@@ -560,7 +558,7 @@ void XdgSurfaceStableInterface::Private::setWindowGeometryCallback(wl_client *cl
 }
 
 XdgSurfaceStableInterface::Private::Private(XdgSurfaceStableInterface *q, XdgShellStableInterface *c, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::Resource::Private(q, c, parentResource, &xdg_surface_interface, &s_interface),
+    : KWaylandServer::Resource::Private(q, c, parentResource, &xdg_surface_interface, &s_interface),
     m_shell(c),
     m_surface(surface)
 {
@@ -569,7 +567,7 @@ XdgSurfaceStableInterface::Private::Private(XdgSurfaceStableInterface *q, XdgShe
 XdgSurfaceStableInterface::Private::~Private() = default;
 
 
-class XdgPositionerStableInterface::Private : public KWayland::Server::Resource::Private
+class XdgPositionerStableInterface::Private : public KWaylandServer::Resource::Private
 {
 public:
     Private(XdgPositionerStableInterface *q,  XdgShellStableInterface *c, wl_resource* parentResource);
@@ -593,7 +591,7 @@ private:
 };
 
 XdgPositionerStableInterface::Private::Private(XdgPositionerStableInterface *q, XdgShellStableInterface *c, wl_resource *parentResource)
-    : KWayland::Server::Resource::Private(q, c, parentResource, &xdg_positioner_interface, &s_interface)
+    : KWaylandServer::Resource::Private(q, c, parentResource, &xdg_positioner_interface, &s_interface)
 {
 }
 
@@ -1000,7 +998,7 @@ Display* XdgShellStableInterface::display() const
 XdgShellStableInterface::~XdgShellStableInterface() = default;
 
 XdgSurfaceStableInterface::XdgSurfaceStableInterface(XdgShellStableInterface *parent, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::Resource(new Private(this, parent, surface, parentResource))
+    : KWaylandServer::Resource(new Private(this, parent, surface, parentResource))
 {
 }
 
@@ -1013,7 +1011,7 @@ SurfaceInterface* XdgSurfaceStableInterface::surface() const
 }
 
 XdgPositionerStableInterface::XdgPositionerStableInterface(XdgShellStableInterface *parent, wl_resource *parentResource)
-    : KWayland::Server::Resource(new Private(this, parent, parentResource))
+    : KWaylandServer::Resource(new Private(this, parent, parentResource))
 {
 }
 
@@ -1079,7 +1077,7 @@ XdgSurfaceStableInterface::Private *XdgSurfaceStableInterface::d_func() const
 
 
 XdgTopLevelStableInterface::XdgTopLevelStableInterface(XdgShellStableInterface *parent, SurfaceInterface *surface, wl_resource *parentResource)
-    : KWayland::Server::XdgShellSurfaceInterface(new Private(this, parent, surface, parentResource))
+    : KWaylandServer::XdgShellSurfaceInterface(new Private(this, parent, surface, parentResource))
 {
 }
 
@@ -1102,6 +1100,5 @@ XdgPopupStableInterface::Private *XdgPopupStableInterface::d_func() const
     return static_cast<Private*>(d.data());
 }
 
-}
 }
 

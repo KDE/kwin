@@ -12,9 +12,7 @@
 
 #include <wayland-idle-inhibit-unstable-v1-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Q_DECL_HIDDEN IdleInhibitManagerUnstableV1Interface : public IdleInhibitManagerInterface
@@ -75,7 +73,6 @@ private:
 };
 
 
-}
 }
 
 #endif

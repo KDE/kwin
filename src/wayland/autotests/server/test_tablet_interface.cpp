@@ -35,7 +35,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "qwayland-tablet-unstable-v2.h"
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 class Tablet : public QtWayland::zwp_tablet_v2
 {
@@ -229,7 +229,7 @@ void TestTabletInterface::testAdd()
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
     QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
-    m_tool = seatInterface->addTool(KWayland::Server::TabletToolInterface::Pen, 0, 0, {TabletToolInterface::Tilt, TabletToolInterface::Pressure});
+    m_tool = seatInterface->addTool(KWaylandServer::TabletToolInterface::Pen, 0, 0, {TabletToolInterface::Tilt, TabletToolInterface::Pressure});
     QVERIFY(m_tool);
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);

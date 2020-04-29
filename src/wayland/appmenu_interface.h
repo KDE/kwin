@@ -9,11 +9,9 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -42,7 +40,7 @@ Q_SIGNALS:
     /**
      * Emitted whenever a new AppmenuInterface is created.
      **/
-    void appMenuCreated(KWayland::Server::AppMenuInterface*);
+    void appMenuCreated(KWaylandServer::AppMenuInterface*);
 
 private:
     explicit AppMenuManagerInterface(Display *display, QObject *parent = nullptr);
@@ -86,7 +84,7 @@ Q_SIGNALS:
     /**
      * Emitted when the address changes or is first received
      */
-    void addressChanged(KWayland::Server::AppMenuInterface::InterfaceAddress);
+    void addressChanged(KWaylandServer::AppMenuInterface::InterfaceAddress);
 
 private:
     explicit AppMenuInterface(AppMenuManagerInterface *parent, SurfaceInterface *s, wl_resource *parentResource);
@@ -96,7 +94,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

@@ -15,9 +15,7 @@
 #include <wayland-server.h>
 #include <wayland-idle-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class IdleInterface::Private : public Global::Private
@@ -252,5 +250,4 @@ IdleTimeoutInterface::Private *IdleTimeoutInterface::d_func() const
     return reinterpret_cast<IdleTimeoutInterface::Private*>(d.data());
 }
 
-}
 }

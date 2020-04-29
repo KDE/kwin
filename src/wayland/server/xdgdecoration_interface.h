@@ -9,11 +9,9 @@
 #include "global.h"
 #include "resource.h"
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -77,7 +75,7 @@ Q_SIGNALS:
     /**
      * New mode requested by the client
      */
-    void modeRequested(KWayland::Server::XdgDecorationInterface::Mode requestedMode);
+    void modeRequested(KWaylandServer::XdgDecorationInterface::Mode requestedMode);
 
 private:
     explicit XdgDecorationInterface(XdgDecorationManagerInterface *parent, XdgShellSurfaceInterface *surface, wl_resource *parentResource);
@@ -87,9 +85,6 @@ private:
     Private *d_func() const;
 };
 
-
 }
-}
-
 
 #endif

@@ -12,11 +12,9 @@
 #include <QObject>
 #include <QMarginsF>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class BufferInterface;
@@ -65,7 +63,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

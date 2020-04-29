@@ -43,8 +43,8 @@ private Q_SLOTS:
     void testDpmsRequestMode();
 
 private:
-    KWayland::Server::Display *m_display;
-    KWayland::Server::OutputInterface *m_serverOutput;
+    KWaylandServer::Display *m_display;
+    KWaylandServer::OutputInterface *m_serverOutput;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -63,7 +63,7 @@ TestWaylandOutput::TestWaylandOutput(QObject *parent)
 
 void TestWaylandOutput::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -127,7 +127,7 @@ void TestWaylandOutput::cleanup()
 
 void TestWaylandOutput::testRegistry()
 {
-    QSignalSpy globalPositionChangedSpy(m_serverOutput, &KWayland::Server::OutputInterface::globalPositionChanged);
+    QSignalSpy globalPositionChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::globalPositionChanged);
     QVERIFY(globalPositionChangedSpy.isValid());
     QCOMPARE(m_serverOutput->globalPosition(), QPoint(0, 0));
     m_serverOutput->setGlobalPosition(QPoint(100, 50));
@@ -137,7 +137,7 @@ void TestWaylandOutput::testRegistry()
     m_serverOutput->setGlobalPosition(QPoint(100, 50));
     QCOMPARE(globalPositionChangedSpy.count(), 1);
 
-    QSignalSpy physicalSizeChangedSpy(m_serverOutput, &KWayland::Server::OutputInterface::physicalSizeChanged);
+    QSignalSpy physicalSizeChangedSpy(m_serverOutput, &KWaylandServer::OutputInterface::physicalSizeChanged);
     QVERIFY(physicalSizeChangedSpy.isValid());
     QCOMPARE(m_serverOutput->physicalSize(), QSize());
     m_serverOutput->setPhysicalSize(QSize(200, 100));
@@ -195,7 +195,7 @@ void TestWaylandOutput::testRegistry()
 void TestWaylandOutput::testModeChanges()
 {
     // verify the server modes
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     const auto serverModes = m_serverOutput->modes();
     QCOMPARE(serverModes.count(), 3);
     QCOMPARE(serverModes.at(0).size, QSize(800, 600));
@@ -321,7 +321,7 @@ void TestWaylandOutput::testScaleChange()
     // change the scale
     outputChanged.clear();
     QCOMPARE(m_serverOutput->scale(), 1);
-    QSignalSpy serverScaleChanged(m_serverOutput, &KWayland::Server::OutputInterface::scaleChanged);
+    QSignalSpy serverScaleChanged(m_serverOutput, &KWaylandServer::OutputInterface::scaleChanged);
     QVERIFY(serverScaleChanged.isValid());
     m_serverOutput->setScale(2);
     QCOMPARE(m_serverOutput->scale(), 2);
@@ -343,9 +343,9 @@ void TestWaylandOutput::testScaleChange()
 void TestWaylandOutput::testSubPixel_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::Output::SubPixel>("expected");
-    QTest::addColumn<KWayland::Server::OutputInterface::SubPixel>("actual");
+    QTest::addColumn<KWaylandServer::OutputInterface::SubPixel>("actual");
 
     QTest::newRow("none") << Output::SubPixel::None << OutputInterface::SubPixel::None;
     QTest::newRow("horizontal/rgb") << Output::SubPixel::HorizontalRGB << OutputInterface::SubPixel::HorizontalRGB;
@@ -357,7 +357,7 @@ void TestWaylandOutput::testSubPixel_data()
 void TestWaylandOutput::testSubPixel()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QFETCH(OutputInterface::SubPixel, actual);
     QCOMPARE(m_serverOutput->subPixel(), OutputInterface::SubPixel::Unknown);
     QSignalSpy serverSubPixelChangedSpy(m_serverOutput, &OutputInterface::subPixelChanged);
@@ -402,9 +402,9 @@ void TestWaylandOutput::testSubPixel()
 void TestWaylandOutput::testTransform_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
-    QTest::addColumn<KWayland::Server::OutputInterface::Transform>("actual");
+    QTest::addColumn<KWaylandServer::OutputInterface::Transform>("actual");
 
     QTest::newRow("90")          << Output::Transform::Rotated90  << OutputInterface::Transform::Rotated90;
     QTest::newRow("180")         << Output::Transform::Rotated180 << OutputInterface::Transform::Rotated180;
@@ -418,7 +418,7 @@ void TestWaylandOutput::testTransform_data()
 void TestWaylandOutput::testTransform()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QFETCH(OutputInterface::Transform, actual);
     QCOMPARE(m_serverOutput->transform(), OutputInterface::Transform::Normal);
     QSignalSpy serverTransformChangedSpy(m_serverOutput, &OutputInterface::transformChanged);
@@ -462,10 +462,10 @@ void TestWaylandOutput::testTransform()
 void TestWaylandOutput::testDpms_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
-    QTest::addColumn<KWayland::Server::OutputInterface::DpmsMode>("server");
+    QTest::addColumn<KWaylandServer::OutputInterface::DpmsMode>("server");
 
     QTest::newRow("Standby") << Dpms::Mode::Standby << OutputInterface::DpmsMode::Standby;
     QTest::newRow("Suspend") << Dpms::Mode::Suspend << OutputInterface::DpmsMode::Suspend;
@@ -475,7 +475,7 @@ void TestWaylandOutput::testDpms_data()
 void TestWaylandOutput::testDpms()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     m_display->createDpmsManager()->create();
 
@@ -554,10 +554,10 @@ void TestWaylandOutput::testDpms()
 void TestWaylandOutput::testDpmsRequestMode_data()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
-    QTest::addColumn<KWayland::Server::OutputInterface::DpmsMode>("server");
+    QTest::addColumn<KWaylandServer::OutputInterface::DpmsMode>("server");
 
     QTest::newRow("Standby") << Dpms::Mode::Standby << OutputInterface::DpmsMode::Standby;
     QTest::newRow("Suspend") << Dpms::Mode::Suspend << OutputInterface::DpmsMode::Suspend;
@@ -569,7 +569,7 @@ void TestWaylandOutput::testDpmsRequestMode()
 {
     // this test verifies that requesting a dpms change from client side emits the signal on server side
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     // setup code
     m_display->createDpmsManager()->create();

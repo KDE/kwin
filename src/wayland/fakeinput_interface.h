@@ -6,14 +6,12 @@
 #ifndef KWAYLAND_SERVER_FAKEINPUT_INTERFACE_H
 #define KWAYLAND_SERVER_FAKEINPUT_INTERFACE_H
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -47,7 +45,7 @@ Q_SIGNALS:
      * Signal emitted whenever a client bound the fake input @p device.
      * @param device The created FakeInputDevice
      **/
-    void deviceCreated(KWayland::Server::FakeInputDevice *device);
+    void deviceCreated(KWaylandServer::FakeInputDevice *device);
 
 private:
     explicit FakeInputInterface(Display *display, QObject *parent = nullptr);
@@ -168,8 +166,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::FakeInputDevice*)
+Q_DECLARE_METATYPE(KWaylandServer::FakeInputDevice*)
 
 #endif

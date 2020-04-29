@@ -10,15 +10,13 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_client;
 struct wl_interface;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -27,7 +25,7 @@ class Display;
  * @brief Convenient Class which represents a wl_client.
  *
  * The ClientConnection gets automatically created for a wl_client when a wl_client is
- * first used in the context of KWayland::Server. In particular the signal
+ * first used in the context of KWaylandServer. In particular the signal
  * @link Display::clientConnected @endlink will be emitted.
  *
  * @see Display
@@ -72,7 +70,7 @@ public:
      * The pid of the ClientConnection endpoint.
      *
      * Please note: if the ClientConnection got created with @link Display::createClient @endlink
-     * the pid will be identical to the process running the KWayland::Server::Display.
+     * the pid will be identical to the process running the KWaylandServer::Display.
      *
      * @returns The pid of the connection.
      **/
@@ -81,7 +79,7 @@ public:
      * The uid of the ClientConnection endpoint.
      *
      * Please note: if the ClientConnection got created with @link Display::createClient @endlink
-     * the uid will be identical to the process running the KWayland::Server::Display.
+     * the uid will be identical to the process running the KWaylandServer::Display.
      *
      * @returns The uid of the connection.
      **/
@@ -90,7 +88,7 @@ public:
      * The gid of the ClientConnection endpoint.
      *
      * Please note: if the ClientConnection got created with @link Display::createClient @endlink
-     * the gid will be identical to the process running the KWayland::Server::Display.
+     * the gid will be identical to the process running the KWaylandServer::Display.
      *
      * @returns The gid of the connection.
      **/
@@ -100,7 +98,7 @@ public:
      * The absolute path to the executable.
      *
      * Please note: if the ClientConnection got created with @link Display::createClient @endlink
-     * the executablePath will be identical to the process running the KWayland::Server::Display.
+     * the executablePath will be identical to the process running the KWaylandServer::Display.
      *
      * If the executable path cannot be resolved an empty QString is returned.
      *
@@ -131,7 +129,7 @@ Q_SIGNALS:
     /**
      * Signal emitted when the ClientConnection got disconnected from the server.
      **/
-    void disconnected(KWayland::Server::ClientConnection*);
+    void disconnected(KWaylandServer::ClientConnection*);
 
 private:
     friend class Display;
@@ -141,8 +139,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::ClientConnection*)
+Q_DECLARE_METATYPE(KWaylandServer::ClientConnection*)
 
 #endif

@@ -14,9 +14,7 @@
 
 #include <wayland-server_decoration_palette-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class ServerSideDecorationPaletteManagerInterface::Private : public Global::Private
 {
@@ -198,5 +196,4 @@ SurfaceInterface* ServerSideDecorationPaletteInterface::surface() const
 }
 
 }//namespace
-}
 

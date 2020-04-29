@@ -10,9 +10,7 @@
 #include "global_p.h"
 
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class RelativePointerManagerInterface::Private : public Global::Private
@@ -80,7 +78,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

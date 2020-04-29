@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "global.h"
 #include "resource.h"
@@ -16,9 +16,7 @@
 class QSize;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -35,7 +33,7 @@ public:
     virtual ~QtSurfaceExtensionInterface();
 
 Q_SIGNALS:
-    void surfaceCreated(KWayland::Server::QtExtendedSurfaceInterface*);
+    void surfaceCreated(KWaylandServer::QtExtendedSurfaceInterface*);
 
 private:
     friend class Display;
@@ -76,7 +74,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

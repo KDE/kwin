@@ -10,7 +10,7 @@
 #include <QList>
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "clientconnection.h"
 
@@ -18,23 +18,21 @@ struct wl_client;
 struct wl_display;
 struct wl_event_loop;
 
-namespace KWayland
+namespace KWaylandServer
 {
 /**
  * @short KWayland Server.
  *
  * This namespace groups all classes related to the Server module.
  *
- * The main entry point into the KWayland::Server API is the Display class.
+ * The main entry point into the KWaylandServer API is the Display class.
  * It allows to create a Wayland server and create various global objects on it.
  *
- * KWayland::Server is an API to easily create a head-less Wayland server with a
+ * KWaylandServer is an API to easily create a head-less Wayland server with a
  * Qt style API.
  *
  * @see Display
  **/
-namespace Server
-{
 
 class CompositorInterface;
 class DataDeviceManagerInterface;
@@ -349,15 +347,14 @@ Q_SIGNALS:
     void automaticSocketNamingChanged(bool);
     void runningChanged(bool);
     void aboutToTerminate();
-    void clientConnected(KWayland::Server::ClientConnection*);
-    void clientDisconnected(KWayland::Server::ClientConnection*);
+    void clientConnected(KWaylandServer::ClientConnection*);
+    void clientDisconnected(KWaylandServer::ClientConnection*);
 
 private:
     class Private;
     QScopedPointer<Private> d;
 };
 
-}
 }
 
 #endif

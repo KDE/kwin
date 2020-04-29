@@ -12,9 +12,7 @@
 
 #include <wayland-dpms-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class OutputInterface;
@@ -64,7 +62,6 @@ private:
     static const struct org_kde_kwin_dpms_interface s_interface;
 };
 
-}
 }
 
 #endif

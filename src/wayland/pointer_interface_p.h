@@ -11,9 +11,7 @@
 #include <QPointer>
 #include <QVector>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class PointerPinchGestureInterface;
 class PointerSwipeGestureInterface;
@@ -63,7 +61,6 @@ private:
     static const struct wl_pointer_interface s_interface;
 };
 
-}
 }
 
 #endif

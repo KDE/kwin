@@ -21,9 +21,7 @@
 // std
 #include <algorithm>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource)
@@ -964,5 +962,4 @@ SurfaceInterface::Private *SurfaceInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

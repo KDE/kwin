@@ -12,11 +12,9 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -36,11 +34,11 @@ Q_SIGNALS:
     /**
      * Emitted whenever this CompositorInterface created a SurfaceInterface.
      **/
-    void surfaceCreated(KWayland::Server::SurfaceInterface*);
+    void surfaceCreated(KWaylandServer::SurfaceInterface*);
     /**
      * Emitted whenever this CompositorInterface created a RegionInterface.
      **/
-    void regionCreated(KWayland::Server::RegionInterface*);
+    void regionCreated(KWaylandServer::RegionInterface*);
 
 private:
     explicit CompositorInterface(Display *display, QObject *parent = nullptr);
@@ -48,7 +46,6 @@ private:
     class Private;
 };
 
-}
 }
 
 #endif

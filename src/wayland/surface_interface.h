@@ -13,11 +13,9 @@
 #include <QPointer>
 #include <QRegion>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class BlurManagerInterface;
 class BlurInterface;
@@ -75,7 +73,7 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
      **/
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 scale READ scale NOTIFY scaleChanged)
-    Q_PROPERTY(KWayland::Server::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
+    Q_PROPERTY(KWaylandServer::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
     virtual ~SurfaceInterface();
@@ -300,7 +298,7 @@ Q_SIGNALS:
     void opaqueChanged(const QRegion&);
     void inputChanged(const QRegion&);
     void scaleChanged(qint32);
-    void transformChanged(KWayland::Server::OutputInterface::Transform);
+    void transformChanged(KWaylandServer::OutputInterface::Transform);
     /**
      * Emitted when the Surface removes its content
      **/
@@ -386,8 +384,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::SurfaceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::SurfaceInterface*)
 
 #endif

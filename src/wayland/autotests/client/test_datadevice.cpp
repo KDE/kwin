@@ -45,10 +45,10 @@ private Q_SLOTS:
     void testDestroy();
 
 private:
-    KWayland::Server::Display *m_display = nullptr;
-    KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
-    KWayland::Server::CompositorInterface *m_compositorInterface = nullptr;
-    KWayland::Server::SeatInterface *m_seatInterface = nullptr;
+    KWaylandServer::Display *m_display = nullptr;
+    KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
+    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
+    KWaylandServer::SeatInterface *m_seatInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::DataDeviceManager *m_dataDeviceManager = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -61,8 +61,8 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-datade
 
 void TestDataDevice::init()
 {
-    qRegisterMetaType<KWayland::Server::DataSourceInterface*>();
-    using namespace KWayland::Server;
+    qRegisterMetaType<KWaylandServer::DataSourceInterface*>();
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -165,9 +165,9 @@ void TestDataDevice::cleanup()
 void TestDataDevice::testCreate()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWayland::Server::DataDeviceInterface*)));
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWaylandServer::DataDeviceInterface*)));
     QVERIFY(dataDeviceCreatedSpy.isValid());
 
     QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
@@ -211,10 +211,10 @@ void TestDataDevice::testDrag_data()
 void TestDataDevice::testDrag()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWayland::Server::DataDeviceInterface*)));
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWaylandServer::DataDeviceInterface*)));
     QVERIFY(dataDeviceCreatedSpy.isValid());
 
     QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
@@ -225,7 +225,7 @@ void TestDataDevice::testDrag()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface*>();
     QVERIFY(deviceInterface);
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataDeviceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -236,7 +236,7 @@ void TestDataDevice::testDrag()
     auto sourceInterface = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
     QVERIFY(sourceInterface);
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
 
     QScopedPointer<Surface> surface(m_compositor->createSurface());
@@ -294,10 +294,10 @@ void TestDataDevice::testDragInternally_data()
 void TestDataDevice::testDragInternally()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWayland::Server::DataDeviceInterface*)));
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWaylandServer::DataDeviceInterface*)));
     QVERIFY(dataDeviceCreatedSpy.isValid());
 
     QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
@@ -308,7 +308,7 @@ void TestDataDevice::testDragInternally()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface*>();
     QVERIFY(deviceInterface);
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
 
     QScopedPointer<Surface> surface(m_compositor->createSurface());
@@ -361,10 +361,10 @@ void TestDataDevice::testDragInternally()
 void TestDataDevice::testSetSelection()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     QScopedPointer<Pointer> pointer(m_seat->createPointer());
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWayland::Server::DataDeviceInterface*)));
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataDeviceCreated(KWaylandServer::DataDeviceInterface*)));
     QVERIFY(dataDeviceCreatedSpy.isValid());
 
     QScopedPointer<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
@@ -375,7 +375,7 @@ void TestDataDevice::testSetSelection()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface*>();
     QVERIFY(deviceInterface);
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(KWaylandServer::DataSourceInterface*)));
     QVERIFY(dataDeviceCreatedSpy.isValid());
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
@@ -388,7 +388,7 @@ void TestDataDevice::testSetSelection()
     QVERIFY(sourceInterface);
 
     // everything setup, now we can test setting the selection
-    QSignalSpy selectionChangedSpy(deviceInterface, SIGNAL(selectionChanged(KWayland::Server::DataSourceInterface*)));
+    QSignalSpy selectionChangedSpy(deviceInterface, SIGNAL(selectionChanged(KWaylandServer::DataSourceInterface*)));
     QVERIFY(selectionChangedSpy.isValid());
     QSignalSpy selectionClearedSpy(deviceInterface, SIGNAL(selectionCleared()));
     QVERIFY(selectionClearedSpy.isValid());
@@ -446,7 +446,7 @@ void TestDataDevice::testSendSelectionOnSeat()
 {
     // this test verifies that the selection is sent when setting a focused keyboard
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     // first add keyboard support to Seat
     QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
     QVERIFY(keyboardChangedSpy.isValid());
@@ -503,7 +503,7 @@ void TestDataDevice::testReplaceSource()
 {
     // this test verifies that replacing a data source cancels the previous source
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     // first add keyboard support to Seat
     QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
     QVERIFY(keyboardChangedSpy.isValid());

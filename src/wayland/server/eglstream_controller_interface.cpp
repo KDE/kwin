@@ -11,9 +11,7 @@
 #include <wayland-util.h>
 #include <QLibrary>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 const quint32 EglStreamControllerInterface::Private::s_version = 1;
@@ -89,5 +87,4 @@ void EglStreamControllerInterface::create()
     static_cast<Private &>(*d).create();
 }
 
-}
 }

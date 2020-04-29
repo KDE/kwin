@@ -17,10 +17,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-
-namespace Server
+namespace KWaylandServer
 {
 
 class Cursor::Private
@@ -468,5 +465,4 @@ QPointer< SurfaceInterface > Cursor::surface() const
     return d->surface;
 }
 
-}
 }

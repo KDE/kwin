@@ -11,14 +11,12 @@
 #include <QSize>
 #include <QVector>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -179,12 +177,11 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::OutputDeviceInterface::ModeFlags)
-Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::Enablement)
-Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::SubPixel)
-Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::Transform)
-Q_DECLARE_METATYPE(KWayland::Server::OutputDeviceInterface::ColorCurves)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::OutputDeviceInterface::ModeFlags)
+Q_DECLARE_METATYPE(KWaylandServer::OutputDeviceInterface::Enablement)
+Q_DECLARE_METATYPE(KWaylandServer::OutputDeviceInterface::SubPixel)
+Q_DECLARE_METATYPE(KWaylandServer::OutputDeviceInterface::Transform)
+Q_DECLARE_METATYPE(KWaylandServer::OutputDeviceInterface::ColorCurves)
 
 #endif

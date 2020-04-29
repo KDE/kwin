@@ -8,13 +8,11 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class DataDeviceManagerInterface;
@@ -81,7 +79,7 @@ public:
 
 Q_SIGNALS:
     void dragStarted();
-    void selectionChanged(KWayland::Server::DataSourceInterface*);
+    void selectionChanged(KWaylandServer::DataSourceInterface*);
     void selectionCleared();
 
 private:
@@ -93,8 +91,7 @@ private:
 };
 
 }
-}
 
-Q_DECLARE_METATYPE(KWayland::Server::DataDeviceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataDeviceInterface*)
 
 #endif

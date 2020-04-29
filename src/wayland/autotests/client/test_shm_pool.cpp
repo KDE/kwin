@@ -36,7 +36,7 @@ private Q_SLOTS:
     void testDestroy();
 
 private:
-    KWayland::Server::Display *m_display;
+    KWaylandServer::Display *m_display;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shmPool;
@@ -57,7 +57,7 @@ TestShmPool::TestShmPool(QObject *parent)
 
 void TestShmPool::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);

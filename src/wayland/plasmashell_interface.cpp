@@ -14,9 +14,7 @@
 #include <wayland-server.h>
 #include <wayland-plasma-shell-server-protocol.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class PlasmaShellInterface::Private : public Global::Private
@@ -400,5 +398,4 @@ PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *nativ
     return Private::get<PlasmaShellSurfaceInterface>(native);
 }
 
-}
 }

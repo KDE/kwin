@@ -14,9 +14,7 @@
 // Wayland
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class IdleInhibitorInterface;
@@ -131,7 +129,6 @@ private:
     static const struct wl_surface_interface s_interface;
 };
 
-}
 }
 
 #endif

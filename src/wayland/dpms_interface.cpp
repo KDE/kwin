@@ -7,9 +7,7 @@
 #include "display.h"
 #include "output_interface.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 const quint32 DpmsManagerInterface::Private::s_version = 1;
@@ -158,5 +156,4 @@ DpmsInterface::Private *DpmsInterface::d_func() const
     return reinterpret_cast<Private*>(d.data());
 }
 
-}
 }

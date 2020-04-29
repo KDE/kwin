@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testConnectFdNoSocketName();
 
 private:
-    KWayland::Server::Display *m_display;
+    KWaylandServer::Display *m_display;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-connection-0");
@@ -47,7 +47,7 @@ TestWaylandConnectionThread::TestWaylandConnectionThread(QObject *parent)
 
 void TestWaylandConnectionThread::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -197,7 +197,7 @@ void TestWaylandConnectionThread::testConnectionDieing()
 void TestWaylandConnectionThread::testConnectFd()
 {
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     int sv[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
     auto c = m_display->createClient(sv[0]);
@@ -243,7 +243,7 @@ void TestWaylandConnectionThread::testConnectFdNoSocketName()
     delete m_display;
     m_display = nullptr;
     using namespace KWayland::Client;
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     Display display;
     display.start(Display::StartMode::ConnectClientsOnly);

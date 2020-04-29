@@ -8,9 +8,7 @@
 
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 /**
@@ -38,7 +36,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif // KWAYLAND_SERVER_REMOTE_ACCESS_P_H

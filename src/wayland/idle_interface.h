@@ -6,13 +6,11 @@
 #ifndef KWAYLAND_SERVER_IDLE_INTERFACE_H
 #define KWAYLAND_SERVER_IDLE_INTERFACE_H
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 #include "global.h"
 #include "resource.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class Display;
@@ -120,7 +118,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

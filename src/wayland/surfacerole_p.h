@@ -9,9 +9,7 @@
 
 #include <QPointer>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class SurfaceInterface;
@@ -30,7 +28,6 @@ private:
     Q_DISABLE_COPY(SurfaceRole)
 };
 
-}
 }
 
 #endif // KWAYLAND_SERVER_SURFACEROLE_P_H

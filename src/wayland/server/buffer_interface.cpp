@@ -16,9 +16,7 @@
 
 #include "drm_fourcc.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 namespace EGL
@@ -335,5 +333,4 @@ bool BufferInterface::hasAlphaChannel() const
     return d->alpha;
 }
 
-}
 }

@@ -14,9 +14,7 @@
 
 #include <wayland-server.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class ShellInterface::Private : public Global::Private
@@ -146,7 +144,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
  *********************************/
 ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource)
     : Resource::Private(q, shell, parentResource, &wl_shell_surface_interface, &s_interface)
-    , GenericShellSurface<KWayland::Server::ShellSurfaceInterface>(q, surface)
+    , GenericShellSurface<KWaylandServer::ShellSurfaceInterface>(q, surface)
     , pingTimer(new QTimer)
 {
     pingTimer->setSingleShot(true);
@@ -463,5 +461,4 @@ ShellSurfaceInterface::Private *ShellSurfaceInterface::d_func() const
     return reinterpret_cast<ShellSurfaceInterface::Private*>(d.data());
 }
 
-}
 }

@@ -8,14 +8,12 @@
 
 #include <QObject>
 
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
 struct wl_client;
 struct wl_resource;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 class ClientConnection;
@@ -86,5 +84,5 @@ protected:
 };
 
 }
-}
+
 #endif

@@ -10,11 +10,9 @@
 #include <QObject>
 
 #include "outputdevice_interface.h"
-#include <KWayland/Server/kwaylandserver_export.h>
+#include <KWaylandServer/kwaylandserver_export.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 /**
@@ -94,7 +92,6 @@ private:
     Private *d_func() const;
 };
 
-}
 }
 
 #endif

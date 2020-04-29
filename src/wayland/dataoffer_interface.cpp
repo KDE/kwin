@@ -13,9 +13,7 @@
 // system
 #include <unistd.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 
 #ifndef K_DOXYGEN
@@ -204,5 +202,4 @@ void DataOfferInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
     wl_data_offer_send_action(d->resource, wlAction);
 }
 
-}
 }
