@@ -65,11 +65,9 @@ class QAction;
  */
 Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS)
 
-namespace KWayland {
-    namespace Server {
-        class SurfaceInterface;
-        class Display;
-    }
+namespace KWaylandServer {
+    class SurfaceInterface;
+    class Display;
 }
 
 namespace KWin
@@ -1084,7 +1082,7 @@ public:
     virtual WindowQuadType newWindowQuadType() = 0;
 
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(WId id) const = 0;
-    Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(KWayland::Server::SurfaceInterface *surf) const = 0;
+    Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(KWaylandServer::SurfaceInterface *surf) const = 0;
     /**
      * Finds the EffectWindow for the internal window @p w.
      * If there is no such window @c null is returned.
@@ -1257,7 +1255,7 @@ public:
      * on Wayland, on X11 it will be nullptr
      * @since 5.5
      */
-    virtual KWayland::Server::Display *waylandDisplay() const = 0;
+    virtual KWaylandServer::Display *waylandDisplay() const = 0;
 
     /**
      * Whether animations are supported by the Scene.
@@ -2062,7 +2060,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * Interface to the corresponding wayland surface.
      * relevant only in Wayland, on X11 it will be nullptr
      */
-    Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
+    Q_PROPERTY(KWaylandServer::SurfaceInterface *surface READ surface)
 
     /**
      * Whether the window is fullscreen.
@@ -2409,7 +2407,7 @@ public:
     /**
      * @since 5.5
      */
-    virtual KWayland::Server::SurfaceInterface *surface() const = 0;
+    virtual KWaylandServer::SurfaceInterface *surface() const = 0;
 
     /**
      * @since 5.6

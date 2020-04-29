@@ -24,15 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 #include <QMap>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class IdleInterface;
 }
-}
 
-using KWayland::Server::IdleInterface;
+using KWaylandServer::IdleInterface;
 
 namespace KWin
 {

@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QQuickItem>
 #include <QQmlContext>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <cmath>
 

@@ -33,10 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QAction;
 
-namespace KWayland {
-    namespace Server {
-        class OutputConfigurationInterface;
-    }
+namespace KWaylandServer {
+class OutputConfigurationInterface;
 }
 
 namespace KWin
@@ -184,7 +182,7 @@ public:
      * Base implementation warns that the current backend does not implement this
      * functionality.
      */
-    void requestOutputsChange(KWayland::Server::OutputConfigurationInterface *config);
+    void requestOutputsChange(KWaylandServer::OutputConfigurationInterface *config);
 
     /**
      * Whether the Platform requires compositing for rendering.

@@ -31,10 +31,10 @@
 #include <QWindow>
 #include <cmath> // for ceil()
 
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/blur_interface.h>
-#include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/display.h>
+#include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/blur_interface.h>
+#include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/display.h>
 #include <KSharedConfig>
 #include <KConfigGroup>
 
@@ -55,7 +55,7 @@ BlurEffect::BlurEffect()
     //     Should be included in _NET_SUPPORTED instead.
     if (m_shader && m_shader->isValid() && m_renderTargetsValid) {
         net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
-        KWayland::Server::Display *display = effects->waylandDisplay();
+        KWaylandServer::Display *display = effects->waylandDisplay();
         if (display) {
             m_blurManager = display->createBlurManager(this);
             m_blurManager->create();
@@ -291,7 +291,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
         }
     }
 
-    KWayland::Server::SurfaceInterface *surf = w->surface();
+    KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf && surf->blur()) {
         region = surf->blur()->region();
@@ -317,10 +317,10 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
 
 void BlurEffect::slotWindowAdded(EffectWindow *w)
 {
-    KWayland::Server::SurfaceInterface *surf = w->surface();
+    KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf) {
-        windowBlurChangedConnections[w] = connect(surf, &KWayland::Server::SurfaceInterface::blurChanged, this, [this, w] () {
+        windowBlurChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::blurChanged, this, [this, w] () {
             if (w) {
                 updateBlurRegion(w);
             }

@@ -26,9 +26,9 @@
 #include <QMatrix4x4>
 #include <QWindow>
 
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/contrast_interface.h>
-#include <KWayland/Server/display.h>
+#include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/contrast_interface.h>
+#include <KWaylandServer/display.h>
 
 namespace KWin
 {
@@ -45,7 +45,7 @@ ContrastEffect::ContrastEffect()
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid()) {
         net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
-        KWayland::Server::Display *display = effects->waylandDisplay();
+        KWaylandServer::Display *display = effects->waylandDisplay();
         if (display) {
             m_contrastManager = display->createContrastManager(this);
             m_contrastManager->create();
@@ -133,7 +133,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
         }
     }
 
-    KWayland::Server::SurfaceInterface *surf = w->surface();
+    KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf && surf->contrast()) {
         region = surf->contrast()->region();
@@ -174,10 +174,10 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 
 void ContrastEffect::slotWindowAdded(EffectWindow *w)
 {
-    KWayland::Server::SurfaceInterface *surf = w->surface();
+    KWaylandServer::SurfaceInterface *surf = w->surface();
 
     if (surf) {
-        m_contrastChangedConnections[w] = connect(surf, &KWayland::Server::SurfaceInterface::contrastChanged, this, [this, w] () {
+        m_contrastChangedConnections[w] = connect(surf, &KWaylandServer::SurfaceInterface::contrastChanged, this, [this, w] () {
 
             if (w) {
                 updateContrastRegion(w);

@@ -31,19 +31,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QVector>
 
-#include <KWayland/Server/output_interface.h>
-#include <KWayland/Server/outputdevice_interface.h>
+#include <KWaylandServer/output_interface.h>
+#include <KWaylandServer/outputdevice_interface.h>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class OutputInterface;
 class OutputDeviceInterface;
 class OutputChangeSet;
 class OutputManagementInterface;
 class XdgOutputInterface;
-}
 }
 
 namespace KWin
@@ -109,9 +106,9 @@ public:
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
 
-    void applyChanges(const KWayland::Server::OutputChangeSet *changeSet) override;
+    void applyChanges(const KWaylandServer::OutputChangeSet *changeSet) override;
 
-    QPointer<KWayland::Server::OutputInterface> waylandOutput() const {
+    QPointer<KWaylandServer::OutputInterface> waylandOutput() const {
         return m_waylandOutput;
     }
 
@@ -132,7 +129,7 @@ Q_SIGNALS:
 protected:
     void initInterfaces(const QString &model, const QString &manufacturer,
                         const QByteArray &uuid, const QSize &physicalSize,
-                        const QVector<KWayland::Server::OutputDeviceInterface::Mode> &modes);
+                        const QVector<KWaylandServer::OutputDeviceInterface::Mode> &modes);
 
     QPoint globalPos() const;
 
@@ -152,7 +149,7 @@ protected:
     virtual void updateEnablement(bool enable) {
         Q_UNUSED(enable);
     }
-    virtual void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) {
+    virtual void updateDpms(KWaylandServer::OutputInterface::DpmsMode mode) {
         Q_UNUSED(mode);
     }
     virtual void updateMode(int modeIndex) {
@@ -168,12 +165,12 @@ protected:
     QSize orientateSize(const QSize &size) const;
 
 private:
-    void setTransform(KWayland::Server::OutputDeviceInterface::Transform transform);
+    void setTransform(KWaylandServer::OutputDeviceInterface::Transform transform);
 
-    KWayland::Server::OutputInterface *m_waylandOutput;
-    KWayland::Server::XdgOutputInterface *m_xdgOutput;
-    KWayland::Server::OutputDeviceInterface *m_waylandOutputDevice;
-    KWayland::Server::OutputInterface::DpmsMode m_dpms = KWayland::Server::OutputInterface::DpmsMode::On;
+    KWaylandServer::OutputInterface *m_waylandOutput;
+    KWaylandServer::XdgOutputInterface *m_xdgOutput;
+    KWaylandServer::OutputDeviceInterface *m_waylandOutputDevice;
+    KWaylandServer::OutputInterface::DpmsMode m_dpms = KWaylandServer::OutputInterface::DpmsMode::On;
 
     QString m_name;
     bool m_internal = false;

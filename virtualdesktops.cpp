@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <NETWM>
 
-#include <KWayland/Server/plasmavirtualdesktop_interface.h>
+#include <KWaylandServer/plasmavirtualdesktop_interface.h>
 // Qt
 #include <QAction>
 #include <QUuid>
@@ -53,9 +53,9 @@ VirtualDesktop::~VirtualDesktop()
     emit aboutToBeDestroyed();
 }
 
-void VirtualDesktopManager::setVirtualDesktopManagement(KWayland::Server::PlasmaVirtualDesktopManagementInterface *management)
+void VirtualDesktopManager::setVirtualDesktopManagement(KWaylandServer::PlasmaVirtualDesktopManagementInterface *management)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     Q_ASSERT(!m_virtualDesktopManagement);
     m_virtualDesktopManagement = management;
 

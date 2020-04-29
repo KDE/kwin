@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event.h"
 #include "wayland_server.h"
 
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/seat_interface.h>
 
 #include <QTimer>
 

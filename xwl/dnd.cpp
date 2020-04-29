@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/surface.h>
 
-#include <KWayland/Server/compositor_interface.h>
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/compositor_interface.h>
+#include <KWaylandServer/seat_interface.h>
 
 #include <QMouseEvent>
 
@@ -80,16 +80,16 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
                         32, 1, &s_version);
     xcb_flush(xcbConn);
 
-    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::dragStarted, this, &Dnd::startDrag);
-    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::dragEnded, this, &Dnd::endDrag);
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &Dnd::startDrag);
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, &Dnd::endDrag);
 
     const auto *comp = waylandServer()->compositor();
     m_surface = waylandServer()->internalCompositor()->createSurface(this);
     m_surface->setInputRegion(nullptr);
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
     auto *dc = new QMetaObject::Connection();
-    *dc = connect(comp, &KWayland::Server::CompositorInterface::surfaceCreated, this,
-                 [this, dc](KWayland::Server::SurfaceInterface *si) {
+    *dc = connect(comp, &KWaylandServer::CompositorInterface::surfaceCreated, this,
+                 [this, dc](KWaylandServer::SurfaceInterface *si) {
                     // TODO: how to make sure that it is the iface of m_surface?
                     if (m_surfaceIface || si->client() != waylandServer()->internalConnection()) {
                         return;

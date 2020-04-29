@@ -33,8 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include "kwin_wayland_test.h"
 
@@ -728,14 +728,14 @@ void SceneOpenGLShadowTest::testNoCornerShadowTiles()
 
     clientShadow->setOffsets(QMarginsF(128, 128, 128, 128));
 
-    QSignalSpy shadowChangedSpy(client->surface(), &KWayland::Server::SurfaceInterface::shadowChanged);
+    QSignalSpy shadowChangedSpy(client->surface(), &KWaylandServer::SurfaceInterface::shadowChanged);
     QVERIFY(shadowChangedSpy.isValid());
     clientShadow->commit();
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(shadowChangedSpy.wait());
 
     // Check that we got right shadow from the client.
-    QPointer<KWayland::Server::ShadowInterface> shadowIface = client->surface()->shadow();
+    QPointer<KWaylandServer::ShadowInterface> shadowIface = client->surface()->shadow();
     QVERIFY(!shadowIface.isNull());
     QCOMPARE(shadowIface->offset().left(),   128.0);
     QCOMPARE(shadowIface->offset().top(),    128.0);
@@ -808,14 +808,14 @@ void SceneOpenGLShadowTest::testDistributeHugeCornerTiles()
 
     clientShadow->setOffsets(QMarginsF(256, 256, 256, 0));
 
-    QSignalSpy shadowChangedSpy(client->surface(), &KWayland::Server::SurfaceInterface::shadowChanged);
+    QSignalSpy shadowChangedSpy(client->surface(), &KWaylandServer::SurfaceInterface::shadowChanged);
     QVERIFY(shadowChangedSpy.isValid());
     clientShadow->commit();
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(shadowChangedSpy.wait());
 
     // Check that we got right shadow from the client.
-    QPointer<KWayland::Server::ShadowInterface> shadowIface = client->surface()->shadow();
+    QPointer<KWaylandServer::ShadowInterface> shadowIface = client->surface()->shadow();
     QVERIFY(!shadowIface.isNull());
     QCOMPARE(shadowIface->offset().left(),   256.0);
     QCOMPARE(shadowIface->offset().top(),    256.0);

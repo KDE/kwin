@@ -83,7 +83,7 @@ void AbstractOutput::setEnabled(bool enable)
     Q_UNUSED(enable)
 }
 
-void AbstractOutput::applyChanges(const KWayland::Server::OutputChangeSet *changeSet)
+void AbstractOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
 {
     Q_UNUSED(changeSet)
 }

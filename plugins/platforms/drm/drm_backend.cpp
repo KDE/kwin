@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "egl_stream_backend.h"
 #endif
 // KWayland
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/seat_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KCoreAddons>
@@ -156,7 +156,7 @@ void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        (*it)->updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
+        (*it)->updateDpms(KWaylandServer::OutputInterface::DpmsMode::On);
     }
 }
 
@@ -634,7 +634,7 @@ void DrmBackend::initCursor()
 #endif
 
     m_cursorEnabled = waylandServer()->seat()->hasPointer();
-    connect(waylandServer()->seat(), &KWayland::Server::SeatInterface::hasPointerChanged, this,
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged, this,
         [this] {
             m_cursorEnabled = waylandServer()->seat()->hasPointer();
             if (usesSoftwareCursor()) {

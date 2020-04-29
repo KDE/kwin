@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDecoration
 #include <KDecoration2/Decoration>
 // KWayland
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/seat_interface.h>
 // screenlocker
 #include <KScreenLocker/KsldApp>
 // Qt

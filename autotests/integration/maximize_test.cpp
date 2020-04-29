@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/plasmashell.h>
 
-#include <KWayland/Server/xdgdecoration_interface.h>
+#include <KWaylandServer/xdgdecoration_interface.h>
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>

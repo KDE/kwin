@@ -33,8 +33,8 @@ class EglDmabuf;
 class EglDmabufBuffer : public DmabufBuffer
 {
 public:
-    using Plane = KWayland::Server::LinuxDmabufUnstableV1Interface::Plane;
-    using Flags = KWayland::Server::LinuxDmabufUnstableV1Interface::Flags;
+    using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
+    using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
 
     enum class ImportType {
         Direct,
@@ -71,15 +71,15 @@ private:
 class EglDmabuf : public LinuxDmabuf
 {
 public:
-    using Plane = KWayland::Server::LinuxDmabufUnstableV1Interface::Plane;
-    using Flags = KWayland::Server::LinuxDmabufUnstableV1Interface::Flags;
+    using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
+    using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
 
     static EglDmabuf* factory(AbstractEglBackend *backend);
 
     explicit EglDmabuf(AbstractEglBackend *backend);
     ~EglDmabuf() override;
 
-    KWayland::Server::LinuxDmabufUnstableV1Buffer *importBuffer(const QVector<Plane> &planes,
+    KWaylandServer::LinuxDmabufUnstableV1Buffer *importBuffer(const QVector<Plane> &planes,
                                                                 uint32_t format,
                                                                 const QSize &size,
                                                                 Flags flags) override;
@@ -89,7 +89,7 @@ private:
                          uint32_t format,
                          const QSize &size);
 
-    KWayland::Server::LinuxDmabufUnstableV1Buffer *yuvImport(const QVector<Plane> &planes,
+    KWaylandServer::LinuxDmabufUnstableV1Buffer *yuvImport(const QVector<Plane> &planes,
                                                              uint32_t format,
                                                              const QSize &size,
                                                              Flags flags);

@@ -22,12 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "selection.h"
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class DataDeviceInterface;
-}
 }
 
 namespace KWin
@@ -52,7 +49,7 @@ private:
     /**
      * React to Wl selection change.
      */
-    void wlSelectionChanged(KWayland::Server::DataDeviceInterface *ddi);
+    void wlSelectionChanged(KWaylandServer::DataDeviceInterface *ddi);
     /**
      * Check the current state of the selection and if a source needs
      * to be created or destroyed.

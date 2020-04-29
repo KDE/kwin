@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "xcbutils.h"
 
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <QDebug>
 
@@ -699,12 +699,12 @@ void Toplevel::setSkipCloseAnimation(bool set)
     emit skipCloseAnimationChanged();
 }
 
-void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
+void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
 {
     if (m_surface == surface) {
         return;
     }
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     if (m_surface) {
         disconnect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
         disconnect(m_surface, &SurfaceInterface::sizeChanged, this, &Toplevel::discardWindowPixmap);

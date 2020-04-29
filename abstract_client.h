@@ -31,12 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <QPointer>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class PlasmaWindowInterface;
-}
 }
 
 namespace KDecoration2
@@ -867,7 +864,7 @@ public:
     /**
      * Return window management interface
      */
-    KWayland::Server::PlasmaWindowInterface *windowManagementInterface() const {
+    KWaylandServer::PlasmaWindowInterface *windowManagementInterface() const {
         return m_windowManagementInterface;
     }
 
@@ -1231,7 +1228,7 @@ private:
     static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 
-    KWayland::Server::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
+    KWaylandServer::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
 
     AbstractClient *m_transientFor = nullptr;
     QList<AbstractClient*> m_transients;

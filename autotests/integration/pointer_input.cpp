@@ -41,9 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/clientconnection.h>
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/clientconnection.h>
+#include <KWaylandServer/seat_interface.h>
 
 #include <wayland-cursor.h>
 
@@ -75,7 +75,7 @@ PlatformCursorImage loadReferenceThemeCursor(const T &shape)
     waylandServer()->internalClientConection()->flush();
     waylandServer()->dispatch();
 
-    auto buffer = KWayland::Server::BufferInterface::get(
+    auto buffer = KWaylandServer::BufferInterface::get(
         waylandServer()->internalConnection()->getResource(
             KWayland::Client::Buffer::getId(b)));
     if (!buffer) {

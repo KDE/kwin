@@ -28,12 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QOpenGLFramebufferObject;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class BufferInterface;
-}
 }
 
 namespace KWin
@@ -113,11 +110,11 @@ protected:
 private:
     void createTextureSubImage(int scale, const QImage &image, const QRegion &damage);
     bool createTextureImage(const QImage &image);
-    bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
-    bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
-    bool loadDmabufTexture(const QPointer< KWayland::Server::BufferInterface > &buffer);
+    bool loadShmTexture(const QPointer<KWaylandServer::BufferInterface> &buffer);
+    bool loadEglTexture(const QPointer<KWaylandServer::BufferInterface> &buffer);
+    bool loadDmabufTexture(const QPointer< KWaylandServer::BufferInterface > &buffer);
     bool loadInternalImageObject(WindowPixmap *pixmap);
-    EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    EGLImageKHR attach(const QPointer<KWaylandServer::BufferInterface> &buffer);
     bool updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
     bool updateFromInternalImageObject(WindowPixmap *pixmap);
     SceneOpenGLTexture *q;

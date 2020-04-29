@@ -38,12 +38,9 @@ typedef uint32_t xkb_led_index_t;
 typedef uint32_t xkb_keysym_t;
 typedef uint32_t xkb_layout_index_t;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
     class SeatInterface;
-}
 }
 
 namespace KWin
@@ -112,7 +109,7 @@ public:
      */
     void forwardModifiers();
 
-    void setSeat(KWayland::Server::SeatInterface *seat);
+    void setSeat(KWaylandServer::SeatInterface *seat);
 
 Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
@@ -162,7 +159,7 @@ private:
     };
     Ownership m_ownership = Ownership::Server;
 
-    QPointer<KWayland::Server::SeatInterface> m_seat;
+    QPointer<KWaylandServer::SeatInterface> m_seat;
 };
 
 inline

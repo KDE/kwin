@@ -131,7 +131,7 @@ public:
     KWin::EffectWindow *findWindow(WId) const override {
         return nullptr;
     }
-    KWin::EffectWindow *findWindow(KWayland::Server::SurfaceInterface *) const override {
+    KWin::EffectWindow *findWindow(KWaylandServer::SurfaceInterface *) const override {
         return nullptr;
     }
     KWin::EffectWindow *findWindow(QWindow *w) const override {
@@ -240,7 +240,7 @@ public:
     xcb_window_t x11RootWindow() const override {
         return QX11Info::appRootWindow();
     }
-    KWayland::Server::Display *waylandDisplay() const override {
+    KWaylandServer::Display *waylandDisplay() const override {
         return nullptr;
     }
 

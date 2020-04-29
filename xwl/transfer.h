@@ -33,10 +33,10 @@ namespace Client
 class DataDevice;
 class DataSource;
 }
-namespace Server
+}
+namespace KWaylandServer
 {
 class DataDeviceInterface;
-}
 }
 
 namespace KWin

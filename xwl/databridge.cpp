@@ -31,12 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/seat.h>
 
-#include <KWayland/Server/datadevicemanager_interface.h>
-#include <KWayland/Server/datadevice_interface.h>
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/datadevicemanager_interface.h>
+#include <KWaylandServer/datadevice_interface.h>
+#include <KWaylandServer/seat_interface.h>
 
 using namespace KWayland::Client;
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 namespace KWin
 {

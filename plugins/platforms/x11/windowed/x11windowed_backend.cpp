@@ -34,8 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QSocketNotifier>
 // kwayland
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/seat_interface.h>
 // xcb
 #include <xcb/xcb_keysyms.h>
 // X11

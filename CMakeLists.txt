@@ -125,6 +125,12 @@ set_package_properties(KScreenLocker PROPERTIES
     PURPOSE "For screenlocker integration in kwin_wayland"
 )
 
+find_package(KWaylandServer CONFIG REQUIRED)
+set_package_properties(KWaylandServer PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "For Wayland integration"
+)
+
 find_package(Breeze 5.9.0 CONFIG)
 set_package_properties(Breeze PROPERTIES
     TYPE OPTIONAL
@@ -637,7 +643,7 @@ set(kwin_XCB_LIBS
 
 set(kwin_WAYLAND_LIBS
     KF5::WaylandClient
-    KF5::WaylandServer
+    Plasma::KWaylandServer
     Wayland::Cursor
     XKB::XKB
     ${CMAKE_THREAD_LIBS_INIT}

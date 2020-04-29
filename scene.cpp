@@ -81,9 +81,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "thumbnailitem.h"
 
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/subcompositor_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/subcompositor_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 namespace KWin
 {
@@ -393,7 +393,7 @@ void Scene::addToplevel(Toplevel *c)
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
     //A change of scale won't affect the geometry in compositor co-ordinates, but will affect the window quads.
     if (c->surface()) {
-        connect(c->surface(), &KWayland::Server::SurfaceInterface::scaleChanged, this, std::bind(&Scene::windowGeometryShapeChanged, this, c));
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, std::bind(&Scene::windowGeometryShapeChanged, this, c));
     }
     connect(c, &Toplevel::screenScaleChanged, this,
         [this, c] {
@@ -1028,7 +1028,7 @@ WindowPixmap::WindowPixmap(Scene::Window *window)
 {
 }
 
-WindowPixmap::WindowPixmap(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface, WindowPixmap *parent)
+WindowPixmap::WindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent)
     : m_window(parent->m_window)
     , m_pixmap(XCB_PIXMAP_NONE)
     , m_discarded(false)
@@ -1045,7 +1045,7 @@ WindowPixmap::~WindowPixmap()
         xcb_free_pixmap(connection(), m_pixmap);
     }
     if (m_buffer) {
-        using namespace KWayland::Server;
+        using namespace KWaylandServer;
         QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
         m_buffer->unref();
     }
@@ -1094,7 +1094,7 @@ void WindowPixmap::create()
     m_window->unreferencePreviousPixmap();
 }
 
-WindowPixmap *WindowPixmap::createChild(const QPointer<KWayland::Server::SubSurfaceInterface> &subSurface)
+WindowPixmap *WindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface)
 {
     Q_UNUSED(subSurface)
     return nullptr;
@@ -1110,11 +1110,11 @@ bool WindowPixmap::isValid() const
 
 void WindowPixmap::updateBuffer()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     if (SurfaceInterface *s = surface()) {
         QVector<WindowPixmap*> oldTree = m_children;
         QVector<WindowPixmap*> children;
-        using namespace KWayland::Server;
+        using namespace KWaylandServer;
         const auto subSurfaces = s->childSubSurfaces();
         for (const auto &subSurface : subSurfaces) {
             if (subSurface.isNull()) {
@@ -1167,7 +1167,7 @@ void WindowPixmap::updateBuffer()
     }
 }
 
-KWayland::Server::SurfaceInterface *WindowPixmap::surface() const
+KWaylandServer::SurfaceInterface *WindowPixmap::surface() const
 {
     if (!m_subSurface.isNull()) {
         return m_subSurface->surface().data();

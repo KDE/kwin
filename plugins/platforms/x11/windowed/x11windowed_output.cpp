@@ -53,10 +53,10 @@ X11WindowedOutput::~X11WindowedOutput()
 
 void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
-    KWayland::Server::OutputDeviceInterface::Mode mode;
+    KWaylandServer::OutputDeviceInterface::Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
-    mode.flags = KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
+    mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO: get refresh rate via randr
 
     // Physicial size must be adjusted, such that QPA calculates correct sizes of

@@ -40,12 +40,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QOpenGLFramebufferObject;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class SurfaceInterface;
-}
 }
 
 namespace KWin
@@ -279,7 +276,7 @@ class KWIN_EXPORT Toplevel : public QObject
      * Interface to the Wayland Surface.
      * Relevant only in Wayland, in X11 it will be nullptr
      */
-    Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
+    Q_PROPERTY(KWaylandServer::SurfaceInterface *surface READ surface)
 
     /**
      * Whether the window is a popup.
@@ -517,8 +514,8 @@ public:
     void setSkipCloseAnimation(bool set);
 
     quint32 surfaceId() const;
-    KWayland::Server::SurfaceInterface *surface() const;
-    void setSurface(KWayland::Server::SurfaceInterface *surface);
+    KWaylandServer::SurfaceInterface *surface() const;
+    void setSurface(KWaylandServer::SurfaceInterface *surface);
 
     const QSharedPointer<QOpenGLFramebufferObject> &internalFramebufferObject() const;
     QImage internalImageObject() const;
@@ -741,7 +738,7 @@ private:
     int m_screen;
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
-    KWayland::Server::SurfaceInterface *m_surface = nullptr;
+    KWaylandServer::SurfaceInterface *m_surface = nullptr;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;
 };
@@ -998,7 +995,7 @@ inline quint32 Toplevel::surfaceId() const
     return m_surfaceId;
 }
 
-inline KWayland::Server::SurfaceInterface *Toplevel::surface() const
+inline KWaylandServer::SurfaceInterface *Toplevel::surface() const
 {
     return m_surface;
 }

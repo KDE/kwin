@@ -51,13 +51,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include <KDecoration2/Decoration>
 #include <KGlobalAccel>
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/fakeinput_interface.h>
-#include <KWayland/Server/relativepointer_interface.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/tablet_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/fakeinput_interface.h>
+#include <KWaylandServer/relativepointer_interface.h>
+#include <KWaylandServer/seat_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/tablet_interface.h>
 #include <decorations/decoratedclient.h>
 
 //screenlocker
@@ -421,8 +421,8 @@ public:
         return waylandServer()->isScreenLocked();
     }
 private:
-    bool surfaceAllowed(KWayland::Server::SurfaceInterface *(KWayland::Server::SeatInterface::*method)() const) const {
-        if (KWayland::Server::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
+    bool surfaceAllowed(KWaylandServer::SurfaceInterface *(KWaylandServer::SeatInterface::*method)() const) const {
+        if (KWaylandServer::SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
             if (Toplevel *t = waylandServer()->findClient(s)) {
                 return t->isLockScreen() || t->isInputMethod();
             }
@@ -431,13 +431,13 @@ private:
         return true;
     }
     bool pointerSurfaceAllowed() const {
-        return surfaceAllowed(&KWayland::Server::SeatInterface::focusedPointerSurface);
+        return surfaceAllowed(&KWaylandServer::SeatInterface::focusedPointerSurface);
     }
     bool keyboardSurfaceAllowed() const {
-        return surfaceAllowed(&KWayland::Server::SeatInterface::focusedKeyboardSurface);
+        return surfaceAllowed(&KWaylandServer::SeatInterface::focusedKeyboardSurface);
     }
     bool touchSurfaceAllowed() const {
-        return surfaceAllowed(&KWayland::Server::SeatInterface::focusedTouchSurface);
+        return surfaceAllowed(&KWaylandServer::SeatInterface::focusedTouchSurface);
     }
 };
 
@@ -1406,23 +1406,23 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
-        KWayland::Server::PointerAxisSource source;
+        KWaylandServer::PointerAxisSource source;
         switch (_event->axisSource()) {
         case KWin::InputRedirection::PointerAxisSourceWheel:
-            source = KWayland::Server::PointerAxisSource::Wheel;
+            source = KWaylandServer::PointerAxisSource::Wheel;
             break;
         case KWin::InputRedirection::PointerAxisSourceFinger:
-            source = KWayland::Server::PointerAxisSource::Finger;
+            source = KWaylandServer::PointerAxisSource::Finger;
             break;
         case KWin::InputRedirection::PointerAxisSourceContinuous:
-            source = KWayland::Server::PointerAxisSource::Continuous;
+            source = KWaylandServer::PointerAxisSource::Continuous;
             break;
         case KWin::InputRedirection::PointerAxisSourceWheelTilt:
-            source = KWayland::Server::PointerAxisSource::WheelTilt;
+            source = KWaylandServer::PointerAxisSource::WheelTilt;
             break;
         case KWin::InputRedirection::PointerAxisSourceUnknown:
         default:
-            source = KWayland::Server::PointerAxisSource::Unknown;
+            source = KWaylandServer::PointerAxisSource::Unknown;
             break;
         }
         seat->pointerAxisV5(_event->orientation(), _event->delta(), _event->discreteDelta(), source);
@@ -1551,7 +1551,7 @@ public:
     }
 };
 
-static KWayland::Server::SeatInterface *findSeat()
+static KWaylandServer::SeatInterface *findSeat()
 {
     auto server = waylandServer();
     if (!server) {
@@ -1570,20 +1570,20 @@ public:
     {
     }
 
-    static KWayland::Server::TabletSeatInterface *findTabletSeat()
+    static KWaylandServer::TabletSeatInterface *findTabletSeat()
     {
         auto server = waylandServer();
         if (!server) {
             return nullptr;
         }
-        KWayland::Server::TabletManagerInterface *manager = server->tabletManager();
+        KWaylandServer::TabletManagerInterface *manager = server->tabletManager();
         return manager->seat(findSeat());
     }
 
     void integrateDevice(LibInput::Device *device)
     {
         if (device->isTabletTool()) {
-            KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
+            KWaylandServer::TabletSeatInterface *tabletSeat = findTabletSeat();
             struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
             const char *devnode = udev_device_get_devnode(udev_device);
             tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
@@ -1591,7 +1591,7 @@ public:
     }
     void removeDevice(const QString &sysname)
     {
-        KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
+        KWaylandServer::TabletSeatInterface *tabletSeat = findTabletSeat();
         tabletSeat->removeTablet(sysname);
     }
 
@@ -1601,10 +1601,10 @@ public:
             return false;
         }
 
-        KWayland::Server::TabletSeatInterface *tabletSeat = findTabletSeat();
+        KWaylandServer::TabletSeatInterface *tabletSeat = findTabletSeat();
         auto tool = tabletSeat->toolByHardwareSerial(event->serialId());
         if (!tool) {
-            using namespace KWayland::Server;
+            using namespace KWaylandServer;
 
             const QVector<InputRedirection::Capability> capabilities = event->capabilities();
             const auto f = [](InputRedirection::Capability cap) {
@@ -1697,14 +1697,14 @@ public:
             emit cursor->cursorChanged();
         }
 
-        KWayland::Server::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
+        KWaylandServer::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
 
         Toplevel *toplevel = input()->findToplevel(event->globalPos());
         if (!toplevel || !toplevel->surface()) {
             return false;
         }
 
-        KWayland::Server::SurfaceInterface *surface = toplevel->surface();
+        KWaylandServer::SurfaceInterface *surface = toplevel->surface();
         tool->setCurrentSurface(surface);
 
         if (!tool->isClientSupported() || !tablet->isSurfaceSupported(surface)) {
@@ -1768,7 +1768,7 @@ public:
         waylandServer()->simulateUserActivity();
         return true;
     }
-    QHash<KWayland::Server::TabletToolInterface*, Cursor*> m_cursorByTool;
+    QHash<KWaylandServer::TabletToolInterface*, Cursor*> m_cursorByTool;
 };
 
 class DragAndDropInputFilter : public InputEventFilter
@@ -1981,7 +1981,7 @@ void InputRedirection::init()
 void InputRedirection::setupWorkspace()
 {
     if (waylandServer()) {
-        using namespace KWayland::Server;
+        using namespace KWaylandServer;
         FakeInputInterface *fakeInput = waylandServer()->display()->createFakeInput(this);
         fakeInput->create();
         connect(fakeInput, &FakeInputInterface::deviceCreated, this,
@@ -2173,7 +2173,7 @@ void InputRedirection::setupLibInput()
 
         if (waylandServer()) {
             // create relative pointer manager
-            waylandServer()->display()->createRelativePointerManager(KWayland::Server::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
+            waylandServer()->display()->createRelativePointerManager(KWaylandServer::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
         }
 
         conn->setInputConfig(kwinApp()->inputConfig());

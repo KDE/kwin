@@ -146,7 +146,7 @@ private:
     void dpmsFinishOff();
 
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
-    void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) override;
+    void updateDpms(KWaylandServer::OutputInterface::DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void setWaylandMode();
 

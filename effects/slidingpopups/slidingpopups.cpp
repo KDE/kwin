@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFontMetrics>
 #include <QWindow>
 
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/slide_interface.h>
-#include <KWayland/Server/display.h>
+#include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/slide_interface.h>
+#include <KWaylandServer/display.h>
 
 #include <KWindowEffects>
 
@@ -40,7 +40,7 @@ namespace KWin
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
     initConfig<SlidingPopupsConfig>();
-    KWayland::Server::Display *display = effects->waylandDisplay();
+    KWaylandServer::Display *display = effects->waylandDisplay();
     if (display) {
         display->createSlideManager(this)->create();
     }
@@ -200,7 +200,7 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
     //Wayland
     if (auto surf = w->surface()) {
         slotWaylandSlideOnShowChanged(w);
-        connect(surf, &KWayland::Server::SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
+        connect(surf, &KWaylandServer::SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
             slotWaylandSlideOnShowChanged(effects->findWindow(surf));
         });
     }
@@ -354,7 +354,7 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
         return;
     }
 
-    KWayland::Server::SurfaceInterface *surf = w->surface();
+    KWaylandServer::SurfaceInterface *surf = w->surface();
     if (!surf) {
         return;
     }
@@ -365,16 +365,16 @@ void SlidingPopupsEffect::slotWaylandSlideOnShowChanged(EffectWindow* w)
         animData.offset = surf->slideOnShowHide()->offset();
 
         switch (surf->slideOnShowHide()->location()) {
-        case KWayland::Server::SlideInterface::Location::Top:
+        case KWaylandServer::SlideInterface::Location::Top:
             animData.location = Location::Top;
             break;
-        case KWayland::Server::SlideInterface::Location::Left:
+        case KWaylandServer::SlideInterface::Location::Left:
             animData.location = Location::Left;
             break;
-        case KWayland::Server::SlideInterface::Location::Right:
+        case KWaylandServer::SlideInterface::Location::Right:
             animData.location = Location::Right;
             break;
-        case KWayland::Server::SlideInterface::Location::Bottom:
+        case KWaylandServer::SlideInterface::Location::Bottom:
         default:
             animData.location = Location::Bottom;
             break;

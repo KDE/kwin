@@ -30,10 +30,10 @@ namespace Client
 {
 class Surface;
 }
-namespace Server
+}
+namespace KWaylandServer
 {
 class SurfaceInterface;
-}
 }
 
 namespace KWin
@@ -64,7 +64,7 @@ public:
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
 
-    KWayland::Server::SurfaceInterface *surfaceIface() const {
+    KWaylandServer::SurfaceInterface *surfaceIface() const {
         return m_surfaceIface;
     }
     KWayland::Client::Surface *surface() const {
@@ -82,7 +82,7 @@ private:
     QVector<Drag *> m_oldDrags;
 
     KWayland::Client::Surface *m_surface;
-    KWayland::Server::SurfaceInterface *m_surfaceIface = nullptr;
+    KWaylandServer::SurfaceInterface *m_surfaceIface = nullptr;
 
     Q_DISABLE_COPY(Dnd)
 };

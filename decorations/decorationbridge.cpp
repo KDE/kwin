@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationSettings>
 
 // KWayland
-#include <KWayland/Server/server_decoration_interface.h>
+#include <KWaylandServer/server_decoration_interface.h>
 
 // Frameworks
 #include <KPluginMetaData>
@@ -111,7 +111,7 @@ void DecorationBridge::readDecorationOptions()
 
 void DecorationBridge::init()
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     m_noPlugin = readNoPlugin();
     if (m_noPlugin) {
         if (waylandServer()) {

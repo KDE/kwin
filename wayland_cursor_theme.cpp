@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 // KWayland
 #include <KWayland/Client/shm_pool.h>
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/output_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/output_interface.h>
 // Wayland
 #include <wayland-cursor.h>
 

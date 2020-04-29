@@ -41,7 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/xdgdecoration.h>
-#include <KWayland/Server/display.h>
+#include <KWaylandServer/display.h>
 
 //screenlocker
 #include <KScreenLocker/KsldApp>

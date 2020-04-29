@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 
 // KWayland
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/outputchangeset.h>
-#include <KWayland/Server/xdgoutput_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/outputchangeset.h>
+#include <KWaylandServer/xdgoutput_interface.h>
 // KF5
 #include <KLocalizedString>
 
@@ -42,8 +42,8 @@ AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
     m_waylandOutputDevice = waylandServer()->display()->createOutputDevice(this);
     m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, this);
 
-    connect(m_waylandOutput, &KWayland::Server::OutputInterface::dpmsModeRequested, this,
-            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::dpmsModeRequested, this,
+            [this] (KWaylandServer::OutputInterface::DpmsMode mode) {
         updateDpms(mode);
     });
 }
@@ -121,12 +121,12 @@ void AbstractWaylandOutput::setScale(qreal scale)
     m_xdgOutput->done();
 }
 
-using DeviceInterface = KWayland::Server::OutputDeviceInterface;
+using DeviceInterface = KWaylandServer::OutputDeviceInterface;
 
-KWayland::Server::OutputInterface::Transform toOutputTransform(DeviceInterface::Transform transform)
+KWaylandServer::OutputInterface::Transform toOutputTransform(DeviceInterface::Transform transform)
 {
     using Transform = DeviceInterface::Transform;
-    using OutputTransform = KWayland::Server::OutputInterface::Transform;
+    using OutputTransform = KWaylandServer::OutputInterface::Transform;
 
     switch (transform) {
     case Transform::Rotated90:
@@ -169,7 +169,7 @@ DeviceInterface::Transform toDeviceTransform(AbstractWaylandOutput::Transform tr
     return static_cast<DeviceInterface::Transform>(transform);
 }
 
-void AbstractWaylandOutput::applyChanges(const KWayland::Server::OutputChangeSet *changeSet)
+void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";
     bool emitModeChanged = false;
@@ -270,12 +270,12 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
         qCDebug(KWIN_CORE).nospace() << "Adding mode " << ++i << ": " << mode.size << " [" << mode.refreshRate << "]";
         m_waylandOutputDevice->addMode(mode);
 
-        KWayland::Server::OutputInterface::ModeFlags flags;
+        KWaylandServer::OutputInterface::ModeFlags flags;
         if (mode.flags & DeviceInterface::ModeFlag::Current) {
-            flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
+            flags |= KWaylandServer::OutputInterface::ModeFlag::Current;
         }
         if (mode.flags & DeviceInterface::ModeFlag::Preferred) {
-            flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
+            flags |= KWaylandServer::OutputInterface::ModeFlag::Preferred;
         }
         m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }

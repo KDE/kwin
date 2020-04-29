@@ -43,7 +43,7 @@ target_link_libraries(testVirtualDesktops
     KF5::ConfigCore
     KF5::GlobalAccel
     KF5::I18n
-    KF5::WaylandServer
+    Plasma::KWaylandServer
     KF5::WindowSystem
 )
 add_test(NAME kwin-testVirtualDesktops COMMAND testVirtualDesktops)
@@ -311,7 +311,7 @@ target_link_libraries(testScreenEdges
     KF5::GlobalAccel
     KF5::I18n
     KF5::Notifications
-    KF5::WaylandServer
+    Plasma::KWaylandServer
     KF5::WindowSystem
 
     XCB::COMPOSITE
@@ -402,7 +402,7 @@ target_link_libraries(testXkb
     Qt5::Widgets
 
     KF5::ConfigCore
-    KF5::WaylandServer
+    Plasma::KWaylandServer
     KF5::WindowSystem
 
     XKB::XKB

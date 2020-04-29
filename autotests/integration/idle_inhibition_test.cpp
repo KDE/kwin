@@ -27,12 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
 
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/idle_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/idle_interface.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
-using KWayland::Server::IdleInterface;
+using KWaylandServer::IdleInterface;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_idle_inhbition_test-0");
 

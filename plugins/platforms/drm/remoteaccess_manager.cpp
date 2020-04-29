@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../../wayland_server.h"
 
 // system
-#include <KWayland/Server/output_interface.h>
+#include <KWaylandServer/output_interface.h>
 #include <unistd.h>
 #include <gbm.h>
 

@@ -31,11 +31,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include <kwinglplatform.h>
 #include <QOpenGLContext>
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/eglstream_controller_interface.h>
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/resource.h>
+#include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/eglstream_controller_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/resource.h>
 #include <wayland-server-core.h>
 
 namespace KWin
@@ -210,7 +210,7 @@ bool EglStreamBackend::initializeEgl()
     return true;
 }
 
-EglStreamBackend::StreamTexture *EglStreamBackend::lookupStreamTexture(KWayland::Server::SurfaceInterface *surface)
+EglStreamBackend::StreamTexture *EglStreamBackend::lookupStreamTexture(KWaylandServer::SurfaceInterface *surface)
 {
     auto it = m_streamTextures.find(surface);
     return it != m_streamTextures.end() ?
@@ -218,7 +218,7 @@ EglStreamBackend::StreamTexture *EglStreamBackend::lookupStreamTexture(KWayland:
            nullptr;
 }
 
-void EglStreamBackend::attachStreamConsumer(KWayland::Server::SurfaceInterface *surface,
+void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *surface,
                                             void *eglStream,
                                             wl_array *attribs)
 {
@@ -248,7 +248,7 @@ void EglStreamBackend::attachStreamConsumer(KWayland::Server::SurfaceInterface *
         m_streamTextures.insert(surface, newSt);
         texture = newSt.texture;
 
-        connect(surface, &KWayland::Server::Resource::unbound, this,
+        connect(surface, &KWaylandServer::Resource::unbound, this,
             [surface, this]() {
                 const StreamTexture &st = m_streamTextures.take(surface);
                 pEglDestroyStreamKHR(eglDisplay(), st.stream);
@@ -283,7 +283,7 @@ void EglStreamBackend::init()
     setSupportsBufferAge(false);
     initWayland();
 
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     m_eglStreamControllerInterface = waylandServer()->display()->createEglStreamControllerInterface();
     connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
             &EglStreamBackend::attachStreamConsumer);
@@ -618,7 +618,7 @@ void EglStreamTexture::copyExternalTexture(GLuint tex)
     glViewport(oldViewport[0], oldViewport[1], oldViewport[2], oldViewport[3]);
 }
 
-bool EglStreamTexture::attachBuffer(KWayland::Server::BufferInterface *buffer)
+bool EglStreamTexture::attachBuffer(KWaylandServer::BufferInterface *buffer)
 {
     QSize oldSize = m_size;
     m_size = buffer->size();
@@ -639,7 +639,7 @@ bool EglStreamTexture::attachBuffer(KWayland::Server::BufferInterface *buffer)
 
 bool EglStreamTexture::loadTexture(WindowPixmap *pixmap)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     SurfaceInterface *surface = pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
     if (!pixmap->buffer().isNull() && st != nullptr) {
@@ -667,7 +667,7 @@ bool EglStreamTexture::loadTexture(WindowPixmap *pixmap)
 
 void EglStreamTexture::updateTexture(WindowPixmap *pixmap)
 {
-    using namespace KWayland::Server;    
+    using namespace KWaylandServer;
     SurfaceInterface *surface = pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
     if (!pixmap->buffer().isNull() && st != nullptr) {

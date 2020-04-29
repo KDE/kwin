@@ -32,9 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datasource.h>
 
-#include <KWayland/Server/datasource_interface.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/datasource_interface.h>
+#include <KWaylandServer/seat_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <QMouseEvent>
 #include <QTimer>
@@ -115,15 +115,15 @@ XToWlDrag::XToWlDrag(X11Source *source)
     source->setDataSource(m_dataSource);
 
     auto *dc = new QMetaObject::Connection();
-    *dc = connect(waylandServer()->dataDeviceManager(), &KWayland::Server::DataDeviceManagerInterface::dataSourceCreated, this,
-                 [this, dc](KWayland::Server::DataSourceInterface *dsi) {
+    *dc = connect(waylandServer()->dataDeviceManager(), &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated, this,
+                 [this, dc](KWaylandServer::DataSourceInterface *dsi) {
                     Q_ASSERT(dsi);
                     if (dsi->client() != waylandServer()->internalConnection()) {
                         return;
                     }
                     QObject::disconnect(*dc);
                     delete dc;
-                    connect(dsi, &KWayland::Server::DataSourceInterface::mimeTypeOffered, this, &XToWlDrag::offerCallback);
+                    connect(dsi, &KWaylandServer::DataSourceInterface::mimeTypeOffered, this, &XToWlDrag::offerCallback);
                 }
     );
     // Start drag with serial of last left pointer button press.

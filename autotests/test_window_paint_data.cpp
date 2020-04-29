@@ -236,7 +236,7 @@ public:
     bool skipsCloseAnimation() const override {
         return false;
     }
-    KWayland::Server::SurfaceInterface *surface() const override {
+    KWaylandServer::SurfaceInterface *surface() const override {
         return nullptr;
     }
     bool isFullScreen() const override {

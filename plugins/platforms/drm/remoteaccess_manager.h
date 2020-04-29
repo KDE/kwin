@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define REMOTEACCESSMANAGER_H
 
 // KWayland
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/remote_access_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/remote_access_interface.h>
 // Qt
 #include <QObject>
 
@@ -35,8 +35,8 @@ namespace KWin
 class DrmOutput;
 class DrmBuffer;
 
-using KWayland::Server::RemoteAccessManagerInterface;
-using KWayland::Server::BufferHandle;
+using KWaylandServer::RemoteAccessManagerInterface;
+using KWaylandServer::BufferHandle;
 
 class RemoteAccessManager : public QObject
 {

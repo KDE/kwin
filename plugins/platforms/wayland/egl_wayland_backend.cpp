@@ -37,8 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KDE
 #include <KWayland/Client/surface.h>
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/display.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/display.h>
 
 // Qt
 #include <QOpenGLContext>

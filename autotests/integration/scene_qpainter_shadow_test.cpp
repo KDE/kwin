@@ -37,8 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-#include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include "kwin_wayland_test.h"
 
@@ -753,7 +753,7 @@ void SceneQPainterShadowTest::testShadowTextureReconstruction()
     clientShadow->setOffsets(QMarginsF(128, 128, 128, 128));
 
     // Commit shadow.
-    QSignalSpy shadowChangedSpy(client->surface(), &KWayland::Server::SurfaceInterface::shadowChanged);
+    QSignalSpy shadowChangedSpy(client->surface(), &KWaylandServer::SurfaceInterface::shadowChanged);
     QVERIFY(shadowChangedSpy.isValid());
     clientShadow->commit();
     surface->commit(Surface::CommitFlag::None);

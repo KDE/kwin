@@ -30,7 +30,7 @@ DmabufBuffer::DmabufBuffer(const QVector<Plane> &planes,
                            uint32_t format,
                            const QSize &size,
                            Flags flags)
-    : KWayland::Server::LinuxDmabufUnstableV1Buffer(format, size)
+    : KWaylandServer::LinuxDmabufUnstableV1Buffer(format, size)
     , m_planes(planes)
     , m_format(format)
     , m_size(size)
@@ -53,7 +53,7 @@ DmabufBuffer::~DmabufBuffer()
 }
 
 LinuxDmabuf::LinuxDmabuf()
-    : KWayland::Server::LinuxDmabufUnstableV1Interface::Impl()
+    : KWaylandServer::LinuxDmabufUnstableV1Interface::Impl()
 {
     Q_ASSERT(waylandServer());
     waylandServer()->linuxDmabuf()->setImpl(this);
@@ -64,10 +64,10 @@ LinuxDmabuf::~LinuxDmabuf()
     waylandServer()->linuxDmabuf()->setImpl(nullptr);
 }
 
-using Plane = KWayland::Server::LinuxDmabufUnstableV1Interface::Plane;
-using Flags = KWayland::Server::LinuxDmabufUnstableV1Interface::Flags;
+using Plane = KWaylandServer::LinuxDmabufUnstableV1Interface::Plane;
+using Flags = KWaylandServer::LinuxDmabufUnstableV1Interface::Flags;
 
-KWayland::Server::LinuxDmabufUnstableV1Buffer* LinuxDmabuf::importBuffer(const QVector<Plane> &planes,
+KWaylandServer::LinuxDmabufUnstableV1Buffer* LinuxDmabuf::importBuffer(const QVector<Plane> &planes,
                                                                          uint32_t format,
                                                                          const QSize &size,
                                                                          Flags flags)

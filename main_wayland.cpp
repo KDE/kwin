@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xwl/xwayland.h"
 
 // KWayland
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/seat_interface.h>
 // KDE
 #include <KCrash>
 #include <KLocalizedString>

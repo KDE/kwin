@@ -32,12 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QWindow;
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class SurfaceInterface;
-}
 }
 
 namespace KWin
@@ -157,12 +154,12 @@ private:
     void updateToReset();
     void updatePosition(const QPointF &pos);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
-    void warpXcbOnSurfaceLeft(KWayland::Server::SurfaceInterface *surface);
+    void warpXcbOnSurfaceLeft(KWaylandServer::SurfaceInterface *surface);
     QPointF applyPointerConfinement(const QPointF &pos) const;
     void disconnectConfinedPointerRegionConnection();
     void disconnectLockedPointerAboutToBeUnboundConnection();
     void disconnectPointerConstraintsConnection();
-    void breakPointerConstraints(KWayland::Server::SurfaceInterface *surface);
+    void breakPointerConstraints(KWaylandServer::SurfaceInterface *surface);
     CursorImage *m_cursor;
     bool m_supportsWarping;
     QPointF m_pos;

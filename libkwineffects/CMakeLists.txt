@@ -21,7 +21,7 @@ target_link_libraries(kwinxrenderutils
         Qt5::Core
         Qt5::Gui
 
-        KF5::WaylandServer
+        Plasma::KWaylandServer
 
         XCB::RENDER
         XCB::XCB

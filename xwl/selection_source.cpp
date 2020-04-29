@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datasource.h>
 
-#include <KWayland/Server/datadevice_interface.h>
-#include <KWayland/Server/datasource_interface.h>
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/datadevice_interface.h>
+#include <KWaylandServer/datasource_interface.h>
+#include <KWaylandServer/seat_interface.h>
 
 #include <unistd.h>
 
@@ -49,14 +49,14 @@ SelectionSource::SelectionSource(Selection *selection)
 {
 }
 
-WlSource::WlSource(Selection *selection, KWayland::Server::DataDeviceInterface *ddi)
+WlSource::WlSource(Selection *selection, KWaylandServer::DataDeviceInterface *ddi)
     : SelectionSource(selection)
     , m_ddi(ddi)
 {
     Q_ASSERT(ddi);
 }
 
-void WlSource::setDataSourceIface(KWayland::Server::DataSourceInterface *dsi)
+void WlSource::setDataSourceIface(KWaylandServer::DataSourceInterface *dsi)
 {
     if (m_dsi == dsi) {
         return;
@@ -65,7 +65,7 @@ void WlSource::setDataSourceIface(KWayland::Server::DataSourceInterface *dsi)
         m_offers << mime;
     }
     m_offerConnection = connect(dsi,
-                         &KWayland::Server::DataSourceInterface::mimeTypeOffered,
+                         &KWaylandServer::DataSourceInterface::mimeTypeOffered,
                          this, &WlSource::receiveOffer);
     m_dsi = dsi;
 }

@@ -33,11 +33,11 @@ namespace Client
 {
 class DataDevice;
 }
-namespace Server
+}
+namespace KWaylandServer
 {
 class DataDeviceInterface;
 class SurfaceInterface;
-}
 }
 
 namespace KWin
@@ -74,7 +74,7 @@ public:
     {
         return m_dataDevice;
     }
-    KWayland::Server::DataDeviceInterface *dataDeviceIface() const
+    KWaylandServer::DataDeviceInterface *dataDeviceIface() const
     {
         return m_dataDeviceInterface;
     }
@@ -93,7 +93,7 @@ private:
 
     /* Internal data device interface */
     KWayland::Client::DataDevice *m_dataDevice = nullptr;
-    KWayland::Server::DataDeviceInterface *m_dataDeviceInterface = nullptr;
+    KWaylandServer::DataDeviceInterface *m_dataDeviceInterface = nullptr;
 
     Q_DISABLE_COPY(DataBridge)
 };

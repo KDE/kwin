@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_drm.h"
 #include "wayland_server.h"
 // KWayland
-#include <KWayland/Server/output_interface.h>
+#include <KWaylandServer/output_interface.h>
 // KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -282,7 +282,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         return false;
     }
 
-    updateDpms(KWayland::Server::OutputInterface::DpmsMode::On);
+    updateDpms(KWaylandServer::OutputInterface::DpmsMode::On);
     return true;
 }
 
@@ -324,20 +324,20 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
     const QString model = connectorName + QStringLiteral("-") + modelName;
 
     // read in mode information
-    QVector<KWayland::Server::OutputDeviceInterface::Mode> modes;
+    QVector<KWaylandServer::OutputDeviceInterface::Mode> modes;
     for (int i = 0; i < connector->count_modes; ++i) {
         // TODO: in AMS here we could read and store for later every mode's blob_id
         // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
         auto *m = &connector->modes[i];
-        KWayland::Server::OutputDeviceInterface::ModeFlags deviceflags;
+        KWaylandServer::OutputDeviceInterface::ModeFlags deviceflags;
         if (isCurrentMode(m)) {
-            deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Current;
+            deviceflags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
         }
         if (m->type & DRM_MODE_TYPE_PREFERRED) {
-            deviceflags |= KWayland::Server::OutputDeviceInterface::ModeFlag::Preferred;
+            deviceflags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Preferred;
         }
 
-        KWayland::Server::OutputDeviceInterface::Mode mode;
+        KWaylandServer::OutputDeviceInterface::Mode mode;
         mode.id = i;
         mode.size = QSize(m->hdisplay, m->vdisplay);
         mode.flags = deviceflags;
@@ -535,9 +535,9 @@ void DrmOutput::atomicDisable()
     }
 }
 
-static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface::DpmsMode wlMode)
+static DrmOutput::DpmsMode fromWaylandDpmsMode(KWaylandServer::OutputInterface::DpmsMode wlMode)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     switch (wlMode) {
     case OutputInterface::DpmsMode::On:
         return DrmOutput::DpmsMode::On;
@@ -552,9 +552,9 @@ static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface
     }
 }
 
-static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
+static KWaylandServer::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     switch (mode) {
     case DrmOutput::DpmsMode::On:
         return OutputInterface::DpmsMode::On;
@@ -569,7 +569,7 @@ static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::
     }
 }
 
-void DrmOutput::updateDpms(KWayland::Server::OutputInterface::DpmsMode mode)
+void DrmOutput::updateDpms(KWaylandServer::OutputInterface::DpmsMode mode)
 {
     if (m_dpms.isNull() || !isEnabled()) {
         return;

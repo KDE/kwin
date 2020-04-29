@@ -37,10 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ui_debug_console.h"
 
 // KWayland
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/clientconnection.h>
-#include <KWayland/Server/subcompositor_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/clientconnection.h>
+#include <KWaylandServer/subcompositor_interface.h>
+#include <KWaylandServer/surface_interface.h>
 // frameworks
 #include <KLocalizedString>
 #include <NETWM>
@@ -732,9 +732,9 @@ QString DebugConsoleDelegate::displayText(const QVariant &value, const QLocale &
         return QStringLiteral("%1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height());
     }
     default:
-        if (value.userType() == qMetaTypeId<KWayland::Server::SurfaceInterface*>()) {
-            if (auto s = value.value<KWayland::Server::SurfaceInterface*>()) {
-                return QStringLiteral("KWayland::Server::SurfaceInterface(0x%1)").arg(qulonglong(s), 0, 16);
+        if (value.userType() == qMetaTypeId<KWaylandServer::SurfaceInterface*>()) {
+            if (auto s = value.value<KWaylandServer::SurfaceInterface*>()) {
+                return QStringLiteral("KWaylandServer::SurfaceInterface(0x%1)").arg(qulonglong(s), 0, 16);
             } else {
                 return QStringLiteral("nullptr");
             }
@@ -1272,7 +1272,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         beginResetModel();
         endResetModel();
     };
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
 
     const auto unmangeds = workspace()->unmanagedList();
     for (auto u : unmangeds) {
@@ -1332,7 +1332,7 @@ int SurfaceTreeModel::columnCount(const QModelIndex &parent) const
 int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
-        using namespace KWayland::Server;
+        using namespace KWaylandServer;
         if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
             const auto &children = surface->childSubSurfaces();
             return children.count();
@@ -1353,7 +1353,7 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
     }
 
     if (parent.isValid()) {
-        using namespace KWayland::Server;
+        using namespace KWaylandServer;
         if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
             const auto &children = surface->childSubSurfaces();
             if (row < children.count()) {
@@ -1385,7 +1385,7 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
 
 QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
 {
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(child.internalPointer())) {
         const auto &subsurface = surface->subSurface();
         if (subsurface.isNull()) {
@@ -1444,7 +1444,7 @@ QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
-    using namespace KWayland::Server;
+    using namespace KWaylandServer;
     if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(index.internalPointer())) {
         if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
             return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath())

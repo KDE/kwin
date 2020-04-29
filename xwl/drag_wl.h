@@ -34,12 +34,12 @@ namespace Client
 {
 class Surface;
 }
-namespace Server
+}
+namespace KWaylandServer
 {
 class DataDeviceInterface;
 class DataSourceInterface;
 class SurfaceInterface;
-}
 }
 
 namespace KWin
@@ -67,12 +67,12 @@ public:
 
     bool end() override;
 
-    KWayland::Server::DataSourceInterface *dataSourceIface() const {
+    KWaylandServer::DataSourceInterface *dataSourceIface() const {
         return m_dsi;
     }
 
 private:
-    KWayland::Server::DataSourceInterface *m_dsi;
+    KWaylandServer::DataSourceInterface *m_dsi;
     Xvisit *m_visit = nullptr;
 
     Q_DISABLE_COPY(WlToXDrag)

@@ -55,9 +55,9 @@ public:
     ~HwcomposerOutput() override;
     bool isValid() const;
 
-    void updateDpms(KWayland::Server::OutputInterface::DpmsMode mode) override;
+    void updateDpms(KWaylandServer::OutputInterface::DpmsMode mode) override;
 Q_SIGNALS:
-    void dpmsModeRequested(KWayland::Server::OutputInterface::DpmsMode mode);
+    void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
 private:
     QSize m_pixelSize;
     hwc_composer_device_1_t *m_device;

@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/touch.h>
 #include <KWayland/Client/xdgshell.h>
 
-#include <KWayland/Server/seat_interface.h>
+#include <KWaylandServer/seat_interface.h>
 
 #include <QMetaMethod>
 #include <QThread>
@@ -338,7 +338,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     );
     WaylandServer *server = waylandServer();
     if (server) {
-        using namespace KWayland::Server;
+        using namespace KWaylandServer;
         SeatInterface *si = server->seat();
         connect(m_seat, &Seat::hasKeyboardChanged, si, &SeatInterface::setHasKeyboard);
         connect(m_seat, &Seat::hasPointerChanged, si, &SeatInterface::setHasPointer);

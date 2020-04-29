@@ -27,12 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <QVector>
 
-namespace KWayland
-{
-namespace Server
+namespace KWaylandServer
 {
 class OutputChangeSet;
-}
 }
 
 namespace KWin
@@ -127,7 +124,7 @@ public:
      *
      * Default implementation does nothing
      */
-    virtual void applyChanges(const KWayland::Server::OutputChangeSet *changeSet);
+    virtual void applyChanges(const KWaylandServer::OutputChangeSet *changeSet);
 
     /**
      * Returns geometry of this output in device independent pixels.

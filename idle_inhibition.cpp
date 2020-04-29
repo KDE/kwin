@@ -23,13 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "workspace.h"
 
-#include <KWayland/Server/idle_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/idle_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <algorithm>
 #include <functional>
 
-using KWayland::Server::SurfaceInterface;
+using KWaylandServer::SurfaceInterface;
 
 namespace KWin
 {

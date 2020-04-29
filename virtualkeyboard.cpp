@@ -28,10 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xkb.h"
 #include "screenlockerwatcher.h"
 
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/textinput_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/seat_interface.h>
+#include <KWaylandServer/textinput_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <KStatusNotifierItem>
 #include <KLocalizedString>
@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // xkbcommon
 #include <xkbcommon/xkbcommon.h>
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 namespace KWin
 {

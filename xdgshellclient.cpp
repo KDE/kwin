@@ -36,19 +36,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
-#include <KWayland/Server/appmenu_interface.h>
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/clientconnection.h>
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/plasmashell_interface.h>
-#include <KWayland/Server/plasmawindowmanagement_interface.h>
-#include <KWayland/Server/qtsurfaceextension_interface.h>
-#include <KWayland/Server/seat_interface.h>
-#include <KWayland/Server/server_decoration_interface.h>
-#include <KWayland/Server/server_decoration_palette_interface.h>
-#include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/surface_interface.h>
-#include <KWayland/Server/xdgdecoration_interface.h>
+#include <KWaylandServer/appmenu_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/clientconnection.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/plasmashell_interface.h>
+#include <KWaylandServer/plasmawindowmanagement_interface.h>
+#include <KWaylandServer/qtsurfaceextension_interface.h>
+#include <KWaylandServer/seat_interface.h>
+#include <KWaylandServer/server_decoration_interface.h>
+#include <KWaylandServer/server_decoration_palette_interface.h>
+#include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/xdgdecoration_interface.h>
 
 #include <QFileInfo>
 
@@ -59,7 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Q_DECLARE_METATYPE(NET::WindowType)
 
-using namespace KWayland::Server;
+using namespace KWaylandServer;
 
 namespace KWin
 {
@@ -168,7 +168,7 @@ void XdgShellClient::init()
     updateShadow();
     connect(surface(), &SurfaceInterface::shadowChanged, this, &Toplevel::updateShadow);
 
-    connect(waylandServer(), &WaylandServer::foreignTransientChanged, this, [this](KWayland::Server::SurfaceInterface *child) {
+    connect(waylandServer(), &WaylandServer::foreignTransientChanged, this, [this](KWaylandServer::SurfaceInterface *child) {
         if (child == surface()) {
             handleTransientForChanged();
         }
@@ -455,7 +455,7 @@ void XdgShellClient::updateDecoration(bool check_workspace_pos, bool force)
     } else
         destroyDecoration();
     if (m_serverDecoration && isDecorated()) {
-        m_serverDecoration->setMode(KWayland::Server::ServerSideDecorationManagerInterface::Mode::Server);
+        m_serverDecoration->setMode(KWaylandServer::ServerSideDecorationManagerInterface::Mode::Server);
     }
     if (m_xdgDecoration) {
         auto mode = isDecorated() || m_userNoBorder ? XdgDecorationInterface::Mode::ServerSide: XdgDecorationInterface::Mode::ClientSide;
@@ -1791,7 +1791,7 @@ QMatrix4x4 XdgShellClient::inputTransformation() const
     return matrix;
 }
 
-void XdgShellClient::installServerSideDecoration(KWayland::Server::ServerSideDecorationInterface *deco)
+void XdgShellClient::installServerSideDecoration(KWaylandServer::ServerSideDecorationInterface *deco)
 {
     if (m_serverDecoration == deco) {
         return;
@@ -1856,7 +1856,7 @@ bool XdgShellClient::shouldExposeToWindowManagement()
     return true;
 }
 
-KWayland::Server::XdgShellSurfaceInterface::States XdgShellClient::xdgSurfaceStates() const
+KWaylandServer::XdgShellSurfaceInterface::States XdgShellClient::xdgSurfaceStates() const
 {
     XdgShellSurfaceInterface::States states;
     if (isActive()) {

@@ -31,9 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
 
-#include <KWayland/Server/buffer_interface.h>
-#include <KWayland/Server/shadow_interface.h>
-#include <KWayland/Server/surface_interface.h>
+#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/shadow_interface.h>
+#include <KWaylandServer/surface_interface.h>
 
 #include <QWindow>
 
@@ -239,7 +239,7 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     return true;
 }
 
-bool Shadow::init(const QPointer< KWayland::Server::ShadowInterface > &shadow)
+bool Shadow::init(const QPointer< KWaylandServer::ShadowInterface > &shadow)
 {
     if (!shadow) {
         return false;

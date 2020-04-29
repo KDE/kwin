@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/dataoffer.h>
 
-#include <KWayland/Server/datadevicemanager_interface.h>
+#include <KWaylandServer/datadevicemanager_interface.h>
 
 #include <QPoint>
 #include <QPointer>

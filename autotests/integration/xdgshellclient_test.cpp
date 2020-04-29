@@ -44,9 +44,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/appmenu.h>
 
-#include <KWayland/Server/clientconnection.h>
-#include <KWayland/Server/display.h>
-#include <KWayland/Server/xdgdecoration_interface.h>
+#include <KWaylandServer/clientconnection.h>
+#include <KWaylandServer/display.h>
+#include <KWaylandServer/xdgdecoration_interface.h>
 
 #include <QDBusConnection>
 
