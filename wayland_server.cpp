@@ -65,6 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/xdgoutput_interface.h>
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
+#include <KWaylandServer/keyboard_shortcuts_inhibit_interface.h>
 
 // KF
 #include <KServiceTypeTrader>
@@ -322,7 +323,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     );
 
     m_tabletManager = m_display->createTabletManagerInterface(m_display);
-
+    m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManager(m_display);
     m_xdgShell = m_display->createXdgShell(XdgShellInterfaceVersion::Stable, m_display);
     m_xdgShell->create();
     connect(m_xdgShell, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
@@ -838,6 +839,16 @@ void WaylandServer::updateKeyState(KWin::Xkb::LEDs leds)
     m_keyState->setState(KeyStateInterface::Key::CapsLock, leds & KWin::Xkb::LED::CapsLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
     m_keyState->setState(KeyStateInterface::Key::NumLock, leds & KWin::Xkb::LED::NumLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
     m_keyState->setState(KeyStateInterface::Key::ScrollLock, leds & KWin::Xkb::LED::ScrollLock ? KeyStateInterface::State::Locked : KeyStateInterface::State::Unlocked);
+}
+
+bool WaylandServer::isKeyboardShortcutsInhibited() const
+{
+    auto surface = seat()->focusedKeyboardSurface();
+    if (surface) {
+        auto inhibitor = keyboardShortcutsInhibitManager()->findInhibitor(surface, seat());
+        return inhibitor && inhibitor->isActive();
+    }
+    return false;
 }
 
 }

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event.h"
 #include "options.h"
 #include "screenlockerwatcher.h"
+#include "wayland_server.h"
 #include "workspace.h"
 
 #include <QDBusConnection>
@@ -63,13 +64,15 @@ void ModifierOnlyShortcuts::keyEvent(KeyEvent *event)
             if (m_modifier != Qt::NoModifier) {
                 const auto list = options->modifierOnlyDBusShortcut(m_modifier);
                 if (list.size() >= 4) {
-                    auto call = QDBusMessage::createMethodCall(list.at(0), list.at(1), list.at(2), list.at(3));
-                    QVariantList args;
-                    for (int i = 4; i < list.size(); ++i) {
-                        args << list.at(i);
+                    if (!waylandServer() || !waylandServer()->isKeyboardShortcutsInhibited()) {
+                        auto call = QDBusMessage::createMethodCall(list.at(0), list.at(1), list.at(2), list.at(3));
+                        QVariantList args;
+                        for (int i = 4; i < list.size(); ++i) {
+                            args << list.at(i);
+                        }
+                        call.setArguments(args);
+                        QDBusConnection::sessionBus().asyncCall(call);
                     }
-                    call.setArguments(args);
-                    QDBusConnection::sessionBus().asyncCall(call);
                 }
             }
         }

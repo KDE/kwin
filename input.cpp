@@ -788,7 +788,9 @@ public:
                 return ret;
             }
         } else if (event->type() == QEvent::KeyPress) {
-            return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
+            if (!waylandServer()->isKeyboardShortcutsInhibited()) {
+                return input()->shortcuts()->processKey(static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
+            }
         }
         return false;
     }
