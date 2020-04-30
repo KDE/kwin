@@ -313,7 +313,7 @@ ecm_generate_export_header(KWaylandServer
 # needs fixing of undeprecated API being still implemented using own deprecated API
 
 
-target_include_directories(KWaylandServer INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KWaylandServer>")
+target_include_directories(KWaylandServer INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(KWaylandServer
     PUBLIC Qt5::Gui
