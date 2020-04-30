@@ -80,10 +80,23 @@ ScrollViewKCM {
         text: i18n("Select the rules to export")
         actions: [
             Kirigami.Action {
+                iconName: "object-select-symbolic"
+                text: checked ? i18n("Unselect All") : i18n("Select All")
+                checkable: true
+                checked: selectedIndexes.length == ruleBookView.count
+                onToggled: {
+                    if (checked) {
+                        selectedIndexes = [...Array(ruleBookView.count).keys()]
+                    } else {
+                        selectedIndexes = [];
+                    }
+                }
+            }
+            ,
+            Kirigami.Action {
                 iconName: "document-save"
                 text: i18n("Save Rules")
-                // FIXME: It does not update on selection changes
-                // enabled: selectedIndexes.length > 0
+                enabled: selectedIndexes.length > 0
                 onTriggered: {
                     exportDialog.active = true;
                 }
@@ -112,8 +125,8 @@ ScrollViewKCM {
             }
         }
         QQC2.Button {
-            text: i18n("Export...")
-            icon.name: "document-export"
+            text: checked ? i18n("Cancel Export") : i18n("Export...")
+            icon.name: exportInfo.visible ? "dialog-cancel" : "document-export"
             enabled: ruleBookView.count > 0
             checkable: true
             checked: exportInfo.visible
@@ -213,6 +226,7 @@ ScrollViewKCM {
                         } else {
                             if (position >= 0) { selectedIndexes.splice(position, 1); }
                         }
+                        selectedIndexesChanged();
                     }
                 }
             }
