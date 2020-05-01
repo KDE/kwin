@@ -60,7 +60,6 @@ class PlasmaShellInterface;
 class PlasmaShellSurfaceInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
-class QtSurfaceExtensionInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
 class XdgDecorationManagerInterface;

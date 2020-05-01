@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/plasmawindowmanagement_interface.h>
 #include <KWaylandServer/pointerconstraints_interface.h>
 #include <KWaylandServer/pointergestures_interface.h>
-#include <KWaylandServer/qtsurfaceextension_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/server_decoration_interface.h>
 #include <KWaylandServer/server_decoration_palette_interface.h>
