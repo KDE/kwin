@@ -397,7 +397,7 @@ void ScreenShotEffect::postPaintScreen()
                 p.begin(&multipleOutputsImage);
 
                 // reassemble images together
-                for (i = m_cacheOutputsImages.begin(); i != m_cacheOutputsImages.end(); ++i) {
+                for (i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
                     auto pos = i.key();
                     auto img = i.value();
                     // disable dpr rendering, we already took care of this

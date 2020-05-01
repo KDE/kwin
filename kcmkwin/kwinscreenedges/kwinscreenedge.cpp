@@ -134,7 +134,7 @@ void KWinScreenEdge::monitorChangeDefaultEdge(const QList<int> &borderList, int 
 
 void KWinScreenEdge::reload()
 {
-    for (auto it = m_reference.begin(); it != m_reference.cend(); ++it) {
+    for (auto it = m_reference.cbegin(); it != m_reference.cend(); ++it) {
         monitor()->selectEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()), it.value());
     }
     onChanged();
@@ -142,7 +142,7 @@ void KWinScreenEdge::reload()
 
 void KWinScreenEdge::setDefaults()
 {
-    for (auto it = m_default.begin(); it != m_default.cend(); ++it) {
+    for (auto it = m_default.cbegin(); it != m_default.cend(); ++it) {
         monitor()->selectEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()), it.value());
     }
     onChanged();
@@ -200,13 +200,13 @@ ElectricBorder KWinScreenEdge::monitorEdgeToElectricBorder(int edge)
 void KWinScreenEdge::onChanged()
 {
     bool needSave = isSaveNeeded();
-    for (auto it = m_reference.begin(); it != m_reference.cend(); ++it) {
+    for (auto it = m_reference.cbegin(); it != m_reference.cend(); ++it) {
         needSave |= it.value() != monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
     }
     emit saveNeededChanged(needSave);
 
     bool defaults = isDefault();
-    for (auto it = m_default.begin(); it != m_default.cend(); ++it) {
+    for (auto it = m_default.cbegin(); it != m_default.cend(); ++it) {
         defaults &= it.value() == monitor()->selectedEdgeItem(KWinScreenEdge::electricBorderToMonitorEdge(it.key()));
     }
     emit defaultChanged(defaults);
