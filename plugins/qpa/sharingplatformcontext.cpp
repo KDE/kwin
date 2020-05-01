@@ -111,7 +111,7 @@ GLuint SharingPlatformContext::defaultFramebufferObject(QPlatformSurface *surfac
 
 void SharingPlatformContext::create()
 {
-    if (config() == 0) {
+    if (!config()) {
         qCWarning(KWIN_QPA) << "Did not get an EGL config";
         return;
     }
