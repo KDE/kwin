@@ -104,7 +104,8 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
             return;
         }
         NETIcon icon;
-        icon.data = windowIcon.pixmap(size).toImage().bits();
+        QImage windowImage = windowIcon.pixmap(size).toImage();
+        icon.data = windowImage.bits();
         icon.size.width = size.width();
         icon.size.height = size.height();
         m_winInfo->setIcon(icon, false);
