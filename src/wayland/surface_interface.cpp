@@ -328,6 +328,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     const bool contrastChanged = source->contrastIsSet;
     const bool slideChanged = source->slideIsSet;
     const bool childrenChanged = source->childrenChanged;
+    const bool visibilityChanged = bufferChanged && (bool(source->buffer) != bool(target->buffer));
     bool sizeChanged = false;
     auto buffer = target->buffer;
     if (bufferChanged) {
@@ -457,6 +458,9 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
                 target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
                 if (emitChanged) {
                     subSurfaceIsMapped = true;
+                    if (visibilityChanged) {
+                        emit q->mapped();
+                    }
                     trackedDamage = trackedDamage.united(target->damage);
                     emit q->damaged(target->damage);
                     // workaround for https://bugreports.qt.io/browse/QTBUG-52092

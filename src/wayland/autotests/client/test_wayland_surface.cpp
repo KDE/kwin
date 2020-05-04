@@ -400,9 +400,12 @@ void TestWaylandSurface::testAttachBuffer()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy damageSpy(serverSurface, SIGNAL(damaged(QRegion)));
     QVERIFY(damageSpy.isValid());
+    QSignalSpy mappedSpy(serverSurface, SIGNAL(mapped()));
+    QVERIFY(mappedSpy.isValid());
     QSignalSpy unmappedSpy(serverSurface, SIGNAL(unmapped()));
     QVERIFY(unmappedSpy.isValid());
     QVERIFY(damageSpy.wait());
+    QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
 
     // now the ServerSurface should have the black image attached as a buffer
@@ -418,6 +421,7 @@ void TestWaylandSurface::testAttachBuffer()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     damageSpy.clear();
     QVERIFY(damageSpy.wait());
+    QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
     KWaylandServer::BufferInterface *buffer2 = serverSurface->buffer();
     buffer2->ref();
@@ -445,6 +449,7 @@ void TestWaylandSurface::testAttachBuffer()
     s->commit();
     damageSpy.clear();
     QVERIFY(damageSpy.wait());
+    QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
     QVERIFY(!buffer2->isReferenced());
     delete buffer2;
@@ -485,6 +490,7 @@ void TestWaylandSurface::testAttachBuffer()
     QCOMPARE(serverSurface->input(), QRegion(0, 0, 24, 24));
     QCOMPARE(serverSurface->buffer(), buffer3);
     QVERIFY(damageSpy.isEmpty());
+    QCOMPARE(mappedSpy.count(), 1);
     QVERIFY(unmappedSpy.isEmpty());
     QVERIFY(serverSurface->isMapped());
 
@@ -496,7 +502,7 @@ void TestWaylandSurface::testAttachBuffer()
     s->damage(QRect(0, 0, 10, 10));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(unmappedSpy.wait());
-    QVERIFY(!unmappedSpy.isEmpty());
+    QCOMPARE(mappedSpy.count(), 1);
     QCOMPARE(unmappedSpy.count(), 1);
     QVERIFY(damageSpy.isEmpty());
     QVERIFY(!serverSurface->isMapped());

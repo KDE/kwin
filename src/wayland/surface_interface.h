@@ -300,6 +300,10 @@ Q_SIGNALS:
     void scaleChanged(qint32);
     void transformChanged(KWaylandServer::OutputInterface::Transform);
     /**
+     * Emitted when the Surface becomes visible, i.e. a non-null buffer has been attached.
+     **/
+    void mapped();
+    /**
      * Emitted when the Surface removes its content
      **/
     void unmapped();
