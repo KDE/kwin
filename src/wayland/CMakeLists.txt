@@ -25,6 +25,7 @@ set(SERVER_LIB_SRCS
     idleinhibit_interface.cpp
     idleinhibit_interface_v1.cpp
     keyboard_interface.cpp
+    keyboard_shortcuts_inhibit_interface.cpp
     keystate_interface.cpp
     linuxdmabuf_v1_interface.cpp
     output_interface.cpp
@@ -242,6 +243,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME wlr-data-control-unstable-v1
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml
+    BASENAME keyboard-shortcuts-inhibit-unstable-v1
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -301,6 +307,7 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-keyboard-shortcuts-inhibit-unstable-v1.h
 )
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
@@ -363,6 +370,7 @@ set(SERVER_LIB_HEADERS
   idle_interface.h
   idleinhibit_interface.h
   keyboard_interface.h
+  keyboard_shortcuts_inhibit_interface.h
   keystate_interface.h
   linuxdmabuf_v1_interface.h
   output_interface.h

@@ -51,3 +51,16 @@ add_executable(testDataControlInterface test_datacontrol_interface.cpp ${DATACON
 target_link_libraries( testDataControlInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testDataControlInterface COMMAND testDataControlInterface)
 ecm_mark_as_test(testDataControlInterface)
+
+########################################################
+# Test Keyboard Shortcuts Inhibitor Interface
+########################################################
+ecm_add_qtwayland_client_protocol(KEYBOARD_SHORTCUTS_INHIBITOR_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml
+    BASENAME keyboard-shortcuts-inhibit-unstable-v1
+    )
+add_executable(testKeyboardShortcutsInhibitorInterface test_keyboard_shortcuts_inhibitor_interface.cpp ${KEYBOARD_SHORTCUTS_INHIBITOR_SRCS})
+target_link_libraries(testKeyboardShortcutsInhibitorInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testKeyboardShortcutsInhibitorInterface COMMAND testKeyboardShortcutsInhibitorInterface)
+ecm_mark_as_test(testKeyboardShortcutsInhibitorInterface)
+
