@@ -35,11 +35,6 @@ Kirigami.AbstractListItem {
     hoverEnabled: false
 
     RowLayout {
-        anchors {
-            left: parent.left
-            right: parent.right
-            margins: Kirigami.Units.smallSpacing
-        }
 
         Kirigami.Icon {
             id: itemIcon

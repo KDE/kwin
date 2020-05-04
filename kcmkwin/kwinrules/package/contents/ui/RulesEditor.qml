@@ -143,14 +143,10 @@ ScrollViewKCM {
                 width: ListView.view.width
 
                 RowLayout {
-                    anchors.fill: parent
-
                     Kirigami.Icon {
                         source: model.icon
                         Layout.preferredHeight: Kirigami.Units.iconSizes.smallMedium
                         Layout.preferredWidth: Kirigami.Units.iconSizes.smallMedium
-                        Layout.leftMargin: Kirigami.Units.largeSpacing
-                        Layout.rightMargin: Kirigami.Units.largeSpacing
                         Layout.alignment: Qt.AlignVCenter
                     }
                     QQC2.Label {
@@ -183,6 +179,8 @@ ScrollViewKCM {
                         opacity: propertyDelegate.hovered ? 1 : 0
                         onClicked: propertyDelegate.clicked()
                         Layout.preferredWidth: implicitWidth
+                        Layout.leftMargin: -Kirigami.Units.smallSpacing
+                        Layout.rightMargin: -Kirigami.Units.smallSpacing
                         Layout.alignment: Qt.AlignVCenter
                     }
                 }
