@@ -22,6 +22,8 @@ public:
 
     virtual void commit() = 0;
 
+    static SurfaceRole *get(SurfaceInterface *surface);
+
 private:
     QPointer<SurfaceInterface> m_surface;
 

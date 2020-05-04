@@ -1,280 +1,947 @@
 /*
-    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+
+#include "xdgshell_interface.h"
 #include "xdgshell_interface_p.h"
+
+#include "display.h"
+#include "output_interface.h"
+#include "seat_interface.h"
+
+#include <QTimer>
 
 namespace KWaylandServer
 {
 
-XdgShellInterface::Private::Private(XdgShellInterfaceVersion interfaceVersion, XdgShellInterface *q, Display *d, const wl_interface *interface, quint32 version)
-    : Global::Private(d, interface, version)
-    , interfaceVersion(interfaceVersion)
-    , q(q)
+// TODO: Reset the surface when it becomes unmapped.
+
+XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
+    : q(shell)
 {
 }
 
-void XdgShellInterface::Private::setupTimer(quint32 serial)
+static wl_client *clientFromXdgSurface(XdgSurfaceInterface *surface)
 {
-    QTimer *pingTimer = new QTimer();
-    pingTimer->setSingleShot(false);
-    pingTimer->setInterval(1000);
-    int attempt = 0;
-    connect(pingTimer, &QTimer::timeout, q, [this, serial, attempt]() mutable {
+    return XdgSurfaceInterfacePrivate::get(surface)->resource()->client();
+}
+
+void XdgShellInterfacePrivate::registerXdgSurface(XdgSurfaceInterface *surface)
+{
+    xdgSurfaces.insert(clientFromXdgSurface(surface), surface);
+}
+
+void XdgShellInterfacePrivate::unregisterXdgSurface(XdgSurfaceInterface *surface)
+{
+    xdgSurfaces.remove(clientFromXdgSurface(surface), surface);
+}
+
+/**
+ * @todo Whether the ping is delayed or has timed out is out of domain of the XdgShellInterface.
+ * Such matter must be handled somewhere else, e.g. XdgToplevelClient, not here!
+ */
+void XdgShellInterfacePrivate::registerPing(quint32 serial)
+{
+    QTimer *timer = new QTimer(q);
+    timer->setInterval(1000);
+    QObject::connect(timer, &QTimer::timeout, q, [this, serial, attempt = 0]() mutable {
         ++attempt;
         if (attempt == 1) {
             emit q->pingDelayed(serial);
-        } else {
-            emit q->pingTimeout(serial);
-            auto timerIt = pingTimers.find(serial);
-            if (timerIt != pingTimers.end()) {
-                delete timerIt.value();
-                pingTimers.erase(timerIt);
-            }
+            return;
         }
+        emit q->pingTimeout(serial);
+        delete pings.take(serial);
     });
-
-    pingTimers.insert(serial, pingTimer);
-    pingTimer->start();
+    pings.insert(serial, timer);
+    timer->start();
 }
 
-XdgShellInterface::XdgShellInterface(Private *d, QObject *parent)
-    : Global(d, parent)
+XdgShellInterfacePrivate *XdgShellInterfacePrivate::get(XdgShellInterface *shell)
+{
+    return shell->d.data();
+}
+
+void XdgShellInterfacePrivate::xdg_wm_base_destroy(Resource *resource)
+{
+    if (xdgSurfaces.contains(resource->client())) {
+        wl_resource_post_error(resource->handle, error_defunct_surfaces,
+                               "xdg_wm_base was destroyed before children");
+        return;
+    }
+    wl_resource_destroy(resource->handle);
+}
+
+void XdgShellInterfacePrivate::xdg_wm_base_create_positioner(Resource *resource, uint32_t id)
+{
+    wl_resource *positionerResource = wl_resource_create(resource->client(), &xdg_positioner_interface,
+                                                         resource->version(), id);
+    new XdgPositionerPrivate(positionerResource);
+}
+
+void XdgShellInterfacePrivate::xdg_wm_base_get_xdg_surface(Resource *resource, uint32_t id,
+                                                           ::wl_resource *surfaceResource)
+{
+    SurfaceInterface *surface = SurfaceInterface::get(surfaceResource);
+
+    if (surface->buffer()) {
+        wl_resource_post_error(resource->handle, XDG_SURFACE_ERROR_UNCONFIGURED_BUFFER,
+                               "xdg_surface must not have a buffer at creation");
+        return;
+    }
+
+    wl_resource *xdgSurfaceResource = wl_resource_create(resource->client(), &xdg_surface_interface,
+                                                         resource->version(), id);
+
+    XdgSurfaceInterface *xdgSurface = new XdgSurfaceInterface(q, surface, xdgSurfaceResource);
+    registerXdgSurface(xdgSurface);
+}
+
+void XdgShellInterfacePrivate::xdg_wm_base_pong(Resource *resource, uint32_t serial)
+{
+    Q_UNUSED(resource)
+    if (QTimer *timer = pings.take(serial)) {
+        delete timer;
+        emit q->pongReceived(serial);
+    }
+}
+
+XdgShellInterface::XdgShellInterface(Display *display, QObject *parent)
+    : QObject(parent)
+    , d(new XdgShellInterfacePrivate(this))
+{
+    d->display = display;
+    d->init(*display, 1);
+}
+
+XdgShellInterface::~XdgShellInterface()
 {
 }
 
-XdgShellInterface::~XdgShellInterface() = default;
-
-XdgShellSurfaceInterface *XdgShellInterface::getSurface(wl_resource *native)
+Display *XdgShellInterface::display() const
 {
-    Q_UNUSED(native)
+    return d->display;
+}
+
+quint32 XdgShellInterface::ping(XdgSurfaceInterface *surface)
+{
+    ::wl_client *client = clientFromXdgSurface(surface);
+
+    XdgShellInterfacePrivate::Resource *clientResource = d->resourceMap().value(client);
+    if (!clientResource)
+        return 0;
+
+    quint32 serial = d->display->nextSerial();
+    d->send_ping(clientResource->handle, serial);
+    d->registerPing(serial);
+
+    return serial;
+}
+
+XdgSurfaceInterfacePrivate::XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface)
+    : q(xdgSurface)
+{
+}
+
+void XdgSurfaceInterfacePrivate::commit()
+{
+    if (current.windowGeometry != next.windowGeometry) {
+        current.windowGeometry = next.windowGeometry;
+        emit q->windowGeometryChanged(current.windowGeometry);
+    }
+}
+
+XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface *surface)
+{
+    return surface->d.data();
+}
+
+void XdgSurfaceInterfacePrivate::xdg_surface_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
+    XdgShellInterfacePrivate::get(shell)->unregisterXdgSurface(q);
+    delete q;
+}
+
+void XdgSurfaceInterfacePrivate::xdg_surface_destroy(Resource *resource)
+{
+    if (toplevel || popup) {
+        qWarning() << "Tried to destroy xdg_surface before its role object";
+    }
+    wl_resource_destroy(resource->handle);
+}
+
+void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, uint32_t id)
+{
+    if (SurfaceRole::get(surface)) {
+        wl_resource_post_error(resource->handle, error_already_constructed,
+                               "xdg_surface has already been constructured");
+        return;
+    }
+
+    wl_resource *toplevelResource = wl_resource_create(resource->client(), &xdg_toplevel_interface,
+                                                       resource->version(), id);
+
+    toplevel = new XdgToplevelInterface(q, toplevelResource);
+    emit shell->toplevelCreated(toplevel);
+}
+
+void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint32_t id,
+                                                       ::wl_resource *parentResource,
+                                                       ::wl_resource *positionerResource)
+{
+    if (SurfaceRole::get(surface)) {
+        wl_resource_post_error(resource->handle, error_already_constructed,
+                               "xdg_surface has already been constructured");
+        return;
+    }
+
+    XdgPositioner positioner = XdgPositioner::get(positionerResource);
+    if (!positioner.isComplete()) {
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_wm_base::error_invalid_positioner,
+                               "xdg_positioner is incomplete");
+        return;
+    }
+
+    // Notice that the parent surface may be null, in which case it must be specified via
+    // "some other protocol", before committing the initial state. However, we don't have
+    // support for any such protocol right now.
+    XdgSurfaceInterface *parentSurface = XdgSurfaceInterface::get(parentResource);
+    if (!parentSurface) {
+        wl_resource_post_error(resource->handle, -1, "parent surface is not set");
+        return;
+    }
+
+    wl_resource *popupResource = wl_resource_create(resource->client(), &xdg_popup_interface,
+                                                    resource->version(), id);
+
+    popup = new XdgPopupInterface(q, parentSurface, positioner, popupResource);
+    emit shell->popupCreated(popup);
+}
+
+void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resource,
+                                                                 int32_t x, int32_t y,
+                                                                 int32_t width, int32_t height)
+{
+    if (!toplevel && !popup) {
+        wl_resource_post_error(resource->handle, error_not_constructed,
+                               "xdg_surface must have a role");
+        return;
+    }
+
+    if (width < 1 || height < 1) {
+        wl_resource_post_error(resource->handle, -1, "invalid window geometry size");
+        return;
+    }
+
+    next.windowGeometry = QRect(x, y, width, height);
+}
+
+void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
+{
+    Q_UNUSED(resource)
+    emit q->configureAcknowledged(serial);
+}
+
+XdgSurfaceInterface::XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface,
+                                         ::wl_resource *resource)
+    : d(new XdgSurfaceInterfacePrivate(this))
+{
+    d->shell = shell;
+    d->surface = surface;
+    d->init(resource);
+}
+
+XdgSurfaceInterface::~XdgSurfaceInterface()
+{
+}
+
+XdgToplevelInterface *XdgSurfaceInterface::toplevel() const
+{
+    return d->toplevel;
+}
+
+XdgPopupInterface *XdgSurfaceInterface::popup() const
+{
+    return d->popup;
+}
+
+XdgShellInterface *XdgSurfaceInterface::shell() const
+{
+    return d->shell;
+}
+
+SurfaceInterface *XdgSurfaceInterface::surface() const
+{
+    return d->surface;
+}
+
+bool XdgSurfaceInterface::isConfigured() const
+{
+    return d->isConfigured;
+}
+
+QRect XdgSurfaceInterface::windowGeometry() const
+{
+    return d->current.windowGeometry;
+}
+
+XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
+{
+    if (auto surface = QtWaylandServer::xdg_surface::Resource::fromResource(resource))
+        return static_cast<XdgSurfaceInterfacePrivate *>(surface->object())->q;
     return nullptr;
 }
 
-XdgShellInterfaceVersion XdgShellInterface::interfaceVersion() const
-{
-    Q_D();
-    return d->interfaceVersion;
-}
-
-quint32 XdgShellInterface::ping(XdgShellSurfaceInterface * surface)
-{
-    return d_func()->ping(surface);
-}
-
-XdgShellInterface::Private *XdgShellInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
-}
-
-XdgShellSurfaceInterface::Private::Private(XdgShellInterfaceVersion interfaceVersion, XdgShellSurfaceInterface *q, Global *c, SurfaceInterface *surface, wl_resource *parentResource, const wl_interface *interface, const void *implementation)
-    : Resource::Private(q, c, parentResource, interface, implementation)
-    , GenericShellSurface<XdgShellSurfaceInterface>(q, surface)
-    , interfaceVersion(interfaceVersion)
+XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel,
+                                                         XdgSurfaceInterface *surface)
+    : SurfaceRole(surface->surface())
+    , q(toplevel)
+    , xdgSurface(surface)
 {
 }
 
-XdgShellSurfaceInterface::Private::~Private() = default;
+void XdgToplevelInterfacePrivate::commit()
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
 
-XdgShellSurfaceInterface::XdgShellSurfaceInterface(Private *p)
-    : Resource(p)
+    if (xdgSurfacePrivate->isConfigured) {
+        xdgSurfacePrivate->commit();
+    } else {
+        emit q->initializeRequested();
+        return;
+    }
+
+    if (current.minimumSize != next.minimumSize) {
+        current.minimumSize = next.minimumSize;
+        emit q->minimumSizeChanged(current.minimumSize);
+    }
+    if (current.maximumSize != next.maximumSize) {
+        current.maximumSize = next.maximumSize;
+        emit q->maximumSizeChanged(current.maximumSize);
+    }
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete q;
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource,
+                                                          ::wl_resource *parentResource)
+{
+    Q_UNUSED(resource)
+    XdgToplevelInterface *parent = XdgToplevelInterface::get(parentResource);
+    if (parentXdgToplevel == parent) {
+        return;
+    }
+    parentXdgToplevel = parent;
+    emit q->parentXdgToplevelChanged();
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_title(Resource *resource, const QString &title)
+{
+    Q_UNUSED(resource)
+    if (windowTitle == title) {
+        return;
+    }
+    windowTitle = title;
+    emit q->windowTitleChanged(title);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_app_id(Resource *resource, const QString &app_id)
+{
+    Q_UNUSED(resource)
+    if (windowClass == app_id) {
+        return;
+    }
+    windowClass = app_id;
+    emit q->windowClassChanged(app_id);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_show_window_menu(Resource *resource, ::wl_resource *seatResource,
+                                                                uint32_t serial, int32_t x, int32_t y)
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+
+    if (!xdgSurfacePrivate->isConfigured) {
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed,
+                               "surface has not been configured yet");
+        return;
+    }
+
+    SeatInterface *seat = SeatInterface::get(seatResource);
+    emit q->windowMenuRequested(seat, QPoint(x, y), serial);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_move(Resource *resource, ::wl_resource *seatResource, uint32_t serial)
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+
+    if (!xdgSurfacePrivate->isConfigured) {
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed,
+                               "surface has not been configured yet");
+        return;
+    }
+
+    SeatInterface *seat = SeatInterface::get(seatResource);
+    emit q->moveRequested(seat, serial);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_resource *seatResource,
+                                                      uint32_t serial, uint32_t xdgEdges)
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+
+    if (!xdgSurfacePrivate->isConfigured) {
+        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_surface::error_not_constructed,
+                               "surface has not been configured yet");
+        return;
+    }
+
+    SeatInterface *seat = SeatInterface::get(seatResource);
+
+    Qt::Edges edges;
+    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_TOP) {
+        edges |= Qt::TopEdge;
+    }
+    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_RIGHT) {
+        edges |= Qt::RightEdge;
+    }
+    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_BOTTOM) {
+        edges |= Qt::BottomEdge;
+    }
+    if (xdgEdges & XDG_TOPLEVEL_RESIZE_EDGE_LEFT) {
+        edges |= Qt::LeftEdge;
+    }
+
+    emit q->resizeRequested(seat, edges, serial);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, int32_t width, int32_t height)
+{
+    if (width < 0 || height < 0) {
+        wl_resource_post_error(resource->handle, -1, "width and height must be positive or zero");
+        return;
+    }
+    next.maximumSize = QSize(width, height);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, int32_t width, int32_t height)
+{
+    if (width < 0 || height < 0) {
+        wl_resource_post_error(resource->handle, -1, "width and height must be positive or zero");
+        return;
+    }
+    next.minimumSize = QSize(width, height);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_maximized(Resource *resource)
+{
+    Q_UNUSED(resource)
+    emit q->maximizeRequested();
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_unset_maximized(Resource *resource)
+{
+    Q_UNUSED(resource)
+    emit q->unmaximizeRequested();
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_fullscreen(Resource *resource, ::wl_resource *outputResource)
+{
+    Q_UNUSED(resource)
+    OutputInterface *output = OutputInterface::get(outputResource);
+    emit q->fullscreenRequested(output);
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_unset_fullscreen(Resource *resource)
+{
+    Q_UNUSED(resource)
+    emit q->unfullscreenRequested();
+}
+
+void XdgToplevelInterfacePrivate::xdg_toplevel_set_minimized(Resource *resource)
+{
+    Q_UNUSED(resource)
+    emit q->minimizeRequested();
+}
+
+XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(XdgToplevelInterface *toplevel)
+{
+    return toplevel->d.data();
+}
+
+XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(wl_resource *resource)
+{
+    if (auto toplevel = QtWaylandServer::xdg_toplevel::Resource::fromResource(resource))
+        return static_cast<XdgToplevelInterfacePrivate *>(toplevel->object());
+    return nullptr;
+}
+
+XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *surface, ::wl_resource *resource)
+    : d(new XdgToplevelInterfacePrivate(this, surface))
+{
+    d->init(resource);
+}
+
+XdgToplevelInterface::~XdgToplevelInterface()
 {
 }
 
-XdgShellSurfaceInterface::~XdgShellSurfaceInterface() = default;
-
-XdgShellInterfaceVersion XdgShellSurfaceInterface::interfaceVersion() const
+XdgShellInterface *XdgToplevelInterface::shell() const
 {
-    Q_D();
-    return d->interfaceVersion;
+    return d->xdgSurface->shell();
 }
 
-quint32 XdgShellSurfaceInterface::configure(States states, const QSize &size)
+XdgSurfaceInterface *XdgToplevelInterface::xdgSurface() const
 {
-    Q_D();
-    return d->configure(states, size);
+    return d->xdgSurface;
 }
 
-bool XdgShellSurfaceInterface::isConfigurePending() const
+SurfaceInterface *XdgToplevelInterface::surface() const
 {
-    Q_D();
-    return !d->configureSerials.isEmpty();
+    return d->xdgSurface->surface();
 }
 
-SurfaceInterface *XdgShellSurfaceInterface::surface() const
+bool XdgToplevelInterface::isConfigured() const
 {
-    Q_D();
-    return d->surface;
+    return d->xdgSurface->isConfigured();
 }
 
-QString XdgShellSurfaceInterface::title() const
+XdgToplevelInterface *XdgToplevelInterface::parentXdgToplevel() const
 {
-    Q_D();
-    return d->title;
+    return d->parentXdgToplevel;
 }
 
-QByteArray XdgShellSurfaceInterface::windowClass() const
+QString XdgToplevelInterface::windowTitle() const
 {
-    Q_D();
+    return d->windowTitle;
+}
+
+QString XdgToplevelInterface::windowClass() const
+{
     return d->windowClass;
 }
 
-bool XdgShellSurfaceInterface::isTransient() const
+QSize XdgToplevelInterface::minimumSize() const
 {
-    Q_D();
-    return !d->parent.isNull();
+    return d->current.minimumSize.isEmpty() ? QSize(0, 0) : d->current.minimumSize;
 }
 
-QPointer<XdgShellSurfaceInterface> XdgShellSurfaceInterface::transientFor() const
+QSize XdgToplevelInterface::maximumSize() const
 {
-    Q_D();
-    return d->parent;
+    return d->current.maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->current.maximumSize;
 }
 
-void XdgShellSurfaceInterface::close()
+quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)
 {
-    Q_D();
-    d->close();
-}
+    // Note that the states listed in the configure event must be an array of uint32_t.
 
-QRect XdgShellSurfaceInterface::windowGeometry() const
-{
-    Q_D();
-    return d->windowGeometry();
-}
+    uint32_t statesData[4] = { 0 };
+    int i = 0;
 
-QSize XdgShellSurfaceInterface::minimumSize() const
-{
-    Q_D();
-    return d->minimumSize();
-}
-
-QSize XdgShellSurfaceInterface::maximumSize() const
-{
-    Q_D();
-    return d->maximumSize();
-}
-
-XdgShellSurfaceInterface::Private *XdgShellSurfaceInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
-}
-
-XdgShellPopupInterface::Private::Private(XdgShellInterfaceVersion interfaceVersion, XdgShellPopupInterface *q, XdgShellInterface *c, SurfaceInterface *surface, wl_resource *parentResource, const wl_interface *interface, const void *implementation)
-    : Resource::Private(q, c, parentResource, interface, implementation)
-    , GenericShellSurface<XdgShellPopupInterface>(q, surface)
-    , interfaceVersion(interfaceVersion)
-{
-}
-
-XdgShellPopupInterface::Private::~Private() = default;
-
-XdgShellPopupInterface::XdgShellPopupInterface(Private *p)
-    : Resource(p)
-{
-}
-
-XdgShellPopupInterface::~XdgShellPopupInterface() = default;
-
-SurfaceInterface *XdgShellPopupInterface::surface() const
-{
-    Q_D();
-    return d->surface;
-}
-
-QPointer<SurfaceInterface> XdgShellPopupInterface::transientFor() const
-{
-    Q_D();
-    return d->parent;
-}
-
-QSize XdgShellPopupInterface::initialSize() const
-{
-    Q_D();
-    return d->initialSize;
-}
-
-QPoint XdgShellPopupInterface::transientOffset() const
-{
-    QRect rect = anchorRect();
-    const QPoint center = rect.isEmpty() ? rect.topLeft() : rect.center();
-    rect = rect.adjusted(0,0,1,1); //compensate for the stupid QRect::right +1 fiasco
-
-    switch(anchorEdge()) {
-        case Qt::TopEdge | Qt::LeftEdge:
-            return rect.topLeft();
-        case Qt::TopEdge:
-            return QPoint(center.x(), rect.y());
-        case Qt::TopEdge | Qt::RightEdge:
-            return rect.topRight();
-        case Qt::RightEdge:
-            return QPoint(rect.right(), center.y());
-        case Qt::BottomEdge | Qt::RightEdge:
-            return rect.bottomRight();
-        case Qt::BottomEdge:
-                return QPoint(center.x(), rect.bottom());
-        case Qt::BottomEdge | Qt::LeftEdge:
-            return rect.bottomLeft();
-        case Qt::LeftEdge:
-                return QPoint(rect.left(), center.y());
-        default:
-            return center;
+    if (states & State::MaximizedHorizontal && states & State::MaximizedVertical) {
+        statesData[i++] = QtWaylandServer::xdg_toplevel::state_maximized;
     }
-    Q_UNREACHABLE();
+    if (states & State::FullScreen) {
+        statesData[i++] = QtWaylandServer::xdg_toplevel::state_fullscreen;
+    }
+    if (states & State::Resizing) {
+        statesData[i++] = QtWaylandServer::xdg_toplevel::state_resizing;
+    }
+    if (states & State::Activated) {
+        statesData[i++] = QtWaylandServer::xdg_toplevel::state_activated;
+    }
+
+    const QByteArray xdgStates = QByteArray::fromRawData(reinterpret_cast<char *>(statesData),
+                                                         sizeof(uint32_t) * i);
+    const quint32 serial = xdgSurface()->shell()->display()->nextSerial();
+
+    d->send_configure(size.width(), size.height(), xdgStates);
+
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface());
+    xdgSurfacePrivate->send_configure(serial);
+    xdgSurfacePrivate->isConfigured = true;
+
+    return serial;
 }
 
-QRect XdgShellPopupInterface::anchorRect() const
+void XdgToplevelInterface::sendClose()
 {
-    Q_D();
+    d->send_close();
+}
+
+XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
+{
+    if (auto toplevel = QtWaylandServer::xdg_toplevel::Resource::fromResource(resource)) {
+        return static_cast<XdgToplevelInterfacePrivate *>(toplevel->object())->q;
+    }
+    return nullptr;
+}
+
+XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup,
+                                                   XdgSurfaceInterface *surface)
+    : SurfaceRole(surface->surface())
+    , q(popup)
+    , xdgSurface(surface)
+{
+}
+
+void XdgPopupInterfacePrivate::commit()
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+
+    if (xdgSurfacePrivate->isConfigured) {
+        xdgSurfacePrivate->commit();
+    } else {
+        emit q->initializeRequested();
+    }
+}
+
+void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete q;
+}
+
+void XdgPopupInterfacePrivate::xdg_popup_destroy(Resource *resource)
+{
+    // TODO: We need to post an error with the code XDG_WM_BASE_ERROR_NOT_THE_TOPMOST_POPUP if
+    // this popup is not the topmost grabbing popup. We most likely need a grab abstraction or
+    // something to determine whether the given popup has an explicit grab.
+    wl_resource_destroy(resource->handle);
+}
+
+void XdgPopupInterfacePrivate::xdg_popup_grab(Resource *resource, ::wl_resource *seatHandle, uint32_t serial)
+{
+    if (xdgSurface->surface()->buffer()) {
+        wl_resource_post_error(resource->handle, error_invalid_grab,
+                               "xdg_surface is already mapped");
+        return;
+    }
+    SeatInterface *seat = SeatInterface::get(seatHandle);
+    emit q->grabRequested(seat, serial);
+}
+
+XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface,
+                                     XdgSurfaceInterface *parentSurface,
+                                     const XdgPositioner &positioner,
+                                     ::wl_resource *resource)
+    : d(new XdgPopupInterfacePrivate(this, surface))
+{
+    d->parentXdgSurface = parentSurface;
+    d->positioner = positioner;
+    d->init(resource);
+}
+
+XdgPopupInterface::~XdgPopupInterface()
+{
+}
+
+XdgSurfaceInterface *XdgPopupInterface::parentXdgSurface() const
+{
+    return d->parentXdgSurface;
+}
+
+XdgSurfaceInterface *XdgPopupInterface::xdgSurface() const
+{
+    return d->xdgSurface;
+}
+
+SurfaceInterface *XdgPopupInterface::surface() const
+{
+    return d->xdgSurface->surface();
+}
+
+bool XdgPopupInterface::isConfigured() const
+{
+    return d->xdgSurface->isConfigured();
+}
+
+XdgPositioner XdgPopupInterface::positioner() const
+{
+    return d->positioner;
+}
+
+quint32 XdgPopupInterface::sendConfigure(const QRect &rect)
+{
+    const quint32 serial = xdgSurface()->shell()->display()->nextSerial();
+
+    d->send_configure(rect.x(), rect.y(), rect.width(), rect.height());
+
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface());
+    xdgSurfacePrivate->send_configure(serial);
+    xdgSurfacePrivate->isConfigured = true;
+
+    return serial;
+}
+
+void XdgPopupInterface::sendPopupDone()
+{
+    d->send_popup_done();
+}
+
+XdgPopupInterface *XdgPopupInterface::get(::wl_resource *resource)
+{
+    if (auto popup = QtWaylandServer::xdg_popup::Resource::fromResource(resource))
+        return static_cast<XdgPopupInterfacePrivate *>(popup->object())->q;
+    return nullptr;
+}
+
+XdgPositionerPrivate::XdgPositionerPrivate(::wl_resource *resource)
+    : data(new XdgPositionerData)
+{
+    init(resource);
+}
+
+XdgPositionerPrivate *XdgPositionerPrivate::get(wl_resource *resource)
+{
+    if (auto positioner = QtWaylandServer::xdg_positioner::Resource::fromResource(resource))
+        return static_cast<XdgPositionerPrivate *>(positioner->object());
+    return nullptr;
+}
+
+void XdgPositionerPrivate::xdg_positioner_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete this;
+}
+
+void XdgPositionerPrivate::xdg_positioner_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_size(Resource *resource, int32_t width, int32_t height)
+{
+    if (width < 1 || height < 1) {
+        wl_resource_post_error(resource->handle, error_invalid_input,
+                               "width and height must be positive and non-zero");
+        return;
+    }
+    data->size = QSize(width, height);
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_anchor_rect(Resource *resource, int32_t x, int32_t y,
+                                                   int32_t width, int32_t height)
+{
+    if (width < 1 || height < 1) {
+        wl_resource_post_error(resource->handle, error_invalid_input,
+                               "width and height must be positive and non-zero");
+        return;
+    }
+    data->anchorRect = QRect(x, y, width, height);
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_anchor(Resource *resource, uint32_t anchor)
+{
+    if (anchor > anchor_bottom_right) {
+        wl_resource_post_error(resource->handle, error_invalid_input, "unknown anchor point");
+        return;
+    }
+
+    switch (anchor) {
+    case anchor_top:
+        data->anchorEdges = Qt::TopEdge;
+        break;
+    case anchor_top_right:
+        data->anchorEdges = Qt::TopEdge | Qt::RightEdge;
+        break;
+    case anchor_right:
+        data->anchorEdges = Qt::RightEdge;
+        break;
+    case anchor_bottom_right:
+        data->anchorEdges = Qt::BottomEdge | Qt::RightEdge;
+        break;
+    case anchor_bottom:
+        data->anchorEdges = Qt::BottomEdge;
+        break;
+    case anchor_bottom_left:
+        data->anchorEdges = Qt::BottomEdge | Qt::LeftEdge;
+        break;
+    case anchor_left:
+        data->anchorEdges = Qt::LeftEdge;
+        break;
+    case anchor_top_left:
+        data->anchorEdges = Qt::TopEdge | Qt::LeftEdge;
+        break;
+    default:
+        data->anchorEdges = Qt::Edges();
+        break;
+    }
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_gravity(Resource *resource, uint32_t gravity)
+{
+    if (gravity > gravity_bottom_right) {
+        wl_resource_post_error(resource->handle, error_invalid_input, "unknown gravity direction");
+        return;
+    }
+
+    switch (gravity) {
+    case gravity_top:
+        data->gravityEdges = Qt::TopEdge;
+        break;
+    case gravity_top_right:
+        data->gravityEdges = Qt::TopEdge | Qt::RightEdge;
+        break;
+    case gravity_right:
+        data->gravityEdges = Qt::RightEdge;
+        break;
+    case gravity_bottom_right:
+        data->gravityEdges = Qt::BottomEdge | Qt::RightEdge;
+        break;
+    case gravity_bottom:
+        data->gravityEdges = Qt::BottomEdge;
+        break;
+    case gravity_bottom_left:
+        data->gravityEdges = Qt::BottomEdge | Qt::LeftEdge;
+        break;
+    case gravity_left:
+        data->gravityEdges = Qt::LeftEdge;
+        break;
+    case gravity_top_left:
+        data->gravityEdges = Qt::TopEdge | Qt::LeftEdge;
+        break;
+    default:
+        data->gravityEdges = Qt::Edges();
+        break;
+    }
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_constraint_adjustment(Resource *resource,
+                                                                    uint32_t constraint_adjustment)
+{
+    Q_UNUSED(resource)
+
+    if (constraint_adjustment & constraint_adjustment_flip_x) {
+        data->flipConstraintAdjustments |= Qt::Horizontal;
+    } else {
+        data->flipConstraintAdjustments &= ~Qt::Horizontal;
+    }
+
+    if (constraint_adjustment & constraint_adjustment_flip_y) {
+        data->flipConstraintAdjustments |= Qt::Vertical;
+    } else {
+        data->flipConstraintAdjustments &= ~Qt::Vertical;
+    }
+
+    if (constraint_adjustment & constraint_adjustment_slide_x) {
+        data->slideConstraintAdjustments |= Qt::Horizontal;
+    } else {
+        data->slideConstraintAdjustments &= ~Qt::Horizontal;
+    }
+
+    if (constraint_adjustment & constraint_adjustment_slide_y) {
+        data->slideConstraintAdjustments |= Qt::Vertical;
+    } else {
+        data->slideConstraintAdjustments &= ~Qt::Vertical;
+    }
+
+    if (constraint_adjustment & constraint_adjustment_resize_x) {
+        data->resizeConstraintAdjustments |= Qt::Horizontal;
+    } else {
+        data->resizeConstraintAdjustments &= ~Qt::Horizontal;
+    }
+
+    if (constraint_adjustment & constraint_adjustment_resize_y) {
+        data->resizeConstraintAdjustments |= Qt::Vertical;
+    } else {
+        data->resizeConstraintAdjustments &= ~Qt::Vertical;
+    }
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_offset(Resource *resource, int32_t x, int32_t y)
+{
+    Q_UNUSED(resource)
+    data->offset = QPoint(x, y);
+}
+
+XdgPositioner::XdgPositioner()
+    : d(new XdgPositionerData)
+{
+}
+
+XdgPositioner::XdgPositioner(const XdgPositioner &other)
+    : d(other.d)
+{
+}
+
+XdgPositioner::~XdgPositioner()
+{
+}
+
+XdgPositioner &XdgPositioner::operator=(const XdgPositioner &other)
+{
+    d = other.d;
+    return *this;
+}
+
+bool XdgPositioner::isComplete() const
+{
+    return d->size.isValid() && d->anchorRect.isValid();
+}
+
+Qt::Orientations XdgPositioner::slideConstraintAdjustments() const
+{
+    return d->slideConstraintAdjustments;
+}
+
+Qt::Orientations XdgPositioner::flipConstraintAdjustments() const
+{
+    return d->flipConstraintAdjustments;
+}
+
+Qt::Orientations XdgPositioner::resizeConstraintAdjustments() const
+{
+    return d->resizeConstraintAdjustments;
+}
+
+Qt::Edges XdgPositioner::anchorEdges() const
+{
+    return d->anchorEdges;
+}
+
+Qt::Edges XdgPositioner::gravityEdges() const
+{
+    return d->gravityEdges;
+}
+
+QSize XdgPositioner::size() const
+{
+    return d->size;
+}
+
+QRect XdgPositioner::anchorRect() const
+{
     return d->anchorRect;
 }
 
-Qt::Edges XdgShellPopupInterface::anchorEdge() const
+QPoint XdgPositioner::offset() const
 {
-    Q_D();
-    return d->anchorEdge;
+    return d->offset;
 }
 
-Qt::Edges XdgShellPopupInterface::gravity() const
+XdgPositioner XdgPositioner::get(::wl_resource *resource)
 {
-    Q_D();
-    return d->gravity;
+    XdgPositionerPrivate *xdgPositionerPrivate = XdgPositionerPrivate::get(resource);
+    if (xdgPositionerPrivate)
+        return XdgPositioner(xdgPositionerPrivate->data);
+    return XdgPositioner();
 }
 
-QPoint XdgShellPopupInterface::anchorOffset() const
+XdgPositioner::XdgPositioner(const QSharedDataPointer<XdgPositionerData> &data)
+    : d(data)
 {
-    Q_D();
-    return d->anchorOffset;
 }
 
-PositionerConstraints XdgShellPopupInterface::constraintAdjustments() const
-{
-    Q_D();
-    return d->constraintAdjustments;
-}
-
-QRect XdgShellPopupInterface::windowGeometry() const
-{
-    Q_D();
-    return d->windowGeometry();
-}
-
-void XdgShellPopupInterface::popupDone()
-{
-    Q_D();
-    return d->popupDone();
-}
-
-quint32 XdgShellPopupInterface::configure(const QRect &rect)
-{
-    Q_D();
-    return d->configure(rect);
-}
-
-XdgShellPopupInterface::Private *XdgShellPopupInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
-}
-
-}
+} // namespace KWaylandServer

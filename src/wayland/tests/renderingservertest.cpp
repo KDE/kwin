@@ -79,7 +79,7 @@ public:
     explicit CompositorWindow(QWidget *parent = nullptr);
     virtual ~CompositorWindow();
 
-    void surfaceCreated(KWaylandServer::XdgShellSurfaceInterface *surface);
+    void surfaceCreated(KWaylandServer::XdgToplevelInterface *surface);
 
     void setSeat(const QPointer<KWaylandServer::SeatInterface> &seat);
 
@@ -94,7 +94,7 @@ protected:
 
 private:
     void updateFocus();
-    QList<KWaylandServer::XdgShellSurfaceInterface *> m_stackingOrder;
+    QList<KWaylandServer::XdgToplevelInterface *> m_stackingOrder;
     QPointer<KWaylandServer::SeatInterface> m_seat;
 };
 
@@ -106,13 +106,13 @@ CompositorWindow::CompositorWindow(QWidget *parent)
 
 CompositorWindow::~CompositorWindow() = default;
 
-void CompositorWindow::surfaceCreated(KWaylandServer::XdgShellSurfaceInterface *surface)
+void CompositorWindow::surfaceCreated(KWaylandServer::XdgToplevelInterface *surface)
 {
     using namespace KWaylandServer;
-    surface->configure(XdgShellSurfaceInterface::States());
+    surface->sendConfigure(QSize(), XdgToplevelInterface::States());
     m_stackingOrder << surface;
     connect(surface->surface(), &SurfaceInterface::damaged, this, static_cast<void (CompositorWindow::*)()>(&CompositorWindow::update));
-    connect(surface, &XdgShellSurfaceInterface::destroyed, this,
+    connect(surface, &XdgToplevelInterface::destroyed, this,
         [surface, this] {
             m_stackingOrder.removeAll(surface);
             updateFocus();
@@ -129,7 +129,7 @@ void CompositorWindow::updateFocus()
         return;
     }
     auto it = std::find_if(m_stackingOrder.constBegin(), m_stackingOrder.constEnd(),
-        [](XdgShellSurfaceInterface *toplevel) {
+        [](XdgToplevelInterface *toplevel) {
             return toplevel->surface()->isMapped();
         }
     );
@@ -243,8 +243,7 @@ int main(int argc, char **argv)
     ddm->create();
     CompositorInterface *compositor = display.createCompositor(&display);
     compositor->create();
-    XdgShellInterface *shell = display.createXdgShell(XdgShellInterfaceVersion::Stable);
-    shell->create();
+    XdgShellInterface *shell = display.createXdgShell();
     display.createShm();
     OutputInterface *output = display.createOutput(&display);
     output->setPhysicalSize(QSize(269, 202));
@@ -263,7 +262,7 @@ int main(int argc, char **argv)
     compositorWindow.setMaximumSize(windowSize);
     compositorWindow.setGeometry(QRect(QPoint(0, 0), windowSize));
     compositorWindow.show();
-    QObject::connect(shell, &XdgShellInterface::surfaceCreated, &compositorWindow, &CompositorWindow::surfaceCreated);
+    QObject::connect(shell, &XdgShellInterface::toplevelCreated, &compositorWindow, &CompositorWindow::surfaceCreated);
 
     // start XWayland
     if (parser.isSet(xwaylandOption)) {

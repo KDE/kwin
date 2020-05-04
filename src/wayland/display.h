@@ -72,7 +72,7 @@ class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class XdgOutputManagerInterface;
-class XdgDecorationManagerInterface;
+class XdgDecorationManagerV1Interface;
 class EglStreamControllerInterface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
@@ -210,7 +210,7 @@ public:
      *
      * @since 5.25
      **/
-    XdgShellInterface *createXdgShell(const XdgShellInterfaceVersion &version, QObject *parent = nullptr);
+    XdgShellInterface *createXdgShell(QObject *parent = nullptr);
 
     /**
      * Creates the RelativePointerManagerInterface in interface @p version
@@ -299,7 +299,7 @@ public:
      * @return the created manager
      * @since 5.54
      */
-    XdgDecorationManagerInterface *createXdgDecorationManager(XdgShellInterface *shellInterface, QObject *parent = nullptr);
+    XdgDecorationManagerV1Interface *createXdgDecorationManagerV1(QObject *parent = nullptr);
 
     /**
      * Creates the EglStreamControllerInterface

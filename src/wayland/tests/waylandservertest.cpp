@@ -77,8 +77,8 @@ int main(int argc, char **argv)
     display.createShm();
     CompositorInterface *compositor = display.createCompositor(&display);
     compositor->create();
-    XdgShellInterface *shell = display.createXdgShell(XdgShellInterfaceVersion::Stable);
-    shell->create();
+    XdgShellInterface *shell = display.createXdgShell();
+    Q_UNUSED(shell)
     OutputInterface *output = display.createOutput(&display);
     output->setPhysicalSize(QSize(10, 10));
     output->addMode(QSize(1024, 768));

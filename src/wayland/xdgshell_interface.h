@@ -1,509 +1,533 @@
 /*
-    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef KWAYLAND_SERVER_XDGSHELL_INTERFACE_H
-#define KWAYLAND_SERVER_XDGSHELL_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
-
-#include <QSize>
+#pragma once
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
+#include <QObject>
+#include <QSharedDataPointer>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
 
+class Display;
 class OutputInterface;
 class SeatInterface;
 class SurfaceInterface;
-class XdgShellPopupInterface;
-class XdgShellSurfaceInterface;
-template <typename T>
-class GenericShellSurface;
+class XdgShellInterfacePrivate;
+class XdgSurfaceInterfacePrivate;
+class XdgToplevelInterfacePrivate;
+class XdgPopupInterfacePrivate;
+class XdgPositionerData;
+class XdgToplevelInterface;
+class XdgPopupInterface;
+class XdgSurfaceInterface;
 
 /**
- * Enum describing the different InterfaceVersion encapsulated in this implementation.
+ * The XdgShellInterface class represents an extension for destrop-style user interfaces.
  *
- * @since 5.25
- **/
-enum class XdgShellInterfaceVersion
-{
-    /**
-     * xdg_shell (unstable v5)
-     **/
-    UnstableV5,
-    /**
-     * zxdg_shell_v6 (unstable v6)
-     * @since 5.39
-     **/
-    UnstableV6,
-    /**
-      xdg_wm_base (stable)
-      @since 5.48
-      */
-    Stable
-};
-
-/**
- * Flags describing how a popup should be reposition if constrained
- * @since 5.39
+ * The XdgShellInterface class provides a way for a client to extend a regular Wayland surface
+ * with functionality required to construct user interface elements, e.g. toplevel windows or
+ * menus.
+ *
+ * XdgShellInterface corresponds to the WaylandInterface \c xdg_wm_base.
+ *
+ * \since 5.20
  */
-enum class PositionerConstraint {
-    /**
-     * Slide the popup on the X axis until there is room
-     */
-    SlideX = 1 << 0,
-    /**
-     * Slide the popup on the Y axis until there is room
-     */
-    SlideY = 1 << 1,
-    /**
-     * Invert the anchor and gravity on the X axis
-     */
-    FlipX = 1 << 2,
-    /**
-     * Invert the anchor and gravity on the Y axis
-     */
-    FlipY = 1 << 3,
-    /**
-     * Resize the popup in the X axis
-     */
-    ResizeX = 1 << 4,
-    /**
-     * Resize the popup in the Y axis
-     */
-    ResizeY = 1 << 5
-};
-
-Q_DECLARE_FLAGS(PositionerConstraints, PositionerConstraint)
-
-/**
- *
- * @since 5.25
- **/
-class KWAYLANDSERVER_EXPORT XdgShellInterface : public Global
+class KWAYLANDSERVER_EXPORT XdgShellInterface : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual ~XdgShellInterface();
-
     /**
-     * @returns The interface version used by this XdgShellInterface
-     **/
-    XdgShellInterfaceVersion interfaceVersion() const;
-
-    /**
-     * @returns The XdgShellSurfaceInterface for the @p native resource.
-     **/
-    //TODO KF6 make virtual
-    XdgShellSurfaceInterface *getSurface(wl_resource *native);
-
-    /**
-     * Confirm the client is still alive and responding
-     *
-     * Will result in pong being emitted
-     *
-     * @returns unique identifier for this request
-     * @since 5.39
+     * Constructs an XdgShellInterface object with the given wayland display \a display.
      */
-    quint32 ping(XdgShellSurfaceInterface * surface);
+    XdgShellInterface(Display *display, QObject *parent = nullptr);
+    /**
+     * Destructs the XdgShellInterface object.
+     */
+    ~XdgShellInterface() override;
+
+    /**
+     * Returns the wayland display of the XdgShellInterface.
+     */
+    Display *display() const;
+
+    /**
+     * Sends a ping event to the client with the given xdg-surface \a surface. If the client
+     * replies to the event within a reasonable amount of time, pongReceived signal will be
+     * emitted.
+     */
+    quint32 ping(XdgSurfaceInterface *surface);
 
 Q_SIGNALS:
-    void surfaceCreated(KWaylandServer::XdgShellSurfaceInterface *surface);
+    /**
+     * This signal is emitted when a new XdgToplevelInterface object is created.
+     */
+    void toplevelCreated(XdgToplevelInterface *toplevel);
 
     /**
-     * Emitted whenever a new popup got created.
-     *
-     * A popup only gets created in response to an action on the @p seat.
-     *
-     *
-     * @param surface The popup xdg shell surface which got created
-     * @param seat The seat on which an action triggered the popup
-     * @param serial The serial of the action on the seat
-     *
-     * XDGV5 only
-     * Use both xdgPopupCreated and XdgShellPopupInterface::grabbed to cover both XDGV5 and XDGV6
-     **/
-
-    void popupCreated(KWaylandServer::XdgShellPopupInterface *surface, KWaylandServer::SeatInterface *seat, quint32 serial);
-
-    /*
-     * Emitted whenever a new popup gets created.
-     *
-     * @param surface The popup xdg shell surface which got created
-     * @since 5.39
+     * This signal is emitted when a new XdgPopupInterface object is created.
      */
-    void xdgPopupCreated(KWaylandServer::XdgShellPopupInterface *surface);
+    void popupCreated(XdgPopupInterface *popup);
 
-    /*
-     * Emitted in response to a ping request
-     *
-     * @param serial unique identifier for the request
-     * @since 5.39
+    /**
+     * This signal is emitted when the client has responded to a ping event with serial \a serial.
      */
     void pongReceived(quint32 serial);
 
-    /*
-     * Emitted when the application takes more than expected
-     * to answer to a ping, this will always be emitted before
-     * eventuallt pingTimeout gets emitted
+    /**
+     * @todo Drop this signal.
      *
-     * @param serial unique identifier for the request
-     * @since 5.39
-     */
-    void pingDelayed(quint32 serial);
-
-    /*
-     * Emitted when the application doesn't answer to a ping
-     * and the serve gave up on it
-     *
-     * @param serial unique identifier for the request
-     * @since 5.39
+     * This signal is emitted when the client has not responded to a ping event with serial
+     * \a serial within a reasonable amount of time and the compositor gave up on it.
      */
     void pingTimeout(quint32 serial);
 
-protected:
-    class Private;
-    explicit XdgShellInterface(Private *d, QObject *parent = nullptr);
+    /**
+     * This signal is emitted when the client has not responded to a ping event with serial
+     * \a serial within a reasonable amount of time.
+     */
+    void pingDelayed(quint32 serial);
 
 private:
-    Private *d_func() const;
+    QScopedPointer<XdgShellInterfacePrivate> d;
+    friend class XdgShellInterfacePrivate;
 };
 
-
 /**
+ * The XdgSurfaceInterface class provides a base set of functionality required to construct
+ * user interface elements.
  *
- * @since 5.25
- **/
-class KWAYLANDSERVER_EXPORT XdgShellSurfaceInterface : public Resource
+ * XdgSurfaceInterface corresponds to the Wayland interface \c xdg_surface.
+ *
+ * \since 5.20
+ */
+class KWAYLANDSERVER_EXPORT XdgSurfaceInterface : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual ~XdgShellSurfaceInterface();
+    /**
+     * Constructs an XdgSurfaceInterface for the given \a shell and \a surface.
+     */
+    XdgSurfaceInterface(XdgShellInterface *shell, SurfaceInterface *surface,
+                        ::wl_resource *resource);
+    /**
+     * Destructs the XdgSurfaceInterface object.
+     */
+    ~XdgSurfaceInterface() override;
 
     /**
-     * @returns The interface version used by this XdgShellSurfaceInterface
-     **/
-    XdgShellInterfaceVersion interfaceVersion() const;
-
-    /**
-     * States the Surface can be in
-     **/
-    enum class State {
-        /**
-         * The Surface is maximized.
-         **/
-        Maximized  = 1 << 0,
-        /**
-         * The Surface is fullscreen.
-         **/
-        Fullscreen = 1 << 1,
-        /**
-         * The Surface is currently being resized by the Compositor.
-         **/
-        Resizing   = 1 << 2,
-        /**
-         * The Surface is considered active. Does not imply keyboard focus.
-         **/
-        Activated  = 1 << 3
-    };
-    Q_DECLARE_FLAGS(States, State)
-
-    /**
-     * Sends a configure event to the Surface.
-     * This tells the Surface the current @p states it is in and the @p size it should have.
-     * If @p size has width and height at @c 0, the Surface can choose the size.
+     * Returns the XdgToplevelInterface associated with this XdgSurfaceInterface.
      *
-     * The Surface acknowledges the configure event with {@link configureAcknowledged}.
+     * This method will return \c null if no xdg_toplevel object is associated with this surface.
+     */
+    XdgToplevelInterface *toplevel() const;
+
+    /**
+     * Returns the XdgPopupInterface associated with this XdgSurfaceInterface.
      *
-     * @param states The states the surface is in
-     * @param size The requested size
-     * @returns The serial of the configure event
-     * @see configureAcknowledged
-     * @see isConfigurePending
-     **/
-    quint32 configure(States states, const QSize &size = QSize(0, 0));
+     * This method will return \c null if no xdg_popup object is associated with this surface.
+     */
+    XdgPopupInterface *popup() const;
 
     /**
-     * @returns @c true if there is a not yet acknowledged configure event.
-     * @see configure
-     * @see configureAcknowledged
-     **/
-    bool isConfigurePending() const;
+     * Returns the XdgShellInterface associated with this XdgSurfaceInterface.
+     */
+    XdgShellInterface *shell() const;
 
     /**
-     * @return The SurfaceInterface this XdgSurfaceV5Interface got created for.
-     **/
+     * Returns the SurfaceInterface assigned to this XdgSurfaceInterface.
+     */
     SurfaceInterface *surface() const;
 
     /**
-     * @returns The title of this surface.
-     * @see titleChanged
-     **/
-    QString title() const;
-    QByteArray windowClass() const;
+     * Returns \c true if the surface has been configured; otherwise returns \c false.
+     */
+    bool isConfigured() const;
 
     /**
-     * @returns Whether this Surface is a transient for another Surface, that is it has a parent.
-     * @see transientFor
-     **/
-    bool isTransient() const;
-    /**
-     * @returns the parent surface if the surface is a transient for another surface
-     * @see isTransient
-     **/
-    QPointer<XdgShellSurfaceInterface> transientFor() const;
-
-    /**
-     * Request the client to close the window.
-     **/
-    void close();
-
-    /**
-     * @brief windowGeometry
-     * The geometry of the window within the buffer
+     * Returns the window geometry of the XdgSurfaceInterface.
      *
-     * If invalid, the geometry of the bufer should be used instead
-     * @since 5.59
+     * This method will return an invalid QRect if the window geometry is not set by the client.
      */
     QRect windowGeometry() const;
 
     /**
-     * @returns The minimum size for the window specified by the client.
-     * @since 5.65
+     * Returns the XdgSurfaceInterface for the specified wayland resource object \a resource.
+     */
+    static XdgSurfaceInterface *get(::wl_resource *resource);
+
+Q_SIGNALS:
+    /**
+     * This signal is emitted when a configure event with serial \a serial has been acknowledged.
+     */
+    void configureAcknowledged(quint32 serial);
+
+    /**
+     * This signal is emitted when the window geometry has been changed.
+     */
+    void windowGeometryChanged(const QRect &rect);
+
+private:
+    QScopedPointer<XdgSurfaceInterfacePrivate> d;
+    friend class XdgSurfaceInterfacePrivate;
+};
+
+/**
+ * The XdgToplevelInterface class represents a surface with window-like functionality such
+ * as maximize, fullscreen, resizing, minimizing, etc.
+ *
+ * XdgToplevelInterface corresponds to the Wayland interface \c xdg_toplevel.
+ *
+ * \since 5.20
+ */
+class KWAYLANDSERVER_EXPORT XdgToplevelInterface : public QObject
+{
+    Q_OBJECT
+
+public:
+    enum State {
+        MaximizedHorizontal = 0x1,
+        MaximizedVertical = 0x2,
+        FullScreen = 0x4,
+        Resizing = 0x8,
+        Activated = 0x10,
+        Maximized = MaximizedHorizontal | MaximizedVertical
+    };
+    Q_DECLARE_FLAGS(States, State)
+
+    /**
+     * Constructs an XdgToplevelInterface for the given xdg-surface \a surface.
+     */
+    XdgToplevelInterface(XdgSurfaceInterface *surface, ::wl_resource *resource);
+    /**
+     * Destructs the XdgToplevelInterface object.
+     */
+    ~XdgToplevelInterface() override;
+
+    /**
+     * Returns the XdgShellInterface for this XdgToplevelInterface.
+     *
+     * This is equivalent to xdgSurface()->shell().
+     */
+    XdgShellInterface *shell() const;
+
+    /**
+     * Returns the XdgSurfaceInterface associated with the XdgToplevelInterface.
+     */
+    XdgSurfaceInterface *xdgSurface() const;
+
+    /**
+     * Returns the SurfaceInterface associated with the XdgToplevelInterface.
+     */
+    SurfaceInterface *surface() const;
+
+    /**
+     * Returns the parent XdgToplevelInterface above which this toplevel is stacked.
+     */
+    XdgToplevelInterface *parentXdgToplevel() const;
+
+    /**
+     * Returns \c true if the toplevel has been configured; otherwise returns \c false.
+     */
+    bool isConfigured() const;
+
+    /**
+     * Returns the window title of the toplevel surface.
+     */
+    QString windowTitle() const;
+
+    /**
+     * Returns the window class of the toplevel surface.
+     */
+    QString windowClass() const;
+
+    /**
+     * Returns the minimum window geometry size of the toplevel surface.
      */
     QSize minimumSize() const;
 
     /**
-     * @returns The maximum size for the window specified by the client.
-     * @since 5.65
+     * Returns the maximum window geometry size of the toplevel surface.
      */
     QSize maximumSize() const;
 
+    /**
+     * Sends a configure event to the client. \a size specifies the new window geometry size. A size
+     * of zero means the client should decide its own window dimensions.
+     */
+    quint32 sendConfigure(const QSize &size, const States &states);
+
+    /**
+     * Sends a close event to the client. The client may choose to ignore this request.
+     */
+    void sendClose();
+
+    /**
+     * Returns the XdgToplevelInterface for the specified wayland resource object \a resource.
+     */
+    static XdgToplevelInterface *get(::wl_resource *resource);
+
 Q_SIGNALS:
     /**
-     * Emitted whenever the title changes.
-     *
-     * @see title
-     **/
-    void titleChanged(const QString&);
+     * This signal is emitted when the xdg-toplevel has commited the initial state and wants to
+     * be configured. After initializing the toplevel, you must send a configure event.
+     */
+    void initializeRequested();
+
     /**
-     * Emitted whenever the window class changes.
-     *
-     * @see windowClass
-     **/
-    void windowClassChanged(const QByteArray&);
+     * This signal is emitted when the toplevel's title has been changed.
+     */
+    void windowTitleChanged(const QString &windowTitle);
+
     /**
-     * The surface requested a window move.
-     *
-     * @param seat The SeatInterface on which the surface requested the move
-     * @param serial The serial of the implicit mouse grab which triggered the move
-     **/
+     * This signal is emitted when the toplevel's application id has been changed.
+     */
+    void windowClassChanged(const QString &windowClass);
+
+    /**
+     * This signal is emitted when the toplevel has requested the window menu to be shown at
+     * \a pos. The \a seat and the \a serial indicate the user action that triggerred the request.
+     */
+    void windowMenuRequested(KWaylandServer::SeatInterface *seat, const QPoint &pos, quint32 serial);
+
+    /**
+     * This signal is emitted when the toplevel's minimum size has been changed.
+     */
+    void minimumSizeChanged(const QSize &size);
+
+    /**
+     * This signal is emitted when the toplevel's maximum size has been changed.
+     */
+    void maximumSizeChanged(const QSize &size);
+
+    /**
+     * This signal is emitted when the toplevel wants to be interactively moved. The \a seat and
+     * the \a serial indicate the user action in response to which this request has been issued.
+     */
     void moveRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
+
     /**
-     * The surface requested a window resize.
-     *
-     * @param seat The SeatInterface on which the surface requested the resize
-     * @param serial The serial of the implicit mouse grab which triggered the resize
-     * @param edges A hint which edges are involved in the resize
-     **/
-    void resizeRequested(KWaylandServer::SeatInterface *seat, quint32 serial, Qt::Edges edges);
-    void windowMenuRequested(KWaylandServer::SeatInterface *seat, quint32 serial, const QPoint &surfacePos);
+     * This signal is emitted when the toplevel wants to be interactively resized along the
+     * specified window edges \a edges. The \a seat and the \a serial indicate the user action
+     * in response to which this request has been issued.
+     */
+    void resizeRequested(KWaylandServer::SeatInterface *seat, Qt::Edges edges, quint32 serial);
+
     /**
-     * The surface requested a change of maximized state.
-     * @param maximized Whether the window wants to be maximized
-     **/
-    void maximizedChanged(bool maximized);
+     * This signal is emitted when the toplevel surface wants to become maximized.
+     */
+    void maximizeRequested();
+
     /**
-     * The surface requested a change of fullscreen state
-     * @param fullscreen Whether the window wants to be fullscreen
-     * @param output An optional output hint on which the window wants to be fullscreen
-     **/
-    void fullscreenChanged(bool fullscreen, KWaylandServer::OutputInterface *output);
+     * This signal is emitted when the toplevel surface wants to become unmaximized.
+     */
+    void unmaximizeRequested();
+
     /**
-     * The surface requested to be minimized.
-     **/
+     * This signal is emitted when the toplevel wants to be shown in the full screen mode.
+     */
+    void fullscreenRequested(KWaylandServer::OutputInterface *output);
+
+    /**
+     * This signal is emitted when the toplevel surface wants to leave the full screen mode.
+     */
+    void unfullscreenRequested();
+
+    /**
+     * This signal is emitted when the toplevel wants to be iconified.
+     */
     void minimizeRequested();
-    /**
-     * A configure event with @p serial got acknowledged.
-     * @see configure
-     **/
-    void configureAcknowledged(quint32 serial);
-    /**
-     * Emitted whenever the parent surface changes.
-     * @see isTransient
-     * @see transientFor
-     **/
-    void transientForChanged();
 
     /**
-     * Emitted whenever the maximum size hint changes
-     * @since 5.39
+     * This signal is emitted when the parent toplevel has changed.
      */
-    void maxSizeChanged(const QSize &size);
-
-    /**
-     * Emitted whenever the minimum size hint changes
-     * @since 5.39
-     */
-    void minSizeChanged(const QSize &size);
-
-    /**
-     * @brief windowGeometryChanged
-     * @param windowGeometry the newly changed windowGeometry
-     * @since 5.59
-     */
-    void windowGeometryChanged(const QRect &windowGeometry);
-
-protected:
-    class Private;
-    explicit XdgShellSurfaceInterface(Private *p);
+    void parentXdgToplevelChanged();
 
 private:
-    Private *d_func() const;
-    friend class GenericShellSurface<XdgShellSurfaceInterface>;
+    QScopedPointer<XdgToplevelInterfacePrivate> d;
+    friend class XdgToplevelInterfacePrivate;
 };
 
 /**
+ * The XdgPositioner class provides a collection of rules for the placement of a popup surface.
  *
- * @since 5.25
- **/
-class KWAYLANDSERVER_EXPORT XdgShellPopupInterface : public Resource
+ * XdgPositioner corresponds to the Wayland interface \c xdg_positioner.
+ *
+ * \since 5.20
+ */
+class KWAYLANDSERVER_EXPORT XdgPositioner
 {
-    Q_OBJECT
 public:
-    virtual ~XdgShellPopupInterface();
-
     /**
-     * @return The SurfaceInterface this XdgShellPopupInterface got created for.
-     **/
-    SurfaceInterface *surface() const;
-
-    /*
-     * Ask the popup surface to configure itself for the given configuration.
-     *
-     * @arg rect. The position of the surface relative to the transient parent
-     * @since 5.39
+     * Constructs an incomplete XdgPositioner object.
      */
-    quint32 configure(const QRect &rect);
-
+    XdgPositioner();
     /**
-     * @returns the parent surface.
-     * @see transientOffset
-     **/
-    QPointer<SurfaceInterface> transientFor() const;
-
-    /**
-     * The offset of the Surface in the coordinate system of the SurfaceInterface this surface is a transient for.
-     *
-     * For XDG V6 this returns the point on the anchorRect defined by the anchor edge.
-     *
-     * @returns offset in parent coordinate system.
-     * @see transientFor
-     **/
-    QPoint transientOffset() const;
-
-    /**
-     * The size of the surface that is to be positioned.
-     *
-     * @since 5.39
+     * Constructs a copy of the XdgPositioner object.
      */
-    QSize initialSize() const;
+    XdgPositioner(const XdgPositioner &other);
+    /**
+     * Destructs the XdgPositioner object.
+     */
+    ~XdgPositioner();
 
     /**
-     * The area this popup should be positioned around
-     * @since 5.39
+     * Assigns the value of \a other to this XdgPositioner object.
+     */
+    XdgPositioner &operator=(const XdgPositioner &other);
+
+    /**
+     * Returns \c true if the positioner object is complete; otherwise returns \c false.
+     *
+     * An xdg positioner considered complete if it has a valid size and a valid anchor rect.
+     */
+    bool isComplete() const;
+
+    /**
+     * Returns the set of orientations along which the compositor may slide the popup to ensure
+     * that it is entirely inside the compositor's defined "work area."
+     */
+    Qt::Orientations slideConstraintAdjustments() const;
+
+    /**
+     * Returns the set of orientations along which the compositor may flip the popup to ensure
+     * that it is entirely inside the compositor's defined "work area."
+     */
+    Qt::Orientations flipConstraintAdjustments() const;
+
+    /**
+     * Returns the set of orientations along which the compositor can resize the popup to ensure
+     * that it is entirely inside the compositor's defined "work area."
+     */
+    Qt::Orientations resizeConstraintAdjustments() const;
+
+    /**
+     * Returns the set of edges on the anchor rectangle that the surface should be positioned
+     * around.
+     */
+    Qt::Edges anchorEdges() const;
+
+    /**
+     * Returns the direction in which the surface should be positioned, relative to the anchor
+     * point of the parent surface.
+     */
+    Qt::Edges gravityEdges() const;
+
+    /**
+     * Returns the window geometry size of the surface that is to be positioned.
+     */
+    QSize size() const;
+
+    /**
+     * Returns the anchor rectangle relative to the upper left corner of the window geometry of
+     * the parent surface that the popup should be positioned around.
      */
     QRect anchorRect() const;
 
     /**
-     * Which edge of the anchor should the popup be positioned around
-     * @since 5.39
+     * Returns the surface position offset relative to the position of the anchor on the anchor
+     * rectangle and the anchor on the surface.
      */
-    Qt::Edges anchorEdge() const;
+    QPoint offset() const;
 
     /**
-     * An additional offset that should be applied to the popup from the anchor rect
+     * Returns the current state of the xdg positioner object identified by \a resource.
+     */
+    static XdgPositioner get(::wl_resource *resource);
+
+private:
+    XdgPositioner(const QSharedDataPointer<XdgPositionerData> &data);
+    QSharedDataPointer<XdgPositionerData> d;
+};
+
+/**
+ * The XdgPopupInterface class represents a surface that can be used to implement context menus,
+ * popovers and other similar short-lived user interface elements.
+ *
+ * XdgPopupInterface corresponds to the Wayland interface \c xdg_popup.
+ *
+ * \since 5.20
+ */
+class KWAYLANDSERVER_EXPORT XdgPopupInterface : public QObject
+{
+    Q_OBJECT
+
+public:
+    XdgPopupInterface(XdgSurfaceInterface *surface, XdgSurfaceInterface *parentSurface,
+                      const XdgPositioner &positioner, ::wl_resource *resource);
+    /**
+     * Destructs the XdgPopupInterface object.
+     */
+    ~XdgPopupInterface() override;
+
+    XdgShellInterface *shell() const;
+
+    /**
+     * Returns the parent XdgSurfaceInterface.
      *
-     * @since 5.39
+     * This method may return \c null, in which case the parent xdg-surface must be specified
+     * using "some other protocol", before commiting the initial state.
      */
-    QPoint anchorOffset() const;
+    XdgSurfaceInterface *parentXdgSurface() const;
 
     /**
-     * Specifies in what direction the popup should be positioned around the anchor
-     * i.e if the gravity is "bottom", then then the top of top of the popup will be at the anchor edge
-     * if the gravity is top, then the bottom of the popup will be at the anchor edge
-     *
-     * @since 5.39
+     * Returns the XdgSurfaceInterface associated with the XdgPopupInterface.
      */
-
-    //DAVE left + right is illegal, so this is possible a useless return value? Maybe an enum with 9 entries left, topleft, top, ..
-    Qt::Edges gravity() const;
+    XdgSurfaceInterface *xdgSurface() const;
 
     /**
-     * Specifies how the compositor should position the popup if it does not fit in the requested position
-     * @since 5.39
+     * Returns the SurfaceInterface associated with the XdgPopupInterface.
      */
-    PositionerConstraints constraintAdjustments() const;
+    SurfaceInterface *surface() const;
 
     /**
-     * Dismiss this popup. This indicates to the client that it should destroy this popup.
-     * The Compositor can invoke this method when e.g. the user clicked outside the popup
-     * to dismiss it.
-     **/
-    void popupDone();
+     * Returns the XdgPositioner assigned to this XdgPopupInterface.
+     */
+    XdgPositioner positioner() const;
 
     /**
-     * @brief windowGeometryChanged
-     * @param windowGeometry the newly changed geometry of the window contents within the buffer
-     * @since 5.59
+     * Returns \c true if the popup has been configured; otherwise returns \c false.
      */
-    QRect windowGeometry()const;
+    bool isConfigured() const;
+
+    /**
+     * Sends a configure event to the client and returns the serial number of the event.
+     */
+    quint32 sendConfigure(const QRect &rect);
+
+    /**
+     * Sends a popup done event to the client.
+     */
+    void sendPopupDone();
+
+    /**
+     * Returns the XdgPopupInterface for the specified wayland resource object \a resource.
+     */
+    static XdgPopupInterface *get(::wl_resource *resource);
 
 Q_SIGNALS:
     /**
-     * A configure event with @p serial got acknowledged.
-     * Note: XdgV6 only
-     * @see configure
-     * @since 5.39
-     **/
-    void configureAcknowledged(quint32 serial);
-
-    /**
-     * The client requested that this popup takes an explicit grab
-     *
-     * @param seat The seat on which an action triggered the popup
-     * @param serial The serial of the action on the seat
-     * @since 5.39
+     * This signal is emitted when the xdg-popup has commited the initial state and wants to
+     * be configured. After initializing the popup, you must send a configure event.
      */
-    void grabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
-
-    /**
-     * @brief windowGeometryChanged
-     * @param windowGeometry the newly changed windowGeometry
-     * @since 5.59
-     */
-    void windowGeometryChanged(const QRect &windowGeometry);
-
-protected:
-    class Private;
-    explicit XdgShellPopupInterface(Private *p);
+    void initializeRequested();
+    void grabRequested(SeatInterface *seat, quint32 serial);
 
 private:
-    friend class GenericShellSurface<XdgShellPopupInterface>;
-
-    Private *d_func() const;
+    QScopedPointer<XdgPopupInterfacePrivate> d;
 };
 
-}
+} // namespace KWaylandServer
 
-Q_DECLARE_METATYPE(KWaylandServer::XdgShellSurfaceInterface *)
-Q_DECLARE_METATYPE(KWaylandServer::XdgShellPopupInterface *)
-Q_DECLARE_METATYPE(KWaylandServer::XdgShellSurfaceInterface::State)
-Q_DECLARE_METATYPE(KWaylandServer::XdgShellSurfaceInterface::States)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::PositionerConstraints)
-
-#endif
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::XdgToplevelInterface::States)
+Q_DECLARE_METATYPE(KWaylandServer::XdgToplevelInterface::State)
+Q_DECLARE_METATYPE(KWaylandServer::XdgToplevelInterface::States)

@@ -39,10 +39,10 @@
 #include "subcompositor_interface.h"
 #include "tablet_interface.h"
 #include "textinput_interface_p.h"
-#include "xdgdecoration_interface.h"
+#include "xdgdecoration_v1_interface.h"
 #include "xdgforeign_interface.h"
 #include "xdgoutput_interface.h"
-#include "xdgshell_stable_interface_p.h"
+#include "xdgshell_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -377,20 +377,11 @@ TextInputManagerInterface *Display::createTextInputManager(const TextInputInterf
     return t;
 }
 
-XdgShellInterface *Display::createXdgShell(const XdgShellInterfaceVersion &version, QObject *parent)
+XdgShellInterface *Display::createXdgShell(QObject *parent)
 {
-    XdgShellInterface *x = nullptr;
-    switch (version) {
-    case XdgShellInterfaceVersion::UnstableV5:
-        return nullptr;
-    case XdgShellInterfaceVersion::UnstableV6:
-        return nullptr;
-    case XdgShellInterfaceVersion::Stable:
-        x = new XdgShellStableInterface(this, parent);
-        break;
-    }
-    connect(this, &Display::aboutToTerminate, x, [x] { delete x; });
-    return x;
+    XdgShellInterface *shell = new XdgShellInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, shell, [shell] { delete shell; });
+    return shell;
 }
 
 RelativePointerManagerInterface *Display::createRelativePointerManager(const RelativePointerInterfaceVersion &version, QObject *parent)
@@ -483,9 +474,9 @@ XdgOutputManagerInterface *Display::createXdgOutputManager(QObject *parent)
     return b;
 }
 
-XdgDecorationManagerInterface *Display::createXdgDecorationManager(XdgShellInterface *shellInterface, QObject *parent)
+XdgDecorationManagerV1Interface *Display::createXdgDecorationManagerV1(QObject *parent)
 {
-    auto d = new XdgDecorationManagerInterface(this, shellInterface, parent);
+    auto d = new XdgDecorationManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
 }

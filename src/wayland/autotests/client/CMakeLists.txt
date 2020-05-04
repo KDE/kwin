@@ -343,16 +343,13 @@ add_test(NAME kwayland-testXdgForeign COMMAND testXdgForeign)
 ecm_mark_as_test(testXdgForeign)
 
 ########################################################
-# Test XdgShellStable
+# Test XdgShell
 ########################################################
-set( testXdgShellStable_SRCS
-      test_xdg_shell.cpp
-      test_xdg_shell_stable.cpp
-      )
-add_executable(testXdgShellStable ${testXdgShellStable_SRCS})
-target_link_libraries( testXdgShellStable Qt5::Test Qt5::Gui Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
-add_test(NAME kwayland-testXdgShellStable COMMAND testXdgShellStable)
-ecm_mark_as_test(testXdgShellStable)
+set(testXdgShell_SRCS test_xdg_shell.cpp)
+add_executable(testXdgShell ${testXdgShell_SRCS})
+target_link_libraries( testXdgShell Qt5::Test Qt5::Gui Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testXdgShell COMMAND testXdgShell)
+ecm_mark_as_test(testXdgShell)
 
 ########################################################
 # Test Pointer Constraints

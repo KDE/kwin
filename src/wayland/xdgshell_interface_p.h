@@ -1,94 +1,175 @@
 /*
-    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef KWAYLAND_SERVER_XDGSHELL_INTERFACE_P_H
-#define KWAYLAND_SERVER_XDGSHELL_INTERFACE_P_H
-#include "xdgshell_interface.h"
-#include "global_p.h"
-#include "generic_shell_surface_p.h"
-#include "resource_p.h"
 
-#include <QTimer>
+#pragma once
+
+#include "xdgshell_interface.h"
+#include "qwayland-server-xdg-shell.h"
+
+#include "surface_interface.h"
+#include "surfacerole_p.h"
 
 namespace KWaylandServer
 {
 
-class XdgShellInterface::Private : public Global::Private
+class XdgToplevelDecorationV1Interface;
+
+class XdgShellInterfacePrivate : public QtWaylandServer::xdg_wm_base
 {
 public:
-    XdgShellInterfaceVersion interfaceVersion;
+    XdgShellInterfacePrivate(XdgShellInterface *shell);
 
-    virtual quint32 ping(XdgShellSurfaceInterface * surface) = 0;
-    void setupTimer(quint32 serial);
-    //pingserial/timer correspondence
-    QHash <quint32, QTimer *> pingTimers;
+    void registerXdgSurface(XdgSurfaceInterface *surface);
+    void unregisterXdgSurface(XdgSurfaceInterface *surface);
 
-protected:
-    Private(XdgShellInterfaceVersion interfaceVersion, XdgShellInterface *q, Display *d, const wl_interface *interface, quint32 version);
+    void registerPing(quint32 serial);
+
+    static XdgShellInterfacePrivate *get(XdgShellInterface *shell);
+
     XdgShellInterface *q;
-};
-
-class XdgShellSurfaceInterface::Private : public Resource::Private, public GenericShellSurface<XdgShellSurfaceInterface>
-{
-public:
-    virtual ~Private();
-
-    virtual void close() = 0;
-    virtual quint32 configure(States states, const QSize &size) = 0;
-    virtual QRect windowGeometry() const = 0;
-    virtual QSize minimumSize() const = 0;
-    virtual QSize maximumSize() const = 0;
-
-    XdgShellSurfaceInterface *q_func() {
-        return reinterpret_cast<XdgShellSurfaceInterface *>(q);
-    }
-
-    QVector<quint32> configureSerials;
-    QPointer<XdgShellSurfaceInterface> parent;
-    XdgShellInterfaceVersion interfaceVersion;
+    Display *display;
+    QMap<quint32, QTimer *> pings;
 
 protected:
-    Private(XdgShellInterfaceVersion interfaceVersion, XdgShellSurfaceInterface *q, Global *c, SurfaceInterface *surface, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
+    void xdg_wm_base_destroy(Resource *resource) override;
+    void xdg_wm_base_create_positioner(Resource *resource, uint32_t id) override;
+    void xdg_wm_base_get_xdg_surface(Resource *resource, uint32_t id, ::wl_resource *surface) override;
+    void xdg_wm_base_pong(Resource *resource, uint32_t serial) override;
+
+private:
+    QMultiMap<wl_client *, XdgSurfaceInterface *> xdgSurfaces;
 };
 
-class XdgShellPopupInterface::Private : public Resource::Private, public GenericShellSurface<XdgShellPopupInterface>
+class XdgPositionerData : public QSharedData
 {
 public:
-    virtual ~Private();
-    virtual void popupDone() = 0;
-    virtual QRect windowGeometry() const = 0;
+    Qt::Orientations slideConstraintAdjustments;
+    Qt::Orientations flipConstraintAdjustments;
+    Qt::Orientations resizeConstraintAdjustments;
+    Qt::Edges anchorEdges;
+    Qt::Edges gravityEdges;
+    QPoint offset;
+    QSize size;
+    QRect anchorRect;
+};
 
-    XdgShellPopupInterface *q_func() {
-        return reinterpret_cast<XdgShellPopupInterface *>(q);
-    }
+class XdgPositionerPrivate : public QtWaylandServer::xdg_positioner
+{
+public:
+    XdgPositionerPrivate(::wl_resource *resource);
 
-    virtual quint32 configure(const QRect &rect) {
-        Q_UNUSED(rect)
-        return 0;
+    QSharedDataPointer<XdgPositionerData> data;
+
+    static XdgPositionerPrivate *get(::wl_resource *resource);
+
+protected:
+    void xdg_positioner_destroy_resource(Resource *resource) override;
+    void xdg_positioner_destroy(Resource *resource) override;
+    void xdg_positioner_set_size(Resource *resource, int32_t width, int32_t height) override;
+    void xdg_positioner_set_anchor_rect(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
+    void xdg_positioner_set_anchor(Resource *resource, uint32_t anchor) override;
+    void xdg_positioner_set_gravity(Resource *resource, uint32_t gravity) override;
+    void xdg_positioner_set_constraint_adjustment(Resource *resource, uint32_t constraint_adjustment) override;
+    void xdg_positioner_set_offset(Resource *resource, int32_t x, int32_t y) override;
+};
+
+class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
+{
+public:
+    XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface);
+
+    void commit();
+
+    XdgSurfaceInterface *q;
+    XdgShellInterface *shell;
+    QPointer<XdgToplevelInterface> toplevel;
+    QPointer<XdgPopupInterface> popup;
+    QPointer<SurfaceInterface> surface;
+    bool isConfigured = false;
+
+    struct State
+    {
+        QRect windowGeometry;
     };
 
-    QVector<quint32> configureSerials;
-    QPointer<SurfaceInterface> parent;
-    QSize initialSize;
+    State next;
+    State current;
 
-    /*
-     *
-     */
-    QRect anchorRect;
-    Qt::Edges anchorEdge;
-    Qt::Edges gravity;
-    PositionerConstraints constraintAdjustments;
-    QPoint anchorOffset;
-
-    XdgShellInterfaceVersion interfaceVersion;
+    static XdgSurfaceInterfacePrivate *get(XdgSurfaceInterface *surface);
 
 protected:
-    Private(XdgShellInterfaceVersion interfaceVersion, XdgShellPopupInterface *q, XdgShellInterface *c, SurfaceInterface *surface, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
-
+    void xdg_surface_destroy_resource(Resource *resource) override;
+    void xdg_surface_destroy(Resource *resource) override;
+    void xdg_surface_get_toplevel(Resource *resource, uint32_t id) override;
+    void xdg_surface_get_popup(Resource *resource, uint32_t id, ::wl_resource *parent, ::wl_resource *positioner) override;
+    void xdg_surface_set_window_geometry(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
+    void xdg_surface_ack_configure(Resource *resource, uint32_t serial) override;
 };
 
-}
+class XdgToplevelInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_toplevel
+{
+public:
+    XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
 
-#endif
+    void commit() override;
+
+    static XdgToplevelInterfacePrivate *get(XdgToplevelInterface *toplevel);
+    static XdgToplevelInterfacePrivate *get(::wl_resource *resource);
+
+    XdgToplevelInterface *q;
+    QPointer<XdgToplevelInterface> parentXdgToplevel;
+    QPointer<XdgToplevelDecorationV1Interface> decoration;
+    XdgSurfaceInterface *xdgSurface;
+
+    QString windowTitle;
+    QString windowClass;
+
+    struct State
+    {
+        QSize minimumSize;
+        QSize maximumSize;
+    };
+
+    State next;
+    State current;
+
+protected:
+    void xdg_toplevel_destroy_resource(Resource *resource) override;
+    void xdg_toplevel_destroy(Resource *resource) override;
+    void xdg_toplevel_set_parent(Resource *resource, ::wl_resource *parent) override;
+    void xdg_toplevel_set_title(Resource *resource, const QString &title) override;
+    void xdg_toplevel_set_app_id(Resource *resource, const QString &app_id) override;
+    void xdg_toplevel_show_window_menu(Resource *resource, ::wl_resource *seat, uint32_t serial, int32_t x, int32_t y) override;
+    void xdg_toplevel_move(Resource *resource, ::wl_resource *seat, uint32_t serial) override;
+    void xdg_toplevel_resize(Resource *resource, ::wl_resource *seat, uint32_t serial, uint32_t edges) override;
+    void xdg_toplevel_set_max_size(Resource *resource, int32_t width, int32_t height) override;
+    void xdg_toplevel_set_min_size(Resource *resource, int32_t width, int32_t height) override;
+    void xdg_toplevel_set_maximized(Resource *resource) override;
+    void xdg_toplevel_unset_maximized(Resource *resource) override;
+    void xdg_toplevel_set_fullscreen(Resource *resource, ::wl_resource *output) override;
+    void xdg_toplevel_unset_fullscreen(Resource *resource) override;
+    void xdg_toplevel_set_minimized(Resource *resource) override;
+};
+
+class XdgPopupInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_popup
+{
+public:
+    XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface);
+
+    void commit() override;
+
+    XdgPopupInterface *q;
+    XdgSurfaceInterface *parentXdgSurface;
+    XdgSurfaceInterface *xdgSurface;
+    XdgPositioner positioner;
+
+protected:
+    void xdg_popup_destroy_resource(Resource *resource) override;
+    void xdg_popup_destroy(Resource *resource) override;
+    void xdg_popup_grab(Resource *resource, ::wl_resource *seat, uint32_t serial) override;
+};
+
+} // namespace KWaylandServer

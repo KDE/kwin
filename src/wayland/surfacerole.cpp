@@ -25,4 +25,13 @@ SurfaceRole::~SurfaceRole()
     }
 }
 
+SurfaceRole *SurfaceRole::get(SurfaceInterface *surface)
+{
+    if (surface) {
+        return surface->d_func()->role;
+    }
+
+    return nullptr;
+}
+
 }
