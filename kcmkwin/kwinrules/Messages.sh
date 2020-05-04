@@ -1,4 +1,2 @@
 #! /usr/bin/env bash
-$EXTRACTRC *.ui >> rc.cpp || exit 11
-$XGETTEXT *.cpp *.h -o $podir/kcmkwinrules.pot
-rm -f rc.cpp
+$XGETTEXT `find . -name \*.cpp -o -name \*.h -o -name \*.qml` -o $podir/kcmkwinrules.pot
