@@ -42,7 +42,6 @@
 #include "xdgforeign_interface.h"
 #include "xdgoutput_interface.h"
 #include "xdgshell_stable_interface_p.h"
-#include "xdgshell_v5_interface_p.h"
 #include "xdgshell_v6_interface_p.h"
 #include "xdgdecoration_interface.h"
 #include "eglstream_controller_interface.h"
@@ -387,8 +386,7 @@ XdgShellInterface *Display::createXdgShell(const XdgShellInterfaceVersion &versi
     XdgShellInterface *x = nullptr;
     switch (version) {
     case XdgShellInterfaceVersion::UnstableV5:
-        x = new XdgShellV5Interface(this, parent);
-        break;
+        return nullptr;
     case XdgShellInterfaceVersion::UnstableV6:
         x = new XdgShellV6Interface(this, parent);
         break;

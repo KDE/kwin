@@ -1,5 +1,4 @@
 set(SERVER_LIB_SRCS
-    ../compat/wayland-xdg-shell-v5-protocol.c
     abstract_data_source.cpp
     appmenu_interface.cpp
     blur_interface.cpp
@@ -65,8 +64,6 @@ set(SERVER_LIB_SRCS
     xdgoutput_interface.cpp
     xdgshell_interface.cpp
     xdgshell_stable_interface.cpp
-    xdgshell_v5_interface.cpp
-    xdgshell_v5_interface.cpp
     xdgshell_v6_interface.cpp
 )
 

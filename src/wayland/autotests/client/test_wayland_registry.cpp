@@ -52,7 +52,6 @@
 #include <wayland-relativepointer-unstable-v1-client-protocol.h>
 #include <wayland-pointer-gestures-unstable-v1-client-protocol.h>
 #include <wayland-pointer-constraints-unstable-v1-client-protocol.h>
-#include "../../src/compat/wayland-xdg-shell-v5-client-protocol.h"
 
 class TestWaylandRegistry : public QObject
 {
@@ -74,7 +73,6 @@ private Q_SLOTS:
     void testBindContrastManager();
     void testBindSlideManager();
     void testBindDpmsManager();
-    void testBindXdgShellUnstableV5();
     void testBindRelativePointerManagerUnstableV1();
     void testBindPointerGesturesUnstableV1();
     void testBindPointerConstraintsUnstableV1();
@@ -99,7 +97,6 @@ private:
     KWaylandServer::ServerSideDecorationManagerInterface *m_serverSideDecorationManager;
     KWaylandServer::TextInputManagerInterface *m_textInputManagerV0;
     KWaylandServer::TextInputManagerInterface *m_textInputManagerV2;
-    KWaylandServer::XdgShellInterface *m_xdgShellUnstableV5;
     KWaylandServer::RelativePointerManagerInterface *m_relativePointerV1;
     KWaylandServer::PointerGesturesInterface *m_pointerGesturesV1;
     KWaylandServer::PointerConstraintsInterface *m_pointerConstraintsV1;
@@ -124,7 +121,6 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_serverSideDecorationManager(nullptr)
     , m_textInputManagerV0(nullptr)
     , m_textInputManagerV2(nullptr)
-    , m_xdgShellUnstableV5(nullptr)
     , m_relativePointerV1(nullptr)
     , m_pointerGesturesV1(nullptr)
     , m_pointerConstraintsV1(nullptr)
@@ -168,9 +164,6 @@ void TestWaylandRegistry::init()
     m_textInputManagerV2 = m_display->createTextInputManager(KWaylandServer::TextInputInterfaceVersion::UnstableV2);
     QCOMPARE(m_textInputManagerV2->interfaceVersion(), KWaylandServer::TextInputInterfaceVersion::UnstableV2);
     m_textInputManagerV2->create();
-    m_xdgShellUnstableV5 = m_display->createXdgShell(KWaylandServer::XdgShellInterfaceVersion::UnstableV5);
-    m_xdgShellUnstableV5->create();
-    QCOMPARE(m_xdgShellUnstableV5->interfaceVersion(), KWaylandServer::XdgShellInterfaceVersion::UnstableV5);
     m_relativePointerV1 = m_display->createRelativePointerManager(KWaylandServer::RelativePointerInterfaceVersion::UnstableV1);
     m_relativePointerV1->create();
     QCOMPARE(m_relativePointerV1->interfaceVersion(), KWaylandServer::RelativePointerInterfaceVersion::UnstableV1);
@@ -298,11 +291,6 @@ void TestWaylandRegistry::testBindSlideManager()
 void TestWaylandRegistry::testBindDpmsManager()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::Dpms, SIGNAL(dpmsAnnounced(quint32,quint32)), bindDpmsManager, org_kde_kwin_dpms_manager_destroy)
-}
-
-void TestWaylandRegistry::testBindXdgShellUnstableV5()
-{
-    TEST_BIND(KWayland::Client::Registry::Interface::XdgShellUnstableV5, SIGNAL(xdgShellUnstableV5Announced(quint32,quint32)), bindXdgShellUnstableV5, zxdg_shell_v5_destroy)
 }
 
 void TestWaylandRegistry::testBindRelativePointerManagerUnstableV1()
