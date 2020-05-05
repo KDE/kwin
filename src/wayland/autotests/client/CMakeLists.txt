@@ -343,17 +343,6 @@ add_test(NAME kwayland-testXdgForeign COMMAND testXdgForeign)
 ecm_mark_as_test(testXdgForeign)
 
 ########################################################
-# Test XdgShellV6
-########################################################
-set( testXdgShellV6_SRCS
-      test_xdg_shell.cpp
-      test_xdg_shell_v6.cpp
-      )
-add_executable(testXdgShellV6 ${testXdgShellV6_SRCS})
-target_link_libraries( testXdgShellV6 Qt5::Test Qt5::Gui Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
-add_test(NAME kwayland-testXdgShellV6 COMMAND testXdgShellV6)
-ecm_mark_as_test(testXdgShellV6)
-########################################################
 # Test XdgShellStable
 ########################################################
 set( testXdgShellStable_SRCS

@@ -64,7 +64,6 @@ set(SERVER_LIB_SRCS
     xdgoutput_interface.cpp
     xdgshell_interface.cpp
     xdgshell_stable_interface.cpp
-    xdgshell_v6_interface.cpp
 )
 
 ecm_qt_declare_logging_category(SERVER_LIB_SRCS
@@ -158,11 +157,6 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
     BASENAME text-input-unstable-v2
-)
-
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-shell/xdg-shell-unstable-v6.xml
-    BASENAME xdg-shell-v6
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -300,8 +294,6 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-foreign-unstable-v2-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-server-protocol.h
-    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-client-protocol.h
-    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-shell-v6-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-keyboard-shortcuts-inhibit-unstable-v1.h

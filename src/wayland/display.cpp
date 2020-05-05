@@ -9,6 +9,7 @@
 #include "blur_interface.h"
 #include "compositor_interface.h"
 #include "contrast_interface.h"
+#include "datacontroldevicemanager_v1_interface.h"
 #include "datadevicemanager_interface.h"
 #include "dpms_interface.h"
 #include "eglstream_controller_interface.h"
@@ -42,11 +43,6 @@
 #include "xdgforeign_interface.h"
 #include "xdgoutput_interface.h"
 #include "xdgshell_stable_interface_p.h"
-#include "xdgshell_v6_interface_p.h"
-#include "xdgdecoration_interface.h"
-#include "eglstream_controller_interface.h"
-#include "keystate_interface.h"
-#include "datacontroldevicemanager_v1_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -388,8 +384,7 @@ XdgShellInterface *Display::createXdgShell(const XdgShellInterfaceVersion &versi
     case XdgShellInterfaceVersion::UnstableV5:
         return nullptr;
     case XdgShellInterfaceVersion::UnstableV6:
-        x = new XdgShellV6Interface(this, parent);
-        break;
+        return nullptr;
     case XdgShellInterfaceVersion::Stable:
         x = new XdgShellStableInterface(this, parent);
         break;
