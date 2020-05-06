@@ -9,7 +9,7 @@
             <default>Nothing</default>
         </entry>
         <entry name="CommandAllKey" type="String">
-            <default>Alt</default>
+            <default>Meta</default>
         </entry>
         <entry name="CommandAllWheel" type="String">
             <default>Nothing</default>

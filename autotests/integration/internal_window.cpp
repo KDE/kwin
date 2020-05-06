@@ -605,13 +605,13 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
     QVERIFY(internalClient->isDecorated());
 
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
     group.writeEntry("CommandAll3", "Move");
     group.sync();
     workspace()->slotReconfigure();
-    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
     QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
@@ -621,12 +621,12 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
 
     // simulate modifier+click
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QVERIFY(!internalClient->isMove());
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(internalClient->isMove());
     // release modifier should not change it
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QVERIFY(internalClient->isMove());
     // but releasing the key should end move/resize
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
@@ -647,7 +647,7 @@ void InternalWindowTest::testModifierScroll()
     QVERIFY(internalClient->isDecorated());
 
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();
     workspace()->slotReconfigure();
@@ -659,12 +659,12 @@ void InternalWindowTest::testModifierScroll()
     internalClient->setOpacity(0.5);
     QCOMPARE(internalClient->opacity(), 0.5);
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
     QCOMPARE(internalClient->opacity(), 0.6);
     kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
     QCOMPARE(internalClient->opacity(), 0.5);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 }
 
 void InternalWindowTest::testPopup()

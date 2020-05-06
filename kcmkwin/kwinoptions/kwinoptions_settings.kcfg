@@ -296,10 +296,10 @@
     </entry>
 
     <entry key="CommandAllKey" type="Enum">
-      <default>Alt</default>
+      <default>Meta</default>
       <choices>
-          <choice name="Alt"></choice>
           <choice name="Meta"></choice>
+          <choice name="Alt"></choice>
       </choices>
     </entry>
 

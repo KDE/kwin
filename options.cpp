@@ -765,7 +765,7 @@ void Options::loadConfig()
     config = KConfigGroup(m_settings->config(), "MouseBindings");
     // TODO: add properties for missing options
     CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel", "Nothing"));
-    CmdAllModKey = (config.readEntry("CommandAllKey", "Alt") == QStringLiteral("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAllModKey = (config.readEntry("CommandAllKey", "Meta") == QStringLiteral("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel", "Nothing"));
     setCommandActiveTitlebar1(mouseCommand(config.readEntry("CommandActiveTitlebar1", "Raise"), true));
     setCommandActiveTitlebar2(mouseCommand(config.readEntry("CommandActiveTitlebar2", "Nothing"), true));
@@ -963,7 +963,7 @@ void Options::reloadCompositingSettings(bool force)
 // restricted should be true for operations that the user may not be able to repeat
 // if the window is moved out of the workspace (e.g. if the user moves a window
 // by the titlebar, and moves it too high beneath Kicker at the top edge, they
-// may not be able to move it back, unless they know about Alt+LMB)
+// may not be able to move it back, unless they know about Meta+LMB)
 Options::WindowOperation Options::windowOperation(const QString &name, bool restricted)
 {
     if (name == QStringLiteral("Move"))

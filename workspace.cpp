@@ -1330,7 +1330,7 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
     QDBusConnection::sessionBus().asyncCall(message);
 
     global_shortcuts_disabled_for_client = disable;
-    // Update also Alt+LMB actions etc.
+    // Update also Meta+LMB actions etc.
     for (auto it = clients.constBegin();
             it != clients.constEnd();
             ++it)

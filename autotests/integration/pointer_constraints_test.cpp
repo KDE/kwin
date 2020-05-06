@@ -179,14 +179,14 @@ void TestPointerConstraints::testConfinedPointer()
     // modifier + click should be ignored
     // first ensure the settings are ok
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", QStringLiteral("Alt"));
+    group.writeEntry("CommandAllKey", QStringLiteral("Meta"));
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
     group.writeEntry("CommandAll3", "Move");
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();
     workspace()->slotReconfigure();
-    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
     QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);

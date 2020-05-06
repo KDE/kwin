@@ -206,12 +206,12 @@
           </property>
           <item>
            <property name="text">
-            <string>Alt</string>
+            <string>Meta</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Meta</string>
+            <string>Alt</string>
            </property>
           </item>
          </widget>
