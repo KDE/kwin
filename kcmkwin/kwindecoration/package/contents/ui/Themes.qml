@@ -40,6 +40,7 @@ KCM.GridView {
     view.implicitCellWidth: Kirigami.Units.gridUnit * 18
 
     view.delegate: KCM.GridDelegate {
+        id: delegate
         text: model.display
 
         thumbnailAvailable: true
@@ -101,7 +102,7 @@ KCM.GridView {
                 onTriggered: {
                     kcm.theme = index
                     view.currentIndex = index
-                    bridgeItem.bridge.configure()
+                    bridgeItem.bridge.configure(delegate)
                 }
             }
         ]

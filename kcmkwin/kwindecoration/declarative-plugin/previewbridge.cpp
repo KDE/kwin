@@ -36,7 +36,11 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QQuickItem>
+#include <QQuickRenderControl>
+#include <QQuickWindow>
 #include <QVBoxLayout>
+#include <QWindow>
 
 namespace KDecoration2
 {
@@ -173,15 +177,16 @@ DecorationButton *PreviewBridge::createButton(KDecoration2::Decoration *decorati
     return m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
 }
 
-void PreviewBridge::configure()
+void PreviewBridge::configure(QQuickItem *ctx)
 {
     if (!m_valid) {
         return;
     }
     //setup the UI
-    QDialog dialog;
+    QDialog *dialog = new QDialog();
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
     if (m_lastCreatedClient) {
-        dialog.setWindowTitle(m_lastCreatedClient->caption());
+        dialog->setWindowTitle(m_lastCreatedClient->caption());
     }
 
     // create the KCModule through the plugintrader
@@ -189,7 +194,7 @@ void PreviewBridge::configure()
     if (!m_theme.isNull()) {
         args.insert(QStringLiteral("theme"), m_theme);
     }
-    KCModule *kcm = m_factory->create<KCModule>(QStringLiteral("kcmodule"), &dialog, QVariantList({args}));
+    KCModule *kcm = m_factory->create<KCModule>(QStringLiteral("kcmodule"), dialog, QVariantList({args}));
     if (!kcm) {
         return;
     }
@@ -205,28 +210,35 @@ void PreviewBridge::configure()
                                                           QStringLiteral("reloadConfig"));
         QDBusConnection::sessionBus().send(message);
     };
-    connect(&dialog, &QDialog::accepted, this, save);
+    connect(dialog, &QDialog::accepted, this, save);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                      QDialogButtonBox::Cancel |
                                                      QDialogButtonBox::RestoreDefaults |
                                                      QDialogButtonBox::Reset,
-                                                     &dialog);
+                                                     dialog);
 
     QPushButton *reset = buttons->button(QDialogButtonBox::Reset);
     reset->setEnabled(false);
     // Here we connect our buttons with the dialog
-    connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    connect(buttons, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
     connect(reset, &QPushButton::clicked, kcm, &KCModule::load);
     auto changedSignal = static_cast<void(KCModule::*)(bool)>(&KCModule::changed);
     connect(kcm, changedSignal, reset, &QPushButton::setEnabled);
     connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
 
-    QVBoxLayout *layout = new QVBoxLayout(&dialog);
+    QVBoxLayout *layout = new QVBoxLayout(dialog);
     layout->addWidget(kcm);
     layout->addWidget(buttons);
-    dialog.exec();
+
+    if (ctx->window()) {
+        dialog->winId(); // so it creates windowHandle
+        dialog->windowHandle()->setTransientParent(QQuickRenderControl::renderWindowFor(ctx->window()));
+        dialog->setModal(true);
+    }
+
+    dialog->show();
 }
 
 BridgeItem::BridgeItem(QObject *parent)
