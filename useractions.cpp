@@ -1132,31 +1132,6 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
     }
 }
 
-/**
- * Performs a mouse command on this client (see options.h)
- */
-bool X11Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)
-{
-    bool replay = false;
-    switch(command) {
-    case Options::MouseShade :
-        toggleShade();
-        cancelShadeHoverTimer();
-        break;
-    case Options::MouseSetShade:
-        setShade(ShadeNormal);
-        cancelShadeHoverTimer();
-        break;
-    case Options::MouseUnsetShade:
-        setShade(ShadeNone);
-        cancelShadeHoverTimer();
-        break;
-    default:
-        return AbstractClient::performMouseCommand(command, globalPos);
-    }
-    return replay;
-}
-
 void Workspace::slotActivateAttentionWindow()
 {
     if (attention_chain.count() > 0)

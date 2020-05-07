@@ -545,6 +545,11 @@ QVector<uint> AbstractClient::x11DesktopIds() const
     return x11Ids;
 }
 
+ShadeMode AbstractClient::shadeMode() const
+{
+    return m_shadeMode;
+}
+
 bool AbstractClient::isShadeable() const
 {
     return false;
@@ -557,12 +562,85 @@ void AbstractClient::setShade(bool set)
 
 void AbstractClient::setShade(ShadeMode mode)
 {
-    Q_UNUSED(mode)
+    if (!isShadeable())
+        return;
+    if (mode == ShadeHover && isMove())
+        return; // causes geometry breaks and is probably nasty
+    if (isSpecialWindow() || noBorder())
+        mode = ShadeNone;
+
+    mode = rules()->checkShade(mode);
+    if (m_shadeMode == mode)
+        return;
+
+    const bool wasShade = isShade();
+    const ShadeMode previousShadeMode = shadeMode();
+    m_shadeMode = mode;
+
+    if (wasShade == isShade()) {
+        // Decoration may want to update after e.g. hover-shade changes
+        emit shadeChanged();
+        return; // No real change in shaded state
+    }
+
+    Q_ASSERT(isDecorated());
+    GeometryUpdatesBlocker blocker(this);
+
+    doSetShade(previousShadeMode);
+
+    discardWindowPixmap();
+    updateWindowRules(Rules::Shade);
+
+    emit shadeChanged();
 }
 
-ShadeMode AbstractClient::shadeMode() const
+void AbstractClient::doSetShade(ShadeMode previousShadeMode)
 {
-    return ShadeNone;
+    Q_UNUSED(previousShadeMode)
+}
+
+void AbstractClient::shadeHover()
+{
+    setShade(ShadeHover);
+    cancelShadeHoverTimer();
+}
+
+void AbstractClient::shadeUnhover()
+{
+    setShade(ShadeNormal);
+    cancelShadeHoverTimer();
+}
+
+void AbstractClient::startShadeHoverTimer()
+{
+    if (!isShade())
+        return;
+    m_shadeHoverTimer = new QTimer(this);
+    connect(m_shadeHoverTimer, &QTimer::timeout, this, &AbstractClient::shadeHover);
+    m_shadeHoverTimer->setSingleShot(true);
+    m_shadeHoverTimer->start(options->shadeHoverInterval());
+}
+
+void AbstractClient::startShadeUnhoverTimer()
+{
+    if (m_shadeMode == ShadeHover && !isMoveResize() && !isMoveResizePointerButtonDown()) {
+        m_shadeHoverTimer = new QTimer(this);
+        connect(m_shadeHoverTimer, &QTimer::timeout, this, &AbstractClient::shadeUnhover);
+        m_shadeHoverTimer->setSingleShot(true);
+        m_shadeHoverTimer->start(options->shadeHoverInterval());
+    }
+}
+
+void AbstractClient::cancelShadeHoverTimer()
+{
+    delete m_shadeHoverTimer;
+    m_shadeHoverTimer = nullptr;
+}
+
+void AbstractClient::toggleShade()
+{
+    // If the mode is ShadeHover or ShadeActive, cancel shade too.
+    setShade(shadeMode() == ShadeNone ? ShadeNormal : ShadeNone);
 }
 
 AbstractClient::Position AbstractClient::titlebarPosition() const
@@ -1745,6 +1823,18 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
         updateCursor();
         break;
     }
+    case Options::MouseShade:
+        toggleShade();
+        cancelShadeHoverTimer();
+        break;
+    case Options::MouseSetShade:
+        setShade(ShadeNormal);
+        cancelShadeHoverTimer();
+        break;
+    case Options::MouseUnsetShade:
+        setShade(ShadeNone);
+        cancelShadeHoverTimer();
+        break;
     case Options::MouseNothing:
     default:
         replay = true;
@@ -2324,7 +2414,11 @@ void AbstractClient::setDecoratedClient(QPointer< Decoration::DecoratedClientImp
 
 void AbstractClient::enterEvent(const QPoint &globalPos)
 {
-    // TODO: shade hover
+    if (options->isShadeHover()) {
+        cancelShadeHoverTimer();
+        startShadeHoverTimer();
+    }
+
     if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
         return;
 
@@ -2350,7 +2444,8 @@ void AbstractClient::leaveEvent()
 {
     cancelAutoRaise();
     workspace()->cancelDelayFocus();
-    // TODO: shade hover
+    cancelShadeHoverTimer();
+    startShadeUnhoverTimer();
     // TODO: send hover leave to deco
     // TODO: handle Options::FocusStrictlyUnderMouse
 }

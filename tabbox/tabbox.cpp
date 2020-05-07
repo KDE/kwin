@@ -318,16 +318,12 @@ void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, QWindow *tabbox, bool b) 
 
 void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 {
-    X11Client *cl = dynamic_cast<X11Client *>(static_cast<TabBoxClientImpl*>(c)->client());
-    if (!cl) {
-        // shading is X11 specific
-        return;
-    }
-    cl->cancelShadeHoverTimer(); // stop core shading action
-    if (!b && cl->shadeMode() == ShadeNormal)
-        cl->setShade(ShadeHover);
-    else if (b && cl->shadeMode() == ShadeHover)
-        cl->setShade(ShadeNormal);
+    AbstractClient *client = static_cast<TabBoxClientImpl *>(c)->client();
+    client->cancelShadeHoverTimer(); // stop core shading action
+    if (!b && client->shadeMode() == ShadeNormal)
+        client->setShade(ShadeHover);
+    else if (b && client->shadeMode() == ShadeHover)
+        client->setShade(ShadeNormal);
 }
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const

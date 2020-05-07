@@ -120,7 +120,6 @@ X11Client::X11Client()
     , shade_below(nullptr)
     , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
-    , shadeHoverTimer(nullptr)
     , m_colormap(XCB_COLORMAP_NONE)
     , in_group(nullptr)
     , ping_timer(nullptr)
@@ -147,7 +146,6 @@ X11Client::X11Client()
 
     info = nullptr;
 
-    shade_mode = ShadeNone;
     deleting = false;
     m_fullscreenMode = FullScreenNone;
     hidden = false;
@@ -1468,35 +1466,8 @@ bool X11Client::isShadeable() const
     return !isSpecialWindow() && !noBorder() && (rules()->checkShade(ShadeNormal) != rules()->checkShade(ShadeNone));
 }
 
-void X11Client::setShade(ShadeMode mode)
+void X11Client::doSetShade(ShadeMode previousShadeMode)
 {
-    if (mode == ShadeHover && isMove())
-        return; // causes geometry breaks and is probably nasty
-    if (isSpecialWindow() || noBorder())
-        mode = ShadeNone;
-    mode = rules()->checkShade(mode);
-    if (shade_mode == mode)
-        return;
-    bool was_shade = isShade();
-    ShadeMode was_shade_mode = shade_mode;
-    shade_mode = mode;
-
-    // Decorations may turn off some borders when shaded
-    // this has to happen _before_ the tab alignment since it will restrict the minimum geometry
-#if 0
-    if (decoration)
-        decoration->borders(border_left, border_right, border_top, border_bottom);
-#endif
-
-    if (was_shade == isShade()) {
-        // Decoration may want to update after e.g. hover-shade changes
-        emit shadeChanged();
-        return; // No real change in shaded state
-    }
-
-    Q_ASSERT(isDecorated());   // noborder windows can't be shaded
-    GeometryUpdatesBlocker blocker(this);
-
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if (isShade()) {
         // shade_mode == ShadeNormal
@@ -1512,7 +1483,7 @@ void X11Client::setShade(ShadeMode mode)
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
         plainResize(s);
         shade_geometry_change = false;
-        if (was_shade_mode == ShadeHover) {
+        if (previousShadeMode == ShadeHover) {
             if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
                     workspace()->restack(this, shade_below, true);
             if (isActive())
@@ -1528,9 +1499,9 @@ void X11Client::setShade(ShadeMode mode)
         shade_geometry_change = false;
         plainResize(s);
         setGeometryRestore(frameGeometry());
-        if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
+        if ((shadeMode() == ShadeHover || shadeMode() == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
-        if (shade_mode == ShadeHover) {
+        if (shadeMode() == ShadeHover) {
             QList<Toplevel *> order = workspace()->stackingOrder();
             // invalidate, since "this" could be the topmost toplevel and shade_below dangeling
             shade_below = nullptr;
@@ -1554,36 +1525,8 @@ void X11Client::setShade(ShadeMode mode)
     }
     info->setState(isShade() ? NET::Shaded : NET::States(), NET::Shaded);
     info->setState(isShown(false) ? NET::States() : NET::Hidden, NET::Hidden);
-    discardWindowPixmap();
     updateVisibility();
     updateAllowedActions();
-    updateWindowRules(Rules::Shade);
-
-    emit shadeChanged();
-}
-
-void X11Client::shadeHover()
-{
-    setShade(ShadeHover);
-    cancelShadeHoverTimer();
-}
-
-void X11Client::shadeUnhover()
-{
-    setShade(ShadeNormal);
-    cancelShadeHoverTimer();
-}
-
-void X11Client::cancelShadeHoverTimer()
-{
-    delete shadeHoverTimer;
-    shadeHoverTimer = nullptr;
-}
-
-void X11Client::toggleShade()
-{
-    // If the mode is ShadeHover or ShadeActive, cancel shade too
-    setShade(shade_mode == ShadeNone ? ShadeNormal : ShadeNone);
 }
 
 void X11Client::updateVisibility()

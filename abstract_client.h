@@ -453,7 +453,7 @@ public:
         return _shortcut;
     }
     void setShortcut(const QString &cut);
-    virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
+    bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
     void setOnAllDesktops(bool set);
     void setDesktop(int);
     void enterDesktop(VirtualDesktop *desktop);
@@ -517,15 +517,11 @@ public:
     bool isShade() const {
         return shadeMode() == ShadeNormal;
     }
-    /**
-     * Default implementation returns @c ShadeNone
-     */
-    virtual ShadeMode shadeMode() const; // Prefer isShade()
+    ShadeMode shadeMode() const; // Prefer isShade()
     void setShade(bool set);
-    /**
-     * Default implementation does nothing
-     */
-    virtual void setShade(ShadeMode mode);
+    void setShade(ShadeMode mode);
+    void toggleShade();
+    void cancelShadeHoverTimer();
     /**
      * Whether the Client can be shaded. Default implementation returns @c false.
      */
@@ -950,6 +946,13 @@ protected:
      */
     virtual void doSetKeepBelow();
     /**
+     * Called from setShade() once the shadeMode value got updated, but before the changed signal
+     * is emitted.
+     *
+     * Default implementation does nothing.
+     */
+    virtual void doSetShade(ShadeMode previousShadeMode);
+    /**
      * Called from setDeskop once the desktop value got updated, but before the changed signal
      * is emitted.
      *
@@ -1203,6 +1206,13 @@ protected:
 
     bool tabTo(AbstractClient *other, bool behind, bool activate);
 
+    void startShadeHoverTimer();
+    void startShadeUnhoverTimer();
+
+private Q_SLOTS:
+    void shadeHover();
+    void shadeUnhover();
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -1221,6 +1231,8 @@ private:
     bool m_demandsAttention = false;
     bool m_minimized = false;
     QTimer *m_autoRaiseTimer = nullptr;
+    QTimer *m_shadeHoverTimer = nullptr;
+    ShadeMode m_shadeMode = ShadeNone;
     QVector <VirtualDesktop *> m_desktops;
 
     QString m_colorScheme;

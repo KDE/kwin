@@ -144,10 +144,7 @@ public:
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override; // For compositing
 
-    ShadeMode shadeMode() const override; // Prefer isShade()
-    void setShade(ShadeMode mode) override;
     bool isShadeable() const override;
-
     bool isMaximizable() const override;
     MaximizeMode maximizeMode() const override;
 
@@ -201,8 +198,6 @@ public:
 
     bool providesContextHelp() const override;
 
-    bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos) override;
-
     QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;
 
     xcb_colormap_t colormap() const;
@@ -251,9 +246,7 @@ public:
     static bool sameAppWindowRoleMatch(const X11Client *c1, const X11Client *c2, bool active_hack);
 
     void killWindow() override;
-    void toggleShade();
     void showContextHelp() override;
-    void cancelShadeHoverTimer();
     void checkActiveModal();
     StrutRect strutRect(StrutArea area) const;
     StrutRects strutRects() const;
@@ -330,10 +323,6 @@ public Q_SLOTS:
     void closeWindow() override;
     void updateCaption() override;
 
-private Q_SLOTS:
-    void shadeHover();
-    void shadeUnhover();
-
 private:
     // Handlers for X11 events
     bool mapRequestEvent(xcb_map_request_event_t *e);
@@ -359,6 +348,7 @@ protected:
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
+    void doSetShade(ShadeMode previousShadeMode) override;
     void doSetDesktop() override;
     void doMinimize() override;
     void doSetSkipPager() override;
@@ -503,7 +493,6 @@ private:
     void setTransient(xcb_window_t new_transient_for_id);
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
-    ShadeMode shade_mode;
     X11Client *shade_below;
     uint deleting : 1; ///< True when doing cleanup and destroying the client
     Xcb::MotifHints m_motif;
@@ -522,7 +511,6 @@ private:
     QRect m_bufferGeometry = QRect(0, 0, 100, 100);
     QRect m_clientGeometry = QRect(0, 0, 100, 100);
     QRect geom_fs_restore;
-    QTimer* shadeHoverTimer;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;
@@ -605,11 +593,6 @@ inline bool X11Client::isShown(bool shaded_is_shown) const
 inline bool X11Client::isHiddenInternal() const
 {
     return hidden;
-}
-
-inline ShadeMode X11Client::shadeMode() const
-{
-    return shade_mode;
 }
 
 inline MaximizeMode X11Client::maximizeMode() const
