@@ -113,6 +113,17 @@ QString WorkspaceWrapper::currentActivity() const
 #endif
 }
 
+void WorkspaceWrapper::setCurrentActivity(QString activity)
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    if (Activities::self()) {
+        Activities::self()->setCurrent(activity);
+    }
+#else
+    Q_UNUSED(activity)
+#endif
+}
+
 QStringList WorkspaceWrapper::activityList() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES
