@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "idle_inhibition.h"
 #include "screens.h"
+#include "waylandxdgshellintegration.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
 
@@ -144,7 +145,7 @@ void WaylandServer::terminateClientConnections()
     }
 }
 
-void WaylandServer::registerClient(AbstractClient *client)
+void WaylandServer::registerShellClient(AbstractClient *client)
 {
     if (client->readyForPainting()) {
         emit shellClientAdded(client);
@@ -154,13 +155,11 @@ void WaylandServer::registerClient(AbstractClient *client)
     m_clients << client;
 }
 
-void WaylandServer::createXdgToplevelClient(XdgToplevelInterface *shellSurface)
+void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
 {
-    if (!workspace()) {
-        return;
-    }
+    // TODO: Find a better way and more generic to install extensions.
 
-    SurfaceInterface *surface = shellSurface->surface();
+    SurfaceInterface *surface = client->surface();
     if (surface->client() == m_xwayland.client) {
         return;
     }
@@ -168,8 +167,7 @@ void WaylandServer::createXdgToplevelClient(XdgToplevelInterface *shellSurface)
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
 
-    XdgToplevelClient *client = new XdgToplevelClient(shellSurface);
-    registerClient(client);
+    registerShellClient(client);
 
     auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
         [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
@@ -183,6 +181,9 @@ void WaylandServer::createXdgToplevelClient(XdgToplevelInterface *shellSurface)
     if (auto decoration = ServerSideDecorationInterface::get(surface)) {
         client->installServerDecoration(decoration);
     }
+    if (auto decoration = XdgToplevelDecorationV1Interface::get(client->shellSurface())) {
+        client->installXdgDecoration(decoration);
+    }
     if (auto menu = m_appMenuManager->appMenuForSurface(surface)) {
         client->installAppMenu(menu);
     }
@@ -195,14 +196,19 @@ void WaylandServer::createXdgToplevelClient(XdgToplevelInterface *shellSurface)
     });
 }
 
-void WaylandServer::createXdgPopupClient(XdgPopupInterface *shellSurface)
+void WaylandServer::registerXdgGenericClient(AbstractClient *client)
 {
-    if (!workspace()) {
+    XdgToplevelClient *toplevelClient = qobject_cast<XdgToplevelClient *>(client);
+    if (toplevelClient) {
+        registerXdgToplevelClient(toplevelClient);
         return;
     }
-
-    XdgPopupClient *client = new XdgPopupClient(shellSurface);
-    registerClient(client);
+    XdgPopupClient *popupClient = qobject_cast<XdgPopupClient *>(client);
+    if (popupClient) {
+        registerShellClient(popupClient);
+        return;
+    }
+    qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
 }
 
 class KWinDisplay : public KWaylandServer::FilteredDisplay
@@ -340,9 +346,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_tabletManager = m_display->createTabletManagerInterface(m_display);
     m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
 
-    m_xdgShell = m_display->createXdgShell(m_display);
-    connect(m_xdgShell, &XdgShellInterface::toplevelCreated, this, &WaylandServer::createXdgToplevelClient);
-    connect(m_xdgShell, &XdgShellInterface::popupCreated, this, &WaylandServer::createXdgPopupClient);
+    auto shellIntegration = new WaylandXdgShellIntegration(this);
+    connect(shellIntegration, &WaylandXdgShellIntegration::clientCreated,
+            this, &WaylandServer::registerXdgGenericClient);
 
     m_xdgDecorationManagerV1 = m_display->createXdgDecorationManagerV1(m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this,

@@ -85,11 +85,6 @@ public:
     QRect clientGeometry() const;
     bool isClosing() const;
     bool isHidden() const;
-    bool isUnmapped() const;
-
-Q_SIGNALS:
-    void windowMapped();
-    void windowUnmapped();
 
 protected:
     void addDamage(const QRegion &damage) override;
@@ -116,8 +111,6 @@ private:
     void updateDepth();
     void internalShow();
     void internalHide();
-    void internalMap();
-    void internalUnmap();
     void cleanGrouping();
     void cleanTabBox();
 
@@ -132,7 +125,6 @@ private:
     QRect m_clientGeometry;
     bool m_isClosing = false;
     bool m_isHidden = false;
-    bool m_isUnmapped = true;
     bool m_haveNextWindowGeometry = false;
 };
 
@@ -151,6 +143,8 @@ class XdgToplevelClient final : public XdgSurfaceClient
 public:
     explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
     ~XdgToplevelClient() override;
+
+    KWaylandServer::XdgToplevelInterface *shellSurface() const;
 
     void debug(QDebug &stream) const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;

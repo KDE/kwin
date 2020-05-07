@@ -70,10 +70,8 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testMapUnmapMap_data();
-    void testMapUnmapMap();
+    void testMapUnmap();
     void testDesktopPresenceChanged();
-    void testTransientPositionAfterRemap();
     void testWindowOutputs_data();
     void testWindowOutputs();
     void testMinimizeActiveWindow_data();
@@ -158,109 +156,68 @@ void TestXdgShellClient::cleanup()
     Test::destroyWaylandConnection();
 }
 
-void TestXdgShellClient::testMapUnmapMap_data()
+void TestXdgShellClient::testMapUnmap()
 {
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
+    // This test verifies that the compositor destroys XdgToplevelClient when the
+    // associated xdg_toplevel surface is unmapped.
 
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
+    // Create a wl_surface and an xdg_toplevel, but don't commit them yet!
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(
+        Test::createXdgShellStableSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
 
-void TestXdgShellClient::testMapUnmapMap()
-{
-    // this test verifies that mapping a previously mapped window works correctly
     QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
     QVERIFY(clientAddedSpy.isValid());
-    QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
-    QVERIFY(effectsWindowShownSpy.isValid());
-    QSignalSpy effectsWindowHiddenSpy(effects, &EffectsHandler::windowHidden);
-    QVERIFY(effectsWindowHiddenSpy.isValid());
 
-    QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
 
-    // now let's render
+    // Tell the compositor that we want to map the surface.
+    surface->commit(Surface::CommitFlag::None);
+
+    // The compositor will respond with a configure event.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+
+    // Now we can attach a buffer with actual data to the surface.
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-
-    QVERIFY(clientAddedSpy.isEmpty());
     QVERIFY(clientAddedSpy.wait());
-    auto client = clientAddedSpy.first().first().value<AbstractClient *>();
+    QCOMPARE(clientAddedSpy.count(), 1);
+    AbstractClient *client = clientAddedSpy.last().first().value<AbstractClient *>();
     QVERIFY(client);
-    QVERIFY(client->isShown(true));
-    QCOMPARE(client->isHiddenInternal(), false);
     QCOMPARE(client->readyForPainting(), true);
-    QCOMPARE(client->depth(), 32);
-    QVERIFY(client->hasAlpha());
-    QCOMPARE(client->icon().name(), QStringLiteral("wayland"));
-    QCOMPARE(workspace()->activeClient(), client);
-    QVERIFY(effectsWindowShownSpy.isEmpty());
-    QVERIFY(client->isMaximizable());
-    QVERIFY(client->isMovable());
-    QVERIFY(client->isMovableAcrossScreens());
-    QVERIFY(client->isResizable());
-    QVERIFY(client->property("maximizable").toBool());
-    QVERIFY(client->property("moveable").toBool());
-    QVERIFY(client->property("moveableAcrossScreens").toBool());
-    QVERIFY(client->property("resizeable").toBool());
-    QCOMPARE(client->isInternal(), false);
-    QVERIFY(client->effectWindow());
-    QVERIFY(!client->effectWindow()->internalWindow());
-    QCOMPARE(client->internalId().isNull(), false);
-    const auto uuid = client->internalId();
-    QUuid deletedUuid;
-    QCOMPARE(deletedUuid.isNull(), true);
 
-    connect(client, &AbstractClient::windowClosed, this, [&deletedUuid] (Toplevel *, Deleted *d) { deletedUuid = d->internalId(); });
+    // When the client becomes active, the compositor will send another configure event.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
 
-    // now unmap
-    QSignalSpy hiddenSpy(client, &AbstractClient::windowHidden);
-    QVERIFY(hiddenSpy.isValid());
-    QSignalSpy windowClosedSpy(client, &AbstractClient::windowClosed);
-    QVERIFY(windowClosedSpy.isValid());
+    // Unmap the xdg_toplevel surface by committing a null buffer.
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
-    QVERIFY(hiddenSpy.wait());
-    QCOMPARE(client->readyForPainting(), true);
-    QCOMPARE(client->isHiddenInternal(), true);
-    QVERIFY(windowClosedSpy.isEmpty());
-    QVERIFY(!workspace()->activeClient());
-    QCOMPARE(effectsWindowHiddenSpy.count(), 1);
-    QCOMPARE(effectsWindowHiddenSpy.first().first().value<EffectWindow*>(), client->effectWindow());
+    QVERIFY(Test::waitForWindowDestroyed(client));
 
-    QSignalSpy windowShownSpy(client, &AbstractClient::windowShown);
-    QVERIFY(windowShownSpy.isValid());
-    Test::render(surface.data(), QSize(100, 50), Qt::blue, QImage::Format_RGB32);
-    QCOMPARE(clientAddedSpy.count(), 1);
-    QVERIFY(windowShownSpy.wait());
-    QCOMPARE(windowShownSpy.count(), 1);
-    QCOMPARE(clientAddedSpy.count(), 1);
-    QCOMPARE(client->readyForPainting(), true);
-    QCOMPARE(client->isHiddenInternal(), false);
-    QCOMPARE(client->depth(), 24);
-    QVERIFY(!client->hasAlpha());
-    QCOMPARE(workspace()->activeClient(), client);
-    QCOMPARE(effectsWindowShownSpy.count(), 1);
-    QCOMPARE(effectsWindowShownSpy.first().first().value<EffectWindow*>(), client->effectWindow());
-
-    // let's unmap again
-    surface->attachBuffer(Buffer::Ptr());
+    // Tell the compositor that we want to re-map the xdg_toplevel surface.
     surface->commit(Surface::CommitFlag::None);
-    QVERIFY(hiddenSpy.wait());
-    QCOMPARE(hiddenSpy.count(), 2);
-    QCOMPARE(client->readyForPainting(), true);
-    QCOMPARE(client->isHiddenInternal(), true);
-    QCOMPARE(client->internalId(), uuid);
-    QVERIFY(windowClosedSpy.isEmpty());
-    QCOMPARE(effectsWindowHiddenSpy.count(), 2);
-    QCOMPARE(effectsWindowHiddenSpy.last().first().value<EffectWindow*>(), client->effectWindow());
 
+    // The compositor will respond with a configure event.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 3);
+
+    // Now we can attach a buffer with actual data to the surface.
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 2);
+    client = clientAddedSpy.last().first().value<AbstractClient *>();
+    QVERIFY(client);
+    QCOMPARE(client->readyForPainting(), true);
+
+    // The compositor will respond with a configure event.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 4);
+
+    // Destroy the test client.
     shellSurface.reset();
-    surface.reset();
-    QVERIFY(windowClosedSpy.wait());
-    QCOMPARE(windowClosedSpy.count(), 1);
-    QCOMPARE(effectsWindowHiddenSpy.count(), 2);
-    QCOMPARE(deletedUuid.isNull(), false);
-    QCOMPARE(deletedUuid, uuid);
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 void TestXdgShellClient::testDesktopPresenceChanged()
@@ -294,43 +251,6 @@ void TestXdgShellClient::testDesktopPresenceChanged()
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(0).value<EffectWindow*>(), c->effectWindow());
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(1).toInt(), 1);
     QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(2).toInt(), 2);
-}
-
-void TestXdgShellClient::testTransientPositionAfterRemap()
-{
-    // this test simulates the situation that a transient window gets reused and the parent window
-    // moved between the two usages
-    QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-
-    // create the Transient window
-    XdgPositioner positioner(QSize(50, 40), QRect(0, 0, 5, 10));
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::RightEdge);
-    positioner.setGravity(Qt::BottomEdge | Qt::RightEdge);
-    QScopedPointer<Surface> transientSurface(Test::createSurface());
-    QScopedPointer<XdgShellPopup> transientShellSurface(Test::createXdgShellStablePopup(transientSurface.data(), shellSurface.data(), positioner));
-    auto transient = Test::renderAndWaitForShown(transientSurface.data(), positioner.initialSize(), Qt::blue);
-    QVERIFY(transient);
-    QCOMPARE(transient->frameGeometry(), QRect(c->frameGeometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
-
-    // unmap the transient
-    QSignalSpy windowHiddenSpy(transient, &AbstractClient::windowHidden);
-    QVERIFY(windowHiddenSpy.isValid());
-    transientSurface->attachBuffer(Buffer::Ptr());
-    transientSurface->commit(Surface::CommitFlag::None);
-    QVERIFY(windowHiddenSpy.wait());
-
-    // now move the parent surface
-    c->setFrameGeometry(c->frameGeometry().translated(5, 10));
-
-    // now map the transient again
-    QSignalSpy windowShownSpy(transient, &AbstractClient::windowShown);
-    QVERIFY(windowShownSpy.isValid());
-    Test::render(transientSurface.data(), QSize(50, 40), Qt::blue);
-    QVERIFY(windowShownSpy.wait());
-    QCOMPARE(transient->frameGeometry(), QRect(c->frameGeometry().topLeft() + QPoint(5, 10), QSize(50, 40)));
 }
 
 void TestXdgShellClient::testWindowOutputs_data()

@@ -260,16 +260,16 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this, [this](AbstractClient *c) {
             if (c->readyForPainting())
-                slotWaylandClientShown(c);
+                slotClientShown(c);
             else
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotWaylandClientShown);
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
         });
         const auto clients = waylandServer()->clients();
         for (AbstractClient *c : clients) {
             if (c->readyForPainting()) {
                 setupClientConnections(c);
             } else {
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotWaylandClientShown);
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
             }
         }
     }
@@ -569,13 +569,6 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
     emit windowAdded(c->effectWindow());
-}
-
-void EffectsHandlerImpl::slotWaylandClientShown(Toplevel *toplevel)
-{
-    AbstractClient *client = static_cast<AbstractClient *>(toplevel);
-    setupClientConnections(client);
-    emit windowAdded(toplevel->effectWindow());
 }
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)

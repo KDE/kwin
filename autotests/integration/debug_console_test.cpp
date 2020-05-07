@@ -388,16 +388,8 @@ void DebugConsoleTest::testWaylandClient()
 
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
-    shellSurface.reset();
-    Test::flushWaylandConnection();
-    qDebug() << rowsRemovedSpy.count();
-    QEXPECT_FAIL("wlShell", "Deleting a ShellSurface does not result in the server removing the XdgShellClient", Continue);
-    QVERIFY(rowsRemovedSpy.wait(500));
-    surface.reset();
+    QVERIFY(rowsRemovedSpy.wait());
 
-    if (rowsRemovedSpy.isEmpty()) {
-        QVERIFY(rowsRemovedSpy.wait());
-    }
     QCOMPARE(rowsRemovedSpy.count(), 1);
     QCOMPARE(rowsRemovedSpy.first().first().value<QModelIndex>(), waylandTopLevelIndex);
     QCOMPARE(rowsRemovedSpy.first().at(1).value<int>(), 0);

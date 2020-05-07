@@ -737,11 +737,6 @@ void Workspace::addShellClient(AbstractClient *client)
     updateTabbox();
     connect(client, &AbstractClient::windowShown, this, [this, client] {
         updateClientLayer(client);
-        // TODO: when else should we send the client through placement?
-        if (client->hasTransientPlacementHint()) {
-            const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
-            client->placeIn(area);
-        }
         markXStackingOrderAsDirty();
         updateStackingOrder(true);
         updateClientArea();

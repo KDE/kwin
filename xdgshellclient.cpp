@@ -58,12 +58,16 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
 
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
             this, &XdgSurfaceClient::handleConfigureAcknowledged);
+    connect(shellSurface, &XdgSurfaceInterface::resetOccurred,
+            this, &XdgSurfaceClient::destroyClient);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
             this, &XdgSurfaceClient::handleCommit);
     connect(shellSurface->surface(), &SurfaceInterface::shadowChanged,
             this, &XdgSurfaceClient::updateShadow);
-    connect(shellSurface->surface(), &SurfaceInterface::unmapped,
-            this, &XdgSurfaceClient::internalUnmap);
+#if 0 // TODO: Refactor kwin core in order to uncomment this code.
+    connect(shellSurface->surface(), &SurfaceInterface::mapped,
+            this, &XdgSurfaceClient::setReadyForPainting);
+#endif
     connect(shellSurface->surface(), &SurfaceInterface::unbound,
             this, &XdgSurfaceClient::destroyClient);
     connect(shellSurface->surface(), &SurfaceInterface::destroyed,
@@ -234,7 +238,7 @@ void XdgSurfaceClient::handleCommit()
     handleRoleCommit();
     m_lastAcknowledgedConfigure.reset();
 
-    internalMap();
+    setReadyForPainting();
     updateDepth();
 }
 
@@ -464,7 +468,7 @@ void XdgSurfaceClient::updateGeometry(const QRect &rect)
  */
 void XdgSurfaceClient::updateGeometryRestoreHack()
 {
-    if (isUnmapped() && geometryRestore().isEmpty() && !frameGeometry().isEmpty()) {
+    if (geometryRestore().isEmpty() && !frameGeometry().isEmpty()) {
         setGeometryRestore(frameGeometry());
     }
 }
@@ -496,12 +500,12 @@ void XdgSurfaceClient::addDamage(const QRegion &damage)
 bool XdgSurfaceClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return !isClosing() && !isHidden() && !isMinimized() && !isUnmapped();
+    return !isClosing() && !isHidden() && !isMinimized();
 }
 
 bool XdgSurfaceClient::isHiddenInternal() const
 {
-    return isHidden() || isUnmapped();
+    return isHidden();
 }
 
 void XdgSurfaceClient::hideClient(bool hide)
@@ -540,55 +544,6 @@ void XdgSurfaceClient::internalHide()
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
     emit windowHidden(this);
-}
-
-/**
- * \todo We just need to destroy XdgSurfaceClient when the xdg-surface is unmapped.
- */
-bool XdgSurfaceClient::isUnmapped() const
-{
-    return m_isUnmapped;
-}
-
-/**
- * \todo We just need to destroy XdgSurfaceClient when the xdg-surface is unmapped.
- */
-void XdgSurfaceClient::internalMap()
-{
-    if (!isUnmapped()) {
-        return;
-    }
-    m_isUnmapped = false;
-    if (readyForPainting()) {
-        addRepaintFull();
-        emit windowShown(this);
-    } else {
-        setReadyForPainting();
-    }
-    emit windowMapped();
-}
-
-/**
- * \todo We just need to destroy XdgSurfaceClient when the xdg-surface is unmapped.
- */
-void XdgSurfaceClient::internalUnmap()
-{
-    if (isUnmapped()) {
-        return;
-    }
-    if (isMoveResize()) {
-        leaveMoveResize();
-    }
-    m_isUnmapped = true;
-    m_requestedClientGeometry = QRect();
-    m_lastAcknowledgedConfigure = nullptr;
-    m_configureTimer->stop();
-    qDeleteAll(m_configureEvents);
-    m_configureEvents.clear();
-    addWorkspaceRepaint(visibleRect());
-    workspace()->clientHidden(this);
-    emit windowHidden(this);
-    emit windowUnmapped();
 }
 
 bool XdgSurfaceClient::isClosing() const
@@ -692,6 +647,11 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
 
 XdgToplevelClient::~XdgToplevelClient()
 {
+}
+
+XdgToplevelInterface *XdgToplevelClient::shellSurface() const
+{
+    return m_shellSurface;
 }
 
 void XdgToplevelClient::debug(QDebug &stream) const
@@ -933,7 +893,7 @@ bool XdgToplevelClient::hasStrut() const
 
 void XdgToplevelClient::showOnScreenEdge()
 {
-    if (!m_plasmaShellSurface || isUnmapped()) {
+    if (!m_plasmaShellSurface) {
         return;
     }
     hideClient(false);
@@ -1098,7 +1058,7 @@ bool XdgToplevelClient::acceptsFocus() const
             return m_plasmaShellSurface->panelTakesFocus();
         }
     }
-    return !isClosing() && !isUnmapped();
+    return !isClosing() && readyForPainting();
 }
 
 Layer XdgToplevelClient::layerForDock() const
@@ -1412,19 +1372,19 @@ void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *d
     m_serverDecoration = decoration;
 
     connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this, [this] {
-        if (!isClosing() && !isUnmapped()) {
+        if (!isClosing() && readyForPainting()) {
             updateDecoration(/* check_workspace_pos */ true);
         }
     });
     connect(m_serverDecoration, &ServerSideDecorationInterface::modeRequested, this,
         [this] (ServerSideDecorationManagerInterface::Mode mode) {
             const bool changed = mode != m_serverDecoration->mode();
-            if (changed && !isUnmapped()) {
+            if (changed && readyForPainting()) {
                 updateDecoration(/* check_workspace_pos */ false);
             }
         }
     );
-    if (!isUnmapped()) {
+    if (readyForPainting()) {
         updateDecoration(/* check_workspace_pos */ true);
     }
 }
@@ -1562,7 +1522,7 @@ void XdgToplevelClient::updateShowOnScreenEdge()
     if (!ScreenEdges::self()) {
         return;
     }
-    if (isUnmapped() || !m_plasmaShellSurface ||
+    if (!readyForPainting() || !m_plasmaShellSurface ||
             m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
         ScreenEdges::self()->reserve(this, ElectricNone);
         return;
@@ -1639,15 +1599,13 @@ void XdgToplevelClient::setupWindowManagementIntegration()
     if (isLockScreen()) {
         return;
     }
-    connect(this, &XdgToplevelClient::windowMapped,
+    connect(surface(), &SurfaceInterface::mapped,
             this, &XdgToplevelClient::setupWindowManagementInterface);
-    connect(this, &XdgToplevelClient::windowUnmapped,
-            this, &XdgToplevelClient::destroyWindowManagementInterface);
 }
 
 void XdgToplevelClient::setupPlasmaShellIntegration()
 {
-    connect(this, &XdgToplevelClient::windowMapped,
+    connect(surface(), &SurfaceInterface::mapped,
             this, &XdgToplevelClient::updateShowOnScreenEdge);
 }
 
@@ -1945,7 +1903,11 @@ static QPoint popupOffset(const QRect &anchorRect, const Qt::Edges anchorEdge,
 QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
 {
     const XdgPositioner positioner = m_shellSurface->positioner();
-    const QSize desiredSize = isUnmapped() ? positioner.size() : size();
+
+    QSize desiredSize = size();
+    if (desiredSize.isEmpty()) {
+        desiredSize = positioner.size();
+    }
 
     const QPoint parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
 

@@ -70,9 +70,6 @@ class LinuxDmabufUnstableV1Buffer;
 class TabletManagerInterface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
-class XdgShellInterface;
-class XdgToplevelInterface;
-class XdgPopupInterface;
 }
 
 
@@ -81,6 +78,7 @@ namespace KWin
 
 class AbstractClient;
 class Toplevel;
+class XdgPopupClient;
 class XdgToplevelClient;
 
 class KWIN_EXPORT WaylandServer : public QObject
@@ -264,15 +262,15 @@ private:
     quint16 createClientId(KWaylandServer::ClientConnection *c);
     void destroyInternalConnection();
     void initScreenLocker();
-    void createXdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
-    void createXdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
-    void registerClient(AbstractClient *client);
+    void registerXdgGenericClient(AbstractClient *client);
+    void registerXdgToplevelClient(XdgToplevelClient *client);
+    void registerXdgPopupClient(XdgPopupClient *client);
+    void registerShellClient(AbstractClient *client);
     KWaylandServer::Display *m_display = nullptr;
     KWaylandServer::CompositorInterface *m_compositor = nullptr;
     KWaylandServer::SeatInterface *m_seat = nullptr;
     KWaylandServer::TabletManagerInterface *m_tabletManager = nullptr;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManager = nullptr;
-    KWaylandServer::XdgShellInterface *m_xdgShell = nullptr;
     KWaylandServer::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;

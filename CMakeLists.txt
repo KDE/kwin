@@ -519,6 +519,8 @@ set(kwin_SRCS
     wayland_cursor_theme.cpp
     wayland_server.cpp
     waylandclient.cpp
+    waylandshellintegration.cpp
+    waylandxdgshellintegration.cpp
     window_property_notify_x11_filter.cpp
     workspace.cpp
     x11client.cpp
