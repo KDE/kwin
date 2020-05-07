@@ -1133,29 +1133,6 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
 }
 
 /**
- * Called by the decoration in the new API to determine what buttons the user has configured for
- * window tab dragging and the operations menu.
- */
-Options::WindowOperation X11Client::mouseButtonToWindowOperation(Qt::MouseButtons button)
-{
-    Options::MouseCommand com = Options::MouseNothing;
-    bool active = isActive();
-    if (!wantsInput())   // we cannot be active, use it anyway
-        active = true;
-
-    if (button == Qt::LeftButton)
-        com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    else if (button == Qt::MidButton)
-        com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-    else if (button == Qt::RightButton)
-        com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-
-    if (com == Options::MouseOperationsMenu)
-        return Options::OperationsOp;
-    return Options::NoOp;
-}
-
-/**
  * Performs a mouse command on this client (see options.h)
  */
 bool X11Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)

@@ -201,7 +201,6 @@ public:
 
     bool providesContextHelp() const override;
 
-    Options::WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
     bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos) override;
 
     QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;
