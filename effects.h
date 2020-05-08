@@ -59,7 +59,6 @@ class Group;
 class Toplevel;
 class Unmanaged;
 class WindowPropertyNotifyX11Filter;
-class X11Client;
 
 class KWIN_EXPORT EffectsHandlerImpl : public EffectsHandler
 {
@@ -308,8 +307,7 @@ protected:
     void connectNotify(const QMetaMethod &signal) override;
     void disconnectNotify(const QMetaMethod &signal) override;
     void effectsChanged();
-    void setupAbstractClientConnections(KWin::AbstractClient *c);
-    void setupClientConnections(KWin::X11Client *c);
+    void setupClientConnections(KWin::AbstractClient *client);
     void setupUnmanagedConnections(KWin::Unmanaged *u);
 
     /**

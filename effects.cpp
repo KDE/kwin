@@ -181,7 +181,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     );
     connect(ws, &Workspace::internalClientAdded, this,
         [this](InternalClient *client) {
-            setupAbstractClientConnections(client);
+            setupClientConnections(client);
             emit windowAdded(client->effectWindow());
         }
     );
@@ -255,7 +255,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         setupUnmanagedConnections(u);
     }
     for (InternalClient *client : ws->internalClients()) {
-        setupAbstractClientConnections(client);
+        setupClientConnections(client);
     }
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this, [this](AbstractClient *c) {
@@ -267,7 +267,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         const auto clients = waylandServer()->clients();
         for (AbstractClient *c : clients) {
             if (c->readyForPainting()) {
-                setupAbstractClientConnections(c);
+                setupClientConnections(c);
             } else {
                 connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotWaylandClientShown);
             }
@@ -293,7 +293,7 @@ void EffectsHandlerImpl::unloadAllEffects()
     effectsChanged();
 }
 
-void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
+void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
 {
     connect(c, &AbstractClient::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
     connect(c, static_cast<void (AbstractClient::*)(KWin::AbstractClient*, MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged),
@@ -334,6 +334,7 @@ void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
     connect(c, &AbstractClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
     connect(c, &AbstractClient::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
     connect(c, &AbstractClient::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
+    connect(c, &AbstractClient::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
     connect(c, &AbstractClient::unresponsiveChanged, this,
         [this, c](bool unresponsive) {
             emit windowUnresponsiveChanged(c->effectWindow(), unresponsive);
@@ -366,12 +367,6 @@ void EffectsHandlerImpl::setupAbstractClientConnections(AbstractClient* c)
             emit windowFullScreenChanged(c->effectWindow());
         }
     );
-}
-
-void EffectsHandlerImpl::setupClientConnections(X11Client *c)
-{
-    setupAbstractClientConnections(c);
-    connect(c, &X11Client::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
@@ -579,7 +574,7 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 void EffectsHandlerImpl::slotWaylandClientShown(Toplevel *toplevel)
 {
     AbstractClient *client = static_cast<AbstractClient *>(toplevel);
-    setupAbstractClientConnections(client);
+    setupClientConnections(client);
     emit windowAdded(toplevel->effectWindow());
 }
 
