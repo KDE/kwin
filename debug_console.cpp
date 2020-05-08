@@ -894,10 +894,6 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     for (auto c : x11Clients) {
         m_x11Clients.append(c);
     }
-    const auto x11DesktopClients = workspace()->desktopList();
-    for (auto c : x11DesktopClients) {
-        m_x11Clients.append(c);
-    }
     connect(workspace(), &Workspace::clientAdded, this,
         [this] (AbstractClient *client) {
             if (X11Client *x11Client = qobject_cast<X11Client *>(client)) {
@@ -1289,12 +1285,6 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         }
         connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
     }
-    for (auto c : workspace()->desktopList()) {
-        if (!c->surface()) {
-            continue;
-        }
-        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-    }
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::shellClientAdded, this,
             [this, reset] (AbstractClient *c) {
@@ -1343,7 +1333,6 @@ int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
     }
     // toplevel are all windows
     return workspace()->allClientList().count() +
-           workspace()->desktopList().count() +
            workspace()->unmanagedList().count();
 }
 
@@ -1371,11 +1360,6 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
         return createIndex(row, column, allClients.at(row)->surface());
     }
     int reference = allClients.count();
-    const auto &desktopClients = workspace()->desktopList();
-    if (row < reference + desktopClients.count()) {
-        return createIndex(row, column, desktopClients.at(row-reference)->surface());
-    }
-    reference += desktopClients.count();
     const auto &unmanaged = workspace()->unmanagedList();
     if (row < reference + unmanaged.count()) {
         return createIndex(row, column, unmanaged.at(row-reference)->surface());
@@ -1423,13 +1407,6 @@ QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
             }
         }
         row = allClients.count();
-        const auto &desktopClients = workspace()->desktopList();
-        for (int i = 0; i < desktopClients.count(); i++) {
-            if (desktopClients.at(i)->surface() == parent) {
-                return createIndex(row + i, 0, parent);
-            }
-        }
-        row += desktopClients.count();
         const auto &unmanaged = workspace()->unmanagedList();
         for (int i = 0; i < unmanaged.count(); i++) {
             if (unmanaged.at(i)->surface() == parent) {

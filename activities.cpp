@@ -73,6 +73,8 @@ void Activities::slotCurrentChanged(const QString &newActivity)
 void Activities::slotRemoved(const QString &activity)
 {
     foreach (X11Client *client, Workspace::self()->clientList()) {
+        if (client->isDesktop())
+            continue;
         client->setOnActivity(activity, false);
     }
     //toss out any session data for it
@@ -167,6 +169,8 @@ void Activities::reallyStop(const QString &id)
     const QList<X11Client *> &clients = ws->clientList();
     for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
         const X11Client *c = (*it);
+        if (c->isDesktop())
+            continue;
         const QByteArray sessionId = c->sessionId();
         if (sessionId.isEmpty()) {
             continue; //TODO support old wm_command apps too?

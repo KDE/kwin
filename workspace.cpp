@@ -446,7 +446,7 @@ void Workspace::initWithX11()
         // No client activated in manage()
         if (new_active_client == nullptr)
             new_active_client = topClientOnDesktop(VirtualDesktopManager::self()->current(), -1);
-        if (new_active_client == nullptr && !desktops.isEmpty())
+        if (new_active_client == nullptr)
             new_active_client = findDesktop(true, VirtualDesktopManager::self()->current());
     }
     if (new_active_client != nullptr)
@@ -477,7 +477,6 @@ Workspace::~Workspace()
         // from crashing.
         clients.removeAll(c);
         m_allClients.removeAll(c);
-        desktops.removeAll(c);
     }
     X11Client::cleanupX11();
 
@@ -576,14 +575,13 @@ void Workspace::addClient(X11Client *c)
         grp->gotLeader(c);
 
     if (c->isDesktop()) {
-        desktops.append(c);
         if (active_client == nullptr && should_get_focus.isEmpty() && c->isOnCurrentDesktop())
             requestFocus(c);   // TODO: Make sure desktop is active after startup if there's no other window active
     } else {
         FocusChain::self()->update(c, FocusChain::Update);
-        clients.append(c);
-        m_allClients.append(c);
     }
+    clients.append(c);
+    m_allClients.append(c);
     if (!unconstrained_stacking_order.contains(c))
         unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
     if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
@@ -629,11 +627,10 @@ void Workspace::removeClient(X11Client *c)
         clientShortcutUpdated(c);   // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
     }
 
-    Q_ASSERT(clients.contains(c) || desktops.contains(c));
+    Q_ASSERT(clients.contains(c));
     // TODO: if marked client is removed, notify the marked list
     clients.removeAll(c);
     m_allClients.removeAll(c);
-    desktops.removeAll(c);
     markXStackingOrderAsDirty();
     attention_chain.removeAll(c);
     Group* group = findGroup(c->window());
@@ -991,7 +988,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
     else if (active_client && active_client->isShown(true) && active_client->isOnCurrentDesktop())
         c = active_client;
 
-    if (c == nullptr && !desktops.isEmpty())
+    if (!c)
         c = findDesktop(true, desktop);
 
     if (c != active_client)
@@ -999,8 +996,6 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
 
     if (c)
         requestFocus(c);
-    else if (!desktops.isEmpty())
-        requestFocus(findDesktop(true, desktop));
     else
         focusToNull();
 }
@@ -1107,7 +1102,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     else if (active_client && active_client->isShown(true) && active_client->isOnCurrentDesktop() && active_client->isOnCurrentActivity())
         c = active_client;
 
-    if (c == nullptr && !desktops.isEmpty())
+    if (!c)
         c = findDesktop(true, VirtualDesktopManager::self()->current());
 
     if (c != active_client)
@@ -1115,8 +1110,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
     if (c)
         requestFocus(c);
-    else if (!desktops.isEmpty())
-        requestFocus(findDesktop(true, VirtualDesktopManager::self()->current()));
     else
         focusToNull();
 
@@ -1659,18 +1652,12 @@ X11Client *Workspace::findClient(std::function<bool (const X11Client *)> func) c
     if (X11Client *ret = Toplevel::findInList(clients, func)) {
         return ret;
     }
-    if (X11Client *ret = Toplevel::findInList(desktops, func)) {
-        return ret;
-    }
     return nullptr;
 }
 
 AbstractClient *Workspace::findAbstractClient(std::function<bool (const AbstractClient*)> func) const
 {
     if (AbstractClient *ret = Toplevel::findInList(m_allClients, func)) {
-        return ret;
-    }
-    if (X11Client *ret = Toplevel::findInList(desktops, func)) {
         return ret;
     }
     if (InternalClient *ret = Toplevel::findInList(m_internalClients, func)) {
@@ -1719,9 +1706,6 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
     if (X11Client *ret = Toplevel::findInList(clients, func)) {
         return ret;
     }
-    if (X11Client *ret = Toplevel::findInList(desktops, func)) {
-        return ret;
-    }
     if (Unmanaged *ret = Toplevel::findInList(unmanaged, func)) {
         return ret;
     }
@@ -1734,7 +1718,6 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
 void Workspace::forEachToplevel(std::function<void (Toplevel *)> func)
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
-    std::for_each(desktops.constBegin(), desktops.constEnd(), func);
     std::for_each(deleted.constBegin(), deleted.constEnd(), func);
     std::for_each(unmanaged.constBegin(), unmanaged.constEnd(), func);
     std::for_each(m_internalClients.constBegin(), m_internalClients.constEnd(), func);
@@ -1755,7 +1738,6 @@ bool Workspace::hasClient(const AbstractClient *c)
 void Workspace::forEachAbstractClient(std::function< void (AbstractClient*) > func)
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
-    std::for_each(desktops.constBegin(), desktops.constEnd(), func);
     std::for_each(m_internalClients.constBegin(), m_internalClients.constEnd(), func);
 }
 

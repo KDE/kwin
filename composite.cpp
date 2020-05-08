@@ -369,9 +369,6 @@ void Compositor::startupWithWorkspace()
         c->setupCompositing();
         c->updateShadow();
     }
-    for (X11Client *c : Workspace::self()->desktopList()) {
-        c->setupCompositing();
-    }
     for (Unmanaged *c : Workspace::self()->unmanagedList()) {
         c->setupCompositing();
         c->updateShadow();
@@ -427,9 +424,6 @@ void Compositor::stop()
         for (X11Client *c : Workspace::self()->clientList()) {
             m_scene->removeToplevel(c);
         }
-        for (X11Client *c : Workspace::self()->desktopList()) {
-            m_scene->removeToplevel(c);
-        }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
             m_scene->removeToplevel(c);
         }
@@ -437,9 +431,6 @@ void Compositor::stop()
             m_scene->removeToplevel(client);
         }
         for (X11Client *c : Workspace::self()->clientList()) {
-            c->finishCompositing();
-        }
-        for (X11Client *c : Workspace::self()->desktopList()) {
             c->finishCompositing();
         }
         for (Unmanaged *c : Workspace::self()->unmanagedList()) {
@@ -753,9 +744,6 @@ static bool repaintsPending(const QList<T*> &windows)
 bool Compositor::windowRepaintsPending() const
 {
     if (repaintsPending(Workspace::self()->clientList())) {
-        return true;
-    }
-    if (repaintsPending(Workspace::self()->desktopList())) {
         return true;
     }
     if (repaintsPending(Workspace::self()->unmanagedList())) {

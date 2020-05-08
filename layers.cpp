@@ -205,13 +205,10 @@ void Workspace::propagateClients(bool propagate_new_clients)
     int pos = 0;
     xcb_window_t *cl(nullptr);
     if (propagate_new_clients) {
-        cl = new xcb_window_t[ manual_overlays.count() + desktops.count() + clients.count()];
+        cl = new xcb_window_t[ manual_overlays.count() + clients.count()];
         for (const auto win : manual_overlays) {
             cl[pos++] = win;
         }
-        // TODO this is still not completely in the map order
-        for (auto it = desktops.constBegin(); it != desktops.constEnd(); ++it)
-            cl[pos++] = (*it)->window();
         for (auto it = clients.constBegin(); it != clients.constEnd(); ++it)
             cl[pos++] = (*it)->window();
         rootInfo()->setClientList(cl, pos);
