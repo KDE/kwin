@@ -176,6 +176,11 @@ Q_SIGNALS:
      */
     void windowGeometryChanged(const QRect &rect);
 
+    /**
+     * This signal is emitted when the surface has been unmapped and its state has been reset.
+     */
+    void resetOccurred();
+
 private:
     QScopedPointer<XdgSurfaceInterfacePrivate> d;
     friend class XdgSurfaceInterfacePrivate;
@@ -282,6 +287,11 @@ Q_SIGNALS:
      * be configured. After initializing the toplevel, you must send a configure event.
      */
     void initializeRequested();
+
+    /**
+     * This signal is emitted when the toplevel has been unmapped and its state has been reset.
+     */
+    void resetOccurred();
 
     /**
      * This signal is emitted when the toplevel's title has been changed.

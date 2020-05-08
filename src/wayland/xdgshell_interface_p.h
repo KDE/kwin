@@ -82,12 +82,14 @@ public:
     XdgSurfaceInterfacePrivate(XdgSurfaceInterface *xdgSurface);
 
     void commit();
+    void reset();
 
     XdgSurfaceInterface *q;
     XdgShellInterface *shell;
     QPointer<XdgToplevelInterface> toplevel;
     QPointer<XdgPopupInterface> popup;
     QPointer<SurfaceInterface> surface;
+    bool isMapped = false;
     bool isConfigured = false;
 
     struct State
@@ -115,6 +117,7 @@ public:
     XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel, XdgSurfaceInterface *surface);
 
     void commit() override;
+    void reset();
 
     static XdgToplevelInterfacePrivate *get(XdgToplevelInterface *toplevel);
     static XdgToplevelInterfacePrivate *get(::wl_resource *resource);
@@ -160,6 +163,7 @@ public:
     XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface);
 
     void commit() override;
+    void reset();
 
     XdgPopupInterface *q;
     XdgSurfaceInterface *parentXdgSurface;

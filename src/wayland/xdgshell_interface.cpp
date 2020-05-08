@@ -16,8 +16,6 @@
 namespace KWaylandServer
 {
 
-// TODO: Reset the surface when it becomes unmapped.
-
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
 {
@@ -151,6 +149,14 @@ void XdgSurfaceInterfacePrivate::commit()
         current.windowGeometry = next.windowGeometry;
         emit q->windowGeometryChanged(current.windowGeometry);
     }
+    isMapped = surface->buffer();
+}
+
+void XdgSurfaceInterfacePrivate::reset()
+{
+    isConfigured = false;
+    current = next = State();
+    emit q->resetOccurred();
 }
 
 XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface *surface)
@@ -307,10 +313,17 @@ void XdgToplevelInterfacePrivate::commit()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
 
+    bool isResettable = xdgSurfacePrivate->isConfigured && xdgSurfacePrivate->isMapped;
+
     if (xdgSurfacePrivate->isConfigured) {
         xdgSurfacePrivate->commit();
     } else {
         emit q->initializeRequested();
+        return;
+    }
+
+    if (isResettable && !xdgSurfacePrivate->isMapped) {
+        reset();
         return;
     }
 
@@ -322,6 +335,18 @@ void XdgToplevelInterfacePrivate::commit()
         current.maximumSize = next.maximumSize;
         emit q->maximumSizeChanged(current.maximumSize);
     }
+}
+
+void XdgToplevelInterfacePrivate::reset()
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+    xdgSurfacePrivate->reset();
+
+    windowTitle = QString();
+    windowClass = QString();
+    current = next = State();
+
+    emit q->resetOccurred();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_destroy_resource(Resource *resource)
@@ -600,11 +625,24 @@ void XdgPopupInterfacePrivate::commit()
 {
     auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
 
+    bool isResettable = xdgSurfacePrivate->isConfigured && xdgSurfacePrivate->isMapped;
+
     if (xdgSurfacePrivate->isConfigured) {
         xdgSurfacePrivate->commit();
     } else {
         emit q->initializeRequested();
+        return;
     }
+
+    if (isResettable && !xdgSurfacePrivate->isMapped) {
+        reset();
+    }
+}
+
+void XdgPopupInterfacePrivate::reset()
+{
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+    xdgSurfacePrivate->reset();
 }
 
 void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)
