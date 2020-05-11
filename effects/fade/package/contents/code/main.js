@@ -97,9 +97,7 @@ function fadeOutHandler(w) {
     }
 }
 effects.windowAdded.connect(fadeInHandler);
-effects.windowShown.connect(fadeInHandler);
 effects.windowClosed.connect(fadeOutHandler);
-effects.windowHidden.connect(fadeOutHandler);
 effects.windowDataChanged.connect(function (window, role) {
     if (role == Effect.WindowAddedGrabRole) {
         if (effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
