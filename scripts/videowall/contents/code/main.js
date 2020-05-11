@@ -39,7 +39,7 @@ function isVideoPlayer(client) {
 
 var videowall = function(client, set) {
     if (set && isVideoPlayer(client)) {
-        client.geometry = workspace.clientArea(KWin.FullArea, 0, 1);
+        client.frameGeometry = workspace.clientArea(KWin.FullArea, 0, 1);
     }
 };
 

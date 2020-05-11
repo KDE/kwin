@@ -219,8 +219,16 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     /**
      * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
+     *
+     * @deprecated Use frameGeometry
      */
     Q_PROPERTY(QRect geometry READ frameGeometry WRITE setFrameGeometry)
+
+    /**
+     * The geometry of this Client. Be aware that depending on resize mode the frameGeometryChanged
+     * signal might be emitted at each resize step or only at the end of the resize operation.
+     */
+    Q_PROPERTY(QRect frameGeometry READ frameGeometry WRITE setFrameGeometry)
 
     /**
      * Whether the Client is currently being moved by the user.
