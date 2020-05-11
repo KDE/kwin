@@ -351,8 +351,7 @@ public Q_SLOTS:
     void hideOutline();
 
 private Q_SLOTS:
-    void setupAbstractClientConnections(AbstractClient *client);
-    void setupClientConnections(X11Client *client);
+    void setupClientConnections(AbstractClient *client);
 };
 
 class QtScriptWorkspaceWrapper : public WorkspaceWrapper

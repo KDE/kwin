@@ -69,7 +69,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::clientAdded);
-        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::setupAbstractClientConnections);
+        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::setupClientConnections);
     }
     foreach (KWin::X11Client *client, ws->clientList()) {
         setupClientConnections(client);
@@ -277,20 +277,19 @@ QString WorkspaceWrapper::supportInformation() const
     return Workspace::self()->supportInformation();
 }
 
-void WorkspaceWrapper::setupAbstractClientConnections(AbstractClient *client)
+void WorkspaceWrapper::setupClientConnections(AbstractClient *client)
 {
     connect(client, &AbstractClient::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
     connect(client, &AbstractClient::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
     connect(client, qOverload<AbstractClient *, bool, bool>(&AbstractClient::clientMaximizedStateChanged),
             this, &WorkspaceWrapper::clientMaximizeSet);
-}
 
-void WorkspaceWrapper::setupClientConnections(X11Client *client)
-{
-    setupAbstractClientConnections(client);
+    X11Client *x11Client = qobject_cast<X11Client *>(client); // TODO: Drop X11-specific signals.
+    if (!x11Client)
+        return;
 
-    connect(client, &X11Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
-    connect(client, &X11Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
+    connect(x11Client, &X11Client::clientManaging, this, &WorkspaceWrapper::clientManaging);
+    connect(x11Client, &X11Client::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)

@@ -899,8 +899,10 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
         m_x11Clients.append(c);
     }
     connect(workspace(), &Workspace::clientAdded, this,
-        [this] (X11Client *c) {
-            add(s_x11ClientId -1, m_x11Clients, c);
+        [this] (AbstractClient *client) {
+            if (X11Client *x11Client = qobject_cast<X11Client *>(client)) {
+                add(s_x11ClientId -1, m_x11Clients, x11Client);
+            }
         }
     );
     connect(workspace(), &Workspace::clientRemoved, this,

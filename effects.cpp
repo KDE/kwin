@@ -166,7 +166,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         }
     );
     connect(ws, &Workspace::clientAdded, this,
-        [this](X11Client *c) {
+        [this](AbstractClient *c) {
             if (c->readyForPainting())
                 slotClientShown(c);
             else
@@ -564,8 +564,8 @@ void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 {
-    Q_ASSERT(qobject_cast<X11Client *>(t));
-    X11Client *c = static_cast<X11Client *>(t);
+    Q_ASSERT(qobject_cast<AbstractClient *>(t));
+    AbstractClient *c = static_cast<AbstractClient *>(t);
     disconnect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
     setupClientConnections(c);
     emit windowAdded(c->effectWindow());
