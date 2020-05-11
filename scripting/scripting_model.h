@@ -268,6 +268,14 @@ public:
     ~ClientModelByScreenAndDesktop() override;
 };
 
+class ClientModelByScreenAndActivity : public ClientModel
+{
+    Q_OBJECT
+public:
+    ClientModelByScreenAndActivity(QObject *parent = nullptr);
+    ~ClientModelByScreenAndActivity() override;
+};
+
 /**
  * @brief Custom QSortFilterProxyModel to filter on Client caption, role and class.
  */

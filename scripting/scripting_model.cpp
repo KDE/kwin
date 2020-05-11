@@ -847,6 +847,7 @@ name::~name() {}
 CLIENT_MODEL_WRAPPER(SimpleClientModel, QList<LevelRestriction>())
 CLIENT_MODEL_WRAPPER(ClientModelByScreen, QList<LevelRestriction>() << ScreenRestriction)
 CLIENT_MODEL_WRAPPER(ClientModelByScreenAndDesktop, QList<LevelRestriction>() << ScreenRestriction << VirtualDesktopRestriction)
+CLIENT_MODEL_WRAPPER(ClientModelByScreenAndActivity, QList<LevelRestriction>() << ScreenRestriction << ActivityRestriction)
 #undef CLIENT_MODEL_WRAPPER
 
 ClientFilterModel::ClientFilterModel(QObject *parent)
