@@ -61,6 +61,7 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testStackingOrder();
     void testPointer();
     void testPointerButton();
     void testPointerAxis();
@@ -219,6 +220,24 @@ void LockScreenTest::init()
 void LockScreenTest::cleanup()
 {
     Test::destroyWaylandConnection();
+}
+
+void LockScreenTest::testStackingOrder()
+{
+    // This test verifies that the lockscreen greeter is placed above other windows.
+
+    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+
+    LOCK
+    QVERIFY(clientAddedSpy.wait());
+
+    AbstractClient *client = clientAddedSpy.first().first().value<AbstractClient *>();
+    QVERIFY(client);
+    QVERIFY(client->isLockScreen());
+    QCOMPARE(client->layer(), UnmanagedLayer);
+
+    UNLOCK
 }
 
 void LockScreenTest::testPointer()
