@@ -75,9 +75,7 @@ var logoutEffect = {
     init: function () {
         logoutEffect.loadConfig();
         effects.windowAdded.connect(logoutEffect.opened);
-        effects.windowShown.connect(logoutEffect.opened);
         effects.windowClosed.connect(logoutEffect.closed);
-        effects.windowHidden.connect(logoutEffect.closed);
     }
 };
 logoutEffect.init();
