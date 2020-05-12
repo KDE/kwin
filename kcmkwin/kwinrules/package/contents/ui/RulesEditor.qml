@@ -48,12 +48,8 @@ ScrollViewKCM {
         Kirigami.PlaceholderMessage {
             id: hintArea
             visible: rulesView.count <= 4
-            anchors {
-                top: parent.contentItem.bottom
-                left: parent.left
-                right: parent.right
-                bottom: parent.bottom
-            }
+            anchors.centerIn: parent
+            width: parent.width - (units.largeSpacing * 4)
             helpfulAction: QQC2.Action {
                 text: i18n("Add Properties...")
                 icon.name: "list-add-symbolic"

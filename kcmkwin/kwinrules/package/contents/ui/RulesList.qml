@@ -68,7 +68,8 @@ ScrollViewKCM {
 
         Kirigami.PlaceholderMessage {
             visible: ruleBookView.count == 0
-            anchors.fill: parent
+            anchors.centerIn: parent
+            width: parent.width - (units.largeSpacing * 4)
             text: i18n("No rules for specific windows are currently set");
         }
     }
