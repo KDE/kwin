@@ -25,7 +25,6 @@
 class KConfig;
 
 #include <kcmodule.h>
-#include <KComboBox>
 #include <KLocalizedString>
 
 #include "ui_actions.h"
@@ -68,12 +67,6 @@ private:
 
     KWinMouseConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
-
-    void createMaximizeButtonTooltips(KComboBox* combo);
-
-private Q_SLOTS:
-    void paletteChanged();
-
 };
 
 class KWindowActionsConfig : public KCModule

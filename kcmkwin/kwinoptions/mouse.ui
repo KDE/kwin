@@ -607,15 +607,24 @@
       </item>
       <item row="0" column="1">
        <widget class="KComboBox" name="kcfg_MaximizeButtonLeftClickCommand">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;left&lt;/em&gt; click onto the maximize button.</string>
         </property>
+        <item>
+         <property name="text">
+          <string>Maximize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maximize (vertical only)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maximize (horizontal only)</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="1" column="0">
@@ -633,15 +642,24 @@
       </item>
       <item row="1" column="1">
        <widget class="KComboBox" name="kcfg_MaximizeButtonMiddleClickCommand">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;middle&lt;/em&gt; click onto the maximize button.</string>
         </property>
+        <item>
+         <property name="text">
+          <string>Maximize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maximize (vertical only)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maximize (horizontal only)</string>
+         </property>
+        </item>
        </widget>
       </item>
       <item row="2" column="0">
@@ -659,15 +677,24 @@
       </item>
       <item row="2" column="1">
        <widget class="KComboBox" name="kcfg_MaximizeButtonRightClickCommand">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="whatsThis">
          <string>Behavior on &lt;em&gt;right&lt;/em&gt; click onto the maximize button.</string>
         </property>
+        <item>
+         <property name="text">
+          <string>Maximize</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maximize (vertical only)</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Maximize (horizontal only)</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
