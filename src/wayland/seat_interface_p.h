@@ -19,6 +19,7 @@
 namespace KWaylandServer
 {
 
+class AbstractDataSource;
 class DataDeviceInterface;
 class TextInputInterface;
 
@@ -52,7 +53,7 @@ public:
     QVector<TextInputInterface*> textInputs;
 
     // the last thing copied into the clipboard content
-    DataSourceInterface *currentSelection = nullptr;
+    AbstractDataSource *currentSelection = nullptr;
 
     // Pointer related members
     struct Pointer {

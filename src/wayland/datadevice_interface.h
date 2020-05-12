@@ -18,6 +18,7 @@ namespace KWaylandServer
 class DataDeviceManagerInterface;
 class DataOfferInterface;
 class DataSourceInterface;
+class AbstractDataSource;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -51,7 +52,7 @@ public:
 
     DataSourceInterface *selection() const;
 
-    void sendSelection(DataSourceInterface *other);
+    void sendSelection(KWaylandServer::AbstractDataSource *other);
     void sendClearSelection();
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.

@@ -24,7 +24,7 @@ public:
     Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager, wl_resource *parentResource);
     ~Private();
 
-    DataOfferInterface *createDataOffer(DataSourceInterface *source);
+    DataOfferInterface *createDataOffer(AbstractDataSource *source);
 
     SeatInterface *seat;
     DataSourceInterface *source = nullptr;
@@ -149,7 +149,7 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
     }
 }
 
-DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)
+DataOfferInterface *DataDeviceInterface::Private::createDataOffer(AbstractDataSource *source)
 {
     if (!resource) {
         return nullptr;
@@ -209,7 +209,7 @@ DataSourceInterface *DataDeviceInterface::selection() const
     return d->selection;
 }
 
-void DataDeviceInterface::sendSelection(DataSourceInterface *other)
+void DataDeviceInterface::sendSelection(AbstractDataSource *other)
 {
     Q_D();
     auto r = d->createDataOffer(other);

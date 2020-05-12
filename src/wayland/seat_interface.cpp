@@ -3,6 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+#include "abstract_data_source.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "display.h"
@@ -1554,13 +1555,13 @@ TextInputInterface *SeatInterface::focusedTextInput() const
     return d->textInput.focus.textInput;
 }
 
-DataSourceInterface *SeatInterface::selection() const
+AbstractDataSource *SeatInterface::selection() const
 {
     Q_D();
     return d->currentSelection;
 }
 
-void SeatInterface::setSelection(DataSourceInterface *selection)
+void SeatInterface::setSelection(AbstractDataSource *selection)
 {
     Q_D();
     if (d->currentSelection == selection) {

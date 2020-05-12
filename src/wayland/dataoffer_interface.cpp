@@ -26,7 +26,7 @@ const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = 
 };
 #endif
 
-DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource)
+DataOfferInterface::Private::Private(AbstractDataSource *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource)
     : Resource::Private(q, nullptr, parentResource, &wl_data_offer_interface, &s_interface)
     , source(source)
     , dataDevice(parentInterface)
@@ -137,7 +137,7 @@ void DataOfferInterface::Private::sendSourceActions()
     wl_data_offer_send_source_actions(resource, wlActions);
 }
 
-DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface, wl_resource *parentResource)
+DataOfferInterface::DataOfferInterface(AbstractDataSource *source, DataDeviceInterface *parentInterface, wl_resource *parentResource)
     : Resource(new Private(source, parentInterface, this, parentResource))
 {
     Q_ASSERT(source);

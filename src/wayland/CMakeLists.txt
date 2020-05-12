@@ -1,5 +1,6 @@
 set(SERVER_LIB_SRCS
     ../compat/wayland-xdg-shell-v5-protocol.c
+    abstract_data_source.cpp
     appmenu_interface.cpp
     blur_interface.cpp
     buffer_interface.cpp
@@ -329,6 +330,7 @@ install(TARGETS KWaylandServer EXPORT KWaylandServerTargets ${KF5_INSTALL_TARGET
 
 set(SERVER_LIB_HEADERS
   ${CMAKE_CURRENT_BINARY_DIR}/KWaylandServer/kwaylandserver_export.h
+  abstract_data_source.h
   appmenu_interface.h
   blur_interface.h
   buffer_interface.h

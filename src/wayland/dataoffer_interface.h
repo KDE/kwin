@@ -17,7 +17,7 @@ namespace KWaylandServer
 {
 
 class DataDeviceInterface;
-class DataSourceInterface;
+class AbstractDataSource;
 
 /**
  * @brief Represents the Resource for the wl_data_offer interface.
@@ -59,7 +59,7 @@ Q_SIGNALS:
 
 private:
     friend class DataDeviceInterface;
-    explicit DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface, wl_resource *parentResource);
+    explicit DataOfferInterface(AbstractDataSource *source, DataDeviceInterface *parentInterface, wl_resource *parentResource);
 
     class Private;
     Private *d_func() const;
