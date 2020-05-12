@@ -768,6 +768,7 @@ Q_SIGNALS:
 
 private:
     friend class Display;
+    friend class DataControlDeviceInterface;
     friend class DataDeviceManagerInterface;
     friend class TextInputManagerUnstableV0Interface;
     friend class TextInputManagerUnstableV2Interface;

@@ -39,3 +39,15 @@ add_executable(testTabletInterface test_tablet_interface.cpp ${TABLET_SRCS})
 target_link_libraries( testTabletInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testTabletInterface COMMAND testTabletInterface)
 ecm_mark_as_test(testTabletInterface)
+
+########################################################
+# Test DataControlInterface
+########################################################
+ecm_add_qtwayland_client_protocol(DATACONTROL_SRCS
+    PROTOCOL  ${PROJECT_SOURCE_DIR}/src/protocols/wlr-data-control-unstable-v1.xml
+    BASENAME wlr-data-control-unstable-v1
+)
+add_executable(testDataControlInterface test_datacontrol_interface.cpp ${DATACONTROL_SRCS})
+target_link_libraries( testDataControlInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testDataControlInterface COMMAND testDataControlInterface)
+ecm_mark_as_test(testDataControlInterface)

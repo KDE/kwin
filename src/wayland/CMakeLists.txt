@@ -7,6 +7,10 @@ set(SERVER_LIB_SRCS
     clientconnection.cpp
     compositor_interface.cpp
     contrast_interface.cpp
+    datacontroldevice_interface.cpp
+    datacontroldevicemanager_interface.cpp
+    datacontroloffer_interface.cpp
+    datacontrolsource_interface.cpp
     datadevice_interface.cpp
     datadevicemanager_interface.cpp
     dataoffer_interface.cpp
@@ -233,6 +237,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME tablet-unstable-v2
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/protocols/wlr-data-control-unstable-v1.xml
+    BASENAME wlr-data-control-unstable-v1
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -337,6 +346,10 @@ set(SERVER_LIB_HEADERS
   clientconnection.h
   compositor_interface.h
   contrast_interface.h
+  datacontroldevice_interface.h
+  datacontroldevicemanager_interface.h
+  datacontroloffer_interface.h
+  datacontrolsource_interface.h
   datadevice_interface.h
   datadevicemanager_interface.h
   dataoffer_interface.h

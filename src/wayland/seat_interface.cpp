@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -9,6 +10,8 @@
 #include "display.h"
 #include "datadevice_interface.h"
 #include "datasource_interface.h"
+#include "datacontroldevice_interface.h"
+#include "datacontrolsource_interface.h"
 #include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
 #include "pointer_interface.h"
@@ -329,6 +332,33 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
         }
     }
 }
+
+void SeatInterface::Private::registerDataControlDevice(DataControlDeviceInterface *dataDevice)
+{
+    Q_ASSERT(dataDevice->seat() == q);
+    dataControlDevices << dataDevice;
+    auto dataDeviceCleanup = [this, dataDevice] {
+        dataControlDevices.removeOne(dataDevice);
+    };
+    QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
+
+    QObject::connect(dataDevice, &DataControlDeviceInterface::selectionChanged, q,
+        [this, dataDevice] {
+            q->setSelection(dataDevice->selection());
+        }
+    );
+
+    QObject::connect(dataDevice, &DataControlDeviceInterface::selectionCleared, q,
+        [this, dataDevice] {
+            Q_UNUSED(dataDevice);
+            q->setSelection(nullptr);
+        }
+    );
+    if (currentSelection) {
+        dataDevice->sendSelection(currentSelection);
+    }
+}
+
 
 void SeatInterface::Private::registerTextInput(TextInputInterface *ti)
 {
@@ -1588,6 +1618,14 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
             focussedSelection->sendSelection(selection);
         } else {
             focussedSelection->sendClearSelection();
+        }
+    }
+
+    for (auto control : qAsConst(d->dataControlDevices)) {
+        if (selection) {
+            control->sendSelection(selection);
+        } else {
+            control->sendClearSelection();
         }
     }
 

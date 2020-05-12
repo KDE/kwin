@@ -43,6 +43,10 @@
 #include "xdgshell_stable_interface_p.h"
 #include "xdgshell_v5_interface_p.h"
 #include "xdgshell_v6_interface_p.h"
+#include "xdgdecoration_interface.h"
+#include "eglstream_controller_interface.h"
+#include "keystate_interface.h"
+#include "datacontroldevicemanager_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -511,6 +515,13 @@ TabletManagerInterface *Display::createTabletManagerInterface(QObject *parent)
     auto d = new TabletManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
+}
+
+DataControlDeviceManagerInterface *Display::createDataControlDeviceManager(QObject *parent)
+{
+    auto m = new DataControlDeviceManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, m, [m] { delete m; });
+    return m;
 }
 
 void Display::createShm()
