@@ -92,7 +92,7 @@
     </entry>
 
     <entry key="MaximizeButtonRightClickCommand" type="Enum">
-        <default>MaximizeVerticalOnly</default>
+        <default>MaximizeHorizontalOnly</default>
         <choices>
             <choice name="Maximize"></choice>
             <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
