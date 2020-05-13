@@ -2544,14 +2544,15 @@ void AbstractClient::setDesktopFileName(QByteArray name)
 
 QString AbstractClient::iconFromDesktopFile() const
 {
-    if (m_desktopFileName.isEmpty()) {
-        return QString();
+    const QString desktopFileName = QString::fromUtf8(m_desktopFileName);
+    QString desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                                     desktopFileName);
+    if (desktopFilePath.isEmpty()) {
+        desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                                 desktopFileName + QLatin1String(".desktop"));
     }
-    QString desktopFile = QString::fromUtf8(m_desktopFileName);
-    if (!desktopFile.endsWith(QLatin1String(".desktop"))) {
-        desktopFile.append(QLatin1String(".desktop"));
-    }
-    KDesktopFile df(desktopFile);
+
+    KDesktopFile df(desktopFilePath);
     return df.readIcon();
 }
 
