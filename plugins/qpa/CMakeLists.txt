@@ -21,9 +21,9 @@ add_library(KWinQpaPlugin MODULE ${QPA_SOURCES})
 set_target_properties(KWinQpaPlugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/platforms/")
 
 set(QT5PLATFORMSUPPORT_LIBS
-    Qt5FontDatabaseSupport::Qt5FontDatabaseSupport
-    Qt5ThemeSupport::Qt5ThemeSupport
-    Qt5EventDispatcherSupport::Qt5EventDispatcherSupport
+    Qt5::FontDatabaseSupportPrivate
+    Qt5::ThemeSupportPrivate
+    Qt5::EventDispatcherSupportPrivate
 )
 
 target_link_libraries(KWinQpaPlugin
