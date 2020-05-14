@@ -234,7 +234,8 @@ public:
         return interfaces;
     }
 
-    QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate"};
+    const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate"};
+    QSet<QString> m_reported;
 
     bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override {
         if (client->processId() == getpid()) {
@@ -257,7 +258,13 @@ public:
                 client->setProperty("requestedInterfaces", requestedInterfaces);
             }
             if (!requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName))) {
-                qCWarning(KWIN_CORE) << "Did not grant the interface" << interfaceName << "to" << client->executablePath() << ". Please request it under X-KDE-Wayland-Interfaces";
+                if (KWIN_CORE().isDebugEnabled()) {
+                    const QString id = client->executablePath() + QLatin1Char('|') + QString::fromUtf8(interfaceName);
+                    if (!m_reported.contains({id})) {
+                        m_reported.insert(id);
+                        qCDebug(KWIN_CORE) << "Interface" << interfaceName << "not in X-KDE-Wayland-Interfaces of" << client->executablePath();
+                    }
+                }
                 return false;
             }
         }
