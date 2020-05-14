@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDesktopFile>
 
+#include <QDir>
 #include <QMouseEvent>
 #include <QStyleHints>
 
@@ -2545,8 +2546,16 @@ void AbstractClient::setDesktopFileName(QByteArray name)
 QString AbstractClient::iconFromDesktopFile() const
 {
     const QString desktopFileName = QString::fromUtf8(m_desktopFileName);
-    QString desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                     desktopFileName);
+    QString desktopFilePath;
+
+    if (QDir::isAbsolutePath(desktopFileName)) {
+        desktopFilePath = desktopFileName;
+    }
+
+    if (desktopFilePath.isEmpty()) {
+        desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
+                                                 desktopFileName);
+    }
     if (desktopFilePath.isEmpty()) {
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
                                                  desktopFileName + QLatin1String(".desktop"));
