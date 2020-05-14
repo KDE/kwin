@@ -218,9 +218,10 @@ ScrollViewKCM {
                 return value ? i18n("Yes") : i18n("No");
             case RuleItem.Percentage:
                 return i18n("%1 %", value);
-            case RuleItem.Coordinate:
-                var point = value.split(',');
-                return i18nc("Coordinates (x, y)", "(%1, %2)", point[0], point[1]);
+            case RuleItem.Point:
+                return i18nc("Coordinates (x, y)", "(%1, %2)", value.x, value.y);
+            case RuleItem.Size:
+                return i18nc("Size (width, height)", "(%1, %2)", value.width, value.height);
             case RuleItem.Option:
                 return options.textOfValue(value);
             case RuleItem.FlagsOption:

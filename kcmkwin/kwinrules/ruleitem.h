@@ -43,7 +43,8 @@ public:
         Option,
         FlagsOption,
         Percentage,
-        Coordinate,
+        Point,
+        Size,
         Shortcut
     };
     Q_ENUM(Type)

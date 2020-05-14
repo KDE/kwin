@@ -396,12 +396,12 @@ void RulesModel::populateRuleList()
 
     // Size & Position
     addRule(new RuleItem(QLatin1String("position"),
-                         RulePolicy::SetRule, RuleItem::Coordinate,
+                         RulePolicy::SetRule, RuleItem::Point,
                          i18n("Position"), i18n("Size & Position"),
                          QIcon::fromTheme("transform-move")));
 
     addRule(new RuleItem(QLatin1String("size"),
-                         RulePolicy::SetRule, RuleItem::Coordinate,
+                         RulePolicy::SetRule, RuleItem::Size,
                          i18n("Size"), i18n("Size & Position"),
                          QIcon::fromTheme("image-resize-symbolic")));
 
@@ -474,12 +474,12 @@ void RulesModel::populateRuleList()
                               "to unconditionally popup in the middle of your screen.")));
 
     addRule(new RuleItem(QLatin1String("minsize"),
-                         RulePolicy::ForceRule, RuleItem::Coordinate,
+                         RulePolicy::ForceRule, RuleItem::Size,
                          i18n("Minimum Size"), i18n("Size & Position"),
                          QIcon::fromTheme("image-resize-symbolic")));
 
     addRule(new RuleItem(QLatin1String("maxsize"),
-                         RulePolicy::ForceRule, RuleItem::Coordinate,
+                         RulePolicy::ForceRule, RuleItem::Size,
                          i18n("Maximum Size"), i18n("Size & Position"),
                          QIcon::fromTheme("image-resize-symbolic")));
 
@@ -647,10 +647,8 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
 void RulesModel::setWindowProperties(const QVariantMap &info, bool forceValue)
 {
     // Properties that cannot be directly applied via x11PropertyHash
-    const QString position = QStringLiteral("%1,%2").arg(info.value("x").toInt())
-    .arg(info.value("y").toInt());
-    const QString size = QStringLiteral("%1,%2").arg(info.value("width").toInt())
-    .arg(info.value("height").toInt());
+    const QPoint position = QPoint(info.value("x").toInt(), info.value("y").toInt());
+    const QSize size = QSize(info.value("width").toInt(), info.value("height").toInt());
 
     m_rules["position"]->setSuggestedValue(position, forceValue);
     m_rules["size"]->setSuggestedValue(size, forceValue);

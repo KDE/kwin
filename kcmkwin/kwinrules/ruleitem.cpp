@@ -208,11 +208,10 @@ QVariant RuleItem::typedValue(const QVariant &value, const RuleItem::Type type)
                 return 0x3FF - 0x040;  //All possible flags minus NET::Override (deprecated)
             }
             return value.toInt();
-        case Coordinate:
-            if (value.toString().isEmpty()) {
-                return QStringLiteral("0,0");
-            }
-            return value.toString();
+        case Point:
+            return value.toPoint();
+        case Size:
+            return value.toSize();
         case String:
             return value.toString().trimmed();
         case Shortcut:
