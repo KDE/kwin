@@ -42,12 +42,12 @@
         </item>
         <item>
          <property name="text">
-          <string extracomment="@item:inlistbox behavior on double click">Vertically maximize</string>
+          <string extracomment="@item:inlistbox behavior on double click">Maximize (vertical only)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string extracomment="@item:inlistbox behavior on double click">Horizontally maximize</string>
+          <string extracomment="@item:inlistbox behavior on double click">Maximize (horizontal only)</string>
          </property>
         </item>
         <item>
@@ -617,12 +617,12 @@
         </item>
         <item>
          <property name="text">
-          <string>Vertically maximize</string>
+          <string>Maximize (vertical only)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Horizontally maximize</string>
+          <string>Maximize (horizontal only)</string>
          </property>
         </item>
        </widget>
@@ -652,12 +652,12 @@
         </item>
         <item>
          <property name="text">
-          <string>Vertically maximize</string>
+          <string>Maximize (vertical only)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Horizontally maximize</string>
+          <string>Maximize (horizontal only)</string>
          </property>
         </item>
        </widget>
@@ -687,12 +687,12 @@
         </item>
         <item>
          <property name="text">
-          <string>Vertically maximize</string>
+          <string>Maximize (vertical only)</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Horizontally maximize</string>
+          <string>Maximize (horizontal only)</string>
          </property>
         </item>
        </widget>

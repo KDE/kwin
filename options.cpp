@@ -758,7 +758,7 @@ void Options::loadConfig()
     KConfigGroup config(m_settings->config(), "Windows");
     OpTitlebarDblClick = windowOperation(config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true);
     setOperationMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
-    setOperationMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Vertically Maximize"), true));
+    setOperationMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
     setOperationMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
 
     // Mouse bindings
@@ -982,9 +982,9 @@ Options::WindowOperation Options::windowOperation(const QString &name, bool rest
         return ShadeOp;
     else if (name == QStringLiteral("Operations"))
         return OperationsOp;
-    else if (name == QStringLiteral("Vertically maximize"))
+    else if (name == QStringLiteral("Maximize (vertical only)"))
         return VMaximizeOp;
-    else if (name == QStringLiteral("Horizontally maximize"))
+    else if (name == QStringLiteral("Maximize (horizontal only)"))
         return HMaximizeOp;
     else if (name == QStringLiteral("Lower"))
         return LowerOp;

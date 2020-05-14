@@ -62,8 +62,8 @@
         <default>Maximize</default>
         <choices>
             <choice name="Maximize"></choice>
-            <choice name="MaximizeVerticalOnly" value="Vertically maximize"></choice>
-            <choice name="MaximizeHorizontalOnly" value="Horizontally maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
             <choice name="Minimize"></choice>
             <choice name="Shade"></choice>
             <choice name="Lower"></choice>
@@ -77,8 +77,8 @@
         <default>Maximize</default>
         <choices>
             <choice name="Maximize"></choice>
-            <choice name="MaximizeVerticalOnly" value="Vertically maximize"></choice>
-            <choice name="MaximizeHorizontalOnly" value="Horizontally maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
         </choices>
     </entry>
 
@@ -86,8 +86,8 @@
         <default>MaximizeVerticalOnly</default>
         <choices>
             <choice name="Maximize"></choice>
-            <choice name="MaximizeVerticalOnly" value="Vertically maximize"></choice>
-            <choice name="MaximizeHorizontalOnly" value="Horizontally maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
         </choices>
     </entry>
 
@@ -95,8 +95,8 @@
         <default>MaximizeHorizontalOnly</default>
         <choices>
             <choice name="Maximize"></choice>
-            <choice name="MaximizeVerticalOnly" value="Vertically maximize"></choice>
-            <choice name="MaximizeHorizontalOnly" value="Horizontally maximize"></choice>
+            <choice name="MaximizeVerticalOnly" value="Maximize (vertical only)"></choice>
+            <choice name="MaximizeHorizontalOnly" value="Maximize (horizontal only)"></choice>
         </choices>
     </entry>
 

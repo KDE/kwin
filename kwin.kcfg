@@ -189,10 +189,10 @@
             <default>Maximize</default>
         </entry>
         <entry name="MaximizeButtonMiddleClickCommand" type="String">
-            <default>Vertically maximize</default>
+            <default>Maximize (vertical only)</default>
         </entry>
         <entry name="MaximizeButtonRightClickCommand" type="String">
-            <default>Horizontally maximize</default>
+            <default>Maximize (horizontal only)</default>
         </entry>
         <entry name="KillPingTimeout" type="Int">
             <default>5000</default>
