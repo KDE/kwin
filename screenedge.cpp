@@ -62,6 +62,12 @@ namespace KWin {
 // Mouse should not move more than this many pixels
 static const int DISTANCE_RESET = 30;
 
+// How large the touch target of the area recognizing touch gestures is
+static const int TOUCH_TARGET = 3;
+
+// How far the user needs to swipe before triggering an action.
+static const int MINIMUM_DELTA = 44;
+
 Edge::Edge(ScreenEdges *parent)
     : QObject(parent)
     , m_edges(parent)
@@ -527,7 +533,7 @@ void Edge::setGeometry(const QRect &geometry)
 
     if (isScreenEdge()) {
         m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(screens()->size(screens()->number(m_geometry.center())) * 0.2);
+        m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA));
     }
 }
 
@@ -1070,17 +1076,17 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
         y += m_cornerOffset;
         // create top left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricTopLeft : ElectricTopRight;
-        m_edges << createEdge(edge, x, screen.y(), 1, 1);
+        m_edges << createEdge(edge, x, screen.y(), TOUCH_TARGET, TOUCH_TARGET);
     }
     if (isBottomScreen(screen, fullArea)) {
         // also bottom most screen
         height -= m_cornerOffset;
         // create bottom left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricBottomLeft : ElectricBottomRight;
-        m_edges << createEdge(edge, x, screen.y() + screen.height() -1, 1, 1);
+        m_edges << createEdge(edge, x, screen.y() + screen.height() - 1, TOUCH_TARGET, TOUCH_TARGET);
     }
     // create border
-    m_edges << createEdge(border, x, y, 1, height);
+    m_edges << createEdge(border, x, y, TOUCH_TARGET, height);
 }
 
 void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea)
@@ -1100,7 +1106,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
         width -= m_cornerOffset;
     }
     const int y = (border == ElectricTop) ? screen.y() : screen.y() + screen.height() - 1;
-    m_edges << createEdge(border, x, y, width, 1);
+    m_edges << createEdge(border, x, y, width, TOUCH_TARGET);
 }
 
 Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction)
