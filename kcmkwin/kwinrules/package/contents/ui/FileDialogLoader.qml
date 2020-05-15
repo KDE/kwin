@@ -36,7 +36,7 @@ Loader {
 
         title: root.title
         selectExisting: !root.isSaveDialog
-        folder: (root.lastFolder == "") ? shortcuts.home : root.lastFolder
+        folder: root.lastFolder || shortcuts.home
         nameFilters: [ i18n("KWin Rules (*.kwinrule)") ]
         defaultSuffix: "*.kwinrule"
 

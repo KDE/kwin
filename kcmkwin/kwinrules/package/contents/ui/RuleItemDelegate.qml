@@ -106,7 +106,7 @@ Kirigami.AbstractListItem {
 
         QQC2.ToolTip {
             text: model.description
-            visible: hovered && (text != "")
+            visible: hovered && (text.length > 0)
         }
     }
 }

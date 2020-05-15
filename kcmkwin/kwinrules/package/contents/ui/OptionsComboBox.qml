@@ -91,7 +91,7 @@ QQC2.ComboBox {
 
         QQC2.ToolTip {
             text: model.tooltip
-            visible: hovered && (model.tooltip != "")
+            visible: hovered && (model.tooltip.length > 0)
         }
 
         Component.onCompleted: {

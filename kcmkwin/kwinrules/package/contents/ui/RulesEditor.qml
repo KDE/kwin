@@ -162,7 +162,7 @@ ScrollViewKCM {
                         Layout.alignment: Qt.AlignVCenter
                         QQC2.ToolTip {
                             text: model.description
-                            visible: hovered && (model.description != "")
+                            visible: hovered && (model.description.length > 0)
                         }
                     }
                     QQC2.Label {
@@ -262,7 +262,7 @@ ScrollViewKCM {
             if (!showItem) {
                 return false;
             }
-            if (filterString != "") {
+            if (filterString.length > 0) {
                 return sourceModel.data(index, RulesModel.NameRole).toLowerCase().includes(filterString)
             }
             return true;

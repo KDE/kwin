@@ -67,7 +67,7 @@ ScrollViewKCM {
         }
 
         Kirigami.PlaceholderMessage {
-            visible: ruleBookView.count == 0
+            visible: ruleBookView.count === 0
             anchors.centerIn: parent
             width: parent.width - (units.largeSpacing * 4)
             text: i18n("No rules for specific windows are currently set");
@@ -84,7 +84,7 @@ ScrollViewKCM {
                 iconName: "object-select-symbolic"
                 text: checked ? i18n("Unselect All") : i18n("Select All")
                 checkable: true
-                checked: selectedIndexes.length == ruleBookView.count
+                checked: selectedIndexes.length === ruleBookView.count
                 onToggled: {
                     if (checked) {
                         selectedIndexes = [...Array(ruleBookView.count).keys()]
