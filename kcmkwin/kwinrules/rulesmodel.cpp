@@ -740,18 +740,17 @@ QList<OptionsModel::Data> RulesModel::activitiesModelData() const
 
 QList<OptionsModel::Data> RulesModel::placementModelData() const
 {
-    // From "placement.h" : Placement rule is stored as a string, not the enum value
     static const auto modelData = QList<OptionsModel::Data> {
-        { Placement::policyToString(Placement::Default),      i18n("Default")             },
-        { Placement::policyToString(Placement::NoPlacement),  i18n("No Placement")        },
-        { Placement::policyToString(Placement::Smart),        i18n("Minimal Overlapping") },
-        { Placement::policyToString(Placement::Maximizing),   i18n("Maximized")           },
-        { Placement::policyToString(Placement::Cascade),      i18n("Cascaded")            },
-        { Placement::policyToString(Placement::Centered),     i18n("Centered")            },
-        { Placement::policyToString(Placement::Random),       i18n("Random")              },
-        { Placement::policyToString(Placement::ZeroCornered), i18n("In Top-Left Corner")  },
-        { Placement::policyToString(Placement::UnderMouse),   i18n("Under Mouse")         },
-        { Placement::policyToString(Placement::OnMainWindow), i18n("On Main Window")      }
+        { Placement::Default,      i18n("Default")             },
+        { Placement::NoPlacement,  i18n("No Placement")        },
+        { Placement::Smart,        i18n("Minimal Overlapping") },
+        { Placement::Maximizing,   i18n("Maximized")           },
+        { Placement::Cascade,      i18n("Cascaded")            },
+        { Placement::Centered,     i18n("Centered")            },
+        { Placement::Random,       i18n("Random")              },
+        { Placement::ZeroCornered, i18n("In Top-Left Corner")  },
+        { Placement::UnderMouse,   i18n("Under Mouse")         },
+        { Placement::OnMainWindow, i18n("On Main Window")      }
     };
     return modelData;
 }
