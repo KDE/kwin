@@ -48,7 +48,15 @@ ScrollViewKCM {
         Kirigami.PlaceholderMessage {
             id: hintArea
             visible: rulesView.count <= 4
-            anchors.centerIn: parent
+            anchors {
+                // We need to center on the free space below contentItem, not the full ListView.
+                // Setting both top and bottom anchors (or using anchors.fill) stretches the component
+                // and distorts the spacing between its internal items.
+                // This is fine as long as we have a single item here.
+                horizontalCenter: parent.horizontalCenter
+                top: parent.contentItem.bottom
+                bottom: parent.bottom
+            }
             width: parent.width - (units.largeSpacing * 4)
             helpfulAction: QQC2.Action {
                 text: i18n("Add Properties...")
