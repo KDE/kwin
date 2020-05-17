@@ -35,6 +35,9 @@ public:
     void setFocusTrackingEnabled(bool enabled);
     bool isFocusTrackingEnabled() const;
 
+    void setTextCaretTrackingEnabled(bool enabled);
+    bool isTextCaretTrackingEnabled() const;
+
 Q_SIGNALS:
     void focusPointChanged(const QPoint &point);
 
@@ -48,6 +51,7 @@ private:
 
     QAccessibleClient::Registry *m_accessibilityRegistry = nullptr;
     bool m_isFocusTrackingEnabled = false;
+    bool m_isTextCaretTrackingEnabled = false;
 };
 
 } // namespace KWin

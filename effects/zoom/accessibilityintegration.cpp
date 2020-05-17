@@ -44,10 +44,27 @@ bool ZoomAccessibilityIntegration::isFocusTrackingEnabled() const
     return m_isFocusTrackingEnabled;
 }
 
+void ZoomAccessibilityIntegration::setTextCaretTrackingEnabled(bool enabled)
+{
+    if (m_isTextCaretTrackingEnabled == enabled) {
+        return;
+    }
+    m_isTextCaretTrackingEnabled = enabled;
+    updateAccessibilityRegistry();
+}
+
+bool ZoomAccessibilityIntegration::isTextCaretTrackingEnabled() const
+{
+    return m_isTextCaretTrackingEnabled;
+}
+
 void ZoomAccessibilityIntegration::updateAccessibilityRegistry()
 {
     Registry::EventListeners eventListeners = Registry::NoEventListeners;
 
+    if (isTextCaretTrackingEnabled()) {
+        eventListeners |= Registry::TextCaretMoved;
+    }
     if (isFocusTrackingEnabled()) {
         eventListeners |= Registry::Focus;
     }
@@ -67,6 +84,8 @@ void ZoomAccessibilityIntegration::createAccessibilityRegistry()
 {
     m_accessibilityRegistry = new Registry(this);
 
+    connect(m_accessibilityRegistry, &Registry::textCaretMoved,
+            this, &ZoomAccessibilityIntegration::slotFocusChanged);
     connect(m_accessibilityRegistry, &Registry::focusChanged,
             this, &ZoomAccessibilityIntegration::slotFocusChanged);
 }

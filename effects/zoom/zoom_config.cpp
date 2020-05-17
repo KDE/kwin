@@ -62,6 +62,7 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 
 #if !HAVE_ACCESSIBILITY
     m_ui->kcfg_EnableFocusTracking->setVisible(false);
+    m_ui->kcfg_EnableTextCaretTracking->setVisible(false);
 #endif
 
     // Shortcut config. The shortcut belongs to the component "kwin"!

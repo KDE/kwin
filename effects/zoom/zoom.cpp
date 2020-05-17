@@ -161,6 +161,15 @@ bool ZoomEffect::isFocusTrackingEnabled() const
 #endif
 }
 
+bool ZoomEffect::isTextCaretTrackingEnabled() const
+{
+#if HAVE_ACCESSIBILITY
+    return m_accessibilityIntegration->isTextCaretTrackingEnabled();
+#else
+    return false;
+#endif
+}
+
 void ZoomEffect::showCursor()
 {
     if (isMouseHidden) {
@@ -233,6 +242,8 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 #if HAVE_ACCESSIBILITY
     // Enable tracking of the focused location.
     m_accessibilityIntegration->setFocusTrackingEnabled(ZoomConfig::enableFocusTracking());
+    // Enable tracking of the text caret.
+    m_accessibilityIntegration->setTextCaretTrackingEnabled(ZoomConfig::enableTextCaretTracking());
 #endif
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
     focusDelay = qMax(uint(0), ZoomConfig::focusDelay());
@@ -314,7 +325,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& d
         }
 
         // use the focusPoint if focus tracking is enabled
-        if (isFocusTrackingEnabled()) {
+        if (isFocusTrackingEnabled() || isTextCaretTrackingEnabled()) {
             bool acceptFocus = true;
             if (mouseTracking != MouseTrackingDisabled && focusDelay > 0) {
                 // Wait some time for the mouse before doing the switch. This serves as threshold

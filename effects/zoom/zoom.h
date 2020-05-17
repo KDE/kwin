@@ -46,6 +46,7 @@ class ZoomEffect
     Q_PROPERTY(int mousePointer READ configuredMousePointer)
     Q_PROPERTY(int mouseTracking READ configuredMouseTracking)
     Q_PROPERTY(bool focusTrackingEnabled READ isFocusTrackingEnabled)
+    Q_PROPERTY(bool textCaretTrackingEnabled READ isTextCaretTrackingEnabled)
     Q_PROPERTY(int focusDelay READ configuredFocusDelay)
     Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
     Q_PROPERTY(qreal targetZoom READ targetZoom)
@@ -68,6 +69,7 @@ public:
         return mouseTracking;
     }
     bool isFocusTrackingEnabled() const;
+    bool isTextCaretTrackingEnabled() const;
     int configuredFocusDelay() const {
         return focusDelay;
     }
