@@ -45,6 +45,9 @@ RulesModel::RulesModel(QObject *parent)
     qmlRegisterUncreatableType<RulesModel>("org.kde.kcms.kwinrules", 1, 0, "RulesModel",
                                                  QStringLiteral("Do not create objects of type RulesModel"));
 
+    qDBusRegisterMetaType<KWin::DBusDesktopDataStruct>();
+    qDBusRegisterMetaType<KWin::DBusDesktopDataVector>();
+
     populateRuleList();
 }
 
@@ -421,6 +424,10 @@ void RulesModel::populateRuleList()
                                         QIcon::fromTheme("virtual-desktops")));
     desktop->setOptionsData(virtualDesktopsModelData());
 
+    connect(this, &RulesModel::virtualDesktopsUpdated,
+            this, [this] { m_rules["desktop"]->setOptionsData(virtualDesktopsModelData()); });
+    updateVirtualDesktops();
+
 #ifdef KWIN_BUILD_ACTIVITIES
     m_activities = new KActivities::Consumer(this);
 
@@ -700,10 +707,10 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
 QList<OptionsModel::Data> RulesModel::virtualDesktopsModelData() const
 {
     QList<OptionsModel::Data> modelData;
-    for (int desktopId = 1; desktopId <= KWindowSystem::numberOfDesktops(); ++desktopId) {
+    for (const DBusDesktopDataStruct &desktop : m_virtualDesktops) {
         modelData << OptionsModel::Data{
-            desktopId,
-            QString::number(desktopId).rightJustified(2) + QStringLiteral(": ") + KWindowSystem::desktopName(desktopId),
+            desktop.position + 1,  // "desktop" setting uses the desktop position (int) starting at 1
+            QString::number(desktop.position + 1).rightJustified(2) + QStringLiteral(": ") + desktop.name,
             QIcon::fromTheme("virtual-desktops")
         };
     }
@@ -814,5 +821,33 @@ void RulesModel::selectX11Window()
             }
     );
 }
+
+void RulesModel::updateVirtualDesktops()
+{
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("/VirtualDesktopManager"),
+                                                          QStringLiteral("org.freedesktop.DBus.Properties"),
+                                                          QStringLiteral("Get"));
+    message.setArguments(QVariantList{
+        QStringLiteral("org.kde.KWin.VirtualDesktopManager"),
+        QStringLiteral("desktops")
+    });
+
+    QDBusPendingReply<QVariant> async = QDBusConnection::sessionBus().asyncCall(message);
+
+    QDBusPendingCallWatcher *callWatcher = new QDBusPendingCallWatcher(async, this);
+    connect(callWatcher, &QDBusPendingCallWatcher::finished, this,
+            [this](QDBusPendingCallWatcher *self) {
+                QDBusPendingReply<QVariant> reply = *self;
+                self->deleteLater();
+                if (!reply.isValid()) {
+                    return;
+                }
+                m_virtualDesktops = qdbus_cast<KWin::DBusDesktopDataVector>(reply.value());
+                emit virtualDesktopsUpdated();
+            }
+    );
+}
+
 
 } //namespace

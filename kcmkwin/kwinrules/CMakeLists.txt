@@ -11,6 +11,7 @@ set(kwinrules_SRCS
     ../../rules.cpp
     ../../placement.cpp
     ../../utils.cpp
+    ../../virtualdesktopsdbustypes.cpp
     kwinsrc.cpp
     optionsmodel.cpp
     ruleitem.cpp

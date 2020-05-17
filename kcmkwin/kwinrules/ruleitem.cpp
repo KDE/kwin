@@ -119,7 +119,7 @@ RuleItem::Type RuleItem::type() const
 
 QVariant RuleItem::value() const
 {
-    if (m_type == Option) {
+    if (m_options && m_type == Option) {
         return m_options->value();
     }
     return m_value;
@@ -127,7 +127,7 @@ QVariant RuleItem::value() const
 
 void RuleItem::setValue(QVariant value)
 {
-    if (m_type == Option) {
+    if (m_options && m_type == Option) {
         m_options->setValue(value);
     }
     m_value = typedValue(value, m_type);
