@@ -3,6 +3,10 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\" -DEFFECT_BUILTINS)
 
 include_directories(${KWin_SOURCE_DIR}) # for xcbutils.h
 
+if (HAVE_ACCESSIBILITY)
+    include_directories(${QACCESSIBILITYCLIENT_INCLUDE_DIR})
+endif()
+
 set(kwin_effect_OWN_LIBS
     kwineffects
 )
@@ -20,6 +24,10 @@ set(kwin_effect_KDE_LIBS
     KF5::Plasma # screenedge effect
     KF5::WindowSystem
 )
+
+if (HAVE_ACCESSIBILITY)
+    set(kwin_effect_KDE_LIBS ${kwin_effect_KDE_LIBS} ${QACCESSIBILITYCLIENT_LIBRARY})
+endif()
 
 set(kwin_effect_QT_LIBS
     Qt5::Concurrent
@@ -103,6 +111,13 @@ set(kwin4_effect_builtins_sources
     wobblywindows/wobblywindows.cpp
     zoom/zoom.cpp
 )
+
+if (HAVE_ACCESSIBILITY)
+    set(kwin4_effect_builtins_sources
+        zoom/accessibilityintegration.cpp
+        ${kwin4_effect_builtins_sources}
+    )
+endif()
 
 qt5_add_resources(kwin4_effect_builtins_sources shaders.qrc)
 

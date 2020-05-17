@@ -23,11 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "zoomconfig.h"
 
+#if HAVE_ACCESSIBILITY
+#include "accessibilityintegration.h"
+#endif
+
 #include <QAction>
 #include <QApplication>
 #include <QStyle>
 #include <QVector2D>
-#include <QDBusConnection>
 #include <kstandardaction.h>
 #include <KConfigGroup>
 #include <KGlobalAccel>
@@ -49,8 +52,6 @@ ZoomEffect::ZoomEffect()
     , polling(false)
     , zoomFactor(1.25)
     , mouseTracking(MouseTrackingProportional)
-    , enableFocusTracking(false)
-    , followFocus(true)
     , mousePointer(MousePointerScale)
     , focusDelay(350)   // in milliseconds
     , imageWidth(0)
@@ -133,6 +134,11 @@ ZoomEffect::ZoomEffect()
     connect(&timeline, &QTimeLine::frameChanged, this, &ZoomEffect::timelineFrameChanged);
     connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
 
+#if HAVE_ACCESSIBILITY
+    m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
+    connect(m_accessibilityIntegration, &ZoomAccessibilityIntegration::focusPointChanged, this, &ZoomEffect::moveFocus);
+#endif
+
     source_zoom = -1; // used to trigger initialZoom reading
     reconfigure(ReconfigureAll);
 }
@@ -144,6 +150,15 @@ ZoomEffect::~ZoomEffect()
     // Save the zoom value.
     ZoomConfig::setInitialZoom(target_zoom);
     ZoomConfig::self()->save();
+}
+
+bool ZoomEffect::isFocusTrackingEnabled() const
+{
+#if HAVE_ACCESSIBILITY
+    return m_accessibilityIntegration->isFocusTrackingEnabled();
+#else
+    return false;
+#endif
 }
 
 void ZoomEffect::showCursor()
@@ -215,27 +230,10 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     mousePointer = MousePointerType(ZoomConfig::mousePointer());
     // Track moving of the mouse.
     mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
+#if HAVE_ACCESSIBILITY
     // Enable tracking of the focused location.
-    bool _enableFocusTracking = ZoomConfig::enableFocusTracking();
-    if (enableFocusTracking != _enableFocusTracking) {
-        enableFocusTracking = _enableFocusTracking;
-        if (QDBusConnection::sessionBus().isConnected()) {
-            if (enableFocusTracking)
-                QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.kaccessibleapp"),
-                                                      QStringLiteral("/Adaptor"),
-                                                      QStringLiteral("org.kde.kaccessibleapp.Adaptor"),
-                                                      QStringLiteral("focusChanged"),
-                                                      this, SLOT(focusChanged(int,int,int,int,int,int)));
-            else
-                QDBusConnection::sessionBus().disconnect(QStringLiteral("org.kde.kaccessibleapp"),
-                                                         QStringLiteral("/Adaptor"),
-                                                         QStringLiteral("org.kde.kaccessibleapp.Adaptor"),
-                                                         QStringLiteral("focusChanged"),
-                                                         this, SLOT(focusChanged(int,int,int,int,int,int)));
-        }
-    }
-    // When the focus changes, move the zoom area to the focused location.
-    followFocus = ZoomConfig::enableFollowFocus();
+    m_accessibilityIntegration->setFocusTrackingEnabled(ZoomConfig::enableFocusTracking());
+#endif
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
     focusDelay = qMax(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
@@ -316,7 +314,7 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& d
         }
 
         // use the focusPoint if focus tracking is enabled
-        if (enableFocusTracking && followFocus) {
+        if (isFocusTrackingEnabled()) {
             bool acceptFocus = true;
             if (mouseTracking != MouseTrackingDisabled && focusDelay > 0) {
                 // Wait some time for the mouse before doing the switch. This serves as threshold
@@ -513,16 +511,13 @@ void ZoomEffect::slotMouseChanged(const QPoint& pos, const QPoint& old, Qt::Mous
     }
 }
 
-void ZoomEffect::focusChanged(int px, int py, int rx, int ry, int rwidth, int rheight)
+void ZoomEffect::moveFocus(const QPoint &point)
 {
     if (zoom == 1.0)
         return;
-    const QSize screenSize = effects->virtualScreenSize();
-    focusPoint = (px >= 0 && py >= 0) ? QPoint(px, py) : QPoint(rx + qMax(0, (qMin(screenSize.width(), rwidth) / 2) - 60), ry + qMax(0, (qMin(screenSize.height(), rheight) / 2) - 60));
-    if (enableFocusTracking) {
-        lastFocusEvent = QTime::currentTime();
-        effects->addRepaintFull();
-    }
+    focusPoint = point;
+    lastFocusEvent = QTime::currentTime();
+    effects->addRepaintFull();
 }
 
 bool ZoomEffect::isActive() const

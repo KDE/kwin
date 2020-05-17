@@ -17,8 +17,6 @@
         <entry name="EnableFocusTracking" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="EnableFollowFocus" type="Bool">
-            <default>true</default>
         </entry>
         <entry name="FocusDelay" type="UInt">
             <default>350</default>
