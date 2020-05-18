@@ -21,24 +21,6 @@ add_test(NAME kwayland-testWaylandServerSeat COMMAND testWaylandServerSeat)
 ecm_mark_as_test(testWaylandServerSeat)
 
 ########################################################
-# QtSurfaceExtenstion Helper
-########################################################
-add_executable(surfaceExtensionHelper surfaceextension_helper.cpp)
-target_link_libraries( surfaceExtensionHelper Qt5::Gui)
-ecm_mark_as_test(surfaceExtensionHelper)
-
-########################################################
-# Test QtSurfaceExtenstion
-########################################################
-set( testQtSurfaceExtension_SRCS
-        test_qt_surface_extension.cpp
-    )
-add_executable(testQtSurfaceExtension ${testQtSurfaceExtension_SRCS})
-target_link_libraries( testQtSurfaceExtension Qt5::Test Qt5::Gui Plasma::KWaylandServer)
-add_test(NAME kwayland-testQtSurfaceExtension COMMAND testQtSurfaceExtension)
-ecm_mark_as_test(testQtSurfaceExtension)
-
-########################################################
 # Test No XDG_RUNTIME_DIR
 ########################################################
 add_executable(testNoXdgRuntimeDir test_no_xdg_runtime_dir.cpp)

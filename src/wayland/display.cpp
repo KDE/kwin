@@ -27,7 +27,6 @@
 #include "plasmawindowmanagement_interface.h"
 #include "pointerconstraints_interface_p.h"
 #include "pointergestures_interface_p.h"
-#include "qtsurfaceextension_interface.h"
 #include "relativepointer_interface_p.h"
 #include "remote_access_interface.h"
 #include "seat_interface.h"
@@ -304,13 +303,6 @@ PlasmaWindowManagementInterface *Display::createPlasmaWindowManagement(QObject *
     auto wm = new PlasmaWindowManagementInterface(this, parent);
     connect(this, &Display::aboutToTerminate, wm, [wm] { delete wm; });
     return wm;
-}
-
-QtSurfaceExtensionInterface *Display::createQtSurfaceExtension(QObject *parent)
-{
-    auto s = new QtSurfaceExtensionInterface(this, parent);
-    connect(this, &Display::aboutToTerminate, s, [s] { delete s; });
-    return s;
 }
 
 RemoteAccessManagerInterface *Display::createRemoteAccessManager(QObject *parent)

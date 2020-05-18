@@ -35,7 +35,6 @@ set(SERVER_LIB_SRCS
     pointerconstraints_interface_v1.cpp
     pointergestures_interface.cpp
     pointergestures_interface_v1.cpp
-    qtsurfaceextension_interface.cpp
     region_interface.cpp
     relativepointer_interface.cpp
     relativepointer_interface_v1.cpp
@@ -363,7 +362,6 @@ set(SERVER_LIB_HEADERS
   pointer_interface.h
   pointerconstraints_interface.h
   pointergestures_interface.h
-  qtsurfaceextension_interface.h
   region_interface.h
   relativepointer_interface.h
   remote_access_interface.h
