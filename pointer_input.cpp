@@ -973,8 +973,6 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_surfaceRenderedTimer.start();
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
-        m_cursors.clear();
-        m_cursorsByName.clear();
         loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
         updateDecorationCursor();
         updateMoveResize();
@@ -1262,12 +1260,12 @@ void CursorImage::updateDragCursor()
 
 void CursorImage::loadThemeCursor(CursorShape shape, WaylandCursorImage::Image *image)
 {
-    m_waylandImage.loadThemeCursor(shape, m_cursors, image);
+    m_waylandImage.loadThemeCursor(shape, image);
 }
 
 void CursorImage::loadThemeCursor(const QByteArray &shape, WaylandCursorImage::Image *image)
 {
-    m_waylandImage.loadThemeCursor(shape, m_cursorsByName, image);
+    m_waylandImage.loadThemeCursor(shape, image);
 }
 
 template <typename T>
@@ -1300,18 +1298,6 @@ void WaylandCursorImage::loadThemeCursor(const T &shape, Image *image)
     QImage img = buffer->data().copy();
     img.setDevicePixelRatio(scale);
     *image = {img, QPoint(hotSpotX, hotSpotY)};
-}
-
-template <typename T>
-void WaylandCursorImage::loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image)
-{
-    auto it = cursors.constFind(shape);
-    if (it == cursors.constEnd()) {
-        loadThemeCursor(shape, image);
-        cursors.insert(shape, *image);
-    } else {
-        *image = it.value();
-    }
 }
 
 void CursorImage::reevaluteSource()

@@ -189,9 +189,6 @@ public:
     template <typename T>
     void loadThemeCursor(const T &shape, Image *image);
 
-    template <typename T>
-    void loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image);
-
 Q_SIGNALS:
     void themeChanged();
 
@@ -253,8 +250,6 @@ private:
     WaylandCursorImage::Image m_fallbackCursor;
     WaylandCursorImage::Image m_moveResizeCursor;
     WaylandCursorImage::Image m_windowSelectionCursor;
-    QHash<CursorShape, WaylandCursorImage::Image> m_cursors;
-    QHash<QByteArray, WaylandCursorImage::Image> m_cursorsByName;
     QElapsedTimer m_surfaceRenderedTimer;
     struct {
         WaylandCursorImage::Image cursor;
