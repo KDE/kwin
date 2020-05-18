@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/datadevicemanager.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 // Server
 #include <KWaylandServer/appmenu_interface.h>
@@ -119,7 +118,6 @@ void WaylandServer::destroyInternalConnection()
         delete m_internalConnection.compositor;
         delete m_internalConnection.seat;
         delete m_internalConnection.ddm;
-        delete m_internalConnection.shm;
         dispatch();
         m_internalConnection.client->deleteLater();
         m_internalConnection.clientThread->quit();
@@ -673,11 +671,6 @@ void WaylandServer::createInternalConnection()
             registry->setEventQueue(eventQueue);
             registry->create(m_internalConnection.client);
             m_internalConnection.registry = registry;
-            connect(registry, &Registry::shmAnnounced, this,
-                [this] (quint32 name, quint32 version) {
-                    m_internalConnection.shm = m_internalConnection.registry->createShmPool(name, version, this);
-                }
-            );
             connect(registry, &Registry::interfacesAnnounced, this,
                 [this, registry] {
                     m_internalConnection.interfacesAnnounced = true;

@@ -98,8 +98,8 @@ Cursor::Cursor(QObject *parent)
     : QObject(parent)
     , m_mousePollingCounter(0)
     , m_cursorTrackingCounter(0)
-    , m_themeName("default")
-    , m_themeSize(24)
+    , m_themeName(defaultThemeName())
+    , m_themeSize(defaultThemeSize())
 {
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
@@ -128,8 +128,8 @@ void Cursor::loadThemeSettings()
 void Cursor::loadThemeFromKConfig()
 {
     KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
-    const QString themeName = mousecfg.readEntry("cursorTheme", "default");
-    const uint themeSize = mousecfg.readEntry("cursorSize", 24);
+    const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
+    const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);
 }
 
@@ -277,7 +277,7 @@ void Cursor::doStopCursorTracking()
 {
 }
 
-QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
+QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
 {
     static const QHash<QByteArray, QVector<QByteArray>> alternatives = {
         {QByteArrayLiteral("left_ptr"),       {QByteArrayLiteral("arrow"),
@@ -407,6 +407,16 @@ QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
         return it.value();
     }
     return QVector<QByteArray>();
+}
+
+QString Cursor::defaultThemeName()
+{
+    return QStringLiteral("default");
+}
+
+int Cursor::defaultThemeSize()
+{
+    return 24;
 }
 
 QByteArray CursorShape::name() const

@@ -226,6 +226,9 @@ public:
     }
     virtual ~PlatformCursorImage() = default;
 
+    bool isNull() const {
+        return m_image.isNull();
+    }
     QImage image() const {
         return m_image;
     }

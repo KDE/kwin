@@ -55,7 +55,6 @@ class Scene;
 class Screens;
 class ScreenEdges;
 class Toplevel;
-class WaylandCursorTheme;
 
 namespace Decoration
 {

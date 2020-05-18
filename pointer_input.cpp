@@ -27,15 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event_spy.h"
 #include "osd.h"
 #include "screens.h"
-#include "wayland_cursor_theme.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "decorations/decoratedclient.h"
 // KDecoration
 #include <KDecoration2/Decoration>
 // KWayland
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/buffer.h>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/display.h>
@@ -1119,23 +1116,6 @@ void CursorImage::updateServerCursor()
     }
 }
 
-void WaylandCursorImage::loadTheme()
-{
-    if (m_cursorTheme) {
-        return;
-    }
-    // check whether we can create it
-    if (waylandServer()->internalShmPool()) {
-        m_cursorTheme = new WaylandCursorTheme(waylandServer()->internalShmPool(), this);
-        connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this,
-            [this] {
-                delete m_cursorTheme;
-                m_cursorTheme = nullptr;
-            }
-        );
-    }
-}
-
 void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)
 {
     loadThemeCursor(shape, &m_effectsCursor);
@@ -1268,36 +1248,83 @@ void CursorImage::loadThemeCursor(const QByteArray &shape, WaylandCursorImage::I
     m_waylandImage.loadThemeCursor(shape, image);
 }
 
-template <typename T>
-void WaylandCursorImage::loadThemeCursor(const T &shape, Image *image)
+WaylandCursorImage::WaylandCursorImage(QObject *parent)
+    : QObject(parent)
 {
-    loadTheme();
-    if (!m_cursorTheme) {
+    Cursor *pointerCursor = Cursors::self()->mouse();
+
+    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::invalidateCursorTheme);
+    connect(screens(), &Screens::maxScaleChanged, this, &WaylandCursorImage::invalidateCursorTheme);
+}
+
+bool WaylandCursorImage::ensureCursorTheme()
+{
+    if (!m_cursorTheme.isEmpty()) {
+        return true;
+    }
+
+    const Cursor *pointerCursor = Cursors::self()->mouse();
+    const qreal targetDevicePixelRatio = screens()->maxScale();
+
+    m_cursorTheme = KXcursorTheme::fromTheme(pointerCursor->themeName(), pointerCursor->themeSize(),
+                                             targetDevicePixelRatio);
+    if (!m_cursorTheme.isEmpty()) {
+        return true;
+    }
+
+    m_cursorTheme = KXcursorTheme::fromTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(),
+                                             targetDevicePixelRatio);
+    if (!m_cursorTheme.isEmpty()) {
+        return true;
+    }
+
+    return false;
+}
+
+void WaylandCursorImage::invalidateCursorTheme()
+{
+    m_cursorTheme = KXcursorTheme();
+}
+
+void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, Image *cursorImage)
+{
+    loadThemeCursor(shape.name(), cursorImage);
+}
+
+void WaylandCursorImage::loadThemeCursor(const QByteArray &name, Image *cursorImage)
+{
+    if (!ensureCursorTheme()) {
         return;
     }
 
-    image->image = {};
-    wl_cursor_image *cursor = m_cursorTheme->get(shape);
-    if (!cursor) {
-        qDebug() << "Could not find cursor" << shape;
+    if (loadThemeCursor_helper(name, cursorImage)) {
         return;
     }
-    wl_buffer *b = wl_cursor_image_get_buffer(cursor);
-    if (!b) {
-        return;
+
+    const auto alternativeNames = Cursor::cursorAlternativeNames(name);
+    for (const QByteArray &alternativeName : alternativeNames) {
+        if (loadThemeCursor_helper(alternativeName, cursorImage)) {
+            return;
+        }
     }
-    waylandServer()->internalClientConection()->flush();
-    waylandServer()->dispatch();
-    auto buffer = KWaylandServer::BufferInterface::get(waylandServer()->internalConnection()->getResource(KWayland::Client::Buffer::getId(b)));
-    if (!buffer) {
-        return;
+
+    qCWarning(KWIN_CORE) << "Failed to load theme cursor for shape" << name;
+}
+
+bool WaylandCursorImage::loadThemeCursor_helper(const QByteArray &name, Image *cursorImage)
+{
+    const QVector<KXcursorSprite> sprites = m_cursorTheme.shape(name);
+    if (sprites.isEmpty()) {
+        return false;
     }
-    auto scale = screens()->maxScale();
-    int hotSpotX = qRound(cursor->hotspot_x / scale);
-    int hotSpotY = qRound(cursor->hotspot_y / scale);
-    QImage img = buffer->data().copy();
-    img.setDevicePixelRatio(scale);
-    *image = {img, QPoint(hotSpotX, hotSpotY)};
+
+    cursorImage->image = sprites.first().data();
+    cursorImage->image.setDevicePixelRatio(m_cursorTheme.devicePixelRatio());
+
+    cursorImage->hotspot = sprites.first().hotspot();
+    cursorImage->hotspot /= m_cursorTheme.devicePixelRatio();
+
+    return true;
 }
 
 void CursorImage::reevaluteSource()

@@ -424,6 +424,7 @@ add_subdirectory(helpers)
 ########### next target ###############
 
 set(kwin_SRCS
+    3rdparty/xcursor.c
     abstract_client.cpp
     abstract_opengl_context_attribute_builder.cpp
     abstract_output.cpp
@@ -490,8 +491,8 @@ set(kwin_SRCS
     pointer_input.cpp
     popup_input_filter.cpp
     rootinfo_filter.cpp
-    rules.cpp
     rulebooksettings.cpp
+    rules.cpp
     scene.cpp
     screenedge.cpp
     screenlockerwatcher.cpp
@@ -524,7 +525,6 @@ set(kwin_SRCS
     virtualkeyboard.cpp
     virtualkeyboard_dbus.cpp
     was_user_interaction_x11_filter.cpp
-    wayland_cursor_theme.cpp
     wayland_server.cpp
     waylandclient.cpp
     waylandshellintegration.cpp
@@ -534,6 +534,7 @@ set(kwin_SRCS
     x11client.cpp
     x11eventfilter.cpp
     xcbutils.cpp
+    xcursortheme.cpp
     xdgshellclient.cpp
     xkb.cpp
     xwaylandclient.cpp

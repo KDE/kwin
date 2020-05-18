@@ -38,7 +38,6 @@ class Registry;
 class Compositor;
 class Seat;
 class DataDeviceManager;
-class ShmPool;
 class Surface;
 }
 }
@@ -205,9 +204,6 @@ public:
     KWayland::Client::DataDeviceManager *internalDataDeviceManager() {
         return m_internalConnection.ddm;
     }
-    KWayland::Client::ShmPool *internalShmPool() {
-        return m_internalConnection.shm;
-    }
     KWayland::Client::ConnectionThread *internalClientConection() {
         return m_internalConnection.client;
     }
@@ -298,7 +294,6 @@ private:
         KWayland::Client::Compositor *compositor = nullptr;
         KWayland::Client::Seat *seat = nullptr;
         KWayland::Client::DataDeviceManager *ddm = nullptr;
-        KWayland::Client::ShmPool *shm = nullptr;
         bool interfacesAnnounced = false;
 
     } m_internalConnection;

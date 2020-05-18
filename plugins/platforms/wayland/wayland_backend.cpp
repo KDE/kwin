@@ -34,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "outputscreens.h"
 #include "pointer_input.h"
 #include "screens.h"
-#include "wayland_cursor_theme.h"
 #include "wayland_server.h"
 
 #include <config-kwin.h>

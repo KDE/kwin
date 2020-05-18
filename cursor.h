@@ -139,7 +139,15 @@ public:
     /**
      * @return list of alternative names for the cursor with @p name
      */
-    QVector<QByteArray> cursorAlternativeNames(const QByteArray &name) const;
+    static QVector<QByteArray> cursorAlternativeNames(const QByteArray &name);
+    /**
+     * Returns the default Xcursor theme name.
+     */
+    static QString defaultThemeName();
+    /**
+     * Returns the default Xcursor theme size.
+     */
+    static int defaultThemeSize();
 
     /**
      * Returns the current cursor position. This method does an update of the mouse position if

@@ -66,8 +66,6 @@ class XdgShell;
 
 namespace KWin
 {
-class WaylandCursorTheme;
-
 namespace Wayland
 {
 
