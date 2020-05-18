@@ -23,6 +23,7 @@ namespace KWaylandServer
 {
 
 class DataDeviceInterface;
+class DataSourceInterface;
 class Display;
 class SurfaceInterface;
 class TextInputInterface;
@@ -692,8 +693,10 @@ public:
      * @since 5.24
      * @see selectionChanged
      * @see setSelection
+     * This may be null
      **/
-    DataDeviceInterface *selection() const;
+    DataSourceInterface *selection() const;
+
     /**
      * This method allows to manually set the @p dataDevice for the current clipboard selection.
      * The clipboard selection is handled automatically in SeatInterface.
@@ -707,7 +710,7 @@ public:
      * @see selectionChanged
      * @since 5.24
      **/
-    void setSelection(DataDeviceInterface *dataDevice);
+    void setSelection(DataSourceInterface *selection);
 
     static SeatInterface *get(wl_resource *native);
 
@@ -736,7 +739,7 @@ Q_SIGNALS:
      * @see selection
      * @see setSelection
      **/
-    void selectionChanged(DataDeviceInterface*);
+    void selectionChanged(DataSourceInterface*);
 
     /**
      * Emitted when a drag'n'drop operation is started

@@ -51,7 +51,7 @@ public:
 
     DataSourceInterface *selection() const;
 
-    void sendSelection(DataDeviceInterface *other);
+    void sendSelection(DataSourceInterface *other);
     void sendClearSelection();
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.

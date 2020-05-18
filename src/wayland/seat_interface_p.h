@@ -37,7 +37,6 @@ public:
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerTextInput(TextInputInterface *textInput);
     void endDrag(quint32 serial);
-    void cancelPreviousSelection(DataDeviceInterface *newlySelectedDataDevice);
 
     QString name;
     bool pointer = false;
@@ -49,8 +48,11 @@ public:
     QVector<KeyboardInterface*> keyboards;
     QVector<TouchInterface*> touchs;
     QVector<DataDeviceInterface*> dataDevices;
+
     QVector<TextInputInterface*> textInputs;
-    DataDeviceInterface *currentSelection = nullptr;
+
+    // the last thing copied into the clipboard content
+    DataSourceInterface *currentSelection = nullptr;
 
     // Pointer related members
     struct Pointer {
@@ -165,7 +167,7 @@ private:
     void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
     void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
     void getTouch(wl_client *client, wl_resource *resource, uint32_t id);
-    void updateSelection(DataDeviceInterface *dataDevice, bool set);
+    void updateSelection(DataDeviceInterface *dataDevice);
     static Private *cast(wl_resource *r);
     static void unbind(wl_resource *r);
 
