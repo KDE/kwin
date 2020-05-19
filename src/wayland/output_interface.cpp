@@ -38,7 +38,7 @@ public:
     QList<Mode> modes;
     QList<ResourceData> resources;
     struct {
-        DpmsMode mode = DpmsMode::On;
+        DpmsMode mode = DpmsMode::Off;
         bool supported = false;
     } dpms;
 
