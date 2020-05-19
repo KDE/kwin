@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/seat.h>
 
@@ -58,7 +59,6 @@ DataBridge::DataBridge(QObject *parent)
     DataDeviceManager *dataDeviceManager = waylandServer()->internalDataDeviceManager();
     Seat *seat = waylandServer()->internalSeat();
     m_dataDevice = dataDeviceManager->getDataDevice(seat, this);
-    waylandServer()->dispatch();
 
     const DataDeviceManagerInterface *dataDeviceManagerInterface =
         waylandServer()->dataDeviceManager();
@@ -78,6 +78,9 @@ DataBridge::DataBridge(QObject *parent)
             init();
         }
     );
+
+    waylandServer()->internalClientConection()->flush();
+    waylandServer()->dispatch();
 }
 
 DataBridge::~DataBridge()
