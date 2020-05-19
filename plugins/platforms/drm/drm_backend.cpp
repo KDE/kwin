@@ -424,6 +424,7 @@ bool DrmBackend::updateOutputs()
     }
 
     // check for outputs which got removed
+    QVector<DrmOutput*> removedOutputs;
     auto it = m_outputs.begin();
     while (it != m_outputs.end()) {
         if (connectedOutputs.contains(*it)) {
@@ -434,7 +435,7 @@ bool DrmBackend::updateOutputs()
         it = m_outputs.erase(it);
         m_enabledOutputs.removeOne(removed);
         emit outputRemoved(removed);
-        removed->teardown();
+        removedOutputs.append(removed);
     }
 
     // now check new connections
@@ -518,6 +519,7 @@ bool DrmBackend::updateOutputs()
         emit screensQueried();
     }
 
+    qDeleteAll(removedOutputs);
     qDeleteAll(oldConnectors);
     qDeleteAll(oldCrtcs);
     return true;
