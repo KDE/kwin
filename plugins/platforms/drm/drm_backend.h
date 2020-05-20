@@ -132,6 +132,10 @@ public:
 
     QString supportInformation() const override;
 
+    bool isCursorEnabled() const {
+        return m_cursorEnabled;
+    };
+
 public Q_SLOTS:
     void turnOutputsOn();
 
