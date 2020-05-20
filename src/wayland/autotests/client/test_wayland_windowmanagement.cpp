@@ -145,7 +145,7 @@ void TestWindowManagement::init()
 
     QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow*)));
     QVERIFY(windowSpy.isValid());
-    m_windowInterface = m_windowManagementInterface->createWindow(this);
+    m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
@@ -323,7 +323,7 @@ void TestWindowManagement::testCreateAfterUnmap()
     QCOMPARE(m_windowManagement->children().count(), 1);
     // create and unmap in one go
     // client will first handle the create, the unmap will be sent once the server side is bound
-    auto serverWindow = m_windowManagementInterface->createWindow(this);
+    auto serverWindow = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     serverWindow->unmap();
     QCOMPARE(m_windowManagementInterface->children().count(), 0);
     QCoreApplication::instance()->processEvents();
@@ -518,7 +518,7 @@ void TestWindowManagement::testParentWindow()
     // now let's create a second window
     QSignalSpy windowAddedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowAddedSpy.isValid());
-    auto serverTransient = m_windowManagementInterface->createWindow(this);
+    auto serverTransient = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     serverTransient->setParentWindow(m_windowInterface);
     QVERIFY(windowAddedSpy.wait());
     auto transient = windowAddedSpy.first().first().value<PlasmaWindow*>();
@@ -625,7 +625,7 @@ void TestWindowManagement::testPid()
     QVERIFY(m_window->pid() == 1337);
 
     //test server not setting a PID for whatever reason
-    QScopedPointer<KWaylandServer::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this));
+    QScopedPointer<KWaylandServer::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow*)));
     QVERIFY(windowSpy.wait());
     QScopedPointer<PlasmaWindow> newWindow( windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());

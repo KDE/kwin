@@ -17,6 +17,7 @@
 #include <QVector>
 #include <QRect>
 #include <QHash>
+#include <QUuid>
 
 #include <wayland-server.h>
 #include <wayland-plasma-window-management-server-protocol.h>
@@ -37,11 +38,13 @@ public:
     QPointer<PlasmaVirtualDesktopManagementInterface> plasmaVirtualDesktopManagementInterface = nullptr;
     quint32 windowIdCounter = 0;
     QVector<quint32> stackingOrder;
+    QVector<QByteArray> stackingOrderUuids;
 
 private:
     static void unbind(wl_resource *resource);
     static void showDesktopCallback(wl_client *client, wl_resource *resource, uint32_t state);
     static void getWindowCallback(wl_client *client, wl_resource *resource, uint32_t id, uint32_t internalWindowId);
+    static void getWindowByUuidCallback(wl_client *client, wl_resource *resource, uint32_t id, const char* uuid);
 
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendShowingDesktopState(wl_resource *r);
@@ -82,6 +85,7 @@ public:
     QMetaObject::Connection parentWindowDestroyConnection;
     QStringList plasmaVirtualDesktops;
     QRect geometry;
+    QByteArray uuid;
 
 private:
     static void unbind(wl_resource *resource);
@@ -114,7 +118,7 @@ private:
     static const struct org_kde_plasma_window_interface s_interface;
 };
 
-const quint32 PlasmaWindowManagementInterface::Private::s_version = 11;
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 12;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)
@@ -125,7 +129,8 @@ PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterfac
 #ifndef K_DOXYGEN
 const struct org_kde_plasma_window_management_interface PlasmaWindowManagementInterface::Private::s_interface = {
     showDesktopCallback,
-    getWindowCallback
+    getWindowCallback,
+    getWindowByUuidCallback
 };
 #endif
 
@@ -175,6 +180,14 @@ void PlasmaWindowManagementInterface::Private::sendStackingOrderChanged(wl_resou
     org_kde_plasma_window_management_send_stacking_order_changed(r, &wlIds);
 
     wl_array_release(&wlIds);
+
+    QByteArray uuids;
+    for (const auto &uuid : qAsConst(stackingOrderUuids)) {
+        uuids += uuid;
+        uuids += ';';
+    }
+
+    org_kde_plasma_window_management_send_stacking_order_uuid_changed(r, uuids.constData());
 }
 
 void PlasmaWindowManagementInterface::Private::showDesktopCallback(wl_client *client, wl_resource *resource, uint32_t state)
@@ -212,6 +225,26 @@ void PlasmaWindowManagementInterface::Private::getWindowCallback(wl_client *clie
     (*it)->d->createResource(resource, id);
 }
 
+void PlasmaWindowManagementInterface::Private::getWindowByUuidCallback(wl_client *client, wl_resource *resource, uint32_t id, const char* uuid)
+{
+    Q_UNUSED(client)
+    auto p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
+    auto it = std::find_if(p->windows.constBegin(), p->windows.constEnd(),
+        [uuid] (PlasmaWindowInterface *window) {
+            return window->d->uuid == uuid;
+        }
+    );
+    if (it == p->windows.constEnd()) {
+        qWarning() << "Could not find window with uuid" << uuid;
+        // create a temp window just for the resource and directly send an unmapped
+        PlasmaWindowInterface *window = new PlasmaWindowInterface(p->q, p->q);
+        window->d->unmapped = true;
+        window->d->createResource(resource, id);
+        return;
+    }
+    (*it)->d->createResource(resource, id);
+}
+
 PlasmaWindowManagementInterface::PlasmaWindowManagementInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)
 {
@@ -230,7 +263,11 @@ void PlasmaWindowManagementInterface::Private::bind(wl_client *client, uint32_t 
     wl_resource_set_implementation(shell, &s_interface, this, unbind);
     resources << shell;
     for (auto it = windows.constBegin(); it != windows.constEnd(); ++it) {
-        org_kde_plasma_window_management_send_window(shell, (*it)->d->windowId);
+         if (wl_resource_get_version(shell) >= ORG_KDE_PLASMA_WINDOW_MANAGEMENT_WINDOW_WITH_UUID_SINCE_VERSION) {
+            org_kde_plasma_window_management_send_window_with_uuid(shell, (*it)->d->windowId, (*it)->d->uuid.constData());
+        } else {
+            org_kde_plasma_window_management_send_window(shell, (*it)->d->windowId);
+        }
     }
     sendStackingOrderChanged(shell);
 }
@@ -256,14 +293,20 @@ PlasmaWindowManagementInterface::Private *PlasmaWindowManagementInterface::d_fun
     return reinterpret_cast<Private*>(d.data());
 }
 
-PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *parent)
+PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *parent, const QUuid &uuid)
 {
     Q_D();
     PlasmaWindowInterface *window = new PlasmaWindowInterface(this, parent);
-    // TODO: improve window ids so that it cannot wrap around
-    window->d->windowId = ++d->windowIdCounter;
+
+    window->d->uuid = uuid.toByteArray();
+    window->d->windowId = ++d->windowIdCounter; //NOTE the window id is deprecated
+
     for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
-        org_kde_plasma_window_management_send_window(*it, window->d->windowId);
+        if (wl_resource_get_version(*it) >= ORG_KDE_PLASMA_WINDOW_MANAGEMENT_WINDOW_WITH_UUID_SINCE_VERSION) {
+            org_kde_plasma_window_management_send_window_with_uuid(*it, window->d->windowId, window->d->uuid.constData());
+        } else {
+            org_kde_plasma_window_management_send_window(*it, window->d->windowId);
+        }
     }
     d->windows << window;
     connect(window, &QObject::destroyed, this,

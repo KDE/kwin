@@ -179,7 +179,7 @@ if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
     VERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     VERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     VERIFY(w);
     VERIFY(rowInsertedSpy.wait());
     m_connection->flush();
@@ -267,7 +267,7 @@ void PlasmaWindowModelTest::testAddRemoveRows()
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
     // this happens by creating a PlasmaWindow on server side
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
     QCOMPARE(rowInsertedSpy.count(), 1);
@@ -343,7 +343,7 @@ void PlasmaWindowModelTest::testDefaultData()
     QVERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
 
@@ -450,7 +450,7 @@ void PlasmaWindowModelTest::testGeometry()
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
 
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
 
@@ -478,7 +478,7 @@ void PlasmaWindowModelTest::testTitle()
     QVERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
     m_connection->flush();
@@ -503,7 +503,7 @@ void PlasmaWindowModelTest::testAppId()
     QVERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
     m_connection->flush();
@@ -528,7 +528,7 @@ void PlasmaWindowModelTest::testPid()
     QVERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     w->setPid(1337);
     QVERIFY(w);
     m_connection->flush();
@@ -546,7 +546,7 @@ void PlasmaWindowModelTest::testVirtualDesktops()
     QVERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
     m_connection->flush();
@@ -595,7 +595,7 @@ void PlasmaWindowModelTest::testRequests()
     QVERIFY(model);
     QSignalSpy rowInsertedSpy(model, &PlasmaWindowModel::rowsInserted);
     QVERIFY(rowInsertedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(rowInsertedSpy.wait());
 
@@ -815,7 +815,7 @@ void PlasmaWindowModelTest::testCreateWithUnmappedWindow()
     // create a window in "normal way"
     QSignalSpy windowCreatedSpy(m_pw, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowCreatedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(w);
     QVERIFY(windowCreatedSpy.wait());
     PlasmaWindow *window = windowCreatedSpy.first().first().value<PlasmaWindow*>();
@@ -884,7 +884,7 @@ void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy()
     QVERIFY(model);
     QSignalSpy windowCreatedSpy(m_pw, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowCreatedSpy.isValid());
-    auto w = m_pwInterface->createWindow(m_pwInterface);
+    auto w = m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(windowCreatedSpy.wait());
     PlasmaWindow *window = windowCreatedSpy.first().first().value<PlasmaWindow*>();
     // make sure the resource is properly created on server side
@@ -918,7 +918,7 @@ void PlasmaWindowModelTest::testCreateWindowAfterModelDestroy()
     delete model;
     QSignalSpy windowCreatedSpy(m_pw, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowCreatedSpy.isValid());
-    m_pwInterface->createWindow(m_pwInterface);
+    m_pwInterface->createWindow(m_pwInterface, QUuid::createUuid());
     QVERIFY(windowCreatedSpy.wait());
 }
 

@@ -37,7 +37,7 @@ public:
     };
     void setShowingDesktopState(ShowingDesktopState state);
 
-    PlasmaWindowInterface *createWindow(QObject *parent);
+    PlasmaWindowInterface *createWindow(QObject *parent, const QUuid &uuid);
     QList<PlasmaWindowInterface*> windows() const;
 
     /**
@@ -232,6 +232,13 @@ public:
      * @since 5.70
      */
     quint32 internalId() const;
+
+    /**
+     * @return a unique string that identifies this window
+     *
+     * @since Plasma 5.20
+     */
+    QByteArray uuid() const;
 
 Q_SIGNALS:
     void closeRequested();
