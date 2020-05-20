@@ -15,7 +15,6 @@
 #include "KWayland/Client/output.h"
 #include "KWayland/Client/registry.h"
 #include "../../src/server/display.h"
-#include "../../src/server/shell_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/outputconfiguration_interface.h"
 #include "../../src/server/outputdevice_interface.h"
@@ -96,8 +95,6 @@ void TestWaylandOutputManagement::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    auto shell = m_display->createShell(this);
-    shell->create();
     auto comp = m_display->createCompositor(this);
     comp->create();
 

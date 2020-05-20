@@ -7,7 +7,7 @@
 #include "../src/server/display.h"
 #include "../src/server/output_interface.h"
 #include "../src/server/seat_interface.h"
-#include "../src/server/shell_interface.h"
+#include "../src/server/xdgshell_interface.h"
 
 #include <QGuiApplication>
 #include <QFile>
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
     display.createShm();
     CompositorInterface *compositor = display.createCompositor(&display);
     compositor->create();
-    ShellInterface *shell = display.createShell();
+    XdgShellInterface *shell = display.createXdgShell(XdgShellInterfaceVersion::Stable);
     shell->create();
     OutputInterface *output = display.createOutput(&display);
     output->setPhysicalSize(QSize(10, 10));

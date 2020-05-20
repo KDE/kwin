@@ -11,12 +11,10 @@
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/plasmashell.h"
 #include "KWayland/Client/registry.h"
-#include "KWayland/Client/shell.h"
 #include "KWayland/Client/surface.h"
 // server
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/shell_interface.h"
 #include "../../src/server/plasmashell_interface.h"
 
 #include <wayland-client-protocol.h>
@@ -33,15 +31,11 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testMultipleShellSurfacesForSurface();
     void testMultiplePlasmaShellSurfacesForSurface();
-    void testTransientForSameSurface_data();
-    void testTransientForSameSurface();
 
 private:
     Display *m_display = nullptr;
     CompositorInterface *m_ci = nullptr;
-    ShellInterface *m_si = nullptr;
     PlasmaShellInterface *m_psi = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
@@ -63,8 +57,6 @@ void ErrorTest::init()
     m_display->createShm();
     m_ci = m_display->createCompositor(m_display);
     m_ci->create();
-    m_si = m_display->createShell(m_display);
-    m_si->create();
     m_psi = m_display->createPlasmaShell(m_display);
     m_psi->create();
 
@@ -97,10 +89,6 @@ void ErrorTest::init()
                                              registry.interface(Registry::Interface::Compositor).version,
                                              this);
     QVERIFY(m_compositor);
-    m_shell = registry.createShell(registry.interface(Registry::Interface::Shell).name,
-                                   registry.interface(Registry::Interface::Shell).version,
-                                   this);
-    QVERIFY(m_shell);
     m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
                                                registry.interface(Registry::Interface::PlasmaShell).version,
                                                this);
@@ -129,23 +117,9 @@ void ErrorTest::cleanup()
         m_thread = nullptr;
     }
     CLEANUP(m_psi)
-    CLEANUP(m_si)
     CLEANUP(m_ci)
     CLEANUP(m_display)
 #undef CLEANUP
-}
-
-void ErrorTest::testMultipleShellSurfacesForSurface()
-{
-    // this test verifies that creating two ShellSurfaces for the same Surface triggers a protocol error
-    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
-    QVERIFY(errorSpy.isValid());
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface1(m_shell->createSurface(surface.data()));
-    QScopedPointer<ShellSurface> shellSurface2(m_shell->createSurface(surface.data()));
-    QVERIFY(errorSpy.wait());
-    QVERIFY(m_connection->hasError());
-    QCOMPARE(m_connection->errorCode(), EPROTO);
 }
 
 void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()
@@ -163,28 +137,6 @@ void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()
     QVERIFY(m_connection->hasError());
     QCOMPARE(m_connection->errorCode(), EPROTO);
     wl_surface_destroy(surface);
-}
-
-void ErrorTest::testTransientForSameSurface_data()
-{
-    QTest::addColumn<ShellSurface::TransientFlag>("flag");
-
-    QTest::newRow("transient") << ShellSurface::TransientFlag::Default;
-    QTest::newRow("transient no focus") << ShellSurface::TransientFlag::NoFocus;
-}
-
-void ErrorTest::testTransientForSameSurface()
-{
-    // this test verifies that creating a transient shell surface for itself triggers a protocol error
-    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
-    QVERIFY(errorSpy.isValid());
-    QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QScopedPointer<ShellSurface> shellSurface(m_shell->createSurface(surface.data()));
-    QFETCH(ShellSurface::TransientFlag, flag);
-    shellSurface->setTransient(surface.data(), QPoint(), flag);
-    QVERIFY(errorSpy.wait());
-    QVERIFY(m_connection->hasError());
-    QCOMPARE(m_connection->errorCode(), EPROTO);
 }
 
 QTEST_GUILESS_MAIN(ErrorTest)

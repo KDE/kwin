@@ -11,7 +11,7 @@
 #include "../src/server/output_interface.h"
 #include "../src/server/pointer_interface.h"
 #include "../src/server/seat_interface.h"
-#include "../src/server/shell_interface.h"
+#include "../src/server/xdgshell_interface.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -79,7 +79,7 @@ public:
     explicit CompositorWindow(QWidget *parent = nullptr);
     virtual ~CompositorWindow();
 
-    void surfaceCreated(KWaylandServer::ShellSurfaceInterface *surface);
+    void surfaceCreated(KWaylandServer::XdgShellSurfaceInterface *surface);
 
     void setSeat(const QPointer<KWaylandServer::SeatInterface> &seat);
 
@@ -94,7 +94,7 @@ protected:
 
 private:
     void updateFocus();
-    QList<KWaylandServer::ShellSurfaceInterface*> m_stackingOrder;
+    QList<KWaylandServer::XdgShellSurfaceInterface *> m_stackingOrder;
     QPointer<KWaylandServer::SeatInterface> m_seat;
 };
 
@@ -106,26 +106,13 @@ CompositorWindow::CompositorWindow(QWidget *parent)
 
 CompositorWindow::~CompositorWindow() = default;
 
-void CompositorWindow::surfaceCreated(KWaylandServer::ShellSurfaceInterface *surface)
+void CompositorWindow::surfaceCreated(KWaylandServer::XdgShellSurfaceInterface *surface)
 {
     using namespace KWaylandServer;
+    surface->configure(XdgShellSurfaceInterface::States());
     m_stackingOrder << surface;
-    connect(surface, &ShellSurfaceInterface::fullscreenChanged, this,
-        [surface, this](bool fullscreen) {
-            if (fullscreen) {
-                surface->requestSize(size());
-            }
-        }
-    );
-    connect(surface, &ShellSurfaceInterface::maximizedChanged, this,
-        [surface, this](bool maximized) {
-            if (maximized) {
-                surface->requestSize(size());
-            }
-        }
-    );
     connect(surface->surface(), &SurfaceInterface::damaged, this, static_cast<void (CompositorWindow::*)()>(&CompositorWindow::update));
-    connect(surface, &ShellSurfaceInterface::destroyed, this,
+    connect(surface, &XdgShellSurfaceInterface::destroyed, this,
         [surface, this] {
             m_stackingOrder.removeAll(surface);
             updateFocus();
@@ -142,8 +129,8 @@ void CompositorWindow::updateFocus()
         return;
     }
     auto it = std::find_if(m_stackingOrder.constBegin(), m_stackingOrder.constEnd(),
-        [](ShellSurfaceInterface *s) {
-            return s->surface()->buffer() != nullptr;
+        [](XdgShellSurfaceInterface *toplevel) {
+            return toplevel->surface()->isMapped();
         }
     );
     if (it == m_stackingOrder.constEnd()) {
@@ -162,11 +149,14 @@ void CompositorWindow::paintEvent(QPaintEvent *event)
 {
     QWidget::paintEvent(event);
     QPainter p(this);
-    for (auto s : m_stackingOrder) {
-        if (auto *b = s->surface()->buffer()) {
-            p.drawImage(QPoint(0, 0), b->data());
-            s->surface()->frameRendered(QDateTime::currentMSecsSinceEpoch());
+    for (auto window : m_stackingOrder) {
+        KWaylandServer::SurfaceInterface *surface = window->surface();
+        if (!surface || !surface->isMapped()) {
+            continue;
         }
+        KWaylandServer::BufferInterface *buffer = surface->buffer();
+        p.drawImage(QPoint(0, 0), buffer->data());
+        surface->frameRendered(QDateTime::currentMSecsSinceEpoch());
     }
 }
 
@@ -253,7 +243,7 @@ int main(int argc, char **argv)
     ddm->create();
     CompositorInterface *compositor = display.createCompositor(&display);
     compositor->create();
-    ShellInterface *shell = display.createShell();
+    XdgShellInterface *shell = display.createXdgShell(XdgShellInterfaceVersion::Stable);
     shell->create();
     display.createShm();
     OutputInterface *output = display.createOutput(&display);
@@ -273,7 +263,7 @@ int main(int argc, char **argv)
     compositorWindow.setMaximumSize(windowSize);
     compositorWindow.setGeometry(QRect(QPoint(0, 0), windowSize));
     compositorWindow.show();
-    QObject::connect(shell, &ShellInterface::surfaceCreated, &compositorWindow, &CompositorWindow::surfaceCreated);
+    QObject::connect(shell, &XdgShellInterface::surfaceCreated, &compositorWindow, &CompositorWindow::surfaceCreated);
 
     // start XWayland
     if (parser.isSet(xwaylandOption)) {

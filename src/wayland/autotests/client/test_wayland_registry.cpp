@@ -20,7 +20,6 @@
 #include "KWayland/Client/seat.h"
 #include "KWayland/Client/relativepointer.h"
 #include "KWayland/Client/server_decoration.h"
-#include "KWayland/Client/shell.h"
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/subcompositor.h"
 #include "KWayland/Client/xdgshell.h"
@@ -31,7 +30,6 @@
 #include "../../src/server/idleinhibit_interface.h"
 #include "../../src/server/output_interface.h"
 #include "../../src/server/seat_interface.h"
-#include "../../src/server/shell_interface.h"
 #include "../../src/server/blur_interface.h"
 #include "../../src/server/contrast_interface.h"
 #include "../../src/server/server_decoration_interface.h"
@@ -67,7 +65,6 @@ private Q_SLOTS:
 
     void testCreate();
     void testBindCompositor();
-    void testBindShell();
     void testBindOutput();
     void testBindShm();
     void testBindSeat();
@@ -96,7 +93,6 @@ private:
     KWaylandServer::OutputInterface *m_output;
     KWaylandServer::OutputDeviceInterface *m_outputDevice;
     KWaylandServer::SeatInterface *m_seat;
-    KWaylandServer::ShellInterface *m_shell;
     KWaylandServer::SubCompositorInterface *m_subcompositor;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManager;
     KWaylandServer::OutputManagementInterface *m_outputManagement;
@@ -122,7 +118,6 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_output(nullptr)
     , m_outputDevice(nullptr)
     , m_seat(nullptr)
-    , m_shell(nullptr)
     , m_subcompositor(nullptr)
     , m_dataDeviceManager(nullptr)
     , m_outputManagement(nullptr)
@@ -151,8 +146,6 @@ void TestWaylandRegistry::init()
     m_output->create();
     m_seat = m_display->createSeat();
     m_seat->create();
-    m_shell = m_display->createShell();
-    m_shell->create();
     m_subcompositor = m_display->createSubCompositor();
     m_subcompositor->create();
     m_dataDeviceManager = m_display->createDataDeviceManager();
@@ -263,11 +256,6 @@ void TestWaylandRegistry::testBindCompositor()
     TEST_BIND(KWayland::Client::Registry::Interface::Compositor, SIGNAL(compositorAnnounced(quint32,quint32)), bindCompositor, wl_compositor_destroy)
 }
 
-void TestWaylandRegistry::testBindShell()
-{
-    TEST_BIND(KWayland::Client::Registry::Interface::Shell, SIGNAL(shellAnnounced(quint32,quint32)), bindShell, free)
-}
-
 void TestWaylandRegistry::testBindOutput()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::Output, SIGNAL(outputAnnounced(quint32,quint32)), bindOutput, wl_output_destroy)
@@ -363,8 +351,6 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(outputAnnouncedSpy.isValid());
     QSignalSpy outputDeviceAnnouncedSpy(&registry, SIGNAL(outputDeviceAnnounced(quint32,quint32)));
     QVERIFY(outputDeviceAnnouncedSpy.isValid());
-    QSignalSpy shellAnnouncedSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
-    QVERIFY(shellAnnouncedSpy.isValid());
     QSignalSpy seatAnnouncedSpy(&registry, SIGNAL(seatAnnounced(quint32,quint32)));
     QVERIFY(seatAnnouncedSpy.isValid());
     QSignalSpy subCompositorAnnouncedSpy(&registry, SIGNAL(subCompositorAnnounced(quint32,quint32)));
@@ -386,7 +372,6 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!compositorAnnouncedSpy.isEmpty());
     QVERIFY(!outputAnnouncedSpy.isEmpty());
     QVERIFY(!outputDeviceAnnouncedSpy.isEmpty());
-    QVERIFY(!shellAnnouncedSpy.isEmpty());
     QVERIFY(!seatAnnouncedSpy.isEmpty());
     QVERIFY(!subCompositorAnnouncedSpy.isEmpty());
     QVERIFY(!outputManagementAnnouncedSpy.isEmpty());
@@ -399,7 +384,6 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Output));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::OutputDevice));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Seat));
-    QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Shell));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::Shm));
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::SubCompositor));
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::FullscreenShell));
@@ -412,7 +396,6 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Output).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::OutputDevice).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Seat).isEmpty());
-    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Shell).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Shm).isEmpty());
     QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::SubCompositor).isEmpty());
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::FullscreenShell).isEmpty());
@@ -425,7 +408,6 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(seatRemovedSpy.isValid());
 
     Seat *seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, &registry);
-    Shell *shell = registry.createShell(registry.interface(Registry::Interface::Shell).name, registry.interface(Registry::Interface::Shell).version, &registry);
     Output *output = registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
     Compositor *compositor = registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, &registry);
     SubCompositor *subcompositor = registry.createSubCompositor(registry.interface(Registry::Interface::SubCompositor).name, registry.interface(Registry::Interface::SubCompositor).version, &registry);
@@ -437,8 +419,6 @@ void TestWaylandRegistry::testRemoval()
     m_display->dispatchEvents();
     QSignalSpy seatObjectRemovedSpy(seat, &Seat::removed);
     QVERIFY(seatObjectRemovedSpy.isValid());
-    QSignalSpy shellObjectRemovedSpy(shell, &Shell::removed);
-    QVERIFY(shellObjectRemovedSpy.isValid());
     QSignalSpy outputObjectRemovedSpy(output, &Output::removed);
     QVERIFY(outputObjectRemovedSpy.isValid());
     QSignalSpy compositorObjectRemovedSpy(compositor, &Compositor::removed);
@@ -454,16 +434,6 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Seat));
     QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Seat).isEmpty());
     QCOMPARE(seatObjectRemovedSpy.count(), 1);
-
-    QSignalSpy shellRemovedSpy(&registry, SIGNAL(shellRemoved(quint32)));
-    QVERIFY(shellRemovedSpy.isValid());
-
-    delete m_shell;
-    QVERIFY(shellRemovedSpy.wait());
-    QCOMPARE(shellRemovedSpy.first().first(), shellAnnouncedSpy.first().first());
-    QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Shell));
-    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Shell).isEmpty());
-    QCOMPARE(shellObjectRemovedSpy.count(), 1);
 
     QSignalSpy outputRemovedSpy(&registry, SIGNAL(outputRemoved(quint32)));
     QVERIFY(outputRemovedSpy.isValid());
@@ -549,7 +519,6 @@ void TestWaylandRegistry::testRemoval()
 
     // verify everything has been removed only once
     QCOMPARE(seatObjectRemovedSpy.count(), 1);
-    QCOMPARE(shellObjectRemovedSpy.count(), 1);
     QCOMPARE(outputObjectRemovedSpy.count(), 1);
     QCOMPARE(compositorObjectRemovedSpy.count(), 1);
     QCOMPARE(subcompositorObjectRemovedSpy.count(), 1);
@@ -642,7 +611,7 @@ void TestWaylandRegistry::testDestroy()
     QVERIFY(connectedSpy.wait());
 
     Registry registry;
-    QSignalSpy shellAnnouncedSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
+    QSignalSpy seatAnnouncedSpy(&registry, SIGNAL(seatAnnounced(quint32,quint32)));
 
     QVERIFY(!registry.isValid());
     registry.create(&connection);
@@ -650,8 +619,10 @@ void TestWaylandRegistry::testDestroy()
     QVERIFY(registry.isValid());
 
     //create some arbitrary Interface
-    shellAnnouncedSpy.wait();
-    QScopedPointer<Shell> shell(registry.createShell(registry.interface(Registry::Interface::Shell).name, registry.interface(Registry::Interface::Shell).version, &registry));
+    seatAnnouncedSpy.wait();
+    QScopedPointer<Seat> seat(registry.createSeat(registry.interface(Registry::Interface::Seat).name,
+                                                  registry.interface(Registry::Interface::Seat).version,
+                                                  &registry));
 
 
     QSignalSpy connectionDiedSpy(&connection, SIGNAL(connectionDied()));
@@ -672,7 +643,7 @@ void TestWaylandRegistry::testDestroy()
 
     // calling destroy again should not fail
     registry.destroy();
-    shell->destroy();
+    seat->destroy();
 }
 
 void TestWaylandRegistry::testGlobalSync()

@@ -33,7 +33,6 @@
 #include "server_decoration_interface.h"
 #include "server_decoration_palette_interface.h"
 #include "shadow_interface.h"
-#include "shell_interface.h"
 #include "slide_interface.h"
 #include "subcompositor_interface.h"
 #include "tablet_interface.h"
@@ -243,13 +242,6 @@ CompositorInterface *Display::createCompositor(QObject *parent)
     CompositorInterface *compositor = new CompositorInterface(this, parent);
     connect(this, &Display::aboutToTerminate, compositor, [compositor] { delete compositor; });
     return compositor;
-}
-
-ShellInterface *Display::createShell(QObject *parent)
-{
-    ShellInterface *shell = new ShellInterface(this, parent);
-    connect(this, &Display::aboutToTerminate, shell, [shell] { delete shell; });
-    return shell;
 }
 
 OutputDeviceInterface *Display::createOutputDevice(QObject *parent)

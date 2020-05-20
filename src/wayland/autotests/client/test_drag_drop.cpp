@@ -16,7 +16,6 @@
 #include "KWayland/Client/touch.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/seat.h"
-#include "KWayland/Client/shell.h"
 #include "KWayland/Client/shm_pool.h"
 #include "KWayland/Client/surface.h"
 #include "../../src/server/display.h"
@@ -24,7 +23,6 @@
 #include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/datasource_interface.h"
 #include "../../src/server/seat_interface.h"
-#include "../../src/server/shell_interface.h"
 
 class TestDragAndDrop : public QObject
 {
@@ -47,7 +45,6 @@ private:
     KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
     KWaylandServer::SeatInterface *m_seatInterface = nullptr;
-    KWaylandServer::ShellInterface *m_shellInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
@@ -60,7 +57,6 @@ private:
     KWayland::Client::Touch *m_touch = nullptr;
     KWayland::Client::DataDeviceManager *m_ddm = nullptr;
     KWayland::Client::ShmPool *m_shm = nullptr;
-    KWayland::Client::Shell *m_shell = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-drag-n-drop-0");
@@ -93,8 +89,6 @@ void TestDragAndDrop::init()
     m_dataDeviceManagerInterface->create();
     QVERIFY(m_dataDeviceManagerInterface->isValid());
     m_display->createShm();
-    m_shellInterface = m_display->createShell(m_display);
-    m_shellInterface->create();
 
     m_thread = new QThread(this);
     m_connection->moveToThread(m_thread);
@@ -128,7 +122,6 @@ void TestDragAndDrop::init()
     CREATE(m_seat, Seat, Seat)
     CREATE(m_ddm, DataDeviceManager, DataDeviceManager)
     CREATE(m_shm, ShmPool, Shm)
-    CREATE(m_shell, Shell, Shell)
 
 #undef CREATE
 
@@ -155,7 +148,6 @@ void TestDragAndDrop::cleanup()
     }
     DELETE(m_dataSource)
     DELETE(m_dataDevice)
-    DELETE(m_shell)
     DELETE(m_shm)
     DELETE(m_compositor)
     DELETE(m_ddm)

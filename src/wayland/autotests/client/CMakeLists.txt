@@ -50,17 +50,6 @@ add_test(NAME kwayland-testWaylandOutput COMMAND testWaylandOutput)
 ecm_mark_as_test(testWaylandOutput)
 
 ########################################################
-# Test WaylandShell
-########################################################
-set( testWaylandShell_SRCS
-        test_wayland_shell.cpp
-    )
-add_executable(testWaylandShell ${testWaylandShell_SRCS})
-target_link_libraries( testWaylandShell Qt5::Test Qt5::Gui KF5::WaylandClient Plasma::KWaylandServer Wayland::Client Wayland::Server)
-add_test(NAME kwayland-testWaylandShell COMMAND testWaylandShell)
-ecm_mark_as_test(testWaylandShell)
-
-########################################################
 # Test WaylandSurface
 ########################################################
 set( testWaylandSurface_SRCS

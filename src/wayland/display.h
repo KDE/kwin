@@ -55,7 +55,6 @@ class BlurManagerInterface;
 class ContrastManagerInterface;
 class ServerSideDecorationManagerInterface;
 class SlideManagerInterface;
-class ShellInterface;
 class SubCompositorInterface;
 enum class TextInputInterfaceVersion;
 class TextInputManagerInterface;
@@ -169,7 +168,6 @@ public:
 
     CompositorInterface *createCompositor(QObject *parent = nullptr);
     void createShm();
-    ShellInterface *createShell(QObject *parent = nullptr);
     SeatInterface *createSeat(QObject *parent = nullptr);
     /**
      * @returns All SeatInterface currently managed on the Display.

@@ -44,7 +44,6 @@ set(SERVER_LIB_SRCS
     server_decoration_interface.cpp
     server_decoration_palette_interface.cpp
     shadow_interface.cpp
-    shell_interface.cpp
     slide_interface.cpp
     subcompositor_interface.cpp
     surface_interface.cpp
@@ -370,7 +369,6 @@ set(SERVER_LIB_HEADERS
   server_decoration_interface.h
   server_decoration_palette_interface.h
   shadow_interface.h
-  shell_interface.h
   slide_interface.h
   subcompositor_interface.h
   surface_interface.h
