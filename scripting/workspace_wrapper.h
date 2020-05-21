@@ -256,6 +256,17 @@ void setter( rettype val );
      */
     Q_SCRIPTABLE QString desktopName(int desktop) const;
     /**
+     * Create a new virtual desktop at the requested position.
+     * @param position The position of the desktop. It should be in range [0, count].
+     * @param name The name for the new desktop, if empty the default name will be used.
+     */
+    Q_SCRIPTABLE void createDesktop(int position, const QString &name) const;
+    /**
+     * Remove the virtual desktop at the requested position
+     * @param position The position of the desktop to be removed. It should be in range [0, count - 1].
+     */
+    Q_SCRIPTABLE void removeDesktop(int position) const;
+    /**
      * Provides support information about the currently running KWin instance.
      */
     Q_SCRIPTABLE QString supportInformation() const;

@@ -272,6 +272,21 @@ QString WorkspaceWrapper::desktopName(int desktop) const
     return VirtualDesktopManager::self()->name(desktop);
 }
 
+void WorkspaceWrapper::createDesktop(int position, const QString &name) const
+{
+    VirtualDesktopManager::self()->createVirtualDesktop(position, name);
+}
+
+void WorkspaceWrapper::removeDesktop(int position) const
+{
+    VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(position + 1);
+    if (!vd) {
+        return;
+    }
+
+    VirtualDesktopManager::self()->removeVirtualDesktop(vd->id());
+}
+
 QString WorkspaceWrapper::supportInformation() const
 {
     return Workspace::self()->supportInformation();
