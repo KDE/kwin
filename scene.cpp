@@ -1132,8 +1132,9 @@ void WindowPixmap::create()
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         // use Buffer
         update();
-        if (!isRoot() && isValid()) {
+        if (isRoot() && isValid()) {
             m_window->unreferencePreviousPixmap();
+            m_window->invalidateQuadsCache();
         }
         return;
     }
@@ -1164,6 +1165,7 @@ void WindowPixmap::create()
     m_pixmapSize = bufferGeometry.size();
     m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
+    m_window->invalidateQuadsCache();
 }
 
 void WindowPixmap::update()

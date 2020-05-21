@@ -709,9 +709,12 @@ void DrmOutput::updateTransform(Transform transform)
     }
     m_modesetRequested = true;
 
-    // the cursor might need to get rotated
-    updateCursor();
-    showCursor();
+    // show cursor only if is enabled, i.e if pointer device is presentP
+    if (m_backend->isCursorEnabled()) {
+        // the cursor might need to get rotated
+        updateCursor();
+        showCursor();
+    }
 }
 
 void DrmOutput::updateMode(int modeIndex)
@@ -867,9 +870,11 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
             }
             m_modesetRequested = true;
-            // the cursor might need to get rotated
-            updateCursor();
-            showCursor();
+            if (m_backend->isCursorEnabled()) {
+                // the cursor might need to get rotated
+                updateCursor();
+                showCursor();
+            }
             // TODO: forward to OutputInterface and OutputDeviceInterface
             setWaylandMode();
             emit screens()->changed();

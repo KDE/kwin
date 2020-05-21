@@ -22,8 +22,9 @@
 #define KWIN_RULES_MODEL_H
 
 #include "ruleitem.h"
-#include "rulesettings.h"
 #include <rules.h>
+#include <rulesettings.h>
+#include <virtualdesktopsdbustypes.h>
 
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
@@ -96,6 +97,8 @@ signals:
     void warningMessageChanged();
     void suggestionsChanged();
 
+    void virtualDesktopsUpdated();
+
 private:
     void populateRuleList();
     bool wmclassWarning() const;
@@ -103,6 +106,7 @@ private:
     QString defaultDescription() const;
 
     static const QHash<QString, QString> x11PropertyHash();
+    void updateVirtualDesktops();
 
     QList<OptionsModel::Data> windowTypesModelData() const;
     QList<OptionsModel::Data> virtualDesktopsModelData() const;
@@ -117,6 +121,7 @@ private slots:
 private:
     QList<RuleItem *> m_ruleList;
     QHash<QString, RuleItem *> m_rules;
+    DBusDesktopDataVector m_virtualDesktops;
 #ifdef KWIN_BUILD_ACTIVITIES
     KActivities::Consumer *m_activities;
 #endif
