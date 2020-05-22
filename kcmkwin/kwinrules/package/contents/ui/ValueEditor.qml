@@ -165,7 +165,7 @@ Loader {
                 Layout.preferredWidth: 50   // 50%
                 Layout.fillWidth: true
                 from: 0
-                to: 4098
+                to: 32767
                 value: (controlType == RuleItem.Size) ? ruleValue.width : ruleValue.x
             }
             QQC2.Label {
@@ -178,7 +178,7 @@ Loader {
                 id: coordY
                 editable: true
                 from: 0
-                to: 4098
+                to: 32767
                 Layout.preferredWidth: 50   // 50%
                 Layout.fillWidth: true
                 value: (controlType == RuleItem.Size) ? ruleValue.height : ruleValue.y
