@@ -78,6 +78,87 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
 public:
     virtual ~SurfaceInterface();
 
+    /**
+     * Maps the specified @a point from the surface-local coordinates to buffer pixel coordinates.
+     *
+     * Note that there is no direct connection between points in the surface-local coordinates
+     * and points in the buffer pixel coordinates. In order to map points between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QPointF mapToBuffer(const QPointF &point) const;
+    /**
+     * Maps the specified @a point from the buffer pixel coordinates to surface-local coordinates.
+     *
+     * Note that there is no direct connection between points in the surface-local coordinates
+     * and points in the buffer pixel coordinates. In order to map points between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QPointF mapFromBuffer(const QPointF &point) const;
+    /**
+     * Maps the specified @a size from the surface-local coordinates to buffer pixel coordinates.
+     *
+     * Note that there is no direct connection between sizes in the surface-local coordinates
+     * and sizes in the buffer pixel coordinates. In order to map sizes between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QSizeF mapToBuffer(const QSizeF &size) const;
+    /**
+     * Maps the specified @a size from the buffer pixel coordinates to surface-local coordinates.
+     *
+     * Note that there is no direct connection between sizes in the surface-local coordinates
+     * and sizes in the buffer pixel coordinates. In order to map sizes between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QSizeF mapFromBuffer(const QSizeF &size) const;
+    /**
+     * Maps the specified @a rect from the surface-local coordinates to buffer pixel coordinates.
+     *
+     * Note that there is no direct connection between rects in the surface-local coordinates
+     * and rects in the buffer pixel coordinates. In order to map rects between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QRectF mapToBuffer(const QRectF &rect) const;
+    /**
+     * Maps the specified @a rect from the buffer pixel coordinates to surface-local coordinates.
+     *
+     * Note that there is no direct connection between rects in the surface-local coordinates
+     * and rects in the buffer pixel coordinates. In order to map rects between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QRectF mapFromBuffer(const QRectF &rect) const;
+    /**
+     * Maps the specified @a region from the surface-local coordinates to buffer pixel coordinates.
+     *
+     * Note that there is no direct connection between regions in the surface-local coordinates
+     * and regions in the buffer pixel coordinates. In order to map regions between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QRegion mapToBuffer(const QRegion &region) const;
+    /**
+     * Maps the specified @a region from the buffer pixel coordinates to surface-local coordinates.
+     *
+     * Note that there is no direct connection between regions in the surface-local coordinates
+     * and regions in the buffer pixel coordinates. In order to map regions between the two spaces,
+     * one has to use mapToBuffer() and mapFromBuffer().
+     *
+     * @since 5.20
+     */
+    QRegion mapFromBuffer(const QRegion &region) const;
+
     void frameRendered(quint32 msec);
 
     QRegion damage() const;

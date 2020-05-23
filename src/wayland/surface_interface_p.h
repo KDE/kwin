@@ -71,6 +71,20 @@ public:
     void commitSubSurface();
     void commit();
 
+    QPointF mapFromBuffer(const State *state, const QPointF &point) const;
+    QPointF mapToBuffer(const State *state, const QPointF &point) const;
+    QSizeF mapFromBuffer(const State *state, const QSizeF &size) const;
+    QSizeF mapToBuffer(const State *state, const QSizeF &size) const;
+    QRectF mapFromBuffer(const State *state, const QRectF &rect) const;
+    QRectF mapToBuffer(const State *state, const QRectF &rect) const;
+    QRegion mapFromBuffer(const State *state, const QRegion &region) const;
+    QRegion mapToBuffer(const State *state, const QRegion &region) const;
+
+    QPointF bufferTransform(const State *state, const QPointF &point) const;
+    QPointF invertBufferTransform(const State *state, const QPointF &point) const;
+    QSizeF bufferTransform(const State *state, const QSizeF &size) const;
+    QSizeF invertBufferTransform(const State *state, const QSizeF &size) const;
+
     SurfaceRole *role = nullptr;
 
     State current;

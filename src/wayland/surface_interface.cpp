@@ -442,28 +442,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         if (target->buffer && (!target->damage.isEmpty() || !target->bufferDamage.isEmpty())) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             if (!windowRegion.isEmpty()) {
-                QRegion bufferDamage;
-                if (!target->bufferDamage.isEmpty()) {
-                    typedef OutputInterface::Transform Tr;
-                    const Tr tr = target->transform;
-                    const qint32 sc = target->scale;
-                    if (tr == Tr::Rotated90 || tr == Tr::Rotated270 ||
-                            tr == Tr::Flipped90 || tr == Tr::Flipped270) {
-                        // calculate transformed + scaled buffer damage
-                        for (const auto &rect : target->bufferDamage) {
-                            const auto add = QRegion(rect.x() / sc, rect.y() / sc, rect.height() / sc, rect.width() / sc);
-                            bufferDamage = bufferDamage.united(add);
-                        }
-                    } else if (sc != 1) {
-                        // calculate scaled buffer damage
-                        for (const auto &rect : target->bufferDamage) {
-                            const auto add = QRegion(rect.x() / sc, rect.y() / sc, rect.width() / sc, rect.height() / sc);
-                            bufferDamage = bufferDamage.united(add);
-                        }
-                    } else {
-                        bufferDamage = target->bufferDamage;
-                    }
-                }
+                const QRegion bufferDamage = mapFromBuffer(target, target->bufferDamage);
                 target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
                 trackedDamage = trackedDamage.united(target->damage);
                 emit q->damaged(target->damage);
@@ -962,6 +941,273 @@ SurfaceInterface* SurfaceInterface::dataProxy() const
 SurfaceInterface::Private *SurfaceInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());
+}
+
+QPointF SurfaceInterface::Private::bufferTransform(const State *state, const QPointF &point) const
+{
+    if (!state->buffer)
+        return point;
+
+    // Note that the buffer transform specifies the transformation that has been applied
+    // to the buffer to compensate for the output transform. If the output is rotated 90
+    // degrees clockwise, the buffer will be rotated 90 degrees counter clockwise.
+
+    QPointF scaled = point * state->scale;
+    QPointF transformed;
+
+    switch (state->transform) {
+    case OutputInterface::Transform::Normal:
+        transformed.setX(scaled.x());
+        transformed.setY(scaled.y());
+        break;
+    case OutputInterface::Transform::Rotated90:
+        transformed.setX(scaled.y());
+        transformed.setY(state->buffer->height() - scaled.x());
+        break;
+    case OutputInterface::Transform::Rotated180:
+        transformed.setX(state->buffer->width() - scaled.x());
+        transformed.setY(state->buffer->height() - scaled.y());
+        break;
+    case OutputInterface::Transform::Rotated270:
+        transformed.setX(state->buffer->width() - scaled.y());
+        transformed.setY(point.x());
+        break;
+    case OutputInterface::Transform::Flipped:
+        transformed.setX(state->buffer->width() - scaled.x());
+        transformed.setY(point.y());
+        break;
+    case OutputInterface::Transform::Flipped90:
+        transformed.setX(point.y());
+        transformed.setY(point.x());
+        break;
+    case OutputInterface::Transform::Flipped180:
+        transformed.setX(point.x());
+        transformed.setY(state->buffer->height() - scaled.y());
+        break;
+    case OutputInterface::Transform::Flipped270:
+        transformed.setX(state->buffer->width() - scaled.y());
+        transformed.setY(state->buffer->height() - scaled.x());
+        break;
+    }
+
+    return transformed;
+}
+
+QPointF SurfaceInterface::Private::invertBufferTransform(const State *state, const QPointF &point) const
+{
+    if (!state->buffer)
+        return point;
+
+    // Note that the buffer transform specifies the transformation that has been applied
+    // to the buffer to compensate for the output transform. If the output is rotated 90
+    // degrees clockwise, the buffer will be rotated 90 degrees counter clockwise.
+
+    QPointF transformed;
+
+    switch (state->transform) {
+    case OutputInterface::Transform::Normal:
+        transformed.setX(point.x());
+        transformed.setY(point.y());
+        break;
+    case OutputInterface::Transform::Rotated90:
+        transformed.setX(state->buffer->height() - point.y());
+        transformed.setY(point.x());
+        break;
+    case OutputInterface::Transform::Rotated180:
+        transformed.setX(state->buffer->width() - point.x());
+        transformed.setY(state->buffer->height() - point.y());
+        break;
+    case OutputInterface::Transform::Rotated270:
+        transformed.setX(point.y());
+        transformed.setY(state->buffer->width() - point.x());
+        break;
+    case OutputInterface::Transform::Flipped:
+        transformed.setX(state->buffer->width() - point.x());
+        transformed.setY(point.y());
+        break;
+    case OutputInterface::Transform::Flipped90:
+        transformed.setX(point.y());
+        transformed.setY(point.x());
+        break;
+    case OutputInterface::Transform::Flipped180:
+        transformed.setX(point.x());
+        transformed.setY(state->buffer->height() - point.y());
+        break;
+    case OutputInterface::Transform::Flipped270:
+        transformed.setX(state->buffer->height() - point.y());
+        transformed.setY(state->buffer->width() - point.x());
+        break;
+    }
+
+    return transformed / state->scale;
+}
+
+QSizeF SurfaceInterface::Private::bufferTransform(const State *state, const QSizeF &size) const
+{
+    QSizeF transformed = size * state->scale;
+
+    switch (state->transform) {
+    case OutputInterface::Transform::Rotated90:
+    case OutputInterface::Transform::Rotated270:
+    case OutputInterface::Transform::Flipped90:
+    case OutputInterface::Transform::Flipped270:
+        transformed.transpose();
+        break;
+    case OutputInterface::Transform::Normal:
+    case OutputInterface::Transform::Rotated180:
+    case OutputInterface::Transform::Flipped:
+    case OutputInterface::Transform::Flipped180:
+        break;
+    }
+
+    return transformed;
+}
+
+QSizeF SurfaceInterface::Private::invertBufferTransform(const State *state, const QSizeF &size) const
+{
+    QSizeF transformed = size / state->scale;
+
+    switch (state->transform) {
+    case OutputInterface::Transform::Rotated90:
+    case OutputInterface::Transform::Rotated270:
+    case OutputInterface::Transform::Flipped90:
+    case OutputInterface::Transform::Flipped270:
+        transformed.transpose();
+        break;
+    case OutputInterface::Transform::Normal:
+    case OutputInterface::Transform::Rotated180:
+    case OutputInterface::Transform::Flipped:
+    case OutputInterface::Transform::Flipped180:
+        break;
+    }
+
+    return transformed;
+}
+
+QPointF SurfaceInterface::Private::mapToBuffer(const State *state, const QPointF &point) const
+{
+    QPointF transformed = point;
+
+    transformed = bufferTransform(state, transformed);
+
+    return transformed;
+}
+
+QPointF SurfaceInterface::Private::mapFromBuffer(const State *state, const QPointF &point) const
+{
+    QPointF transformed = point;
+
+    transformed = invertBufferTransform(state, transformed);
+
+    return transformed;
+}
+
+QSizeF SurfaceInterface::Private::mapToBuffer(const State *state, const QSizeF &size) const
+{
+    QSizeF transformed = size;
+
+    transformed = bufferTransform(state, transformed);
+
+    return transformed;
+}
+
+QSizeF SurfaceInterface::Private::mapFromBuffer(const State *state, const QSizeF &size) const
+{
+    QSizeF transformed = size;
+
+    transformed = invertBufferTransform(state, transformed);
+
+    return transformed;
+}
+
+QRectF SurfaceInterface::Private::mapToBuffer(const State *state, const QRectF &rect) const
+{
+    const QPointF topLeft = mapToBuffer(state, rect.topLeft());
+    const QPointF bottomRight = mapToBuffer(state, rect.bottomRight());
+
+    const qreal left = std::min(topLeft.x(), bottomRight.x());
+    const qreal top = std::min(topLeft.y(), bottomRight.y());
+    const qreal right = std::max(topLeft.x(), bottomRight.x());
+    const qreal bottom = std::max(topLeft.y(), bottomRight.y());
+
+    return QRectF(QPointF(left, top), QPointF(right, bottom));
+}
+
+QRectF SurfaceInterface::Private::mapFromBuffer(const State *state, const QRectF &rect) const
+{
+    const QPointF topLeft = mapFromBuffer(state, rect.topLeft());
+    const QPointF bottomRight = mapFromBuffer(state, rect.bottomRight());
+
+    const qreal left = std::min(topLeft.x(), bottomRight.x());
+    const qreal top = std::min(topLeft.y(), bottomRight.y());
+    const qreal right = std::max(topLeft.x(), bottomRight.x());
+    const qreal bottom = std::max(topLeft.y(), bottomRight.y());
+
+    return QRectF(QPointF(left, top), QPointF(right, bottom));
+}
+
+QRegion SurfaceInterface::Private::mapToBuffer(const State *state, const QRegion &region) const
+{
+    QRegion transformed;
+    for (const QRect &rect : region)
+        transformed += mapToBuffer(state, QRectF(rect)).toRect();
+    return transformed;
+}
+
+QRegion SurfaceInterface::Private::mapFromBuffer(const State *state, const QRegion &region) const
+{
+    QRegion transformed;
+    for (const QRect &rect : region)
+        transformed += mapFromBuffer(state, QRectF(rect)).toRect();
+    return transformed;
+}
+
+QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const
+{
+    Q_D();
+    return d->mapToBuffer(&d->current, point);
+}
+
+QPointF SurfaceInterface::mapFromBuffer(const QPointF &point) const
+{
+    Q_D();
+    return d->mapFromBuffer(&d->current, point);
+}
+
+QSizeF SurfaceInterface::mapToBuffer(const QSizeF &size) const
+{
+    Q_D();
+    return d->mapToBuffer(&d->current, size);
+}
+
+QSizeF SurfaceInterface::mapFromBuffer(const QSizeF &size) const
+{
+    Q_D();
+    return d->mapFromBuffer(&d->current, size);
+}
+
+QRectF SurfaceInterface::mapToBuffer(const QRectF &rect) const
+{
+    Q_D();
+    return d->mapToBuffer(&d->current, rect);
+}
+
+QRectF SurfaceInterface::mapFromBuffer(const QRectF &rect) const
+{
+    Q_D();
+    return d->mapFromBuffer(&d->current, rect);
+}
+
+QRegion SurfaceInterface::mapToBuffer(const QRegion &region) const
+{
+    Q_D();
+    return d->mapToBuffer(&d->current, region);
+}
+
+QRegion SurfaceInterface::mapFromBuffer(const QRegion &region) const
+{
+    Q_D();
+    return d->mapFromBuffer(&d->current, region);
 }
 
 }
