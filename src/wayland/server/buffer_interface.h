@@ -120,6 +120,14 @@ public:
     QImage data();
 
     /**
+     * Returns the width of the buffer in device pixels.
+     */
+    int width() const;
+    /**
+     * Returns the height of the buffer in device pixels.
+     */
+    int height() const;
+    /**
      * Returns the size of this BufferInterface.
      * Note: only for shared memory buffers (shmBuffer) the size can be derived,
      * for other buffers it might be possible to derive the size if an EGL display

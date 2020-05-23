@@ -314,6 +314,16 @@ wl_resource *BufferInterface::resource() const
     return d->buffer;
 }
 
+int BufferInterface::width() const
+{
+    return d->size.width();
+}
+
+int BufferInterface::height() const
+{
+    return d->size.height();
+}
+
 QSize BufferInterface::size() const
 {
     return d->size;
