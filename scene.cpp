@@ -1028,30 +1028,28 @@ WindowQuadList Scene::Window::makeContentsQuads() const
             continue;
 
         const QRegion region = windowPixmap->shape();
-        const QPoint position = windowPixmap->framePosition();
-        const qreal scale = windowPixmap->scale();
         const int quadId = id++;
 
-        for (const QRect &rect : region) {
+        for (const QRectF &rect : region) {
             // Note that the window quad id is not unique if the window is shaped, i.e. the
             // region contains more than just one rectangle. We assume that the "source" quad
             // had been subdivided.
             WindowQuad quad(WindowQuadContents, quadId);
 
-            const qreal x0 = rect.x() + position.x();
-            const qreal y0 = rect.y() + position.y();
-            const qreal x1 = rect.x() + rect.width() + position.x();
-            const qreal y1 = rect.y() + rect.height() + position.y();
+            const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
+            const QPointF windowTopRight = windowPixmap->mapToWindow(rect.topRight());
+            const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
+            const QPointF windowBottomLeft = windowPixmap->mapToWindow(rect.bottomLeft());
 
-            const qreal u0 = rect.x() * scale;
-            const qreal v0 = rect.y() * scale;
-            const qreal u1 = (rect.x() + rect.width()) * scale;
-            const qreal v1 = (rect.y() + rect.height()) * scale;
+            const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
+            const QPointF bufferTopRight = windowPixmap->mapToBuffer(rect.topRight());
+            const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
+            const QPointF bufferBottomLeft = windowPixmap->mapToBuffer(rect.bottomLeft());
 
-            quad[0] = WindowVertex(QPointF(x0, y0), QPointF(u0, v0));
-            quad[1] = WindowVertex(QPointF(x1, y0), QPointF(u1, v0));
-            quad[2] = WindowVertex(QPointF(x1, y1), QPointF(u1, v1));
-            quad[3] = WindowVertex(QPointF(x0, y1), QPointF(u0, v1));
+            quad[0] = WindowVertex(windowTopLeft, bufferTopLeft);
+            quad[1] = WindowVertex(windowTopRight, bufferTopRight);
+            quad[2] = WindowVertex(windowBottomRight, bufferBottomRight);
+            quad[3] = WindowVertex(windowBottomLeft, bufferBottomLeft);
 
             quads << quad;
         }
@@ -1286,6 +1284,16 @@ bool WindowPixmap::hasAlphaChannel() const
     if (buffer())
         return buffer()->hasAlphaChannel();
     return toplevel()->hasAlpha();
+}
+
+QPointF WindowPixmap::mapToWindow(const QPointF &point) const
+{
+    return point + framePosition();
+}
+
+QPointF WindowPixmap::mapToBuffer(const QPointF &point) const
+{
+    return point * scale();
 }
 
 //****************************************

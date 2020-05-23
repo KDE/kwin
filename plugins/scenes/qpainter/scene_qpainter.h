@@ -71,20 +71,6 @@ private:
     class Window;
 };
 
-class SceneQPainter::Window : public Scene::Window
-{
-public:
-    Window(SceneQPainter *scene, Toplevel *c);
-    ~Window() override;
-    void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
-protected:
-    WindowPixmap *createWindowPixmap() override;
-private:
-    void renderShadow(QPainter *painter);
-    void renderWindowDecorations(QPainter *painter);
-    SceneQPainter *m_scene;
-};
-
 class QPainterWindowPixmap : public WindowPixmap
 {
 public:
@@ -101,6 +87,21 @@ protected:
 private:
     explicit QPainterWindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
     QImage m_image;
+};
+
+class SceneQPainter::Window : public Scene::Window
+{
+public:
+    Window(SceneQPainter *scene, Toplevel *c);
+    ~Window() override;
+    void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
+protected:
+    WindowPixmap *createWindowPixmap() override;
+private:
+    void renderWindowPixmap(QPainter *painter, QPainterWindowPixmap *windowPixmap);
+    void renderShadow(QPainter *painter);
+    void renderWindowDecorations(QPainter *painter);
+    SceneQPainter *m_scene;
 };
 
 class QPainterEffectFrame : public Scene::EffectFrame

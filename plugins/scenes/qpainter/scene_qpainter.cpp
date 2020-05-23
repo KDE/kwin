@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_qpainter.h"
 // KWin
-#include "x11client.h"
+#include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
 #include "deleted.h"
@@ -228,37 +228,6 @@ SceneQPainter::Window::~Window()
 {
 }
 
-static void paintSubSurface(QPainter *painter, const QPoint &pos, QPainterWindowPixmap *pixmap)
-{
-    QPoint p = pos;
-    if (!pixmap->subSurface().isNull()) {
-        p += pixmap->subSurface()->position();
-    }
-
-    painter->drawImage(QRect(pos, pixmap->size()), pixmap->image());
-    const auto &children = pixmap->children();
-    for (auto it = children.begin(); it != children.end(); ++it) {
-        auto pixmap = static_cast<QPainterWindowPixmap*>(*it);
-        if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
-            continue;
-        }
-        paintSubSurface(painter, p, pixmap);
-    }
-}
-
-static bool isXwaylandClient(Toplevel *toplevel)
-{
-    X11Client *client = qobject_cast<X11Client *>(toplevel);
-    if (client) {
-        return true;
-    }
-    Deleted *deleted = qobject_cast<Deleted *>(toplevel);
-    if (deleted) {
-        return deleted->wasX11Client();
-    }
-    return false;
-}
-
 void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const WindowPaintData &data)
 {
     QRegion region = _region;
@@ -299,28 +268,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     }
     renderShadow(painter);
     renderWindowDecorations(painter);
-
-    // render content
-    QRect source;
-    QRect target;
-    if (isXwaylandClient(toplevel)) {
-        // special case for XWayland windows
-        source = QRect(toplevel->clientPos(), toplevel->clientSize());
-        target = source;
-    } else {
-        source = pixmap->image().rect();
-        target = toplevel->bufferGeometry().translated(-pos());
-    }
-    painter->drawImage(target, pixmap->image(), source);
-
-    // render subsurfaces
-    const auto &children = pixmap->children();
-    for (auto pixmap : children) {
-        if (pixmap->subSurface().isNull() || pixmap->subSurface()->surface().isNull() || !pixmap->subSurface()->surface()->isMapped()) {
-            continue;
-        }
-        paintSubSurface(painter, bufferOffset(), static_cast<QPainterWindowPixmap*>(pixmap));
-    }
+    renderWindowPixmap(painter, pixmap);
 
     if (!opaque) {
         tempPainter.restore();
@@ -334,6 +282,30 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     }
 
     painter->restore();
+}
+
+void SceneQPainter::Window::renderWindowPixmap(QPainter *painter, QPainterWindowPixmap *windowPixmap)
+{
+    const QRegion shape = windowPixmap->shape();
+    for (const QRectF &rect : shape) {
+        const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
+        const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
+
+        const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
+        const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
+
+        painter->drawImage(QRectF(windowTopLeft, windowBottomRight),
+                           windowPixmap->image(),
+                           QRectF(bufferTopLeft, bufferBottomRight));
+    }
+
+    const QVector<WindowPixmap *> children = windowPixmap->children();
+    for (WindowPixmap *child : children) {
+        QPainterWindowPixmap *scenePixmap = static_cast<QPainterWindowPixmap *>(child);
+        if (scenePixmap->isValid()) {
+            renderWindowPixmap(painter, scenePixmap);
+        }
+    }
 }
 
 void SceneQPainter::Window::renderShadow(QPainter* painter)

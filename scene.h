@@ -502,6 +502,14 @@ public:
      * Returns @c true if the attached buffer has an alpha channel; otherwise returns @c false.
      */
     bool hasAlphaChannel() const;
+    /**
+     * Maps the specified @a point from the window pixmap coordinates to the window local coordinates.
+     */
+    QPointF mapToWindow(const QPointF &point) const;
+    /**
+     * Maps the specified @a point from the window pixmap coordinates to the buffer pixel coordinates.
+     */
+    QPointF mapToBuffer(const QPointF &point) const;
 
     /**
      * @returns the parent WindowPixmap in the sub-surface tree
