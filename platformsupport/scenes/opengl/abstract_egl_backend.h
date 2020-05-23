@@ -108,7 +108,7 @@ protected:
     }
 
 private:
-    void createTextureSubImage(int scale, const QImage &image, const QRegion &damage);
+    void createTextureSubImage(const QImage &image, const QRegion &damage);
     bool createTextureImage(const QImage &image);
     bool loadShmTexture(const QPointer<KWaylandServer::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWaylandServer::BufferInterface> &buffer);

@@ -422,6 +422,7 @@ void Scene::addToplevel(Toplevel *c)
         connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
 
         connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, discardQuads);
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::viewportChanged, this, discardQuads);
     }
 
     connect(c, &Toplevel::screenScaleChanged, this, discardQuads);
@@ -1293,6 +1294,8 @@ QPointF WindowPixmap::mapToWindow(const QPointF &point) const
 
 QPointF WindowPixmap::mapToBuffer(const QPointF &point) const
 {
+    if (surface())
+        return surface()->mapToBuffer(point);
     return point * scale();
 }
 

@@ -359,6 +359,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         }
     );
 
+    m_display->createViewporter();
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
