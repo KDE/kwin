@@ -185,11 +185,17 @@ public:
     BufferInterface *buffer();
     QPoint offset() const;
     /**
-     * The size of the Surface in global compositor space.
-     * @see For buffer size use BufferInterface::size
-     * from SurfaceInterface::buffer
-     * @since 5.3
-     **/
+     * Returns the rectangle that indicates what area of the attached buffer is displayed.
+     *
+     * The size of the viewport rectangle doesn't correspond to the size of the surface.
+     */
+    QRectF viewport() const;
+    /**
+     * Returns the current size of the surface, in surface coordinates.
+     *
+     * Note that there is no direct relationship between the surface size and the buffer size.
+     * In order to determine the size of the currently attached buffer, use buffer()->size().
+     */
     QSize size() const;
     /**
      * Returns the rectangle that bounds this surface and all of its sub-surfaces.
@@ -378,7 +384,19 @@ Q_SIGNALS:
     void damaged(const QRegion&);
     void opaqueChanged(const QRegion&);
     void inputChanged(const QRegion&);
+    /**
+     * This signal is emitted when the scale of the attached buffer has changed.
+     *
+     * Note that the compositor has to re-compute the texture coordinates after the scale
+     * of the buffer has been changed.
+     */
     void scaleChanged(qint32);
+    /**
+     * This signal is emitted when the buffer transform has changed.
+     *
+     * Note that the compositor has to re-compute the texture coordinates after the buffer
+     * transform has been changed.
+     */
     void transformChanged(KWaylandServer::OutputInterface::Transform);
     /**
      * Emitted when the Surface becomes visible, i.e. a non-null buffer has been attached.
@@ -389,9 +407,21 @@ Q_SIGNALS:
      **/
     void unmapped();
     /**
+     * This signal is emitted when the surface size has changed.
+     *
+     * Note that the compositor has to re-compute the texture coordinates after the surface
+     * size has been changed.
+     *
      * @since 5.3
-     **/
+     */
     void sizeChanged();
+    /**
+     * This signal is emitted when the viewport rectangle has changed.
+     *
+     * Note that the compositor has to re-compute the texture coordinates after the viewport
+     * rectangle has been changed.
+     */
+    void viewportChanged();
     /**
      * @since 5.4
      **/
@@ -462,6 +492,7 @@ private:
     friend class IdleInhibitManagerUnstableV1Interface;
     friend class PointerConstraintsUnstableV1Interface;
     friend class SurfaceRole;
+    friend class ViewportInterface;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 
     class Private;

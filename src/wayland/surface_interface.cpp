@@ -329,16 +329,13 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     const bool slideChanged = source->slideIsSet;
     const bool childrenChanged = source->childrenChanged;
     const bool visibilityChanged = bufferChanged && (bool(source->buffer) != bool(target->buffer));
-    bool sizeChanged = false;
-    auto buffer = target->buffer;
+    const QRectF oldViewport = target->viewport;
+    const QSize oldSize = target->size;
     if (bufferChanged) {
         // TODO: is the reffing correct for subsurfaces?
-        QSize oldSize;
         if (target->buffer) {
-            oldSize = target->buffer->size();
             if (emitChanged) {
                 target->buffer->unref();
-                QObject::disconnect(target->buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
             } else {
                 delete target->buffer;
                 target->buffer = nullptr;
@@ -347,20 +344,21 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         if (source->buffer) {
             if (emitChanged) {
                 source->buffer->ref();
-                QObject::connect(source->buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
             }
-            const QSize newSize = source->buffer->size();
-            sizeChanged = newSize.isValid() && newSize != oldSize;
         }
-        buffer = source->buffer;
-    }
-    // copy values
-    if (bufferChanged) {
-        target->buffer = buffer;
+        target->buffer = source->buffer;
         target->offset = source->offset;
         target->damage = source->damage;
         target->bufferDamage = source->bufferDamage;
         target->bufferIsSet = source->bufferIsSet;
+    }
+    if (source->sourceGeometryIsSet) {
+        target->sourceGeometry = source->sourceGeometry;
+        target->sourceGeometryIsSet = true;
+    }
+    if (source->destinationSizeIsSet) {
+        target->destinationSize = source->destinationSize;
+        target->destinationSizeIsSet = true;
     }
     if (childrenChanged) {
         target->childrenChanged = source->childrenChanged;
@@ -414,6 +412,21 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     if (!emitChanged) {
         return;
     }
+    if (target->buffer) {
+        if (target->sourceGeometry.isValid()) {
+            target->viewport = target->sourceGeometry;
+        } else {
+            target->viewport = QRectF(QPointF(0, 0), invertBufferTransform(target, target->buffer->size()));
+        }
+        if (target->destinationSize.isValid()) {
+            target->size = target->destinationSize;
+        } else {
+            target->size = target->viewport.size().toSize();
+        }
+    } else {
+        target->viewport = QRectF();
+        target->size = QSize();
+    }
     if (opaqueRegionChanged) {
         emit q->opaqueChanged(target->opaque);
     }
@@ -422,9 +435,6 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     }
     if (scaleFactorChanged) {
         emit q->scaleChanged(target->scale);
-        if (buffer && !sizeChanged) {
-            emit q->sizeChanged();
-        }
     }
     if (transformChanged) {
         emit q->transformChanged(target->transform);
@@ -457,8 +467,11 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
             }
         }
     }
-    if (sizeChanged) {
+    if (target->size != oldSize) {
         emit q->sizeChanged();
+    }
+    if (target->viewport != oldViewport) {
+        emit q->viewportChanged();
     }
     if (shadowChanged) {
         emit q->shadowChanged();
@@ -742,11 +755,13 @@ QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
 QSize SurfaceInterface::size() const
 {
     Q_D();
-    // TODO: apply transform to the buffer size
-    if (d->current.buffer) {
-        return d->current.buffer->size() / scale();
-    }
-    return QSize();
+    return d->current.size;
+}
+
+QRectF SurfaceInterface::viewport() const
+{
+    Q_D();
+    return d->current.viewport;
 }
 
 QRect SurfaceInterface::boundingRect() const
@@ -1084,10 +1099,55 @@ QSizeF SurfaceInterface::Private::invertBufferTransform(const State *state, cons
     return transformed;
 }
 
+QPointF SurfaceInterface::Private::viewportTransform(const State *state, const QPointF &point) const
+{
+    if (!viewportExtension)
+        return point;
+
+    qreal x = state->size.width() * (point.x() - state->viewport.x()) / state->viewport.width();
+    qreal y = state->size.height() * (point.y() - state->viewport.y()) / state->viewport.height();
+
+    return QPointF(x, y);
+}
+
+QPointF SurfaceInterface::Private::invertViewportTransform(const State *state, const QPointF &point) const
+{
+    if (!viewportExtension)
+        return point;
+
+    qreal x = point.x() * state->viewport.width() / state->size.width() + state->viewport.x();
+    qreal y = point.y() * state->viewport.height() / state->size.height() + state->viewport.y();
+
+    return QPointF(x, y);
+}
+
+QSizeF SurfaceInterface::Private::viewportTransform(const State *state, const QSizeF &size) const
+{
+    if (!viewportExtension)
+        return size;
+
+    qreal width = size.width() * state->size.width() / state->viewport.width();
+    qreal height = size.height() * state->size.height() / state->viewport.height();
+
+    return QSizeF(width, height);
+}
+
+QSizeF SurfaceInterface::Private::invertViewportTransform(const State *state, const QSizeF &size) const
+{
+    if (!viewportExtension)
+        return size;
+
+    qreal width = size.width() * state->viewport.width() / state->size.width();
+    qreal height = size.height() * state->viewport.height() / state->size.height();
+
+    return QSize(width, height);
+}
+
 QPointF SurfaceInterface::Private::mapToBuffer(const State *state, const QPointF &point) const
 {
     QPointF transformed = point;
 
+    transformed = invertViewportTransform(state, transformed);
     transformed = bufferTransform(state, transformed);
 
     return transformed;
@@ -1098,6 +1158,7 @@ QPointF SurfaceInterface::Private::mapFromBuffer(const State *state, const QPoin
     QPointF transformed = point;
 
     transformed = invertBufferTransform(state, transformed);
+    transformed = viewportTransform(state, transformed);
 
     return transformed;
 }
@@ -1106,6 +1167,7 @@ QSizeF SurfaceInterface::Private::mapToBuffer(const State *state, const QSizeF &
 {
     QSizeF transformed = size;
 
+    transformed = invertViewportTransform(state, transformed);
     transformed = bufferTransform(state, transformed);
 
     return transformed;
@@ -1116,6 +1178,7 @@ QSizeF SurfaceInterface::Private::mapFromBuffer(const State *state, const QSizeF
     QSizeF transformed = size;
 
     transformed = invertBufferTransform(state, transformed);
+    transformed = viewportTransform(state, transformed);
 
     return transformed;
 }

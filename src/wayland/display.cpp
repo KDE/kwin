@@ -39,6 +39,7 @@
 #include "subcompositor_interface.h"
 #include "tablet_interface.h"
 #include "textinput_interface_p.h"
+#include "viewporter_interface.h"
 #include "xdgdecoration_v1_interface.h"
 #include "xdgforeign_interface.h"
 #include "xdgoutput_interface.h"
@@ -514,6 +515,13 @@ KeyboardShortcutsInhibitManagerV1Interface *Display::createKeyboardShortcutsInhi
     auto d = new KeyboardShortcutsInhibitManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
+}
+
+ViewporterInterface *Display::createViewporter(QObject *parent)
+{
+    auto viewporter = new ViewporterInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, viewporter, [viewporter] { delete viewporter; });
+    return viewporter;
 }
 
 void Display::createShm()

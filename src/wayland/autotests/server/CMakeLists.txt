@@ -64,3 +64,14 @@ target_link_libraries(testKeyboardShortcutsInhibitorInterface Qt5::Test Plasma::
 add_test(NAME kwayland-testKeyboardShortcutsInhibitorInterface COMMAND testKeyboardShortcutsInhibitorInterface)
 ecm_mark_as_test(testKeyboardShortcutsInhibitorInterface)
 
+########################################################
+# Test Viewporter Interface
+########################################################
+ecm_add_qtwayland_client_protocol(VIEWPORTER_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
+    BASENAME viewporter
+    )
+add_executable(testViewporterInterface test_viewporter_interface.cpp ${VIEWPORTER_SRCS})
+target_link_libraries(testViewporterInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testViewporterInterface COMMAND testViewporterInterface)
+ecm_mark_as_test(testViewporterInterface)

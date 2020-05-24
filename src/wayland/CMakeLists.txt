@@ -58,6 +58,7 @@ set(SERVER_LIB_SRCS
     textinput_interface_v0.cpp
     textinput_interface_v2.cpp
     touch_interface.cpp
+    viewporter_interface.cpp
     xdgdecoration_v1_interface.cpp
     xdgforeign_interface.cpp
     xdgforeign_v2_interface.cpp
@@ -238,6 +239,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME keyboard-shortcuts-inhibit-unstable-v1
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
+    BASENAME viewporter
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -386,6 +392,7 @@ set(SERVER_LIB_HEADERS
   tablet_interface.h
   textinput_interface.h
   touch_interface.h
+  viewporter_interface.h
   xdgdecoration_v1_interface.h
   xdgforeign_interface.h
   xdgoutput_interface.h

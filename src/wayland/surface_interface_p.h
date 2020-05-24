@@ -19,6 +19,7 @@ namespace KWaylandServer
 
 class IdleInhibitorInterface;
 class SurfaceRole;
+class ViewportInterface;
 
 class SurfaceInterface::Private : public Resource::Private
 {
@@ -28,6 +29,12 @@ public:
         QRegion bufferDamage = QRegion();
         QRegion opaque = QRegion();
         QRegion input = QRegion();
+        QRectF sourceGeometry = QRectF();
+        QSize destinationSize = QSize();
+        QRectF viewport = QRectF();
+        QSize size = QSize();
+        bool sourceGeometryIsSet = false;
+        bool destinationSizeIsSet = false;
         bool inputIsSet = false;
         bool opaqueIsSet = false;
         bool bufferIsSet = false;
@@ -84,6 +91,10 @@ public:
     QPointF invertBufferTransform(const State *state, const QPointF &point) const;
     QSizeF bufferTransform(const State *state, const QSizeF &size) const;
     QSizeF invertBufferTransform(const State *state, const QSizeF &size) const;
+    QPointF viewportTransform(const State *state, const QPointF &point) const;
+    QPointF invertViewportTransform(const State *state, const QPointF &point) const;
+    QSizeF viewportTransform(const State *state, const QSizeF &size) const;
+    QSizeF invertViewportTransform(const State *state, const QSizeF &size) const;
 
     SurfaceRole *role = nullptr;
 
@@ -105,7 +116,7 @@ public:
     QPointer<ConfinedPointerInterface> confinedPointer;
     QHash<OutputInterface*, QMetaObject::Connection> outputDestroyedConnections;
     QVector<IdleInhibitorInterface*> idleInhibitors;
-
+    ViewportInterface *viewportExtension = nullptr;
     SurfaceInterface *dataProxy = nullptr;
 
 private:

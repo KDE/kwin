@@ -79,6 +79,7 @@ class LinuxDmabufUnstableV1Interface;
 class TabletManagerInterface;
 class DataControlDeviceManagerV1Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
+class ViewporterInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -326,6 +327,11 @@ public:
      * Creates the KeyboardShortcutsInhibitorV1Interface
      */
     KeyboardShortcutsInhibitManagerV1Interface *createKeyboardShortcutsInhibitManagerV1(QObject *parent = nullptr);
+
+    /**
+     * Creates the viewporter compositor extension.
+     */
+    ViewporterInterface *createViewporter(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.
