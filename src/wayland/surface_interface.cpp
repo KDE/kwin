@@ -318,7 +318,7 @@ void SurfaceInterface::Private::destroy()
 void SurfaceInterface::Private::swapStates(State *source, State *target, bool emitChanged)
 {
     Q_Q(SurfaceInterface);
-    bool bufferChanged = source->bufferIsSet;
+    const bool bufferChanged = source->bufferIsSet;
     const bool opaqueRegionChanged = source->opaqueIsSet;
     const bool inputRegionChanged = source->inputIsSet;
     const bool scaleFactorChanged = source->scaleIsSet && (target->scale != source->scale);
@@ -351,10 +351,6 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
             }
             const QSize newSize = source->buffer->size();
             sizeChanged = newSize.isValid() && newSize != oldSize;
-        }
-        if (!target->buffer && !source->buffer && emitChanged) {
-            // null buffer set on a not mapped surface, don't emit unmapped
-            bufferChanged = false;
         }
         buffer = source->buffer;
     }
@@ -414,6 +410,10 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
 
     *source = State{};
     source->children = target->children;
+
+    if (!emitChanged) {
+        return;
+    }
     if (opaqueRegionChanged) {
         emit q->opaqueChanged(target->opaque);
     }
@@ -429,7 +429,16 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     if (transformChanged) {
         emit q->transformChanged(target->transform);
     }
-    if (bufferChanged && emitChanged) {
+    if (visibilityChanged) {
+        if (target->buffer) {
+            subSurfaceIsMapped = true;
+            emit q->mapped();
+        } else {
+            subSurfaceIsMapped = false;
+            emit q->unmapped();
+        }
+    }
+    if (bufferChanged) {
         if (target->buffer && (!target->damage.isEmpty() || !target->bufferDamage.isEmpty())) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             if (!windowRegion.isEmpty()) {
@@ -456,30 +465,18 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
                     }
                 }
                 target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
-                if (emitChanged) {
-                    subSurfaceIsMapped = true;
-                    if (visibilityChanged) {
-                        emit q->mapped();
-                    }
-                    trackedDamage = trackedDamage.united(target->damage);
-                    emit q->damaged(target->damage);
-                    // workaround for https://bugreports.qt.io/browse/QTBUG-52092
-                    // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
-                    if (subSurface) {
-                        const auto mainSurface = subSurface->mainSurface();
-                        if (!mainSurface || !mainSurface->buffer()) {
-                            q->frameRendered(0);
-                        }
+                trackedDamage = trackedDamage.united(target->damage);
+                emit q->damaged(target->damage);
+                // workaround for https://bugreports.qt.io/browse/QTBUG-52092
+                // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
+                if (subSurface) {
+                    const auto mainSurface = subSurface->mainSurface();
+                    if (!mainSurface || !mainSurface->buffer()) {
+                        q->frameRendered(0);
                     }
                 }
             }
-        } else if (!target->buffer && emitChanged) {
-            subSurfaceIsMapped = false;
-            emit q->unmapped();
         }
-    }
-    if (!emitChanged) {
-        return;
     }
     if (sizeChanged) {
         emit q->sizeChanged();
