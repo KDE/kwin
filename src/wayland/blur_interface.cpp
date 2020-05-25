@@ -1,108 +1,48 @@
 /*
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "blur_interface.h"
 #include "region_interface.h"
 #include "display.h"
-#include "global_p.h"
-#include "resource_p.h"
 #include "surface_interface_p.h"
 
 #include <wayland-server.h>
-#include <wayland-blur-server-protocol.h>
+
+#include "qwayland-server-blur.h"
 
 namespace KWaylandServer
 {
 
-class BlurManagerInterface::Private : public Global::Private
+class BlurManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur_manager
 {
 public:
-    Private(BlurManagerInterface *q, Display *d);
+    BlurManagerInterfacePrivate(BlurManagerInterface *q, Display *d);
 
 private:
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void createBlur(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
-
-    static void createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
-    static void unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface);
-    static void unbind(wl_resource *resource);
-    static Private *cast(wl_resource *r) {
-        auto blurManager = reinterpret_cast<QPointer<BlurManagerInterface>*>(wl_resource_get_user_data(r))->data();
-        if (blurManager) {
-            return static_cast<Private*>(blurManager->d.data());
-        }
-        return nullptr;
-    }
     BlurManagerInterface *q;
-    static const struct org_kde_kwin_blur_manager_interface s_interface;
     static const quint32 s_version;
+
+protected:
+    void org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface);
+    void org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface);
 };
 
-const quint32 BlurManagerInterface::Private::s_version = 1;
+const quint32 BlurManagerInterfacePrivate::s_version = 1;
 
-#ifndef K_DOXYGEN
-const struct org_kde_kwin_blur_manager_interface BlurManagerInterface::Private::s_interface = {
-    createCallback,
-    unsetCallback
-};
-#endif
-
-BlurManagerInterface::Private::Private(BlurManagerInterface *q, Display *d)
-    : Global::Private(d, &org_kde_kwin_blur_manager_interface, s_version)
-    , q(q)
+BlurManagerInterfacePrivate::BlurManagerInterfacePrivate(BlurManagerInterface *_q, Display *d)
+    : QtWaylandServer::org_kde_kwin_blur_manager(*d, s_version)
+    , q(_q)
 {
 }
 
-void BlurManagerInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
+void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface)
 {
-    auto c = display->getConnection(client);
-    wl_resource *resource = c->createResource(&org_kde_kwin_blur_manager_interface, qMin(version, s_version), id);
-    if (!resource) {
-        wl_client_post_no_memory(client);
-        return;
-    }
-    auto ref = new QPointer<BlurManagerInterface>(q);//deleted in unbind
-    wl_resource_set_implementation(resource, &s_interface, ref, unbind);
-}
-
-void BlurManagerInterface::Private::unbind(wl_resource *r)
-{
-    delete reinterpret_cast<QPointer<BlurManagerInterface>*>(wl_resource_get_user_data(r));
-}
-
-void BlurManagerInterface::Private::createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
-{
-    auto m = cast(resource);
-    if (!m) {
-        return;// will happen if global is deleted
-    }
-    m->createBlur(client, resource, id, surface);
-}
-
-void BlurManagerInterface::Private::createBlur(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
-{
-    SurfaceInterface *s = SurfaceInterface::get(surface);
-    if (!s) {
-        return;
-    }
-
-    BlurInterface *blur = new BlurInterface(q, resource);
-    blur->create(display->getConnection(client), wl_resource_get_version(resource), id);
-    if (!blur->resource()) {
-        wl_resource_post_no_memory(resource);
-        delete blur;
-        return;
-    }
-    s->d_func()->setBlur(QPointer<BlurInterface>(blur));
-}
-
-void BlurManagerInterface::Private::unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
-{
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
+    Q_UNUSED(resource);
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
         return;
@@ -110,75 +50,84 @@ void BlurManagerInterface::Private::unsetCallback(wl_client *client, wl_resource
     s->d_func()->setBlur(QPointer<BlurInterface>());
 }
 
+
+void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
+{
+    SurfaceInterface *s = SurfaceInterface::get(surface);
+    if (!s) {
+        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
+        return;
+    }
+    wl_resource *blur_resource = wl_resource_create(resource->client(), &org_kde_kwin_blur_interface, resource->version(), id);
+    if (!blur_resource) {
+        wl_client_post_no_memory(resource->client());
+        return;
+    }
+    auto blur = new BlurInterface(blur_resource);
+    s->d_func()->setBlur(blur);
+}
+
 BlurManagerInterface::BlurManagerInterface(Display *display, QObject *parent)
-    : Global(new Private(this, display), parent)
+    : QObject(parent)
+    , d(new BlurManagerInterfacePrivate(this, display))
 {
 }
 
 BlurManagerInterface::~BlurManagerInterface() = default;
 
-class BlurInterface::Private : public Resource::Private
+class BlurInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur
 {
 public:
-    Private(BlurInterface *q, BlurManagerInterface *c, wl_resource *parentResource);
-    ~Private();
-
+    BlurInterfacePrivate(BlurInterface *q, wl_resource *resource);
     QRegion pendingRegion;
     QRegion currentRegion;
 
-private:
-    void commit();
-    //TODO
-    BlurInterface *q_func() {
-        return reinterpret_cast<BlurInterface *>(q);
-    }
+    BlurInterface *q;
 
-    static void commitCallback(wl_client *client, wl_resource *resource);
-    static void setRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
-
-    static const struct org_kde_kwin_blur_interface s_interface;
+protected:
+    void org_kde_kwin_blur_destroy_resource(Resource *resource);
+    void org_kde_kwin_blur_commit(Resource *resource);
+    void org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region);
+    void org_kde_kwin_blur_release(Resource *resource);
 };
 
-#ifndef K_DOXYGEN
-const struct org_kde_kwin_blur_interface BlurInterface::Private::s_interface = {
-    commitCallback,
-    setRegionCallback,
-    resourceDestroyedCallback
-};
-#endif
-
-void BlurInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
+void BlurInterfacePrivate::org_kde_kwin_blur_commit(Resource *resource)
 {
-    Q_UNUSED(client)
-    cast<Private>(resource)->commit();
-}
-
-void BlurInterface::Private::commit()
-{
+    Q_UNUSED(resource)
     currentRegion = pendingRegion;
 }
 
-void BlurInterface::Private::setRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
+void BlurInterfacePrivate::org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region)
 {
-    Q_UNUSED(client)
-    Private *p = cast<Private>(resource);
+    Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
     if (r) {
-        p->pendingRegion = r->region();
+        pendingRegion = r->region();
     } else {
-        p->pendingRegion = QRegion();
+        pendingRegion = QRegion();
     }
 }
 
-BlurInterface::Private::Private(BlurInterface *q, BlurManagerInterface *c, wl_resource *parentResource)
-    : Resource::Private(q, c, parentResource, &org_kde_kwin_blur_interface, &s_interface)
+void BlurInterfacePrivate::org_kde_kwin_blur_release(QtWaylandServer::org_kde_kwin_blur::Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void BlurInterfacePrivate::org_kde_kwin_blur_destroy_resource(QtWaylandServer::org_kde_kwin_blur::Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete q;
+}
+
+BlurInterfacePrivate::BlurInterfacePrivate(BlurInterface *_q, wl_resource *resource)
+    : QtWaylandServer::org_kde_kwin_blur(resource)
+    , q(_q)
 {
 }
 
-BlurInterface::Private::~Private() = default;
-
-BlurInterface::BlurInterface(BlurManagerInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(this, parent, parentResource))
+BlurInterface::BlurInterface(wl_resource *resource)
+    : QObject()
+    , d(new BlurInterfacePrivate(this, resource))
 {
 }
 
@@ -186,13 +135,7 @@ BlurInterface::~BlurInterface() = default;
 
 QRegion BlurInterface::region()
 {
-    Q_D();
     return d->currentRegion;
-}
-
-BlurInterface::Private *BlurInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
 }
 
 }

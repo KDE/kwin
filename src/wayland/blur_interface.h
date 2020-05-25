@@ -1,23 +1,24 @@
 /*
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2015 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef KWAYLAND_SERVER_BLUR_INTERFACE_H
-#define KWAYLAND_SERVER_BLUR_INTERFACE_H
-
-#include "global.h"
-#include "resource.h"
+#pragma once
 
 #include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
+struct wl_resource;
+
 namespace KWaylandServer
 {
 
 class Display;
+class BlurManagerInterfacePrivate;
+class BlurInterfacePrivate;
 
 /**
  * @brief Represents the Global for org_kde_kwin_blur_manager interface.
@@ -26,18 +27,17 @@ class Display;
  *
  * @see BlurInterface
  * @see SurfaceInterface
- * @since 5.5
  **/
-class KWAYLANDSERVER_EXPORT BlurManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT BlurManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~BlurManagerInterface();
+    ~BlurManagerInterface() override;
 
 private:
     explicit BlurManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<BlurManagerInterfacePrivate> d;
 };
 
 /**
@@ -49,15 +49,16 @@ private:
  * the BlurInterface is only available on the SurfaceInterface after it has been
  * committed.
  *
+ * Lifespan matches the underlying client resource
+ *
  * @see BlurManagerInterface
  * @see SurfaceInterface
- * @since 5.5
  **/
-class KWAYLANDSERVER_EXPORT BlurInterface : public Resource
+class KWAYLANDSERVER_EXPORT BlurInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~BlurInterface();
+    ~BlurInterface() override;
 
     /**
      * @returns The region or the SurfaceInterface which should be blurred, null Region implies complete surface.
@@ -65,13 +66,10 @@ public:
     QRegion region();
 
 private:
-    explicit BlurInterface(BlurManagerInterface *parent, wl_resource *parentResource);
-    friend class BlurManagerInterface;
+    explicit BlurInterface(wl_resource *resource);
+    friend class BlurManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<BlurInterfacePrivate> d;
 };
 
 }
-
-#endif

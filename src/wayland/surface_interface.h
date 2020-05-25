@@ -375,7 +375,7 @@ private:
     friend class CompositorInterface;
     friend class SubSurfaceInterface;
     friend class ShadowManagerInterface;
-    friend class BlurManagerInterface;
+    friend class BlurManagerInterfacePrivate;
     friend class SlideManagerInterface;
     friend class ContrastManagerInterface;
     friend class IdleInhibitManagerUnstableV1Interface;

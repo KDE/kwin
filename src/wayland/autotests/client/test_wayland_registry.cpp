@@ -156,7 +156,6 @@ void TestWaylandRegistry::init()
     m_outputDevice->create();
     QVERIFY(m_outputManagement->isValid());
     m_blur = m_display->createBlurManager(this);
-    m_blur->create();
     m_contrast = m_display->createContrastManager(this);
     m_contrast->create();
     m_display->createSlideManager(this)->create();

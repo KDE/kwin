@@ -86,8 +86,6 @@ void TestFilter::init()
     QVERIFY(m_compositorInterface->isValid());
 
     m_blurManagerInterface = m_display->createBlurManager(m_display);
-    m_blurManagerInterface->create();
-    QVERIFY(m_blurManagerInterface->isValid());
 }
 
 void TestFilter::cleanup()
