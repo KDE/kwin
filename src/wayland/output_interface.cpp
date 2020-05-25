@@ -517,6 +517,12 @@ QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client
     return ret;
 }
 
+bool OutputInterface::isEnabled() const
+{
+    Q_D();
+    return d->dpms.mode == DpmsMode::On;
+}
+
 OutputInterface *OutputInterface::get(wl_resource* native)
 {
     return Private::get(native);

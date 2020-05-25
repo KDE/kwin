@@ -116,6 +116,12 @@ public:
      **/
     QVector<wl_resource *> clientResources(ClientConnection *client) const;
 
+    /**
+     * Returns @c true if the output is on; otherwise returns false.
+     * @since 5.20
+     */
+    bool isEnabled() const;
+
     static OutputInterface *get(wl_resource *native);
 
 Q_SIGNALS:
