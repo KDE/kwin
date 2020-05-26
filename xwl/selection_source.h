@@ -41,6 +41,7 @@ namespace KWaylandServer
 {
 class DataDeviceInterface;
 class DataSourceInterface;
+class AbstractDataSource;
 }
 
 namespace KWin
@@ -93,8 +94,8 @@ class WlSource : public SelectionSource
     Q_OBJECT
 
 public:
-    WlSource(Selection *selection, KWaylandServer::DataDeviceInterface *ddi);
-    void setDataSourceIface(KWaylandServer::DataSourceInterface *dsi);
+    WlSource(Selection *selection);
+    void setDataSourceIface(KWaylandServer::AbstractDataSource *dsi);
 
     bool handleSelectionRequest(xcb_selection_request_event_t *event);
     void sendTargets(xcb_selection_request_event_t *event);
@@ -109,8 +110,7 @@ Q_SIGNALS:
 private:
     bool checkStartTransfer(xcb_selection_request_event_t *event);
 
-    KWaylandServer::DataDeviceInterface *m_ddi = nullptr;
-    KWaylandServer::DataSourceInterface *m_dsi = nullptr;
+    KWaylandServer::AbstractDataSource *m_dsi = nullptr;
 
     QVector<QString> m_offers;
     QMetaObject::Connection m_offerConnection;

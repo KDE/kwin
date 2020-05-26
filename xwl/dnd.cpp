@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWaylandServer/compositor_interface.h>
 #include <KWaylandServer/seat_interface.h>
+#include <KWaylandServer/datasource_interface.h>
 
 #include <QMouseEvent>
 
@@ -200,7 +201,7 @@ void Dnd::startDrag()
 
     // New Wl to X drag, init drag and Wl source.
     m_currentDrag = new WlToXDrag();
-    auto source = new WlSource(this, ddi);
+    auto source = new WlSource(this);
     source->setDataSourceIface(ddi->dragSource());
     setWlSource(source);
     ownSelection(true);

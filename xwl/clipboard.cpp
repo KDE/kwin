@@ -69,11 +69,19 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
 
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::selectionChanged,
             this, &Clipboard::wlSelectionChanged);
+
+    connect(DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionChanged, this, [](KWaylandServer::DataSourceInterface *selection) {
+        waylandServer()->seat()->setSelection(selection);
+    });
+
+    connect(DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionCleared, this, []() {
+        waylandServer()->seat()->setSelection(nullptr);
+    });
 }
 
-void Clipboard::wlSelectionChanged(KWaylandServer::DataDeviceInterface *ddi)
+void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
 {
-    if (ddi && ddi != DataBridge::self()->dataDeviceIface()) {
+    if (dsi && dsi->client() != DataBridge::self()->dataDeviceIface()->client()->client()) {
         // Wayland native client provides new selection
         if (!m_checkConnection) {
             m_checkConnection = connect(workspace(), &Workspace::clientActivated,
@@ -90,7 +98,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::DataDeviceInterface *ddi)
 
 void Clipboard::checkWlSource()
 {
-    auto ddi = waylandServer()->seat()->selection();
+    auto dsi = waylandServer()->seat()->selection();
     auto removeSource = [this] {
         if (wlSource()) {
             setWlSource(nullptr);
@@ -107,7 +115,7 @@ void Clipboard::checkWlSource()
     // Otherwise the Wayland source gets destroyed to shield
     // against snooping X clients.
 
-    if (!ddi || DataBridge::self()->dataDeviceIface() == ddi) {
+    if (!dsi || (DataBridge::self()->dataDeviceIface()->client()->client() == dsi->client())) {
         // Xwayland source or no source
         disconnect(m_checkConnection);
         m_checkConnection = QMetaObject::Connection();
@@ -124,14 +132,11 @@ void Clipboard::checkWlSource()
         // source already exists, nothing more to do
         return;
     }
-    auto *wls = new WlSource(this, ddi);
+    auto *wls = new WlSource(this);
     setWlSource(wls);
-    auto *dsi = ddi->selection();
     if (dsi) {
         wls->setDataSourceIface(dsi);
     }
-    connect(ddi, &KWaylandServer::DataDeviceInterface::selectionChanged,
-            wls, &WlSource::setDataSourceIface);
     ownSelection(true);
 }
 
@@ -174,14 +179,13 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
             // also offers directly the currently available types
             source->setDataSource(dataSource);
             DataBridge::self()->dataDevice()->setSelection(0, dataSource);
-            waylandServer()->seat()->setSelection(DataBridge::self()->dataDeviceIface());
         } else if (auto *dataSource = source->dataSource()) {
             for (const QString &mime : added) {
                 dataSource->offer(mime);
             }
         }
     } else {
-        waylandServer()->seat()->setSelection(nullptr);
+        DataBridge::self()->dataDevice()->setSelection(0);
     }
 
     waylandServer()->internalClientConection()->flush();

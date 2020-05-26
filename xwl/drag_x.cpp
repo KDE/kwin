@@ -118,7 +118,7 @@ XToWlDrag::XToWlDrag(X11Source *source)
     *dc = connect(waylandServer()->dataDeviceManager(), &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated, this,
                  [this, dc](KWaylandServer::DataSourceInterface *dsi) {
                     Q_ASSERT(dsi);
-                    if (dsi->client() != waylandServer()->internalConnection()) {
+                    if (dsi->client() != waylandServer()->internalConnection()->client()) {
                         return;
                     }
                     QObject::disconnect(*dc);

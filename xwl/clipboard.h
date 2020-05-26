@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWaylandServer
 {
-class DataDeviceInterface;
+class AbstractDataSource;
 }
 
 namespace KWin
@@ -49,7 +49,7 @@ private:
     /**
      * React to Wl selection change.
      */
-    void wlSelectionChanged(KWaylandServer::DataDeviceInterface *ddi);
+    void wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi);
     /**
      * Check the current state of the selection and if a source needs
      * to be created or destroyed.
