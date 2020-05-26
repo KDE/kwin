@@ -58,7 +58,6 @@ BlurEffect::BlurEffect()
         KWaylandServer::Display *display = effects->waylandDisplay();
         if (display) {
             m_blurManager = display->createBlurManager(this);
-            m_blurManager->create();
         }
     } else {
         net_wm_blur_region = 0;
