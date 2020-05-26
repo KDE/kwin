@@ -1941,10 +1941,12 @@ void XdgShellClient::updateClientOutputs()
 {
     QVector<OutputInterface *> clientOutputs;
     const auto outputs = waylandServer()->display()->outputs();
-    for (OutputInterface *output : outputs) {
-        const QRect outputGeometry(output->globalPosition(), output->pixelSize() / output->scale());
-        if (frameGeometry().intersects(outputGeometry)) {
-            clientOutputs << output;
+    for (const auto output : outputs) {
+        if (output->dpmsMode() == OutputInterface::DpmsMode::On)) {
+            const QRect outputGeometry(output->globalPosition(), output->pixelSize() / output->scale());
+            if (frameGeometry().intersects(outputGeometry)) {
+                clientOutputs << output;
+            }
         }
     }
     surface()->setOutputs(clientOutputs);

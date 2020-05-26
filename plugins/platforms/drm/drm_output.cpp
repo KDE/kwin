@@ -628,6 +628,8 @@ void DrmOutput::dpmsFinishOff()
     if (isEnabled()) {
         waylandOutput()->setDpmsMode(toWaylandDpmsMode(m_dpmsModePending));
         m_backend->createDpmsFilter();
+    } else {
+        waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::Off));
     }
 }
 
