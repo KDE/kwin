@@ -559,6 +559,7 @@ void SurfaceInterface::Private::setScale(qint32 scale)
 void SurfaceInterface::Private::setTransform(OutputInterface::Transform transform)
 {
     pending.transform = transform;
+    pending.transformIsSet = true;
 }
 
 void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
