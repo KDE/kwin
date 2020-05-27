@@ -579,6 +579,7 @@ void DrmOutput::updateDpms(KWaylandServer::OutputInterface::DpmsMode mode)
 
     if (drmMode == m_dpmsModePending) {
         qCDebug(KWIN_DRM) << "New DPMS mode equals old mode. DPMS unchanged.";
+        waylandOutput()->setDpmsMode(mode);
         return;
     }
 
@@ -607,10 +608,7 @@ void DrmOutput::dpmsFinishOn()
 {
     qCDebug(KWIN_DRM) << "DPMS mode set for output" << m_crtc->id() << "to On.";
 
-    auto wlOutput = waylandOutput();
-    if (wlOutput) {
-        wlOutput->setDpmsMode(toWaylandDpmsMode(DpmsMode::On));
-    }
+    waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::On));
 
     m_backend->checkOutputsAreOn();
     if (!m_backend->atomicModeSetting()) {
