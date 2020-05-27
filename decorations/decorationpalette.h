@@ -15,6 +15,11 @@
 #include <KDecoration2/DecorationSettings>
 #include <QFileSystemWatcher>
 #include <QPalette>
+#include <KSharedConfig>
+#include <KColorScheme>
+#include <KConfigWatcher>
+
+#include <optional>
 
 namespace KWin
 {
@@ -38,19 +43,31 @@ private:
     void update();
 
     QString m_colorScheme;
-    QFileSystemWatcher m_watcher;
+    KConfigWatcher::Ptr m_watcher;
 
-    QPalette m_palette;
+    struct LegacyPalette {
+        QPalette palette;
 
-    QColor m_activeTitleBarColor;
-    QColor m_inactiveTitleBarColor;
+        QColor activeTitleBarColor;
+        QColor inactiveTitleBarColor;
 
-    QColor m_activeFrameColor;
-    QColor m_inactiveFrameColor;
+        QColor activeFrameColor;
+        QColor inactiveFrameColor;
 
-    QColor m_activeForegroundColor;
-    QColor m_inactiveForegroundColor;
-    QColor m_warningForegroundColor;
+        QColor activeForegroundColor;
+        QColor inactiveForegroundColor;
+        QColor warningForegroundColor;
+    };
+
+    struct ModernPalette {
+        KColorScheme active;
+        KColorScheme inactive;
+    };
+
+    std::optional<LegacyPalette> m_legacyPalette;
+    KSharedConfig::Ptr m_colorSchemeConfig;
+
+    ModernPalette m_palette;
 };
 
 }
