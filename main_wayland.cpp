@@ -609,7 +609,7 @@ int main(int argc, char * argv[])
             return 1;
         }
         const qreal scale = parser.value(scaleOption).toDouble(&ok);
-        if (!ok || scale < 1) {
+        if (!ok || scale <= 0) {
             std::cerr << "FATAL ERROR incorrect value for scale" << std::endl;
             return 1;
         }
