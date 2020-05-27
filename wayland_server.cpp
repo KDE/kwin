@@ -368,6 +368,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_dataDeviceManager = m_display->createDataDeviceManager(m_display);
     m_dataDeviceManager->create();
     m_display->createDataControlDeviceManagerV1(m_display);
+    m_display->createPrimarySelectionDeviceManagerV1(m_display);
     m_idle = m_display->createIdle(m_display);
     m_idle->create();
     auto idleInhibition = new IdleInhibition(m_idle);
