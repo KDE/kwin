@@ -42,7 +42,7 @@ public:
     void sendClearSelection();
 
 Q_SIGNALS:
-    void selectionChanged(KWaylandServer::DataControlSourceV1Interface*);
+    void selectionChanged(KWaylandServer::DataControlSourceV1Interface *dataSource);
     void selectionCleared();
 
 private:
