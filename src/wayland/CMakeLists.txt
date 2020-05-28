@@ -7,10 +7,10 @@ set(SERVER_LIB_SRCS
     clientconnection.cpp
     compositor_interface.cpp
     contrast_interface.cpp
-    datacontroldevice_interface.cpp
-    datacontroldevicemanager_interface.cpp
-    datacontroloffer_interface.cpp
-    datacontrolsource_interface.cpp
+    datacontroldevice_v1_interface.cpp
+    datacontroldevicemanager_v1_interface.cpp
+    datacontroloffer_v1_interface.cpp
+    datacontrolsource_v1_interface.cpp
     datadevice_interface.cpp
     datadevicemanager_interface.cpp
     dataoffer_interface.cpp
@@ -346,10 +346,10 @@ set(SERVER_LIB_HEADERS
   clientconnection.h
   compositor_interface.h
   contrast_interface.h
-  datacontroldevice_interface.h
-  datacontroldevicemanager_interface.h
-  datacontroloffer_interface.h
-  datacontrolsource_interface.h
+  datacontroldevice_v1_interface.h
+  datacontroldevicemanager_v1_interface.h
+  datacontroloffer_v1_interface.h
+  datacontrolsource_v1_interface.h
   datadevice_interface.h
   datadevicemanager_interface.h
   dataoffer_interface.h

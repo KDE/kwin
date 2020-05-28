@@ -10,23 +10,23 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "datacontroldevicemanager_interface.h"
+#include "datacontroldevicemanager_v1_interface.h"
 
 namespace KWaylandServer
 {
 
-class DataControlSourceInterfacePrivate;
+class DataControlSourceV1InterfacePrivate;
 
 /**
  * @brief Represents the Resource for the zwlr_data_control_source_v1 interface.
  * Lifespan is mapped to the underlying object
  **/
-class KWAYLANDSERVER_EXPORT DataControlSourceInterface : public AbstractDataSource
+class KWAYLANDSERVER_EXPORT DataControlSourceV1Interface : public AbstractDataSource
 {
     Q_OBJECT
 
 public:
-    ~DataControlSourceInterface() override;
+    ~DataControlSourceV1Interface() override;
 
     void requestData(const QString &mimeType, qint32 fd) override;
     void cancel() override;
@@ -34,17 +34,17 @@ public:
     QStringList mimeTypes() const override;
     wl_client *client() override;
 
-    static DataControlSourceInterface *get(wl_resource *native);
+    static DataControlSourceV1Interface *get(wl_resource *native);
 
 private:
-    friend class DataControlDeviceManagerInterfacePrivate;
-    explicit DataControlSourceInterface(DataControlDeviceManagerInterface *parent, ::wl_resource *resource);
+    friend class DataControlDeviceManagerV1InterfacePrivate;
+    explicit DataControlSourceV1Interface(DataControlDeviceManagerV1Interface *parent, ::wl_resource *resource);
 
-    QScopedPointer<DataControlSourceInterfacePrivate> d;
+    QScopedPointer<DataControlSourceV1InterfacePrivate> d;
 };
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlSourceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataControlSourceV1Interface*)
 
 #endif

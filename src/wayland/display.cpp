@@ -46,7 +46,7 @@
 #include "xdgdecoration_interface.h"
 #include "eglstream_controller_interface.h"
 #include "keystate_interface.h"
-#include "datacontroldevicemanager_interface.h"
+#include "datacontroldevicemanager_v1_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -517,9 +517,9 @@ TabletManagerInterface *Display::createTabletManagerInterface(QObject *parent)
     return d;
 }
 
-DataControlDeviceManagerInterface *Display::createDataControlDeviceManager(QObject *parent)
+DataControlDeviceManagerV1Interface *Display::createDataControlDeviceManagerV1(QObject *parent)
 {
-    auto m = new DataControlDeviceManagerInterface(this, parent);
+    auto m = new DataControlDeviceManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, m, [m] { delete m; });
     return m;
 }

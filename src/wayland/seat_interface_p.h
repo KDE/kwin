@@ -22,7 +22,7 @@ namespace KWaylandServer
 class AbstractDataSource;
 class DataDeviceInterface;
 class DataSourceInterface;
-class DataControlDeviceInterface;
+class DataControlDeviceV1Interface;
 class TextInputInterface;
 
 class SeatInterface::Private : public Global::Private
@@ -38,7 +38,7 @@ public:
     QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
     TextInputInterface *textInputForSurface(SurfaceInterface *surface) const;
     void registerDataDevice(DataDeviceInterface *dataDevice);
-    void registerDataControlDevice(DataControlDeviceInterface *dataDevice);
+    void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     void registerTextInput(TextInputInterface *textInput);
     void endDrag(quint32 serial);
 
@@ -52,7 +52,7 @@ public:
     QVector<KeyboardInterface*> keyboards;
     QVector<TouchInterface*> touchs;
     QVector<DataDeviceInterface*> dataDevices;
-    QVector<DataControlDeviceInterface*> dataControlDevices;
+    QVector<DataControlDeviceV1Interface*> dataControlDevices;
 
     QVector<TextInputInterface*> textInputs;
 

@@ -3,9 +3,9 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "datacontroloffer_interface.h"
-#include "datacontroldevice_interface.h"
-#include "datacontrolsource_interface.h"
+#include "datacontroloffer_v1_interface.h"
+#include "datacontroldevice_v1_interface.h"
+#include "datacontrolsource_v1_interface.h"
 // Qt
 #include <QStringList>
 #include <QPointer>
@@ -17,12 +17,12 @@
 namespace KWaylandServer
 {
 
-class DataControlOfferInterfacePrivate : public QtWaylandServer::zwlr_data_control_offer_v1
+class DataControlOfferV1InterfacePrivate : public QtWaylandServer::zwlr_data_control_offer_v1
 {
 public:
-    DataControlOfferInterfacePrivate(DataControlOfferInterface *q, AbstractDataSource *source, wl_resource *resource);
+    DataControlOfferV1InterfacePrivate(DataControlOfferV1Interface *q, AbstractDataSource *source, wl_resource *resource);
 
-    DataControlOfferInterface *q;
+    DataControlOfferV1Interface *q;
     QPointer<AbstractDataSource> source;
 
 protected:
@@ -31,25 +31,25 @@ protected:
     void zwlr_data_control_offer_v1_destroy_resource(Resource *resource) override;
 };
 
-DataControlOfferInterfacePrivate::DataControlOfferInterfacePrivate(DataControlOfferInterface *_q, AbstractDataSource *source, wl_resource *resource)
+DataControlOfferV1InterfacePrivate::DataControlOfferV1InterfacePrivate(DataControlOfferV1Interface *_q, AbstractDataSource *source, wl_resource *resource)
     : QtWaylandServer::zwlr_data_control_offer_v1(resource)
     , q(_q)
     , source(source)
 {
 }
 
-void DataControlOfferInterfacePrivate::zwlr_data_control_offer_v1_destroy(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
+void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_destroy(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void DataControlOfferInterfacePrivate::zwlr_data_control_offer_v1_destroy_resource(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
+void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_destroy_resource(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
 {
     Q_UNUSED(resource)
     delete q;
 }
 
-void DataControlOfferInterfacePrivate::zwlr_data_control_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
+void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
     Q_UNUSED(resource)
     if (!source) {
@@ -59,9 +59,9 @@ void DataControlOfferInterfacePrivate::zwlr_data_control_offer_v1_receive(Resour
     source->requestData(mimeType, fd);
 }
 
-DataControlOfferInterface::DataControlOfferInterface(AbstractDataSource *source, wl_resource *resource)
+DataControlOfferV1Interface::DataControlOfferV1Interface(AbstractDataSource *source, wl_resource *resource)
     : QObject()
-    , d(new DataControlOfferInterfacePrivate(this, source, resource))
+    , d(new DataControlOfferV1InterfacePrivate(this, source, resource))
 {
     Q_ASSERT(source);
     connect(source, &AbstractDataSource::mimeTypeOffered, this,
@@ -71,9 +71,9 @@ DataControlOfferInterface::DataControlOfferInterface(AbstractDataSource *source,
     );
 }
 
-DataControlOfferInterface::~DataControlOfferInterface() = default;
+DataControlOfferV1Interface::~DataControlOfferV1Interface() = default;
 
-void DataControlOfferInterface::sendAllOffers()
+void DataControlOfferV1Interface::sendAllOffers()
 {
     Q_ASSERT(d->source);
     for (const QString &mimeType : d->source->mimeTypes()) {
@@ -81,7 +81,7 @@ void DataControlOfferInterface::sendAllOffers()
     }
 }
 
-wl_resource *DataControlOfferInterface::resource() const
+wl_resource *DataControlOfferV1Interface::resource() const
 {
     return d->resource()->handle;
 }

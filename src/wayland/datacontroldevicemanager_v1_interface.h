@@ -14,29 +14,29 @@ namespace KWaylandServer
 {
 
 class Display;
-class DataControlSourceInterface;
-class DataControlDeviceManagerInterfacePrivate;
-class DataControlDeviceInterface;
+class DataControlSourceV1Interface;
+class DataControlDeviceManagerV1InterfacePrivate;
+class DataControlDeviceV1Interface;
 
 /**
  * @brief Represents the Global for zwlr_data_control_manager_v1 interface.
  *
  **/
-class KWAYLANDSERVER_EXPORT DataControlDeviceManagerInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataControlDeviceManagerV1Interface : public QObject
 {
     Q_OBJECT
 
 public:
-    ~DataControlDeviceManagerInterface() override;
+    ~DataControlDeviceManagerV1Interface() override;
 
 Q_SIGNALS:
-    void dataSourceCreated(KWaylandServer::DataControlSourceInterface *dataSource);
-    void dataDeviceCreated(KWaylandServer::DataControlDeviceInterface *dataDevice);
+    void dataSourceCreated(KWaylandServer::DataControlSourceV1Interface *dataSource);
+    void dataDeviceCreated(KWaylandServer::DataControlDeviceV1Interface *dataDevice);
 
 private:
-    explicit DataControlDeviceManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit DataControlDeviceManagerV1Interface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    QScopedPointer<DataControlDeviceManagerInterfacePrivate> d;
+    QScopedPointer<DataControlDeviceManagerV1InterfacePrivate> d;
 };
 
 }

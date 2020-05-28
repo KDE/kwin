@@ -10,8 +10,8 @@
 #include "display.h"
 #include "datadevice_interface.h"
 #include "datasource_interface.h"
-#include "datacontroldevice_interface.h"
-#include "datacontrolsource_interface.h"
+#include "datacontroldevice_v1_interface.h"
+#include "datacontrolsource_v1_interface.h"
 #include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
 #include "pointer_interface.h"
@@ -333,7 +333,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
     }
 }
 
-void SeatInterface::Private::registerDataControlDevice(DataControlDeviceInterface *dataDevice)
+void SeatInterface::Private::registerDataControlDevice(DataControlDeviceV1Interface *dataDevice)
 {
     Q_ASSERT(dataDevice->seat() == q);
     dataControlDevices << dataDevice;
@@ -342,13 +342,13 @@ void SeatInterface::Private::registerDataControlDevice(DataControlDeviceInterfac
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
 
-    QObject::connect(dataDevice, &DataControlDeviceInterface::selectionChanged, q,
+    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionChanged, q,
         [this, dataDevice] {
             q->setSelection(dataDevice->selection());
         }
     );
 
-    QObject::connect(dataDevice, &DataControlDeviceInterface::selectionCleared, q,
+    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionCleared, q,
         [this, dataDevice] {
             Q_UNUSED(dataDevice);
             q->setSelection(nullptr);

@@ -10,7 +10,7 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "datacontroldevicemanager_interface.h"
+#include "datacontroldevicemanager_v1_interface.h"
 
 struct wl_resource;
 
@@ -18,33 +18,33 @@ namespace KWaylandServer
 {
 
 class AbstractDataSource;
-class DataControlDeviceInterface;
-class DataControlSourceInterface;
-class DataControlOfferInterfacePrivate;
+class DataControlDeviceV1Interface;
+class DataControlSourceV1Interface;
+class DataControlOfferV1InterfacePrivate;
 
 /**
  * @brief Represents the Resource for the wl_data_offer interface.
  * Lifespan is mapped to the underlying object
  **/
-class KWAYLANDSERVER_EXPORT DataControlOfferInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataControlOfferV1Interface : public QObject
 {
     Q_OBJECT
 
 public:
-    ~DataControlOfferInterface() override;
+    ~DataControlOfferV1Interface() override;
 
     void sendAllOffers();
     wl_resource *resource() const;
 
 private:
-    friend class DataControlDeviceInterfacePrivate;
-    explicit DataControlOfferInterface(AbstractDataSource *source, wl_resource *resource);
+    friend class DataControlDeviceV1InterfacePrivate;
+    explicit DataControlOfferV1Interface(AbstractDataSource *source, wl_resource *resource);
 
-    QScopedPointer<DataControlOfferInterfacePrivate> d;
+    QScopedPointer<DataControlOfferV1InterfacePrivate> d;
 };
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlOfferInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataControlOfferV1Interface*)
 
 #endif

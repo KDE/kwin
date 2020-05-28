@@ -27,9 +27,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/seat_interface.h"
-#include "../../src/server/datacontroldevice_interface.h"
-#include "../../src/server/datacontroldevicemanager_interface.h"
-#include "../../src/server/datacontrolsource_interface.h"
+#include "../../src/server/datacontroldevice_v1_interface.h"
+#include "../../src/server/datacontroldevicemanager_v1_interface.h"
+#include "../../src/server/datacontrolsource_v1_interface.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -135,7 +135,7 @@ private:
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
-    DataControlDeviceManagerInterface *m_dataControlDeviceManagerInterface;
+    DataControlDeviceManagerV1Interface *m_dataControlDeviceManagerInterface;
 
     DataControlDeviceManager *m_dataControlDeviceManager;
 
@@ -172,7 +172,7 @@ void DataControlInterfaceTest::initTestCase()
     m_seat->create();
     m_serverCompositor = m_display.createCompositor(this);
     m_serverCompositor->create();
-    m_dataControlDeviceManagerInterface = m_display.createDataControlDeviceManager(this);
+    m_dataControlDeviceManagerInterface = m_display.createDataControlDeviceManagerV1(this);
     QVERIFY(m_serverCompositor->isValid());
 
     // setup connection

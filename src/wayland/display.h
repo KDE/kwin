@@ -77,7 +77,7 @@ class EglStreamControllerInterface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
 class TabletManagerInterface;
-class DataControlDeviceManagerInterface;
+class DataControlDeviceManagerV1Interface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -309,10 +309,10 @@ public:
     EglStreamControllerInterface *createEglStreamControllerInterface(QObject *parent = nullptr);
 
     /**
-     * Creates the DataControlDeviceManager
+     * Creates the DataControlDeviceManagerV1
      *
      */
-    DataControlDeviceManagerInterface *createDataControlDeviceManager(QObject *parent = nullptr);
+    DataControlDeviceManagerV1Interface *createDataControlDeviceManagerV1(QObject *parent = nullptr);
 
     /**
      * Creates the entry point to support wacom-like tablets and pens.

@@ -3,10 +3,10 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "datacontroldevice_interface.h"
-#include "datacontroldevicemanager_interface.h"
-#include "datacontroloffer_interface.h"
-#include "datacontrolsource_interface.h"
+#include "datacontroldevice_v1_interface.h"
+#include "datacontroldevicemanager_v1_interface.h"
+#include "datacontroloffer_v1_interface.h"
+#include "datacontrolsource_v1_interface.h"
 #include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
@@ -18,16 +18,16 @@
 namespace KWaylandServer
 {
 
-class DataControlDeviceInterfacePrivate: public QtWaylandServer::zwlr_data_control_device_v1
+class DataControlDeviceV1InterfacePrivate: public QtWaylandServer::zwlr_data_control_device_v1
 {
 public:
-    DataControlDeviceInterfacePrivate(DataControlDeviceInterface *q, SeatInterface *seat, wl_resource *resource);
+    DataControlDeviceV1InterfacePrivate(DataControlDeviceV1Interface *q, SeatInterface *seat, wl_resource *resource);
 
-    DataControlOfferInterface *createDataOffer(AbstractDataSource *source);
+    DataControlOfferV1Interface *createDataOffer(AbstractDataSource *source);
 
-    DataControlDeviceInterface *q;
+    DataControlDeviceV1Interface *q;
     QPointer<SeatInterface> seat;
-    QPointer<DataControlSourceInterface> selection;
+    QPointer<DataControlSourceV1Interface> selection;
 
 protected:
     void zwlr_data_control_device_v1_destroy_resource(Resource *resource) override;
@@ -36,19 +36,19 @@ protected:
 };
 
 
-DataControlDeviceInterfacePrivate::DataControlDeviceInterfacePrivate(DataControlDeviceInterface *_q, SeatInterface *seat, wl_resource *resource)
+DataControlDeviceV1InterfacePrivate::DataControlDeviceV1InterfacePrivate(DataControlDeviceV1Interface *_q, SeatInterface *seat, wl_resource *resource)
     : QtWaylandServer::zwlr_data_control_device_v1(resource)
     ,  q(_q)
     , seat(seat)
 {
 }
 
-void DataControlDeviceInterfacePrivate::zwlr_data_control_device_v1_set_selection(Resource *resource, wl_resource *source)
+void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_set_selection(Resource *resource, wl_resource *source)
 {
-    DataControlSourceInterface *dataSource = nullptr;
+    DataControlSourceV1Interface *dataSource = nullptr;
 
     if (source) {
-        dataSource = DataControlSourceInterface::get(source);
+        dataSource = DataControlSourceV1Interface::get(source);
          Q_ASSERT(dataSource);
          if (dataSource == seat->selection()) {
             wl_resource_post_error(resource->handle, error::error_used_source,
@@ -63,12 +63,12 @@ void DataControlDeviceInterfacePrivate::zwlr_data_control_device_v1_set_selectio
     emit q->selectionChanged(selection);
 }
 
-void DataControlDeviceInterfacePrivate::zwlr_data_control_device_v1_destroy(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
+void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_destroy(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-DataControlOfferInterface *DataControlDeviceInterfacePrivate::createDataOffer(AbstractDataSource *source)
+DataControlOfferV1Interface *DataControlDeviceV1InterfacePrivate::createDataOffer(AbstractDataSource *source)
 {
     if (!source) {
         // a data offer can only exist together with a source
@@ -80,38 +80,38 @@ DataControlOfferInterface *DataControlDeviceInterfacePrivate::createDataOffer(Ab
         return nullptr;
     }
 
-    DataControlOfferInterface *offer = new DataControlOfferInterface(source, data_offer_resource);
+    DataControlOfferV1Interface *offer = new DataControlOfferV1Interface(source, data_offer_resource);
     send_data_offer(offer->resource());
     offer->sendAllOffers();
     return offer;
 }
 
-void DataControlDeviceInterfacePrivate::zwlr_data_control_device_v1_destroy_resource(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
+void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_destroy_resource(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
 {
     Q_UNUSED(resource)
     delete q;
 }
 
-DataControlDeviceInterface::DataControlDeviceInterface(SeatInterface *seat, wl_resource *resource)
+DataControlDeviceV1Interface::DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource)
     : QObject()
-    , d(new DataControlDeviceInterfacePrivate(this, seat, resource))
+    , d(new DataControlDeviceV1InterfacePrivate(this, seat, resource))
 {
     seat->d_func()->registerDataControlDevice(this);
 }
 
-DataControlDeviceInterface::~DataControlDeviceInterface() = default;
+DataControlDeviceV1Interface::~DataControlDeviceV1Interface() = default;
 
-SeatInterface *DataControlDeviceInterface::seat() const
+SeatInterface *DataControlDeviceV1Interface::seat() const
 {
     return d->seat;
 }
 
-DataControlSourceInterface *DataControlDeviceInterface::selection() const
+DataControlSourceV1Interface *DataControlDeviceV1Interface::selection() const
 {
     return d->selection;
 }
 
-void DataControlDeviceInterface::sendSelection(AbstractDataSource *other)
+void DataControlDeviceV1Interface::sendSelection(AbstractDataSource *other)
 {
     if (!other) {
         sendClearSelection();
@@ -124,7 +124,7 @@ void DataControlDeviceInterface::sendSelection(AbstractDataSource *other)
     d->send_selection(r->resource());
 }
 
-void DataControlDeviceInterface::sendClearSelection()
+void DataControlDeviceV1Interface::sendClearSelection()
 {
     d->send_selection(nullptr);
 }

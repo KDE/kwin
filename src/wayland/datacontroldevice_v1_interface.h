@@ -16,9 +16,9 @@ namespace KWaylandServer
 {
 
 class AbstractDataSource;
-class DataControlDeviceManagerInterface;
-class DataControlOfferInterface;
-class DataControlSourceInterface;
+class DataControlDeviceManagerV1Interface;
+class DataControlOfferV1Interface;
+class DataControlSourceV1Interface;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -26,38 +26,38 @@ class SurfaceInterface;
  * @brief Represents the Resource for the wl_data_device interface.
  *
  * @see SeatInterface
- * @see DataControlSourceInterface
+ * @see DataControlSourceV1Interface
  * Lifespan is mapped to the underlying object
  **/
 
-class DataControlDeviceInterfacePrivate;
+class DataControlDeviceV1InterfacePrivate;
 
-class KWAYLANDSERVER_EXPORT DataControlDeviceInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataControlDeviceV1Interface : public QObject
 {
     Q_OBJECT
 
 public:
-    ~DataControlDeviceInterface() override;
+    ~DataControlDeviceV1Interface() override;
 
     SeatInterface *seat() const;
-    DataControlSourceInterface *selection() const;
+    DataControlSourceV1Interface *selection() const;
 
     void sendSelection(AbstractDataSource *other);
     void sendClearSelection();
 
 Q_SIGNALS:
-    void selectionChanged(KWaylandServer::DataControlSourceInterface*);
+    void selectionChanged(KWaylandServer::DataControlSourceV1Interface*);
     void selectionCleared();
 
 private:
-    friend class DataControlDeviceManagerInterfacePrivate;
-    explicit DataControlDeviceInterface(SeatInterface *seat, wl_resource *resource);
+    friend class DataControlDeviceManagerV1InterfacePrivate;
+    explicit DataControlDeviceV1Interface(SeatInterface *seat, wl_resource *resource);
 
-    QScopedPointer<DataControlDeviceInterfacePrivate> d;
+    QScopedPointer<DataControlDeviceV1InterfacePrivate> d;
 };
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::DataControlDeviceInterface*)
+Q_DECLARE_METATYPE(KWaylandServer::DataControlDeviceV1Interface*)
 
 #endif
