@@ -24,6 +24,7 @@ class DataControlSourceInterfacePrivate;
 class KWAYLANDSERVER_EXPORT DataControlSourceInterface : public AbstractDataSource
 {
     Q_OBJECT
+
 public:
     ~DataControlSourceInterface() override;
 

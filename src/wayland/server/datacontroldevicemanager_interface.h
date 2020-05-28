@@ -15,7 +15,6 @@ namespace KWaylandServer
 
 class Display;
 class DataControlSourceInterface;
-
 class DataControlDeviceManagerInterfacePrivate;
 class DataControlDeviceInterface;
 
@@ -26,6 +25,7 @@ class DataControlDeviceInterface;
 class KWAYLANDSERVER_EXPORT DataControlDeviceManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~DataControlDeviceManagerInterface() override;
 

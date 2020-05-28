@@ -24,6 +24,7 @@ public:
 
     QStringList mimeTypes;
     DataControlSourceInterface *q;
+
 protected:
     void zwlr_data_control_source_v1_destroy_resource(Resource *resource) override;
     void zwlr_data_control_source_v1_offer(Resource *resource, const QString &mime_type) override;
@@ -81,7 +82,6 @@ wl_client *DataControlSourceInterface::client()
 {
     return d->resource()->client();
 }
-
 
 DataControlSourceInterface *DataControlSourceInterface::get(wl_resource *native)
 {

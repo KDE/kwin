@@ -21,6 +21,7 @@ class DataControlOfferInterfacePrivate : public QtWaylandServer::zwlr_data_contr
 {
 public:
     DataControlOfferInterfacePrivate(DataControlOfferInterface *q, AbstractDataSource *source, wl_resource *resource);
+
     DataControlOfferInterface *q;
     QPointer<AbstractDataSource> source;
 

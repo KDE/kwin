@@ -35,11 +35,11 @@ class DataControlDeviceInterfacePrivate;
 class KWAYLANDSERVER_EXPORT DataControlDeviceInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~DataControlDeviceInterface() override;
 
     SeatInterface *seat() const;
-
     DataControlSourceInterface *selection() const;
 
     void sendSelection(AbstractDataSource *other);

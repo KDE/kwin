@@ -23,6 +23,7 @@ public:
     DataControlDeviceManagerInterfacePrivate(DataControlDeviceManagerInterface *q, Display *d);
 
     DataControlDeviceManagerInterface *q;
+
 protected:
     void zwlr_data_control_manager_v1_create_data_source(Resource *resource, uint32_t id) override;
     void zwlr_data_control_manager_v1_get_data_device(Resource *resource, uint32_t id, wl_resource *seat) override;

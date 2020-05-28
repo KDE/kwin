@@ -13,13 +13,13 @@
 #include "datacontroldevicemanager_interface.h"
 
 struct wl_resource;
+
 namespace KWaylandServer
 {
 
 class AbstractDataSource;
 class DataControlDeviceInterface;
 class DataControlSourceInterface;
-
 class DataControlOfferInterfacePrivate;
 
 /**
@@ -29,6 +29,7 @@ class DataControlOfferInterfacePrivate;
 class KWAYLANDSERVER_EXPORT DataControlOfferInterface : public QObject
 {
     Q_OBJECT
+
 public:
     ~DataControlOfferInterface() override;
 
