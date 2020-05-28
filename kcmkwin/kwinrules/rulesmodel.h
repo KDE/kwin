@@ -73,6 +73,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex & index, const QVariant & value, int role) override;
 
+    QModelIndex indexOf(const QString &key) const;
     bool hasRule(const QString &key) const;
     RuleItem *ruleItem(const QString &key) const;
 
@@ -104,6 +105,7 @@ private:
     bool wmclassWarning() const;
     RuleItem *addRule(RuleItem *rule);
     QString defaultDescription() const;
+    void processSuggestion(const QString &key, const QVariant &value);
 
     static const QHash<QString, QString> x11PropertyHash();
     void updateVirtualDesktops();

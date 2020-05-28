@@ -107,7 +107,7 @@ QVariant RulesModel::data(const QModelIndex &index, int role) const
     case EnabledRole:
         return rule->isEnabled();
     case SelectableRole:
-        return !rule->hasFlag(RuleItem::AlwaysEnabled);
+        return !rule->hasFlag(RuleItem::AlwaysEnabled) && !rule->hasFlag(RuleItem::SuggestionOnly);
     case ValueRole:
         return rule->value();
     case TypeRole:
@@ -140,6 +140,9 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
         rule->setEnabled(value.toBool());
         break;
     case ValueRole:
+        if (rule->hasFlag(RuleItem::SuggestionOnly)) {
+            processSuggestion(rule->key(), value);
+        }
         if (value == rule->value()) {
             return true;
         }
@@ -173,6 +176,15 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
     return true;
 }
 
+QModelIndex RulesModel::indexOf(const QString& key) const
+{
+    const QModelIndexList indexes = match(index(0), RulesModel::KeyRole, key, 1, Qt::MatchFixedString);
+    if (indexes.isEmpty()) {
+        return QModelIndex();
+    }
+    return indexes.at(0);
+}
+
 RuleItem *RulesModel::addRule(RuleItem *rule)
 {
     m_ruleList << rule;
@@ -203,7 +215,7 @@ QString RulesModel::description() const
 
 void RulesModel::setDescription(const QString &description)
 {
-    setData(index(0, 0), description, RulesModel::ValueRole);
+    setData(indexOf("description"), description, RulesModel::ValueRole);
 }
 
 QString RulesModel::defaultDescription() const
@@ -221,6 +233,14 @@ QString RulesModel::defaultDescription() const
     return i18n("New window settings");
 }
 
+void RulesModel::processSuggestion(const QString &key, const QVariant &value)
+{
+    if (key == QLatin1String("wmclasshelper")) {
+        setData(indexOf("wmclass"), value, RulesModel::ValueRole);
+        setData(indexOf("wmclasscomplete"), true, RulesModel::ValueRole);
+    }
+}
+
 QString RulesModel::warningMessage() const
 {
     if (wmclassWarning()) {
@@ -232,7 +252,6 @@ QString RulesModel::warningMessage() const
 
     return QString();
 }
-
 
 bool RulesModel::wmclassWarning() const
 {
@@ -291,7 +310,9 @@ void RulesModel::writeToSettings(RuleSettings *settings) const
         KConfigSkeletonItem *configItem = settings->findItem(rule->key());
         KConfigSkeletonItem *configPolicyItem = settings->findItem(rule->policyKey());
 
-        Q_ASSERT (configItem);
+        if (!configItem) {
+            continue;
+        }
 
         if (rule->isEnabled()) {
             configItem->setProperty(rule->value());
@@ -372,6 +393,13 @@ void RulesModel::populateRuleList()
                                                 i18n("Match whole window class"), i18n("Window matching"),
                                                 QIcon::fromTheme("window")));
     wmclasscomplete->setFlag(RuleItem::AlwaysEnabled);
+
+    // Helper item to store the detected whole window class when detecting properties
+    auto wmclasshelper = addRule(new RuleItem(QLatin1String("wmclasshelper"),
+                                              RulePolicy::NoPolicy, RuleItem::String,
+                                              i18n("Whole window class"), i18n("Window matching"),
+                                              QIcon::fromTheme("window")));
+    wmclasshelper->setFlag(RuleItem::SuggestionOnly);
 
     auto types = addRule(new RuleItem(QLatin1String("types"),
                                       RulePolicy::NoPolicy, RuleItem::FlagsOption,
@@ -625,10 +653,6 @@ void RulesModel::populateRuleList()
 const QHash<QString, QString> RulesModel::x11PropertyHash()
 {
     static const auto propertyToRule = QHash<QString, QString> {
-        /* The original detection dialog allows to choose depending on "Match complete window class":
-         *     if Match Complete == false: wmclass = "resourceClass"
-         *     if Match Complete == true:  wmclass = "resourceName" + " " + "resourceClass"
-         */
         { "resourceName",       "wmclass"       },
         { "caption",            "title"         },
         { "role",               "windowrole"    },
@@ -667,6 +691,12 @@ void RulesModel::setWindowProperties(const QVariantMap &info, bool forceValue)
         window_type = NET::Normal;
     }
     m_rules["types"]->setSuggestedValue(1 << window_type, forceValue);
+
+    // Store "complete window class" as "resourceName" + " " + "resourceClass"
+    // Do not force the value, we want it only as a suggested value for the user to select
+    const QString wmcompleteclass = QStringLiteral("%1 %2").arg(info.value("resourceName").toString())
+                                                           .arg(info.value("resourceClass").toString());
+    m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
 
     const auto ruleForProperty = x11PropertyHash();
     for (QString &property : info.keys()) {

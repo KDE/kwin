@@ -99,7 +99,7 @@ bool RuleItem::isEnabled() const
 
 void RuleItem::setEnabled(bool enabled)
 {
-    m_enabled = enabled | hasFlag(AlwaysEnabled);
+    m_enabled = (enabled && !hasFlag(SuggestionOnly)) || hasFlag(AlwaysEnabled);
 }
 
 bool RuleItem::hasFlag(RuleItem::Flags flag) const
