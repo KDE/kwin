@@ -117,11 +117,11 @@ void DataControlDeviceV1Interface::sendSelection(AbstractDataSource *other)
         sendClearSelection();
         return;
     }
-    auto r = d->createDataOffer(other);
-    if (!r) {
+    DataControlOfferV1Interface *offer = d->createDataOffer(other);
+    if (!offer) {
         return;
     }
-    d->send_selection(r->resource());
+    d->send_selection(offer->resource());
 }
 
 void DataControlDeviceV1Interface::sendClearSelection()
