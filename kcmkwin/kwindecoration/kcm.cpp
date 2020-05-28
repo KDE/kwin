@@ -68,15 +68,9 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
                      QStringLiteral("vpilo@coldshock.net"));
     setAboutData(about);
     setButtons(Apply | Default | Help);
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    qmlRegisterType<QAbstractListModel>();
-    qmlRegisterType<QSortFilterProxyModel>();
-    qmlRegisterType<KWinDecorationSettings>();
-#else
     qmlRegisterAnonymousType<QAbstractListModel>("org.kde.kwin.KWinDecoration", 1);
     qmlRegisterAnonymousType<QSortFilterProxyModel>("org.kde.kwin.KWinDecoration", 1);
     qmlRegisterAnonymousType<KWinDecorationSettings>("org.kde.kwin.KWinDecoration", 1);
-#endif
     m_proxyThemesModel->setSourceModel(m_themesModel);
     m_proxyThemesModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyThemesModel->setSortCaseSensitivity(Qt::CaseInsensitive);

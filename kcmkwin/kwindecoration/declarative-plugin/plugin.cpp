@@ -41,17 +41,10 @@ void Plugin::registerTypes(const char *uri)
     qmlRegisterType<KDecoration2::Preview::PreviewItem>(uri, 1, 0, "Decoration");
     qmlRegisterType<KDecoration2::Preview::PreviewButtonItem>(uri, 1, 0, "Button");
     qmlRegisterType<KDecoration2::Preview::ButtonsModel>(uri, 1, 0, "ButtonsModel");
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    qmlRegisterType<KDecoration2::Preview::PreviewClient>();
-    qmlRegisterType<KDecoration2::Decoration>();
-    qmlRegisterType<KDecoration2::DecorationShadow>();
-    qmlRegisterType<KDecoration2::Preview::PreviewBridge>();
-#else
     qmlRegisterAnonymousType<KDecoration2::Preview::PreviewClient>(uri, 1);
     qmlRegisterAnonymousType<KDecoration2::Decoration>(uri, 1);
     qmlRegisterAnonymousType<KDecoration2::DecorationShadow>(uri, 1);
     qmlRegisterAnonymousType<KDecoration2::Preview::PreviewBridge>(uri, 1);
-#endif
 }
 
 }
