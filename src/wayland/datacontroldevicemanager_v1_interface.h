@@ -19,9 +19,11 @@ class DataControlDeviceManagerV1InterfacePrivate;
 class DataControlDeviceV1Interface;
 
 /**
- * @brief Represents the Global for zwlr_data_control_manager_v1 interface.
+ * The DataControlDeviceManagerV1Interface provides a way for privileged clients such as clipboard
+ * managers to manage the current selection.
  *
- **/
+ * DataControlDeviceManagerV1Interface corresponds to the Wayland interface @c zwlr_data_control_manager_v1.
+ */
 class KWAYLANDSERVER_EXPORT DataControlDeviceManagerV1Interface : public QObject
 {
     Q_OBJECT

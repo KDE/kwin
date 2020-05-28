@@ -18,9 +18,10 @@ namespace KWaylandServer
 class DataControlSourceV1InterfacePrivate;
 
 /**
- * @brief Represents the Resource for the zwlr_data_control_source_v1 interface.
- * Lifespan is mapped to the underlying object
- **/
+ * The DataControlSourceV1Interface class represents the source side in a data transfer.
+ *
+ * DataControlSourceV1Interface corresponds to the wayland interface zwlr_data_control_source_v1.
+ */
 class KWAYLANDSERVER_EXPORT DataControlSourceV1Interface : public AbstractDataSource
 {
     Q_OBJECT

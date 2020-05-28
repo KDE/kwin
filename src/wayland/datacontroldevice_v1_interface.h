@@ -17,21 +17,17 @@ namespace KWaylandServer
 
 class AbstractDataSource;
 class DataControlDeviceManagerV1Interface;
+class DataControlDeviceV1InterfacePrivate;
 class DataControlOfferV1Interface;
 class DataControlSourceV1Interface;
 class SeatInterface;
 class SurfaceInterface;
 
 /**
- * @brief Represents the Resource for the wl_data_device interface.
+ * The DataControlDeviceV1Interface extensions allows clients to manage seat's current selection.
  *
- * @see SeatInterface
- * @see DataControlSourceV1Interface
- * Lifespan is mapped to the underlying object
- **/
-
-class DataControlDeviceV1InterfacePrivate;
-
+ * DataControlDeviceV1Interface corresponds to the Wayland interface @c zwlr_data_control_device_v1.
+ */
 class KWAYLANDSERVER_EXPORT DataControlDeviceV1Interface : public QObject
 {
     Q_OBJECT

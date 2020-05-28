@@ -23,9 +23,10 @@ class DataControlSourceV1Interface;
 class DataControlOfferV1InterfacePrivate;
 
 /**
- * @brief Represents the Resource for the wl_data_offer interface.
- * Lifespan is mapped to the underlying object
- **/
+ * The DataControlOfferV1Interface extension represents a piece of data offered for transfer.
+ *
+ * DataControlOfferV1Interface corresponds to the Wayland interface @c zwlr_data_control_offer_v1.
+ */
 class KWAYLANDSERVER_EXPORT DataControlOfferV1Interface : public QObject
 {
     Q_OBJECT
