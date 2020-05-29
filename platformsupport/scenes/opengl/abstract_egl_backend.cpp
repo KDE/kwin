@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
 #include "egl_dmabuf.h"
+#include "kwineglext.h"
 #include "texture.h"
 #include "composite.h"
 #include "egl_context_attribute_builder.h"
@@ -48,16 +49,6 @@ typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resou
 eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
 eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
 eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
-
-#ifndef EGL_WAYLAND_BUFFER_WL
-#define EGL_WAYLAND_BUFFER_WL                   0x31D5
-#endif
-#ifndef EGL_WAYLAND_PLANE_WL
-#define EGL_WAYLAND_PLANE_WL                    0x31D6
-#endif
-#ifndef EGL_WAYLAND_Y_INVERTED_WL
-#define EGL_WAYLAND_Y_INVERTED_WL               0x31DB
-#endif
 
 AbstractEglBackend::AbstractEglBackend()
     : QObject(nullptr)
