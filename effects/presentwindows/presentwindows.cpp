@@ -1378,8 +1378,8 @@ void PresentWindowsEffect::calculateWindowTransformationsNatural(EffectWindowLis
         scale = (area.height() - 20) / double(bounds.height());
     // Make bounding rect fill the screen size for later steps
     bounds = QRect(
-                 bounds.x() - (area.width() - 20 - bounds.width() * scale) / 2 - 10 / scale,
-                 bounds.y() - (area.height() - 20 - bounds.height() * scale) / 2 - 10 / scale,
+                 (bounds.x() * scale - (area.width() - 20 - bounds.width() * scale) / 2 - 10) / scale,
+                 (bounds.y() * scale - (area.height() - 20 - bounds.height() * scale) / 2 - 10) / scale,
                  area.width() / scale,
                  area.height() / scale
              );

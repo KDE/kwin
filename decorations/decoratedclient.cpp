@@ -54,7 +54,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             emit decoratedClient->activeChanged(client->isActive());
         }
     );
-    connect(client, &AbstractClient::frameGeometryChanged, this,
+    connect(client, &AbstractClient::geometryShapeChanged, this,
         [decoratedClient, this]() {
             if (m_client->clientSize() == m_clientSize) {
                 return;
