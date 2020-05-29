@@ -70,7 +70,7 @@ class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
 class LinuxDmabufUnstableV1Buffer;
 class TabletManagerInterface;
-class KeyboardShortcutsInhibitManagerInterface;
+class KeyboardShortcutsInhibitManagerV1Interface;
 }
 
 
@@ -133,7 +133,7 @@ public:
     KWaylandServer::XdgOutputManagerInterface *xdgOutputManager() const {
         return m_xdgOutputManager;
     }
-    KWaylandServer::KeyboardShortcutsInhibitManagerInterface *keyboardShortcutsInhibitManager() const
+    KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *keyboardShortcutsInhibitManager() const
     {
         return m_keyboardShortcutsInhibitManager;
     }
@@ -281,7 +281,7 @@ private:
     KWaylandServer::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
     KWaylandServer::XdgDecorationManagerInterface *m_xdgDecorationManager = nullptr;
     KWaylandServer::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
-    KWaylandServer::KeyboardShortcutsInhibitManagerInterface *m_keyboardShortcutsInhibitManager = nullptr;
+    KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
     struct {
         KWaylandServer::ClientConnection *client = nullptr;

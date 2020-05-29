@@ -65,7 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/xdgoutput_interface.h>
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
-#include <KWaylandServer/keyboard_shortcuts_inhibit_interface.h>
+#include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
 
 // KF
 #include <KServiceTypeTrader>
@@ -323,7 +323,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     );
 
     m_tabletManager = m_display->createTabletManagerInterface(m_display);
-    m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManager(m_display);
+    m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
     m_xdgShell = m_display->createXdgShell(XdgShellInterfaceVersion::Stable, m_display);
     m_xdgShell->create();
     connect(m_xdgShell, &XdgShellInterface::surfaceCreated, this, &WaylandServer::createSurface<XdgShellSurfaceInterface>);
