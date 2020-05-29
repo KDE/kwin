@@ -78,7 +78,7 @@ class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
 class TabletManagerInterface;
 class DataControlDeviceManagerV1Interface;
-class KeyboardShortcutsInhibitManagerInterface;
+class KeyboardShortcutsInhibitManagerV1Interface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -323,9 +323,9 @@ public:
     TabletManagerInterface *createTabletManagerInterface(QObject *parent = nullptr);
 
     /**
-     * Creates the KeyboardShortcutsInhibitorInterface
+     * Creates the KeyboardShortcutsInhibitorV1Interface
      */
-    KeyboardShortcutsInhibitManagerInterface *createKeyboardShortcutsInhibitManager(QObject *object = nullptr);
+    KeyboardShortcutsInhibitManagerV1Interface *createKeyboardShortcutsInhibitManagerV1(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

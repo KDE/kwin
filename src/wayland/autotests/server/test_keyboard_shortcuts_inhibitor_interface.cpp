@@ -11,7 +11,7 @@
 // WaylandServer
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
-#include "../../src/server/keyboard_shortcuts_inhibit_interface.h"
+#include "../../src/server/keyboard_shortcuts_inhibit_v1_interface.h"
 #include "../../src/server/seat_interface.h"
 
 #include "KWayland/Client/compositor.h"
@@ -85,7 +85,7 @@ private:
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
-    KeyboardShortcutsInhibitManagerInterface *m_manager;
+    KeyboardShortcutsInhibitManagerV1Interface *m_manager;
     QVector<SurfaceInterface *> m_surfaces;
     QVector<wl_surface *> m_clientSurfaces;
     KeyboardShortcutsInhibitManager *m_inhibitManagerClient = nullptr;
@@ -105,7 +105,7 @@ void TestKeyboardShortcutsInhibitorInterface::initTestCase()
     m_serverCompositor = m_display.createCompositor(this);
     m_serverCompositor->create();
 
-    m_manager = m_display.createKeyboardShortcutsInhibitManager(this);
+    m_manager = m_display.createKeyboardShortcutsInhibitManagerV1(this);
     QVERIFY(m_serverCompositor->isValid());
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
@@ -185,7 +185,7 @@ void TestKeyboardShortcutsInhibitorInterface::testKeyboardShortcuts()
     auto inhibitorClient = new KeyboardShortcutsInhibitor(inhibitorClientV1);
     QSignalSpy inhibitorActiveSpy(inhibitorClient, &KeyboardShortcutsInhibitor::inhibitorActive);
     QSignalSpy inhibitorInactiveSpy(inhibitorClient, &KeyboardShortcutsInhibitor::inhibitorInactive);
-    QSignalSpy inhibitorCreatedSpy(m_manager, &KeyboardShortcutsInhibitManagerInterface::inhibitorCreated);
+    QSignalSpy inhibitorCreatedSpy(m_manager, &KeyboardShortcutsInhibitManagerV1Interface::inhibitorCreated);
     QVERIFY(inhibitorCreatedSpy.wait() || inhibitorCreatedSpy.count() == 1);
     auto inhibitorServer = m_manager->findInhibitor(surface, m_seat);
 

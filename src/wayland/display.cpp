@@ -15,7 +15,7 @@
 #include "fakeinput_interface.h"
 #include "idle_interface.h"
 #include "idleinhibit_interface_p.h"
-#include "keyboard_shortcuts_inhibit_interface.h"
+#include "keyboard_shortcuts_inhibit_v1_interface.h"
 #include "keystate_interface.h"
 #include "linuxdmabuf_v1_interface.h"
 #include "logging.h"
@@ -525,9 +525,9 @@ DataControlDeviceManagerV1Interface *Display::createDataControlDeviceManagerV1(Q
     return m;
 }
 
-KeyboardShortcutsInhibitManagerInterface *Display::createKeyboardShortcutsInhibitManager(QObject *parent)
+KeyboardShortcutsInhibitManagerV1Interface *Display::createKeyboardShortcutsInhibitManagerV1(QObject *parent)
 {
-    auto d = new KeyboardShortcutsInhibitManagerInterface(this, parent);
+    auto d = new KeyboardShortcutsInhibitManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
 }
