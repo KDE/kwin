@@ -97,26 +97,32 @@ public:
     bool init(const QByteArray &socketName = QByteArray(), InitializationFlags flags = InitializationFlag::NoOptions);
     void terminateClientConnections();
 
-    KWaylandServer::Display *display() {
+    KWaylandServer::Display *display() const
+    {
         return m_display;
     }
-    KWaylandServer::CompositorInterface *compositor() {
+    KWaylandServer::CompositorInterface *compositor() const
+    {
         return m_compositor;
     }
-    KWaylandServer::SeatInterface *seat() {
+    KWaylandServer::SeatInterface *seat() const
+    {
         return m_seat;
     }
-    KWaylandServer::TabletManagerInterface *tabletManager()
+    KWaylandServer::TabletManagerInterface *tabletManager() const
     {
         return m_tabletManager;
     }
-    KWaylandServer::DataDeviceManagerInterface *dataDeviceManager() {
+    KWaylandServer::DataDeviceManagerInterface *dataDeviceManager() const
+    {
         return m_dataDeviceManager;
     }
-    KWaylandServer::PlasmaVirtualDesktopManagementInterface *virtualDesktopManagement() {
+    KWaylandServer::PlasmaVirtualDesktopManagementInterface *virtualDesktopManagement() const
+    {
         return m_virtualDesktopManagement;
     }
-    KWaylandServer::PlasmaWindowManagementInterface *windowManagement() {
+    KWaylandServer::PlasmaWindowManagementInterface *windowManagement() const
+    {
         return m_windowManagement;
     }
     KWaylandServer::ServerSideDecorationManagerInterface *decorationManager() const {
