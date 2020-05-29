@@ -161,13 +161,16 @@ void KeyboardLayout::reconfigure()
 {
     if (m_config) {
         m_config->reparseConfiguration();
-        const QString policyKey = m_config->group(QStringLiteral("Layout")).readEntry("SwitchMode", QStringLiteral("Global"));
+        const KConfigGroup layoutGroup = m_config->group("Layout");
+        const QString policyKey = layoutGroup.readEntry("SwitchMode", QStringLiteral("Global"));
+        m_xkb->reconfigure();
         if (!m_policy || m_policy->name() != policyKey) {
             delete m_policy;
-            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, policyKey);
+            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, layoutGroup, policyKey);
         }
+    } else {
+        m_xkb->reconfigure();
     }
-    m_xkb->reconfigure();
     resetLayout();
 }
 
@@ -178,9 +181,9 @@ void KeyboardLayout::resetLayout()
     updateNotifier();
     reinitNotifierMenu();
     loadShortcuts();
-    emit layoutsReconfigured();
 
     initDBusInterface();
+    emit layoutsReconfigured();
 }
 
 void KeyboardLayout::loadShortcuts()
