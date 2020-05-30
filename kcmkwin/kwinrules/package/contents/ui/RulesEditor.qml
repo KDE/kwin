@@ -202,6 +202,7 @@ ScrollViewKCM {
         onSheetOpenChanged: {
             searchField.text = "";
             if (sheetOpen) {
+                overlayModel.ready = true;
                 searchField.forceActiveFocus();
             } else {
                 overlayModel.onlySuggestions = false;
@@ -249,8 +250,19 @@ ScrollViewKCM {
             invalidateFilter();
         }
 
+        // Delay the model filtering until `ready` is set
+        // FIXME: Workaround https://bugs.kde.org/show_bug.cgi?id=422289
+        property bool ready: false
+        onReadyChanged: {
+            invalidateFilter();
+        }
+
         filterString: searchField.text.trim().toLowerCase()
         filterRowCallback: (source_row, source_parent) => {
+            if (!ready) {
+                return false;
+            }
+
             var index = sourceModel.index(source_row, 0, source_parent);
 
             var hasSuggestion = sourceModel.data(index, RulesModel.SuggestedValueRole) != null;
