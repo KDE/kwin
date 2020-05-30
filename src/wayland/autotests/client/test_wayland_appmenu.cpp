@@ -108,8 +108,6 @@ void TestAppmenu::init()
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
     m_appmenuManagerInterface = m_display->createAppMenuManagerInterface(m_display);
-    m_appmenuManagerInterface->create();
-    QVERIFY(m_appmenuManagerInterface->isValid());
 
     QVERIFY(appmenuSpy.wait());
     m_appmenuManager = registry.createAppMenuManager(appmenuSpy.first().first().value<quint32>(), appmenuSpy.first().last().value<quint32>(), this);

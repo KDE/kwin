@@ -183,7 +183,7 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME idle-inhibit-unstable-v1
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/appmenu.xml
     BASENAME appmenu
 )

@@ -6,10 +6,10 @@
 #ifndef KWAYLAND_SERVER_APPMENU_INTERFACE_H
 #define KWAYLAND_SERVER_APPMENU_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
-
 #include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
@@ -18,6 +18,9 @@ class Display;
 class SurfaceInterface;
 class AppMenuInterface;
 
+class AppMenuManagerInterfacePrivate;
+class AppMenuInterfacePrivate;
+
 /**
  * Provides the DBus service name and object path to a AppMenu DBus interface.
  *
@@ -25,11 +28,11 @@ class AppMenuInterface;
  * and notifies when a new one is created
  * @since 5.42
  */
-class KWAYLANDSERVER_EXPORT AppMenuManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT AppMenuManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~AppMenuManagerInterface();
+    ~AppMenuManagerInterface() override;
     /**
      * Returns any existing appMenu for a given surface
      * This returns a null pointer if no AppMenuInterface exists.
@@ -45,8 +48,7 @@ Q_SIGNALS:
 private:
     explicit AppMenuManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<AppMenuManagerInterfacePrivate> d;
 };
 
 /**
@@ -55,7 +57,7 @@ private:
  * the AppMenu DBus interface is registered.
  * @since 5.42
  */
-class KWAYLANDSERVER_EXPORT AppMenuInterface : public Resource
+class KWAYLANDSERVER_EXPORT AppMenuInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -68,7 +70,7 @@ public:
         /** Object path of the AppMenu interface*/
         QString objectPath;
     };
-    virtual ~AppMenuInterface();
+    ~AppMenuInterface() override;
 
     /**
      * @returns the service name and object path or empty strings if unset
@@ -87,11 +89,11 @@ Q_SIGNALS:
     void addressChanged(KWaylandServer::AppMenuInterface::InterfaceAddress);
 
 private:
-    explicit AppMenuInterface(AppMenuManagerInterface *parent, SurfaceInterface *s, wl_resource *parentResource);
-    friend class AppMenuManagerInterface;
+    explicit AppMenuInterface(SurfaceInterface *s, wl_resource *resource);
+    friend class AppMenuManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<AppMenuInterfacePrivate> d;
+
 };
 
 }
