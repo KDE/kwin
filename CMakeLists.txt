@@ -687,10 +687,8 @@ set_target_properties(kwin PROPERTIES
    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-target_link_libraries(kwin ${kwinLibs})
+target_link_libraries(kwin ${kwinLibs} kwinglutils ${epoxy_LIBRARY})
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
-
-target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
 
 add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11 kwin KF5::Crash Qt5::X11Extras)
