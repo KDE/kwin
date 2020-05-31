@@ -17,8 +17,6 @@
 #include "../../src/server/output_interface.h"
 #include "../../src/server/remote_access_interface.h"
 
-#include <linux/input.h>
-
 using namespace KWayland::Client;
 using namespace KWaylandServer;
 
