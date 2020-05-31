@@ -106,7 +106,7 @@ void VirtualTerminal::setup(int vtNr)
         // error condition
         return;
     }
-    QString ttyName = QStringLiteral("/dev/tty%1").arg(vtNr);
+    QString ttyName = QStringLiteral(KWIN_TTY_PREFIX "%1").arg(vtNr);
 
     m_vt = open(ttyName.toUtf8().constData(), O_RDWR|O_CLOEXEC|O_NONBLOCK);
     if (m_vt < 0) {

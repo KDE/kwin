@@ -584,6 +584,7 @@ if (HAVE_LINUX_VT_H)
     set(kwin_SRCS ${kwin_SRCS}
         virtual_terminal.cpp
     )
+    set(KWIN_TTY_PREFIX "/dev/tty")
 endif()
 
 if(CMAKE_SYSTEM MATCHES "FreeBSD")
@@ -591,7 +592,11 @@ if(CMAKE_SYSTEM MATCHES "FreeBSD")
     set(kwin_SRCS ${kwin_SRCS}
         virtual_terminal.cpp
     )
+    set(KWIN_TTY_PREFIX "/dev/ttyv")
 endif()
+if(KWIN_TTY_PREFIX)
+    set_source_files_properties(virtual_terminal.cpp PROPERTIES COMPILE_DEFINITIONS KWIN_TTY_PREFIX="${KWIN_TTY_PREFIX}")
+endif()    
 
 kconfig_add_kcfg_files(kwin_SRCS settings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS colorcorrection/colorcorrect_settings.kcfgc)
