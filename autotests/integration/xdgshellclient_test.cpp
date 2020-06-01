@@ -46,7 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/xdgdecoration_interface.h>
 
 #include <QDBusConnection>
 
