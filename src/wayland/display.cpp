@@ -29,6 +29,7 @@
 #include "plasmawindowmanagement_interface.h"
 #include "pointerconstraints_interface_p.h"
 #include "pointergestures_interface_p.h"
+#include "primaryselectiondevicemanager_v1_interface.h"
 #include "relativepointer_interface_p.h"
 #include "remote_access_interface.h"
 #include "seat_interface.h"
@@ -522,6 +523,13 @@ ViewporterInterface *Display::createViewporter(QObject *parent)
     auto viewporter = new ViewporterInterface(this, parent);
     connect(this, &Display::aboutToTerminate, viewporter, [viewporter] { delete viewporter; });
     return viewporter;
+}
+
+PrimarySelectionDeviceManagerV1Interface *Display::createPrimarySelectionDeviceManagerV1(QObject *parent)
+{
+    auto primarySelection = new PrimarySelectionDeviceManagerV1Interface(this, parent);
+    connect(this, &Display::aboutToTerminate, primarySelection, [primarySelection] { delete primarySelection; });
+    return primarySelection;
 }
 
 void Display::createShm()

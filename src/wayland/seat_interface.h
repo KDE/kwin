@@ -712,6 +712,8 @@ public:
      **/
     void setSelection(AbstractDataSource *selection);
 
+    void setPrimarySelection(AbstractDataSource *selection);
+
     static SeatInterface *get(wl_resource *native);
 
 Q_SIGNALS:
@@ -742,6 +744,12 @@ Q_SIGNALS:
     void selectionChanged(KWaylandServer::AbstractDataSource*);
 
     /**
+     * Emitted whenever the primary selection changes
+     * @see primarySelection
+     **/
+    void primarySelectionChanged(KWaylandServer::AbstractDataSource*);
+
+    /**
      * Emitted when a drag'n'drop operation is started
      * @since 5.6
      * @see dragEnded
@@ -769,6 +777,7 @@ Q_SIGNALS:
 private:
     friend class Display;
     friend class DataControlDeviceV1Interface;
+    friend class PrimarySelectionDeviceV1Interface;
     friend class DataDeviceManagerInterface;
     friend class TextInputManagerUnstableV0Interface;
     friend class TextInputManagerUnstableV2Interface;

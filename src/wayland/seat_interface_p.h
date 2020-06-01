@@ -24,6 +24,7 @@ class DataDeviceInterface;
 class DataSourceInterface;
 class DataControlDeviceV1Interface;
 class TextInputInterface;
+class PrimarySelectionDeviceV1Interface;
 
 class SeatInterface::Private : public Global::Private
 {
@@ -37,6 +38,7 @@ public:
     QVector<TouchInterface *> touchsForSurface(SurfaceInterface *surface) const;
     QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
     TextInputInterface *textInputForSurface(SurfaceInterface *surface) const;
+    void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     void registerTextInput(TextInputInterface *textInput);
@@ -52,12 +54,14 @@ public:
     QVector<KeyboardInterface*> keyboards;
     QVector<TouchInterface*> touchs;
     QVector<DataDeviceInterface*> dataDevices;
+    QVector<PrimarySelectionDeviceV1Interface*> primarySelectionDevices;
     QVector<DataControlDeviceV1Interface*> dataControlDevices;
 
     QVector<TextInputInterface*> textInputs;
 
     // the last thing copied into the clipboard content
     AbstractDataSource *currentSelection = nullptr;
+    AbstractDataSource *currentPrimarySelection = nullptr;
 
     // Pointer related members
     struct Pointer {
@@ -109,6 +113,7 @@ public:
             QMetaObject::Connection destroyConnection;
             quint32 serial = 0;
             QVector<DataDeviceInterface *> selections;
+            QVector<PrimarySelectionDeviceV1Interface *> primarySelections;
         };
         Focus focus;
         quint32 lastStateSerial = 0;
@@ -173,6 +178,7 @@ private:
     void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
     void getTouch(wl_client *client, wl_resource *resource, uint32_t id);
     void updateSelection(DataDeviceInterface *dataDevice);
+    void updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     static Private *cast(wl_resource *r);
     static void unbind(wl_resource *r);
 

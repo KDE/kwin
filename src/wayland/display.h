@@ -78,6 +78,7 @@ class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
 class TabletManagerInterface;
 class DataControlDeviceManagerV1Interface;
+class PrimarySelectionDeviceManagerV1Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class ViewporterInterface;
 
@@ -332,6 +333,11 @@ public:
      * Creates the viewporter compositor extension.
      */
     ViewporterInterface *createViewporter(QObject *parent = nullptr);
+
+    /**
+     * Creates the PrimarySelectionDeviceManagerV1Interface
+     */
+    PrimarySelectionDeviceManagerV1Interface *createPrimarySelectionDeviceManagerV1(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

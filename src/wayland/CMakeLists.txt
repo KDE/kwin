@@ -40,6 +40,10 @@ set(SERVER_LIB_SRCS
     pointerconstraints_interface_v1.cpp
     pointergestures_interface.cpp
     pointergestures_interface_v1.cpp
+    primaryselectiondevice_v1_interface.cpp
+    primaryselectiondevicemanager_v1_interface.cpp
+    primaryselectionoffer_v1_interface.cpp
+    primaryselectionsource_v1_interface.cpp
     region_interface.cpp
     relativepointer_interface.cpp
     relativepointer_interface_v1.cpp
@@ -244,6 +248,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME viewporter
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/primary-selection/primary-selection-unstable-v1.xml
+    BASENAME wp-primary-selection-unstable-v1
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -378,6 +387,7 @@ set(SERVER_LIB_HEADERS
   pointer_interface.h
   pointerconstraints_interface.h
   pointergestures_interface.h
+  primaryselectiondevicemanager_v1_interface.h
   region_interface.h
   relativepointer_interface.h
   remote_access_interface.h
