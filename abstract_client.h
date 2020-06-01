@@ -1040,6 +1040,7 @@ protected:
     void setPendingGeometryUpdate(PendingGeometry_t update);
     QRect bufferGeometryBeforeUpdateBlocking() const;
     QRect frameGeometryBeforeUpdateBlocking() const;
+    QRect clientGeometryBeforeUpdateBlocking() const;
     void updateGeometryBeforeUpdateBlocking();
     /**
      * Schedules a repaint for the visibleRect before and after a
@@ -1270,6 +1271,7 @@ private:
     QRect m_visibleRectBeforeGeometryUpdate;
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
+    QRect m_clientGeometryBeforeUpdateBlocking;
     QRect m_virtualKeyboardGeometry;
     QRect m_keyboardGeometryRestore;
     QRect m_maximizeGeometryRestore;

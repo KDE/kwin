@@ -152,11 +152,6 @@ QPoint Unmanaged::clientPos() const
     return QPoint(0, 0);   // unmanaged windows don't have decorations
 }
 
-QSize Unmanaged::clientSize() const
-{
-    return size();
-}
-
 QRect Unmanaged::transparentRect() const
 {
     return QRect(clientPos(), clientSize());

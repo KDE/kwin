@@ -66,7 +66,6 @@ public:
 
     QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
-    QSize clientSize() const override;
     QMatrix4x4 inputTransformation() const override;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::move;
@@ -122,7 +121,6 @@ private:
     QRect m_requestedFrameGeometry;
     QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;
-    QRect m_clientGeometry;
     bool m_isClosing = false;
     bool m_isHidden = false;
     bool m_haveNextWindowGeometry = false;

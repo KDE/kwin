@@ -92,6 +92,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
 {
     m_internalId = c->internalId();
     m_frameGeometry = c->m_frameGeometry;
+    m_clientGeometry = c->m_clientGeometry;
     m_visual = c->m_visual;
     bit_depth = c->bit_depth;
     info = c->info;

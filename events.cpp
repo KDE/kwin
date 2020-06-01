@@ -1294,6 +1294,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     if (newgeom != m_frameGeometry) {
         addWorkspaceRepaint(visibleRect());  // damage old area
         QRect old = m_frameGeometry;
+        m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;
         emit frameGeometryChanged(this, old); // update shadow region
         addRepaintFull();

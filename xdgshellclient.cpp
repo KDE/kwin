@@ -49,6 +49,12 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
+enum XdgSurfaceGeometryType {
+    XdgSurfaceGeometryClient = 0x1,
+    XdgSurfaceGeometryFrame = 0x2,
+    XdgSurfaceGeometryBuffer = 0x4,
+};
+
 XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     : WaylandClient(shellSurface->surface())
     , m_shellSurface(shellSurface)
@@ -154,11 +160,6 @@ QSize XdgSurfaceClient::requestedClientSize() const
 QRect XdgSurfaceClient::clientGeometry() const
 {
     return m_clientGeometry;
-}
-
-QSize XdgSurfaceClient::clientSize() const
-{
-    return m_clientGeometry.size();
 }
 
 QMatrix4x4 XdgSurfaceClient::inputTransformation() const
@@ -437,20 +438,39 @@ void XdgSurfaceClient::requestGeometry(const QRect &rect)
 
 void XdgSurfaceClient::updateGeometry(const QRect &rect)
 {
+    const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
+    const QRect oldBufferGeometry = m_bufferGeometry;
 
+    m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
     m_bufferGeometry = frameRectToBufferRect(rect);
-    m_clientGeometry = frameRectToClientRect(rect);
 
-    if (oldFrameGeometry == m_frameGeometry) {
+    uint changedGeometries = 0;
+
+    if (m_clientGeometry != oldClientGeometry) {
+        changedGeometries |= XdgSurfaceGeometryClient;
+    }
+    if (m_frameGeometry != oldFrameGeometry) {
+        changedGeometries |= XdgSurfaceGeometryFrame;
+    }
+    if (m_bufferGeometry != oldBufferGeometry) {
+        changedGeometries |= XdgSurfaceGeometryBuffer;
+    }
+
+    if (!changedGeometries) {
         return;
     }
 
     updateWindowRules(Rules::Position | Rules::Size);
     updateGeometryBeforeUpdateBlocking();
 
-    emit frameGeometryChanged(this, oldFrameGeometry);
+    if (changedGeometries & XdgSurfaceGeometryClient) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (changedGeometries & XdgSurfaceGeometryFrame) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
     emit geometryShapeChanged(this, oldFrameGeometry);
 
     addRepaintDuringGeometryUpdates();

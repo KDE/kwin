@@ -38,7 +38,6 @@ namespace KWin
 
 InternalClient::InternalClient(QWindow *window)
     : m_internalWindow(window)
-    , m_clientSize(window->size())
     , m_windowId(window->winId())
     , m_internalWindowFlags(window->flags())
 {
@@ -137,11 +136,6 @@ QString InternalClient::captionSuffix() const
 QPoint InternalClient::clientContentPos() const
 {
     return -1 * clientPos();
-}
-
-QSize InternalClient::clientSize() const
-{
-    return m_clientSize;
 }
 
 QSize InternalClient::minSize() const
@@ -334,7 +328,7 @@ void InternalClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 
     const QRect newClientGeometry = frameRectToClientRect(rect);
 
-    if (m_clientSize == newClientGeometry.size()) {
+    if (clientSize() == newClientGeometry.size()) {
         commitGeometry(rect);
     } else {
         requestGeometry(rect);
@@ -530,13 +524,15 @@ void InternalClient::commitGeometry(const QRect &rect)
         return;
     }
 
+    m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
-
-    m_clientSize = frameRectToClientRect(frameGeometry()).size();
 
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
 
+    if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
+        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    }
     if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
         emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     }

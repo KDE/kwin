@@ -123,7 +123,6 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     QSize basicUnit() const;
-    QSize clientSize() const override;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
@@ -508,7 +507,6 @@ private:
 
     MaximizeMode max_mode;
     QRect m_bufferGeometry = QRect(0, 0, 100, 100);
-    QRect m_clientGeometry = QRect(0, 0, 100, 100);
     QRect geom_fs_restore;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
@@ -622,11 +620,6 @@ inline int X11Client::sessionStackingOrder() const
 inline bool X11Client::isManaged() const
 {
     return m_managed;
-}
-
-inline QSize X11Client::clientSize() const
-{
-    return m_clientGeometry.size();
 }
 
 inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)

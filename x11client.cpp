@@ -160,6 +160,7 @@ X11Client::X11Client()
     //client constructed be connected to the workspace wrapper
 
     m_frameGeometry = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
+    m_clientGeometry = QRect(0, 0, 100, 100);
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
@@ -2898,6 +2899,9 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
+    if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
+        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    }
     if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
         emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     }
@@ -4190,6 +4194,9 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
+    if (clientGeometryBeforeUpdateBlocking() != m_clientGeometry) {
+        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    }
     if (frameGeometryBeforeUpdateBlocking() != m_frameGeometry) {
         emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     }
@@ -4246,6 +4253,9 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     workspace()->updateStackingOrder();
     if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
+    }
+    if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
+        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
     }
     if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
         emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());

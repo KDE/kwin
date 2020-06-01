@@ -1984,10 +1984,16 @@ QRect AbstractClient::frameGeometryBeforeUpdateBlocking() const
     return m_frameGeometryBeforeUpdateBlocking;
 }
 
+QRect AbstractClient::clientGeometryBeforeUpdateBlocking() const
+{
+    return m_clientGeometryBeforeUpdateBlocking;
+}
+
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
     m_bufferGeometryBeforeUpdateBlocking = bufferGeometry();
     m_frameGeometryBeforeUpdateBlocking = frameGeometry();
+    m_clientGeometryBeforeUpdateBlocking = clientGeometry();
 }
 
 void AbstractClient::doMove(int, int)

@@ -43,7 +43,6 @@ public:
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPoint clientPos() const override;
-    QSize clientSize() const override;
     QRect transparentRect() const override;
     Layer layer() const override {
         return UnmanagedLayer;
