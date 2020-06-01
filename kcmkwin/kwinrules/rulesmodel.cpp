@@ -382,7 +382,7 @@ void RulesModel::populateRuleList()
     types->setFlag(RuleItem::AffectsWarning);
 
     addRule(new RuleItem(QLatin1String("windowrole"),
-                         RulePolicy::NoPolicy, RuleItem::String,
+                         RulePolicy::StringMatch, RuleItem::String,
                          i18n("Window role"), i18n("Window matching"),
                          QIcon::fromTheme("dialog-object-properties")));
 
