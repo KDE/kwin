@@ -1068,8 +1068,8 @@ Layer XdgToplevelClient::layerForDock() const
         case PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover:
             return NormalLayer;
         case PlasmaShellSurfaceInterface::PanelBehavior::AutoHide:
-            return AboveLayer;
         case PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow:
+            return AboveLayer;
         case PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible:
             return DockLayer;
         default:
