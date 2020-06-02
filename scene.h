@@ -670,11 +670,13 @@ template <typename T>
 inline
 T *Scene::Window::windowPixmap() const
 {
-    if (m_currentPixmap->isValid()) {
+    if (m_currentPixmap && m_currentPixmap->isValid()) {
         return static_cast<T*>(m_currentPixmap.data());
-    } else {
+    }
+    if (m_previousPixmap && m_previousPixmap->isValid()) {
         return static_cast<T*>(m_previousPixmap.data());
     }
+    return nullptr;
 }
 
 template <typename T>
