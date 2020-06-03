@@ -1503,7 +1503,7 @@ void XdgToplevelClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
     updateShowOnScreenEdge();
     connect(this, &XdgToplevelClient::frameGeometryChanged,
             this, &XdgToplevelClient::updateShowOnScreenEdge);
-    connect(this, &XdgToplevelClient::windowShown,
+    connect(this, &XdgToplevelClient::readyForPaintingChanged,
             this, &XdgToplevelClient::updateShowOnScreenEdge);
 
     setSkipTaskbar(shellSurface->skipTaskbar());
