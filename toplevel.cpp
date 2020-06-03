@@ -492,12 +492,15 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 
 void Toplevel::setReadyForPainting()
 {
-    if (!ready_for_painting) {
-        ready_for_painting = true;
-        if (compositing()) {
-            addRepaintFull();
-            emit windowShown(this);
-        }
+    if (ready_for_painting) {
+        return;
+    }
+
+    ready_for_painting = true;
+    emit readyForPaintingChanged();
+    if (compositing()) {
+        addRepaintFull();
+        emit windowShown(this);
     }
 }
 

@@ -658,6 +658,14 @@ Q_SIGNALS:
      */
     void frameGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
 
+    /**
+     * Emitted once when a window first gets a buffer
+     * This differs from windowShown which will emit if the window is hidden
+     * by the window manager
+     * @since 5.19
+     */
+    void readyForPaintingChanged();
+
 protected Q_SLOTS:
     /**
      * Checks whether the screen number for this Toplevel changed and updates if needed.
