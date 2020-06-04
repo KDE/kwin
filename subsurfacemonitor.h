@@ -70,6 +70,10 @@ Q_SIGNALS:
      * This signal is emitted when a sub-surface is unmapped.
      */
     void subSurfaceUnmapped();
+    /**
+     * This signal is emitted when the buffer scale of a sub-surface has been changed.
+     */
+    void subSurfaceBufferScaleChanged();
 
 private:
     void registerSubSurface(KWaylandServer::SubSurfaceInterface *subSurface);
