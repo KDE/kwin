@@ -551,7 +551,7 @@ qreal Toplevel::screenScale() const
 
 qreal Toplevel::bufferScale() const
 {
-    return surface() ? surface()->scale() : 1;
+    return surface() ? surface()->bufferScale() : 1;
 }
 
 bool Toplevel::isOnScreen(int screen) const

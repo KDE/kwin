@@ -1692,7 +1692,7 @@ public:
 
                 QImage cursorImage;
                 cursorImage = buffer->data().copy();
-                cursorImage.setDevicePixelRatio(cursorSurface->scale());
+                cursorImage.setDevicePixelRatio(cursorSurface->bufferScale());
 
                 cursor->updateCursor(cursorImage, tcursor->hotspot());
             });

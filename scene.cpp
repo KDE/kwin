@@ -421,7 +421,7 @@ void Scene::addToplevel(Toplevel *c)
         connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
 
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, discardQuads);
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::bufferScaleChanged, this, discardQuads);
         connect(c->surface(), &KWaylandServer::SurfaceInterface::viewportChanged, this, discardQuads);
     }
 
@@ -1269,7 +1269,7 @@ QPoint WindowPixmap::framePosition() const
 qreal WindowPixmap::scale() const
 {
     if (surface())
-        return surface()->scale();
+        return surface()->bufferScale();
     return toplevel()->bufferScale();
 }
 
