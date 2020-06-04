@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Platform plugin for standalone x11 in kwin_x11.",
+        "Description[az]": "Kwin_x11 -də müstəqil X11 üçün platforma əlavəsi.",
         "Description[ca@valencia]": "Connector de plataforma per a una X11 autònoma en kwin_x11.",
         "Description[ca]": "Connector de plataforma per una X11 autònoma en el kwin_x11.",
         "Description[da]": "Platform-plugin til standalone x11 i kwin_x11.",
@@ -38,6 +39,7 @@
         "Description[zh_TW]": "在 kwin_x11 中供 standalone 的 x11 使用的平臺外掛程式。",
         "Id": "KWinX11Platform",
         "Name": "x11-standalone",
+        "Name[az]": "x11-standalone",
         "Name[ca@valencia]": "X11-autònoma",
         "Name[ca]": "X11-autònoma",
         "Name[da]": "x11-standalone",

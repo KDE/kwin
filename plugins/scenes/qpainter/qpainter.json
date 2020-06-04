@@ -2,6 +2,7 @@
     "CompositingType": 4,
     "KPlugin": {
         "Description": "KWin Compositor plugin rendering through QPainter",
+        "Description[az]": "QPainter vasitəsi ilə KWin birləşdirici əlavəsini formalaşdırmaq",
         "Description[ca@valencia]": "Connector del Compositor de KWin que renderitza a través de QPainter",
         "Description[ca]": "Connector del Compositor del KWin que renderitza a través del QPainter",
         "Description[da]": "KWin-compositorplugin som renderer igennem QPainter",
@@ -39,6 +40,7 @@
         "Description[zh_TW]": "透過 QPainter 繪製 KWin 合成器附加元件",
         "Id": "KWinSceneQPainter",
         "Name": "SceneQPainter",
+        "Name[az]": "SceneQPainter",
         "Name[ca@valencia]": "SceneQPainter",
         "Name[ca]": "SceneQPainter",
         "Name[cs]": "SceneQPainter",

@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to a virtual framebuffer.",
+        "Description[az]": "Virtual çərçivə tamponunun formalaşdırılması.",
         "Description[ca@valencia]": "Renderitza en un «framebuffer» virtual.",
         "Description[ca]": "Renderitza a un «framebuffer» virtual.",
         "Description[da]": "Rendér til en virtuel framebuffer.",
@@ -38,6 +39,7 @@
         "Description[zh_TW]": "成像到虛擬影格緩衝區。",
         "Id": "KWinWaylandVirtualBackend",
         "Name": "virtual",
+        "Name[az]": "virtual",
         "Name[ca@valencia]": "Virtual",
         "Name[ca]": "Virtual",
         "Name[cs]": "virtuální",
