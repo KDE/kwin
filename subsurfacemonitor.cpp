@@ -50,6 +50,8 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
             this, &SubSurfaceMonitor::subSurfaceBufferScaleChanged);
     connect(surface, &SurfaceInterface::bufferTransformChanged,
             this, &SubSurfaceMonitor::subSurfaceBufferTransformChanged);
+    connect(surface, &SurfaceInterface::bufferSizeChanged,
+            this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
 
     registerSurface(surface);
 }
@@ -72,6 +74,8 @@ void SubSurfaceMonitor::unregisterSubSurface(SubSurfaceInterface *subSurface)
                this, &SubSurfaceMonitor::subSurfaceBufferScaleChanged);
     disconnect(surface, &SurfaceInterface::bufferTransformChanged,
                this, &SubSurfaceMonitor::subSurfaceBufferTransformChanged);
+    disconnect(surface, &SurfaceInterface::bufferSizeChanged,
+               this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
 
     unregisterSurface(surface);
 }

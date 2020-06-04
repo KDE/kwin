@@ -410,10 +410,10 @@ void Scene::addToplevel(Toplevel *c)
         // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
         connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardPixmap);
         connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardPixmap);
         connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardPixmap);
         connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardPixmap);
         connect(monitor, &SubSurfaceMonitor::subSurfaceBufferTransformChanged, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceBufferSizeChanged, this, discardPixmap);
 
         connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardQuads);
@@ -423,11 +423,14 @@ void Scene::addToplevel(Toplevel *c)
         connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceBufferScaleChanged, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceBufferTransformChanged, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceBufferSizeChanged, this, discardQuads);
 
         connect(surface, &KWaylandServer::SurfaceInterface::bufferTransformChanged, this, discardPixmap);
+        connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged, this, discardPixmap);
 
         connect(surface, &KWaylandServer::SurfaceInterface::bufferScaleChanged, this, discardQuads);
         connect(surface, &KWaylandServer::SurfaceInterface::bufferTransformChanged, this, discardQuads);
+        connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged, this, discardQuads);
         connect(surface, &KWaylandServer::SurfaceInterface::viewportChanged, this, discardQuads);
     }
 
