@@ -1030,7 +1030,7 @@ void AbstractClient::checkUnrestrictedMoveResize()
     }
 }
 
-// When the user pressed mouse on the titlebar, don't activate move immediatelly,
+// When the user pressed mouse on the titlebar, don't activate move immediately,
 // since it may be just a click. Activate instead after a delay. Move used to be
 // activated only after moving by several pixels, but that looks bad.
 void AbstractClient::startDelayedMoveResize()
