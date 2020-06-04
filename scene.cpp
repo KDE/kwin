@@ -402,10 +402,10 @@ void Scene::addToplevel(Toplevel *c)
 
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
-    if (c->surface()) {
+    if (KWaylandServer::SurfaceInterface *surface = c->surface()) {
         // We generate window quads for sub-surfaces so it's quite important to discard
         // the pixmap tree and cached window quads when the sub-surface tree is changed.
-        SubSurfaceMonitor *monitor = new SubSurfaceMonitor(c->surface(), this);
+        SubSurfaceMonitor *monitor = new SubSurfaceMonitor(surface, this);
 
         // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
         connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardPixmap);
@@ -413,6 +413,7 @@ void Scene::addToplevel(Toplevel *c)
         connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardPixmap);
         connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardPixmap);
         connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceBufferTransformChanged, this, discardPixmap);
 
         connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardQuads);
@@ -421,9 +422,13 @@ void Scene::addToplevel(Toplevel *c)
         connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
         connect(monitor, &SubSurfaceMonitor::subSurfaceBufferScaleChanged, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceBufferTransformChanged, this, discardQuads);
 
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::bufferScaleChanged, this, discardQuads);
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::viewportChanged, this, discardQuads);
+        connect(surface, &KWaylandServer::SurfaceInterface::bufferTransformChanged, this, discardPixmap);
+
+        connect(surface, &KWaylandServer::SurfaceInterface::bufferScaleChanged, this, discardQuads);
+        connect(surface, &KWaylandServer::SurfaceInterface::bufferTransformChanged, this, discardQuads);
+        connect(surface, &KWaylandServer::SurfaceInterface::viewportChanged, this, discardQuads);
     }
 
     connect(c, &Toplevel::screenScaleChanged, this, discardQuads);

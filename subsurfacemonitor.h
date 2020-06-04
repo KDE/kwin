@@ -74,6 +74,10 @@ Q_SIGNALS:
      * This signal is emitted when the buffer scale of a sub-surface has been changed.
      */
     void subSurfaceBufferScaleChanged();
+    /**
+     * This signal is emitted when the buffer transform of a sub-surface has been changed.
+     */
+    void subSurfaceBufferTransformChanged();
 
 private:
     void registerSubSurface(KWaylandServer::SubSurfaceInterface *subSurface);
