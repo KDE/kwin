@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void PlastikPlugin::registerTypes(const char *uri)
 {
-    Q_UNUSED(uri)
+    // Need to register something to tell Qt that it loaded (QTBUG-84571)
+    qmlRegisterModule(uri, 1, 0);
 }
 
 void PlastikPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
