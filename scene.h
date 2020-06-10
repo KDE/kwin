@@ -200,8 +200,6 @@ Q_SIGNALS:
     void resetCompositing();
 
 public Q_SLOTS:
-    // shape/size of a window changed
-    void windowGeometryShapeChanged(KWin::Toplevel* c);
     // a window has been closed
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:

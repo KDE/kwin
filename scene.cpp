@@ -397,10 +397,6 @@ void Scene::addToplevel(Toplevel *c)
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
 
-    auto discardPixmap = [w]() { w->discardPixmap(); };
-    auto discardQuads = [w]() { w->discardQuads(); };
-
-    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
     if (c->surface()) {
         // We generate window quads for sub-surfaces so it's quite important to discard
@@ -408,25 +404,26 @@ void Scene::addToplevel(Toplevel *c)
         SubSurfaceMonitor *monitor = new SubSurfaceMonitor(c->surface(), this);
 
         // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, w, &Window::discardPixmap);
 
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMoved, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMoved, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, w, &Window::discardQuads);
 
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, discardQuads);
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::viewportChanged, this, discardQuads);
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, w, &Window::discardQuads);
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::viewportChanged, w, &Window::discardQuads);
     }
 
-    connect(c, &Toplevel::screenScaleChanged, this, discardQuads);
-    connect(c, &Toplevel::shadowChanged, this, discardQuads);
+    connect(c, &Toplevel::screenScaleChanged, w, &Window::discardQuads);
+    connect(c, &Toplevel::shadowChanged, w, &Window::discardQuads);
+    connect(c, &Toplevel::geometryShapeChanged, w, &Window::discardShape);
 
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
@@ -454,14 +451,6 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
         window->shadow()->setToplevel(deleted);
     }
     m_windows[deleted] = window;
-}
-
-void Scene::windowGeometryShapeChanged(Toplevel *c)
-{
-    if (!m_windows.contains(c))    // this is ok, shape is not valid by default
-        return;
-    Window *w = m_windows[ c ];
-    w->discardShape();
 }
 
 void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
