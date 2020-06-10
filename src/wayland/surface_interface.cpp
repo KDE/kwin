@@ -451,18 +451,16 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     if (bufferChanged) {
         if (target->buffer && (!target->damage.isEmpty() || !target->bufferDamage.isEmpty())) {
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
-            if (!windowRegion.isEmpty()) {
-                const QRegion bufferDamage = mapFromBuffer(target, target->bufferDamage);
-                target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
-                trackedDamage = trackedDamage.united(target->damage);
-                emit q->damaged(target->damage);
-                // workaround for https://bugreports.qt.io/browse/QTBUG-52092
-                // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
-                if (subSurface) {
-                    const auto mainSurface = subSurface->mainSurface();
-                    if (!mainSurface || !mainSurface->buffer()) {
-                        q->frameRendered(0);
-                    }
+            const QRegion bufferDamage = mapFromBuffer(target, target->bufferDamage);
+            target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
+            trackedDamage = trackedDamage.united(target->damage);
+            emit q->damaged(target->damage);
+            // workaround for https://bugreports.qt.io/browse/QTBUG-52092
+            // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
+            if (subSurface) {
+                const auto mainSurface = subSurface->mainSurface();
+                if (!mainSurface || !mainSurface->buffer()) {
+                    q->frameRendered(0);
                 }
             }
         }
