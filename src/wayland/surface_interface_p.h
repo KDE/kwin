@@ -31,7 +31,6 @@ public:
         QRegion input = QRegion();
         QRectF sourceGeometry = QRectF();
         QSize destinationSize = QSize();
-        QRectF viewport = QRectF();
         QSize size = QSize();
         bool sourceGeometryIsSet = false;
         bool destinationSizeIsSet = false;
@@ -77,24 +76,7 @@ public:
 
     void commitSubSurface();
     void commit();
-
-    QPointF mapFromBuffer(const State *state, const QPointF &point) const;
-    QPointF mapToBuffer(const State *state, const QPointF &point) const;
-    QSizeF mapFromBuffer(const State *state, const QSizeF &size) const;
-    QSizeF mapToBuffer(const State *state, const QSizeF &size) const;
-    QRectF mapFromBuffer(const State *state, const QRectF &rect) const;
-    QRectF mapToBuffer(const State *state, const QRectF &rect) const;
-    QRegion mapFromBuffer(const State *state, const QRegion &region) const;
-    QRegion mapToBuffer(const State *state, const QRegion &region) const;
-
-    QPointF bufferTransform(const State *state, const QPointF &point) const;
-    QPointF invertBufferTransform(const State *state, const QPointF &point) const;
-    QSizeF bufferTransform(const State *state, const QSizeF &size) const;
-    QSizeF invertBufferTransform(const State *state, const QSizeF &size) const;
-    QPointF viewportTransform(const State *state, const QPointF &point) const;
-    QPointF invertViewportTransform(const State *state, const QPointF &point) const;
-    QSizeF viewportTransform(const State *state, const QSizeF &size) const;
-    QSizeF invertViewportTransform(const State *state, const QSizeF &size) const;
+    QMatrix4x4 buildSurfaceToBufferMatrix(const State *state);
 
     SurfaceRole *role = nullptr;
 
@@ -103,6 +85,8 @@ public:
     State subSurfacePending;
     QPointer<SubSurfaceInterface> subSurface;
     QRegion trackedDamage;
+    QMatrix4x4 surfaceToBufferMatrix;
+    QMatrix4x4 bufferToSurfaceMatrix;
 
     // workaround for https://bugreports.qt.io/browse/QTBUG-52192
     // A subsurface needs to be considered mapped even if it doesn't have a buffer attached

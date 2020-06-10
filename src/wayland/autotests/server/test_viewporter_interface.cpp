@@ -149,17 +149,21 @@ void TestViewporterInterface::testCropScale()
     QVERIFY(serverSurfaceMappedSpy.isValid());
     QSignalSpy serverSurfaceSizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
     QVERIFY(serverSurfaceSizeChangedSpy.isValid());
+    QSignalSpy surfaceToBufferMatrixChangedSpy(serverSurface, &SurfaceInterface::surfaceToBufferMatrixChanged);
+    QVERIFY(surfaceToBufferMatrixChangedSpy.isValid());
 
     // Map the surface.
-    QImage image(QSize(100, 50), QImage::Format_ARGB32_Premultiplied);
+    QImage image(QSize(200, 100), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::black);
     KWayland::Client::Buffer::Ptr buffer = m_shm->createBuffer(image);
     clientSurface->attachBuffer(buffer);
+    clientSurface->setScale(2);
     clientSurface->damage(image.rect());
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(serverSurfaceMappedSpy.wait());
+    QCOMPARE(surfaceToBufferMatrixChangedSpy.count(), 1);
     QCOMPARE(serverSurface->size(), QSize(100, 50));
-    QCOMPARE(serverSurface->viewport(), QRectF(0, 0, 100, 50));
+    QCOMPARE(serverSurface->mapToBuffer(QPointF(0, 0)), QPointF(0, 0));
 
     // Create a viewport for the surface.
     QScopedPointer<Viewport> clientViewport(new Viewport);
@@ -170,22 +174,25 @@ void TestViewporterInterface::testCropScale()
                                wl_fixed_from_double(30), wl_fixed_from_double(20));
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
+    QCOMPARE(surfaceToBufferMatrixChangedSpy.count(), 2);
     QCOMPARE(serverSurface->size(), QSize(30, 20));
-    QCOMPARE(serverSurface->viewport(), QRectF(10, 10, 30, 20));
+    QCOMPARE(serverSurface->mapToBuffer(QPointF(0, 0)), QPointF(20, 20));
 
     // Scale the surface.
     clientViewport->set_destination(500, 250);
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
+    QCOMPARE(surfaceToBufferMatrixChangedSpy.count(), 3);
     QCOMPARE(serverSurface->size(), QSize(500, 250));
-    QCOMPARE(serverSurface->viewport(), QRectF(10, 10, 30, 20));
+    QCOMPARE(serverSurface->mapToBuffer(QPointF(0, 0)), QPointF(20, 20));
 
     // If the viewport is destroyed, the crop and scale state will be unset on a next commit.
     clientViewport->destroy();
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(serverSurfaceSizeChangedSpy.wait());
+    QCOMPARE(surfaceToBufferMatrixChangedSpy.count(), 4);
     QCOMPARE(serverSurface->size(), QSize(100, 50));
-    QCOMPARE(serverSurface->viewport(), QRectF(0, 0, 100, 50));
+    QCOMPARE(serverSurface->mapToBuffer(QPointF(0, 0)), QPointF(0, 0));
 }
 
 QTEST_GUILESS_MAIN(TestViewporterInterface)

@@ -9,6 +9,7 @@
 #include "resource.h"
 #include "output_interface.h"
 
+#include <QMatrix4x4>
 #include <QObject>
 #include <QPointer>
 #include <QRegion>
@@ -85,6 +86,9 @@ public:
      * and points in the buffer pixel coordinates. In order to map points between the two spaces,
      * one has to use mapToBuffer() and mapFromBuffer().
      *
+     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
+     *
+     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
      * @since 5.20
      */
     QPointF mapToBuffer(const QPointF &point) const;
@@ -95,49 +99,12 @@ public:
      * and points in the buffer pixel coordinates. In order to map points between the two spaces,
      * one has to use mapToBuffer() and mapFromBuffer().
      *
+     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
+     *
+     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
      * @since 5.20
      */
     QPointF mapFromBuffer(const QPointF &point) const;
-    /**
-     * Maps the specified @a size from the surface-local coordinates to buffer pixel coordinates.
-     *
-     * Note that there is no direct connection between sizes in the surface-local coordinates
-     * and sizes in the buffer pixel coordinates. In order to map sizes between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * @since 5.20
-     */
-    QSizeF mapToBuffer(const QSizeF &size) const;
-    /**
-     * Maps the specified @a size from the buffer pixel coordinates to surface-local coordinates.
-     *
-     * Note that there is no direct connection between sizes in the surface-local coordinates
-     * and sizes in the buffer pixel coordinates. In order to map sizes between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * @since 5.20
-     */
-    QSizeF mapFromBuffer(const QSizeF &size) const;
-    /**
-     * Maps the specified @a rect from the surface-local coordinates to buffer pixel coordinates.
-     *
-     * Note that there is no direct connection between rects in the surface-local coordinates
-     * and rects in the buffer pixel coordinates. In order to map rects between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * @since 5.20
-     */
-    QRectF mapToBuffer(const QRectF &rect) const;
-    /**
-     * Maps the specified @a rect from the buffer pixel coordinates to surface-local coordinates.
-     *
-     * Note that there is no direct connection between rects in the surface-local coordinates
-     * and rects in the buffer pixel coordinates. In order to map rects between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * @since 5.20
-     */
-    QRectF mapFromBuffer(const QRectF &rect) const;
     /**
      * Maps the specified @a region from the surface-local coordinates to buffer pixel coordinates.
      *
@@ -145,6 +112,9 @@ public:
      * and regions in the buffer pixel coordinates. In order to map regions between the two spaces,
      * one has to use mapToBuffer() and mapFromBuffer().
      *
+     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
+     *
+     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
      * @since 5.20
      */
     QRegion mapToBuffer(const QRegion &region) const;
@@ -155,9 +125,19 @@ public:
      * and regions in the buffer pixel coordinates. In order to map regions between the two spaces,
      * one has to use mapToBuffer() and mapFromBuffer().
      *
+     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
+     *
+     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
      * @since 5.20
      */
     QRegion mapFromBuffer(const QRegion &region) const;
+    /**
+     * Returns the projection matrix from the surface-local coordinates to buffer coordinates.
+     *
+     * @see surfaceToBufferMatrixChanged()
+     * @since 5.20
+     */
+    QMatrix4x4 surfaceToBufferMatrix() const;
 
     void frameRendered(quint32 msec);
 
@@ -184,12 +164,6 @@ public:
      **/
     BufferInterface *buffer();
     QPoint offset() const;
-    /**
-     * Returns the rectangle that indicates what area of the attached buffer is displayed.
-     *
-     * The size of the viewport rectangle doesn't correspond to the size of the surface.
-     */
-    QRectF viewport() const;
     /**
      * Returns the current size of the surface, in surface coordinates.
      *
@@ -374,6 +348,14 @@ public:
 
 Q_SIGNALS:
     /**
+     * This signal is emitted when the projection matrix from the surface-local coordinate space
+     * to the buffer coordinate space has been changed.
+     *
+     * Note that the compositor will most likely need to re-compute the texture coordinates after
+     * the surface-to-buffer matrix has been changed.
+     */
+    void surfaceToBufferMatrixChanged();
+    /**
      * Emitted whenever the SurfaceInterface got damaged.
      * The signal is only emitted during the commit of state.
      * A damage means that a new BufferInterface got attached.
@@ -386,16 +368,10 @@ Q_SIGNALS:
     void inputChanged(const QRegion&);
     /**
      * This signal is emitted when the scale of the attached buffer has changed.
-     *
-     * Note that the compositor has to re-compute the texture coordinates after the scale
-     * of the buffer has been changed.
      */
     void scaleChanged(qint32);
     /**
      * This signal is emitted when the buffer transform has changed.
-     *
-     * Note that the compositor has to re-compute the texture coordinates after the buffer
-     * transform has been changed.
      */
     void transformChanged(KWaylandServer::OutputInterface::Transform);
     /**
@@ -408,20 +384,8 @@ Q_SIGNALS:
     void unmapped();
     /**
      * This signal is emitted when the surface size has changed.
-     *
-     * Note that the compositor has to re-compute the texture coordinates after the surface
-     * size has been changed.
-     *
-     * @since 5.3
      */
     void sizeChanged();
-    /**
-     * This signal is emitted when the viewport rectangle has changed.
-     *
-     * Note that the compositor has to re-compute the texture coordinates after the viewport
-     * rectangle has been changed.
-     */
-    void viewportChanged();
     /**
      * @since 5.4
      **/
