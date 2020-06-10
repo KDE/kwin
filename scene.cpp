@@ -398,7 +398,7 @@ void Scene::addToplevel(Toplevel *c)
     m_windows[ c ] = w;
 
     auto discardPixmap = [w]() { w->discardPixmap(); };
-    auto discardQuads = [w]() { w->invalidateQuadsCache(); };
+    auto discardQuads = [w]() { w->discardQuads(); };
 
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
@@ -768,7 +768,7 @@ void Scene::Window::discardShape()
     // it is created on-demand and cached, simply
     // reset the flag
     m_bufferShapeIsValid = false;
-    invalidateQuadsCache();
+    discardQuads();
 }
 
 QRegion Scene::Window::bufferShape() const
@@ -1066,7 +1066,7 @@ WindowQuadList Scene::Window::makeContentsQuads() const
     return quads;
 }
 
-void Scene::Window::invalidateQuadsCache()
+void Scene::Window::discardQuads()
 {
     cached_quad_list.reset();
 }
@@ -1134,7 +1134,7 @@ void WindowPixmap::create()
         update();
         if (isRoot() && isValid()) {
             m_window->unreferencePreviousPixmap();
-            m_window->invalidateQuadsCache();
+            m_window->discardQuads();
         }
         return;
     }
@@ -1165,7 +1165,7 @@ void WindowPixmap::create()
     m_pixmapSize = bufferGeometry.size();
     m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
-    m_window->invalidateQuadsCache();
+    m_window->discardQuads();
 }
 
 void WindowPixmap::update()

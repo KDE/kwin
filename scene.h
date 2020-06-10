@@ -347,7 +347,7 @@ public:
     Shadow* shadow();
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
-    void invalidateQuadsCache();
+    void discardQuads();
     void preprocess();
 protected:
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
