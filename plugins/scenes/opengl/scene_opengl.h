@@ -147,6 +147,8 @@ class OpenGLWindowPixmap;
 
 class OpenGLWindow final : public Scene::Window
 {
+    Q_OBJECT
+
 public:
     enum Leaf { ShadowLeaf, DecorationLeaf, ContentLeaf, PreviousContentLeaf };
 

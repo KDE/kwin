@@ -286,11 +286,13 @@ protected:
 };
 
 // The base class for windows representations in composite backends
-class Scene::Window
+class Scene::Window : public QObject
 {
+    Q_OBJECT
+
 public:
-    Window(Toplevel* c);
-    virtual ~Window();
+    explicit Window(Toplevel *client, QObject *parent = nullptr);
+    ~Window() override;
     // perform the actual painting of the window
     virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
     // do any cleanup needed when the window's composite pixmap is discarded

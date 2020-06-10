@@ -91,6 +91,8 @@ private:
 
 class SceneQPainter::Window : public Scene::Window
 {
+    Q_OBJECT
+
 public:
     Window(SceneQPainter *scene, Toplevel *c);
     ~Window() override;

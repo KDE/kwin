@@ -703,8 +703,9 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
 // Scene::Window
 //****************************************
 
-Scene::Window::Window(Toplevel * c)
-    : toplevel(c)
+Scene::Window::Window(Toplevel *client, QObject *parent)
+    : QObject(parent)
+    , toplevel(client)
     , filter(ImageFilterFast)
     , m_shadow(nullptr)
     , m_currentPixmap()
