@@ -56,6 +56,11 @@ private:
      */
     void checkWlSource();
 
+    /**
+     * Returns of dsi is managed by our data bridge
+     */
+    bool ownsSelection(KWaylandServer::AbstractDataSource *dsi) const;
+
     QMetaObject::Connection m_checkConnection;
 
     Q_DISABLE_COPY(Clipboard)
