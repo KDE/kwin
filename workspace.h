@@ -250,6 +250,8 @@ public:
 
 private:
     Compositor *m_compositor;
+    QTimer *m_quickTileCombineTimer;
+    QuickTileMode m_lastTilingMode;
 
     //-------------------------------------------------
     // Unsorted
