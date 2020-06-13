@@ -146,6 +146,11 @@ protected:
         m_waylandOutput->setDpmsSupported(set);
     }
 
+    virtual bool isCurrentMode(int mode) {
+        Q_UNUSED(mode);
+        return true;
+    }
+
     virtual void updateEnablement(bool enable) {
         Q_UNUSED(enable);
     }

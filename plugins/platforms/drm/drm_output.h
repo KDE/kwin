@@ -110,6 +110,8 @@ public:
      */
     int rotation() const;
 
+    virtual bool isCurrentMode(int modeIndex) override;
+
 private:
     friend class DrmBackend;
     friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc

@@ -343,11 +343,10 @@ void DrmBackend::openDrm()
                     if (device->sysNum() != m_drmId) {
                         return;
                     }
-                    if (device->hasProperty("HOTPLUG", "1")) {
-                        qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
-                        updateOutputs();
-                        updateCursor();
-                    }
+
+                    qCDebug(KWIN_DRM) << "Received udev event for monitored drm device";
+                    updateOutputs();
+                    updateCursor();
                 }
             );
             m_udevMonitor->enable();
@@ -418,6 +417,8 @@ bool DrmBackend::updateOutputs()
 
         if (DrmOutput *o = findOutput(con->id())) {
             connectedOutputs << o;
+            DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_fd, con->id()));
+            o->initOutputDevice(connector.data());
         } else {
             pendingConnectors << con;
         }

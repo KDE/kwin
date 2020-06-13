@@ -717,6 +717,14 @@ void DrmOutput::updateTransform(Transform transform)
     }
 }
 
+bool DrmOutput::isCurrentMode(int modeIndex)
+{
+    // get all modes on the connector
+    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_backend->fd(), m_conn->id()));
+
+    return modeIndex < connector->count_modes && isCurrentMode(&connector->modes[modeIndex]);
+}
+
 void DrmOutput::updateMode(int modeIndex)
 {
     // get all modes on the connector

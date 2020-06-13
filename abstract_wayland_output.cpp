@@ -176,7 +176,7 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
     bool overallSizeCheckNeeded = false;
 
     // Enablement changes are handled by platform.
-    if (changeSet->modeChanged()) {
+    if (!isCurrentMode(changeSet->mode())) {
         qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->mode();
         m_waylandOutputDevice->setCurrentMode(changeSet->mode());
         updateMode(changeSet->mode());
@@ -280,11 +280,14 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
         m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }
 
-    m_waylandOutputDevice->create();
+    if(!m_waylandOutputDevice->isValid())
+        m_waylandOutputDevice->create();
 
     // start off enabled
 
-    m_waylandOutput->create();
+    if(!m_waylandOutput->isValid())
+        m_waylandOutput->create();
+
     m_xdgOutput->setName(name());
     m_xdgOutput->setDescription(description());
     m_xdgOutput->setLogicalSize(pixelSize() / scale());
