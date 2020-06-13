@@ -1778,6 +1778,22 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
             this, &XdgPopupClient::handleGrabRequested);
     connect(shellSurface, &XdgPopupInterface::initializeRequested,
             this, &XdgPopupClient::initialize);
+    connect(shellSurface, &XdgPopupInterface::popupRepositionRequested,
+            [=](XdgPositioner positioner, quint32 token) {
+                m_shellSurface->setPositioner(positioner);
+                m_shellSurface->sendPopupRepositioned(token);
+                Q_EMIT repositioned();
+            });
+    connect(this, &XdgPopupClient::repositioned, this,
+        [this] () {
+            if (!frameGeometry().isEmpty()) {
+                GeometryUpdatesBlocker blocker(this);
+                const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
+                Placement::self()->place(this, area);
+                setGeometryRestore(frameGeometry());
+            }
+        }
+    );
     connect(shellSurface, &XdgPopupInterface::destroyed,
             this, &XdgPopupClient::destroyClient);
 

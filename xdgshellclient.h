@@ -273,6 +273,12 @@ public:
     void takeFocus() override;
     bool supportsWindowRules() const override;
 
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the XdgPopupClient is repositioned.
+     */
+    void repositioned();
+
 protected:
     bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() const override;
