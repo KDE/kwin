@@ -389,7 +389,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         }
     );
     m_appMenuManager = m_display->createAppMenuManagerInterface(m_display);
-    m_appMenuManager->create();
     connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated,
         [this] (AppMenuInterface *appMenu) {
             if (XdgToplevelClient *client = findXdgToplevelClient(appMenu->surface())) {
