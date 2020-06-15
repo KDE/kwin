@@ -709,21 +709,25 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
 
 void QuickTilingTest::testShortcut_data()
 {
-    QTest::addColumn<QString>("shortcut");
+    QTest::addColumn<QStringList>("shortcutList");
     QTest::addColumn<QuickTileMode>("expectedMode");
     QTest::addColumn<QRect>("expectedGeometry");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
-    QTest::newRow("top") << QStringLiteral("Window Quick Tile Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
-    QTest::newRow("left") << QStringLiteral("Window Quick Tile Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
-    QTest::newRow("bottom") << QStringLiteral("Window Quick Tile Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
-    QTest::newRow("right") << QStringLiteral("Window Quick Tile Right") << FLAG(Right) << QRect(640, 0, 640, 1024);
+    QTest::newRow("top") << QStringList{QStringLiteral("Window Quick Tile Top")} << FLAG(Top) << QRect(0, 0, 1280, 512);
+    QTest::newRow("bottom") << QStringList{QStringLiteral("Window Quick Tile Bottom")} << FLAG(Bottom) << QRect(0, 512, 1280, 512);
+    QTest::newRow("top right") << QStringList{QStringLiteral("Window Quick Tile Top Right")} << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
+    QTest::newRow("top left") << QStringList{QStringLiteral("Window Quick Tile Top Left")} << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
+    QTest::newRow("bottom right") << QStringList{QStringLiteral("Window Quick Tile Bottom Right")} << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
+    QTest::newRow("bottom left") << QStringList{QStringLiteral("Window Quick Tile Bottom Left")} << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
+    QTest::newRow("left") << QStringList{QStringLiteral("Window Quick Tile Left")} << FLAG(Left) << QRect(0, 0, 640, 1024);
+    QTest::newRow("right") << QStringList{QStringLiteral("Window Quick Tile Right")} << FLAG(Right) << QRect(640, 0, 640, 1024);
 
-    QTest::newRow("top right") << QStringLiteral("Window Quick Tile Top Right") << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
-    QTest::newRow("top left") << QStringLiteral("Window Quick Tile Top Left") << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
-    QTest::newRow("bottom right") << QStringLiteral("Window Quick Tile Bottom Right") << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
-    QTest::newRow("bottom left") << QStringLiteral("Window Quick Tile Bottom Left") << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
-
+    // Test combined actions for corner tiling
+    QTest::newRow("top left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Top")} << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
+    QTest::newRow("top right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Top")} << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
+    QTest::newRow("bottom left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Bottom")} << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
+    QTest::newRow("bottom right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Bottom")} << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
 #undef FLAG
 }
 
@@ -749,22 +753,30 @@ void QuickTilingTest::testShortcut()
     QVERIFY(configureRequestedSpy.wait());
     QCOMPARE(configureRequestedSpy.count(), 1);
 
-    QFETCH(QString, shortcut);
+    QFETCH(QStringList, shortcutList);
     QFETCH(QRect, expectedGeometry);
 
-    // invoke global shortcut through dbus
-    auto msg = QDBusMessage::createMethodCall(
-        QStringLiteral("org.kde.kglobalaccel"),
-        QStringLiteral("/component/kwin"),
-        QStringLiteral("org.kde.kglobalaccel.Component"),
-        QStringLiteral("invokeShortcut"));
-    msg.setArguments(QList<QVariant>{shortcut});
-    QDBusConnection::sessionBus().asyncCall(msg);
+    const int numberOfQuickTileActions = shortcutList.count();
+
+    if (numberOfQuickTileActions > 1) {
+        QTest::qWait(1001);
+    }
+
+    for (QString shortcut : shortcutList) {
+        // invoke global shortcut through dbus
+        auto msg = QDBusMessage::createMethodCall(
+            QStringLiteral("org.kde.kglobalaccel"),
+            QStringLiteral("/component/kwin"),
+            QStringLiteral("org.kde.kglobalaccel.Component"),
+            QStringLiteral("invokeShortcut"));
+        msg.setArguments(QList<QVariant>{shortcut});
+        QDBusConnection::sessionBus().asyncCall(msg);
+    }
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
     QVERIFY(quickTileChangedSpy.wait());
-    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QCOMPARE(quickTileChangedSpy.count(), numberOfQuickTileActions);
     // at this point the geometry did not yet change
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed
@@ -795,15 +807,13 @@ void QuickTilingTest::testScript_data()
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
     QTest::newRow("top") << QStringLiteral("Top") << FLAG(Top) << QRect(0, 0, 1280, 512);
-    QTest::newRow("left") << QStringLiteral("Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
     QTest::newRow("bottom") << QStringLiteral("Bottom") << FLAG(Bottom) << QRect(0, 512, 1280, 512);
-    QTest::newRow("right") << QStringLiteral("Right") << FLAG(Right) << QRect(640, 0, 640, 1024);
-
     QTest::newRow("top right") << QStringLiteral("TopRight") << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
     QTest::newRow("top left") << QStringLiteral("TopLeft") << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
     QTest::newRow("bottom right") << QStringLiteral("BottomRight") << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
     QTest::newRow("bottom left") << QStringLiteral("BottomLeft") << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
-
+    QTest::newRow("left") << QStringLiteral("Left") << FLAG(Left) << QRect(0, 0, 640, 1024);
+    QTest::newRow("right") << QStringLiteral("Right") << FLAG(Right) << QRect(640, 0, 640, 1024);
 #undef FLAG
 }
 

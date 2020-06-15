@@ -140,7 +140,7 @@ ScrollViewKCM {
 
     Component {
         id: ruleBookDelegate
-        Kirigami.AbstractListItem {
+        Kirigami.SwipeListItem {
             id: ruleBookItem
 
             RowLayout {
@@ -160,7 +160,7 @@ ScrollViewKCM {
                     Layout.fillWidth: true
                     background: Item {}
                     horizontalAlignment: Text.AlignLeft
-                    text: display
+                    text: model && model.display
                     onEditingFinished: {
                         kcm.setRuleDescription(index, text);
                     }
@@ -168,7 +168,7 @@ ScrollViewKCM {
                         switch (event.key) {
                         case Qt.Key_Escape:
                             // On <Esc> key reset to model data before losing focus
-                            text = display;
+                            text = model.display;
                         case Qt.Key_Enter:
                         case Qt.Key_Return:
                         case Qt.Key_Tab:
@@ -189,33 +189,6 @@ ScrollViewKCM {
                     }
                 }
 
-                Kirigami.ActionToolBar {
-                    Layout.preferredWidth: maximumContentWidth + Kirigami.Units.smallSpacing
-                    alignment: Qt.AlignRight
-                    display: QQC2.Button.IconOnly
-                    visible: !exportInfo.visible
-                    opacity: ruleBookItem.hovered ? 1 : 0
-                    focus: false
-
-                    actions: [
-                        Kirigami.Action {
-                            text: i18n("Edit")
-                            iconName: "edit-entry"
-                            onTriggered: {
-                                kcm.editRule(index);
-                            }
-                        }
-                        ,
-                        Kirigami.Action {
-                            text: i18n("Delete")
-                            iconName: "entry-delete"
-                            onTriggered: {
-                                kcm.removeRule(index);
-                            }
-                        }
-                    ]
-                }
-
                 QQC2.CheckBox {
                     id: itemSelectionCheck
                     visible: exportInfo.visible
@@ -231,6 +204,26 @@ ScrollViewKCM {
                     }
                 }
             }
+
+            actions: [
+                Kirigami.Action {
+                    text: i18n("Edit")
+                    iconName: "edit-entry"
+                    visible: !exportInfo.visible
+                    onTriggered: {
+                        kcm.editRule(index);
+                    }
+                }
+                ,
+                Kirigami.Action {
+                    text: i18n("Delete")
+                    iconName: "entry-delete"
+                    visible: !exportInfo.visible
+                    onTriggered: {
+                        kcm.removeRule(index);
+                    }
+                }
+            ]
         }
     }
 
