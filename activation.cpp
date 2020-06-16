@@ -520,15 +520,22 @@ void Workspace::setCurrentScreen(int new_screen)
     screens()->setCurrent(new_screen);
 }
 
-void Workspace::gotFocusIn(const AbstractClient* c)
+bool Workspace::handleFocus(AbstractClient *c)
 {
-    if (should_get_focus.contains(const_cast< AbstractClient* >(c))) {
+    const bool allow = allowClientActivation(c, -1U, true);
+    if (should_get_focus.contains(c)) {
         // remove also all sooner elements that should have got FocusIn,
         // but didn't for some reason (and also won't anymore, because they were sooner)
         while (should_get_focus.first() != c)
             should_get_focus.pop_front();
         should_get_focus.pop_front(); // remove 'c'
+    } else if (allow) {
+        // If the FocusIn event hasn't been initiated by the user and the current focus stealing
+        // prevention policy is fine with it, clear should_get_focus to make sure that we get a
+        // valid most recently activated client.
+        should_get_focus.clear();
     }
+    return allow;
 }
 
 void Workspace::setShouldGetFocus(AbstractClient* c)

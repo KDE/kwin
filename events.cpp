@@ -1123,9 +1123,7 @@ void X11Client::focusInEvent(xcb_focus_in_event_t *e)
         client->cancelFocusOutTimer();
     });
     // check if this client is in should_get_focus list or if activation is allowed
-    bool activate =  workspace()->allowClientActivation(this, -1U, true);
-    workspace()->gotFocusIn(this);   // remove from should_get_focus list
-    if (activate)
+    if (workspace()->handleFocus(this))
         setActive(true);
     else {
         workspace()->restoreFocus();
