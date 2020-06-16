@@ -81,6 +81,7 @@ class DataControlDeviceManagerV1Interface;
 class PrimarySelectionDeviceManagerV1Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class ViewporterInterface;
+class ScreencastInterface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -332,6 +333,11 @@ public:
      * Creates the PrimarySelectionDeviceManagerV1Interface
      */
     PrimarySelectionDeviceManagerV1Interface *createPrimarySelectionDeviceManagerV1(QObject *parent = nullptr);
+
+    /**
+     * Creates an interface to request video feeds of different compositor resources
+     */
+    ScreencastInterface *createScreencastInterface(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

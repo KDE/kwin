@@ -33,6 +33,7 @@
 #include "relativepointer_interface_p.h"
 #include "remote_access_interface.h"
 #include "seat_interface.h"
+#include "screencast_interface.h"
 #include "server_decoration_interface.h"
 #include "server_decoration_palette_interface.h"
 #include "shadow_interface.h"
@@ -339,6 +340,13 @@ ServerSideDecorationManagerInterface *Display::createServerSideDecorationManager
     auto d = new ServerSideDecorationManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
+}
+
+ScreencastInterface *Display::createScreencastInterface(QObject *parent)
+{
+    auto s = new ScreencastInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, s, [s] { delete s; });
+    return s;
 }
 
 TextInputManagerInterface *Display::createTextInputManager(const TextInputInterfaceVersion &version, QObject *parent)

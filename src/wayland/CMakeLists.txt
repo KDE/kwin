@@ -68,6 +68,7 @@ set(SERVER_LIB_SRCS
     xdgforeign_v2_interface.cpp
     xdgoutput_interface.cpp
     xdgshell_interface.cpp
+    screencast_interface.cpp
 )
 
 ecm_qt_declare_logging_category(SERVER_LIB_SRCS
@@ -258,6 +259,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME wp-primary-selection-unstable-v1
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
+    BASENAME zkde-screencast-unstable-v1
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -316,6 +322,8 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-tablet-unstable-v2.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-keyboard-shortcuts-inhibit-unstable-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-screencast-unstable-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-screencast-unstable-v1.cpp
 )
 
 set_source_files_properties(${SERVER_GENERATED_SRCS} PROPERTIES SKIP_AUTOMOC ON)
@@ -397,6 +405,7 @@ set(SERVER_LIB_HEADERS
   relativepointer_interface.h
   remote_access_interface.h
   resource.h
+  screencast_interface.h
   seat_interface.h
   server_decoration_interface.h
   server_decoration_palette_interface.h
