@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "waylandxdgshellintegration.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
+#include "service_utils.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>
@@ -67,9 +68,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
 #include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
-
-// KF
-#include <KServiceTypeTrader>
 
 // Qt
 #include <QCryptographicHash>
@@ -243,17 +241,7 @@ public:
     }
 
     QStringList fetchRequestedInterfaces(KWaylandServer::ClientConnection *client) const {
-        const auto serviceQuery = QStringLiteral("exist Exec and exist [X-KDE-Wayland-Interfaces] and '%1' =~ Exec").arg(client->executablePath());
-        const auto servicesFound = KServiceTypeTrader::self()->query(QStringLiteral("Application"), serviceQuery);
-
-        if (servicesFound.isEmpty()) {
-            qCDebug(KWIN_CORE) << "Could not find the desktop file for" << client->executablePath();
-            return {};
-        }
-
-        const auto interfaces = servicesFound.first()->property("X-KDE-Wayland-Interfaces").toStringList();
-        qCDebug(KWIN_CORE) << "Interfaces for" << client->executablePath() << interfaces;
-        return interfaces;
+        return KWin::fetchRequestedInterfaces(client->executablePath());
     }
 
     const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate"};

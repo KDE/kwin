@@ -23,6 +23,7 @@ set(kwin_effect_KDE_LIBS
     KF5::Notifications # screenshot effect
     KF5::Plasma # screenedge effect
     KF5::WindowSystem
+    KF5::Service # utils / screenshot effect
 )
 
 if (HAVE_ACCESSIBILITY)
@@ -110,6 +111,7 @@ set(kwin4_effect_builtins_sources
     windowgeometry/windowgeometry.cpp
     wobblywindows/wobblywindows.cpp
     zoom/zoom.cpp
+    ../service_utils.cpp
 )
 
 if (HAVE_ACCESSIBILITY)
