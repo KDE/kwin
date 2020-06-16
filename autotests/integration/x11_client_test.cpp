@@ -57,6 +57,7 @@ private Q_SLOTS:
     void testCaptionWmName();
     void testCaptionMultipleWindows();
     void testFullscreenWindowGroups();
+    void testActivateFocusedWindow();
 };
 
 void X11ClientTest::initTestCase()
@@ -624,6 +625,72 @@ void X11ClientTest::testFullscreenWindowGroups()
     // activating the fullscreen window again, should move it to active layer
     workspace()->activateClient(client);
     QTRY_COMPARE(client->layer(), ActiveLayer);
+}
+
+void X11ClientTest::testActivateFocusedWindow()
+{
+    // The window manager may call XSetInputFocus() on a window that already has focus, in which
+    // case no FocusIn event will be generated and the window won't be marked as active. This test
+    // verifies that we handle that subtle case properly.
+
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(connection.data()));
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+
+    // Create the first test window.
+    const xcb_window_t window1 = xcb_generate_id(connection.data());
+    xcb_create_window(connection.data(), XCB_COPY_FROM_PARENT, window1, rootWindow(),
+                      windowGeometry.x(), windowGeometry.y(),
+                      windowGeometry.width(), windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_icccm_set_wm_normal_hints(connection.data(), window1, &hints);
+    xcb_change_property(connection.data(), XCB_PROP_MODE_REPLACE, window1,
+                        atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &window1);
+    xcb_map_window(connection.data(), window1);
+    xcb_flush(connection.data());
+    QVERIFY(windowCreatedSpy.wait());
+    X11Client *client1 = windowCreatedSpy.first().first().value<X11Client *>();
+    QVERIFY(client1);
+    QCOMPARE(client1->windowId(), window1);
+    QCOMPARE(client1->isActive(), true);
+
+    // Create the second test window.
+    const xcb_window_t window2 = xcb_generate_id(connection.data());
+    xcb_create_window(connection.data(), XCB_COPY_FROM_PARENT, window2, rootWindow(),
+                      windowGeometry.x(), windowGeometry.y(),
+                      windowGeometry.width(), windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_icccm_set_wm_normal_hints(connection.data(), window2, &hints);
+    xcb_change_property(connection.data(), XCB_PROP_MODE_REPLACE, window2,
+                        atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &window2);
+    xcb_map_window(connection.data(), window2);
+    xcb_flush(connection.data());
+    QVERIFY(windowCreatedSpy.wait());
+    X11Client *client2 = windowCreatedSpy.last().first().value<X11Client *>();
+    QVERIFY(client2);
+    QCOMPARE(client2->windowId(), window2);
+    QCOMPARE(client2->isActive(), true);
+
+    // When the second test window is destroyed, the window manager will attempt to activate the
+    // next client in the focus chain, which is the first window.
+    xcb_set_input_focus(connection.data(), XCB_INPUT_FOCUS_POINTER_ROOT, window1, XCB_CURRENT_TIME);
+    xcb_destroy_window(connection.data(), window2);
+    xcb_flush(connection.data());
+    QVERIFY(Test::waitForWindowDestroyed(client2));
+    QVERIFY(client1->isActive());
+
+    // Destroy the first test window.
+    xcb_destroy_window(connection.data(), window1);
+    xcb_flush(connection.data());
+    QVERIFY(Test::waitForWindowDestroyed(client1));
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)
