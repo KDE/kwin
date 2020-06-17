@@ -88,4 +88,14 @@ void X11Output::setGammaRampSize(int size)
     m_gammaRampSize = size;
 }
 
+QSize X11Output::physicalSize() const
+{
+    return m_physicalSize;
+}
+
+void X11Output::setPhysicalSize(const QSize &size)
+{
+    m_physicalSize = size;
+}
+
 }
