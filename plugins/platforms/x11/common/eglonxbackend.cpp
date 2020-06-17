@@ -492,7 +492,7 @@ bool EglTexture::loadTexture(WindowPixmap *pixmap)
         return true;
     }
     // did not succeed, try on X11
-    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
+    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->bufferGeometry().size());
 }
 
 bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
