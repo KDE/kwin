@@ -1,4 +1,5 @@
 /*
+    SPDX-FileCopyrightText: 2004 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
@@ -6,6 +7,7 @@
 
 #include "rulebookmodel.h"
 
+#include <KLocalizedString>
 
 namespace KWin
 {
@@ -168,6 +170,90 @@ void RuleBookModel::save()
 {
     m_ruleBook->setRules(m_rules);
     m_ruleBook->save();
+}
+
+// Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
+QModelIndex RuleBookModel::findRuleWithProperties(const QVariantMap &info, bool wholeApp) const
+{
+    const QByteArray wmclass_class = info.value("resourceClass").toByteArray().toLower();
+    const QByteArray wmclass_name = info.value("resourceName").toByteArray().toLower();
+    const QByteArray role = info.value("role").toByteArray().toLower();
+    const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
+    const QString title = info.value("caption").toString();
+    const QByteArray machine = info.value("clientMachine").toByteArray();
+    const bool isLocalHost = info.value("localhost").toBool();
+
+    int bestMatchRow = -1;
+    int match_quality = 0;
+
+    for (int row = 0; row < m_rules.count(); row++) {
+        Rules *rule = m_rules.at(row);
+
+        /* clang-format off */
+        // If the rule doesn't match try the next one
+        if (!rule->matchWMClass(wmclass_class, wmclass_name)
+            || !rule->matchType(type)
+            || !rule->matchRole(role)
+            || !rule->matchTitle(title)
+            || !rule->matchClientMachine(machine, isLocalHost)) {
+            continue;
+        }
+        /* clang-format on */
+
+        if (rule->wmclassmatch != Rules::ExactMatch) {
+            continue; // too generic
+        }
+
+        // Now that the rule matches the window, check the quality of the match
+        // It stablishes a quality depending on the match policy of the rule
+        int quality = 0;
+        bool generic = true;
+
+        // from now on, it matches the app - now try to match for a specific window
+        if (rule->wmclasscomplete) {
+            quality += 1;
+            generic = false; // this can be considered specific enough (old X apps)
+        }
+        if (!wholeApp) {
+            if (rule->windowrolematch != Rules::UnimportantMatch) {
+                quality += rule->windowrolematch == Rules::ExactMatch ? 5 : 1;
+                generic = false;
+            }
+            if (rule->titlematch != Rules::UnimportantMatch) {
+                quality += rule->titlematch == Rules::ExactMatch ? 3 : 1;
+                generic = false;
+            }
+            if (rule->types != NET::AllTypesMask) {
+                // Checks that type fits the mask, and only one of the types
+                int bits = 0;
+                for (unsigned int bit = 1; bit < 1U << 31; bit <<= 1) {
+                    if (rule->types & bit) {
+                        ++bits;
+                    }
+                }
+                if (bits == 1) {
+                    quality += 2;
+                }
+            }
+            if (generic) { // ignore generic rules, use only the ones that are for this window
+                continue;
+            }
+        } else {
+            if (rule->types == NET::AllTypesMask) {
+                quality += 2;
+            }
+        }
+
+        if (quality > match_quality) {
+            bestMatchRow = row;
+            match_quality = quality;
+        }
+    }
+
+    if (bestMatchRow < 0) {
+        return QModelIndex();
+    }
+    return index(bestMatchRow);
 }
 
 } // namespace

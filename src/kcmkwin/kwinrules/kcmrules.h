@@ -51,12 +51,19 @@ private slots:
 private:
     int editIndex() const;
     void saveCurrentRule();
+    void parseArguments(const QStringList &args);
+    void createRuleFromProperties();
+    Rules *ruleForProperties(const QVariantMap &windowProperties, bool wholeApp) const;
 
 private:
     RuleBookModel *m_ruleBookModel;
     RulesModel* m_rulesModel;
 
     QPersistentModelIndex m_editIndex;
+
+    bool m_alreadyLoaded = false;
+    QVariantMap m_winProperties;
+    bool m_wholeApp = false;
 };
 
 } // namespace

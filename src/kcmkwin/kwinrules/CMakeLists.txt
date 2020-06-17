@@ -16,6 +16,7 @@ set(kwinrules_SRCS
     optionsmodel.cpp
     ruleitem.cpp
     rulesmodel.cpp
+    rulebookmodel.cpp
 )
 
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulesettings.kcfgc)
@@ -33,6 +34,7 @@ set(kcm_libs
     Qt::Quick
     Qt::QuickWidgets
 
+    KF5::KCMUtils
     KF5::I18n
     KF5::QuickAddons
     KF5::WindowSystem
@@ -44,11 +46,11 @@ if (KWIN_BUILD_ACTIVITIES)
 endif()
 target_link_libraries(KWinRulesObjects ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
-add_executable(kwin_rules_dialog main.cpp rulesdialog.cpp)
+add_executable(kwin_rules_dialog main.cpp)
 target_link_libraries(kwin_rules_dialog KWinRulesObjects)
 install(TARGETS kwin_rules_dialog DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
-add_library(kcm_kwinrules MODULE kcmrules.cpp rulebookmodel.cpp)
+add_library(kcm_kwinrules MODULE kcmrules.cpp)
 target_link_libraries(kcm_kwinrules KWinRulesObjects)
 kcoreaddons_desktop_to_json(kcm_kwinrules "kcm_kwinrules.desktop" SERVICE_TYPES kcmodule.desktop)
 
