@@ -54,6 +54,9 @@ public:
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
 
+    QSize physicalSize() const override;
+    void setPhysicalSize(const QSize &size);
+
 private:
     void setCrtc(xcb_randr_crtc_t crtc);
     void setGammaRampSize(int size);
@@ -61,6 +64,7 @@ private:
     xcb_randr_crtc_t m_crtc = XCB_NONE;
     QString m_name;
     QRect m_geometry;
+    QSize m_physicalSize;
     int m_gammaRampSize;
     int m_refreshRate;
 
