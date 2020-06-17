@@ -24,7 +24,6 @@ Name[ru]=Завершение сеанса
 Name[sk]=Ukončenie sedenia
 Name[sv]=Avsluta session
 Name[uk]=Вихід з сеансу
-Name[x-test]=xxSession Quitxx
 Name[zh_CN]=会话退出
 Name[zh_TW]=離開工作階段
 Icon=preferences-system-windows-effect-logout
@@ -51,7 +50,6 @@ Comment[ru]=Сохранение фона рабочего стола до ок�
 Comment[sk]=Ponechať pozadie plochy aktívne počas odhlásenia do skončenia
 Comment[sv]=Behåll skrivbordets bakgrund levande under utloggning till slutet
 Comment[uk]=Не вимикати тло стільниці до кінця процедури виходу із облікового запису
-Comment[x-test]=xxKeep the desktop background alive during logout until the endxx
 Comment[zh_CN]=注销时保持桌面背景，直到完全退出
 Comment[zh_TW]=直到登出完成前皆保留桌面背景圖片
 

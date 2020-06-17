@@ -95,7 +95,6 @@ Name[uz@cyrillic]=Ойнанинг хусусиятлари
 Name[vi]=Ứng xử của Cửa sổ
 Name[wa]=Dujhance des fniesses
 Name[xh]=Ukuziphatha kwe Window
-Name[x-test]=xxWindow Behaviorxx
 Name[zh_CN]=窗口行为
 Name[zh_TW]=視窗行為
 
@@ -125,7 +124,6 @@ Comment[ru]=Настройка поведения окон
 Comment[sk]=Nastavuje akcie a správanie okien
 Comment[sv]=Anpassa fönsteråtgärder och beteende
 Comment[uk]=Налаштовування реакції та поведінки вікон
-Comment[x-test]=xxConfigure window actions and behaviorxx
 Comment[zh_CN]=配置窗口操作和行为
 Comment[zh_TW]=設定視窗動作及行為
 
@@ -166,7 +164,6 @@ X-KDE-Keywords[sr@latin]=focus,placement,window behavior,window actions,animatio
 X-KDE-Keywords[sv]=fokus,placering,fönsterbeteende,animering,höj,höj automatiskt,fönster,ram,namnlist,dubbelklick
 X-KDE-Keywords[tr]=odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,yükselt,otomatik yükselt,pencereler,çerçeve,başlık çubuğu,çift tıklama
 X-KDE-Keywords[uk]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне
-X-KDE-Keywords[x-test]=xxfocusxx,xxplacementxx,xxwindow behaviorxx,xxwindow actionsxx,xxanimationxx,xxraisexx,xxauto raisexx,xxwindowsxx,xxframexx,xxtitlebarxx,xxdoubleclickxx
 X-KDE-Keywords[zh_CN]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,焦点,位置,窗口行为,窗口动作,动画,升起,自动升起,窗口,边框,标题栏,双击
 X-KDE-Keywords[zh_TW]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 

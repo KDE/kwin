@@ -77,7 +77,6 @@ Name[uz]=Shaffoflik
 Name[uz@cyrillic]=Шаффофлик
 Name[vi]=Trong mờ
 Name[wa]=Transparince
-Name[x-test]=xxTranslucencyxx
 Name[zh_CN]=透明度
 Name[zh_TW]=半透明
 Icon=preferences-system-windows-effect-translucency
@@ -148,7 +147,6 @@ Comment[ug]=كۆزنەك مەلۇم شارائىتتا يېرىم سۈزۈك ئ�
 Comment[uk]=Додавання прозорості до вікон за різних умов
 Comment[vi]=Làm trong suốt cửa sổ trong các điều kiện khác nhau
 Comment[wa]=Rind les purneas voeyoute sorlon diferinnès condicions
-Comment[x-test]=xxMake windows translucent under different conditionsxx
 Comment[zh_CN]=使窗口在某些条件下呈现半透明效果
 Comment[zh_TW]=在不同的情況下讓視窗變半透明
 

@@ -25,7 +25,6 @@ Comment[ru]=Сжатие окна при сворачивании
 Comment[sk]=Deformuje okná pri ich minimalizovaní
 Comment[sv]=Kläm fönster när de minimeras
 Comment[uk]=Складує вікна, якщо їх мінімізовано
-Comment[x-test]=xxSquash windows when they are minimizedxx
 Comment[zh_CN]=最小化时压扁窗口
 Comment[zh_TW]=壓縮最小化的視窗
 Icon=preferences-system-windows-effect-squash
@@ -55,7 +54,6 @@ Name[ru]=Сжатие
 Name[sk]=Rozpučiť
 Name[sv]=Kläm
 Name[uk]=Складування
-Name[x-test]=xxSquashxx
 Name[zh_CN]=压扁
 Name[zh_TW]=壓縮
 

@@ -39,7 +39,6 @@ Name[sr@latin]=Oko na ekranu
 Name[sv]=Ögat på skärmen
 Name[tr]=Ekrandaki göz
 Name[uk]=Око на екрані
-Name[x-test]=xxeye On Screenxx
 Name[zh_CN]=注视屏幕
 Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
@@ -78,7 +77,6 @@ Comment[sr@latin]=Usisava prozore u površ da bi je prikazao. Možda vas podseti
 Comment[sv]=Sug in fönster i skrivbordet för att visa det senare. Det kanske påminner dig om någonting.
 Comment[tr]=İlerisini göstermek için pencereleri masaüstüne topla. Bu size bir şey hatırlatabilir.
 Comment[uk]=Втягнути вікна до стільниці, щоб показати останню. Так вам простіше буде щось згадати.
-Comment[x-test]=xxSuck windows into desktop to show the latter. This might remind you of something.xx
 Comment[zh_CN]=将窗口吸入桌面并显示桌面。这可能会让您想起什么。
 Comment[zh_TW]=將視窗「吸」入桌面。
 

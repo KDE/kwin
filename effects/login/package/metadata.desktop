@@ -81,7 +81,6 @@ Name[uz]=Kirish
 Name[uz@cyrillic]=Кириш
 Name[vi]=Đăng nhập
 Name[wa]=Elodjaedje
-Name[x-test]=xxLoginxx
 Name[zh_CN]=登录时
 Name[zh_TW]=登入
 Icon=preferences-system-windows-effect-login
@@ -148,7 +147,6 @@ Comment[ug]=تىزىمغا كىرگەندە ئۈستەلئۈستىگە تەكش�
 Comment[uk]=Плавна поява стільниці під час входу
 Comment[vi]=Làm mờ dần màn hình khi đăng nhập
 Comment[wa]=Dous fondou viè l' sicribanne a l' elodjaedje
-Comment[x-test]=xxSmoothly fade to the desktop when logging inxx
 Comment[zh_CN]=登录时平滑淡入到桌面
 Comment[zh_TW]=登入時平順地淡入桌面
 

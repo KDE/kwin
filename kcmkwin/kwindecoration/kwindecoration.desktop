@@ -70,7 +70,6 @@ Name[tr]=Pencere Dekorasyonları
 Name[ug]=كۆزنەك بېزەكلىرى
 Name[uk]=Обрамлення вікон
 Name[wa]=Gåyotaedjes des fniesses
-Name[x-test]=xxWindow Decorationsxx
 Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
@@ -100,7 +99,6 @@ Comment[ru]=Настройка заголовка и границ окон
 Comment[sk]=Nastaviť záhlavia a okraje okna
 Comment[sv]=Anpassa namnlister och kanter för fönster
 Comment[uk]=Налаштовування смужок заголовків та рамок вікон
-Comment[x-test]=xxConfigure window titlebars and bordersxx
 Comment[zh_CN]=配置窗口标题栏和边框
 Comment[zh_TW]=設定視窗的標題列和邊框
 
@@ -145,6 +143,5 @@ X-KDE-Keywords[sr@latin]=kwin,window,manager,border,style,theme,look,feel,layout
 X-KDE-Keywords[sv]=kwin,fönster,hantering,kant,stil,tema,utseende,känsla,layout,knapp,grepp,kant,kwm,dekoration
 X-KDE-Keywords[tr]=kwin,pencere,yönetici,kenarlık,biçim,tema,görünüm,şekil,düzen,düğme,kullanım,kenar,kwm,dekorasyon
 X-KDE-Keywords[uk]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення
-X-KDE-Keywords[x-test]=xxkwinxx,xxwindowxx,xxmanagerxx,xxborderxx,xxstylexx,xxthemexx,xxlookxx,xxfeelxx,xxlayoutxx,xxbuttonxx,xxhandlexx,xxedgexx,xxkwmxx,xxdecorationxx
 X-KDE-Keywords[zh_CN]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,窗口,管理,边框,样式,主题,外怪,布局,按钮,边界,装饰
 X-KDE-Keywords[zh_TW]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration

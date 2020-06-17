@@ -74,7 +74,6 @@ Name[uz]=Soʻnish
 Name[uz@cyrillic]=Сўниш
 Name[vi]=Mờ dần
 Name[wa]=Blåwe
-Name[x-test]=xxFadexx
 Name[zh_CN]=淡入
 Name[zh_TW]=淡出
 Icon=preferences-system-windows-effect-fade
@@ -142,7 +141,6 @@ Comment[ug]=كۆزنەكنى كۆرسەتكەن ياكى يوشۇرغاندا ك
 Comment[uk]=Плавна поява або зникнення вікон
 Comment[vi]=Làm cửa sổ mờ dần hay hiện dần khi chúng được ẩn đi hay hiện lên
 Comment[wa]=Fé blawi/disblawi doûçmint les finiesses cwand on les mostere ou k' on les catche
-Comment[x-test]=xxMake windows smoothly fade in and out when they are shown or hiddenxx
 Comment[zh_CN]=当窗口被显示或者隐藏时，使窗口平滑地淡入淡出
 Comment[zh_TW]=顯示或隱藏視窗時以淡入、淡出方式呈現
 
