@@ -33,7 +33,6 @@
         "Description[sv]": "Återge i rambuffer.",
         "Description[tr]": "Çerçeve tamponuna gerçekle.",
         "Description[uk]": "Обробляти до буфера кадрів.",
-        "Description[x-test]": "xxRender to framebuffer.xx",
         "Description[zh_CN]": "渲染到帧缓冲。",
         "Description[zh_TW]": "成像至 framebuffer。",
         "Id": "KWinWaylandFbdevBackend",
@@ -72,7 +71,6 @@
         "Name[sv]": "rambuffer",
         "Name[tr]": "çerçeve tampon",
         "Name[uk]": "framebuffer",
-        "Name[x-test]": "xxframebufferxx",
         "Name[zh_CN]": "framebuffer",
         "Name[zh_TW]": "framebuffer"
     },

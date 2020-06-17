@@ -29,7 +29,6 @@ Name[sk]=Škálovať
 Name[sl]=Merilo
 Name[sv]=Skala
 Name[uk]=Масштабування
-Name[x-test]=xxScalexx
 Name[zh_CN]=比例
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale
@@ -61,7 +60,6 @@ Comment[sk]=Okná sa plynule objavia/zmiznú pri ich zobrazení alebo skrytí
 Comment[sl]=Okna se pojavijo in izginejo postopoma kadar se prikažejo ali skrijejo
 Comment[sv]=Gör att fönster mjukt skalas in eller ut när de visas eller döljs
 Comment[uk]=Плавне масштабування вікон при появі або приховуванні
-Comment[x-test]=xxMake windows smoothly scale in and out when they are shown or hiddenxx
 Comment[zh_CN]=窗口显示或隐藏时平滑缩放
 Comment[zh_TW]=顯示或隱藏視窗時以平順的比例縮放方式呈現。
 
