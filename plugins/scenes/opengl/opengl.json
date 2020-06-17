@@ -34,7 +34,6 @@
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via OpenGL",
         "Description[tr]": "OpenGL üzerinden gerçekleme yapan KWin Dizgici eklentisi",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням OpenGL",
-        "Description[x-test]": "xxKWin Compositor plugin rendering through OpenGLxx",
         "Description[zh_CN]": "使用 OpenGL 渲染的 KWin 混成插件",
         "Description[zh_TW]": "透過 OpenGL 繪製 KWin 合成器附加元件",
         "Id": "KWinSceneOpenGL",
@@ -72,7 +71,6 @@
         "Name[sv]": "Scen OpenGL",
         "Name[tr]": "SceneOpenGL",
         "Name[uk]": "SceneOpenGL",
-        "Name[x-test]": "xxSceneOpenGLxx",
         "Name[zh_CN]": "SceneOpenGL",
         "Name[zh_TW]": "SceneOpenGL"
     }
