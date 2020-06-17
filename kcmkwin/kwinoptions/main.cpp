@@ -85,6 +85,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab->addTab(mFocus, i18n("&Focus"));
     connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mFocus, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mFocus, &KCModule::setDefaultsIndicatorsVisible);
 
     // Need to relay unmanagedWidgetDefaultState and unmanagedWidgetChangeState to wrapping KCModule
     connect(mFocus, &KFocusConfig::unmanagedWidgetDefaulted, this, &KWinOptions::unmanagedWidgetDefaultState);
@@ -95,25 +96,28 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mTitleBarActions, &KCModule::setDefaultsIndicatorsVisible);
 
     mWindowActions = new KWindowActionsConfig(false, mSettings, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
     connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mWindowActions, &KCModule::setDefaultsIndicatorsVisible);
 
     mMoving = new KMovingConfig(false, mSettings, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("Mo&vement"));
     connect(mMoving, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mMoving, &KCModule::setDefaultsIndicatorsVisible);
 
     mAdvanced = new KAdvancedConfig(false, mSettings, this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
     connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mAdvanced, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
-
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mAdvanced, &KCModule::setDefaultsIndicatorsVisible);
     KAboutData *about =
         new KAboutData(QStringLiteral("kcmkwinoptions"), i18n("Window Behavior Configuration Module"),
                        QString(), QString(), KAboutLicense::GPL,
