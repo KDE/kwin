@@ -36,6 +36,7 @@ Name[sk]=Akcie okna
 Name[sl]=Dejavnosti oken
 Name[sv]=Fönsteråtgärder
 Name[uk]=Дії з вікнами
+Name[x-test]=xxWindow Actionsxx
 Name[zh_CN]=窗口动作
 Name[zh_TW]=視窗動作
 
@@ -66,6 +67,7 @@ Comment[sk]=Nastavenie akcií myši pre okná a záhlavia
 Comment[sl]=Nastavi aktivnosti miške za okna in naslovne vrstice
 Comment[sv]=Anpassa musåtgärder för fönster och namnlister
 Comment[uk]=Налаштовування керування мишею для вікон та смужок заголовків
+Comment[x-test]=xxConfigure mouse actions for windows and titlebarsxx
 Comment[zh_CN]=配置窗口和标题栏的鼠标动作
 Comment[zh_TW]=設定視窗及標題列的滑鼠動作
 
@@ -109,5 +111,6 @@ X-KDE-Keywords[sr@latin]=shade,maximise,maximize,minimize,minimise,lower,operati
 X-KDE-Keywords[sv]=skugga,maximera,minimera,åtgärdsmeny,namnlist,ändra storlek
 X-KDE-Keywords[tr]=geri yükle, gölgele,büyüt,küçült,aşağı al,işlemler menüsü,başlık çubuğu,yeniden boyutlandır
 X-KDE-Keywords[uk]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,тінь,максимізувати,розгорнути,згорнути,нижче,меню дій,заголовок,смужка заголовка,розмір,розміри,зміна розмірів
+X-KDE-Keywords[x-test]=xxshadexx,xxmaximisexx,xxmaximizexx,xxminimizexx,xxminimisexx,xxlowerxx,xxoperations menuxx,xxtitlebarxx,xxresizexx
 X-KDE-Keywords[zh_CN]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,阴影,最大化,最小化,降低,动作,菜单,标题栏,更改大小
 X-KDE-Keywords[zh_TW]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize

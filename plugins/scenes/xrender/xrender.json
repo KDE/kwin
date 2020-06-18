@@ -35,6 +35,7 @@
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via XRender",
         "Description[tr]": "XRender üzerinden KWin Dizgici eklentisi oluşturma",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням XRender",
+        "Description[x-test]": "xxKWin Compositor plugin rendering through XRenderxx",
         "Description[zh_CN]": "使用 XRender 渲染的 KWin 混成插件",
         "Description[zh_TW]": "透過 XRender 繪製 KWin 合成器附加元件",
         "Id": "KWinSceneXRender",
@@ -73,6 +74,7 @@
         "Name[sv]": "Scen XRender",
         "Name[tr]": "SceneXRender",
         "Name[uk]": "SceneXRender",
+        "Name[x-test]": "xxSceneXRenderxx",
         "Name[zh_CN]": "SceneXRender",
         "Name[zh_TW]": "SceneXRender"
     }

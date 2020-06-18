@@ -70,6 +70,7 @@ Name[ug]=ئاتا سۆزلەشكۈ
 Name[uk]=Батьківське вікно
 Name[vi]=Cha hộp thoại
 Name[wa]=Parint del divize
+Name[x-test]=xxDialog Parentxx
 Name[zh_CN]=暗淡父级对话框
 Name[zh_TW]=上層對話框
 Icon=preferences-system-windows-effect-dialog-parent
@@ -137,6 +138,7 @@ Comment[ug]=نۆۋەتتىكى ئاكتىپ كۆزنەكنىڭ ئاتا سۆزل
 Comment[uk]=Затемнення батьківських вікон активних діалогових вікон
 Comment[vi]=Làm tối cửa sổ cha của hộp thoại hiện đang hoạt động 
 Comment[wa]=Fwait pus noer li finiesse parint do purnea di dvize ovrant pol moumint
+Comment[x-test]=xxDarkens the parent window of the currently active dialogxx
 Comment[zh_CN]=将当前激活对话框的父窗口变暗
 Comment[zh_TW]=將目前對話框的父視窗變暗
 

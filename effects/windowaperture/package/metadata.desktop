@@ -37,6 +37,7 @@ Name[sr@latin]=Blenda prozora
 Name[sv]=Fönsteröppning
 Name[tr]=Pencere Açıklığı
 Name[uk]=Апертура вікна
+Name[x-test]=xxWindow Aperturexx
 Name[zh_CN]=窗口光圈
 Name[zh_TW]=視窗光圈
 Icon=preferences-system-windows-effect-windowaperture
@@ -61,6 +62,7 @@ Comment[ru]=Перемещение окон в углы экрана
 Comment[sl]=Pomakne okna v kote zaslona
 Comment[sv]=Flytta fönster till skärmhörn
 Comment[uk]=Пересування вікон до кутів екрана
+Comment[x-test]=xxMove windows into screen cornersxx
 Comment[zh_CN]=将窗口移动到屏幕角
 Comment[zh_TW]=將視窗移至螢幕角落
 

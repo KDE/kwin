@@ -30,6 +30,7 @@ Name[sk]=Odhlásiť sa
 Name[sl]=Odjava
 Name[sv]=Logga ut
 Name[uk]=Вихід
+Name[x-test]=xxLogoutxx
 Name[zh_CN]=注销
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
@@ -63,6 +64,7 @@ Comment[sk]=Plynule zobrazí plochu pri odhlásení
 Comment[sl]=Postopoma okno zbledi v zaslon za odjavo
 Comment[sv]=Tona mjukt till utloggningsskärmen
 Comment[uk]=Плавний перехід до вікна виходу з системи
+Comment[x-test]=xxSmoothly fade to the logout screenxx
 Comment[zh_CN]=平滑地淡出到注销屏幕
 Comment[zh_TW]=平順地淡入登出畫面
 
