@@ -34,6 +34,7 @@ Name[sr@latin]=Posivljavanje programa bez odziva
 Name[sv]=Avmätta oemottagliga program
 Name[tr]=Yanıt Vermeyen Uygulamaların Yoğunluğunu Kaldır
 Name[uk]=Зненасичення вікон, які не відповідають на запити
+Name[x-test]=xxDesaturate Unresponsive Applicationsxx
 Name[zh_CN]=对未响应应用程序降低饱和度
 Name[zh_TW]=淡化無回應的應用程式
 Icon=preferences-system-windows-effect-frozenapp
@@ -72,6 +73,7 @@ Comment[sr@latin]=Prozori programa koji se ne odazivaju (smrznutih) bivaju posiv
 Comment[sv]=Avmätta fönster för oemottagliga (frysta) program
 Comment[tr]=Yanıt vermeyen (donmuş) uygulamaların pencerelerini soldur
 Comment[uk]=Зменшення насиченості кольорів вікон програм, які не відповідають на запити (повисли)
+Comment[x-test]=xxDesaturate windows of unresponsive (frozen) applicationsxx
 Comment[zh_CN]=将未响应 (冻结) 的应用程序窗口的饱和度降低
 Comment[zh_TW]=淡化無回應（凍結）的應用程式視窗
 

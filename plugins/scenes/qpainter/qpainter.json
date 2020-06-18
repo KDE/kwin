@@ -34,6 +34,7 @@
         "Description[sv]": "Kwin sammansättningsinsticksprogram återger via QPainter",
         "Description[tr]": "QPainter üzerinden KWin Dizgici eklentisi oluşturma",
         "Description[uk]": "Додаток засобу композиції KWin для обробки з використанням QPainter",
+        "Description[x-test]": "xxKWin Compositor plugin rendering through QPainterxx",
         "Description[zh_CN]": "使用 QPainter 渲染的 KWin 混成插件",
         "Description[zh_TW]": "透過 QPainter 繪製 KWin 合成器附加元件",
         "Id": "KWinSceneQPainter",
@@ -71,6 +72,7 @@
         "Name[sv]": "Scen QPainter",
         "Name[tr]": "SceneQPainter",
         "Name[uk]": "SceneQPainter",
+        "Name[x-test]": "xxSceneQPainterxx",
         "Name[zh_CN]": "SceneQPainter",
         "Name[zh_TW]": "SceneQPainter"
     }
