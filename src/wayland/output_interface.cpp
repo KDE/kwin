@@ -520,6 +520,9 @@ QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client
 bool OutputInterface::isEnabled() const
 {
     Q_D();
+    if (!d->dpms.supported) {
+        return true;
+    }
     return d->dpms.mode == DpmsMode::On;
 }
 
