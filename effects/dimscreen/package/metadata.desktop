@@ -58,6 +58,7 @@ Comment[ug]=root ھوقۇقىنى ئىلتىماس قىلغاندا پۈتكۈل
 Comment[uk]=Притлумлює кольори усього екрана, коли працюємо з доступом root
 Comment[vi]=Làm tối toàn màn hình khi yêu cầu quyền quản trị
 Comment[wa]=Fwait pus noer li waitroûle etire cwand on dmande les droets da root
+Comment[x-test]=xxDarkens the entire screen when requesting root privilegesxx
 Comment[zh_CN]=在请求 root 权限时暗化整个屏幕
 Comment[zh_TW]=當要求 root 權限時將整個螢幕變暗
 Icon=preferences-system-windows-effect-dimscreen
@@ -121,6 +122,7 @@ Name[ug]=باشقۇرغۇچى ھالىتىدە ئېكراننى تۇتۇقلاش
 Name[uk]=Притлумлення кольорів у режимі адміністратора
 Name[vi]=Làm tối màn hình cho chế độ quản trị
 Name[wa]=Fé pus noere li waitroûle pol môde Manaedjeu
+Name[x-test]=xxDim Screen for Administrator Modexx
 Name[zh_CN]=进入管理员模式时暗淡屏幕
 Name[zh_TW]=為管理員模式暗化螢幕
 

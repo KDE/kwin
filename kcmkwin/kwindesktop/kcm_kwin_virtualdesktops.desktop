@@ -70,6 +70,7 @@ Name[tr]=Sanal Masaüstleri
 Name[ug]=مەۋھۇم ئۈستەلئۈستى
 Name[uk]=Віртуальні стільниці
 Name[wa]=Forveyous scribannes
+Name[x-test]=xxVirtual Desktopsxx
 Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
@@ -98,6 +99,7 @@ Comment[ru]=Число, расположение и способ переклю�
 Comment[sk]=Nastaviť navigáciu, počet a rozloženie virtuálnych plôch
 Comment[sv]=Anpassa navigering, antal och layout av virtuella skrivbord
 Comment[uk]=Налаштовування навігації, кількості та компонування віртуальних стільниць
+Comment[x-test]=xxConfigure navigation, number and layout of virtual desktopsxx
 Comment[zh_CN]=配置虚拟桌面的导航，数目和布局
 Comment[zh_TW]=設定虛擬桌面的導覽、數字與佈局
 X-KDE-Keywords=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
@@ -140,6 +142,7 @@ X-KDE-Keywords[sr@latin]=desktop,desktops,number,virtual desktop,multiple deskto
 X-KDE-Keywords[sv]=skrivbord,antal,virtuellt skrivbord,flera skrivbord,skrivbordsvisning,visningskomponent,visningsminiprogram,visningsinställningar
 X-KDE-Keywords[tr]=masaüstü,masaüstleri,sayı,sanal masaüstü,çoklu masaüstü,sayfalayıcı,sayfalayıcı gereci,sayfalayıcı gereci,sayfalayıcı ayarları
 X-KDE-Keywords[uk]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,стільниця,стільниці,кількість,віртуальна стільниця,перемикач,пейджер,віджет перемикача,віджет пейджера,аплет перемикання,аплет перемикача,параметри перемикання,параметри перемикача
+X-KDE-Keywords[x-test]=xxdesktopxx,xxdesktopsxx,xxnumberxx,xxvirtual desktopxx,xxmultiple desktopsxx,xxpagerxx,xxpager widgetxx,xxpager appletxx,xxpager settingsxx
 X-KDE-Keywords[zh_CN]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,桌面,虚拟桌面,多桌面,分页,分页器,分页器组件,分页器设置
 X-KDE-Keywords[zh_TW]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
 

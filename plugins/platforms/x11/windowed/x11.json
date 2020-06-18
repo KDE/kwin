@@ -33,6 +33,7 @@
         "Description[sv]": "Återge till ett nästlat fönster på X11-fönstersystem.",
         "Description[tr]": "X11 pencere sisteminde iç içe geçmiş bir pencereye gerçekle.",
         "Description[uk]": "Обробляти у вкладене вікно системи керування вікнами X11.",
+        "Description[x-test]": "xxRender to a nested window on X11 windowing system.xx",
         "Description[zh_CN]": "渲染到 X11 窗口系统上的嵌套窗口中",
         "Description[zh_TW]": "成像到 X11 視窗系統的巢狀視窗。",
         "Id": "KWinWaylandX11Backend",
@@ -71,6 +72,7 @@
         "Name[sv]": "X11",
         "Name[tr]": "x11",
         "Name[uk]": "x11",
+        "Name[x-test]": "xxx11xx",
         "Name[zh_CN]": "x11",
         "Name[zh_TW]": "x11"
     },

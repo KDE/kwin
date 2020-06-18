@@ -34,6 +34,7 @@ Name[ru]=Перемещение окон
 Name[sk]=Presuny okien
 Name[sv]=Fönsterförflyttning
 Name[uk]=Пересування вікон
+Name[x-test]=xxWindow Movementxx
 Name[zh_CN]=窗口移动
 Name[zh_TW]=視窗移動
 
@@ -62,6 +63,7 @@ Comment[ru]=Настройка поведения при перемещении 
 Comment[sk]=Nastavenie spôsobu presunu okien
 Comment[sv]=Anpassa alternativ för fönsterförflyttning
 Comment[uk]=Налаштовування параметрів пересування вікон
+Comment[x-test]=xxConfigure window movement optionsxx
 Comment[zh_CN]=配置窗口移动选项
 Comment[zh_TW]=設定視窗移動選項
 
@@ -104,5 +106,6 @@ X-KDE-Keywords[sr@latin]=moving,smart,cascade,maximize,maximise,snap zone,snap,b
 X-KDE-Keywords[sv]=flytta,smart,kaskad,maximera,låszon,lås,kanter
 X-KDE-Keywords[tr]=taşıma,akıllı,döşeme,büyütme,en büyük,kopma alanı,kopma,kenarlık
 X-KDE-Keywords[uk]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,пересування,кмітливе,каскадом,максимізувати,розгорнути,прилипання,зона прилипання,межа
+X-KDE-Keywords[x-test]=xxmovingxx,xxsmartxx,xxcascadexx,xxmaximizexx,xxmaximisexx,xxsnap zonexx,xxsnapxx,xxborderxx
 X-KDE-Keywords[zh_CN]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,移动,智能,最大化,级联,吸附区,吸附,边框
 X-KDE-Keywords[zh_TW]=moving,smart,cascade,maximize,maximise,snap zone,snap,border
