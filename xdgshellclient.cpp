@@ -676,7 +676,7 @@ XdgToplevelInterface *XdgToplevelClient::shellSurface() const
 
 void XdgToplevelClient::debug(QDebug &stream) const
 {
-    stream << this;
+    stream << "XdgTopLevel: " << resourceClass() << caption();
 }
 
 NET::WindowType XdgToplevelClient::windowType(bool direct, int supported_types) const
@@ -1817,7 +1817,7 @@ XdgPopupClient::~XdgPopupClient()
 
 void XdgPopupClient::debug(QDebug &stream) const
 {
-    stream << this;
+    stream << "XdgPopup: transientFor:" << transientFor();
 }
 
 NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) const
