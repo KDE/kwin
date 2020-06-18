@@ -59,6 +59,7 @@ public:
     void save() override;
 
 protected:
+    void initialize(KWinOptionsSettings *settings);
     void showEvent(QShowEvent *ev) override;
     void changeEvent(QEvent *ev) override;
 
@@ -80,6 +81,7 @@ public:
     void save() override;
 
 protected:
+    void initialize(KWinOptionsSettings *settings);
     void showEvent(QShowEvent *ev) override;
 
 private:
