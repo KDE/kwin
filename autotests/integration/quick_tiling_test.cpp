@@ -775,8 +775,7 @@ void QuickTilingTest::testShortcut()
 
     QSignalSpy quickTileChangedSpy(c, &AbstractClient::quickTileModeChanged);
     QVERIFY(quickTileChangedSpy.isValid());
-    QVERIFY(quickTileChangedSpy.wait());
-    QCOMPARE(quickTileChangedSpy.count(), numberOfQuickTileActions);
+    QTRY_COMPARE(quickTileChangedSpy.count(), numberOfQuickTileActions);
     // at this point the geometry did not yet change
     QCOMPARE(c->frameGeometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed
