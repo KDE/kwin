@@ -73,8 +73,8 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
      * The current input region.
      **/
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
-    Q_PROPERTY(qint32 scale READ scale NOTIFY scaleChanged)
-    Q_PROPERTY(KWaylandServer::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
+    Q_PROPERTY(qint32 bufferScale READ bufferScale NOTIFY bufferScaleChanged)
+    Q_PROPERTY(KWaylandServer::OutputInterface::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
     virtual ~SurfaceInterface();
@@ -145,8 +145,8 @@ public:
     QRegion opaque() const;
     QRegion input() const;
     bool inputIsInfinite() const;
-    qint32 scale() const;
-    OutputInterface::Transform transform() const;
+    qint32 bufferScale() const;
+    OutputInterface::Transform bufferTransform() const;
     /**
      * @returns the current BufferInterface, might be @c nullptr.
      **/
@@ -357,11 +357,11 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the scale of the attached buffer has changed.
      */
-    void scaleChanged(qint32);
+    void bufferScaleChanged(qint32);
     /**
      * This signal is emitted when the buffer transform has changed.
      */
-    void transformChanged(KWaylandServer::OutputInterface::Transform);
+    void bufferTransformChanged(KWaylandServer::OutputInterface::Transform);
     /**
      * Emitted when the Surface becomes visible, i.e. a non-null buffer has been attached.
      **/

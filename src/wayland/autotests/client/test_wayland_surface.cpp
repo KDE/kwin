@@ -732,24 +732,24 @@ void TestWaylandSurface::testScale()
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
-    QCOMPARE(serverSurface->scale(), 1);
+    QCOMPARE(serverSurface->bufferScale(), 1);
 
     // let's change the scale factor
-    QSignalSpy scaleChangedSpy(serverSurface, &SurfaceInterface::scaleChanged);
+    QSignalSpy bufferScaleChangedSpy(serverSurface, &SurfaceInterface::bufferScaleChanged);
 
     //changing the scale implicitly changes the size
     QSignalSpy sizeChangedSpy(serverSurface, &SurfaceInterface::sizeChanged);
 
-    QVERIFY(scaleChangedSpy.isValid());
+    QVERIFY(bufferScaleChangedSpy.isValid());
     s->setScale(2);
     QCOMPARE(s->scale(), 2);
     // needs a commit
-    QVERIFY(!scaleChangedSpy.wait(100));
+    QVERIFY(!bufferScaleChangedSpy.wait(100));
     s->commit(Surface::CommitFlag::None);
-    QVERIFY(scaleChangedSpy.wait());
-    QCOMPARE(scaleChangedSpy.count(), 1);
-    QCOMPARE(scaleChangedSpy.first().first().toInt(), 2);
-    QCOMPARE(serverSurface->scale(), 2);
+    QVERIFY(bufferScaleChangedSpy.wait());
+    QCOMPARE(bufferScaleChangedSpy.count(), 1);
+    QCOMPARE(bufferScaleChangedSpy.first().first().toInt(), 2);
+    QCOMPARE(serverSurface->bufferScale(), 2);
 
     //even though we've changed the scale, if we don't have a buffer we
     //don't have a size. If we don't have a size it can't have changed
@@ -759,17 +759,17 @@ void TestWaylandSurface::testScale()
     // let's try changing to same factor, should not emit changed on server
     s->setScale(2);
     s->commit(Surface::CommitFlag::None);
-    QVERIFY(!scaleChangedSpy.wait(100));
+    QVERIFY(!bufferScaleChangedSpy.wait(100));
 
     // but changing to a different value should still work
     s->setScale(4);
     s->commit(Surface::CommitFlag::None);
-    QVERIFY(scaleChangedSpy.wait());
-    QCOMPARE(scaleChangedSpy.count(), 2);
-    QCOMPARE(scaleChangedSpy.first().first().toInt(), 2);
-    QCOMPARE(scaleChangedSpy.last().first().toInt(), 4);
-    QCOMPARE(serverSurface->scale(), 4);
-    scaleChangedSpy.clear();
+    QVERIFY(bufferScaleChangedSpy.wait());
+    QCOMPARE(bufferScaleChangedSpy.count(), 2);
+    QCOMPARE(bufferScaleChangedSpy.first().first().toInt(), 2);
+    QCOMPARE(bufferScaleChangedSpy.last().first().toInt(), 4);
+    QCOMPARE(serverSurface->bufferScale(), 4);
+    bufferScaleChangedSpy.clear();
 
     //attach a buffer of 100x100, our scale is 4, so this should be a size of 25x25
     QImage red(100, 100, QImage::Format_ARGB32_Premultiplied);
@@ -783,18 +783,18 @@ void TestWaylandSurface::testScale()
     QCOMPARE(sizeChangedSpy.count(), 1);
     QCOMPARE(serverSurface->size(), QSize(25,25));
     sizeChangedSpy.clear();
-    scaleChangedSpy.clear();
+    bufferScaleChangedSpy.clear();
 
     //set the scale to 1, buffer is still 100x100 so size should change to 100x100
     s->setScale(1);
     s->commit(Surface::CommitFlag::None);
     QVERIFY(sizeChangedSpy.wait());
     QCOMPARE(sizeChangedSpy.count(), 1);
-    QCOMPARE(scaleChangedSpy.count(), 1);
-    QCOMPARE(serverSurface->scale(), 1);
+    QCOMPARE(bufferScaleChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->bufferScale(), 1);
     QCOMPARE(serverSurface->size(), QSize(100,100));
     sizeChangedSpy.clear();
-    scaleChangedSpy.clear();
+    bufferScaleChangedSpy.clear();
 
     //set scale and size in one commit, buffer is 50x50 at scale 2 so size should be 25x25
     QImage blue(50, 50, QImage::Format_ARGB32_Premultiplied);
@@ -806,8 +806,8 @@ void TestWaylandSurface::testScale()
     s->commit(Surface::CommitFlag::None);
     QVERIFY(sizeChangedSpy.wait());
     QCOMPARE(sizeChangedSpy.count(), 1);
-    QCOMPARE(scaleChangedSpy.count(), 1);
-    QCOMPARE(serverSurface->scale(), 2);
+    QCOMPARE(bufferScaleChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->bufferScale(), 2);
     QCOMPARE(serverSurface->size(), QSize(25,25));
 }
 
@@ -856,14 +856,14 @@ void TestWaylandSurface::testUnmapOfNotMappedSurface()
 
     QSignalSpy unmappedSpy(serverSurface, &SurfaceInterface::unmapped);
     QVERIFY(unmappedSpy.isValid());
-    QSignalSpy scaleChanged(serverSurface, &SurfaceInterface::scaleChanged);
+    QSignalSpy bufferScaleChanged(serverSurface, &SurfaceInterface::bufferScaleChanged);
 
     // let's map a null buffer and change scale to trigger a signal we can wait for
     s->attachBuffer(Buffer::Ptr());
     s->setScale(2);
     s->commit(Surface::CommitFlag::None);
 
-    QVERIFY(scaleChanged.wait());
+    QVERIFY(bufferScaleChanged.wait());
     QVERIFY(unmappedSpy.isEmpty());
 }
 

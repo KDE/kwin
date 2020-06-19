@@ -325,39 +325,39 @@ QMatrix4x4 SurfaceInterface::Private::buildSurfaceToBufferMatrix(const State *st
         return surfaceToBufferMatrix;
     }
 
-    surfaceToBufferMatrix.scale(state->scale, state->scale);
+    surfaceToBufferMatrix.scale(state->bufferScale, state->bufferScale);
 
-    switch (state->transform) {
+    switch (state->bufferTransform) {
     case OutputInterface::Transform::Normal:
     case OutputInterface::Transform::Flipped:
         break;
     case OutputInterface::Transform::Rotated90:
     case OutputInterface::Transform::Flipped90:
-        surfaceToBufferMatrix.translate(0, state->buffer->height() / state->scale);
+        surfaceToBufferMatrix.translate(0, state->buffer->height() / state->bufferScale);
         surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated180:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(state->buffer->width() / state->scale,
-                                        state->buffer->height() / state->scale);
+        surfaceToBufferMatrix.translate(state->buffer->width() / state->bufferScale,
+                                        state->buffer->height() / state->bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
     case OutputInterface::Transform::Rotated270:
     case OutputInterface::Transform::Flipped270:
-        surfaceToBufferMatrix.translate(state->buffer->width() / state->scale, 0);
+        surfaceToBufferMatrix.translate(state->buffer->width() / state->bufferScale, 0);
         surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
         break;
     }
 
-    switch (current.transform) {
+    switch (state->bufferTransform) {
     case OutputInterface::Transform::Flipped:
     case OutputInterface::Transform::Flipped180:
-        surfaceToBufferMatrix.translate(state->buffer->width() / state->scale, 0);
+        surfaceToBufferMatrix.translate(state->buffer->width() / state->bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
     case OutputInterface::Transform::Flipped90:
     case OutputInterface::Transform::Flipped270:
-        surfaceToBufferMatrix.translate(state->buffer->height() / state->scale, 0);
+        surfaceToBufferMatrix.translate(state->buffer->height() / state->bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
     default:
@@ -379,8 +379,8 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     const bool bufferChanged = source->bufferIsSet;
     const bool opaqueRegionChanged = source->opaqueIsSet;
     const bool inputRegionChanged = source->inputIsSet;
-    const bool scaleFactorChanged = source->scaleIsSet && (target->scale != source->scale);
-    const bool transformChanged = source->transformIsSet && (target->transform != source->transform);
+    const bool scaleFactorChanged = source->bufferScaleIsSet && (target->bufferScale != source->bufferScale);
+    const bool transformChanged = source->bufferTransformIsSet && (target->bufferTransform != source->bufferTransform);
     const bool shadowChanged = source->shadowIsSet;
     const bool blurChanged = source->blurIsSet;
     const bool contrastChanged = source->contrastIsSet;
@@ -450,12 +450,12 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         target->opaqueIsSet = true;
     }
     if (scaleFactorChanged) {
-        target->scale = source->scale;
-        target->scaleIsSet = true;
+        target->bufferScale = source->bufferScale;
+        target->bufferScaleIsSet = true;
     }
     if (transformChanged) {
-        target->transform = source->transform;
-        target->transformIsSet = true;
+        target->bufferTransform = source->bufferTransform;
+        target->bufferTransformIsSet = true;
     }
     if (!lockedPointer.isNull()) {
         lockedPointer->d_func()->commit();
@@ -477,8 +477,8 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         } else if (target->sourceGeometry.isValid()) {
             target->size = target->sourceGeometry.size().toSize();
         } else {
-            target->size = target->buffer->size() / target->scale;
-            switch (target->transform) {
+            target->size = target->buffer->size() / target->bufferScale;
+            switch (target->bufferTransform) {
             case OutputInterface::Transform::Rotated90:
             case OutputInterface::Transform::Rotated270:
             case OutputInterface::Transform::Flipped90:
@@ -504,10 +504,10 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         emit q->inputChanged(target->input);
     }
     if (scaleFactorChanged) {
-        emit q->scaleChanged(target->scale);
+        emit q->bufferScaleChanged(target->bufferScale);
     }
     if (transformChanged) {
-        emit q->transformChanged(target->transform);
+        emit q->bufferTransformChanged(target->bufferTransform);
     }
     if (visibilityChanged) {
         if (target->buffer) {
@@ -612,14 +612,14 @@ void SurfaceInterface::Private::damageBuffer(const QRect &rect)
 
 void SurfaceInterface::Private::setScale(qint32 scale)
 {
-    pending.scale = scale;
-    pending.scaleIsSet = true;
+    pending.bufferScale = scale;
+    pending.bufferScaleIsSet = true;
 }
 
 void SurfaceInterface::Private::setTransform(OutputInterface::Transform transform)
 {
-    pending.transform = transform;
-    pending.transformIsSet = true;
+    pending.bufferTransform = transform;
+    pending.bufferTransformIsSet = true;
 }
 
 void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
@@ -769,16 +769,16 @@ bool SurfaceInterface::inputIsInfinite() const
     return d->current.inputIsInfinite;
 }
 
-qint32 SurfaceInterface::scale() const
+qint32 SurfaceInterface::bufferScale() const
 {
     Q_D();
-    return d->current.scale;
+    return d->current.bufferScale;
 }
 
-OutputInterface::Transform SurfaceInterface::transform() const
+OutputInterface::Transform SurfaceInterface::bufferTransform() const
 {
     Q_D();
-    return d->current.transform;
+    return d->current.bufferTransform;
 }
 
 BufferInterface *SurfaceInterface::buffer()

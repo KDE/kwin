@@ -43,10 +43,10 @@ public:
         bool slideIsSet = false;
         bool inputIsInfinite = true;
         bool childrenChanged = false;
-        bool scaleIsSet = false;
-        bool transformIsSet = false;
-        qint32 scale = 1;
-        OutputInterface::Transform transform = OutputInterface::Transform::Normal;
+        bool bufferScaleIsSet = false;
+        bool bufferTransformIsSet = false;
+        qint32 bufferScale = 1;
+        OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
         QList<wl_resource*> callbacks = QList<wl_resource*>();
         QPoint offset = QPoint();
         BufferInterface *buffer = nullptr;
