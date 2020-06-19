@@ -146,6 +146,13 @@ public:
     QRegion input() const;
     bool inputIsInfinite() const;
     qint32 bufferScale() const;
+    /**
+     * Returns the buffer transform that had been applied to the buffer to compensate for
+     * output rotation.
+     *
+     * If the surface is on an output that is rotated 90 degrees clockwise, the buffer will
+     * be rotated 90 degrees counter clockwise.
+     */
     OutputInterface::Transform bufferTransform() const;
     /**
      * @returns the current BufferInterface, might be @c nullptr.
