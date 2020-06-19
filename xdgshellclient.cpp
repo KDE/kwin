@@ -676,7 +676,7 @@ XdgToplevelInterface *XdgToplevelClient::shellSurface() const
 
 void XdgToplevelClient::debug(QDebug &stream) const
 {
-    stream << "XdgTopLevel: " << resourceClass() << caption();
+    stream << "XdgToplevelClient:" << resourceClass() << caption();
 }
 
 NET::WindowType XdgToplevelClient::windowType(bool direct, int supported_types) const
