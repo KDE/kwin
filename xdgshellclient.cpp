@@ -1817,7 +1817,7 @@ XdgPopupClient::~XdgPopupClient()
 
 void XdgPopupClient::debug(QDebug &stream) const
 {
-    stream << "XdgPopup: transientFor:" << transientFor();
+    stream << "XdgPopupClient: transientFor:" << transientFor();
 }
 
 NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) const
