@@ -43,7 +43,7 @@ Loader {
             case RuleItem.String: return stringEditor
             case RuleItem.Integer: return integerEditor
             case RuleItem.Option: return optionEditor
-            case RuleItem.FlagsOption: return flagsEditor
+            case RuleItem.NetTypes: return netTypesEditor
             case RuleItem.Percentage: return percentageEditor
             case RuleItem.Point: return coordinateEditor
             case RuleItem.Size: return coordinateEditor
@@ -113,12 +113,13 @@ Loader {
     }
 
     Component {
-        id: flagsEditor
+        id: netTypesEditor
         OptionsComboBox {
             flat: true
             model: ruleOptions
             multipleChoice: true
-            selectionMask: ruleValue
+            // If NET::AllTypesMask (-1), select everything
+            selectionMask: (ruleValue == -1) ? 0x3BF : ruleValue
             onActivated: {
                 valueEditor.valueEdited(selectionMask);
             }

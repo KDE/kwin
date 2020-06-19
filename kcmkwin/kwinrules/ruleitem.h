@@ -41,7 +41,7 @@ public:
         String,
         Integer,
         Option,
-        FlagsOption,
+        NetTypes,
         Percentage,
         Point,
         Size,

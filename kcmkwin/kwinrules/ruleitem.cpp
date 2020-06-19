@@ -157,7 +157,7 @@ QVariant RuleItem::options() const
 void RuleItem::setOptionsData(const QList<OptionsModel::Data> &data)
 {
     if (!m_options) {
-        if (m_type != Option && m_type != FlagsOption) {
+        if (m_type != Option && m_type != NetTypes) {
             return;
         }
         m_options = new OptionsModel();
@@ -202,12 +202,13 @@ QVariant RuleItem::typedValue(const QVariant &value, const RuleItem::Type type)
         case Integer:
         case Percentage:
             return value.toInt();
-        case FlagsOption:
-            // HACK: Currently, the only user of this is "types" property
-            if (value.toInt() == -1) { //NET:AllTypesMask
-                return 0x3FF - 0x040;  //All possible flags minus NET::Override (deprecated)
+        case NetTypes: {
+            const int usefulTypes = value.toInt() & 0x3BF;  // remove NET::Override=0x040 (deprecated)
+            if (usefulTypes == 0 || usefulTypes == 0x3BF) { // if no flags or all of them are selected
+                return -1;                                  // return NET:AllTypesMask
             }
             return value.toInt();
+        }
         case Point:
             return value.toPoint();
         case Size:

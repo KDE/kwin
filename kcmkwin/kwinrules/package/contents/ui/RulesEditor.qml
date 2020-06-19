@@ -225,7 +225,7 @@ ScrollViewKCM {
                 return i18nc("Size (width, height)", "(%1, %2)", value.width, value.height);
             case RuleItem.Option:
                 return options.textOfValue(value);
-            case RuleItem.FlagsOption:
+            case RuleItem.NetTypes:
                 var selectedValue = value.toString(2).length - 1;
                 return options.textOfValue(selectedValue);
         }
