@@ -1259,7 +1259,7 @@ QPoint WindowPixmap::framePosition() const
 qreal WindowPixmap::scale() const
 {
     if (surface())
-        return surface()->scale();
+        return surface()->bufferScale();
     return toplevel()->bufferScale();
 }
 
