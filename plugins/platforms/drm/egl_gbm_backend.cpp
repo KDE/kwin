@@ -504,7 +504,7 @@ QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
 
         return region;
     }
-    return QRegion();
+    return output.output->geometry();
 }
 
 void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
