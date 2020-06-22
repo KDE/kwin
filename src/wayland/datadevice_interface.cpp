@@ -350,7 +350,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
             offer->dndAction(action);
             source->dndAction(action);
         };
-        d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, offer, matchOffers);
+        d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, source, matchOffers);
         d->drag.sourceActionConnection = connect(source, &DataSourceInterface::supportedDragAndDropActionsChanged, source, matchOffers);
     }
     d->client->flush();
