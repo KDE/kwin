@@ -70,11 +70,6 @@ private:
 
     OrgKdeKwinCompositingInterface *m_compositingInterface;
     KWinCompositingSetting *m_settings;
-
-    // unmanaged states
-    int m_backend;
-    bool m_glCore;
-    double m_animationDurationFactor;
 };
 
 static const QVector<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
@@ -215,10 +210,10 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
 
     const bool inPlasma = isRunningPlasma();
 
-    bool changed = glCore != m_glCore;
-    changed |= backend != m_backend;
+    bool changed = glCore != m_settings->glCore();
+    changed |= backend != m_settings->backend();
     if (!inPlasma) {
-      changed |= (animationDuration != m_animationDurationFactor);
+      changed |= (animationDuration != m_settings->animationDurationFactor());
     }
     unmanagedWidgetChangeState(changed);
 
@@ -244,10 +239,9 @@ void KWinCompositingKCM::load()
 
     m_settings->findItem("Backend")->readConfig(m_settings->config());
     m_settings->findItem("glCore")->readConfig(m_settings->config());
-    m_backend = m_settings->backend();
-    m_glCore = m_settings->glCore();
-    if (m_backend == KWinCompositingSetting::EnumBackend::OpenGL) {
-        if (m_glCore) {
+
+    if (m_settings->backend() == KWinCompositingSetting::EnumBackend::OpenGL) {
+        if (m_settings->glCore()) {
             m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL31_INDEX);
         } else {
             m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL20_INDEX);
