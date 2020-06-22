@@ -1270,6 +1270,12 @@ void CursorImage::loadThemeCursor(const QByteArray &shape, WaylandCursorImage::I
     m_waylandImage.loadThemeCursor(shape, m_cursorsByName, image);
 }
 
+void WaylandCursorImage::loadThemeCursorShape(CursorShape shape, WaylandCursorImage::Image *image)
+{
+    loadThemeCursor(shape, image);
+}
+
+
 template <typename T>
 void WaylandCursorImage::loadThemeCursor(const T &shape, Image *image)
 {

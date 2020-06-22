@@ -186,6 +186,9 @@ public:
         QImage image;
         QPoint hotspot;
     };
+
+    void loadThemeCursorShape(CursorShape shape, WaylandCursorImage::Image *image);
+
     template <typename T>
     void loadThemeCursor(const T &shape, Image *image);
 

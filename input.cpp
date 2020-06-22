@@ -1669,7 +1669,7 @@ public:
                 static const auto createDefaultCursor = [] {
                     WaylandCursorImage defaultCursor;
                     WaylandCursorImage::Image ret;
-                    defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), &ret);
+                    defaultCursor.loadThemeCursorShape(CursorShape(Qt::CrossCursor), &ret);
                     return ret;
                 };
                 static const auto defaultCursor = createDefaultCursor();
