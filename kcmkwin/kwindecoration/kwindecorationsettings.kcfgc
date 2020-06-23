@@ -1,4 +1,4 @@
-File=kwindecorationsettings.kcfgc
+File=kwindecorationsettings.kcfg
 ClassName=KWinDecorationSettings
 Mutators=true
 DefaultValueGetters=true
