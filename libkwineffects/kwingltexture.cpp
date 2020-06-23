@@ -628,6 +628,9 @@ bool GLTexture::isYInverted() const
 void GLTexture::setYInverted(bool inverted)
 {
     Q_D(GLTexture);
+    if (d->m_yInverted == inverted)
+        return;
+
     d->m_yInverted = inverted;
     d->updateMatrix();
 }
