@@ -328,11 +328,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
         // same client?
         if (keys.focus.surface->client() == dataDevice->client()) {
             keys.focus.selections.append(dataDevice);
-<<<<<<< HEAD
             if (currentSelection) {
-=======
-            if (currentSelection && currentSelection->selection()) {
->>>>>>> Plasma/5.19
                 dataDevice->sendSelection(currentSelection);
             }
         }
@@ -451,33 +447,9 @@ void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice)
 
 void SeatInterface::Private::updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice)
 {
-<<<<<<< HEAD
     // if the update is from the focussed window we should inform the active client
     if (!(keys.focus.surface && (*keys.focus.surface->client() == primarySelectionDevice->client()))) {
         return;
-=======
-    bool selChanged = currentSelection != dataDevice;
-    if (keys.focus.surface && (keys.focus.surface->client() == dataDevice->client())) {
-        // cancel the previous selection
-        cancelPreviousSelection(dataDevice);
-        // new selection on a data device belonging to current keyboard focus
-        currentSelection = dataDevice;
-    }
-    if (dataDevice == currentSelection) {
-        // need to send out the selection
-        for (auto focussedDevice: qAsConst(keys.focus.selections)) {
-            if (set) {
-                focussedDevice->sendSelection(dataDevice);
-            } else {
-                focussedDevice->sendClearSelection();
-                currentSelection = nullptr;
-                selChanged = true;
-            }
-        }
-    }
-    if (selChanged) {
-        emit q->selectionChanged(currentSelection);
->>>>>>> Plasma/5.19
     }
     q->setPrimarySelection(primarySelectionDevice->selection());
 }
@@ -708,11 +680,8 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &glob
         d->drag.target->updateDragTarget(nullptr, serial);
     }
 
-<<<<<<< HEAD
-    // technically we can have mulitple data devices
-=======
+
     // TODO: technically we can have mulitple data devices
->>>>>>> Plasma/5.19
     // and we should send the drag to all of them, but that seems overly complicated
     // in practice so far the only case for mulitple data devices is for clipboard overriding
     d->drag.target = nullptr;
@@ -1206,7 +1175,6 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
                 dataDevice->sendSelection(d->currentSelection);
             } else {
                 dataDevice->sendClearSelection();
-<<<<<<< HEAD
             }
         }
         // primary selection
@@ -1223,8 +1191,6 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
                 primaryDataDevice->sendSelection(d->currentPrimarySelection);
             } else {
                 primaryDataDevice->sendClearSelection();
-=======
->>>>>>> Plasma/5.19
             }
         }
     }
@@ -1731,8 +1697,6 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
     if (d->currentPrimarySelection == selection) {
         return;
     }
-<<<<<<< HEAD
-
     if (d->currentPrimarySelection) {
         d->currentPrimarySelection->cancel();
         disconnect(d->currentPrimarySelection, nullptr, this, nullptr);
@@ -1752,16 +1716,6 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
             focussedSelection->sendSelection(selection);
         } else {
             focussedSelection->sendClearSelection();
-=======
-    // cancel the previous selection
-    d->cancelPreviousSelection(dataDevice);
-    d->currentSelection = dataDevice;
-    for (auto focussedDevice: qAsConst(d->keys.focus.selections)) {
-        if (dataDevice && dataDevice->selection()) {
-            focussedDevice->sendSelection(dataDevice);
-        } else {
-            focussedDevice->sendClearSelection();
->>>>>>> Plasma/5.19
         }
     }
 
