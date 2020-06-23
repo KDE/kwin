@@ -162,6 +162,7 @@ X11Client::X11Client()
     m_frameGeometry = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
+    connect(options, &Options::configChanged, this, &X11Client::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
 
     connect(this, &X11Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
