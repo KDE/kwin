@@ -653,7 +653,6 @@ void RulesModel::populateRuleList()
 const QHash<QString, QString> RulesModel::x11PropertyHash()
 {
     static const auto propertyToRule = QHash<QString, QString> {
-        { "resourceName",       "wmclass"       },
         { "caption",            "title"         },
         { "role",               "windowrole"    },
         { "clientMachine",      "clientmachine" },
@@ -692,11 +691,17 @@ void RulesModel::setWindowProperties(const QVariantMap &info, bool forceValue)
     }
     m_rules["types"]->setSuggestedValue(1 << window_type, forceValue);
 
-    // Store "complete window class" as "resourceName" + " " + "resourceClass"
-    // Do not force the value, we want it only as a suggested value for the user to select
-    const QString wmcompleteclass = QStringLiteral("%1 %2").arg(info.value("resourceName").toString())
-                                                           .arg(info.value("resourceClass").toString());
+    const QString wmsimpleclass = info.value("resourceClass").toString();
+    const QString wmcompleteclass = QStringLiteral("%1 %2").arg(info.value("resourceName").toString(),
+                                                                info.value("resourceClass").toString());
+    const bool isComplete = m_rules.value("wmclasscomplete")->value().toBool();
+
+    m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
     m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
+
+    if (forceValue) {
+        m_rules["wmclass"]->setValue(isComplete ? wmcompleteclass : wmsimpleclass);
+    }
 
     const auto ruleForProperty = x11PropertyHash();
     for (QString &property : info.keys()) {
