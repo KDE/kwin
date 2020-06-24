@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/xdgdecoration.h>
+#include <KWayland/Client/outputmanagement.h>
 #include <KWaylandServer/display.h>
 
 //screenlocker
@@ -74,6 +75,7 @@ static struct {
     PlasmaWindowManagement *windowManagement = nullptr;
     PointerConstraints *pointerConstraints = nullptr;
     Registry *registry = nullptr;
+    OutputManagement* outputManagement = nullptr;
     QThread *thread = nullptr;
     QVector<Output*> outputs;
     IdleInhibitManager *idleInhibit = nullptr;
@@ -174,6 +176,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
         s_waylandConnection.decoration = registry->createServerSideDecorationManager(registry->interface(Registry::Interface::ServerSideDecorationManager).name,
                                                                                     registry->interface(Registry::Interface::ServerSideDecorationManager).version);
         if (!s_waylandConnection.decoration->isValid()) {
+            return false;
+        }
+    }
+    if (flags.testFlag(AdditionalWaylandInterface::OutputManagement)) {
+        s_waylandConnection.outputManagement = registry->createOutputManagement(registry->interface(Registry::Interface::OutputManagement).name,
+                                                                                registry->interface(Registry::Interface::OutputManagement).version);
+        if (!s_waylandConnection.outputManagement->isValid()) {
             return false;
         }
     }
@@ -332,6 +341,11 @@ AppMenuManager* waylandAppMenuManager()
 XdgDecorationManager *xdgDecorationManager()
 {
     return s_waylandConnection.xdgDecoration;
+}
+
+OutputManagement *waylandOutputManagement()
+{
+    return s_waylandConnection.outputManagement;
 }
 
 
