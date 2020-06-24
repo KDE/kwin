@@ -118,8 +118,8 @@ Loader {
             flat: true
             model: ruleOptions
             multipleChoice: true
-            // If NET::AllTypesMask (-1), select everything
-            selectionMask: (ruleValue == -1) ? 0x3BF : ruleValue
+            // Filter the provided value with the options mask
+            selectionMask: ruleValue & optionsMask
             onActivated: {
                 valueEditor.valueEdited(selectionMask);
             }

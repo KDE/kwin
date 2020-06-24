@@ -71,6 +71,7 @@ QHash< int, QByteArray > RulesModel::roleNames() const
         {PolicyRole,         QByteArrayLiteral("policy")},
         {PolicyModelRole,    QByteArrayLiteral("policyModel")},
         {OptionsModelRole,   QByteArrayLiteral("options")},
+        {OptionsMaskRole,    QByteArrayLiteral("optionsMask")},
         {SuggestedValueRole, QByteArrayLiteral("suggested")},
     };
 }
@@ -118,6 +119,8 @@ QVariant RulesModel::data(const QModelIndex &index, int role) const
         return rule->policyModel();
     case OptionsModelRole:
         return rule->options();
+    case OptionsMaskRole:
+        return rule->optionsMask();
     case SuggestedValueRole:
         return rule->suggestedValue();
     }
