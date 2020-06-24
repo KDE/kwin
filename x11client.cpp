@@ -163,6 +163,7 @@ X11Client::X11Client()
     m_clientGeometry = QRect(0, 0, 100, 100);
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
+    connect(options, &Options::configChanged, this, &X11Client::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
 
     connect(this, &X11Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
