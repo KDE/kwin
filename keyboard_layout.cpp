@@ -76,8 +76,10 @@ void KeyboardLayout::init()
 void KeyboardLayout::initDBusInterface()
 {
     if (m_xkb->numberOfLayouts() <= 1) {
-        delete m_dbusInterface;
-        m_dbusInterface = nullptr;
+        if (m_dbusInterface) {
+            m_dbusInterface->deleteLater();
+            m_dbusInterface = nullptr;
+        }
         return;
     }
     if (m_dbusInterface) {

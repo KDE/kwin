@@ -93,12 +93,9 @@ void KeyboardLayoutTest::reconfigureLayouts()
     QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Layouts"), QStringLiteral("org.kde.keyboard"), QStringLiteral("reloadConfig"));
     QVERIFY(QDBusConnection::sessionBus().send(message));
 
-    // we don't get the signal when traversing to one-layout configuration
-    if ( layoutGroup.readEntry("LayoutList").contains(',') ) {
-        QVERIFY(layoutsReconfiguredSpy.wait(1000));
-        QCOMPARE(layoutsReconfiguredSpy.count(), 1);
-        layoutsReconfiguredSpy.clear();
-    }
+    QVERIFY(layoutsReconfiguredSpy.wait(1000));
+    QCOMPARE(layoutsReconfiguredSpy.count(), 1);
+    layoutsReconfiguredSpy.clear();
 }
 
 void KeyboardLayoutTest::resetLayouts()
@@ -193,7 +190,7 @@ void KeyboardLayoutTest::testReconfigure()
 
     reconfigureLayouts();
     // now we should have two layouts
-    QTRY_COMPARE(xkb->numberOfLayouts(), 2u);
+    QCOMPARE(xkb->numberOfLayouts(), 2u);
     // default layout is German
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
     layouts = xkb->layoutNames();
@@ -213,7 +210,7 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     reconfigureLayouts();
     // now we should have three layouts
     auto xkb = input()->keyboard()->xkb();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    QCOMPARE(xkb->numberOfLayouts(), 3u);
     // default layout is German
     xkb->switchToLayout(0);
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
@@ -322,25 +319,25 @@ void KeyboardLayoutTest::testDBusServiceExport()
     layoutGroup.sync();
     reconfigureLayouts();
     auto xkb = input()->keyboard()->xkb();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
+    QCOMPARE(xkb->numberOfLayouts(), 1u);
     // default layout is English
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     // with one layout we should not have the dbus interface
-    QTRY_VERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
+    QVERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
 
     // reconfigure to two layouts
     layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de"));
     layoutGroup.sync();
     reconfigureLayouts();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 2u);
-    QTRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
+    QCOMPARE(xkb->numberOfLayouts(), 2u);
+    QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
 
     // and back to one layout
     layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
     layoutGroup.sync();
     reconfigureLayouts();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
-    QTRY_VERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
+    QCOMPARE(xkb->numberOfLayouts(), 1u);
+    QVERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
 }
 
 void KeyboardLayoutTest::testVirtualDesktopPolicy()
@@ -350,7 +347,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
     layoutGroup.sync();
     reconfigureLayouts();
     auto xkb = input()->keyboard()->xkb();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    QCOMPARE(xkb->numberOfLayouts(), 3u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     VirtualDesktopManager::self()->setCount(4);
@@ -365,7 +362,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
         VirtualDesktopManager::self()->setCurrent(desktops.at(desktop));
         QCOMPARE(desktops.at(desktop), VirtualDesktopManager::self()->currentDesktop());
         // should be reset to English
-        QTRY_COMPARE(xkb->currentLayout(), 0);
+        QCOMPARE(xkb->currentLayout(), 0);
         // change first desktop to German
         layout = (desktop + 1) % xkb->numberOfLayouts();
         changeLayout(xkb->layoutNames()[layout]).waitForFinished();
@@ -389,7 +386,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
     desktop = 0;
     const KWin::VirtualDesktop* deletedDesktop = desktops.last();
     VirtualDesktopManager::self()->setCount(1);
-    QTRY_COMPARE(xkb->currentLayout(), layout = (desktop + 1) % xkb->numberOfLayouts());
+    QCOMPARE(xkb->currentLayout(), layout = (desktop + 1) % xkb->numberOfLayouts());
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
 
     // add another desktop
@@ -399,7 +396,7 @@ void KeyboardLayoutTest::testVirtualDesktopPolicy()
     QCOMPARE(desktops.count(), 2);
     QCOMPARE(desktops.first(), VirtualDesktopManager::self()->currentDesktop());
     VirtualDesktopManager::self()->setCurrent(desktops.last());
-    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // check there are no more layouts left in config than the last actual non-default layouts number
     QSignalSpy deletedDesktopSpy(deletedDesktop, &VirtualDesktop::aboutToBeDestroyed);
@@ -416,7 +413,7 @@ void KeyboardLayoutTest::testWindowPolicy()
     layoutGroup.sync();
     reconfigureLayouts();
     auto xkb = input()->keyboard()->xkb();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 3u);
+    QCOMPARE(xkb->numberOfLayouts(), 3u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // create a window
@@ -445,9 +442,9 @@ void KeyboardLayoutTest::testWindowPolicy()
 
     // activate other window
     workspace()->activateClient(c1);
-    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German"));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
     workspace()->activateClient(c2);
-    QTRY_COMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German (Neo 2)"));
 }
 
 void KeyboardLayoutTest::testApplicationPolicy()
@@ -515,7 +512,7 @@ void KeyboardLayoutTest::testNumLock()
     reconfigureLayouts();
 
     auto xkb = input()->keyboard()->xkb();
-    QTRY_COMPARE(xkb->numberOfLayouts(), 1u);
+    QCOMPARE(xkb->numberOfLayouts(), 1u);
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // by default not set
