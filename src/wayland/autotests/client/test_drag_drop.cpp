@@ -84,8 +84,6 @@ void TestDragAndDrop::init()
     m_seatInterface->create();
     QVERIFY(m_seatInterface->isValid());
     m_dataDeviceManagerInterface = m_display->createDataDeviceManager(m_display);
-    m_dataDeviceManagerInterface->create();
-    QVERIFY(m_dataDeviceManagerInterface->isValid());
     m_display->createShm();
 
     m_thread = new QThread(this);

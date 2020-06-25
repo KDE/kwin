@@ -1,159 +1,160 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "dataoffer_interface_p.h"
+#include "dataoffer_interface.h"
 #include "datadevice_interface.h"
 #include "datasource_interface.h"
+
 // Qt
 #include <QStringList>
+#include <QPointer>
 // Wayland
-#include <wayland-server.h>
+#include <qwayland-server-wayland.h>
 // system
 #include <unistd.h>
 
 namespace KWaylandServer
 {
 
-#ifndef K_DOXYGEN
-const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = {
-    acceptCallback,
-    receiveCallback,
-    resourceDestroyedCallback,
-    finishCallback,
-    setActionsCallback
-};
-#endif
-
-DataOfferInterface::Private::Private(AbstractDataSource *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource)
-    : Resource::Private(q, nullptr, parentResource, &wl_data_offer_interface, &s_interface)
-    , source(source)
-    , dataDevice(parentInterface)
+class DataOfferInterfacePrivate : public QtWaylandServer::wl_data_offer
 {
-    // TODO: connect to new selections
+public:
+    DataOfferInterfacePrivate(AbstractDataSource *source, DataOfferInterface *q, wl_resource *resource);
+    DataOfferInterface *q;
+    QPointer<AbstractDataSource> source;
+
+    // defaults are set to sensible values for < version 3 interfaces
+    DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::Copy | DataDeviceManagerInterface::DnDAction::Move;
+    DataDeviceManagerInterface::DnDAction preferredDnDAction = DataDeviceManagerInterface::DnDAction::Copy;
+
+protected:
+    void data_offer_destroy_resource(Resource *resource) override;
+    void data_offer_accept(Resource *resource, uint32_t serial, const QString &mime_type) override;
+    void data_offer_receive(Resource *resource, const QString &mime_type, int32_t fd) override;
+    void data_offer_destroy(Resource *resource) override;
+    void data_offer_finish(Resource *resource) override;
+    void data_offer_set_actions(Resource *resource, uint32_t dnd_actions, uint32_t preferred_action) override;
+};
+
+
+DataOfferInterfacePrivate::DataOfferInterfacePrivate(AbstractDataSource *_source, DataOfferInterface *_q, wl_resource *resource)
+    : QtWaylandServer::wl_data_offer(resource)
+    , q(_q)
+    , source(_source)
+{
 }
 
-DataOfferInterface::Private::~Private() = default;
-
-void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType)
+void DataOfferInterfacePrivate::data_offer_accept(Resource *resource, uint32_t serial, const QString &mime_type)
 {
-    Q_UNUSED(client)
+    Q_UNUSED(resource)
     Q_UNUSED(serial)
-    auto p = cast<Private>(resource);
-    if (!p->source) {
+    if (!source) {
         return;
     }
-    p->source->accept(mimeType ? QString::fromUtf8(mimeType) : QString());
+    source->accept(mime_type);
 }
 
-void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd)
+void DataOfferInterfacePrivate::data_offer_receive(Resource *resource, const QString &mime_type, int32_t fd)
 {
-    Q_UNUSED(client)
-    cast<Private>(resource)->receive(QString::fromUtf8(mimeType), fd);
-}
-
-void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
-{
+    Q_UNUSED(resource)
     if (!source) {
         close(fd);
         return;
     }
-    source->requestData(mimeType, fd);
+    source->requestData(mime_type, fd);
 }
 
-void DataOfferInterface::Private::finishCallback(wl_client *client, wl_resource *resource)
+void DataOfferInterfacePrivate::data_offer_destroy(QtWaylandServer::wl_data_offer::Resource *resource)
 {
-    Q_UNUSED(client)
-    auto p = cast<Private>(resource);
-    if (!p->source) {
-        return;
-    }
-    p->source->dndFinished();
+    wl_resource_destroy(resource->handle);
+}
+
+void DataOfferInterfacePrivate::data_offer_finish(Resource *resource)
+{
+    Q_UNUSED(resource)
+    source->dndFinished();
     // TODO: It is a client error to perform other requests than wl_data_offer.destroy after this one
 }
 
-void DataOfferInterface::Private::setActionsCallback(wl_client *client, wl_resource *resource, uint32_t dnd_actions, uint32_t preferred_action)
+void DataOfferInterfacePrivate::data_offer_set_actions(Resource *resource, uint32_t dnd_actions, uint32_t preferred_action)
 {
     // TODO: check it's drag and drop, otherwise send error
-    Q_UNUSED(client)
     DataDeviceManagerInterface::DnDActions supportedActions;
-    if (dnd_actions & WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY) {
+    if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_copy) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Copy;
     }
-    if (dnd_actions & WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE) {
+    if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_move) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Move;
     }
-    if (dnd_actions & WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK) {
+    if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_ask) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Ask;
     }
     // verify that the no other actions are sent
-    if (dnd_actions & ~(WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY | WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE | WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK)) {
-        wl_resource_post_error(resource, WL_DATA_OFFER_ERROR_INVALID_ACTION_MASK, "Invalid action mask");
+    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy | QtWaylandServer::wl_data_device_manager::dnd_action_move | QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
+        wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
         return;
     }
-    if (preferred_action != WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY &&
-        preferred_action != WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE &&
-        preferred_action != WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK &&
-        preferred_action != WL_DATA_DEVICE_MANAGER_DND_ACTION_NONE) {
-        wl_resource_post_error(resource, WL_DATA_OFFER_ERROR_INVALID_ACTION, "Invalid preferred action");
+    if (preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_copy &&
+        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_move &&
+        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_ask &&
+        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_none) {
+        wl_resource_post_error(resource->handle, error_invalid_action, "Invalid preferred action");
         return;
     }
 
     DataDeviceManagerInterface::DnDAction preferredAction = DataDeviceManagerInterface::DnDAction::None;
-    if (preferred_action == WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY) {
+    if (preferred_action == QtWaylandServer::wl_data_device_manager::dnd_action_copy) {
         preferredAction = DataDeviceManagerInterface::DnDAction::Copy;
-    } else if (preferred_action == WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE) {
+    } else if (preferred_action == QtWaylandServer::wl_data_device_manager::dnd_action_move) {
         preferredAction = DataDeviceManagerInterface::DnDAction::Move;
-    } else if (preferred_action == WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK) {
+    } else if (preferred_action == QtWaylandServer::wl_data_device_manager::dnd_action_ask) {
         preferredAction = DataDeviceManagerInterface::DnDAction::Ask;
     }
 
-    auto p = cast<Private>(resource);
-    p->supportedDnDActions = supportedActions;
-    p->preferredDnDAction = preferredAction;
-    emit p->q_func()->dragAndDropActionsChanged();
+    supportedDnDActions = supportedActions;
+    preferredDnDAction = preferredAction;
+    emit q->dragAndDropActionsChanged();
 }
 
-void DataOfferInterface::Private::sendSourceActions()
+void DataOfferInterface::sendSourceActions()
 {
-    if (!source) {
+    if (!d->source) {
         return;
     }
-    if (wl_resource_get_version(resource) < WL_DATA_OFFER_SOURCE_ACTIONS_SINCE_VERSION) {
+    if (d->resource()->version() < WL_DATA_OFFER_SOURCE_ACTIONS_SINCE_VERSION) {
         return;
     }
-    uint32_t wlActions = WL_DATA_DEVICE_MANAGER_DND_ACTION_NONE;
-    const auto actions = source->supportedDragAndDropActions();
+    uint32_t wlActions = QtWaylandServer::wl_data_device_manager::dnd_action_none;
+    const auto actions = d->source->supportedDragAndDropActions();
     if (actions.testFlag(DataDeviceManagerInterface::DnDAction::Copy)) {
-        wlActions |= WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY;
+        wlActions |= QtWaylandServer::wl_data_device_manager::dnd_action_copy;
     }
     if (actions.testFlag(DataDeviceManagerInterface::DnDAction::Move)) {
-        wlActions |= WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE;
+        wlActions |= QtWaylandServer::wl_data_device_manager::dnd_action_move;
     }
     if (actions.testFlag(DataDeviceManagerInterface::DnDAction::Ask)) {
-        wlActions |= WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK;
+        wlActions |= QtWaylandServer::wl_data_device_manager::dnd_action_ask;
     }
-    wl_data_offer_send_source_actions(resource, wlActions);
+    d->send_source_actions(wlActions);
 }
 
-DataOfferInterface::DataOfferInterface(AbstractDataSource *source, DataDeviceInterface *parentInterface, wl_resource *parentResource)
-    : Resource(new Private(source, parentInterface, this, parentResource))
+void DataOfferInterfacePrivate::data_offer_destroy_resource(QtWaylandServer::wl_data_offer::Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete q;
+}
+
+DataOfferInterface::DataOfferInterface(AbstractDataSource *source, wl_resource *resource)
+    : QObject(nullptr)
+    , d(new DataOfferInterfacePrivate(source, this, resource))
 {
     Q_ASSERT(source);
     connect(source, &DataSourceInterface::mimeTypeOffered, this,
         [this](const QString &mimeType) {
-            Q_D();
-            if (!d->resource) {
-                return;
-            }
-            wl_data_offer_send_offer(d->resource, mimeType.toUtf8().constData());
-        }
-    );
-    QObject::connect(source, &QObject::destroyed, this,
-        [this] {
-            Q_D();
-            d->source = nullptr;
+            d->send_offer(mimeType);
         }
     );
 }
@@ -162,44 +163,40 @@ DataOfferInterface::~DataOfferInterface() = default;
 
 void DataOfferInterface::sendAllOffers()
 {
-    Q_D();
     for (const QString &mimeType : d->source->mimeTypes()) {
-        wl_data_offer_send_offer(d->resource, mimeType.toUtf8().constData());
+        d->send_offer(mimeType);
     }
 }
 
-DataOfferInterface::Private *DataOfferInterface::d_func() const
+wl_resource *DataOfferInterface::resource() const
 {
-    return reinterpret_cast<DataOfferInterface::Private*>(d.data());
+    return d->resource()->handle;
 }
 
 DataDeviceManagerInterface::DnDActions DataOfferInterface::supportedDragAndDropActions() const
 {
-    Q_D();
     return d->supportedDnDActions;
 }
 
 DataDeviceManagerInterface::DnDAction DataOfferInterface::preferredDragAndDropAction() const
 {
-    Q_D();
     return d->preferredDnDAction;
 }
 
 void DataOfferInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
-    Q_D();
-    if (wl_resource_get_version(d->resource) < WL_DATA_OFFER_ACTION_SINCE_VERSION) {
+    if (d->resource()->version() < WL_DATA_OFFER_ACTION_SINCE_VERSION) {
         return;
     }
-    uint32_t wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_NONE;
+    uint32_t wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_none;
     if (action == DataDeviceManagerInterface::DnDAction::Copy) {
-        wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY;
+        wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_copy;
     } else if (action == DataDeviceManagerInterface::DnDAction::Move ) {
-        wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_MOVE;
+        wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_move;
     } else if (action == DataDeviceManagerInterface::DnDAction::Ask) {
-        wlAction = WL_DATA_DEVICE_MANAGER_DND_ACTION_ASK;
+        wlAction = QtWaylandServer::wl_data_device_manager::dnd_action_ask;
     }
-    wl_data_offer_send_action(d->resource, wlAction);
+    d->send_action(wlAction);
 }
 
 }

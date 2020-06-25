@@ -247,7 +247,13 @@ QVector<TouchInterface *> SeatInterface::Private::touchsForSurface(SurfaceInterf
 
 QVector<DataDeviceInterface *> SeatInterface::Private::dataDevicesForSurface(SurfaceInterface *surface) const
 {
-    return interfacesForSurface(surface, dataDevices);
+    QVector<DataDeviceInterface *> primarySelectionDevices;
+    for (auto it = dataDevices.constBegin(); it != dataDevices.constEnd(); ++it) {
+        if ((*it)->client() == *surface->client()) {
+            primarySelectionDevices << *it;
+        }
+    }
+    return primarySelectionDevices;
 }
 
 void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
@@ -259,7 +265,6 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
         keys.focus.selections.removeOne(dataDevice);
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
-    QObject::connect(dataDevice, &Resource::unbound, q, dataDeviceCleanup);
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q,
         [this, dataDevice] {
             updateSelection(dataDevice);
@@ -303,7 +308,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
                 }
             );
             if (dataDevice->dragSource()) {
-                drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &Resource::aboutToBeUnbound, q,
+                drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &AbstractDataSource::aboutToBeDestroyed, q,
                     [this] {
                         const auto serial = display->nextSerial();
                         if (drag.target) {
@@ -324,7 +329,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
     // is the new DataDevice for the current keyoard focus?
     if (keys.focus.surface) {
         // same client?
-        if (keys.focus.surface->client() == dataDevice->client()) {
+        if (*keys.focus.surface->client() == dataDevice->client()) {
             keys.focus.selections.append(dataDevice);
             if (currentSelection) {
                 dataDevice->sendSelection(currentSelection);
@@ -419,7 +424,7 @@ void SeatInterface::Private::endDrag(quint32 serial)
 void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice)
 {
     // if the update is from the focussed window we should inform the active client
-    if (!(keys.focus.surface && (keys.focus.surface->client() == dataDevice->client()))) {
+    if (!(keys.focus.surface && (*keys.focus.surface->client() == dataDevice->client()))) {
         return;
     }
     q->setSelection(dataDevice->selection());
@@ -1644,8 +1649,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
         auto cleanup = [this]() {
             setSelection(nullptr);
         };
-        connect(selection, &DataSourceInterface::unbound, this, cleanup);
-        connect(selection, &QObject::destroyed, this, cleanup);
+        connect(selection, &DataSourceInterface::aboutToBeDestroyed, this, cleanup);
     }
 
     d->currentSelection = selection;
@@ -1684,7 +1688,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
         auto cleanup = [this]() {
             setPrimarySelection(nullptr);
         };
-        connect(selection, &DataSourceInterface::unbound, this, cleanup);
+        connect(selection, &DataSourceInterface::aboutToBeDestroyed, this, cleanup);
     }
 
     d->currentPrimarySelection = selection;

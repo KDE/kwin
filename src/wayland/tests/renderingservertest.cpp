@@ -240,7 +240,6 @@ int main(int argc, char **argv)
     Display display;
     display.start();
     DataDeviceManagerInterface *ddm = display.createDataDeviceManager();
-    ddm->create();
     display.createCompositor(&display);
     XdgShellInterface *shell = display.createXdgShell();
     display.createShm();

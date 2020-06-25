@@ -29,7 +29,6 @@ private Q_SLOTS:
     void testTargetAccepts_data();
     void testTargetAccepts();
     void testRequestSend();
-    void testRequestSendOnUnbound();
     void testCancel();
     void testServerGet();
     void testDestroy();
@@ -82,8 +81,6 @@ void TestDataSource::init()
     registry.setup();
 
     m_dataDeviceManagerInterface = m_display->createDataDeviceManager(m_display);
-    m_dataDeviceManagerInterface->create();
-    QVERIFY(m_dataDeviceManagerInterface->isValid());
 
     QVERIFY(dataDeviceManagerSpy.wait());
     m_dataDeviceManager = registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
@@ -131,7 +128,6 @@ void TestDataSource::testOffer()
     QPointer<DataSourceInterface> serverDataSource = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
     QVERIFY(!serverDataSource.isNull());
     QCOMPARE(serverDataSource->mimeTypes().count(), 0);
-    QVERIFY(serverDataSource->parentResource());
 
     QSignalSpy offeredSpy(serverDataSource.data(), SIGNAL(mimeTypeOffered(QString)));
     QVERIFY(offeredSpy.isValid());
@@ -161,10 +157,6 @@ void TestDataSource::testOffer()
     dataSource.reset();
     QVERIFY(!serverDataSource.isNull());
     wl_display_flush(m_connection->display());
-    // after running the event loop the Wayland event should be delivered, but it uses delete later
-    QCoreApplication::processEvents();
-    QVERIFY(!serverDataSource.isNull());
-    // so once more event loop
     QCoreApplication::processEvents();
     QVERIFY(serverDataSource.isNull());
 }
@@ -212,7 +204,6 @@ void TestDataSource::testRequestSend()
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
-
     QSignalSpy sendRequestedSpy(dataSource.data(), SIGNAL(sendDataRequested(QString,qint32)));
     QVERIFY(sendRequestedSpy.isValid());
 
@@ -232,28 +223,6 @@ void TestDataSource::testRequestSend()
     QFile writeFile;
     QVERIFY(writeFile.open(sendRequestedSpy.first().last().value<qint32>(), QFile::WriteOnly, QFileDevice::AutoCloseHandle));
     writeFile.close();
-}
-
-void TestDataSource::testRequestSendOnUnbound()
-{
-    // this test verifies that the server doesn't crash when requesting a send on an unbound DataSource
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataSourceCreated);
-    QVERIFY(dataSourceCreatedSpy.isValid());
-
-    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
-    QVERIFY(dataSource->isValid());
-    QVERIFY(dataSourceCreatedSpy.wait());
-    QCOMPARE(dataSourceCreatedSpy.count(), 1);
-    auto sds = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
-    QVERIFY(sds);
-
-    QSignalSpy unboundSpy(sds, &Resource::unbound);
-    QVERIFY(unboundSpy.isValid());
-    dataSource.reset();
-    QVERIFY(unboundSpy.wait());
-    sds->requestData(QStringLiteral("text/plain"), -1);
 }
 
 void TestDataSource::testCancel()

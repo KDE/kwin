@@ -72,7 +72,6 @@ void SelectionTest::init()
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->create();
     m_ddmInterface = m_display->createDataDeviceManager(m_display);
-    m_ddmInterface->create();
 
     // setup connection
     setupConnection(&m_client1);

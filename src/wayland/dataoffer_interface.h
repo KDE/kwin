@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -18,18 +19,21 @@ namespace KWaylandServer
 
 class DataDeviceInterface;
 class AbstractDataSource;
+class DataOfferInterfacePrivate;
 
 /**
  * @brief Represents the Resource for the wl_data_offer interface.
  *
  **/
-class KWAYLANDSERVER_EXPORT DataOfferInterface : public Resource
+class KWAYLANDSERVER_EXPORT DataOfferInterface : public QObject
 {
     Q_OBJECT
 public:
     virtual ~DataOfferInterface();
 
     void sendAllOffers();
+    void sendSourceActions();
+    wl_resource *resource() const;
 
     /**
      * @returns The Drag and Drop actions supported by this DataOfferInterface.
@@ -58,11 +62,10 @@ Q_SIGNALS:
     void dragAndDropActionsChanged();
 
 private:
-    friend class DataDeviceInterface;
-    explicit DataOfferInterface(AbstractDataSource *source, DataDeviceInterface *parentInterface, wl_resource *parentResource);
+    friend class DataDeviceInterfacePrivate;
+    explicit DataOfferInterface(AbstractDataSource *source, wl_resource *resource);
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<DataOfferInterfacePrivate> d;
 };
 
 }

@@ -1814,7 +1814,6 @@ void TestWaylandSeat::testSelection()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
-    ddmi->create();
     Registry registry;
     QSignalSpy dataDeviceManagerSpy(&registry, SIGNAL(dataDeviceManagerAnnounced(quint32,quint32)));
     QVERIFY(dataDeviceManagerSpy.isValid());
@@ -1927,7 +1926,6 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     using namespace KWaylandServer;
     // create the DataDeviceManager
     QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
-    ddmi->create();
     QSignalSpy ddiCreatedSpy(ddmi.data(), &DataDeviceManagerInterface::dataDeviceCreated);
     QVERIFY(ddiCreatedSpy.isValid());
 

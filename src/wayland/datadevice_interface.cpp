@@ -1,28 +1,28 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "datadevice_interface.h"
 #include "datadevicemanager_interface.h"
-#include "dataoffer_interface_p.h"
 #include "datasource_interface.h"
+#include "dataoffer_interface.h"
 #include "display.h"
 #include "resource_p.h"
 #include "pointer_interface.h"
 #include "seat_interface.h"
+#include "seat_interface_p.h"
 #include "surface_interface.h"
-// Wayland
-#include <wayland-server.h>
+#include <qwayland-server-wayland.h>
 
 namespace KWaylandServer
 {
 
-class DataDeviceInterface::Private : public Resource::Private
+class DataDeviceInterfacePrivate : public QtWaylandServer::wl_data_device
 {
 public:
-    Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager, wl_resource *parentResource);
-    ~Private();
+    DataDeviceInterfacePrivate(SeatInterface *seat, DataDeviceInterface *_q, wl_resource *resource);
 
     DataOfferInterface *createDataOffer(AbstractDataSource *source);
 
@@ -31,9 +31,7 @@ public:
     SurfaceInterface *surface = nullptr;
     SurfaceInterface *icon = nullptr;
 
-    DataSourceInterface *selection = nullptr;
-    QMetaObject::Connection selectionUnboundConnection;
-    QMetaObject::Connection selectionDestroyedConnection;
+    QPointer<DataSourceInterface> selection;
 
     struct Drag {
         SurfaceInterface *surface = nullptr;
@@ -45,47 +43,34 @@ public:
     };
     Drag drag;
 
+    DataDeviceInterface *q;
+
     QPointer<SurfaceInterface> proxyRemoteSurface;
 
-private:
-    DataDeviceInterface *q_func() {
-        return reinterpret_cast<DataDeviceInterface*>(q);
-    }
-    void startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *icon, quint32 serial);
-    void setSelection(DataSourceInterface *dataSource);
-    static void startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial);
-    static void setSelectionCallback(wl_client *client, wl_resource *resource, wl_resource *source, uint32_t serial);
-
-    static const struct wl_data_device_interface s_interface;
+protected:
+    void data_device_destroy_resource(Resource *resource) override;
+    void data_device_start_drag(Resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial) override;
+    void data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial) override;
+    void data_device_release(Resource *resource) override;
 };
 
-#ifndef K_DOXYGEN
-const struct wl_data_device_interface DataDeviceInterface::Private::s_interface = {
-    startDragCallback,
-    setSelectionCallback,
-    resourceDestroyedCallback
-};
-#endif
-
-DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager, wl_resource *parentResource)
-    : Resource::Private(q, manager, parentResource, &wl_data_device_interface, &s_interface)
+DataDeviceInterfacePrivate::DataDeviceInterfacePrivate(SeatInterface *seat, DataDeviceInterface *_q, wl_resource *resource)
+    : QtWaylandServer::wl_data_device(resource)
     , seat(seat)
+    , q(_q)
 {
 }
 
-DataDeviceInterface::Private::~Private() = default;
-
-void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial)
+void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource, wl_resource *sourceResource, wl_resource *originResource, wl_resource *iconResource, uint32_t serial)
 {
-    Q_UNUSED(client)
-    Q_UNUSED(serial)
-    // TODO: verify serial
-    cast<Private>(resource)->startDrag(DataSourceInterface::get(source), SurfaceInterface::get(origin), SurfaceInterface::get(icon), serial);
-}
+    Q_UNUSED(resource)
+    SurfaceInterface *focusSurface = SurfaceInterface::get(originResource);
+    SurfaceInterface *i = SurfaceInterface::get(iconResource);
+    DataSourceInterface *dataSource = nullptr;
+    if (sourceResource) {
+        dataSource = DataSourceInterface::get(sourceResource);
+    }
 
-void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i, quint32 serial)
-{
-    SurfaceInterface *focusSurface = origin;
     if (proxyRemoteSurface) {
         // origin is a proxy surface
         focusSurface = proxyRemoteSurface.data();
@@ -100,144 +85,123 @@ void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, Su
         }
     }
     // TODO: source is allowed to be null, handled client internally!
-    Q_Q(DataDeviceInterface);
     source = dataSource;
     if (dataSource) {
-        QObject::connect(dataSource, &Resource::aboutToBeUnbound, q, [this] { source = nullptr; });
+        QObject::connect(dataSource, &AbstractDataSource::aboutToBeDestroyed, q, [this] { source = nullptr; });
     }
-    surface = origin;
+    surface = focusSurface;
     icon = i;
     drag.serial = serial;
     emit q->dragStarted();
 }
 
-void DataDeviceInterface::Private::setSelectionCallback(wl_client *client, wl_resource *resource, wl_resource *source, uint32_t serial)
+void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial)
 {
-    Q_UNUSED(client)
+    Q_UNUSED(resource)
     Q_UNUSED(serial)
-    // TODO: verify serial
-    cast<Private>(resource)->setSelection(DataSourceInterface::get(source));
-}
+    DataSourceInterface *dataSource = DataSourceInterface::get(source);
 
-void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
-{
     if (dataSource && dataSource->supportedDragAndDropActions() && wl_resource_get_version(dataSource->resource()) >= WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
-        wl_resource_post_error(dataSource->resource(), WL_DATA_SOURCE_ERROR_INVALID_SOURCE, "Data source is for drag and drop");
+        wl_resource_post_error(dataSource->resource(), QtWaylandServer::wl_data_source::error_invalid_source, "Data source is for drag and drop");
         return;
     }
+
     if (selection == dataSource) {
         return;
     }
-    Q_Q(DataDeviceInterface);
-    QObject::disconnect(selectionUnboundConnection);
-    QObject::disconnect(selectionDestroyedConnection);
     if (selection) {
         selection->cancel();
     }
     selection = dataSource;
     if (selection) {
-        auto clearSelection = [this] {
-            setSelection(nullptr);
-        };
-        selectionUnboundConnection = QObject::connect(selection, &Resource::unbound, q, clearSelection);
-        selectionDestroyedConnection = QObject::connect(selection, &QObject::destroyed, q, clearSelection);
         emit q->selectionChanged(selection);
     } else {
-        selectionUnboundConnection = QMetaObject::Connection();
-        selectionDestroyedConnection = QMetaObject::Connection();
         emit q->selectionCleared();
     }
 }
 
-DataOfferInterface *DataDeviceInterface::Private::createDataOffer(AbstractDataSource *source)
+void DataDeviceInterfacePrivate::data_device_release(QtWaylandServer::wl_data_device::Resource *resource)
 {
-    if (!resource) {
-        return nullptr;
-    }
+    wl_resource_destroy(resource->handle);
+}
+
+
+DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSource *source)
+{
     if (!source) {
         // a data offer can only exist together with a source
         return nullptr;
     }
-    Q_Q(DataDeviceInterface);
-    DataOfferInterface *offer = new DataOfferInterface(source, q, resource);
-    auto c = q->global()->display()->getConnection(wl_resource_get_client(resource));
-    offer->create(c, wl_resource_get_version(resource), 0);
-    if (!offer->resource()) {
-        // TODO: send error?
-        delete offer;
+
+    wl_resource *data_offer_resource = wl_resource_create(resource()->client(), &wl_data_offer_interface, resource()->version(), 0);
+    if (!data_offer_resource) {
+        wl_resource_post_no_memory(resource()->handle);
         return nullptr;
     }
-    wl_data_device_send_data_offer(resource, offer->resource());
+
+    DataOfferInterface *offer = new DataOfferInterface(source, data_offer_resource);
+    send_data_offer(offer->resource());
     offer->sendAllOffers();
     return offer;
 }
 
-DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(seat, this, parent, parentResource))
+void DataDeviceInterfacePrivate::data_device_destroy_resource(QtWaylandServer::wl_data_device::Resource *resource)
 {
+    Q_UNUSED(resource)
+    delete q;
+}
+
+DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, wl_resource *resource)
+    : QObject(nullptr)
+    , d(new DataDeviceInterfacePrivate(seat, this, resource))
+{
+    seat->d_func()->registerDataDevice(this);
 }
 
 DataDeviceInterface::~DataDeviceInterface() = default;
 
 SeatInterface *DataDeviceInterface::seat() const
 {
-    Q_D();
     return d->seat;
 }
 
 DataSourceInterface *DataDeviceInterface::dragSource() const
 {
-    Q_D();
     return d->source;
 }
 
 SurfaceInterface *DataDeviceInterface::icon() const
 {
-    Q_D();
     return d->icon;
 }
 
 SurfaceInterface *DataDeviceInterface::origin() const
 {
-    Q_D();
     return d->proxyRemoteSurface ? d->proxyRemoteSurface.data() : d->surface;
 }
 
 DataSourceInterface *DataDeviceInterface::selection() const
 {
-    Q_D();
     return d->selection;
 }
 
 void DataDeviceInterface::sendSelection(AbstractDataSource *other)
 {
-    Q_D();
     auto r = d->createDataOffer(other);
     if (!r) {
         return;
     }
-    if (!d->resource) {
-        return;
-    }
-    wl_data_device_send_selection(d->resource, r->resource());
+    d->send_selection(r->resource());
 }
 
 void DataDeviceInterface::sendClearSelection()
 {
-    Q_D();
-    if (!d->resource) {
-        return;
-    }
-    wl_data_device_send_selection(d->resource, nullptr);
+    d->send_selection(nullptr);
 }
 
 void DataDeviceInterface::drop()
 {
-    Q_D();
-    if (!d->resource) {
-        return;
-    }
-    wl_data_device_send_drop(d->resource);
+    d->send_drop();
     if (d->drag.posConnection) {
         disconnect(d->drag.posConnection);
         d->drag.posConnection = QMetaObject::Connection();
@@ -245,15 +209,14 @@ void DataDeviceInterface::drop()
     disconnect(d->drag.destroyConnection);
     d->drag.destroyConnection = QMetaObject::Connection();
     d->drag.surface = nullptr;
-    client()->flush();
+    wl_client_flush(d->resource()->client());
 }
 
 void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
 {
-    Q_D();
     if (d->drag.surface) {
-        if (d->resource && d->drag.surface->resource()) {
-            wl_data_device_send_leave(d->resource);
+        if (d->drag.surface->resource()) {
+            d->send_leave();
         }
         if (d->drag.posConnection) {
             disconnect(d->drag.posConnection);
@@ -289,48 +252,43 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     if (d->seat->isDragPointer()) {
         d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this,
             [this] {
-                Q_D();
                 const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-                wl_data_device_send_motion(d->resource, d->seat->timestamp(),
+                d->send_motion(d->seat->timestamp(),
                                         wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-                client()->flush();
+                wl_client_flush(d->resource()->client());
             }
         );
     } else if (d->seat->isDragTouch()) {
         d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this,
             [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
-                Q_D();
                 Q_UNUSED(id);
                 if (serial != d->drag.serial) {
                     // different touch down has been moved
                     return;
                 }
                 const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
-                wl_data_device_send_motion(d->resource, d->seat->timestamp(),
-                                        wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-                client()->flush();
+                d->send_motion(d->seat->timestamp(),
+                               wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+                wl_client_flush(d->resource()->client());
             }
         );
     }
     d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this,
         [this] {
-            Q_D();
-            if (d->resource) {
-                wl_data_device_send_leave(d->resource);
-            }
+            d->send_leave();
             if (d->drag.posConnection) {
                 disconnect(d->drag.posConnection);
             }
-            d->drag = Private::Drag();
+            d->drag = DataDeviceInterfacePrivate::Drag();
         }
     );
 
     // TODO: handle touch position
     const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-    wl_data_device_send_enter(d->resource, serial, surface->resource(),
-                              wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
+    d->send_enter(serial, surface->resource(),
+                  wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {
-        offer->d_func()->sendSourceActions();
+        offer->sendSourceActions();
         auto matchOffers = [source, offer] {
             DataDeviceManagerInterface::DnDAction action{DataDeviceManagerInterface::DnDAction::None};
             if (source->supportedDragAndDropActions().testFlag(offer->preferredDragAndDropAction())) {
@@ -353,25 +311,23 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         d->drag.targetActionConnection = connect(offer, &DataOfferInterface::dragAndDropActionsChanged, source, matchOffers);
         d->drag.sourceActionConnection = connect(source, &DataSourceInterface::supportedDragAndDropActionsChanged, source, matchOffers);
     }
-    d->client->flush();
+    wl_client_flush(d->resource()->client());
 }
 
 quint32 DataDeviceInterface::dragImplicitGrabSerial() const
 {
-    Q_D();
     return d->drag.serial;
 }
 
 void DataDeviceInterface::updateProxy(SurfaceInterface *remote)
 {
-    Q_D();
     // TODO: connect destroy signal?
     d->proxyRemoteSurface = remote;
 }
 
-DataDeviceInterface::Private *DataDeviceInterface::d_func() const
+wl_client *DataDeviceInterface::client()
 {
-    return reinterpret_cast<DataDeviceInterface::Private*>(d.data());
+    return d->resource()->client();
 }
 
 }

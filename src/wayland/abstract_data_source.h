@@ -27,10 +27,7 @@ namespace KWaylandServer {
 // Anything related to selections are pure virtual, content relating
 // to drag and drop has a default implementation
 
-
-// TODO ideally this shouldn't inherit from resource as it provides some misleading public methods
-// This can be resolved once DataSource is ported to the new system
-class KWAYLANDSERVER_EXPORT AbstractDataSource : public Resource
+class KWAYLANDSERVER_EXPORT AbstractDataSource : public QObject
 {
     Q_OBJECT
 public:
@@ -64,16 +61,18 @@ public:
         Q_UNUSED(action);
     };
 
-    virtual wl_client* client() {
-        return Resource::client()->client();
-    }
+    virtual wl_client* client() const {
+        return nullptr;
+    };
 
 Q_SIGNALS:
+    void aboutToBeDestroyed();
+
     void mimeTypeOffered(const QString&);
     void supportedDragAndDropActionsChanged();
 
 protected:
-    explicit AbstractDataSource(Resource::Private *d, QObject *parent = nullptr);
+    explicit AbstractDataSource(QObject *parent = nullptr);
 };
 
 }

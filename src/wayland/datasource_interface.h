@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -14,6 +15,8 @@
 
 namespace KWaylandServer
 {
+
+class DataSourceInterfacePrivate;
 
 /**
  * @brief Represents the Resource for the wl_data_source interface.
@@ -42,12 +45,15 @@ public:
     void dndFinished() override;
     void dndAction(DataDeviceManagerInterface::DnDAction action) override;
 
+    wl_resource *resource() const;
+
+    wl_client *client() const override;
+
 private:
-    friend class DataDeviceManagerInterface;
+    friend class DataDeviceManagerInterfacePrivate;
     explicit DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *parentResource);
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<DataSourceInterfacePrivate> d;
 };
 
 }

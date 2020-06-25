@@ -780,8 +780,8 @@ Q_SIGNALS:
 private:
     friend class Display;
     friend class DataControlDeviceV1Interface;
+    friend class DataDeviceInterface;
     friend class PrimarySelectionDeviceV1Interface;
-    friend class DataDeviceManagerInterface;
     friend class TextInputManagerV2InterfacePrivate;
     explicit SeatInterface(Display *display, QObject *parent);
 

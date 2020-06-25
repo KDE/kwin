@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -21,6 +22,7 @@ class DataSourceInterface;
 class AbstractDataSource;
 class SeatInterface;
 class SurfaceInterface;
+class DataDeviceInterfacePrivate;
 
 /**
  * @brief DataDeviceInterface allows clients to share data by copy-and-paste and drag-and-drop.
@@ -33,7 +35,7 @@ class SurfaceInterface;
  * @see SeatInterface
  * @see DataSourceInterface
  **/
-class KWAYLANDSERVER_EXPORT DataDeviceInterface : public Resource
+class KWAYLANDSERVER_EXPORT DataDeviceInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -78,17 +80,17 @@ public:
      **/
     void updateProxy(SurfaceInterface *remote);
 
+    wl_client *client();
+
 Q_SIGNALS:
     void dragStarted();
     void selectionChanged(KWaylandServer::DataSourceInterface*);
     void selectionCleared();
 
 private:
-    friend class DataDeviceManagerInterface;
-    explicit DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent, wl_resource *parentResource);
-
-    class Private;
-    Private *d_func() const;
+    friend class DataDeviceManagerInterfacePrivate;
+    explicit DataDeviceInterface(SeatInterface *seat, wl_resource *resource);
+    QScopedPointer<DataDeviceInterfacePrivate> d;
 };
 
 }

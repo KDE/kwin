@@ -40,7 +40,7 @@ DataControlSourceV1InterfacePrivate::DataControlSourceV1InterfacePrivate(DataCon
 void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy_resource(QtWaylandServer::zwlr_data_control_source_v1::Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->unbound();
+    emit q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -56,7 +56,7 @@ void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy(Qt
 }
 
 DataControlSourceV1Interface::DataControlSourceV1Interface(DataControlDeviceManagerV1Interface *parent, ::wl_resource *resource)
-    : AbstractDataSource(nullptr, parent)
+    : AbstractDataSource(parent)
     , d(new DataControlSourceV1InterfacePrivate(this, resource))
 {
 }
@@ -79,7 +79,7 @@ QStringList DataControlSourceV1Interface::mimeTypes() const
     return d->mimeTypes;
 }
 
-wl_client *DataControlSourceV1Interface::client()
+wl_client *DataControlSourceV1Interface::client() const
 {
     return d->resource()->client();
 }

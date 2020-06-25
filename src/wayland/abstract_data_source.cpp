@@ -8,6 +8,6 @@
 
 using namespace KWaylandServer;
 
-AbstractDataSource::AbstractDataSource(Resource::Private *d, QObject *parent)
-    : Resource(d, parent)
+AbstractDataSource::AbstractDataSource(QObject *parent)
+    : QObject(parent)
 {}

@@ -38,8 +38,7 @@ PrimarySelectionSourceV1InterfacePrivate::PrimarySelectionSourceV1InterfacePriva
 void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_destroy_resource(QtWaylandServer::zwp_primary_selection_source_v1::Resource *resource)
 {
     Q_UNUSED(resource)
-    emit q->aboutToBeUnbound();
-    emit q->unbound();
+    emit q->aboutToBeDestroyed();
     delete q;
 }
 
@@ -55,7 +54,7 @@ void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_d
 }
 
 PrimarySelectionSourceV1Interface::PrimarySelectionSourceV1Interface(PrimarySelectionDeviceManagerV1Interface *parent, ::wl_resource *resource)
-    : AbstractDataSource(nullptr, parent)
+    : AbstractDataSource(parent)
     , d(new PrimarySelectionSourceV1InterfacePrivate(this, resource))
 {
 }
@@ -78,7 +77,7 @@ QStringList PrimarySelectionSourceV1Interface::mimeTypes() const
     return d->mimeTypes;
 }
 
-wl_client *PrimarySelectionSourceV1Interface::client()
+wl_client *PrimarySelectionSourceV1Interface::client() const
 {
     return d->resource()->client();
 }

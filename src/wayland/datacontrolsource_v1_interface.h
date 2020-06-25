@@ -33,7 +33,7 @@ public:
     void cancel() override;
 
     QStringList mimeTypes() const override;
-    wl_client *client() override;
+    wl_client *client() const override;
 
     static DataControlSourceV1Interface *get(wl_resource *native);
 

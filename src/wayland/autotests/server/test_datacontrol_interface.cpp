@@ -110,7 +110,7 @@ public:
         AbstractDataSource(nullptr)
     {}
     ~TestDataSource() {
-        emit unbound();
+        emit aboutToBeDestroyed();
     }
     void requestData(const QString &mimeType, qint32 fd) override {
         Q_UNUSED(mimeType);

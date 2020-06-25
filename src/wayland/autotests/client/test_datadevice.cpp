@@ -27,6 +27,8 @@
 // Wayland
 #include <wayland-client.h>
 
+#include <unistd.h>
+
 class TestDataDevice : public QObject
 {
     Q_OBJECT
@@ -101,8 +103,6 @@ void TestDataDevice::init()
     registry.setup();
 
     m_dataDeviceManagerInterface = m_display->createDataDeviceManager(m_display);
-    m_dataDeviceManagerInterface->create();
-    QVERIFY(m_dataDeviceManagerInterface->isValid());
 
     QVERIFY(dataDeviceManagerSpy.wait());
     m_dataDeviceManager = registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
@@ -179,8 +179,6 @@ void TestDataDevice::testCreate()
     QVERIFY(!deviceInterface->origin());
     QVERIFY(!deviceInterface->icon());
     QVERIFY(!deviceInterface->selection());
-    QVERIFY(deviceInterface->parentResource());
-
 
     // this will probably fail, we need to make a selection client side
     QVERIFY(!m_seatInterface->selection());
@@ -433,12 +431,10 @@ void TestDataDevice::testSetSelection()
     dataDevice->setSelection(2, dataSource.data());
     QVERIFY(selectionChangedSpy.wait());
     // now unbind the dataDevice
-    QSignalSpy unboundSpy(deviceInterface, &DataDeviceInterface::unbound);
+    QSignalSpy unboundSpy(deviceInterface, &QObject::destroyed);
     QVERIFY(unboundSpy.isValid());
     dataDevice.reset();
     QVERIFY(unboundSpy.wait());
-    // send a selection to the unbound data device
-    deviceInterface->sendSelection(deviceInterface->selection());
 }
 
 void TestDataDevice::testSendSelectionOnSeat()
@@ -491,7 +487,7 @@ void TestDataDevice::testSendSelectionOnSeat()
 
     // now let's try to destroy the data device and set a focused keyboard just while the data device is being destroyedd
     m_seatInterface->setFocusedKeyboardSurface(nullptr);
-    QSignalSpy unboundSpy(serverDataDevice, &Resource::unbound);
+    QSignalSpy unboundSpy(serverDataDevice, &QObject::destroyed);
     QVERIFY(unboundSpy.isValid());
     dataDevice.reset();
     QVERIFY(unboundSpy.wait());
@@ -575,6 +571,21 @@ void TestDataDevice::testReplaceSource()
     dataSource3.reset();
     dataDevice2->setSelection(1, dataSource4.data());
     QVERIFY(selectionOfferedSpy.wait());
+
+    auto dataOffer = selectionOfferedSpy.last()[0].value<DataOffer*>();
+
+    // try to crash by destroying the data source, then requesting data
+    dataSource4.reset();
+    int pipeFds[2];
+    Q_ASSERT(pipe(pipeFds) == 0);
+
+    dataOffer->receive(QStringLiteral("text/plain"), pipeFds[1]);
+    close(pipeFds[1]);
+
+    //spin the event loop, nothing should explode
+    QTest::qWait(10);
+
+    close(pipeFds[0]);
 }
 
 void TestDataDevice::testDestroy()

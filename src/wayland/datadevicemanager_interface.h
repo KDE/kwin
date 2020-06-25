@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -9,7 +10,6 @@
 #include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
 #include "datadevice_interface.h"
 
 namespace KWaylandServer
@@ -17,20 +17,20 @@ namespace KWaylandServer
 
 class Display;
 class DataSourceInterface;
+class DataDeviceManagerInterfacePrivate;
 
 /**
  * @brief Represents the Global for wl_data_device_manager interface.
  *
  **/
-class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~DataDeviceManagerInterface();
+    ~DataDeviceManagerInterface() override;
 
     /**
      * Drag and Drop actions supported by the DataSourceInterface.
-     * @since 5.XX
      **/
     enum class DnDAction {
         None = 0,
@@ -47,7 +47,7 @@ Q_SIGNALS:
 private:
     explicit DataDeviceManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<DataDeviceManagerInterfacePrivate> d;
 };
 
 }

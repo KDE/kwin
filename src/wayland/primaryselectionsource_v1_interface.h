@@ -33,7 +33,7 @@ public:
     QStringList mimeTypes() const override;
 
     static PrimarySelectionSourceV1Interface *get(wl_resource *native);
-    wl_client *client() override;
+    wl_client *client() const override;
 
 private:
     friend class PrimarySelectionDeviceManagerV1InterfacePrivate;
