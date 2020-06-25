@@ -10,6 +10,7 @@
 #define KWIN_WAYLAND_SERVER_H
 
 #include <kwinglobals.h>
+#include "grab_filter.h"
 #include "keyboard_input.h"
 
 #include <QObject>
@@ -301,8 +302,10 @@ private:
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     QList<AbstractClient *> m_clients;
+    QScopedPointer<GrabFilter> m_grabFilter;
     InitializationFlags m_initFlags;
     QVector<KWaylandServer::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
+    friend class ApplicationWayland;
     KWIN_SINGLETON(WaylandServer)
 };
 

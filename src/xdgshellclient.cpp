@@ -11,6 +11,8 @@
 #include "xdgshellclient.h"
 #include "abstract_wayland_output.h"
 #include "deleted.h"
+#include "grab_filter.h"
+#include "input.h"
 #include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -30,6 +32,10 @@
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
+
+#include <QKeyEvent>
+
+#include <wayland-server-core.h>
 
 using namespace KWaylandServer;
 
@@ -1749,7 +1755,10 @@ bool XdgPopupClient::hasPopupGrab() const
     if (m_grabSeat.isNull()) {
         return false;
     }
-    return m_grabSeat->grabHandler<XdgPopupGrab>()->toplevelPopup() == m_shellSurface;
+
+    auto xdgPopupGrab = qobject_cast<XdgPopupGrab*>(waylandServer()->seat()->keyboardGrab());
+
+    return xdgPopupGrab && xdgPopupGrab->toplevelPopup() == m_shellSurface;
 }
 
 void XdgPopupClient::popupDone()
@@ -2007,7 +2016,19 @@ void XdgPopupClient::handleGrabRequested(SeatInterface *seat, quint32 serial)
 {
     Q_UNUSED(serial)
     m_grabSeat = seat;
-    seat->grabHandler<XdgPopupGrab>()->grabPopup(m_shellSurface);
+
+    auto keyboardGrab = waylandServer()->seat()->keyboardGrab();
+    auto xdgPopupGrab = qobject_cast<XdgPopupGrab*>(keyboardGrab);
+
+    if (keyboardGrab != nullptr && xdgPopupGrab == nullptr) {
+        return;
+    } else if (keyboardGrab == nullptr) {
+        auto grabber = new XdgPopupGrab;
+        grabber->grabPopup(m_shellSurface);
+        waylandServer()->seat()->setKeyboardGrab(grabber);
+    } else if (xdgPopupGrab != nullptr) {
+        xdgPopupGrab->grabPopup(m_shellSurface);
+    }
 }
 
 void XdgPopupClient::initialize()

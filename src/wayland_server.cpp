@@ -8,6 +8,7 @@
 */
 #include "wayland_server.h"
 #include "abstract_wayland_output.h"
+#include "grab_filter.h"
 #include "x11client.h"
 #include "platform.h"
 #include "composite.h"
@@ -184,6 +185,7 @@ public:
 WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
     , m_display(new KWinDisplay(this))
+    , m_grabFilter(new GrabFilter)
 {
     qRegisterMetaType<KWaylandServer::OutputInterface::DpmsMode>();
 }

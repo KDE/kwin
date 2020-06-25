@@ -51,6 +51,7 @@ set(kwin_SRCS
     gestures.cpp
     globalshortcuts.cpp
     group.cpp
+    grab_filter.cpp
     idle_inhibition.cpp
     input.cpp
     input_event.cpp

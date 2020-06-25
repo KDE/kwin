@@ -163,6 +163,8 @@ void ApplicationWayland::performStartup()
 
     // try creating the Wayland Backend
     createInput();
+    input()->prependInputEventFilter(waylandServer()->m_grabFilter.data());
+
     // now libinput thread has been created, adjust scheduler to not leak into other processes
     gainRealTime(RealTimeFlags::ResetOnFork);
 
