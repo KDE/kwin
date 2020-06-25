@@ -29,6 +29,7 @@
 #include <KWaylandServer/server_decoration_palette_interface.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
+#include <KWaylandServer/xdgshell_interface.h>
 
 using namespace KWaylandServer;
 
@@ -1745,7 +1746,10 @@ NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) con
 
 bool XdgPopupClient::hasPopupGrab() const
 {
-    return m_haveExplicitGrab;
+    if (m_grabSeat.isNull()) {
+        return false;
+    }
+    return m_grabSeat->grabHandler<XdgPopupGrab>()->toplevelPopup() == m_shellSurface;
 }
 
 void XdgPopupClient::popupDone()
@@ -2001,9 +2005,9 @@ XdgSurfaceConfigure *XdgPopupClient::sendRoleConfigure() const
 
 void XdgPopupClient::handleGrabRequested(SeatInterface *seat, quint32 serial)
 {
-    Q_UNUSED(seat)
     Q_UNUSED(serial)
-    m_haveExplicitGrab = true;
+    m_grabSeat = seat;
+    seat->grabHandler<XdgPopupGrab>()->grabPopup(m_shellSurface);
 }
 
 void XdgPopupClient::initialize()
