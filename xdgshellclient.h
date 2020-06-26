@@ -221,6 +221,8 @@ private:
     void setupWindowManagementIntegration();
     void setupPlasmaShellIntegration();
     void sendPing(PingReason reason);
+    MaximizeMode initialMaximizeMode() const;
+    bool initialFullScreenMode() const;
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
@@ -230,12 +232,14 @@ private:
     KWaylandServer::XdgToplevelInterface *m_shellSurface;
     KWaylandServer::XdgToplevelInterface::States m_requestedStates;
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
+    KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
     QRect m_fullScreenGeometryRestore;
     NET::WindowType m_windowType = NET::Normal;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     bool m_isFullScreen = false;
+    bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;
 };

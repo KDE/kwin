@@ -1188,27 +1188,43 @@ void XdgToplevelClient::handleStatesAcknowledged(const XdgToplevelInterface::Sta
 
 void XdgToplevelClient::handleMaximizeRequested()
 {
-    maximize(MaximizeFull);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        maximize(MaximizeFull);
+        scheduleConfigure();
+    } else {
+        m_initialStates |= XdgToplevelInterface::State::Maximized;
+    }
 }
 
 void XdgToplevelClient::handleUnmaximizeRequested()
 {
-    maximize(MaximizeRestore);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        maximize(MaximizeRestore);
+        scheduleConfigure();
+    } else {
+        m_initialStates &= ~XdgToplevelInterface::State::Maximized;
+    }
 }
 
 void XdgToplevelClient::handleFullscreenRequested(OutputInterface *output)
 {
     Q_UNUSED(output)
-    setFullScreen(/* set */ true, /* user */ false);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        setFullScreen(/* set */ true, /* user */ false);
+        scheduleConfigure();
+    } else {
+        m_initialStates |= XdgToplevelInterface::State::FullScreen;
+    }
 }
 
 void XdgToplevelClient::handleUnfullscreenRequested()
 {
-    setFullScreen(/* set */ false, /* user */ false);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        setFullScreen(/* set */ false, /* user */ false);
+        scheduleConfigure();
+    } else {
+        m_initialStates &= ~XdgToplevelInterface::State::FullScreen;
+    }
 }
 
 void XdgToplevelClient::handleMinimizeRequested()
@@ -1291,6 +1307,23 @@ void XdgToplevelClient::sendPing(PingReason reason)
     m_pings.insert(serial, reason);
 }
 
+MaximizeMode XdgToplevelClient::initialMaximizeMode() const
+{
+    MaximizeMode maximizeMode = MaximizeRestore;
+    if (m_initialStates & XdgToplevelInterface::State::MaximizedHorizontal) {
+        maximizeMode = MaximizeMode(maximizeMode | MaximizeHorizontal);
+    }
+    if (m_initialStates & XdgToplevelInterface::State::MaximizedVertical) {
+        maximizeMode = MaximizeMode(maximizeMode | MaximizeVertical);
+    }
+    return maximizeMode;
+}
+
+bool XdgToplevelClient::initialFullScreenMode() const
+{
+    return m_initialStates & XdgToplevelInterface::State::FullScreen;
+}
+
 void XdgToplevelClient::initialize()
 {
     blockGeometryUpdates(true);
@@ -1305,7 +1338,8 @@ void XdgToplevelClient::initialize()
         if (originalGeometry != ruledGeometry) {
             setFrameGeometry(ruledGeometry);
         }
-        maximize(rules()->checkMaximize(maximizeMode(), true));
+        maximize(rules()->checkMaximize(initialMaximizeMode(), true));
+        setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
         setDesktop(rules()->checkDesktop(desktop(), true));
         setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
         if (rules()->checkMinimize(isMinimized(), true)) {
@@ -1343,6 +1377,7 @@ void XdgToplevelClient::initialize()
     blockGeometryUpdates(false);
     scheduleConfigure();
     updateColorScheme();
+    m_isInitialized = true;
 }
 
 void XdgToplevelClient::updateMaximizeMode(MaximizeMode maximizeMode)
