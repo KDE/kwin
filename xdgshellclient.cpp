@@ -1330,6 +1330,8 @@ void XdgToplevelClient::initialize()
 
     bool needsPlacement = !isInitialPositionSet();
 
+    updateDecoration(false, false);
+
     if (supportsWindowRules()) {
         setupWindowRules(false);
 
@@ -1449,13 +1451,15 @@ void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *d
     m_xdgDecoration = decoration;
 
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed, this, [this] {
-        if (!isClosing()) {
+        if (!isClosing() && m_isInitialized) {
             updateDecoration(/* check_workspace_pos */ true);
         }
     });
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
-        // force is true as we must send a new configure response.
-        updateDecoration(/* check_workspace_pos */ false, /* force */ true);
+        if (m_isInitialized) {
+            // force is true as we must send a new configure response.
+            updateDecoration(/* check_workspace_pos */ false, /* force */ true);
+        }
     });
 }
 
