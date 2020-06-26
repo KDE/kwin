@@ -8,20 +8,20 @@
 #define KWAYLAND_KEYSTATE_INTERFACE_H
 
 #include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
-#include "resource.h"
+#include <QObject>
 
 namespace KWaylandServer
 {
 
 class Display;
+class KeyStateInterfacePrivate;
 
 /**
  * @brief Exposes key states to wayland clients
  *
  * @since 5.58
  **/
-class KWAYLANDSERVER_EXPORT KeyStateInterface : public Global
+class KWAYLANDSERVER_EXPORT KeyStateInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -46,7 +46,7 @@ private:
     explicit KeyStateInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
 
-    class Private;
+    QScopedPointer<KeyStateInterfacePrivate> d;
 };
 
 }
