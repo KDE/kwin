@@ -118,11 +118,11 @@ void KeyboardLayout::initNotifierItem()
     m_notifierItem->setStatus(KStatusNotifierItem::Passive);
     m_notifierItem->setToolTipTitle(i18nc("tooltip title", "Keyboard Layout"));
     m_notifierItem->setTitle(i18nc("tooltip title", "Keyboard Layout"));
-    m_notifierItem->setToolTipIconByName(QStringLiteral("preferences-desktop-keyboard"));
+    m_notifierItem->setToolTipIconByName(QStringLiteral("input-keyboard"));
     m_notifierItem->setStandardActionsEnabled(false);
 
     // TODO: proper icon
-    m_notifierItem->setIconByName(QStringLiteral("preferences-desktop-keyboard"));
+    m_notifierItem->setIconByName(QStringLiteral("input-keyboard"));
 
     connect(m_notifierItem, &KStatusNotifierItem::activateRequested, this, &KeyboardLayout::switchToNextLayout);
     connect(m_notifierItem, &KStatusNotifierItem::scrollRequested, this,
