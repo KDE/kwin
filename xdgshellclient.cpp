@@ -1695,6 +1695,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     }
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
+    dontMoveResize();
 
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
     updateDecoration(false, false);
