@@ -69,6 +69,7 @@ bool Unmanaged::track(xcb_window_t w)
     setWindowHandles(w);   // the window is also the frame
     Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
     m_frameGeometry = geo.rect();
+    m_clientGeometry = geo.rect();
     checkScreen();
     m_visual = attr->visual;
     bit_depth = geo->depth;
