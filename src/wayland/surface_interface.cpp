@@ -388,6 +388,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     const bool childrenChanged = source->childrenChanged;
     const bool visibilityChanged = bufferChanged && (bool(source->buffer) != bool(target->buffer));
     const QSize oldSize = target->size;
+    const QSize oldBufferSize = bufferSize;
     const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
     if (bufferChanged) {
         // TODO: is the reffing correct for subsurfaces?
@@ -472,6 +473,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     }
     // TODO: Refactor the state management code because it gets more clumsy.
     if (target->buffer) {
+        bufferSize = target->buffer->size();
         if (target->destinationSize.isValid()) {
             target->size = target->destinationSize;
         } else if (target->sourceGeometry.isValid()) {
@@ -494,6 +496,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         }
     } else {
         target->size = QSize();
+        bufferSize = QSize();
     }
     surfaceToBufferMatrix = buildSurfaceToBufferMatrix(target);
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
@@ -537,6 +540,9 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     }
     if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
         emit q->surfaceToBufferMatrixChanged();
+    }
+    if (bufferSize != oldBufferSize) {
+        emit q->bufferSizeChanged();
     }
     if (target->size != oldSize) {
         emit q->sizeChanged();

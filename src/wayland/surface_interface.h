@@ -174,6 +174,12 @@ public:
      * @since 5.69
      */
     QRect boundingRect() const;
+    /**
+     * Returns the size of the attached buffer, in device pixels.
+     *
+     * If no buffer is attached to this surface, an invalid QSize will be returned.
+     */
+    QSize bufferSize() const;
 
     /**
      * @returns The SubSurface for this Surface in case there is one.
@@ -369,6 +375,10 @@ Q_SIGNALS:
      * This signal is emitted when the buffer transform has changed.
      */
     void bufferTransformChanged(KWaylandServer::OutputInterface::Transform);
+    /**
+     * This signal is emitted when the size of the attached buffer has changed.
+     */
+    void bufferSizeChanged();
     /**
      * Emitted when the Surface becomes visible, i.e. a non-null buffer has been attached.
      **/
