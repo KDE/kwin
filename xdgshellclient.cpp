@@ -1757,6 +1757,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     StackingUpdatesBlocker blocker(workspace());
+    dontMoveResize();
 
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
