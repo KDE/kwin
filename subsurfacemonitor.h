@@ -75,6 +75,10 @@ Q_SIGNALS:
      * and the buffer coordinate space for a sub-surface has changed.
      */
     void subSurfaceSurfaceToBufferMatrixChanged();
+    /**
+     * This signal is emitted when the buffer size of a subsurface has changed.
+     */
+    void subSurfaceBufferSizeChanged();
 
 private:
     void registerSubSurface(KWaylandServer::SubSurfaceInterface *subSurface);
