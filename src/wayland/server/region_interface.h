@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -11,11 +12,13 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "resource.h"
+struct wl_resource;
 
 namespace KWaylandServer
 {
+
 class CompositorInterface;
+class RegionInterfacePrivate;
 
 /**
  * @brief Resource for the wl_region.
@@ -25,7 +28,7 @@ class CompositorInterface;
  *
  * @see CompositorInterface
  **/
-class KWAYLANDSERVER_EXPORT RegionInterface : public Resource
+class KWAYLANDSERVER_EXPORT RegionInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -49,10 +52,8 @@ Q_SIGNALS:
 
 private:
     friend class CompositorInterface;
-    explicit RegionInterface(CompositorInterface *parent, wl_resource *parentResource);
-
-    class Private;
-    Private *d_func() const;
+    explicit RegionInterface(CompositorInterface *compositor, wl_resource *resource);
+    QScopedPointer<RegionInterfacePrivate> d;
 };
 
 }

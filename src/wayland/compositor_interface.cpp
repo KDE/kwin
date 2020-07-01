@@ -99,14 +99,13 @@ void CompositorInterface::Private::createRegionCallback(wl_client *client, wl_re
 
 void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    RegionInterface *region = new RegionInterface(q, resource);
-    region->create(display->getConnection(client), wl_resource_get_version(resource), id);
-    if (!region->resource()) {
+    wl_resource *regionResource = wl_resource_create(client, &wl_region_interface,
+                                                     wl_resource_get_version(resource), id);
+    if (!regionResource) {
         wl_resource_post_no_memory(resource);
-        delete region;
         return;
     }
-    emit q->regionCreated(region);
+    emit q->regionCreated(new RegionInterface(q, regionResource));
 }
 
 }

@@ -136,7 +136,6 @@ void TestRegion::testCreate()
     auto serverRegion = regionCreatedSpy.first().first().value<KWaylandServer::RegionInterface*>();
     QVERIFY(serverRegion);
     QCOMPARE(serverRegion->region(), QRegion());
-    QCOMPARE(serverRegion->global(), m_compositorInterface);
 }
 
 void TestRegion::testCreateWithRegion()
@@ -154,7 +153,6 @@ void TestRegion::testCreateWithRegion()
     auto serverRegion = regionCreatedSpy.first().first().value<KWaylandServer::RegionInterface*>();
     QVERIFY(serverRegion);
     QCOMPARE(serverRegion->region(), QRegion(0, 0, 10, 20));
-    QVERIFY(serverRegion->parentResource());
 }
 
 void TestRegion::testCreateUniquePtr()
@@ -282,16 +280,12 @@ void TestRegion::testDisconnect()
     auto serverRegion = regionCreatedSpy.first().first().value<RegionInterface*>();
 
     // destroy client
-    QSignalSpy clientDisconnectedSpy(serverRegion->client(), &ClientConnection::disconnected);
-    QVERIFY(clientDisconnectedSpy.isValid());
     QSignalSpy regionDestroyedSpy(serverRegion, &QObject::destroyed);
     QVERIFY(regionDestroyedSpy.isValid());
     if (m_connection) {
         m_connection->deleteLater();
         m_connection = nullptr;
     }
-    QVERIFY(clientDisconnectedSpy.wait());
-    QCOMPARE(clientDisconnectedSpy.count(), 1);
     QCOMPARE(regionDestroyedSpy.count(), 0);
     QVERIFY(regionDestroyedSpy.wait());
     QCOMPARE(regionDestroyedSpy.count(), 1);

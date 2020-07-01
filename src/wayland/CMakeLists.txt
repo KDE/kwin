@@ -79,6 +79,11 @@ ecm_qt_declare_logging_category(SERVER_LIB_SRCS
     EXPORT KWAYLAND
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${Wayland_DATADIR}/wayland.xml
+    BASENAME wayland
+)
+
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/output-management.xml
     BASENAME output-management
