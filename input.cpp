@@ -1561,7 +1561,7 @@ static KWaylandServer::SeatInterface *findSeat()
 }
 
 /**
- * Useful when there's no proper tablet support on the clients
+ * Handles input coming from a tablet device (e.g. wacom) often with a pen
  */
 class TabletInputFilter : public QObject, public InputEventFilter
 {
@@ -1713,7 +1713,7 @@ public:
 
         switch (event->type()) {
         case QEvent::TabletMove: {
-            const auto pos = event->globalPosF() - toplevel->pos();
+            const auto pos = event->globalPosF() - toplevel->bufferGeometry().topLeft();
             tool->sendMotion(pos);
             m_cursorByTool[tool]->setPos(event->globalPos());
             break;
