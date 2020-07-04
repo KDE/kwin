@@ -305,7 +305,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         return false;
     }
     m_compositor = m_display->createCompositor(m_display);
-    m_compositor->create();
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,
         [this] (SurfaceInterface *surface) {
             // check whether we have a Toplevel with the Surface's id

@@ -248,7 +248,7 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
         m_streamTextures.insert(surface, newSt);
         texture = newSt.texture;
 
-        connect(surface, &KWaylandServer::Resource::unbound, this,
+        connect(surface, &KWaylandServer::SurfaceInterface::destroyed, this,
             [surface, this]() {
                 const StreamTexture &st = m_streamTextures.take(surface);
                 pEglDestroyStreamKHR(eglDisplay(), st.stream);

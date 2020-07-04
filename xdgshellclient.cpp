@@ -74,8 +74,6 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     connect(shellSurface->surface(), &SurfaceInterface::mapped,
             this, &XdgSurfaceClient::setReadyForPainting);
 #endif
-    connect(shellSurface->surface(), &SurfaceInterface::unbound,
-            this, &XdgSurfaceClient::destroyClient);
     connect(shellSurface->surface(), &SurfaceInterface::destroyed,
             this, &XdgSurfaceClient::destroyClient);
 
