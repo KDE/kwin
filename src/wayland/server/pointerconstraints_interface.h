@@ -177,7 +177,7 @@ protected:
 
 private:
     Private *d_func() const;
-    friend class SurfaceInterface;
+    friend class SurfaceInterfacePrivate;
 };
 
 /**
@@ -271,7 +271,7 @@ protected:
 
 private:
     Private *d_func() const;
-    friend class SurfaceInterface;
+    friend class SurfaceInterfacePrivate;
 };
 
 }

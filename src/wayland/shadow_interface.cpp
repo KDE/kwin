@@ -97,7 +97,8 @@ void ShadowManagerInterface::Private::createShadow(wl_client *client, wl_resourc
         delete shadow;
         return;
     }
-    s->d_func()->setShadow(QPointer<ShadowInterface>(shadow));
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setShadow(QPointer<ShadowInterface>(shadow));
 }
 
 void ShadowManagerInterface::Private::unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
@@ -108,7 +109,8 @@ void ShadowManagerInterface::Private::unsetCallback(wl_client *client, wl_resour
     if (!s) {
         return;
     }
-    s->d_func()->setShadow(QPointer<ShadowInterface>());
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setShadow(QPointer<ShadowInterface>());
 }
 
 ShadowManagerInterface::ShadowManagerInterface(Display *display, QObject *parent)

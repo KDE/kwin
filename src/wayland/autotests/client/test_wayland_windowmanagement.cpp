@@ -64,7 +64,7 @@ private:
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
     KWaylandServer::PlasmaWindowInterface *m_windowInterface;
-    KWaylandServer::SurfaceInterface *m_surfaceInterface = nullptr;
+    QPointer<KWaylandServer::SurfaceInterface> m_surfaceInterface;
 
     KWayland::Client::Surface *m_surface = nullptr;
     KWayland::Client::ConnectionThread *m_connection;
@@ -234,8 +234,7 @@ void TestWindowManagement::cleanup()
     delete m_windowInterface;
     m_windowInterface = nullptr;
 
-    delete m_surfaceInterface;
-    m_surfaceInterface = nullptr;
+    QVERIFY(m_surfaceInterface.isNull());
 
     delete m_display;
     m_display = nullptr;

@@ -132,7 +132,8 @@ SubSurfaceInterface::Private::~Private()
     // no need to notify the surface as it's tracking a QPointer which will be reset automatically
     if (parent) {
         Q_Q(SubSurfaceInterface);
-        reinterpret_cast<SurfaceInterface::Private*>(parent->d.data())->removeChild(QPointer<SubSurfaceInterface>(q));
+        SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
+        parentPrivate->removeChild(QPointer<SubSurfaceInterface>(q));
     }
 }
 
@@ -145,21 +146,23 @@ void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 vers
     surface = s;
     parent = p;
     Q_Q(SubSurfaceInterface);
-    surface->d_func()->subSurface = QPointer<SubSurfaceInterface>(q);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
+    surfacePrivate->subSurface = QPointer<SubSurfaceInterface>(q);
     // copy current state to subSurfacePending state
     // it's the reference for all new pending state which needs to be committed
-    surface->d_func()->subSurfacePending = surface->d_func()->current;
-    surface->d_func()->subSurfacePending.blurIsSet = false;
-    surface->d_func()->subSurfacePending.bufferIsSet = false;
-    surface->d_func()->subSurfacePending.childrenChanged = false;
-    surface->d_func()->subSurfacePending.contrastIsSet = false;
-    surface->d_func()->subSurfacePending.callbacks.clear();
-    surface->d_func()->subSurfacePending.inputIsSet = false;
-    surface->d_func()->subSurfacePending.inputIsInfinite = true;
-    surface->d_func()->subSurfacePending.opaqueIsSet = false;
-    surface->d_func()->subSurfacePending.shadowIsSet = false;
-    surface->d_func()->subSurfacePending.slideIsSet = false;
-    parent->d_func()->addChild(QPointer<SubSurfaceInterface>(q));
+    surfacePrivate->subSurfacePending = surfacePrivate->current;
+    surfacePrivate->subSurfacePending.blurIsSet = false;
+    surfacePrivate->subSurfacePending.bufferIsSet = false;
+    surfacePrivate->subSurfacePending.childrenChanged = false;
+    surfacePrivate->subSurfacePending.contrastIsSet = false;
+    surfacePrivate->subSurfacePending.frameCallbacks.clear();
+    surfacePrivate->subSurfacePending.inputIsSet = false;
+    surfacePrivate->subSurfacePending.inputIsInfinite = true;
+    surfacePrivate->subSurfacePending.opaqueIsSet = false;
+    surfacePrivate->subSurfacePending.shadowIsSet = false;
+    surfacePrivate->subSurfacePending.slideIsSet = false;
+    parentPrivate->addChild(QPointer<SubSurfaceInterface>(q));
 
     QObject::connect(surface.data(), &QObject::destroyed, q,
         [this] {
@@ -168,7 +171,8 @@ void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 vers
             // takes effect immediately."
             if (parent) {
                 Q_Q(SubSurfaceInterface);
-                reinterpret_cast<SurfaceInterface::Private*>(parent->d.data())->removeChild(QPointer<SubSurfaceInterface>(q));
+                SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
+                parentPrivate->removeChild(QPointer<SubSurfaceInterface>(q));
             }
         }
     );
@@ -184,7 +188,8 @@ void SubSurfaceInterface::Private::commit()
         emit q->positionChanged(pos);
     }
     if (surface) {
-        surface->d_func()->commitSubSurface();
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+        surfacePrivate->commitSubSurface();
     }
 }
 
@@ -225,7 +230,8 @@ void SubSurfaceInterface::Private::placeAbove(SurfaceInterface *sibling)
         return;
     }
     Q_Q(SubSurfaceInterface);
-    if (!parent->d_func()->raiseChild(QPointer<SubSurfaceInterface>(q), sibling)) {
+    SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
+    if (!parentPrivate->raiseChild(QPointer<SubSurfaceInterface>(q), sibling)) {
         wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
     }
 }
@@ -243,7 +249,8 @@ void SubSurfaceInterface::Private::placeBelow(SurfaceInterface *sibling)
         return;
     }
     Q_Q(SubSurfaceInterface);
-    if (!parent->d_func()->lowerChild(QPointer<SubSurfaceInterface>(q), sibling)) {
+    SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(parent);
+    if (!parentPrivate->lowerChild(QPointer<SubSurfaceInterface>(q), sibling)) {
         wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
     }
 }
@@ -268,8 +275,9 @@ void SubSurfaceInterface::Private::setMode(Mode m)
     if (m == Mode::Desynchronized && (!parent->subSurface() || !parent->subSurface()->isSynchronized())) {
         // no longer synchronized, this is like calling commit
         if (surface) {
-            surface->d_func()->commit();
-            surface->d_func()->commitSubSurface();
+            SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+            surfacePrivate->commit();
+            surfacePrivate->commitSubSurface();
         }
     }
     mode = m;
@@ -347,8 +355,9 @@ QPointer<SurfaceInterface> SubSurfaceInterface::mainSurface() const
     if (!d->parent) {
         return QPointer<SurfaceInterface>();
     }
-    if (d->parent->d_func()->subSurface) {
-        return d->parent->d_func()->subSurface->mainSurface();
+    SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(d->parent);
+    if (parentPrivate->subSurface) {
+        return parentPrivate->subSurface->mainSurface();
     }
     return d->parent;
 }

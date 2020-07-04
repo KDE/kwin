@@ -47,7 +47,8 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_unset(Resource *reso
     if (!s) {
         return;
     }
-    s->d_func()->setBlur(QPointer<BlurInterface>());
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setBlur(QPointer<BlurInterface>());
 }
 
 
@@ -64,7 +65,8 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_create(Resource *res
         return;
     }
     auto blur = new BlurInterface(blur_resource);
-    s->d_func()->setBlur(blur);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setBlur(blur);
 }
 
 BlurManagerInterface::BlurManagerInterface(Display *display, QObject *parent)

@@ -76,7 +76,6 @@ private Q_SLOTS:
     void testDataDeviceForKeyboardSurface();
     void testTouch();
     void testDisconnect();
-    void testPointerEnterOnUnboundSurface();
     void testKeymap();
     void testKeymapThroughFd();
 
@@ -2307,41 +2306,6 @@ void TestWaylandSeat::testDisconnect()
     m_shm->destroy();
     m_subCompositor->destroy();
     m_queue->destroy();
-}
-
-void TestWaylandSeat::testPointerEnterOnUnboundSurface()
-{
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-
-    // create the things we need
-    m_seatInterface->setHasKeyboard(true);
-    m_seatInterface->setHasPointer(true);
-    m_seatInterface->setHasTouch(true);
-    QSignalSpy pointerChangedSpy(m_seat, &Seat::hasPointerChanged);
-    QVERIFY(pointerChangedSpy.isValid());
-    QVERIFY(pointerChangedSpy.wait());
-
-    // create pointer and Surface
-    QScopedPointer<Pointer> pointer(m_seat->createPointer());
-    QVERIFY(!pointer.isNull());
-    // create the surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(surfaceCreatedSpy.isValid());
-    QScopedPointer<Surface> s(m_compositor->createSurface());
-    QVERIFY(surfaceCreatedSpy.wait());
-    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
-    QVERIFY(serverSurface);
-
-    // unbind the surface again
-    QSignalSpy surfaceUnboundSpy(serverSurface, &SurfaceInterface::unbound);
-    QVERIFY(surfaceUnboundSpy.isValid());
-    s.reset();
-    QVERIFY(surfaceUnboundSpy.wait());
-    QSignalSpy clientErrorSpy(m_connection, &ConnectionThread::errorOccurred);
-    QVERIFY(clientErrorSpy.isValid());
-    m_seatInterface->setFocusedPointerSurface(serverSurface);
-    QVERIFY(!clientErrorSpy.wait(100));
 }
 
 void TestWaylandSeat::testKeymap()

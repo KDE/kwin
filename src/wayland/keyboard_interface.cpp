@@ -130,7 +130,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     if (!d->focusedSurface) {
         return;
     }
-    d->destroyConnection = connect(d->focusedSurface, &Resource::aboutToBeUnbound, this,
+    d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeUnbound, this,
         [this] {
             Q_D();
             if (d->resource) {

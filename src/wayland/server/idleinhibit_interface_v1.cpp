@@ -60,7 +60,8 @@ void IdleInhibitManagerUnstableV1Interface::Private::createInhibitorCallback(wl_
     auto q = cast(resource);
     auto inhibitor = new IdleInhibitorInterface(q->q, resource);
     inhibitor->d_func()->create(q->display->getConnection(client), version, id);
-    s->d_func()->installIdleInhibitor(inhibitor);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->installIdleInhibitor(inhibitor);
 }
 
 void IdleInhibitManagerUnstableV1Interface::Private::bind(wl_client *client, uint32_t version, uint32_t id)

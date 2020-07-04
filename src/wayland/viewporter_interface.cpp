@@ -47,21 +47,21 @@ ViewportInterface::ViewportInterface(SurfaceInterface *surface, wl_resource *res
     : QtWaylandServer::wp_viewport(resource)
     , surface(surface)
 {
-    SurfaceInterface::Private *surfacePrivate = surface->d_func();
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     surfacePrivate->viewportExtension = this;
 }
 
 ViewportInterface::~ViewportInterface()
 {
     if (surface) {
-        SurfaceInterface::Private *surfacePrivate = surface->d_func();
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
         surfacePrivate->viewportExtension = nullptr;
     }
 }
 
 ViewportInterface *ViewportInterface::get(SurfaceInterface *surface)
 {
-    return surface->d_func()->viewportExtension;
+    return SurfaceInterfacePrivate::get(surface)->viewportExtension;
 }
 
 void ViewportInterface::wp_viewport_destroy_resource(Resource *resource)
@@ -73,7 +73,7 @@ void ViewportInterface::wp_viewport_destroy_resource(Resource *resource)
 void ViewportInterface::wp_viewport_destroy(Resource *resource)
 {
     if (surface) {
-        SurfaceInterface::Private *surfacePrivate = surface->d_func();
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
         surfacePrivate->pending.sourceGeometry = QRectF();
         surfacePrivate->pending.sourceGeometryIsSet = true;
         surfacePrivate->pending.destinationSize = QSize();
@@ -97,7 +97,7 @@ void ViewportInterface::wp_viewport_set_source(Resource *resource, wl_fixed_t x_
     const qreal height = wl_fixed_to_double(height_fixed);
 
     if (x == -1 && y == -1 && width == -1 && height == -1) {
-        SurfaceInterface::Private *surfacePrivate = surface->d_func();
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
         surfacePrivate->pending.sourceGeometry = QRectF();
         surfacePrivate->pending.sourceGeometryIsSet = true;
         return;
@@ -108,7 +108,7 @@ void ViewportInterface::wp_viewport_set_source(Resource *resource, wl_fixed_t x_
         return;
     }
 
-    SurfaceInterface::Private *surfacePrivate = surface->d_func();
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     surfacePrivate->pending.sourceGeometry = QRectF(x, y, width, height);
     surfacePrivate->pending.sourceGeometryIsSet = true;
 }
@@ -122,7 +122,7 @@ void ViewportInterface::wp_viewport_set_destination(Resource *resource, int32_t 
     }
 
     if (width == -1 && height == -1) {
-        SurfaceInterface::Private *surfacePrivate = surface->d_func();
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
         surfacePrivate->pending.destinationSize = QSize();
         surfacePrivate->pending.destinationSizeIsSet = true;
         return;
@@ -133,7 +133,7 @@ void ViewportInterface::wp_viewport_set_destination(Resource *resource, int32_t 
         return;
     }
 
-    SurfaceInterface::Private *surfacePrivate = surface->d_func();
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     surfacePrivate->pending.destinationSize = QSize(width, height);
     surfacePrivate->pending.destinationSizeIsSet = true;
 }

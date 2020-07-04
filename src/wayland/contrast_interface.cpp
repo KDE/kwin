@@ -51,7 +51,8 @@ void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_create(Resou
         return;
     }
     auto contrast = new ContrastInterface(contrast_resource);
-    s->d_func()->setContrast(contrast);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setContrast(contrast);
 }
 
 void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_unset(Resource *resource, wl_resource *surface)
@@ -61,7 +62,8 @@ void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_unset(Resour
         wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
     }
-    s->d_func()->setContrast(QPointer<ContrastInterface>());
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setContrast(QPointer<ContrastInterface>());
 }
 
 ContrastManagerInterface::ContrastManagerInterface(Display *display, QObject *parent)

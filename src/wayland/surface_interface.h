@@ -1,12 +1,12 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #ifndef WAYLAND_SERVER_SURFACE_INTERFACE_H
 #define WAYLAND_SERVER_SURFACE_INTERFACE_H
 
-#include "resource.h"
 #include "output_interface.h"
 
 #include <QMatrix4x4>
@@ -18,20 +18,16 @@
 
 namespace KWaylandServer
 {
-class BlurManagerInterface;
 class BlurInterface;
 class BufferInterface;
 class ConfinedPointerInterface;
 class ContrastInterface;
-class ContrastManagerInterface;
 class CompositorInterface;
-class IdleInhibitManagerUnstableV1Interface;
 class LockedPointerInterface;
-class PointerConstraintsUnstableV1Interface;
-class ShadowManagerInterface;
 class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
+class SurfaceInterfacePrivate;
 
 /**
  * @brief Resource representing a wl_surface.
@@ -58,7 +54,7 @@ class SubSurfaceInterface;
  * @see ShadowInterface
  * @see SlideInterface
  **/
-class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
+class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
     /**
@@ -77,7 +73,30 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
     Q_PROPERTY(KWaylandServer::OutputInterface::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
-    virtual ~SurfaceInterface();
+    explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
+    ~SurfaceInterface() override;
+
+    /**
+     * Returns the object id for this Wayland surface.
+     */
+    uint32_t id() const;
+    /**
+     * Returns the Wayland client that owns this SurfaceInterface.
+     */
+    ClientConnection *client() const;
+    /**
+     * Returns the Wayland resource corresponding to this SurfaceInterface.
+     */
+    wl_resource *resource() const;
+    /**
+     * Returns the compositor for this SurfaceInterface.
+     */
+    CompositorInterface *compositor() const;
+
+    /**
+     * Returns a list with all created Wayland surfaces.
+     */
+    static QList<SurfaceInterface *> surfaces();
 
     /**
      * Maps the specified @a point from the surface-local coordinates to buffer pixel coordinates.
@@ -349,6 +368,10 @@ public:
 
 Q_SIGNALS:
     /**
+     * This signal is emitted when the surface is about to be unbound.
+     */
+    void aboutToBeUnbound();
+    /**
      * This signal is emitted when the projection matrix from the surface-local coordinate space
      * to the buffer coordinate space has been changed.
      *
@@ -452,20 +475,8 @@ Q_SIGNALS:
     void committed();
 
 private:
-    friend class CompositorInterface;
-    friend class SubSurfaceInterface;
-    friend class ShadowManagerInterface;
-    friend class BlurManagerInterfacePrivate;
-    friend class SlideManagerInterface;
-    friend class ContrastManagerInterfacePrivate;
-    friend class IdleInhibitManagerUnstableV1Interface;
-    friend class PointerConstraintsUnstableV1Interface;
-    friend class SurfaceRole;
-    friend class ViewportInterface;
-    explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
-
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<SurfaceInterfacePrivate> d;
+    friend class SurfaceInterfacePrivate;
 };
 
 }

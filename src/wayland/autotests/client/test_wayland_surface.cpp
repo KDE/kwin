@@ -238,11 +238,12 @@ void TestWaylandSurface::testStaticAccessor()
     delete s1;
     QVERIFY(KWayland::Client::Surface::all().isEmpty());
     QVERIFY(!KWayland::Client::Surface::get(nullptr));
-    QSignalSpy unboundSpy(serverSurface1, &KWaylandServer::Resource::unbound);
-    QVERIFY(unboundSpy.isValid());
-    QVERIFY(unboundSpy.wait());
+    QSignalSpy destroyedSpy(serverSurface1, &KWaylandServer::SurfaceInterface::destroyed);
+    QVERIFY(destroyedSpy.isValid());
+    QVERIFY(destroyedSpy.wait());
     QVERIFY(!KWaylandServer::SurfaceInterface::get(nullptr));
-    QVERIFY(!KWaylandServer::SurfaceInterface::get(1, nullptr));
+    QVERIFY(!KWaylandServer::SurfaceInterface::get(serverSurface1->id(), nullptr));
+    QVERIFY(!KWaylandServer::SurfaceInterface::get(serverSurface2->id(), nullptr));
 }
 
 void TestWaylandSurface::testDamage()
@@ -255,7 +256,6 @@ void TestWaylandSurface::testDamage()
     KWaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
     QCOMPARE(serverSurface->damage(), QRegion());
-    QVERIFY(serverSurface->parentResource());
     QVERIFY(!serverSurface->isMapped());
 
     QSignalSpy committedSpy(serverSurface, SIGNAL(committed()));

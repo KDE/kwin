@@ -14,21 +14,24 @@ namespace KWaylandServer
 SurfaceRole::SurfaceRole(SurfaceInterface *surface)
     : m_surface(surface)
 {
-    m_surface->d_func()->role = this;
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+    surfacePrivate->role = this;
 }
 
 SurfaceRole::~SurfaceRole()
 {
     // Lifetime of the surface role is not bounded to the associated surface.
     if (m_surface) {
-        m_surface->d_func()->role = nullptr;
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
+        surfacePrivate->role = nullptr;
     }
 }
 
 SurfaceRole *SurfaceRole::get(SurfaceInterface *surface)
 {
     if (surface) {
-        return surface->d_func()->role;
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+        return surfacePrivate->role;
     }
 
     return nullptr;

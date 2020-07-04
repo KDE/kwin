@@ -67,7 +67,8 @@ void SlideManagerInterface::Private::createSlide(wl_client *client, wl_resource 
         delete slide;
         return;
     }
-    s->d_func()->setSlide(QPointer<SlideInterface>(slide));
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->setSlide(QPointer<SlideInterface>(slide));
 }
 
 void SlideManagerInterface::Private::unsetCallback(wl_client *client, wl_resource *resource, wl_resource * surface)

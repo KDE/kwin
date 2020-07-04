@@ -54,7 +54,7 @@ class PlasmaShellSurfaceInterface::Private : public Resource::Private
 public:
     Private(PlasmaShellSurfaceInterface *q, PlasmaShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource);
 
-    SurfaceInterface *surface;
+    QPointer<SurfaceInterface> surface;
     QPoint m_globalPos;
     Role m_role = Role::Normal;
     bool m_positionSet = false;
@@ -159,12 +159,6 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
 PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, shell, parent, parentResource))
 {
-    auto unsetSurface = [this] {
-        Q_D();
-        d->surface = nullptr;
-    };
-    connect(parent, &Resource::unbound, this, unsetSurface);
-    connect(parent, &QObject::destroyed, this, unsetSurface);
 }
 
 PlasmaShellSurfaceInterface::~PlasmaShellSurfaceInterface() = default;

@@ -105,7 +105,7 @@ void XdgExporterUnstableV2Interface::Private::exportCallback(wl_client *client, 
             });
 
     //if the surface dies before this, this dies too
-    connect(SurfaceInterface::get(surface), &Resource::unbound,
+    connect(SurfaceInterface::get(surface), &QObject::destroyed,
             s->q, [s, e, handle]() {
                 if (e) {
                     e->deleteLater();
@@ -274,7 +274,7 @@ void XdgImporterUnstableV2Interface::Private::importCallback(wl_client *client, 
                 emit s->q->transientChanged(child, parent);
 
                 //child surface destroyed
-                connect(child, &Resource::unbound,
+                connect(child, &QObject::destroyed,
                         s->q, [s, child]() {
                             auto it = s->parents.find(child);
                             if (it != s->parents.end()) {

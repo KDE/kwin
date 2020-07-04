@@ -100,6 +100,7 @@ Q_SIGNALS:
 private:
     friend class SubCompositorInterface;
     friend class SurfaceInterface;
+    friend class SurfaceInterfacePrivate;
     explicit SubSurfaceInterface(SubCompositorInterface *parent, wl_resource *parentResource);
 
     class Private;

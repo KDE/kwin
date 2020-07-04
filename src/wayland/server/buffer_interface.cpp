@@ -4,6 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "buffer_interface.h"
+#include "compositor_interface.h"
 #include "display.h"
 #include "logging.h"
 #include "surface_interface.h"
@@ -155,7 +156,7 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
         }
         size = dmabufBuffer->size();
     } else if (parent) {
-        EGLDisplay eglDisplay = parent->global()->display()->eglDisplay();
+        EGLDisplay eglDisplay = parent->compositor()->display()->eglDisplay();
         static bool resolved = false;
         using namespace EGL;
         if (!resolved && eglDisplay != EGL_NO_DISPLAY) {

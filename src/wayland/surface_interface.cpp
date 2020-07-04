@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -8,39 +9,72 @@
 #include "buffer_interface.h"
 #include "clientconnection.h"
 #include "compositor_interface.h"
+#include "display.h"
 #include "idleinhibit_interface_p.h"
 #include "pointerconstraints_interface_p.h"
 #include "region_interface.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
 #include "surfacerole_p.h"
-// Qt
-#include <QListIterator>
-// Wayland
-#include <wayland-server.h>
 // std
 #include <algorithm>
 
 namespace KWaylandServer
 {
 
-SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource)
-    : Resource::Private(q, c, parentResource, &wl_surface_interface, &s_interface)
+QList<SurfaceInterface *> SurfaceInterfacePrivate::surfaces;
+
+KWaylandFrameCallback::KWaylandFrameCallback(wl_resource *resource, SurfaceInterface *surface)
+    : QtWaylandServer::wl_callback(resource)
+    , surface(surface)
 {
 }
 
-SurfaceInterface::Private::~Private()
+void KWaylandFrameCallback::destroy()
 {
-    destroy();
+    wl_resource_destroy(resource()->handle);
 }
 
-void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
+void KWaylandFrameCallback::callback_destroy_resource(Resource *)
+{
+    if (surface) {
+        SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
+        surfacePrivate->current.frameCallbacks.removeOne(this);
+        surfacePrivate->pending.frameCallbacks.removeOne(this);
+        surfacePrivate->subSurfacePending.frameCallbacks.removeOne(this);
+    }
+    delete this;
+}
+
+SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
+    : q(q)
+{
+    surfaces.append(q);
+}
+
+SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
+{
+    for (KWaylandFrameCallback *frameCallback : current.frameCallbacks) {
+        frameCallback->destroy();
+    }
+    for (KWaylandFrameCallback *frameCallback : pending.frameCallbacks) {
+        frameCallback->destroy();
+    }
+    for (KWaylandFrameCallback *frameCallback : subSurfacePending.frameCallbacks) {
+        frameCallback->destroy();
+    }
+    if (current.buffer) {
+        current.buffer->unref();
+    }
+    surfaces.removeOne(q);
+}
+
+void SurfaceInterfacePrivate::addChild(QPointer<SubSurfaceInterface> child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.children.append(child);
     subSurfacePending.children.append(child);
     current.children.append(child);
-    Q_Q(SurfaceInterface);
     emit q->childSubSurfaceAdded(child);
     emit q->subSurfaceTreeChanged();
     QObject::connect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
@@ -49,13 +83,12 @@ void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > child)
     QObject::connect(child->surface().data(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
 }
 
-void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > child)
+void SurfaceInterfacePrivate::removeChild(QPointer<SubSurfaceInterface> child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.children.removeAll(child);
     subSurfacePending.children.removeAll(child);
     current.children.removeAll(child);
-    Q_Q(SurfaceInterface);
     emit q->childSubSurfaceRemoved(child);
     emit q->subSurfaceTreeChanged();
     QObject::disconnect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
@@ -66,9 +99,8 @@ void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > chil
     }
 }
 
-bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
+bool SurfaceInterfacePrivate::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
 {
-    Q_Q(SurfaceInterface);
     auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
     if (it == pending.children.end()) {
         return false;
@@ -102,9 +134,8 @@ bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurf
     return true;
 }
 
-bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
+bool SurfaceInterfacePrivate::lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
 {
-    Q_Q(SurfaceInterface);
     auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
     if (it == pending.children.end()) {
         return false;
@@ -139,31 +170,31 @@ bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurf
     return true;
 }
 
-void SurfaceInterface::Private::setShadow(const QPointer<ShadowInterface> &shadow)
+void SurfaceInterfacePrivate::setShadow(const QPointer<ShadowInterface> &shadow)
 {
     pending.shadow = shadow;
     pending.shadowIsSet = true;
 }
 
-void SurfaceInterface::Private::setBlur(const QPointer<BlurInterface> &blur)
+void SurfaceInterfacePrivate::setBlur(const QPointer<BlurInterface> &blur)
 {
     pending.blur = blur;
     pending.blurIsSet = true;
 }
 
-void SurfaceInterface::Private::setSlide(const QPointer<SlideInterface> &slide)
+void SurfaceInterfacePrivate::setSlide(const QPointer<SlideInterface> &slide)
 {
     pending.slide = slide;
     pending.slideIsSet = true;
 }
 
-void SurfaceInterface::Private::setContrast(const QPointer<ContrastInterface> &contrast)
+void SurfaceInterfacePrivate::setContrast(const QPointer<ContrastInterface> &contrast)
 {
     pending.contrast = contrast;
     pending.contrastIsSet = true;
 }
 
-void SurfaceInterface::Private::installPointerConstraint(LockedPointerInterface *lock)
+void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerInterface *lock)
 {
     Q_ASSERT(lockedPointer.isNull());
     Q_ASSERT(confinedPointer.isNull());
@@ -171,15 +202,15 @@ void SurfaceInterface::Private::installPointerConstraint(LockedPointerInterface 
 
     auto cleanUp = [this]() {
         lockedPointer.clear();
-        disconnect(constrainsOneShotConnection);
+        QObject::disconnect(constrainsOneShotConnection);
         constrainsOneShotConnection = QMetaObject::Connection();
-        disconnect(constrainsUnboundConnection);
+        QObject::disconnect(constrainsUnboundConnection);
         constrainsUnboundConnection = QMetaObject::Connection();
-        emit q_func()->pointerConstraintsChanged();
+        emit q->pointerConstraintsChanged();
     };
 
     if (lock->lifeTime() == LockedPointerInterface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerInterface::lockedChanged, q_func(),
+        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerInterface::lockedChanged, q,
             [this, cleanUp] {
                 if (lockedPointer.isNull() || lockedPointer->isLocked()) {
                     return;
@@ -188,7 +219,7 @@ void SurfaceInterface::Private::installPointerConstraint(LockedPointerInterface 
             }
         );
     }
-    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerInterface::unbound, q_func(),
+    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerInterface::unbound, q,
         [this, cleanUp] {
             if (lockedPointer.isNull()) {
                 return;
@@ -196,10 +227,10 @@ void SurfaceInterface::Private::installPointerConstraint(LockedPointerInterface 
             cleanUp();
         }
     );
-    emit q_func()->pointerConstraintsChanged();
+    emit q->pointerConstraintsChanged();
 }
 
-void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterface *confinement)
+void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerInterface *confinement)
 {
     Q_ASSERT(lockedPointer.isNull());
     Q_ASSERT(confinedPointer.isNull());
@@ -207,15 +238,15 @@ void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterfac
 
     auto cleanUp = [this]() {
         confinedPointer.clear();
-        disconnect(constrainsOneShotConnection);
+        QObject::disconnect(constrainsOneShotConnection);
         constrainsOneShotConnection = QMetaObject::Connection();
-        disconnect(constrainsUnboundConnection);
+        QObject::disconnect(constrainsUnboundConnection);
         constrainsUnboundConnection = QMetaObject::Connection();
-        emit q_func()->pointerConstraintsChanged();
+        emit q->pointerConstraintsChanged();
     };
 
     if (confinement->lifeTime() == ConfinedPointerInterface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerInterface::confinedChanged, q_func(),
+        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerInterface::confinedChanged, q,
             [this, cleanUp] {
                 if (confinedPointer.isNull() || confinedPointer->isConfined()) {
                     return;
@@ -224,7 +255,7 @@ void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterfac
             }
         );
     }
-    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerInterface::unbound, q_func(),
+    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerInterface::unbound, q,
         [this, cleanUp] {
             if (confinedPointer.isNull()) {
                 return;
@@ -232,56 +263,173 @@ void SurfaceInterface::Private::installPointerConstraint(ConfinedPointerInterfac
             cleanUp();
         }
     );
-    emit q_func()->pointerConstraintsChanged();
+    emit q->pointerConstraintsChanged();
 }
 
-void SurfaceInterface::Private::installIdleInhibitor(IdleInhibitorInterface *inhibitor)
+void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorInterface *inhibitor)
 {
     idleInhibitors << inhibitor;
     QObject::connect(inhibitor, &IdleInhibitorInterface::aboutToBeUnbound, q,
         [this, inhibitor] {
             idleInhibitors.removeOne(inhibitor);
             if (idleInhibitors.isEmpty()) {
-                emit q_func()->inhibitsIdleChanged();
+                emit q->inhibitsIdleChanged();
             }
         }
     );
     if (idleInhibitors.count() == 1) {
-        emit q_func()->inhibitsIdleChanged();
+        emit q->inhibitsIdleChanged();
     }
 }
 
-#ifndef K_DOXYGEN
-const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
-    resourceDestroyedCallback,
-    attachCallback,
-    damageCallback,
-    frameCallback,
-    opaqueRegionCallback,
-    inputRegionCallback,
-    commitCallback,
-    bufferTransformCallback,
-    bufferScaleCallback,
-    damageBufferCallback
-};
-#endif
+void SurfaceInterfacePrivate::surface_destroy_resource(Resource *)
+{
+    emit q->aboutToBeUnbound();
+    delete q;
+}
 
-SurfaceInterface::SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(this, parent, parentResource))
+void SurfaceInterfacePrivate::surface_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_resource *buffer, int32_t x, int32_t y)
+{
+    Q_UNUSED(resource)
+    pending.bufferIsSet = true;
+    pending.offset = QPoint(x, y);
+    if (pending.buffer) {
+        delete pending.buffer;
+    }
+    if (!buffer) {
+        // got a null buffer, deletes content in next frame
+        pending.buffer = nullptr;
+        pending.damage = QRegion();
+        pending.bufferDamage = QRegion();
+        return;
+    }
+    pending.buffer = new BufferInterface(buffer, q);
+    QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q,
+        [this](BufferInterface *buffer) {
+            if (pending.buffer == buffer) {
+                pending.buffer = nullptr;
+            }
+            if (subSurfacePending.buffer == buffer) {
+                subSurfacePending.buffer = nullptr;
+            }
+            if (current.buffer == buffer) {
+                current.buffer->unref();
+                current.buffer = nullptr;
+            }
+        }
+    );
+}
+
+void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    pending.damage = pending.damage.united(QRect(x, y, width, height));
+}
+
+void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callback)
+{
+    wl_resource *callbackResource = wl_resource_create(resource->client(), &wl_callback_interface,
+                                                       /* version */ 1, callback);
+    if (!callbackResource) {
+        wl_resource_post_no_memory(resource->handle);
+        return;
+    }
+    pending.frameCallbacks.append(new KWaylandFrameCallback(callbackResource, q));
+}
+
+void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, struct ::wl_resource *region)
+{
+    Q_UNUSED(resource)
+    RegionInterface *r = RegionInterface::get(region);
+    pending.opaque = r ? r->region() : QRegion();
+    pending.opaqueIsSet = true;
+
+}
+
+void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struct ::wl_resource *region)
+{
+    Q_UNUSED(resource)
+    RegionInterface *r = RegionInterface::get(region);
+    pending.input = r ? r->region() : QRegion();
+    pending.inputIsInfinite = !r;
+    pending.inputIsSet = true;
+}
+
+void SurfaceInterfacePrivate::surface_commit(Resource *resource)
+{
+    Q_UNUSED(resource)
+    commit();
+}
+
+void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
+{
+    Q_UNUSED(resource)
+    pending.bufferTransform = OutputInterface::Transform(transform);
+    pending.bufferTransformIsSet = true;
+}
+
+void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32_t scale)
+{
+    Q_UNUSED(resource)
+    pending.bufferScale = scale;
+    pending.bufferScaleIsSet = true;
+}
+
+void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    Q_UNUSED(resource)
+    pending.bufferDamage = pending.bufferDamage.united(QRect(x, y, width, height));
+}
+
+SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource *resource)
+    : QObject(compositor)
+    , d(new SurfaceInterfacePrivate(this))
+{
+    d->compositor = compositor;
+    d->init(resource);
+}
+
+SurfaceInterface::~SurfaceInterface()
 {
 }
 
-SurfaceInterface::~SurfaceInterface() = default;
+uint32_t SurfaceInterface::id() const
+{
+    return wl_resource_get_id(resource());
+}
+
+ClientConnection *SurfaceInterface::client() const
+{
+    return d->compositor->display()->getConnection(d->resource()->client());
+}
+
+wl_resource *SurfaceInterface::resource() const
+{
+    return d->resource()->handle;
+}
+
+CompositorInterface *SurfaceInterface::compositor() const
+{
+    return d->compositor;
+}
+
+QList<SurfaceInterface *> SurfaceInterface::surfaces()
+{
+    return SurfaceInterfacePrivate::surfaces;
+}
 
 void SurfaceInterface::frameRendered(quint32 msec)
 {
-    Q_D();
     // notify all callbacks
-    const bool needsFlush = !d->current.callbacks.isEmpty();
-    while (!d->current.callbacks.isEmpty()) {
-        wl_resource *r = d->current.callbacks.takeFirst();
-        wl_callback_send_done(r, msec);
-        wl_resource_destroy(r);
+    const bool needsFlush = !d->current.frameCallbacks.isEmpty();
+    while (!d->current.frameCallbacks.isEmpty()) {
+        KWaylandFrameCallback *frameCallback = d->current.frameCallbacks.takeFirst();
+        frameCallback->send_done(msec);
+        frameCallback->destroy();
     }
     for (auto it = d->current.children.constBegin(); it != d->current.children.constEnd(); ++it) {
         const auto &subSurface = *it;
@@ -295,27 +443,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
     }
 }
 
-void SurfaceInterface::Private::destroy()
-{
-    // copy all existing callbacks to new list and clear existing lists
-    // the wl_resource_destroy on the callback resource goes into destroyFrameCallback
-    // which would modify the list we are iterating on
-    QList<wl_resource *> callbacksToDestroy;
-    callbacksToDestroy << current.callbacks;
-    current.callbacks.clear();
-    callbacksToDestroy << pending.callbacks;
-    pending.callbacks.clear();
-    callbacksToDestroy << subSurfacePending.callbacks;
-    subSurfacePending.callbacks.clear();
-    for (auto it = callbacksToDestroy.constBegin(), end = callbacksToDestroy.constEnd(); it != end; it++) {
-        wl_resource_destroy(*it);
-    }
-    if (current.buffer) {
-        current.buffer->unref();
-    }
-}
-
-QMatrix4x4 SurfaceInterface::Private::buildSurfaceToBufferMatrix(const State *state)
+QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const State *state)
 {
     // The order of transforms is reversed, i.e. the viewport transform is the first one.
 
@@ -373,9 +501,8 @@ QMatrix4x4 SurfaceInterface::Private::buildSurfaceToBufferMatrix(const State *st
     return surfaceToBufferMatrix;
 }
 
-void SurfaceInterface::Private::swapStates(State *source, State *target, bool emitChanged)
+void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emitChanged)
 {
-    Q_Q(SurfaceInterface);
     const bool bufferChanged = source->bufferIsSet;
     const bool opaqueRegionChanged = source->opaqueIsSet;
     const bool inputRegionChanged = source->inputIsSet;
@@ -423,7 +550,7 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
         target->childrenChanged = source->childrenChanged;
         target->children = source->children;
     }
-    target->callbacks.append(source->callbacks);
+    target->frameCallbacks.append(source->frameCallbacks);
 
     if (shadowChanged) {
         target->shadow = source->shadow;
@@ -564,9 +691,8 @@ void SurfaceInterface::Private::swapStates(State *source, State *target, bool em
     }
 }
 
-void SurfaceInterface::Private::commit()
+void SurfaceInterfacePrivate::commit()
 {
-    Q_Q(SurfaceInterface);
     if (!subSurface.isNull() && subSurface->isSynchronized()) {
         swapStates(&pending, &subSurfacePending, false);
     } else {
@@ -590,7 +716,7 @@ void SurfaceInterface::Private::commit()
     emit q->committed();
 }
 
-void SurfaceInterface::Private::commitSubSurface()
+void SurfaceInterfacePrivate::commitSubSurface()
 {
     if (subSurface.isNull() || !subSurface->isSynchronized()) {
         return;
@@ -606,224 +732,77 @@ void SurfaceInterface::Private::commitSubSurface()
     }
 }
 
-void SurfaceInterface::Private::damage(const QRect &rect)
-{
-    pending.damage = pending.damage.united(rect);
-}
-
-void SurfaceInterface::Private::damageBuffer(const QRect &rect)
-{
-    pending.bufferDamage = pending.bufferDamage.united(rect);
-}
-
-void SurfaceInterface::Private::setScale(qint32 scale)
-{
-    pending.bufferScale = scale;
-    pending.bufferScaleIsSet = true;
-}
-
-void SurfaceInterface::Private::setTransform(OutputInterface::Transform transform)
-{
-    pending.bufferTransform = transform;
-    pending.bufferTransformIsSet = true;
-}
-
-void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
-{
-    wl_resource *r = client->createResource(&wl_callback_interface, 1, callback);
-    if (!r) {
-        wl_resource_post_no_memory(resource);
-        return;
-    }
-    wl_resource_set_implementation(r, nullptr, this, destroyFrameCallback);
-    pending.callbacks << r;
-}
-
-void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &offset)
-{
-    pending.bufferIsSet = true;
-    pending.offset = offset;
-    if (pending.buffer) {
-        delete pending.buffer;
-    }
-    if (!buffer) {
-        // got a null buffer, deletes content in next frame
-        pending.buffer = nullptr;
-        pending.damage = QRegion();
-        pending.bufferDamage = QRegion();
-        return;
-    }
-    Q_Q(SurfaceInterface);
-    pending.buffer = new BufferInterface(buffer, q);
-    QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q,
-        [this](BufferInterface *buffer) {
-            if (pending.buffer == buffer) {
-                pending.buffer = nullptr;
-            }
-            if (subSurfacePending.buffer == buffer) {
-                subSurfacePending.buffer = nullptr;
-            }
-            if (current.buffer == buffer) {
-                current.buffer->unref();
-                current.buffer = nullptr;
-            }
-        }
-    );
-}
-
-void SurfaceInterface::Private::destroyFrameCallback(wl_resource *r)
-{
-    auto s = cast<Private>(r);
-    s->current.callbacks.removeAll(r);
-    s->pending.callbacks.removeAll(r);
-    s->subSurfacePending.callbacks.removeAll(r);
-}
-
-void SurfaceInterface::Private::attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy)
-{
-    Q_UNUSED(client)
-    cast<Private>(resource)->attachBuffer(buffer, QPoint(sx, sy));
-}
-
-void SurfaceInterface::Private::damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    Q_UNUSED(client)
-    cast<Private>(resource)->damage(QRect(x, y, width, height));
-}
-
-void SurfaceInterface::Private::damageBufferCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
-{
-    Q_UNUSED(client)
-    cast<Private>(resource)->damageBuffer(QRect(x, y, width, height));
-}
-
-void SurfaceInterface::Private::frameCallback(wl_client *client, wl_resource *resource, uint32_t callback)
-{
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
-    s->addFrameCallback(callback);
-}
-
-void SurfaceInterface::Private::opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
-{
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
-    auto r = RegionInterface::get(region);
-    s->setOpaque(r ? r->region() : QRegion());
-}
-
-void SurfaceInterface::Private::setOpaque(const QRegion &region)
-{
-    pending.opaqueIsSet = true;
-    pending.opaque = region;
-}
-
-void SurfaceInterface::Private::inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
-{
-    auto s = cast<Private>(resource);
-    Q_ASSERT(client == *s->client);
-    auto r = RegionInterface::get(region);
-    s->setInput(r ? r->region() : QRegion(), !r);
-}
-
-void SurfaceInterface::Private::setInput(const QRegion &region, bool isInfinite)
-{
-    pending.inputIsSet = true;
-    pending.inputIsInfinite = isInfinite;
-    pending.input = region;
-}
-
-void SurfaceInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    cast<Private>(resource)->commit();
-}
-
-void SurfaceInterface::Private::bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform)
-{
-    Q_UNUSED(client)
-    cast<Private>(resource)->setTransform(OutputInterface::Transform(transform));
-}
-
-void SurfaceInterface::Private::bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale)
-{
-    Q_UNUSED(client)
-    cast<Private>(resource)->setScale(scale);
-}
-
 QRegion SurfaceInterface::damage() const
 {
-    Q_D();
     return d->current.damage;
 }
 
 QRegion SurfaceInterface::opaque() const
 {
-    Q_D();
     return d->current.opaque;
 }
 
 QRegion SurfaceInterface::input() const
 {
-    Q_D();
     return d->current.input;
 }
 
 bool SurfaceInterface::inputIsInfinite() const
 {
-    Q_D();
     return d->current.inputIsInfinite;
 }
 
 qint32 SurfaceInterface::bufferScale() const
 {
-    Q_D();
     return d->current.bufferScale;
 }
 
 OutputInterface::Transform SurfaceInterface::bufferTransform() const
 {
-    Q_D();
     return d->current.bufferTransform;
 }
 
 BufferInterface *SurfaceInterface::buffer()
 {
-    Q_D();
     return d->current.buffer;
 }
 
 QPoint SurfaceInterface::offset() const
 {
-    Q_D();
     return d->current.offset;
 }
 
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 {
-    return Private::get<SurfaceInterface>(native);
+    if (auto surface = SurfaceInterfacePrivate::Resource::fromResource(native)) {
+        return static_cast<SurfaceInterfacePrivate *>(surface->object())->q;
+    }
+    return nullptr;
 }
 
 SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *client)
 {
-    return Private::get<SurfaceInterface>(id, client);
+    const QList<SurfaceInterface *> candidates = surfaces();
+    for (SurfaceInterface *surface : candidates) {
+        if (surface->client() == client && surface->id() == id) {
+            return surface;
+        }
+    }
+    return nullptr;
 }
 
 QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const
 {
-    Q_D();
     return d->current.children;
 }
 
 QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
 {
-    Q_D();
     return d->subSurface;
 }
 
 QSize SurfaceInterface::size() const
 {
-    Q_D();
     return d->current.size;
 }
 
@@ -842,31 +821,26 @@ QRect SurfaceInterface::boundingRect() const
 
 QPointer< ShadowInterface > SurfaceInterface::shadow() const
 {
-    Q_D();
     return d->current.shadow;
 }
 
 QPointer< BlurInterface > SurfaceInterface::blur() const
 {
-    Q_D();
     return d->current.blur;
 }
 
 QPointer< ContrastInterface > SurfaceInterface::contrast() const
 {
-    Q_D();
     return d->current.contrast;
 }
 
 QPointer< SlideInterface > SurfaceInterface::slideOnShowHide() const
 {
-    Q_D();
     return d->current.slide;
 }
 
 bool SurfaceInterface::isMapped() const
 {
-    Q_D();
     if (d->subSurface) {
         // from spec:
         // "A sub-surface becomes mapped, when a non-NULL wl_buffer is applied and the parent surface is mapped."
@@ -877,25 +851,21 @@ bool SurfaceInterface::isMapped() const
 
 QRegion SurfaceInterface::trackedDamage() const
 {
-    Q_D();
     return d->trackedDamage;
 }
 
 void SurfaceInterface::resetTrackedDamage()
 {
-    Q_D();
     d->trackedDamage = QRegion();
 }
 
 QVector<OutputInterface *> SurfaceInterface::outputs() const
 {
-    Q_D();
     return d->outputs;
 }
 
 void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
 {
-    Q_D();
     QVector<OutputInterface *> removedOutputs = d->outputs;
     for (auto it = outputs.constBegin(), end = outputs.constEnd(); it != end; ++it) {
         const auto o = *it;
@@ -903,8 +873,8 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     }
     for (auto it = removedOutputs.constBegin(), end = removedOutputs.constEnd(); it != end; ++it) {
         const auto resources = (*it)->clientResources(client());
-        for (wl_resource *r : resources) {
-            wl_surface_send_leave(d->resource, r);
+        for (wl_resource *outputResource : resources) {
+            d->send_leave(outputResource);
         }
         disconnect(d->outputDestroyedConnections.take(*it));
     }
@@ -916,11 +886,10 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     for (auto it = addedOutputsOutputs.constBegin(), end = addedOutputsOutputs.constEnd(); it != end; ++it) {
         const auto o = *it;
         const auto resources = o->clientResources(client());
-        for (wl_resource *r : resources) {
-            wl_surface_send_enter(d->resource, r);
+        for (wl_resource *outputResource : resources) {
+            d->send_enter(outputResource);
         }
         d->outputDestroyedConnections[o] = connect(o, &Global::aboutToDestroyGlobal, this, [this, o] {
-            Q_D();
             auto outputs = d->outputs;
             if (outputs.removeOne(o)) {
                 setOutputs(outputs);
@@ -936,7 +905,6 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
     if (!isMapped()) {
         return nullptr;
     }
-    Q_D();
     // go from top to bottom. Top most child is last in list
     QListIterator<QPointer<SubSurfaceInterface>> it(d->current.children);
     it.toBack();
@@ -964,7 +932,6 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
     if (!isMapped()) {
         return nullptr;
     }
-    Q_D();
     // go from top to bottom. Top most child is last in list
     QListIterator<QPointer<SubSurfaceInterface>> it(d->current.children);
     it.toBack();
@@ -988,48 +955,36 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
 
 QPointer<LockedPointerInterface> SurfaceInterface::lockedPointer() const
 {
-    Q_D();
     return d->lockedPointer;
 }
 
 QPointer<ConfinedPointerInterface> SurfaceInterface::confinedPointer() const
 {
-    Q_D();
     return d->confinedPointer;
 }
 
 bool SurfaceInterface::inhibitsIdle() const
 {
-    Q_D();
     return !d->idleInhibitors.isEmpty();
 }
 
 void SurfaceInterface::setDataProxy(SurfaceInterface *surface)
 {
-    Q_D();
     d->dataProxy = surface;
 }
 
 SurfaceInterface* SurfaceInterface::dataProxy() const
 {
-    Q_D();
     return d->dataProxy;
-}
-
-SurfaceInterface::Private *SurfaceInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
 }
 
 QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const
 {
-    Q_D();
     return d->surfaceToBufferMatrix.map(point);
 }
 
 QPointF SurfaceInterface::mapFromBuffer(const QPointF &point) const
 {
-    Q_D();
     return d->bufferToSurfaceMatrix.map(point);
 }
 
@@ -1044,20 +999,17 @@ static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
 
 QRegion SurfaceInterface::mapToBuffer(const QRegion &region) const
 {
-    Q_D();
     return map_helper(d->surfaceToBufferMatrix, region);
 }
 
 QRegion SurfaceInterface::mapFromBuffer(const QRegion &region) const
 {
-    Q_D();
     return map_helper(d->bufferToSurfaceMatrix, region);
 }
 
 QMatrix4x4 SurfaceInterface::surfaceToBufferMatrix() const
 {
-    Q_D();
     return d->surfaceToBufferMatrix;
 }
 
-}
+} // namespace KWaylandServer

@@ -42,7 +42,7 @@ private:
     void doExport();
 
     KWaylandServer::Display *m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
+    QPointer<KWaylandServer::CompositorInterface> m_compositorInterface;
     KWaylandServer::XdgForeignInterface *m_foreignInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -151,11 +151,6 @@ void TestForeign::cleanup()
         variable = nullptr; \
     }
 
-    CLEANUP(m_exportedSurfaceInterface)
-    CLEANUP(m_childSurfaceInterface)
-
-
-
     CLEANUP(m_compositor)
     CLEANUP(m_exporter)
     CLEANUP(m_importer)
@@ -170,7 +165,6 @@ void TestForeign::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
     CLEANUP(m_foreignInterface)
 
     //internally there are some deleteLaters on exported interfaces
@@ -181,6 +175,8 @@ void TestForeign::cleanup()
         m_display = nullptr;
         destroyedSpy.wait();
     }
+
+    QVERIFY(m_compositorInterface.isNull());
 
 #undef CLEANUP
 }
@@ -258,10 +254,6 @@ void TestForeign::testDeleteChildSurface()
     m_childSurface->deleteLater();
 
     QVERIFY(transientSpy.wait());
-
-    //when the client surface dies, the server one will eventually die too
-    QSignalSpy surfaceDestroyedSpy(m_childSurfaceInterface, SIGNAL(destroyed()));
-    QVERIFY(surfaceDestroyedSpy.wait());
 
     QVERIFY(!transientSpy.first().at(0).value<KWaylandServer::SurfaceInterface *>());
     QCOMPARE(transientSpy.first().at(1).value<KWaylandServer::SurfaceInterface *>(), m_exportedSurfaceInterface.data());

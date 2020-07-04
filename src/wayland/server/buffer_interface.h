@@ -49,7 +49,9 @@ class LinuxDmabufBuffer;
 class KWAYLANDSERVER_EXPORT BufferInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit BufferInterface(wl_resource *resource, SurfaceInterface *parent);
     virtual ~BufferInterface();
     /**
      * Reference the BufferInterface.
@@ -171,8 +173,6 @@ Q_SIGNALS:
     void sizeChanged();
 
 private:
-    friend class SurfaceInterface;
-    explicit BufferInterface(wl_resource *resource, SurfaceInterface *parent);
     class Private;
     QScopedPointer<Private> d;
 };

@@ -82,14 +82,13 @@ void CompositorInterface::Private::createSurfaceCallback(wl_client *client, wl_r
 
 void CompositorInterface::Private::createSurface(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    SurfaceInterface *surface = new SurfaceInterface(q, resource);
-    surface->create(display->getConnection(client), wl_resource_get_version(resource), id);
-    if (!surface->resource()) {
+    wl_resource *surfaceResource = wl_resource_create(client, &wl_surface_interface,
+                                                      wl_resource_get_version(resource), id);
+    if (!surfaceResource) {
         wl_resource_post_no_memory(resource);
-        delete surface;
         return;
     }
-    emit q->surfaceCreated(surface);
+    emit q->surfaceCreated(new SurfaceInterface(q, surfaceResource));
 }
 
 void CompositorInterface::Private::createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id)

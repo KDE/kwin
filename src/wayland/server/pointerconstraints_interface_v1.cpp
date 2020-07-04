@@ -84,7 +84,7 @@ void PointerConstraintsUnstableV1Interface::Private::createConstraint(wl_client 
         return;
     }
     if (!s->lockedPointer().isNull() || !s->confinedPointer().isNull()) {
-        wl_resource_post_error(s->resource(), ZWP_POINTER_CONSTRAINTS_V1_ERROR_ALREADY_CONSTRAINED, "Surface already constrained");
+        wl_resource_post_error(surface, ZWP_POINTER_CONSTRAINTS_V1_ERROR_ALREADY_CONSTRAINED, "Surface already constrained");
         return;
     }
     auto constraint = new T(q, resource);
@@ -100,7 +100,8 @@ void PointerConstraintsUnstableV1Interface::Private::createConstraint(wl_client 
     auto r = RegionInterface::get(region);
     constraint->d_func()->region = r ? r->region() : QRegion();
     constraint->d_func()->create(display->getConnection(client), version, id);
-    s->d_func()->installPointerConstraint(constraint);
+    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
+    surfacePrivate->installPointerConstraint(constraint);
 }
 
 void PointerConstraintsUnstableV1Interface::Private::lockPointerCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface, wl_resource *pointer, wl_resource *region, uint32_t lifetime)

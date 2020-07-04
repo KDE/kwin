@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -7,12 +8,11 @@
 #define WAYLAND_SERVER_SURFACE_INTERFACE_P_H
 
 #include "surface_interface.h"
-#include "resource_p.h"
 // Qt
 #include <QHash>
 #include <QVector>
 // Wayland
-#include <wayland-server.h>
+#include "qwayland-server-wayland.h"
 
 namespace KWaylandServer
 {
@@ -21,7 +21,20 @@ class IdleInhibitorInterface;
 class SurfaceRole;
 class ViewportInterface;
 
-class SurfaceInterface::Private : public Resource::Private
+class KWaylandFrameCallback : public QtWaylandServer::wl_callback
+{
+public:
+    KWaylandFrameCallback(wl_resource *resource, SurfaceInterface *surface);
+
+    void destroy();
+
+    QPointer<SurfaceInterface> surface;
+
+protected:
+    void callback_destroy_resource(Resource *resource) override;
+};
+
+class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface
 {
 public:
     struct State {
@@ -47,7 +60,7 @@ public:
         bool bufferTransformIsSet = false;
         qint32 bufferScale = 1;
         OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
-        QList<wl_resource*> callbacks = QList<wl_resource*>();
+        QList<KWaylandFrameCallback *> frameCallbacks;
         QPoint offset = QPoint();
         BufferInterface *buffer = nullptr;
         // stacking order: bottom (first) -> top (last)
@@ -57,10 +70,11 @@ public:
         QPointer<ContrastInterface> contrast;
         QPointer<SlideInterface> slide;
     };
-    Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource);
-    ~Private();
 
-    void destroy();
+    static SurfaceInterfacePrivate *get(SurfaceInterface *surface) { return surface->d.data(); }
+
+    explicit SurfaceInterfacePrivate(SurfaceInterface *q);
+    ~SurfaceInterfacePrivate() override;
 
     void addChild(QPointer<SubSurfaceInterface> subsurface);
     void removeChild(QPointer<SubSurfaceInterface> subsurface);
@@ -78,6 +92,8 @@ public:
     void commit();
     QMatrix4x4 buildSurfaceToBufferMatrix(const State *state);
 
+    CompositorInterface *compositor;
+    SurfaceInterface *q;
     SurfaceRole *role = nullptr;
 
     State current;
@@ -104,41 +120,28 @@ public:
     ViewportInterface *viewportExtension = nullptr;
     SurfaceInterface *dataProxy = nullptr;
 
+    static QList<SurfaceInterface *> surfaces;
+
+protected:
+    void surface_destroy_resource(Resource *resource) override;
+    void surface_destroy(Resource *resource) override;
+    void surface_attach(Resource *resource, struct ::wl_resource *buffer, int32_t x, int32_t y) override;
+    void surface_damage(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
+    void surface_frame(Resource *resource, uint32_t callback) override;
+    void surface_set_opaque_region(Resource *resource, struct ::wl_resource *region) override;
+    void surface_set_input_region(Resource *resource, struct ::wl_resource *region) override;
+    void surface_commit(Resource *resource) override;
+    void surface_set_buffer_transform(Resource *resource, int32_t transform) override;
+    void surface_set_buffer_scale(Resource *resource, int32_t scale) override;
+    void surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
+
 private:
+    void swapStates(State *source, State *target, bool emitChanged);
+
     QMetaObject::Connection constrainsOneShotConnection;
     QMetaObject::Connection constrainsUnboundConnection;
-
-    SurfaceInterface *q_func() {
-        return reinterpret_cast<SurfaceInterface *>(q);
-    }
-    void swapStates(State *source, State *target, bool emitChanged);
-    void damage(const QRect &rect);
-    void damageBuffer(const QRect &rect);
-    void setScale(qint32 scale);
-    void setTransform(OutputInterface::Transform transform);
-    void addFrameCallback(uint32_t callback);
-    void attachBuffer(wl_resource *buffer, const QPoint &offset);
-    void setOpaque(const QRegion &region);
-    void setInput(const QRegion &region, bool isInfinite);
-
-    static void destroyFrameCallback(wl_resource *r);
-
-    static void attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy);
-    static void damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
-    static void frameCallback(wl_client *client, wl_resource *resource, uint32_t callback);
-    static void opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
-    static void inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
-    static void commitCallback(wl_client *client, wl_resource *resource);
-    // since version 2
-    static void bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform);
-    // since version 3
-    static void bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale);
-    // since version 4
-    static void damageBufferCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
-
-    static const struct wl_surface_interface s_interface;
 };
 
-}
+} // namespace KWaylandServer
 
 #endif
