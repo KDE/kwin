@@ -241,8 +241,7 @@ int main(int argc, char **argv)
     display.start();
     DataDeviceManagerInterface *ddm = display.createDataDeviceManager();
     ddm->create();
-    CompositorInterface *compositor = display.createCompositor(&display);
-    compositor->create();
+    display.createCompositor(&display);
     XdgShellInterface *shell = display.createXdgShell();
     display.createShm();
     OutputInterface *output = display.createOutput(&display);

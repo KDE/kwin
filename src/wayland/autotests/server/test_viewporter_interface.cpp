@@ -66,8 +66,6 @@ void TestViewporterInterface::initTestCase()
     m_display.createViewporter();
 
     m_serverCompositor = m_display.createCompositor(this);
-    m_serverCompositor->create();
-    QVERIFY(m_serverCompositor->isValid());
 
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);

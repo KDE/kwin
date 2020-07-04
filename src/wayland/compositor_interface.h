@@ -1,12 +1,12 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #ifndef WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
 #define WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
 
-#include "global.h"
 #include "region_interface.h"
 #include "surface_interface.h"
 
@@ -17,35 +17,41 @@
 namespace KWaylandServer
 {
 
+class CompositorInterfacePrivate;
 class Display;
-class SurfaceInterface;
 
 /**
- * @brief Represents the Global for wl_compositor interface.
+ * The CompositorInterface global allows clients to create surfaces and region objects.
  *
- **/
-class KWAYLANDSERVER_EXPORT CompositorInterface : public Global
+ * The CompositorInterface corresponds to the Wayland interface @c wl_compositor.
+ */
+class KWAYLANDSERVER_EXPORT CompositorInterface : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual ~CompositorInterface();
+    explicit CompositorInterface(Display *display, QObject *parent = nullptr);
+    ~CompositorInterface() override;
+
+    /**
+     * Returns the Display object for this CompositorInterface.
+     */
+    Display *display() const;
 
 Q_SIGNALS:
     /**
-     * Emitted whenever this CompositorInterface created a SurfaceInterface.
-     **/
-    void surfaceCreated(KWaylandServer::SurfaceInterface*);
+     * This signal is emitted when a new SurfaceInterface @a surface has been created.
+     */
+    void surfaceCreated(KWaylandServer::SurfaceInterface *surface);
     /**
-     * Emitted whenever this CompositorInterface created a RegionInterface.
-     **/
-    void regionCreated(KWaylandServer::RegionInterface*);
+     * This signal is emitted when a new RegionInterface @a region has been created.
+     */
+    void regionCreated(KWaylandServer::RegionInterface *region);
 
 private:
-    explicit CompositorInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
-    class Private;
+    QScopedPointer<CompositorInterfacePrivate> d;
 };
 
-}
+} // namespace KWaylandServer
 
 #endif

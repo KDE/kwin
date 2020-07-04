@@ -68,7 +68,6 @@ void SelectionTest::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
     m_compositorInterface = m_display->createCompositor(m_display);
-    m_compositorInterface->create();
     m_seatInterface = m_display->createSeat(m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->create();

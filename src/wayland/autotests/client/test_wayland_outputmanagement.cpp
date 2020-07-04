@@ -95,9 +95,7 @@ void TestWaylandOutputManagement::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    auto comp = m_display->createCompositor(this);
-    comp->create();
-
+    m_display->createCompositor(this);
     auto outputDeviceInterface = m_display->createOutputDevice(this);
 
     OutputDeviceInterface::Mode m0;

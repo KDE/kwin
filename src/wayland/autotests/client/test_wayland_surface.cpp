@@ -90,8 +90,6 @@ void TestWaylandSurface::init()
 
     m_compositorInterface = m_display->createCompositor(m_display);
     QVERIFY(m_compositorInterface);
-    m_compositorInterface->create();
-    QVERIFY(m_compositorInterface->isValid());
 
     m_idleInhibitInterface = m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display);
     QVERIFY(m_idleInhibitInterface);

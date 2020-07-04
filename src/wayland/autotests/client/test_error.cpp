@@ -56,7 +56,6 @@ void ErrorTest::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
     m_ci = m_display->createCompositor(m_display);
-    m_ci->create();
     m_psi = m_display->createPlasmaShell(m_display);
     m_psi->create();
 

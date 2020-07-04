@@ -1,110 +1,75 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "compositor_interface.h"
 #include "display.h"
-#include "global_p.h"
 #include "surface_interface.h"
-// Wayland
-#include <wayland-server.h>
+
+#include "qwayland-server-wayland.h"
 
 namespace KWaylandServer
 {
 
-class CompositorInterface::Private : public Global::Private
+static const int s_version = 4;
+
+class CompositorInterfacePrivate : public QtWaylandServer::wl_compositor
 {
 public:
-    Private(CompositorInterface *q, Display *d);
-
-private:
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
-    void createSurface(wl_client *client, wl_resource *resource, uint32_t id);
-    void createRegion(wl_client *client, wl_resource *resource, uint32_t id);
-
-    static void unbind(wl_resource *resource);
-    static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
+    CompositorInterfacePrivate(CompositorInterface *q, Display *display);
 
     CompositorInterface *q;
-    static const struct wl_compositor_interface s_interface;
-    static const quint32 s_version;
+    Display *display;
+
+protected:
+    void compositor_create_surface(Resource *resource, uint32_t id) override;
+    void compositor_create_region(Resource *resource, uint32_t id) override;
 };
 
-const quint32 CompositorInterface::Private::s_version = 4;
-
-CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
-    : Global::Private(d, &wl_compositor_interface, s_version)
+CompositorInterfacePrivate::CompositorInterfacePrivate(CompositorInterface *q, Display *display)
+    : QtWaylandServer::wl_compositor(*display, s_version)
     , q(q)
+    , display(display)
 {
 }
 
-#ifndef K_DOXYGEN
-const struct wl_compositor_interface CompositorInterface::Private::s_interface = {
-    createSurfaceCallback,
-    createRegionCallback
-};
-#endif
-
-CompositorInterface::CompositorInterface(Display *display, QObject *parent)
-    : Global(new Private(this, display), parent)
+void CompositorInterfacePrivate::compositor_create_surface(Resource *resource, uint32_t id)
 {
-}
-
-CompositorInterface::~CompositorInterface() = default;
-
-void CompositorInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
-{
-    auto c = display->getConnection(client);
-    wl_resource *resource = c->createResource(&wl_compositor_interface, qMin(version, s_version), id);
-    if (!resource) {
-        wl_client_post_no_memory(client);
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
-    // TODO: should we track?
-}
-
-void CompositorInterface::Private::unbind(wl_resource *resource)
-{
-    Q_UNUSED(resource)
-    // TODO: implement?
-}
-
-void CompositorInterface::Private::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id)
-{
-    cast(resource)->createSurface(client, resource, id);
-}
-
-void CompositorInterface::Private::createSurface(wl_client *client, wl_resource *resource, uint32_t id)
-{
-    wl_resource *surfaceResource = wl_resource_create(client, &wl_surface_interface,
-                                                      wl_resource_get_version(resource), id);
+    wl_resource *surfaceResource = wl_resource_create(resource->client(), &wl_surface_interface,
+                                                      resource->version(), id);
     if (!surfaceResource) {
-        wl_resource_post_no_memory(resource);
+        wl_resource_post_no_memory(resource->handle);
         return;
     }
     emit q->surfaceCreated(new SurfaceInterface(q, surfaceResource));
 }
 
-void CompositorInterface::Private::createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id)
+void CompositorInterfacePrivate::compositor_create_region(Resource *resource, uint32_t id)
 {
-    cast(resource)->createRegion(client, resource, id);
-}
-
-void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *resource, uint32_t id)
-{
-    wl_resource *regionResource = wl_resource_create(client, &wl_region_interface,
-                                                     wl_resource_get_version(resource), id);
+    wl_resource *regionResource = wl_resource_create(resource->client(), &wl_region_interface,
+                                                     resource->version(), id);
     if (!regionResource) {
-        wl_resource_post_no_memory(resource);
+        wl_resource_post_no_memory(resource->handle);
         return;
     }
     emit q->regionCreated(new RegionInterface(q, regionResource));
 }
 
+CompositorInterface::CompositorInterface(Display *display, QObject *parent)
+    : QObject(parent)
+    , d(new CompositorInterfacePrivate(this, display))
+{
 }
+
+CompositorInterface::~CompositorInterface()
+{
+}
+
+Display *CompositorInterface::display() const
+{
+    return d->display;
+}
+
+} // namespace KWaylandServer

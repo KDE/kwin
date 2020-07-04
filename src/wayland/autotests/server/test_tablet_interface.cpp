@@ -144,9 +144,8 @@ void TestTabletInterface::initTestCase()
     m_seat = m_display.createSeat(this);
     m_seat->create();
     m_serverCompositor = m_display.createCompositor(this);
-    m_serverCompositor->create();
     m_tabletManager = m_display.createTabletManagerInterface(this);
-    QVERIFY(m_serverCompositor->isValid());
+
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
     });

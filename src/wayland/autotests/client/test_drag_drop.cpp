@@ -78,8 +78,6 @@ void TestDragAndDrop::init()
     m_connection->setSocketName(s_socketName);
 
     m_compositorInterface = m_display->createCompositor(m_display);
-    m_compositorInterface->create();
-    QVERIFY(m_compositorInterface->isValid());
     m_seatInterface = m_display->createSeat(m_display);
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);

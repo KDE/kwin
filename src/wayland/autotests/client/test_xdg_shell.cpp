@@ -105,7 +105,6 @@ void XdgShellTest::init()
     m_seatInterface->setHasTouch(true);
     m_seatInterface->create();
     m_compositorInterface = m_display->createCompositor(m_display);
-    m_compositorInterface->create();
     m_xdgShellInterface = m_display->createXdgShell(m_display);
 
     // setup connection

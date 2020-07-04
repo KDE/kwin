@@ -57,7 +57,6 @@ void ShadowTest::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
     m_compositorInterface = m_display->createCompositor(m_display);
-    m_compositorInterface->create();
     m_shadowInterface = m_display->createShadowManager(m_display);
     m_shadowInterface->create();
 

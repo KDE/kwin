@@ -171,9 +171,7 @@ void DataControlInterfaceTest::initTestCase()
     m_seat = m_display.createSeat(this);
     m_seat->create();
     m_serverCompositor = m_display.createCompositor(this);
-    m_serverCompositor->create();
     m_dataControlDeviceManagerInterface = m_display.createDataControlDeviceManagerV1(this);
-    QVERIFY(m_serverCompositor->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

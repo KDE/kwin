@@ -130,10 +130,6 @@ void TestWaylandSeat::init()
     m_display->createShm();
 
     m_compositorInterface = m_display->createCompositor(m_display);
-    QVERIFY(m_compositorInterface);
-    m_compositorInterface->create();
-    QVERIFY(m_compositorInterface->isValid());
-
     m_subCompositorInterface = m_display->createSubCompositor(m_display);
     QVERIFY(m_subCompositorInterface);
     m_subCompositorInterface->create();

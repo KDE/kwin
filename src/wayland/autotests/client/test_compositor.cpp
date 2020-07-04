@@ -77,10 +77,6 @@ void TestCompositor::init()
 
     // here we need a shm pool
     m_compositorInterface = m_display->createCompositor(m_display);
-    QVERIFY(m_compositorInterface);
-    m_compositorInterface->create();
-    QVERIFY(m_compositorInterface->isValid());
-
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 }

@@ -75,8 +75,7 @@ int main(int argc, char **argv)
     Display display;
     display.start();
     display.createShm();
-    CompositorInterface *compositor = display.createCompositor(&display);
-    compositor->create();
+    display.createCompositor(&display);
     XdgShellInterface *shell = display.createXdgShell();
     Q_UNUSED(shell)
     OutputInterface *output = display.createOutput(&display);

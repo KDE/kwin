@@ -51,7 +51,7 @@ Q_SIGNALS:
     void regionChanged(const QRegion&);
 
 private:
-    friend class CompositorInterface;
+    friend class CompositorInterfacePrivate;
     explicit RegionInterface(CompositorInterface *compositor, wl_resource *resource);
     QScopedPointer<RegionInterfacePrivate> d;
 };
