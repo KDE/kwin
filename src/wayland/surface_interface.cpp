@@ -41,7 +41,7 @@ void KWaylandFrameCallback::callback_destroy_resource(Resource *)
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
         surfacePrivate->current.frameCallbacks.removeOne(this);
         surfacePrivate->pending.frameCallbacks.removeOne(this);
-        surfacePrivate->subSurfacePending.frameCallbacks.removeOne(this);
+        surfacePrivate->cached.frameCallbacks.removeOne(this);
     }
     delete this;
 }
@@ -60,7 +60,7 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
     for (KWaylandFrameCallback *frameCallback : pending.frameCallbacks) {
         frameCallback->destroy();
     }
-    for (KWaylandFrameCallback *frameCallback : subSurfacePending.frameCallbacks) {
+    for (KWaylandFrameCallback *frameCallback : cached.frameCallbacks) {
         frameCallback->destroy();
     }
     if (current.buffer) {
@@ -73,7 +73,7 @@ void SurfaceInterfacePrivate::addChild(QPointer<SubSurfaceInterface> child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.children.append(child);
-    subSurfacePending.children.append(child);
+    cached.children.append(child);
     current.children.append(child);
     emit q->childSubSurfaceAdded(child);
     emit q->subSurfaceTreeChanged();
@@ -87,7 +87,7 @@ void SurfaceInterfacePrivate::removeChild(QPointer<SubSurfaceInterface> child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.children.removeAll(child);
-    subSurfacePending.children.removeAll(child);
+    cached.children.removeAll(child);
     current.children.removeAll(child);
     emit q->childSubSurfaceRemoved(child);
     emit q->subSurfaceTreeChanged();
@@ -314,8 +314,8 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
             if (pending.buffer == buffer) {
                 pending.buffer = nullptr;
             }
-            if (subSurfacePending.buffer == buffer) {
-                subSurfacePending.buffer = nullptr;
+            if (cached.buffer == buffer) {
+                cached.buffer = nullptr;
             }
             if (current.buffer == buffer) {
                 current.buffer->unref();
@@ -694,7 +694,7 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
 void SurfaceInterfacePrivate::commit()
 {
     if (!subSurface.isNull() && subSurface->isSynchronized()) {
-        swapStates(&pending, &subSurfacePending, false);
+        swapStates(&pending, &cached, false);
     } else {
         swapStates(&pending, &current, true);
         if (!subSurface.isNull()) {
@@ -721,7 +721,7 @@ void SurfaceInterfacePrivate::commitSubSurface()
     if (subSurface.isNull() || !subSurface->isSynchronized()) {
         return;
     }
-    swapStates(&subSurfacePending, &current, true);
+    swapStates(&cached, &current, true);
     // "The cached state is applied to the sub-surface immediately after the parent surface's state is applied"
     for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
         const auto &subSurface = *it;

@@ -98,7 +98,7 @@ public:
 
     State current;
     State pending;
-    State subSurfacePending;
+    State cached;
     QPointer<SubSurfaceInterface> subSurface;
     QRegion trackedDamage;
     QMatrix4x4 surfaceToBufferMatrix;

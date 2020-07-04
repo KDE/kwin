@@ -151,17 +151,17 @@ void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 vers
     surfacePrivate->subSurface = QPointer<SubSurfaceInterface>(q);
     // copy current state to subSurfacePending state
     // it's the reference for all new pending state which needs to be committed
-    surfacePrivate->subSurfacePending = surfacePrivate->current;
-    surfacePrivate->subSurfacePending.blurIsSet = false;
-    surfacePrivate->subSurfacePending.bufferIsSet = false;
-    surfacePrivate->subSurfacePending.childrenChanged = false;
-    surfacePrivate->subSurfacePending.contrastIsSet = false;
-    surfacePrivate->subSurfacePending.frameCallbacks.clear();
-    surfacePrivate->subSurfacePending.inputIsSet = false;
-    surfacePrivate->subSurfacePending.inputIsInfinite = true;
-    surfacePrivate->subSurfacePending.opaqueIsSet = false;
-    surfacePrivate->subSurfacePending.shadowIsSet = false;
-    surfacePrivate->subSurfacePending.slideIsSet = false;
+    surfacePrivate->cached = surfacePrivate->current;
+    surfacePrivate->cached.blurIsSet = false;
+    surfacePrivate->cached.bufferIsSet = false;
+    surfacePrivate->cached.childrenChanged = false;
+    surfacePrivate->cached.contrastIsSet = false;
+    surfacePrivate->cached.frameCallbacks.clear();
+    surfacePrivate->cached.inputIsSet = false;
+    surfacePrivate->cached.inputIsInfinite = true;
+    surfacePrivate->cached.opaqueIsSet = false;
+    surfacePrivate->cached.shadowIsSet = false;
+    surfacePrivate->cached.slideIsSet = false;
     parentPrivate->addChild(QPointer<SubSurfaceInterface>(q));
 
     QObject::connect(surface.data(), &QObject::destroyed, q,
