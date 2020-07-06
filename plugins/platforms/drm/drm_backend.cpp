@@ -519,7 +519,11 @@ bool DrmBackend::updateOutputs()
         emit screensQueried();
     }
 
-    qDeleteAll(removedOutputs);
+    for(DrmOutput* removedOutput : removedOutputs) {
+        removedOutput->teardown();
+        removedOutput->m_crtc = nullptr;
+        removedOutput->m_conn = nullptr;
+    }
     qDeleteAll(oldConnectors);
     qDeleteAll(oldCrtcs);
     return true;
