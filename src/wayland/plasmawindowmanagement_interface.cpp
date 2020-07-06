@@ -232,7 +232,7 @@ void PlasmaWindowManagementInterface::Private::bind(wl_client *client, uint32_t 
     for (auto it = windows.constBegin(); it != windows.constEnd(); ++it) {
         org_kde_plasma_window_management_send_window(shell, (*it)->d->windowId);
     }
-    sendStackingOrderChanged();
+    sendStackingOrderChanged(shell);
 }
 
 void PlasmaWindowManagementInterface::Private::unbind(wl_resource *resource)
