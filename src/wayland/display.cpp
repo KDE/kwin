@@ -108,14 +108,14 @@ Display::Display(QObject *parent)
     : QObject(parent)
     , d(new Private(this))
 {
+    d->display = wl_display_create();
 }
 
 Display::~Display()
 {
-    terminate();
-    if (d->display) {
-        wl_display_destroy(d->display);
-    }
+    emit aboutToTerminate();
+    wl_display_terminate(d->display);
+    wl_display_destroy(d->display);
 }
 
 void Display::Private::flush()
@@ -164,17 +164,15 @@ bool Display::automaticSocketNaming() const
     return d->automaticSocketNaming;
 }
 
-void Display::start(StartMode mode)
+bool Display::start(StartMode mode)
 {
     Q_ASSERT(!d->running);
-    Q_ASSERT(!d->display);
-    d->display = wl_display_create();
     if (mode == StartMode::ConnectToSocket) {
         if (d->automaticSocketNaming) {
             const char *socket = wl_display_add_socket_auto(d->display);
             if (socket == nullptr) {
                 qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
-                return;
+                return false;
             }
 
             const QString newEffectiveSocketName = QString::fromUtf8(socket);
@@ -184,12 +182,14 @@ void Display::start(StartMode mode)
             }
         } else if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
             qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
-            return;
+            return false;
         }
     }
 
     d->loop = wl_display_get_event_loop(d->display);
     d->installSocketNotifier();
+
+    return d->running;
 }
 
 void Display::startLoop()
@@ -208,19 +208,6 @@ void Display::dispatchEvents(int msecTimeout)
         wl_event_loop_dispatch(d->loop, msecTimeout);
         wl_display_flush_clients(d->display);
     }
-}
-
-void Display::terminate()
-{
-    if (!d->running) {
-        return;
-    }
-    emit aboutToTerminate();
-    wl_display_terminate(d->display);
-    wl_display_destroy(d->display);
-    d->display = nullptr;
-    d->loop = nullptr;
-    d->setRunning(false);
 }
 
 void Display::Private::setRunning(bool r)

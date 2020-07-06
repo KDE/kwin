@@ -125,8 +125,11 @@ public:
         ConnectToSocket,
         ConnectClientsOnly
     };
-    void start(StartMode mode = StartMode::ConnectToSocket);
-    void terminate();
+    /**
+     * Start accepting client connections. If the display has started successfully, this
+     * function returns @c true; otherwise @c false is returned.
+     */
+    bool start(StartMode mode = StartMode::ConnectToSocket);
     /**
      * Starts the event loop for the server socket.
      * This method should only be used if start() is used before creating the

@@ -28,7 +28,6 @@ private Q_SLOTS:
 
     void testInitConnectionNoThread();
     void testConnectionFailure();
-    void testConnectionDieing();
     void testConnectionThread();
     void testConnectFd();
     void testConnectFdNoSocketName();
@@ -165,33 +164,6 @@ void TestWaylandConnectionThread::testConnectionThread()
     connectionThread->quit();
     connectionThread->wait();
     delete connectionThread;
-}
-
-void TestWaylandConnectionThread::testConnectionDieing()
-{
-    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
-    QSignalSpy connectedSpy(connection.data(), SIGNAL(connected()));
-    connection->setSocketName(s_socketName);
-    connection->initConnection();
-    QVERIFY(connectedSpy.wait());
-    QVERIFY(connection->display());
-
-    QSignalSpy diedSpy(connection.data(), SIGNAL(connectionDied()));
-    m_display->terminate();
-    QVERIFY(!m_display->isRunning());
-    QVERIFY(diedSpy.wait());
-    QCOMPARE(diedSpy.count(), 1);
-    QVERIFY(!connection->display());
-
-    connectedSpy.clear();
-    QVERIFY(connectedSpy.isEmpty());
-    // restarts the server
-    m_display->start();
-    QVERIFY(m_display->isRunning());
-    if (connectedSpy.count() == 0) {
-        QVERIFY(connectedSpy.wait());
-    }
-    QCOMPARE(connectedSpy.count(), 1);
 }
 
 void TestWaylandConnectionThread::testConnectFd()

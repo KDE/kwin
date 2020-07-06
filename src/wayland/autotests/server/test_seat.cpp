@@ -157,13 +157,13 @@ void TestWaylandServerSeat::testPointerPos()
 
 void TestWaylandServerSeat::testDestroyThroughTerminate()
 {
-    Display display;
-    display.setSocketName(s_socketName);
-    display.start();
-    SeatInterface *seat = display.createSeat();
+    QScopedPointer<Display> display(new Display());
+    display->setSocketName(s_socketName);
+    display->start();
+    SeatInterface *seat = display->createSeat();
     QSignalSpy destroyedSpy(seat, SIGNAL(destroyed(QObject*)));
     QVERIFY(destroyedSpy.isValid());
-    display.terminate();
+    display.reset();
     QVERIFY(!destroyedSpy.isEmpty());
 }
 

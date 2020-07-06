@@ -56,23 +56,19 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(runtimeDir.exists());
     QVERIFY(!runtimeDir.exists(testSocketName));
 
-    Display display;
-    QSignalSpy runningSpy(&display, SIGNAL(runningChanged(bool)));
+    QScopedPointer<Display> display(new Display);
+    QSignalSpy runningSpy(display.data(), SIGNAL(runningChanged(bool)));
     QVERIFY(runningSpy.isValid());
-    display.setSocketName(testSocketName);
-    QVERIFY(!display.isRunning());
-    display.start();
+    display->setSocketName(testSocketName);
+    QVERIFY(!display->isRunning());
+    display->start();
 //     QVERIFY(runningSpy.wait());
     QCOMPARE(runningSpy.count(), 1);
     QVERIFY(runningSpy.first().first().toBool());
-    QVERIFY(display.isRunning());
+    QVERIFY(display->isRunning());
     QVERIFY(runtimeDir.exists(testSocketName));
 
-    display.terminate();
-    QVERIFY(!display.isRunning());
-    QCOMPARE(runningSpy.count(), 2);
-    QVERIFY(runningSpy.first().first().toBool());
-    QVERIFY(!runningSpy.last().first().toBool());
+    display.reset();
     QVERIFY(!runtimeDir.exists(testSocketName));
 }
 
