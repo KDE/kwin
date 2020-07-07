@@ -222,7 +222,6 @@ protected:
      */
     void setX11Connection(xcb_connection_t *c) {
         m_connection = c;
-        emit x11ConnectionChanged();
     }
     void destroyAtoms();
     void destroyPlatform();

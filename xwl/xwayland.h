@@ -62,6 +62,7 @@ Q_SIGNALS:
 
 private:
     void createX11Connection();
+    void destroyX11Connection();
     void continueStartupWithX();
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;

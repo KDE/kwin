@@ -89,13 +89,7 @@ Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
 Xwayland::~Xwayland()
 {
     disconnect(m_xwaylandFailConnection);
-    if (m_app->x11Connection()) {
-        Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
-        m_app->destroyAtoms();
-        Q_EMIT m_app->x11ConnectionAboutToBeDestroyed();
-        xcb_disconnect(m_app->x11Connection());
-        m_app->setX11Connection(nullptr);
-    }
+    destroyX11Connection();
 
     if (m_xwaylandProcess) {
         m_xwaylandProcess->terminate();
@@ -207,6 +201,32 @@ void Xwayland::createX11Connection()
     // we don't support X11 multi-head in Wayland
     m_app->setX11ScreenNumber(screenNumber);
     m_app->setX11RootWindow(defaultScreen()->root);
+
+    m_app->createAtoms();
+    m_app->setupEventFilters();
+
+    // Note that it's very important to have valid x11RootWindow(), x11ScreenNumber(), and
+    // atoms when the rest of kwin is notified about the new X11 connection.
+    emit m_app->x11ConnectionChanged();
+}
+
+void Xwayland::destroyX11Connection()
+{
+    if (!m_app->x11Connection()) {
+        return;
+    }
+
+    Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
+    m_app->destroyAtoms();
+
+    emit m_app->x11ConnectionAboutToBeDestroyed();
+    xcb_disconnect(m_app->x11Connection());
+
+    m_app->setX11Connection(nullptr);
+    m_app->setX11ScreenNumber(-1);
+    m_app->setX11RootWindow(XCB_WINDOW_NONE);
+
+    emit m_app->x11ConnectionChanged();
 }
 
 void Xwayland::continueStartupWithX()
@@ -242,23 +262,7 @@ void Xwayland::continueStartupWithX()
     KSelectionOwner owner("WM_S0", xcbConn, m_app->x11RootWindow());
     owner.claim(true);
 
-    m_app->createAtoms();
-    m_app->setupEventFilters();
-
     m_dataBridge = new DataBridge;
-
-    // Check  whether another windowmanager is running
-    const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};
-    ScopedCPointer<xcb_generic_error_t> redirectCheck(xcb_request_check(connection(),
-                                                                        xcb_change_window_attributes_checked(connection(),
-                                                                                                             rootWindow(),
-                                                                                                             XCB_CW_EVENT_MASK,
-                                                                                                             maskValues)));
-    if (!redirectCheck.isNull()) {
-        fputs(i18n("kwin_wayland: an X11 window manager is running on the X11 Display.\n").toLocal8Bit().constData(), stderr);
-        Q_EMIT criticalError(1);
-        return;
-    }
 
     auto env = m_app->processStartupEnvironment();
     env.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
