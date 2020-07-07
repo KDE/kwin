@@ -96,6 +96,7 @@ public:
 
     ~WaylandServer() override;
     bool init(const QByteArray &socketName = QByteArray(), InitializationFlags flags = InitializationFlag::NoOptions);
+    bool start();
     void terminateClientConnections();
 
     KWaylandServer::Display *display() const

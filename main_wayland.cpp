@@ -191,13 +191,19 @@ void ApplicationWayland::finalizeStartup()
         disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
     }
     startSession();
-    createWorkspace();
     notifyStarted();
 }
 
 void ApplicationWayland::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+
+    // Note that we start accepting client connections after creating the Workspace.
+    createWorkspace();
+
+    if (!waylandServer()->start()) {
+        qFatal("Failed to initialze the Wayland server, exiting now");
+    }
 
     if (operationMode() == OperationModeWaylandOnly) {
         finalizeStartup();

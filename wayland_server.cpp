@@ -291,6 +291,11 @@ public:
     }
 };
 
+bool WaylandServer::start()
+{
+    return m_display->start();
+}
+
 bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags)
 {
     m_initFlags = flags;
@@ -299,10 +304,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         m_display->setSocketName(QString::fromUtf8(socketName));
     } else {
         m_display->setAutomaticSocketNaming(true);
-    }
-    m_display->start();
-    if (!m_display->isRunning()) {
-        return false;
     }
     m_compositor = m_display->createCompositor(m_display);
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,

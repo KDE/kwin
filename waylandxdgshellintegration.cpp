@@ -66,7 +66,9 @@ void WaylandXdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *tople
 void WaylandXdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel)
 {
     if (!workspace()) {
-        return; // TODO: Shouldn't we create the client when workspace is initialized?
+        qCWarning(KWIN_CORE, "An xdg-toplevel surface has been created while the compositor "
+                  "is still not fully initialized. That is a compositor bug!");
+        return;
     }
 
     emit clientCreated(new XdgToplevelClient(toplevel));
@@ -75,7 +77,9 @@ void WaylandXdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *t
 void WaylandXdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
 {
     if (!workspace()) {
-        return; // TODO: Shouldn't we create the client when workspace is initialized?
+        qCWarning(KWIN_CORE, "An xdg-popup surface has been created while the compositor is "
+                  "still not fully initialized. That is a compositor bug!");
+        return;
     }
 
     emit clientCreated(new XdgPopupClient(popup));

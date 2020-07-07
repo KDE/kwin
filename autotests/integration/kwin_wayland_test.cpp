@@ -135,13 +135,18 @@ void WaylandTestApplication::finalizeStartup()
     if (m_xwayland) {
         disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &WaylandTestApplication::finalizeStartup);
     }
-    createWorkspace();
     notifyStarted();
 }
 
 void WaylandTestApplication::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
+
+    createWorkspace();
+
+    if (!waylandServer()->start()) {
+        qFatal("Failed to initialize the Wayland server, exiting now");
+    }
 
     if (operationMode() == OperationModeWaylandOnly) {
         finalizeStartup();

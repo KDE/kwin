@@ -39,8 +39,9 @@ void NoXdgRuntimeDirTest::initTestCase()
 
 void NoXdgRuntimeDirTest::testInitFails()
 {
-    // this test verifies that without an XDG_RUNTIME_DIR the WaylandServer fials to init
-    QVERIFY(!waylandServer()->init(s_socketName.toLocal8Bit()));
+    // this test verifies that without an XDG_RUNTIME_DIR the WaylandServer fails to start
+    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    QVERIFY(!waylandServer()->start());
 }
 
 WAYLANDTEST_MAIN(NoXdgRuntimeDirTest)
