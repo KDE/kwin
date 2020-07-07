@@ -1807,7 +1807,6 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             emit quickTileModeChanged();
         }
         setFrameGeometry(workspace()->clientArea(MaximizeArea, this));
-        workspace()->raiseClient(this);
     } else {
         if (m_requestedMaximizeMode == MaximizeRestore) {
             updateQuickTileMode(QuickTileFlag::None);
