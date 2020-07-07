@@ -136,6 +136,7 @@ void WaylandTestApplication::finalizeStartup()
         disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &WaylandTestApplication::finalizeStartup);
     }
     createWorkspace();
+    notifyStarted();
 }
 
 void WaylandTestApplication::continueStartupWithScene()

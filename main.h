@@ -194,12 +194,14 @@ Q_SIGNALS:
     void workspaceCreated();
     void screensCreated();
     void virtualTerminalCreated();
+    void started();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
 
     void notifyKSplash();
+    void notifyStarted();
     void createInput();
     void createWorkspace();
     void createAtoms();

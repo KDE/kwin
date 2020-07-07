@@ -160,6 +160,11 @@ Application::~Application()
     destroyPlatform();
 }
 
+void Application::notifyStarted()
+{
+    emit started();
+}
+
 void Application::destroyAtoms()
 {
     delete atoms;

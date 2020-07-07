@@ -113,8 +113,8 @@ void SceneOpenGLShadowTest::initTestCase()
     // Copied from generic_scene_opengl_test.cpp
 
     qRegisterMetaType<KWin::AbstractClient*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
@@ -135,7 +135,7 @@ void SceneOpenGLShadowTest::initTestCase()
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(KWin::Compositor::self());
 
     // Add directory with fake decorations to the plugin search path.

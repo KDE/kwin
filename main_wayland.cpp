@@ -192,6 +192,7 @@ void ApplicationWayland::finalizeStartup()
     }
     startSession();
     createWorkspace();
+    notifyStarted();
 }
 
 void ApplicationWayland::continueStartupWithScene()

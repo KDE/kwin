@@ -249,6 +249,8 @@ void ApplicationX11::performStartup()
                 Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
                 notifyKSplash();
+
+                notifyStarted();
             }
         );
         connect(platform(), &Platform::initFailed, this,

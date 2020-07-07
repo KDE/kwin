@@ -67,8 +67,8 @@ void DontCrashCursorPhysicalSizeEmpty::cleanup()
 void DontCrashCursorPhysicalSizeEmpty::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
@@ -81,7 +81,7 @@ void DontCrashCursorPhysicalSizeEmpty::initTestCase()
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("0"));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
 }
 
 void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco_data()
