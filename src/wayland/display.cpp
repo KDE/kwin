@@ -192,13 +192,6 @@ bool Display::start(StartMode mode)
     return d->running;
 }
 
-void Display::startLoop()
-{
-    Q_ASSERT(!d->running);
-    Q_ASSERT(d->display);
-    d->installSocketNotifier();
-}
-
 void Display::dispatchEvents(int msecTimeout)
 {
     Q_ASSERT(d->display);

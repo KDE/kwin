@@ -131,15 +131,6 @@ public:
      */
     bool start(StartMode mode = StartMode::ConnectToSocket);
     /**
-     * Starts the event loop for the server socket.
-     * This method should only be used if start() is used before creating the
-     * QCoreApplication. In that case start() cannot fully setup the event processing
-     * and the loop needs to be started after the QCoreApplication got created.
-     * @see start
-     * @see dispatchEvents
-     **/
-    void startLoop();
-    /**
      * Dispatches pending events in a blocking way. May only be used if the Display is
      * created and started before the QCoreApplication is created. Once the QCoreApplication
      * is created and the event loop is started this method delegates to the normal dispatch
