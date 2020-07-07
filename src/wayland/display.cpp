@@ -114,7 +114,6 @@ Display::Display(QObject *parent)
 Display::~Display()
 {
     emit aboutToTerminate();
-    wl_display_terminate(d->display);
     wl_display_destroy(d->display);
 }
 
