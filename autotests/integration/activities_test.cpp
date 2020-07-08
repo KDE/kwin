@@ -105,8 +105,7 @@ struct XcbConnectionDeleter
 
 void ActivitiesTest::testSetOnActivitiesValidates()
 {
-    // this test creates a Client and sets it on activities which don't exist
-    // that should result in the window being on all activities
+    // this test verifies that windows can't be placed on activities that don't exist
     // create an xcb window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -142,13 +141,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("foo")));
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("bar")));
 
-    //setting the client to an invalid activities should result in the client being on all activities
-    client->setOnActivity(QStringLiteral("foo"), true);
-    QVERIFY(client->isOnAllActivities());
-    QVERIFY(!client->activities().contains(QLatin1String("foo")));
-
     client->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
-    QVERIFY(client->isOnAllActivities());
     QVERIFY(!client->activities().contains(QLatin1String("foo")));
     QVERIFY(!client->activities().contains(QLatin1String("bar")));
 
