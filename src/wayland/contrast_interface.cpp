@@ -7,122 +7,76 @@
 #include "contrast_interface.h"
 #include "region_interface.h"
 #include "display.h"
-#include "global_p.h"
-#include "resource_p.h"
 #include "surface_interface_p.h"
 
 #include <wayland-server.h>
-#include <wayland-contrast-server-protocol.h>
+#include <qwayland-server-contrast.h>
 
 namespace KWaylandServer
 {
 
-class ContrastManagerInterface::Private : public Global::Private
+class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
 {
 public:
-    Private(ContrastManagerInterface *q, Display *d);
-
+    ContrastManagerInterfacePrivate(ContrastManagerInterface *_q, Display *display);
+    ~ContrastManagerInterfacePrivate() = default;
 private:
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
-    void createContrast(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
-
-    static void createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
-    static void unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface);
-    static void unbind(wl_resource *resource);
-    static Private *cast(wl_resource *r) {
-        auto contrastManager = reinterpret_cast<QPointer<ContrastManagerInterface>*>(wl_resource_get_user_data(r))->data();
-        if (contrastManager) {
-            return static_cast<Private*>(contrastManager->d.data());
-         }
-        return nullptr;
-    }
-
     ContrastManagerInterface *q;
-    static const struct org_kde_kwin_contrast_manager_interface s_interface;
     static const quint32 s_version;
+
+protected:
+    void org_kde_kwin_contrast_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
+    void org_kde_kwin_contrast_manager_unset(Resource *resource, wl_resource *surface) override;
 };
 
-const quint32 ContrastManagerInterface::Private::s_version = 1;
+const quint32 ContrastManagerInterfacePrivate::s_version = 1;
 
-#ifndef K_DOXYGEN
-const struct org_kde_kwin_contrast_manager_interface ContrastManagerInterface::Private::s_interface = {
-    createCallback,
-    unsetCallback
-};
-#endif
-
-ContrastManagerInterface::Private::Private(ContrastManagerInterface *q, Display *d)
-    : Global::Private(d, &org_kde_kwin_contrast_manager_interface, s_version)
-    , q(q)
+ContrastManagerInterfacePrivate::ContrastManagerInterfacePrivate(ContrastManagerInterface *_q, Display *display)
+    : QtWaylandServer::org_kde_kwin_contrast_manager(*display, s_version)
+    , q(_q)
 {
 }
 
-void ContrastManagerInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
-{
-    auto c = display->getConnection(client);
-    wl_resource *resource = c->createResource(&org_kde_kwin_contrast_manager_interface, qMin(version, s_version), id);
-    if (!resource) {
-        wl_client_post_no_memory(client);
-        return;
-    }
-    auto ref = new QPointer<ContrastManagerInterface>(q);//deleted in unbind
-    wl_resource_set_implementation(resource, &s_interface, ref, unbind);
-}
-
-void ContrastManagerInterface::Private::unbind(wl_resource *resource)
-{
-    delete reinterpret_cast<QPointer<ContrastManagerInterface>*>(wl_resource_get_user_data(resource));
-}
-
-void ContrastManagerInterface::Private::createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
-{
-    auto m = cast(resource);
-    if (!m) {
-        return;// will happen if global is deleted
-    }
-    m->createContrast(client, resource, id, surface);
-}
-
-void ContrastManagerInterface::Private::createContrast(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
+void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
+        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
     }
 
-    ContrastInterface *contrast = new ContrastInterface(q, resource);
-    contrast->create(display->getConnection(client), wl_resource_get_version(resource), id);
-    if (!contrast->resource()) {
-        wl_resource_post_no_memory(resource);
-        delete contrast;
+    wl_resource *contrast_resource = wl_resource_create(resource->client(), &org_kde_kwin_contrast_interface, resource->version(), id);
+    if (!contrast_resource) {
+        wl_client_post_no_memory(resource->client());
         return;
     }
-    s->d_func()->setContrast(QPointer<ContrastInterface>(contrast));
+    auto contrast = new ContrastInterface(contrast_resource);
+    s->d_func()->setContrast(contrast);
 }
 
-void ContrastManagerInterface::Private::unsetCallback(wl_client *client, wl_resource *resource, wl_resource *surface)
+void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_unset(Resource *resource, wl_resource *surface)
 {
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
+        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
     }
     s->d_func()->setContrast(QPointer<ContrastInterface>());
 }
 
 ContrastManagerInterface::ContrastManagerInterface(Display *display, QObject *parent)
-    : Global(new Private(this, display), parent)
+    : QObject(parent)
+    , d(new ContrastManagerInterfacePrivate(this, display))
 {
 }
 
 ContrastManagerInterface::~ContrastManagerInterface() = default;
 
-class ContrastInterface::Private : public Resource::Private
+class ContrastInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast
 {
 public:
-    Private(ContrastInterface *q, ContrastManagerInterface *c, wl_resource *parentResource);
-    ~Private();
+    ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource);
+    ~ContrastInterfacePrivate() = default;
 
     QRegion pendingRegion;
     QRegion currentRegion;
@@ -134,88 +88,78 @@ public:
     qreal currentSaturation;
 
 private:
-    void commit();
-    //TODO
-    ContrastInterface *q_func() {
-        return reinterpret_cast<ContrastInterface *>(q);
-    }
+    ContrastInterface *q;
 
-    static void commitCallback(wl_client *client, wl_resource *resource);
-    static void setRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
-    static void setContrastCallback(wl_client *client, wl_resource *resource, wl_fixed_t contrast);
-    static void setIntensityCallback(wl_client *client, wl_resource *resource, wl_fixed_t intensity);
-    static void setSaturationCallback(wl_client *client, wl_resource *resource, wl_fixed_t saturation);
+protected:
+    void org_kde_kwin_contrast_commit(Resource *resource) override;
+    void org_kde_kwin_contrast_set_region(Resource *resource, wl_resource *region) override;
+    void org_kde_kwin_contrast_set_contrast(Resource *resource, wl_fixed_t contrast) override;
+    void org_kde_kwin_contrast_set_intensity(Resource *resource, wl_fixed_t intensity) override;
+    void org_kde_kwin_contrast_set_saturation(Resource *resource, wl_fixed_t saturation) override;
+    void org_kde_kwin_contrast_release(Resource *resource) override;
+    void org_kde_kwin_contrast_destroy_resource(Resource *resource) override;
+    
 
-    static const struct org_kde_kwin_contrast_interface s_interface;
 };
 
-#ifndef K_DOXYGEN
-const struct org_kde_kwin_contrast_interface ContrastInterface::Private::s_interface = {
-    commitCallback,
-    setRegionCallback,
-    setContrastCallback,
-    setIntensityCallback,
-    setSaturationCallback,
-    resourceDestroyedCallback
-};
-#endif
-
-void ContrastInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
+void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)
 {
-    Q_UNUSED(client)
-    cast<Private>(resource)->commit();
-}
-
-void ContrastInterface::Private::commit()
-{
+    Q_UNUSED(resource)
     currentRegion = pendingRegion;
     currentContrast = pendingContrast;
     currentIntensity = pendingIntensity;
     currentSaturation = pendingSaturation;
 }
 
-void ContrastInterface::Private::setRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
+void ContrastInterfacePrivate::org_kde_kwin_contrast_set_region(Resource *resource, wl_resource *region)
 {
-    Q_UNUSED(client)
-    Private *p = cast<Private>(resource);
+    Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
     if (r) {
-        p->pendingRegion = r->region();
+        pendingRegion = r->region();
     } else {
-        p->pendingRegion = QRegion();
+        pendingRegion = QRegion();
     }
 }
 
-void ContrastInterface::Private::setContrastCallback(wl_client *client, wl_resource *resource, wl_fixed_t contrast)
+void ContrastInterfacePrivate::org_kde_kwin_contrast_set_contrast(Resource *resource, wl_fixed_t contrast)
 {
-    Q_UNUSED(client)
-    Private *p = cast<Private>(resource);
-    p->pendingContrast = wl_fixed_to_double(contrast);
+    Q_UNUSED(resource)
+    pendingContrast = wl_fixed_to_double(contrast);
 }
 
-void ContrastInterface::Private::setIntensityCallback(wl_client *client, wl_resource *resource, wl_fixed_t intensity)
+void ContrastInterfacePrivate::org_kde_kwin_contrast_set_intensity(Resource *resource, wl_fixed_t intensity)
 {
-    Q_UNUSED(client)
-    Private *p = cast<Private>(resource);
-    p->pendingIntensity = wl_fixed_to_double(intensity);
+    Q_UNUSED(resource)
+    pendingIntensity = wl_fixed_to_double(intensity);
 }
 
-void ContrastInterface::Private::setSaturationCallback(wl_client *client, wl_resource *resource, wl_fixed_t saturation)
+void ContrastInterfacePrivate::org_kde_kwin_contrast_set_saturation(Resource *resource, wl_fixed_t saturation)
 {
-    Q_UNUSED(client)
-    Private *p = cast<Private>(resource);
-    p->pendingSaturation = wl_fixed_to_double(saturation);
+    Q_UNUSED(resource)
+    pendingSaturation = wl_fixed_to_double(saturation);
 }
 
-ContrastInterface::Private::Private(ContrastInterface *q, ContrastManagerInterface *c, wl_resource *parentResource)
-    : Resource::Private(q, c, parentResource, &org_kde_kwin_contrast_interface, &s_interface)
+void ContrastInterfacePrivate::org_kde_kwin_contrast_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void ContrastInterfacePrivate::org_kde_kwin_contrast_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete q;
+}
+
+ContrastInterfacePrivate::ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource)
+    : QtWaylandServer::org_kde_kwin_contrast(resource)
+    , q(_q)
 {
 }
 
-ContrastInterface::Private::~Private() = default;
-
-ContrastInterface::ContrastInterface(ContrastManagerInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(this, parent, parentResource))
+ContrastInterface::ContrastInterface(wl_resource *resource)
+    : QObject()
+    , d(new ContrastInterfacePrivate(this, resource))
 {
 }
 
@@ -223,31 +167,22 @@ ContrastInterface::~ContrastInterface() = default;
 
 QRegion ContrastInterface::region() const
 {
-    Q_D();
     return d->currentRegion;
 }
 
 qreal ContrastInterface::contrast() const
 {
-    Q_D();
     return d->currentContrast;
 }
 
 qreal ContrastInterface::intensity() const
 {
-    Q_D();
     return d->currentIntensity;
 }
 
 qreal ContrastInterface::saturation() const
 {
-    Q_D();
     return d->currentSaturation;
-}
-
-ContrastInterface::Private *ContrastInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
 }
 
 }

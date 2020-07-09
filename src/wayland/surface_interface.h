@@ -457,7 +457,7 @@ private:
     friend class ShadowManagerInterface;
     friend class BlurManagerInterfacePrivate;
     friend class SlideManagerInterface;
-    friend class ContrastManagerInterface;
+    friend class ContrastManagerInterfacePrivate;
     friend class IdleInhibitManagerUnstableV1Interface;
     friend class PointerConstraintsUnstableV1Interface;
     friend class SurfaceRole;

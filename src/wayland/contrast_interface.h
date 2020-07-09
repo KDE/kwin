@@ -7,17 +7,18 @@
 #ifndef KWAYLAND_SERVER_CONTRAST_INTERFACE_H
 #define KWAYLAND_SERVER_CONTRAST_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
-
 #include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
 
 class Display;
+class ContrastManagerInterfacePrivate;
+class ContrastInterfacePrivate;
 
 /**
  * @brief Represents the Global for org_kde_kwin_contrast_manager interface.
@@ -28,16 +29,16 @@ class Display;
  * @see SurfaceInterface
  * @since 5.5
  **/
-class KWAYLANDSERVER_EXPORT ContrastManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT ContrastManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ContrastManagerInterface();
+    ~ContrastManagerInterface() override;
 
 private:
     explicit ContrastManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<ContrastManagerInterfacePrivate> d;
 };
 
 /**
@@ -53,11 +54,11 @@ private:
  * @see SurfaceInterface
  * @since 5.5
  **/
-class KWAYLANDSERVER_EXPORT ContrastInterface : public Resource
+class KWAYLANDSERVER_EXPORT ContrastInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ContrastInterface();
+    ~ContrastInterface() override;
 
     QRegion region() const;
     qreal contrast() const;
@@ -65,11 +66,10 @@ public:
     qreal saturation() const;
 
 private:
-    explicit ContrastInterface(ContrastManagerInterface *parent, wl_resource *parentResource);
-    friend class ContrastManagerInterface;
+    explicit ContrastInterface(wl_resource *resource);
+    friend class ContrastManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<ContrastInterfacePrivate> d;
 };
 
 }
