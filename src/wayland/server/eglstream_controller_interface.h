@@ -17,7 +17,7 @@ namespace KWaylandServer
 {
 
 class Display;
-
+class EglStreamControllerInterfacePrivate;
 /**
  * @brief Represents the Global for the wl_eglstream_controller interface.
  *
@@ -26,22 +26,22 @@ class Display;
  * of buffer contents between client and compositor.
  *
  */
-class KWAYLANDSERVER_EXPORT EglStreamControllerInterface : public Global
+class KWAYLANDSERVER_EXPORT EglStreamControllerInterface : public QObject
 {
     Q_OBJECT
 public:
     ~EglStreamControllerInterface() override;
-    void create();
 
 Q_SIGNALS:
     /**
      * Emitted when a new stream attach request is received.
      */
     void streamConsumerAttached(SurfaceInterface *surface, void *eglStream, wl_array *attribs);
+
 private:
     explicit EglStreamControllerInterface(Display *display, QObject *parent = nullptr);
 
-    class Private;
+    QScopedPointer<EglStreamControllerInterfacePrivate> d;
     friend class Display;
 };
 
