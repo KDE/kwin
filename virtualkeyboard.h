@@ -46,10 +46,12 @@ private:
     void setEnabled(bool enable);
     void updateSni();
     void updateInputPanelState();
+    void adoptInputMethodContext();
 
     bool m_enabled = false;
     KStatusNotifierItem *m_sni = nullptr;
     QScopedPointer<QQuickView> m_inputWindow;
+    QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
     // If a surface loses focus immediately after being resized by the keyboard, don't react to it to avoid resize loops
     QTimer *m_floodTimer;

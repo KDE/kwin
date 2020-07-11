@@ -38,6 +38,8 @@ class CompositorInterface;
 class Display;
 class DataDeviceInterface;
 class IdleInterface;
+class InputMethodV1Interface;
+class InputPanelSurfaceV1Interface;
 class SeatInterface;
 class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
@@ -132,6 +134,10 @@ public:
     bool isKeyboardShortcutsInhibited() const;
 
     KWaylandServer::LinuxDmabufUnstableV1Interface *linuxDmabuf();
+
+    KWaylandServer::InputMethodV1Interface *inputMethod() const {
+        return m_inputMethod;
+    }
 
     QList<AbstractClient *> clients() const {
         return m_clients;
@@ -235,6 +241,8 @@ public:
     void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmabufUnstableV1Buffer *buffer) {
         m_linuxDmabufBuffers.remove(buffer);
     }
+    AbstractClient *
+    createInputPanelClient(KWaylandServer::InputPanelSurfaceV1Interface *surface);
 
     AbstractWaylandOutput *findOutput(KWaylandServer::OutputInterface *output) const;
 
@@ -274,6 +282,7 @@ private:
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
+    KWaylandServer::InputMethodV1Interface *m_inputMethod = nullptr;
     KWaylandServer::ClientConnection *m_inputMethodServerConnection = nullptr;
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     struct {

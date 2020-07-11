@@ -12,6 +12,7 @@
 #include "platform.h"
 #include "composite.h"
 #include "idle_inhibition.h"
+#include "inputpanelv1client.h"
 #include "screens.h"
 #include "waylandxdgshellintegration.h"
 #include "workspace.h"
@@ -57,6 +58,7 @@
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
 #include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
+#include <KWaylandServer/inputmethod_v1_interface.h>
 
 // Qt
 #include <QCryptographicHash>
@@ -223,6 +225,13 @@ AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface
         }
     }
     return outputFound;
+}
+
+AbstractClient *WaylandServer::createInputPanelClient(KWaylandServer::InputPanelSurfaceV1Interface *surface)
+{
+    auto *client = new InputPanelV1Client(surface);
+    registerShellClient(client);
+    return client;
 }
 
 class KWinDisplay : public KWaylandServer::FilteredDisplay
@@ -474,6 +483,8 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 
     m_keyState = m_display->createKeyStateInterface(m_display);
     m_keyState->create();
+
+    m_inputMethod = m_display->createInputMethodInterface(m_display);
 
     return true;
 }
