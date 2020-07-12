@@ -383,7 +383,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         }
     );
     m_paletteManager = m_display->createServerSideDecorationPaletteManager(m_display);
-    m_paletteManager->create();
     connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated,
         [this] (ServerSideDecorationPaletteInterface *palette) {
             if (XdgToplevelClient *client = findXdgToplevelClient(palette->surface())) {
