@@ -2471,17 +2471,17 @@ bool SceneOpenGLShadow::prepareBackend()
     QPainter p;
     p.begin(&image);
 
-    p.drawPixmap(0, 0, shadowPixmap(ShadowElementTopLeft));
-    p.drawPixmap(innerRectLeft, 0, shadowPixmap(ShadowElementTop));
-    p.drawPixmap(width - topRight.width(), 0, shadowPixmap(ShadowElementTopRight));
+    p.drawPixmap(0, 0, topLeft.width(), topLeft.height(), shadowPixmap(ShadowElementTopLeft));
+    p.drawPixmap(innerRectLeft, 0, top.width(), top.height(), shadowPixmap(ShadowElementTop));
+    p.drawPixmap(width - topRight.width(), 0, topRight.width(), topRight.height(), shadowPixmap(ShadowElementTopRight));
 
-    p.drawPixmap(0, innerRectTop, shadowPixmap(ShadowElementLeft));
-    p.drawPixmap(width - right.width(), innerRectTop, shadowPixmap(ShadowElementRight));
+    p.drawPixmap(0, innerRectTop, left.width(), left.height(), shadowPixmap(ShadowElementLeft));
+    p.drawPixmap(width - right.width(), innerRectTop, right.width(), right.height(), shadowPixmap(ShadowElementRight));
 
-    p.drawPixmap(0, height - bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
-    p.drawPixmap(innerRectLeft, height - bottom.height(), shadowPixmap(ShadowElementBottom));
-    p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
-
+    p.drawPixmap(0, height - bottomLeft.height(), bottomLeft.width(), bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
+    p.drawPixmap(innerRectLeft, height - bottom.height(), bottom.width(), bottom.height(), shadowPixmap(ShadowElementBottom));
+    p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), bottomRight.width(), bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
+    
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
