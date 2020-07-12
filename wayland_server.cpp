@@ -439,7 +439,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
             );
         }
     );
-    m_decorationManager->create();
 
     m_outputManagement = m_display->createOutputManagement(m_display);
     connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
