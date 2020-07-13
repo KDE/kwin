@@ -156,9 +156,7 @@ void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
     // TODO: Find a better way and more generic to install extensions.
 
     SurfaceInterface *surface = client->surface();
-    if (surface->client() == m_xwayland.client) {
-        return;
-    }
+
     if (surface->client() == m_screenLockerClientConnection) {
         ScreenLocker::KSldApp::self()->lockScreenShown();
     }
