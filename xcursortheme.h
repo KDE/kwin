@@ -71,7 +71,7 @@ public:
     /**
      * Returns the hotspot for this sprite. (0, 0) corresponds to the upper left corner.
      *
-     * The coordinates of the hotspot are in device pixels.
+     * The coordinates of the hotspot are in device independent pixels.
      */
     QPoint hotspot() const;
 

@@ -96,7 +96,7 @@ static void load_callback(XcursorImages *images, void *data)
         QImage data(nativeCursorImage->width, nativeCursorImage->height, QImage::Format_ARGB32);
         memcpy(data.bits(), nativeCursorImage->pixels, data.sizeInBytes());
 
-        sprites.append(KXcursorSprite(data, hotspot, delay));
+        sprites.append(KXcursorSprite(data, hotspot / themePrivate->devicePixelRatio, delay));
     }
 
     themePrivate->registry.insert(images->name, sprites);

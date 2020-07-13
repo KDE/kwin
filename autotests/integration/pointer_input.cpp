@@ -64,7 +64,6 @@ static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &
     cursorImage.setDevicePixelRatio(theme.devicePixelRatio());
 
     QPoint cursorHotspot = sprites.first().hotspot();
-    cursorHotspot /= theme.devicePixelRatio();
 
     return PlatformCursorImage(cursorImage, cursorHotspot);
 }

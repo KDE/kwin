@@ -1322,7 +1322,6 @@ bool WaylandCursorImage::loadThemeCursor_helper(const QByteArray &name, Image *c
     cursorImage->image.setDevicePixelRatio(m_cursorTheme.devicePixelRatio());
 
     cursorImage->hotspot = sprites.first().hotspot();
-    cursorImage->hotspot /= m_cursorTheme.devicePixelRatio();
 
     return true;
 }
