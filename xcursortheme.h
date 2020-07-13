@@ -20,13 +20,16 @@
 #include <kwin_export.h>
 
 #include <QImage>
-#include <QMap>
+#include <QSharedDataPointer>
 #include <QVector>
 
 #include <chrono>
 
 namespace KWin
 {
+
+class KXcursorSpritePrivate;
+class KXcursorThemePrivate;
 
 /**
  * The KXcursorSprite class represents a single sprite in the Xcursor theme.
@@ -40,10 +43,25 @@ public:
     KXcursorSprite();
 
     /**
+     * Constructs a copy of the KXcursorSprite object @a other.
+     */
+    KXcursorSprite(const KXcursorSprite &other);
+
+    /**
      * Constructs an XcursorSprite with the specified @a data, @a hotspot, and @a delay.
      */
     KXcursorSprite(const QImage &data, const QPoint &hotspot,
                    const std::chrono::milliseconds &delay);
+
+    /**
+     * Destructs the KXcursorSprite object.
+     */
+    ~KXcursorSprite();
+
+    /**
+     * Assigns the value of @a other to the Xcursor sprite object.
+     */
+    KXcursorSprite &operator=(const KXcursorSprite &other);
 
     /**
      * Returns the image for this sprite.
@@ -63,9 +81,7 @@ public:
     std::chrono::milliseconds delay() const;
 
 private:
-    QImage m_data;
-    QPoint m_hotspot;
-    std::chrono::milliseconds m_delay;
+    QSharedDataPointer<KXcursorSpritePrivate> d;
 };
 
 /**
@@ -74,6 +90,26 @@ private:
 class KWIN_EXPORT KXcursorTheme
 {
 public:
+    /**
+     * Constructs an empty Xcursor theme.
+     */
+    KXcursorTheme();
+
+    /**
+     * Constructs a copy of the KXcursorTheme object @a other.
+     */
+    KXcursorTheme(const KXcursorTheme &other);
+
+    /**
+     * Destructs the KXcursorTheme object.
+     */
+    ~KXcursorTheme();
+
+    /**
+     * Assigns the value of @a other to the Xcursor theme object.
+     */
+    KXcursorTheme &operator=(const KXcursorTheme &other);
+
     /**
      * Returns the ratio between device pixels and logical pixels for the Xcursor theme.
      */
@@ -95,8 +131,7 @@ public:
     static KXcursorTheme fromTheme(const QString &themeName, int size, qreal dpr);
 
 private:
-    QMap<QByteArray, QVector<KXcursorSprite>> m_cursorRegistry;
-    qreal m_devicePixelRatio = 1;
+    QSharedDataPointer<KXcursorThemePrivate> d;
 };
 
 } // namespace KWin

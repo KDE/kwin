@@ -18,38 +18,74 @@
 #include "xcursortheme.h"
 #include "3rdparty/xcursor.h"
 
+#include <QMap>
+#include <QSharedData>
+
 namespace KWin
 {
 
-KXcursorSprite::KXcursorSprite()
+class KXcursorSpritePrivate : public QSharedData
 {
+public:
+    QImage data;
+    QPoint hotspot;
+    std::chrono::milliseconds delay;
+};
+
+class KXcursorThemePrivate : public QSharedData
+{
+public:
+    QMap<QByteArray, QVector<KXcursorSprite>> registry;
+    qreal devicePixelRatio = 1;
+};
+
+KXcursorSprite::KXcursorSprite()
+    : d(new KXcursorSpritePrivate)
+{
+}
+
+KXcursorSprite::KXcursorSprite(const KXcursorSprite &other)
+    : d(other.d)
+{
+}
+
+KXcursorSprite::~KXcursorSprite()
+{
+}
+
+KXcursorSprite &KXcursorSprite::operator=(const KXcursorSprite &other)
+{
+    d = other.d;
+    return *this;
 }
 
 KXcursorSprite::KXcursorSprite(const QImage &data, const QPoint &hotspot,
                                const std::chrono::milliseconds &delay)
-    : m_data(data)
-    , m_hotspot(hotspot)
-    , m_delay(delay)
+    : d(new KXcursorSpritePrivate)
 {
+    d->data = data;
+    d->hotspot = hotspot;
+    d->delay = delay;
 }
 
 QImage KXcursorSprite::data() const
 {
-    return m_data;
+    return d->data;
 }
 
 QPoint KXcursorSprite::hotspot() const
 {
-    return m_hotspot;
+    return d->hotspot;
 }
 
 std::chrono::milliseconds KXcursorSprite::delay() const
 {
-    return m_delay;
+    return d->delay;
 }
 
 static void load_callback(XcursorImages *images, void *data)
 {
+    KXcursorThemePrivate *themePrivate = static_cast<KXcursorThemePrivate *>(data);
     QVector<KXcursorSprite> sprites;
 
     for (int i = 0; i < images->nimage; ++i) {
@@ -63,34 +99,53 @@ static void load_callback(XcursorImages *images, void *data)
         sprites.append(KXcursorSprite(data, hotspot, delay));
     }
 
-    auto cursorRegistry = static_cast<QMap<QByteArray, QVector<KXcursorSprite>> *>(data);
-    cursorRegistry->insert(images->name, sprites);
-
+    themePrivate->registry.insert(images->name, sprites);
     XcursorImagesDestroy(images);
+}
+
+KXcursorTheme::KXcursorTheme()
+    : d(new KXcursorThemePrivate)
+{
+}
+
+KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
+    : d(other.d)
+{
+}
+
+KXcursorTheme::~KXcursorTheme()
+{
+}
+
+KXcursorTheme &KXcursorTheme::operator=(const KXcursorTheme &other)
+{
+    d = other.d;
+    return *this;
 }
 
 qreal KXcursorTheme::devicePixelRatio() const
 {
-    return m_devicePixelRatio;
+    return d->devicePixelRatio;
 }
 
 bool KXcursorTheme::isEmpty() const
 {
-    return m_cursorRegistry.isEmpty();
+    return d->registry.isEmpty();
 }
 
 QVector<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
 {
-    return m_cursorRegistry.value(name);
+    return d->registry.value(name);
 }
 
 KXcursorTheme KXcursorTheme::fromTheme(const QString &themeName, int size, qreal dpr)
 {
     KXcursorTheme theme;
-    theme.m_devicePixelRatio = dpr;
+    KXcursorThemePrivate *themePrivate = theme.d;
+    themePrivate->devicePixelRatio = dpr;
 
     const QByteArray nativeThemeName = themeName.toUtf8();
-    xcursor_load_theme(nativeThemeName, size * dpr, load_callback, &theme.m_cursorRegistry);
+    xcursor_load_theme(nativeThemeName, size * dpr, load_callback, themePrivate);
 
     return theme;
 }
