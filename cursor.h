@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QObject>
 #include <QPoint>
+// KF
+#include <KSharedConfig>
 // xcb
 #include <xcb/xcb.h>
 
@@ -309,6 +311,24 @@ private:
     Cursor* m_currentCursor = nullptr;
     Cursor* m_mouse = nullptr;
     QVector<Cursor*> m_cursors;
+};
+
+class InputConfig
+{
+public:
+    KSharedConfigPtr inputConfig() const {
+        return m_inputConfig;
+    }
+    void setInputConfig(KSharedConfigPtr config) {
+        m_inputConfig = std::move(config);
+    }
+
+    static InputConfig *self();
+private:
+    InputConfig();
+
+    KSharedConfigPtr m_inputConfig;
+    static InputConfig *s_self;
 };
 
 inline const QPoint &Cursor::currentPos() const

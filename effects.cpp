@@ -1684,7 +1684,7 @@ KSharedConfigPtr EffectsHandlerImpl::config() const
 
 KSharedConfigPtr EffectsHandlerImpl::inputConfig() const
 {
-    return kwinApp()->inputConfig();
+    return InputConfig::self()->inputConfig();
 }
 
 Effect *EffectsHandlerImpl::findEffect(const QString &name) const

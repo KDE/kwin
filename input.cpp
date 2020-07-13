@@ -2150,7 +2150,7 @@ void InputRedirection::setupInputFilters()
 void InputRedirection::reconfigure()
 {
     if (Application::usesLibinput()) {
-        auto inputConfig = kwinApp()->inputConfig();
+        auto inputConfig = InputConfig::self()->inputConfig();
         inputConfig->reparseConfiguration();
         const auto config = inputConfig->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
@@ -2178,7 +2178,7 @@ void InputRedirection::setupLibInput()
             waylandServer()->display()->createRelativePointerManager(KWaylandServer::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
         }
 
-        conn->setInputConfig(kwinApp()->inputConfig());
+        conn->setInputConfig(InputConfig::self()->inputConfig());
         conn->updateLEDs(m_keyboard->xkb()->leds());
         waylandServer()->updateKeyState(m_keyboard->xkb()->leds());
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, waylandServer(), &WaylandServer::updateKeyState);

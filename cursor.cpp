@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
-#include <KSharedConfig>
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QDBusConnection>
@@ -127,7 +126,7 @@ void Cursor::loadThemeSettings()
 
 void Cursor::loadThemeFromKConfig()
 {
-    KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
+    KConfigGroup mousecfg(InputConfig::self()->inputConfig(), "Mouse");
     const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
     const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);
@@ -144,9 +143,10 @@ void Cursor::updateTheme(const QString &name, int size)
 
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
+// #endif
     Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
-        kwinApp()->inputConfig()->reparseConfiguration();
+        InputConfig::self()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();
         // sync to environment
         qputenv("XCURSOR_THEME", m_themeName.toUtf8());
@@ -483,6 +483,18 @@ QByteArray CursorShape::name() const
     default:
         return QByteArray();
     }
+}
+
+InputConfig *InputConfig::s_self = nullptr;
+InputConfig *InputConfig::self() {
+    if (!s_self)
+        s_self = new InputConfig;
+    return s_self;
+}
+
+InputConfig::InputConfig()
+    : m_inputConfig(KSharedConfig::openConfig(QStringLiteral("kcminputrc"), KConfig::NoGlobals))
+{
 }
 
 } // namespace
