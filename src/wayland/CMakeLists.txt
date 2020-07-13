@@ -188,9 +188,9 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME appmenu
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml
-    BASENAME server_decoration_palette
+    BASENAME server-decoration-palette
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS

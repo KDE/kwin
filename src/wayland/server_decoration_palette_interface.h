@@ -6,9 +6,9 @@
 #ifndef KWAYLAND_SERVER_DECORATION_PALETTE_INTERFACE_H
 #define KWAYLAND_SERVER_DECORATION_PALETTE_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
+struct wl_resource;
 
+#include <QObject>
 #include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
@@ -17,6 +17,8 @@ namespace KWaylandServer
 class Display;
 class SurfaceInterface;
 class ServerSideDecorationPaletteInterface;
+class ServerSideDecorationPaletteManagerInterfacePrivate;
+class ServerSideDecorationPaletteInterfacePrivate;
 
 /**
  * Allows a client to specify a preferred palette to use for server-side window decorations
@@ -25,11 +27,11 @@ class ServerSideDecorationPaletteInterface;
  * and notifies when a new one is created
  * @since 5.42
  */
-class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ServerSideDecorationPaletteManagerInterface();
+    ~ServerSideDecorationPaletteManagerInterface() override;
     /**
      * Returns any existing palette for a given surface
      * This returns a null pointer if no ServerSideDecorationPaletteInterface exists.
@@ -45,8 +47,7 @@ Q_SIGNALS:
 private:
     explicit ServerSideDecorationPaletteManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<ServerSideDecorationPaletteManagerInterfacePrivate> d;
 };
 
 /**
@@ -54,11 +55,11 @@ private:
  * This interface is attached to a wl_surface and informs the server of a requested palette
  * @since 5.42
  */
-class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteInterface : public Resource
+class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ServerSideDecorationPaletteInterface();
+    ~ServerSideDecorationPaletteInterface() override;
 
     /**
      * @returns the palette or an empty string if unset
@@ -77,11 +78,10 @@ Q_SIGNALS:
     void paletteChanged(const QString &palette);
 
 private:
-    explicit ServerSideDecorationPaletteInterface(ServerSideDecorationPaletteManagerInterface *parent, SurfaceInterface *s, wl_resource *parentResource);
-    friend class ServerSideDecorationPaletteManagerInterface;
+    explicit ServerSideDecorationPaletteInterface(SurfaceInterface *surface, wl_resource *resource);
+    friend class ServerSideDecorationPaletteManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<ServerSideDecorationPaletteInterfacePrivate> d;
 };
 
 }

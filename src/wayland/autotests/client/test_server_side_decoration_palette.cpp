@@ -105,8 +105,6 @@ void TestServerSideDecorationPalette::init()
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
     m_paletteManagerInterface = m_display->createServerSideDecorationPaletteManager(m_display);
-    m_paletteManagerInterface->create();
-    QVERIFY(m_paletteManagerInterface->isValid());
 
     QVERIFY(registrySpy.wait());
     m_paletteManager = registry.createServerSideDecorationPaletteManager(registrySpy.first().first().value<quint32>(), registrySpy.first().last().value<quint32>(), this);
