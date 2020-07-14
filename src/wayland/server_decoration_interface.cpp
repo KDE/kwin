@@ -10,7 +10,7 @@
 
 #include <QVector>
 
-#include <qwayland-server-server_decoration.h>
+#include <qwayland-server-server-decoration.h>
 
 namespace KWaylandServer
 {
