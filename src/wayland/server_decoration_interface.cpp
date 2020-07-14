@@ -35,23 +35,18 @@ protected:
 
 const quint32 ServerSideDecorationManagerInterfacePrivate::s_version = 1;
 
-namespace {
 static uint32_t modeWayland(ServerSideDecorationManagerInterface::Mode mode)
 {
     switch (mode) {
     case ServerSideDecorationManagerInterface::Mode::None:
-        return ORG_KDE_KWIN_SERVER_DECORATION_MODE_NONE;
-        break;
+        return ServerSideDecorationManagerInterfacePrivate::mode_None;
     case ServerSideDecorationManagerInterface::Mode::Client:
-        return ORG_KDE_KWIN_SERVER_DECORATION_MODE_CLIENT;
-        break;
+        return ServerSideDecorationManagerInterfacePrivate::mode_Client;
     case ServerSideDecorationManagerInterface::Mode::Server:
-        return ORG_KDE_KWIN_SERVER_DECORATION_MODE_SERVER;
-        break;
+        return ServerSideDecorationManagerInterfacePrivate::mode_Server;
     default:
         Q_UNREACHABLE();
     }
-}
 }
 
 void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
@@ -137,19 +132,18 @@ protected:
 
 QVector<ServerSideDecorationInterfacePrivate*> ServerSideDecorationInterfacePrivate::s_all;
 
-
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode)
 {
     Q_UNUSED(resource)
     ServerSideDecorationManagerInterface::Mode m = ServerSideDecorationManagerInterface::Mode::None;
     switch (mode) {
-    case ORG_KDE_KWIN_SERVER_DECORATION_MODE_NONE:
+    case ServerSideDecorationManagerInterfacePrivate::mode_None:
         m = ServerSideDecorationManagerInterface::Mode::None;
         break;
-    case ORG_KDE_KWIN_SERVER_DECORATION_MODE_CLIENT:
+    case ServerSideDecorationManagerInterfacePrivate::mode_Client:
         m = ServerSideDecorationManagerInterface::Mode::Client;
         break;
-    case ORG_KDE_KWIN_SERVER_DECORATION_MODE_SERVER:
+    case ServerSideDecorationManagerInterfacePrivate::mode_Server:
         m = ServerSideDecorationManagerInterface::Mode::Server;
         break;
     default:
