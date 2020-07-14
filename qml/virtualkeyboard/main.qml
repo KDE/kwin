@@ -62,4 +62,11 @@ Item {
             }
         }
     }
+    // this property assignment is done here to not break 5.14.x qtvirtualkeyboard
+    // TODO: Move it to InputPanel when we depend on 5.15
+    Component.onCompleted: {
+        if (inputPanel.hasOwnProperty("desktopPanel")) {
+            inputPanel.desktopPanel = true;
+        }
+    }
 }
