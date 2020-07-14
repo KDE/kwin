@@ -101,8 +101,6 @@ void TestServerSideDecoration::init()
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
     m_serverSideDecorationManagerInterface = m_display->createServerSideDecorationManager(m_display);
-    m_serverSideDecorationManagerInterface->create();
-    QVERIFY(m_serverSideDecorationManagerInterface->isValid());
 
     QVERIFY(serverSideDecoManagerSpy.wait());
     m_serverSideDecorationManager = m_registry->createServerSideDecorationManager(serverSideDecoManagerSpy.first().first().value<quint32>(),

@@ -6,10 +6,11 @@
 #ifndef KWAYLAND_SERVER_SERVER_DECORATION_INTERFACE_H
 #define KWAYLAND_SERVER_SERVER_DECORATION_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
@@ -17,17 +18,19 @@ namespace KWaylandServer
 class Display;
 class ServerSideDecorationInterface;
 class SurfaceInterface;
+class ServerSideDecorationManagerInterfacePrivate;
+class ServerSideDecorationInterfacePrivate;
 
 /**
  * @brief Manager to create ServerSideDecorationInterface.
  *
  * @since 5.6
  **/
-class KWAYLANDSERVER_EXPORT ServerSideDecorationManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT ServerSideDecorationManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ServerSideDecorationManagerInterface();
+    ~ServerSideDecorationManagerInterface() override;
 
     /**
      * Decoration mode used for SurfaceInterfaces.
@@ -68,8 +71,7 @@ Q_SIGNALS:
 private:
     explicit ServerSideDecorationManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<ServerSideDecorationManagerInterfacePrivate> d;
 };
 
 /**
@@ -79,11 +81,11 @@ private:
  *
  * @since 5.6
  **/
-class KWAYLANDSERVER_EXPORT ServerSideDecorationInterface : public Resource
+class KWAYLANDSERVER_EXPORT ServerSideDecorationInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ServerSideDecorationInterface();
+    ~ServerSideDecorationInterface() override;
 
     /**
      * Sets the @p mode on the SurfaceInterface. A client might refuse the provided @p mode,
@@ -119,11 +121,10 @@ Q_SIGNALS:
     void modeRequested(KWaylandServer::ServerSideDecorationManagerInterface::Mode);
 
 private:
-    explicit ServerSideDecorationInterface(ServerSideDecorationManagerInterface *parent, SurfaceInterface *surface, wl_resource *parentResource);
-    friend class ServerSideDecorationManagerInterface;
+    explicit ServerSideDecorationInterface(SurfaceInterface *surface, wl_resource *resource);
+    friend class ServerSideDecorationManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<ServerSideDecorationInterfacePrivate> d;
 };
 
 }

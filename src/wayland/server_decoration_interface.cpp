@@ -5,85 +5,35 @@
 */
 #include "server_decoration_interface.h"
 #include "display.h"
-#include "global_p.h"
 #include "logging.h"
-#include "resource_p.h"
 #include "surface_interface.h"
 
 #include <QVector>
 
-#include <wayland-server_decoration-server-protocol.h>
+#include <qwayland-server-server_decoration.h>
 
 namespace KWaylandServer
 {
 
-class ServerSideDecorationManagerInterface::Private : public Global::Private
+class ServerSideDecorationManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration_manager
 {
 public:
-    Private(ServerSideDecorationManagerInterface *q, Display *d);
+    ServerSideDecorationManagerInterfacePrivate(ServerSideDecorationManagerInterface *_q, Display *display);
+    void setDefaultMode(ServerSideDecorationManagerInterface::Mode mode);
 
-    Mode defaultMode = Mode::None;
-
-    QVector<wl_resource*> resources;
-
+    ServerSideDecorationManagerInterface::Mode defaultMode = ServerSideDecorationManagerInterface::Mode::None;
+    
 private:
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
-
-    static void unbind(wl_resource *resource);
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
-
-    static void createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource * surface);
-    void create(wl_client *client, wl_resource *resource, uint32_t id, wl_resource * surface);
-
     ServerSideDecorationManagerInterface *q;
-    static const struct org_kde_kwin_server_decoration_manager_interface s_interface;
     static const quint32 s_version;
+
+protected:
+    void org_kde_kwin_server_decoration_manager_bind_resource(Resource *resource) override;
+    void org_kde_kwin_server_decoration_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
+
 };
 
-const quint32 ServerSideDecorationManagerInterface::Private::s_version = 1;
-
-#ifndef K_DOXYGEN
-const struct org_kde_kwin_server_decoration_manager_interface ServerSideDecorationManagerInterface::Private::s_interface = {
-    createCallback
-};
-#endif
-
-void ServerSideDecorationManagerInterface::Private::createCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
-{
-    reinterpret_cast<Private*>(wl_resource_get_user_data(resource))->create(client, resource, id, surface);
-}
-
-void ServerSideDecorationManagerInterface::Private::create(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
-{
-    SurfaceInterface *s = SurfaceInterface::get(surface);
-    if (!s) {
-        // TODO: send error?
-        qCWarning(KWAYLAND_SERVER) << "ServerSideDecorationInterface requested for non existing SurfaceInterface";
-        return;
-    }
-    ServerSideDecorationInterface *decoration = new ServerSideDecorationInterface(q, s, resource);
-    decoration->create(display->getConnection(client), wl_resource_get_version(resource), id);
-    if (!decoration->resource()) {
-        wl_resource_post_no_memory(resource);
-        delete decoration;
-        return;
-    }
-    decoration->setMode(defaultMode);
-    emit q->decorationCreated(decoration);
-}
-
-ServerSideDecorationManagerInterface::Mode ServerSideDecorationManagerInterface::defaultMode() const
-{
-    return d_func()->defaultMode;
-}
-
-ServerSideDecorationManagerInterface::Private::Private(ServerSideDecorationManagerInterface *q, Display *d)
-    : Global::Private(d, &org_kde_kwin_server_decoration_manager_interface, s_version)
-    , q(q)
-{
-}
+const quint32 ServerSideDecorationManagerInterfacePrivate::s_version = 1;
 
 namespace {
 static uint32_t modeWayland(ServerSideDecorationManagerInterface::Mode mode)
@@ -104,82 +54,93 @@ static uint32_t modeWayland(ServerSideDecorationManagerInterface::Mode mode)
 }
 }
 
-void ServerSideDecorationManagerInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
+void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {
-    auto c = display->getConnection(client);
-    wl_resource *resource = c->createResource(&org_kde_kwin_server_decoration_manager_interface, qMin(version, s_version), id);
-    if (!resource) {
-        wl_client_post_no_memory(client);
+    SurfaceInterface *s = SurfaceInterface::get(surface);
+    if (!s) {
+        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
     }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 
-    resources << resource;
-
-    org_kde_kwin_server_decoration_manager_send_default_mode(resource, modeWayland(defaultMode));
-    c->flush();
+    wl_resource *decorationResource = wl_resource_create(resource->client(), &org_kde_kwin_server_decoration_interface, resource->version(), id);
+    if (!decorationResource) {
+        wl_client_post_no_memory(resource->client());
+        return;
+    }
+    auto decoration = new ServerSideDecorationInterface(s, decorationResource);
+    decoration->setMode(defaultMode);
+    emit q->decorationCreated(decoration);
 }
 
-void ServerSideDecorationManagerInterface::Private::unbind(wl_resource *resource)
+void ServerSideDecorationManagerInterfacePrivate::setDefaultMode(ServerSideDecorationManagerInterface::Mode mode)
 {
-    cast(resource)->resources.removeAll(resource);
+    defaultMode = mode;
+    const uint32_t wlMode = modeWayland(mode);
+
+    const auto clientResources = resourceMap();
+    for (Resource *resource : clientResources) {
+        send_default_mode(resource->handle, wlMode);
+    }
 }
+
+ServerSideDecorationManagerInterfacePrivate::ServerSideDecorationManagerInterfacePrivate(ServerSideDecorationManagerInterface *_q, Display *display)
+    : QtWaylandServer::org_kde_kwin_server_decoration_manager(*display, s_version)
+    , q(_q)
+{
+}
+
+void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration_manager_bind_resource(Resource *resource)
+{
+    send_default_mode(resource->handle, modeWayland(defaultMode));
+}
+
 
 ServerSideDecorationManagerInterface::ServerSideDecorationManagerInterface(Display *display, QObject *parent)
-    : Global(new Private(this, display), parent)
+    : QObject(parent)
+    , d(new ServerSideDecorationManagerInterfacePrivate(this, display))
 {
 }
 
 ServerSideDecorationManagerInterface::~ServerSideDecorationManagerInterface() = default;
 
-ServerSideDecorationManagerInterface::Private *ServerSideDecorationManagerInterface::d_func() const
-{
-    return reinterpret_cast<ServerSideDecorationManagerInterface::Private*>(d.data());
-}
-
 void ServerSideDecorationManagerInterface::setDefaultMode(Mode mode)
 {
-    Q_D();
-    d->defaultMode = mode;
-    const uint32_t wlMode = modeWayland(mode);
-    for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); it++) {
-        org_kde_kwin_server_decoration_manager_send_default_mode(*it, wlMode);
-    }
+    d->setDefaultMode(mode);
 }
 
-class ServerSideDecorationInterface::Private : public Resource::Private
+ServerSideDecorationManagerInterface::Mode ServerSideDecorationManagerInterface::defaultMode() const
+{
+    return d->defaultMode;
+}
+
+class ServerSideDecorationInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration
 {
 public:
-    Private(ServerSideDecorationInterface *q, ServerSideDecorationManagerInterface *c, SurfaceInterface *surface,  wl_resource *parentResource);
-    ~Private();
+    ServerSideDecorationInterfacePrivate(ServerSideDecorationInterface *_q, SurfaceInterface *surface,  wl_resource *resource);
+    ~ServerSideDecorationInterfacePrivate();
+
+    static ServerSideDecorationInterface *get(SurfaceInterface *surface);
+    void setMode(ServerSideDecorationManagerInterface::Mode mode);
 
     ServerSideDecorationManagerInterface::Mode mode = ServerSideDecorationManagerInterface::Mode::None;
     SurfaceInterface *surface;
 
-    static ServerSideDecorationInterface *get(SurfaceInterface *s);
-
 private:
-    static void requestModeCallback(wl_client *client, wl_resource *resource, uint32_t mode);
+    ServerSideDecorationInterface *q;
+    static QVector<ServerSideDecorationInterfacePrivate*> s_all;
 
-    ServerSideDecorationInterface *q_func() {
-        return reinterpret_cast<ServerSideDecorationInterface *>(q);
-    }
-
-    static const struct org_kde_kwin_server_decoration_interface s_interface;
-    static QVector<Private*> s_all;
+protected:
+    void org_kde_kwin_server_decoration_destroy_resource(Resource *resource) override;
+    void org_kde_kwin_server_decoration_release(Resource *resource) override;
+    void org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode) override;
 };
 
-#ifndef K_DOXYGEN
-const struct org_kde_kwin_server_decoration_interface ServerSideDecorationInterface::Private::s_interface = {
-    resourceDestroyedCallback,
-    requestModeCallback
-};
-QVector<ServerSideDecorationInterface::Private*> ServerSideDecorationInterface::Private::s_all;
-#endif
+QVector<ServerSideDecorationInterfacePrivate*> ServerSideDecorationInterfacePrivate::s_all;
 
-void ServerSideDecorationInterface::Private::requestModeCallback(wl_client *client, wl_resource *resource, uint32_t mode)
+
+void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode)
 {
-    Q_UNUSED(client)
+    Q_UNUSED(resource)
     ServerSideDecorationManagerInterface::Mode m = ServerSideDecorationManagerInterface::Mode::None;
     switch (mode) {
     case ORG_KDE_KWIN_SERVER_DECORATION_MODE_NONE:
@@ -196,32 +157,52 @@ void ServerSideDecorationInterface::Private::requestModeCallback(wl_client *clie
         qCWarning(KWAYLAND_SERVER) << "Invalid mode:" << mode;
         return;
     }
-    emit cast<Private>(resource)->q_func()->modeRequested(m);
+    emit q->modeRequested(m);
 }
 
-ServerSideDecorationInterface *ServerSideDecorationInterface::Private::get(SurfaceInterface *s)
+void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_release(Resource *resource)
 {
-    auto it = std::find_if(s_all.constBegin(), s_all.constEnd(), [s] (Private *p) { return p->surface == s; });
-    if (it == s_all.constEnd()) {
-        return nullptr;
-    }
-    return (*it)->q_func();
+    wl_resource_destroy(resource->handle);
 }
 
-ServerSideDecorationInterface::Private::Private(ServerSideDecorationInterface *q, ServerSideDecorationManagerInterface *c, SurfaceInterface *surface, wl_resource *parentResource)
-    : Resource::Private(q, c, parentResource, &org_kde_kwin_server_decoration_interface, &s_interface)
+void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
+    delete q;
+}
+
+ServerSideDecorationInterface *ServerSideDecorationInterfacePrivate::get(SurfaceInterface *surface)
+{
+    for (ServerSideDecorationInterfacePrivate *decoration : qAsConst(s_all)) {
+        if (decoration->surface == surface) {
+            return decoration->q;
+        }
+    }
+    return nullptr;
+}
+
+ServerSideDecorationInterfacePrivate::ServerSideDecorationInterfacePrivate(ServerSideDecorationInterface *_q, SurfaceInterface *surface, wl_resource *resource)
+    : QtWaylandServer::org_kde_kwin_server_decoration(resource)
     , surface(surface)
+    , q(_q)
 {
     s_all << this;
 }
 
-ServerSideDecorationInterface::Private::~Private()
+ServerSideDecorationInterfacePrivate::~ServerSideDecorationInterfacePrivate()
 {
     s_all.removeAll(this);
 }
 
-ServerSideDecorationInterface::ServerSideDecorationInterface(ServerSideDecorationManagerInterface *parent, SurfaceInterface *surface, wl_resource *parentResource)
-    : Resource(new Private(this, parent, surface, parentResource))
+void ServerSideDecorationInterfacePrivate::setMode(ServerSideDecorationManagerInterface::Mode mode)
+{
+    mode = mode;
+    send_mode(modeWayland(mode));
+}
+
+ServerSideDecorationInterface::ServerSideDecorationInterface(SurfaceInterface *surface, wl_resource *resource)
+    : QObject()
+    , d(new ServerSideDecorationInterfacePrivate(this, surface, resource))
 {
 }
 
@@ -229,32 +210,22 @@ ServerSideDecorationInterface::~ServerSideDecorationInterface() = default;
 
 void ServerSideDecorationInterface::setMode(ServerSideDecorationManagerInterface::Mode mode)
 {
-    Q_D();
-    d->mode = mode;
-    org_kde_kwin_server_decoration_send_mode(resource(), modeWayland(mode));
-    client()->flush();
+    d->setMode(mode);
 }
 
 ServerSideDecorationManagerInterface::Mode ServerSideDecorationInterface::mode() const
 {
-    Q_D();
     return d->mode;
 }
 
 SurfaceInterface *ServerSideDecorationInterface::surface() const
 {
-    Q_D();
     return d->surface;
 }
 
-ServerSideDecorationInterface::Private *ServerSideDecorationInterface::d_func() const
+ServerSideDecorationInterface *ServerSideDecorationInterface::get(SurfaceInterface *surface)
 {
-    return reinterpret_cast<ServerSideDecorationInterface::Private*>(d.data());
-}
-
-ServerSideDecorationInterface *ServerSideDecorationInterface::get(SurfaceInterface *s)
-{
-    return Private::get(s);
+    return ServerSideDecorationInterfacePrivate::get(surface);
 }
 
 }
