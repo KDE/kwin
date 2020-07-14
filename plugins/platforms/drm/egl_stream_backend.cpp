@@ -287,10 +287,6 @@ void EglStreamBackend::init()
     m_eglStreamControllerInterface = waylandServer()->display()->createEglStreamControllerInterface();
     connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
             &EglStreamBackend::attachStreamConsumer);
-    m_eglStreamControllerInterface->create();
-    if (!m_eglStreamControllerInterface->isValid()) {
-        setFailed("failed to initialize wayland-eglstream-controller interface");
-    }
 }
 
 bool EglStreamBackend::initRenderingContext()
