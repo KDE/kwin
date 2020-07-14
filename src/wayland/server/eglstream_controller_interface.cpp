@@ -9,7 +9,7 @@
 #include "logging.h"
 
 #include <wayland-util.h>
-#include <qwayland-server-eglstream-controller.h>
+#include <qwayland-server-wl-eglstream-controller.h>
 
 namespace KWaylandServer
 {
