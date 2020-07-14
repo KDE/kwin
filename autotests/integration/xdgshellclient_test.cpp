@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/output.h>
+#include <KWayland/Client/pointer.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
@@ -118,6 +120,7 @@ private Q_SLOTS:
     void testXdgWindowGeometryInteractiveResize();
     void testXdgWindowGeometryFullScreen();
     void testXdgWindowGeometryMaximize();
+    void testPointerInputTransform();
 };
 
 void TestXdgShellClient::initTestCase()
@@ -143,8 +146,10 @@ void TestXdgShellClient::initTestCase()
 void TestXdgShellClient::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
+                                         Test::AdditionalWaylandInterface::Seat |
                                          Test::AdditionalWaylandInterface::XdgDecoration |
                                          Test::AdditionalWaylandInterface::AppMenu));
+    QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
     KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
@@ -1577,6 +1582,65 @@ void TestXdgShellClient::testXdgWindowGeometryMaximize()
     QCOMPARE(client->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(client->frameGeometry().size(), QSize(180, 80));
 
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testPointerInputTransform()
+{
+    // This test verifies that XdgToplevelClient provides correct input transform matrix.
+    // The input transform matrix is used by seat to map pointer events from the global
+    // screen coordinates to the surface-local coordinates.
+
+    // Get a wl_pointer object on the client side.
+    QScopedPointer<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy pointerEnteredSpy(pointer.data(), &KWayland::Client::Pointer::entered);
+    QVERIFY(pointerEnteredSpy.isValid());
+    QSignalSpy pointerMotionSpy(pointer.data(), &KWayland::Client::Pointer::motion);
+    QVERIFY(pointerMotionSpy.isValid());
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->bufferGeometry().size(), QSize(200, 100));
+    QCOMPARE(client->frameGeometry().size(), QSize(200, 100));
+
+    // Enter the surface.
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerMotion(client->pos(), timestamp++);
+    QVERIFY(pointerEnteredSpy.wait());
+
+    // Move the pointer to (10, 5) relative to the upper left frame corner, which is located
+    // at (0, 0) in the surface-local coordinates.
+    kwinApp()->platform()->pointerMotion(client->pos() + QPoint(10, 5), timestamp++);
+    QVERIFY(pointerMotionSpy.wait());
+    QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 5));
+
+    // Let's pretend that the client has changed the extents of the client-side drop-shadow
+    // but the frame geometry didn't change.
+    QSignalSpy bufferGeometryChangedSpy(client, &AbstractClient::bufferGeometryChanged);
+    QVERIFY(bufferGeometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    shellSurface->setWindowGeometry(QRect(10, 20, 200, 100));
+    Test::render(surface.data(), QSize(220, 140), Qt::blue);
+    QVERIFY(bufferGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 0);
+    QCOMPARE(client->frameGeometry().size(), QSize(200, 100));
+    QCOMPARE(client->bufferGeometry().size(), QSize(220, 140));
+
+    // Move the pointer to (20, 50) relative to the upper left frame corner, which is located
+    // at (10, 20) in the surface-local coordinates.
+    kwinApp()->platform()->pointerMotion(client->pos() + QPoint(20, 50), timestamp++);
+    QVERIFY(pointerMotionSpy.wait());
+    QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 20) + QPoint(20, 50));
+
+    // Destroy the xdg-toplevel surface.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
