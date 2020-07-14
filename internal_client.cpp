@@ -531,6 +531,9 @@ void InternalClient::commitGeometry(const QRect &rect)
     addWorkspaceRepaint(visibleRect());
     syncGeometryToInternalWindow();
 
+    if (bufferGeometryBeforeUpdateBlocking() != bufferGeometry()) {
+        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    }
     if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
         emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
     }

@@ -658,6 +658,10 @@ Q_SIGNALS:
     void shadowChanged();
 
     /**
+     * This signal is emitted when the Toplevel's buffer geometry changes.
+     */
+    void bufferGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
+    /**
      * This signal is emitted when the Toplevel's frame geometry changes.
      */
     void frameGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);

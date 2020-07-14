@@ -908,6 +908,7 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
+    emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
     emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();

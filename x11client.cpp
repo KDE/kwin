@@ -2902,6 +2902,9 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
+    if (bufferGeometryBeforeUpdateBlocking() != bufferGeometry()) {
+        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    }
     if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
         emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
     }
@@ -4197,6 +4200,9 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
+    if (bufferGeometryBeforeUpdateBlocking() != m_bufferGeometry) {
+        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    }
     if (clientGeometryBeforeUpdateBlocking() != m_clientGeometry) {
         emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
     }
@@ -4256,6 +4262,9 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     workspace()->updateStackingOrder();
     if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
+    }
+    if (bufferGeometryBeforeUpdateBlocking() != bufferGeometry()) {
+        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
     }
     if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
         emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());

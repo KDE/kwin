@@ -463,6 +463,9 @@ void XdgSurfaceClient::updateGeometry(const QRect &rect)
     updateWindowRules(Rules::Position | Rules::Size);
     updateGeometryBeforeUpdateBlocking();
 
+    if (changedGeometries & XdgSurfaceGeometryBuffer) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
+    }
     if (changedGeometries & XdgSurfaceGeometryClient) {
         emit clientGeometryChanged(this, oldClientGeometry);
     }
