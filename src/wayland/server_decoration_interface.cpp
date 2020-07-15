@@ -190,7 +190,7 @@ ServerSideDecorationInterfacePrivate::~ServerSideDecorationInterfacePrivate()
 
 void ServerSideDecorationInterfacePrivate::setMode(ServerSideDecorationManagerInterface::Mode mode)
 {
-    mode = mode;
+    this->mode = mode;
     send_mode(modeWayland(mode));
 }
 
