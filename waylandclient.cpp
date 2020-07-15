@@ -107,7 +107,7 @@ pid_t WaylandClient::pid() const
 
 bool WaylandClient::isLockScreen() const
 {
-    return surface()->client() == waylandServer()->screenLockerClientConnection();
+    return surface() && surface()->client() == waylandServer()->screenLockerClientConnection();
 }
 
 bool WaylandClient::isInputMethod() const
