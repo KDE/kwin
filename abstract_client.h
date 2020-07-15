@@ -926,6 +926,7 @@ protected:
     void setIcon(const QIcon &icon);
     void startAutoRaise();
     void autoRaise();
+    bool isMostRecentlyRaised() const;
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return

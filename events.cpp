@@ -853,12 +853,6 @@ void X11Client::grabButton(Qt::KeyboardModifier modifier, uint8_t button)
 #undef XNumL
 #undef XScrL
 
-bool X11Client::isMostRecentlyRaised() const
-{
-    // The last toplevel in the unconstrained stacking order is the most recently raised one.
-    return workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
-}
-
 void X11Client::updateMouseGrab()
 {
     xcb_ungrab_button(connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
