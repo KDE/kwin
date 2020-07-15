@@ -122,6 +122,8 @@ public:
 
     static QList<SurfaceInterface *> surfaces;
 
+    ClientConnection *client = nullptr;
+
 protected:
     void surface_destroy_resource(Resource *resource) override;
     void surface_destroy(Resource *resource) override;

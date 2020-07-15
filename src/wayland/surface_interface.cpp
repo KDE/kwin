@@ -391,6 +391,7 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 {
     d->compositor = compositor;
     d->init(resource);
+    d->client =  compositor->display()->getConnection(d->resource()->client());
 }
 
 SurfaceInterface::~SurfaceInterface()
@@ -404,7 +405,7 @@ uint32_t SurfaceInterface::id() const
 
 ClientConnection *SurfaceInterface::client() const
 {
-    return d->compositor->display()->getConnection(d->resource()->client());
+    return d->client;
 }
 
 wl_resource *SurfaceInterface::resource() const
