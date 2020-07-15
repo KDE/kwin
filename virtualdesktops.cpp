@@ -247,6 +247,13 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
 
     // Nothing will be connected to rootInfo
     if (m_rootInfo) {
+        int columns = count() / m_rows;
+        if (count() % m_rows > 0) {
+            columns++;
+        }
+        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
+        updateRootInfo();
+        m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
         for (auto *vd : m_desktops) {
             m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
         }
@@ -713,7 +720,6 @@ void VirtualDesktopManager::load()
 
         const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
 
-        //load gets called 2 times, see workspace.cpp line 416 and BUG 385260
         if (m_desktops[i-1]->id().isEmpty()) {
             m_desktops[i-1]->setId(sId.isEmpty() ? generateDesktopId() : sId.toUtf8());
         } else {
@@ -726,16 +732,6 @@ void VirtualDesktopManager::load()
 
     int rows = group.readEntry<int>("Rows", 2);
     m_rows = qBound(1, rows, n);
-
-    if (m_rootInfo) {
-        // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
-        int columns = n / m_rows;
-        if (n % m_rows > 0) {
-            columns++;
-        }
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
-        m_rootInfo->activate();
-    }
 
     s_loadingDesktopSettings = false;
 }

@@ -359,10 +359,7 @@ void Workspace::initWithX11()
     RootInfo *rootInfo = RootInfo::create();
     const auto vds = VirtualDesktopManager::self();
     vds->setRootInfo(rootInfo);
-    // load again to sync to RootInfo, see BUG 385260
-    vds->load();
-    vds->updateRootInfo();
-    rootInfo->setCurrentDesktop(vds->currentDesktop()->x11DesktopNumber());
+    rootInfo->activate();
 
     // TODO: only in X11 mode
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
