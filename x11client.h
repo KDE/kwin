@@ -417,7 +417,8 @@ private:
     void sendSyncRequest();
     void leaveMoveResize() override;
     void positionGeometryTip() override;
-    void grabButton(Qt::KeyboardModifier modifier, uint8_t button);
+    void establishCommandWindowGrab(uint8_t button);
+    void establishCommandAllGrab(uint8_t button);
     void resizeDecoration();
     void createDecoration(const QRect &oldgeom) override;
 
