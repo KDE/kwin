@@ -837,24 +837,45 @@ void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
     }
 }
 
+static uint16_t x11CommandAllModifier()
+{
+    switch (options->commandAllModifier()) {
+    case Qt::MetaModifier:
+        return KKeyServer::modXMeta();
+    case Qt::AltModifier:
+        return KKeyServer::modXAlt();
+    default:
+        return 0;
+    }
+}
+
 #define XCapL KKeyServer::modXLock()
 #define XNumL KKeyServer::modXNumLock()
 #define XScrL KKeyServer::modXScrollLock()
-void X11Client::grabButton(Qt::KeyboardModifier modifier, uint8_t button)
+void X11Client::establishCommandWindowGrab(uint8_t button)
 {
-    uint16_t x11Modifier;
+    // Unfortunately there are a lot of possible modifier combinations that we need to take into
+    // account. We tackle that problem in a kind of smart way. First, we grab the button with all
+    // possible modifiers, then we ungrab the ones that are relevant only to commandAllx().
 
-    switch (modifier) {
-    case Qt::MetaModifier:
-        x11Modifier = KKeyServer::modXMeta();
-        break;
-    case Qt::AltModifier:
-        x11Modifier = KKeyServer::modXAlt();
-        break;
-    default:
-        x11Modifier = 0;
-        break;
-    }
+    m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, XCB_MOD_MASK_ANY, button);
+
+    uint16_t x11Modifier = x11CommandAllModifier();
+
+    unsigned int mods[ 8 ] = {
+        0, XCapL, XNumL, XNumL | XCapL,
+        XScrL, XScrL | XCapL,
+        XScrL | XNumL, XScrL | XNumL | XCapL
+    };
+    for (int i = 0;
+            i < 8;
+            ++i)
+        m_wrapper.ungrabButton(x11Modifier | mods[ i ], button);
+}
+
+void X11Client::establishCommandAllGrab(uint8_t button)
+{
+    uint16_t x11Modifier = x11CommandAllModifier();
 
     unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
@@ -895,17 +916,17 @@ void X11Client::updateMouseGrab()
     if ((options->focusPolicyIsReasonable() && !isActive()) ||
             (options->isClickRaise() && !isMostRecentlyRaised())) {
         if (options->commandWindow1() != Options::MouseNothing) {
-            grabButton(Qt::NoModifier, XCB_BUTTON_INDEX_1);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_1);
         }
         if (options->commandWindow2() != Options::MouseNothing) {
-            grabButton(Qt::NoModifier, XCB_BUTTON_INDEX_2);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_2);
         }
         if (options->commandWindow3() != Options::MouseNothing) {
-            grabButton(Qt::NoModifier, XCB_BUTTON_INDEX_3);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_3);
         }
         if (options->commandWindowWheel() != Options::MouseNothing) {
-            grabButton(Qt::NoModifier, XCB_BUTTON_INDEX_4);
-            grabButton(Qt::NoModifier, XCB_BUTTON_INDEX_5);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_4);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_5);
         }
     }
 
@@ -915,17 +936,17 @@ void X11Client::updateMouseGrab()
 
     if (!workspace()->globalShortcutsDisabled()) {
         if (options->commandAll1() != Options::MouseNothing) {
-            grabButton(options->commandAllModifier(), XCB_BUTTON_INDEX_1);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_1);
         }
         if (options->commandAll2() != Options::MouseNothing) {
-            grabButton(options->commandAllModifier(), XCB_BUTTON_INDEX_2);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_2);
         }
         if (options->commandAll3() != Options::MouseNothing) {
-            grabButton(options->commandAllModifier(), XCB_BUTTON_INDEX_3);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_3);
         }
         if (options->commandAllWheel() != Options::MouseWheelNothing) {
-            grabButton(options->commandAllModifier(), XCB_BUTTON_INDEX_4);
-            grabButton(options->commandAllModifier(), XCB_BUTTON_INDEX_5);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_4);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_5);
         }
     }
 }
