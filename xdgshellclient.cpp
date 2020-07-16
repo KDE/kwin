@@ -74,7 +74,7 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     connect(shellSurface->surface(), &SurfaceInterface::mapped,
             this, &XdgSurfaceClient::setReadyForPainting);
 #endif
-    connect(shellSurface->surface(), &SurfaceInterface::destroyed,
+    connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceClient::destroyClient);
 
     // The effective window geometry is determined by two things: (a) the rectangle that bounds
