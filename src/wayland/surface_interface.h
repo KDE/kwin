@@ -368,9 +368,15 @@ public:
 
 Q_SIGNALS:
     /**
-     * This signal is emitted when the surface is about to be unbound.
+     * This signal is emitted when the underlying wl_surface resource is about to be freed.
+     *
+     * The unbound() signal is emitted either when the client that owns the surface has been
+     * destroyed or if the surface has been destroyed due to a destructor request.
+     *
+     * The SurfaceInterface object and the associated wl_surface resource are valid when this
+     * signal is emitted.
      */
-    void aboutToBeUnbound();
+    void aboutToBeDestroyed();
     /**
      * This signal is emitted when the projection matrix from the surface-local coordinate space
      * to the buffer coordinate space has been changed.

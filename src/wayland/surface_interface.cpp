@@ -284,7 +284,7 @@ void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorInterface *inhib
 
 void SurfaceInterfacePrivate::surface_destroy_resource(Resource *)
 {
-    emit q->aboutToBeUnbound();
+    emit q->aboutToBeDestroyed();
     delete q;
 }
 

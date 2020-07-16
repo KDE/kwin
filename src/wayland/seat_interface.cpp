@@ -1616,7 +1616,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
     }
     d->textInput.focus.textInput = t;
     if (d->textInput.focus.surface) {
-        d->textInput.focus.destroyConnection = connect(surface, &SurfaceInterface::aboutToBeUnbound, this,
+        d->textInput.focus.destroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this,
             [this] {
                 setFocusedTextInputSurface(nullptr);
             }
