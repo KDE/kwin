@@ -82,7 +82,6 @@ public:
     QRect requestedClientGeometry() const;
     QSize requestedClientSize() const;
     QRect clientGeometry() const;
-    bool isClosing() const;
     bool isHidden() const;
 
 protected:
@@ -121,7 +120,6 @@ private:
     QRect m_requestedFrameGeometry;
     QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;
-    bool m_isClosing = false;
     bool m_isHidden = false;
     bool m_haveNextWindowGeometry = false;
 };

@@ -408,6 +408,7 @@ void InternalClient::showOnScreenEdge()
 
 void InternalClient::destroyClient()
 {
+    markAsZombie();
     if (isMoveResize()) {
         leaveMoveResize();
     }

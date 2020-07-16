@@ -201,6 +201,9 @@ void AbstractClient::setIcon(const QIcon &icon)
 
 void AbstractClient::setActive(bool act)
 {
+    if (isZombie()) {
+        return;
+    }
     if (m_active == act) {
         return;
     }
@@ -233,6 +236,17 @@ void AbstractClient::setActive(bool act)
 
 void AbstractClient::doSetActive()
 {
+}
+
+bool AbstractClient::isZombie() const
+{
+    return m_zombie;
+}
+
+void AbstractClient::markAsZombie()
+{
+    Q_ASSERT(!m_zombie);
+    m_zombie = true;
 }
 
 Layer AbstractClient::layer() const

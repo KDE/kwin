@@ -188,7 +188,7 @@ bool XdgSurfaceClient::stateCompare() const
 
 void XdgSurfaceClient::scheduleConfigure()
 {
-    if (isClosing()) {
+    if (isZombie()) {
         return;
     }
 
@@ -518,7 +518,7 @@ void XdgSurfaceClient::addDamage(const QRegion &damage)
 bool XdgSurfaceClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return !isClosing() && !isHidden() && !isMinimized();
+    return !isZombie() && !isHidden() && !isMinimized();
 }
 
 bool XdgSurfaceClient::isHiddenInternal() const
@@ -564,14 +564,9 @@ void XdgSurfaceClient::internalHide()
     emit windowHidden(this);
 }
 
-bool XdgSurfaceClient::isClosing() const
-{
-    return m_isClosing;
-}
-
 void XdgSurfaceClient::destroyClient()
 {
-    m_isClosing = true;
+    markAsZombie();
     m_configureTimer->stop();
     if (isMoveResize()) {
         leaveMoveResize();
@@ -1076,7 +1071,7 @@ bool XdgToplevelClient::acceptsFocus() const
             return m_plasmaShellSurface->panelTakesFocus();
         }
     }
-    return !isClosing() && readyForPainting();
+    return !isZombie() && readyForPainting();
 }
 
 Layer XdgToplevelClient::layerForDock() const
@@ -1427,7 +1422,7 @@ void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *d
     m_serverDecoration = decoration;
 
     connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this, [this] {
-        if (!isClosing() && readyForPainting()) {
+        if (!isZombie() && readyForPainting()) {
             updateDecoration(/* check_workspace_pos */ true);
         }
     });
@@ -1449,7 +1444,7 @@ void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *d
     m_xdgDecoration = decoration;
 
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed, this, [this] {
-        if (!isClosing() && m_isInitialized) {
+        if (!isZombie() && m_isInitialized) {
             updateDecoration(/* check_workspace_pos */ true);
         }
     });

@@ -146,7 +146,6 @@ X11Client::X11Client()
 
     info = nullptr;
 
-    deleting = false;
     m_fullscreenMode = FullScreenNone;
     hidden = false;
     noborder = false;
@@ -214,8 +213,7 @@ void X11Client::deleteClient(X11Client *c)
  */
 void X11Client::releaseWindow(bool on_shutdown)
 {
-    Q_ASSERT(!deleting);
-    deleting = true;
+    markAsZombie();
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
@@ -288,8 +286,7 @@ void X11Client::releaseWindow(bool on_shutdown)
  */
 void X11Client::destroyClient()
 {
-    Q_ASSERT(!deleting);
-    deleting = true;
+    markAsZombie();
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
@@ -1099,7 +1096,7 @@ void X11Client::destroyDecoration()
         move(grav);
         if (compositing())
             discardWindowPixmap();
-        if (!deleting) {
+        if (!isZombie()) {
             emit geometryShapeChanged(this, oldgeom);
         }
     }
@@ -1533,7 +1530,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
 
 void X11Client::updateVisibility()
 {
-    if (deleting)
+    if (isZombie())
         return;
     if (hidden) {
         info->setState(NET::Hidden, NET::Hidden);
@@ -1579,7 +1576,7 @@ void X11Client::updateVisibility()
 void X11Client::exportMappingState(int s)
 {
     Q_ASSERT(m_client != XCB_WINDOW_NONE);
-    Q_ASSERT(!deleting || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
+    Q_ASSERT(!isZombie() || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
     if (s == XCB_ICCCM_WM_STATE_WITHDRAWN) {
         m_client.deleteProperty(atoms->wm_state);
         return;
@@ -2202,7 +2199,7 @@ void X11Client::fetchIconicName()
 
 void X11Client::setClientShown(bool shown)
 {
-    if (deleting)
+    if (isZombie())
         return; // Don't change shown status if this client is being deleted
     if (shown != hidden)
         return; // nothing to change

@@ -491,7 +491,6 @@ private:
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     X11Client *shade_below;
-    uint deleting : 1; ///< True when doing cleanup and destroying the client
     Xcb::MotifHints m_motif;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint noborder : 1;
