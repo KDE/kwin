@@ -56,6 +56,7 @@ private Q_SLOTS:
     void testInitiallyMaximizedBorderless();
     void testBorderlessMaximizedWindow();
     void testBorderlessMaximizedWindowNoClientSideDecoration();
+    void testMaximizedGainFocusAndBeActivated();
 };
 
 void TestMaximized::initTestCase()
@@ -424,6 +425,32 @@ void TestMaximized::testBorderlessMaximizedWindowNoClientSideDecoration()
     QVERIFY(client->isDecorated());
     QVERIFY(!client->noBorder());
     QCOMPARE(deco->mode(), XdgDecoration::Mode::ServerSide);
+}
+
+void TestMaximized::testMaximizedGainFocusAndBeActivated()
+{
+    // This test verifies that a window will be raised and gain focus  when it's maximized
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> xdgShellSurface(Test::createXdgShellStableSurface(surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<XdgShellSurface> xdgShellSurface2(Test::createXdgShellStableSurface(surface2.data()));
+    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(!client->isActive());
+    QVERIFY(client2->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Toplevel *>{client, client2}));
+
+    workspace()->performWindowOperation(client, Options::MaximizeOp);
+
+    QVERIFY(client->isActive());
+    QVERIFY(!client2->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Toplevel *>{client2, client}));
+
+    xdgShellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    xdgShellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client2));
 }
 
 WAYLANDTEST_MAIN(TestMaximized)
