@@ -57,6 +57,9 @@ class KWIN_EXPORT Device : public InputDevice
     // advanced
     Q_PROPERTY(int supportedButtons READ supportedButtons CONSTANT)
     Q_PROPERTY(bool supportsCalibrationMatrix READ supportsCalibrationMatrix CONSTANT)
+    Q_PROPERTY(QMatrix4x4 defaultCalibrationMatrix READ defaultCalibrationMatrix CONSTANT)
+    Q_PROPERTY(QMatrix4x4 calibrationMatrix READ calibrationMatrix WRITE setCalibrationMatrix NOTIFY calibrationMatrixChanged)
+    Q_PROPERTY(Qt::ScreenOrientation orientation READ orientation WRITE setOrientation NOTIFY orientationChanged)
 
     Q_PROPERTY(bool supportsLeftHanded READ supportsLeftHanded CONSTANT)
     Q_PROPERTY(bool leftHandedEnabledByDefault READ leftHandedEnabledByDefault CONSTANT)
@@ -346,6 +349,19 @@ public:
      */
     void setLeftHanded(bool set);
 
+    QMatrix4x4 defaultCalibrationMatrix() const {
+        return m_defaultCalibrationMatrix;
+    }
+    QMatrix4x4 calibrationMatrix() const {
+        return m_calibrationMatrix;
+    }
+    void setCalibrationMatrix(QMatrix4x4 matrix);
+
+    Qt::ScreenOrientation orientation() const {
+        return m_orientation;
+    }
+    void setOrientation(Qt::ScreenOrientation orientation);
+
     qreal defaultPointerAcceleration() const {
         return m_defaultPointerAcceleration;
     }
@@ -442,8 +458,6 @@ public:
         m_config = config;
     }
 
-    void setOrientation(Qt::ScreenOrientation orientation);
-
     /**
      * Loads the configuration and applies it to the Device
      */
@@ -485,6 +499,8 @@ public:
 
 Q_SIGNALS:
     void tapButtonMapChanged();
+    void calibrationMatrixChanged();
+    void orientationChanged();
     void leftHandedChanged();
     void disableWhileTypingChanged();
     void pointerAccelerationChanged();
@@ -569,6 +585,7 @@ private:
     QPointer<AbstractOutput> m_output;
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
+    QMatrix4x4 m_calibrationMatrix;
     quint32 m_supportedClickMethods;
     enum libinput_config_click_method m_defaultClickMethod;
     enum libinput_config_click_method m_clickMethod;
