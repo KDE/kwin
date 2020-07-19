@@ -87,6 +87,7 @@ struct libinput_device {
     std::array<float, 6> calibrationMatrix{{1.0f, 0.0f, 0.0f,
                                             0.0f, 1.0f, 0.0f}};
     bool defaultCalibrationMatrixIsIdentity = true;
+    bool calibrationMatrixIsIdentity = true;
 
     bool lidSwitch = false;
     bool tabletModeSwitch = false;

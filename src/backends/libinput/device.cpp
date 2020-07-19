@@ -101,7 +101,9 @@ enum class ConfigKey {
     ScrollMethod,
     ScrollButton,
     ClickMethod,
-    ScrollFactor
+    ScrollFactor,
+    Orientation,
+    Calibration
 };
 
 struct ConfigData {
@@ -120,6 +122,14 @@ struct ConfigData {
     explicit ConfigData(QByteArray _key, void (Device::*_setter)(qreal), qreal (Device::*_defaultValue)() const = nullptr)
         : key(_key)
     { qrealSetter.setter = _setter; qrealSetter.defaultValue = _defaultValue; }
+
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(Qt::ScreenOrientation), Qt::ScreenOrientation (Device::*_defaultValue)() const = nullptr)
+        : key(_key)
+    { screenOrientationSetter.setter = _setter; screenOrientationSetter.defaultValue = _defaultValue; }
+
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(QMatrix4x4), QMatrix4x4 (Device::*_defaultValue)() const = nullptr)
+        : key(_key)
+    { qMatrix4x4Setter.setter = _setter, qMatrix4x4Setter.defaultValue = _defaultValue; }
 
     QByteArray key;
 
@@ -140,6 +150,14 @@ struct ConfigData {
         void (Device::*setter)(qreal) = nullptr;
         qreal (Device::*defaultValue)() const;
     } qrealSetter;
+    struct {
+        void (Device::*setter)(Qt::ScreenOrientation) = nullptr;
+        Qt::ScreenOrientation (Device::*defaultValue)() const;
+    } screenOrientationSetter;
+    struct {
+        void (Device::*setter)(QMatrix4x4) = nullptr;
+        QMatrix4x4 (Device::*defaultValue)() const;
+    } qMatrix4x4Setter;
 };
 
 static const QMap<ConfigKey, ConfigData> s_configData {
@@ -157,18 +175,19 @@ static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::ScrollMethod, ConfigData(QByteArrayLiteral("ScrollMethod"), &Device::activateScrollMethodFromInt, &Device::defaultScrollMethodToInt)},
     {ConfigKey::ScrollButton, ConfigData(QByteArrayLiteral("ScrollButton"), &Device::setScrollButton, &Device::defaultScrollButton)},
     {ConfigKey::ClickMethod, ConfigData(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)},
-    {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)}
+    {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
+    {ConfigKey::Orientation, ConfigData(QByteArrayLiteral("Orientation"), &Device::setOrientation, &Device::defaultOrientation)},
+    {ConfigKey::Calibration, ConfigData(QByteArrayLiteral("CalibrationMatrix"), &Device::setCalibrationMatrix, &Device::defaultCalibrationMatrix)}
 };
 
 namespace {
-QMatrix4x4 getDefaultCalibrationMatrix(libinput_device *device)
+QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device*, float[6])> getter)
 {
     float matrix[6];
-    const int ret = libinput_device_config_calibration_get_default_matrix(device, matrix);
-    if (ret == 0) {
-        return QMatrix4x4();
+    if(!getter(device, matrix)) {
+        return {};
     }
-    return QMatrix4x4{
+    return QMatrix4x4 {
         matrix[0], matrix[1], matrix[2], 0.0f,
         matrix[3], matrix[4], matrix[5], 0.0f,
         0.0f,  0.0f, 1.0f, 0.0f,
@@ -176,23 +195,23 @@ QMatrix4x4 getDefaultCalibrationMatrix(libinput_device *device)
     };
 }
 
-void setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt::ScreenOrientation orientation) {
-    // 90 deg cw:
-    static const QMatrix4x4 portraitMatrix{
+bool setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt::ScreenOrientation orientation) {
+    // 90 deg cw
+    static const QMatrix4x4 portraitMatrix {
         0.0f, -1.0f, 1.0f, 0.0f,
         1.0f,  0.0f, 0.0f, 0.0f,
         0.0f,  0.0f, 1.0f, 0.0f,
         0.0f,  0.0f, 0.0f, 1.0f
     };
-    // 180 deg cw:
-    static const QMatrix4x4 invertedLandscapeMatrix{
+    // 180 deg cw
+    static const QMatrix4x4 invertedLandscapeMatrix {
         -1.0f,  0.0f, 1.0f, 0.0f,
          0.0f, -1.0f, 1.0f, 0.0f,
          0.0f,  0.0f, 1.0f, 0.0f,
          0.0f,  0.0f, 0.0f, 1.0f
     };
     // 270 deg cw
-    static const QMatrix4x4 invertedPortraitMatrix{
+    static const QMatrix4x4 invertedPortraitMatrix {
          0.0f, 1.0f, 0.0f, 0.0f,
         -1.0f, 0.0f, 1.0f, 0.0f,
          0.0f,  0.0f, 1.0f, 0.0f,
@@ -215,12 +234,9 @@ void setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt
         break;
     }
 
-    const auto columnOrder = matrix.constData();
-    float m[6] = {
-        columnOrder[0], columnOrder[4], columnOrder[8],
-        columnOrder[1], columnOrder[5], columnOrder[9]
-    };
-    libinput_device_config_calibration_set_matrix(device, m);
+    float data[6] { matrix(0,0), matrix(0,1), matrix(0,2),
+                    matrix(1,0), matrix(1,1), matrix(1,2) };
+    return libinput_device_config_calibration_set_matrix(device, data) == LIBINPUT_CONFIG_STATUS_SUCCESS;
 }
 }
 
@@ -279,8 +295,8 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_pointerAccelerationProfile(libinput_device_config_accel_get_profile(m_device))
     , m_enabled(m_supportsDisableEvents ? libinput_device_config_send_events_get_mode(m_device) == LIBINPUT_CONFIG_SEND_EVENTS_ENABLED : true)
     , m_config()
-    , m_defaultCalibrationMatrix(m_supportsCalibrationMatrix ? getDefaultCalibrationMatrix(m_device) : QMatrix4x4{})
-    , m_calibrationMatrix(m_defaultCalibrationMatrix)
+    , m_defaultCalibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_default_matrix))
+    , m_calibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_matrix))
     , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
     , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
     , m_clickMethod(libinput_device_config_click_get_method(m_device))
@@ -320,6 +336,14 @@ Device::Device(libinput_device *device, QObject *parent)
     }
     if (m_keyboard) {
         m_alphaNumericKeyboard = checkAlphaNumericKeyboard(m_device);
+    }
+
+    if (m_supportsCalibrationMatrix &&
+        m_calibrationMatrix != m_defaultCalibrationMatrix) {
+        float matrix[] {m_defaultCalibrationMatrix(0,0), m_defaultCalibrationMatrix(0,1), m_defaultCalibrationMatrix(0,2),
+                           m_defaultCalibrationMatrix(1,0), m_defaultCalibrationMatrix(1,1), m_defaultCalibrationMatrix(1,2)};
+        libinput_device_config_calibration_set_matrix(m_device, matrix);
+        m_calibrationMatrix = m_defaultCalibrationMatrix;
     }
 
     qDBusRegisterMetaType<QMatrix4x4>();
@@ -379,6 +403,19 @@ void Device::loadConfiguration()
         readEntry(key, it.value().quint32Setter, 0);
         readEntry(key, it.value().stringSetter, "");
         readEntry(key, it.value().qrealSetter, 1.0);
+
+        if(it.value().screenOrientationSetter.setter != nullptr) {
+            auto setter = it.value().screenOrientationSetter;
+            int def = setter.defaultValue ? (this->*(setter.defaultValue))() : Qt::PrimaryOrientation;
+            int orientation = m_config.readEntry(key.constData(), def);
+            (this->*(setter.setter))(static_cast<Qt::ScreenOrientation>(orientation));
+        }
+
+        if(it.value().qMatrix4x4Setter.setter != nullptr) {
+            auto setter = it.value().qMatrix4x4Setter;
+            QMatrix4x4 def = setter.defaultValue ? (this->*(setter.defaultValue))() : QMatrix4x4();
+            (this->*(setter.setter))(m_config.readEntry(key.constData(), QVariant(def)).value<QMatrix4x4>());
+        }
     };
 
     m_loading = false;
@@ -572,14 +609,15 @@ void Device::setScrollFactor(qreal factor)
 
 void Device::setOrientation(Qt::ScreenOrientation orientation)
 {
-    if (!m_supportsCalibrationMatrix || orientation == m_orientation) {
+    if (!m_supportsCalibrationMatrix || m_orientation == orientation) {
         return;
     }
 
-    setOrientedCalibrationMatrix(m_device, m_calibrationMatrix, orientation);
-
-    m_orientation = orientation;
-    Q_EMIT orientationChanged();
+    if (setOrientedCalibrationMatrix(m_device, m_calibrationMatrix, orientation)) {
+        writeEntry(ConfigKey::Orientation, static_cast<int>(orientation));
+        m_orientation = orientation;
+        Q_EMIT orientationChanged();
+    }
 }
 
 void Device::setCalibrationMatrix(QMatrix4x4 matrix) {
@@ -587,9 +625,12 @@ void Device::setCalibrationMatrix(QMatrix4x4 matrix) {
         return;
     }
 
-    setOrientedCalibrationMatrix(m_device, matrix, m_orientation);
+    if(setOrientedCalibrationMatrix(m_device, matrix, m_orientation)) {
+        writeEntry(ConfigKey::Calibration, QVariant(matrix));
+        m_calibrationMatrix = matrix;
+        Q_EMIT calibrationMatrixChanged();
+    }
 
-    m_calibrationMatrix = matrix;
     Q_EMIT calibrationMatrixChanged();
 }
 
@@ -633,3 +674,4 @@ void Device::setLeds(LEDs leds)
 
 }
 }
+

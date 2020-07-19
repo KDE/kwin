@@ -357,6 +357,9 @@ public:
     }
     void setCalibrationMatrix(QMatrix4x4 matrix);
 
+    Qt::ScreenOrientation defaultOrientation() const {
+        return Qt::PrimaryOrientation;
+    }
     Qt::ScreenOrientation orientation() const {
         return m_orientation;
     }
