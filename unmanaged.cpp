@@ -109,9 +109,9 @@ void Unmanaged::release(ReleaseReason releaseReason)
             xcb_shape_select_input(connection(), window(), false);
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
+    workspace()->removeUnmanaged(this);
+    addWorkspaceRepaint(visibleRect());
     if (releaseReason != ReleaseReason::KWinShutsDown) {
-        workspace()->removeUnmanaged(this);
-        addWorkspaceRepaint(del->visibleRect());
         disownDataPassedToDeleted();
         del->unrefWindow();
     }

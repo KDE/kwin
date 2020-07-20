@@ -141,9 +141,8 @@ protected:
     static Compositor *s_compositor;
 
 private:
-    void claimCompositorSelection();
-
-    void setupX11Support();
+    void initializeX11();
+    void cleanupX11();
 
     void setCompositeTimer();
     bool windowRepaintsPending() const;

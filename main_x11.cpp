@@ -223,7 +223,7 @@ void ApplicationX11::performStartup()
     });
     connect(owner.data(), SIGNAL(lostOwnership()), SLOT(lostSelection()));
     connect(owner.data(), &KSelectionOwner::claimedOwnership, [this]{
-        setupEventFilters();
+        installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
 

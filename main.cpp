@@ -309,9 +309,14 @@ void Application::createOptions()
     options = new Options;
 }
 
-void Application::setupEventFilters()
+void Application::installNativeX11EventFilter()
 {
     installNativeEventFilter(m_eventFilter.data());
+}
+
+void Application::removeNativeX11EventFilter()
+{
+    removeNativeEventFilter(m_eventFilter.data());
 }
 
 void Application::destroyWorkspace()

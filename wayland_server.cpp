@@ -101,6 +101,11 @@ WaylandServer::~WaylandServer()
     destroyInputMethodConnection();
 }
 
+KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
+{
+    return m_xwaylandConnection;
+}
+
 void WaylandServer::destroyInternalConnection()
 {
     emit terminatingInternalClientConnection();
@@ -603,23 +608,17 @@ int WaylandServer::createXWaylandConnection()
     if (!socket.connection) {
         return -1;
     }
-    m_xwayland.client = socket.connection;
-    m_xwayland.destroyConnection = connect(m_xwayland.client, &KWaylandServer::ClientConnection::disconnected, this,
-        [] {
-            qFatal("Xwayland Connection died");
-        }
-    );
+    m_xwaylandConnection = socket.connection;
     return socket.fd;
 }
 
 void WaylandServer::destroyXWaylandConnection()
 {
-    if (!m_xwayland.client) {
+    if (!m_xwaylandConnection) {
         return;
     }
-    disconnect(m_xwayland.destroyConnection);
-    m_xwayland.client->destroy();
-    m_xwayland.client = nullptr;
+    m_xwaylandConnection->destroy();
+    m_xwaylandConnection = nullptr;
 }
 
 int WaylandServer::createInputMethodConnection()

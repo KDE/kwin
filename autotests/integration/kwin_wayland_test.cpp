@@ -83,17 +83,13 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
-    if (m_xwayland) {
-        // needs to be done before workspace gets destroyed
-        m_xwayland->prepareDestroy();
-    }
+    delete m_xwayland;
+    m_xwayland = nullptr;
     destroyWorkspace();
     waylandServer()->dispatch();
     if (QStyle *s = style()) {
         s->unpolish(this);
     }
-    // kill Xwayland before terminating its connection
-    delete m_xwayland;
     waylandServer()->terminateClientConnections();
     destroyCompositor();
 }
@@ -133,7 +129,7 @@ void WaylandTestApplication::continueStartupWithScreens()
 void WaylandTestApplication::finalizeStartup()
 {
     if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &WaylandTestApplication::finalizeStartup);
+        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     }
     notifyStarted();
 }
@@ -160,8 +156,8 @@ void WaylandTestApplication::continueStartupWithScene()
         std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
         exit(code);
     });
-    connect(m_xwayland, &Xwl::Xwayland::initialized, this, &WaylandTestApplication::finalizeStartup);
-    m_xwayland->init();
+    connect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
+    m_xwayland->start();
 }
 
 }

@@ -184,9 +184,7 @@ public:
     void createInternalConnection();
     void initWorkspace();
 
-    KWaylandServer::ClientConnection *xWaylandConnection() const {
-        return m_xwayland.client;
-    }
+    KWaylandServer::ClientConnection *xWaylandConnection() const;
     KWaylandServer::ClientConnection *inputMethodConnection() const {
         return m_inputMethodServerConnection;
     }
@@ -281,10 +279,7 @@ private:
     KWaylandServer::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
-    struct {
-        KWaylandServer::ClientConnection *client = nullptr;
-        QMetaObject::Connection destroyConnection;
-    } m_xwayland;
+    QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
     KWaylandServer::ClientConnection *m_inputMethodServerConnection = nullptr;
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     struct {

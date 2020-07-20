@@ -52,6 +52,7 @@ class Window;
 }
 
 class AbstractClient;
+class ColorMapper;
 class Compositor;
 class Deleted;
 class Group;
@@ -530,7 +531,8 @@ Q_SIGNALS:
 
 private:
     void init();
-    void initWithX11();
+    void initializeX11();
+    void cleanupX11();
     void initShortcuts();
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
@@ -642,7 +644,8 @@ private:
 
     bool workspaceInit;
 
-    KStartupInfo* startup;
+    QScopedPointer<KStartupInfo> m_startup;
+    QScopedPointer<ColorMapper> m_colorMapper;
 
     QVector<QRect> workarea; // Array of workareas for virtual desktops
     // Array of restricted areas that window cannot be moved into

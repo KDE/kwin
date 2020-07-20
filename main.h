@@ -206,7 +206,8 @@ protected:
     void createWorkspace();
     void createAtoms();
     void createOptions();
-    void setupEventFilters();
+    void installNativeX11EventFilter();
+    void removeNativeX11EventFilter();
     void destroyWorkspace();
     void destroyCompositor();
     /**
