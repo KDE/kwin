@@ -101,6 +101,11 @@ Xwayland::~Xwayland()
     s_self = nullptr;
 }
 
+QProcess *Xwayland::process() const
+{
+    return m_xwaylandProcess;
+}
+
 void Xwayland::init()
 {
     int pipeFds[2];

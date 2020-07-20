@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xproto.h>
 
-class QProcess;
-
 class xcb_screen_t;
 
 namespace KWin
@@ -55,6 +53,8 @@ public:
     const xcb_query_extension_reply_t *xfixes() const {
         return m_xfixes;
     }
+
+    QProcess *process() const override;
 
 Q_SIGNALS:
     void initialized();

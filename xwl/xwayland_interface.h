@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QPoint>
 
+class QProcess;
+
 namespace KWin
 {
 class Toplevel;
@@ -49,6 +51,7 @@ public:
     static XwaylandInterface *self();
 
     virtual Xwl::DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) = 0;
+    virtual QProcess *process() const = 0;
 
 protected:
     explicit XwaylandInterface(QObject *parent = nullptr);
