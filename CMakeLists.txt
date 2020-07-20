@@ -751,7 +751,7 @@ ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS
     CATEGORY_NAME
         kwin_xwl
     DEFAULT_SEVERITY
-        Critical
+        Warning
 )
 
 set(kwin_WAYLAND_SRCS
