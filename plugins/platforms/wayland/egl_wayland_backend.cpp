@@ -78,6 +78,7 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
     m_eglSurface = eglSurface;
 
     connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &EglWaylandOutput::updateSize);
+    connect(m_waylandOutput, &WaylandOutput::modeChanged, this, &EglWaylandOutput::updateMode);
 
     return true;
 }
@@ -85,6 +86,11 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
 void EglWaylandOutput::updateSize(const QSize &size)
 {
     wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
+}
+
+void EglWaylandOutput::updateMode()
+{
+    updateSize(m_waylandOutput->pixelSize());
 }
 
 EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)

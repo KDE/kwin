@@ -46,6 +46,7 @@ public:
 
     bool init(EglWaylandBackend *backend);
     void updateSize(const QSize &size);
+    void updateMode();
 
 private:
     WaylandOutput *m_waylandOutput;

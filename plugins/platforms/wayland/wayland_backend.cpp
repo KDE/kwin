@@ -452,6 +452,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThread(nullptr)
 {
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
+    supportsOutputChanges();
 }
 
 WaylandBackend::~WaylandBackend()
