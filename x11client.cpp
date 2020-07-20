@@ -2892,22 +2892,25 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
         }
         return;
     }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
     updateServerGeometry();
     updateWindowRules(Rules::Position);
+    updateGeometryBeforeUpdateBlocking();
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
-    if (bufferGeometryBeforeUpdateBlocking() != bufferGeometry()) {
-        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    if (oldBufferGeometry != bufferGeometry()) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
     }
-    if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
-        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != clientGeometry()) {
+        emit clientGeometryChanged(this, oldClientGeometry);
     }
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldFrameGeometry != frameGeometry()) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
     }
     addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
 }
 
 bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)
@@ -4183,8 +4186,14 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
+
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+
     updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
+    updateGeometryBeforeUpdateBlocking();
 
     // keep track of old maximize mode
     // to detect changes
@@ -4192,21 +4201,20 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     workspace()->updateStackingOrder();
 
     // Need to regenerate decoration pixmaps when the buffer size is changed.
-    if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
+    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
-    if (bufferGeometryBeforeUpdateBlocking() != m_bufferGeometry) {
-        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    if (oldBufferGeometry != m_bufferGeometry) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
     }
-    if (clientGeometryBeforeUpdateBlocking() != m_clientGeometry) {
-        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit clientGeometryChanged(this, oldClientGeometry);
     }
-    if (frameGeometryBeforeUpdateBlocking() != m_frameGeometry) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
     }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    emit geometryShapeChanged(this, oldFrameGeometry);
     addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
 }
 
 void X11Client::plainResize(int w, int h, ForceGeometry_t force)
@@ -4251,25 +4259,28 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
     updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
+    updateGeometryBeforeUpdateBlocking();
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
-    if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
+    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
-    if (bufferGeometryBeforeUpdateBlocking() != bufferGeometry()) {
-        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    if (oldBufferGeometry != m_bufferGeometry) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
     }
-    if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
-        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit clientGeometryChanged(this, oldClientGeometry);
     }
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
     }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    emit geometryShapeChanged(this, oldFrameGeometry);
     addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
 }
 
 void X11Client::updateServerGeometry()

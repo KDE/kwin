@@ -100,7 +100,7 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
 
 QRect InternalClient::bufferGeometry() const
 {
-    return frameGeometry() - frameMargins();
+    return m_clientGeometry;
 }
 
 QStringList InternalClient::activities() const
@@ -525,23 +525,25 @@ void InternalClient::commitGeometry(const QRect &rect)
         return;
     }
 
+    // The client geometry and the buffer geometry are the same.
+    const QRect oldClientGeometry = m_clientGeometry;
+    const QRect oldFrameGeometry = m_frameGeometry;
+
     m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
 
     addWorkspaceRepaint(visibleRect());
+    updateGeometryBeforeUpdateBlocking();
     syncGeometryToInternalWindow();
 
-    if (bufferGeometryBeforeUpdateBlocking() != bufferGeometry()) {
-        emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit bufferGeometryChanged(this, oldClientGeometry);
+        emit clientGeometryChanged(this, oldClientGeometry);
     }
-    if (clientGeometryBeforeUpdateBlocking() != clientGeometry()) {
-        emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
     }
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
-    }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
-    updateGeometryBeforeUpdateBlocking();
+    emit geometryShapeChanged(this, oldFrameGeometry);
 
     if (isResize()) {
         performMoveResize();

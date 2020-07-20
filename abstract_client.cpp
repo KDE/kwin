@@ -903,16 +903,19 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
     doMove(x, y);
+    updateGeometryBeforeUpdateBlocking();
     updateWindowRules(Rules::Position);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
-    emit bufferGeometryChanged(this, bufferGeometryBeforeUpdateBlocking());
-    emit clientGeometryChanged(this, clientGeometryBeforeUpdateBlocking());
-    emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    emit bufferGeometryChanged(this, oldBufferGeometry);
+    emit clientGeometryChanged(this, oldClientGeometry);
+    emit frameGeometryChanged(this, oldFrameGeometry);
     addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
 }
 
 bool AbstractClient::startMoveResize()

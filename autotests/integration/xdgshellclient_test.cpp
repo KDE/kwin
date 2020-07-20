@@ -121,6 +121,7 @@ private Q_SLOTS:
     void testXdgWindowGeometryFullScreen();
     void testXdgWindowGeometryMaximize();
     void testPointerInputTransform();
+    void testReentrantSetFrameGeometry();
 };
 
 void TestXdgShellClient::initTestCase()
@@ -1639,6 +1640,34 @@ void TestXdgShellClient::testPointerInputTransform()
     kwinApp()->platform()->pointerMotion(client->pos() + QPoint(20, 50), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 20) + QPoint(20, 50));
+
+    // Destroy the xdg-toplevel surface.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testReentrantSetFrameGeometry()
+{
+    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // to the frameGeometryChanged() signal won't cause an infinite recursion.
+
+    // Create an xdg-toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::red);
+    QVERIFY(client);
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Let's pretend that there is a script that really wants the client to be at (100, 100).
+    connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
+        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+    });
+
+    // Trigger the lambda above.
+    client->move(QPoint(40, 50));
+
+    // Eventually, the client will end up at (100, 100).
+    QCOMPARE(client->pos(), QPoint(100, 100));
 
     // Destroy the xdg-toplevel surface.
     shellSurface.reset();
