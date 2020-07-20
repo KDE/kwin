@@ -185,26 +185,17 @@ void Xwayland::prepareDestroy()
 
 void Xwayland::createX11Connection()
 {
-    int screenNumber = 0;
-    xcb_connection_t *c = nullptr;
-    if (m_xcbConnectionFd == -1) {
-        c = xcb_connect(nullptr, &screenNumber);
-    } else {
-        c = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
-    }
-    if (int error = xcb_connection_has_error(c)) {
-        std::cerr << "FATAL ERROR: Creating connection to XServer failed: " << error << std::endl;
-        Q_EMIT criticalError(1);
+    xcb_connection_t *connection = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
+    if (!connection) {
         return;
     }
 
-    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(c));
+    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(connection));
     m_xcbScreen = iter.data;
     Q_ASSERT(m_xcbScreen);
 
-    m_app->setX11Connection(c);
-    // we don't support X11 multi-head in Wayland
-    m_app->setX11ScreenNumber(screenNumber);
+    m_app->setX11Connection(connection);
+    m_app->setX11ScreenNumber(0);
     m_app->setX11RootWindow(defaultScreen()->root);
 
     m_app->createAtoms();
