@@ -811,6 +811,7 @@ xcb_timestamp_t X11Client::userTime() const
 
 void X11Client::doSetActive()
 {
+    m_focusedPendingActivation = false;
     updateUrgency(); // demand attention again if it's still urgent
     info->setState(isActive() ? NET::Focused : NET::States(), NET::Focused);
 }

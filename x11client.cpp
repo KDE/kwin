@@ -2023,8 +2023,14 @@ void X11Client::setOnAllActivities(bool on)
  */
 void X11Client::takeFocus()
 {
-    if (rules()->checkAcceptFocus(info->input()))
+    if (rules()->checkAcceptFocus(info->input())) {
+        // if the client has already received a focus in event
+        // update our active state immediately instead of waiting for a response to take focus
+        if (m_focusedPendingActivation) {
+            setActive(true);
+        }
         m_client.focus();
+    }
     else
         demandAttention(false); // window cannot take input, at least withdraw urgency
     if (info->supportsProtocol(NET::TakeFocusProtocol)) {

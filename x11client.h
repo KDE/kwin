@@ -530,6 +530,10 @@ private:
     bool sessionActivityOverride;
     bool needsXWindowMove;
 
+    // True whislt the client has received a focus event that is denied
+    // and we are attempting to focus a different window
+    bool m_focusedPendingActivation = false;
+
     Xcb::Window m_decoInputExtent;
     QPoint input_offset;
 

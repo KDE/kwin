@@ -1007,8 +1007,6 @@ void X11ClientTest::testActivateFocusedWindow()
     // case no FocusIn event will be generated and the window won't be marked as active. This test
     // verifies that we handle that subtle case properly.
 
-    QSKIP("Focus is not restored properly when the active client is about to be unmapped");
-
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(connection.data()));
 
