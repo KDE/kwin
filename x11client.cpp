@@ -2025,11 +2025,6 @@ void X11Client::setOnAllActivities(bool on)
  */
 void X11Client::takeFocus()
 {
-    // Force a FocusIn event if the window is already focused but inactive.
-    Xcb::CurrentInput currentInput;
-    if (!currentInput.isNull() && currentInput.window() == window())
-        workspace()->focusToNull();
-
     if (rules()->checkAcceptFocus(info->input()))
         m_client.focus();
     else
