@@ -1,0 +1,55 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.krunner1">
+
+    <!--
+        Returns a list of actions supported by this runner.
+        For example, a song match returned by a music player runner can be queued, added to the playlist, or played.
+        This should be constant
+      Structure is:
+         - ID
+         - Text
+         - IconName
+    -->
+    <method name="Actions">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="RemoteActions" />
+      <arg name="matches" type="a(sss)" direction="out">
+      </arg>
+    </method>
+
+    <!--
+        Execute an action
+    -->
+    <method name="Run">
+        <!--
+        The Unique ID from Match.
+        -->
+      <arg name="matchId" type="s" direction="in"/>
+        <!--
+        The action ID to run. For the default action this will be empty.
+        -->
+      <arg name="actionId" type="s" direction="in"/>
+    </method>
+    <!--
+        Fetch matching results for a given query.
+
+        Note: Multiple Match calls may be made with new queries before a call has returned
+        has returned.
+    -->
+    <method name="Match">
+      <arg name="query" type="s" direction="in"/>
+      <!--
+        Return a list of items that match the
+        Structure is:
+         - Id
+         - Text
+         - IconName
+         - Type (see PlasmaQuery::Type)
+         - Relevance
+         - Properties (VariantMap)
+      -->
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="RemoteMatches"/>
+      <arg name="matches" type="a(sssuda{sv})" direction="out"/>
+    </method>
+  </interface>
+</node>

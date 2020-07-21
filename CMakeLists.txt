@@ -111,6 +111,13 @@ set_package_properties(KF5DocTools PROPERTIES
 )
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
+find_package(KF5Runner ${KF5_MIN_VERSION} CONFIG)
+set_package_properties(KF5Runner PROPERTIES
+    PURPOSE "Enable building of KWin with krunner support"
+    TYPE OPTIONAL
+    )
+add_feature_info("KF5Runner" KF5Runner_FOUND "Enable building of KWin with krunner support")
+
 find_package(KF5Kirigami2 ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Kirigami2 PROPERTIES
     DESCRIPTION "A QtQuick based components set"
@@ -336,6 +343,7 @@ option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
+cmake_dependent_option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON "KF5Runner_FOUND" OFF)
 
 # Binary name of KWin
 set(KWIN_NAME "kwin")
@@ -590,6 +598,12 @@ if (KWIN_BUILD_ACTIVITIES)
     )
 endif()
 
+if (KWIN_BUILD_RUNNERS)
+    set(kwin_SRCS ${kwin_SRCS}
+        runners/windowsrunnerinterface.cpp
+    )
+endif()
+
 if (HAVE_LINUX_VT_H)
     set(kwin_SRCS ${kwin_SRCS}
         virtual_terminal.cpp
@@ -619,6 +633,9 @@ qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/col
 qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
+if (KWIN_BUILD_RUNNERS)
+    qt5_add_dbus_adaptor(kwin_SRCS "runners/org.kde.krunner1.xml" runners/windowsrunnerinterface.h KWin::WindowsRunner)
+endif()
 
 qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
 qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
@@ -693,6 +710,10 @@ set(kwin_WAYLAND_LIBS
 
 if (KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
+endif()
+
+if (KWIN_BUILD_RUNNERS)
+    set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Runner)
 endif()
 
 set(kwinLibs
@@ -825,6 +846,11 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_IN
 
 # Install the KWin/Script service type
 install(FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+
+# install KWin krunner runner
+if (KWIN_BUILD_RUNNERS)
+    install(FILES runners/kwin-runner-windows.desktop DESTINATION ${KDE_INSTALL_DATAROOTDIR}/krunner/dbusplugins)
+endif()
 
 add_subdirectory(qml)
 

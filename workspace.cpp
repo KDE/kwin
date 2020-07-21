@@ -59,6 +59,7 @@
 #include <KStartupInfo>
 // Qt
 #include <QtConcurrentRun>
+#include <runners/windowsrunnerinterface.h>
 
 namespace KWin
 {
@@ -197,7 +198,7 @@ Workspace::Workspace()
     });
 
     new DBusInterface(this);
-
+    new WindowsRunner(this);
     Outline::create(this);
 
     initShortcuts();
@@ -1687,6 +1688,11 @@ AbstractClient *Workspace::findAbstractClient(std::function<bool (const Abstract
         return ret;
     }
     return nullptr;
+}
+
+AbstractClient *Workspace::findAbstractClient(const QUuid &internalId) const
+{
+    return qobject_cast<AbstractClient *>(findToplevel(internalId));
 }
 
 Unmanaged *Workspace::findUnmanaged(std::function<bool (const Unmanaged*)> func) const
