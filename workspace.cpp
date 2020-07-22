@@ -1700,7 +1700,7 @@ X11Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
 
 Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) const
 {
-    if (X11Client *ret = Toplevel::findInList(clients, func)) {
+    if (auto *ret = Toplevel::findInList(m_allClients, func)) {
         return ret;
     }
     if (Unmanaged *ret = Toplevel::findInList(unmanaged, func)) {
