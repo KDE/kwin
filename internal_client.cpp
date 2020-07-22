@@ -388,8 +388,9 @@ void InternalClient::setOnAllActivities(bool set)
     // Internal clients do not support activities.
 }
 
-void InternalClient::takeFocus()
+bool InternalClient::takeFocus()
 {
+    return false;
 }
 
 bool InternalClient::userCanSetFullScreen() const

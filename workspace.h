@@ -167,17 +167,17 @@ public:
     AbstractClient* clientUnderMouse(int screen) const;
 
     void activateClient(AbstractClient*, bool force = false);
-    void requestFocus(AbstractClient* c, bool force = false);
+    bool requestFocus(AbstractClient* c, bool force = false);
     enum ActivityFlag {
         ActivityFocus = 1 << 0, // focus the window
         ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
         ActivityRaise = 1 << 2 // raise the window
     };
     Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
-    void takeActivity(AbstractClient* c, ActivityFlags flags);
+    bool takeActivity(AbstractClient* c, ActivityFlags flags);
     bool allowClientActivation(const AbstractClient* c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
-    void restoreFocus();
+    bool restoreFocus();
     void gotFocusIn(const AbstractClient*);
     void setShouldGetFocus(AbstractClient*);
     bool activateNextClient(AbstractClient* c);

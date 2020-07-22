@@ -81,7 +81,7 @@ public:
     bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
-    void takeFocus() override;
+    bool takeFocus() override;
     bool userCanSetFullScreen() const override;
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;

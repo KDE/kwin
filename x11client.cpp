@@ -2057,12 +2057,20 @@ void X11Client::setOnAllActivities(bool on)
 /**
  * Performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
  */
-void X11Client::takeFocus()
+bool X11Client::takeFocus()
 {
-    if (rules()->checkAcceptFocus(info->input()))
-        m_client.focus();
-    else
+    if (rules()->checkAcceptFocus(info->input())) {
+        xcb_void_cookie_t cookie = xcb_set_input_focus_checked(connection(),
+                                                               XCB_INPUT_FOCUS_POINTER_ROOT,
+                                                               windowId(), XCB_TIME_CURRENT_TIME);
+        ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
+        if (error) {
+            qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", windowId(), error->error_code);
+            return false;
+        }
+    } else {
         demandAttention(false); // window cannot take input, at least withdraw urgency
+    }
     if (info->supportsProtocol(NET::TakeFocusProtocol)) {
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, 0, 0, 0, XCB_CURRENT_TIME);
     }
@@ -2079,6 +2087,8 @@ void X11Client::takeFocus()
     }
     if (breakShowingDesktop)
         workspace()->setShowingDesktop(false);
+
+    return true;
 }
 
 /**
