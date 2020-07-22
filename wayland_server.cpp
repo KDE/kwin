@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/dpms_interface.h>
 #include <KWaylandServer/idle_interface.h>
-#include <KWaylandServer/idleinhibit_interface.h>
+#include <KWaylandServer/idleinhibit_v1_interface.h>
 #include <KWaylandServer/linuxdmabuf_v1_interface.h>
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/plasmashell_interface.h>
@@ -357,7 +357,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_idle->create();
     auto idleInhibition = new IdleInhibition(m_idle);
     connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerClient);
-    m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display)->create();
+    m_display->createIdleInhibitManagerV1(m_display);
     m_plasmaShell = m_display->createPlasmaShell(m_display);
     m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
