@@ -21,7 +21,7 @@
 #include "popup_input_filter.h"
 #include "abstract_client.h"
 #include "deleted.h"
-#include "wayland_server.h"
+#include "workspace.h"
 
 #include <QMouseEvent>
 
@@ -31,7 +31,7 @@ namespace KWin
 PopupInputFilter::PopupInputFilter()
     : QObject()
 {
-    connect(waylandServer(), &WaylandServer::shellClientAdded, this, &PopupInputFilter::handleClientAdded);
+    connect(workspace(), &Workspace::clientAdded, this, &PopupInputFilter::handleClientAdded);
 }
 
 void PopupInputFilter::handleClientAdded(Toplevel *client)

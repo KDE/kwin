@@ -752,6 +752,7 @@ void Workspace::addShellClient(AbstractClient *client)
         updateStackingOrder(true);
         updateClientArea();
     });
+    emit clientAdded(client);
 }
 
 void Workspace::removeShellClient(AbstractClient *client)

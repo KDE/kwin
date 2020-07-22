@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "scene.h"
 #include "unmanaged.h"
+#include "waylandclient.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "keyboard_input.h"
@@ -876,40 +877,15 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     if (waylandServer()) {
         const auto clients = waylandServer()->clients();
         for (auto c : clients) {
-            m_waylandClients.append(c);
+            handleClientAdded(c);
         }
-        // TODO: that only includes windows getting shown, not those which are only created
-        connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-            [this] (AbstractClient *c) {
-                add(s_waylandClientId -1, m_waylandClients, c);
-            }
-        );
-        connect(waylandServer(), &WaylandServer::shellClientRemoved, this,
-            [this] (AbstractClient *c) {
-                remove(s_waylandClientId -1, m_waylandClients, c);
-            }
-        );
     }
     const auto x11Clients = workspace()->clientList();
     for (auto c : x11Clients) {
-        m_x11Clients.append(c);
+        handleClientAdded(c);
     }
-    connect(workspace(), &Workspace::clientAdded, this,
-        [this] (AbstractClient *client) {
-            if (X11Client *x11Client = qobject_cast<X11Client *>(client)) {
-                add(s_x11ClientId -1, m_x11Clients, x11Client);
-            }
-        }
-    );
-    connect(workspace(), &Workspace::clientRemoved, this,
-        [this] (AbstractClient *ac) {
-            X11Client *c = qobject_cast<X11Client *>(ac);
-            if (!c) {
-                return;
-            }
-            remove(s_x11ClientId -1, m_x11Clients, c);
-        }
-    );
+    connect(workspace(), &Workspace::clientAdded, this, &DebugConsoleModel::handleClientAdded);
+    connect(workspace(), &Workspace::clientRemoved, this, &DebugConsoleModel::handleClientRemoved);
 
     const auto unmangeds = workspace()->unmanagedList();
     for (auto u : unmangeds) {
@@ -938,6 +914,36 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
             remove(s_workspaceInternalId -1, m_internalClients, client);
         }
     );
+}
+
+void DebugConsoleModel::handleClientAdded(AbstractClient *client)
+{
+    X11Client *x11Client = qobject_cast<X11Client *>(client);
+    if (x11Client) {
+        add(s_x11ClientId - 1, m_x11Clients, x11Client);
+        return;
+    }
+
+    WaylandClient *waylandClient = qobject_cast<WaylandClient *>(client);
+    if (waylandClient) {
+        add(s_waylandClientId - 1, m_waylandClients, waylandClient);
+        return;
+    }
+}
+
+void DebugConsoleModel::handleClientRemoved(AbstractClient *client)
+{
+    X11Client *x11Client = qobject_cast<X11Client *>(client);
+    if (x11Client) {
+        remove(s_x11ClientId - 1, m_x11Clients, x11Client);
+        return;
+    }
+
+    WaylandClient *waylandClient = qobject_cast<WaylandClient *>(client);
+    if (waylandClient) {
+        remove(s_waylandClientId - 1, m_waylandClients, waylandClient);
+        return;
+    }
 }
 
 DebugConsoleModel::~DebugConsoleModel() = default;
@@ -1241,7 +1247,7 @@ static T *clientForIndex(const QModelIndex &index, const QVector<T*> &clients, i
     return clients.at(row);
 }
 
-AbstractClient *DebugConsoleModel::waylandClient(const QModelIndex &index) const
+WaylandClient *DebugConsoleModel::waylandClient(const QModelIndex &index) const
 {
     return clientForIndex(index, m_waylandClients, s_waylandClientId);
 }
@@ -1284,14 +1290,6 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
             continue;
         }
         connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-    }
-    if (waylandServer()) {
-        connect(waylandServer(), &WaylandServer::shellClientAdded, this,
-            [this, reset] (AbstractClient *c) {
-                connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-                reset();
-            }
-        );
     }
     connect(workspace(), &Workspace::clientAdded, this,
         [this, reset] (AbstractClient *c) {

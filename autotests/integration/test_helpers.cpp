@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "screenlockerwatcher.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -64,7 +65,7 @@ namespace Test
 static struct {
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
-    Compositor *compositor = nullptr;
+    KWayland::Client::Compositor *compositor = nullptr;
     SubCompositor *subCompositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
     ShadowManager *shadowManager = nullptr;
@@ -283,7 +284,7 @@ ConnectionThread *waylandConnection()
     return s_waylandConnection.connection;
 }
 
-Compositor *waylandCompositor()
+KWayland::Client::Compositor *waylandCompositor()
 {
     return s_waylandConnection.compositor;
 }
@@ -401,7 +402,7 @@ void render(Surface *surface, const QImage &img)
 
 AbstractClient *waitForWaylandWindowShown(int timeout)
 {
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
         return nullptr;
     }
@@ -413,7 +414,7 @@ AbstractClient *waitForWaylandWindowShown(int timeout)
 
 AbstractClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
         return nullptr;
     }

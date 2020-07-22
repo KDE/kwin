@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../x11client.h"
 #include "../outline.h"
 #include "../screens.h"
-#include "../xdgshellclient.h"
 #include "../virtualdesktops.h"
 #include "../wayland_server.h"
 #include "../workspace.h"
@@ -67,10 +66,6 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
         }
     );
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
-    if (waylandServer()) {
-        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::clientAdded);
-        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &WorkspaceWrapper::setupClientConnections);
-    }
     foreach (KWin::X11Client *client, ws->clientList()) {
         setupClientConnections(client);
     }

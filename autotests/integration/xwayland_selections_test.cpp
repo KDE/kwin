@@ -112,8 +112,6 @@ void XwaylandSelectionsTest::testSync()
 
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
-    QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(shellClientAddedSpy.isValid());
     QSignalSpy clipboardChangedSpy(Xwl::DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionChanged);
     QVERIFY(clipboardChangedSpy.isValid());
 
@@ -131,13 +129,8 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(m_copyProcess->waitForStarted());
 
     AbstractClient *copyClient = nullptr;
-    if (copyPlatform == QLatin1String("xcb")) {
-        QVERIFY(clientAddedSpy.wait());
-        copyClient = clientAddedSpy.first().first().value<AbstractClient*>();
-    } else {
-        QVERIFY(shellClientAddedSpy.wait());
-        copyClient = shellClientAddedSpy.first().first().value<AbstractClient*>();
-    }
+    QVERIFY(clientAddedSpy.wait());
+    copyClient = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(copyClient);
     if (workspace()->activeClient() != copyClient) {
         workspace()->activateClient(copyClient);
@@ -166,15 +159,9 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(m_pasteProcess->waitForStarted());
 
     AbstractClient *pasteClient = nullptr;
-    if (pastePlatform == QLatin1String("xcb")) {
-        QVERIFY(clientAddedSpy.wait());
-        pasteClient = clientAddedSpy.last().first().value<AbstractClient*>();
-    } else {
-        QVERIFY(shellClientAddedSpy.wait());
-        pasteClient = shellClientAddedSpy.last().first().value<AbstractClient*>();
-    }
+    QVERIFY(clientAddedSpy.wait());
+    pasteClient = clientAddedSpy.last().first().value<AbstractClient *>();
     QCOMPARE(clientAddedSpy.count(), 1);
-    QCOMPARE(shellClientAddedSpy.count(), 1);
     QVERIFY(pasteClient);
 
     if (workspace()->activeClient() != pasteClient) {

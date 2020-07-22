@@ -260,7 +260,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(inhibitor->isValid());
 
     // Map the client.
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(clientAddedSpy.isEmpty());

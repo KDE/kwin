@@ -258,12 +258,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         setupClientConnections(client);
     }
     if (auto w = waylandServer()) {
-        connect(w, &WaylandServer::shellClientAdded, this, [this](AbstractClient *c) {
-            if (c->readyForPainting())
-                slotClientShown(c);
-            else
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
-        });
         const auto clients = waylandServer()->clients();
         for (AbstractClient *c : clients) {
             if (c->readyForPainting()) {

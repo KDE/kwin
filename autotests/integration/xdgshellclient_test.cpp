@@ -171,7 +171,7 @@ void TestXdgShellClient::testMapUnmap()
     QScopedPointer<XdgShellSurface> shellSurface(
         Test::createXdgShellStableSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
     QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
@@ -878,8 +878,8 @@ void TestXdgShellClient::testUnresponsiveWindow()
     // for this an external binary is launched
     const QString kill = QFINDTESTDATA(QStringLiteral("kill"));
     QVERIFY(!kill.isEmpty());
-    QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(shellClientAddedSpy.isValid());
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(clientAddedSpy.isValid());
 
     QScopedPointer<QProcess> process(new QProcess);
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -907,12 +907,12 @@ void TestXdgShellClient::testUnresponsiveWindow()
     QVERIFY(processStartedSpy.wait());
 
     AbstractClient *killClient = nullptr;
-    if (shellClientAddedSpy.isEmpty()) {
-        QVERIFY(shellClientAddedSpy.wait());
+    if (clientAddedSpy.isEmpty()) {
+        QVERIFY(clientAddedSpy.wait());
     }
     ::kill(process->processId(), SIGUSR1); // send a signal to freeze the process
 
-    killClient = shellClientAddedSpy.first().first().value<AbstractClient*>();
+    killClient = clientAddedSpy.first().first().value<AbstractClient*>();
     QVERIFY(killClient);
     QSignalSpy unresponsiveSpy(killClient, &AbstractClient::unresponsiveChanged);
     QSignalSpy killedSpy(process.data(), static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished));
