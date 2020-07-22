@@ -190,6 +190,13 @@ void Xwayland::dispatchEvents()
         return;
     }
 
+    const int connectionError = xcb_connection_has_error(connection);
+    if (connectionError) {
+        qCWarning(KWIN_XWL, "The X11 connection broke (error %d)", connectionError);
+        stop();
+        return;
+    }
+
     while (xcb_generic_event_t *event = xcb_poll_for_event(connection)) {
         if (m_dataBridge->filterEvent(event)) {
             free(event);
