@@ -1146,11 +1146,15 @@ void X11Client::focusInEvent(xcb_focus_in_event_t *e)
     // check if this client is in should_get_focus list or if activation is allowed
     bool activate =  workspace()->allowClientActivation(this, -1U, true);
     workspace()->gotFocusIn(this);   // remove from should_get_focus list
-    if (activate)
+    if (activate) {
         setActive(true);
-    else {
-        workspace()->restoreFocus();
-        demandAttention();
+    } else {
+        if (workspace()->restoreFocus()) {
+            demandAttention();
+        } else {
+            qCWarning(KWIN_CORE, "Failed to restore focus. Activating 0x%x", windowId());
+            setActive(true);
+        }
     }
 }
 

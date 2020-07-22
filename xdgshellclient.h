@@ -91,7 +91,7 @@ public:
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void setOnAllActivities(bool set) override;
-    void takeFocus() override;
+    bool takeFocus() override;
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;

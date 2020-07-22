@@ -945,7 +945,7 @@ void XdgShellClient::setOnAllActivities(bool set)
     Q_UNUSED(set)
 }
 
-void XdgShellClient::takeFocus()
+bool XdgShellClient::takeFocus()
 {
     if (rules()->checkAcceptFocus(wantsInput())) {
         if (m_xdgShellToplevel) {
@@ -957,6 +957,8 @@ void XdgShellClient::takeFocus()
     if (!keepAbove() && !isOnScreenDisplay() && !belongsToDesktop()) {
         workspace()->setShowingDesktop(false);
     }
+
+    return true;
 }
 
 void XdgShellClient::doSetActive()

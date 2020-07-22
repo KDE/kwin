@@ -359,8 +359,9 @@ void InternalClient::setOnAllActivities(bool set)
     // Internal clients do not support activities.
 }
 
-void InternalClient::takeFocus()
+bool InternalClient::takeFocus()
 {
+    return false;
 }
 
 void InternalClient::setNoBorder(bool set)

@@ -178,7 +178,7 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
-    void takeFocus() override;
+    bool takeFocus() override;
 
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
 

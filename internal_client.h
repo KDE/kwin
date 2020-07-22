@@ -74,7 +74,7 @@ public:
     bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
-    void takeFocus() override;
+    bool takeFocus() override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
