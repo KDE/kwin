@@ -550,7 +550,7 @@ public:
     void setupWindowRules(bool ignore_temporary);
     void evaluateWindowRules();
     virtual void applyWindowRules();
-    virtual void takeFocus() = 0;
+    virtual bool takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     /**
      * Whether a dock window wants input.

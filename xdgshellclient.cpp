@@ -1033,7 +1033,7 @@ void XdgToplevelClient::doFinishMoveResize()
     scheduleConfigure();
 }
 
-void XdgToplevelClient::takeFocus()
+bool XdgToplevelClient::takeFocus()
 {
     if (wantsInput()) {
         sendPing(PingReason::FocusWindow);
@@ -1042,6 +1042,7 @@ void XdgToplevelClient::takeFocus()
     if (!keepAbove() && !isOnScreenDisplay() && !belongsToDesktop()) {
         workspace()->setShowingDesktop(false);
     }
+    return true;
 }
 
 bool XdgToplevelClient::wantsInput() const
@@ -2130,8 +2131,9 @@ bool XdgPopupClient::wantsInput() const
     return false;
 }
 
-void XdgPopupClient::takeFocus()
+bool XdgPopupClient::takeFocus()
 {
+    return false;
 }
 
 bool XdgPopupClient::acceptsFocus() const

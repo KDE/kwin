@@ -164,7 +164,7 @@ public:
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
     bool supportsWindowRules() const override;
-    void takeFocus() override;
+    bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
     bool hasStrut() const override;
@@ -270,7 +270,7 @@ public:
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void showOnScreenEdge() override;
     bool wantsInput() const override;
-    void takeFocus() override;
+    bool takeFocus() override;
     bool supportsWindowRules() const override;
 
 protected:
