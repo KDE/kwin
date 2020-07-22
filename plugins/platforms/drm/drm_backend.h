@@ -55,7 +55,6 @@ class DrmConnector;
 class GbmSurface;
 class Cursor;
 
-
 class KWIN_EXPORT DrmBackend : public Platform
 {
     Q_OBJECT
@@ -68,6 +67,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
+    DmaBufTexture *createDmaBufTexture(const QSize &size) override;
 
     void init() override;
     void prepareShutdown() override;

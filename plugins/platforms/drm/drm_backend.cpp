@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
+#include "gbm_dmabuf.h"
 #endif
 #if HAVE_EGL_STREAMS
 #include "egl_stream_backend.h"
@@ -816,6 +817,15 @@ QString DrmBackend::supportInformation() const
     s << "Using EGL Streams: " << m_useEglStreams << Qt::endl;
 #endif
     return supportInfo;
+}
+
+DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
+{
+#if HAVE_GBM
+    return GbmDmaBuf::createBuffer(size, m_gbmDevice);
+#else
+    return nullptr;
+#endif
 }
 
 }

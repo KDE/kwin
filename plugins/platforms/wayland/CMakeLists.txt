@@ -3,6 +3,7 @@ set(WAYLAND_BACKEND_SOURCES
     scene_qpainter_wayland_backend.cpp
     wayland_backend.cpp
     wayland_output.cpp
+    ../drm/gbm_dmabuf.cpp
 )
 
 if (HAVE_WAYLAND_EGL)
@@ -15,7 +16,7 @@ set_target_properties(KWinWaylandWaylandBackend PROPERTIES LIBRARY_OUTPUT_DIRECT
 target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient SceneQPainterBackend)
 
 if (HAVE_WAYLAND_EGL)
-    target_link_libraries(KWinWaylandWaylandBackend SceneOpenGLBackend Wayland::Egl)
+    target_link_libraries(KWinWaylandWaylandBackend SceneOpenGLBackend Wayland::Egl gbm::gbm)
 endif()
 
 install(
