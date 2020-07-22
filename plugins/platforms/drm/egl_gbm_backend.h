@@ -64,7 +64,7 @@ private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    void initRemotePresent();
+
     struct Output {
         DrmOutput *output = nullptr;
         DrmSurfaceBuffer *buffer = nullptr;
@@ -105,7 +105,6 @@ private:
 
     DrmBackend *m_backend;
     QVector<Output> m_outputs;
-    QScopedPointer<RemoteAccessManager> m_remoteaccessManager;
     friend class EglGbmTexture;
 };
 

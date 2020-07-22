@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 // kwin libs
 #include <kwinglplatform.h>
-// Qt
-#include <QOpenGLContext>
 #include <kwineglimagetexture.h>
 // system
 #include <gbm.h>
@@ -132,7 +130,6 @@ void EglGbmBackend::init()
     initKWinGL();
     initBufferAge();
     initWayland();
-    initRemotePresent();
 }
 
 bool EglGbmBackend::initRenderingContext()
@@ -157,15 +154,6 @@ bool EglGbmBackend::initRenderingContext()
     setSurface(m_outputs.first().eglSurface);
 
     return makeContextCurrent(m_outputs.first());
-}
-
-void EglGbmBackend::initRemotePresent()
-{
-    if (qEnvironmentVariableIsSet("KWIN_NO_REMOTE")) {
-        return;
-    }
-    qCDebug(KWIN_DRM) << "Support for remote access enabled";
-    m_remoteaccessManager.reset(new RemoteAccessManager);
 }
 
 std::shared_ptr<GbmSurface> EglGbmBackend::createGbmSurface(const QSize &size) const
