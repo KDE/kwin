@@ -1,5 +1,6 @@
 File=kwinoptions_settings.kcfg
 ClassName=KWinOptionsSettings
+IncludeFiles=options.h
 Mutators=true
 DefaultValueGetters=true
 ParentInConstructor=true
