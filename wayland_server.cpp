@@ -62,7 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/outputconfiguration_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
-#include <KWaylandServer/xdgforeign_interface.h>
+#include <KWaylandServer/xdgforeign_v2_interface.h>
 #include <KWaylandServer/xdgoutput_interface.h>
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
@@ -185,7 +185,7 @@ void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
         client->installPalette(palette);
     }
 
-    connect(m_XdgForeign, &XdgForeignInterface::transientChanged, client, [this](SurfaceInterface *child) {
+    connect(m_XdgForeign, &XdgForeignV2Interface::transientChanged, client, [this](SurfaceInterface *child) {
         emit foreignTransientChanged(child);
     });
 }
@@ -451,8 +451,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 
     m_display->createSubCompositor(m_display)->create();
 
-    m_XdgForeign = m_display->createXdgForeignInterface(m_display);
-    m_XdgForeign->create();
+    m_XdgForeign = m_display->createXdgForeignV2Interface(m_display);
 
     m_keyState = m_display->createKeyStateInterface(m_display);
     m_keyState->create();

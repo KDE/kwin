@@ -298,7 +298,7 @@ private:
         bool interfacesAnnounced = false;
 
     } m_internalConnection;
-    KWaylandServer::XdgForeignInterface *m_XdgForeign = nullptr;
+    KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     QList<AbstractClient *> m_clients;
     QHash<KWaylandServer::ClientConnection*, quint16> m_clientIds;
