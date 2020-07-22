@@ -240,7 +240,7 @@ public:
         return KWin::fetchRequestedInterfaces(client->executablePath());
     }
 
-    const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate"};
+    const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate", "zkde_screencast_unstable_v1"};
     QSet<QString> m_reported;
 
     bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override {
@@ -457,6 +457,8 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 
     m_keyState = m_display->createKeyStateInterface(m_display);
     m_keyState->create();
+
+    m_screencast = m_display->createScreencastInterface(m_display);
 
     return true;
 }

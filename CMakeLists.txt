@@ -391,6 +391,10 @@ add_feature_info("SCHED_RESET_ON_FORK"
                  HAVE_SCHED_RESET_ON_FORK
                  "Required for running kwin_wayland with real-time scheduling")
 
+
+pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3)
+add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
+
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
 
 ########### global ###############
@@ -449,6 +453,7 @@ set(kwin_SRCS
     decorations/decorations_logging.cpp
     decorations/settings.cpp
     deleted.cpp
+    dmabuftexture.cpp
     effectloader.cpp
     effects.cpp
     egl_context_attribute_builder.cpp
@@ -709,6 +714,7 @@ set_target_properties(kwin PROPERTIES
 )
 
 target_link_libraries(kwin ${kwinLibs} kwinglutils ${epoxy_LIBRARY})
+
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(CMAKE_SYSTEM MATCHES "FreeBSD")
@@ -749,11 +755,28 @@ ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS
 
 set(kwin_WAYLAND_SRCS
    main_wayland.cpp
+   screencast/screencastmanager.cpp
+   screencast/pipewirecore.cpp
+   screencast/pipewirestream.cpp
    tabletmodemanager.cpp
+)
+ecm_qt_declare_logging_category(kwin_WAYLAND_SRCS
+    HEADER
+        kwinpipewire_logging.h
+    IDENTIFIER
+        KWIN_PIPEWIRE
+    CATEGORY_NAME
+        kwin_pipewire
+    DEFAULT_SEVERITY
+        Warning
 )
 
 add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
-target_link_libraries(kwin_wayland kwin KF5::Crash)
+target_link_libraries(kwin_wayland
+                      kwin
+                      PkgConfig::PipeWire # required for PipewireStream
+                      KF5::Crash
+)
 if (HAVE_LIBCAP)
     target_link_libraries(kwin_wayland ${Libcap_LIBRARIES})
 endif()

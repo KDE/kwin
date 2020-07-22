@@ -88,6 +88,7 @@ set(kwin_GLUTILSLIB_SRCS
     kwingltexture.cpp
     kwinglutils.cpp
     kwinglutils_funcs.cpp
+    kwineglimagetexture.cpp
     logging.cpp
 )
 
