@@ -1457,7 +1457,7 @@ void AbstractClient::setupWindowManagementInterface()
         return;
     }
     using namespace KWaylandServer;
-    auto w = waylandServer()->windowManagement()->createWindow(waylandServer()->windowManagement());
+    auto w = waylandServer()->windowManagement()->createWindow(waylandServer()->windowManagement(), internalId());
     w->setTitle(caption());
     w->setVirtualDesktop(isOnAllDesktops() ? 0 : desktop() - 1);
     w->setActive(isActive());
