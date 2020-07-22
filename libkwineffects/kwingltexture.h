@@ -113,6 +113,8 @@ public:
     GLenum filter() const;
     GLenum internalFormat() const;
 
+    QImage toImage() const;
+
     /** @short
      * Make the texture fully transparent
      */

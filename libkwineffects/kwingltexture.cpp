@@ -683,4 +683,11 @@ bool GLTexture::supportsFormatRG()
     return GLTexturePrivate::s_supportsTextureFormatRG;
 }
 
+QImage GLTexture::toImage() const
+{
+    QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
+    glGetTextureImage(texture(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.sizeInBytes(), ret.bits());
+    return ret;
+}
+
 } // namespace KWin
