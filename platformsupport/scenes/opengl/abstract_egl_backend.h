@@ -37,6 +37,7 @@ namespace KWin
 {
 
 class EglDmabuf;
+class AbstractOutput;
 
 class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
 {
@@ -58,6 +59,8 @@ public:
     EGLConfig config() const {
         return m_config;
     }
+
+    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
 protected:
     AbstractEglBackend();

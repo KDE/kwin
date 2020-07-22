@@ -73,7 +73,7 @@ public:
     QSize modeSize() const;
 
     // TODO: The name is ambiguous. Rename this function.
-    QSize pixelSize() const;
+    QSize pixelSize() const override;
 
     qreal scale() const override;
 
@@ -125,6 +125,7 @@ public:
 
 Q_SIGNALS:
     void modeChanged();
+    void outputChange(const QRegion &damagedRegion);
 
 protected:
     void initInterfaces(const QString &model, const QString &manufacturer,

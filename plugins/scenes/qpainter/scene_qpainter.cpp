@@ -149,8 +149,6 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
     // do cleanup
     clearStackingOrder();
 
-    emit frameRendered();
-
     return renderTimer.nsecsElapsed();
 }
 

@@ -98,4 +98,9 @@ void X11Output::setPhysicalSize(const QSize &size)
     m_physicalSize = size;
 }
 
+QSize X11Output::pixelSize() const
+{
+    return geometry().size();
+}
+
 }

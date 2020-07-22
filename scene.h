@@ -52,6 +52,8 @@ class EffectWindowImpl;
 class OverlayWindow;
 class Shadow;
 class WindowPixmap;
+class GLTexture;
+class AbstractOutput;
 
 // The base class for compositing backends.
 class KWIN_EXPORT Scene : public QObject
@@ -194,6 +196,11 @@ public:
      * Default implementation returns empty list
      */
     virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
+
+    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const {
+        Q_UNUSED(output);
+        return {};
+    }
 
 Q_SIGNALS:
     void frameRendered();
@@ -347,6 +354,11 @@ public:
     void unreferencePreviousPixmap();
     void discardQuads();
     void preprocess();
+
+    virtual QSharedPointer<GLTexture> windowTexture() {
+        return {};
+    }
+
 protected:
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
     WindowQuadList makeContentsQuads() const;

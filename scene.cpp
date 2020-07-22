@@ -198,6 +198,8 @@ void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& d
         paintGenericScreen(mask, data);
     else
         paintSimpleScreen(mask, region);
+
+    Q_EMIT frameRendered();
 }
 
 // The generic painting code that can handle even transformations.

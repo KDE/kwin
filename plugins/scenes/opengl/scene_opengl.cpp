@@ -49,6 +49,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations/decoratedclient.h"
 #include <logging.h>
 
+#include "abstract_wayland_output.h"
+#include "abstract_egl_backend.h"
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/subcompositor_interface.h>
 #include <KWaylandServer/surface_interface.h>
@@ -889,6 +891,11 @@ QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
     return m_backend->extensions().toVector();
 }
 
+QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput* output) const
+{
+    return m_backend->textureForOutput(output);
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************
@@ -1531,6 +1538,41 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     endRenderWindow();
 }
 
+QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
+{
+    auto frame = windowPixmap<OpenGLWindowPixmap>();
+
+    if (frame->children().isEmpty()) {
+        return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
+    } else {
+        auto effectWindow = window()->effectWindow();
+        QRect geo(pos(), window()->clientSize());
+        QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, geo.size()));
+
+        QScopedPointer<GLRenderTarget> framebuffer(new KWin::GLRenderTarget(*texture));
+        GLRenderTarget::pushRenderTarget(framebuffer.data());
+
+        auto renderVSG = GLRenderTarget::virtualScreenGeometry();
+        GLVertexBuffer::setVirtualScreenGeometry(geo);
+        GLRenderTarget::setVirtualScreenGeometry(geo);
+
+        QMatrix4x4 mvp;
+        mvp.ortho(geo);
+
+        WindowPaintData data(effectWindow);
+        data.setProjectionMatrix(mvp);
+        QSizeF size(geo.size());
+        data.setYScale(-1);
+        data.setXTranslation(bufferOffset().x());
+        data.setYTranslation(geo.height() + bufferOffset().y());
+
+        performPaint(Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_WINDOW_LANCZOS, geo, data);
+        GLRenderTarget::popRenderTarget();
+        GLVertexBuffer::setVirtualScreenGeometry(renderVSG);
+        GLRenderTarget::setVirtualScreenGeometry(renderVSG);
+        return texture;
+    }
+}
 
 //****************************************
 // OpenGLWindowPixmap

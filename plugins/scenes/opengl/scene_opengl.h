@@ -80,6 +80,7 @@ public:
     }
 
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
+    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
     static SceneOpenGL *createScene(QObject *parent);
 
@@ -100,6 +101,7 @@ protected:
     bool init_ok;
 private:
     bool viewportLimitsMatched(const QSize &size) const;
+
 private:
     bool m_debug;
     OpenGLBackend *m_backend;
@@ -189,6 +191,7 @@ public:
 
     WindowPixmap *createWindowPixmap() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
+    QSharedPointer<GLTexture> windowTexture() override;
 
 private:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;

@@ -57,6 +57,8 @@ public:
     QSize physicalSize() const override;
     void setPhysicalSize(const QSize &size);
 
+    QSize pixelSize() const override;
+
 private:
     void setCrtc(xcb_randr_crtc_t crtc);
     void setGammaRampSize(int size);
