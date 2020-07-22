@@ -27,8 +27,15 @@
 //#include "drm.h"
 
 // These typedefs are copied from drm.h
+#if   defined(__linux__)
+
+#include <linux/types.h>
+#include <asm/ioctl.h>
+
+#else /* One of the BSDs */
 typedef uint32_t __u32;
 typedef uint64_t __u64;
+#endif
 
 #if defined(__cplusplus)
 extern "C" {
