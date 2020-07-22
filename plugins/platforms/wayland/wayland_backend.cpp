@@ -460,13 +460,13 @@ WaylandBackend::WaylandBackend(QObject *parent)
 
 
     char const *drm_render_node = "/dev/dri/renderD128";
-    m_drm_fd = open(drm_render_node, O_RDWR);
-    if (m_drm_fd < 0) {
+    m_drmFileDescriptor = open(drm_render_node, O_RDWR);
+    if (m_drmFileDescriptor < 0) {
         qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
         m_gbmDevice = nullptr;
         return;
     }
-    m_gbmDevice = gbm_create_device(m_drm_fd);
+    m_gbmDevice = gbm_create_device(m_drmFileDescriptor);
 }
 
 WaylandBackend::~WaylandBackend()
@@ -492,7 +492,7 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->wait();
     m_connectionThreadObject->deleteLater();
     gbm_device_destroy(m_gbmDevice);
-    close(m_drm_fd);
+    close(m_drmFileDescriptor);
 
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }

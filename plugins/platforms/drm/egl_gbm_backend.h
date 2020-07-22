@@ -28,8 +28,10 @@ struct gbm_surface;
 
 namespace KWin
 {
+class AbstractOutput;
 class DrmBackend;
 class DrmBuffer;
+class DrmSurfaceBuffer;
 class DrmOutput;
 class GbmSurface;
 
@@ -52,6 +54,8 @@ public:
     QRegion prepareRenderingForScreen(int screenId) override;
     void init() override;
 
+    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
+
 protected:
     void present() override;
     void cleanupSurfaces() override;
@@ -63,7 +67,7 @@ private:
     void initRemotePresent();
     struct Output {
         DrmOutput *output = nullptr;
-        DrmBuffer *buffer = nullptr;
+        DrmSurfaceBuffer *buffer = nullptr;
         std::shared_ptr<GbmSurface> gbmSurface;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         int bufferAge = 0;
@@ -93,7 +97,7 @@ private:
     void prepareRenderFramebuffer(const Output &output) const;
     void renderFramebufferToSurface(Output &output);
 
-    void presentOnOutput(Output &output);
+    void presentOnOutput(Output &output, const QRegion &damagedRegion);
 
     void removeOutput(DrmOutput *drmOutput);
     void cleanupOutput(Output &output);

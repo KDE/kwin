@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "screens.h"
 
+#include <unistd.h>
+#include <fcntl.h>
+
 // kwin libs
 #include <kwinglplatform.h>
 
@@ -41,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/display.h>
 
 // Qt
+#include <QFile>
 #include <QOpenGLContext>
 
 namespace KWin
@@ -288,17 +292,19 @@ void EglWaylandBackend::present()
 {
     for (auto *output: qAsConst(m_outputs)) {
         makeContextCurrent(output);
-        presentOnSurface(output);
+        presentOnSurface(output, output->m_waylandOutput->geometry());
     }
 }
 
-void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output)
+void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion &damage)
 {
     output->m_waylandOutput->surface()->setupFrameCallback();
     if (!m_swapping) {
         m_swapping = true;
         Compositor::self()->aboutToSwapBuffers();
     }
+
+    Q_EMIT output->m_waylandOutput->outputChange(damage);
 
     if (supportsBufferAge()) {
         eglSwapBuffers(eglDisplay(), output->m_eglSurface);
@@ -363,7 +369,8 @@ void EglWaylandBackend::endRenderingFrame(const QRegion &renderedRegion, const Q
 void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     EglWaylandOutput *output = m_outputs[screenId];
-    if (damagedRegion.intersected(output->m_waylandOutput->geometry()).isEmpty() && screenId == 0) {
+    QRegion damage = damagedRegion.intersected(output->m_waylandOutput->geometry());
+    if (damage.isEmpty() && screenId == 0) {
 
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
@@ -381,7 +388,7 @@ void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &
         }
         return;
     }
-    presentOnSurface(output);
+    presentOnSurface(output, damage);
 
     // Save the damaged region to history
     // Note: damage history is only collected for the first screen. See EglGbmBackend
@@ -391,7 +398,7 @@ void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &
             output->m_damageHistory.removeLast();
         }
 
-        output->m_damageHistory.prepend(damagedRegion.intersected(output->m_waylandOutput->geometry()));
+        output->m_damageHistory.prepend(damage);
     }
 }
 
