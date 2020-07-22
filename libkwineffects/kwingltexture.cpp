@@ -190,7 +190,7 @@ GLTexture::GLTexture(const QString& fileName)
 {
 }
 
-GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
+GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels, bool needsMutability)
      : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
@@ -209,7 +209,7 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
-        if (d->s_supportsTextureStorage) {
+        if (d->s_supportsTextureStorage && !needsMutability) {
             glTexStorage2D(d->m_target, levels, internalFormat, width, height);
             d->m_immutable = true;
         } else {
@@ -234,8 +234,8 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     unbind();
 }
 
-GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels)
-    : GLTexture(internalFormat, size.width(), size.height(), levels)
+GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
+    : GLTexture(internalFormat, size.width(), size.height(), levels, needsMutability)
 {
 }
 
