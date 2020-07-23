@@ -755,9 +755,6 @@ ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS
 
 set(kwin_WAYLAND_SRCS
    main_wayland.cpp
-   screencast/screencastmanager.cpp
-   screencast/pipewirecore.cpp
-   screencast/pipewirestream.cpp
    tabletmodemanager.cpp
 )
 ecm_qt_declare_logging_category(kwin_WAYLAND_SRCS
@@ -772,9 +769,19 @@ ecm_qt_declare_logging_category(kwin_WAYLAND_SRCS
 )
 
 add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
+
+
+if (PipeWire_FOUND)
+    target_sources(kwin_wayland
+        PRIVATE
+        screencast/screencastmanager.cpp
+        screencast/pipewirecore.cpp
+        screencast/pipewirestream.cpp)
+    target_link_libraries(kwin_wayland PkgConfig::PipeWire)
+endif()
+
 target_link_libraries(kwin_wayland
                       kwin
-                      PkgConfig::PipeWire # required for PipewireStream
                       KF5::Crash
 )
 if (HAVE_LIBCAP)

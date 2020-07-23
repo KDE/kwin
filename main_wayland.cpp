@@ -26,7 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "effects.h"
 #include "tabletmodemanager.h"
+
+#ifdef PipeWire_FOUND
 #include "screencast/screencastmanager.h"
+#endif
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
 
@@ -165,7 +168,9 @@ void ApplicationWayland::performStartup()
     VirtualKeyboard::create(this);
     createBackend();
     TabletModeManager::create(this);
+#ifdef PipeWire_FOUND
     new ScreencastManager(this);
+#endif
 }
 
 void ApplicationWayland::createBackend()
