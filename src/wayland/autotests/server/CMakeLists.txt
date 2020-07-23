@@ -76,7 +76,6 @@ target_link_libraries(testViewporterInterface Qt5::Test Plasma::KWaylandServer K
 add_test(NAME kwayland-testViewporterInterface COMMAND testViewporterInterface)
 ecm_mark_as_test(testViewporterInterface)
 
-
 ########################################################
 # Test ScreencastInterface
 ########################################################
@@ -88,3 +87,15 @@ add_executable(testScreencastInterface test_screencast.cpp ${SCREENCAST_SRCS})
 target_link_libraries(testScreencastInterface Qt5::Test Plasma::KWaylandServer Wayland::Client KF5::WaylandClient)
 add_test(NAME kwayland-testScreencastInterface COMMAND testScreencastInterface)
 ecm_mark_as_test(testScreencastInterface)
+
+########################################################
+# Test InputMethod Interface
+########################################################
+ecm_add_qtwayland_client_protocol(INPUTMETHOD_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+    BASENAME input-method-unstable-v1
+    )
+add_executable(testInputMethodInterface test_inputmethod_interface.cpp ${INPUTMETHOD_SRCS})
+target_link_libraries(testInputMethodInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testInputMethodInterface COMMAND testInputMethodInterface)
+ecm_mark_as_test(testInputMethodInterface)

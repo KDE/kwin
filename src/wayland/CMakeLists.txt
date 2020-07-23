@@ -22,6 +22,7 @@ set(SERVER_LIB_SRCS
     global.cpp
     idle_interface.cpp
     idleinhibit_v1_interface
+    inputmethod_v1_interface.cpp
     keyboard_interface.cpp
     keyboard_shortcuts_inhibit_v1_interface.cpp
     keystate_interface.cpp
@@ -256,6 +257,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME zkde-screencast-unstable-v1
 )
 
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+    BASENAME input-method-unstable-v1
+)
+
 set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-blur-server-protocol.h
@@ -377,6 +383,7 @@ set(SERVER_LIB_HEADERS
   global.h
   idle_interface.h
   idleinhibit_v1_interface.h
+  inputmethod_v1_interface.h
   keyboard_interface.h
   keyboard_shortcuts_inhibit_v1_interface.h
   keystate_interface.h

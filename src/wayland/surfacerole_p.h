@@ -20,6 +20,11 @@ public:
     explicit SurfaceRole(SurfaceInterface *surface);
     virtual ~SurfaceRole();
 
+    const QPointer<SurfaceInterface> &surface() const
+    {
+        return m_surface;
+    }
+
     virtual void commit() = 0;
 
     static SurfaceRole *get(SurfaceInterface *surface);

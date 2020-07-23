@@ -45,6 +45,7 @@
 #include "xdgforeign_v2_interface.h"
 #include "xdgoutput_interface.h"
 #include "xdgshell_interface.h"
+#include "inputmethod_v1_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -488,6 +489,14 @@ DataControlDeviceManagerV1Interface *Display::createDataControlDeviceManagerV1(Q
 KeyboardShortcutsInhibitManagerV1Interface *Display::createKeyboardShortcutsInhibitManagerV1(QObject *parent)
 {
     auto d = new KeyboardShortcutsInhibitManagerV1Interface(this, parent);
+
+    connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
+    return d;
+}
+
+InputMethodV1Interface *Display::createInputMethodInterface(QObject *parent)
+{
+    auto d = new InputMethodV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
 }
@@ -504,6 +513,13 @@ PrimarySelectionDeviceManagerV1Interface *Display::createPrimarySelectionDeviceM
     auto primarySelection = new PrimarySelectionDeviceManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, primarySelection, [primarySelection] { delete primarySelection; });
     return primarySelection;
+}
+
+InputPanelV1Interface *Display::createInputPanelInterface(QObject *parent)
+{
+    auto p = new InputPanelV1Interface(this, parent);
+    connect(this, &Display::aboutToTerminate, p, [p] { delete p; });
+    return p;
 }
 
 void Display::createShm()

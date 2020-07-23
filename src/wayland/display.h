@@ -80,6 +80,8 @@ class PrimarySelectionDeviceManagerV1Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class ViewporterInterface;
 class ScreencastInterface;
+class InputMethodV1Interface;
+class InputPanelV1Interface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -302,6 +304,9 @@ public:
      * @since 5.58
      */
     EglStreamControllerInterface *createEglStreamControllerInterface(QObject *parent = nullptr);
+
+    InputMethodV1Interface *createInputMethodInterface(QObject *parent = nullptr);
+    InputPanelV1Interface *createInputPanelInterface(QObject *parent = nullptr);
 
     /**
      * Creates the DataControlDeviceManagerV1
