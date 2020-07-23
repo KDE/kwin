@@ -31,7 +31,6 @@
 #include "pointergestures_interface_p.h"
 #include "primaryselectiondevicemanager_v1_interface.h"
 #include "relativepointer_interface_p.h"
-#include "remote_access_interface.h"
 #include "seat_interface.h"
 #include "screencast_interface.h"
 #include "server_decoration_interface.h"
@@ -277,13 +276,6 @@ PlasmaWindowManagementInterface *Display::createPlasmaWindowManagement(QObject *
     auto wm = new PlasmaWindowManagementInterface(this, parent);
     connect(this, &Display::aboutToTerminate, wm, [wm] { delete wm; });
     return wm;
-}
-
-RemoteAccessManagerInterface *Display::createRemoteAccessManager(QObject *parent)
-{
-    auto i = new RemoteAccessManagerInterface(this, parent);
-    connect(this, &Display::aboutToTerminate, i, [i] { delete i; });
-    return i;
 }
 
 IdleInterface *Display::createIdle(QObject *parent)

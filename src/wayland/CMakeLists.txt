@@ -47,7 +47,6 @@ set(SERVER_LIB_SRCS
     region_interface.cpp
     relativepointer_interface.cpp
     relativepointer_interface_v1.cpp
-    remote_access_interface.cpp
     resource.cpp
     seat_interface.cpp
     server_decoration_interface.cpp
@@ -197,11 +196,6 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml
     BASENAME server-decoration-palette
-)
-
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/remote-access.xml
-    BASENAME remote-access
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -403,7 +397,6 @@ set(SERVER_LIB_HEADERS
   primaryselectiondevicemanager_v1_interface.h
   region_interface.h
   relativepointer_interface.h
-  remote_access_interface.h
   resource.h
   screencast_interface.h
   seat_interface.h
