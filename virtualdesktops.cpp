@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 namespace KWin {
 
-extern int screen_number;
 static bool s_loadingDesktopSettings = false;
 
 static QByteArray generateDesktopId()
@@ -701,13 +700,8 @@ void VirtualDesktopManager::load()
     if (!m_config) {
         return;
     }
-    QString groupname;
-    if (screen_number == 0) {
-        groupname = QStringLiteral("Desktops");
-    } else {
-        groupname = QStringLiteral("Desktops-screen-%1").arg(screen_number);
-    }
-    KConfigGroup group(m_config, groupname);
+
+    KConfigGroup group(m_config, QStringLiteral("Desktops"));
     const int n = group.readEntry("Number", 1);
     setCount(n);
 
@@ -744,13 +738,7 @@ void VirtualDesktopManager::save()
     if (!m_config) {
         return;
     }
-    QString groupname;
-    if (screen_number == 0) {
-        groupname = QStringLiteral("Desktops");
-    } else {
-        groupname = QStringLiteral("Desktops-screen-%1").arg(screen_number);
-    }
-    KConfigGroup group(m_config, groupname);
+    KConfigGroup group(m_config, QStringLiteral("Desktops"));
 
     for (int i = count() + 1;  group.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
         group.deleteEntry(QStringLiteral("Id_%1").arg(i));
