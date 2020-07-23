@@ -2,6 +2,7 @@
 IconName=kwin
 Comment=KWin Window Manager
 Comment[ar]=مدير النوافذ كوين
+Comment[az]=KWin pəncərə Meneceri
 Comment[bg]=Мениджър на прозорци KWin
 Comment[bs]=Menadžer prozora K‑vin
 Comment[ca]=Gestor de finestres KWin
@@ -66,6 +67,7 @@ Comment[zh_TW]=KWin 視窗管理員
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
 Name[ar]=عُلِّق التركيب
+Name[az]=Effektlər dayandırıldı
 Name[bg]=Ефектите са временно спрени
 Name[bs]=Slaganje je suspendovano
 Name[ca]=S'ha suspès la composició
@@ -130,6 +132,7 @@ Name[zh_CN]=混成已被中断
 Name[zh_TW]=組合效能已被暫停
 Comment=Another application has requested to suspend compositing.
 Comment[ar]=تطبيق أخر طلب تعليق التركيب
+Comment[az]=Hansısa tətbiq qrafik effektləri söndürməyi tələb edti.
 Comment[bg]=Друго приложение е поискало временно спиране на ефектите.
 Comment[bs]=Drugi program je zatražio da se slaganje suspenduje.
 Comment[ca]=Una altra aplicació ha sol·licitat de suspendre la composició.
@@ -193,6 +196,7 @@ Action=Popup
 
 [Event/graphicsreset]
 Name=Graphics Reset
+Name[az]=Qrafikanın sıfırlanması
 Name[bs]=Reset grafike
 Name[ca]=Reinici dels gràfics
 Name[ca@valencia]=Reinici dels gràfics
@@ -238,6 +242,7 @@ Name[x-test]=xxGraphics Resetxx
 Name[zh_CN]=图形重置
 Name[zh_TW]=圖形重置
 Comment=A graphics reset event occurred
+Comment[az]=Qrafik sistemdə qəza baş verdi
 Comment[bs]=Grafički reset događaj se desio
 Comment[ca]=Ha ocorregut un esdeveniment de reinici dels gràfics
 Comment[ca@valencia]=Ha ocorregut un esdeveniment de reinici dels gràfics

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Fade Desktop
 Name[ar]=تلاشِ سطح المكتب
+Name[az]=İş Masasının rəvan dəyişimi
 Name[bg]=Избледняване на работния плот
 Name[bs]=Utapanje površi
 Name[ca]=Esvaïment de l'escriptori
@@ -68,6 +69,7 @@ Name[zh_TW]=淡出淡入桌面
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
 Comment[ar]=يجعل أسطح المكتب تتلاشى عند التبيديل بينها
+Comment[az]=Başqa İş Masasına keçdiksə fon şəklinin tədricən dəyişilməsi
 Comment[bg]=Избледняване при превключване между работните плотове
 Comment[bs]=Jedna virtuelna površ utapa se u drugu pri prebacivanju
 Comment[ca]=Esvaeix entre els escriptoris virtuals quan es commuta entre ells

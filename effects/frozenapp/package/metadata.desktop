@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desaturate Unresponsive Applications
+Name[az]=Cavab verməyən pəncərələrin rəngsizləşməsi
 Name[ca]=Dessatura les aplicacions que no responen
 Name[ca@valencia]=Dessatura les aplicacions que no responguen
 Name[da]=Dæmp programmer som ikke svarer
@@ -39,6 +40,7 @@ Name[zh_CN]=对未响应应用程序降低饱和度
 Name[zh_TW]=淡化無回應的應用程式
 Icon=preferences-system-windows-effect-frozenapp
 Comment=Desaturate windows of unresponsive (frozen) applications
+Comment[az]=Cavab verməyən (donmuş) pəncərələrin rəngsizləşməsi
 Comment[ca]=Dessatura les finestres de les aplicacions que no responen (congelades)
 Comment[ca@valencia]=Dessatura les finestres de les aplicacions que no responen (congelades)
 Comment[da]=Dæmp vinduerne for programmer der ikke svarer (er frosset)

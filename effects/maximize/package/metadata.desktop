@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Animation for a window going to maximize/restore from maximize
+Comment[az]=Tam açıldıqdan sonra ölçüsü genişlnəcək/bərpa olunacaq pəncərənin animasiyası
 Comment[bs]=Animacija za prozor koji ide u maksimiziranje/vraćanje iz maksimiziranja
 Comment[ca]=Animació per a una finestra que es maximitza/restaura des de maximització
 Comment[ca@valencia]=Animació per una finestra que es maximitza/restaura des de maximització
@@ -48,6 +49,7 @@ Comment[zh_TW]=視窗最大化/回復時的動畫
 Icon=preferences-system-windows-effect-maximize
 Name=Maximize
 Name[ast]=Maximización
+Name[az]=Genişləndirmək
 Name[bs]=Maksimiziraj
 Name[ca]=Maximitza
 Name[ca@valencia]=Maximitza

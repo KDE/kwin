@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Logout
 Name[ast]=Zarru de sesión
+Name[az]=Sistemdən Çıxış
 Name[ca]=Sortida
 Name[ca@valencia]=Eixida
 Name[cs]=Odhlášení
@@ -35,6 +36,7 @@ Name[zh_CN]=注销
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Smoothly fade to the logout screen
+Comment[az]=Sesiyadan çıxış ekranının tədricən görünmsəi
 Comment[ca]=Transició suau a la pantalla de sortida
 Comment[ca@valencia]=Transició suau a la pantalla d'eixida
 Comment[cs]=Plynule přejít na odhlašovací obrazovku

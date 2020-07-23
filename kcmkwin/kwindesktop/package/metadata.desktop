@@ -2,6 +2,7 @@
 Name=Virtual Desktops
 Name[ar]=أسطح المكتب الافتراضية
 Name[ast]=Escritorios virtuales
+Name[az]=Virtual İş Masaları
 Name[bg]=Виртуални работни плотове
 Name[bs]=Virtuelne površi
 Name[ca]=Escriptoris virtuals
@@ -63,6 +64,7 @@ Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
 Comment=Configure navigation, number and layout of virtual desktops
+Comment[az]=Virtual İş Masasının nömrəsi, qatı və istiqamətinin tənzimlənməsi
 Comment[ca]=Configura la navegació, el nombre i la disposició dels escriptoris virtuals
 Comment[da]=Indstil navigation, antal og layout af virtuelle skriveborde
 Comment[de]=Navigation, Anzahl und Layout virtueller Arbeitsflächen einrichten

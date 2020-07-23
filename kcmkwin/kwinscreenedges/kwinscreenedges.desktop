@@ -13,6 +13,7 @@ X-KDE-Weight=50
 
 Name=Screen Edges
 Name[ar]=حواف الشاشة
+Name[az]=Pəncərə kənarları
 Name[bg]=Краища на екрана
 Name[bs]=Ivice ekrana
 Name[ca]=Vores de la pantalla
@@ -81,6 +82,7 @@ Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 
 Comment=Configure active screen corners and edges
+Comment[az]=Aktiv ekran künclərini və kənarlarını tənzimləmək
 Comment[ca]=Configura les cantonades i vores actives de la pantalla
 Comment[da]=Indstil aktive skærmhjørner- og kanter
 Comment[de]=Aktive Bildschirmränder und -ecken einrichten
@@ -112,6 +114,7 @@ Comment[zh_CN]=配置活动屏幕的边角和边缘
 Comment[zh_TW]=設定作用中螢幕角落與邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
+X-KDE-Keywords[az]=pəncərə,menecer,efekt,künc,kənar,sərhəd,fəaliyyət,əməl,keçiş,kwin ekran kənarları,iş masası kənarlar,ekran kənarları,pəncərənin genişlənməsi,ekranın yanları,mozaik pəncərələr,ekran davranışları,iş masasını dəyişmə,virtual iş masalarıekran küncləri
 X-KDE-Keywords[bs]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners, prozor, menadćer, efekt, uigao, ivica, akcija, prebacivanje, desktop ivice, ivice ekrana, maksimitiranje prozora, ponašanje ekrana, virtualni desktop
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,cantonada,vora,acció,canvi,escriptori,vores de la pantalla del kwin,vores de l'escriptori,vores de la pantalla,maximitza les finestres,finestres en mosaic,costat de la pantalla,comportament de la pantalla,canvi d'escriptori,escriptori virtual,cantonades de la pantalla
 X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,efecte,cantó,vora,acció,canvi,escriptori,vores de pantalla de kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de les finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantons de la pantalla

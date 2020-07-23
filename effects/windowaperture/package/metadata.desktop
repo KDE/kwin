@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Window Aperture
 Name[ast]=Apertura de ventanes
+Name[az]=Pəncərələrin səpələnməsi
 Name[ca]=Obertura de la finestra
 Name[ca@valencia]=Obertura de la finestra
 Name[cs]=Mřížka oken
@@ -42,6 +43,7 @@ Name[zh_CN]=窗口光圈
 Name[zh_TW]=視窗光圈
 Icon=preferences-system-windows-effect-windowaperture
 Comment=Move windows into screen corners
+Comment[az]=Pəncərələrin ekranın künclərinə çəkilməsi
 Comment[ca]=Mou les finestres cap a les cantonades de la pantalla
 Comment[cs]=Přesunout okna do rohů obrazovky
 Comment[en_GB]=Move windows into screen corners

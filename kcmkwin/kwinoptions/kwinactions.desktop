@@ -10,6 +10,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinactions
 
 Name=Window Actions
+Name[az]=Pəncərə fəaliyyətləri
 Name[ca]=Accions de la finestra
 Name[cs]=Činnosti oken
 Name[da]=Vindueshandlinger
@@ -41,6 +42,7 @@ Name[zh_CN]=窗口动作
 Name[zh_TW]=視窗動作
 
 Comment=Configure mouse actions for windows and titlebars
+Comment[az]=Pəncərələr və başlıqlar üçün siçan fəaliyyətlərinin tənzimlənməsi
 Comment[ca]=Configura les accions de ratolí per a les finestres i les barres de títol
 Comment[cs]=Nastavení činností myši na oknech a pruhu titulku
 Comment[da]=Indstil mushandlinger for vinduer og titellinjer
@@ -72,6 +74,7 @@ Comment[zh_CN]=配置窗口和标题栏的鼠标动作
 Comment[zh_TW]=設定視窗及標題列的滑鼠動作
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+X-KDE-Keywords[az]=kölgə,genişlənmə,genişləndirmə,yığılma,zəif,əməliyyat menyusu,başlıq,ölçü dəyişmə
 X-KDE-Keywords[bs]=sjena,povećali,povećala,smanjiti,umanjiti,sniziti,izbornik operacija,naslovnica,promjena veličine
 X-KDE-Keywords[ca]=ombra,maximitza,maximitza,minimitza,minimitza,abaixa,menú d'operacions,barra de títol,redimensiona
 X-KDE-Keywords[ca@valencia]=ombra,maximitza,maximitza,minimitza,minimitza,abaixa,menú d'operacions,barra de títol,redimensiona

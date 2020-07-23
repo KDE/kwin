@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinfocus
 
 Name=Window Focus Behavior
+Name[az]=Pəncərə fokuslama davranışları
 Name[ca]=Comportament del focus de les finestres
 Name[cs]=Chování při zaměření na okno
 Name[da]=Opførsel af vinduesfokus
@@ -39,6 +40,7 @@ Name[zh_CN]=窗口焦点行为
 Name[zh_TW]=視窗焦點行為
 
 Comment=Configure window activation policy
+Comment[az]=Pəncərə aktivliyi qaydalarını tənzimləmək
 Comment[ca]=Configura la política d'activació de les finestres
 Comment[cs]=Nastavení pravidel aktivování oken
 Comment[da]=Indstil vinduers aktiveringspolitik
@@ -69,6 +71,7 @@ Comment[zh_CN]=配置窗口激活策略
 Comment[zh_TW]=設定視窗啟用策略
 
 X-KDE-Keywords=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
+X-KDE-Keywords[az]=fokus,qaldırmaq,avtomatik qaldırma,klaviatura,CDE,bütün iş masaları,fokususn siçanı izləməsi,fokusun əngəllənməsi,fokus oğurlanması,fokus qaydaları,pəncərənin fokuslanması davranışları,pəncərə ekran davranışları
 X-KDE-Keywords[ca]=focus,elevació automàtica,elevació,elevació en clic,teclat,CDE,alt-tab,tots els escriptoris,focus segueix el ratolí,prevenció del focus,robatori del focus,política del focus,comportament del focus de la finestra,comportament en pantalla de la finestra
 X-KDE-Keywords[da]=fokus,autohæv,hæv,klikhæv,tastatur,CDE,alt-tab,alle skriveborde,fokus følger mus,fokusforhindring,stjæler fokus,fokuspolitik,opførsel for vinduesfokus
 X-KDE-Keywords[en_GB]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behaviour,window screen behaviour

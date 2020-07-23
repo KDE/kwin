@@ -15,6 +15,7 @@ X-KDE-FormFactors=desktop,tablet
 
 Name=Window Decorations
 Name[ar]=زخارف النوافذ
+Name[az]=Pəncərə dekorasiyası
 Name[bg]=Декорации на прозорците
 Name[bs]=Dekoracije prozora
 Name[ca]=Decoració de les finestres
@@ -75,6 +76,7 @@ Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 
 Comment=Configure window titlebars and borders
+Comment[az]=Pəncərə başlığı və çərçivəsini tənzimləmək
 Comment[ca]=Configura la barra de títol i les vores de les finestres
 Comment[ca@valencia]=Configura la barra de títol i les vores de les finestres
 Comment[da]=Indstil vinduets titellinjer og kanter
@@ -106,6 +108,7 @@ Comment[zh_CN]=配置窗口标题栏和边框
 Comment[zh_TW]=設定視窗的標題列和邊框
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
+X-KDE-Keywords[az]=kwin, pəncərə,menecer,çərçivə,üslub,mövzu,görünüş,qat,düymə,kənar,kwm, dekorasiya
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,granica,stil,tema,izgled,osjećati,izgled,dugme,držati,ivica,kwm,dekoracija
 X-KDE-Keywords[ca]=kwin,finestra,gestor,vora,estil,tema,aspecte,comportament,disposició,botó,gestió,vora,kwm,decoració
 X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,vora,estil,tema,aspecte,comportament,disposició,botó,gestió,vora,kwm,decoració

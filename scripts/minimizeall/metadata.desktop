@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=MinimizeAll
+Name[az]=Hamısını_yığmaq
 Name[ca]=MinimitzaTot
 Name[ca@valencia]=MinimitzaTot
 Name[cs]=MinimalizovatVše
@@ -41,6 +42,7 @@ Name[x-test]=xxMinimizeAllxx
 Name[zh_CN]=最小化所有
 Name[zh_TW]=全部最小化
 Comment=Adds a shortcut to minimize and restore all windows
+Comment[az]=Bütün pəncərələri yığmaq və bərpa etmək üçün qısayolu əlavə edir
 Comment[ca]=Afegeix una drecera per a minimitzar i restaurar totes les finestres
 Comment[ca@valencia]=Afig una drecera per a minimitzar i restaurar totes les finestres
 Comment[cs]=Přidá zkratku k minimalizaci a obnovení všech oken.

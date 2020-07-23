@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Session Quit
+Name[az]=Sesiyadan çıxış
 Name[ca]=Sortida de la sessió
 Name[cs]=Sezení bylo ukončeno
 Name[da]=Afslutning af session
@@ -31,6 +32,7 @@ Name[zh_CN]=会话退出
 Name[zh_TW]=離開工作階段
 Icon=preferences-system-windows-effect-logout
 Comment=Keep the desktop background alive during logout until the end
+Comment[az]=Seansdan çıxışda sona qədər İş Masası fon şəklinin saxlanılması
 Comment[ca]=Manté viu el fons de l'escriptori durant la sortida de la sessió fins el final
 Comment[da]=Hold skrivebordsbaggrunden i live under log ud helt til sidst
 Comment[en_GB]=Keep the desktop background alive during logout until the end

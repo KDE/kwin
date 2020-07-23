@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Eye on Screen
+Name[az]=Pəncərənin ekranın mərkəzinə çəkilməsi
 Name[ca]=Ull a la pantalla
 Name[cs]=Oko na obrazovce
 Name[en_GB]=Eye on Screen
@@ -26,6 +27,7 @@ Name[zh_CN]=关注屏幕
 Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
+Comment[az]=Pəncərənin İş Masasının mərkəzinə çəkilməsi
 Comment[ca]=Enganxa les finestres a l'escriptori
 Comment[en_GB]=Suck windows into the desktop
 Comment[es]=Aspirar las ventanas en el escritorio
