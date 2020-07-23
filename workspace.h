@@ -134,6 +134,9 @@ public:
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
     Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
     void forEachToplevel(std::function<void (Toplevel *)> func);
+
+    Toplevel *findToplevel(const QUuid &internalId) const;
+
     /**
      * @brief Finds a Toplevel for the internal window @p w.
      *

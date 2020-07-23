@@ -1712,6 +1712,13 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
     return nullptr;
 }
 
+Toplevel *Workspace::findToplevel(const QUuid &internalId) const
+{
+    return findToplevel([internalId] (const KWin::Toplevel* l) -> bool {
+        return internalId == l->internalId();
+    });
+}
+
 void Workspace::forEachToplevel(std::function<void (Toplevel *)> func)
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
