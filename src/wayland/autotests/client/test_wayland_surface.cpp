@@ -20,7 +20,7 @@
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
-#include "../../src/server/idleinhibit_interface.h"
+#include "../../src/server/idleinhibit_v1_interface.h"
 #include "../../src/server/surface_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -57,7 +57,7 @@ private Q_SLOTS:
 private:
     KWaylandServer::Display *m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::IdleInhibitManagerInterface *m_idleInhibitInterface;
+    KWaylandServer::IdleInhibitManagerV1Interface *m_idleInhibitInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shm;
@@ -91,10 +91,8 @@ void TestWaylandSurface::init()
     m_compositorInterface = m_display->createCompositor(m_display);
     QVERIFY(m_compositorInterface);
 
-    m_idleInhibitInterface = m_display->createIdleInhibitManager(IdleInhibitManagerInterfaceVersion::UnstableV1, m_display);
+    m_idleInhibitInterface = m_display->createIdleInhibitManagerV1(m_display);
     QVERIFY(m_idleInhibitInterface);
-    m_idleInhibitInterface->create();
-    QVERIFY(m_idleInhibitInterface->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

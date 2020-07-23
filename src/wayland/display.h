@@ -38,8 +38,7 @@ class CompositorInterface;
 class DataDeviceManagerInterface;
 class DpmsManagerInterface;
 class IdleInterface;
-enum class IdleInhibitManagerInterfaceVersion;
-class IdleInhibitManagerInterface;
+class IdleInhibitManagerV1Interface;
 class FakeInputInterface;
 class OutputInterface;
 class OutputDeviceInterface;
@@ -245,7 +244,7 @@ public:
      * @returns The created manager object
      * @since 5.41
      **/
-    IdleInhibitManagerInterface *createIdleInhibitManager(const IdleInhibitManagerInterfaceVersion &version, QObject *parent = nullptr);
+    IdleInhibitManagerV1Interface *createIdleInhibitManagerV1(QObject *parent = nullptr);
 
     /**
      * Creates the AppMenuManagerInterface in interface @p version.

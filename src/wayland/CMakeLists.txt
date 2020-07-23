@@ -21,8 +21,7 @@ set(SERVER_LIB_SRCS
     filtered_display.cpp
     global.cpp
     idle_interface.cpp
-    idleinhibit_interface.cpp
-    idleinhibit_interface_v1.cpp
+    idleinhibit_v1_interface
     keyboard_interface.cpp
     keyboard_shortcuts_inhibit_v1_interface.cpp
     keystate_interface.cpp
@@ -183,7 +182,7 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME xdg-foreign-unstable-v2
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
     BASENAME idle-inhibit-unstable-v1
 )
@@ -378,7 +377,7 @@ set(SERVER_LIB_HEADERS
   filtered_display.h
   global.h
   idle_interface.h
-  idleinhibit_interface.h
+  idleinhibit_v1_interface.h
   keyboard_interface.h
   keyboard_shortcuts_inhibit_v1_interface.h
   keystate_interface.h

@@ -10,7 +10,7 @@
 #include "clientconnection.h"
 #include "compositor_interface.h"
 #include "display.h"
-#include "idleinhibit_interface_p.h"
+#include "idleinhibit_v1_interface_p.h"
 #include "pointerconstraints_interface_p.h"
 #include "region_interface.h"
 #include "subcompositor_interface.h"
@@ -266,10 +266,10 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerInterface 
     emit q->pointerConstraintsChanged();
 }
 
-void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorInterface *inhibitor)
+void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inhibitor)
 {
     idleInhibitors << inhibitor;
-    QObject::connect(inhibitor, &IdleInhibitorInterface::aboutToBeUnbound, q,
+    QObject::connect(inhibitor, &IdleInhibitorV1Interface::destroyed, q,
         [this, inhibitor] {
             idleInhibitors.removeOne(inhibitor);
             if (idleInhibitors.isEmpty()) {

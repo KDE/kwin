@@ -15,7 +15,7 @@
 #include "eglstream_controller_interface.h"
 #include "fakeinput_interface.h"
 #include "idle_interface.h"
-#include "idleinhibit_interface_p.h"
+#include "idleinhibit_v1_interface_p.h"
 #include "keyboard_shortcuts_inhibit_v1_interface.h"
 #include "keystate_interface.h"
 #include "linuxdmabuf_v1_interface.h"
@@ -408,16 +408,11 @@ XdgForeignInterface *Display::createXdgForeignInterface(QObject *parent)
     return foreign;
 }
 
-IdleInhibitManagerInterface *Display::createIdleInhibitManager(const IdleInhibitManagerInterfaceVersion &version, QObject *parent)
+IdleInhibitManagerV1Interface *Display::createIdleInhibitManagerV1(QObject *parent)
 {
-    IdleInhibitManagerInterface *i = nullptr;
-    switch (version) {
-    case IdleInhibitManagerInterfaceVersion::UnstableV1:
-        i = new IdleInhibitManagerUnstableV1Interface(this, parent);
-        break;
-    }
-    connect(this, &Display::aboutToTerminate, i, [i] { delete i; });
-    return i;
+    IdleInhibitManagerV1Interface *idleManager = new IdleInhibitManagerV1Interface(this, parent);
+    connect(this, &Display::aboutToTerminate, idleManager, [idleManager] { delete idleManager; });
+    return idleManager;
 }
 
 AppMenuManagerInterface *Display::createAppMenuManagerInterface(QObject *parent)
