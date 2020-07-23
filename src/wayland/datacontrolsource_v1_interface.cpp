@@ -40,6 +40,7 @@ DataControlSourceV1InterfacePrivate::DataControlSourceV1InterfacePrivate(DataCon
 void DataControlSourceV1InterfacePrivate::zwlr_data_control_source_v1_destroy_resource(QtWaylandServer::zwlr_data_control_source_v1::Resource *resource)
 {
     Q_UNUSED(resource)
+    emit q->unbound();
     delete q;
 }
 
