@@ -43,4 +43,4 @@
 #define XCB_ICCCM_WM_STATE_ICONIC 3
 #endif
 
-#cmakedefine01 PipeWire_FOUND
+#cmakedefine PipeWire_FOUND 1
