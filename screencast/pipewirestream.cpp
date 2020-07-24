@@ -130,6 +130,7 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
       spa_data->maxsize = dmabuf->stride() * stream->m_resolution.height();
 
       stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
+#ifdef F_SEAL_SEAL //Disable memfd on systems that don't have it, like BSD < 12
     } else {
         const int bytesPerPixel = stream->m_hasAlpha ? 4 : 3;
         const int stride = SPA_ROUND_UP_N (stream->m_resolution.width() * bytesPerPixel, 4);
@@ -161,6 +162,7 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
             qCCritical(KWIN_PIPEWIRE) << "memfd: Failed to mmap memory";
         else
             qCDebug(KWIN_PIPEWIRE) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
+#endif
     }
 }
 
