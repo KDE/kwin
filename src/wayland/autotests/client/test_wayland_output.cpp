@@ -477,7 +477,7 @@ void TestWaylandOutput::testDpms()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    m_display->createDpmsManager()->create();
+    m_display->createDpmsManager();
 
     // set Dpms on the Output
     QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);
@@ -572,7 +572,7 @@ void TestWaylandOutput::testDpmsRequestMode()
     using namespace KWaylandServer;
 
     // setup code
-    m_display->createDpmsManager()->create();
+    m_display->createDpmsManager();
 
     // set Dpms on the Output
     QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);

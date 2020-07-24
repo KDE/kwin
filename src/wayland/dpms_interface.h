@@ -9,12 +9,12 @@
 #include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
 
 namespace KWaylandServer
 {
 
 class Display;
+class DpmsManagerInterfacePrivate;
 
 /**
  * @brief Global for server side Display Power Management Signaling interface.
@@ -49,16 +49,16 @@ class Display;
  * @see OutputInterface
  * @since 5.5
  **/
-class KWAYLANDSERVER_EXPORT DpmsManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT DpmsManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~DpmsManagerInterface();
+    ~DpmsManagerInterface() override;
 
 private:
     explicit DpmsManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<DpmsManagerInterfacePrivate> d;
 };
 
 }
