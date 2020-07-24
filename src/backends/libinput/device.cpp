@@ -20,9 +20,11 @@
 QDBusArgument &operator<<(QDBusArgument &argument, const QMatrix4x4 &matrix)
 {
     argument.beginArray(qMetaTypeId<double>());
-    for(quint8 row = 0; row < 4; ++row )
-        for(quint8 col = 0; col < 4; ++col )
+    for (quint8 row = 0; row < 4; ++row) {
+        for (quint8 col = 0; col < 4; ++col) {
             argument << matrix(row, col);
+        }
+    }
     argument.endArray();
     return argument;
 }
@@ -30,8 +32,8 @@ QDBusArgument &operator<<(QDBusArgument &argument, const QMatrix4x4 &matrix)
 const QDBusArgument &operator>>(const QDBusArgument &argument, QMatrix4x4 &matrix)
 {
     argument.beginArray();
-    for(quint8 row = 0; row < 4; ++row ) {
-        for(quint8 col = 0; col < 4; ++col ) {
+    for (quint8 row = 0; row < 4; ++row) {
+        for (quint8 col = 0; col < 4; ++col) {
             double val;
             argument >> val;
             matrix(row, col) = val;
@@ -413,8 +415,14 @@ void Device::loadConfiguration()
 
         if(it.value().qMatrix4x4Setter.setter != nullptr) {
             auto setter = it.value().qMatrix4x4Setter;
-            QMatrix4x4 def = setter.defaultValue ? (this->*(setter.defaultValue))() : QMatrix4x4();
-            (this->*(setter.setter))(m_config.readEntry(key.constData(), QVariant(def)).value<QMatrix4x4>());
+            QList<float> list = m_config.readEntry(key.constData(), QList<float>());
+            QMatrix4x4 matrix;
+            if(list.size() == 16) {
+                matrix = QMatrix4x4(list.toVector().constData());
+            } else if(setter.defaultValue) {
+                matrix = (this->*(setter.defaultValue))();
+            }
+            (this->*(setter.setter))(matrix);
         }
     };
 
@@ -626,7 +634,13 @@ void Device::setCalibrationMatrix(QMatrix4x4 matrix) {
     }
 
     if(setOrientedCalibrationMatrix(m_device, matrix, m_orientation)) {
-        writeEntry(ConfigKey::Calibration, QVariant(matrix));
+        QList<float> list;
+        for (uchar row = 0; row < 4; ++row) {
+            for (uchar col = 0; col < 4; ++col) {
+                list << matrix(row,col);
+            }
+        }
+        writeEntry(ConfigKey::Calibration, list);
         m_calibrationMatrix = matrix;
         Q_EMIT calibrationMatrixChanged();
     }
