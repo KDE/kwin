@@ -6,15 +6,17 @@
 #ifndef KWAYLAND_SERVER_IDLE_INTERFACE_H
 #define KWAYLAND_SERVER_IDLE_INTERFACE_H
 
+#include <QObject>
+
 #include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
-#include "resource.h"
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
 
 class Display;
-class SeatInterface;
+class IdleInterfacePrivate;
 
 /**
  * @brief Global representing the org_kde_kwin_idle interface.
@@ -36,11 +38,11 @@ class SeatInterface;
  *
  * @since 5.4
  **/
-class KWAYLANDSERVER_EXPORT IdleInterface : public Global
+class KWAYLANDSERVER_EXPORT IdleInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~IdleInterface();
+    ~IdleInterface() override;
 
     /**
      * Inhibits the IdleInterface. While inhibited no IdleTimeoutInterface interface gets
@@ -100,22 +102,7 @@ Q_SIGNALS:
 private:
     explicit IdleInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
-    Private *d_func() const;
-};
-
-// TODO: KF6 make private class
-class KWAYLANDSERVER_EXPORT IdleTimeoutInterface : public Resource
-{
-    Q_OBJECT
-public:
-    virtual ~IdleTimeoutInterface();
-
-private:
-    explicit IdleTimeoutInterface(SeatInterface *seat, IdleInterface *parent, wl_resource *parentResource);
-    friend class IdleInterface;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<IdleInterfacePrivate> d;
 };
 
 }

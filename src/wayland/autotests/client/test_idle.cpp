@@ -57,7 +57,6 @@ void IdleTest::init()
     m_seatInterface->setName(QStringLiteral("seat0"));
     m_seatInterface->create();
     m_idleInterface = m_display->createIdle();
-    m_idleInterface->create();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
