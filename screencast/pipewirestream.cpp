@@ -43,6 +43,10 @@
 
 #include <KLocalizedString>
 
+#ifdef Q_OS_LINUX
+#include <linux/memfd.h>
+#endif
+
 void PipeWireStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
     PipeWireStream *pw = static_cast<PipeWireStream*>(data);
