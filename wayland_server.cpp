@@ -59,6 +59,7 @@
 #include <KWaylandServer/filtered_display.h>
 #include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
 #include <KWaylandServer/inputmethod_v1_interface.h>
+#include <KWaylandServer/xdgsession_v1_interface.h>
 
 // Qt
 #include <QCryptographicHash>
@@ -378,6 +379,9 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
             }
         }
     );
+
+    const QString dataFolder = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    m_display->createXdgSessionManagerV1(new XdgCborSessionStorageV1(dataFolder + QLatin1String("/session"), this));
 
     m_display->createViewporter();
     m_display->createShm();

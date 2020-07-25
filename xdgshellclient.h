@@ -142,6 +142,7 @@ public:
     bool isMaximizable() const override;
     bool isMinimizable() const override;
     bool isTransient() const override;
+    bool isInitialPositionSet() const override;
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool noBorder() const override;
@@ -196,6 +197,17 @@ private:
     void handlePingTimeout(quint32 serial);
     void handlePingDelayed(quint32 serial);
     void handlePongReceived(quint32 serial);
+    void saveFrameGeometry();
+    void saveMaximizedMode();
+    void saveMinimizedMode();
+    void saveFullScreenMode();
+    void saveDesktop();
+    void saveKeepAbove();
+    void saveKeepBelow();
+    void saveSkipSwitcher();
+    void saveSkipPager();
+    void saveSkipTaskbar();
+    void saveShortcut();
     void initialize();
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);
@@ -203,8 +215,17 @@ private:
     void setupWindowManagementIntegration();
     void setupPlasmaShellIntegration();
     void sendPing(PingReason reason);
+    QRect initialFrameGeometry() const;
+    bool initialKeepAbove() const;
+    bool initialKeepBelow() const;
+    bool initialSkipSwitcher() const;
+    bool initialSkipPager() const;
+    bool initialSkipTaskbar() const;
     MaximizeMode initialMaximizeMode() const;
+    bool initialMinimizeMode() const;
     bool initialFullScreenMode() const;
+    int initialDesktop() const;
+    QString initialShortcut() const;
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;

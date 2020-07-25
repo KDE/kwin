@@ -1591,6 +1591,7 @@ void AbstractClient::setShortcut(const QString& _cut)
         if (_shortcut == cut)
             return;
         _shortcut = cut;
+        emit shortcutChanged();
         setShortcutInternal();
     };
     if (cut.isEmpty()) {
