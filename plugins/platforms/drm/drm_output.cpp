@@ -120,6 +120,11 @@ bool DrmOutput::showCursor(DrmDumbBuffer *c)
 
 bool DrmOutput::showCursor()
 {
+    if (Q_UNLIKELY(m_backend->usesSoftwareCursor())) {
+        qCCritical(KWIN_DRM) << "DrmOutput::showCursor should never be called when software cursor is enabled";
+        return true;
+    }
+
     const bool ret = showCursor(m_cursor[m_cursorIndex]);
     if (!ret) {
         return ret;
@@ -710,7 +715,7 @@ void DrmOutput::updateTransform(Transform transform)
     m_modesetRequested = true;
 
     // show cursor only if is enabled, i.e if pointer device is presentP
-    if (m_backend->isCursorEnabled()) {
+    if (m_backend->isCursorEnabled() && !m_backend->usesSoftwareCursor()) {
         // the cursor might need to get rotated
         updateCursor();
         showCursor();
