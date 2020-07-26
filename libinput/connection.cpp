@@ -567,8 +567,14 @@ void Connection::processEvents()
                     capabilities << InputRedirection::Wheel;
                 }
 
+                const auto *output = static_cast<AbstractWaylandOutput*>(
+                            kwinApp()->platform()->enabledOutputs()[tte->device()->screenId()]);
+                const QPointF globalPos =
+                        devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
+                                                    output);
+
                 emit tabletToolEvent(tabletEventType,
-                                     tte->transformedPosition(m_size), tte->pressure(),
+                                     globalPos, tte->pressure(),
                                      tte->xTilt(), tte->yTilt(), tte->rotation(),
                                      tte->isTipDown(), tte->isNearby(), serial,
                                      toolId, toolType, capabilities, tte->time(),
