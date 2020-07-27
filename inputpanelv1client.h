@@ -55,6 +55,7 @@ public:
     void setNoBorder(bool /*set*/) override {}
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
     void debug(QDebug & stream) const override;
+    QRect inputGeometry() const override;
 
 private:
     void showTopLevel(KWaylandServer::OutputInterface *output, KWaylandServer::InputPanelSurfaceV1Interface::Position position);

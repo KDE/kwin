@@ -246,9 +246,6 @@ bool InternalClient::isLockScreen() const
 
 bool InternalClient::isInputMethod() const
 {
-    if (m_internalWindow) {
-        return m_internalWindow->property("__kwin_input_method").toBool();
-    }
     return false;
 }
 

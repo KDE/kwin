@@ -63,20 +63,6 @@ VirtualKeyboard::~VirtualKeyboard() = default;
 
 void VirtualKeyboard::init()
 {
-    // TODO: need a shared Qml engine
-    qCDebug(KWIN_VIRTUALKEYBOARD) << "Initializing window";
-    m_inputWindow.reset(new QQuickView(nullptr));
-    m_inputWindow->setFlags(Qt::FramelessWindowHint);
-    m_inputWindow->setGeometry(screens()->geometry(screens()->current()));
-    m_inputWindow->setResizeMode(QQuickView::SizeRootObjectToView);
-    m_inputWindow->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME "/virtualkeyboard/main.qml"))));
-    if (m_inputWindow->status() != QQuickView::Status::Ready) {
-        qCWarning(KWIN_VIRTUALKEYBOARD) << "window not ready yet";
-        m_inputWindow.reset();
-        return;
-    }
-    m_inputWindow->setProperty("__kwin_input_method", true);
-
     connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &VirtualKeyboard::hide);
 
     if (waylandServer()) {
@@ -118,28 +104,22 @@ void VirtualKeyboard::init()
         t2->create();
 
         auto inputPanel = waylandServer()->display()->createInputPanelInterface(this);
-        connect(inputPanel, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [this, inputPanel] (InputPanelSurfaceV1Interface *surface) {
+        connect(inputPanel, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [this] (InputPanelSurfaceV1Interface *surface) {
             m_inputClient = waylandServer()->createInputPanelClient(surface);
             auto refreshFrame = [this] {
-                const QRect inputGeometry = m_inputClient->surface()->input().boundingRect();
-                if (!m_trackedClient || inputGeometry.isEmpty()) {
+                if (!m_trackedClient) {
                     return;
                 }
-                m_trackedClient->setVirtualKeyboardGeometry(inputGeometry);
+
+                m_trackedClient->setVirtualKeyboardGeometry(m_inputClient ? m_inputClient->inputGeometry() : QRect());
             };
             connect(surface->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
-
-            connect(surface->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
-            connect(this, &VirtualKeyboard::hide, m_inputClient, [this] {
-                m_inputClient->hideClient(true);
+            connect(surface->surface(), &QObject::destroyed, this, [this] {
+                if (m_trackedClient) {
+                    m_trackedClient->setVirtualKeyboardGeometry({});
+                }
             });
-            connect(this, &VirtualKeyboard::show, m_inputClient, [this] {
-                m_inputClient->hideClient(false);
-            });
-            connect(surface->surface(), &SurfaceInterface::unmapped, this, [this, inputPanel, surface] {
-                m_inputClient->destroyClient();
-                inputPanel->inputPanelSurfaceAdded(surface);
-            });
+            updateInputPanelState();
             refreshFrame();
         });
 
@@ -182,7 +162,7 @@ void VirtualKeyboard::init()
                             adoptInputMethodContext();
                         } else {
                             waylandServer()->inputMethod()->sendDeactivate();
-                            Q_EMIT hide();
+                            hide();
                         }
                         qApp->inputMethod()->update(Qt::ImQueryAll);
                     });
@@ -197,7 +177,6 @@ void VirtualKeyboard::init()
                         m_trackedClient = newClient;
                     }
 
-
                     updateInputPanelState();
                 } else {
                     m_waylandShowConnection = QMetaObject::Connection();
@@ -211,26 +190,21 @@ void VirtualKeyboard::init()
             }
         );
     }
-    m_inputWindow->installEventFilter(this);
-    connect(Workspace::self(), &Workspace::destroyed, this,
-        [this] {
-            m_inputWindow.reset();
-        }
-    );
-    m_inputWindow->setColor(Qt::transparent);
-    m_inputWindow->setMask(m_inputWindow->rootObject()->childrenRect().toRect());
-    connect(m_inputWindow->rootObject(), &QQuickItem::childrenRectChanged, m_inputWindow.data(),
-        [this] {
-            if (!m_inputWindow) {
-                return;
-            }
-            m_inputWindow->setMask(m_inputWindow->rootObject()->childrenRect().toRect());
-        }
-    );
-
     connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this, &VirtualKeyboard::updateInputPanelState);
+}
 
-    connect(m_inputWindow->rootObject(), &QQuickItem::childrenRectChanged, this, &VirtualKeyboard::updateInputPanelState);
+void VirtualKeyboard::show()
+{
+    auto t = waylandServer()->seat()->focusedTextInput();
+    if (t) {
+        Q_EMIT t->enabledChanged();
+    }
+}
+
+void VirtualKeyboard::hide()
+{
+    waylandServer()->inputMethod()->sendDeactivate();
+    updateInputPanelState();
 }
 
 void VirtualKeyboard::setEnabled(bool enabled)
@@ -373,57 +347,8 @@ void VirtualKeyboard::updateInputPanelState()
         return;
     }
 
-    if (m_inputWindow) {
-        const bool inputPanelHasBeenClosed = m_inputWindow->isVisible() && !qApp->inputMethod()->isVisible();
-        if (inputPanelHasBeenClosed && m_floodTimer->isActive()) {
-            return;
-        }
-        m_floodTimer->start();
-
-        m_inputWindow->setVisible(qApp->inputMethod()->isVisible());
-
-        if (qApp->inputMethod()->isVisible()) {
-            m_inputWindow->setMask(m_inputWindow->rootObject()->childrenRect().toRect());
-        }
-
-        if (m_inputWindow->isVisible() && m_trackedClient && m_inputWindow->rootObject()) {
-            const QRect inputPanelGeom = m_inputWindow->rootObject()->childrenRect().toRect().translated(m_inputWindow->geometry().topLeft());
-
-            m_trackedClient->setVirtualKeyboardGeometry(inputPanelGeom);
-
-            t->setInputPanelState(true, QRect(0, 0, 0, 0));
-
-        } else {
-            if (inputPanelHasBeenClosed && m_trackedClient) {
-                m_trackedClient->setVirtualKeyboardGeometry(QRect());
-            }
-
-            t->setInputPanelState(false, QRect(0, 0, 0, 0));
-        }
-    }
-
-    if (m_inputClient) {
-        m_trackedClient->setVirtualKeyboardGeometry(m_inputClient->frameGeometry());
-        t->setInputPanelState(true, QRect(0, 0, 0, 0));
-    }
-}
-
-void VirtualKeyboard::show()
-{
-    if (m_inputWindow.isNull() || !m_enabled) {
-        return;
-    }
-    m_inputWindow->setGeometry(screens()->geometry(screens()->current()));
-    qApp->inputMethod()->show();
-}
-
-void VirtualKeyboard::hide()
-{
-    if (m_inputWindow.isNull()) {
-        return;
-    }
-    m_inputWindow->hide();
-    qApp->inputMethod()->hide();
+    m_trackedClient->setVirtualKeyboardGeometry(m_inputClient ? m_inputClient->inputGeometry() : QRect());
+    t->setInputPanelState(m_inputClient && m_inputClient->isShown(false), QRect(0, 0, 0, 0));
 }
 
 bool VirtualKeyboard::event(QEvent *e)
@@ -594,39 +519,6 @@ bool VirtualKeyboard::event(QEvent *e)
         return true;
     }
     return QObject::event(e);
-}
-
-bool VirtualKeyboard::eventFilter(QObject *o, QEvent *e)
-{
-    if (o != m_inputWindow.data() || !m_inputWindow->isVisible()) {
-        return false;
-    }
-    if (e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease) {
-        QKeyEvent *event = static_cast<QKeyEvent*>(e);
-        if (event->nativeScanCode() == 0) {
-            // this is a key composed by the virtual keyboard - we need to send it to the client
-            const auto sym = input()->keyboard()->xkb()->fromKeyEvent(event);
-            if (sym != 0) {
-                if (waylandServer()) {
-                    auto t = waylandServer()->seat()->focusedTextInput();
-                    if (t && t->isEnabled()) {
-                        if (e->type() == QEvent::KeyPress) {
-                            t->keysymPressed(sym);
-                        } else if (e->type() == QEvent::KeyRelease) {
-                            t->keysymReleased(sym);
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-QWindow *VirtualKeyboard::inputPanel() const
-{
-    return m_inputWindow.data();
 }
 
 }

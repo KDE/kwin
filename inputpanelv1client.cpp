@@ -124,6 +124,11 @@ NET::WindowType InputPanelV1Client::windowType(bool, int) const
     return NET::Utility;
 }
 
+QRect InputPanelV1Client::inputGeometry() const
+{
+    return surface()->input().boundingRect().translated(pos());
+}
+
 void InputPanelV1Client::hideClient(bool hide)
 {
     m_visible = !hide;
@@ -135,6 +140,7 @@ void InputPanelV1Client::hideClient(bool hide)
         reposition();
         addRepaintFull();
         Q_EMIT windowShown(this);
+        autoRaise();
     }
 }
 
