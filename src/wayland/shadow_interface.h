@@ -6,43 +6,38 @@
 #ifndef KWAYLAND_SERVER_SHADOW_INTERFACE_H
 #define KWAYLAND_SERVER_SHADOW_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
-
 #include <QObject>
 #include <QMarginsF>
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
 
 class BufferInterface;
 class Display;
+class ShadowManagerInterfacePrivate;
+class ShadowInterfacePrivate;
 
-/**
- * TODO
- */
-class KWAYLANDSERVER_EXPORT ShadowManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT ShadowManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ShadowManagerInterface();
+    ~ShadowManagerInterface() override;
 
 private:
     explicit ShadowManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<ShadowManagerInterfacePrivate> d;
 };
 
-/**
- * TODO
- */
-class KWAYLANDSERVER_EXPORT ShadowInterface : public Resource
+class KWAYLANDSERVER_EXPORT ShadowInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~ShadowInterface();
+    ~ShadowInterface() override;
 
     BufferInterface *left() const;
     BufferInterface *topLeft() const;
@@ -56,11 +51,10 @@ public:
     QMarginsF offset() const;
 
 private:
-    explicit ShadowInterface(ShadowManagerInterface *parent, wl_resource *parentResource);
-    friend class ShadowManagerInterface;
+    explicit ShadowInterface(wl_resource *resource);
+    friend class ShadowManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<ShadowInterfacePrivate> d;
 };
 
 }

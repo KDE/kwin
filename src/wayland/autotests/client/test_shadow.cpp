@@ -58,7 +58,6 @@ void ShadowTest::init()
     m_display->createShm();
     m_compositorInterface = m_display->createCompositor(m_display);
     m_shadowInterface = m_display->createShadowManager(m_display);
-    m_shadowInterface->create();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
