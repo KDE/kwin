@@ -21,27 +21,21 @@
 
 #pragma once
 
-#include "wayland_server.h"
 #include <KWaylandServer/screencast_interface.h>
 
 class PipeWireStream;
 
-namespace KWin
-{
-class AbstractEglBackend;
-}
-
-class ScreencastManager
-    : public QObject
+class ScreencastManager : public QObject
 {
     Q_OBJECT
+
 public:
-    ScreencastManager(QObject *parent);
+    explicit ScreencastManager(QObject *parent = nullptr);
 
     void streamWindow(KWaylandServer::ScreencastStreamInterface *stream, const QString &winid);
     void streamOutput(KWaylandServer::ScreencastStreamInterface *stream,
-                                  ::wl_resource *outputResource,
-                                  KWaylandServer::ScreencastInterface::CursorMode mode);
+                      ::wl_resource *outputResource,
+                      KWaylandServer::ScreencastInterface::CursorMode mode);
 
 private:
     void integrateStreams(KWaylandServer::ScreencastStreamInterface *waylandStream, PipeWireStream *pipewireStream);

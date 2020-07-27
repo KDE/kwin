@@ -19,20 +19,22 @@
  */
 
 #include "screencastmanager.h"
-#include "scene.h"
-#include "workspace.h"
-#include "composite.h"
-#include "platform.h"
+#include "abstract_client.h"
 #include "abstract_wayland_output.h"
-#include "plugins/scenes/opengl/scene_opengl.h"
+#include "composite.h"
+#include "deleted.h"
+#include "effects.h"
+#include "kwingltexture.h"
 #include "pipewirestream.h"
+#include "platform.h"
+#include "scene.h"
+#include "wayland_server.h"
+#include "workspace.h"
+
+#include <KLocalizedString>
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/output_interface.h>
-#include <KLocalizedString>
-#include <abstract_client.h>
-#include <effects.h>
-#include <deleted.h>
 
 using namespace KWin;
 
@@ -45,6 +47,7 @@ ScreencastManager::ScreencastManager(QObject *parent)
     connect(m_screencast, &KWaylandServer::ScreencastInterface::outputScreencastRequested,
             this, &ScreencastManager::streamOutput);
 }
+
 class EGLFence : public QObject
 {
 public:
@@ -136,8 +139,8 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *
 }
 
 void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *waylandStream,
-                                  ::wl_resource *outputResource,
-                                  KWaylandServer::ScreencastInterface::CursorMode mode)
+                                     ::wl_resource *outputResource,
+                                     KWaylandServer::ScreencastInterface::CursorMode mode)
 {
     auto outputIface = KWaylandServer::OutputInterface::get(outputResource);
     if (!outputIface) {
