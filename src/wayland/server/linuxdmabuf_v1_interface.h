@@ -61,11 +61,11 @@ public:
     /**
      * Destroys the Buffer.
      */
-    virtual ~LinuxDmabufUnstableV1Buffer() = default;
+    virtual ~LinuxDmabufUnstableV1Buffer();
 
 private:
     class Private;
-    Private *d;
+    QScopedPointer<Private> d;
 };
 
 /**

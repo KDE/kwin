@@ -84,6 +84,10 @@ LinuxDmabufUnstableV1Buffer::LinuxDmabufUnstableV1Buffer(uint32_t format, const 
     d->m_size = size;
 }
 
+LinuxDmabufUnstableV1Buffer::~LinuxDmabufUnstableV1Buffer()
+{
+}
+
 typedef LinuxDmabufUnstableV1Interface V1Iface;
 
 class V1Iface::Private : public Global::Private
