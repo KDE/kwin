@@ -426,7 +426,6 @@ QList<SurfaceInterface *> SurfaceInterface::surfaces()
 void SurfaceInterface::frameRendered(quint32 msec)
 {
     // notify all callbacks
-    const bool needsFlush = !d->current.frameCallbacks.isEmpty();
     while (!d->current.frameCallbacks.isEmpty()) {
         KWaylandFrameCallback *frameCallback = d->current.frameCallbacks.takeFirst();
         frameCallback->send_done(msec);
@@ -438,9 +437,6 @@ void SurfaceInterface::frameRendered(quint32 msec)
             continue;
         }
         subSurface->d_func()->surface->frameRendered(msec);
-    }
-    if (needsFlush)  {
-        client()->flush();
     }
 }
 
