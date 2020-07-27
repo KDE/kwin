@@ -45,5 +45,7 @@ public:
 
 private:
     void integrateStreams(KWaylandServer::ScreencastStreamInterface *waylandStream, PipeWireStream *pipewireStream);
+
+    KWaylandServer::ScreencastInterface *m_screencast;
 };
 

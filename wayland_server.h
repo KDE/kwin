@@ -69,7 +69,6 @@ class LinuxDmabufUnstableV1Buffer;
 class TabletManagerInterface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
-class ScreencastInterface;
 }
 
 
@@ -127,9 +126,6 @@ public:
     KWaylandServer::PlasmaWindowManagementInterface *windowManagement() const
     {
         return m_windowManagement;
-    }
-    KWaylandServer::ScreencastInterface *screencast() {
-        return m_screencast;
     }
     KWaylandServer::ServerSideDecorationManagerInterface *decorationManager() const {
         return m_decorationManager;
@@ -285,7 +281,6 @@ private:
     KWaylandServer::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
     QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
-    KWaylandServer::ScreencastInterface *m_screencast = nullptr;
     struct {
         KWaylandServer::ClientConnection *client = nullptr;
         QMetaObject::Connection destroyConnection;

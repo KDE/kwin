@@ -458,10 +458,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_keyState = m_display->createKeyStateInterface(m_display);
     m_keyState->create();
 
-#ifdef PipeWire_FOUND
-    m_screencast = m_display->createScreencastInterface(m_display);
-#endif
-
     return true;
 }
 

@@ -27,6 +27,7 @@
 #include "plugins/scenes/opengl/scene_opengl.h"
 #include "pipewirestream.h"
 
+#include <KWaylandServer/display.h>
 #include <KWaylandServer/output_interface.h>
 #include <KLocalizedString>
 #include <abstract_client.h>
@@ -37,9 +38,12 @@ using namespace KWin;
 
 ScreencastManager::ScreencastManager(QObject *parent)
     : QObject(parent)
+    , m_screencast(waylandServer()->display()->createScreencastInterface(this))
 {
-    connect(waylandServer()->screencast(), &KWaylandServer::ScreencastInterface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
-    connect(waylandServer()->screencast(), &KWaylandServer::ScreencastInterface::outputScreencastRequested, this, &ScreencastManager::streamOutput);
+    connect(m_screencast, &KWaylandServer::ScreencastInterface::windowScreencastRequested,
+            this, &ScreencastManager::streamWindow);
+    connect(m_screencast, &KWaylandServer::ScreencastInterface::outputScreencastRequested,
+            this, &ScreencastManager::streamOutput);
 }
 class EGLFence : public QObject
 {
