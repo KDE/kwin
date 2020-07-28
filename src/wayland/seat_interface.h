@@ -26,7 +26,7 @@ class DataDeviceInterface;
 class AbstractDataSource;
 class Display;
 class SurfaceInterface;
-class TextInputInterface;
+class TextInputV2Interface;
 
 /**
  * Describes the source types for axis events. This indicates to the
@@ -654,10 +654,10 @@ public:
      * If the SeatInterface has the keyboard capability this method will
      * be invoked automatically when setting the focused keyboard surface.
      *
-     * In case there is a TextInputInterface for the @p surface, the enter
-     * event will be triggered on the TextInputInterface for @p surface.
-     * The focusedTextInput will be set to that TextInputInterface. If there
-     * is no TextInputInterface for that @p surface, it might get updated later on.
+     * In case there is a TextInputV2Interface for the @p surface, the enter
+     * event will be triggered on the TextInputV2Interface for @p surface.
+     * The focusedTextInput will be set to that TextInputV2Interface. If there
+     * is no TextInputV2Interface for that @p surface, it might get updated later on.
      * In both cases the signal focusedTextInputChanged will be emitted.
      *
      * @see focusedTextInputSurface
@@ -679,13 +679,13 @@ public:
      *
      * The focused text input might not be enabled for the {@link focusedTextInputSurface}.
      * It is recommended to check the enabled state before interacting with the
-     * TextInputInterface.
+     * TextInputV2Interface.
      *
      * @see focusedTextInputChanged
      * @see focusedTextInputSurface
      * @since 5.23
      **/
-    TextInputInterface *focusedTextInput() const;
+    TextInputV2Interface *textInputV2() const;
     ///@}
 
     /**
@@ -772,15 +772,14 @@ Q_SIGNALS:
      * @see focusedTextInput
      * @since 5.23
      **/
-    void focusedTextInputChanged();
+    void focusedTextInputSurfaceChanged();
 
 private:
     friend class Display;
     friend class DataControlDeviceV1Interface;
     friend class PrimarySelectionDeviceV1Interface;
     friend class DataDeviceManagerInterface;
-    friend class TextInputManagerUnstableV0Interface;
-    friend class TextInputManagerUnstableV2Interface;
+    friend class TextInputManagerV2InterfacePrivate;
     explicit SeatInterface(Display *display, QObject *parent);
 
     class Private;

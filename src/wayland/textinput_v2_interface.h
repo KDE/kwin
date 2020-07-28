@@ -6,38 +6,21 @@
 #ifndef KWAYLAND_SERVER_TEXTINPUT_INTERFACE_H
 #define KWAYLAND_SERVER_TEXTINPUT_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
+#include "textinput.h"
 
+struct wl_resource;
 namespace KWaylandServer
 {
 
 class Display;
 class SeatInterface;
 class SurfaceInterface;
-class TextInputInterface;
-
-/**
- * Enum describing the different InterfaceVersion encapsulated in this implementation
- *
- * @since 5.23
- **/
-enum class TextInputInterfaceVersion {
-    /**
-     * wl_text_input as the non-standardized version
-     **/
-    UnstableV0,
-    /**
-     * not supported version
-     **/
-    UnstableV1,
-    /**
-     * zwp_text_input_v2 as used by Qt 5.7
-     **/
-    UnstableV2
-};
+class TextInputV2Interface;
+class TextInputV2InterfacePrivate;
+class TextInputManagerV2InterfacePrivate;
 
 /**
  * @brief Represent the Global for the interface.
@@ -45,27 +28,19 @@ enum class TextInputInterfaceVersion {
  * The class can represent different interfaces. Which concrete interface is represented
  * can be determined through {@link interfaceVersion}.
  *
- * To create a TextInputManagerInterface use {@link Display::createTextInputManager}
+ * To create a TextInputManagerV2Interface use {@link Display::createTextInputManager}
  *
  * @since 5.23
  **/
-class KWAYLANDSERVER_EXPORT TextInputManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT TextInputManagerV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~TextInputManagerInterface();
-
-    /**
-     * @returns The interface version used by this TextInputManagerInterface
-     **/
-    TextInputInterfaceVersion interfaceVersion() const;
-
-protected:
-    class Private;
-    explicit TextInputManagerInterface(Private *d, QObject *parent = nullptr);
+    explicit TextInputManagerV2Interface(Display *display, QObject *parent = nullptr);
+    ~TextInputManagerV2Interface() override;
 
 private:
-    Private *d_func() const;
+    QScopedPointer<TextInputManagerV2InterfacePrivate> d;
 };
 
 /**
@@ -77,137 +52,20 @@ private:
  * It does not expose the actual interface to cover up the fact that the interface is unstable
  * and might change. If one needs to know the actual used protocol, use the method {@link interfaceVersion}.
  *
- * A TextInputInterface gets created by the {@link TextInputManagerInterface}. The individual
+ * A TextInputV2Interface gets created by the {@link TextInputManagerV2Interface}. The individual
  * instances are not exposed directly. The SeatInterface provides access to the currently active
- * TextInputInterface. This is evaluated automatically based on which SurfaceInterface has
+ * TextInputV2Interface. This is evaluated automatically based on which SurfaceInterface has
  * keyboard focus.
  *
- * @see TextInputManagerInterface
+ * @see TextInputManagerV2Interface
  * @see SeatInterface
  * @since 5.23
  **/
-class KWAYLANDSERVER_EXPORT TextInputInterface : public Resource
+class KWAYLANDSERVER_EXPORT TextInputV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~TextInputInterface();
-
-    /**
-     * ContentHint allows to modify the behavior of the text input.
-     **/
-    enum class ContentHint : uint32_t {
-        /**
-         * no special behaviour
-         */
-        None = 0,
-        /**
-         * suggest word completions
-         */
-        AutoCompletion = 1 << 0,
-        /**
-         * suggest word corrections
-         */
-        AutoCorrection = 1 << 1,
-        /**
-         * switch to uppercase letters at the start of a sentence
-         */
-        AutoCapitalization = 1 << 2,
-        /**
-         * prefer lowercase letters
-         */
-        LowerCase = 1 << 3,
-        /**
-         * prefer uppercase letters
-         */
-        UpperCase = 1 << 4,
-        /**
-         * prefer casing for titles and headings (can be language dependent)
-         */
-        TitleCase = 1 << 5,
-        /**
-         * characters should be hidden
-         */
-        HiddenText = 1 << 6,
-        /**
-         * typed text should not be stored
-         */
-        SensitiveData = 1 << 7,
-        /**
-         * just latin characters should be entered
-         */
-        Latin = 1 << 8,
-        /**
-         * the text input is multi line
-         */
-        MultiLine = 1 << 9
-    };
-    Q_DECLARE_FLAGS(ContentHints, ContentHint)
-
-    /**
-     * The ContentPurpose allows to specify the primary purpose of a text input.
-     *
-     * This allows an input method to show special purpose input panels with
-     * extra characters or to disallow some characters.
-     */
-    enum class ContentPurpose : uint32_t {
-        /**
-         * default input, allowing all characters
-         */
-        Normal,
-        /**
-         * allow only alphabetic characters
-         **/
-        Alpha,
-        /**
-         * allow only digits
-         */
-        Digits,
-        /**
-         * input a number (including decimal separator and sign)
-         */
-        Number,
-        /**
-         * input a phone number
-         */
-        Phone,
-        /**
-         * input an URL
-         */
-        Url,
-        /**
-         * input an email address
-         **/
-        Email,
-        /**
-         * input a name of a person
-         */
-        Name,
-        /**
-         * input a password
-         */
-        Password,
-        /**
-         * input a date
-         */
-        Date,
-        /**
-         * input a time
-         */
-        Time,
-        /**
-         * input a date and time
-         */
-        DateTime,
-        /**
-         * input for a terminal
-         */
-        Terminal
-    };
-
-    /**
-     * @returns The interface version used by this TextInputInterface
-     **/
-    TextInputInterfaceVersion interfaceVersion() const;
+    ~TextInputV2Interface() override;
 
     /**
      * The preferred language as a RFC-3066 format language tag.
@@ -215,7 +73,7 @@ public:
      * This can be used by the server to show a language specific virtual keyboard layout.
      * @see preferredLanguageChanged
      **/
-    QByteArray preferredLanguage() const;
+    QString preferredLanguage() const;
 
     /**
      * @see cursorRectangleChanged
@@ -225,12 +83,12 @@ public:
     /**
      * @see contentTypeChanged
      **/
-    ContentPurpose contentPurpose() const;
+    TextInputContentPurpose contentPurpose() const;
 
     /**
      *@see contentTypeChanged
      **/
-    ContentHints contentHints() const;
+    TextInputContentHints contentHints() const;
 
     /**
      * @returns The plain surrounding text around the input position.
@@ -238,7 +96,7 @@ public:
      * @see surroundingTextCursorPosition
      * @see surroundingTextSelectionAnchor
      **/
-    QByteArray surroundingText() const;
+    QString surroundingText() const;
     /**
      * @returns The byte offset of current cursor position within the {@link surroundingText}
      * @see surroundingText
@@ -256,14 +114,14 @@ public:
     qint32 surroundingTextSelectionAnchor() const;
 
     /**
-     * @return The surface the TextInputInterface is enabled on
+     * @return The surface the TextInputV2Interface is enabled on
      * @see isEnabled
      * @see enabledChanged
      **/
     QPointer<SurfaceInterface> surface() const;
 
     /**
-     * @return Whether the TextInputInterface is currently enabled for a SurfaceInterface.
+     * @return Whether the TextInputV2Interface is currently enabled for a SurfaceInterface.
      * @see surface
      * @see enabledChanged
      **/
@@ -282,7 +140,7 @@ public:
      * @see commit
      * @see preEditCursor
      **/
-    void preEdit(const QByteArray &text, const QByteArray &commitText);
+    void preEdit(const QString &text, const QString &commitText);
 
     /**
      * Notify when @p text should be inserted into the editor widget.
@@ -296,7 +154,7 @@ public:
      * @see preEdit
      * @see deleteSurroundingText
      **/
-    void commit(const QByteArray &text);
+    void commit(const QString &text);
 
     /**
      * Sets the cursor position inside the composing text (as byte offset) relative to the
@@ -348,7 +206,7 @@ public:
     /**
      * Sets the language of the input text. The @p languageTag is a RFC-3066 format language tag.
      **/
-    void setLanguage(const QByteArray &languageTag);
+    void setLanguage(const QString &languageTag);
 
 Q_SIGNALS:
     /**
@@ -371,7 +229,7 @@ Q_SIGNALS:
      * Emitted whenever the preferred @p language changes.
      * @see preferredLanguage
      **/
-    void preferredLanguageChanged(const QByteArray &language);
+    void preferredLanguageChanged(const QString &language);
     /**
      * @see cursorRectangle
      **/
@@ -391,7 +249,7 @@ Q_SIGNALS:
      **/
     void surroundingTextChanged();
     /**
-     * Emitted whenever this TextInputInterface gets enabled or disabled for a SurfaceInterface.
+     * Emitted whenever this TextInputV2Interface gets enabled or disabled for a SurfaceInterface.
      * @see isEnabled
      * @see surface
      **/
@@ -402,26 +260,17 @@ Q_SIGNALS:
      **/
     void stateCommitted(uint32_t serial);
 
-protected:
-    class Private;
-    explicit TextInputInterface(Private *p, QObject *parent = nullptr);
-
 private:
-    friend class TextInputManagerUnstableV0Interface;
-    friend class TextInputManagerUnstableV2Interface;
+    friend class TextInputManagerV2InterfacePrivate;
     friend class SeatInterface;
+    friend class TextInputV2InterfacePrivate;
+    explicit TextInputV2Interface(SeatInterface *seat);
 
-    Private *d_func() const;
+    QScopedPointer<TextInputV2InterfacePrivate> d;
 };
-
 
 }
 
-Q_DECLARE_METATYPE(KWaylandServer::TextInputInterfaceVersion)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface *)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface::ContentHint)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface::ContentHints)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::TextInputInterface::ContentHints)
-Q_DECLARE_METATYPE(KWaylandServer::TextInputInterface::ContentPurpose)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputV2Interface *)
 
 #endif

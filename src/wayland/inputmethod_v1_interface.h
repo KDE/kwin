@@ -8,10 +8,11 @@
 #define WAYLAND_SERVER_INPUTMETHOD_INTERFACE_H
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
 #include <QVector>
 #include <QObject>
 
-#include "textinput_interface.h"
+#include "textinput.h"
 
 namespace KWaylandServer
 {
@@ -68,7 +69,7 @@ public:
 
     void sendSurroundingText(const QString &text, quint32 cursor, quint32 anchor);
     void sendReset();
-    void sendContentType(TextInputInterface::ContentHints hint, TextInputInterface::ContentPurpose purpose);
+    void sendContentType(KWaylandServer::TextInputContentHints hint, KWaylandServer::TextInputContentPurpose purpose);
     void sendInvokeAction(quint32 button, quint32 index);
     void sendCommitState(quint32 serial);
     void sendPreferredLanguage(const QString &language);

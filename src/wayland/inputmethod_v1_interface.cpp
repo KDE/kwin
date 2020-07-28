@@ -14,7 +14,6 @@
 #include <QHash>
 
 #include "qwayland-server-input-method-unstable-v1.h"
-#include "wayland-text-server-protocol.h"
 #include "qwayland-server-text-input-unstable-v1.h"
 
 namespace KWaylandServer
@@ -101,13 +100,13 @@ public:
     {
         Qt::LayoutDirection qtDirection;
         switch (direction) {
-        case WL_TEXT_INPUT_TEXT_DIRECTION_LTR:
+        case ZWP_TEXT_INPUT_V1_TEXT_DIRECTION_LTR:
             qtDirection = Qt::LeftToRight;
             break;
-        case WL_TEXT_INPUT_TEXT_DIRECTION_RTL:
+        case ZWP_TEXT_INPUT_V1_TEXT_DIRECTION_RTL:
             qtDirection = Qt::RightToLeft;
             break;
-        case WL_TEXT_INPUT_TEXT_DIRECTION_AUTO:
+        case ZWP_TEXT_INPUT_V1_TEXT_DIRECTION_AUTO:
             qtDirection = Qt::LayoutDirectionAuto;
             break;
         }
@@ -156,87 +155,87 @@ void InputMethodContextV1Interface::sendCommitState(uint32_t serial)
     }
 }
 
-void InputMethodContextV1Interface::sendContentType(TextInputInterface::ContentHints hint, TextInputInterface::ContentPurpose purpose)
+void InputMethodContextV1Interface::sendContentType(TextInputContentHints hint, TextInputContentPurpose purpose)
 {
     quint32 contentHint = QtWaylandServer::zwp_text_input_v1::content_hint_none;
     quint32 contentPurpose;
 
-    if (hint.testFlag(TextInputInterface::ContentHint::AutoCapitalization)) {
+    if (hint.testFlag(TextInputContentHint::AutoCapitalization)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::AutoCorrection)) {
+    if (hint.testFlag(TextInputContentHint::AutoCorrection)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_auto_correction;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::AutoCapitalization)) {
+    if (hint.testFlag(TextInputContentHint::AutoCapitalization)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_auto_capitalization;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::LowerCase)) {
+    if (hint.testFlag(TextInputContentHint::LowerCase)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_lowercase;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::UpperCase)) {
+    if (hint.testFlag(TextInputContentHint::UpperCase)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_uppercase;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::TitleCase)) {
+    if (hint.testFlag(TextInputContentHint::TitleCase)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_titlecase;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::HiddenText)) {
+    if (hint.testFlag(TextInputContentHint::HiddenText)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_hidden_text;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::SensitiveData)) {
+    if (hint.testFlag(TextInputContentHint::SensitiveData)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_lowercase;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::Latin)) {
+    if (hint.testFlag(TextInputContentHint::Latin)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_latin;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::MultiLine)) {
+    if (hint.testFlag(TextInputContentHint::MultiLine)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_multiline;
     }
-    if (hint.testFlag(TextInputInterface::ContentHint::None)) {
+    if (hint.testFlag(TextInputContentHint::None)) {
         contentHint |= QtWaylandServer::zwp_text_input_v1::content_hint_none;
     }
 
     switch (purpose) {
-    case TextInputInterface::ContentPurpose::Alpha:
+    case TextInputContentPurpose::Alpha:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_alpha;
         break;
-    case TextInputInterface::ContentPurpose::Digits:
+    case TextInputContentPurpose::Digits:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_digits;
         break;
-    case TextInputInterface::ContentPurpose::Number:
+    case TextInputContentPurpose::Number:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_number;
         break;
-    case TextInputInterface::ContentPurpose::Phone:
+    case TextInputContentPurpose::Phone:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_phone;
         break;
-    case TextInputInterface::ContentPurpose::Url:
+    case TextInputContentPurpose::Url:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_url;
         break;
-    case TextInputInterface::ContentPurpose::Email:
+    case TextInputContentPurpose::Email:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_email;
         break;
-    case TextInputInterface::ContentPurpose::Name:
+    case TextInputContentPurpose::Name:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_name;
         break;
-    case TextInputInterface::ContentPurpose::Password:
+    case TextInputContentPurpose::Password:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_password;
         break;
-    case TextInputInterface::ContentPurpose::Date:
+    case TextInputContentPurpose::Date:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_date;
         break;
-    case TextInputInterface::ContentPurpose::Time:
+    case TextInputContentPurpose::Time:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_time;
         break;
-    case TextInputInterface::ContentPurpose::DateTime:
+    case TextInputContentPurpose::DateTime:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_datetime;
         break;
-    case TextInputInterface::ContentPurpose::Terminal:
+    case TextInputContentPurpose::Terminal:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_terminal;
         break;
-    case TextInputInterface::ContentPurpose::Normal:
+    case TextInputContentPurpose::Normal:
     default:
         contentPurpose = QtWaylandServer::zwp_text_input_v1::content_purpose_alpha;
     }
-    
+
     for (auto r : d->resourceMap()) {
         d->send_content_type(r->handle, contentHint, contentPurpose);
     }

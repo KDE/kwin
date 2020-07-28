@@ -19,7 +19,7 @@
 #include "primaryselectiondevice_v1_interface.h"
 #include "primaryselectionsource_v1_interface.h"
 #include "surface_interface.h"
-#include "textinput_interface_p.h"
+#include "textinput_v2_interface_p.h"
 // Qt
 #include <QFile>
 // Wayland
@@ -46,6 +46,7 @@ SeatInterface::Private::Private(SeatInterface *q, Display *display)
     : Global::Private(display, &wl_seat_interface, s_version)
     , q(q)
 {
+    textInputV2 = new TextInputV2Interface(q);
 }
 
 #ifndef K_DOXYGEN
@@ -247,11 +248,6 @@ QVector<DataDeviceInterface *> SeatInterface::Private::dataDevicesForSurface(Sur
     return interfacesForSurface(surface, dataDevices);
 }
 
-TextInputInterface *SeatInterface::Private::textInputForSurface(SurfaceInterface *surface) const
-{
-    return interfaceForSurface(surface, textInputs);
-}
-
 void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
 {
     Q_ASSERT(dataDevice->seat() == q);
@@ -399,32 +395,6 @@ void SeatInterface::Private::registerPrimarySelectionDevice(PrimarySelectionDevi
             }
         }
     }
-}
-
-void SeatInterface::Private::registerTextInput(TextInputInterface *ti)
-{
-    // text input version 0 might call this multiple times
-    if (textInputs.contains(ti)) {
-        return;
-    }
-    textInputs << ti;
-    if (textInput.focus.surface && textInput.focus.surface->client() == ti->client()) {
-        // this is a text input for the currently focused text input surface
-        if (!textInput.focus.textInput) {
-            textInput.focus.textInput = ti;
-            ti->d_func()->sendEnter(textInput.focus.surface, textInput.focus.serial);
-            emit q->focusedTextInputChanged();
-        }
-    }
-    QObject::connect(ti, &QObject::destroyed, q,
-        [this, ti] {
-            textInputs.removeAt(textInputs.indexOf(ti));
-            if (textInput.focus.textInput == ti) {
-                textInput.focus.textInput = nullptr;
-                emit q->focusedTextInputChanged();
-            }
-        }
-    );
 }
 
 void SeatInterface::Private::endDrag(quint32 serial)
@@ -1608,48 +1578,38 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 {
     Q_D();
     const quint32 serial = d->display->nextSerial();
-    const auto old = d->textInput.focus.textInput;
-    if (d->textInput.focus.textInput) {
-        // TODO: setFocusedSurface like in other interfaces
-        d->textInput.focus.textInput->d_func()->sendLeave(serial, d->textInput.focus.surface);
+
+    if (d->focusedTextInputSurface) {
+        disconnect(d->focusedSurfaceDestroyConnection);
     }
-    if (d->textInput.focus.surface) {
-        disconnect(d->textInput.focus.destroyConnection);
+
+    if (d->focusedTextInputSurface != surface){
+        d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
+        emit focusedTextInputSurfaceChanged();
     }
-    d->textInput.focus = Private::TextInput::Focus();
-    d->textInput.focus.surface = surface;
-    TextInputInterface *t = d->textInputForSurface(surface);
-    if (t && !t->resource()) {
-        t = nullptr;
-    }
-    d->textInput.focus.textInput = t;
-    if (d->textInput.focus.surface) {
-        d->textInput.focus.destroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this,
+
+    d->focusedTextInputSurface = surface;
+    if (d->focusedTextInputSurface) {
+        d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this,
             [this] {
                 setFocusedTextInputSurface(nullptr);
             }
         );
-        d->textInput.focus.serial = serial;
     }
-    if (t) {
-        // TODO: setFocusedSurface like in other interfaces
-        t->d_func()->sendEnter(surface, serial);
-    }
-    if (old != t) {
-        emit focusedTextInputChanged();
-    }
+    // TODO: setFocusedSurface like in other interfaces
+    d->textInputV2->d->sendEnter(surface, serial);
 }
 
 SurfaceInterface *SeatInterface::focusedTextInputSurface() const
 {
     Q_D();
-    return d->textInput.focus.surface;
+    return d->focusedTextInputSurface;
 }
 
-TextInputInterface *SeatInterface::focusedTextInput() const
+TextInputV2Interface *SeatInterface::textInputV2() const
 {
     Q_D();
-    return d->textInput.focus.textInput;
+    return d->textInputV2;
 }
 
 AbstractDataSource *SeatInterface::selection() const

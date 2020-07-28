@@ -54,8 +54,7 @@ class ContrastManagerInterface;
 class ServerSideDecorationManagerInterface;
 class SlideManagerInterface;
 class SubCompositorInterface;
-enum class TextInputInterfaceVersion;
-class TextInputManagerInterface;
+class TextInputManagerV2Interface;
 class XdgShellInterface;
 enum class RelativePointerInterfaceVersion;
 class RelativePointerManagerInterface;
@@ -198,7 +197,7 @@ public:
      * @returns The created manager object
      * @since 5.23
      **/
-    TextInputManagerInterface *createTextInputManager(const TextInputInterfaceVersion &version, QObject *parent = nullptr);
+    TextInputManagerV2Interface *createTextInputManagerV2(QObject *parent = nullptr);
 
     /**
      * Creates the XdgShell in interface @p version.

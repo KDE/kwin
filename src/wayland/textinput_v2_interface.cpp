@@ -1,0 +1,491 @@
+/*
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+*/
+#include "textinput_v2_interface_p.h"
+#include "display.h"
+#include "seat_interface_p.h"
+#include "surface_interface_p.h"
+
+
+
+namespace KWaylandServer
+{
+
+const quint32 TextInputManagerV2InterfacePrivate::s_version = 1;
+
+// helpers
+static TextInputContentHints convertContentHint(uint32_t hint)
+{
+    const auto hints = zwp_text_input_v2_content_hint(hint);
+    TextInputContentHints ret = TextInputContentHint::None;
+
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_auto_completion) {
+        ret |= TextInputContentHint::AutoCompletion;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_auto_correction) {
+        ret |= TextInputContentHint::AutoCorrection;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_auto_capitalization) {
+        ret |= TextInputContentHint::AutoCapitalization;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_lowercase) {
+        ret |= TextInputContentHint::LowerCase;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_uppercase) {
+        ret |= TextInputContentHint::UpperCase;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_titlecase) {
+        ret |= TextInputContentHint::TitleCase;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_hidden_text) {
+        ret |= TextInputContentHint::HiddenText;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_sensitive_data) {
+        ret |= TextInputContentHint::SensitiveData;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_latin) {
+        ret |= TextInputContentHint::Latin;
+    }
+    if (hints & QtWaylandServer::zwp_text_input_v2::content_hint_multiline) {
+        ret |= TextInputContentHint::MultiLine;
+    }
+    return ret;
+}
+
+static TextInputContentPurpose convertContentPurpose(uint32_t purpose)
+{
+    const auto wlPurpose = QtWaylandServer::zwp_text_input_v2::content_purpose(purpose);
+
+    switch (wlPurpose) {
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_alpha:
+        return TextInputContentPurpose::Alpha;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_digits:
+        return TextInputContentPurpose::Digits;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_number:
+        return TextInputContentPurpose::Number;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_phone:
+        return TextInputContentPurpose::Phone;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_url:
+        return TextInputContentPurpose::Url;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_email:
+        return TextInputContentPurpose::Email;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_name:
+        return TextInputContentPurpose::Name;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_password:
+        return TextInputContentPurpose::Password;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_date:
+        return TextInputContentPurpose::Date;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_time:
+        return TextInputContentPurpose::Time;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_datetime:
+        return TextInputContentPurpose::DateTime;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_terminal:
+        return TextInputContentPurpose::Terminal;
+    case QtWaylandServer::zwp_text_input_v2::content_purpose_normal:
+        return TextInputContentPurpose::Normal;
+    default:
+        return TextInputContentPurpose::Normal;
+    }
+}
+
+
+TextInputManagerV2InterfacePrivate::TextInputManagerV2InterfacePrivate(TextInputManagerV2Interface *_q, Display *display)
+    : QtWaylandServer::zwp_text_input_manager_v2(*display, s_version)
+    , q(_q)
+{
+}
+
+void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_get_text_input(Resource *resource, uint32_t id, wl_resource *seat)
+{
+    SeatInterface *s = SeatInterface::get(seat);
+    if (!s) {
+        wl_resource_post_error(resource->handle, 0, "Invalid  seat");
+        return;
+    }
+
+    TextInputV2InterfacePrivate *textInputPrivate = TextInputV2InterfacePrivate::get(s->textInputV2());
+    textInputPrivate->add(resource->client(), id, resource->version());
+}
+
+TextInputManagerV2Interface::TextInputManagerV2Interface(Display *display, QObject *parent)
+    : QObject(parent)
+    , d(new TextInputManagerV2InterfacePrivate(this, display))
+{
+}
+
+TextInputManagerV2Interface::~TextInputManagerV2Interface() = default;
+
+void TextInputV2InterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 serial)
+{
+    if (!surface) {
+        return;
+    }
+
+    const auto clientResources = textInputsForClient(surface->client());
+    for (auto resource : clientResources) {
+        send_enter(resource->handle, serial, surface->resource());
+    }
+}
+
+void TextInputV2InterfacePrivate::sendLeave(quint32 serial, SurfaceInterface *surface)
+{
+    if (!surface) {
+        return;
+    }
+
+    const auto clientResources = textInputsForClient(surface->client());
+    for (auto resource : clientResources) {
+        send_leave(resource->handle, serial, surface->resource());
+    }
+}
+
+void TextInputV2InterfacePrivate::preEdit(const QString &text, const QString &commit)
+{
+    if (!surface) {
+        return;
+    }
+
+    const auto clientResources = textInputsForClient(surface->client());
+    for (auto resource : clientResources) {
+        send_preedit_string(resource->handle, text, commit);
+    }
+}
+
+void TextInputV2InterfacePrivate::commit(const QString &text)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_commit_string(resource->handle, text);
+    }
+}
+
+void TextInputV2InterfacePrivate::keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers)
+{
+    if (!surface) {
+        return;
+    }
+    Q_UNUSED(modifiers)
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_PRESSED, 0);
+    }
+}
+
+void TextInputV2InterfacePrivate::keysymReleased(quint32 keysym, Qt::KeyboardModifiers modifiers)
+{
+    if (!surface) {
+        return;
+    }
+    Q_UNUSED(modifiers)
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_RELEASED, 0);
+    }
+}
+
+void TextInputV2InterfacePrivate::deleteSurroundingText(quint32 beforeLength, quint32 afterLength)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_delete_surrounding_text(resource->handle, beforeLength, afterLength);
+    }
+}
+
+void TextInputV2InterfacePrivate::setCursorPosition(qint32 index, qint32 anchor)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_cursor_position(resource->handle, index, anchor);
+    }
+}
+
+void TextInputV2InterfacePrivate::setTextDirection(Qt::LayoutDirection direction)
+{
+    if (!surface) {
+        return;
+    }
+    text_direction wlDirection;
+    switch (direction) {
+    case Qt::LeftToRight:
+        wlDirection = text_direction::text_direction_ltr;
+        break;
+    case Qt::RightToLeft:
+        wlDirection = text_direction::text_direction_rtl;
+        break;
+    case Qt::LayoutDirectionAuto:
+        wlDirection = text_direction::text_direction_auto;
+        break;
+    default:
+        Q_UNREACHABLE();
+        break;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_text_direction(resource->handle, wlDirection);
+    }
+}
+
+void TextInputV2InterfacePrivate::setPreEditCursor(qint32 index)
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_preedit_cursor(resource->handle, index);
+    }
+}
+
+void TextInputV2InterfacePrivate::sendInputPanelState()
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_input_panel_state(resource->handle,inputPanelVisible ? ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_VISIBLE : ZWP_TEXT_INPUT_V2_INPUT_PANEL_VISIBILITY_HIDDEN,
+                               overlappedSurfaceArea.x(), overlappedSurfaceArea.y(), overlappedSurfaceArea.width(), overlappedSurfaceArea.height());
+    }
+}
+
+void TextInputV2InterfacePrivate::sendLanguage()
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_language(resource->handle, language);
+    }
+}
+
+TextInputV2InterfacePrivate::TextInputV2InterfacePrivate(SeatInterface *seat, TextInputV2Interface *_q)
+    : seat(seat)
+    , q(_q)
+{
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_enable(Resource *resource, wl_resource *s)
+{
+    Q_UNUSED(resource)
+    surface = QPointer<SurfaceInterface>(SurfaceInterface::get(s));
+    enabled = true;
+    emit q->enabledChanged();
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, wl_resource *s)
+{
+    Q_UNUSED(resource)
+    Q_UNUSED(s)
+    surface.clear();
+    enabled = false;
+    emit q->enabledChanged();
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_update_state(Resource *resource, uint32_t serial, uint32_t reason)
+{
+    Q_UNUSED(resource)
+    switch (reason) {
+    case update_state::update_state_change:
+        break;
+    case update_state::update_state_full:
+        break;
+    case update_state::update_state_enter:
+        break;
+    case update_state::update_state_reset:
+        emit q->requestReset();
+        break;
+    default:
+        return;
+    }
+    emit q->stateCommitted(serial);
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_hide_input_panel(Resource *resource)
+{
+    Q_UNUSED(resource)
+    emit q->requestHideInputPanel();
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
+{
+    Q_UNUSED(resource)
+    surroundingText = QString(text);
+    surroundingTextCursorPosition = cursor;
+    surroundingTextSelectionAnchor = anchor;
+    emit q->surroundingTextChanged();
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_set_content_type(Resource *resource, uint32_t hint, uint32_t purpose)
+{
+    Q_UNUSED(resource)
+    const auto contentHints = convertContentHint(hint);
+    const auto contentPurpose = convertContentPurpose(purpose);
+    if (this->contentHints != contentHints || this->contentPurpose != contentPurpose) {
+        this->contentHints = contentHints;
+        this->contentPurpose = contentPurpose;
+        emit q->contentTypeChanged();
+    }
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    Q_UNUSED(resource)
+    const QRect rect = QRect(x, y, width, height);
+    if (cursorRectangle != rect) {
+        cursorRectangle = rect;
+        emit q->cursorRectangleChanged(cursorRectangle);
+    }
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_set_preferred_language(Resource *resource, const QString &language)
+{
+    Q_UNUSED(resource)
+    if (preferredLanguage != language) {
+        preferredLanguage = language;
+        emit q->preferredLanguageChanged(preferredLanguage);
+    }
+}
+
+void TextInputV2InterfacePrivate::zwp_text_input_v2_show_input_panel(Resource *resource)
+{
+    Q_UNUSED(resource)
+    emit q->requestShowInputPanel();
+}
+
+QList<TextInputV2InterfacePrivate::Resource *> TextInputV2InterfacePrivate::textInputsForClient(ClientConnection *client) const
+{
+    return resourceMap().values(client->client());
+}
+
+TextInputV2Interface::TextInputV2Interface(SeatInterface *seat)
+    : QObject()
+    , d(new TextInputV2InterfacePrivate(seat, this))
+{
+}
+
+TextInputV2Interface::~TextInputV2Interface() = default;
+
+QString TextInputV2Interface::preferredLanguage() const
+{
+    return d->preferredLanguage;
+}
+
+TextInputContentHints TextInputV2Interface::contentHints() const
+{
+    return d->contentHints;
+}
+
+TextInputContentPurpose KWaylandServer::TextInputV2Interface::contentPurpose() const
+{
+    return d->contentPurpose;
+}
+
+QString TextInputV2Interface::surroundingText() const
+{
+    return d->surroundingText;
+}
+
+qint32 TextInputV2Interface::surroundingTextCursorPosition() const
+{
+    return d->surroundingTextCursorPosition;
+}
+
+qint32 TextInputV2Interface::surroundingTextSelectionAnchor() const
+{
+    return d->surroundingTextSelectionAnchor;
+}
+
+void TextInputV2Interface::preEdit(const QString &text, const QString &commit)
+{
+    d->preEdit(text, commit);
+}
+
+void TextInputV2Interface::commit(const QString &text)
+{
+    d->commit(text);
+}
+
+void TextInputV2Interface::keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers)
+{
+    Q_UNUSED(modifiers)
+    d->keysymPressed(keysym, modifiers);
+}
+
+void TextInputV2Interface::keysymReleased(quint32 keysym, Qt::KeyboardModifiers modifiers)
+{
+    d->keysymReleased(keysym, modifiers);
+}
+
+void TextInputV2Interface::deleteSurroundingText(quint32 beforeLength, quint32 afterLength)
+{
+    d->deleteSurroundingText(beforeLength, afterLength);
+}
+
+void TextInputV2Interface::setCursorPosition(qint32 index, qint32 anchor)
+{
+    d->setCursorPosition(index, anchor);
+}
+
+void TextInputV2Interface::setTextDirection(Qt::LayoutDirection direction)
+{
+    d->setTextDirection(direction);
+}
+
+void TextInputV2Interface::setPreEditCursor(qint32 index)
+{
+    d->setPreEditCursor(index);
+}
+
+void TextInputV2Interface::setInputPanelState(bool visible, const QRect &overlappedSurfaceArea)
+{
+    if (d->inputPanelVisible == visible && d->overlappedSurfaceArea == overlappedSurfaceArea) {
+        // not changed
+        return;
+    }
+    d->inputPanelVisible = visible;
+    d->overlappedSurfaceArea = overlappedSurfaceArea;
+    d->sendInputPanelState();
+}
+
+void TextInputV2Interface::setLanguage(const QString &languageTag)
+{
+    if (d->language == languageTag) {
+        // not changed
+        return;
+    }
+    d->language = languageTag;
+    d->sendLanguage();
+}
+
+QPointer<SurfaceInterface> TextInputV2Interface::surface() const
+{
+    return d->surface;
+}
+
+QRect TextInputV2Interface::cursorRectangle() const
+{
+    return d->cursorRectangle;
+}
+
+bool TextInputV2Interface::isEnabled() const
+{
+    return d->enabled;
+}
+}

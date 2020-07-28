@@ -40,7 +40,7 @@
 #include "slide_interface.h"
 #include "subcompositor_interface.h"
 #include "tablet_interface.h"
-#include "textinput_interface_p.h"
+#include "textinput_v2_interface_p.h"
 #include "viewporter_interface.h"
 #include "xdgdecoration_v1_interface.h"
 #include "xdgforeign_v2_interface.h"
@@ -343,19 +343,9 @@ ScreencastV1Interface *Display::createScreencastV1Interface(QObject *parent)
     return s;
 }
 
-TextInputManagerInterface *Display::createTextInputManager(const TextInputInterfaceVersion &version, QObject *parent)
+TextInputManagerV2Interface *Display::createTextInputManagerV2(QObject *parent)
 {
-    TextInputManagerInterface *t = nullptr;
-    switch (version) {
-    case TextInputInterfaceVersion::UnstableV0:
-        t = new TextInputManagerUnstableV0Interface(this, parent);
-        break;
-    case TextInputInterfaceVersion::UnstableV1:
-        // unsupported
-        return nullptr;
-    case TextInputInterfaceVersion::UnstableV2:
-        t = new TextInputManagerUnstableV2Interface(this, parent);
-    }
+    auto t = new TextInputManagerV2Interface(this, parent);
     connect(this, &Display::aboutToTerminate, t, [t] { delete t; });
     return t;
 }

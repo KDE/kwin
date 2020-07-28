@@ -18,7 +18,8 @@
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/seat_interface.h"
-#include "../../src/server/textinput_interface.h"
+#include "../../src/server/textinput.h"
+#include "../../src/server/textinput_v2_interface.h"
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;
@@ -32,15 +33,10 @@ private Q_SLOTS:
 
     void testEnterLeave_data();
     void testEnterLeave();
-    void testShowHidePanel_data();
     void testShowHidePanel();
-    void testCursorRectangle_data();
     void testCursorRectangle();
-    void testPreferredLanguage_data();
     void testPreferredLanguage();
-    void testReset_data();
     void testReset();
-    void testSurroundingText_data();
     void testSurroundingText();
     void testContentHints_data();
     void testContentHints();
@@ -48,30 +44,24 @@ private Q_SLOTS:
     void testContentPurpose();
     void testTextDirection_data();
     void testTextDirection();
-    void testLanguage_data();
     void testLanguage();
-    void testKeyEvent_data();
     void testKeyEvent();
-    void testPreEdit_data();
     void testPreEdit();
-    void testCommit_data();
     void testCommit();
 
 private:
     SurfaceInterface *waitForSurface();
-    TextInput *createTextInput(TextInputInterfaceVersion version);
+    TextInput *createTextInput();
     Display *m_display = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
-    TextInputManagerInterface *m_textInputManagerV0Interface = nullptr;
-    TextInputManagerInterface *m_textInputManagerV2Interface = nullptr;
+    TextInputManagerV2Interface *m_textInputManagerV2Interface = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
     Seat *m_seat = nullptr;
     Keyboard *m_keyboard = nullptr;
     Compositor *m_compositor = nullptr;
-    TextInputManager *m_textInputManagerV0 = nullptr;
     TextInputManager *m_textInputManagerV2 = nullptr;
 };
 
@@ -90,10 +80,7 @@ void TextInputTest::init()
     m_seatInterface->setHasTouch(true);
     m_seatInterface->create();
     m_compositorInterface = m_display->createCompositor();
-    m_textInputManagerV0Interface = m_display->createTextInputManager(TextInputInterfaceVersion::UnstableV0);
-    m_textInputManagerV0Interface->create();
-    m_textInputManagerV2Interface = m_display->createTextInputManager(TextInputInterfaceVersion::UnstableV2);
-    m_textInputManagerV2Interface->create();
+    m_textInputManagerV2Interface = m_display->createTextInputManagerV2();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -135,10 +122,7 @@ void TextInputTest::init()
                                              this);
     QVERIFY(m_compositor->isValid());
 
-    m_textInputManagerV0 = registry.createTextInputManager(registry.interface(Registry::Interface::TextInputManagerUnstableV0).name,
-                                                           registry.interface(Registry::Interface::TextInputManagerUnstableV0).version,
-                                                           this);
-    QVERIFY(m_textInputManagerV0->isValid());
+
 
     m_textInputManagerV2 = registry.createTextInputManager(registry.interface(Registry::Interface::TextInputManagerUnstableV2).name,
                                                            registry.interface(Registry::Interface::TextInputManagerUnstableV2).version,
@@ -153,7 +137,6 @@ void TextInputTest::cleanup()
         delete variable; \
         variable = nullptr; \
     }
-    CLEANUP(m_textInputManagerV0)
     CLEANUP(m_textInputManagerV2)
     CLEANUP(m_keyboard)
     CLEANUP(m_seat)
@@ -170,7 +153,6 @@ void TextInputTest::cleanup()
         m_thread = nullptr;
     }
 
-    CLEANUP(m_textInputManagerV0Interface)
     CLEANUP(m_textInputManagerV2Interface)
     CLEANUP(m_compositorInterface)
     CLEANUP(m_seatInterface)
@@ -193,34 +175,23 @@ SurfaceInterface *TextInputTest::waitForSurface()
     return surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
 }
 
-TextInput *TextInputTest::createTextInput(TextInputInterfaceVersion version)
+TextInput *TextInputTest::createTextInput()
 {
-    switch (version) {
-    case TextInputInterfaceVersion::UnstableV0:
-        return m_textInputManagerV0->createTextInput(m_seat);
-    case TextInputInterfaceVersion::UnstableV2:
         return m_textInputManagerV2->createTextInput(m_seat);
-    default:
-        Q_UNREACHABLE();
-        return nullptr;
     }
-}
 
 void TextInputTest::testEnterLeave_data()
 {
-    QTest::addColumn<TextInputInterfaceVersion>("version");
     QTest::addColumn<bool>("updatesDirectly");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0 << false;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2 << true;
+    QTest::newRow("UnstableV2") << true;
 }
 
 void TextInputTest::testEnterLeave()
 {
     // this test verifies that enter leave are sent correctly
     QScopedPointer<Surface> surface(m_compositor->createSurface());
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
     QVERIFY(!textInput.isNull());
@@ -228,17 +199,16 @@ void TextInputTest::testEnterLeave()
     QVERIFY(enteredSpy.isValid());
     QSignalSpy leftSpy(textInput.data(), &TextInput::left);
     QVERIFY(leftSpy.isValid());
-    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputChanged);
+    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
     QVERIFY(textInputChangedSpy.isValid());
 
     // now let's try to enter it
-    QVERIFY(!m_seatInterface->focusedTextInput());
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);
     // text input not yet set for the surface
     QFETCH(bool, updatesDirectly);
-    QCOMPARE(bool(m_seatInterface->focusedTextInput()), updatesDirectly);
+    QCOMPARE(bool(m_seatInterface->textInputV2()), updatesDirectly);
     QCOMPARE(textInputChangedSpy.isEmpty(), !updatesDirectly);
     textInput->enable(surface.data());
     // this should trigger on server side
@@ -246,10 +216,9 @@ void TextInputTest::testEnterLeave()
         QVERIFY(textInputChangedSpy.wait());
     }
     QCOMPARE(textInputChangedSpy.count(), 1);
-    auto serverTextInput = m_seatInterface->focusedTextInput();
+    auto serverTextInput = m_seatInterface->textInputV2();
     QVERIFY(serverTextInput);
-    QCOMPARE(serverTextInput->interfaceVersion(), version);
-    QSignalSpy enabledChangedSpy(serverTextInput, &TextInputInterface::enabledChanged);
+    QSignalSpy enabledChangedSpy(serverTextInput, &TextInputV2Interface::enabledChanged);
     QVERIFY(enabledChangedSpy.isValid());
     if (updatesDirectly) {
         QVERIFY(enabledChangedSpy.wait());
@@ -268,7 +237,6 @@ void TextInputTest::testEnterLeave()
     // now trigger a leave
     m_seatInterface->setFocusedKeyboardSurface(nullptr);
     QCOMPARE(textInputChangedSpy.count(), 2);
-    QVERIFY(!m_seatInterface->focusedTextInput());
     QVERIFY(leftSpy.wait());
     QVERIFY(!textInput->enteredSurface());
     QVERIFY(serverTextInput->isEnabled());
@@ -276,7 +244,7 @@ void TextInputTest::testEnterLeave()
     // if we enter again we should directly get the text input as it's still activated
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(textInputChangedSpy.count(), 3);
-    QVERIFY(m_seatInterface->focusedTextInput());
+    QVERIFY(m_seatInterface->textInputV2());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(textInput->enteredSurface(), surface.data());
@@ -290,7 +258,7 @@ void TextInputTest::testEnterLeave()
     // does not trigger a leave
     QCOMPARE(textInputChangedSpy.count(), 3);
     // should still be the same text input
-    QCOMPARE(m_seatInterface->focusedTextInput(), serverTextInput);
+    QCOMPARE(m_seatInterface->textInputV2(), serverTextInput);
     //reset
     textInput->enable(surface.data());
     QVERIFY(enabledChangedSpy.wait());
@@ -303,14 +271,6 @@ void TextInputTest::testEnterLeave()
     QVERIFY(!textInput->enteredSurface());
 }
 
-void TextInputTest::testShowHidePanel_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
-}
-
 void TextInputTest::testShowHidePanel()
 {
     // this test verifies that the requests for show/hide panel work
@@ -318,20 +278,20 @@ void TextInputTest::testShowHidePanel()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
-    QSignalSpy showPanelRequestedSpy(ti, &TextInputInterface::requestShowInputPanel);
+    QSignalSpy showPanelRequestedSpy(ti, &TextInputV2Interface::requestShowInputPanel);
     QVERIFY(showPanelRequestedSpy.isValid());
-    QSignalSpy hidePanelRequestedSpy(ti, &TextInputInterface::requestHideInputPanel);
+    QSignalSpy hidePanelRequestedSpy(ti, &TextInputV2Interface::requestHideInputPanel);
     QVERIFY(hidePanelRequestedSpy.isValid());
     QSignalSpy inputPanelStateChangedSpy(textInput.data(), &TextInput::inputPanelStateChanged);
     QVERIFY(inputPanelStateChangedSpy.isValid());
@@ -350,14 +310,6 @@ void TextInputTest::testShowHidePanel()
     QCOMPARE(textInput->isInputPanelVisible(), false);
 }
 
-void TextInputTest::testCursorRectangle_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
-}
-
 void TextInputTest::testCursorRectangle()
 {
     // this test verifies that passing the cursor rectangle from client to server works
@@ -365,31 +317,23 @@ void TextInputTest::testCursorRectangle()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QCOMPARE(ti->cursorRectangle(), QRect());
-    QSignalSpy cursorRectangleChangedSpy(ti, &TextInputInterface::cursorRectangleChanged);
+    QSignalSpy cursorRectangleChangedSpy(ti, &TextInputV2Interface::cursorRectangleChanged);
     QVERIFY(cursorRectangleChangedSpy.isValid());
 
     textInput->setCursorRectangle(QRect(10, 20, 30, 40));
     QVERIFY(cursorRectangleChangedSpy.wait());
     QCOMPARE(ti->cursorRectangle(), QRect(10, 20, 30, 40));
-}
-
-void TextInputTest::testPreferredLanguage_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
 }
 
 void TextInputTest::testPreferredLanguage()
@@ -398,31 +342,23 @@ void TextInputTest::testPreferredLanguage()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QVERIFY(ti->preferredLanguage().isEmpty());
 
-    QSignalSpy preferredLanguageChangedSpy(ti, &TextInputInterface::preferredLanguageChanged);
+    QSignalSpy preferredLanguageChangedSpy(ti, &TextInputV2Interface::preferredLanguageChanged);
     QVERIFY(preferredLanguageChangedSpy.isValid());
     textInput->setPreferredLanguage(QStringLiteral("foo"));
     QVERIFY(preferredLanguageChangedSpy.wait());
     QCOMPARE(ti->preferredLanguage(), QStringLiteral("foo").toUtf8());
-}
-
-void TextInputTest::testReset_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
 }
 
 void TextInputTest::testReset()
@@ -431,30 +367,22 @@ void TextInputTest::testReset()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
-    QSignalSpy resetRequestedSpy(ti, &TextInputInterface::requestReset);
+    QSignalSpy resetRequestedSpy(ti, &TextInputV2Interface::requestReset);
     QVERIFY(resetRequestedSpy.isValid());
 
     textInput->reset();
     QVERIFY(resetRequestedSpy.wait());
-}
-
-void TextInputTest::testSurroundingText_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
 }
 
 void TextInputTest::testSurroundingText()
@@ -463,21 +391,21 @@ void TextInputTest::testSurroundingText()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
     QVERIFY(ti->surroundingText().isEmpty());
     QCOMPARE(ti->surroundingTextCursorPosition(), 0);
     QCOMPARE(ti->surroundingTextSelectionAnchor(), 0);
 
-    QSignalSpy surroundingTextChangedSpy(ti, &TextInputInterface::surroundingTextChanged);
+    QSignalSpy surroundingTextChangedSpy(ti, &TextInputV2Interface::surroundingTextChanged);
     QVERIFY(surroundingTextChangedSpy.isValid());
 
     textInput->setSurroundingText(QStringLiteral("100 €, 100 $"), 5, 6);
@@ -489,28 +417,25 @@ void TextInputTest::testSurroundingText()
 
 void TextInputTest::testContentHints_data()
 {
-    QTest::addColumn<TextInputInterfaceVersion>("version");
     QTest::addColumn<TextInput::ContentHints>("clientHints");
-    QTest::addColumn<TextInputInterface::ContentHints>("serverHints");
+    QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
 
-    QTest::newRow("completion/v0")     << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::AutoCompletion) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::AutoCompletion);
-    QTest::newRow("Correction/v0")     << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::AutoCorrection) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::AutoCorrection);
-    QTest::newRow("Capitalization/v0") << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::AutoCapitalization) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::AutoCapitalization);
-    QTest::newRow("Lowercase/v0")      << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::LowerCase) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::LowerCase);
-    QTest::newRow("Uppercase/v0")      << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::UpperCase) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::UpperCase);
-    QTest::newRow("Titlecase/v0")      << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::TitleCase) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::TitleCase);
-    QTest::newRow("HiddenText/v0")     << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::HiddenText) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::HiddenText);
-    QTest::newRow("SensitiveData/v0")  << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::SensitiveData) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::SensitiveData);
-    QTest::newRow("Latin/v0")          << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::Latin) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::Latin);
-    QTest::newRow("Multiline/v0")      << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentHints(TextInput::ContentHint::MultiLine) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::MultiLine);
+    QTest::newRow("completion/v2")     << TextInput::ContentHints(TextInput::ContentHint::AutoCompletion) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCompletion);
+    QTest::newRow("Correction/v2")     << TextInput::ContentHints(TextInput::ContentHint::AutoCorrection) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCorrection);
+    QTest::newRow("Capitalization/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCapitalization) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCapitalization);
+    QTest::newRow("Lowercase/v2")      << TextInput::ContentHints(TextInput::ContentHint::LowerCase) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::LowerCase);
+    QTest::newRow("Uppercase/v2")      << TextInput::ContentHints(TextInput::ContentHint::UpperCase) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::UpperCase);
+    QTest::newRow("Titlecase/v2")      << TextInput::ContentHints(TextInput::ContentHint::TitleCase) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::TitleCase);
+    QTest::newRow("HiddenText/v2")     << TextInput::ContentHints(TextInput::ContentHint::HiddenText) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::HiddenText);
+    QTest::newRow("SensitiveData/v2")  << TextInput::ContentHints(TextInput::ContentHint::SensitiveData) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::SensitiveData);
+    QTest::newRow("Latin/v2")          << TextInput::ContentHints(TextInput::ContentHint::Latin) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::Latin);
+    QTest::newRow("Multiline/v2")      << TextInput::ContentHints(TextInput::ContentHint::MultiLine) << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::MultiLine);
 
-    QTest::newRow("autos/v0") << TextInputInterfaceVersion::UnstableV0
-                              << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization)
-                              << (TextInputInterface::ContentHint::AutoCompletion | TextInputInterface::ContentHint::AutoCorrection | TextInputInterface::ContentHint::AutoCapitalization);
+    QTest::newRow("autos/v2") << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization)
+                              << (KWaylandServer::TextInputContentHint::AutoCompletion | KWaylandServer::TextInputContentHint::AutoCorrection | KWaylandServer::TextInputContentHint::AutoCapitalization);
 
     // all has combinations which don't make sense - what's both lowercase and uppercase?
-    QTest::newRow("all/v0") << TextInputInterfaceVersion::UnstableV0
-                            << (TextInput::ContentHint::AutoCompletion |
+    QTest::newRow("all/v2") << (TextInput::ContentHint::AutoCompletion |
                                 TextInput::ContentHint::AutoCorrection |
                                 TextInput::ContentHint::AutoCapitalization |
                                 TextInput::ContentHint::LowerCase |
@@ -520,56 +445,17 @@ void TextInputTest::testContentHints_data()
                                 TextInput::ContentHint::SensitiveData |
                                 TextInput::ContentHint::Latin |
                                 TextInput::ContentHint::MultiLine)
-                            << (TextInputInterface::ContentHint::AutoCompletion |
-                                TextInputInterface::ContentHint::AutoCorrection |
-                                TextInputInterface::ContentHint::AutoCapitalization |
-                                TextInputInterface::ContentHint::LowerCase |
-                                TextInputInterface::ContentHint::UpperCase |
-                                TextInputInterface::ContentHint::TitleCase |
-                                TextInputInterface::ContentHint::HiddenText |
-                                TextInputInterface::ContentHint::SensitiveData |
-                                TextInputInterface::ContentHint::Latin |
-                                TextInputInterface::ContentHint::MultiLine);
+                            << (KWaylandServer::TextInputContentHint::AutoCompletion |
+                                KWaylandServer::TextInputContentHint::AutoCorrection |
+                                KWaylandServer::TextInputContentHint::AutoCapitalization |
+                                KWaylandServer::TextInputContentHint::LowerCase |
+                                KWaylandServer::TextInputContentHint::UpperCase |
+                                KWaylandServer::TextInputContentHint::TitleCase |
+                                KWaylandServer::TextInputContentHint::HiddenText |
+                                KWaylandServer::TextInputContentHint::SensitiveData |
+                                KWaylandServer::TextInputContentHint::Latin |
+                                KWaylandServer::TextInputContentHint::MultiLine);
 
-    // same for version 2
-
-    QTest::newRow("completion/v2")     << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::AutoCompletion) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::AutoCompletion);
-    QTest::newRow("Correction/v2")     << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::AutoCorrection) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::AutoCorrection);
-    QTest::newRow("Capitalization/v2") << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::AutoCapitalization) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::AutoCapitalization);
-    QTest::newRow("Lowercase/v2")      << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::LowerCase) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::LowerCase);
-    QTest::newRow("Uppercase/v2")      << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::UpperCase) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::UpperCase);
-    QTest::newRow("Titlecase/v2")      << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::TitleCase) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::TitleCase);
-    QTest::newRow("HiddenText/v2")     << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::HiddenText) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::HiddenText);
-    QTest::newRow("SensitiveData/v2")  << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::SensitiveData) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::SensitiveData);
-    QTest::newRow("Latin/v2")          << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::Latin) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::Latin);
-    QTest::newRow("Multiline/v2")      << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentHints(TextInput::ContentHint::MultiLine) << TextInputInterface::ContentHints(TextInputInterface::ContentHint::MultiLine);
-
-    QTest::newRow("autos/v2") << TextInputInterfaceVersion::UnstableV2
-                              << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization)
-                              << (TextInputInterface::ContentHint::AutoCompletion | TextInputInterface::ContentHint::AutoCorrection | TextInputInterface::ContentHint::AutoCapitalization);
-
-    // all has combinations which don't make sense - what's both lowercase and uppercase?
-    QTest::newRow("all/v2") << TextInputInterfaceVersion::UnstableV2
-                            << (TextInput::ContentHint::AutoCompletion |
-                                TextInput::ContentHint::AutoCorrection |
-                                TextInput::ContentHint::AutoCapitalization |
-                                TextInput::ContentHint::LowerCase |
-                                TextInput::ContentHint::UpperCase |
-                                TextInput::ContentHint::TitleCase |
-                                TextInput::ContentHint::HiddenText |
-                                TextInput::ContentHint::SensitiveData |
-                                TextInput::ContentHint::Latin |
-                                TextInput::ContentHint::MultiLine)
-                            << (TextInputInterface::ContentHint::AutoCompletion |
-                                TextInputInterface::ContentHint::AutoCorrection |
-                                TextInputInterface::ContentHint::AutoCapitalization |
-                                TextInputInterface::ContentHint::LowerCase |
-                                TextInputInterface::ContentHint::UpperCase |
-                                TextInputInterface::ContentHint::TitleCase |
-                                TextInputInterface::ContentHint::HiddenText |
-                                TextInputInterface::ContentHint::SensitiveData |
-                                TextInputInterface::ContentHint::Latin |
-                                TextInputInterface::ContentHint::MultiLine);
 }
 
 void TextInputTest::testContentHints()
@@ -578,19 +464,19 @@ void TextInputTest::testContentHints()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
-    QCOMPARE(ti->contentHints(), TextInputInterface::ContentHints());
+    QCOMPARE(ti->contentHints(), KWaylandServer::TextInputContentHints());
 
-    QSignalSpy contentTypeChangedSpy(ti, &TextInputInterface::contentTypeChanged);
+    QSignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
     QVERIFY(contentTypeChangedSpy.isValid());
     QFETCH(TextInput::ContentHints, clientHints);
     textInput->setContentType(clientHints, TextInput::ContentPurpose::Normal);
@@ -604,40 +490,27 @@ void TextInputTest::testContentHints()
     // unsetting should work
     textInput->setContentType(TextInput::ContentHints(), TextInput::ContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
-    QCOMPARE(ti->contentHints(), TextInputInterface::ContentHints());
+    QCOMPARE(ti->contentHints(), KWaylandServer::TextInputContentHints());
 }
 
 void TextInputTest::testContentPurpose_data()
 {
-    QTest::addColumn<TextInputInterfaceVersion>("version");
+
     QTest::addColumn<TextInput::ContentPurpose>("clientPurpose");
-    QTest::addColumn<TextInputInterface::ContentPurpose>("serverPurpose");
+    QTest::addColumn<KWaylandServer::TextInputContentPurpose>("serverPurpose");
 
-    QTest::newRow("Alpha/v0")    << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Alpha    << TextInputInterface::ContentPurpose::Alpha;
-    QTest::newRow("Digits/v0")   << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Digits   << TextInputInterface::ContentPurpose::Digits;
-    QTest::newRow("Number/v0")   << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Number   << TextInputInterface::ContentPurpose::Number;
-    QTest::newRow("Phone/v0")    << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Phone    << TextInputInterface::ContentPurpose::Phone;
-    QTest::newRow("Url/v0")      << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Url      << TextInputInterface::ContentPurpose::Url;
-    QTest::newRow("Email/v0")    << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Email    << TextInputInterface::ContentPurpose::Email;
-    QTest::newRow("Name/v0")     << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Name     << TextInputInterface::ContentPurpose::Name;
-    QTest::newRow("Password/v0") << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Password << TextInputInterface::ContentPurpose::Password;
-    QTest::newRow("Date/v0")     << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Date     << TextInputInterface::ContentPurpose::Date;
-    QTest::newRow("Time/v0")     << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Time     << TextInputInterface::ContentPurpose::Time;
-    QTest::newRow("Datetime/v0") << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::DateTime << TextInputInterface::ContentPurpose::DateTime;
-    QTest::newRow("Terminal/v0") << TextInputInterfaceVersion::UnstableV0 << TextInput::ContentPurpose::Terminal << TextInputInterface::ContentPurpose::Terminal;
-
-    QTest::newRow("Alpha/v2")    << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Alpha    << TextInputInterface::ContentPurpose::Alpha;
-    QTest::newRow("Digits/v2")   << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Digits   << TextInputInterface::ContentPurpose::Digits;
-    QTest::newRow("Number/v2")   << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Number   << TextInputInterface::ContentPurpose::Number;
-    QTest::newRow("Phone/v2")    << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Phone    << TextInputInterface::ContentPurpose::Phone;
-    QTest::newRow("Url/v2")      << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Url      << TextInputInterface::ContentPurpose::Url;
-    QTest::newRow("Email/v2")    << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Email    << TextInputInterface::ContentPurpose::Email;
-    QTest::newRow("Name/v2")     << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Name     << TextInputInterface::ContentPurpose::Name;
-    QTest::newRow("Password/v2") << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Password << TextInputInterface::ContentPurpose::Password;
-    QTest::newRow("Date/v2")     << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Date     << TextInputInterface::ContentPurpose::Date;
-    QTest::newRow("Time/v2")     << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Time     << TextInputInterface::ContentPurpose::Time;
-    QTest::newRow("Datetime/v2") << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::DateTime << TextInputInterface::ContentPurpose::DateTime;
-    QTest::newRow("Terminal/v2") << TextInputInterfaceVersion::UnstableV2 << TextInput::ContentPurpose::Terminal << TextInputInterface::ContentPurpose::Terminal;
+    QTest::newRow("Alpha/v2")    << TextInput::ContentPurpose::Alpha    << KWaylandServer::TextInputContentPurpose::Alpha;
+    QTest::newRow("Digits/v2")   << TextInput::ContentPurpose::Digits   << KWaylandServer::TextInputContentPurpose::Digits;
+    QTest::newRow("Number/v2")   << TextInput::ContentPurpose::Number   << KWaylandServer::TextInputContentPurpose::Number;
+    QTest::newRow("Phone/v2")    << TextInput::ContentPurpose::Phone    << KWaylandServer::TextInputContentPurpose::Phone;
+    QTest::newRow("Url/v2")      << TextInput::ContentPurpose::Url      << KWaylandServer::TextInputContentPurpose::Url;
+    QTest::newRow("Email/v2")    << TextInput::ContentPurpose::Email    << KWaylandServer::TextInputContentPurpose::Email;
+    QTest::newRow("Name/v2")     << TextInput::ContentPurpose::Name     << KWaylandServer::TextInputContentPurpose::Name;
+    QTest::newRow("Password/v2") << TextInput::ContentPurpose::Password << KWaylandServer::TextInputContentPurpose::Password;
+    QTest::newRow("Date/v2")     << TextInput::ContentPurpose::Date     << KWaylandServer::TextInputContentPurpose::Date;
+    QTest::newRow("Time/v2")     << TextInput::ContentPurpose::Time     << KWaylandServer::TextInputContentPurpose::Time;
+    QTest::newRow("Datetime/v2") << TextInput::ContentPurpose::DateTime << KWaylandServer::TextInputContentPurpose::DateTime;
+    QTest::newRow("Terminal/v2") << TextInput::ContentPurpose::Terminal << KWaylandServer::TextInputContentPurpose::Terminal;
 }
 
 void TextInputTest::testContentPurpose()
@@ -646,19 +519,19 @@ void TextInputTest::testContentPurpose()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
-    QCOMPARE(ti->contentPurpose(), TextInputInterface::ContentPurpose::Normal);
+    QCOMPARE(ti->contentPurpose(), KWaylandServer::TextInputContentPurpose::Normal);
 
-    QSignalSpy contentTypeChangedSpy(ti, &TextInputInterface::contentTypeChanged);
+    QSignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
     QVERIFY(contentTypeChangedSpy.isValid());
     QFETCH(TextInput::ContentPurpose, clientPurpose);
     textInput->setContentType(TextInput::ContentHints(), clientPurpose);
@@ -672,19 +545,19 @@ void TextInputTest::testContentPurpose()
     // unsetting should work
     textInput->setContentType(TextInput::ContentHints(), TextInput::ContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
-    QCOMPARE(ti->contentPurpose(), TextInputInterface::ContentPurpose::Normal);
+    QCOMPARE(ti->contentPurpose(), KWaylandServer::TextInputContentPurpose::Normal);
 }
 
 void TextInputTest::testTextDirection_data()
 {
-    QTest::addColumn<TextInputInterfaceVersion>("version");
+
     QTest::addColumn<Qt::LayoutDirection>("textDirection");
 
-    QTest::newRow("ltr/v0") << TextInputInterfaceVersion::UnstableV0 << Qt::LeftToRight;
-    QTest::newRow("rtl/v0") << TextInputInterfaceVersion::UnstableV0 << Qt::RightToLeft;
+    QTest::newRow("ltr/v0") << Qt::LeftToRight;
+    QTest::newRow("rtl/v0") << Qt::RightToLeft;
 
-    QTest::newRow("ltr/v2") << TextInputInterfaceVersion::UnstableV2 << Qt::LeftToRight;
-    QTest::newRow("rtl/v2") << TextInputInterfaceVersion::UnstableV2 << Qt::RightToLeft;
+    QTest::newRow("ltr/v2") << Qt::LeftToRight;
+    QTest::newRow("rtl/v2") << Qt::RightToLeft;
 }
 
 void TextInputTest::testTextDirection()
@@ -693,8 +566,8 @@ void TextInputTest::testTextDirection()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     // default should be auto
     QCOMPARE(textInput->textDirection(), Qt::LayoutDirectionAuto);
@@ -703,7 +576,7 @@ void TextInputTest::testTextDirection()
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
     // let's send the new text direction
@@ -723,22 +596,14 @@ void TextInputTest::testTextDirection()
     QCOMPARE(textInput->textDirection(), Qt::LayoutDirectionAuto);
 }
 
-void TextInputTest::testLanguage_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
-}
-
 void TextInputTest::testLanguage()
 {
     // this test verifies that language is sent from server to client
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     // default should be empty
     QVERIFY(textInput->language().isEmpty());
@@ -747,7 +612,7 @@ void TextInputTest::testLanguage()
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
     // let's send the new language
@@ -765,14 +630,6 @@ void TextInputTest::testLanguage()
     QCOMPARE(textInput->language(), QByteArrayLiteral("bar"));
 }
 
-void TextInputTest::testKeyEvent_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
-}
-
 void TextInputTest::testKeyEvent()
 {
     qRegisterMetaType<Qt::KeyboardModifiers>();
@@ -781,15 +638,15 @@ void TextInputTest::testKeyEvent()
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     textInput->enable(surface.data());
     m_connection->flush();
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
     // TODO: test modifiers
@@ -813,22 +670,14 @@ void TextInputTest::testKeyEvent()
     QCOMPARE(keyEventSpy.last().at(3).value<quint32>(), 101u);
 }
 
-void TextInputTest::testPreEdit_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
-}
-
 void TextInputTest::testPreEdit()
 {
     // this test verifies that pre-edit is correctly passed to the client
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     // verify default values
     QVERIFY(textInput->composingText().isEmpty());
@@ -840,7 +689,7 @@ void TextInputTest::testPreEdit()
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
     // now let's pass through some pre-edit events
@@ -863,22 +712,14 @@ void TextInputTest::testPreEdit()
     QCOMPARE(textInput->composingTextCursorPosition(), 6);
 }
 
-void TextInputTest::testCommit_data()
-{
-    QTest::addColumn<TextInputInterfaceVersion>("version");
-
-    QTest::newRow("UnstableV0") << TextInputInterfaceVersion::UnstableV0;
-    QTest::newRow("UnstableV2") << TextInputInterfaceVersion::UnstableV2;
-}
-
 void TextInputTest::testCommit()
 {
     // this test verifies that the commit is handled correctly by the client
     QScopedPointer<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
-    QFETCH(TextInputInterfaceVersion, version);
-    QScopedPointer<TextInput> textInput(createTextInput(version));
+
+    QScopedPointer<TextInput> textInput(createTextInput());
     QVERIFY(!textInput.isNull());
     // verify default values
     QCOMPARE(textInput->commitText(), QByteArray());
@@ -892,7 +733,7 @@ void TextInputTest::testCommit()
     m_display->dispatchEvents();
 
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    auto ti = m_seatInterface->focusedTextInput();
+    auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
     // now let's commit

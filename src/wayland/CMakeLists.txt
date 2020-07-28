@@ -59,9 +59,7 @@ set(SERVER_LIB_SRCS
     surface_interface.cpp
     surfacerole.cpp
     tablet_interface.cpp
-    textinput_interface.cpp
-    textinput_interface_v0.cpp
-    textinput_interface_v2.cpp
+    textinput_v2_interface.cpp
     touch_interface.cpp
     viewporter_interface.cpp
     xdgdecoration_v1_interface.cpp
@@ -158,18 +156,12 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME server-decoration
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input.xml
-    BASENAME text
-)
-
-
 ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
     BASENAME text-input-unstable-v1
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
     BASENAME text-input-unstable-v2
 )
@@ -426,7 +418,8 @@ set(SERVER_LIB_HEADERS
   subcompositor_interface.h
   surface_interface.h
   tablet_interface.h
-  textinput_interface.h
+  textinput.h
+  textinput_v2_interface.h
   touch_interface.h
   viewporter_interface.h
   xdgdecoration_v1_interface.h

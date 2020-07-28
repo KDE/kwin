@@ -23,7 +23,7 @@ class AbstractDataSource;
 class DataDeviceInterface;
 class DataSourceInterface;
 class DataControlDeviceV1Interface;
-class TextInputInterface;
+class TextInputV2Interface;
 class PrimarySelectionDeviceV1Interface;
 
 class SeatInterface::Private : public Global::Private
@@ -37,11 +37,9 @@ public:
     QVector<KeyboardInterface *> keyboardsForSurface(SurfaceInterface *surface) const;
     QVector<TouchInterface *> touchsForSurface(SurfaceInterface *surface) const;
     QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
-    TextInputInterface *textInputForSurface(SurfaceInterface *surface) const;
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
-    void registerTextInput(TextInputInterface *textInput);
     void endDrag(quint32 serial);
 
     QString name;
@@ -57,7 +55,10 @@ public:
     QVector<PrimarySelectionDeviceV1Interface*> primarySelectionDevices;
     QVector<DataControlDeviceV1Interface*> dataControlDevices;
 
-    QVector<TextInputInterface*> textInputs;
+    // TextInput v2
+    QPointer<TextInputV2Interface> textInputV2;
+    SurfaceInterface *focusedTextInputSurface = nullptr;
+    QMetaObject::Connection focusedSurfaceDestroyConnection;
 
     // the last thing copied into the clipboard content
     AbstractDataSource *currentSelection = nullptr;
@@ -124,17 +125,6 @@ public:
     };
     Keyboard keys;
     bool updateKey(quint32 key, Keyboard::State state);
-
-    struct TextInput {
-        struct Focus {
-            SurfaceInterface *surface = nullptr;
-            QMetaObject::Connection destroyConnection;
-            quint32 serial = 0;
-            TextInputInterface *textInput = nullptr;
-        };
-        Focus focus;
-    };
-    TextInput textInput;
 
     // Touch related members
     struct Touch {
