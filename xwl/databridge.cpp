@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "clipboard.h"
 #include "dnd.h"
 #include "selection.h"
+#include "xcbutils.h"
 #include "xwayland.h"
 
 #include "abstract_client.h"
@@ -102,7 +103,7 @@ bool DataBridge::filterEvent(xcb_generic_event_t *event)
     if (m_dnd && m_dnd->filterEvent(event)) {
         return true;
     }
-    if (event->response_type - Xwayland::self()->xfixes()->first_event == XCB_XFIXES_SELECTION_NOTIFY) {
+    if (event->response_type == Xcb::Extensions::self()->fixesSelectionNotifyEvent()) {
         return handleXfixesNotify((xcb_xfixes_selection_notify_event_t *)event);
     }
     return false;

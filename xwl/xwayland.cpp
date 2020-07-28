@@ -312,9 +312,7 @@ void Xwayland::destroyX11Connection()
     m_app->removeNativeX11EventFilter();
 
     xcb_disconnect(m_app->x11Connection());
-
     m_xcbConnectionFd = -1;
-    m_xfixes = nullptr;
 
     m_app->setX11Connection(nullptr);
     m_app->setX11DefaultScreen(nullptr);
@@ -333,9 +331,6 @@ void Xwayland::continueStartupWithX()
         Q_EMIT criticalError(1);
         return;
     }
-
-    xcb_prefetch_extension_data(xcbConn, &xcb_xfixes_id);
-    m_xfixes = xcb_get_extension_data(xcbConn, &xcb_xfixes_id);
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     KSelectionOwner owner("WM_S0", xcbConn, m_app->x11RootWindow());
