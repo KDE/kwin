@@ -23,13 +23,12 @@
 #include "pipewirestream.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
-#include "kwineglimagetexture.h"
+#include "kwingltexture.h"
+#include "kwinglutils.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
 #include "pipewirecore.h"
 #include "platform.h"
-#include "platformsupport/scenes/opengl/drm_fourcc.h"
-#include "scenes/opengl/egl_dmabuf.h"
 #include "utils.h"
 
 #include <KLocalizedString>
