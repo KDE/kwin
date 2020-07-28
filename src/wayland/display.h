@@ -65,7 +65,7 @@ enum class PointerGesturesInterfaceVersion;
 class PointerGesturesInterface;
 enum class PointerConstraintsInterfaceVersion;
 class PointerConstraintsInterface;
-class XdgForeignInterface;
+class XdgForeignV2Interface;
 class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
 class PlasmaVirtualDesktopManagementInterface;
@@ -231,12 +231,12 @@ public:
     PointerConstraintsInterface *createPointerConstraints(const PointerConstraintsInterfaceVersion &version, QObject *parent = nullptr);
 
     /**
-     * Creates the XdgForeignInterface in interface @p version
+     * Creates the XdgForeignV2Interface in interface @p version
      *
      * @returns The created manager object
      * @since 5.40
      **/
-    XdgForeignInterface *createXdgForeignInterface(QObject *parent = nullptr);
+    XdgForeignV2Interface *createXdgForeignV2Interface(QObject *parent = nullptr);
 
     /**
      * Creates the IdleInhibitManagerInterface in interface @p version.

@@ -42,7 +42,7 @@
 #include "textinput_interface_p.h"
 #include "viewporter_interface.h"
 #include "xdgdecoration_v1_interface.h"
-#include "xdgforeign_interface.h"
+#include "xdgforeign_v2_interface.h"
 #include "xdgoutput_interface.h"
 #include "xdgshell_interface.h"
 
@@ -401,9 +401,9 @@ PointerConstraintsInterface *Display::createPointerConstraints(const PointerCons
     return p;
 }
 
-XdgForeignInterface *Display::createXdgForeignInterface(QObject *parent)
+XdgForeignV2Interface *Display::createXdgForeignV2Interface(QObject *parent)
 {
-    XdgForeignInterface *foreign = new XdgForeignInterface(this, parent);
+    XdgForeignV2Interface *foreign = new XdgForeignV2Interface(this, parent);
     connect(this, &Display::aboutToTerminate, foreign, [foreign] { delete foreign; });
     return foreign;
 }

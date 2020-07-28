@@ -62,7 +62,6 @@ set(SERVER_LIB_SRCS
     touch_interface.cpp
     viewporter_interface.cpp
     xdgdecoration_v1_interface.cpp
-    xdgforeign_interface.cpp
     xdgforeign_v2_interface.cpp
     xdgoutput_interface.cpp
     xdgshell_interface.cpp
@@ -177,7 +176,7 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME pointer-constraints-unstable-v1
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-foreign/xdg-foreign-unstable-v2.xml
     BASENAME xdg-foreign-unstable-v2
 )
@@ -410,7 +409,7 @@ set(SERVER_LIB_HEADERS
   touch_interface.h
   viewporter_interface.h
   xdgdecoration_v1_interface.h
-  xdgforeign_interface.h
+  xdgforeign_v2_interface.h
   xdgoutput_interface.h
   xdgshell_interface.h
 )

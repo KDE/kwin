@@ -6,102 +6,110 @@
 #ifndef KWAYLAND_SERVER_XDGFOREIGNV2_INTERFACE_P_H
 #define KWAYLAND_SERVER_XDGFOREIGNV2_INTERFACE_P_H
 
-#include "global.h"
-#include "resource.h"
+#include "xdgforeign_v2_interface.h"
+#include "surface_interface_p.h"
+
+#include <qwayland-server-xdg-foreign-unstable-v2.h>
 
 namespace KWaylandServer
 {
 
 class Display;
 class SurfaceInterface;
-class XdgExportedUnstableV2Interface;
-class XdgImportedUnstableV2Interface;
+class XdgExportedV2Interface;
+class XdgImportedV2Interface;
+class XdgExporterV2InterfacePrivate;
+class XdgImporterV2InterfacePrivate;
+class XdgExportedV2Interface;
+class XdgImportedV2InterfacePrivate;
 
-class Q_DECL_HIDDEN XdgForeignInterface::Private
-{
-public:
-    Private(Display *display, XdgForeignInterface *q);
-
-    XdgForeignInterface *q;
-    XdgExporterUnstableV2Interface *exporter;
-    XdgImporterUnstableV2Interface *importer;
-};
-
-class Q_DECL_HIDDEN XdgExporterUnstableV2Interface : public Global
+class XdgForeignV2InterfacePrivate : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~XdgExporterUnstableV2Interface();
+    XdgForeignV2InterfacePrivate(Display *display, XdgForeignV2Interface *q);
 
-    XdgExportedUnstableV2Interface *exportedSurface(const QString &handle);
+    XdgForeignV2Interface *q;
+    XdgExporterV2Interface *exporter;
+    XdgImporterV2Interface *importer;
+};
+
+class XdgExporterV2Interface : public QObject
+{
+    Q_OBJECT
+public:
+    explicit XdgExporterV2Interface(Display *display, XdgForeignV2Interface *parent = nullptr);
+    ~XdgExporterV2Interface() override;
+
+    XdgExportedV2Interface *exportedSurface(const QString &handle);
 
 Q_SIGNALS:
-    void surfaceExported(const QString &handle, XdgExportedUnstableV2Interface *exported);
+    void surfaceExported(const QString &handle, XdgExportedV2Interface *exported);
     void surfaceUnexported(const QString &handle);
 
 private:
-    explicit XdgExporterUnstableV2Interface(Display *display, XdgForeignInterface *parent = nullptr);
-    friend class Display;
-    friend class XdgForeignInterface;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<XdgExporterV2InterfacePrivate> d;
 };
 
-class Q_DECL_HIDDEN XdgImporterUnstableV2Interface : public Global
+class XdgImporterV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~XdgImporterUnstableV2Interface();
+    explicit XdgImporterV2Interface(Display *display, XdgForeignV2Interface *parent = nullptr);
+    ~XdgImporterV2Interface() override;
 
-    XdgImportedUnstableV2Interface *importedSurface(const QString &handle);
+    XdgImportedV2Interface *importedSurface(const QString &handle);
     SurfaceInterface *transientFor(SurfaceInterface *surface);
 
 Q_SIGNALS:
-    void surfaceImported(const QString &handle, XdgImportedUnstableV2Interface *imported);
+    void surfaceImported(const QString &handle, XdgImportedV2Interface *imported);
     void surfaceUnimported(const QString &handle);
     void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 private:
-    explicit XdgImporterUnstableV2Interface(Display *display, XdgForeignInterface *parent = nullptr);
-    friend class Display;
-    friend class XdgForeignInterface;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<XdgImporterV2InterfacePrivate> d;
 };
 
-class Q_DECL_HIDDEN XdgExportedUnstableV2Interface : public Resource
+class XdgExportedV2Interface : public QObject, QtWaylandServer::zxdg_exported_v2
 {
-    Q_OBJECT
 public:
-    virtual ~XdgExportedUnstableV2Interface();
+    explicit XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource );
+    ~XdgExportedV2Interface() override;
+
+    SurfaceInterface *parentResource();
 
 private:
-    explicit XdgExportedUnstableV2Interface(XdgExporterUnstableV2Interface *parent, wl_resource *parentResource);
-    friend class XdgExporterUnstableV2Interface;
+    SurfaceInterface *surface;
 
-    class Private;
-    Private *d_func() const;
+protected:
+    void zxdg_exported_v2_destroy(Resource *resource) override;
+    void zxdg_exported_v2_destroy_resource(Resource *resource) override;
+
 };
 
-class Q_DECL_HIDDEN XdgImportedUnstableV2Interface : public Resource
+class XdgImportedV2Interface : public QObject, QtWaylandServer::zxdg_imported_v2
 {
     Q_OBJECT
 public:
-    virtual ~XdgImportedUnstableV2Interface();
+    explicit XdgImportedV2Interface(SurfaceInterface *surface, wl_resource *resource);
+    ~XdgImportedV2Interface() override;
 
     SurfaceInterface *child() const;
+    SurfaceInterface *parentResource();
 
 Q_SIGNALS:
     void childChanged(KWaylandServer::SurfaceInterface *child);
 
 private:
-    explicit XdgImportedUnstableV2Interface(XdgImporterUnstableV2Interface *parent, wl_resource *parentResource);
-    friend class XdgImporterUnstableV2Interface;
+    SurfaceInterface *surface;
+    QPointer<SurfaceInterface> parentOf;
 
-    class Private;
-    Private *d_func() const;
+protected:
+    void zxdg_imported_v2_set_parent_of(Resource *resource, wl_resource *surface) override;
+    void zxdg_imported_v2_destroy(Resource *resource) override;
+    void zxdg_imported_v2_destroy_resource(Resource *resource) override;
+
 };
-
 }
 
 #endif

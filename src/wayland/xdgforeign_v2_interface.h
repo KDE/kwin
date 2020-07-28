@@ -6,8 +6,7 @@
 #ifndef KWAYLAND_SERVER_XDGFOREIGN_INTERFACE_H
 #define KWAYLAND_SERVER_XDGFOREIGN_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -16,8 +15,9 @@ namespace KWaylandServer
 
 class Display;
 class SurfaceInterface;
-class XdgExporterUnstableV2Interface;
-class XdgImporterUnstableV2Interface;
+class XdgExporterV2Interface;
+class XdgImporterV2Interface;
+class XdgForeignV2InterfacePrivate;
 
 /**
  * This class encapsulates the server side logic of the XdgForeign protocol.
@@ -29,23 +29,12 @@ class XdgImporterUnstableV2Interface;
  *
  * @since 5.40
  */
-class KWAYLANDSERVER_EXPORT XdgForeignInterface : public QObject
+class KWAYLANDSERVER_EXPORT XdgForeignV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    XdgForeignInterface(Display *display, QObject *parent = nullptr);
-    ~XdgForeignInterface();
-
-    /**
-     * Creates the native zxdg_exporter_v2 and zxdg_importer_v2 interfaces
-     * and announces them to the client.
-     */
-    void create();
-
-    /**
-     * @returns true if theimporter and exporter are valid and functional
-     */
-    bool isValid();
+    XdgForeignV2Interface(Display *display, QObject *parent = nullptr);
+    ~XdgForeignV2Interface() override;
 
     /**
      * If a client did import a surface and set one of its own as child of the
@@ -69,10 +58,9 @@ Q_SIGNALS:
 
 private:
     friend class Display;
-    friend class XdgExporterUnstableV2Interface;
-    friend class XdgImporterUnstableV2Interface;
-    class Private;
-    Private *d;
+    friend class XdgExporterV2InterfacePrivate;
+    friend class XdgImporterV2InterfacePrivate;
+    QScopedPointer<XdgForeignV2InterfacePrivate> d;
 };
 
 }
