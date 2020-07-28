@@ -1538,8 +1538,10 @@ void XdgToplevelClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
         workspace()->updateClientArea();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
-        hideClient(true);
-        m_plasmaShellSurface->hideAutoHidingPanel();
+        if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
+            hideClient(true);
+            m_plasmaShellSurface->hideAutoHidingPanel();
+        }
         updateShowOnScreenEdge();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
