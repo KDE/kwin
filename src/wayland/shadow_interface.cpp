@@ -42,7 +42,7 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_destroy(Resource
 
 void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {
-     SurfaceInterface *s = SurfaceInterface::get(surface);
+    SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
         wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
