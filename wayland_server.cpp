@@ -419,7 +419,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
 
     auto shadowManager = m_display->createShadowManager(m_display);
-    shadowManager->create();
 
     m_display->createDpmsManager(m_display);
 
