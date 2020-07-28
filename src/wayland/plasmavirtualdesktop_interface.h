@@ -6,8 +6,7 @@
 #ifndef KWAYLAND_SERVER_PLASMAVIRTUALDESKTOP_H
 #define KWAYLAND_SERVER_PLASMAVIRTUALDESKTOP_H
 
-#include "global.h"
-#include "resource.h"
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -16,6 +15,8 @@ namespace KWaylandServer
 
 class Display;
 class PlasmaVirtualDesktopInterface;
+class PlasmaVirtualDesktopInterfacePrivate;
+class PlasmaVirtualDesktopManagementInterfacePrivate;
 
 /**
  * @short Wrapper for the org_kde_plasma_virtual_desktop_management interface.
@@ -23,11 +24,11 @@ class PlasmaVirtualDesktopInterface;
  * This class provides a convenient wrapper for the org_kde_plasma_virtual_desktop_management interface.
  * @since 5.52
  */
-class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopManagementInterface : public Global
+class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopManagementInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~PlasmaVirtualDesktopManagementInterface();
+    ~PlasmaVirtualDesktopManagementInterface() override;
 
     /**
      * Sets how many rows the virtual desktops should be laid into
@@ -91,15 +92,14 @@ Q_SIGNALS:
 private:
     explicit PlasmaVirtualDesktopManagementInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<PlasmaVirtualDesktopManagementInterfacePrivate> d;
 };
 
 class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~PlasmaVirtualDesktopInterface();
+    ~PlasmaVirtualDesktopInterface() override;
 
     /**
      * @returns the unique id for this desktop.
@@ -145,9 +145,9 @@ Q_SIGNALS:
 private:
     explicit PlasmaVirtualDesktopInterface(PlasmaVirtualDesktopManagementInterface *parent);
     friend class PlasmaVirtualDesktopManagementInterface;
+    friend class PlasmaVirtualDesktopManagementInterfacePrivate;
 
-    class Private;
-    const QScopedPointer<Private> d;
+    QScopedPointer<PlasmaVirtualDesktopInterfacePrivate> d;
 };
 
 }

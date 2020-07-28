@@ -97,9 +97,9 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME plasma-shell
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-virtual-desktop.xml
-    BASENAME plasma-virtual-desktop
+    BASENAME org-kde-plasma-virtual-desktop
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
