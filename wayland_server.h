@@ -61,7 +61,7 @@ class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
-class XdgForeignInterface;
+class XdgForeignV2Interface;
 class XdgOutputManagerInterface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
