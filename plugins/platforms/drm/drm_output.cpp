@@ -118,6 +118,10 @@ bool DrmOutput::showCursor(DrmDumbBuffer *c)
 
 bool DrmOutput::showCursor()
 {
+    if (m_deleted) {
+        return false;
+    }
+
     if (Q_UNLIKELY(m_backend->usesSoftwareCursor())) {
         qCCritical(KWIN_DRM) << "DrmOutput::showCursor should never be called when software cursor is enabled";
         return true;
@@ -174,6 +178,9 @@ QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 
 void DrmOutput::updateCursor()
 {
+    if (m_deleted) {
+        return;
+    }
     QImage cursorImage = Cursors::self()->currentCursor()->image();
     if (cursorImage.isNull()) {
         return;
