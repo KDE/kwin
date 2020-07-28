@@ -84,8 +84,7 @@ class ShadowInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow
 {
 public:
     ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource);
-    void commit();
-    void attach(State::Flags flag, wl_resource *buffer);
+    ~ShadowInterfacePrivate();
 
     struct State {
         enum Flags {
@@ -111,6 +110,10 @@ public:
         QMarginsF offset;
         Flags flags  = Flags::None;
     };
+
+    void commit();
+    void attach(State::Flags flag, wl_resource *buffer);
+
     State current;
     State pending;
     ShadowInterface *q;
