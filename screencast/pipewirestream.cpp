@@ -21,36 +21,39 @@
  */
 
 #include "pipewirestream.h"
+#include "cursor.h"
+#include "dmabuftexture.h"
+#include "kwineglimagetexture.h"
+#include "kwinscreencast_logging.h"
+#include "main.h"
+#include "pipewirecore.h"
+#include "platform.h"
+#include "platformsupport/scenes/opengl/drm_fourcc.h"
+#include "scenes/opengl/egl_dmabuf.h"
+#include "utils.h"
 
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <gbm.h>
-#include <spa/buffer/meta.h>
+#include <KLocalizedString>
 
 #include <QLoggingCategory>
 #include <QPainter>
-#include "utils.h"
-#include "cursor.h"
-#include "main.h"
-#include "platform.h"
-#include "scenes/opengl/egl_dmabuf.h"
-#include "platformsupport/scenes/opengl/drm_fourcc.h"
-#include "kwineglimagetexture.h"
-#include "dmabuftexture.h"
-#include "pipewirecore.h"
-#include "kwinpipewire_logging.h"
 
-#include <KLocalizedString>
+#include <spa/buffer/meta.h>
+
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+namespace KWin
+{
 
 void PipeWireStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
     PipeWireStream *pw = static_cast<PipeWireStream*>(data);
-    qCDebug(KWIN_PIPEWIRE) << "state changed"<< pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
+    qCDebug(KWIN_SCREENCAST) << "state changed"<< pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
     switch (state) {
     case PW_STREAM_STATE_ERROR:
-        qCWarning(KWIN_PIPEWIRE) << "Stream error: " << error_message;
+        qCWarning(KWIN_SCREENCAST) << "Stream error: " << error_message;
         break;
     case PW_STREAM_STATE_PAUSED:
         if (pw->nodeId() == 0 && pw->pwStream) {
@@ -84,7 +87,7 @@ void PipeWireStream::newStreamParams()
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT (paramsBuffer, sizeof (paramsBuffer));
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
-    const auto cursorSize = KWin::Cursors::self()->currentCursor()->themeSize();
+    const auto cursorSize = Cursors::self()->currentCursor()->themeSize();
     const spa_pod *params[] = {
         (spa_pod*) spa_pod_builder_add_object(&pod_builder,
                                               SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers,
@@ -110,7 +113,7 @@ void PipeWireStream::onStreamParamChanged(void *data, uint32_t id, const struct 
 
     PipeWireStream *pw = static_cast<PipeWireStream *>(data);
     spa_format_video_raw_parse (format, &pw->videoFormat);
-    qCDebug(KWIN_PIPEWIRE) << "Stream format changed" << pw << pw->videoFormat.format;
+    qCDebug(KWIN_SCREENCAST) << "Stream format changed" << pw << pw->videoFormat.format;
     pw->newStreamParams();
 }
 
@@ -122,11 +125,11 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
-    QSharedPointer<KWin::DmaBufTexture> dmabuf (KWin::kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
+    QSharedPointer<DmaBufTexture> dmabuf(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
     if (dmabuf) {
       spa_data->type = SPA_DATA_DmaBuf;
       spa_data->fd = dmabuf->fd();
-      spa_data->data = NULL;
+      spa_data->data = nullptr;
       spa_data->maxsize = dmabuf->stride() * stream->m_resolution.height();
 
       stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
@@ -138,30 +141,30 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
         spa_data->type = SPA_DATA_MemFd;
         spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
         if (spa_data->fd == -1) {
-            qCCritical(KWIN_PIPEWIRE) << "memfd: Can't create memfd";
+            qCCritical(KWIN_SCREENCAST) << "memfd: Can't create memfd";
             return;
         }
         spa_data->mapoffset = 0;
 
         if (ftruncate (spa_data->fd, spa_data->maxsize) < 0) {
-            qCCritical(KWIN_PIPEWIRE) << "memfd: Can't truncate to" << spa_data->maxsize;
+            qCCritical(KWIN_SCREENCAST) << "memfd: Can't truncate to" << spa_data->maxsize;
             return;
         }
 
         unsigned int seals = F_SEAL_GROW | F_SEAL_SHRINK | F_SEAL_SEAL;
         if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1)
-            qCWarning(KWIN_PIPEWIRE) << "memfd: Failed to add seals";
+            qCWarning(KWIN_SCREENCAST) << "memfd: Failed to add seals";
 
-        spa_data->data = mmap(NULL,
+        spa_data->data = mmap(nullptr,
                               spa_data->maxsize,
                               PROT_READ | PROT_WRITE,
                               MAP_SHARED,
                               spa_data->fd,
                               spa_data->mapoffset);
         if (spa_data->data == MAP_FAILED)
-            qCCritical(KWIN_PIPEWIRE) << "memfd: Failed to mmap memory";
+            qCCritical(KWIN_SCREENCAST) << "memfd: Failed to mmap memory";
         else
-            qCDebug(KWIN_PIPEWIRE) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
+            qCDebug(KWIN_SCREENCAST) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
 #endif
     }
 }
@@ -212,7 +215,7 @@ bool PipeWireStream::init()
     connect(pwCore.data(), &PipeWireCore::pipewireFailed, this, &PipeWireStream::coreFailed);
 
     if (!createStream()) {
-        qCWarning(KWIN_PIPEWIRE) << "Failed to create PipeWire stream";
+        qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire stream";
         m_error = i18n("Failed to create PipeWire stream");
         return false;
     }
@@ -247,7 +250,7 @@ bool PipeWireStream::createStream()
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
-    const auto format = m_hasAlpha || m_gbmDevice ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    const auto format = m_hasAlpha ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
     const spa_pod *param = (spa_pod*)spa_pod_builder_add_object(&podBuilder,
                                         SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat,
@@ -262,16 +265,16 @@ bool PipeWireStream::createStream()
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
 
     if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, &param, 1) != 0) {
-        qCWarning(KWIN_PIPEWIRE) << "Could not connect to stream";
+        qCWarning(KWIN_SCREENCAST) << "Could not connect to stream";
         pw_stream_destroy(pwStream);
         return false;
     }
 
     if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded) {
-        connect(KWin::Cursors::self(), &KWin::Cursors::positionChanged, this, [this] {
+        connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             if (m_cursor.lastFrameTexture) {
                 m_repainting = true;
-                recordFrame(m_cursor.lastFrameTexture.data(), QRegion{m_cursor.lastRect} | cursorGeometry(KWin::Cursors::self()->currentCursor()));
+                recordFrame(m_cursor.lastFrameTexture.data(), QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
                 m_repainting = false;
             }
         });
@@ -291,9 +294,9 @@ void PipeWireStream::stop()
     delete this;
 }
 
-static KWin::GLTexture *copyTexture(KWin::GLTexture *texture)
+static GLTexture *copyTexture(GLTexture *texture)
 {
-    KWin::GLTexture *copy = new KWin::GLTexture(texture->internalFormat(), texture->size());
+    GLTexture *copy = new GLTexture(texture->internalFormat(), texture->size());
     copy->setFilter(GL_LINEAR);
     copy->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -305,7 +308,7 @@ static KWin::GLTexture *copyTexture(KWin::GLTexture *texture)
     return copy;
 }
 
-void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &damagedRegion)
+void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damagedRegion)
 {
     Q_ASSERT(!m_stopped);
     Q_ASSERT(frameTexture);
@@ -320,7 +323,7 @@ void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &d
     auto state = pw_stream_get_state(pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
         if (error) {
-            qCWarning(KWIN_PIPEWIRE) << "Failed to record frame: stream is not active" << error;
+            qCWarning(KWIN_SCREENCAST) << "Failed to record frame: stream is not active" << error;
         }
         return;
     }
@@ -336,7 +339,7 @@ void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &d
 
     uint8_t *data = (uint8_t *) spa_data->data;
     if (!data && spa_buffer->datas->type != SPA_DATA_DmaBuf) {
-        qCWarning(KWIN_PIPEWIRE) << "Failed to record frame: invalid buffer data";
+        qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
         pw_stream_queue_buffer(pwStream, buffer);
         return;
     }
@@ -349,7 +352,7 @@ void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &d
         const uint bufferSize = stride * size.height();
 
         if (bufferSize > spa_data->maxsize) {
-            qCDebug(KWIN_PIPEWIRE) << "Failed to record frame: frame is too big";
+            qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
             pw_stream_queue_buffer(pwStream, buffer);
             return;
         }
@@ -359,7 +362,7 @@ void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &d
 
         frameTexture->bind();
         glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
-        auto cursor = KWin::Cursors::self()->currentCursor();
+        auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             QImage dest(data, size.width(), size.height(), QImage::Format_RGBA8888_Premultiplied);
             QPainter painter(&dest);
@@ -390,13 +393,13 @@ void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &d
 
         frameTexture->render(damagedRegion, r, true);
 
-        auto cursor = KWin::Cursors::self()->currentCursor();
+        auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             if (!m_repainting) //We need to copy the last version of the stream to render the moved cursor on top
                 m_cursor.lastFrameTexture.reset(copyTexture(frameTexture));
 
             if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey())
-                m_cursor.texture.reset(new KWin::GLTexture(cursor->image()));
+                m_cursor.texture.reset(new GLTexture(cursor->image()));
 
             m_cursor.texture->setYInverted(false);
             m_cursor.texture->bind();
@@ -418,20 +421,20 @@ void PipeWireStream::recordFrame(KWin::GLTexture* frameTexture, const QRegion &d
     frameTexture->unbind();
 
     if (m_cursor.mode == KWaylandServer::ScreencastInterface::Metadata) {
-        sendCursorData(KWin::Cursors::self()->currentCursor(),
+        sendCursorData(Cursors::self()->currentCursor(),
                         (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
     }
 
     pw_stream_queue_buffer(pwStream, buffer);
 }
 
-QRect PipeWireStream::cursorGeometry(KWin::Cursor *cursor) const
+QRect PipeWireStream::cursorGeometry(Cursor *cursor) const
 {
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
     return QRect{position, m_cursor.texture->size()};
 }
 
-void PipeWireStream::sendCursorData(KWin::Cursor* cursor, spa_meta_cursor *spa_meta_cursor)
+void PipeWireStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
 {
     if (!cursor || !spa_meta_cursor) {
         return;
@@ -476,3 +479,5 @@ void PipeWireStream::setCursorMode(KWaylandServer::ScreencastInterface::CursorMo
     m_cursor.scale = scale;
     m_cursor.viewport = viewport;
 }
+
+} // namespace KWin

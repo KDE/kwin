@@ -23,6 +23,9 @@
 
 #include <KWaylandServer/screencast_interface.h>
 
+namespace KWin
+{
+
 class PipeWireStream;
 
 class ScreencastManager : public QObject
@@ -43,3 +46,4 @@ private:
     KWaylandServer::ScreencastInterface *m_screencast;
 };
 
+} // namespace KWin

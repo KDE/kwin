@@ -36,7 +36,8 @@
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/output_interface.h>
 
-using namespace KWin;
+namespace KWin
+{
 
 ScreencastManager::ScreencastManager(QObject *parent)
     : QObject(parent)
@@ -53,7 +54,7 @@ class EGLFence : public QObject
 public:
     EGLFence(EGLDisplay eglDisplay)
         : m_eglDisplay(eglDisplay)
-        , m_sync(eglCreateSync(eglDisplay, EGL_SYNC_FENCE_KHR, NULL))
+        , m_sync(eglCreateSync(eglDisplay, EGL_SYNC_FENCE_KHR, nullptr))
     {
         Q_ASSERT(m_sync);
         glFinish();
@@ -80,7 +81,7 @@ private:
 class WindowStream : public PipeWireStream
 {
 public:
-    WindowStream(KWin::Toplevel *toplevel, QObject *parent)
+    WindowStream(Toplevel *toplevel, QObject *parent)
         : PipeWireStream(toplevel->hasAlpha(), toplevel->clientSize() * toplevel->bufferScale(), parent)
         , m_toplevel(toplevel)
     {
@@ -93,14 +94,14 @@ public:
 
 private:
     void startFeeding() {
-        auto scene = KWin::Compositor::self()->scene();
+        auto scene = Compositor::self()->scene();
         connect(scene, &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
         m_toplevel->damaged(m_toplevel, m_toplevel->frameGeometry());
     }
 
-    void includeDamage(KWin::Toplevel *toplevel, const QRect &damage) {
+    void includeDamage(Toplevel *toplevel, const QRect &damage) {
         Q_ASSERT(m_toplevel == toplevel);
         m_damagedRegion |= damage;
     }
@@ -122,12 +123,12 @@ private:
     }
 
     QRegion m_damagedRegion;
-    KWin::Toplevel *m_toplevel;
+    Toplevel *m_toplevel;
 };
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *waylandStream, const QString &winid)
 {
-    auto *toplevel = KWin::Workspace::self()->findToplevel(winid);
+    auto *toplevel = Workspace::self()->findToplevel(winid);
 
     if (!toplevel) {
         waylandStream->sendFailed(i18n("Could not find window id %1", winid));
@@ -166,7 +167,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     connect(streamOutput, &QObject::destroyed, stream, &PipeWireStream::stopStreaming);
     auto bufferToStream = [streamOutput, stream] (const QRegion &damagedRegion) {
-        auto scene = KWin::Compositor::self()->scene();
+        auto scene = Compositor::self()->scene();
         auto texture = scene->textureForOutput(streamOutput);
 
         const QRect frame({}, streamOutput->modeSize());
@@ -174,7 +175,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *
         stream->recordFrame(texture.data(), region);
     };
     connect(stream, &PipeWireStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
-        KWin::Compositor::self()->addRepaint(streamOutput->geometry());
+        Compositor::self()->addRepaint(streamOutput->geometry());
         connect(streamOutput, &AbstractWaylandOutput::outputChange, stream, bufferToStream);
     });
     integrateStreams(waylandStream, stream);
@@ -195,3 +196,5 @@ void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamInterfa
         delete stream;
     }
 }
+
+} // namespace KWin

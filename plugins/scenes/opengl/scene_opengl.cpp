@@ -49,8 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations/decoratedclient.h"
 #include <logging.h>
 
-#include "abstract_wayland_output.h"
-#include "abstract_egl_backend.h"
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/subcompositor_interface.h>
 #include <KWaylandServer/surface_interface.h>

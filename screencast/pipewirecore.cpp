@@ -21,10 +21,15 @@
  */
 
 #include "pipewirecore.h"
+#include "kwinscreencast_logging.h"
+
+#include <KLocalizedString>
+
 #include <QDebug>
 #include <QSocketNotifier>
-#include <KLocalizedString>
-#include "kwinpipewire_logging.h"
+
+namespace KWin
+{
 
 PipeWireCore::PipeWireCore()
 {
@@ -56,7 +61,7 @@ void PipeWireCore::onCoreError(void* data, uint32_t id, int seq, int res, const 
 {
     Q_UNUSED(seq)
 
-    qCWarning(KWIN_PIPEWIRE) << "PipeWire remote error: " << message;
+    qCWarning(KWIN_SCREENCAST) << "PipeWire remote error: " << message;
     if (id == PW_ID_CORE && res == -EPIPE) {
         PipeWireCore *pw = static_cast<PipeWireCore*>(data);
         Q_EMIT pw->pipewireFailed(QString::fromUtf8(message));
@@ -72,26 +77,26 @@ bool PipeWireCore::init()
     connect(notifier, &QSocketNotifier::activated, this, [this] {
             int result = pw_loop_iterate (pwMainLoop, 0);
             if (result < 0)
-                qCWarning(KWIN_PIPEWIRE) << "pipewire_loop_iterate failed: " << result;
+                qCWarning(KWIN_SCREENCAST) << "pipewire_loop_iterate failed: " << result;
         }
     );
 
     pwContext = pw_context_new(pwMainLoop, nullptr, 0);
     if (!pwContext) {
-        qCWarning(KWIN_PIPEWIRE) << "Failed to create PipeWire context";
+        qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire context";
         m_error = i18n("Failed to create PipeWire context");
         return false;
     }
 
     pwCore = pw_context_connect(pwContext, nullptr, 0);
     if (!pwCore) {
-        qCWarning(KWIN_PIPEWIRE) << "Failed to connect PipeWire context";
+        qCWarning(KWIN_SCREENCAST) << "Failed to connect PipeWire context";
         m_error = i18n("Failed to connect PipeWire context");
         return false;
     }
 
     if (pw_loop_iterate(pwMainLoop, 0) < 0) {
-        qCWarning(KWIN_PIPEWIRE) << "Failed to start main PipeWire loop";
+        qCWarning(KWIN_SCREENCAST) << "Failed to start main PipeWire loop";
         m_error = i18n("Failed to start main PipeWire loop");
         return false;
     }
@@ -113,3 +118,5 @@ QSharedPointer< PipeWireCore > PipeWireCore::self()
     }
     return ret;
 }
+
+} // namespace KWin

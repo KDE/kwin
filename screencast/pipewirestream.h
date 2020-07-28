@@ -22,27 +22,27 @@
 
 #pragma once
 
-#include <QObject>
-#include <QSize>
-#include <QHash>
-#include <QSharedPointer>
+#include "config-kwin.h"
+#include "kwinglobals.h"
+
 #include <KWaylandServer/screencast_interface.h>
 
-#include "kwinglobals.h"
-#include "config-kwin.h"
+#include <QHash>
+#include <QObject>
+#include <QSharedPointer>
+#include <QSize>
+
 #include <pipewire/pipewire.h>
 #include <spa/param/format-utils.h>
-#include <spa/param/video/format-utils.h>
 #include <spa/param/props.h>
-
-#undef Status
+#include <spa/param/video/format-utils.h>
 
 namespace KWin
 {
-    class Cursor;
-    class GLTexture;
-    class DmaBufTexture;
-}
+
+class Cursor;
+class DmaBufTexture;
+class GLTexture;
 class PipeWireCore;
 
 class KWIN_EXPORT PipeWireStream : public QObject
@@ -62,7 +62,7 @@ public:
     void stop();
 
     /** Renders @p frame into the current framebuffer into the stream */
-    void recordFrame(KWin::GLTexture *frame, const QRegion &damagedRegion);
+    void recordFrame(GLTexture *frame, const QRegion &damagedRegion);
 
     void setCursorMode(KWaylandServer::ScreencastInterface::CursorMode mode, qreal scale, const QRect &viewport);
 
@@ -80,7 +80,7 @@ private:
     bool createStream();
     void updateParams();
     void coreFailed(const QString &errorMessage);
-    void sendCursorData(KWin::Cursor* cursor, spa_meta_cursor *spa_cursor);
+    void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
     void newStreamParams();
 
     QSharedPointer<PipeWireCore> pwCore;
@@ -96,7 +96,6 @@ private:
     spa_video_info_raw videoFormat;
     QString m_error;
     const bool m_hasAlpha;
-    struct gbm_device *m_gbmDevice = nullptr;
 
     struct {
         KWaylandServer::ScreencastInterface::CursorMode mode = KWaylandServer::ScreencastInterface::Hidden;
@@ -104,11 +103,13 @@ private:
         QRect viewport;
         qint64 lastKey = 0;
         QRect lastRect;
-        QScopedPointer<KWin::GLTexture> texture;
-        QScopedPointer<KWin::GLTexture> lastFrameTexture;
+        QScopedPointer<GLTexture> texture;
+        QScopedPointer<GLTexture> lastFrameTexture;
     } m_cursor;
     bool m_repainting = false;
-    QRect cursorGeometry(KWin::Cursor *cursor) const;
+    QRect cursorGeometry(Cursor *cursor) const;
 
-    QHash<struct pw_buffer *, QSharedPointer<KWin::DmaBufTexture>> m_dmabufDataForPwBuffer;
+    QHash<struct pw_buffer *, QSharedPointer<DmaBufTexture>> m_dmabufDataForPwBuffer;
 };
+
+} // namespace KWin

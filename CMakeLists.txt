@@ -759,11 +759,11 @@ set(kwin_WAYLAND_SRCS
 )
 ecm_qt_declare_logging_category(kwin_WAYLAND_SRCS
     HEADER
-        kwinpipewire_logging.h
+        kwinscreencast_logging.h
     IDENTIFIER
-        KWIN_PIPEWIRE
+        KWIN_SCREENCAST
     CATEGORY_NAME
-        kwin_pipewire
+        kwin_screencast
     DEFAULT_SEVERITY
         Warning
 )

@@ -22,10 +22,14 @@
 
 #pragma once
 
-#include <QObject>
 #include <QDebug>
-#include <spa/utils/hook.h>
+#include <QObject>
+
 #include <pipewire/pipewire.h>
+#include <spa/utils/hook.h>
+
+namespace KWin
+{
 
 class PipeWireCore : public QObject
 {
@@ -52,3 +56,5 @@ public:
 Q_SIGNALS:
     void pipewireFailed(const QString &message);
 };
+
+} // namespace KWin
