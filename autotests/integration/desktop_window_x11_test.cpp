@@ -124,7 +124,7 @@ void X11DesktopWindowTest::testDesktopWindow()
     auto cmCookie = xcb_create_colormap_checked(c.data(), XCB_COLORMAP_ALLOC_NONE, colormapId, rootWindow(), visualId);
     QVERIFY(!xcb_request_check(c.data(), cmCookie));
 
-    const uint32_t values[] = {XCB_PIXMAP_NONE, defaultScreen()->black_pixel, colormapId};
+    const uint32_t values[] = {XCB_PIXMAP_NONE, kwinApp()->x11DefaultScreen()->black_pixel, colormapId};
     auto cookie = xcb_create_window_checked(c.data(), 32, w, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),

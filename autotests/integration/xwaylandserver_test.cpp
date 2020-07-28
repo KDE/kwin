@@ -129,6 +129,7 @@ void XwaylandServerTest::testCrash()
     QTRY_VERIFY(!client);
     QTRY_VERIFY(!unmanaged);
     QCOMPARE(kwinApp()->x11Connection(), nullptr);
+    QCOMPARE(kwinApp()->x11DefaultScreen(), nullptr);
     QCOMPARE(kwinApp()->x11RootWindow(), XCB_WINDOW_NONE);
     QCOMPARE(kwinApp()->x11ScreenNumber(), -1);
 }

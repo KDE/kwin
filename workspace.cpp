@@ -79,8 +79,8 @@ extern bool is_multihead;
 
 ColorMapper::ColorMapper(QObject *parent)
     : QObject(parent)
-    , m_default(defaultScreen()->default_colormap)
-    , m_installed(defaultScreen()->default_colormap)
+    , m_default(kwinApp()->x11DefaultScreen()->default_colormap)
+    , m_installed(kwinApp()->x11DefaultScreen()->default_colormap)
 {
 }
 

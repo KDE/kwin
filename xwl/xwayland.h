@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xproto.h>
 
-class xcb_screen_t;
-
 namespace KWin
 {
 class ApplicationWaylandAbstract;
@@ -48,9 +46,6 @@ public:
     Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
     ~Xwayland() override;
 
-    xcb_screen_t *xcbScreen() const {
-        return m_xcbScreen;
-    }
     const xcb_query_extension_reply_t *xfixes() const {
         return m_xfixes;
     }
@@ -115,7 +110,6 @@ private:
     int m_displayFileDescriptor = -1;
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
-    xcb_screen_t *m_xcbScreen = nullptr;
     const xcb_query_extension_reply_t *m_xfixes = nullptr;
     DataBridge *m_dataBridge = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;

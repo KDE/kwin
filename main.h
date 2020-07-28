@@ -162,6 +162,13 @@ public:
         return m_connection;
     }
 
+    /**
+     * @returns the X11 default screen
+     */
+    xcb_screen_t *x11DefaultScreen() const {
+        return m_defaultScreen;
+    }
+
 #ifdef KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const {
         return m_useKActivities;
@@ -224,6 +231,13 @@ protected:
     void setX11Connection(xcb_connection_t *c) {
         m_connection = c;
     }
+    /**
+     * Inheriting classes should use this method to set the default screen
+     * before accessing any X11 specific code pathes.
+     */
+    void setX11DefaultScreen(xcb_screen_t *screen) {
+        m_defaultScreen = screen;
+    }
     void destroyAtoms();
     void destroyPlatform();
 
@@ -246,6 +260,7 @@ private:
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
+    xcb_screen_t *m_defaultScreen = nullptr;
 #ifdef KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif

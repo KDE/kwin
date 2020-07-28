@@ -167,38 +167,6 @@ KWIN_EXPORT xcb_timestamp_t xTime()
     return qApp->property("x11Time").value<xcb_timestamp_t>();
 }
 
-inline
-KWIN_EXPORT xcb_screen_t *defaultScreen()
-{
-    xcb_connection_t *c = connection();
-    if (!c) {
-        return nullptr;
-    }
-    int screen = qApp->property("x11ScreenNumber").toInt();
-    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(c));
-            it.rem;
-            --screen, xcb_screen_next(&it)) {
-        if (screen == 0) {
-            return it.data;
-        }
-    }
-    return nullptr;
-}
-
-inline
-KWIN_DEPRECATED_EXPORT int displayWidth()
-{
-    xcb_screen_t *screen = defaultScreen();
-    return screen ? screen->width_in_pixels : 0;
-}
-
-inline
-KWIN_DEPRECATED_EXPORT int displayHeight()
-{
-    xcb_screen_t *screen = defaultScreen();
-    return screen ? screen->height_in_pixels : 0;
-}
-
 /**
  * Short wrapper for a cursor image provided by the Platform.
  * @since 5.9

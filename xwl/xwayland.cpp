@@ -281,13 +281,13 @@ void Xwayland::createX11Connection()
         return;
     }
 
-    xcb_screen_iterator_t iter = xcb_setup_roots_iterator(xcb_get_setup(connection));
-    m_xcbScreen = iter.data;
-    Q_ASSERT(m_xcbScreen);
+    xcb_screen_t *screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
+    Q_ASSERT(screen);
 
     m_app->setX11Connection(connection);
+    m_app->setX11DefaultScreen(screen);
     m_app->setX11ScreenNumber(0);
-    m_app->setX11RootWindow(defaultScreen()->root);
+    m_app->setX11RootWindow(screen->root);
 
     m_app->createAtoms();
     m_app->installNativeX11EventFilter();
@@ -313,11 +313,11 @@ void Xwayland::destroyX11Connection()
 
     xcb_disconnect(m_app->x11Connection());
 
-    m_xcbScreen = nullptr;
     m_xcbConnectionFd = -1;
     m_xfixes = nullptr;
 
     m_app->setX11Connection(nullptr);
+    m_app->setX11DefaultScreen(nullptr);
     m_app->setX11ScreenNumber(-1);
     m_app->setX11RootWindow(XCB_WINDOW_NONE);
 
