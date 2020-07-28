@@ -421,7 +421,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     auto shadowManager = m_display->createShadowManager(m_display);
     shadowManager->create();
 
-    m_display->createDpmsManager(m_display)->create();
+    m_display->createDpmsManager(m_display);
 
     m_decorationManager = m_display->createServerSideDecorationManager(m_display);
     connect(m_decorationManager, &ServerSideDecorationManagerInterface::decorationCreated, this,
