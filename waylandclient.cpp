@@ -14,6 +14,7 @@
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/buffer_interface.h>
 
 #include <QFileInfo>
 
@@ -270,6 +271,15 @@ void WaylandClient::doSetActive()
     if (isActive()) { // TODO: Xwayland clients must be unfocused somewhere else.
         StackingUpdatesBlocker blocker(workspace());
         workspace()->focusToNull();
+    }
+}
+
+void WaylandClient::updateDepth()
+{
+    if (surface()->buffer()->hasAlphaChannel() && !isDesktop()) {
+        setDepth(32);
+    } else {
+        setDepth(24);
     }
 }
 

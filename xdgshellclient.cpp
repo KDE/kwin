@@ -483,15 +483,6 @@ void XdgSurfaceClient::updateGeometryRestoreHack()
     }
 }
 
-void XdgSurfaceClient::updateDepth()
-{
-    if (surface()->buffer()->hasAlphaChannel() && !isDesktop()) {
-        setDepth(32);
-    } else {
-        setDepth(24);
-    }
-}
-
 QRect XdgSurfaceClient::frameRectToBufferRect(const QRect &rect) const
 {
     const int left = rect.left() + borderLeft() - m_windowGeometry.left();
