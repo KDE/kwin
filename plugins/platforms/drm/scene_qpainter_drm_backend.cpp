@@ -83,7 +83,7 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
             delete (*it).buffer[1];
             auto initBuffer = [it, output, this] (int index) {
                 it->buffer[index] = m_backend->createBuffer(output->pixelSize());
-                if (o.buffer[index]->map()) {
+                if (it->buffer[index]->map()) {
                     it->buffer[index]->image()->fill(Qt::black);
                 }
             };
