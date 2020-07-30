@@ -270,11 +270,18 @@ public:
     }
 
     const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate", "zkde_screencast_unstable_v1"};
+
+    const QSet<QByteArray> inputmethodInterfaces = { "zwp_input_panel_v1", "zwp_input_method_v1" };
+
     QSet<QString> m_reported;
 
     bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override {
         if (client->processId() == getpid()) {
             return true;
+        }
+
+        if (client != waylandServer()->inputMethodConnection() && inputmethodInterfaces.contains(interfaceName)) {
+            return false;
         }
 
         if (!interfacesBlackList.contains(interfaceName)) {
