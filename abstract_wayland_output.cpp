@@ -175,6 +175,8 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
     bool emitModeChanged = false;
     bool overallSizeCheckNeeded = false;
 
+    KWaylandServer::OutputGeometryUpdatesBlocker blocker(m_waylandOutput);
+
     // Enablement changes are handled by platform.
     if (changeSet->modeChanged()) {
         qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->mode();
@@ -250,6 +252,8 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
                                            const QByteArray &uuid, const QSize &physicalSize,
                                            const QVector<DeviceInterface::Mode> &modes)
 {
+    KWaylandServer::OutputGeometryUpdatesBlocker blocker(m_waylandOutput);
+
     m_waylandOutputDevice->setUuid(uuid);
 
     if (!manufacturer.isEmpty()) {
