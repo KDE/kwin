@@ -2,10 +2,9 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2008 Cédric Borgese <cedric.borgese@gmail.com>
+SPDX-FileCopyrightText: 2008 Cédric Borgese <cedric.borgese@gmail.com>
 
-You can Freely distribute this program under the GNU General Public
-License. See the file "COPYING" for the exact licensing terms.
+SPDX-License-Identifier: GPL-2.0-or-later
 ******************************************************************/
 
 
