@@ -1984,6 +1984,21 @@ EffectWindow* EffectWindowImpl::findModal()
     return nullptr;
 }
 
+EffectWindow* EffectWindowImpl::transientFor()
+{
+    auto client = qobject_cast<AbstractClient *>(toplevel);
+    if (!client) {
+        return nullptr;
+    }
+
+    AbstractClient *transientFor = client->transientFor();
+    if (transientFor) {
+        return transientFor->effectWindow();
+    }
+
+    return nullptr;
+}
+
 QWindow *EffectWindowImpl::internalWindow() const
 {
     auto client = qobject_cast<InternalClient *>(toplevel);

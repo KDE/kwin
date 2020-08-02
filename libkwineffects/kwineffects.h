@@ -2373,6 +2373,7 @@ public:
 
     virtual bool isModal() const = 0;
     Q_SCRIPTABLE virtual KWin::EffectWindow* findModal() = 0;
+    Q_SCRIPTABLE virtual KWin::EffectWindow* transientFor() = 0;
     Q_SCRIPTABLE virtual QList<KWin::EffectWindow*> mainWindows() const = 0;
 
     /**
