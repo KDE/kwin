@@ -1,10 +1,10 @@
 /*
- * SPDX-FileCopyrightText: 2015 Martin Flöser <mgraesslin@kde.org>
- * SPDX-FileCopyrightText: 2018 David Edmundson <davidedmundson@kde.org>
- * SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
- *
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2015 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2018 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "waylandclient.h"
 #include "screens.h"

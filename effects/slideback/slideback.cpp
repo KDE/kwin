@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2009 Michael Zanetti <michael_zanetti@gmx.net>
+    SPDX-FileCopyrightText: 2009 Michael Zanetti <michael_zanetti@gmx.net>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "slideback.h"
 

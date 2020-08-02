@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- SPDX-FileCopyrightText: 2019 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2019 David Edmundson <davidedmundson@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 "use strict";
 

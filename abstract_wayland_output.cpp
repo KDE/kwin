@@ -1,12 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
-SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "abstract_wayland_output.h"
 
 #include "screens.h"

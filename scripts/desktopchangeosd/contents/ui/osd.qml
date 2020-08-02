@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2012, 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2012, 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 import QtQuick 2.0;
 import QtQuick.Window 2.0;
 import org.kde.plasma.core 2.0 as PlasmaCore;

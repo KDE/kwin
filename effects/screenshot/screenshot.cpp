@@ -1,12 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- SPDX-FileCopyrightText: 2010 Martin Gräßlin <mgraesslin@kde.org>
- SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
+    SPDX-FileCopyrightText: 2010 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "screenshot.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>

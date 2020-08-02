@@ -1,21 +1,21 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
-SPDX-FileCopyrightText: 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
-SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-Based on glcompmgr code by Felix Bellaby.
-Using code from Compiz and Beryl.
+    Based on glcompmgr code by Felix Bellaby.
+    Using code from Compiz and Beryl.
 
-Explicit command stream synchronization based on the sample
-implementation by James Jones <jajones@nvidia.com>,
+    Explicit command stream synchronization based on the sample
+    implementation by James Jones <jajones@nvidia.com>,
 
-SPDX-FileCopyrightText: 2011 NVIDIA Corporation 
+    SPDX-FileCopyrightText: 2011 NVIDIA Corporation
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "scene_opengl.h"
 
 #include "platform.h"

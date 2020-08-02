@@ -1,12 +1,12 @@
-/**************************************************************************
-* KWin - the KDE window manager                                          *
-* This file is part of the KDE project.                                  *
-*                                                                        *
-* SPDX-FileCopyrightText: 2013 Antonis Tsiapaliokas <kok3rs@gmail.com>             *
-* SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>           *
-*                                                                        *
-* SPDX-License-Identifier: GPL-2.0-or-later
-**************************************************************************/
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
+
+    SPDX-FileCopyrightText: 2013 Antonis Tsiapaliokas <kok3rs@gmail.com>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 import QtQuick 2.5
 import QtQuick.Controls 2.5 as QQC2

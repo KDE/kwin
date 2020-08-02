@@ -1,10 +1,10 @@
 /*
- *   SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
- *   SPDX-FileCopyrightText: 2011 Philipp Knechtges <philipp-dev@knechtges.com>
- *   SPDX-FileCopyrightText: 2018 Alex Nemeth <alex.nemeth329@gmail.com>
- *
- *   SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
+    SPDX-FileCopyrightText: 2011 Philipp Knechtges <philipp-dev@knechtges.com>
+    SPDX-FileCopyrightText: 2018 Alex Nemeth <alex.nemeth329@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "blur.h"
 #include "blurshader.h"

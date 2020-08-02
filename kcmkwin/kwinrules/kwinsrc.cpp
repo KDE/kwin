@@ -1,8 +1,8 @@
 /*
- * SPDX-FileCopyrightText: 2004 Lubos Lunak <l.lunak@kde.org>
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2004 Lubos Lunak <l.lunak@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include <input.h>
 

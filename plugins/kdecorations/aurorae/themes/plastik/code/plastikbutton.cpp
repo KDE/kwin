@@ -1,12 +1,12 @@
-/********************************************************************
-SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
-SPDX-FileCopyrightText: 2003-2005 Sandro Giessl <sandro@giessl.com>
+/*
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2003-2005 Sandro Giessl <sandro@giessl.com>
 
-based on the window decoration "Web":
-SPDX-FileCopyrightText: 2001 Rik Hemsley (rikkus) <rik@kde.org>
+    based on the window decoration "Web":
+    SPDX-FileCopyrightText: 2001 Rik Hemsley (rikkus) <rik@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "plastikbutton.h"
 #include <KColorScheme>
 #include <KConfigGroup>

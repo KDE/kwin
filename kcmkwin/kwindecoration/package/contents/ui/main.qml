@@ -1,7 +1,7 @@
 /*
-   SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
+    SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
 
-   SPDX-License-Identifier: LGPL-2.0-only
+    SPDX-License-Identifier: LGPL-2.0-only
 */
 
 import QtQuick 2.7

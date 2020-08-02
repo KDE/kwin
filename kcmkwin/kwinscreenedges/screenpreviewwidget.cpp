@@ -1,8 +1,7 @@
-/* This file is part of the KDE libraries
+/*
+    SPDX-FileCopyrightText: 2009 Marco Martin <notmart@gmail.com>
 
-   SPDX-FileCopyrightText: 2009 Marco Martin <notmart@gmail.com>
-
-   SPDX-License-Identifier: LGPL-2.0-or-later
+    SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
 #include "screenpreviewwidget.h"

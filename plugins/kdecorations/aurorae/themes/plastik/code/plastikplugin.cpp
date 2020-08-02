@@ -1,8 +1,8 @@
-/********************************************************************
-SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
+/*
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "plastikplugin.h"
 #include "plastikbutton.h"
 #include <QQmlEngine>

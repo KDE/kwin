@@ -1,10 +1,9 @@
-/****************************************************************************
+/*
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
- SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-License-Identifier: MIT
 
-SPDX-License-Identifier: MIT
-
-****************************************************************************/
+*/
 
 #include <KMessageBox>
 #include <KLocalizedString>

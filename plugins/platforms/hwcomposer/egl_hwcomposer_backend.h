@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-3.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-3.0-or-later
+*/
 #ifndef KWIN_EGL_HWCOMPOSER_BACKEND_H
 #define KWIN_EGL_HWCOMPOSER_BACKEND_H
 #include "abstract_egl_backend.h"

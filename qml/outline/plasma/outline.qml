@@ -1,8 +1,8 @@
 /*
- * SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
- * SPDX-FileCopyrightText: 2017 Kai Uwe Broulik <kde@privat.broulik.de>
- *
- * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2017 Kai Uwe Broulik <kde@privat.broulik.de>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 import QtQuick 2.1
 import QtQuick.Window 2.1

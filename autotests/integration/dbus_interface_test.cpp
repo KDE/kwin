@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2018 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2018 Martin Flöser <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "atoms.h"

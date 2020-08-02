@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-3.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-3.0-or-later
+*/
 #ifndef KWIN_SCREENS_HWCOMPOSER_H
 #define KWIN_SCREENS_HWCOMPOSER_H
 #include "outputscreens.h"

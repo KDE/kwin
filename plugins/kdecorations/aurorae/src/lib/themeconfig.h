@@ -1,8 +1,8 @@
-/********************************************************************
-SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
+/*
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef THEMECONFIG_H
 #define THEMECONFIG_H
 // This class encapsulates all theme config values

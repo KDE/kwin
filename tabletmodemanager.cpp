@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2018 Marco Martin <mart@kde.org>
- *
- * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
- *
- */
+    SPDX-FileCopyrightText: 2018 Marco Martin <mart@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+
+*/
 
 #include "tabletmodemanager.h"
 #include "input.h"

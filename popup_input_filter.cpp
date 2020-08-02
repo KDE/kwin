@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2017 Martin Graesslin <mgraesslin@kde.org>
- *
- * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
- *
- */
+    SPDX-FileCopyrightText: 2017 Martin Graesslin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+
+*/
 #include "popup_input_filter.h"
 #include "abstract_client.h"
 #include "deleted.h"

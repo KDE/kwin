@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2020 Méven Car <meven.car@enika.com>
+    SPDX-FileCopyrightText: 2020 Méven Car <meven.car@enika.com>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef SERVICE_UTILS_H
 #define SERVICE_UTILS_H

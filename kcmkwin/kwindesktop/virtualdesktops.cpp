@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2018 Eike Hein <hein@kde.org>
- * SPDX-FileCopyrightText: 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
- *
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2018 Eike Hein <hein@kde.org>
+    SPDX-FileCopyrightText: 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "virtualdesktops.h"
 #include "animationsmodel.h"

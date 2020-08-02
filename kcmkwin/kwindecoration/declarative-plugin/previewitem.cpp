@@ -1,8 +1,8 @@
 /*
- * SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
- *
- * SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
- */
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 #include "previewitem.h"
 #include "previewbridge.h"
 #include "previewsettings.h"

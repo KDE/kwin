@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2011 Tamas Krutki <ktamasw@gmail.com>
- * SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2011 Tamas Krutki <ktamasw@gmail.com>
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "module.h"
 #include "ui_module.h"

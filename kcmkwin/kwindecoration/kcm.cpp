@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
- * SPDX-FileCopyrightText: 2019 Cyril Rossi <cyril.rossi@enioka.com>
- *
- * SPDX-License-Identifier: LGPL-2.0-only
- */
+    SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
+    SPDX-FileCopyrightText: 2019 Cyril Rossi <cyril.rossi@enioka.com>
+
+    SPDX-License-Identifier: LGPL-2.0-only
+*/
 
 #include "kcm.h"
 #include "decorationmodel.h"

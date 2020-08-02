@@ -1,11 +1,11 @@
 /*
- * mouse.h
- *
- * SPDX-FileCopyrightText: 1998 Matthias Ettrich <ettrich@kde.org>
- *
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+    mouse.h
+
+    SPDX-FileCopyrightText: 1998 Matthias Ettrich <ettrich@kde.org>
+
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef __KKWMMOUSECONFIG_H__
 #define __KKWMMOUSECONFIG_H__

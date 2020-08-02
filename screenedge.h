@@ -1,20 +1,20 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-SPDX-FileCopyrightText: 2011 Arthur Arlt <a.arlt@stud.uni-heidelberg.de>
-SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2011 Arthur Arlt <a.arlt@stud.uni-heidelberg.de>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-Since the functionality provided in this class has been moved from
-class Workspace, it is not clear who exactly has written the code.
-The list below contains the copyright holders of the class Workspace.
+    Since the functionality provided in this class has been moved from
+    class Workspace, it is not clear who exactly has written the code.
+    The list below contains the copyright holders of the class Workspace.
 
-SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
-SPDX-FileCopyrightText: 2009 Lucas Murray <lmurray@undefinedfire.com>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009 Lucas Murray <lmurray@undefinedfire.com>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_SCREENEDGE_H
 #define KWIN_SCREENEDGE_H

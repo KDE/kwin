@@ -1,13 +1,13 @@
 /*
- * main.h
- *
- * SPDX-FileCopyrightText: 2001 Waldo Bastian <bastian@kde.org>
- *
- * Requires the Qt widget libraries, available at no cost at
- * https://www.qt.io/
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+    main.h
+
+    SPDX-FileCopyrightText: 2001 Waldo Bastian <bastian@kde.org>
+
+    Requires the Qt widget libraries, available at no cost at
+    https://www.qt.io
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 
 #ifndef __MAIN_H__

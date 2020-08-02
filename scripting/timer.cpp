@@ -1,8 +1,8 @@
 /*
- *   SPDX-FileCopyrightText: 2007 Richard J. Moore <rich@kde.org>
- *
- *   SPDX-License-Identifier: LGPL-2.0-only
- */
+    SPDX-FileCopyrightText: 2007 Richard J. Moore <rich@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.0-only
+*/
 
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>

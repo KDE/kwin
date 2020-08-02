@@ -1,10 +1,10 @@
-/********************************************************************
- This file is part of the KDE project.
+/*
+    This file is part of the KDE project.
 
- SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 /*global effect, effects, animate, cancel, set, animationTime, Effect, QEasingCurve */
 
 "use strict";

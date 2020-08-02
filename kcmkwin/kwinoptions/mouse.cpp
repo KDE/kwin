@@ -1,9 +1,8 @@
 /*
- *
- * SPDX-FileCopyrightText: 1998 Matthias Ettrich <ettrich@kde.org>
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 1998 Matthias Ettrich <ettrich@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "mouse.h"
 

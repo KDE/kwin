@@ -1,8 +1,8 @@
 /*
- *   SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
- *
- *   SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "blur_config.h"
 // KConfigSkeleton

@@ -1,8 +1,8 @@
-/******************************************************************************
-*   SPDX-FileCopyrightText: 2017 Demitrius Belai <demitriusbelai@gmail.com>              *
-*                                                                             *
-*   SPDX-License-Identifier: LGPL-2.0-or-later
-*******************************************************************************/
+/*
+    SPDX-FileCopyrightText: 2017 Demitrius Belai <demitriusbelai@gmail.com>
+
+    SPDX-License-Identifier: LGPL-2.0-or-later
+*/
 
 #ifndef DECORATIONPACKAGE_H
 #define DECORATIONPACKAGE_H

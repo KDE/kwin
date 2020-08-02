@@ -1,9 +1,9 @@
 /*
- *   SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
- *   SPDX-FileCopyrightText: 2014 Marco Martin <mart@kde.org>
- *
- *   SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
+    SPDX-FileCopyrightText: 2014 Marco Martin <mart@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef CONTRASTSHADER_H
 #define CONTRASTSHADER_H

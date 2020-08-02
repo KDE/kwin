@@ -1,11 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- SPDX-FileCopyrightText: 2008, 2011 Martin Gräßlin <kde@martin-graesslin.com>
+    SPDX-FileCopyrightText: 2008, 2011 Martin Gräßlin <kde@martin-graesslin.com>
 
-SPDX-License-Identifier: GPL-2.0-or-later
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 uniform mat4 modelViewProjectionMatrix;
 uniform float width;
 uniform float height;

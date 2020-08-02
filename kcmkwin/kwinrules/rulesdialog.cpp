@@ -1,9 +1,9 @@
 /*
- * SPDX-FileCopyrightText: 2004 Lubos Lunak <l.lunak@kde.org>
- * SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
- *
- *  SPDX-License-Identifier: GPL-2.0-or-later
- */
+    SPDX-FileCopyrightText: 2004 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "rulesdialog.h"
 
