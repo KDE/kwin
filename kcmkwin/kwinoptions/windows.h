@@ -1,8 +1,8 @@
 /*
     windows.h
 
-    SPDX-FileCopyrightText: 1997 Patrick Dowler dowler @morgul.fsh.uvic.ca
-    SPDX-FileCopyrightText: 2001 Waldo Bastian bastian @kde.org
+    SPDX-FileCopyrightText: 1997 Patrick Dowler <dowler@morgul.fsh.uvic.ca>
+    SPDX-FileCopyrightText: 2001 Waldo Bastian <bastian@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
