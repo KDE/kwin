@@ -153,6 +153,11 @@ int GestureRecognizer::startSwipeGesture(uint fingerCount, const QPointF &startP
 void GestureRecognizer::updateSwipeGesture(const QSizeF &delta)
 {
     m_swipeUpdates << delta;
+    if (std::abs(delta.width()) < 1 && std::abs(delta.height()) < 1) {
+        // some (touch) devices report sub-pixel movement on screen edges
+        // this often cancels gestures -> ignore these movements
+        return;
+    }
     // determine the direction of the swipe
     if (delta.width() == delta.height()) {
         // special case of diagonal, this is not yet supported, thus cancel all gestures
