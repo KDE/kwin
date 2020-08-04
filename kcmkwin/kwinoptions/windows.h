@@ -77,6 +77,7 @@ protected:
 private Q_SLOTS:
     void focusPolicyChanged();
     void updateMultiScreen();
+    void updateDefaultIndicator();
 
 private:
 

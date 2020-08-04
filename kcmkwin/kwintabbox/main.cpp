@@ -86,6 +86,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     addConfig(m_tabBoxConfig, m_primaryTabBoxUi);
     addConfig(m_tabBoxAlternativeConfig, m_alternativeTabBoxUi);
 
+    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     createConnections(m_primaryTabBoxUi);
     createConnections(m_alternativeTabBoxUi);
 
@@ -261,8 +262,18 @@ bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *for
     return isNeedSave;
 }
 
-bool KWinTabBoxConfig::updateUnmanagedIsDefault(const KWinTabBoxConfigForm *form, const TabBoxSettings *config)
+bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
 {
+    const bool visible = defaultsIndicatorsVisible();
+    form->setFilterScreenDefaultIndicatorVisible(visible && form->filterScreen() != config->defaultMultiScreenModeValue());
+    form->setFilterDesktopDefaultIndicatorVisible(visible && form->filterDesktop() != config->defaultDesktopModeValue());
+    form->setFilterActivitiesDefaultIndicatorVisible(visible && form->filterActivities() != config->defaultActivitiesModeValue());
+    form->setFilterMinimizationDefaultIndicatorVisible(visible && form->filterMinimization() != config->defaultMinimizedModeValue());
+    form->setApplicationModeDefaultIndicatorVisible(visible && form->applicationMode() != config->defaultApplicationsModeValue());
+    form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
+    form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
+    form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
+
     bool isDefault = true;
     isDefault &= form->filterScreen() == config->defaultMultiScreenModeValue();
     isDefault &= form->filterDesktop() == config->defaultDesktopModeValue();

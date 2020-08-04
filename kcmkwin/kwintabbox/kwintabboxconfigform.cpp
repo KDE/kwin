@@ -324,6 +324,54 @@ void KWinTabBoxConfigForm::setLayoutNameEnabled(bool enabled)
     ui->effectCombo->setEnabled(enabled);
 }
 
+void KWinTabBoxConfigForm::setFilterScreenDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterScreens, visible);
+    setDefaultIndicatorVisible(ui->currentScreen, visible);
+    setDefaultIndicatorVisible(ui->otherScreens, visible);
+}
+
+void KWinTabBoxConfigForm::setFilterDesktopDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterDesktops, visible);
+    setDefaultIndicatorVisible(ui->currentDesktop, visible);
+    setDefaultIndicatorVisible(ui->otherDesktops, visible);
+}
+
+void KWinTabBoxConfigForm::setFilterActivitiesDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterActivities, visible);
+    setDefaultIndicatorVisible(ui->currentActivity, visible);
+    setDefaultIndicatorVisible(ui->otherActivities, visible);
+}
+
+void KWinTabBoxConfigForm::setFilterMinimizationDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterMinimization, visible);
+    setDefaultIndicatorVisible(ui->visibleWindows, visible);
+    setDefaultIndicatorVisible(ui->hiddenWindows, visible);
+}
+
+void KWinTabBoxConfigForm::setApplicationModeDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->oneAppWindow, visible);
+}
+
+void KWinTabBoxConfigForm::setShowDesktopModeDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->showDesktop, visible);
+}
+
+void KWinTabBoxConfigForm::setSwitchingModeDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->switchingModeCombo, visible);
+}
+
+void KWinTabBoxConfigForm::setLayoutNameDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->effectCombo, visible);
+}
+
 void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 {
     // Highlight Windows options is availabled if no TabBox effect is selected
@@ -391,6 +439,12 @@ void KWinTabBoxConfigForm::shortcutChanged(const QKeySequence &seq)
     QAction *a = m_actionCollection->action(action);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << seq, KGlobalAccel::NoAutoloading);
     m_actionCollection->writeSettings();
+}
+
+void KWinTabBoxConfigForm::setDefaultIndicatorVisible(QWidget *widget, bool visible)
+{
+    widget->setProperty("_kde_highlight_neutral", visible);
+    widget->update();
 }
 
 } // namespace

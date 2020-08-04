@@ -44,6 +44,7 @@ KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget *parent, const QVariantList
 
     monitorInit();
 
+    connect(this, &KWinScreenEdgesConfig::defaultsIndicatorsVisibleChanged, m_form, &KWinScreenEdgesConfigForm::setDefaultsIndicatorsVisible);
     connect(m_form, &KWinScreenEdgesConfigForm::saveNeededChanged, this, &KWinScreenEdgesConfig::unmanagedWidgetChangeState);
     connect(m_form, &KWinScreenEdgesConfigForm::defaultChanged, this, &KWinScreenEdgesConfig::unmanagedWidgetDefaultState);
 }

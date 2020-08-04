@@ -28,6 +28,7 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
     connect(ui->kcfg_ElectricBorderTiling, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
 
     connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::onChanged);
+    connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::updateDefaultIndicators);
 }
 
 KWinScreenEdgesConfigForm::~KWinScreenEdgesConfigForm()
@@ -53,7 +54,7 @@ double KWinScreenEdgesConfigForm::electricBorderCornerRatio() const
 
 void KWinScreenEdgesConfigForm::setElectricBorderCornerRatioEnabled(bool enable)
 {
-    return ui->electricBorderCornerRatioSpin->setEnabled(enable);
+    ui->electricBorderCornerRatioSpin->setEnabled(enable);
 }
 
 void KWinScreenEdgesConfigForm::reload()
@@ -66,6 +67,14 @@ void KWinScreenEdgesConfigForm::setDefaults()
 {
     ui->electricBorderCornerRatioSpin->setValue(m_defaultCornerRatio * 100.);
     KWinScreenEdge::setDefaults();
+}
+
+void KWinScreenEdgesConfigForm::setDefaultsIndicatorsVisible(bool visible)
+{
+    if (m_defaultIndicatorVisible != visible) {
+        m_defaultIndicatorVisible = visible;
+        updateDefaultIndicators();
+    }
 }
 
 Monitor *KWinScreenEdgesConfigForm::monitor() const
@@ -99,6 +108,12 @@ void KWinScreenEdgesConfigForm::groupChanged()
     monitorHideEdge(ElectricRight, hide);
     monitorHideEdge(ElectricBottom, hide);
     monitorHideEdge(ElectricLeft, hide);
+}
+
+void KWinScreenEdgesConfigForm::updateDefaultIndicators()
+{
+    ui->electricBorderCornerRatioSpin->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && (electricBorderCornerRatio() != m_defaultCornerRatio));
+    ui->electricBorderCornerRatioSpin->update();
 }
 
 } // namespace

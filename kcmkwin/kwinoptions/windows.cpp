@@ -39,6 +39,11 @@
 #define  FOCUS_UNDER_MOUSE              4
 #define  FOCUS_STRICTLY_UNDER_MOUSE     5
 
+namespace
+{
+constexpr int defaultFocusPolicyIndex = CLICK_TO_FOCUS;
+}
+
 KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
     : QWidget(parent)
 {
@@ -60,6 +65,8 @@ void KFocusConfig::initialize(KWinOptionsSettings *settings)
     addConfig(m_settings, this);
 
     connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::focusPolicyChanged);
+    connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::updateDefaultIndicator);
+    connect(this, SIGNAL(defaultsIndicatorsVisibleChanged(bool)), this, SLOT(updateDefaultIndicator()));
 
     connect(qApp, &QGuiApplication::screenAdded, this, &KFocusConfig::updateMultiScreen);
     connect(qApp, &QGuiApplication::screenRemoved, this, &KFocusConfig::updateMultiScreen);
@@ -73,6 +80,13 @@ void KFocusConfig::updateMultiScreen()
     m_ui->multiscreenBehaviorLabel->setVisible(QApplication::screens().count() > 1);
     m_ui->kcfg_ActiveMouseScreen->setVisible(QApplication::screens().count() > 1);
     m_ui->kcfg_SeparateScreenFocus->setVisible(QApplication::screens().count() > 1);
+}
+
+void KFocusConfig::updateDefaultIndicator()
+{
+    const bool isDefault = m_ui->windowFocusPolicy->currentIndex() == defaultFocusPolicyIndex;
+    m_ui->windowFocusPolicy->setProperty("_kde_highlight_neutral", defaultsIndicatorsVisible() && !isDefault);
+    m_ui->windowFocusPolicy->update();
 }
 
 void KFocusConfig::focusPolicyChanged()
@@ -115,7 +129,7 @@ void KFocusConfig::focusPolicyChanged()
     unmanagedWidgetChangeState(changed);
     emit unmanagedWidgetStateChanged(changed);
 
-    const bool isDefault = focusPolicy == CLICK_TO_FOCUS;
+    const bool isDefault = focusPolicy == defaultFocusPolicyIndex;
     unmanagedWidgetDefaultState(isDefault);
     emit unmanagedWidgetDefaulted(isDefault);
 
@@ -206,7 +220,7 @@ void KFocusConfig::save(void)
 void KFocusConfig::defaults()
 {
     KCModule::defaults();
-    m_ui->windowFocusPolicy->setCurrentIndex(CLICK_TO_FOCUS);
+    m_ui->windowFocusPolicy->setCurrentIndex(defaultFocusPolicyIndex);
 }
 
 KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)

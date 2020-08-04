@@ -85,6 +85,15 @@ public:
     void setSwitchingModeEnabled(bool enabled);
     void setLayoutNameEnabled(bool enabled);
 
+    void setFilterScreenDefaultIndicatorVisible(bool visible);
+    void setFilterDesktopDefaultIndicatorVisible(bool visible);
+    void setFilterActivitiesDefaultIndicatorVisible(bool visible);
+    void setFilterMinimizationDefaultIndicatorVisible(bool visible);
+    void setApplicationModeDefaultIndicatorVisible(bool visible);
+    void setShowDesktopModeDefaultIndicatorVisible(bool visible);
+    void setSwitchingModeDefaultIndicatorVisible(bool visible);
+    void setLayoutNameDefaultIndicatorVisible(bool visible);
+
 Q_SIGNALS:
     void filterScreenChanged(int value);
     void filterDesktopChanged(int value);
@@ -109,6 +118,8 @@ private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
 
 private:
+    void setDefaultIndicatorVisible(QWidget *widget, bool visible);
+
     KActionCollection *m_actionCollection = nullptr;
     KShortcutsEditor *m_editor = nullptr;
 

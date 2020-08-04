@@ -53,7 +53,7 @@ private:
     void setEnabledUi(KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
     void createConnections(KWinTabBoxConfigForm *form);
     bool updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
-    bool updateUnmanagedIsDefault(const KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
+    bool updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, const TabBox::TabBoxSettings *config);
 
 private:
     KWinTabBoxConfigForm *m_primaryTabBoxUi = nullptr;
