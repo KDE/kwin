@@ -55,6 +55,9 @@ class DataControlOffer: public QObject, public QtWayland::zwlr_data_control_offe
 {
     Q_OBJECT
 public:
+    ~DataControlOffer() {
+        destroy();
+    }
     QStringList receivedOffers() {
         return m_receivedOffers;
     }
@@ -69,6 +72,10 @@ private:
 class DataControlDevice : public QObject, public QtWayland::zwlr_data_control_device_v1
 {
     Q_OBJECT
+public:
+    ~DataControlDevice() {
+        destroy();
+    }
 Q_SIGNALS:
     void dataControlOffer(DataControlOffer *offer); //our event receives a new ID, so we make a new object
     void selection(struct ::zwlr_data_control_offer_v1 *id);
@@ -87,6 +94,11 @@ protected:
 class DataControlSource: public QObject, public QtWayland::zwlr_data_control_source_v1
 {
     Q_OBJECT
+public:
+    ~DataControlSource() {
+        destroy();
+    }
+public:
 };
 
 
@@ -97,6 +109,9 @@ public:
     TestDataSource() :
         AbstractDataSource(nullptr)
     {}
+    ~TestDataSource() {
+        emit unbound();
+    }
     void requestData(const QString &mimeType, qint32 fd) {
         Q_UNUSED(mimeType);
         Q_UNUSED(fd);
@@ -120,7 +135,8 @@ public:
     ~DataControlInterfaceTest() override;
 
 private Q_SLOTS:
-    void initTestCase();
+    void init();
+    void cleanup();
     void testCopyToControl();
     void testCopyFromControl();
 
@@ -131,7 +147,7 @@ private:
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
     QThread *m_thread;
-    Display m_display;
+    Display *m_display;
     SeatInterface *m_seat;
     CompositorInterface *m_serverCompositor;
 
@@ -160,18 +176,19 @@ DataControlInterfaceTest::~DataControlInterfaceTest()
 }
 
 
-static const QString s_socketName = QStringLiteral("kwin-wayland-server-tablet-test-0");
+static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-test-0");
 
-void DataControlInterfaceTest::initTestCase()
+void DataControlInterfaceTest::init()
 {
-    m_display.setSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = new Display;
+    m_display->setSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_seat = m_display.createSeat(this);
+    m_seat = m_display->createSeat(this);
     m_seat->create();
-    m_serverCompositor = m_display.createCompositor(this);
-    m_dataControlDeviceManagerInterface = m_display.createDataControlDeviceManagerV1(this);
+    m_serverCompositor = m_display->createCompositor(this);
+    m_dataControlDeviceManagerInterface = m_display->createDataControlDeviceManagerV1(this);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -216,6 +233,28 @@ void DataControlInterfaceTest::initTestCase()
     QVERIFY(m_dataControlDeviceManager);
 }
 
+void DataControlInterfaceTest::cleanup()
+{
+#define CLEANUP(variable) \
+    if (variable) { \
+        delete variable; \
+        variable = nullptr; \
+    }
+    CLEANUP(m_dataControlDeviceManager)
+    CLEANUP(m_queue)
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
+    if (m_thread) {
+        m_thread->quit();
+        m_thread->wait();
+        delete m_thread;
+        m_thread = nullptr;
+    }
+    CLEANUP(m_display)
+#undef CLEANUP
+}
 
 void DataControlInterfaceTest::testCopyToControl()
 {
@@ -228,8 +267,8 @@ void DataControlInterfaceTest::testCopyToControl()
     QSignalSpy newOfferSpy(dataControlDevice.data(), &DataControlDevice::dataControlOffer);
     QSignalSpy selectionSpy(dataControlDevice.data(), &DataControlDevice::selection);
 
-    auto testSelection = new TestDataSource;
-    m_seat->setSelection(testSelection);
+    QScopedPointer<TestDataSource> testSelection(new TestDataSource);
+    m_seat->setSelection(testSelection.data());
 
     // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
     selectionSpy.wait();
@@ -262,7 +301,7 @@ void DataControlInterfaceTest::testCopyFromControl()
     serverSelectionChangedSpy.wait();
     QVERIFY(m_seat->selection());
     QCOMPARE(m_seat->selection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
-    source->destroy();
+}
 }
 
 
