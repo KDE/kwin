@@ -139,6 +139,7 @@ private Q_SLOTS:
     void cleanup();
     void testCopyToControl();
     void testCopyFromControl();
+    void testKlipperCase();
 
 private:
     KWayland::Client::ConnectionThread *m_connection;
@@ -302,6 +303,46 @@ void DataControlInterfaceTest::testCopyFromControl()
     QVERIFY(m_seat->selection());
     QCOMPARE(m_seat->selection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
 }
+
+void DataControlInterfaceTest::testKlipperCase()
+{
+    // This tests the setup of klipper's real world operation and a race with a common pattern seen between clients and klipper
+    // The client's behaviour is faked with direct access to the seat
+
+    QScopedPointer<DataControlDevice> dataControlDevice(new DataControlDevice);
+    dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
+
+    QSignalSpy newOfferSpy(dataControlDevice.data(), &DataControlDevice::dataControlOffer);
+    QSignalSpy selectionSpy(dataControlDevice.data(), &DataControlDevice::selection);
+    QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::selectionChanged);
+
+    // Client A has a data source
+    QScopedPointer<TestDataSource> testSelection(new TestDataSource);
+    m_seat->setSelection(testSelection.data());
+
+    // klipper gets it
+    selectionSpy.wait();
+
+    // Client A deletes it
+    testSelection.reset();
+
+    //klipper gets told
+    selectionSpy.wait();
+
+    // Client A sets something else
+    QScopedPointer<TestDataSource> testSelection2(new TestDataSource);
+    m_seat->setSelection(testSelection2.data());
+
+    // Meanwhile klipper updates with the old content
+    QScopedPointer<DataControlSource> source(new DataControlSource);
+    source->init(m_dataControlDeviceManager->create_data_source());
+    source->offer("fromKlipper/test1");
+    source->offer("application/x-kde-onlyReplaceEmpty");
+
+    dataControlDevice->set_selection(source->object());
+
+    QVERIFY(!serverSelectionChangedSpy.wait(10));
+    QCOMPARE(m_seat->selection(), testSelection2.data());
 }
 
 
