@@ -72,6 +72,7 @@ public:
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
+    bool isInitialPositionSet() const override;
     void hideClient(bool hide) override;
     void destroyClient() override;
 
@@ -83,6 +84,8 @@ public:
     QSize requestedClientSize() const;
     QRect clientGeometry() const;
     bool isHidden() const;
+
+    virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
 
 protected:
     void addDamage(const QRegion &damage) override;
@@ -96,6 +99,8 @@ protected:
     void sendConfigure();
     void requestGeometry(const QRect &rect);
     void updateGeometry(const QRect &rect);
+
+    QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
 private:
     void handleConfigureAcknowledged(quint32 serial);
@@ -169,14 +174,13 @@ public:
     bool dockWantsInput() const override;
     bool hasStrut() const override;
     void showOnScreenEdge() override;
-    bool isInitialPositionSet() const override;
     void setFullScreen(bool set, bool user) override;
     void closeWindow() override;
 
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
     void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
-    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface);
+    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
     void installXdgDecoration(KWaylandServer::XdgToplevelDecorationV1Interface *decoration);
 
 protected:
@@ -222,7 +226,6 @@ private:
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
 
-    QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
     QPointer<KWaylandServer::ServerSideDecorationInterface> m_serverDecoration;
@@ -272,6 +275,7 @@ public:
     bool wantsInput() const override;
     bool takeFocus() override;
     bool supportsWindowRules() const override;
+    void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
 
 protected:
     bool acceptsFocus() const override;

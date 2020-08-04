@@ -205,6 +205,19 @@ void WaylandServer::registerXdgGenericClient(AbstractClient *client)
     XdgPopupClient *popupClient = qobject_cast<XdgPopupClient *>(client);
     if (popupClient) {
         registerShellClient(popupClient);
+
+        SurfaceInterface *surface = client->surface();
+        auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
+            [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
+                return plasmaSurface->surface() == surface;
+            }
+        );
+
+        if (it != m_plasmaShellSurfaces.end()) {
+            popupClient->installPlasmaShellSurface(*it);
+            m_plasmaShellSurfaces.erase(it);
+        }
+
         return;
     }
     qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
@@ -366,10 +379,11 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
         [this] (PlasmaShellSurfaceInterface *surface) {
-            if (XdgToplevelClient *client = findXdgToplevelClient(surface->surface())) {
+            if (XdgSurfaceClient *client = findXdgSurfaceClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
                 return;
             }
+
             m_plasmaShellSurfaces.append(surface);
             connect(surface, &QObject::destroyed, this, [this, surface] {
                 m_plasmaShellSurfaces.removeOne(surface);
@@ -754,6 +768,11 @@ AbstractClient *WaylandServer::findClient(SurfaceInterface *surface) const
 XdgToplevelClient *WaylandServer::findXdgToplevelClient(SurfaceInterface *surface) const
 {
     return qobject_cast<XdgToplevelClient *>(findClient(surface));
+}
+
+XdgSurfaceClient *WaylandServer::findXdgSurfaceClient(SurfaceInterface *surface) const
+{
+    return qobject_cast<XdgSurfaceClient *>(findClient(surface));
 }
 
 quint32 WaylandServer::createWindowId(SurfaceInterface *surface)

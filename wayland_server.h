@@ -78,6 +78,7 @@ namespace KWin
 class AbstractClient;
 class Toplevel;
 class XdgPopupClient;
+class XdgSurfaceClient;
 class XdgToplevelClient;
 
 class KWIN_EXPORT WaylandServer : public QObject
@@ -149,6 +150,7 @@ public:
     AbstractClient *findClient(quint32 id) const;
     AbstractClient *findClient(KWaylandServer::SurfaceInterface *surface) const;
     XdgToplevelClient *findXdgToplevelClient(KWaylandServer::SurfaceInterface *surface) const;
+    XdgSurfaceClient *findXdgSurfaceClient(KWaylandServer::SurfaceInterface *surface) const;
 
     /**
      * @returns a transient parent of a surface imported with the foreign protocol, if any

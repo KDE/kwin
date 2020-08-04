@@ -337,6 +337,11 @@ QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
     return geometry;
 }
 
+bool XdgSurfaceClient::isInitialPositionSet() const
+{
+    return m_plasmaShellSurface ? m_plasmaShellSurface->isPositionSet() : false;
+}
+
 /**
  * Sets the frame geometry of the XdgSurfaceClient to \a rect.
  *
@@ -917,11 +922,6 @@ void XdgToplevelClient::showOnScreenEdge()
     if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
         m_plasmaShellSurface->showAutoHidingPanel();
     }
-}
-
-bool XdgToplevelClient::isInitialPositionSet() const
-{
-    return m_plasmaShellSurface ? m_plasmaShellSurface->isPositionSet() : false;
 }
 
 void XdgToplevelClient::closeWindow()
@@ -2170,6 +2170,16 @@ void XdgPopupClient::initialize()
     placeIn(area);
 
     scheduleConfigure();
+}
+void XdgPopupClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
+{
+    m_plasmaShellSurface = shellSurface;
+
+    auto updatePosition = [this, shellSurface] { move(shellSurface->position()); };
+    connect(shellSurface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
+    if (shellSurface->isPositionSet()) {
+        updatePosition();
+    }
 }
 
 } // namespace KWin
