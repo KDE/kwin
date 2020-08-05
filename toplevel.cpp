@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "atoms.h"
 #include "client_machine.h"
+#include "x11client.h"
 #include "composite.h"
 #include "effects.h"
 #include "screens.h"
@@ -497,6 +498,10 @@ void Toplevel::setReadyForPainting()
         if (compositing()) {
             addRepaintFull();
             emit windowShown(this);
+            if (auto *cl = dynamic_cast<AbstractClient*>(this)) {
+                if (cl->tabGroup() && cl->tabGroup()->current() == cl)
+                    cl->tabGroup()->setCurrent(cl, true);
+            }
         }
     }
 }

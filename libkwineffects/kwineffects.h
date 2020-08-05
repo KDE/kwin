@@ -2135,7 +2135,7 @@ public:
         PAINT_DISABLED_BY_DESKTOP      = 1 << 2,
         /**  Window will not be painted because it is minimized  */
         PAINT_DISABLED_BY_MINIMIZE     = 1 << 3,
-        /**  Deprecated, tab groups have been removed: Window will not be painted because it is not the active window in a client group */
+        /**  Window will not be painted because it is not the active window in a client group */
         PAINT_DISABLED_BY_TAB_GROUP = 1 << 4,
         /**  Window will not be painted because it's not on the current activity  */
         PAINT_DISABLED_BY_ACTIVITY     = 1 << 5
@@ -2391,7 +2391,6 @@ public:
     virtual void unminimize() = 0;
     Q_SCRIPTABLE virtual void closeWindow() = 0;
 
-    /// deprecated
     virtual bool isCurrentTab() const = 0;
 
     /**

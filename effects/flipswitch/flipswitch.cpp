@@ -370,6 +370,8 @@ void FlipSwitchEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data,
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
             if (w->isMinimized())
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
+            if (w->isCurrentTab())
+                w->enablePainting(EffectWindow::PAINT_DISABLED_BY_TAB_GROUP);
         } else {
             if ((m_start || m_stop) && !w->isDesktop() && w->isOnCurrentDesktop())
                 data.setTranslucent();

@@ -176,6 +176,17 @@ X11Client::X11Client()
         }
     });
 
+    connect(this, &X11Client::tabGroupChanged, this,
+        [this] {
+            auto group = tabGroup();
+            if (group) {
+                unsigned long data[] = {qHash(group)}; //->id();
+                m_client.changeProperty(atoms->kde_net_wm_tab_group, XCB_ATOM_CARDINAL, 32, 1, data);
+            }
+            else
+                m_client.deleteProperty(atoms->kde_net_wm_tab_group);
+        });
+
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -253,7 +264,8 @@ void X11Client::releaseWindow(bool on_shutdown)
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
         info->setState(NET::States(), info->state());  // Reset all state flags
-    }
+    } else
+        untab();
     xcb_connection_t *c = connection();
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
@@ -615,6 +627,51 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     // Create client group if the window will have a decoration
     bool dontKeepInArea = false;
+    setTabGroup(NULL);
+    if (!noBorder() && false) {
+        const bool autogrouping = false;//rules()->checkAutogrouping(options->isAutogroupSimilarWindows()); TODO TABS
+        const bool autogroupInFg = false;//rules()->checkAutogroupInForeground(options->isAutogroupInForeground()); TODO TABS
+        // Automatically add to previous groups on session restore
+        if (session && session->tabGroupClient && !workspace()->hasClient(session->tabGroupClient))
+            session->tabGroupClient = NULL;
+        if (session && session->tabGroupClient && session->tabGroupClient != this) {
+            tabBehind(session->tabGroupClient, autogroupInFg);
+        } else if (isMapped && autogrouping) {
+            // If the window is already mapped (Restarted KWin) add any windows that already have the
+            // same geometry to the same client group. (May incorrectly handle maximized windows)
+            foreach (X11Client *other, workspace()->clientList()) {
+                if (other->maximizeMode() != MaximizeFull &&
+                    geom == QRect(other->pos(), other->clientSize()) &&
+                    desk == other->desktop() && activities() == other->activities()) {
+
+                    tabBehind(other, autogroupInFg);
+                    break;
+
+                }
+            }
+        }
+        if (!(tabGroup() || isMapped || session)) {
+            // Attempt to automatically group similar windows
+            X11Client* similar = findAutogroupCandidate();
+            if (similar && !similar->noBorder()) {
+                if (autogroupInFg) {
+                    similar->setDesktop(desk); // can happen when grouping by id. ...
+                    similar->setMinimized(false); // ... or anyway - still group, but "here" and visible
+                }
+                if (!similar->isMinimized()) { // do not attempt to tab in background of a hidden group
+                    geom = QRect(similar->pos() + similar->clientPos(), similar->clientSize());
+                    updateDecoration(false);
+                    if (tabBehind(similar, autogroupInFg)) {
+                        // Don't move entire group
+                        geom = QRect(similar->pos() + similar->clientPos(), similar->clientSize());
+                        placementDone = true;
+                        dontKeepInArea = true;
+                    }
+                }
+            }
+        }
+    }
+
     readColorScheme(colorSchemeCookie);
 
     readApplicationMenuServiceName(applicationMenuServiceNameCookie);
@@ -898,6 +955,65 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     // be only done in addClient()
     emit clientManaging(this);
     return true;
+}
+
+// To accept "mainwindow#1" to "mainwindow#2"
+static QByteArray truncatedWindowRole(QByteArray a)
+{
+    int i = a.indexOf('#');
+    if (i == -1)
+        return a;
+    QByteArray b(a);
+    b.truncate(i);
+    return b;
+}
+
+X11Client* X11Client::findAutogroupCandidate() const
+{
+    // Attempt to find a similar window to the input. If we find multiple possibilities that are in
+    // different groups then ignore all of them. This function is for automatic window grouping.
+    X11Client *found = NULL;
+
+    // See if the window has a group ID to match with
+    QString wGId = rules()->checkAutogroupById(QString());
+    if (!wGId.isEmpty()) {
+        foreach (X11Client *c, workspace()->clientList()) {
+            if (activities() != c->activities())
+                continue; // don't cross activities
+            if (wGId == c->rules()->checkAutogroupById(QString())) {
+                if (found && found->tabGroup() != c->tabGroup()) { // We've found two, ignore both
+                    found = NULL;
+                    break; // Continue to the next test
+                }
+                found = c;
+            }
+        }
+        if (found)
+            return found;
+    }
+
+    // If this is a transient window don't take a guess
+    if (isTransient())
+        return NULL;
+
+    // If we don't have an ID take a guess
+    /*if (rules()->checkAutogrouping(options->isAutogroupSimilarWindows())) {
+        QByteArray wRole = truncatedWindowRole(windowRole());
+        foreach (X11Client *c, workspace()->clientList()) {
+            if (desktop() != c->desktop() || activities() != c->activities())
+                continue;
+            QByteArray wRoleB = truncatedWindowRole(c->windowRole());
+            if (resourceClass() == c->resourceClass() &&  // Same resource class
+                    wRole == wRoleB && // Same window role
+                    c->isNormalWindow()) { // Normal window TODO: Can modal windows be "normal"?
+                if (found && found->tabGroup() != c->tabGroup())   // We've found two, ignore both
+                    return NULL;
+                found = c;
+            }
+        }
+    } TODO TABS*/
+
+    return found;
 }
 
 // Called only from manage()
@@ -1273,7 +1389,7 @@ bool X11Client::userCanSetNoBorder() const
         return false;
     }
 
-    return !isFullScreen() && !isShade();
+    return !isFullScreen() && !isShade() && !tabGroup();
 }
 
 void X11Client::setNoBorder(bool set)
@@ -1437,6 +1553,9 @@ void X11Client::doMinimize()
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Minimized);
 }
 
 QRect X11Client::iconGeometry() const
@@ -1491,6 +1610,9 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
         } else if (isActive()) {
             workspace()->focusToNull();
         }
+        // Update states of all other windows in this group
+        if (tabGroup())
+            tabGroup()->updateStates(this, TabGroup::Shaded);
     } else {
         shade_geometry_change = true;
         if (decoratedClient())
@@ -1533,7 +1655,7 @@ void X11Client::updateVisibility()
 {
     if (deleting)
         return;
-    if (hidden) {
+    if (hidden && isCurrentTab()) {
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true);   // Also hide from taskbar
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
@@ -1542,7 +1664,8 @@ void X11Client::updateVisibility()
             internalHide();
         return;
     }
-    setSkipTaskbar(originalSkipTaskbar());   // Reset from 'hidden'
+    if (isCurrentTab())
+        setSkipTaskbar(originalSkipTaskbar());   // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
@@ -1850,11 +1973,17 @@ void X11Client::killProcess(bool ask, xcb_timestamp_t timestamp)
 
 void X11Client::doSetKeepAbove()
 {
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Layer);
     info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
 }
 
 void X11Client::doSetKeepBelow()
 {
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Layer);
     info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
 }
 
@@ -1876,6 +2005,9 @@ void X11Client::doSetSkipSwitcher()
 void X11Client::doSetDesktop()
 {
     updateVisibility();
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Desktop);
 }
 
 void X11Client::doSetDemandsAttention()
@@ -1984,6 +2116,10 @@ void X11Client::updateActivities(bool includeTransients)
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateVisibility();
     updateWindowRules(Rules::Activity);
+
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Activity);
 }
 
 /**
@@ -2207,7 +2343,8 @@ void X11Client::setClientShown(bool shown)
     } else {
         unmap();
         // Don't move tabs to the end of the list when another tab get's activated
-        FocusChain::self()->update(this, FocusChain::MakeLast);
+        if (isCurrentTab())
+            FocusChain::self()->update(this, FocusChain::MakeLast);
         addWorkspaceRepaint(visibleRect());
     }
 }
@@ -2812,6 +2949,12 @@ bool X11Client::belongsToSameApplication(const AbstractClient *other, SameApplic
     return X11Client::belongToSameApplication(this, c2, checks);
 }
 
+void X11Client::updateTabGroupStates(TabGroup::States states)
+{
+    if (auto t = tabGroup())
+        t->updateStates(this, states);
+}
+
 QSize X11Client::resizeIncrements() const
 {
     return m_geometryHints.resizeIncrements();
@@ -2902,6 +3045,9 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
     }
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
+
+    // Update states of all other windows in this group
+    updateTabGroupStates(TabGroup::Geometry);
 }
 
 bool X11Client::belongToSameApplication(const X11Client *c1, const X11Client *c2, SameApplicationChecks checks)
@@ -3557,8 +3703,8 @@ QSize X11Client::constrainClientSize(const QSize &size, SizeMode mode) const
 
     // basesize, minsize, maxsize, paspect and resizeinc have all values defined,
     // even if they're not set in flags - see getWmNormalHints()
-    QSize min_size = minSize();
-    QSize max_size = maxSize();
+    QSize min_size = tabGroup() ? tabGroup()->minSize() : minSize();
+    QSize max_size = tabGroup() ? tabGroup()->maxSize() : maxSize();
     if (isDecorated()) {
         QSize decominsize(0, 0);
         QSize border_size(borderLeft() + borderRight(), borderTop() + borderBottom());
@@ -3722,6 +3868,10 @@ void X11Client::getWmNormalHints()
         // align to eventual new constraints
         maximize(max_mode);
     }
+    // Update min/max size of this group
+    if (tabGroup())
+        tabGroup()->updateMinMaxSize();
+
     if (isManaged()) {
         // update to match restrictions
         QSize new_size = adjustedSize();
@@ -4113,8 +4263,8 @@ bool X11Client::isResizable() const
          mode == PositionLeft || mode == PositionBottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint)
         return false;
 
-    QSize min = minSize();
-    QSize max = maxSize();
+    QSize min = tabGroup() ? tabGroup()->minSize() : minSize();
+    QSize max = tabGroup() ? tabGroup()->maxSize() : maxSize();
     return min.width() < max.width() || min.height() < max.height();
 }
 
@@ -4195,6 +4345,10 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
+
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Geometry);
 }
 
 void X11Client::plainResize(int w, int h, ForceGeometry_t force)
@@ -4252,6 +4406,10 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
+
+    // Update states of all other windows in this group
+    if (tabGroup())
+        tabGroup()->updateStates(this, TabGroup::Geometry);
 }
 
 void X11Client::updateServerGeometry()
@@ -4292,6 +4450,33 @@ void X11Client::updateServerGeometry()
         m_decoInputExtent.move(pos() + inputPos());
     }
 }
+
+// Update states of all other windows in this group
+class TabSynchronizer
+{
+public:
+    TabSynchronizer(AbstractClient *client, TabGroup::States syncStates) :
+    m_client(client) , m_states(syncStates)
+    {
+        if (client->tabGroup())
+            client->tabGroup()->blockStateUpdates(true);
+    }
+    ~TabSynchronizer()
+    {
+        syncNow();
+    }
+    void syncNow()
+    {
+        if (m_client && m_client->tabGroup()) {
+            m_client->tabGroup()->blockStateUpdates(false);
+            m_client->tabGroup()->updateStates(dynamic_cast<X11Client*>(m_client), m_states);
+        }
+        m_client = 0;
+    }
+private:
+    AbstractClient *m_client;
+    TabGroup::States m_states;
+};
 
 static bool changeMaximizeRecursion = false;
 void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
@@ -4342,6 +4527,8 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         return;
 
     GeometryUpdatesBlocker blocker(this);
+    // QT synchronizing required because we eventually change from QT to Maximized
+    TabSynchronizer syncer(this, TabGroup::Maximized|TabGroup::QuickTile);
 
     // maximing one way and unmaximizing the other way shouldn't happen,
     // so restore first and then maximize the other way
@@ -4548,6 +4735,8 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         break;
     }
 
+    syncer.syncNow(); // important because of window rule updates!
+
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
     emit quickTileModeChanged();
@@ -4583,6 +4772,7 @@ void X11Client::setFullScreen(bool set, bool user)
 
     if (set) {
         m_fullscreenMode = FullScreenNormal;
+        untab();
         workspace()->raiseClient(this);
     } else {
         m_fullscreenMode = FullScreenNone;

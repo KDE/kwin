@@ -14,7 +14,8 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 2.0
+import QtQuick 2.5
+import QtQuick.Controls 2.3
 import org.kde.kwin.decoration 0.1
 import org.kde.kwin.decorations.plastik 1.0
 
@@ -88,9 +89,14 @@ Decoration {
         id: options
         deco: decoration
     }
+    DecoratedClientsModel {
+        id: clientsModel
+        decoration: root.auroraeDeco
+    }
+    property var auroraeDeco: decoration
     property int borderSize: decorationSettings.borderSize
     property alias buttonSize: titleRow.captionHeight
-    property alias titleAlignment: caption.horizontalAlignment
+    property var titleAlignment: Text.AlignLeft
     property color titleBarColor: options.titleBarColor
     // set by readConfig after Component completed, ensures that buttons do not flicker
     property int animationDuration: 0
@@ -257,9 +263,8 @@ Decoration {
                         left: parent.left
                     }
                 }
-                Text {
+                ListView {
                     id: caption
-                    textFormat: Text.PlainText
                     anchors {
                         top: parent.top
                         left: leftButtonGroup.right
@@ -268,14 +273,46 @@ Decoration {
                         leftMargin: 5
                         topMargin: 3
                     }
-                    color: options.fontColor
-                    Behavior on color {
-                        ColorAnimation { duration: root.animationDuration }
+                    implicitHeight: metrics.height
+                    model: clientsModel
+                    orientation: ListView.Horizontal
+                    clip: true
+                    interactive: false
+                    delegate: Item {
+                        height: ListView.view.height
+                        width: ListView.view.width / ListView.view.count
+                        Rectangle {
+                            anchors.fill: parent
+                            visible: !model.client.active
+                            color: options.titleBarInactiveColor
+                        }
+                        Text {
+                            anchors.fill: parent
+                            textFormat: Text.PlainText
+                            color: options.fontColor
+                            Behavior on color {
+                                ColorAnimation { duration: root.animationDuration }
+                            }
+                            text: model.display
+                            font: options.titleFont
+                            style: root.titleShadow ? Text.Raised : Text.Normal
+                            styleColor: colorHelper.shade(color, ColorHelper.ShadowShade)
+                            elide: Text.ElideMiddle
+                            renderType: Text.NativeRendering
+                            MouseArea {
+                                enabled: caption.count != 1
+                                anchors.fill: parent
+                                onClicked: {
+                                    decoration.requestActivateWindowTab(model.client)
+                                }
+                            }
+                        }
                     }
-                    text: decoration.client.caption
-                    font: options.titleFont
-                    elide: Text.ElideMiddle
-                    renderType: Text.NativeRendering
+                    TextMetrics {
+                        id: metrics
+                        text: "KWin"
+                        font: options.titleFont
+                    }
                 }
                 ButtonGroup {
                     id: rightButtonGroup

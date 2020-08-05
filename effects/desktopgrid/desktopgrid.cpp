@@ -1414,6 +1414,10 @@ bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
         return false;
     }
 
+    if (!w->isCurrentTab()) {
+        return false;
+    }
+
     if (!w->isOnCurrentActivity()) {
         return false;
     }

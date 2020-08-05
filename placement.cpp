@@ -185,6 +185,8 @@ static inline bool isIrrelevant(const AbstractClient *client, const AbstractClie
         return true;
     if (!client->isShown(false))
         return true;
+    if (!client->isCurrentTab())
+        return true;
     if (!client->isOnDesktop(desktop))
         return true;
     if (!client->isOnCurrentActivity())

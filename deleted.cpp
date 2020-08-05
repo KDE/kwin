@@ -43,6 +43,7 @@ Deleted::Deleted()
     , m_minimized(false)
     , m_modal(false)
     , m_wasClient(false)
+    , m_wasCurrentTab(true)
     , m_decorationRenderer(nullptr)
     , m_fullscreen(false)
     , m_keepAbove(false)
@@ -134,6 +135,7 @@ void Deleted::copyToDeleted(Toplevel* c)
             connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
         }
         m_fullscreen = client->isFullScreen();
+        m_wasCurrentTab = client->isCurrentTab();
         m_keepAbove = client->keepAbove();
         m_keepBelow = client->keepBelow();
         m_caption = client->caption();

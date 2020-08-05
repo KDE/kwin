@@ -100,6 +100,11 @@ QColor DecorationOptions::titleBarColor() const
     return m_active ? m_colors.activeTitleBarColor() : m_colors.inactiveTitleBarColor();
 }
 
+QColor DecorationOptions::titleBarInactiveColor() const
+{
+    return m_colors.inactiveTitleBarColor();
+}
+
 QFont DecorationOptions::titleFont() const
 {
     return m_decoration ? m_decoration->settings()->font() : QFont();

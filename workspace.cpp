@@ -620,6 +620,8 @@ void Workspace::removeClient(X11Client *c)
         m_userActionsMenu->close();
     }
 
+    c->untab(QRect(), true);
+
     if (client_keys_client == c)
         setupWindowShortcutDone(false);
     if (!c->shortcut().isEmpty()) {
@@ -783,7 +785,8 @@ void Workspace::updateToolWindows(bool also_hide)
     // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
     if (!options->isHideUtilityWindowsForInactive()) {
         for (auto it = clients.constBegin(); it != clients.constEnd(); ++it)
-            (*it)->hideClient(false);
+            if (!(*it)->tabGroup() || (*it)->tabGroup()->current() == *it)
+                (*it)->hideClient(false);
         return;
     }
     const Group* group = nullptr;
@@ -2403,6 +2406,8 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
                     continue; // is minimized
                 if (!(*l)->isShown(false))
                     continue;
+                if ((*l)->tabGroup() && (*l) != (*l)->tabGroup()->current())
+                    continue; // is not active tab
                 if (!((*l)->isOnDesktop(c->desktop()) || c->isOnDesktop((*l)->desktop())))
                     continue; // wrong virtual desktop
                 if (!(*l)->isOnCurrentActivity())

@@ -42,7 +42,7 @@ namespace Decoration
 
 DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::DecoratedClient *decoratedClient, KDecoration2::Decoration *decoration)
     : QObject()
-    , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
+    , WindowTabsEnabledDecoratedClientPrivate(decoratedClient, decoration)
     , m_client(client)
     , m_clientSize(client->clientSize())
     , m_renderer(nullptr)
@@ -127,6 +127,8 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
                 m_toolTipShowing = true;
             }
     );
+    connect(client, &AbstractClient::tabGroupChanged, decoration, &KDecoration2::Decoration::windowTabClientsChanged);
+    connect(client, &AbstractClient::tabGroupClientsChanged, decoration, &KDecoration2::Decoration::windowTabClientsChanged);
 }
 
 DecoratedClientImpl::~DecoratedClientImpl()
@@ -340,6 +342,32 @@ void DecoratedClientImpl::destroyRenderer()
 {
     delete m_renderer;
     m_renderer = nullptr;
+}
+
+QVector<KDecoration2::DecoratedClient*> DecoratedClientImpl::tabGroup() const
+{
+    if (!m_client->tabGroup()) {
+        return {const_cast<DecoratedClientImpl*>(this)->decoratedClient()};
+    }
+    const auto &clients = m_client->tabGroup()->clients();
+    QVector<KDecoration2::DecoratedClient*> ret;
+    ret.reserve(clients.size());
+    std::transform(clients.begin(), clients.end(), std::back_inserter(ret), [] (auto c) { return c->decoratedClient()->decoratedClient(); });
+    return ret;
+}
+
+void DecoratedClientImpl::requestActivate()
+{
+    if (auto g = client()->tabGroup()) {
+        g->setCurrent(client());
+    }
+}
+
+void DecoratedClientImpl::requestCloseWindowTabGroup()
+{
+    if (auto g = client()->tabGroup()) {
+        g->closeAll();
+    }
 }
 
 }

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "options.h"
 #include "rules.h"
+#include "tabgroup.h"
 #include "abstract_client.h"
 #include "xcbutils.h"
 // Qt
@@ -341,6 +342,8 @@ private:
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
 
+    X11Client* findAutogroupCandidate() const;
+
 protected:
     void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
@@ -356,6 +359,7 @@ protected:
     void doSetSkipSwitcher() override;
     void doSetDemandsAttention() override;
     bool belongsToDesktop() const override;
+    void updateTabGroupStates(TabGroup::States states) override;
     bool doStartMoveResize() override;
     void doPerformMoveResize() override;
     bool isWaitingForMoveResizeSync() const override;
@@ -587,7 +591,8 @@ inline Group* X11Client::group()
 
 inline bool X11Client::isShown(bool shaded_is_shown) const
 {
-    return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden;
+    return !isMinimized() && (!isShade() || shaded_is_shown) && !hidden &&
+        (!tabGroup() || tabGroup()->current() == this);
 }
 
 inline bool X11Client::isHiddenInternal() const

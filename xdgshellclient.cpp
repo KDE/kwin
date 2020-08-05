@@ -1632,6 +1632,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     m_isFullScreen = set;
 
     if (set) {
+        untab();
         workspace()->raiseClient(this);
     }
     StackingUpdatesBlocker blocker1(workspace());

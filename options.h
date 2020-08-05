@@ -361,6 +361,11 @@ public:
         NoOp,
         SetupWindowShortcutOp,
         ApplicationRulesOp,
+        RemoveTabFromGroupOp,
+        CloseTabGroupOp,
+        ActivateNextTabOp,
+        ActivatePreviousTabOp,
+        TabDragOp
     };
 
     WindowOperation operationTitlebarDblClick() const {
@@ -390,7 +395,7 @@ public:
         MouseNextDesktop, MousePreviousDesktop,
         MouseAbove, MouseBelow,
         MouseOpacityMore, MouseOpacityLess,
-        MouseClose,
+        MouseClose, MousePreviousTab, MouseNextTab, MouseDragTab,
         MouseNothing
     };
 

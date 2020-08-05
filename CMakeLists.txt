@@ -433,6 +433,7 @@ set(kwin_SRCS
     cursor.cpp
     dbusinterface.cpp
     debug_console.cpp
+    tabgroup.cpp
     decorations/decoratedclient.cpp
     decorations/decorationbridge.cpp
     decorations/decorationpalette.cpp

@@ -475,6 +475,10 @@ public Q_SLOTS:
 
     void updateClientArea();
 
+    void slotActivateNextTab();
+    void slotActivatePrevTab();
+    void slotUntab();
+
 private Q_SLOTS:
     void desktopResized();
     void selectWmInputEventMask();

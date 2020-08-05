@@ -142,6 +142,10 @@ class DecorationOptions : public QObject
      */
     Q_PROPERTY(QColor titleBarColor READ titleBarColor NOTIFY colorsChanged)
     /**
+     * The color for the inactive titlebar
+     **/
+    Q_PROPERTY(QColor titleBarInactiveColor READ titleBarInactiveColor NOTIFY colorsChanged)
+    /**
      * The blend color for the titlebar depending on the decoration's active state.
      */
     Q_PROPERTY(QColor titleBarBlendColor READ titleBarBlendColor NOTIFY colorsChanged)
@@ -218,12 +222,14 @@ public:
     ~DecorationOptions() override;
 
     QColor titleBarColor() const;
+    QColor titleBarInactiveColor() const;
     QColor titleBarBlendColor() const;
     QColor fontColor() const;
     QColor buttonColor() const;
     QColor borderColor() const;
     QColor resizeHandleColor() const;
     QFont titleFont() const;
+    QColor inactiveFontColor() const;
     QList<int> titleButtonsLeft() const;
     QList<int> titleButtonsRight() const;
     KDecoration2::Decoration *decoration() const;

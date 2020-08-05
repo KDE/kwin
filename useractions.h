@@ -120,6 +120,26 @@ private Q_SLOTS:
      */
     void menuAboutToShow();
     /**
+     * Adjusts the add to tab group menu to the current value of the Client.
+     */
+    void rebuildTabGroupPopup();
+    /**
+     * Adjusts the switch to tab menu to the current values of the Client.
+     */
+    void rebuildTabListPopup();
+    /**
+     * Adds the Client as tab to the Client identified by the @p action.
+     *
+     * @param action The invoked action containing the Client to which the active Client should be tabbed.
+     */
+    void entabPopupClient(QAction *action);
+    /**
+     * Activates the selected tabbed Client.
+     *
+     * @param action The invoked action containing the tabbed Client which should be activated.
+     */
+    void selectPopupClientTab(QAction *action);
+    /**
      * Adjusts the desktop popup to the current values and the location of
      * the Client.
      */
@@ -190,6 +210,10 @@ private:
      */
     void initActivityPopup();
     /**
+     * Creates the Window Tabbing related menus.
+     */
+    void initTabbingPopups();
+    /**
      * Shows a helper Dialog to inform the user how to get back in case he triggered
      * an action which hides the window decoration (e.g. NoBorder or Fullscreen).
      * @param message The message type to be shown
@@ -217,6 +241,14 @@ private:
      */
     QMenu* m_activityMenu;
     /**
+     * Menu to add the group to other group.
+     */
+    QMenu* m_addTabsMenu;
+    /**
+     * Menu to change tab.
+     */
+    QMenu* m_switchToTabMenu;
+    /**
      * Menu for further entries added by scripts.
      */
     QMenu* m_scriptsMenu;
@@ -231,6 +263,14 @@ private:
     QAction* m_minimizeOperation;
     QAction* m_closeOperation;
     QAction* m_shortcutOperation;
+    /**
+     * Remove client from group.
+     */
+    QAction* m_removeFromTabGroup;
+    /**
+     * Close all clients in the group.
+     */
+    QAction* m_closeTabGroup;
     /**
      * The Client for which the menu is shown.
      */

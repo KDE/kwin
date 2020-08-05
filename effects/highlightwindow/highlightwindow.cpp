@@ -51,7 +51,7 @@ HighlightWindowEffect::~HighlightWindowEffect()
 static bool isInitiallyHidden(EffectWindow* w)
 {
     // Is the window initially hidden until it is highlighted?
-    return w->isMinimized() || !w->isOnCurrentDesktop();
+    return w->isMinimized() || !w->isOnCurrentDesktop() || !w->isCurrentTab();
 }
 
 void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
@@ -97,6 +97,8 @@ void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& 
     if (opacity != m_windowOpacity.end() && *opacity > 0.01) {
         if (w->isMinimized())
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
+        if (w->isCurrentTab())
+            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_TAB_GROUP);
         if (!w->isOnCurrentDesktop())
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
     }

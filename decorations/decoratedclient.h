@@ -37,7 +37,7 @@ namespace Decoration
 
 class Renderer;
 
-class DecoratedClientImpl : public QObject, public KDecoration2::ApplicationMenuEnabledDecoratedClientPrivate
+class DecoratedClientImpl : public QObject, public KDecoration2::WindowTabsEnabledDecoratedClientPrivate
 {
     Q_OBJECT
 public:
@@ -87,6 +87,10 @@ public:
     void requestToggleKeepBelow() override;
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
+
+    QVector<KDecoration2::DecoratedClient*> tabGroup() const override;
+    void requestActivate() override;
+    void requestCloseWindowTabGroup() override;
 
     void showApplicationMenu(int actionId) override;
 

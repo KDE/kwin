@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decorationplugin.h"
 #include "colorhelper.h"
+#include "clientsmodel.h"
 #include "decorationoptions.h"
 #include <QtQml>
 
@@ -25,5 +26,6 @@ void DecorationPlugin::registerTypes(const char *uri)
     qmlRegisterType<ColorHelper>(uri, 0, 1, "ColorHelper");
     qmlRegisterType<KWin::DecorationOptions>(uri, 0, 1, "DecorationOptions");
     qmlRegisterType<KWin::Borders>(uri, 0, 1, "Borders");
+    qmlRegisterType<Aurorae::DecoratedClientsModel>(uri, 0, 1, "DecoratedClientsModel");
 }
 

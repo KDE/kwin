@@ -388,6 +388,8 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
         }
         flags &= ~ActivityFocus;
     }
+    if (c->tabGroup() && c->tabGroup()->current() != c)
+        c->tabGroup()->setCurrent(c);
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
         qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
         return;
@@ -463,6 +465,15 @@ bool Workspace::activateNextClient(AbstractClient* c)
         return false;
 
     AbstractClient* get_focus = nullptr;
+
+     // precedence on keeping the current tabgroup active. to the user that's the same window
+    if (c && c->tabGroup() && c->isShown(false)) {
+        if (c == c->tabGroup()->current())
+            c->tabGroup()->activateNext();
+        get_focus = c->tabGroup()->current();
+        if (get_focus == c) // single tab case - should not happen
+            get_focus = NULL;
+    }
 
     const int desktop = VirtualDesktopManager::self()->current();
 

@@ -89,6 +89,10 @@ public:
         return m_fullscreen;
     }
 
+    bool isCurrentTab() const {
+        return m_wasCurrentTab;
+    }
+
     bool keepAbove() const {
         return m_keepAbove;
     }
@@ -230,6 +234,7 @@ private:
     bool m_fullscreen;
     bool m_keepAbove;
     bool m_keepBelow;
+    bool m_wasCurrentTab;
     QString m_caption;
     bool m_wasActive;
     bool m_wasX11Client;

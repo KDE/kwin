@@ -30,6 +30,7 @@ install(TARGETS kwin5_aurorae DESTINATION ${PLUGIN_INSTALL_DIR}/org.kde.kdecorat
 
 set(decoration_plugin_SRCS
     colorhelper.cpp
+    clientsmodel.cpp
     decorationoptions.cpp
     decorationplugin.cpp
 )

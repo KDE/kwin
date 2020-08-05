@@ -88,7 +88,9 @@ struct SessionInfo {
     bool active; // means 'was active in the saved session'
     int stackingOrder;
     float opacity;
+    int tabGroup; // Unique identifier for the client group that this window is in
 
+    X11Client* tabGroupClient; // The first client created that has an identical identifier
     QStringList activities;
 };
 
