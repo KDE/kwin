@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screencast/screencastmanager.h"
 #endif
 #include "wayland_server.h"
-#include "xwl/xwayland.h"
+#include "xwl/xwaylandserver.h"
 
 // KWayland
 #include <KWaylandServer/display.h>
@@ -134,8 +134,8 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
-    delete m_xwayland;
-    m_xwayland = nullptr;
+    delete m_xwaylandServer;
+    m_xwaylandServer = nullptr;
     destroyWorkspace();
     waylandServer()->dispatch();
 
@@ -190,8 +190,8 @@ void ApplicationWayland::continueStartupWithScreens()
 
 void ApplicationWayland::finalizeStartup()
 {
-    if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    if (m_xwaylandServer) {
+        disconnect(m_xwaylandServer, &Xwl::XwaylandServer::started, this, &ApplicationWayland::finalizeStartup);
     }
     startSession();
     notifyStarted();
@@ -213,15 +213,15 @@ void ApplicationWayland::continueStartupWithScene()
         return;
     }
 
-    m_xwayland = new Xwl::Xwayland(this);
-    connect(m_xwayland, &Xwl::Xwayland::criticalError, this, [](int code) {
+    m_xwaylandServer = new Xwl::XwaylandServer(this);
+    connect(m_xwaylandServer, &Xwl::XwaylandServer::criticalError, this, [](int code) {
         // we currently exit on Xwayland errors always directly
         // TODO: restart Xwayland
         std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
         exit(code);
     });
-    connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
-    m_xwayland->start();
+    connect(m_xwaylandServer, &Xwl::XwaylandServer::started, this, &ApplicationWayland::finalizeStartup);
+    m_xwaylandServer->start();
 }
 
 void ApplicationWayland::startSession()

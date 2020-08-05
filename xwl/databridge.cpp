@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "dnd.h"
 #include "selection.h"
 #include "xcbutils.h"
-#include "xwayland.h"
+#include "xwaylandserver.h"
 
 #include "abstract_client.h"
 #include "atoms.h"

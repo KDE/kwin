@@ -61,7 +61,7 @@ private:
     Q_DISABLE_COPY(XwaylandInterface)
 };
 
-inline XwaylandInterface *xwayland()
+inline XwaylandInterface *xwaylandServer()
 {
     return XwaylandInterface::self();
 }

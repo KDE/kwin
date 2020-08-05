@@ -26,7 +26,7 @@ namespace KWin
 {
 namespace Xwl
 {
-class Xwayland;
+class XwaylandServer;
 }
 
 class ApplicationWayland : public ApplicationWaylandAbstract
@@ -72,7 +72,7 @@ private:
     QProcessEnvironment m_environment;
     QString m_sessionArgument;
 
-    Xwl::Xwayland *m_xwayland = nullptr;
+    Xwl::XwaylandServer *m_xwaylandServer = nullptr;
 };
 
 }

@@ -740,7 +740,7 @@ set(kwin_XWAYLAND_SRCS
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/selection_source.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/xwl/transfer.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/xwayland.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/xwl/xwaylandserver.cpp
 )
 include(ECMQtDeclareLoggingCategory)
 ecm_qt_declare_logging_category(kwin_XWAYLAND_SRCS

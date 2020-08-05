@@ -19,7 +19,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#include "xwayland.h"
+#include "xwaylandserver.h"
 #include "databridge.h"
 
 #include "main_wayland.h"
@@ -71,32 +71,32 @@ namespace KWin
 namespace Xwl
 {
 
-Xwayland *s_self = nullptr;
+XwaylandServer *s_self = nullptr;
 
-Xwayland *Xwayland::self()
+XwaylandServer *XwaylandServer::self()
 {
     return s_self;
 }
 
-Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
+XwaylandServer::XwaylandServer(ApplicationWaylandAbstract *app, QObject *parent)
     : XwaylandInterface(parent)
     , m_app(app)
 {
     s_self = this;
 }
 
-Xwayland::~Xwayland()
+XwaylandServer::~XwaylandServer()
 {
     stop();
     s_self = nullptr;
 }
 
-QProcess *Xwayland::process() const
+QProcess *XwaylandServer::process() const
 {
     return m_xwaylandProcess;
 }
 
-void Xwayland::start()
+void XwaylandServer::start()
 {
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
@@ -145,15 +145,15 @@ void Xwayland::start()
                            QStringLiteral("-rootless"),
                            QStringLiteral("-wm"),
                            QString::number(fd)});
-    connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &Xwayland::handleXwaylandError);
-    connect(m_xwaylandProcess, &QProcess::started, this, &Xwayland::handleXwaylandStarted);
+    connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &XwaylandServer::handleXwaylandError);
+    connect(m_xwaylandProcess, &QProcess::started, this, &XwaylandServer::handleXwaylandStarted);
     connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
-            this, &Xwayland::handleXwaylandFinished);
+            this, &XwaylandServer::handleXwaylandFinished);
     m_xwaylandProcess->start();
     close(pipeFds[1]);
 }
 
-void Xwayland::stop()
+void XwaylandServer::stop()
 {
     if (!m_xwaylandProcess) {
         return;
@@ -182,7 +182,7 @@ void Xwayland::stop()
     waylandServer()->destroyXWaylandConnection(); // This one must be destroyed last!
 }
 
-void Xwayland::dispatchEvents()
+void XwaylandServer::dispatchEvents()
 {
     xcb_connection_t *connection = kwinApp()->x11Connection();
     if (!connection) {
@@ -211,37 +211,37 @@ void Xwayland::dispatchEvents()
     xcb_flush(connection);
 }
 
-void Xwayland::installSocketNotifier()
+void XwaylandServer::installSocketNotifier()
 {
     const int fileDescriptor = xcb_get_file_descriptor(kwinApp()->x11Connection());
 
     m_socketNotifier = new QSocketNotifier(fileDescriptor, QSocketNotifier::Read, this);
-    connect(m_socketNotifier, &QSocketNotifier::activated, this, &Xwayland::dispatchEvents);
+    connect(m_socketNotifier, &QSocketNotifier::activated, this, &XwaylandServer::dispatchEvents);
 
     QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
-    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Xwayland::dispatchEvents);
-    connect(dispatcher, &QAbstractEventDispatcher::awake, this, &Xwayland::dispatchEvents);
+    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &XwaylandServer::dispatchEvents);
+    connect(dispatcher, &QAbstractEventDispatcher::awake, this, &XwaylandServer::dispatchEvents);
 }
 
-void Xwayland::uninstallSocketNotifier()
+void XwaylandServer::uninstallSocketNotifier()
 {
     QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
-    disconnect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Xwayland::dispatchEvents);
-    disconnect(dispatcher, &QAbstractEventDispatcher::awake, this, &Xwayland::dispatchEvents);
+    disconnect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &XwaylandServer::dispatchEvents);
+    disconnect(dispatcher, &QAbstractEventDispatcher::awake, this, &XwaylandServer::dispatchEvents);
 
     delete m_socketNotifier;
     m_socketNotifier = nullptr;
 }
 
-void Xwayland::handleXwaylandStarted()
+void XwaylandServer::handleXwaylandStarted()
 {
     QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
-    connect(watcher, &QFutureWatcher<void>::finished, this, &Xwayland::continueStartupWithX);
+    connect(watcher, &QFutureWatcher<void>::finished, this, &XwaylandServer::continueStartupWithX);
     connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
     watcher->setFuture(QtConcurrent::run(readDisplay, m_displayFileDescriptor));
 }
 
-void Xwayland::handleXwaylandFinished(int exitCode)
+void XwaylandServer::handleXwaylandFinished(int exitCode)
 {
     qCDebug(KWIN_XWL) << "Xwayland process has quit with exit code" << exitCode;
 
@@ -251,7 +251,7 @@ void Xwayland::handleXwaylandFinished(int exitCode)
     stop();
 }
 
-void Xwayland::handleXwaylandError(QProcess::ProcessError error)
+void XwaylandServer::handleXwaylandError(QProcess::ProcessError error)
 {
     switch (error) {
     case QProcess::FailedToStart:
@@ -274,7 +274,7 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
     }
 }
 
-void Xwayland::createX11Connection()
+void XwaylandServer::createX11Connection()
 {
     xcb_connection_t *connection = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
     if (!connection) {
@@ -299,7 +299,7 @@ void Xwayland::createX11Connection()
     emit m_app->x11ConnectionChanged();
 }
 
-void Xwayland::destroyX11Connection()
+void XwaylandServer::destroyX11Connection()
 {
     if (!m_app->x11Connection()) {
         return;
@@ -322,7 +322,7 @@ void Xwayland::destroyX11Connection()
     emit m_app->x11ConnectionChanged();
 }
 
-void Xwayland::continueStartupWithX()
+void XwaylandServer::continueStartupWithX()
 {
     createX11Connection();
     xcb_connection_t *xcbConn = m_app->x11Connection();
@@ -347,7 +347,7 @@ void Xwayland::continueStartupWithX()
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 }
 
-DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)
+DragEventReply XwaylandServer::dragMoveFilter(Toplevel *target, const QPoint &pos)
 {
     if (!m_dataBridge) {
         return DragEventReply::Wayland;

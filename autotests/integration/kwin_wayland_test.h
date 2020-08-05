@@ -55,7 +55,7 @@ namespace KWin
 {
 namespace Xwl
 {
-class Xwayland;
+class XwaylandServer;
 }
 
 class AbstractClient;
@@ -76,7 +76,7 @@ private:
     void continueStartupWithScene();
     void finalizeStartup();
 
-    Xwl::Xwayland *m_xwayland = nullptr;
+    Xwl::XwaylandServer *m_xwaylandServer = nullptr;
 };
 
 namespace Test

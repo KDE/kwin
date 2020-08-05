@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "databridge.h"
 #include "selection_source.h"
 #include "transfer.h"
-#include "xwayland.h"
 
 #include "x11client.h"
 #include "wayland_server.h"

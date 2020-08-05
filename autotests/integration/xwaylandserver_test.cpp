@@ -121,7 +121,7 @@ void XwaylandServerTest::testCrash()
     // Let's pretend that the Xwayland process has crashed.
     QSignalSpy x11ConnectionChangedSpy(kwinApp(), &Application::x11ConnectionChanged);
     QVERIFY(x11ConnectionChangedSpy.isValid());
-    xwayland()->process()->terminate();
+    xwaylandServer()->process()->terminate();
     QVERIFY(x11ConnectionChangedSpy.wait());
 
     // When Xwayland crashes, the compositor should tear down the XCB connection and destroy

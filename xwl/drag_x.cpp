@@ -18,11 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drag_x.h"
-
 #include "databridge.h"
 #include "dnd.h"
 #include "selection_source.h"
-#include "xwayland.h"
+#include "xwaylandserver.h"
 
 #include "abstract_client.h"
 #include "atoms.h"
