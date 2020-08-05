@@ -1,0 +1,18 @@
+[Desktop Entry]
+Comment=Animation for a window going to and leaving full screen mode
+Icon=preferences-system-windows-effect-fullscreen
+Name=Full Screen
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Email=mgraesslin@kde.org
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=kwin4_effect_fullscreen
+X-KDE-PluginInfo-Version=1
+X-KDE-PluginInfo-Website=
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Ordering=60
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/fullscreen.js

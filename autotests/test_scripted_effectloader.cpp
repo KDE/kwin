@@ -133,6 +133,7 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("FadeDesktop")                 << QStringLiteral("kwin4_effect_fadedesktop")      << true;
     QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups")     << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")        << true;
+    QTest::newRow("FullScreen")                  << QStringLiteral("kwin4_effect_fullscreen")       << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")            << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")           << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")         << true;
@@ -205,6 +206,7 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("FadeDesktop")                 << QStringLiteral("kwin4_effect_fadedesktop")      << true;
     QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups")     << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")        << true;
+    QTest::newRow("FullScreen")                  << QStringLiteral("kwin4_effect_fullscreen")       << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")            << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")           << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")         << true;
@@ -364,6 +366,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("fadedesktopEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadingpopupsEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("frozenappEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("fullscreenEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("loginEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("logoutEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("maximizeEnabled"), false);
