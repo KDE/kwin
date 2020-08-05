@@ -28,12 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class AbstractOutput;
 class OpenGLBackend;
 class OverlayWindow;
 class SceneOpenGL;
 class SceneOpenGLTexture;
 class SceneOpenGLTexturePrivate;
 class WindowPixmap;
+class GLTexture;
 
 /**
  * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
@@ -196,6 +198,8 @@ public:
      * Copy a region of pixels from the current read to the current draw buffer
      */
     void copyPixels(const QRegion &region);
+
+    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const;
 
 protected:
     /**

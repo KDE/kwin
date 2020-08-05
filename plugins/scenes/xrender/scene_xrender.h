@@ -186,9 +186,10 @@ private:
     QScopedPointer<XRenderBackend> m_backend;
 };
 
-class SceneXrender::Window
-    : public Scene::Window
+class SceneXrender::Window : public Scene::Window
 {
+    Q_OBJECT
+
 public:
     Window(Toplevel* c, SceneXrender *scene);
     ~Window() override;

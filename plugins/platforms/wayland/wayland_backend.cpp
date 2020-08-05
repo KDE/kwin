@@ -34,8 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "outputscreens.h"
 #include "pointer_input.h"
 #include "screens.h"
-#include "wayland_cursor_theme.h"
 #include "wayland_server.h"
+#include "../drm/gbm_dmabuf.h"
 
 #include <config-kwin.h>
 
@@ -65,6 +65,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <linux/input.h>
 #include <wayland-cursor.h>
+#include <unistd.h>
+#include <gbm.h>
+#include <fcntl.h>
 
 namespace KWin
 {
@@ -452,7 +455,18 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
 {
+    supportsOutputChanges();
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
+
+
+    char const *drm_render_node = "/dev/dri/renderD128";
+    m_drmFileDescriptor = open(drm_render_node, O_RDWR);
+    if (m_drmFileDescriptor < 0) {
+        qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
+        m_gbmDevice = nullptr;
+        return;
+    }
+    m_gbmDevice = gbm_create_device(m_drmFileDescriptor);
 }
 
 WaylandBackend::~WaylandBackend()
@@ -477,6 +491,8 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->quit();
     m_connectionThread->wait();
     m_connectionThreadObject->deleteLater();
+    gbm_device_destroy(m_gbmDevice);
+    close(m_drmFileDescriptor);
 
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
@@ -833,6 +849,11 @@ Outputs WaylandBackend::enabledOutputs() const
 {
     // all outputs are enabled
     return m_outputs;
+}
+
+DmaBufTexture *WaylandBackend::createDmaBufTexture(const QSize& size)
+{
+    return GbmDmaBuf::createBuffer(size, m_gbmDevice);
 }
 
 }

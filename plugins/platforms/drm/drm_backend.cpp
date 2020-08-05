@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
+#include "gbm_dmabuf.h"
 #endif
 #if HAVE_EGL_STREAMS
 #include "egl_stream_backend.h"
@@ -519,7 +520,11 @@ bool DrmBackend::updateOutputs()
         emit screensQueried();
     }
 
-    qDeleteAll(removedOutputs);
+    for(DrmOutput* removedOutput : removedOutputs) {
+        removedOutput->teardown();
+        removedOutput->m_crtc = nullptr;
+        removedOutput->m_conn = nullptr;
+    }
     qDeleteAll(oldConnectors);
     qDeleteAll(oldCrtcs);
     return true;
@@ -812,6 +817,15 @@ QString DrmBackend::supportInformation() const
     s << "Using EGL Streams: " << m_useEglStreams << Qt::endl;
 #endif
     return supportInfo;
+}
+
+DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
+{
+#if HAVE_GBM
+    return GbmDmaBuf::createBuffer(size, m_gbmDevice);
+#else
+    return nullptr;
+#endif
 }
 
 }

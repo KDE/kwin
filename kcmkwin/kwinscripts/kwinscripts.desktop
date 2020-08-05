@@ -9,6 +9,7 @@ X-KDE-PluginKeyword=kwin-scripts
 X-KDE-ParentApp=kcontrol
 
 X-KDE-Keywords=kwin script
+X-KDE-Keywords[az]=kwin skripti
 X-KDE-Keywords[bs]=kwin skripta
 X-KDE-Keywords[ca]=script del KWin
 X-KDE-Keywords[ca@valencia]=script de kwin
@@ -61,6 +62,7 @@ X-KDE-System-Settings-Parent-Category=windowmanagement
 X-KDE-Weight=70
 
 Name=KWin Scripts
+Name[az]=KWin Skriptləri
 Name[bs]=KWin skripte
 Name[ca]=Scripts del KWin
 Name[ca@valencia]=Scripts de KWin
@@ -111,6 +113,7 @@ Name[x-test]=xxKWin Scriptsxx
 Name[zh_CN]=KWin 脚本
 Name[zh_TW]=KWin 文稿
 Comment=Manage KWin scripts
+Comment[az]=KWin skriptləri meneceri
 Comment[bs]=Podesi KWin skripte
 Comment[ca]=Gestiona els scripts del KWin
 Comment[ca@valencia]=Gestiona els scripts de KWin

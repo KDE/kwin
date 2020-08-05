@@ -1,4 +1,5 @@
 kwin_core KWin Core DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_CORE]
+kwin_utils KWin utils DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_UTILS]
 kwin_virtualkeyboard KWin Virtual Keyboard Integration DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_VIRTUALKEYBOARD]
 kwineffects KWin Effects DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWINEFFECTS]
 libkwineffects KWin Effects Library DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [LIBKWINEFFECTS]
@@ -20,3 +21,4 @@ kwin_qpa_plugin KWin QtPlatformAbstraction plugin DEFAULT_SEVERITY [CRITICAL] ID
 kwin_scene_xrender KWin XRender based compositor scene plugin DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_XRENDER]
 kwin_scene_qpainter KWin QPainter based compositor scene plugin DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_QPAINTER]
 kwin_scene_opengl KWin OpenGL based compositor scene plugins DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_OPENGL]
+kwin_screencast KWin Screen Cast Service DEFAULT_SEVERITY [WARNING] IDENTIFIER [KWIN_SCREENCAST]

@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/output.h>
+#include <KWayland/Client/pointer.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
@@ -46,7 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/xdgdecoration_interface.h>
 
 #include <QDBusConnection>
 
@@ -119,6 +120,8 @@ private Q_SLOTS:
     void testXdgWindowGeometryInteractiveResize();
     void testXdgWindowGeometryFullScreen();
     void testXdgWindowGeometryMaximize();
+    void testPointerInputTransform();
+    void testReentrantSetFrameGeometry();
 };
 
 void TestXdgShellClient::initTestCase()
@@ -127,14 +130,14 @@ void TestXdgShellClient::initTestCase()
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWayland::Client::Output*>();
 
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -144,8 +147,10 @@ void TestXdgShellClient::initTestCase()
 void TestXdgShellClient::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
+                                         Test::AdditionalWaylandInterface::Seat |
                                          Test::AdditionalWaylandInterface::XdgDecoration |
                                          Test::AdditionalWaylandInterface::AppMenu));
+    QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
     KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
@@ -166,7 +171,7 @@ void TestXdgShellClient::testMapUnmap()
     QScopedPointer<XdgShellSurface> shellSurface(
         Test::createXdgShellStableSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
 
     QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
@@ -873,8 +878,8 @@ void TestXdgShellClient::testUnresponsiveWindow()
     // for this an external binary is launched
     const QString kill = QFINDTESTDATA(QStringLiteral("kill"));
     QVERIFY(!kill.isEmpty());
-    QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(shellClientAddedSpy.isValid());
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(clientAddedSpy.isValid());
 
     QScopedPointer<QProcess> process(new QProcess);
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -902,12 +907,12 @@ void TestXdgShellClient::testUnresponsiveWindow()
     QVERIFY(processStartedSpy.wait());
 
     AbstractClient *killClient = nullptr;
-    if (shellClientAddedSpy.isEmpty()) {
-        QVERIFY(shellClientAddedSpy.wait());
+    if (clientAddedSpy.isEmpty()) {
+        QVERIFY(clientAddedSpy.wait());
     }
     ::kill(process->processId(), SIGUSR1); // send a signal to freeze the process
 
-    killClient = shellClientAddedSpy.first().first().value<AbstractClient*>();
+    killClient = clientAddedSpy.first().first().value<AbstractClient*>();
     QVERIFY(killClient);
     QSignalSpy unresponsiveSpy(killClient, &AbstractClient::unresponsiveChanged);
     QSignalSpy killedSpy(process.data(), static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished));
@@ -1578,6 +1583,93 @@ void TestXdgShellClient::testXdgWindowGeometryMaximize()
     QCOMPARE(client->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(client->frameGeometry().size(), QSize(180, 80));
 
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testPointerInputTransform()
+{
+    // This test verifies that XdgToplevelClient provides correct input transform matrix.
+    // The input transform matrix is used by seat to map pointer events from the global
+    // screen coordinates to the surface-local coordinates.
+
+    // Get a wl_pointer object on the client side.
+    QScopedPointer<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy pointerEnteredSpy(pointer.data(), &KWayland::Client::Pointer::entered);
+    QVERIFY(pointerEnteredSpy.isValid());
+    QSignalSpy pointerMotionSpy(pointer.data(), &KWayland::Client::Pointer::motion);
+    QVERIFY(pointerMotionSpy.isValid());
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->bufferGeometry().size(), QSize(200, 100));
+    QCOMPARE(client->frameGeometry().size(), QSize(200, 100));
+
+    // Enter the surface.
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerMotion(client->pos(), timestamp++);
+    QVERIFY(pointerEnteredSpy.wait());
+
+    // Move the pointer to (10, 5) relative to the upper left frame corner, which is located
+    // at (0, 0) in the surface-local coordinates.
+    kwinApp()->platform()->pointerMotion(client->pos() + QPoint(10, 5), timestamp++);
+    QVERIFY(pointerMotionSpy.wait());
+    QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 5));
+
+    // Let's pretend that the client has changed the extents of the client-side drop-shadow
+    // but the frame geometry didn't change.
+    QSignalSpy bufferGeometryChangedSpy(client, &AbstractClient::bufferGeometryChanged);
+    QVERIFY(bufferGeometryChangedSpy.isValid());
+    QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    shellSurface->setWindowGeometry(QRect(10, 20, 200, 100));
+    Test::render(surface.data(), QSize(220, 140), Qt::blue);
+    QVERIFY(bufferGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 0);
+    QCOMPARE(client->frameGeometry().size(), QSize(200, 100));
+    QCOMPARE(client->bufferGeometry().size(), QSize(220, 140));
+
+    // Move the pointer to (20, 50) relative to the upper left frame corner, which is located
+    // at (10, 20) in the surface-local coordinates.
+    kwinApp()->platform()->pointerMotion(client->pos() + QPoint(20, 50), timestamp++);
+    QVERIFY(pointerMotionSpy.wait());
+    QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 20) + QPoint(20, 50));
+
+    // Destroy the xdg-toplevel surface.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testReentrantSetFrameGeometry()
+{
+    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // to the frameGeometryChanged() signal won't cause an infinite recursion.
+
+    // Create an xdg-toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(200, 100), Qt::red);
+    QVERIFY(client);
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Let's pretend that there is a script that really wants the client to be at (100, 100).
+    connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
+        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+    });
+
+    // Trigger the lambda above.
+    client->move(QPoint(40, 50));
+
+    // Eventually, the client will end up at (100, 100).
+    QCOMPARE(client->pos(), QPoint(100, 100));
+
+    // Destroy the xdg-toplevel surface.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
 }

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Cross fade animation when Tooltips or Notifications change their geometry
+Comment[az]=Sürüşən ip ucları və ya bildirişlər pəncərəsinin forması dəyişdirilərkən onlar tədricən dartılır və yığılır
 Comment[ca]=Animació d'esvaïment creuat quan els consells d'eines o les notificacions canvien la seva geometria
 Comment[ca@valencia]=Animació d'esvaïment creuat quan els consells d'eines o les notificacions canvien la seua geometria
 Comment[da]=Crossfade-animation når værktøjstip og bekendtgørelser skifter geometry
@@ -38,6 +39,7 @@ Comment[zh_CN]=在工具提示或者通知大小变化时交叉淡入淡出的�
 Comment[zh_TW]=當工具提示或通知變更位置時交錯的淡出動畫
 Icon=preferences-system-windows-effect-morphingpopups
 Name=Morphing popups
+Name[az]=Sürüşən pəncərələrin əmələ gəlmə animasiyası
 Name[ca]=Missatges emergents en metamorfosi
 Name[ca@valencia]=Missatges emergents en metamorfosi
 Name[da]=Sammensmeltende pop-op'er

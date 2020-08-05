@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryFile>
 #include <QDir>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusReply>
 #include <QVarLengthArray>
 #include <QPainter>
 #include <QMatrix4x4>
@@ -37,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KNotification>
 
 #include <unistd.h>
+#include "../service_utils.h"
 
 class ComparableQPoint : public QPoint
 {
@@ -63,6 +66,8 @@ namespace KWin
 
 const static QString s_errorAlreadyTaking = QStringLiteral("org.kde.kwin.Screenshot.Error.AlreadyTaking");
 const static QString s_errorAlreadyTakingMsg = QStringLiteral("A screenshot is already been taken");
+const static QString s_errorNotAuthorized = QStringLiteral("org.kde.kwin.Screenshot.Error.NoAuthorized");
+const static QString s_errorNotAuthorizedMsg = QStringLiteral("The process is not authorized to take a screenshot");
 const static QString s_errorFd = QStringLiteral("org.kde.kwin.Screenshot.Error.FileDescriptor");
 const static QString s_errorFdMsg = QStringLiteral("No valid file descriptor");
 const static QString s_errorCancelled = QStringLiteral("org.kde.kwin.Screenshot.Error.Cancelled");
@@ -71,6 +76,7 @@ const static QString s_errorInvalidArea = QStringLiteral("org.kde.kwin.Screensho
 const static QString s_errorInvalidAreaMsg = QStringLiteral("Invalid area requested");
 const static QString s_errorInvalidScreen = QStringLiteral("org.kde.kwin.Screenshot.Error.InvalidScreen");
 const static QString s_errorInvalidScreenMsg = QStringLiteral("Invalid screen requested");
+const static QString s_dbusInterfaceName = QStringLiteral("org.kde.kwin.Screenshot");
 
 bool ScreenShotEffect::supported()
 {
@@ -496,13 +502,35 @@ void ScreenShotEffect::screenshotForWindow(qulonglong winid, int mask)
     }
 }
 
-QString ScreenShotEffect::interactive(int mask)
+bool ScreenShotEffect::checkCall() const
 {
     if (!calledFromDBus()) {
-        return QString();
+        return false;
     }
+
+    const QDBusReply<uint> reply = connection().interface()->servicePid(message().service());
+    if (reply.isValid()) {
+        const uint pid = reply.value();
+        const auto interfaces = KWin::fetchRestrictedDBusInterfacesFromPid(pid);
+        if (!interfaces.contains(s_dbusInterfaceName)) {
+            sendErrorReply(s_errorNotAuthorized, s_errorNotAuthorizedMsg);
+            qCWarning(KWINEFFECTS) << "Process " << pid << " tried to take a screenshot without being granted to DBus interface" << s_dbusInterfaceName;
+            return false;
+        }
+    } else {
+        return false;
+    }
+
     if (isTakingScreenshot()) {
         sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+        return false;
+    }
+    return true;
+}
+
+QString ScreenShotEffect::interactive(int mask)
+{
+    if (!checkCall()) {
         return QString();
     }
     m_type = (ScreenShotType) mask;
@@ -528,11 +556,7 @@ QString ScreenShotEffect::interactive(int mask)
 
 void ScreenShotEffect::interactive(QDBusUnixFileDescriptor fd, int mask)
 {
-    if (!calledFromDBus()) {
-        return;
-    }
-    if (isTakingScreenshot()) {
-        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+    if (!checkCall()) {
         return;
     }
     m_fd = dup(fd.fileDescriptor());
@@ -581,11 +605,7 @@ void ScreenShotEffect::hideInfoMessage()
 
 QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
 {
-    if (!calledFromDBus()) {
-        return QString();
-    }
-    if (isTakingScreenshot()) {
-        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+    if (!checkCall()) {
         return QString();
     }
     m_replyMessage = message();
@@ -598,11 +618,7 @@ QString ScreenShotEffect::screenshotFullscreen(bool captureCursor)
 
 void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool captureCursor, bool shouldReturnNativeSize)
 {
-    if (!calledFromDBus()) {
-        return;
-    }
-    if (isTakingScreenshot()) {
-        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+    if (!checkCall()) {
         return;
     }
     m_fd = dup(fd.fileDescriptor());
@@ -613,29 +629,13 @@ void ScreenShotEffect::screenshotFullscreen(QDBusUnixFileDescriptor fd, bool cap
     m_captureCursor = captureCursor;
     m_nativeSize = shouldReturnNativeSize;
 
-    showInfoMessage(InfoMessageMode::Screen);
-    effects->startInteractivePositionSelection(
-        [this] (const QPoint &p) {
-            hideInfoMessage();
-            if (p == QPoint(-1, -1)) {
-                // error condition
-                close(m_fd);
-                m_fd = -1;
-            } else {
-                m_scheduledGeometry = effects->virtualScreenGeometry();
-                effects->addRepaint(m_scheduledGeometry);
-            }
-        }
-    );
+    m_scheduledGeometry = effects->virtualScreenGeometry();
+    effects->addRepaint(m_scheduledGeometry);
 }
 
 QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
 {
-    if (!calledFromDBus()) {
-        return QString();
-    }
-    if (isTakingScreenshot()) {
-        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+    if (!checkCall()) {
         return QString();
     }
     m_scheduledGeometry = effects->clientArea(FullScreenArea, screen, 0);
@@ -652,11 +652,7 @@ QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
 
 void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool captureCursor)
 {
-    if (!calledFromDBus()) {
-        return;
-    }
-    if (isTakingScreenshot()) {
-        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+    if (!checkCall()) {
         return;
     }
     m_fd = dup(fd.fileDescriptor());
@@ -689,11 +685,7 @@ void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool capture
 
 QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height, bool captureCursor)
 {
-    if (!calledFromDBus()) {
-        return QString();
-    }
-    if (isTakingScreenshot()) {
-        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+    if (!checkCall()) {
         return QString();
     }
     m_scheduledGeometry = QRect(x, y, width, height);

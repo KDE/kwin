@@ -1563,7 +1563,7 @@ static KWaylandServer::SeatInterface *findSeat()
 }
 
 /**
- * Useful when there's no proper tablet support on the clients
+ * Handles input coming from a tablet device (e.g. wacom) often with a pen
  */
 class TabletInputFilter : public QObject, public InputEventFilter
 {
@@ -1692,7 +1692,7 @@ public:
 
                 QImage cursorImage;
                 cursorImage = buffer->data().copy();
-                cursorImage.setDevicePixelRatio(cursorSurface->scale());
+                cursorImage.setDevicePixelRatio(cursorSurface->bufferScale());
 
                 cursor->updateCursor(cursorImage, tcursor->hotspot());
             });
@@ -1715,7 +1715,7 @@ public:
 
         switch (event->type()) {
         case QEvent::TabletMove: {
-            const auto pos = event->globalPosF() - toplevel->pos();
+            const auto pos = event->globalPosF() - toplevel->bufferGeometry().topLeft();
             tool->sendMotion(pos);
             m_cursorByTool[tool]->setPos(event->globalPos());
             break;
@@ -2150,7 +2150,7 @@ void InputRedirection::setupInputFilters()
 void InputRedirection::reconfigure()
 {
     if (Application::usesLibinput()) {
-        auto inputConfig = kwinApp()->inputConfig();
+        auto inputConfig = InputConfig::self()->inputConfig();
         inputConfig->reparseConfiguration();
         const auto config = inputConfig->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
@@ -2178,7 +2178,7 @@ void InputRedirection::setupLibInput()
             waylandServer()->display()->createRelativePointerManager(KWaylandServer::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
         }
 
-        conn->setInputConfig(kwinApp()->inputConfig());
+        conn->setInputConfig(InputConfig::self()->inputConfig());
         conn->updateLEDs(m_keyboard->xkb()->leds());
         waylandServer()->updateKeyState(m_keyboard->xkb()->leds());
         connect(m_keyboard, &KeyboardInputRedirection::ledsChanged, waylandServer(), &WaylandServer::updateKeyState);

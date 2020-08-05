@@ -182,7 +182,7 @@ private:
         QPoint globalPos;
         bool valid = false;
     } m_lastWorkingState;
-    DrmDumbBuffer *m_cursor[2] = {nullptr, nullptr};
+    QScopedPointer<DrmDumbBuffer> m_cursor[2];
     int m_cursorIndex = 0;
     bool m_hasNewCursor = false;
     bool m_deleted = false;

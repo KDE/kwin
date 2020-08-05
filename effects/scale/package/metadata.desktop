@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Scale
+Name[az]=Miqyas
 Name[ca]=Escala
 Name[ca@valencia]=Escala
 Name[cs]=Měřítko
@@ -34,6 +35,7 @@ Name[zh_CN]=比例
 Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale
 Comment=Make windows smoothly scale in and out when they are shown or hidden
+Comment[az]=Böyüdülərkən və ya kiçildilərkən pəncərələrin miqyasının rəvan şəkildə dəyişməsi
 Comment[ca]=Fa que les finestres entrin o surtin volant quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que les finestres entrin o isquen volant quan es mostren o s'oculten
 Comment[cs]=Nechá okna plynule zvětšit/zmenšit se, pokud jsou zobrazeny resp. skryty

@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
-#include <KSharedConfig>
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QDBusConnection>
@@ -98,8 +97,8 @@ Cursor::Cursor(QObject *parent)
     : QObject(parent)
     , m_mousePollingCounter(0)
     , m_cursorTrackingCounter(0)
-    , m_themeName("default")
-    , m_themeSize(24)
+    , m_themeName(defaultThemeName())
+    , m_themeSize(defaultThemeSize())
 {
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
@@ -127,9 +126,9 @@ void Cursor::loadThemeSettings()
 
 void Cursor::loadThemeFromKConfig()
 {
-    KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
-    const QString themeName = mousecfg.readEntry("cursorTheme", "default");
-    const uint themeSize = mousecfg.readEntry("cursorSize", 24);
+    KConfigGroup mousecfg(InputConfig::self()->inputConfig(), "Mouse");
+    const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
+    const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);
 }
 
@@ -144,9 +143,10 @@ void Cursor::updateTheme(const QString &name, int size)
 
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
+// #endif
     Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
-        kwinApp()->inputConfig()->reparseConfiguration();
+        InputConfig::self()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();
         // sync to environment
         qputenv("XCURSOR_THEME", m_themeName.toUtf8());
@@ -277,7 +277,7 @@ void Cursor::doStopCursorTracking()
 {
 }
 
-QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
+QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
 {
     static const QHash<QByteArray, QVector<QByteArray>> alternatives = {
         {QByteArrayLiteral("left_ptr"),       {QByteArrayLiteral("arrow"),
@@ -409,6 +409,16 @@ QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
     return QVector<QByteArray>();
 }
 
+QString Cursor::defaultThemeName()
+{
+    return QStringLiteral("default");
+}
+
+int Cursor::defaultThemeSize()
+{
+    return 24;
+}
+
 QByteArray CursorShape::name() const
 {
     switch (m_shape) {
@@ -473,6 +483,18 @@ QByteArray CursorShape::name() const
     default:
         return QByteArray();
     }
+}
+
+InputConfig *InputConfig::s_self = nullptr;
+InputConfig *InputConfig::self() {
+    if (!s_self)
+        s_self = new InputConfig;
+    return s_self;
+}
+
+InputConfig::InputConfig()
+    : m_inputConfig(KSharedConfig::openConfig(QStringLiteral("kcminputrc"), KConfig::NoGlobals))
+{
 }
 
 } // namespace

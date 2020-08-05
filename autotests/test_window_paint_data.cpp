@@ -46,6 +46,7 @@ public:
     void addLayerRepaint(const QRect &r) override;
     void addLayerRepaint(int x, int y, int w, int h) override;
     EffectWindow *findModal() override;
+    EffectWindow *transientFor() override;
     const EffectWindowGroup *group() const override;
     bool isPaintingEnabled() override;
     EffectWindowList mainWindows() const override;
@@ -336,6 +337,11 @@ void MockEffectWindow::addLayerRepaint(int x, int y, int w, int h)
 }
 
 EffectWindow *MockEffectWindow::findModal()
+{
+    return nullptr;
+}
+
+EffectWindow *MockEffectWindow::transientFor()
 {
     return nullptr;
 }

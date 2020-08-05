@@ -124,7 +124,6 @@ public:
     QSize minSize() const override;
     QSize maxSize() const override;
     QSize basicUnit() const;
-    QSize clientSize() const override;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
@@ -179,7 +178,7 @@ public:
     bool isMovableAcrossScreens() const override;
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
-    void takeFocus() override;
+    bool takeFocus() override;
 
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
 
@@ -421,8 +420,8 @@ private:
     void sendSyncRequest();
     void leaveMoveResize() override;
     void positionGeometryTip() override;
-    void grabButton(int mod);
-    void ungrabButton(int mod);
+    void establishCommandWindowGrab(uint8_t button);
+    void establishCommandAllGrab(uint8_t button);
     void resizeDecoration();
     void createDecoration(const QRect &oldgeom) override;
 
@@ -430,8 +429,7 @@ private:
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);
     void updateUrgency();
     static void sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol,
-                                  uint32_t data1 = 0, uint32_t data2 = 0, uint32_t data3 = 0,
-                                  xcb_timestamp_t timestamp = xTime());
+                                  uint32_t data1 = 0, uint32_t data2 = 0, uint32_t data3 = 0);
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
@@ -498,7 +496,6 @@ private:
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     X11Client *shade_below;
-    uint deleting : 1; ///< True when doing cleanup and destroying the client
     Xcb::MotifHints m_motif;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint noborder : 1;
@@ -513,7 +510,6 @@ private:
 
     MaximizeMode max_mode;
     QRect m_bufferGeometry = QRect(0, 0, 100, 100);
-    QRect m_clientGeometry = QRect(0, 0, 100, 100);
     QRect geom_fs_restore;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
@@ -628,11 +624,6 @@ inline int X11Client::sessionStackingOrder() const
 inline bool X11Client::isManaged() const
 {
     return m_managed;
-}
-
-inline QSize X11Client::clientSize() const
-{
-    return m_clientGeometry.size();
 }
 
 inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)

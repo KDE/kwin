@@ -208,11 +208,6 @@ QPoint Deleted::clientPos() const
     return contentsRect.topLeft();
 }
 
-QSize Deleted::clientSize() const
-{
-    return contentsRect.size();
-}
-
 void Deleted::debug(QDebug& stream) const
 {
     stream << "\'ID:" << window() << "\' (deleted)";

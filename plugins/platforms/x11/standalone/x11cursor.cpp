@@ -165,7 +165,7 @@ xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
         return XCB_CURSOR_NONE;
     }
     xcb_cursor_context_t *ctx;
-    if (xcb_cursor_context_new(connection(), defaultScreen(), &ctx) < 0) {
+    if (xcb_cursor_context_new(kwinApp()->x11Connection(), kwinApp()->x11DefaultScreen(), &ctx) < 0) {
         return XCB_CURSOR_NONE;
     }
     xcb_cursor_t cursor = xcb_cursor_load_cursor(ctx, name.constData());

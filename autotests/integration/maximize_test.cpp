@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/plasmashell.h>
 
-#include <KWaylandServer/xdgdecoration_interface.h>
-
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>
@@ -58,13 +56,14 @@ private Q_SLOTS:
     void testInitiallyMaximizedBorderless();
     void testBorderlessMaximizedWindow();
     void testBorderlessMaximizedWindowNoClientSideDecoration();
+    void testMaximizedGainFocusAndBeActivated();
 };
 
 void TestMaximized::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -72,7 +71,7 @@ void TestMaximized::initTestCase()
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -426,6 +425,32 @@ void TestMaximized::testBorderlessMaximizedWindowNoClientSideDecoration()
     QVERIFY(client->isDecorated());
     QVERIFY(!client->noBorder());
     QCOMPARE(deco->mode(), XdgDecoration::Mode::ServerSide);
+}
+
+void TestMaximized::testMaximizedGainFocusAndBeActivated()
+{
+    // This test verifies that a window will be raised and gain focus  when it's maximized
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> xdgShellSurface(Test::createXdgShellStableSurface(surface.data()));
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QScopedPointer<Surface> surface2(Test::createSurface());
+    QScopedPointer<XdgShellSurface> xdgShellSurface2(Test::createXdgShellStableSurface(surface2.data()));
+    auto client2 = Test::renderAndWaitForShown(surface2.data(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(!client->isActive());
+    QVERIFY(client2->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Toplevel *>{client, client2}));
+
+    workspace()->performWindowOperation(client, Options::MaximizeOp);
+
+    QVERIFY(client->isActive());
+    QVERIFY(!client2->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Toplevel *>{client2, client}));
+
+    xdgShellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+    xdgShellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client2));
 }
 
 WAYLANDTEST_MAIN(TestMaximized)

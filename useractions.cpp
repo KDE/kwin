@@ -1204,15 +1204,19 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
     case Options::MaximizeOp:
         c->maximize(c->maximizeMode() == MaximizeFull
                     ? MaximizeRestore : MaximizeFull);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::HMaximizeOp:
         c->maximize(c->maximizeMode() ^ MaximizeHorizontal);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::VMaximizeOp:
         c->maximize(c->maximizeMode() ^ MaximizeVertical);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::RestoreOp:
         c->maximize(MaximizeRestore);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::MinimizeOp:
         c->minimize();

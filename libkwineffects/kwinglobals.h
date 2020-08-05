@@ -152,60 +152,19 @@ Q_ENUM_NS(SessionState)
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {
-    static xcb_connection_t *s_con = nullptr;
-    if (!s_con) {
-        s_con = reinterpret_cast<xcb_connection_t*>(qApp->property("x11Connection").value<void*>());
-    }
-    Q_ASSERT(qApp);
-    return s_con;
+    return reinterpret_cast<xcb_connection_t*>(qApp->property("x11Connection").value<void*>());
 }
 
 inline
 KWIN_EXPORT xcb_window_t rootWindow()
 {
-    static xcb_window_t s_rootWindow = XCB_WINDOW_NONE;
-    if (s_rootWindow == XCB_WINDOW_NONE) {
-        s_rootWindow = qApp->property("x11RootWindow").value<quint32>();
-    }
-    return s_rootWindow;
+    return qApp->property("x11RootWindow").value<quint32>();
 }
 
 inline
 KWIN_EXPORT xcb_timestamp_t xTime()
 {
     return qApp->property("x11Time").value<xcb_timestamp_t>();
-}
-
-inline
-KWIN_EXPORT xcb_screen_t *defaultScreen()
-{
-    static xcb_screen_t *s_screen = nullptr;
-    if (s_screen) {
-        return s_screen;
-    }
-    int screen = qApp->property("x11ScreenNumber").toInt();
-    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection()));
-            it.rem;
-            --screen, xcb_screen_next(&it)) {
-        if (screen == 0) {
-            s_screen = it.data;
-        }
-    }
-    return s_screen;
-}
-
-inline
-KWIN_DEPRECATED_EXPORT int displayWidth()
-{
-    xcb_screen_t *screen = defaultScreen();
-    return screen ? screen->width_in_pixels : 0;
-}
-
-inline
-KWIN_DEPRECATED_EXPORT int displayHeight()
-{
-    xcb_screen_t *screen = defaultScreen();
-    return screen ? screen->height_in_pixels : 0;
 }
 
 /**
@@ -226,6 +185,9 @@ public:
     }
     virtual ~PlatformCursorImage() = default;
 
+    bool isNull() const {
+        return m_image.isNull();
+    }
     QImage image() const {
         return m_image;
     }

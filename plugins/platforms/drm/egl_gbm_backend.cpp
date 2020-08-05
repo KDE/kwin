@@ -28,8 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 // kwin libs
 #include <kwinglplatform.h>
-// Qt
-#include <QOpenGLContext>
+#include <kwineglimagetexture.h>
 // system
 #include <gbm.h>
 
@@ -131,7 +130,6 @@ void EglGbmBackend::init()
     initKWinGL();
     initBufferAge();
     initWayland();
-    initRemotePresent();
 }
 
 bool EglGbmBackend::initRenderingContext()
@@ -156,15 +154,6 @@ bool EglGbmBackend::initRenderingContext()
     setSurface(m_outputs.first().eglSurface);
 
     return makeContextCurrent(m_outputs.first());
-}
-
-void EglGbmBackend::initRemotePresent()
-{
-    if (qEnvironmentVariableIsSet("KWIN_NO_REMOTE")) {
-        return;
-    }
-    qCDebug(KWIN_DRM) << "Support for remote access enabled";
-    m_remoteaccessManager.reset(new RemoteAccessManager);
 }
 
 std::shared_ptr<GbmSurface> EglGbmBackend::createGbmSurface(const QSize &size) const
@@ -251,6 +240,7 @@ void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
     if (it == m_outputs.end()) {
         return;
     }
+
     cleanupOutput(*it);
     m_outputs.erase(it);
 }
@@ -438,17 +428,12 @@ void EglGbmBackend::present()
     // Not in use. This backend does per-screen rendering.
 }
 
-void EglGbmBackend::presentOnOutput(Output &output)
+void EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
     eglSwapBuffers(eglDisplay(), output.eglSurface);
     output.buffer = m_backend->createBuffer(output.gbmSurface);
 
-    if(m_remoteaccessManager && gbm_surface_has_free_buffers(output.gbmSurface->surface())) {
-        // GBM surface is released on page flip so
-        // we should pass the buffer before it's presented.
-        m_remoteaccessManager->passBuffer(output.output, output.buffer);
-    }
-
+    Q_EMIT output.output->outputChange(damagedRegion);
     m_backend->present(output.buffer, output.output);
 
     if (supportsBufferAge()) {
@@ -504,7 +489,7 @@ QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
 
         return region;
     }
-    return QRegion();
+    return output.output->geometry();
 }
 
 void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -537,7 +522,7 @@ void EglGbmBackend::endRenderingFrameForScreen(int screenId,
         }
         return;
     }
-    presentOnOutput(output);
+    presentOnOutput(output, damagedRegion);
 
     // Save the damaged region to history
     // Note: damage history is only collected for the first screen. For any other screen full
@@ -563,6 +548,33 @@ bool EglGbmBackend::usesOverlayWindow() const
 bool EglGbmBackend::perScreenRendering() const
 {
     return true;
+}
+
+QSharedPointer<GLTexture> EglGbmBackend::textureForOutput(AbstractOutput *abstractOutput) const
+{
+    const QVector<KWin::EglGbmBackend::Output>::const_iterator itOutput = std::find_if(m_outputs.begin(), m_outputs.end(),
+        [abstractOutput] (const auto &output) {
+            return output.output == abstractOutput;
+        }
+    );
+    if (itOutput == m_outputs.end()) {
+        return {};
+    }
+
+    DrmOutput *drmOutput = itOutput->output;
+    if (!drmOutput->hardwareTransforms()) {
+        const auto glTexture = QSharedPointer<KWin::GLTexture>::create(itOutput->render.texture, GL_RGBA8, drmOutput->pixelSize());
+        glTexture->setYInverted(true);
+        return glTexture;
+    }
+
+    EGLImageKHR image = eglCreateImageKHR(eglDisplay(), nullptr, EGL_NATIVE_PIXMAP_KHR, itOutput->buffer->getBo(), nullptr);
+    if (image == EGL_NO_IMAGE_KHR) {
+        qCWarning(KWIN_DRM) << "Failed to record frame: Error creating EGLImageKHR - " << glGetError();
+        return {};
+    }
+
+    return QSharedPointer<EGLImageTexture>::create(eglDisplay(), image, GL_RGBA8, drmOutput->modeSize());
 }
 
 /************************************************

@@ -47,6 +47,7 @@ class SubCompositor;
 class SubSurface;
 class Surface;
 class XdgDecorationManager;
+class OutputManagement;
 }
 }
 
@@ -91,6 +92,7 @@ enum class AdditionalWaylandInterface {
     AppMenu = 1 << 6,
     ShadowManager = 1 << 7,
     XdgDecoration = 1 << 8,
+    OutputManagement = 1 << 9,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -122,6 +124,7 @@ KWayland::Client::PointerConstraints *waylandPointerConstraints();
 KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
 KWayland::Client::XdgDecorationManager *xdgDecorationManager();
+KWayland::Client::OutputManagement *waylandOutputManagement();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();

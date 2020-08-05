@@ -12,6 +12,7 @@ X-KDE-Weight=50
 
 Name=Touch Screen
 Name[ast]=Pantalla táutil
+Name[az]=Toxunma ekranı
 Name[ca]=Pantalla tàctil
 Name[ca@valencia]=Pantalla tàctil
 Name[cs]=Dotyková obrazovka
@@ -52,6 +53,7 @@ Name[x-test]=xxTouch Screenxx
 Name[zh_CN]=触摸屏
 Name[zh_TW]=觸控螢幕
 Comment=Configure touch screen swipe gestures
+Comment[az]=Toxunma ekranı jestlərini ayarlamaq
 Comment[ca]=Configura els gestos de lliscament en la pantalla tàctil
 Comment[da]=Indstil strygegestusser til touchskærme
 Comment[de]=Wischgesten für Touchscreens einrichten
@@ -83,6 +85,7 @@ Comment[zh_CN]=配置触摸屏滑动手势
 Comment[zh_TW]=設定觸控螢幕滑動手勢
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen
+X-KDE-Keywords[az]=pəncərə,menecer,effekt,sərhəd,kənar,fəaliyyət,dəyişmə,keçiş,iş masası,iş masası kənarları,ekran kənarları,ekran davranışları,toxunma ekranı
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,vora,frontera,acció,canvi,escriptori,vores de l'escriptori,vores de la pantalla,costat de la pantalla,comportament de la pantalla,pantalla tàctil
 X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,efecte,vora,borde,acció,canvi,escriptori,vores d'escriptori,vores de pantalla,costat de pantalla,comportament de la pantalla,pantalla tàctil
 X-KDE-Keywords[da]=kwin,vindue,håndtering,manager,effekt,hjørne,kant,handling,skift,skrivebord,kwin skærmkanter,skrivebordskanter,skærmkanter,maksimer vinduer,tile windows,fliser,felter,siden af skærmen,skærmens opførsel,touch,skift skrivebord,virtuelle skriveborde,skærmhjørner,hjørner

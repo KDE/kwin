@@ -26,12 +26,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "effects.h"
 #include "tabletmodemanager.h"
+
+#ifdef PipeWire_FOUND
+#include "screencast/screencastmanager.h"
+#endif
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
 
 // KWayland
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/seat_interface.h>
+
 // KDE
 #include <KCrash>
 #include <KLocalizedString>
@@ -129,19 +134,14 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
-    if (m_xwayland) {
-        // needs to be done before workspace gets destroyed
-        m_xwayland->prepareDestroy();
-    }
+    delete m_xwayland;
+    m_xwayland = nullptr;
     destroyWorkspace();
     waylandServer()->dispatch();
 
     if (QStyle *s = style()) {
         s->unpolish(this);
     }
-    // kill Xwayland before terminating its connection
-    delete m_xwayland;
-    m_xwayland = nullptr;
     waylandServer()->terminateClientConnections();
     destroyCompositor();
 }
@@ -163,6 +163,9 @@ void ApplicationWayland::performStartup()
     VirtualKeyboard::create(this);
     createBackend();
     TabletModeManager::create(this);
+#ifdef PipeWire_FOUND
+    new ScreencastManager(this);
+#endif
 }
 
 void ApplicationWayland::createBackend()
@@ -188,15 +191,22 @@ void ApplicationWayland::continueStartupWithScreens()
 void ApplicationWayland::finalizeStartup()
 {
     if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
+        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     }
     startSession();
-    createWorkspace();
+    notifyStarted();
 }
 
 void ApplicationWayland::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+
+    // Note that we start accepting client connections after creating the Workspace.
+    createWorkspace();
+
+    if (!waylandServer()->start()) {
+        qFatal("Failed to initialze the Wayland server, exiting now");
+    }
 
     if (operationMode() == OperationModeWaylandOnly) {
         finalizeStartup();
@@ -210,8 +220,8 @@ void ApplicationWayland::continueStartupWithScene()
         std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
         exit(code);
     });
-    connect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
-    m_xwayland->init();
+    connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    m_xwayland->start();
 }
 
 void ApplicationWayland::startSession()
@@ -525,7 +535,7 @@ int main(int argc, char * argv[])
     }
 #endif
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
-                                      i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
+                                      i18n("Enable libinput support for input events processing. Note: never use in a nested session.	(deprecated)"));
     parser.addOption(libinputOption);
 #if HAVE_DRM
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));

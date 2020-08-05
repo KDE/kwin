@@ -208,6 +208,19 @@ void ApplicationX11::lostSelection()
     quit();
 }
 
+
+static xcb_screen_t *findXcbScreen(xcb_connection_t *connection, int screen)
+{
+    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection));
+            it.rem;
+            --screen, xcb_screen_next(&it)) {
+        if (screen == 0) {
+            return it.data;
+        }
+    }
+    return nullptr;
+}
+
 void ApplicationX11::performStartup()
 {
     crashChecking();
@@ -215,6 +228,7 @@ void ApplicationX11::performStartup()
     if (Application::x11ScreenNumber() == -1) {
         Application::setX11ScreenNumber(QX11Info::appScreen());
     }
+    setX11DefaultScreen(findXcbScreen(x11Connection(), x11ScreenNumber()));
 
     owner.reset(new KWinSelectionOwner(Application::x11ScreenNumber()));
     connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, []{
@@ -223,7 +237,7 @@ void ApplicationX11::performStartup()
     });
     connect(owner.data(), SIGNAL(lostOwnership()), SLOT(lostSelection()));
     connect(owner.data(), &KSelectionOwner::claimedOwnership, [this]{
-        setupEventFilters();
+        installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
 
@@ -249,6 +263,8 @@ void ApplicationX11::performStartup()
                 Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
                 notifyKSplash();
+
+                notifyStarted();
             }
         );
         connect(platform(), &Platform::initFailed, this,

@@ -370,6 +370,7 @@ public:
         return m_icon;
     }
 
+    bool isZombie() const;
     bool isActive() const {
         return m_active;
     }
@@ -591,7 +592,7 @@ public:
     void setupWindowRules(bool ignore_temporary);
     void evaluateWindowRules();
     virtual void applyWindowRules();
-    virtual void takeFocus() = 0;
+    virtual bool takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     /**
      * Whether a dock window wants input.
@@ -977,6 +978,8 @@ protected:
     void setIcon(const QIcon &icon);
     void startAutoRaise();
     void autoRaise();
+    bool isMostRecentlyRaised() const;
+    void markAsZombie();
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
@@ -1091,6 +1094,7 @@ protected:
     void setPendingGeometryUpdate(PendingGeometry_t update);
     QRect bufferGeometryBeforeUpdateBlocking() const;
     QRect frameGeometryBeforeUpdateBlocking() const;
+    QRect clientGeometryBeforeUpdateBlocking() const;
     void updateGeometryBeforeUpdateBlocking();
     /**
      * Schedules a repaint for the visibleRect before and after a
@@ -1293,6 +1297,7 @@ private:
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;
+    bool m_zombie = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;
@@ -1328,6 +1333,7 @@ private:
     QRect m_visibleRectBeforeGeometryUpdate;
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
+    QRect m_clientGeometryBeforeUpdateBlocking;
     QRect m_virtualKeyboardGeometry;
     QRect m_keyboardGeometryRestore;
     QRect m_maximizeGeometryRestore;

@@ -18,7 +18,7 @@ if (HAVE_GBM)
         egl_gbm_backend.cpp
         drm_buffer_gbm.cpp
         gbm_surface.cpp
-        remoteaccess_manager.cpp
+        gbm_dmabuf.cpp
     )
 endif()
 

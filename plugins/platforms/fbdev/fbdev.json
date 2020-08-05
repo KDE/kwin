@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to framebuffer.",
+        "Description[az]": "Çərçivə tamponunun formalaşdırılması.",
         "Description[ca@valencia]": "Renderitza en el «framebuffer».",
         "Description[ca]": "Renderitza al «framebuffer».",
         "Description[da]": "Render til framebuffer.",
@@ -38,6 +39,7 @@
         "Description[zh_TW]": "成像至 framebuffer。",
         "Id": "KWinWaylandFbdevBackend",
         "Name": "framebuffer",
+        "Name[az]": "çərçivə tamponu",
         "Name[ca@valencia]": "Framebuffer",
         "Name[ca]": "Framebuffer",
         "Name[cs]": "framebuffer",

@@ -248,7 +248,7 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
         m_streamTextures.insert(surface, newSt);
         texture = newSt.texture;
 
-        connect(surface, &KWaylandServer::Resource::unbound, this,
+        connect(surface, &KWaylandServer::SurfaceInterface::destroyed, this,
             [surface, this]() {
                 const StreamTexture &st = m_streamTextures.take(surface);
                 pEglDestroyStreamKHR(eglDisplay(), st.stream);
@@ -287,10 +287,6 @@ void EglStreamBackend::init()
     m_eglStreamControllerInterface = waylandServer()->display()->createEglStreamControllerInterface();
     connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
             &EglStreamBackend::attachStreamConsumer);
-    m_eglStreamControllerInterface->create();
-    if (!m_eglStreamControllerInterface->isValid()) {
-        setFailed("failed to initialize wayland-eglstream-controller interface");
-    }
 }
 
 bool EglStreamBackend::initRenderingContext()

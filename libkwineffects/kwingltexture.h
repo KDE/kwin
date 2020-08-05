@@ -57,8 +57,8 @@ public:
     explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString& fileName);
-    GLTexture(GLenum internalFormat, int width, int height, int levels = 1);
-    explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1);
+    GLTexture(GLenum internalFormat, int width, int height, int levels = 1, bool needsMutability = false);
+    explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
 
     /**
      * Create a GLTexture wrapper around an existing texture.
@@ -112,6 +112,8 @@ public:
     GLenum target() const;
     GLenum filter() const;
     GLenum internalFormat() const;
+
+    QImage toImage() const;
 
     /** @short
      * Make the texture fully transparent

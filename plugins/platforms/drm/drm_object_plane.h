@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "drm_object.h"
 
+#include <qobjectdefs.h>
 #include <xf86drmMode.h>
 
 namespace KWin
@@ -30,6 +31,7 @@ class DrmBuffer;
 
 class DrmPlane : public DrmObject
 {
+    Q_GADGET
 public:
     DrmPlane(uint32_t plane_id, int fd);
 
@@ -50,6 +52,7 @@ public:
         Rotation,
         Count
     };
+    Q_ENUM(PropertyIndex)
 
     enum class TypeIndex {
         Overlay = 0,
@@ -57,6 +60,7 @@ public:
         Cursor,
         Count
     };
+    Q_ENUM(TypeIndex)
 
     enum class Transformation {
         Rotate0     = 1 << 0,
@@ -66,6 +70,7 @@ public:
         ReflectX    = 1 << 4,
         ReflectY    = 1 << 5
     };
+    Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
     bool atomicInit() override;

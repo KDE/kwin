@@ -1269,6 +1269,7 @@ public:
         return m_fixes.version > 0;
     }
     int fixesCursorNotifyEvent() const;
+    int fixesSelectionNotifyEvent() const;
     bool isFixesRegionAvailable() const;
     bool isSyncAvailable() const {
         return m_sync.present;

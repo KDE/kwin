@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2020, Méven Car <meven.car@enika.com>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,48 +17,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_WAYLAND_CURSOR_THEME_H
-#define KWIN_WAYLAND_CURSOR_THEME_H
 
-#include <kwin_export.h>
+/*
 
-#include <QObject>
-#include "cursor.h"
+ This file is for (very) small utility relating to services/process.
 
-struct wl_cursor_image;
-struct wl_cursor_theme;
-
-namespace KWayland
-{
-namespace Client
-{
-class ShmPool;
-}
-}
+*/
+#include "service_utils.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT WaylandCursorTheme : public QObject
-{
-    Q_OBJECT
-public:
-    explicit WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *parent = nullptr);
-    ~WaylandCursorTheme() override;
+}// namespace
 
-    wl_cursor_image *get(CursorShape shape);
-    wl_cursor_image *get(const QByteArray &name);
-
-Q_SIGNALS:
-    void themeChanged();
-
-private:
-    void loadTheme();
-    void destroyTheme();
-    wl_cursor_theme *m_theme;
-    KWayland::Client::ShmPool *m_shm = nullptr;
-};
-
-}
-
-#endif

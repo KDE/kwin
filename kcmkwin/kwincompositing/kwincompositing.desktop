@@ -14,6 +14,7 @@ X-KDE-Weight=60
 
 Name=Compositor
 Name[ast]=Compositor
+Name[az]=Effektlə təminatı
 Name[bs]=Compositor
 Name[ca]=Compositor
 Name[ca@valencia]=Compositor
@@ -59,6 +60,7 @@ Name[x-test]=xxCompositorxx
 Name[zh_CN]=混成器
 Name[zh_TW]=組合器
 Comment=Compositor Settings for Desktop Effects
+Comment[az]=İş Masası üçün effekt tətbiq edilməsinin ayarlanması
 Comment[bs]=Postavke Compositor-a  za Desktop Efekte
 Comment[ca]=Arranjament del compositor per als efectes de l'escriptori
 Comment[ca@valencia]=Arranjament del compositor pels efectes d'escriptori
@@ -104,6 +106,7 @@ Comment[zh_CN]=桌面特效混成器设置
 Comment[zh_TW]=桌面效果使用的組合器設定
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
+X-KDE-Keywords[az]=pəncərə meneceri,effekt,3D effekt,2DEffekt,video ayarları,qrafik effektlər,iş masası effektləri,OpenGL,XRender,kwin,compositing
 X-KDE-Keywords[ca]=kwin,finestra,gestor,composició,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes de l'escriptori
 X-KDE-Keywords[da]=kwin,vindue,håndtering,window,manager,compositing,effekt,3D effekter,2D effekter,OpenGL,XRender,video-indstillinger,grafiske effekter,skrivebordseffekter,desktop effects
 X-KDE-Keywords[en_GB]=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects

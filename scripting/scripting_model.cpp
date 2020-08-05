@@ -47,9 +47,6 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
     connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
     connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
-    if (waylandServer()) {
-        connect(waylandServer(), &WaylandServer::shellClientAdded, this, &ClientLevel::clientAdded);
-    }
 }
 
 ClientLevel::~ClientLevel()

@@ -172,6 +172,9 @@ public:
      */
     virtual bool setGammaRamp(const GammaRamp &gamma);
 
+    /** Returns the resolution of the output.  */
+    virtual QSize pixelSize() const = 0;
+
 private:
     Q_DISABLE_COPY(AbstractOutput)
 };

@@ -521,6 +521,11 @@ int Extensions::fixesCursorNotifyEvent() const
     return m_fixes.eventBase + XCB_XFIXES_CURSOR_NOTIFY;
 }
 
+int Extensions::fixesSelectionNotifyEvent() const
+{
+    return m_fixes.eventBase + XCB_XFIXES_SELECTION_NOTIFY;
+}
+
 bool Extensions::isShapeInputAvailable() const
 {
     return m_shape.version >= 0x11; // 1.1

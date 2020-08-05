@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Change OSD
+Name[az]=İş Masasının dəyişdirilməsi bildirişi
 Name[bs]=Promjena podloge OSD
 Name[ca]=OSD al canvi d'escriptori
 Name[ca@valencia]=OSD de canvi d'escriptori
@@ -47,8 +48,9 @@ Name[x-test]=xxDesktop Change OSDxx
 Name[zh_CN]=桌面更改屏幕显示
 Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
+Comment[az]=Ekranda iş masasının dəyişimi bildirişini göstərir
 Comment[bs]=Na zaslonu se ukazuju promjene radne površine
-Comment[ca]=En un missatge per pantalla indicant el canvi d'escriptori
+Comment[ca]=Un missatge a la pantalla indicant el canvi d'escriptori
 Comment[ca@valencia]=Un missatge en la pantalla que indica el canvi d'escriptori
 Comment[cs]=Displej označující změnu plochy
 Comment[da]=Et on-screen-display som indikerer skift af skrivebord

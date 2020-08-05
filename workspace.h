@@ -52,6 +52,7 @@ class Window;
 }
 
 class AbstractClient;
+class ColorMapper;
 class Compositor;
 class Deleted;
 class Group;
@@ -134,6 +135,9 @@ public:
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
     Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
     void forEachToplevel(std::function<void (Toplevel *)> func);
+
+    Toplevel *findToplevel(const QUuid &internalId) const;
+
     /**
      * @brief Finds a Toplevel for the internal window @p w.
      *
@@ -167,17 +171,17 @@ public:
     AbstractClient* clientUnderMouse(int screen) const;
 
     void activateClient(AbstractClient*, bool force = false);
-    void requestFocus(AbstractClient* c, bool force = false);
+    bool requestFocus(AbstractClient* c, bool force = false);
     enum ActivityFlag {
         ActivityFocus = 1 << 0, // focus the window
         ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
         ActivityRaise = 1 << 2 // raise the window
     };
     Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
-    void takeActivity(AbstractClient* c, ActivityFlags flags);
+    bool takeActivity(AbstractClient* c, ActivityFlags flags);
     bool allowClientActivation(const AbstractClient* c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
-    void restoreFocus();
+    bool restoreFocus();
     void gotFocusIn(const AbstractClient*);
     void setShouldGetFocus(AbstractClient*);
     bool activateNextClient(AbstractClient* c);
@@ -250,6 +254,8 @@ public:
 
 private:
     Compositor *m_compositor;
+    QTimer *m_quickTileCombineTimer;
+    QuickTileMode m_lastTilingMode;
 
     //-------------------------------------------------
     // Unsorted
@@ -529,7 +535,8 @@ Q_SIGNALS:
 
 private:
     void init();
-    void initWithX11();
+    void initializeX11();
+    void cleanupX11();
     void initShortcuts();
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
@@ -641,7 +648,8 @@ private:
 
     bool workspaceInit;
 
-    KStartupInfo* startup;
+    QScopedPointer<KStartupInfo> m_startup;
+    QScopedPointer<ColorMapper> m_colorMapper;
 
     QVector<QRect> workarea; // Array of workareas for virtual desktops
     // Array of restricted areas that window cannot be moved into

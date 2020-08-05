@@ -61,8 +61,15 @@ KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
 KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget * parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinFocusConfigForm(this))
-    , m_settings(settings)
 {
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KFocusConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
     addConfig(m_settings, this);
 
     connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::focusPolicyChanged);
@@ -224,8 +231,15 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
 KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(this))
-    , m_settings(settings)
 {
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KAdvancedConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
     addConfig(m_settings, this);
 
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Smart, "Smart");
@@ -267,10 +281,18 @@ KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
 }
 
 KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), m_config(settings), standAlone(_standAlone)
+    : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(this))
 {
-    addConfig(m_config, this);
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KMovingConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
+    addConfig(m_settings, this);
     load();
 }
 
@@ -297,7 +319,7 @@ void KMovingConfig::save(void)
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    if (m_config->geometryTip()) {
+    if (m_settings->geometryTip()) {
         interface.loadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
     } else {
         interface.unloadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "clipboard.h"
 #include "dnd.h"
 #include "selection.h"
+#include "xcbutils.h"
 #include "xwayland.h"
 
 #include "abstract_client.h"
@@ -28,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/seat.h>
 
@@ -58,7 +60,6 @@ DataBridge::DataBridge(QObject *parent)
     DataDeviceManager *dataDeviceManager = waylandServer()->internalDataDeviceManager();
     Seat *seat = waylandServer()->internalSeat();
     m_dataDevice = dataDeviceManager->getDataDevice(seat, this);
-    waylandServer()->dispatch();
 
     const DataDeviceManagerInterface *dataDeviceManagerInterface =
         waylandServer()->dataDeviceManager();
@@ -78,6 +79,8 @@ DataBridge::DataBridge(QObject *parent)
             init();
         }
     );
+
+    waylandServer()->dispatch();
 }
 
 DataBridge::~DataBridge()
@@ -94,13 +97,13 @@ void DataBridge::init()
 
 bool DataBridge::filterEvent(xcb_generic_event_t *event)
 {
-    if (m_clipboard->filterEvent(event)) {
+    if (m_clipboard && m_clipboard->filterEvent(event)) {
         return true;
     }
-    if (m_dnd->filterEvent(event)) {
+    if (m_dnd && m_dnd->filterEvent(event)) {
         return true;
     }
-    if (event->response_type - Xwayland::self()->xfixes()->first_event == XCB_XFIXES_SELECTION_NOTIFY) {
+    if (event->response_type == Xcb::Extensions::self()->fixesSelectionNotifyEvent()) {
         return handleXfixesNotify((xcb_xfixes_selection_notify_event_t *)event);
     }
     return false;

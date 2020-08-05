@@ -621,12 +621,9 @@ void TestVirtualDesktops::load()
     config->group("Desktops").writeEntry("Number", 4);
     vds->load();
     QCOMPARE(vds->count(), (uint)4);
-    // setting the screen number should reset to one desktop as config value is missing
-    screen_number = 2;
-    vds->load();
-    QCOMPARE(vds->count(), (uint)1);
-    // creating the respective group should properly load
-    config->group("Desktops-screen-2").writeEntry("Number", 5);
+
+    // setting the config value and reloading should update
+    config->group("Desktops").writeEntry("Number", 5);
     vds->load();
     QCOMPARE(vds->count(), (uint)5);
 }
@@ -650,23 +647,6 @@ void TestVirtualDesktops::save()
     QCOMPARE(desktops.hasKey("Name_2"), false);
     QCOMPARE(desktops.hasKey("Name_3"), false);
     QCOMPARE(desktops.hasKey("Name_4"), false);
-
-    // change screen number
-    screen_number = 3;
-    QCOMPARE(config->hasGroup("Desktops-screen-3"), false);
-    vds->setCount(3);
-    vds->save();
-    QCOMPARE(config->hasGroup("Desktops-screen-3"), true);
-    // old one should be unchanged
-    desktops = config->group("Desktops");
-    QCOMPARE(desktops.readEntry<int>("Number", 1), 4);
-    desktops = config->group("Desktops-screen-3");
-    QCOMPARE(desktops.readEntry<int>("Number", 1), 3);
-    QCOMPARE(desktops.hasKey("Name_1"), false);
-    QCOMPARE(desktops.hasKey("Name_2"), false);
-    QCOMPARE(desktops.hasKey("Name_3"), false);
-    QCOMPARE(desktops.hasKey("Name_4"), false);
-
 }
 
 QTEST_MAIN(TestVirtualDesktops)

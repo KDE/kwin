@@ -60,6 +60,7 @@ Toplevel::Toplevel()
     connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
     connect(screens(), SIGNAL(countChanged(int,int)), SLOT(checkScreen()));
     setupCheckScreenConnection();
+    connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
     // Only for compatibility reasons, drop in the next major release.
     connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::geometryChanged);
@@ -93,6 +94,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
 {
     m_internalId = c->internalId();
     m_frameGeometry = c->m_frameGeometry;
+    m_clientGeometry = c->m_clientGeometry;
     m_visual = c->m_visual;
     bit_depth = c->bit_depth;
     info = c->info;
@@ -556,7 +558,7 @@ qreal Toplevel::screenScale() const
 
 qreal Toplevel::bufferScale() const
 {
-    return surface() ? surface()->scale() : 1;
+    return surface() ? surface()->bufferScale() : 1;
 }
 
 bool Toplevel::isOnScreen(int screen) const

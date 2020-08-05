@@ -162,7 +162,7 @@ void X11XRenderBackend::init(bool createOverlay)
         xcb_render_create_picture(connection(), m_front, m_overlayWindow->window(), m_format, 0, nullptr);
     } else {
         // create XRender picture for the root window
-        m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
+        m_format = XRenderUtils::findPictFormat(kwinApp()->x11DefaultScreen()->root_visual);
         if (m_format == 0) {
             setFailed("Failed to find XRender format for root window");
             return; // error

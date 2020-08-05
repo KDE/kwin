@@ -75,6 +75,7 @@ private Q_SLOTS:
     void testChangeWindowType_data();
     void testChangeWindowType();
     void testEffectWindow();
+    void testReentrantSetFrameGeometry();
 };
 
 class HelperWindow : public QRasterWindow
@@ -184,15 +185,15 @@ void InternalWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::InternalClient *>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -209,8 +210,6 @@ void InternalWindowTest::init()
 void InternalWindowTest::cleanup()
 {
     Test::destroyWaylandConnection();
-
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 }
 
 void InternalWindowTest::testEnterLeave()
@@ -791,6 +790,34 @@ void InternalWindowTest::testEffectWindow()
 
     QCOMPARE(effects->findWindow(&win), internalClient->effectWindow());
     QCOMPARE(effects->findWindow(&win)->internalWindow(), &win);
+}
+
+void InternalWindowTest::testReentrantSetFrameGeometry()
+{
+    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // to the frameGeometryChanged() signal won't cause an infinite recursion.
+
+    // Create an internal window.
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow win;
+    win.setGeometry(0, 0, 100, 100);
+    win.show();
+    QTRY_COMPARE(clientAddedSpy.count(), 1);
+    auto client = clientAddedSpy.first().first().value<InternalClient *>();
+    QVERIFY(client);
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Let's pretend that there is a script that really wants the client to be at (100, 100).
+    connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
+        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+    });
+
+    // Trigger the lambda above.
+    client->move(QPoint(40, 50));
+
+    // Eventually, the client will end up at (100, 100).
+    QCOMPARE(client->pos(), QPoint(100, 100));
 }
 
 }

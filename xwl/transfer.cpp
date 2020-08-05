@@ -293,7 +293,7 @@ TransferXtoWl::TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, qint32 fd,
                       10, 10,
                       0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
-                      Xwayland::self()->xcbScreen()->root_visual,
+                      XCB_COPY_FROM_PARENT,
                       XCB_CW_EVENT_MASK,
                       values);
     // convert selection

@@ -125,7 +125,8 @@ void ObjectTest::testFd()
 
 namespace KWin
 {
-struct DrmOutput {
+class DrmOutput {
+public:
     int foo;
 };
 }

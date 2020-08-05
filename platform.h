@@ -46,6 +46,7 @@ class Manager;
 class AbstractOutput;
 class Edge;
 class Compositor;
+class DmaBufTexture;
 class OverlayWindow;
 class OpenGLBackend;
 class Outline;
@@ -55,7 +56,6 @@ class Scene;
 class Screens;
 class ScreenEdges;
 class Toplevel;
-class WaylandCursorTheme;
 
 namespace Decoration
 {
@@ -84,6 +84,10 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
+    virtual DmaBufTexture *createDmaBufTexture(const QSize &size) {
+        Q_UNUSED(size);
+        return nullptr;
+    }
 
     /**
      * Informs the Platform that it is about to go down and shall do appropriate cleanup.

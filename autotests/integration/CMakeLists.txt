@@ -1,6 +1,6 @@
 add_subdirectory(helper)
 
-add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp generic_scene_opengl_test.cpp ${kwin_XWAYLAND_SRCS})
+add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp generic_scene_opengl_test.cpp ../../cursor.cpp ${kwin_XWAYLAND_SRCS})
 target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test)
 
 function(integrationTest)
@@ -78,6 +78,7 @@ if (XCB_ICCCM_FOUND)
     integrationTest(NAME testSceneQPainterShadow SRCS scene_qpainter_shadow_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testStackingOrder SRCS stacking_order_test.cpp LIBS XCB::ICCCM)
     integrationTest(NAME testDbusInterface SRCS dbus_interface_test.cpp LIBS XCB::ICCCM)
+    integrationTest(NAME testXwaylandServer SRCS xwaylandserver_test.cpp LIBS XCB::ICCCM)
 
     if (KWIN_BUILD_ACTIVITIES)
         integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM)

@@ -328,6 +328,10 @@ public:
      */
     QRect frameGeometry() const;
     /**
+     * Returns the geometry of the client window, in global screen coordinates.
+     */
+    QRect clientGeometry() const;
+    /**
      * Returns the extents of the server-side decoration.
      *
      * Note that the returned margins object will have all margins set to 0 if
@@ -372,7 +376,7 @@ public:
      * The default implementation is a 1:1 mapping meaning the frame is part of the content.
      */
     virtual QPoint clientContentPos() const;
-    virtual QSize clientSize() const = 0;
+    QSize clientSize() const;
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
@@ -586,6 +590,7 @@ public:
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
+    void inputTransformationChanged();
     /**
      * This signal is emitted when the Toplevel's frame geometry changes.
      * @deprecated since 5.19, use frameGeometryChanged instead
@@ -654,9 +659,17 @@ Q_SIGNALS:
     void shadowChanged();
 
     /**
+     * This signal is emitted when the Toplevel's buffer geometry changes.
+     */
+    void bufferGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
+    /**
      * This signal is emitted when the Toplevel's frame geometry changes.
      */
     void frameGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
+    /**
+     * This signal is emitted when the Toplevel's client geometry has changed.
+     */
+    void clientGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
 
 protected Q_SLOTS:
     /**
@@ -705,6 +718,7 @@ protected:
     void deleteEffectWindow();
     void setDepth(int depth);
     QRect m_frameGeometry;
+    QRect m_clientGeometry;
     xcb_visualid_t m_visual;
     int bit_depth;
     NETWinInfo* info;
@@ -752,6 +766,16 @@ inline void Toplevel::setWindowHandles(xcb_window_t w)
 {
     Q_ASSERT(!m_client.isValid() && w != XCB_WINDOW_NONE);
     m_client.reset(w, false);
+}
+
+inline QRect Toplevel::clientGeometry() const
+{
+    return m_clientGeometry;
+}
+
+inline QSize Toplevel::clientSize() const
+{
+    return m_clientGeometry.size();
 }
 
 inline QRect Toplevel::frameGeometry() const

@@ -41,7 +41,7 @@ public:
         String,
         Integer,
         Option,
-        FlagsOption,
+        NetTypes,
         Percentage,
         Point,
         Size,
@@ -92,6 +92,7 @@ public:
 
     QVariant options() const;
     void setOptionsData(const QList<OptionsModel::Data> &data);
+    uint optionsMask() const;
 
     RulePolicy::Type policyType() const;
     int policy() const;          // int belongs to anonymous enum in Rules::
@@ -99,12 +100,10 @@ public:
     QVariant policyModel() const;
     QString policyKey() const;
 
-
-
     void reset();
 
 private:
-    static QVariant typedValue(const QVariant &value, const Type type);
+    QVariant typedValue(const QVariant &value) const;
 
 private:
     QString m_key;
@@ -122,6 +121,7 @@ private:
 
     RulePolicy *m_policy;
     OptionsModel *m_options;
+    uint m_optionsMask;
 };
 
 }   //namespace

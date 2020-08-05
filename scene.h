@@ -52,6 +52,8 @@ class EffectWindowImpl;
 class OverlayWindow;
 class Shadow;
 class WindowPixmap;
+class GLTexture;
+class AbstractOutput;
 
 // The base class for compositing backends.
 class KWIN_EXPORT Scene : public QObject
@@ -195,13 +197,16 @@ public:
      */
     virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
 
+    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const {
+        Q_UNUSED(output);
+        return {};
+    }
+
 Q_SIGNALS:
     void frameRendered();
     void resetCompositing();
 
 public Q_SLOTS:
-    // shape/size of a window changed
-    void windowGeometryShapeChanged(KWin::Toplevel* c);
     // a window has been closed
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
@@ -286,11 +291,13 @@ protected:
 };
 
 // The base class for windows representations in composite backends
-class Scene::Window
+class Scene::Window : public QObject
 {
+    Q_OBJECT
+
 public:
-    Window(Toplevel* c);
-    virtual ~Window();
+    explicit Window(Toplevel *client, QObject *parent = nullptr);
+    ~Window() override;
     // perform the actual painting of the window
     virtual void performPaint(int mask, const QRegion &region, const WindowPaintData &data) = 0;
     // do any cleanup needed when the window's composite pixmap is discarded
@@ -347,8 +354,13 @@ public:
     Shadow* shadow();
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
-    void invalidateQuadsCache();
+    void discardQuads();
     void preprocess();
+
+    virtual QSharedPointer<GLTexture> windowTexture() {
+        return {};
+    }
+
 protected:
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
     WindowQuadList makeContentsQuads() const;
@@ -504,6 +516,14 @@ public:
      * Returns @c true if the attached buffer has an alpha channel; otherwise returns @c false.
      */
     bool hasAlphaChannel() const;
+    /**
+     * Maps the specified @a point from the window pixmap coordinates to the window local coordinates.
+     */
+    QPointF mapToWindow(const QPointF &point) const;
+    /**
+     * Maps the specified @a point from the window pixmap coordinates to the buffer pixel coordinates.
+     */
+    QPointF mapToBuffer(const QPointF &point) const;
 
     /**
      * @returns the parent WindowPixmap in the sub-surface tree
@@ -672,11 +692,13 @@ template <typename T>
 inline
 T *Scene::Window::windowPixmap() const
 {
-    if (m_currentPixmap->isValid()) {
+    if (m_currentPixmap && m_currentPixmap->isValid()) {
         return static_cast<T*>(m_currentPixmap.data());
-    } else {
+    }
+    if (m_previousPixmap && m_previousPixmap->isValid()) {
         return static_cast<T*>(m_previousPixmap.data());
     }
+    return nullptr;
 }
 
 template <typename T>

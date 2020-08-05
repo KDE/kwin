@@ -154,6 +154,7 @@ private:
     void hideInfoMessage();
     bool isTakingScreenshot() const;
     void computeCoordinatesAfterScaling();
+    bool checkCall() const;
 
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;

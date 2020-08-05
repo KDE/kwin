@@ -54,7 +54,6 @@ class KWIN_EXPORT Application : public  QApplication
     Q_PROPERTY(int x11ScreenNumber READ x11ScreenNumber CONSTANT)
     Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
     Q_PROPERTY(KSharedConfigPtr kxkbConfig READ kxkbConfig WRITE setKxkbConfig)
-    Q_PROPERTY(KSharedConfigPtr inputConfig READ inputConfig WRITE setInputConfig)
 public:
     /**
      * @brief This enum provides the various operation modes of KWin depending on the available
@@ -92,13 +91,6 @@ public:
     }
     void setKxkbConfig(KSharedConfigPtr config) {
         m_kxkbConfig = std::move(config);
-    }
-
-    KSharedConfigPtr inputConfig() const {
-        return m_inputConfig;
-    }
-    void setInputConfig(KSharedConfigPtr config) {
-        m_inputConfig = std::move(config);
     }
 
     void start();
@@ -170,6 +162,13 @@ public:
         return m_connection;
     }
 
+    /**
+     * @returns the X11 default screen
+     */
+    xcb_screen_t *x11DefaultScreen() const {
+        return m_defaultScreen;
+    }
+
 #ifdef KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const {
         return m_useKActivities;
@@ -202,17 +201,20 @@ Q_SIGNALS:
     void workspaceCreated();
     void screensCreated();
     void virtualTerminalCreated();
+    void started();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
 
     void notifyKSplash();
+    void notifyStarted();
     void createInput();
     void createWorkspace();
     void createAtoms();
     void createOptions();
-    void setupEventFilters();
+    void installNativeX11EventFilter();
+    void removeNativeX11EventFilter();
     void destroyWorkspace();
     void destroyCompositor();
     /**
@@ -228,7 +230,13 @@ protected:
      */
     void setX11Connection(xcb_connection_t *c) {
         m_connection = c;
-        emit x11ConnectionChanged();
+    }
+    /**
+     * Inheriting classes should use this method to set the default screen
+     * before accessing any X11 specific code pathes.
+     */
+    void setX11DefaultScreen(xcb_screen_t *screen) {
+        m_defaultScreen = screen;
     }
     void destroyAtoms();
     void destroyPlatform();
@@ -248,11 +256,11 @@ private:
     bool m_configLock;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
-    KSharedConfigPtr m_inputConfig;
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
+    xcb_screen_t *m_defaultScreen = nullptr;
 #ifdef KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decorationrenderer.h"
 #include "decoratedclient.h"
+#include "decorations/decorations_logging.h"
 #include "deleted.h"
 #include "abstract_client.h"
 #include "screens.h"
@@ -67,7 +68,25 @@ QImage Renderer::renderToImage(const QRect &geo)
 {
     Q_ASSERT(m_client);
     auto dpr = client()->client()->screenScale();
-    QImage image(geo.width() * dpr, geo.height() * dpr, QImage::Format_ARGB32_Premultiplied);
+
+    // Guess the pixel format of the X pixmap into which the QImage will be copied.
+    QImage::Format format;
+    const int depth = client()->client()->depth();
+    switch (depth) {
+    case 30:
+        format = QImage::Format_A2RGB30_Premultiplied;
+        break;
+    case 24:
+    case 32:
+        format = QImage::Format_ARGB32_Premultiplied;
+        break;
+    default:
+        qCCritical(KWIN_DECORATIONS) << "Unsupported client depth" << depth;
+        format = QImage::Format_ARGB32_Premultiplied;
+        break;
+    };
+
+    QImage image(geo.width() * dpr, geo.height() * dpr, format);
     image.setDevicePixelRatio(dpr);
     image.fill(Qt::transparent);
     QPainter p(&image);

@@ -146,7 +146,6 @@ X11Client::X11Client()
 
     info = nullptr;
 
-    deleting = false;
     m_fullscreenMode = FullScreenNone;
     hidden = false;
     noborder = false;
@@ -160,8 +159,10 @@ X11Client::X11Client()
     //client constructed be connected to the workspace wrapper
 
     m_frameGeometry = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
+    m_clientGeometry = QRect(0, 0, 100, 100);
 
     connect(clientMachine(), &ClientMachine::localhostChanged, this, &X11Client::updateCaption);
+    connect(options, &Options::configChanged, this, &X11Client::updateMouseGrab);
     connect(options, &Options::condensedTitleChanged, this, &X11Client::updateCaption);
 
     connect(this, &X11Client::moveResizeCursorChanged, this, [this] (CursorShape cursor) {
@@ -223,8 +224,7 @@ void X11Client::deleteClient(X11Client *c)
  */
 void X11Client::releaseWindow(bool on_shutdown)
 {
-    Q_ASSERT(!deleting);
-    deleting = true;
+    markAsZombie();
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
@@ -259,8 +259,8 @@ void X11Client::releaseWindow(bool on_shutdown)
     m_frame.unmap();  // Destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
+    workspace()->removeClient(this);
     if (!on_shutdown) {
-        workspace()->removeClient(this);
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
         info->setState(NET::States(), info->state());  // Reset all state flags
@@ -298,8 +298,7 @@ void X11Client::releaseWindow(bool on_shutdown)
  */
 void X11Client::destroyClient()
 {
-    Q_ASSERT(!deleting);
-    deleting = true;
+    markAsZombie();
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
@@ -1213,7 +1212,7 @@ void X11Client::destroyDecoration()
         move(grav);
         if (compositing())
             discardWindowPixmap();
-        if (!deleting) {
+        if (!isZombie()) {
             emit geometryShapeChanged(this, oldgeom);
         }
     }
@@ -1653,7 +1652,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
 
 void X11Client::updateVisibility()
 {
-    if (deleting)
+    if (isZombie())
         return;
     if (hidden && isCurrentTab()) {
         info->setState(NET::Hidden, NET::Hidden);
@@ -1700,7 +1699,7 @@ void X11Client::updateVisibility()
 void X11Client::exportMappingState(int s)
 {
     Q_ASSERT(m_client != XCB_WINDOW_NONE);
-    Q_ASSERT(!deleting || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
+    Q_ASSERT(!isZombie() || s == XCB_ICCCM_WM_STATE_WITHDRAWN);
     if (s == XCB_ICCCM_WM_STATE_WITHDRAWN) {
         m_client.deleteProperty(atoms->wm_state);
         return;
@@ -1828,7 +1827,7 @@ void X11Client::updateHiddenPreview()
     }
 }
 
-void X11Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3, xcb_timestamp_t timestamp)
+void X11Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
 {
     xcb_client_message_event_t ev;
     memset(&ev, 0, sizeof(ev));
@@ -1837,7 +1836,7 @@ void X11Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t proto
     ev.type = a;
     ev.format = 32;
     ev.data.data32[0] = protocol;
-    ev.data.data32[1] = timestamp;
+    ev.data.data32[1] = xTime();
     ev.data.data32[2] = data1;
     ev.data.data32[3] = data2;
     ev.data.data32[4] = data3;
@@ -2158,14 +2157,23 @@ void X11Client::setOnAllActivities(bool on)
 /**
  * Performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
  */
-void X11Client::takeFocus()
+bool X11Client::takeFocus()
 {
-    if (rules()->checkAcceptFocus(info->input()))
-        m_client.focus();
-    else
+    if (rules()->checkAcceptFocus(info->input())) {
+        xcb_void_cookie_t cookie = xcb_set_input_focus_checked(connection(),
+                                                               XCB_INPUT_FOCUS_POINTER_ROOT,
+                                                               windowId(), XCB_TIME_CURRENT_TIME);
+        ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
+        if (error) {
+            qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", windowId(), error->error_code);
+            return false;
+        }
+    } else {
         demandAttention(false); // window cannot take input, at least withdraw urgency
+    }
     if (info->supportsProtocol(NET::TakeFocusProtocol)) {
-        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus, 0, 0, 0, XCB_CURRENT_TIME);
+        updateXTime();
+        sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     }
     workspace()->setShouldGetFocus(this);
 
@@ -2180,6 +2188,8 @@ void X11Client::takeFocus()
     }
     if (breakShowingDesktop)
         workspace()->setShowingDesktop(false);
+
+    return true;
 }
 
 /**
@@ -2330,7 +2340,7 @@ void X11Client::fetchIconicName()
 
 void X11Client::setClientShown(bool shown)
 {
-    if (deleting)
+    if (isZombie())
         return; // Don't change shown status if this client is being deleted
     if (shown != hidden)
         return; // nothing to change
@@ -3035,13 +3045,23 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
         }
         return;
     }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
     updateServerGeometry();
     updateWindowRules(Rules::Position);
+    updateGeometryBeforeUpdateBlocking();
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldBufferGeometry != bufferGeometry()) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
+    }
+    if (oldClientGeometry != clientGeometry()) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (oldFrameGeometry != frameGeometry()) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
     }
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
@@ -4327,8 +4347,14 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
+
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+
     updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
+    updateGeometryBeforeUpdateBlocking();
 
     // keep track of old maximize mode
     // to detect changes
@@ -4336,13 +4362,19 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     workspace()->updateStackingOrder();
 
     // Need to regenerate decoration pixmaps when the buffer size is changed.
-    if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
+    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
-    if (frameGeometryBeforeUpdateBlocking() != m_frameGeometry) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldBufferGeometry != m_bufferGeometry) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
     }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
+    emit geometryShapeChanged(this, oldFrameGeometry);
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
 
@@ -4393,17 +4425,27 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
     updateServerGeometry();
     updateWindowRules(Rules::Position|Rules::Size);
+    updateGeometryBeforeUpdateBlocking();
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
-    if (bufferGeometryBeforeUpdateBlocking().size() != m_bufferGeometry.size()) {
+    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
         discardWindowPixmap();
     }
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldBufferGeometry != m_bufferGeometry) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
     }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
+    emit geometryShapeChanged(this, oldFrameGeometry);
     addRepaintDuringGeometryUpdates();
     updateGeometryBeforeUpdateBlocking();
 

@@ -10,6 +10,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinmoving
 
 Name=Window Movement
+Name[az]=Pəncərə yerdəyişdirilməsi
 Name[ca]=Moviment de les finestres
 Name[cs]=Pohyb oken
 Name[da]=Flytning af vinduer
@@ -40,6 +41,7 @@ Name[zh_CN]=窗口移动
 Name[zh_TW]=視窗移動
 
 Comment=Configure window movement options
+Comment[az]=Pəncərə yerdəyişdirilməsinin tənzimlənməsi
 Comment[ca]=Configura les opcions de moviment de les finestres
 Comment[cs]=Nastavit volby pohybu oken
 Comment[da]=Indstil flytning af vinduer
@@ -70,6 +72,7 @@ Comment[zh_CN]=配置窗口移动选项
 Comment[zh_TW]=設定視窗移動選項
 
 X-KDE-Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
+X-KDE-Keywords[az]=köçürmə,yerdəyişmə,ağıllı,kaskad,genişləndirmə,qopma zonası,çərçivə
 X-KDE-Keywords[bs]=pomjeranje,pametno,kaskada,povećali,povećalo,namjestiti zonu,namjestiti,granica
 X-KDE-Keywords[ca]=moviment,intel·ligent,cascada,maximització,zona d'ajust,ajust,vora
 X-KDE-Keywords[ca@valencia]=moviment,intel·ligent,cascada,maximització,zona d'ajust,ajust,vora

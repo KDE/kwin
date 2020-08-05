@@ -59,15 +59,15 @@ void ActivitiesTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Deleted*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->setUseKActivities(true);
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -105,8 +105,7 @@ struct XcbConnectionDeleter
 
 void ActivitiesTest::testSetOnActivitiesValidates()
 {
-    // this test creates a Client and sets it on activities which don't exist
-    // that should result in the window being on all activities
+    // this test verifies that windows can't be placed on activities that don't exist
     // create an xcb window
     QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
     QVERIFY(!xcb_connection_has_error(c.data()));
@@ -142,13 +141,7 @@ void ActivitiesTest::testSetOnActivitiesValidates()
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("foo")));
     QVERIFY(!Activities::self()->all().contains(QStringLiteral("bar")));
 
-    //setting the client to an invalid activities should result in the client being on all activities
-    client->setOnActivity(QStringLiteral("foo"), true);
-    QVERIFY(client->isOnAllActivities());
-    QVERIFY(!client->activities().contains(QLatin1String("foo")));
-
     client->setOnActivities(QStringList{QStringLiteral("foo"), QStringLiteral("bar")});
-    QVERIFY(client->isOnAllActivities());
     QVERIFY(!client->activities().contains(QLatin1String("foo")));
     QVERIFY(!client->activities().contains(QLatin1String("bar")));
 

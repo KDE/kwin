@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
+#include "abstract_wayland_output.h"
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/surface_interface.h>
@@ -316,6 +317,17 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     kwinApp()->platform()->setSceneEglSurface(surface);
 }
 
+QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *requestedOutput) const
+{
+    QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
+    GLRenderTarget renderTarget(*texture);
+
+    const QRect geo = requestedOutput->geometry();
+    QRect invGeo(geo.left(), geo.bottom(), geo.width(), -geo.height());
+    renderTarget.blitFromFramebuffer(invGeo);
+    return texture;
+}
+
 AbstractEglTexture::AbstractEglTexture(SceneOpenGLTexture *texture, AbstractEglBackend *backend)
     : SceneOpenGLTexturePrivate()
     , q(texture)
@@ -419,11 +431,11 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         return;
     }
     Q_ASSERT(image.size() == m_size);
-    const QRegion damage = s->trackedDamage();
+    const QRegion damage = s->mapToBuffer(s->trackedDamage());
     s->resetTrackedDamage();
 
     // TODO: this should be shared with GLTexture::update
-    createTextureSubImage(s->scale(), image, damage);
+    createTextureSubImage(image, damage);
 }
 
 bool AbstractEglTexture::createTextureImage(const QImage &image)
@@ -471,31 +483,28 @@ bool AbstractEglTexture::createTextureImage(const QImage &image)
     return true;
 }
 
-void AbstractEglTexture::createTextureSubImage(int scale, const QImage &image, const QRegion &damage)
+void AbstractEglTexture::createTextureSubImage(const QImage &image, const QRegion &damage)
 {
     q->bind();
     if (GLPlatform::instance()->isGLES()) {
         if (s_supportsARGB32 && (image.format() == QImage::Format_ARGB32 || image.format() == QImage::Format_ARGB32_Premultiplied)) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             for (const QRect &rect : damage) {
-                auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
-                glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
-                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
+                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(rect).bits());
             }
         } else {
             const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
             for (const QRect &rect : damage) {
-                auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
-                glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
-                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
+                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
             }
         }
     } else {
         const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         for (const QRect &rect : damage) {
-            auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
-            glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
-                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
+            glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
         }
     }
     q->unbind();
@@ -602,6 +611,19 @@ bool AbstractEglTexture::updateFromFBO(const QSharedPointer<QOpenGLFramebufferOb
     return true;
 }
 
+static QRegion scale(const QRegion &region, qreal scaleFactor)
+{
+    if (scaleFactor == 1) {
+        return region;
+    }
+
+    QRegion scaled;
+    for (const QRect &rect : region) {
+        scaled += QRect(rect.topLeft() * scaleFactor, rect.size() * scaleFactor);
+    }
+    return scaled;
+}
+
 bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap)
 {
     const QImage image = pixmap->internalImage();
@@ -614,10 +636,9 @@ bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap)
         return loadInternalImageObject(pixmap);
     }
 
-    createTextureSubImage(image.devicePixelRatio(), image, pixmap->toplevel()->damage());
+    createTextureSubImage(image, scale(pixmap->toplevel()->damage(), image.devicePixelRatio()));
 
     return true;
 }
 
 }
-

@@ -80,6 +80,8 @@ private Q_SLOTS:
     void testResizeForVirtualKeyboardWithFullScreen();
     void testDestroyMoveClient();
     void testDestroyResizeClient();
+    void testSetFullScreenWhenMoving();
+    void testSetMaximizeWhenMoving();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -91,12 +93,12 @@ void MoveResizeWindowTest::initTestCase()
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 1);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
 }
@@ -1109,6 +1111,57 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     QCOMPARE(workspace()->moveResizeClient(), nullptr);
 }
 
+void MoveResizeWindowTest::testSetFullScreenWhenMoving()
+{
+    // Ensure we disable moving event when setFullScreen is triggered
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+
+    // let's render
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
+    QVERIFY(client);
+
+    workspace()->slotWindowMove();
+    QCOMPARE(client->isMove(), true);
+    client->setFullScreen(true);
+    QCOMPARE(client->isMove(), false);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    // Let's pretend that the client crashed.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void MoveResizeWindowTest::testSetMaximizeWhenMoving()
+{
+    // Ensure we disable moving event when changeMaximize is triggered
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+
+    // let's render
+    auto client = Test::renderAndWaitForShown(surface.data(), QSize(500, 800), Qt::blue);
+    QVERIFY(client);
+
+    workspace()->slotWindowMove();
+    QCOMPARE(client->isMove(), true);
+    client->setMaximize(true, true);
+    QCOMPARE(client->isMove(), false);
+    QCOMPARE(workspace()->moveResizeClient(), nullptr);
+    // Let's pretend that the client crashed.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
 }
 
 WAYLANDTEST_MAIN(KWin::MoveResizeWindowTest)

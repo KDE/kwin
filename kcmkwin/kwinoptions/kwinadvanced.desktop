@@ -9,6 +9,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinadvanced
 
 Name=Advanced Window Behavior
+Name[az]=Əlavə pəncərə davranışları
 Name[ca]=Comportament avançat de les finestres
 Name[cs]=Pokročilé chování oken
 Name[da]=Avanceret vinduesopførsel
@@ -40,6 +41,7 @@ Name[zh_CN]=高级窗口行为
 Name[zh_TW]=進階視窗行為
 
 Comment=Configure advanced window management options
+Comment[az]=Əlavə pəncərə idarəedilməsi seçimlərini tənzimləmək
 Comment[ca]=Configura les opcions avançades per a la gestió de les finestres
 Comment[cs]=Nastavení pokročilých voleb správce oken
 Comment[da]=Indstil avancerede vindueshåndteringsegenskaber
@@ -71,6 +73,7 @@ Comment[zh_CN]=配置高级窗口管理选项
 Comment[zh_TW]=設定進階視窗管理選項
 
 X-KDE-Keywords=unshade,unshading,shade,shading,border,hover,active borders,tiling,tabs,tabbing,window,window tabbing,window grouping,window tiling,placement,window placement,placement of windows,window advanced behavior
+X-KDE-Keywords[az]=kölgələmə,kölgələnmə,kölgə,qaralma,çərçivə,örtük,aktiv çərçivələr,mozaika,vərəqlər,vərəqləmə,pəncərə,pəncərə vərəqlənməsi,pəncərə qrupları,pəncərə mozaikası,yerləşmə,pəncərə yerləşməsi,pəncərənin yerləşdirilməsi,əlavə pəncərə davranışları
 X-KDE-Keywords[ca]=desplega,desplegament,ombra,vora,passar per sobre,vores actives,mosaic,pestanyes,pestanyes de finestra,finestra,agrupació de les finestres,mosaic de les finestres,col·locació,col·locació de les finestres,comportament avançat de les finestres
 X-KDE-Keywords[da]=kant,hover,aktive kanter,tiling,faneblade,vinduesfaneblade,gruppering af vinduer,vinduesplacering,placering,placering af vinduer,avanceret vinduesopførsel
 X-KDE-Keywords[en_GB]=unshade,unshading,shade,shading,border,hover,active borders,tiling,tabs,tabbing,window,window tabbing,window grouping,window tiling,placement,window placement,placement of windows,window advanced behaviour
@@ -78,6 +81,7 @@ X-KDE-Keywords[es]=desplegar,extender,recoger,plegar,borde,pasada,bordes activos
 X-KDE-Keywords[et]=varjamine,piire,kohalviibimine,aktiivsed piirded,paanimine,kaardid,aknad kaartidena,akende rühmitamine,akende paanimine,akende paigutus,akende täpne käitumine,aken,paigutus
 X-KDE-Keywords[eu]=zabaldu,zabaltzea,bildu,biltzea,gainetik pasatzea,ertz aktiboak,lauzatze,fitxak,leihoa,leihoen fitxak,leihoak lauza moduan,leihoen kokapena,leihoen jokabide aurreratua
 X-KDE-Keywords[fi]=rullauksen avaus,rullauksen avaaminen,rullaus,rullaaminen,kehys,leijunta,aktiiviset reunat,asettelu,välilehdet,ikkunavälilehdet,ikkunoiden ryhmittely,ikkunoiden asettelu,sijoittaminen,sijoittelu,ikkunoiden sijoittaminen,ikkunoiden sijoittelu,ikkunoiden lisäasetukset
+X-KDE-Keywords[fr]=non ombré, dé-nuancé, nuancé, ombré, bordure, survol, bords actifs, mosaïque, onglets, changement d'onglet, fenêtre, changement de fenêtres, regroupement de fenêtres, mosaïque de fenêtres, placement de fenêtres, positionnement de fenêtre, comportement avancé des fenêtres
 X-KDE-Keywords[gl]=dessombrar,dessombramento,sombra,bordo,beira,pasar,bordos activos,beiras activas,xanela,separadores,agrupar xanelas, situación das xanelas,colocación,colocación das xanelas,comportamento avanzado das xanelas
 X-KDE-Keywords[id]=tak berbayang,tak bayang,berbayang,batas,melayang,bingkai aktif,pengubinan,tab,pengetaban,window,pengetaban window,pengelompokan window,pengubinan window,penempatan,penempatan window,penempatan si window,perilaku tingkat-lanjut window
 X-KDE-Keywords[it]=arrotola,srotola,ombra,ombreggiatura,bordo,sovrapponi,bordi attivi,affiancamento,schede,navigazione a schede,finestre,finestre a schede,raggruppamento finestre,affiancamento finestre,posizionamento,posizionamento finestre,posizionamento delle finestre,comportamento avanzato delle finestre

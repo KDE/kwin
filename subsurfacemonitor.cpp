@@ -46,6 +46,10 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
             this, &SubSurfaceMonitor::subSurfaceMapped);
     connect(surface, &SurfaceInterface::unmapped,
             this, &SubSurfaceMonitor::subSurfaceUnmapped);
+    connect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
+            this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
+    connect(surface, &SurfaceInterface::bufferSizeChanged,
+            this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
 
     registerSurface(surface);
 }
@@ -64,6 +68,10 @@ void SubSurfaceMonitor::unregisterSubSurface(SubSurfaceInterface *subSurface)
                this, &SubSurfaceMonitor::subSurfaceMapped);
     disconnect(surface, &SurfaceInterface::unmapped,
                this, &SubSurfaceMonitor::subSurfaceUnmapped);
+    disconnect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
+               this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
+    disconnect(surface, &SurfaceInterface::bufferSizeChanged,
+               this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
 
     unregisterSurface(surface);
 }

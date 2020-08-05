@@ -889,6 +889,11 @@ QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
     return m_backend->extensions().toVector();
 }
 
+QSharedPointer<GLTexture> SceneOpenGL::textureForOutput(AbstractOutput* output) const
+{
+    return m_backend->textureForOutput(output);
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************
@@ -1531,6 +1536,41 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
     endRenderWindow();
 }
 
+QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
+{
+    auto frame = windowPixmap<OpenGLWindowPixmap>();
+
+    if (frame && frame->children().isEmpty()) {
+        return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
+    } else {
+        auto effectWindow = window()->effectWindow();
+        QRect geo(pos(), window()->clientSize());
+        QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, geo.size()));
+
+        QScopedPointer<GLRenderTarget> framebuffer(new KWin::GLRenderTarget(*texture));
+        GLRenderTarget::pushRenderTarget(framebuffer.data());
+
+        auto renderVSG = GLRenderTarget::virtualScreenGeometry();
+        GLVertexBuffer::setVirtualScreenGeometry(geo);
+        GLRenderTarget::setVirtualScreenGeometry(geo);
+
+        QMatrix4x4 mvp;
+        mvp.ortho(geo);
+
+        WindowPaintData data(effectWindow);
+        data.setProjectionMatrix(mvp);
+        QSizeF size(geo.size());
+        data.setYScale(-1);
+        data.setXTranslation(bufferOffset().x());
+        data.setYTranslation(geo.height() + bufferOffset().y());
+
+        performPaint(Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_WINDOW_LANCZOS, geo, data);
+        GLRenderTarget::popRenderTarget();
+        GLVertexBuffer::setVirtualScreenGeometry(renderVSG);
+        GLRenderTarget::setVirtualScreenGeometry(renderVSG);
+        return texture;
+    }
+}
 
 //****************************************
 // OpenGLWindowPixmap
@@ -2431,17 +2471,17 @@ bool SceneOpenGLShadow::prepareBackend()
     QPainter p;
     p.begin(&image);
 
-    p.drawPixmap(0, 0, shadowPixmap(ShadowElementTopLeft));
-    p.drawPixmap(innerRectLeft, 0, shadowPixmap(ShadowElementTop));
-    p.drawPixmap(width - topRight.width(), 0, shadowPixmap(ShadowElementTopRight));
+    p.drawPixmap(0, 0, topLeft.width(), topLeft.height(), shadowPixmap(ShadowElementTopLeft));
+    p.drawPixmap(innerRectLeft, 0, top.width(), top.height(), shadowPixmap(ShadowElementTop));
+    p.drawPixmap(width - topRight.width(), 0, topRight.width(), topRight.height(), shadowPixmap(ShadowElementTopRight));
 
-    p.drawPixmap(0, innerRectTop, shadowPixmap(ShadowElementLeft));
-    p.drawPixmap(width - right.width(), innerRectTop, shadowPixmap(ShadowElementRight));
+    p.drawPixmap(0, innerRectTop, left.width(), left.height(), shadowPixmap(ShadowElementLeft));
+    p.drawPixmap(width - right.width(), innerRectTop, right.width(), right.height(), shadowPixmap(ShadowElementRight));
 
-    p.drawPixmap(0, height - bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
-    p.drawPixmap(innerRectLeft, height - bottom.height(), shadowPixmap(ShadowElementBottom));
-    p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
-
+    p.drawPixmap(0, height - bottomLeft.height(), bottomLeft.width(), bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
+    p.drawPixmap(innerRectLeft, height - bottom.height(), bottom.width(), bottom.height(), shadowPixmap(ShadowElementBottom));
+    p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), bottomRight.width(), bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
+    
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format

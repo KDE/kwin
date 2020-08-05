@@ -68,8 +68,8 @@ void SceneQPainterTest::cleanup()
 void SceneQPainterTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
@@ -95,7 +95,7 @@ void SceneQPainterTest::initTestCase()
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Compositor::self());
 }
 
@@ -327,7 +327,7 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t w = xcb_generate_id(c.data());
-    uint32_t value = defaultScreen()->white_pixel;
+    uint32_t value = kwinApp()->x11DefaultScreen()->white_pixel;
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),

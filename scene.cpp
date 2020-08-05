@@ -198,6 +198,8 @@ void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& d
         paintGenericScreen(mask, data);
     else
         paintSimpleScreen(mask, region);
+
+    Q_EMIT frameRendered();
 }
 
 // The generic painting code that can handle even transformations.
@@ -397,10 +399,6 @@ void Scene::addToplevel(Toplevel *c)
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
 
-    auto discardPixmap = [w]() { w->discardPixmap(); };
-    auto discardQuads = [w]() { w->invalidateQuadsCache(); };
-
-    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
     if (c->surface()) {
         // We generate window quads for sub-surfaces so it's quite important to discard
@@ -408,24 +406,27 @@ void Scene::addToplevel(Toplevel *c)
         SubSurfaceMonitor *monitor = new SubSurfaceMonitor(c->surface(), this);
 
         // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, w, &Window::discardPixmap);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceBufferSizeChanged, w, &Window::discardPixmap);
 
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMoved, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, this, discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, this, discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMoved, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, w, &Window::discardQuads);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged, w, &Window::discardQuads);
 
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::scaleChanged, this, discardQuads);
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::bufferSizeChanged, w, &Window::discardPixmap);
+        connect(c->surface(), &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged, w, &Window::discardQuads);
     }
 
-    connect(c, &Toplevel::screenScaleChanged, this, discardQuads);
-    connect(c, &Toplevel::shadowChanged, this, discardQuads);
+    connect(c, &Toplevel::screenScaleChanged, w, &Window::discardQuads);
+    connect(c, &Toplevel::shadowChanged, w, &Window::discardQuads);
+    connect(c, &Toplevel::geometryShapeChanged, w, &Window::discardShape);
 
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
@@ -453,14 +454,6 @@ void Scene::windowClosed(Toplevel *toplevel, Deleted *deleted)
         window->shadow()->setToplevel(deleted);
     }
     m_windows[deleted] = window;
-}
-
-void Scene::windowGeometryShapeChanged(Toplevel *c)
-{
-    if (!m_windows.contains(c))    // this is ok, shape is not valid by default
-        return;
-    Window *w = m_windows[ c ];
-    w->discardShape();
 }
 
 void Scene::createStackingOrder(const QList<Toplevel *> &toplevels)
@@ -702,8 +695,9 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
 // Scene::Window
 //****************************************
 
-Scene::Window::Window(Toplevel * c)
-    : toplevel(c)
+Scene::Window::Window(Toplevel *client, QObject *parent)
+    : QObject(parent)
+    , toplevel(client)
     , filter(ImageFilterFast)
     , m_shadow(nullptr)
     , m_currentPixmap()
@@ -766,7 +760,7 @@ void Scene::Window::discardShape()
     // it is created on-demand and cached, simply
     // reset the flag
     m_bufferShapeIsValid = false;
-    invalidateQuadsCache();
+    discardQuads();
 }
 
 QRegion Scene::Window::bufferShape() const
@@ -1030,30 +1024,28 @@ WindowQuadList Scene::Window::makeContentsQuads() const
             continue;
 
         const QRegion region = windowPixmap->shape();
-        const QPoint position = windowPixmap->framePosition();
-        const qreal scale = windowPixmap->scale();
         const int quadId = id++;
 
-        for (const QRect &rect : region) {
+        for (const QRectF &rect : region) {
             // Note that the window quad id is not unique if the window is shaped, i.e. the
             // region contains more than just one rectangle. We assume that the "source" quad
             // had been subdivided.
             WindowQuad quad(WindowQuadContents, quadId);
 
-            const qreal x0 = rect.x() + position.x();
-            const qreal y0 = rect.y() + position.y();
-            const qreal x1 = rect.x() + rect.width() + position.x();
-            const qreal y1 = rect.y() + rect.height() + position.y();
+            const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
+            const QPointF windowTopRight = windowPixmap->mapToWindow(rect.topRight());
+            const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
+            const QPointF windowBottomLeft = windowPixmap->mapToWindow(rect.bottomLeft());
 
-            const qreal u0 = rect.x() * scale;
-            const qreal v0 = rect.y() * scale;
-            const qreal u1 = (rect.x() + rect.width()) * scale;
-            const qreal v1 = (rect.y() + rect.height()) * scale;
+            const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
+            const QPointF bufferTopRight = windowPixmap->mapToBuffer(rect.topRight());
+            const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
+            const QPointF bufferBottomLeft = windowPixmap->mapToBuffer(rect.bottomLeft());
 
-            quad[0] = WindowVertex(QPointF(x0, y0), QPointF(u0, v0));
-            quad[1] = WindowVertex(QPointF(x1, y0), QPointF(u1, v0));
-            quad[2] = WindowVertex(QPointF(x1, y1), QPointF(u1, v1));
-            quad[3] = WindowVertex(QPointF(x0, y1), QPointF(u0, v1));
+            quad[0] = WindowVertex(windowTopLeft, bufferTopLeft);
+            quad[1] = WindowVertex(windowTopRight, bufferTopRight);
+            quad[2] = WindowVertex(windowBottomRight, bufferBottomRight);
+            quad[3] = WindowVertex(windowBottomLeft, bufferBottomLeft);
 
             quads << quad;
         }
@@ -1068,7 +1060,7 @@ WindowQuadList Scene::Window::makeContentsQuads() const
     return quads;
 }
 
-void Scene::Window::invalidateQuadsCache()
+void Scene::Window::discardQuads()
 {
     cached_quad_list.reset();
 }
@@ -1136,7 +1128,7 @@ void WindowPixmap::create()
         update();
         if (isRoot() && isValid()) {
             m_window->unreferencePreviousPixmap();
-            m_window->invalidateQuadsCache();
+            m_window->discardQuads();
         }
         return;
     }
@@ -1167,7 +1159,7 @@ void WindowPixmap::create()
     m_pixmapSize = bufferGeometry.size();
     m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
-    m_window->invalidateQuadsCache();
+    m_window->discardQuads();
 }
 
 void WindowPixmap::update()
@@ -1272,7 +1264,7 @@ QPoint WindowPixmap::framePosition() const
 qreal WindowPixmap::scale() const
 {
     if (surface())
-        return surface()->scale();
+        return surface()->bufferScale();
     return toplevel()->bufferScale();
 }
 
@@ -1288,6 +1280,18 @@ bool WindowPixmap::hasAlphaChannel() const
     if (buffer())
         return buffer()->hasAlphaChannel();
     return toplevel()->hasAlpha();
+}
+
+QPointF WindowPixmap::mapToWindow(const QPointF &point) const
+{
+    return point + framePosition();
+}
+
+QPointF WindowPixmap::mapToBuffer(const QPointF &point) const
+{
+    if (surface())
+        return surface()->mapToBuffer(point);
+    return point * scale();
 }
 
 //****************************************

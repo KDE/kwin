@@ -46,6 +46,7 @@ public:
 
     bool init(EglWaylandBackend *backend);
     void updateSize(const QSize &size);
+    void updateMode();
 
 private:
     WaylandOutput *m_waylandOutput;
@@ -104,7 +105,7 @@ private:
 
     bool makeContextCurrent(EglWaylandOutput *output);
     void present() override;
-    void presentOnSurface(EglWaylandOutput *output);
+    void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;
     QVector<EglWaylandOutput*> m_outputs;

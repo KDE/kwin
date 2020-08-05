@@ -38,7 +38,6 @@ namespace KWin
 
 InternalClient::InternalClient(QWindow *window)
     : m_internalWindow(window)
-    , m_clientSize(window->size())
     , m_windowId(window->winId())
     , m_internalWindowFlags(window->flags())
 {
@@ -101,7 +100,7 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
 
 QRect InternalClient::bufferGeometry() const
 {
-    return frameGeometry() - frameMargins();
+    return m_clientGeometry;
 }
 
 QStringList InternalClient::activities() const
@@ -137,11 +136,6 @@ QString InternalClient::captionSuffix() const
 QPoint InternalClient::clientContentPos() const
 {
     return -1 * clientPos();
-}
-
-QSize InternalClient::clientSize() const
-{
-    return m_clientSize;
 }
 
 QSize InternalClient::minSize() const
@@ -334,7 +328,7 @@ void InternalClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 
     const QRect newClientGeometry = frameRectToClientRect(rect);
 
-    if (m_clientSize == newClientGeometry.size()) {
+    if (clientSize() == newClientGeometry.size()) {
         commitGeometry(rect);
     } else {
         requestGeometry(rect);
@@ -359,8 +353,9 @@ void InternalClient::setOnAllActivities(bool set)
     // Internal clients do not support activities.
 }
 
-void InternalClient::takeFocus()
+bool InternalClient::takeFocus()
 {
+    return false;
 }
 
 void InternalClient::setNoBorder(bool set)
@@ -414,6 +409,7 @@ void InternalClient::showOnScreenEdge()
 
 void InternalClient::destroyClient()
 {
+    markAsZombie();
     if (isMoveResize()) {
         leaveMoveResize();
     }
@@ -530,18 +526,25 @@ void InternalClient::commitGeometry(const QRect &rect)
         return;
     }
 
+    // The client geometry and the buffer geometry are the same.
+    const QRect oldClientGeometry = m_clientGeometry;
+    const QRect oldFrameGeometry = m_frameGeometry;
+
+    m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
 
-    m_clientSize = frameRectToClientRect(frameGeometry()).size();
-
     addWorkspaceRepaint(visibleRect());
+    updateGeometryBeforeUpdateBlocking();
     syncGeometryToInternalWindow();
 
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit bufferGeometryChanged(this, oldClientGeometry);
+        emit clientGeometryChanged(this, oldClientGeometry);
     }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
-    updateGeometryBeforeUpdateBlocking();
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
+    emit geometryShapeChanged(this, oldFrameGeometry);
 
     if (isResize()) {
         performMoveResize();

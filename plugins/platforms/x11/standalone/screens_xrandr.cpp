@@ -78,7 +78,7 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
 
     // update default screen
     auto *xrrEvent = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(event);
-    xcb_screen_t *screen = defaultScreen();
+    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
     if (xrrEvent->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
         screen->width_in_pixels = xrrEvent->height;
         screen->height_in_pixels = xrrEvent->width;
@@ -96,7 +96,7 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
 
 QSize XRandRScreens::displaySize() const
 {
-    xcb_screen_t *screen = defaultScreen();
+    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
     if (!screen) {
         return Screens::size();
     }

@@ -258,12 +258,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         setupClientConnections(client);
     }
     if (auto w = waylandServer()) {
-        connect(w, &WaylandServer::shellClientAdded, this, [this](AbstractClient *c) {
-            if (c->readyForPainting())
-                slotClientShown(c);
-            else
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
-        });
         const auto clients = waylandServer()->clients();
         for (AbstractClient *c : clients) {
             if (c->readyForPainting()) {
@@ -1685,7 +1679,7 @@ KSharedConfigPtr EffectsHandlerImpl::config() const
 
 KSharedConfigPtr EffectsHandlerImpl::inputConfig() const
 {
-    return kwinApp()->inputConfig();
+    return InputConfig::self()->inputConfig();
 }
 
 Effect *EffectsHandlerImpl::findEffect(const QString &name) const
@@ -1981,6 +1975,21 @@ EffectWindow* EffectWindowImpl::findModal()
     AbstractClient *modal = client->findModal();
     if (modal) {
         return modal->effectWindow();
+    }
+
+    return nullptr;
+}
+
+EffectWindow* EffectWindowImpl::transientFor()
+{
+    auto client = qobject_cast<AbstractClient *>(toplevel);
+    if (!client) {
+        return nullptr;
+    }
+
+    AbstractClient *transientFor = client->transientFor();
+    if (transientFor) {
+        return transientFor->effectWindow();
     }
 
     return nullptr;

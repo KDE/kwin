@@ -41,8 +41,15 @@ KWinActionsConfigForm::KWinActionsConfigForm(QWidget *parent)
 KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinMouseConfigForm(this))
-    , m_settings(settings)
 {
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KTitleBarActionsConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
     addConfig(m_settings, this);
     load();
 }
@@ -77,8 +84,15 @@ void KTitleBarActionsConfig::save()
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(this))
-    , m_settings(settings)
 {
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KWindowActionsConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
     addConfig(m_settings, this);
     load();
 }

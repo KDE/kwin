@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Video Wall
+Name[az]=Videolu Divar Kağızı
 Name[bs]=Video zid
 Name[ca]=Mur de vídeo
 Name[ca@valencia]=Mur de vídeo
@@ -48,6 +49,7 @@ Name[x-test]=xxVideo Wallxx
 Name[zh_CN]=视频墙
 Name[zh_TW]=影像牆
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
+Comment[az]=Ekranda fon şəkili əvəzinə seçilmiş videonu tam ekran göstərir.
 Comment[bs]=Proteže punog zaslona gledanje videa nad svim priloženim ekranima stvoriti video zidu
 Comment[ca]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo.
 Comment[ca@valencia]=Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo.

@@ -17,6 +17,7 @@ X-KDE-FormFactors=desktop,tablet
 
 Name=Window Decorations
 Name[ar]=زخارف النوافذ
+Name[az]=Pəncərə dekorasiyası
 Name[bg]=Декорации на прозорците
 Name[bs]=Dekoracije prozora
 Name[ca]=Decoració de les finestres
@@ -76,6 +77,7 @@ Name[x-test]=xxWindow Decorationsxx
 Name[zh_CN]=窗口装饰
 Name[zh_TW]=視窗裝飾
 Comment=Configure window titlebars and borders
+Comment[az]=Pəncərə başlığı və çərçivəsini tənzimləmək
 Comment[ca]=Configura la barra de títol i les vores de les finestres
 Comment[ca@valencia]=Configura la barra de títol i les vores de les finestres
 Comment[da]=Indstil vinduets titellinjer og kanter

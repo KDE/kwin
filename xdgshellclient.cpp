@@ -49,6 +49,12 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
+enum XdgSurfaceGeometryType {
+    XdgSurfaceGeometryClient = 0x1,
+    XdgSurfaceGeometryFrame = 0x2,
+    XdgSurfaceGeometryBuffer = 0x4,
+};
+
 XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     : WaylandClient(shellSurface->surface())
     , m_shellSurface(shellSurface)
@@ -68,9 +74,7 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     connect(shellSurface->surface(), &SurfaceInterface::mapped,
             this, &XdgSurfaceClient::setReadyForPainting);
 #endif
-    connect(shellSurface->surface(), &SurfaceInterface::unbound,
-            this, &XdgSurfaceClient::destroyClient);
-    connect(shellSurface->surface(), &SurfaceInterface::destroyed,
+    connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceClient::destroyClient);
 
     // The effective window geometry is determined by two things: (a) the rectangle that bounds
@@ -156,11 +160,6 @@ QRect XdgSurfaceClient::clientGeometry() const
     return m_clientGeometry;
 }
 
-QSize XdgSurfaceClient::clientSize() const
-{
-    return m_clientGeometry.size();
-}
-
 QMatrix4x4 XdgSurfaceClient::inputTransformation() const
 {
     QMatrix4x4 transformation;
@@ -189,7 +188,7 @@ bool XdgSurfaceClient::stateCompare() const
 
 void XdgSurfaceClient::scheduleConfigure()
 {
-    if (isClosing()) {
+    if (isZombie()) {
         return;
     }
 
@@ -437,20 +436,42 @@ void XdgSurfaceClient::requestGeometry(const QRect &rect)
 
 void XdgSurfaceClient::updateGeometry(const QRect &rect)
 {
+    const QRect oldClientGeometry = m_clientGeometry;
     const QRect oldFrameGeometry = m_frameGeometry;
+    const QRect oldBufferGeometry = m_bufferGeometry;
 
+    m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
     m_bufferGeometry = frameRectToBufferRect(rect);
-    m_clientGeometry = frameRectToClientRect(rect);
 
-    if (oldFrameGeometry == m_frameGeometry) {
+    uint changedGeometries = 0;
+
+    if (m_clientGeometry != oldClientGeometry) {
+        changedGeometries |= XdgSurfaceGeometryClient;
+    }
+    if (m_frameGeometry != oldFrameGeometry) {
+        changedGeometries |= XdgSurfaceGeometryFrame;
+    }
+    if (m_bufferGeometry != oldBufferGeometry) {
+        changedGeometries |= XdgSurfaceGeometryBuffer;
+    }
+
+    if (!changedGeometries) {
         return;
     }
 
     updateWindowRules(Rules::Position | Rules::Size);
     updateGeometryBeforeUpdateBlocking();
 
-    emit frameGeometryChanged(this, oldFrameGeometry);
+    if (changedGeometries & XdgSurfaceGeometryBuffer) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
+    }
+    if (changedGeometries & XdgSurfaceGeometryClient) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (changedGeometries & XdgSurfaceGeometryFrame) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
     emit geometryShapeChanged(this, oldFrameGeometry);
 
     addRepaintDuringGeometryUpdates();
@@ -500,7 +521,7 @@ void XdgSurfaceClient::addDamage(const QRegion &damage)
 bool XdgSurfaceClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return !isClosing() && !isHidden() && !isMinimized();
+    return !isZombie() && !isHidden() && !isMinimized();
 }
 
 bool XdgSurfaceClient::isHiddenInternal() const
@@ -546,14 +567,9 @@ void XdgSurfaceClient::internalHide()
     emit windowHidden(this);
 }
 
-bool XdgSurfaceClient::isClosing() const
-{
-    return m_isClosing;
-}
-
 void XdgSurfaceClient::destroyClient()
 {
-    m_isClosing = true;
+    markAsZombie();
     m_configureTimer->stop();
     if (isMoveResize()) {
         leaveMoveResize();
@@ -656,7 +672,7 @@ XdgToplevelInterface *XdgToplevelClient::shellSurface() const
 
 void XdgToplevelClient::debug(QDebug &stream) const
 {
-    stream << this;
+    stream << "XdgToplevelClient:" << resourceClass() << caption();
 }
 
 NET::WindowType XdgToplevelClient::windowType(bool direct, int supported_types) const
@@ -1017,7 +1033,7 @@ void XdgToplevelClient::doFinishMoveResize()
     scheduleConfigure();
 }
 
-void XdgToplevelClient::takeFocus()
+bool XdgToplevelClient::takeFocus()
 {
     if (wantsInput()) {
         sendPing(PingReason::FocusWindow);
@@ -1026,6 +1042,7 @@ void XdgToplevelClient::takeFocus()
     if (!keepAbove() && !isOnScreenDisplay() && !belongsToDesktop()) {
         workspace()->setShowingDesktop(false);
     }
+    return true;
 }
 
 bool XdgToplevelClient::wantsInput() const
@@ -1058,7 +1075,7 @@ bool XdgToplevelClient::acceptsFocus() const
             return m_plasmaShellSurface->panelTakesFocus();
         }
     }
-    return !isClosing() && readyForPainting();
+    return !isZombie() && readyForPainting();
 }
 
 Layer XdgToplevelClient::layerForDock() const
@@ -1068,8 +1085,8 @@ Layer XdgToplevelClient::layerForDock() const
         case PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover:
             return NormalLayer;
         case PlasmaShellSurfaceInterface::PanelBehavior::AutoHide:
-            return AboveLayer;
         case PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow:
+            return AboveLayer;
         case PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible:
             return DockLayer;
         default:
@@ -1168,27 +1185,43 @@ void XdgToplevelClient::handleStatesAcknowledged(const XdgToplevelInterface::Sta
 
 void XdgToplevelClient::handleMaximizeRequested()
 {
-    maximize(MaximizeFull);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        maximize(MaximizeFull);
+        scheduleConfigure();
+    } else {
+        m_initialStates |= XdgToplevelInterface::State::Maximized;
+    }
 }
 
 void XdgToplevelClient::handleUnmaximizeRequested()
 {
-    maximize(MaximizeRestore);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        maximize(MaximizeRestore);
+        scheduleConfigure();
+    } else {
+        m_initialStates &= ~XdgToplevelInterface::State::Maximized;
+    }
 }
 
 void XdgToplevelClient::handleFullscreenRequested(OutputInterface *output)
 {
     Q_UNUSED(output)
-    setFullScreen(/* set */ true, /* user */ false);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        setFullScreen(/* set */ true, /* user */ false);
+        scheduleConfigure();
+    } else {
+        m_initialStates |= XdgToplevelInterface::State::FullScreen;
+    }
 }
 
 void XdgToplevelClient::handleUnfullscreenRequested()
 {
-    setFullScreen(/* set */ false, /* user */ false);
-    scheduleConfigure();
+    if (m_isInitialized) {
+        setFullScreen(/* set */ false, /* user */ false);
+        scheduleConfigure();
+    } else {
+        m_initialStates &= ~XdgToplevelInterface::State::FullScreen;
+    }
 }
 
 void XdgToplevelClient::handleMinimizeRequested()
@@ -1271,11 +1304,30 @@ void XdgToplevelClient::sendPing(PingReason reason)
     m_pings.insert(serial, reason);
 }
 
+MaximizeMode XdgToplevelClient::initialMaximizeMode() const
+{
+    MaximizeMode maximizeMode = MaximizeRestore;
+    if (m_initialStates & XdgToplevelInterface::State::MaximizedHorizontal) {
+        maximizeMode = MaximizeMode(maximizeMode | MaximizeHorizontal);
+    }
+    if (m_initialStates & XdgToplevelInterface::State::MaximizedVertical) {
+        maximizeMode = MaximizeMode(maximizeMode | MaximizeVertical);
+    }
+    return maximizeMode;
+}
+
+bool XdgToplevelClient::initialFullScreenMode() const
+{
+    return m_initialStates & XdgToplevelInterface::State::FullScreen;
+}
+
 void XdgToplevelClient::initialize()
 {
     blockGeometryUpdates(true);
 
     bool needsPlacement = !isInitialPositionSet();
+
+    updateDecoration(false, false);
 
     if (supportsWindowRules()) {
         setupWindowRules(false);
@@ -1285,7 +1337,8 @@ void XdgToplevelClient::initialize()
         if (originalGeometry != ruledGeometry) {
             setFrameGeometry(ruledGeometry);
         }
-        maximize(rules()->checkMaximize(maximizeMode(), true));
+        maximize(rules()->checkMaximize(initialMaximizeMode(), true));
+        setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
         setDesktop(rules()->checkDesktop(desktop(), true));
         setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
         if (rules()->checkMinimize(isMinimized(), true)) {
@@ -1323,6 +1376,7 @@ void XdgToplevelClient::initialize()
     blockGeometryUpdates(false);
     scheduleConfigure();
     updateColorScheme();
+    m_isInitialized = true;
 }
 
 void XdgToplevelClient::updateMaximizeMode(MaximizeMode maximizeMode)
@@ -1372,7 +1426,7 @@ void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *d
     m_serverDecoration = decoration;
 
     connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this, [this] {
-        if (!isClosing() && readyForPainting()) {
+        if (!isZombie() && readyForPainting()) {
             updateDecoration(/* check_workspace_pos */ true);
         }
     });
@@ -1394,13 +1448,15 @@ void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *d
     m_xdgDecoration = decoration;
 
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed, this, [this] {
-        if (!isClosing()) {
+        if (!isZombie() && m_isInitialized) {
             updateDecoration(/* check_workspace_pos */ true);
         }
     });
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
-        // force is true as we must send a new configure response.
-        updateDecoration(/* check_workspace_pos */ false, /* force */ true);
+        if (m_isInitialized) {
+            // force is true as we must send a new configure response.
+            updateDecoration(/* check_workspace_pos */ false, /* force */ true);
+        }
     });
 }
 
@@ -1482,8 +1538,10 @@ void XdgToplevelClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *s
         workspace()->updateClientArea();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideHideRequested, this, [this] {
-        hideClient(true);
-        m_plasmaShellSurface->hideAutoHidingPanel();
+        if (m_plasmaShellSurface->panelBehavior() == PlasmaShellSurfaceInterface::PanelBehavior::AutoHide) {
+            hideClient(true);
+            m_plasmaShellSurface->hideAutoHidingPanel();
+        }
         updateShowOnScreenEdge();
     });
     connect(shellSurface, &PlasmaShellSurfaceInterface::panelAutoHideShowRequested, this, [this] {
@@ -1637,6 +1695,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     }
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
+    dontMoveResize();
 
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
     updateDecoration(false, false);
@@ -1698,6 +1757,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     StackingUpdatesBlocker blocker(workspace());
+    dontMoveResize();
 
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
@@ -1750,7 +1810,6 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             emit quickTileModeChanged();
         }
         setFrameGeometry(workspace()->clientArea(MaximizeArea, this));
-        workspace()->raiseClient(this);
     } else {
         if (m_requestedMaximizeMode == MaximizeRestore) {
             updateQuickTileMode(QuickTileFlag::None);
@@ -1798,7 +1857,7 @@ XdgPopupClient::~XdgPopupClient()
 
 void XdgPopupClient::debug(QDebug &stream) const
 {
-    stream << this;
+    stream << "XdgPopupClient: transientFor:" << transientFor();
 }
 
 NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) const
@@ -2074,8 +2133,9 @@ bool XdgPopupClient::wantsInput() const
     return false;
 }
 
-void XdgPopupClient::takeFocus()
+bool XdgPopupClient::takeFocus()
 {
+    return false;
 }
 
 bool XdgPopupClient::acceptsFocus() const

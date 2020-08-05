@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "screenlockerwatcher.h"
 #include "wayland_server.h"
+#include "workspace.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -41,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/xdgdecoration.h>
+#include <KWayland/Client/outputmanagement.h>
 #include <KWaylandServer/display.h>
 
 //screenlocker
@@ -63,7 +65,7 @@ namespace Test
 static struct {
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
-    Compositor *compositor = nullptr;
+    KWayland::Client::Compositor *compositor = nullptr;
     SubCompositor *subCompositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
     ShadowManager *shadowManager = nullptr;
@@ -74,6 +76,7 @@ static struct {
     PlasmaWindowManagement *windowManagement = nullptr;
     PointerConstraints *pointerConstraints = nullptr;
     Registry *registry = nullptr;
+    OutputManagement* outputManagement = nullptr;
     QThread *thread = nullptr;
     QVector<Output*> outputs;
     IdleInhibitManager *idleInhibit = nullptr;
@@ -177,6 +180,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::OutputManagement)) {
+        s_waylandConnection.outputManagement = registry->createOutputManagement(registry->interface(Registry::Interface::OutputManagement).name,
+                                                                                registry->interface(Registry::Interface::OutputManagement).version);
+        if (!s_waylandConnection.outputManagement->isValid()) {
+            return false;
+        }
+    }
     if (flags.testFlag(AdditionalWaylandInterface::PlasmaShell)) {
         s_waylandConnection.plasmaShell = registry->createPlasmaShell(registry->interface(Registry::Interface::PlasmaShell).name,
                                                                      registry->interface(Registry::Interface::PlasmaShell).version);
@@ -274,7 +284,7 @@ ConnectionThread *waylandConnection()
     return s_waylandConnection.connection;
 }
 
-Compositor *waylandCompositor()
+KWayland::Client::Compositor *waylandCompositor()
 {
     return s_waylandConnection.compositor;
 }
@@ -334,6 +344,11 @@ XdgDecorationManager *xdgDecorationManager()
     return s_waylandConnection.xdgDecoration;
 }
 
+OutputManagement *waylandOutputManagement()
+{
+    return s_waylandConnection.outputManagement;
+}
+
 
 bool waitForWaylandPointer()
 {
@@ -387,7 +402,7 @@ void render(Surface *surface, const QImage &img)
 
 AbstractClient *waitForWaylandWindowShown(int timeout)
 {
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
         return nullptr;
     }
@@ -399,7 +414,7 @@ AbstractClient *waitForWaylandWindowShown(int timeout)
 
 AbstractClient *renderAndWaitForShown(Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     if (!clientAddedSpy.isValid()) {
         return nullptr;
     }

@@ -42,7 +42,6 @@ public:
     QString captionNormal() const override;
     QString captionSuffix() const override;
     QPoint clientContentPos() const override;
-    QSize clientSize() const override;
     QSize minSize() const override;
     QSize maxSize() const override;
     void debug(QDebug &stream) const override;
@@ -74,7 +73,7 @@ public:
     bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
-    void takeFocus() override;
+    bool takeFocus() override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
@@ -101,7 +100,6 @@ private:
     void updateInternalWindowGeometry();
 
     QWindow *m_internalWindow = nullptr;
-    QSize m_clientSize = QSize(0, 0);
     QString m_captionNormal;
     QString m_captionSuffix;
     double m_opacity = 1.0;

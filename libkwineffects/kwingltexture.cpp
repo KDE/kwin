@@ -190,7 +190,7 @@ GLTexture::GLTexture(const QString& fileName)
 {
 }
 
-GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
+GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels, bool needsMutability)
      : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
@@ -209,7 +209,7 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
-        if (d->s_supportsTextureStorage) {
+        if (d->s_supportsTextureStorage && !needsMutability) {
             glTexStorage2D(d->m_target, levels, internalFormat, width, height);
             d->m_immutable = true;
         } else {
@@ -234,8 +234,8 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     unbind();
 }
 
-GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels)
-    : GLTexture(internalFormat, size.width(), size.height(), levels)
+GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
+    : GLTexture(internalFormat, size.width(), size.height(), levels, needsMutability)
 {
 }
 
@@ -628,6 +628,9 @@ bool GLTexture::isYInverted() const
 void GLTexture::setYInverted(bool inverted)
 {
     Q_D(GLTexture);
+    if (d->m_yInverted == inverted)
+        return;
+
     d->m_yInverted = inverted;
     d->updateMatrix();
 }
@@ -678,6 +681,13 @@ bool GLTexture::supportsSwizzle()
 bool GLTexture::supportsFormatRG()
 {
     return GLTexturePrivate::s_supportsTextureFormatRG;
+}
+
+QImage GLTexture::toImage() const
+{
+    QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
+    glGetTextureImage(texture(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.sizeInBytes(), ret.bits());
+    return ret;
 }
 
 } // namespace KWin

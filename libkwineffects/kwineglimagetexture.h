@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2016 Oleg Chernovskiy <kanedias@xaker.ru>
+Copyright (C) 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,45 +17,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef REMOTEACCESSMANAGER_H
-#define REMOTEACCESSMANAGER_H
 
-// KWayland
-#include <KWaylandServer/display.h>
-#include <KWaylandServer/remote_access_interface.h>
-// Qt
-#include <QObject>
+#pragma once
 
-struct gbm_bo;
-struct gbm_surface;
+#include <kwinglutils_export.h>
+#include <kwingltexture.h>
+
+typedef void *EGLImageKHR;
+typedef void *EGLDisplay;
+typedef void *EGLClientBuffer;
 
 namespace KWin
 {
 
-class DrmOutput;
-class DrmBuffer;
-
-using KWaylandServer::RemoteAccessManagerInterface;
-using KWaylandServer::BufferHandle;
-
-class RemoteAccessManager : public QObject
+class KWINGLUTILS_EXPORT EGLImageTexture : public GLTexture
 {
-    Q_OBJECT
 public:
-    explicit RemoteAccessManager(QObject *parent = nullptr);
-    ~RemoteAccessManager() override;
-
-    void passBuffer(DrmOutput *output, DrmBuffer *buffer);
-
-signals:
-    void bufferNoLongerNeeded(qint32 gbm_handle);
+    EGLImageTexture(EGLDisplay display, EGLImageKHR image, int internalFormat, const QSize &size);
+    ~EGLImageTexture() override;
 
 private:
-    void releaseBuffer(const BufferHandle *buf);
-
-    RemoteAccessManagerInterface *m_interface = nullptr;
+    EGLImageKHR m_image;
+    EGLDisplay m_display;
 };
 
-} // KWin namespace
+}
 
-#endif // REMOTEACCESSMANAGER_H

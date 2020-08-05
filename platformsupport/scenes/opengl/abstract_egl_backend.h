@@ -37,6 +37,7 @@ namespace KWin
 {
 
 class EglDmabuf;
+class AbstractOutput;
 
 class KWIN_EXPORT AbstractEglBackend : public QObject, public OpenGLBackend
 {
@@ -58,6 +59,8 @@ public:
     EGLConfig config() const {
         return m_config;
     }
+
+    QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
 protected:
     AbstractEglBackend();
@@ -108,7 +111,7 @@ protected:
     }
 
 private:
-    void createTextureSubImage(int scale, const QImage &image, const QRegion &damage);
+    void createTextureSubImage(const QImage &image, const QRegion &damage);
     bool createTextureImage(const QImage &image);
     bool loadShmTexture(const QPointer<KWaylandServer::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWaylandServer::BufferInterface> &buffer);

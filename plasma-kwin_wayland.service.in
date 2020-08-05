@@ -1,0 +1,7 @@
+[Unit]
+Description=KDE Window Manager
+
+[Service]
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland
+BusName=org.kde.KWin
+Slice=session.slice

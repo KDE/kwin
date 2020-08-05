@@ -65,8 +65,9 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
     Output o;
     auto initBuffer = [&o, output, this] (int index) {
         o.buffer[index] = m_backend->createBuffer(output->pixelSize());
-        o.buffer[index]->map();
-        o.buffer[index]->image()->fill(Qt::black);
+        if (o.buffer[index]->map()) {
+            o.buffer[index]->image()->fill(Qt::black);
+        }
     };
     connect(output, &DrmOutput::modeChanged, this,
         [output, this] {
@@ -82,8 +83,9 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
             delete (*it).buffer[1];
             auto initBuffer = [it, output, this] (int index) {
                 it->buffer[index] = m_backend->createBuffer(output->pixelSize());
-                it->buffer[index]->map();
-                it->buffer[index]->image()->fill(Qt::black);
+                if (it->buffer[index]->map()) {
+                    it->buffer[index]->image()->fill(Qt::black);
+                }
             };
             initBuffer(0);
             initBuffer(1);

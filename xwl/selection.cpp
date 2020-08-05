@@ -127,25 +127,13 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
 {
     switch (event->response_type & XCB_EVENT_RESPONSE_TYPE_MASK) {
     case XCB_SELECTION_NOTIFY:
-        if (handleSelectionNotify(reinterpret_cast<xcb_selection_notify_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handleSelectionNotify(reinterpret_cast<xcb_selection_notify_event_t *>(event));
     case XCB_PROPERTY_NOTIFY:
-        if (handlePropertyNotify(reinterpret_cast<xcb_property_notify_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handlePropertyNotify(reinterpret_cast<xcb_property_notify_event_t *>(event));
     case XCB_SELECTION_REQUEST:
-        if (handleSelectionRequest(reinterpret_cast<xcb_selection_request_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handleSelectionRequest(reinterpret_cast<xcb_selection_request_event_t *>(event));
     case XCB_CLIENT_MESSAGE:
-        if (handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event));
     default:
         return false;
     }

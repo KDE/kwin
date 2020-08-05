@@ -820,11 +820,31 @@ void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
     }
 }
 
+static uint16_t x11CommandAllModifier()
+{
+    switch (options->commandAllModifier()) {
+    case Qt::MetaModifier:
+        return KKeyServer::modXMeta();
+    case Qt::AltModifier:
+        return KKeyServer::modXAlt();
+    default:
+        return 0;
+    }
+}
+
 #define XCapL KKeyServer::modXLock()
 #define XNumL KKeyServer::modXNumLock()
 #define XScrL KKeyServer::modXScrollLock()
-void X11Client::grabButton(int modifier)
+void X11Client::establishCommandWindowGrab(uint8_t button)
 {
+    // Unfortunately there are a lot of possible modifier combinations that we need to take into
+    // account. We tackle that problem in a kind of smart way. First, we grab the button with all
+    // possible modifiers, then we ungrab the ones that are relevant only to commandAllx().
+
+    m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, XCB_MOD_MASK_ANY, button);
+
+    uint16_t x11Modifier = x11CommandAllModifier();
+
     unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
@@ -833,11 +853,13 @@ void X11Client::grabButton(int modifier)
     for (int i = 0;
             i < 8;
             ++i)
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, modifier | mods[ i ]);
+        m_wrapper.ungrabButton(x11Modifier | mods[ i ], button);
 }
 
-void X11Client::ungrabButton(int modifier)
+void X11Client::establishCommandAllGrab(uint8_t button)
 {
+    uint16_t x11Modifier = x11CommandAllModifier();
+
     unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
@@ -846,47 +868,63 @@ void X11Client::ungrabButton(int modifier)
     for (int i = 0;
             i < 8;
             ++i)
-        m_wrapper.ungrabButton(modifier | mods[ i ]);
+        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, x11Modifier | mods[ i ], button);
 }
 #undef XCapL
 #undef XNumL
 #undef XScrL
 
-/**
- * Releases the passive grab for some modifier combinations when a
- * window becomes active. This helps broken X programs that
- * missinterpret LeaveNotify events in grab mode to work properly
- * (Motif, AWT, Tk, ...)
- */
 void X11Client::updateMouseGrab()
 {
-    if (workspace()->globalShortcutsDisabled()) {
-        m_wrapper.ungrabButton();
-        // keep grab for the simple click without modifiers if needed (see below)
-        bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
-        if (!(!options->isClickRaise() || not_obscured))
-            grabButton(XCB_NONE);
+    xcb_ungrab_button(connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
+
+    if (TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
+        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
         return;
     }
-    if (isActive() && !TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
-        // first grab all modifier combinations
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
-        // remove the grab for no modifiers only if the window
-        // is unobscured or if the user doesn't want click raise
-        // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
-        // the most recently raised window)
-        bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
-        if (!options->isClickRaise() || not_obscured)
-            ungrabButton(XCB_NONE);
-        else
-            grabButton(XCB_NONE);
-        ungrabButton(XCB_MOD_MASK_SHIFT);
-        ungrabButton(XCB_MOD_MASK_CONTROL);
-        ungrabButton(XCB_MOD_MASK_CONTROL | XCB_MOD_MASK_SHIFT);
-    } else {
-        m_wrapper.ungrabButton();
-        // simply grab all modifier combinations
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
+
+    // When a passive grab is activated or deactivated, the X server will generate crossing
+    // events as if the pointer were suddenly to warp from its current position to some position
+    // in the grab window. Some /broken/ X11 clients do get confused by such EnterNotify and
+    // LeaveNotify events so we release the passive grab for the active window.
+    //
+    // The passive grab below is established so the window can be raised or activated when it
+    // is clicked.
+    if ((options->focusPolicyIsReasonable() && !isActive()) ||
+            (options->isClickRaise() && !isMostRecentlyRaised())) {
+        if (options->commandWindow1() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_1);
+        }
+        if (options->commandWindow2() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_2);
+        }
+        if (options->commandWindow3() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_3);
+        }
+        if (options->commandWindowWheel() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_4);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_5);
+        }
+    }
+
+    // We want to grab <command modifier> + buttons no matter what state the window is in. The
+    // client will receive funky EnterNotify and LeaveNotify events, but there is nothing that
+    // we can do about it, unfortunately.
+
+    if (!workspace()->globalShortcutsDisabled()) {
+        if (options->commandAll1() != Options::MouseNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_1);
+        }
+        if (options->commandAll2() != Options::MouseNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_2);
+        }
+        if (options->commandAll3() != Options::MouseNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_3);
+        }
+        if (options->commandAllWheel() != Options::MouseWheelNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_4);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_5);
+        }
     }
 }
 
@@ -1108,11 +1146,15 @@ void X11Client::focusInEvent(xcb_focus_in_event_t *e)
     // check if this client is in should_get_focus list or if activation is allowed
     bool activate =  workspace()->allowClientActivation(this, -1U, true);
     workspace()->gotFocusIn(this);   // remove from should_get_focus list
-    if (activate)
+    if (activate) {
         setActive(true);
-    else {
-        workspace()->restoreFocus();
-        demandAttention();
+    } else {
+        if (workspace()->restoreFocus()) {
+            demandAttention();
+        } else {
+            qCWarning(KWIN_CORE, "Failed to restore focus. Activating 0x%x", windowId());
+            setActive(true);
+        }
     }
 }
 
@@ -1294,6 +1336,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     if (newgeom != m_frameGeometry) {
         addWorkspaceRepaint(visibleRect());  // damage old area
         QRect old = m_frameGeometry;
+        m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;
         emit frameGeometryChanged(this, old); // update shadow region
         addRepaintFull();

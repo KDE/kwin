@@ -27,15 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input_event_spy.h"
 #include "osd.h"
 #include "screens.h"
-#include "wayland_cursor_theme.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "decorations/decoratedclient.h"
 // KDecoration
 #include <KDecoration2/Decoration>
 // KWayland
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/buffer.h>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/display.h>
@@ -166,7 +163,6 @@ void PointerInputRedirection::init()
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
-    connect(waylandServer(), &WaylandServer::shellClientAdded, this, setupMoveResizeConnection);
 
     // warp the cursor to center of screen
     warp(screens()->geometry().center());
@@ -568,7 +564,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
     seat->setPointerPos(m_pos.toPoint());
     seat->setFocusedPointerSurface(focusNow->surface(), focusNow->inputTransformation());
 
-    m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
+    m_focusGeometryConnection = connect(focusNow, &Toplevel::inputTransformationChanged, this,
         [this] {
             // TODO: why no assert possible?
             if (!focus()) {
@@ -967,14 +963,11 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
-    connect(waylandServer(), &WaylandServer::shellClientAdded, this, setupMoveResizeConnection);
     loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
 
     m_surfaceRenderedTimer.start();
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
-        m_cursors.clear();
-        m_cursorsByName.clear();
         loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
         updateDecorationCursor();
         updateMoveResize();
@@ -1115,26 +1108,9 @@ void CursorImage::updateServerCursor()
     }
     m_serverCursor.cursor.hotspot = c->hotspot();
     m_serverCursor.cursor.image = buffer->data().copy();
-    m_serverCursor.cursor.image.setDevicePixelRatio(cursorSurface->scale());
+    m_serverCursor.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
     if (needsEmit) {
         emit changed();
-    }
-}
-
-void WaylandCursorImage::loadTheme()
-{
-    if (m_cursorTheme) {
-        return;
-    }
-    // check whether we can create it
-    if (waylandServer()->internalShmPool()) {
-        m_cursorTheme = new WaylandCursorTheme(waylandServer()->internalShmPool(), this);
-        connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this,
-            [this] {
-                delete m_cursorTheme;
-                m_cursorTheme = nullptr;
-            }
-        );
     }
 }
 
@@ -1229,7 +1205,7 @@ void CursorImage::updateDragCursor()
 
     if (additionalIcon.isNull()) {
         m_drag.cursor.image = buffer->data().copy();
-        m_drag.cursor.image.setDevicePixelRatio(cursorSurface->scale());
+        m_drag.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
     } else {
         QRect cursorRect = buffer->data().rect();
         QRect iconRect = additionalIcon.rect();
@@ -1246,7 +1222,7 @@ void CursorImage::updateDragCursor()
         }
 
         m_drag.cursor.image = QImage(cursorRect.united(iconRect).size(), QImage::Format_ARGB32_Premultiplied);
-        m_drag.cursor.image.setDevicePixelRatio(cursorSurface->scale());
+        m_drag.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
         m_drag.cursor.image.fill(Qt::transparent);
         QPainter p(&m_drag.cursor.image);
         p.drawImage(iconRect, additionalIcon);
@@ -1262,56 +1238,90 @@ void CursorImage::updateDragCursor()
 
 void CursorImage::loadThemeCursor(CursorShape shape, WaylandCursorImage::Image *image)
 {
-    m_waylandImage.loadThemeCursor(shape, m_cursors, image);
+    m_waylandImage.loadThemeCursor(shape, image);
 }
 
 void CursorImage::loadThemeCursor(const QByteArray &shape, WaylandCursorImage::Image *image)
 {
-    m_waylandImage.loadThemeCursor(shape, m_cursorsByName, image);
+    m_waylandImage.loadThemeCursor(shape, image);
 }
 
-template <typename T>
-void WaylandCursorImage::loadThemeCursor(const T &shape, Image *image)
+WaylandCursorImage::WaylandCursorImage(QObject *parent)
+    : QObject(parent)
 {
-    loadTheme();
-    if (!m_cursorTheme) {
-        return;
-    }
+    Cursor *pointerCursor = Cursors::self()->mouse();
 
-    image->image = {};
-    wl_cursor_image *cursor = m_cursorTheme->get(shape);
-    if (!cursor) {
-        qDebug() << "Could not find cursor" << shape;
-        return;
-    }
-    wl_buffer *b = wl_cursor_image_get_buffer(cursor);
-    if (!b) {
-        return;
-    }
-    waylandServer()->internalClientConection()->flush();
-    waylandServer()->dispatch();
-    auto buffer = KWaylandServer::BufferInterface::get(waylandServer()->internalConnection()->getResource(KWayland::Client::Buffer::getId(b)));
-    if (!buffer) {
-        return;
-    }
-    auto scale = screens()->maxScale();
-    int hotSpotX = qRound(cursor->hotspot_x / scale);
-    int hotSpotY = qRound(cursor->hotspot_y / scale);
-    QImage img = buffer->data().copy();
-    img.setDevicePixelRatio(scale);
-    *image = {img, QPoint(hotSpotX, hotSpotY)};
+    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::invalidateCursorTheme);
+    connect(screens(), &Screens::maxScaleChanged, this, &WaylandCursorImage::invalidateCursorTheme);
 }
 
-template <typename T>
-void WaylandCursorImage::loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image)
+bool WaylandCursorImage::ensureCursorTheme()
 {
-    auto it = cursors.constFind(shape);
-    if (it == cursors.constEnd()) {
-        loadThemeCursor(shape, image);
-        cursors.insert(shape, *image);
-    } else {
-        *image = it.value();
+    if (!m_cursorTheme.isEmpty()) {
+        return true;
     }
+
+    const Cursor *pointerCursor = Cursors::self()->mouse();
+    const qreal targetDevicePixelRatio = screens()->maxScale();
+
+    m_cursorTheme = KXcursorTheme::fromTheme(pointerCursor->themeName(), pointerCursor->themeSize(),
+                                             targetDevicePixelRatio);
+    if (!m_cursorTheme.isEmpty()) {
+        return true;
+    }
+
+    m_cursorTheme = KXcursorTheme::fromTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(),
+                                             targetDevicePixelRatio);
+    if (!m_cursorTheme.isEmpty()) {
+        return true;
+    }
+
+    return false;
+}
+
+void WaylandCursorImage::invalidateCursorTheme()
+{
+    m_cursorTheme = KXcursorTheme();
+}
+
+void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, Image *cursorImage)
+{
+    loadThemeCursor(shape.name(), cursorImage);
+}
+
+void WaylandCursorImage::loadThemeCursor(const QByteArray &name, Image *cursorImage)
+{
+    if (!ensureCursorTheme()) {
+        return;
+    }
+
+    if (loadThemeCursor_helper(name, cursorImage)) {
+        return;
+    }
+
+    const auto alternativeNames = Cursor::cursorAlternativeNames(name);
+    for (const QByteArray &alternativeName : alternativeNames) {
+        if (loadThemeCursor_helper(alternativeName, cursorImage)) {
+            return;
+        }
+    }
+
+    qCWarning(KWIN_CORE) << "Failed to load theme cursor for shape" << name;
+}
+
+bool WaylandCursorImage::loadThemeCursor_helper(const QByteArray &name, Image *cursorImage)
+{
+    const QVector<KXcursorSprite> sprites = m_cursorTheme.shape(name);
+    if (sprites.isEmpty()) {
+        return false;
+    }
+
+    cursorImage->image = sprites.first().data();
+    cursorImage->image.setDevicePixelRatio(m_cursorTheme.devicePixelRatio());
+
+    cursorImage->hotspot = sprites.first().hotspot();
+
+    return true;
 }
 
 void CursorImage::reevaluteSource()

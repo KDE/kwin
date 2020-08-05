@@ -61,7 +61,7 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
                       10, 10,
                       0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
-                      Xwayland::self()->xcbScreen()->root_visual,
+                      XCB_COPY_FROM_PARENT,
                       XCB_CW_EVENT_MASK,
                       clipboardValues);
     registerXfixes();
@@ -73,15 +73,11 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
     connect(DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionChanged, this, [](KWaylandServer::DataSourceInterface *selection) {
         waylandServer()->seat()->setSelection(selection);
     });
-
-    connect(DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionCleared, this, []() {
-        waylandServer()->seat()->setSelection(nullptr);
-    });
 }
 
 void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
 {
-    if (dsi && dsi->client() != DataBridge::self()->dataDeviceIface()->client()->client()) {
+    if (dsi && !ownsSelection(dsi)) {
         // Wayland native client provides new selection
         if (!m_checkConnection) {
             m_checkConnection = connect(workspace(), &Workspace::clientActivated,
@@ -94,6 +90,11 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
         setWlSource(nullptr);
     }
     checkWlSource();
+}
+
+bool Clipboard::ownsSelection(KWaylandServer::AbstractDataSource *dsi) const
+{
+    return dsi->client() == DataBridge::self()->dataDeviceIface()->client()->client();
 }
 
 void Clipboard::checkWlSource()
@@ -185,7 +186,10 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
             }
         }
     } else {
-        DataBridge::self()->dataDevice()->setSelection(0);
+        KWaylandServer::AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
+        if (currentSelection && !ownsSelection(currentSelection)) {
+            waylandServer()->seat()->setSelection(nullptr);
+        }
     }
 
     waylandServer()->internalClientConection()->flush();

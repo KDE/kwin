@@ -79,8 +79,8 @@ extern bool is_multihead;
 
 ColorMapper::ColorMapper(QObject *parent)
     : QObject(parent)
-    , m_default(defaultScreen()->default_colormap)
-    , m_installed(defaultScreen()->default_colormap)
+    , m_default(kwinApp()->x11DefaultScreen()->default_colormap)
+    , m_installed(kwinApp()->x11DefaultScreen()->default_colormap)
 {
 }
 
@@ -125,10 +125,11 @@ Workspace::Workspace()
     , client_keys_client(nullptr)
     , global_shortcuts_disabled_for_client(false)
     , workspaceInit(true)
-    , startup(nullptr)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
     , m_sessionManager(new SessionManager(this))
+    , m_quickTileCombineTimer(nullptr)
+    , m_lastTilingMode(0)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
@@ -154,6 +155,9 @@ Workspace::Workspace()
     options->loadCompositingConfig(false);
 
     delayFocusTimer = nullptr;
+
+    m_quickTileCombineTimer = new QTimer(this);
+    m_quickTileCombineTimer->setSingleShot(true);
 
     RuleBook::create(this)->load();
 
@@ -290,7 +294,11 @@ void Workspace::init()
 
     active_client = nullptr;
 
-    initWithX11();
+    // We want to have some xcb connection while tearing down X11 components. We don't really
+    // care if the xcb connection is broken or has an error.
+    connect(kwinApp(), &Application::x11ConnectionChanged, this, &Workspace::initializeX11);
+    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this, &Workspace::cleanupX11);
+    initializeX11();
 
     Scripting::create(this);
 
@@ -310,24 +318,22 @@ void Workspace::init()
     // TODO: ungrabXServer()
 }
 
-void Workspace::initWithX11()
+void Workspace::initializeX11()
 {
     if (!kwinApp()->x11Connection()) {
-        connect(kwinApp(), &Application::x11ConnectionChanged, this, &Workspace::initWithX11, Qt::UniqueConnection);
         return;
     }
-    disconnect(kwinApp(), &Application::x11ConnectionChanged, this, &Workspace::initWithX11);
 
     atoms->retrieveHelpers();
 
     // first initialize the extensions
     Xcb::Extensions::self();
-    ColorMapper *colormaps = new ColorMapper(this);
-    connect(this, &Workspace::clientActivated, colormaps, &ColorMapper::update);
+    m_colorMapper.reset(new ColorMapper(this));
+    connect(this, &Workspace::clientActivated, m_colorMapper.data(), &ColorMapper::update);
 
     // Call this before XSelectInput() on the root window
-    startup = new KStartupInfo(
-        KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
+    m_startup.reset(new KStartupInfo(
+        KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this));
 
     // Select windowmanager privileges
     selectWmInputEventMask();
@@ -354,10 +360,7 @@ void Workspace::initWithX11()
     RootInfo *rootInfo = RootInfo::create();
     const auto vds = VirtualDesktopManager::self();
     vds->setRootInfo(rootInfo);
-    // load again to sync to RootInfo, see BUG 385260
-    vds->load();
-    vds->updateRootInfo();
-    rootInfo->setCurrentDesktop(vds->currentDesktop()->x11DesktopNumber());
+    rootInfo->activate();
 
     // TODO: only in X11 mode
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
@@ -453,32 +456,54 @@ void Workspace::initWithX11()
         activateClient(new_active_client);
 }
 
+void Workspace::cleanupX11()
+{
+    // We expect that other components will unregister their X11 event filters after the
+    // connection to the X server has been lost.
+
+    StackingUpdatesBlocker blocker(this);
+
+    // Use stacking_order, so that kwin --replace keeps stacking order.
+    const QList<X11Client *> orderedClients = ensureStackingOrder(clients);
+    for (X11Client *client : orderedClients) {
+        client->releaseWindow(true);
+        unconstrained_stacking_order.removeOne(client);
+        stacking_order.removeOne(client);
+    }
+
+    for (Unmanaged *overrideRedirect : unmanaged) {
+        overrideRedirect->release(ReleaseReason::KWinShutsDown);
+        unconstrained_stacking_order.removeOne(overrideRedirect);
+        stacking_order.removeOne(overrideRedirect);
+    }
+
+    manual_overlays.clear();
+
+    VirtualDesktopManager *desktopManager = VirtualDesktopManager::self();
+    desktopManager->setRootInfo(nullptr);
+
+    X11Client::cleanupX11();
+    RootInfo::destroy();
+    Xcb::Extensions::destroy();
+
+    if (xcb_connection_t *connection = kwinApp()->x11Connection()) {
+        xcb_delete_property(connection, kwinApp()->x11RootWindow(), atoms->kwin_running);
+    }
+
+    m_colorMapper.reset();
+    m_movingClientFilter.reset();
+    m_startup.reset();
+    m_nullFocus.reset();
+    m_syncAlarmFilter.reset();
+    m_wasUserInteractionFilter.reset();
+    m_xStackingQueryTree.reset();
+}
+
 Workspace::~Workspace()
 {
     blockStackingUpdates(true);
 
-    // TODO: grabXServer();
-
-    // Use stacking_order, so that kwin --replace keeps stacking order
-    const QList<Toplevel *> stack = stacking_order;
-    // "mutex" the stackingorder, since anything trying to access it from now on will find
-    // many dangeling pointers and crash
-    stacking_order.clear();
-
-    for (auto it = stack.constBegin(), end = stack.constEnd(); it != end; ++it) {
-        X11Client *c = qobject_cast<X11Client *>(const_cast<Toplevel*>(*it));
-        if (!c) {
-            continue;
-        }
-        // Only release the window
-        c->releaseWindow(true);
-        // No removeClient() is called, it does more than just removing.
-        // However, remove from some lists to e.g. prevent performTransiencyCheck()
-        // from crashing.
-        clients.removeAll(c);
-        m_allClients.removeAll(c);
-    }
-    X11Client::cleanupX11();
+    cleanupX11();
 
     if (waylandServer()) {
         const QList<AbstractClient *> shellClients = waylandServer()->clients();
@@ -487,15 +512,8 @@ Workspace::~Workspace()
         }
     }
 
-    for (auto it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
-        (*it)->release(ReleaseReason::KWinShutsDown);
-
     for (InternalClient *client : m_internalClients) {
         client->destroyClient();
-    }
-
-    if (auto c = kwinApp()->x11Connection()) {
-        xcb_delete_property(c, kwinApp()->x11RootWindow(), atoms->kwin_running);
     }
 
     for (auto it = deleted.begin(); it != deleted.end();) {
@@ -506,15 +524,10 @@ Workspace::~Workspace()
     delete RuleBook::self();
     kwinApp()->config()->sync();
 
-    RootInfo::destroy();
-    delete startup;
     delete Placement::self();
     delete client_keys_dialog;
     qDeleteAll(session);
 
-    // TODO: ungrabXServer();
-
-    Xcb::Extensions::destroy();
     _self = nullptr;
 }
 
@@ -642,7 +655,8 @@ void Workspace::removeClient(X11Client *c)
     if (c == most_recently_raised)
         most_recently_raised = nullptr;
     should_get_focus.removeAll(c);
-    Q_ASSERT(c != active_client);
+    if (c == active_client)
+        active_client = nullptr;
     if (c == last_active_client)
         last_active_client = nullptr;
     if (c == delayfocus_client)
@@ -752,16 +766,21 @@ void Workspace::addShellClient(AbstractClient *client)
         updateStackingOrder(true);
         updateClientArea();
     });
+    emit clientAdded(client);
 }
 
 void Workspace::removeShellClient(AbstractClient *client)
 {
+    clientHidden(client);
     m_allClients.removeAll(client);
     if (client == most_recently_raised) {
         most_recently_raised = nullptr;
     }
     if (client == delayfocus_client) {
         cancelDelayFocus();
+    }
+    if (client == active_client) {
+        active_client = nullptr;
     }
     if (client == last_active_client) {
         last_active_client = nullptr;
@@ -772,7 +791,6 @@ void Workspace::removeShellClient(AbstractClient *client)
     if (!client->shortcut().isEmpty()) {
         client->setShortcut(QString());   // Remove from client_keys
     }
-    clientHidden(client);
     emit clientRemoved(client);
     markXStackingOrderAsDirty();
     updateStackingOrder(true);
@@ -1258,7 +1276,7 @@ void Workspace::cancelDelayFocus()
 
 bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data)
 {
-    return startup->checkStartup(w, id, data) == KStartupInfo::Match;
+    return m_startup->checkStartup(w, id, data) == KStartupInfo::Match;
 }
 
 /**
@@ -1701,7 +1719,7 @@ X11Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
 
 Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) const
 {
-    if (X11Client *ret = Toplevel::findInList(clients, func)) {
+    if (auto *ret = Toplevel::findInList(m_allClients, func)) {
         return ret;
     }
     if (Unmanaged *ret = Toplevel::findInList(unmanaged, func)) {
@@ -1711,6 +1729,13 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
         return ret;
     }
     return nullptr;
+}
+
+Toplevel *Workspace::findToplevel(const QUuid &internalId) const
+{
+    return findToplevel([internalId] (const KWin::Toplevel* l) -> bool {
+        return internalId == l->internalId();
+    });
 }
 
 void Workspace::forEachToplevel(std::function<void (Toplevel *)> func)

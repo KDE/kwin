@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Fading Popups
+Name[az]=Solğunlaşan sürüşən pəncərələr
 Name[ca]=Missatges emergents esvaïts
 Name[ca@valencia]=Missatges emergents que es fonen
 Name[cs]=Mizející vyskakovací okna
@@ -33,6 +34,7 @@ Name[zh_CN]=气泡通知渐隐渐现
 Name[zh_TW]=淡化彈出視窗
 Icon=preferences-system-windows-effect-fadingpopups
 Comment=Make popups smoothly fade in and out when they are shown or hidden
+Comment[az]=Sürüşən pəncərələr getdikcə şəffaflaşır və sonda tam yox olur
 Comment[ca]=Fa que els missatges emergents s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten
 Comment[ca@valencia]=Fa que els missatges emergents s'encenguen o s'apaguen de manera gradual quan es mostren o s'oculten
 Comment[cs]=Nechá vyskakovací okna plynule zmizet/objevit se, pokud jsou zobrazeny resp. skryty

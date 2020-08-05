@@ -1,6 +1,7 @@
 {
     "KPlugin": {
         "Description": "Render to a nested window on running Wayland compositor.",
+        "Description[az]": "Wayland birləşdiricisində iç-içə keçmiş pəncərələri formalaşdırmaq.",
         "Description[ca@valencia]": "Renderitza en una finestra imbricada en un compositor Wayland en execució.",
         "Description[ca]": "Renderitza a una finestra imbricada en un compositor Wayland en execució.",
         "Description[da]": "Rendér til et indlejret vindue på kørende Wayland-compositor.",
@@ -38,6 +39,7 @@
         "Description[zh_TW]": "成像到執行中的 Wayland 的巢狀視窗。",
         "Id": "KWinWaylandWaylandBackend",
         "Name": "wayland",
+        "Name[az]": "wayland",
         "Name[ca@valencia]": "Wayland",
         "Name[ca]": "Wayland",
         "Name[cs]": "wayland",

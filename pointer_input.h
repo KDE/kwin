@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "input.h"
 #include "cursor.h"
+#include "xcursortheme.h"
 
 #include <QElapsedTimer>
 #include <QObject>
@@ -42,7 +43,6 @@ namespace KWin
 class CursorImage;
 class InputRedirection;
 class Toplevel;
-class WaylandCursorTheme;
 class CursorShape;
 
 namespace Decoration
@@ -181,22 +181,25 @@ class WaylandCursorImage : public QObject
 {
     Q_OBJECT
 public:
-    void loadTheme();
+    explicit WaylandCursorImage(QObject *parent = nullptr);
+
     struct Image {
         QImage image;
         QPoint hotspot;
     };
-    template <typename T>
-    void loadThemeCursor(const T &shape, Image *image);
 
-    template <typename T>
-    void loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image);
+    void loadThemeCursor(const CursorShape &shape, Image *cursorImage);
+    void loadThemeCursor(const QByteArray &name, Image *cursorImage);
 
 Q_SIGNALS:
     void themeChanged();
 
 private:
-    WaylandCursorTheme *m_cursorTheme = nullptr;
+    bool loadThemeCursor_helper(const QByteArray &name, Image *cursorImage);
+    bool ensureCursorTheme();
+    void invalidateCursorTheme();
+
+    KXcursorTheme m_cursorTheme;
 };
 
 class CursorImage : public QObject
@@ -253,8 +256,6 @@ private:
     WaylandCursorImage::Image m_fallbackCursor;
     WaylandCursorImage::Image m_moveResizeCursor;
     WaylandCursorImage::Image m_windowSelectionCursor;
-    QHash<CursorShape, WaylandCursorImage::Image> m_cursors;
-    QHash<QByteArray, WaylandCursorImage::Image> m_cursorsByName;
     QElapsedTimer m_surfaceRenderedTimer;
     struct {
         WaylandCursorImage::Image cursor;

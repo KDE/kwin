@@ -287,6 +287,9 @@ void AbstractClient::setIcon(const QIcon &icon)
 
 void AbstractClient::setActive(bool act)
 {
+    if (isZombie()) {
+        return;
+    }
     if (m_active == act) {
         return;
     }
@@ -319,6 +322,17 @@ void AbstractClient::setActive(bool act)
 
 void AbstractClient::doSetActive()
 {
+}
+
+bool AbstractClient::isZombie() const
+{
+    return m_zombie;
+}
+
+void AbstractClient::markAsZombie()
+{
+    Q_ASSERT(!m_zombie);
+    m_zombie = true;
 }
 
 Layer AbstractClient::layer() const
@@ -467,6 +481,12 @@ void AbstractClient::autoRaise()
 {
     workspace()->raiseClient(this);
     cancelAutoRaise();
+}
+
+bool AbstractClient::isMostRecentlyRaised() const
+{
+    // The last toplevel in the unconstrained stacking order is the most recently raised one.
+    return workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
 }
 
 bool AbstractClient::wantsTabFocus() const
@@ -777,7 +797,6 @@ void AbstractClient::minimize(bool avoid_animation)
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
-    FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
     // TODO: merge signal with s_minimized
     addWorkspaceRepaint(visibleRect());
     emit clientMinimized(this, !avoid_animation);
@@ -969,14 +988,19 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
             setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
     doMove(x, y);
+    updateGeometryBeforeUpdateBlocking();
     updateWindowRules(Rules::Position);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     // client itself is not damaged
-    emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    emit bufferGeometryChanged(this, oldBufferGeometry);
+    emit clientGeometryChanged(this, oldClientGeometry);
+    emit frameGeometryChanged(this, oldFrameGeometry);
     addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
 }
 
 bool AbstractClient::startMoveResize()
@@ -1116,7 +1140,7 @@ void AbstractClient::checkUnrestrictedMoveResize()
     }
 }
 
-// When the user pressed mouse on the titlebar, don't activate move immediatelly,
+// When the user pressed mouse on the titlebar, don't activate move immediately,
 // since it may be just a click. Activate instead after a delay. Move used to be
 // activated only after moving by several pixels, but that looks bad.
 void AbstractClient::startDelayedMoveResize()
@@ -1518,7 +1542,7 @@ void AbstractClient::setupWindowManagementInterface()
         return;
     }
     using namespace KWaylandServer;
-    auto w = waylandServer()->windowManagement()->createWindow(waylandServer()->windowManagement());
+    auto w = waylandServer()->windowManagement()->createWindow(waylandServer()->windowManagement(), internalId());
     w->setTitle(caption());
     w->setVirtualDesktop(isOnAllDesktops() ? 0 : desktop() - 1);
     w->setActive(isActive());
@@ -1720,7 +1744,7 @@ Options::MouseCommand AbstractClient::getMouseCommand(Qt::MouseButton button, bo
         return Options::MouseNothing;
     }
     if (isActive()) {
-        if (options->isClickRaise()) {
+        if (options->isClickRaise() && !isMostRecentlyRaised()) {
             *handled = true;
             return Options::MouseActivateRaiseAndPassClick;
         }
@@ -2079,10 +2103,16 @@ QRect AbstractClient::frameGeometryBeforeUpdateBlocking() const
     return m_frameGeometryBeforeUpdateBlocking;
 }
 
+QRect AbstractClient::clientGeometryBeforeUpdateBlocking() const
+{
+    return m_clientGeometryBeforeUpdateBlocking;
+}
+
 void AbstractClient::updateGeometryBeforeUpdateBlocking()
 {
     m_bufferGeometryBeforeUpdateBlocking = bufferGeometry();
     m_frameGeometryBeforeUpdateBlocking = frameGeometry();
+    m_clientGeometryBeforeUpdateBlocking = clientGeometry();
 }
 
 void AbstractClient::updateTabGroupStates(TabGroup::States)
@@ -3137,7 +3167,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
         return;
 
     if (maximizeMode() != MaximizeRestore) {
-        // TODO update geom_restore?
+        GeometryUpdatesBlocker block(this);
         changeMaximize(false, false, true);   // adjust size
         const QRect screenArea = workspace()->clientArea(ScreenArea, this);
         QRect geom = frameGeometry();

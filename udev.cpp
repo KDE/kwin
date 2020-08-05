@@ -139,6 +139,9 @@ UdevDevice::Ptr Udev::primaryGpu()
     if (!m_udev) {
         return UdevDevice::Ptr();
     }
+#if defined(Q_OS_FREEBSD)
+    return deviceFromSyspath("/dev/dri/card0");
+#else
     UdevEnumerate enumerate(this);
     enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
     enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]*");
@@ -154,6 +157,7 @@ UdevDevice::Ptr Udev::primaryGpu()
         }
         return false;
     });
+#endif
 }
 
 UdevDevice::Ptr Udev::primaryFramebuffer()

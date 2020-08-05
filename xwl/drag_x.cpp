@@ -304,7 +304,7 @@ WlVisit::WlVisit(AbstractClient *target, XToWlDrag *drag)
                       8192, 8192,           // TODO: get current screen size and connect to changes
                       0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT,
-                      Xwayland::self()->xcbScreen()->root_visual,
+                      XCB_COPY_FROM_PARENT,
                       XCB_CW_EVENT_MASK,
                       dndValues);
 

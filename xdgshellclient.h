@@ -66,7 +66,6 @@ public:
 
     QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
-    QSize clientSize() const override;
     QMatrix4x4 inputTransformation() const override;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::move;
@@ -83,7 +82,6 @@ public:
     QRect requestedClientGeometry() const;
     QSize requestedClientSize() const;
     QRect clientGeometry() const;
-    bool isClosing() const;
     bool isHidden() const;
 
 protected:
@@ -122,8 +120,6 @@ private:
     QRect m_requestedFrameGeometry;
     QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;
-    QRect m_clientGeometry;
-    bool m_isClosing = false;
     bool m_isHidden = false;
     bool m_haveNextWindowGeometry = false;
 };
@@ -168,7 +164,7 @@ public:
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void updateColorScheme() override;
     bool supportsWindowRules() const override;
-    void takeFocus() override;
+    bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
     bool hasStrut() const override;
@@ -223,6 +219,8 @@ private:
     void setupWindowManagementIntegration();
     void setupPlasmaShellIntegration();
     void sendPing(PingReason reason);
+    MaximizeMode initialMaximizeMode() const;
+    bool initialFullScreenMode() const;
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
@@ -232,12 +230,14 @@ private:
     KWaylandServer::XdgToplevelInterface *m_shellSurface;
     KWaylandServer::XdgToplevelInterface::States m_requestedStates;
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
+    KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
     QRect m_fullScreenGeometryRestore;
     NET::WindowType m_windowType = NET::Normal;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
     bool m_isFullScreen = false;
+    bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;
 };
@@ -270,7 +270,7 @@ public:
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void showOnScreenEdge() override;
     bool wantsInput() const override;
-    void takeFocus() override;
+    bool takeFocus() override;
     bool supportsWindowRules() const override;
 
 protected:

@@ -51,7 +51,6 @@ public:
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPoint clientPos() const override;
-    QSize clientSize() const override;
     QPoint clientContentPos() const override {
         return m_contentPos;
     }

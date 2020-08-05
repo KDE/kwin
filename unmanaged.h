@@ -28,8 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class Unmanaged
-    : public Toplevel
+class KWIN_EXPORT Unmanaged : public Toplevel
 {
     Q_OBJECT
 public:
@@ -43,7 +42,6 @@ public:
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPoint clientPos() const override;
-    QSize clientSize() const override;
     QRect transparentRect() const override;
     Layer layer() const override {
         return UnmanagedLayer;
