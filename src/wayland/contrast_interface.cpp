@@ -18,10 +18,8 @@ namespace KWaylandServer
 class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
 {
 public:
-    ContrastManagerInterfacePrivate(ContrastManagerInterface *_q, Display *display);
-    ~ContrastManagerInterfacePrivate() = default;
+    ContrastManagerInterfacePrivate(Display *display);
 private:
-    ContrastManagerInterface *q;
     static const quint32 s_version;
 
 protected:
@@ -31,9 +29,8 @@ protected:
 
 const quint32 ContrastManagerInterfacePrivate::s_version = 1;
 
-ContrastManagerInterfacePrivate::ContrastManagerInterfacePrivate(ContrastManagerInterface *_q, Display *display)
+ContrastManagerInterfacePrivate::ContrastManagerInterfacePrivate(Display *display)
     : QtWaylandServer::org_kde_kwin_contrast_manager(*display, s_version)
-    , q(_q)
 {
 }
 
@@ -68,7 +65,7 @@ void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_unset(Resour
 
 ContrastManagerInterface::ContrastManagerInterface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new ContrastManagerInterfacePrivate(this, display))
+    , d(new ContrastManagerInterfacePrivate(display))
 {
 }
 
@@ -78,7 +75,6 @@ class ContrastInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast
 {
 public:
     ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource);
-    ~ContrastInterfacePrivate() = default;
 
     QRegion pendingRegion;
     QRegion currentRegion;
@@ -88,8 +84,6 @@ public:
     qreal currentIntensity;
     qreal pendingSaturation;
     qreal currentSaturation;
-
-private:
     ContrastInterface *q;
 
 protected:
@@ -100,7 +94,6 @@ protected:
     void org_kde_kwin_contrast_set_saturation(Resource *resource, wl_fixed_t saturation) override;
     void org_kde_kwin_contrast_release(Resource *resource) override;
     void org_kde_kwin_contrast_destroy_resource(Resource *resource) override;
-    
 
 };
 

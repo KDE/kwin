@@ -28,8 +28,8 @@ private:
     static const quint32 s_version;
 
 protected:
-    void org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface);
-    void org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface);
+    void org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
+    void org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface) override;
 };
 
 const quint32 BlurManagerInterfacePrivate::s_version = 1;
@@ -87,10 +87,10 @@ public:
     BlurInterface *q;
 
 protected:
-    void org_kde_kwin_blur_destroy_resource(Resource *resource);
-    void org_kde_kwin_blur_commit(Resource *resource);
-    void org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region);
-    void org_kde_kwin_blur_release(Resource *resource);
+    void org_kde_kwin_blur_destroy_resource(Resource *resource) override;
+    void org_kde_kwin_blur_commit(Resource *resource) override;
+    void org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region) override;
+    void org_kde_kwin_blur_release(Resource *resource) override;
 };
 
 void BlurInterfacePrivate::org_kde_kwin_blur_commit(Resource *resource)
@@ -110,12 +110,12 @@ void BlurInterfacePrivate::org_kde_kwin_blur_set_region(Resource *resource, wl_r
     }
 }
 
-void BlurInterfacePrivate::org_kde_kwin_blur_release(QtWaylandServer::org_kde_kwin_blur::Resource *resource)
+void BlurInterfacePrivate::org_kde_kwin_blur_release(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
 
-void BlurInterfacePrivate::org_kde_kwin_blur_destroy_resource(QtWaylandServer::org_kde_kwin_blur::Resource *resource)
+void BlurInterfacePrivate::org_kde_kwin_blur_destroy_resource(Resource *resource)
 {
     Q_UNUSED(resource)
     delete q;

@@ -89,7 +89,6 @@ private:
     QVector<SurfaceInterface *> m_surfaces;
     QVector<wl_surface *> m_clientSurfaces;
     KeyboardShortcutsInhibitManager *m_inhibitManagerClient = nullptr;
-    QVector<KeyboardShortcutsInhibitor *> *m_inhibitors;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-keyboard-shortcuts-inhibitor-test-0");

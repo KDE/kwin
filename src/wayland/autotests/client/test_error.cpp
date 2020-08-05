@@ -19,7 +19,7 @@
 
 #include <wayland-client-protocol.h>
 
-#include <errno.h>  // For EPROTO
+#include <cerrno>  // For EPROTO
 
 using namespace KWayland::Client;
 using namespace KWaylandServer;
@@ -41,7 +41,6 @@ private:
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
     Compositor *m_compositor = nullptr;
-    Shell *m_shell = nullptr;
     PlasmaShell *m_plasmaShell = nullptr;
 };
 
@@ -102,7 +101,6 @@ void ErrorTest::cleanup()
         variable = nullptr; \
     }
     CLEANUP(m_plasmaShell)
-    CLEANUP(m_shell)
     CLEANUP(m_compositor)
     CLEANUP(m_queue)
     if (m_connection) {
