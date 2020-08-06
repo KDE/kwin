@@ -2190,8 +2190,11 @@ void Workspace::updateClientArea(bool force)
 
         for (auto it = m_allClients.constBegin();
                 it != m_allClients.constEnd();
-                ++it)
-            (*it)->checkWorkspacePosition();
+                ++it) {
+            if (!(*it)->isInputMethod()) {
+                (*it)->checkWorkspacePosition();
+            }
+        }
 
         oldrestrictedmovearea.clear(); // reset, no longer valid or needed
     }
