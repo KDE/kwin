@@ -285,12 +285,18 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 void SceneQPainter::Window::renderWindowPixmap(QPainter *painter, QPainterWindowPixmap *windowPixmap)
 {
     const QRegion shape = windowPixmap->shape();
-    for (const QRectF &rect : shape) {
-        const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
-        const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
+    for (const QRect &rect : shape) {
+        const qreal left = rect.x();
+        const qreal top = rect.y();
 
-        const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
-        const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
+        const qreal right = rect.x() + rect.width();
+        const qreal bottom = rect.y() + rect.height();
+
+        const QPointF windowTopLeft = windowPixmap->mapToWindow(QPointF(left, top));
+        const QPointF windowBottomRight = windowPixmap->mapToWindow(QPointF(right, bottom));
+
+        const QPointF bufferTopLeft = windowPixmap->mapToBuffer(QPointF(left, top));
+        const QPointF bufferBottomRight = windowPixmap->mapToBuffer(QPointF(right, bottom));
 
         painter->drawImage(QRectF(windowTopLeft, windowBottomRight),
                            windowPixmap->image(),

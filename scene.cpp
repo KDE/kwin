@@ -1024,21 +1024,27 @@ WindowQuadList Scene::Window::makeContentsQuads() const
         const QRegion region = windowPixmap->shape();
         const int quadId = id++;
 
-        for (const QRectF &rect : region) {
+        for (const QRect &rect : region) {
             // Note that the window quad id is not unique if the window is shaped, i.e. the
             // region contains more than just one rectangle. We assume that the "source" quad
             // had been subdivided.
             WindowQuad quad(WindowQuadContents, quadId);
 
-            const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
-            const QPointF windowTopRight = windowPixmap->mapToWindow(rect.topRight());
-            const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
-            const QPointF windowBottomLeft = windowPixmap->mapToWindow(rect.bottomLeft());
+            const qreal left = rect.x();
+            const qreal top = rect.y();
 
-            const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
-            const QPointF bufferTopRight = windowPixmap->mapToBuffer(rect.topRight());
-            const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
-            const QPointF bufferBottomLeft = windowPixmap->mapToBuffer(rect.bottomLeft());
+            const qreal right = rect.x() + rect.width();
+            const qreal bottom = rect.y() + rect.height();
+
+            const QPointF windowTopLeft = windowPixmap->mapToWindow(QPointF(left, top));
+            const QPointF windowTopRight = windowPixmap->mapToWindow(QPointF(right, top));
+            const QPointF windowBottomRight = windowPixmap->mapToWindow(QPointF(right, bottom));
+            const QPointF windowBottomLeft = windowPixmap->mapToWindow(QPointF(left, bottom));
+
+            const QPointF bufferTopLeft = windowPixmap->mapToBuffer(QPointF(left, top));
+            const QPointF bufferTopRight = windowPixmap->mapToBuffer(QPointF(right, top));
+            const QPointF bufferBottomRight = windowPixmap->mapToBuffer(QPointF(right, bottom));
+            const QPointF bufferBottomLeft = windowPixmap->mapToBuffer(QPointF(left, bottom));
 
             quad[0] = WindowVertex(windowTopLeft, bufferTopLeft);
             quad[1] = WindowVertex(windowTopRight, bufferTopRight);
