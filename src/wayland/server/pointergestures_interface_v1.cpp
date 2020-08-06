@@ -30,7 +30,6 @@ private:
 
     static void getSwipeGestureCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource * pointer);
     static void getPinchGestureCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource * pointer);
-    static void releaseCallback(wl_client *client, wl_resource *resource);
 
     PointerGesturesUnstableV1Interface *q;
     static const struct zwp_pointer_gestures_v1_interface s_interface;
@@ -42,8 +41,7 @@ const quint32 PointerGesturesUnstableV1Interface::Private::s_version = 1;
 #ifndef K_DOXYGEN
 const struct zwp_pointer_gestures_v1_interface PointerGesturesUnstableV1Interface::Private::s_interface = {
     getSwipeGestureCallback,
-    getPinchGestureCallback,
-    releaseCallback
+    getPinchGestureCallback
 };
 #endif
 
@@ -71,12 +69,6 @@ void PointerGesturesUnstableV1Interface::Private::getPinchGestureCallback(wl_cli
     auto *g = new PointerPinchGestureUnstableV1Interface(m->q, resource, p);
     g->d->create(m->display->getConnection(client), version, id);
     p->d_func()->registerPinchGesture(g);
-}
-
-void PointerGesturesUnstableV1Interface::Private::releaseCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    wl_resource_destroy(resource);
 }
 
 PointerGesturesUnstableV1Interface::Private::Private(PointerGesturesUnstableV1Interface *q, Display *d)
