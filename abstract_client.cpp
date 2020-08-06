@@ -280,6 +280,8 @@ Layer AbstractClient::belongsToLayer() const
         return UnmanagedLayer;
     if (isLockScreen())
         return UnmanagedLayer;
+    if (isInputMethod())
+        return UnmanagedLayer;
     if (isDesktop())
         return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
     if (isSplash())          // no damn annoying splashscreens
