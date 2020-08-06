@@ -12,8 +12,9 @@
 #include "transfer.h"
 
 #include "atoms.h"
-#include "x11client.h"
 #include "workspace.h"
+#include "x11client.h"
+#include "xcbutils.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
@@ -124,6 +125,9 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
     case XCB_CLIENT_MESSAGE:
         return handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event));
     default:
+        if (event->response_type == Xcb::Extensions::self()->fixesSelectionNotifyEvent()) {
+            return handleXfixesNotify(reinterpret_cast<xcb_xfixes_selection_notify_event_t *>(event));
+        }
         return false;
     }
 }
