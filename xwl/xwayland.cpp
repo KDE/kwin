@@ -187,10 +187,6 @@ void Xwayland::dispatchEvents()
     }
 
     while (xcb_generic_event_t *event = xcb_poll_for_event(connection)) {
-        if (m_dataBridge->filterEvent(event)) {
-            free(event);
-            continue;
-        }
         long result = 0;
         QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
         dispatcher->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result);

@@ -81,15 +81,14 @@ void DataBridge::init()
     m_clipboard = new Clipboard(atoms->clipboard, this);
     m_dnd = new Dnd(atoms->xdnd_selection, this);
     waylandServer()->dispatch();
+    kwinApp()->installNativeEventFilter(this);
 }
 
-bool DataBridge::filterEvent(xcb_generic_event_t *event)
+bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
 {
-    if (m_clipboard && m_clipboard->filterEvent(event)) {
-        return true;
-    }
-    if (m_dnd && m_dnd->filterEvent(event)) {
-        return true;
+    if (eventType == "xcb_generic_event_t") {
+        xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);
+        return m_clipboard->filterEvent(event) || m_dnd->filterEvent(event);
     }
     return false;
 }

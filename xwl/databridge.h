@@ -9,6 +9,7 @@
 #ifndef KWIN_XWL_DATABRIDGE
 #define KWIN_XWL_DATABRIDGE
 
+#include <QAbstractNativeEventFilter>
 #include <QObject>
 #include <QPoint>
 
@@ -42,7 +43,7 @@ enum class DragEventReply;
  *
  * Exists only once per Xwayland session.
  */
-class DataBridge : public QObject
+class DataBridge : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 
@@ -52,7 +53,6 @@ public:
     explicit DataBridge(QObject *parent = nullptr);
     ~DataBridge() override;
 
-    bool filterEvent(xcb_generic_event_t *event);
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
 
     KWayland::Client::DataDevice *dataDevice() const
@@ -67,6 +67,8 @@ public:
     {
         return m_dnd;
     }
+
+    bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
 
 private:
     void init();
