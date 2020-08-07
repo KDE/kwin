@@ -75,7 +75,6 @@ protected:
     virtual void updateGeometry(const QRect &rect);
 
 private:
-    void updateClientArea();
     void updateClientOutputs();
     void updateIcon();
     void updateResourceName();

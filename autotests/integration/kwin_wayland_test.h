@@ -17,6 +17,8 @@
 // KWayland
 #include <KWayland/Client/xdgshell.h>
 
+#include "qwayland-wlr-layer-shell-unstable-v1.h"
+
 namespace KWayland
 {
 namespace Client
@@ -83,6 +85,28 @@ namespace Test
 
 class MockInputMethod;
 
+class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
+{
+public:
+    ~LayerShellV1() override;
+};
+
+class LayerSurfaceV1 : public QObject, public QtWayland::zwlr_layer_surface_v1
+{
+    Q_OBJECT
+
+public:
+    ~LayerSurfaceV1() override;
+
+protected:
+    void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
+    void zwlr_layer_surface_v1_closed() override;
+
+Q_SIGNALS:
+    void closeRequested();
+    void configureRequested(quint32 serial, const QSize &size);
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -95,7 +119,8 @@ enum class AdditionalWaylandInterface {
     XdgDecoration = 1 << 8,
     OutputManagement = 1 << 9,
     TextInputManagerV2 = 1 << 10,
-    InputMethodV1 = 1 << 11
+    InputMethodV1 = 1 << 11,
+    LayerShellV1 = 1 << 12,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -129,6 +154,7 @@ KWayland::Client::AppMenuManager *waylandAppMenuManager();
 KWayland::Client::XdgDecorationManager *xdgDecorationManager();
 KWayland::Client::OutputManagement *waylandOutputManagement();
 KWayland::Client::TextInputManager *waylandTextInputManager();
+QVector<KWayland::Client::Output *> waylandOutputs();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
@@ -139,6 +165,12 @@ void flushWaylandConnection();
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
+
+LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface,
+                                     const QString &scope,
+                                     KWayland::Client::Output *output = nullptr,
+                                     LayerShellV1::layer layer = LayerShellV1::layer_top);
+
 enum class XdgShellSurfaceType {
     XdgShellStable
 };

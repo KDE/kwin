@@ -49,6 +49,12 @@ StrutRect::StrutRect(QRect rect, StrutArea area)
 {
 }
 
+StrutRect::StrutRect(int x, int y, int width, int height, StrutArea area)
+    : QRect(x, y, width, height)
+    , m_area(area)
+{
+}
+
 StrutRect::StrutRect(const StrutRect& other)
     : QRect(other)
     , m_area(other.area())

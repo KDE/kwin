@@ -54,6 +54,26 @@ namespace KWin
 namespace Test
 {
 
+LayerShellV1::~LayerShellV1()
+{
+    destroy();
+}
+
+LayerSurfaceV1::~LayerSurfaceV1()
+{
+    destroy();
+}
+
+void LayerSurfaceV1::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
+{
+    emit configureRequested(serial, QSize(width, height));
+}
+
+void LayerSurfaceV1::zwlr_layer_surface_v1_closed()
+{
+    emit closeRequested();
+}
+
 static struct {
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
@@ -78,6 +98,7 @@ static struct {
     QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
     MockInputMethod *inputMethodV1 = nullptr;
     QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
+    LayerShellV1 *layerShellV1 = nullptr;
 } s_waylandConnection;
 
 class MockInputMethod : public QtWayland::zwp_input_method_v1
@@ -184,6 +205,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 s_waylandConnection.inputMethodV1 = new MockInputMethod(*registry, name, version);
             } else if (interface == QByteArrayLiteral("zwp_input_panel_v1")) {
                 s_waylandConnection.inputPanelV1 = new QtWayland::zwp_input_panel_v1(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::LayerShellV1) {
+            if (interface == QByteArrayLiteral("zwlr_layer_shell_v1")) {
+                s_waylandConnection.layerShellV1 = new LayerShellV1();
+                s_waylandConnection.layerShellV1->init(*registry, name, version);
             }
         }
     });
@@ -332,6 +359,8 @@ void destroyWaylandConnection()
     s_waylandConnection.textInputManager = nullptr;
     delete s_waylandConnection.inputPanelV1;
     s_waylandConnection.inputPanelV1 = nullptr;
+    delete s_waylandConnection.layerShellV1;
+    s_waylandConnection.layerShellV1 = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
@@ -421,6 +450,10 @@ TextInputManager *waylandTextInputManager()
     return s_waylandConnection.textInputManager;
 }
 
+QVector<KWayland::Client::Output *> waylandOutputs()
+{
+    return s_waylandConnection.outputs;
+}
 
 bool waitForWaylandPointer()
 {
@@ -529,6 +562,25 @@ SubSurface *createSubSurface(Surface *surface, Surface *parentSurface, QObject *
         return nullptr;
     }
     return s;
+}
+
+LayerSurfaceV1 *createLayerSurfaceV1(Surface *surface, const QString &scope, Output *output, LayerShellV1::layer layer)
+{
+    LayerShellV1 *shell = s_waylandConnection.layerShellV1;
+    if (!shell) {
+        qWarning() << "Could not create a layer surface because the layer shell global is not bound";
+        return nullptr;
+    }
+
+    struct ::wl_output *nativeOutput = nullptr;
+    if (output) {
+        nativeOutput = *output;
+    }
+
+    LayerSurfaceV1 *shellSurface = new LayerSurfaceV1();
+    shellSurface->init(shell->get_layer_surface(*surface, nativeOutput, layer, scope));
+
+    return shellSurface;
 }
 
 XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent, CreationSetup creationSetup)

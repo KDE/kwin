@@ -50,8 +50,6 @@ WaylandClient::WaylandClient(SurfaceInterface *surface)
 
     connect(this, &WaylandClient::frameGeometryChanged,
             this, &WaylandClient::updateClientOutputs);
-    connect(this, &WaylandClient::frameGeometryChanged,
-            this, &WaylandClient::updateClientArea);
     connect(this, &WaylandClient::desktopFileNameChanged,
             this, &WaylandClient::updateIcon);
     connect(screens(), &Screens::changed, this,
@@ -206,13 +204,6 @@ bool WaylandClient::belongsToDesktop() const
             return false;
         }
     );
-}
-
-void WaylandClient::updateClientArea()
-{
-    if (hasStrut()) {
-        workspace()->updateClientArea();
-    }
 }
 
 void WaylandClient::updateClientOutputs()

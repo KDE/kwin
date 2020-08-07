@@ -1500,6 +1500,13 @@ void XdgToplevelClient::updateShowOnScreenEdge()
     }
 }
 
+void XdgToplevelClient::updateClientArea()
+{
+    if (hasStrut()) {
+        workspace()->updateClientArea();
+    }
+}
+
 void XdgToplevelClient::setupWindowManagementIntegration()
 {
     if (isLockScreen()) {
@@ -1513,6 +1520,8 @@ void XdgToplevelClient::setupPlasmaShellIntegration()
 {
     connect(surface(), &SurfaceInterface::mapped,
             this, &XdgToplevelClient::updateShowOnScreenEdge);
+    connect(this, &XdgToplevelClient::frameGeometryChanged,
+            this, &XdgToplevelClient::updateClientArea);
 }
 
 void XdgToplevelClient::setFullScreen(bool set, bool user)

@@ -14,6 +14,7 @@
 #include "idle_inhibition.h"
 #include "inputpanelv1client.h"
 #include "screens.h"
+#include "layershellv1integration.h"
 #include "waylandxdgshellintegration.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
@@ -366,9 +367,13 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_tabletManager = m_display->createTabletManagerInterface(m_display);
     m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
 
-    auto shellIntegration = new WaylandXdgShellIntegration(this);
-    connect(shellIntegration, &WaylandXdgShellIntegration::clientCreated,
+    auto xdgShellIntegration = new WaylandXdgShellIntegration(this);
+    connect(xdgShellIntegration, &WaylandXdgShellIntegration::clientCreated,
             this, &WaylandServer::registerXdgGenericClient);
+
+    auto layerShellV1Integration = new LayerShellV1Integration(this);
+    connect(layerShellV1Integration, &LayerShellV1Integration::clientCreated,
+            this, &WaylandServer::registerShellClient);
 
     m_xdgDecorationManagerV1 = m_display->createXdgDecorationManagerV1(m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this,

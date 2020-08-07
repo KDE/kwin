@@ -13,6 +13,10 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
     BASENAME input-method-unstable-v1
 )
+ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
+    BASENAME wlr-layer-shell-unstable-v1
+)
 add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
 target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test Wayland::Client)
 
@@ -63,6 +67,7 @@ integrationTest(WAYLAND_ONLY NAME testKeymapCreationFailure SRCS keymap_creation
 integrationTest(WAYLAND_ONLY NAME testShowingDesktop SRCS showing_desktop_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testDontCrashUseractionsMenu SRCS dont_crash_useractions_menu.cpp)
 integrationTest(WAYLAND_ONLY NAME testKWinBindings SRCS kwinbindings_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testLayerShellV1Client SRCS layershellv1client_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testXdgShellClientRules SRCS xdgshellclient_rules_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testIdleInhibition SRCS idle_inhibition_test.cpp)

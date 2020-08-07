@@ -186,6 +186,7 @@ private:
     void updateMaximizeMode(MaximizeMode maximizeMode);
     void updateFullScreenMode(bool set);
     void updateShowOnScreenEdge();
+    void updateClientArea();
     void setupWindowManagementIntegration();
     void setupPlasmaShellIntegration();
     void sendPing(PingReason reason);

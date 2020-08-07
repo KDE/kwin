@@ -476,6 +476,8 @@ set(kwin_SRCS
     keyboard_repeat.cpp
     killwindow.cpp
     layers.cpp
+    layershellv1client.cpp
+    layershellv1integration.cpp
     libinput/connection.cpp
     libinput/context.cpp
     libinput/device.cpp
