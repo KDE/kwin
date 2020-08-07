@@ -1844,15 +1844,6 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
             this, &XdgPopupClient::initialize);
     connect(shellSurface, &XdgPopupInterface::destroyed,
             this, &XdgPopupClient::destroyClient);
-
-    // The xdg-shell spec states that the parent xdg-surface may be null if it is specified
-    // via "some other protocol," but we don't support any such protocol yet. Notice that the
-    // xdg-foreign protocol is only for toplevel surfaces.
-
-    XdgSurfaceInterface *parentShellSurface = shellSurface->parentXdgSurface();
-    AbstractClient *parentClient = waylandServer()->findClient(parentShellSurface->surface());
-    parentClient->addTransient(this);
-    setTransientFor(parentClient);
 }
 
 XdgPopupClient::~XdgPopupClient()
@@ -2131,6 +2122,10 @@ void XdgPopupClient::handleGrabRequested(SeatInterface *seat, quint32 serial)
 
 void XdgPopupClient::initialize()
 {
+    AbstractClient *parentClient = waylandServer()->findClient(m_shellSurface->parentSurface());
+    parentClient->addTransient(this);
+    setTransientFor(parentClient);
+
     const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
     placeIn(area);
 
