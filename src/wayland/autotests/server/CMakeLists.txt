@@ -99,3 +99,19 @@ add_executable(testInputMethodInterface test_inputmethod_interface.cpp ${INPUTME
 target_link_libraries(testInputMethodInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testInputMethodInterface COMMAND testInputMethodInterface)
 ecm_mark_as_test(testInputMethodInterface)
+
+########################################################
+# Test LayerShellV1 Interface
+########################################################
+ecm_add_qtwayland_client_protocol(LAYERSHELLV1_SRCS
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/protocols/wlr-layer-shell-unstable-v1.xml
+    BASENAME wlr-layer-shell-unstable-v1
+)
+ecm_add_qtwayland_client_protocol(LAYERSHELLV1_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+    BASENAME xdg-shell
+)
+add_executable(testLayerShellV1Interface test_layershellv1_interface.cpp ${LAYERSHELLV1_SRCS})
+target_link_libraries(testLayerShellV1Interface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testLayerShellV1Interface COMMAND testLayerShellV1Interface)
+ecm_mark_as_test(testLayerShellV1Interface)

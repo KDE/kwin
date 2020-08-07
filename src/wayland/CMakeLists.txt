@@ -26,6 +26,7 @@ set(SERVER_LIB_SRCS
     keyboard_interface.cpp
     keyboard_shortcuts_inhibit_v1_interface.cpp
     keystate_interface.cpp
+    layershell_v1_interface.cpp
     linuxdmabuf_v1_interface.cpp
     output_interface.cpp
     outputchangeset.cpp
@@ -244,6 +245,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
 )
 
 ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/protocols/wlr-layer-shell-unstable-v1.xml
+    BASENAME wlr-layer-shell-unstable-v1
+)
+
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml
     BASENAME keyboard-shortcuts-inhibit-unstable-v1
 )
@@ -394,6 +400,7 @@ set(SERVER_LIB_HEADERS
   keyboard_interface.h
   keyboard_shortcuts_inhibit_v1_interface.h
   keystate_interface.h
+  layershell_v1_interface.h
   linuxdmabuf_v1_interface.h
   output_interface.h
   outputchangeset.h

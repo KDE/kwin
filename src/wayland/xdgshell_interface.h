@@ -476,7 +476,7 @@ class KWAYLANDSERVER_EXPORT XdgPopupInterface : public QObject
     Q_OBJECT
 
 public:
-    XdgPopupInterface(XdgSurfaceInterface *surface, XdgSurfaceInterface *parentSurface,
+    XdgPopupInterface(XdgSurfaceInterface *surface, SurfaceInterface *parentSurface,
                       const XdgPositioner &positioner, ::wl_resource *resource);
     /**
      * Destructs the XdgPopupInterface object.
@@ -486,12 +486,10 @@ public:
     XdgShellInterface *shell() const;
 
     /**
-     * Returns the parent XdgSurfaceInterface.
-     *
-     * This method may return \c null, in which case the parent xdg-surface must be specified
-     * using "some other protocol", before commiting the initial state.
+     * Returns the parent surface for this popup surface. If the initial state hasn't been
+     * committed yet, this function may return \c null.
      */
-    XdgSurfaceInterface *parentXdgSurface() const;
+    SurfaceInterface *parentSurface() const;
 
     /**
      * Returns the XdgSurfaceInterface associated with the XdgPopupInterface.
@@ -538,6 +536,7 @@ Q_SIGNALS:
 
 private:
     QScopedPointer<XdgPopupInterfacePrivate> d;
+    friend class XdgPopupInterfacePrivate;
 };
 
 } // namespace KWaylandServer

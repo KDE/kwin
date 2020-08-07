@@ -22,6 +22,8 @@ class XdgShellInterfacePrivate : public QtWaylandServer::xdg_wm_base
 public:
     XdgShellInterfacePrivate(XdgShellInterface *shell);
 
+    Resource *resourceForXdgSurface(XdgSurfaceInterface *surface) const;
+
     void registerXdgSurface(XdgSurfaceInterface *surface);
     void unregisterXdgSurface(XdgSurfaceInterface *surface);
 
@@ -160,13 +162,15 @@ protected:
 class XdgPopupInterfacePrivate : public SurfaceRole, public QtWaylandServer::xdg_popup
 {
 public:
+    static XdgPopupInterfacePrivate *get(XdgPopupInterface *popup);
+
     XdgPopupInterfacePrivate(XdgPopupInterface *popup, XdgSurfaceInterface *surface);
 
     void commit() override;
     void reset();
 
     XdgPopupInterface *q;
-    XdgSurfaceInterface *parentXdgSurface;
+    SurfaceInterface *parentSurface;
     XdgSurfaceInterface *xdgSurface;
     XdgPositioner positioner;
 

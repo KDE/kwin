@@ -28,6 +28,11 @@ static wl_client *clientFromXdgSurface(XdgSurfaceInterface *surface)
     return XdgSurfaceInterfacePrivate::get(surface)->resource()->client();
 }
 
+XdgShellInterfacePrivate::Resource *XdgShellInterfacePrivate::resourceForXdgSurface(XdgSurfaceInterface *surface) const
+{
+    return resourceMap().value(clientFromXdgSurface(surface));
+}
+
 void XdgShellInterfacePrivate::registerXdgSurface(XdgSurfaceInterface *surface)
 {
     xdgSurfaces.insert(clientFromXdgSurface(surface), surface);
@@ -127,9 +132,7 @@ Display *XdgShellInterface::display() const
 
 quint32 XdgShellInterface::ping(XdgSurfaceInterface *surface)
 {
-    ::wl_client *client = clientFromXdgSurface(surface);
-
-    XdgShellInterfacePrivate::Resource *clientResource = d->resourceMap().value(client);
+    XdgShellInterfacePrivate::Resource *clientResource = d->resourceForXdgSurface(surface);
     if (!clientResource)
         return 0;
 
@@ -213,13 +216,10 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
         return;
     }
 
-    // Notice that the parent surface may be null, in which case it must be specified via
-    // "some other protocol", before committing the initial state. However, we don't have
-    // support for any such protocol right now.
-    XdgSurfaceInterface *parentSurface = XdgSurfaceInterface::get(parentResource);
-    if (!parentSurface) {
-        wl_resource_post_error(resource->handle, -1, "parent surface is not set");
-        return;
+    XdgSurfaceInterface *parentXdgSurface = XdgSurfaceInterface::get(parentResource);
+    SurfaceInterface *parentSurface = nullptr;
+    if (parentXdgSurface) {
+        parentSurface = parentXdgSurface->surface();
     }
 
     wl_resource *popupResource = wl_resource_create(resource->client(), &xdg_popup_interface,
@@ -630,6 +630,11 @@ XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
     return nullptr;
 }
 
+XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup)
+{
+    return popup->d.data();
+}
+
 XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup,
                                                    XdgSurfaceInterface *surface)
     : SurfaceRole(surface->surface())
@@ -640,8 +645,15 @@ XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup,
 
 void XdgPopupInterfacePrivate::commit()
 {
-    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
+    if (!parentSurface) {
+        auto shellPrivate = XdgShellInterfacePrivate::get(xdgSurface->shell());
+        wl_resource_post_error(shellPrivate->resourceForXdgSurface(xdgSurface)->handle,
+                               QtWaylandServer::xdg_wm_base::error_invalid_popup_parent,
+                               "no xdg_popup parent surface has been specified");
+        return;
+    }
 
+    auto xdgSurfacePrivate = XdgSurfaceInterfacePrivate::get(xdgSurface);
     bool isResettable = xdgSurfacePrivate->isConfigured && xdgSurfacePrivate->isMapped;
 
     if (xdgSurfacePrivate->isConfigured) {
@@ -688,12 +700,12 @@ void XdgPopupInterfacePrivate::xdg_popup_grab(Resource *resource, ::wl_resource 
 }
 
 XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface,
-                                     XdgSurfaceInterface *parentSurface,
+                                     SurfaceInterface *parentSurface,
                                      const XdgPositioner &positioner,
                                      ::wl_resource *resource)
     : d(new XdgPopupInterfacePrivate(this, surface))
 {
-    d->parentXdgSurface = parentSurface;
+    d->parentSurface = parentSurface;
     d->positioner = positioner;
     d->init(resource);
 }
@@ -702,9 +714,9 @@ XdgPopupInterface::~XdgPopupInterface()
 {
 }
 
-XdgSurfaceInterface *XdgPopupInterface::parentXdgSurface() const
+SurfaceInterface *XdgPopupInterface::parentSurface() const
 {
-    return d->parentXdgSurface;
+    return d->parentSurface;
 }
 
 XdgSurfaceInterface *XdgPopupInterface::xdgSurface() const

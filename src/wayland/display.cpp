@@ -18,6 +18,7 @@
 #include "idleinhibit_v1_interface_p.h"
 #include "keyboard_shortcuts_inhibit_v1_interface.h"
 #include "keystate_interface.h"
+#include "layershell_v1_interface.h"
 #include "linuxdmabuf_v1_interface.h"
 #include "logging.h"
 #include "output_interface.h"
@@ -520,6 +521,13 @@ InputPanelV1Interface *Display::createInputPanelInterface(QObject *parent)
     auto p = new InputPanelV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, p, [p] { delete p; });
     return p;
+}
+
+LayerShellV1Interface *Display::createLayerShellV1(QObject *parent)
+{
+    auto shell = new LayerShellV1Interface(this, parent);
+    connect(this, &Display::aboutToTerminate, shell, [shell] { delete shell; });
+    return shell;
 }
 
 void Display::createShm()
