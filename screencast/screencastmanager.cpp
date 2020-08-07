@@ -137,13 +137,7 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *
         return;
     }
 
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    AbstractWaylandOutput *streamOutput = nullptr;
-    for (auto output : outputs) {
-        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
-            streamOutput = static_cast<AbstractWaylandOutput *>(output);
-        }
-    }
+    AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(outputIface);
 
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));

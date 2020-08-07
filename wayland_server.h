@@ -69,6 +69,7 @@ class Toplevel;
 class XdgPopupClient;
 class XdgSurfaceClient;
 class XdgToplevelClient;
+class AbstractWaylandOutput;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -234,6 +235,8 @@ public:
     void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmabufUnstableV1Buffer *buffer) {
         m_linuxDmabufBuffers.remove(buffer);
     }
+
+    AbstractWaylandOutput *findOutput(KWaylandServer::OutputInterface *output) const;
 
 Q_SIGNALS:
     void shellClientAdded(KWin::AbstractClient *);

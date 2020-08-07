@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_server.h"
+#include "abstract_wayland_output.h"
 #include "x11client.h"
 #include "platform.h"
 #include "composite.h"
@@ -210,6 +211,18 @@ void WaylandServer::registerXdgGenericClient(AbstractClient *client)
         return;
     }
     qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
+}
+
+AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
+{
+    AbstractWaylandOutput *outputFound = nullptr;
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (auto output : outputs) {
+        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
+            outputFound = static_cast<AbstractWaylandOutput *>(output);
+        }
+    }
+    return outputFound;
 }
 
 class KWinDisplay : public KWaylandServer::FilteredDisplay
