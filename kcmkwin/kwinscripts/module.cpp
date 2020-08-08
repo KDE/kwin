@@ -50,6 +50,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
     connect(ui->ghnsButton, &KNS3::Button::dialogFinished, this, [this](const KNS3::Entry::List &changedEntries) {
         if (!changedEntries.isEmpty()) {
+            ui->scriptSelector->clearPlugins();
             updateListViewContents();
         }
     });
