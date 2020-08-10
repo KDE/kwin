@@ -240,7 +240,10 @@ void ApplicationWayland::startSession()
                 p->setProgram(program);
                 p->setArguments(arguments);
                 p->start();
-                p->waitForStarted(); //do we really need to wait?
+                connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, p, [p] {
+                    p->kill();
+                    p->waitForFinished();
+                });
             }
         } else {
             qWarning("Failed to launch the input method server: %s is an invalid command",
