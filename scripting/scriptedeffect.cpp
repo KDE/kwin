@@ -694,6 +694,11 @@ void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint met
     emit animationEnded(w, 0);
 }
 
+QString ScriptedEffect::pluginId() const
+{
+    return m_effectName;
+}
+
 bool ScriptedEffect::isActiveFullScreenEffect() const
 {
     return effects->activeFullScreenEffect() == this;

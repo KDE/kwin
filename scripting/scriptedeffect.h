@@ -29,6 +29,10 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(EasingCurve)
     Q_ENUMS(SessionState)
     /**
+     * The plugin ID of the effect
+     */
+    Q_PROPERTY(QString pluginId READ pluginId CONSTANT)
+    /**
      * True if we are the active fullscreen effect
      */
     Q_PROPERTY(bool isActiveFullScreenEffect READ isActiveFullScreenEffect NOTIFY isActiveFullScreenEffectChanged)
@@ -107,6 +111,8 @@ public:
     QHash<int, QList<QScriptValue > > &screenEdgeCallbacks() {
         return m_screenEdgeCallbacks;
     }
+
+    QString pluginId() const;
 
     bool isActiveFullScreenEffect() const;
 
