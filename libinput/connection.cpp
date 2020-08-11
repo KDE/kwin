@@ -13,12 +13,12 @@
 
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
-#include "../abstract_wayland_output.h"
 #include "../main.h"
 #include "../platform.h"
 #include "../screens.h"
 #endif
 
+#include "../abstract_wayland_output.h"
 #include "../logind.h"
 #include "../udev.h"
 #include "libinput_logging.h"
