@@ -21,7 +21,6 @@ class ApplicationWaylandAbstract;
 
 namespace Xwl
 {
-class DataBridge;
 
 class Xwayland : public XwaylandInterface
 {
@@ -93,7 +92,6 @@ private:
     int m_displayFileDescriptor = -1;
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
-    DataBridge *m_dataBridge = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
     ApplicationWaylandAbstract *m_app;
 

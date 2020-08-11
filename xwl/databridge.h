@@ -9,6 +9,8 @@
 #ifndef KWIN_XWL_DATABRIDGE
 #define KWIN_XWL_DATABRIDGE
 
+#include "kwinglobals.h"
+
 #include <QAbstractNativeEventFilter>
 #include <QObject>
 #include <QPoint>
@@ -32,7 +34,6 @@ class Toplevel;
 
 namespace Xwl
 {
-class Xwayland;
 class Clipboard;
 class Dnd;
 enum class DragEventReply;
@@ -48,9 +49,8 @@ class DataBridge : public QObject, public QAbstractNativeEventFilter
     Q_OBJECT
 
 public:
-    static DataBridge *self();
+    static void destroy();
 
-    explicit DataBridge(QObject *parent = nullptr);
     ~DataBridge() override;
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos);
@@ -80,7 +80,7 @@ private:
     KWayland::Client::DataDevice *m_dataDevice = nullptr;
     KWaylandServer::DataDeviceInterface *m_dataDeviceInterface = nullptr;
 
-    Q_DISABLE_COPY(DataBridge)
+    KWIN_SINGLETON(DataBridge)
 };
 
 } // namespace Xwl

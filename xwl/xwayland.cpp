@@ -152,8 +152,7 @@ void Xwayland::stop()
     // events will be dispatched before blocking; otherwise we will simply hang...
     uninstallSocketNotifier();
 
-    delete m_dataBridge;
-    m_dataBridge = nullptr;
+    DataBridge::destroy();
 
     destroyX11Connection();
 
@@ -321,7 +320,7 @@ void Xwayland::continueStartupWithX()
     KSelectionOwner owner("WM_S0", xcbConn, m_app->x11RootWindow());
     owner.claim(true);
 
-    m_dataBridge = new DataBridge;
+    DataBridge::create(this);
 
     auto env = m_app->processStartupEnvironment();
     env.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
@@ -334,10 +333,11 @@ void Xwayland::continueStartupWithX()
 
 DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)
 {
-    if (!m_dataBridge) {
+    DataBridge *bridge = DataBridge::self();
+    if (!bridge) {
         return DragEventReply::Wayland;
     }
-    return m_dataBridge->dragMoveFilter(target, pos);
+    return bridge->dragMoveFilter(target, pos);
 }
 
 } // namespace Xwl

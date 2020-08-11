@@ -33,11 +33,11 @@ namespace KWin
 namespace Xwl
 {
 
-static DataBridge *s_self = nullptr;
+KWIN_SINGLETON_FACTORY(DataBridge)
 
-DataBridge *DataBridge::self()
+void DataBridge::destroy()
 {
-    return s_self;
+    delete s_self;
 }
 
 DataBridge::DataBridge(QObject *parent)
