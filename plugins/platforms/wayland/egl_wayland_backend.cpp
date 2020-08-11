@@ -83,7 +83,7 @@ void EglWaylandOutput::updateSize(const QSize &size)
 
 void EglWaylandOutput::updateMode()
 {
-    updateSize(m_waylandOutput->pixelSize());
+    updateSize(m_waylandOutput->geometry().size());
 }
 
 EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
@@ -241,7 +241,8 @@ bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
 
     const QRect &v = output->m_waylandOutput->geometry();
 
-    qreal scale = output->m_waylandOutput->scale();
+    //The output is in scaled coordinates
+    const qreal scale = 1;
 
     const QSize overall = screens()->size();
     glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
