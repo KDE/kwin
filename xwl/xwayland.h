@@ -27,8 +27,6 @@ class Xwayland : public XwaylandInterface
     Q_OBJECT
 
 public:
-    static Xwayland *self();
-
     Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
     ~Xwayland() override;
 

@@ -60,24 +60,15 @@ namespace KWin
 namespace Xwl
 {
 
-Xwayland *s_self = nullptr;
-
-Xwayland *Xwayland::self()
-{
-    return s_self;
-}
-
 Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : XwaylandInterface(parent)
     , m_app(app)
 {
-    s_self = this;
 }
 
 Xwayland::~Xwayland()
 {
     stop();
-    s_self = nullptr;
 }
 
 QProcess *Xwayland::process() const
