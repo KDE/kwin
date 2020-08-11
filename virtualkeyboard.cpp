@@ -95,6 +95,7 @@ void VirtualKeyboard::init()
     dbus->setEnabled(m_enabled);
     connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &VirtualKeyboard::setEnabled);
     connect(this, &VirtualKeyboard::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
+    connect(input(), &InputRedirection::keyStateChanged, this, &VirtualKeyboard::hide);
 
     if (waylandServer()) {
         // we can announce support for the text input interface
