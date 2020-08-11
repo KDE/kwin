@@ -10,7 +10,7 @@
 #define KWIN_ABSTRACT_WAYLAND_OUTPUT_H
 
 #include "abstract_output.h"
-#include <utils.h>
+#include "utils.h"
 #include <kwin_export.h>
 
 #include <QObject>

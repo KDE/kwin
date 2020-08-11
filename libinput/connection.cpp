@@ -13,12 +13,12 @@
 
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
+#include "../abstract_wayland_output.h"
 #include "../main.h"
 #include "../platform.h"
 #include "../screens.h"
 #endif
 
-#include "../abstract_wayland_output.h"
 #include "../logind.h"
 #include "../udev.h"
 #include "libinput_logging.h"
@@ -567,12 +567,15 @@ void Connection::processEvents()
                     capabilities << InputRedirection::Wheel;
                 }
 
+#ifndef KWIN_BUILD_TESTING
                 const auto *output = static_cast<AbstractWaylandOutput*>(
                             kwinApp()->platform()->enabledOutputs()[tte->device()->screenId()]);
                 const QPointF globalPos =
                         devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
                                                     output);
-
+#else
+                const QPointF globalPos;
+#endif
                 emit tabletToolEvent(tabletEventType,
                                      globalPos, tte->pressure(),
                                      tte->xTilt(), tte->yTilt(), tte->rotation(),
