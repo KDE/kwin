@@ -34,23 +34,27 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
 {
     Q_UNUSED(context)
     char buf[1024];
-    if (std::vsnprintf(buf, 1023, format, args) <= 0) {
+    int length = std::vsnprintf(buf, 1023, format, args);
+    while (length > 0 && std::isspace(buf[length - 1])) {
+        --length;
+    }
+    if (length <= 0) {
         return;
     }
     switch (priority) {
     case XKB_LOG_LEVEL_DEBUG:
-        qCDebug(KWIN_XKB) << "XKB:" << buf;
+        qCDebug(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     case XKB_LOG_LEVEL_INFO:
-        qCInfo(KWIN_XKB) << "XKB:" << buf;
+        qCInfo(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     case XKB_LOG_LEVEL_WARNING:
-        qCWarning(KWIN_XKB) << "XKB:" << buf;
+        qCWarning(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     case XKB_LOG_LEVEL_ERROR:
     case XKB_LOG_LEVEL_CRITICAL:
     default:
-        qCCritical(KWIN_XKB) << "XKB:" << buf;
+        qCCritical(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     }
 }
