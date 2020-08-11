@@ -1714,9 +1714,13 @@ public:
         } case QEvent::TabletLeaveProximity:
             tool->sendProximityOut();
             break;
-        case QEvent::TabletPress:
+        case QEvent::TabletPress: {
+            const auto pos = event->globalPosF() - toplevel->bufferGeometry().topLeft();
+            tool->sendMotion(pos);
+            m_cursorByTool[tool]->setPos(event->globalPos());
             tool->sendDown();
             break;
+        }
         case QEvent::TabletRelease:
             tool->sendUp();
             break;
