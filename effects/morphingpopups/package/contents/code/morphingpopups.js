@@ -1,6 +1,4 @@
 /*
-    This file is part of the KDE project.
-
     SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2016 Marco Martin <mart@kde.org>
 

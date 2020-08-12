@@ -1,6 +1,5 @@
 /*
     KWin - the KDE window manager
-    This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2007 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2008 Lucas Murray <lmurray@undefinedfire.com>
