@@ -112,6 +112,18 @@ public:
 
     QString description() const;
 
+    /**
+     * The current rotation of the output
+     *
+     * @return rotation in degrees
+     */
+    int rotation() const;
+
+    /**
+     * Returns a matrix that can translate into the display's coordinates system
+     */
+    QMatrix4x4 transformation() const;
+
 Q_SIGNALS:
     void modeChanged();
     void geometryChanged();

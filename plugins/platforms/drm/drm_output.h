@@ -92,13 +92,6 @@ public:
      */
     bool hardwareTransforms() const;
 
-    /**
-     * The current rotation of the output
-     *
-     * @return rotation in degree
-     */
-    int rotation() const;
-
 private:
     friend class DrmBackend;
     friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc

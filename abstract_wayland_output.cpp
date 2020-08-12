@@ -19,6 +19,7 @@
 // KF5
 #include <KLocalizedString>
 
+#include <QMatrix4x4>
 #include <cmath>
 
 namespace KWin
@@ -308,6 +309,48 @@ void AbstractWaylandOutput::setTransform(Transform transform)
 AbstractWaylandOutput::Transform AbstractWaylandOutput::transform() const
 {
     return static_cast<Transform>(m_waylandOutputDevice->transform());
+}
+
+// TODO: Do we need to handle the flipped cases differently?
+int transformToRotation(AbstractWaylandOutput::Transform transform)
+{
+    switch (transform) {
+    case AbstractWaylandOutput::Transform::Normal:
+    case AbstractWaylandOutput::Transform::Flipped:
+        return 0;
+    case AbstractWaylandOutput::Transform::Rotated90:
+    case AbstractWaylandOutput::Transform::Flipped90:
+        return 90;
+    case AbstractWaylandOutput::Transform::Rotated180:
+    case AbstractWaylandOutput::Transform::Flipped180:
+        return 180;
+    case AbstractWaylandOutput::Transform::Rotated270:
+    case AbstractWaylandOutput::Transform::Flipped270:
+        return 270;
+    }
+    Q_UNREACHABLE();
+    return 0;
+}
+
+int AbstractWaylandOutput::rotation() const
+{
+    return transformToRotation(transform());
+}
+
+QMatrix4x4 AbstractWaylandOutput::transformation() const
+{
+    const QSize outputSize = modeSize();
+    const QSize logicalSize = pixelSize();
+
+    QMatrix4x4 matrix;
+    matrix.translate(outputSize.width()/2, outputSize.height()/2);
+    matrix.rotate(rotation(), 0, 0, 1);
+    matrix.translate(-logicalSize.width()/2, -logicalSize.height()/2);
+    matrix.scale(scale());
+
+    const QPoint topLeft = -globalPos();
+    matrix.translate(-topLeft.x(), -topLeft.y());
+    return matrix;
 }
 
 }

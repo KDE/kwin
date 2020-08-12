@@ -129,31 +129,10 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-// TODO: Do we need to handle the flipped cases differently?
-int transformToRotation(DrmOutput::Transform transform)
-{
-    switch (transform) {
-    case DrmOutput::Transform::Normal:
-    case DrmOutput::Transform::Flipped:
-        return 0;
-    case DrmOutput::Transform::Rotated90:
-    case DrmOutput::Transform::Flipped90:
-        return 90;
-    case DrmOutput::Transform::Rotated180:
-    case DrmOutput::Transform::Flipped180:
-        return 180;
-    case DrmOutput::Transform::Rotated270:
-    case DrmOutput::Transform::Flipped270:
-        return 270;
-    }
-    Q_UNREACHABLE();
-    return 0;
-}
-
 QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 {
     QMatrix4x4 matrix;
-    const int angle = transformToRotation(transform());
+    const int angle = rotation();
     if (angle) {
         const QSize center = s / 2;
 
@@ -678,11 +657,6 @@ bool DrmOutput::hardwareTransforms() const
         return false;
     }
     return m_primaryPlane->transformation() == outputToPlaneTransform(transform());
-}
-
-int DrmOutput::rotation() const
-{
-    return transformToRotation(transform());
 }
 
 void DrmOutput::updateTransform(Transform transform)
