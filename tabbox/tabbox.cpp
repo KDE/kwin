@@ -1359,7 +1359,7 @@ void TabBox::keyPress(int keyQt)
                     QTimer::singleShot(50, this, replayWithChangedTabboxMode);
                 }
                 break;
-            } else if (++j > ModeCount) { // guarding counter for invalid modes
+            } else if (++j > 2*ModeCount) { // guarding counter for invalid modes
                 qCDebug(KWIN_TABBOX) << "Invalid TabBoxMode";
                 return;
             }
