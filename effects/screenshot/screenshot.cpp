@@ -322,22 +322,8 @@ void ScreenShotEffect::postPaintScreen()
                 const xcb_pixmap_t xpix = xpixmapFromImage(img);
                 emit screenshotCreated(xpix);
                 m_windowMode = WindowMode::NoCapture;
-            } else if (m_windowMode == WindowMode::File) {
+            } else if (m_windowMode == WindowMode::File || m_windowMode == WindowMode::FileDescriptor) {
                 sendReplyImage(img);
-            } else if (m_windowMode == WindowMode::FileDescriptor) {
-                QtConcurrent::run(
-                    [] (int fd, const QImage &img) {
-                        QFile file;
-                        if (file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
-                            QDataStream ds(&file);
-                            ds << img;
-                            file.close();
-                        } else {
-                            close(fd);
-                        }
-                    }, m_fd, img);
-                m_windowMode = WindowMode::NoCapture;
-                m_fd = -1;
             }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (xImage) {
