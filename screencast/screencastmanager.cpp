@@ -86,7 +86,7 @@ private:
         connect(scene, &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
-        m_toplevel->damaged(m_toplevel, m_toplevel->frameGeometry());
+        m_toplevel->addRepaintFull();
     }
 
     void includeDamage(Toplevel *toplevel, const QRect &damage) {
