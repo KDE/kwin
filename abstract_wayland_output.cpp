@@ -35,6 +35,10 @@ AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
             [this] (KWaylandServer::OutputInterface::DpmsMode mode) {
         updateDpms(mode);
     });
+
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::globalPositionChanged, this, &AbstractWaylandOutput::geometryChanged);
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::pixelSizeChanged, this, &AbstractWaylandOutput::geometryChanged);
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::scaleChanged, this, &AbstractWaylandOutput::geometryChanged);
 }
 
 AbstractWaylandOutput::~AbstractWaylandOutput()
