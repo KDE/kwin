@@ -166,7 +166,7 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
 QString ExampleClientModel::longestCaption() const
 {
     QString caption;
-    for (const auto item : m_services) {
+    for (const auto &item : m_services) {
         const QString name = item->name();
         if (name.size() > caption.size()) {
             caption = name;
