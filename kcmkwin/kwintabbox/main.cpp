@@ -13,7 +13,6 @@
 
 // Qt
 #include <QtDBus>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QPushButton>

@@ -11,7 +11,6 @@
 #include "thumbnailitem.h"
 #include <QApplication>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QScreen>
