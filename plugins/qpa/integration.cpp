@@ -44,7 +44,10 @@ Integration::Integration()
 {
 }
 
-Integration::~Integration() = default;
+Integration::~Integration()
+{
+    qDeleteAll(m_screens);
+}
 
 bool Integration::hasCapability(Capability cap) const
 {
