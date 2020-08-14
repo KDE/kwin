@@ -20,7 +20,7 @@ namespace KWin
 
 KeyboardRepeat::KeyboardRepeat(Xkb *xkb)
     : QObject()
-    , m_timer(new QTimer)
+    , m_timer(new QTimer(this))
     , m_xkb(xkb)
 {
     connect(m_timer, &QTimer::timeout, this, &KeyboardRepeat::handleKeyRepeat);
