@@ -1969,6 +1969,80 @@ void Workspace::saveOldScreenSizes()
 }
 
 /**
+ * Whether or not the window has a strut that expands through the invisible area of
+ * an xinerama setup where the monitors are not the same resolution.
+ */
+static bool hasOffscreenXineramaStrut(AbstractClient *client)
+{
+    // Get strut as a QRegion
+    QRegion region;
+    region += client->strutRect(StrutAreaTop);
+    region += client->strutRect(StrutAreaRight);
+    region += client->strutRect(StrutAreaBottom);
+    region += client->strutRect(StrutAreaLeft);
+
+    // Remove all visible areas so that only the invisible remain
+    for (int i = 0; i < screens()->count(); i ++) {
+        region -= screens()->geometry(i);
+    }
+
+    // If there's anything left then we have an offscreen strut
+    return !region.isEmpty();
+}
+
+QRect Workspace::adjustClientArea(AbstractClient *client, const QRect &area) const
+{
+    QRect adjustedArea = area;
+
+    QRect strutLeft = client->strutRect(StrutAreaLeft);
+    QRect strutRight = client->strutRect(StrutAreaRight);
+    QRect strutTop = client->strutRect(StrutAreaTop);
+    QRect strutBottom = client->strutRect(StrutAreaBottom);
+
+    QRect screenArea = clientArea(ScreenArea, client);
+    // HACK: workarea handling is not xinerama aware, so if this strut
+    // reserves place at a xinerama edge that's inside the virtual screen,
+    // ignore the strut for workspace setting.
+    if (area == QRect(QPoint(0, 0), screens()->displaySize())) {
+        if (strutLeft.left() < screenArea.left()) {
+            strutLeft = QRect();
+        }
+        if (strutRight.right() > screenArea.right()) {
+            strutRight = QRect();
+        }
+        if (strutTop.top() < screenArea.top()) {
+            strutTop = QRect();
+        }
+        if (strutBottom.bottom() < screenArea.bottom()) {
+            strutBottom = QRect();
+        }
+    }
+
+    // Handle struts at xinerama edges that are inside the virtual screen.
+    // They're given in virtual screen coordinates, make them affect only
+    // their xinerama screen.
+    strutLeft.setLeft(qMax(strutLeft.left(), screenArea.left()));
+    strutRight.setRight(qMin(strutRight.right(), screenArea.right()));
+    strutTop.setTop(qMax(strutTop.top(), screenArea.top()));
+    strutBottom.setBottom(qMin(strutBottom.bottom(), screenArea.bottom()));
+
+    if (strutLeft.intersects(area)) {
+        adjustedArea.setLeft(strutLeft.right() + 1);
+    }
+    if (strutRight.intersects(area)) {
+        adjustedArea.setRight(strutRight.left() - 1);
+    }
+    if (strutTop.intersects(area)) {
+        adjustedArea.setTop(strutTop.bottom() + 1);
+    }
+    if (strutBottom.intersects(area)) {
+        adjustedArea.setBottom(strutBottom.top() - 1);
+    }
+
+    return adjustedArea;
+}
+
+/**
  * Updates the current client areas according to the current clients.
  *
  * If the area changes or force is @c true, the new areas are propagated to the world.
@@ -2007,10 +2081,11 @@ void Workspace::updateClientArea(bool force)
                 iS ++)
             new_sareas[ i ][ iS ] = screens[ iS ];
     }
-    for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
-        if (!(*it)->hasStrut())
+    for (AbstractClient *client : qAsConst(m_allClients)) {
+        if (!client->hasStrut()) {
             continue;
-        QRect r = (*it)->adjustedClientArea(desktopArea, desktopArea);
+        }
+        QRect r = adjustClientArea(client, desktopArea);
         // sanity check that a strut doesn't exclude a complete screen geometry
         // this is a violation to EWMH, as KWin just ignores the strut
         for (int i = 0; i < Screens::self()->count(); i++) {
@@ -2020,8 +2095,8 @@ void Workspace::updateClientArea(bool force)
                 break;
             }
         }
-        StrutRects strutRegion = (*it)->strutRects();
-        const QRect clientsScreenRect = KWin::screens()->geometry((*it)->screen());
+        StrutRects strutRegion = client->strutRects();
+        const QRect clientsScreenRect = KWin::screens()->geometry(client->screen());
         for (auto strut = strutRegion.begin(); strut != strutRegion.end(); strut++) {
             *strut = StrutRect((*strut).intersected(clientsScreenRect), (*strut).area());
         }
@@ -2032,20 +2107,20 @@ void Workspace::updateClientArea(bool force)
         // This goes against the EWMH description of the work area but it is a toss up between
         // having unusable sections of the screen (Which can be quite large with newer monitors)
         // or having some content appear offscreen (Relatively rare compared to other).
-        bool hasOffscreenXineramaStrut = (*it)->hasOffscreenXineramaStrut();
+        bool hasOffscreenStrut = hasOffscreenXineramaStrut(client);
 
-        if ((*it)->isOnAllDesktops()) {
+        if (client->isOnAllDesktops()) {
             for (int i = 1;
                     i <= numberOfDesktops;
                     ++i) {
-                if (!hasOffscreenXineramaStrut)
+                if (!hasOffscreenStrut)
                     new_wareas[ i ] = new_wareas[ i ].intersected(r);
                 new_rmoveareas[ i ] += strutRegion;
                 for (int iS = 0;
                         iS < nscreens;
                         iS ++) {
                     const auto geo = new_sareas[ i ][ iS ].intersected(
-                                                (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
+                                                adjustClientArea(client, screens[ iS ]));
                     // ignore the geometry if it results in the screen getting removed completely
                     if (!geo.isEmpty()) {
                         new_sareas[ i ][ iS ] = geo;
@@ -2053,90 +2128,20 @@ void Workspace::updateClientArea(bool force)
                 }
             }
         } else {
-            if (!hasOffscreenXineramaStrut)
-                new_wareas[(*it)->desktop()] = new_wareas[(*it)->desktop()].intersected(r);
-            new_rmoveareas[(*it)->desktop()] += strutRegion;
+            if (!hasOffscreenStrut)
+                new_wareas[client->desktop()] = new_wareas[client->desktop()].intersected(r);
+            new_rmoveareas[client->desktop()] += strutRegion;
             for (int iS = 0;
                     iS < nscreens;
                     iS ++) {
 //                            qDebug() << "adjusting new_sarea: " << screens[ iS ];
-                const auto geo = new_sareas[(*it)->desktop()][ iS ].intersected(
-                      (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
+                const auto geo = new_sareas[client->desktop()][ iS ].intersected(
+                      adjustClientArea(client, screens[ iS ]));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
-                    new_sareas[(*it)->desktop()][ iS ] = geo;
+                    new_sareas[client->desktop()][ iS ] = geo;
                 }
             }
-        }
-    }
-    if (waylandServer()) {
-        auto updateStrutsForWaylandClient = [&] (AbstractClient *c) {
-            // assuming that only docks have "struts" and that all docks have a strut
-            if (!c->hasStrut()) {
-                return;
-            }
-            auto margins = [c] (const QRect &geometry) {
-                QMargins margins;
-                if (!geometry.intersects(c->frameGeometry())) {
-                    return margins;
-                }
-                // figure out which areas of the overall screen setup it borders
-                const bool left = c->frameGeometry().left() == geometry.left();
-                const bool right = c->frameGeometry().right() == geometry.right();
-                const bool top = c->frameGeometry().top() == geometry.top();
-                const bool bottom = c->frameGeometry().bottom() == geometry.bottom();
-                const bool horizontal = c->frameGeometry().width() >= c->frameGeometry().height();
-                if (left && ((!top && !bottom) || !horizontal)) {
-                    margins.setLeft(c->frameGeometry().width());
-                }
-                if (right && ((!top && !bottom) || !horizontal)) {
-                    margins.setRight(c->frameGeometry().width());
-                }
-                if (top && ((!left && !right) || horizontal)) {
-                    margins.setTop(c->frameGeometry().height());
-                }
-                if (bottom && ((!left && !right) || horizontal)) {
-                    margins.setBottom(c->frameGeometry().height());
-                }
-                return margins;
-            };
-            auto marginsToStrutArea = [] (const QMargins &margins) {
-                if (margins.left() != 0) {
-                    return StrutAreaLeft;
-                }
-                if (margins.right() != 0) {
-                    return StrutAreaRight;
-                }
-                if (margins.top() != 0) {
-                    return StrutAreaTop;
-                }
-                if (margins.bottom() != 0) {
-                    return StrutAreaBottom;
-                }
-                return StrutAreaInvalid;
-            };
-            const auto strut = margins(KWin::screens()->geometry(c->screen()));
-            const StrutRects strutRegion = StrutRects{StrutRect(c->frameGeometry(), marginsToStrutArea(strut))};
-            QRect r = desktopArea - margins(KWin::screens()->geometry());
-            if (c->isOnAllDesktops()) {
-                for (int i = 1; i <= numberOfDesktops; ++i) {
-                    new_wareas[ i ] = new_wareas[ i ].intersected(r);
-                    for (int iS = 0; iS < nscreens; ++iS) {
-                        new_sareas[ i ][ iS ] = new_sareas[ i ][ iS ].intersected(screens[iS] - margins(screens[iS]));
-                    }
-                    new_rmoveareas[ i ] += strutRegion;
-                }
-            } else {
-                new_wareas[c->desktop()] = new_wareas[c->desktop()].intersected(r);
-                for (int iS = 0; iS < nscreens; iS++) {
-                    new_sareas[c->desktop()][ iS ] = new_sareas[c->desktop()][ iS ].intersected(screens[iS] - margins(screens[iS]));
-                }
-                new_rmoveareas[ c->desktop() ] += strutRegion;
-            }
-        };
-        const auto clients = waylandServer()->clients();
-        for (auto c : clients) {
-            updateStrutsForWaylandClient(c);
         }
     }
 #if 0

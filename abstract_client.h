@@ -686,6 +686,8 @@ public:
         return m_moveResize.cursor;
     }
 
+    virtual StrutRect strutRect(StrutArea area) const;
+    StrutRects strutRects() const;
     virtual bool hasStrut() const;
 
     void setModal(bool modal);

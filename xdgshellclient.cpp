@@ -851,6 +851,47 @@ bool XdgToplevelClient::supportsWindowRules() const
     return !m_plasmaShellSurface;
 }
 
+StrutRect XdgToplevelClient::strutRect(StrutArea area) const
+{
+    if (!hasStrut()) {
+        return StrutRect();
+    }
+
+    const QRect windowRect = frameGeometry();
+    const QRect outputRect = screens()->geometry(screen());
+
+    const bool left = windowRect.left() == outputRect.left();
+    const bool right = windowRect.right() == outputRect.right();
+    const bool top = windowRect.top() == outputRect.top();
+    const bool bottom = windowRect.bottom() == outputRect.bottom();
+    const bool horizontal = width() >= height();
+
+    switch (area) {
+    case StrutAreaTop:
+        if (top && ((!left && !right) || horizontal)) {
+            return StrutRect(windowRect, StrutAreaTop);
+        }
+        return StrutRect();
+    case StrutAreaRight:
+        if (right && ((!top && !bottom) || !horizontal)) {
+            return StrutRect(windowRect, StrutAreaRight);
+        }
+        return StrutRect();
+    case StrutAreaBottom:
+        if (bottom && ((!left && !right) || horizontal)) {
+            return StrutRect(windowRect, StrutAreaBottom);
+        }
+        return StrutRect();
+    case StrutAreaLeft:
+        if (left && ((!top && !bottom) || !horizontal)) {
+            return StrutRect(windowRect, StrutAreaLeft);
+        }
+        return StrutRect();
+    default:
+        return StrutRect();
+    }
+}
+
 bool XdgToplevelClient::hasStrut() const
 {
     if (!isShown(true)) {

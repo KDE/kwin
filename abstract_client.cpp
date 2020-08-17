@@ -1446,6 +1446,22 @@ void AbstractClient::performMoveResize()
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }
 
+StrutRect AbstractClient::strutRect(StrutArea area) const
+{
+    Q_UNUSED(area)
+    return StrutRect();
+}
+
+StrutRects AbstractClient::strutRects() const
+{
+    StrutRects region;
+    region += strutRect(StrutAreaTop);
+    region += strutRect(StrutAreaRight);
+    region += strutRect(StrutAreaBottom);
+    region += strutRect(StrutAreaLeft);
+    return region;
+}
+
 bool AbstractClient::hasStrut() const
 {
     return false;

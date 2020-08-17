@@ -187,8 +187,6 @@ public:
 
     bool providesContextHelp() const override;
 
-    QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;
-
     xcb_colormap_t colormap() const;
 
     /// Updates visibility depending on being shaded, virtual desktop, etc.
@@ -237,8 +235,8 @@ public:
     void killWindow() override;
     void showContextHelp() override;
     void checkActiveModal();
-    StrutRect strutRect(StrutArea area) const;
-    StrutRects strutRects() const;
+
+    StrutRect strutRect(StrutArea area) const override;
     bool hasStrut() const override;
 
     /**
@@ -248,12 +246,6 @@ public:
      * client.
      */
     void setClientShown(bool shown) override;
-
-    /**
-     * Whether or not the window has a strut that expands through the invisible area of
-     * an xinerama setup where the monitors are not the same resolution.
-     */
-    bool hasOffscreenXineramaStrut() const;
 
     QRect transparentRect() const override;
 

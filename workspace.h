@@ -183,6 +183,7 @@ public:
      */
     void setMoveResizeClient(AbstractClient* c);
 
+    QRect adjustClientArea(AbstractClient *client, const QRect &area) const;
     QPoint adjustClientPosition(AbstractClient* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
     QRect adjustClientSize(AbstractClient* c, QRect moveResizeGeom, int mode);
     void raiseClient(AbstractClient* c, bool nogroup = false);
