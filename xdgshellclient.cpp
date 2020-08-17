@@ -2012,21 +2012,6 @@ void XdgPopupClient::closeWindow()
 {
 }
 
-bool XdgPopupClient::noBorder() const
-{
-    return true;
-}
-
-bool XdgPopupClient::userCanSetNoBorder() const
-{
-    return false;
-}
-
-void XdgPopupClient::setNoBorder(bool set)
-{
-    Q_UNUSED(set)
-}
-
 void XdgPopupClient::showOnScreenEdge()
 {
 }

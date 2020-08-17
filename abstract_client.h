@@ -492,8 +492,8 @@ public:
      * Sets the maximization according to @p vertically and @p horizontally.
      */
     Q_INVOKABLE void setMaximize(bool vertically, bool horizontally);
-    virtual bool noBorder() const = 0;
-    virtual void setNoBorder(bool set) = 0;
+    virtual bool noBorder() const;
+    virtual void setNoBorder(bool set);
     virtual void blockActivityUpdates(bool b = true) = 0;
     QPalette palette() const;
     const Decoration::DecorationPalette *decorationPalette() const;
@@ -528,7 +528,7 @@ public:
     virtual bool isMinimizable() const;
     virtual QRect iconGeometry() const;
     virtual bool userCanSetFullScreen() const;
-    virtual bool userCanSetNoBorder() const = 0;
+    virtual bool userCanSetNoBorder() const;
     virtual void checkNoBorder();
     virtual void setOnActivities(QStringList newActivitiesList);
     virtual void setOnAllActivities(bool set) = 0;
