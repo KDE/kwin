@@ -3359,6 +3359,7 @@ void AbstractClient::setFullScreen(bool set, bool user)
 {
     Q_UNUSED(set)
     Q_UNUSED(user)
+    qCWarning(KWIN_CORE, "%s doesn't support setting fullscreen state", metaObject()->className());
 }
 
 /**
@@ -3431,6 +3432,7 @@ void AbstractClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     Q_UNUSED(horizontal)
     Q_UNUSED(vertical)
     Q_UNUSED(adjust)
+    qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 
 }
