@@ -122,7 +122,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(quint32 scrollButton READ scrollButton WRITE setScrollButton NOTIFY scrollButtonChanged)
 
     Q_PROPERTY(qreal scrollFactor READ scrollFactor WRITE setScrollFactor NOTIFY scrollFactorChanged)
-
+    //
     // switches
     Q_PROPERTY(bool switchDevice READ isSwitch CONSTANT)
     Q_PROPERTY(bool lidSwitch READ isLidSwitch CONSTANT)
@@ -462,6 +462,12 @@ public:
     }
 
     /**
+     * Used to deserialize monitor data from KConfig when initializing a device
+     */
+    void setScreenSlug(QString slug);
+    QString defaultScreenSlug() const { return {}; }
+
+    /**
      * Loads the configuration and applies it to the Device
      */
     void loadConfiguration();
@@ -504,6 +510,7 @@ Q_SIGNALS:
     void tapButtonMapChanged();
     void calibrationMatrixChanged();
     void orientationChanged();
+    void screenChanged();
     void leftHandedChanged();
     void disableWhileTypingChanged();
     void pointerAccelerationChanged();

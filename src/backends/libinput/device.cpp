@@ -8,6 +8,9 @@
 */
 #include "device.h"
 #include "abstract_output.h"
+#include "main.h"
+#include "platform.h"
+#include "libinput_logging.h"
 
 #include <QDBusArgument>
 #include <QDBusConnection>
@@ -105,7 +108,8 @@ enum class ConfigKey {
     ClickMethod,
     ScrollFactor,
     Orientation,
-    Calibration
+    Calibration,
+    Screen
 };
 
 struct ConfigData {
@@ -139,7 +143,6 @@ struct ConfigData {
         void (Device::*setter)(bool) = nullptr;
         bool (Device::*defaultValue)() const;
     } booleanSetter;
-
     struct {
         void (Device::*setter)(quint32) = nullptr;
         quint32 (Device::*defaultValue)() const;
@@ -179,7 +182,8 @@ static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::ClickMethod, ConfigData(QByteArrayLiteral("ClickMethod"), &Device::setClickMethodFromInt, &Device::defaultClickMethodToInt)},
     {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, ConfigData(QByteArrayLiteral("Orientation"), &Device::setOrientation, &Device::defaultOrientation)},
-    {ConfigKey::Calibration, ConfigData(QByteArrayLiteral("CalibrationMatrix"), &Device::setCalibrationMatrix, &Device::defaultCalibrationMatrix)}
+    {ConfigKey::Calibration, ConfigData(QByteArrayLiteral("CalibrationMatrix"), &Device::setCalibrationMatrix, &Device::defaultCalibrationMatrix)},
+    {ConfigKey::Screen, ConfigData(QByteArrayLiteral("Screen"), &Device::setScreenSlug, &Device::defaultScreenSlug)}
 };
 
 namespace {
@@ -615,6 +619,25 @@ void Device::setScrollFactor(qreal factor)
     }
 }
 
+void Device::setCalibrationMatrix(QMatrix4x4 matrix) {
+    if (!m_supportsCalibrationMatrix || m_calibrationMatrix == matrix) {
+        return;
+    }
+
+    if(setOrientedCalibrationMatrix(m_device, matrix, m_orientation)) {
+        QList<float> list;
+        list.reserve(16);
+        for (uchar row = 0; row < 4; ++row) {
+            for (uchar col = 0; col < 4; ++col) {
+                list << matrix(row,col);
+            }
+        }
+        writeEntry(ConfigKey::Calibration, list);
+        m_calibrationMatrix = matrix;
+        Q_EMIT calibrationMatrixChanged();
+    }
+}
+
 void Device::setOrientation(Qt::ScreenOrientation orientation)
 {
     if (!m_supportsCalibrationMatrix || m_orientation == orientation) {
@@ -628,24 +651,36 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
     }
 }
 
-void Device::setCalibrationMatrix(QMatrix4x4 matrix) {
-    if (!m_supportsCalibrationMatrix || m_calibrationMatrix == matrix) {
+void Device::setScreenSlug(QString slug) {
+#ifndef KWIN_BUILD_TESTING
+    if(slug.isEmpty()) {
         return;
     }
 
-    if(setOrientedCalibrationMatrix(m_device, matrix, m_orientation)) {
-        QList<float> list;
-        for (uchar row = 0; row < 4; ++row) {
-            for (uchar col = 0; col < 4; ++col) {
-                list << matrix(row,col);
-            }
-        }
-        writeEntry(ConfigKey::Calibration, list);
-        m_calibrationMatrix = matrix;
-        Q_EMIT calibrationMatrixChanged();
+    auto parts = slug.split(';');
+    if(parts.size() != 4) {
+        qCWarning(KWIN_LIBINPUT) << "Malformed display slug in config:" << slug << "for device:" << m_name;
+        return;
     }
 
-    Q_EMIT calibrationMatrixChanged();
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    AbstractOutput *match = nullptr;
+    for(auto output : outputs) {
+        if(output->manufacturer() == parts[1] &&
+           output->model() == parts[2]) {
+            match = output;
+            // If neither serial (preferred) or name match we may not have the right screen and have to keep iterating.
+            if((!parts[3].isEmpty() && output->serialNumber() == parts[3]) || output->name() == parts[0]) {
+                break;
+            }
+        }
+    }
+    if(match) {
+        setOutput(match);
+    }
+#else
+    Q_UNUSED(slug)
+#endif
 }
 
 AbstractOutput *Device::output() const
@@ -656,6 +691,9 @@ AbstractOutput *Device::output() const
 void Device::setOutput(AbstractOutput *output)
 {
     m_output = output;
+
+    QString slug = output->name() + ';' + output->manufacturer() + ';' + output->model() + ';' + output->serialNumber();
+    writeEntry(ConfigKey::Screen, slug);
 }
 
 static libinput_led toLibinputLEDS(LEDs leds)
@@ -688,4 +726,3 @@ void Device::setLeds(LEDs leds)
 
 }
 }
-
