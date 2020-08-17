@@ -43,13 +43,10 @@ public:
     void showOnScreenEdge() override {}
     bool supportsWindowRules() const override { return false; }
     void closeWindow() override {}
-    void hideClient(bool hide) override;
-    bool isHiddenInternal() const override { return !m_visible; }
     bool takeFocus() override { return false; }
     void updateColorScheme() override {}
     bool wantsInput() const override { return false; }
     bool isInputMethod() const override { return true; }
-    bool isShown(bool /*shaded_is_shown*/) const override { return m_visible && !isZombie(); }
     bool isInitialPositionSet() const override { return true; }
     void updateDecoration(bool /*check_workspace_pos*/, bool /*force*/) override {}
     void setNoBorder(bool /*set*/) override {}
@@ -66,7 +63,6 @@ private:
     QPointer<AbstractWaylandOutput> m_output;
     Mode m_mode = Toplevel;
     const QPointer<KWaylandServer::InputPanelSurfaceV1Interface> m_panelSurface;
-    bool m_visible = true;
 };
 
 }

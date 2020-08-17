@@ -36,6 +36,11 @@ public:
     void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void killWindow() override;
     QByteArray windowRole() const override;
+    bool isShown(bool shaded_is_shown) const override;
+    bool isHiddenInternal() const override;
+    void hideClient(bool hide) override;
+
+    bool isHidden() const;
 
     void updateDepth();
     void setCaption(const QString &caption);
@@ -51,11 +56,14 @@ private:
     void updateClientOutputs();
     void updateIcon();
     void updateResourceName();
+    void internalShow();
+    void internalHide();
 
     QString m_captionNormal;
     QString m_captionSuffix;
     double m_opacity = 1.0;
     quint32 m_windowId;
+    bool m_isHidden = false;
 };
 
 } // namespace KWin

@@ -129,21 +129,6 @@ QRect InputPanelV1Client::inputGeometry() const
     return surface()->input().boundingRect().translated(pos());
 }
 
-void InputPanelV1Client::hideClient(bool hide)
-{
-    m_visible = !hide;
-    if (hide) {
-        workspace()->clientHidden(this);
-        addWorkspaceRepaint(visibleRect());
-        Q_EMIT windowHidden(this);
-    } else {
-        reposition();
-        addRepaintFull();
-        Q_EMIT windowShown(this);
-        autoRaise();
-    }
-}
-
 void InputPanelV1Client::setOutput(OutputInterface *outputIface)
 {
     if (m_output) {

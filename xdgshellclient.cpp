@@ -498,55 +498,6 @@ void XdgSurfaceClient::addDamage(const QRegion &damage)
     Toplevel::addDamage(damage);
 }
 
-bool XdgSurfaceClient::isShown(bool shaded_is_shown) const
-{
-    Q_UNUSED(shaded_is_shown)
-    return !isZombie() && !isHidden() && !isMinimized();
-}
-
-bool XdgSurfaceClient::isHiddenInternal() const
-{
-    return isHidden();
-}
-
-void XdgSurfaceClient::hideClient(bool hide)
-{
-    if (hide) {
-        internalHide();
-    } else {
-        internalShow();
-    }
-}
-
-bool XdgSurfaceClient::isHidden() const
-{
-    return m_isHidden;
-}
-
-void XdgSurfaceClient::internalShow()
-{
-    if (!isHidden()) {
-        return;
-    }
-    m_isHidden = false;
-    addRepaintFull();
-    emit windowShown(this);
-}
-
-void XdgSurfaceClient::internalHide()
-{
-    if (isHidden()) {
-        return;
-    }
-    if (isMoveResize()) {
-        leaveMoveResize();
-    }
-    m_isHidden = true;
-    addWorkspaceRepaint(visibleRect());
-    workspace()->clientHidden(this);
-    emit windowHidden(this);
-}
-
 void XdgSurfaceClient::destroyClient()
 {
     markAsZombie();

@@ -59,10 +59,7 @@ public:
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::move;
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
-    bool isShown(bool shaded_is_shown) const override;
-    bool isHiddenInternal() const override;
     bool isInitialPositionSet() const override;
-    void hideClient(bool hide) override;
     void destroyClient() override;
 
     QRect frameRectToBufferRect(const QRect &rect) const;
@@ -71,7 +68,6 @@ public:
     QSize requestedSize() const;
     QRect requestedClientGeometry() const;
     QSize requestedClientSize() const;
-    bool isHidden() const;
 
     virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
 
@@ -99,8 +95,6 @@ private:
     void resetHaveNextWindowGeometry();
     QRect adjustMoveResizeGeometry(const QRect &rect) const;
     void updateGeometryRestoreHack();
-    void internalShow();
-    void internalHide();
     void cleanGrouping();
     void cleanTabBox();
 
@@ -112,7 +106,6 @@ private:
     QRect m_requestedFrameGeometry;
     QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;
-    bool m_isHidden = false;
     bool m_haveNextWindowGeometry = false;
 };
 

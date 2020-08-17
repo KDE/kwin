@@ -283,4 +283,53 @@ void WaylandClient::updateDepth()
     }
 }
 
+bool WaylandClient::isShown(bool shaded_is_shown) const
+{
+    Q_UNUSED(shaded_is_shown)
+    return !isZombie() && !isHidden() && !isMinimized();
+}
+
+bool WaylandClient::isHiddenInternal() const
+{
+    return isHidden();
+}
+
+void WaylandClient::hideClient(bool hide)
+{
+    if (hide) {
+        internalHide();
+    } else {
+        internalShow();
+    }
+}
+
+bool WaylandClient::isHidden() const
+{
+    return m_isHidden;
+}
+
+void WaylandClient::internalShow()
+{
+    if (!isHidden()) {
+        return;
+    }
+    m_isHidden = false;
+    addRepaintFull();
+    emit windowShown(this);
+}
+
+void WaylandClient::internalHide()
+{
+    if (isHidden()) {
+        return;
+    }
+    if (isMoveResize()) {
+        leaveMoveResize();
+    }
+    m_isHidden = true;
+    addWorkspaceRepaint(visibleRect());
+    workspace()->clientHidden(this);
+    emit windowHidden(this);
+}
+
 } // namespace KWin
