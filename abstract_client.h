@@ -723,7 +723,7 @@ public:
     /**
      * TODO: fix boolean traps
      */
-    virtual void updateDecoration(bool check_workspace_pos, bool force = false) = 0;
+    virtual void updateDecoration(bool check_workspace_pos, bool force = false);
 
     /**
      * Returns whether the window provides context help or not. If it does,

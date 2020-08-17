@@ -2027,12 +2027,6 @@ void XdgPopupClient::setNoBorder(bool set)
     Q_UNUSED(set)
 }
 
-void XdgPopupClient::updateDecoration(bool check_workspace_pos, bool force)
-{
-    Q_UNUSED(check_workspace_pos)
-    Q_UNUSED(force)
-}
-
 void XdgPopupClient::showOnScreenEdge()
 {
 }

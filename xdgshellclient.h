@@ -249,7 +249,6 @@ public:
     bool noBorder() const override;
     bool userCanSetNoBorder() const override;
     void setNoBorder(bool set) override;
-    void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void showOnScreenEdge() override;
     bool wantsInput() const override;
     bool takeFocus() override;

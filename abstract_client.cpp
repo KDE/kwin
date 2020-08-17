@@ -3451,4 +3451,11 @@ void AbstractClient::changeMaximize(bool horizontal, bool vertical, bool adjust)
     qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 
+void AbstractClient::updateDecoration(bool check_workspace_pos, bool force)
+{
+    Q_UNUSED(check_workspace_pos)
+    Q_UNUSED(force)
+    qCWarning(KWIN_CORE, "%s doesn't support server side decorations", metaObject()->className());
+}
+
 }
