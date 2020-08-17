@@ -2012,10 +2012,6 @@ void XdgPopupClient::closeWindow()
 {
 }
 
-void XdgPopupClient::showOnScreenEdge()
-{
-}
-
 bool XdgPopupClient::supportsWindowRules() const
 {
     return false;

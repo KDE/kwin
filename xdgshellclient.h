@@ -246,7 +246,6 @@ public:
     QRect transientPlacement(const QRect &bounds) const override;
     bool isCloseable() const override;
     void closeWindow() override;
-    void showOnScreenEdge() override;
     bool wantsInput() const override;
     bool takeFocus() override;
     bool supportsWindowRules() const override;

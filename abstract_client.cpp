@@ -3474,4 +3474,9 @@ void AbstractClient::setNoBorder(bool set)
     qCWarning(KWIN_CORE, "%s doesn't support setting decorations", metaObject()->className());
 }
 
+void AbstractClient::showOnScreenEdge()
+{
+    qCWarning(KWIN_CORE, "%s doesn't support screen edge activation", metaObject()->className());
+}
+
 }

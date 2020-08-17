@@ -384,10 +384,6 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     }
 }
 
-void InternalClient::showOnScreenEdge()
-{
-}
-
 void InternalClient::destroyClient()
 {
     markAsZombie();

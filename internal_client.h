@@ -65,7 +65,6 @@ public:
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
-    void showOnScreenEdge() override;
     void destroyClient() override;
 
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);

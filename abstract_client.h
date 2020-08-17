@@ -764,7 +764,7 @@ public:
      * The AbstractClient also gets raised (e.g. Panel mode windows can cover) and the AbstractClient
      * gets informed in a window specific way that it is shown and raised again.
      */
-    virtual void showOnScreenEdge() = 0;
+    virtual void showOnScreenEdge();
 
     QByteArray desktopFileName() const {
         return m_desktopFileName;
