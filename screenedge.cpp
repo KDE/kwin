@@ -1068,7 +1068,10 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricBottomLeft : ElectricBottomRight;
         m_edges << createEdge(edge, x, screen.y() + screen.height() -1, 1, 1);
     }
-    // create border
+    if (height <= m_cornerOffset) {
+        // An overlap with another output is near complete. We ignore this border.
+        return;
+    }
     m_edges << createEdge(border, x, y, 1, height);
 }
 
@@ -1088,6 +1091,10 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
         // also right most edge
         width -= m_cornerOffset;
     }
+    if (width <= m_cornerOffset) {
+        // An overlap with another output is near complete. We ignore this border.
+        return;
+    }
     const int y = (border == ElectricTop) ? screen.y() : screen.y() + screen.height() - 1;
     m_edges << createEdge(border, x, y, width, 1);
 }
@@ -1099,6 +1106,10 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
 #else
     Edge *edge = kwinApp()->platform()->createScreenEdge(this);
 #endif
+    // Edges can not have negative size.
+    Q_ASSERT(width >= 0);
+    Q_ASSERT(height >= 0);
+
     edge->setBorder(border);
     edge->setGeometry(QRect(x, y, width, height));
     if (createAction) {
