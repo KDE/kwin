@@ -35,7 +35,6 @@
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xdgshellclient.h"
 #include "xwl/xwayland_interface.h"
 #include "cursor.h"
 #include <KDecoration2/Decoration>
