@@ -38,12 +38,6 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
-enum XdgSurfaceGeometryType {
-    XdgSurfaceGeometryClient = 0x1,
-    XdgSurfaceGeometryFrame = 0x2,
-    XdgSurfaceGeometryBuffer = 0x4,
-};
-
 XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     : WaylandClient(shellSurface->surface())
     , m_shellSurface(shellSurface)
@@ -109,45 +103,15 @@ XdgSurfaceClient::~XdgSurfaceClient()
     qDeleteAll(m_configureEvents);
 }
 
-QRect XdgSurfaceClient::requestedFrameGeometry() const
-{
-    return m_requestedFrameGeometry;
-}
-
-QPoint XdgSurfaceClient::requestedPos() const
-{
-    return m_requestedFrameGeometry.topLeft();
-}
-
-QSize XdgSurfaceClient::requestedSize() const
-{
-    return m_requestedFrameGeometry.size();
-}
-
-QRect XdgSurfaceClient::requestedClientGeometry() const
-{
-    return m_requestedClientGeometry;
-}
-
 QRect XdgSurfaceClient::inputGeometry() const
 {
     return isDecorated() ? AbstractClient::inputGeometry() : bufferGeometry();
 }
 
-QRect XdgSurfaceClient::bufferGeometry() const
-{
-    return m_bufferGeometry;
-}
-
-QSize XdgSurfaceClient::requestedClientSize() const
-{
-    return requestedClientGeometry().size();
-}
-
 QMatrix4x4 XdgSurfaceClient::inputTransformation() const
 {
     QMatrix4x4 transformation;
-    transformation.translate(-m_bufferGeometry.x(), -m_bufferGeometry.y());
+    transformation.translate(-bufferGeometry().x(), -bufferGeometry().y());
     return transformation;
 }
 
@@ -158,13 +122,13 @@ XdgSurfaceConfigure *XdgSurfaceClient::lastAcknowledgedConfigure() const
 
 bool XdgSurfaceClient::stateCompare() const
 {
-    if (m_requestedFrameGeometry != m_frameGeometry) {
+    if (requestedFrameGeometry() != frameGeometry()) {
         return true;
     }
-    if (m_requestedClientGeometry != m_clientGeometry) {
+    if (requestedClientGeometry() != clientGeometry()) {
         return true;
     }
-    if (m_requestedClientGeometry.isEmpty()) {
+    if (requestedClientGeometry().isEmpty()) {
         return true;
     }
     return false;
@@ -326,144 +290,11 @@ bool XdgSurfaceClient::isInitialPositionSet() const
     return m_plasmaShellSurface ? m_plasmaShellSurface->isPositionSet() : false;
 }
 
-/**
- * Sets the frame geometry of the XdgSurfaceClient to \a rect.
- *
- * Because geometry updates are asynchronous on Wayland, there are no any guarantees that
- * the frame geometry will be changed immediately. We may need to send a configure event to
- * the client if the current window geometry size and the requested window geometry size
- * don't match. frameGeometryChanged() will be emitted when the requested frame geometry
- * has been applied.
- *
- * Notice that the client may attach a buffer smaller than the one in the configure event.
- */
-void XdgSurfaceClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
-{
-    m_requestedFrameGeometry = rect;
-
-    // XdgToplevelClient currently doesn't support shaded clients, but let's stick with
-    // what X11Client does. Hopefully, one day we will be able to unify setFrameGeometry()
-    // for all AbstractClient subclasses. It's going to be great!
-
-    if (isShade()) {
-        if (m_requestedFrameGeometry.height() == borderTop() + borderBottom()) {
-            qCDebug(KWIN_CORE) << "Passed shaded frame geometry to setFrameGeometry()";
-        } else {
-            m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
-            m_requestedFrameGeometry.setHeight(borderTop() + borderBottom());
-        }
-    } else {
-        m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
-    }
-
-    if (areGeometryUpdatesBlocked()) {
-        m_frameGeometry = m_requestedFrameGeometry;
-        if (pendingGeometryUpdate() == PendingGeometryForced) {
-            return;
-        }
-        if (force == ForceGeometrySet) {
-            setPendingGeometryUpdate(PendingGeometryForced);
-        } else {
-            setPendingGeometryUpdate(PendingGeometryNormal);
-        }
-        return;
-    }
-
-    m_frameGeometry = frameGeometryBeforeUpdateBlocking();
-
-    // Notice that the window geometry size of (0, 0) has special meaning to xdg shell clients.
-    // It basically says "pick whatever size you think is the best, dawg."
-
-    if (requestedClientSize() != clientSize()) {
-        requestGeometry(requestedFrameGeometry());
-    } else {
-        updateGeometry(requestedFrameGeometry());
-    }
-}
-
-void XdgSurfaceClient::move(int x, int y, ForceGeometry_t force)
-{
-    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
-    QPoint p(x, y);
-    if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
-        qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
-    }
-    m_requestedFrameGeometry.moveTopLeft(p);
-    m_requestedClientGeometry.moveTopLeft(framePosToClientPos(p));
-    if (force == NormalGeometrySet && m_frameGeometry.topLeft() == p) {
-        return;
-    }
-    m_frameGeometry.moveTopLeft(m_requestedFrameGeometry.topLeft());
-    if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced) {
-            return;
-        }
-        if (force == ForceGeometrySet) {
-            setPendingGeometryUpdate(PendingGeometryForced);
-        } else {
-            setPendingGeometryUpdate(PendingGeometryNormal);
-        }
-        return;
-    }
-    m_clientGeometry.moveTopLeft(m_requestedClientGeometry.topLeft());
-    m_bufferGeometry = frameRectToBufferRect(m_frameGeometry);
-    updateWindowRules(Rules::Position);
-    screens()->setCurrent(this);
-    workspace()->updateStackingOrder();
-    emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
-    addRepaintDuringGeometryUpdates();
-    updateGeometryBeforeUpdateBlocking();
-}
-
 void XdgSurfaceClient::requestGeometry(const QRect &rect)
 {
-    m_requestedFrameGeometry = rect;
-    m_requestedClientGeometry = frameRectToClientRect(rect);
+    WaylandClient::requestGeometry(rect);
 
     scheduleConfigure(); // Send the configure event later.
-}
-
-void XdgSurfaceClient::updateGeometry(const QRect &rect)
-{
-    const QRect oldClientGeometry = m_clientGeometry;
-    const QRect oldFrameGeometry = m_frameGeometry;
-    const QRect oldBufferGeometry = m_bufferGeometry;
-
-    m_clientGeometry = frameRectToClientRect(rect);
-    m_frameGeometry = rect;
-    m_bufferGeometry = frameRectToBufferRect(rect);
-
-    uint changedGeometries = 0;
-
-    if (m_clientGeometry != oldClientGeometry) {
-        changedGeometries |= XdgSurfaceGeometryClient;
-    }
-    if (m_frameGeometry != oldFrameGeometry) {
-        changedGeometries |= XdgSurfaceGeometryFrame;
-    }
-    if (m_bufferGeometry != oldBufferGeometry) {
-        changedGeometries |= XdgSurfaceGeometryBuffer;
-    }
-
-    if (!changedGeometries) {
-        return;
-    }
-
-    updateWindowRules(Rules::Position | Rules::Size);
-    updateGeometryBeforeUpdateBlocking();
-
-    if (changedGeometries & XdgSurfaceGeometryBuffer) {
-        emit bufferGeometryChanged(this, oldBufferGeometry);
-    }
-    if (changedGeometries & XdgSurfaceGeometryClient) {
-        emit clientGeometryChanged(this, oldClientGeometry);
-    }
-    if (changedGeometries & XdgSurfaceGeometryFrame) {
-        emit frameGeometryChanged(this, oldFrameGeometry);
-    }
-    emit geometryShapeChanged(this, oldFrameGeometry);
-
-    addRepaintDuringGeometryUpdates();
 }
 
 /**
@@ -492,8 +323,8 @@ QRect XdgSurfaceClient::frameRectToBufferRect(const QRect &rect) const
 
 void XdgSurfaceClient::addDamage(const QRegion &damage)
 {
-    const int offsetX = m_bufferGeometry.x() - m_frameGeometry.x();
-    const int offsetY = m_bufferGeometry.y() - m_frameGeometry.y();
+    const int offsetX = bufferGeometry().x() - frameGeometry().x();
+    const int offsetY = bufferGeometry().y() - frameGeometry().y();
     repaints_region += damage.translated(offsetX, offsetY);
     Toplevel::addDamage(damage);
 }

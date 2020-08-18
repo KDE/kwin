@@ -53,26 +53,17 @@ public:
     explicit XdgSurfaceClient(KWaylandServer::XdgSurfaceInterface *shellSurface);
     ~XdgSurfaceClient() override;
 
+    QRect frameRectToBufferRect(const QRect &rect) const override;
     QRect inputGeometry() const override;
-    QRect bufferGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
-    using AbstractClient::move;
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     bool isInitialPositionSet() const override;
     void destroyClient() override;
     void setVirtualKeyboardGeometry(const QRect &geo) override;
 
-    QRect frameRectToBufferRect(const QRect &rect) const;
-    QRect requestedFrameGeometry() const;
-    QPoint requestedPos() const;
-    QSize requestedSize() const;
-    QRect requestedClientGeometry() const;
-    QSize requestedClientSize() const;
-
     virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
 
 protected:
+    void requestGeometry(const QRect &rect) override;
     void addDamage(const QRegion &damage) override;
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
@@ -82,8 +73,6 @@ protected:
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
     void scheduleConfigure();
     void sendConfigure();
-    void requestGeometry(const QRect &rect);
-    void updateGeometry(const QRect &rect);
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
@@ -104,9 +93,6 @@ private:
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     QRect m_windowGeometry;
-    QRect m_requestedFrameGeometry;
-    QRect m_bufferGeometry;
-    QRect m_requestedClientGeometry;
     bool m_haveNextWindowGeometry = false;
 };
 

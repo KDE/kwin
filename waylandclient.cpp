@@ -28,6 +28,13 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
+enum WaylandGeometryType {
+    WaylandGeometryClient = 0x1,
+    WaylandGeometryFrame = 0x2,
+    WaylandGeometryBuffer = 0x4,
+};
+Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
+
 WaylandClient::WaylandClient(SurfaceInterface *surface)
 {
     // Note that we cannot setup compositing here because we may need to call visibleRect(),
@@ -330,6 +337,166 @@ void WaylandClient::internalHide()
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
     emit windowHidden(this);
+}
+
+QRect WaylandClient::frameRectToBufferRect(const QRect &rect) const
+{
+    return QRect(rect.topLeft(), surface()->size());
+}
+
+QRect WaylandClient::requestedFrameGeometry() const
+{
+    return m_requestedFrameGeometry;
+}
+
+QPoint WaylandClient::requestedPos() const
+{
+    return m_requestedFrameGeometry.topLeft();
+}
+
+QSize WaylandClient::requestedSize() const
+{
+    return m_requestedFrameGeometry.size();
+}
+
+QRect WaylandClient::requestedClientGeometry() const
+{
+    return m_requestedClientGeometry;
+}
+
+QRect WaylandClient::bufferGeometry() const
+{
+    return m_bufferGeometry;
+}
+
+QSize WaylandClient::requestedClientSize() const
+{
+    return requestedClientGeometry().size();
+}
+
+void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
+{
+    m_requestedFrameGeometry = rect;
+
+    if (isShade()) {
+        if (m_requestedFrameGeometry.height() == borderTop() + borderBottom()) {
+            qCDebug(KWIN_CORE) << "Passed shaded frame geometry to setFrameGeometry()";
+        } else {
+            m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
+            m_requestedFrameGeometry.setHeight(borderTop() + borderBottom());
+        }
+    } else {
+        m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
+    }
+
+    if (areGeometryUpdatesBlocked()) {
+        m_frameGeometry = m_requestedFrameGeometry;
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            return;
+        }
+        if (force == ForceGeometrySet) {
+            setPendingGeometryUpdate(PendingGeometryForced);
+        } else {
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        }
+        return;
+    }
+
+    m_frameGeometry = frameGeometryBeforeUpdateBlocking();
+
+    if (requestedClientSize() != clientSize()) {
+        requestGeometry(requestedFrameGeometry());
+    } else {
+        updateGeometry(requestedFrameGeometry());
+    }
+}
+
+void WaylandClient::move(int x, int y, ForceGeometry_t force)
+{
+    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
+    QPoint p(x, y);
+    if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
+        qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
+    }
+    m_requestedFrameGeometry.moveTopLeft(p);
+    m_requestedClientGeometry.moveTopLeft(framePosToClientPos(p));
+    if (force == NormalGeometrySet && m_frameGeometry.topLeft() == p) {
+        return;
+    }
+    m_frameGeometry.moveTopLeft(m_requestedFrameGeometry.topLeft());
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            return;
+        }
+        if (force == ForceGeometrySet) {
+            setPendingGeometryUpdate(PendingGeometryForced);
+        } else {
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        }
+        return;
+    }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    m_clientGeometry.moveTopLeft(m_requestedClientGeometry.topLeft());
+    m_bufferGeometry = frameRectToBufferRect(m_frameGeometry);
+    updateGeometryBeforeUpdateBlocking();
+    updateWindowRules(Rules::Position);
+    screens()->setCurrent(this);
+    workspace()->updateStackingOrder();
+    emit bufferGeometryChanged(this, oldBufferGeometry);
+    emit clientGeometryChanged(this, oldClientGeometry);
+    emit frameGeometryChanged(this, oldFrameGeometry);
+    addRepaintDuringGeometryUpdates();
+}
+
+void WaylandClient::requestGeometry(const QRect &rect)
+{
+    m_requestedFrameGeometry = rect;
+    m_requestedClientGeometry = frameRectToClientRect(rect);
+}
+
+void WaylandClient::updateGeometry(const QRect &rect)
+{
+    const QRect oldClientGeometry = m_clientGeometry;
+    const QRect oldFrameGeometry = m_frameGeometry;
+    const QRect oldBufferGeometry = m_bufferGeometry;
+
+    m_clientGeometry = frameRectToClientRect(rect);
+    m_frameGeometry = rect;
+    m_bufferGeometry = frameRectToBufferRect(rect);
+
+    WaylandGeometryTypes changedGeometries;
+
+    if (m_clientGeometry != oldClientGeometry) {
+        changedGeometries |= WaylandGeometryClient;
+    }
+    if (m_frameGeometry != oldFrameGeometry) {
+        changedGeometries |= WaylandGeometryFrame;
+    }
+    if (m_bufferGeometry != oldBufferGeometry) {
+        changedGeometries |= WaylandGeometryBuffer;
+    }
+
+    if (!changedGeometries) {
+        return;
+    }
+
+    updateWindowRules(Rules::Position | Rules::Size);
+    updateGeometryBeforeUpdateBlocking();
+
+    if (changedGeometries & WaylandGeometryBuffer) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
+    }
+    if (changedGeometries & WaylandGeometryClient) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (changedGeometries & WaylandGeometryFrame) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
+    emit geometryShapeChanged(this, oldFrameGeometry);
+
+    addRepaintDuringGeometryUpdates();
 }
 
 } // namespace KWin
