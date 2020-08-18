@@ -113,7 +113,7 @@ int OutputScreens::number(const QPoint &pos) const
 
 AbstractOutput *OutputScreens::findOutput(int screen) const
 {
-    return m_platform->enabledOutputs().value(screen);
+    return m_platform->findOutput(screen);
 }
 
 } // namespace

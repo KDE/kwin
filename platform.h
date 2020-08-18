@@ -410,6 +410,7 @@ public:
     virtual Outputs enabledOutputs() const {
         return Outputs();
     }
+    AbstractOutput *findOutput(int screenId);
     AbstractOutput *findOutput(const QByteArray &uuid);
 
     /**

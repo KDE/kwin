@@ -163,6 +163,11 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
     config->setApplied();
 }
 
+AbstractOutput *Platform::findOutput(int screenId)
+{
+    return enabledOutputs().value(screenId);
+}
+
 AbstractOutput *Platform::findOutput(const QByteArray &uuid)
 {
     const auto outs = outputs();
