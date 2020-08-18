@@ -46,7 +46,9 @@ Integration::Integration()
 
 Integration::~Integration()
 {
-    qDeleteAll(m_screens);
+    for (QPlatformScreen *platformScreen : m_screens) {
+        QWindowSystemInterface::handleScreenRemoved(platformScreen);
+    }
 }
 
 bool Integration::hasCapability(Capability cap) const
