@@ -71,7 +71,6 @@ public:
     QSize requestedSize() const;
     QRect requestedClientGeometry() const;
     QSize requestedClientSize() const;
-    QRect clientGeometry() const;
     bool isHidden() const;
 
     virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;

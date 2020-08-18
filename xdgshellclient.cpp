@@ -144,11 +144,6 @@ QSize XdgSurfaceClient::requestedClientSize() const
     return requestedClientGeometry().size();
 }
 
-QRect XdgSurfaceClient::clientGeometry() const
-{
-    return m_clientGeometry;
-}
-
 QMatrix4x4 XdgSurfaceClient::inputTransformation() const
 {
     QMatrix4x4 transformation;
