@@ -126,7 +126,6 @@ public:
 
 Q_SIGNALS:
     void modeChanged();
-    void geometryChanged();
     void outputChange(const QRegion &damagedRegion);
 
 protected:

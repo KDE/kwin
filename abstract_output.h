@@ -164,6 +164,12 @@ public:
     /** Returns the resolution of the output.  */
     virtual QSize pixelSize() const = 0;
 
+Q_SIGNALS:
+    /**
+     * This signal is emitted when the geometry of this output has changed.
+     */
+    void geometryChanged();
+
 private:
     Q_DISABLE_COPY(AbstractOutput)
 };
