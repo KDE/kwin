@@ -797,9 +797,10 @@ public:
     QString applicationMenuObjectPath() const {
         return m_applicationMenuObjectPath;
     }
-    QString colorScheme() const {
-        return m_colorScheme;
-    }
+
+    virtual QString preferredColorScheme() const;
+    QString colorScheme() const;
+    void setColorScheme(const QString &colorScheme);
 
     /**
      * Request showing the application menu bar
@@ -975,10 +976,7 @@ protected:
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();
-
-    void updateColorScheme(QString path);
-    virtual void updateColorScheme() = 0;
-
+    void updateColorScheme();
     void setTransientFor(AbstractClient *transientFor);
     /**
      * Just removes the @p cl from the transients without any further checks.

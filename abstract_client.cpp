@@ -742,14 +742,25 @@ const Decoration::DecorationPalette *AbstractClient::decorationPalette() const
     return m_palette.get();
 }
 
-void AbstractClient::updateColorScheme(QString path)
+QString AbstractClient::preferredColorScheme() const
 {
-    if (path.isEmpty()) {
-        path = QStringLiteral("kdeglobals");
+    return rules()->checkDecoColor(QString());
+}
+
+QString AbstractClient::colorScheme() const
+{
+    return m_colorScheme;
+}
+
+void AbstractClient::setColorScheme(const QString &colorScheme)
+{
+    QString requestedColorScheme = colorScheme;
+    if (requestedColorScheme.isEmpty()) {
+        requestedColorScheme = QStringLiteral("kdeglobals");
     }
 
-    if (!m_palette || m_colorScheme != path) {
-        m_colorScheme = path;
+    if (!m_palette || m_colorScheme != requestedColorScheme) {
+        m_colorScheme = requestedColorScheme;
 
         if (m_palette) {
             disconnect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &AbstractClient::handlePaletteChange);
@@ -782,6 +793,11 @@ void AbstractClient::updateColorScheme(QString path)
         emit paletteChanged(palette());
         emit colorSchemeChanged();
     }
+}
+
+void AbstractClient::updateColorScheme()
+{
+    setColorScheme(preferredColorScheme());
 }
 
 void AbstractClient::handlePaletteChange()

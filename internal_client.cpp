@@ -384,11 +384,6 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     }
 }
 
-void InternalClient::updateColorScheme()
-{
-    AbstractClient::updateColorScheme(QString());
-}
-
 void InternalClient::showOnScreenEdge()
 {
 }

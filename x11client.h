@@ -264,9 +264,9 @@ public:
     Xcb::Property fetchFirstInTabBox() const;
     void readFirstInTabBox(Xcb::Property &property);
     void updateFirstInTabBox();
-    Xcb::StringProperty fetchColorScheme() const;
-    void readColorScheme(Xcb::StringProperty &property);
-    void updateColorScheme() override;
+    Xcb::StringProperty fetchPreferredColorScheme() const;
+    QString readPreferredColorScheme(Xcb::StringProperty &property) const;
+    QString preferredColorScheme() const override;
 
     //sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);

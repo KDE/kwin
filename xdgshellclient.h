@@ -147,7 +147,7 @@ public:
     bool noBorder() const override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
-    void updateColorScheme() override;
+    QString preferredColorScheme() const override;
     bool supportsWindowRules() const override;
     bool takeFocus() override;
     bool wantsInput() const override;
@@ -246,7 +246,6 @@ public:
     QRect transientPlacement(const QRect &bounds) const override;
     bool isCloseable() const override;
     void closeWindow() override;
-    void updateColorScheme() override;
     bool noBorder() const override;
     bool userCanSetNoBorder() const override;
     void setNoBorder(bool set) override;

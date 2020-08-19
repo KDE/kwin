@@ -44,7 +44,6 @@ public:
     bool supportsWindowRules() const override { return false; }
     void closeWindow() override {}
     bool takeFocus() override { return false; }
-    void updateColorScheme() override {}
     bool wantsInput() const override { return false; }
     bool isInputMethod() const override { return true; }
     bool isInitialPositionSet() const override { return true; }

@@ -1326,13 +1326,12 @@ void XdgToplevelClient::updateFullScreenMode(bool set)
     emit fullScreenChanged();
 }
 
-void XdgToplevelClient::updateColorScheme()
+QString XdgToplevelClient::preferredColorScheme() const
 {
     if (m_paletteInterface) {
-        AbstractClient::updateColorScheme(rules()->checkDecoColor(m_paletteInterface->palette()));
-    } else {
-        AbstractClient::updateColorScheme(rules()->checkDecoColor(QString()));
+        return rules()->checkDecoColor(m_paletteInterface->palette());
     }
+    return rules()->checkDecoColor(QString());
 }
 
 void XdgToplevelClient::installAppMenu(AppMenuInterface *appMenu)
@@ -1390,16 +1389,11 @@ void XdgToplevelClient::installPalette(ServerSideDecorationPaletteInterface *pal
 {
     m_paletteInterface = palette;
 
-    auto updatePalette = [this](const QString &palette) {
-        AbstractClient::updateColorScheme(rules()->checkDecoColor(palette));
-    };
-    connect(m_paletteInterface, &ServerSideDecorationPaletteInterface::paletteChanged, this, [=](const QString &palette) {
-        updatePalette(palette);
-    });
-    connect(m_paletteInterface, &QObject::destroyed, this, [=]() {
-        updatePalette(QString());
-    });
-    updatePalette(palette->palette());
+    connect(m_paletteInterface, &ServerSideDecorationPaletteInterface::paletteChanged,
+            this, &XdgToplevelClient::updateColorScheme);
+    connect(m_paletteInterface, &QObject::destroyed,
+            this, &XdgToplevelClient::updateColorScheme);
+    updateColorScheme();
 }
 
 /**
@@ -2016,11 +2010,6 @@ bool XdgPopupClient::isCloseable() const
 
 void XdgPopupClient::closeWindow()
 {
-}
-
-void XdgPopupClient::updateColorScheme()
-{
-    AbstractClient::updateColorScheme(QString());
 }
 
 bool XdgPopupClient::noBorder() const

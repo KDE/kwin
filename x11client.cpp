@@ -370,7 +370,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
-    auto colorSchemeCookie = fetchColorScheme();
+    auto colorSchemeCookie = fetchPreferredColorScheme();
     auto firstInTabBoxCookie = fetchFirstInTabBox();
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
@@ -603,7 +603,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     // Create client group if the window will have a decoration
     bool dontKeepInArea = false;
-    readColorScheme(colorSchemeCookie);
+    setColorScheme(readPreferredColorScheme(colorSchemeCookie));
 
     readApplicationMenuServiceName(applicationMenuServiceNameCookie);
     readApplicationMenuObjectPath(applicationMenuObjectPathCookie);
@@ -2552,20 +2552,20 @@ void X11Client::updateFirstInTabBox()
     readFirstInTabBox(property);
 }
 
-Xcb::StringProperty X11Client::fetchColorScheme() const
+Xcb::StringProperty X11Client::fetchPreferredColorScheme() const
 {
     return Xcb::StringProperty(m_client, atoms->kde_color_sheme);
 }
 
-void X11Client::readColorScheme(Xcb::StringProperty &property)
+QString X11Client::readPreferredColorScheme(Xcb::StringProperty &property) const
 {
-    AbstractClient::updateColorScheme(rules()->checkDecoColor(QString::fromUtf8(property)));
+    return rules()->checkDecoColor(QString::fromUtf8(property));
 }
 
-void X11Client::updateColorScheme()
+QString X11Client::preferredColorScheme() const
 {
-    Xcb::StringProperty property = fetchColorScheme();
-    readColorScheme(property);
+    Xcb::StringProperty property = fetchPreferredColorScheme();
+    return readPreferredColorScheme(property);
 }
 
 bool X11Client::isClient() const
