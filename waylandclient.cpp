@@ -290,6 +290,21 @@ void WaylandClient::updateDepth()
     }
 }
 
+void WaylandClient::cleanGrouping()
+{
+    if (transientFor()) {
+        transientFor()->removeTransient(this);
+    }
+    for (auto it = transients().constBegin(); it != transients().constEnd();) {
+        if ((*it)->transientFor() == this) {
+            removeTransient(*it);
+            it = transients().constBegin(); // restart, just in case something more has changed with the list
+        } else {
+            ++it;
+        }
+    }
+}
+
 bool WaylandClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)

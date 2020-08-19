@@ -61,6 +61,8 @@ protected:
     void doSetActive() override;
     void updateCaption() override;
 
+    void cleanGrouping();
+
     virtual void requestGeometry(const QRect &rect);
     virtual void updateGeometry(const QRect &rect);
 

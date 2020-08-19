@@ -381,21 +381,6 @@ void XdgSurfaceClient::setVirtualKeyboardGeometry(const QRect &geo)
     setFrameGeometry(newWindowGeometry);
 }
 
-void XdgSurfaceClient::cleanGrouping()
-{
-    if (transientFor()) {
-        transientFor()->removeTransient(this);
-    }
-    for (auto it = transients().constBegin(); it != transients().constEnd();) {
-        if ((*it)->transientFor() == this) {
-            removeTransient(*it);
-            it = transients().constBegin(); // restart, just in case something more has changed with the list
-        } else {
-            ++it;
-        }
-    }
-}
-
 void XdgSurfaceClient::cleanTabBox()
 {
 #ifdef KWIN_BUILD_TABBOX
