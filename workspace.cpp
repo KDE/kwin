@@ -706,22 +706,24 @@ void Workspace::addShellClient(AbstractClient *client)
     client->updateDecoration(false);
     updateClientLayer(client);
 
-    const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
-    bool placementDone = false;
-    if (client->isInitialPositionSet()) {
-        placementDone = true;
-    }
-    if (client->isFullScreen()) {
-        placementDone = true;
-    }
-    if (client->maximizeMode() == MaximizeMode::MaximizeFull) {
-        placementDone = true;
-    }
-    if (client->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
-        placementDone = true;
-    }
-    if (!placementDone) {
-        client->placeIn(area);
+    if (client->isPlaceable()) {
+        const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
+        bool placementDone = false;
+        if (client->isInitialPositionSet()) {
+            placementDone = true;
+        }
+        if (client->isFullScreen()) {
+            placementDone = true;
+        }
+        if (client->maximizeMode() == MaximizeMode::MaximizeFull) {
+            placementDone = true;
+        }
+        if (client->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
+            placementDone = true;
+        }
+        if (!placementDone) {
+            client->placeIn(area);
+        }
     }
     m_allClients.append(client);
     if (!unconstrained_stacking_order.contains(client)) {
@@ -2195,9 +2197,7 @@ void Workspace::updateClientArea(bool force)
         for (auto it = m_allClients.constBegin();
                 it != m_allClients.constEnd();
                 ++it) {
-            if (!(*it)->isInputMethod()) {
-                (*it)->checkWorkspacePosition();
-            }
+            (*it)->checkWorkspacePosition();
         }
 
         oldrestrictedmovearea.clear(); // reset, no longer valid or needed

@@ -405,6 +405,7 @@ public:
      * @see captionNormal
      */
     virtual QString captionSuffix() const = 0;
+    virtual bool isPlaceable() const;
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;

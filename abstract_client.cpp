@@ -3087,6 +3087,9 @@ void AbstractClient::sendToScreen(int newScreen)
 
 void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect oldClientGeometry)
 {
+    if (isDock() || isDesktop() || !isPlaceable()) {
+        return;
+    }
     enum { Left = 0, Top, Right, Bottom };
     const int border[4] = { borderLeft(), borderTop(), borderRight(), borderBottom() };
     if( !oldGeometry.isValid())
@@ -3095,16 +3098,12 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
         oldDesktop = desktop();
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
-    if (isDesktop())
-        return;
     if (isFullScreen()) {
         QRect area = workspace()->clientArea(FullScreenArea, this);
         if (frameGeometry() != area)
             setFrameGeometry(area);
         return;
     }
-    if (isDock())
-        return;
 
     if (maximizeMode() != MaximizeRestore) {
         GeometryUpdatesBlocker block(this);
@@ -3511,6 +3510,11 @@ void AbstractClient::setNoBorder(bool set)
 void AbstractClient::showOnScreenEdge()
 {
     qCWarning(KWIN_CORE, "%s doesn't support screen edge activation", metaObject()->className());
+}
+
+bool AbstractClient::isPlaceable() const
+{
+    return true;
 }
 
 }
