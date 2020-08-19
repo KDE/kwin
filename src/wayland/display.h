@@ -56,8 +56,6 @@ class SlideManagerInterface;
 class SubCompositorInterface;
 enum class TextInputInterfaceVersion;
 class TextInputManagerInterface;
-class XdgShellV5Interface;
-enum class XdgShellInterfaceVersion;
 class XdgShellInterface;
 enum class RelativePointerInterfaceVersion;
 class RelativePointerManagerInterface;
