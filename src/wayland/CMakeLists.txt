@@ -64,7 +64,7 @@ set(SERVER_LIB_SRCS
     viewporter_interface.cpp
     xdgdecoration_v1_interface.cpp
     xdgforeign_v2_interface.cpp
-    xdgoutput_interface.cpp
+    xdgoutput_v1_interface.cpp
     xdgshell_interface.cpp
     screencast_interface.cpp
 )
@@ -197,9 +197,9 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME server-decoration-palette
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-output/xdg-output-unstable-v1.xml
-    BASENAME xdg-output
+    BASENAME xdg-output-unstable-v1
 )
 
 ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
@@ -417,7 +417,7 @@ set(SERVER_LIB_HEADERS
   viewporter_interface.h
   xdgdecoration_v1_interface.h
   xdgforeign_v2_interface.h
-  xdgoutput_interface.h
+  xdgoutput_v1_interface.h
   xdgshell_interface.h
 )
 

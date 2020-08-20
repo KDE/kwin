@@ -1,14 +1,13 @@
 /*
     SPDX-FileCopyrightText: 2018 David Edmundson <kde@davidedmundson.co.uk>
+    SPDX-FileCopyrightText: 2020 David Edmundson <kde@davidedmundson.co.uk>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #ifndef KWAYLAND_SERVER_XDGOUTPUT_INTERFACE_H
 #define KWAYLAND_SERVER_XDGOUTPUT_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
-
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -24,17 +23,19 @@ namespace KWaylandServer
 
 class Display;
 class OutputInterface;
-class XdgOutputInterface;
+class XdgOutputV1Interface;
+
+class XdgOutputManagerV1InterfacePrivate;
+class XdgOutputV1InterfacePrivate;
 
 /**
  * Global manager for XdgOutputs
- * @since 5.47
  */
-class KWAYLANDSERVER_EXPORT XdgOutputManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT XdgOutputManagerV1Interface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~XdgOutputManagerInterface();
+    ~XdgOutputManagerV1Interface() override;
     /**
      * Creates an XdgOutputInterface object for an existing Output
      * which exposes XDG specific properties of outputs
@@ -42,25 +43,23 @@ public:
      * @arg output the wl_output interface this XDG output is for
      * @parent the parent of the newly created object
      */
-    XdgOutputInterface* createXdgOutput(OutputInterface *output, QObject *parent);
+    XdgOutputV1Interface* createXdgOutput(OutputInterface *output, QObject *parent);
 private:
-    explicit XdgOutputManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit XdgOutputManagerV1Interface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<XdgOutputManagerV1InterfacePrivate> d;
 };
 
 /**
  * Extension to Output
  * Users should set all relevant values on creation and on future changes.
  * done() should be explicitly called after change batches including initial setting.
- * @since 5.47
  */
-class KWAYLANDSERVER_EXPORT XdgOutputInterface : public QObject
+class KWAYLANDSERVER_EXPORT XdgOutputV1Interface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~XdgOutputInterface();
+    ~XdgOutputV1Interface() override;
 
     /**
      * Sets the size of this output in logical co-ordinates.
@@ -89,12 +88,10 @@ public:
      * @brief Sets a short name of the output
      * This should be consistent across reboots for the same monitor
      * It should be set once before the first done call
-     * @since 5.XDGOUTPUT
      */
     void setName(const QString &name);
     /**
      * The last set name
-     * @since 5.XDGOUTPUT
      */
     void name() const;
 
@@ -107,7 +104,6 @@ public:
     void setDescription(const QString &description);
     /**
      * The last set description
-     * @since 5.XDGOUTPUT
      */
     void description() const;
 
@@ -117,11 +113,11 @@ public:
     void done();
 
 private:
-    explicit XdgOutputInterface(QObject *parent);
-    friend class XdgOutputManagerInterface;
+    explicit XdgOutputV1Interface(QObject *parent);
+    friend class XdgOutputManagerV1Interface;
+    friend class XdgOutputManagerV1InterfacePrivate;
 
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<XdgOutputV1InterfacePrivate> d;
 };
 
 

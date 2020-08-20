@@ -15,7 +15,7 @@
 #include "../../src/server/display.h"
 #include "../../src/server/dpms_interface.h"
 #include "../../src/server/output_interface.h"
-#include "../../src/server/xdgoutput_interface.h"
+#include "../../src/server/xdgoutput_v1_interface.h"
 
 // Wayland
 
@@ -31,8 +31,8 @@ private Q_SLOTS:
 private:
     KWaylandServer::Display *m_display;
     KWaylandServer::OutputInterface *m_serverOutput;
-    KWaylandServer::XdgOutputManagerInterface *m_serverXdgOutputManager;
-    KWaylandServer::XdgOutputInterface *m_serverXdgOutput;
+    KWaylandServer::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
+    KWaylandServer::XdgOutputV1Interface *m_serverXdgOutput;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -63,8 +63,7 @@ void TestXdgOutput::init()
     m_serverOutput->setCurrentMode(QSize(1920, 1080));
     m_serverOutput->create();
 
-    m_serverXdgOutputManager = m_display->createXdgOutputManager(this);
-    m_serverXdgOutputManager->create();
+    m_serverXdgOutputManager = m_display->createXdgOutputManagerV1(this);
     m_serverXdgOutput =  m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
     m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); //a 1.5 scale factor
     m_serverXdgOutput->setLogicalPosition(QPoint(11,12)); //not a sensible value for one monitor, but works for this test

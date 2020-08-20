@@ -67,7 +67,7 @@ class XdgForeignV2Interface;
 class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
 class PlasmaVirtualDesktopManagementInterface;
-class XdgOutputManagerInterface;
+class XdgOutputManagerV1Interface;
 class XdgDecorationManagerV1Interface;
 class EglStreamControllerInterface;
 class KeyStateInterface;
@@ -275,7 +275,7 @@ public:
      * @return the created manager
      * @since 5.47
      */
-    XdgOutputManagerInterface *createXdgOutputManager(QObject *parent = nullptr);
+    XdgOutputManagerV1Interface *createXdgOutputManagerV1(QObject *parent = nullptr);
 
 
     /**

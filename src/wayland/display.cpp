@@ -43,7 +43,7 @@
 #include "viewporter_interface.h"
 #include "xdgdecoration_v1_interface.h"
 #include "xdgforeign_v2_interface.h"
-#include "xdgoutput_interface.h"
+#include "xdgoutput_v1_interface.h"
 #include "xdgshell_interface.h"
 #include "inputmethod_v1_interface.h"
 
@@ -444,9 +444,9 @@ PlasmaVirtualDesktopManagementInterface *Display::createPlasmaVirtualDesktopMana
     return b;
 }
 
-XdgOutputManagerInterface *Display::createXdgOutputManager(QObject *parent)
+XdgOutputManagerV1Interface *Display::createXdgOutputManagerV1(QObject *parent)
 {
-    auto b = new XdgOutputManagerInterface(this, parent);
+    auto b = new XdgOutputManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, b, [b] { delete b; });
     return b;
 }
