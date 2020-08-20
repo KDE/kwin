@@ -910,12 +910,11 @@ void Workspace::slotReconfigure()
     updateToolWindows(true);
 
     RuleBook::self()->load();
-    for (auto it = m_allClients.begin();
-            it != m_allClients.end();
-            ++it) {
-        (*it)->setupWindowRules(true);
-        (*it)->applyWindowRules();
-        RuleBook::self()->discardUsed(*it, false);
+    for (AbstractClient *client : m_allClients) {
+        if (client->supportsWindowRules()) {
+            client->evaluateWindowRules();
+            RuleBook::self()->discardUsed(client, false);
+        }
     }
 
     if (borderlessMaximizedWindows != options->borderlessMaximizedWindows() &&
