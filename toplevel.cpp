@@ -8,6 +8,7 @@
 */
 #include "toplevel.h"
 
+#include "abstract_client.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -60,12 +61,35 @@ Toplevel::~Toplevel()
     delete info;
 }
 
-QDebug& operator<<(QDebug& stream, const Toplevel* cl)
+QDebug operator<<(QDebug debug, const Toplevel *toplevel)
 {
-    if (cl == nullptr)
-        return stream << "\'NULL\'";
-    cl->debug(stream);
-    return stream;
+    QDebugStateSaver saver(debug);
+    debug.nospace();
+    if (toplevel) {
+        debug << toplevel->metaObject()->className() << '(' << static_cast<const void *>(toplevel);
+        debug << ", windowId=0x" << Qt::hex << toplevel->windowId() << Qt::dec;
+        if (const KWaylandServer::SurfaceInterface *surface = toplevel->surface()) {
+            debug << ", surface=" << surface;
+        }
+        const AbstractClient *client = qobject_cast<const AbstractClient *>(toplevel);
+        if (client) {
+            if (!client->isPopupWindow()) {
+                debug << ", caption=" << client->caption();
+            }
+            if (client->transientFor()) {
+                debug << ", transientFor=" << client->transientFor();
+            }
+        }
+        if (debug.verbosity() > 2) {
+            debug << ", frameGeometry=" << toplevel->frameGeometry();
+            debug << ", resourceName=" << toplevel->resourceName();
+            debug << ", resourceClass=" << toplevel->resourceClass();
+        }
+        debug << ')';
+    } else {
+        debug << "Toplevel(0x0)";
+    }
+    return debug;
 }
 
 void Toplevel::detectShape(xcb_window_t id)

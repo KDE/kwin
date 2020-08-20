@@ -2450,12 +2450,6 @@ void X11Client::updateAllowedActions(bool force)
     }
 }
 
-void X11Client::debug(QDebug& stream) const
-{
-    stream.nospace();
-    print<QDebug>(stream);
-}
-
 Xcb::StringProperty X11Client::fetchActivities() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES

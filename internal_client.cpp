@@ -137,11 +137,6 @@ QSize InternalClient::maxSize() const
     return m_internalWindow->maximumSize();
 }
 
-void InternalClient::debug(QDebug &stream) const
-{
-    stream.nospace() << "\'InternalClient:" << m_internalWindow << "\'";
-}
-
 QRect InternalClient::transparentRect() const
 {
     return QRect();

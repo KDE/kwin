@@ -601,11 +601,6 @@ XdgToplevelInterface *XdgToplevelClient::shellSurface() const
     return m_shellSurface;
 }
 
-void XdgToplevelClient::debug(QDebug &stream) const
-{
-    stream << "XdgToplevelClient:" << resourceClass() << caption();
-}
-
 NET::WindowType XdgToplevelClient::windowType(bool direct, int supported_types) const
 {
     Q_UNUSED(direct)
@@ -1772,11 +1767,6 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
 
 XdgPopupClient::~XdgPopupClient()
 {
-}
-
-void XdgPopupClient::debug(QDebug &stream) const
-{
-    stream << "XdgPopupClient: transientFor:" << transientFor();
 }
 
 NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) const

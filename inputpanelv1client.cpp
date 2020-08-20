@@ -114,11 +114,6 @@ void InputPanelV1Client::destroyClient()
     delete this;
 }
 
-void InputPanelV1Client::debug(QDebug &stream) const
-{
-    stream << "InputPanelClient(" << static_cast<const void*>(this) << "," << resourceClass() << m_frameGeometry << ')';
-}
-
 NET::WindowType InputPanelV1Client::windowType(bool, int) const
 {
     return NET::Utility;

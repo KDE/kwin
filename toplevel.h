@@ -700,10 +700,8 @@ protected:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);
     void disownDataPassedToDeleted();
-    friend QDebug& operator<<(QDebug& stream, const Toplevel*);
     void deleteEffectWindow();
     void setDepth(int depth);
     QRect m_frameGeometry;
@@ -1054,7 +1052,7 @@ inline bool Toplevel::isPopupWindow() const
     }
 }
 
-QDebug& operator<<(QDebug& stream, const Toplevel*);
+QDebug operator<<(QDebug debug, const Toplevel *toplevel);
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::Toplevel*)

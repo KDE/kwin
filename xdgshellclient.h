@@ -127,7 +127,6 @@ public:
 
     KWaylandServer::XdgToplevelInterface *shellSurface() const;
 
-    void debug(QDebug &stream) const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     MaximizeMode maximizeMode() const override;
     MaximizeMode requestedMaximizeMode() const override;
@@ -233,7 +232,6 @@ public:
     explicit XdgPopupClient(KWaylandServer::XdgPopupInterface *shellSurface);
     ~XdgPopupClient() override;
 
-    void debug(QDebug &stream) const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool hasPopupGrab() const override;
     void popupDone() override;

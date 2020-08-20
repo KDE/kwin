@@ -44,7 +44,6 @@ public:
     bool isInputMethod() const override { return true; }
     bool isInitialPositionSet() const override { return true; }
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
-    void debug(QDebug & stream) const override;
     QRect inputGeometry() const override;
 
 private:

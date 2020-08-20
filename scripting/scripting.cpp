@@ -54,8 +54,8 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
             stream << " ";
         }
         QScriptValue argument = context->argument(i);
-        if (KWin::X11Client *client = qscriptvalue_cast<KWin::X11Client *>(argument)) {
-            client->print<QTextStream>(stream);
+        if (KWin::AbstractClient *client = qscriptvalue_cast<KWin::AbstractClient *>(argument)) {
+            stream << client;
         } else {
             stream << argument.toString();
         }

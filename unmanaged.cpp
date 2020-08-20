@@ -147,11 +147,6 @@ QRect Unmanaged::transparentRect() const
     return QRect(clientPos(), clientSize());
 }
 
-void Unmanaged::debug(QDebug& stream) const
-{
-    stream << "\'ID:" << window() << "\'";
-}
-
 NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
 {
     // for unmanaged windows the direct does not make any difference

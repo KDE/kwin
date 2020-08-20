@@ -171,9 +171,6 @@ public:
         return m_wasOutline;
     }
 
-protected:
-    void debug(QDebug& stream) const override;
-
 private Q_SLOTS:
     void mainClientClosed(KWin::Toplevel *client);
     void transientForClosed(Toplevel *toplevel, Deleted *deleted);

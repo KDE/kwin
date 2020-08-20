@@ -273,9 +273,6 @@ public:
     void setSessionActivityOverride(bool needed);
     bool isClient() const override;
 
-    template <typename T>
-    void print(T &stream) const;
-
     void cancelFocusOutTimer();
 
     /**
@@ -331,7 +328,6 @@ private:
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
 
 protected:
-    void debug(QDebug& stream) const override;
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const override;
     void doSetActive() override;
@@ -639,13 +635,6 @@ inline xcb_window_t X11Client::moveResizeGrabWindow() const
 inline bool X11Client::hiddenPreview() const
 {
     return mapping_state == Kept;
-}
-
-template <typename T>
-inline void X11Client::print(T &stream) const
-{
-    stream << "\'Client:" << window() << ";WMCLASS:" << resourceClass() << ":"
-           << resourceName() << ";Caption:" << caption() << "\'";
 }
 
 } // namespace
