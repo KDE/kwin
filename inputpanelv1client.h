@@ -34,21 +34,16 @@ public:
     void destroyClient() override;
     QRect bufferGeometry() const override { return frameGeometry(); }
     bool isCloseable() const override { return false; }
-    bool noBorder() const override { return true; }
     bool isResizable() const override { return false; }
     bool isMovable() const override { return false; }
     bool isMovableAcrossScreens() const override { return false; }
-    bool userCanSetNoBorder() const override { return false; }
     bool acceptsFocus() const override { return false; }
-    void showOnScreenEdge() override {}
     bool supportsWindowRules() const override { return false; }
     void closeWindow() override {}
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
     bool isInputMethod() const override { return true; }
     bool isInitialPositionSet() const override { return true; }
-    void updateDecoration(bool /*check_workspace_pos*/, bool /*force*/) override {}
-    void setNoBorder(bool /*set*/) override {}
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
     void debug(QDebug & stream) const override;
     QRect inputGeometry() const override;
