@@ -321,11 +321,6 @@ void InternalClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     }
 }
 
-bool InternalClient::supportsWindowRules() const
-{
-    return false;
-}
-
 AbstractClient *InternalClient::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)

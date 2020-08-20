@@ -59,7 +59,6 @@ public:
     void hideClient(bool hide) override;
     void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
-    bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
     bool takeFocus() override;

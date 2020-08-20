@@ -852,7 +852,7 @@ public:
     /**
      * Returns whether window rules can be applied to this client.
      *
-     * Default implementation returns @c true.
+     * Default implementation returns @c false.
      */
     virtual bool supportsWindowRules() const;
 

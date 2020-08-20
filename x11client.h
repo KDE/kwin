@@ -103,6 +103,7 @@ public:
     Group* group() override;
     void checkGroup(Group* gr = nullptr, bool force = false);
     void changeClientLeaderGroup(Group* gr);
+    bool supportsWindowRules() const override;
     void updateWindowRules(Rules::Types selection) override;
     void applyWindowRules() override;
     void updateFullscreenMonitors(NETFullscreenMonitors topology);

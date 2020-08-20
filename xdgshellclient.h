@@ -248,7 +248,6 @@ public:
     void closeWindow() override;
     bool wantsInput() const override;
     bool takeFocus() override;
-    bool supportsWindowRules() const override;
     void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
 
 protected:

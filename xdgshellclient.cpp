@@ -2012,11 +2012,6 @@ void XdgPopupClient::closeWindow()
 {
 }
 
-bool XdgPopupClient::supportsWindowRules() const
-{
-    return false;
-}
-
 bool XdgPopupClient::wantsInput() const
 {
     return false;

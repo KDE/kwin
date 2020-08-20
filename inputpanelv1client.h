@@ -38,7 +38,6 @@ public:
     bool isMovable() const override { return false; }
     bool isMovableAcrossScreens() const override { return false; }
     bool acceptsFocus() const override { return false; }
-    bool supportsWindowRules() const override { return false; }
     void closeWindow() override {}
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }

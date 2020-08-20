@@ -2747,7 +2747,7 @@ bool AbstractClient::isInternal() const
 
 bool AbstractClient::supportsWindowRules() const
 {
-    return true;
+    return false;
 }
 
 QMargins AbstractClient::frameMargins() const

@@ -4991,6 +4991,11 @@ void X11Client::applyWindowRules()
     setBlockingCompositing(info->isBlockingCompositing());
 }
 
+bool X11Client::supportsWindowRules() const
+{
+    return true;
+}
+
 void X11Client::damageNotifyEvent()
 {
     if (m_syncRequest.isPending && isResize()) {
