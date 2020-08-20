@@ -53,7 +53,7 @@ class PlasmaWindowManagementInterface;
 class OutputManagementInterface;
 class OutputConfigurationInterface;
 class XdgForeignV2Interface;
-class XdgOutputManagerInterface;
+class XdgOutputManagerV1Interface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
 class LinuxDmabufUnstableV1Buffer;
@@ -123,8 +123,8 @@ public:
     KWaylandServer::ServerSideDecorationManagerInterface *decorationManager() const {
         return m_decorationManager;
     }
-    KWaylandServer::XdgOutputManagerInterface *xdgOutputManager() const {
-        return m_xdgOutputManager;
+    KWaylandServer::XdgOutputManagerV1Interface *xdgOutputManagerV1() const {
+        return m_xdgOutputManagerV1;
     }
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *keyboardShortcutsInhibitManager() const
     {
@@ -276,7 +276,7 @@ private:
     KWaylandServer::AppMenuManagerInterface *m_appMenuManager = nullptr;
     KWaylandServer::ServerSideDecorationPaletteManagerInterface *m_paletteManager = nullptr;
     KWaylandServer::IdleInterface *m_idle = nullptr;
-    KWaylandServer::XdgOutputManagerInterface *m_xdgOutputManager = nullptr;
+    KWaylandServer::XdgOutputManagerV1Interface *m_xdgOutputManagerV1 = nullptr;
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
     KWaylandServer::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;

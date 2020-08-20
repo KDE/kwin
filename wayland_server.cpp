@@ -54,7 +54,7 @@
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
 #include <KWaylandServer/xdgforeign_v2_interface.h>
-#include <KWaylandServer/xdgoutput_interface.h>
+#include <KWaylandServer/xdgoutput_v1_interface.h>
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
 #include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
@@ -481,8 +481,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     });
     m_outputManagement->create();
 
-    m_xdgOutputManager = m_display->createXdgOutputManager(m_display);
-    m_xdgOutputManager->create();
+    m_xdgOutputManagerV1 = m_display->createXdgOutputManagerV1(m_display);
 
     m_display->createSubCompositor(m_display)->create();
 

@@ -15,7 +15,7 @@
 // KWayland
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/outputchangeset.h>
-#include <KWaylandServer/xdgoutput_interface.h>
+#include <KWaylandServer/xdgoutput_v1_interface.h>
 // KF5
 #include <KLocalizedString>
 
@@ -30,7 +30,7 @@ AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
 {
     m_waylandOutput = waylandServer()->display()->createOutput(this);
     m_waylandOutputDevice = waylandServer()->display()->createOutputDevice(this);
-    m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, this);
+    m_xdgOutputV1 = waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput, this);
 
     connect(m_waylandOutput, &KWaylandServer::OutputInterface::dpmsModeRequested, this,
             [this] (KWaylandServer::OutputInterface::DpmsMode mode) {
@@ -81,8 +81,8 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
     m_waylandOutputDevice->setGlobalPosition(pos);
 
     m_waylandOutput->setGlobalPosition(pos);
-    m_xdgOutput->setLogicalPosition(pos);
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalPosition(pos);
+    m_xdgOutputV1->done();
 }
 
 QSize AbstractWaylandOutput::modeSize() const
@@ -111,8 +111,8 @@ void AbstractWaylandOutput::setScale(qreal scale)
     // or maybe even set this to 3 when we're scaling to 1.5
     // don't treat this like it's chosen deliberately
     m_waylandOutput->setScale(std::ceil(scale));
-    m_xdgOutput->setLogicalSize(pixelSize() / scale);
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale);
+    m_xdgOutputV1->done();
 }
 
 using DeviceInterface = KWaylandServer::OutputDeviceInterface;
@@ -147,8 +147,8 @@ void AbstractWaylandOutput::setTransform(DeviceInterface::Transform transform)
     m_waylandOutputDevice->setTransform(transform);
 
     m_waylandOutput->setTransform(toOutputTransform(transform));
-    m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_xdgOutputV1->done();
 }
 
 inline
@@ -236,8 +236,8 @@ QString AbstractWaylandOutput::description() const
 void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 {
     m_waylandOutput->setCurrentMode(size, refreshRate);
-    m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_xdgOutputV1->done();
 }
 
 void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &manufacturer,
@@ -279,10 +279,10 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
     // start off enabled
 
     m_waylandOutput->create();
-    m_xdgOutput->setName(name());
-    m_xdgOutput->setDescription(description());
-    m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->done();
+    m_xdgOutputV1->setName(name());
+    m_xdgOutputV1->setDescription(description());
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_xdgOutputV1->done();
 }
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const

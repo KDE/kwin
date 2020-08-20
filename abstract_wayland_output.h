@@ -29,7 +29,7 @@ class OutputInterface;
 class OutputDeviceInterface;
 class OutputChangeSet;
 class OutputManagementInterface;
-class XdgOutputInterface;
+class XdgOutputV1Interface;
 }
 
 namespace KWin
@@ -171,7 +171,7 @@ private:
     void setTransform(KWaylandServer::OutputDeviceInterface::Transform transform);
 
     KWaylandServer::OutputInterface *m_waylandOutput;
-    KWaylandServer::XdgOutputInterface *m_xdgOutput;
+    KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;
     KWaylandServer::OutputDeviceInterface *m_waylandOutputDevice;
     KWaylandServer::OutputInterface::DpmsMode m_dpms = KWaylandServer::OutputInterface::DpmsMode::On;
 
