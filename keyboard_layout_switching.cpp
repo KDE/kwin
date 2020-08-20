@@ -34,7 +34,11 @@ Policy::~Policy() = default;
 
 void Policy::setLayout(quint32 layout)
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(layout);
+    if (previousLayout != m_xkb->currentLayout()) {
+        m_layout->updateNotifier();
+    }
 }
 
 quint32 Policy::layout() const
@@ -92,7 +96,7 @@ GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup
         [this, xkb] (const QString &name) {
             Q_UNUSED(name)
             if (xkb->numberOfLayouts() > 1) {
-                xkb->switchToLayout(m_config.readEntry(defaultLayoutEntryKey(), 0));
+                setLayout(m_config.readEntry(defaultLayoutEntryKey(), 0));
             }
         }
     );

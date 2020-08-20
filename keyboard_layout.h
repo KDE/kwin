@@ -44,6 +44,7 @@ public:
 
     void checkLayoutChange();
     void resetLayout();
+    void updateNotifier();
 
     void keyEvent(KeyEvent *event) override;
 
@@ -61,7 +62,6 @@ private:
     void switchToNextLayout();
     void switchToPreviousLayout();
     void switchToLayout(xkb_layout_index_t index);
-    void updateNotifier();
     void reinitNotifierMenu();
     void loadShortcuts();
     Xkb *m_xkb;
