@@ -81,7 +81,9 @@ public:
 signals:
     void descriptionChanged();
     void warningMessageChanged();
+
     void showSuggestions();
+    void showErrorMessage(const QString &message);
 
     void virtualDesktopsUpdated();
 

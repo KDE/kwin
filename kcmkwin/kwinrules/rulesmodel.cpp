@@ -829,6 +829,9 @@ void RulesModel::selectX11Window()
                 QDBusPendingReply<QVariantMap> reply = *self;
                 self->deleteLater();
                 if (!reply.isValid()) {
+                    if (reply.error().name() == QLatin1String("org.kde.KWin.Error.InvalidWindow")) {
+                        emit showErrorMessage(i18n("Could not detect window properties. The window is not managed by KWin."));
+                    }
                     return;
                 }
                 const QVariantMap windowInfo = reply.value();
