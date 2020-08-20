@@ -118,6 +118,9 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             output->deleteLater();
             s_waylandConnection.outputs.removeOne(output);
         });
+        QObject::connect(output, &Output::destroyed, [=]() {
+            s_waylandConnection.outputs.removeOne(output);
+        });
     });
 
     QSignalSpy allAnnounced(registry, &Registry::interfacesAnnounced);
