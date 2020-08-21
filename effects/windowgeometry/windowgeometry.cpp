@@ -19,7 +19,8 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
-using namespace KWin;
+namespace KWin
+{
 
 WindowGeometry::WindowGeometry()
 {
@@ -224,3 +225,5 @@ bool WindowGeometry::isActive() const
 {
     return iAmActive;
 }
+
+} // namespace KWin

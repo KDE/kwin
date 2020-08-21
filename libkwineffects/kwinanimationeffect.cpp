@@ -16,13 +16,14 @@
 #include <QtDebug>
 #include <QVector3D>
 
+namespace KWin
+{
+
 QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2)
 {
     dbg.nospace() << fpx2[0] << "," << fpx2[1] << QString(fpx2.isValid() ? QStringLiteral(" (valid)") : QStringLiteral(" (invalid)"));
     return dbg.space();
 }
-
-namespace KWin {
 
 QElapsedTimer AnimationEffect::s_clock;
 
@@ -39,9 +40,6 @@ public:
     QWeakPointer<FullScreenEffectLock> m_fullScreenEffectLock;
     bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
 };
-}
-
-using namespace KWin;
 
 quint64 AnimationEffectPrivate::m_animCounter = 0;
 
@@ -1042,5 +1040,7 @@ AnimationEffect::AniMap AnimationEffect::state() const
     Q_D(const AnimationEffect);
     return d->m_animations;
 }
+
+} // namespace KWin
 
 #include "moc_kwinanimationeffect.cpp"

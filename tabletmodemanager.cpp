@@ -16,7 +16,8 @@
 #include <QTimer>
 #include <QDBusConnection>
 
-using namespace KWin;
+namespace KWin
+{
 
 KWIN_SINGLETON_FACTORY_VARIABLE(TabletModeManager, s_manager)
 
@@ -154,3 +155,5 @@ void KWin::TabletModeManager::setTabletModeAvailable(bool detecting)
         tabletModeAvailableChanged(detecting);
     }
 }
+
+} // namespace KWin

@@ -9,7 +9,8 @@
 #include "kwineglimagetexture.h"
 #include "kwinglutils.h"
 
-using namespace KWin;
+namespace KWin
+{
 
 DmaBufTexture::DmaBufTexture(KWin::GLTexture *texture)
     : m_texture(texture)
@@ -24,3 +25,4 @@ KWin::GLRenderTarget *DmaBufTexture::framebuffer() const
     return m_framebuffer.data();
 }
 
+} // namespace KWin

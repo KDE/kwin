@@ -9,10 +9,11 @@
 
 #include "kwineglimagetexture.h"
 
-using namespace KWin;
-
 #include <QDebug>
 #include <epoxy/egl.h>
+
+namespace KWin
+{
 
 EGLImageTexture::EGLImageTexture(EGLDisplay display, EGLImage image, int internalFormat, const QSize &size)
     : GLTexture(internalFormat, size, 1, true)
@@ -31,3 +32,5 @@ EGLImageTexture::~EGLImageTexture()
 {
     eglDestroyImageKHR(m_display, m_image);
 }
+
+} // namespace KWin

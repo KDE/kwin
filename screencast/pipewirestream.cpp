@@ -355,7 +355,6 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
             painter.drawImage(QRect{position, cursor->image().size()}, cursor->image());
         }
     } else {
-        using namespace KWin;
         auto &buf = m_dmabufDataForPwBuffer[buffer];
 
         spa_data->chunk->stride = buf->stride();

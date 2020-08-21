@@ -18,8 +18,10 @@
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/textinput_interface.h>
 
-using namespace KWin;
 using namespace KWaylandServer;
+
+namespace KWin
+{
 
 InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurface)
     : WaylandClient(panelSurface->surface())
@@ -136,3 +138,5 @@ void InputPanelV1Client::setOutput(OutputInterface *outputIface)
         connect(m_output, &AbstractWaylandOutput::geometryChanged, this, &InputPanelV1Client::reposition);
     }
 }
+
+} // namespace KWin

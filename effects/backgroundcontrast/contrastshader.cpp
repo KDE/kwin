@@ -17,8 +17,8 @@
 
 #include <cmath>
 
-using namespace KWin;
-
+namespace KWin
+{
 
 ContrastShader::ContrastShader()
     : mValid(false), shader(nullptr), m_opacity(1)
@@ -195,3 +195,4 @@ void ContrastShader::init()
     setIsValid(shader->isValid());
 }
 
+} // namespace KWin

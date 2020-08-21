@@ -19,7 +19,8 @@
 #include "decorations/decorationbridge.h"
 #include <KDecoration2/DecorationSettings>
 
-using namespace KWin;
+namespace KWin
+{
 
 KWIN_SINGLETON_FACTORY(ApplicationMenu)
 
@@ -118,3 +119,5 @@ AbstractClient *ApplicationMenu::findAbstractClientWithApplicationMenu(const QSt
         && c->applicationMenuObjectPath() == menuObjectPath.path();
     });
 }
+
+} // namespace KWin

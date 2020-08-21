@@ -28,7 +28,8 @@
 
 #include <KDeclarative/QmlObjectSharedEngine>
 
-using namespace KWin;
+namespace KWin
+{
 
 static std::unique_ptr<QOpenGLContext> s_shareContext;
 
@@ -375,3 +376,5 @@ QQuickItem *EffectQuickScene::rootItem() const
 {
     return qobject_cast<QQuickItem *>(d->qmlObject->rootObject());
 }
+
+} // namespace KWin

@@ -12,13 +12,14 @@
 
 #include "logging_p.h"
 
+namespace KWin
+{
+
 QDebug operator<<(QDebug dbg, const KWin::AniData &a)
 {
     dbg.nospace() << a.debugInfo();
     return dbg.space();
 }
-
-using namespace KWin;
 
 FullScreenEffectLock::FullScreenEffectLock(Effect *effect)
 {
@@ -120,3 +121,5 @@ QString AniData::debugInfo() const
            QLatin1String(  " Duration: ") + QString::number(timeLine.duration().count()) + QLatin1String("ms\n") +
            QLatin1String(  "   Passed: ") + QString::number(timeLine.elapsed().count()) + QLatin1String("ms\n");
 }
+
+} // namespace KWin

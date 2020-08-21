@@ -23,9 +23,10 @@
 
 #include <functional>
 
-using namespace KWin;
+namespace KWin
+{
 
-class KWin::OnScreenNotificationInputEventSpy : public InputEventSpy
+class OnScreenNotificationInputEventSpy : public InputEventSpy
 {
 public:
     explicit OnScreenNotificationInputEventSpy(OnScreenNotification *parent);
@@ -228,3 +229,5 @@ void OnScreenNotification::setSkipCloseAnimation(bool skip)
         w->setProperty("KWIN_SKIP_CLOSE_ANIMATION", skip);
     }
 }
+
+} // namespace KWin
