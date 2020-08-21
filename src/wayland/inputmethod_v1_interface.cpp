@@ -243,6 +243,13 @@ public:
     void zwp_input_panel_v1_get_input_panel_surface(Resource *resource, uint32_t id, struct ::wl_resource *surfaceResource) override
     {
         auto surface = SurfaceInterface::get(surfaceResource);
+
+        SurfaceRole *surfaceRole = SurfaceRole::get(surface);
+        if (surfaceRole) {
+            wl_resource_post_error(resource->handle, 0, "the surface already has a role assigned");
+            return;
+        }
+
         auto interface = new InputPanelSurfaceV1Interface(surface, id, nullptr);
         interface->d->init(resource->client(), id, resource->version());
 
