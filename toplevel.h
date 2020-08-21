@@ -284,6 +284,13 @@ class KWIN_EXPORT Toplevel : public QObject
      */
     Q_PROPERTY(QUuid internalId READ internalId CONSTANT)
 
+    /**
+     * The pid of the process owning this window.
+     *
+     * @since 5.20
+     */
+    Q_PROPERTY(int pid READ pid CONSTANT)
+
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
