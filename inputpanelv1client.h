@@ -29,10 +29,7 @@ public:
     };
     Q_ENUM(Mode)
 
-    void setFrameGeometry(const QRect &geometry, KWin::AbstractClient::ForceGeometry_t force = NormalGeometrySet) override;
-
     void destroyClient() override;
-    QRect bufferGeometry() const override { return frameGeometry(); }
     bool isPlaceable() const override { return false; }
     bool isCloseable() const override { return false; }
     bool isResizable() const override { return false; }

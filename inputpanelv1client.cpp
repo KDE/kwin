@@ -74,7 +74,7 @@ void KWin::InputPanelV1Client::reposition()
                 const auto outputGeometry = m_output->geometry();
                 QRect geo(outputGeometry.topLeft(), panelSize);
                 geo.translate((outputGeometry.width() - panelSize.width())/2, outputGeometry.height() - panelSize.height());
-                setFrameGeometry(geo);
+                updateGeometry(geo);
             }
         }   break;
         case Overlay: {
@@ -82,26 +82,9 @@ void KWin::InputPanelV1Client::reposition()
             auto textInput = waylandServer()->seat()->focusedTextInput();
             if (textClient && textInput) {
                 const auto cursorRectangle = textInput->cursorRectangle();
-                setFrameGeometry({textClient->pos() + textClient->clientPos() + cursorRectangle.bottomLeft(), surface()->size()});
+                updateGeometry({textClient->pos() + textClient->clientPos() + cursorRectangle.bottomLeft(), surface()->size()});
             }
         }   break;
-    }
-}
-
-void InputPanelV1Client::setFrameGeometry(const QRect &geometry, ForceGeometry_t force)
-{
-    Q_UNUSED(force);
-    if (m_frameGeometry != geometry) {
-        const QRect oldFrameGeometry = m_frameGeometry;
-        m_frameGeometry = geometry;
-        m_clientGeometry = geometry;
-
-        emit frameGeometryChanged(this, oldFrameGeometry);
-        emit clientGeometryChanged(this, oldFrameGeometry);
-        emit bufferGeometryChanged(this, oldFrameGeometry);
-        emit geometryShapeChanged(this, oldFrameGeometry);
-
-        addRepaintDuringGeometryUpdates();
     }
 }
 
