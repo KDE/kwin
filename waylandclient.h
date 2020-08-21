@@ -11,6 +11,11 @@
 namespace KWin
 {
 
+enum class SyncMode {
+    Sync,
+    Async,
+};
+
 class WaylandClient : public AbstractClient
 {
     Q_OBJECT
@@ -61,6 +66,8 @@ protected:
     void doSetActive() override;
     void updateCaption() override;
 
+    void setPositionSyncMode(SyncMode syncMode);
+    void setSizeSyncMode(SyncMode syncMode);
     void cleanGrouping();
 
     virtual void requestGeometry(const QRect &rect);
@@ -80,6 +87,8 @@ private:
     QRect m_requestedFrameGeometry;
     QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;
+    SyncMode m_positionSyncMode = SyncMode::Sync;
+    SyncMode m_sizeSyncMode = SyncMode::Sync;
     quint32 m_windowId;
     bool m_isHidden = false;
 };

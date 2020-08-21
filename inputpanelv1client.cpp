@@ -30,6 +30,8 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     setSkipSwitcher(true);
     setSkipPager(true);
     setSkipTaskbar(true);
+    setPositionSyncMode(SyncMode::Sync);
+    setSizeSyncMode(SyncMode::Sync);
     setupCompositing();
 
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Client::destroyClient);

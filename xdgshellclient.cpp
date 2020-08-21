@@ -43,6 +43,8 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
     , m_shellSurface(shellSurface)
     , m_configureTimer(new QTimer(this))
 {
+    setSizeSyncMode(SyncMode::Async);
+    setPositionSyncMode(SyncMode::Async);
     setupCompositing();
 
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,

@@ -423,7 +423,17 @@ void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
         requestGeometry(requestedFrameGeometry());
     } else {
         updateGeometry(requestedFrameGeometry());
+        return;
     }
+
+    QRect updateRect = m_frameGeometry;
+    if (m_positionSyncMode == SyncMode::Sync) {
+        updateRect.moveTopLeft(requestedPos());
+    }
+    if (m_sizeSyncMode == SyncMode::Sync) {
+        updateRect.setSize(requestedSize());
+    }
+    updateGeometry(updateRect);
 }
 
 void WaylandClient::move(int x, int y, ForceGeometry_t force)
@@ -512,6 +522,16 @@ void WaylandClient::updateGeometry(const QRect &rect)
     emit geometryShapeChanged(this, oldFrameGeometry);
 
     addRepaintDuringGeometryUpdates();
+}
+
+void WaylandClient::setPositionSyncMode(SyncMode syncMode)
+{
+    m_positionSyncMode = syncMode;
+}
+
+void WaylandClient::setSizeSyncMode(SyncMode syncMode)
+{
+    m_sizeSyncMode = syncMode;
 }
 
 } // namespace KWin
