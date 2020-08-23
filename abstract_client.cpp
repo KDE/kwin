@@ -955,6 +955,7 @@ bool AbstractClient::startMoveResize()
         // Exit quick tile mode when the user attempts to resize a tiled window
         updateQuickTileMode(QuickTileFlag::None); // Do so without restoring original geometry
         setGeometryRestore(frameGeometry());
+        doSetQuickTileMode();
         emit quickTileModeChanged();
     }
 
@@ -2864,6 +2865,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             }
             setGeometryRestore(prev_geom_restore);
         }
+        doSetQuickTileMode();
         emit quickTileModeChanged();
         return;
     }
@@ -2894,6 +2896,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
             setMaximize(false, false);
         }
 
+        doSetQuickTileMode();
         emit quickTileModeChanged();
 
         return;
@@ -2973,7 +2976,12 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         setFrameGeometry(geometryRestore(), geom_mode);
         checkWorkspacePosition(); // Just in case it's a different screen
     }
+    doSetQuickTileMode();
     emit quickTileModeChanged();
+}
+
+void AbstractClient::doSetQuickTileMode()
+{
 }
 
 void AbstractClient::sendToScreen(int newScreen)

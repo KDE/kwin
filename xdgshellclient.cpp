@@ -938,6 +938,62 @@ void XdgToplevelClient::doSetMaximized()
     scheduleConfigure();
 }
 
+static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
+{
+    if (mode == QuickTileMode(QuickTileFlag::None)) {
+        return Qt::Edges();
+    }
+
+    Qt::Edges anchors = Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge;
+
+    if ((mode & QuickTileFlag::Left) && !(mode & QuickTileFlag::Right)) {
+        anchors &= ~Qt::RightEdge;
+    }
+    if ((mode & QuickTileFlag::Right) && !(mode & QuickTileFlag::Left)) {
+        anchors &= ~Qt::LeftEdge;
+    }
+
+    if ((mode & QuickTileFlag::Top) && !(mode & QuickTileFlag::Bottom)) {
+        anchors &= ~Qt::BottomEdge;
+    }
+    if ((mode & QuickTileFlag::Bottom) && !(mode & QuickTileFlag::Top)) {
+        anchors &= ~Qt::TopEdge;
+    }
+
+    return anchors;
+}
+
+void XdgToplevelClient::doSetQuickTileMode()
+{
+    const Qt::Edges anchors = anchorsForQuickTileMode(quickTileMode());
+
+    if (anchors & Qt::LeftEdge) {
+        m_requestedStates |= XdgToplevelInterface::State::TiledLeft;
+    } else {
+        m_requestedStates &= ~XdgToplevelInterface::State::TiledLeft;
+    }
+
+    if (anchors & Qt::RightEdge) {
+        m_requestedStates |= XdgToplevelInterface::State::TiledRight;
+    } else {
+        m_requestedStates &= ~XdgToplevelInterface::State::TiledRight;
+    }
+
+    if (anchors & Qt::TopEdge) {
+        m_requestedStates |= XdgToplevelInterface::State::TiledTop;
+    } else {
+        m_requestedStates &= ~XdgToplevelInterface::State::TiledTop;
+    }
+
+    if (anchors & Qt::BottomEdge) {
+        m_requestedStates |= XdgToplevelInterface::State::TiledBottom;
+    } else {
+        m_requestedStates &= ~XdgToplevelInterface::State::TiledBottom;
+    }
+
+    scheduleConfigure();
+}
+
 bool XdgToplevelClient::doStartMoveResize()
 {
     if (moveResizePointerMode() != PositionCenter) {
@@ -1721,6 +1777,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             updateQuickTileMode(QuickTileFlag::None);
         }
         if (quickTileMode() != oldQuickTileMode) {
+            doSetQuickTileMode();
             emit quickTileModeChanged();
         }
         setFrameGeometry(workspace()->clientArea(MaximizeArea, this));
@@ -1729,6 +1786,7 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
             updateQuickTileMode(QuickTileFlag::None);
         }
         if (quickTileMode() != oldQuickTileMode) {
+            doSetQuickTileMode();
             emit quickTileModeChanged();
         }
 

@@ -973,6 +973,7 @@ protected:
     virtual void doSetSkipPager();
     virtual void doSetSkipSwitcher();
     virtual void doSetDemandsAttention();
+    virtual void doSetQuickTileMode();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();

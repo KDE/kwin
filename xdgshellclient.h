@@ -176,6 +176,7 @@ protected:
     void changeMaximize(bool horizontal, bool vertical, bool adjust) override;
     Layer layerForDock() const override;
     bool stateCompare() const override;
+    void doSetQuickTileMode() override;
 
 private:
     void handleWindowTitleChanged();
