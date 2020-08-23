@@ -205,6 +205,10 @@ public:
         FullScreen = 0x4,
         Resizing = 0x8,
         Activated = 0x10,
+        TiledLeft = 0x20,
+        TiledTop = 0x40,
+        TiledRight = 0x80,
+        TiledBottom = 0x100,
         Maximized = MaximizedHorizontal | MaximizedVertical
     };
     Q_DECLARE_FLAGS(States, State)

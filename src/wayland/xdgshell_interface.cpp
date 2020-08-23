@@ -16,6 +16,8 @@
 namespace KWaylandServer
 {
 
+static const int s_version = 2;
+
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
 {
@@ -111,7 +113,7 @@ XdgShellInterface::XdgShellInterface(Display *display, QObject *parent)
     , d(new XdgShellInterfacePrivate(this))
 {
     d->display = display;
-    d->init(*display, 1);
+    d->init(*display, s_version);
 }
 
 XdgShellInterface::~XdgShellInterface()
@@ -571,7 +573,7 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
 {
     // Note that the states listed in the configure event must be an array of uint32_t.
 
-    uint32_t statesData[4] = { 0 };
+    uint32_t statesData[8] = { 0 };
     int i = 0;
 
     if (states & State::MaximizedHorizontal && states & State::MaximizedVertical) {
@@ -585,6 +587,21 @@ quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &sta
     }
     if (states & State::Activated) {
         statesData[i++] = QtWaylandServer::xdg_toplevel::state_activated;
+    }
+
+    if (d->resource()->version() >= XDG_TOPLEVEL_STATE_TILED_LEFT_SINCE_VERSION) {
+        if (states & State::TiledLeft) {
+            statesData[i++] = QtWaylandServer::xdg_toplevel::state_tiled_left;
+        }
+        if (states & State::TiledTop) {
+            statesData[i++] = QtWaylandServer::xdg_toplevel::state_tiled_top;
+        }
+        if (states & State::TiledRight) {
+            statesData[i++] = QtWaylandServer::xdg_toplevel::state_tiled_right;
+        }
+        if (states & State::TiledBottom) {
+            statesData[i++] = QtWaylandServer::xdg_toplevel::state_tiled_bottom;
+        }
     }
 
     const QByteArray xdgStates = QByteArray::fromRawData(reinterpret_cast<char *>(statesData),
