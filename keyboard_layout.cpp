@@ -132,20 +132,23 @@ void KeyboardLayout::initNotifierItem()
 
 void KeyboardLayout::switchToNextLayout()
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToNextLayout();
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::switchToPreviousLayout()
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToPreviousLayout();
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(index);
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::reconfigure()
@@ -200,23 +203,19 @@ void KeyboardLayout::loadShortcuts()
     }
 }
 
-void KeyboardLayout::keyEvent(KeyEvent *event)
+void KeyboardLayout::checkLayoutChange(quint32 previousLayout)
 {
-    if (!event->isAutoRepeat()) {
-        checkLayoutChange();
-    }
-}
-
-void KeyboardLayout::checkLayoutChange()
-{
+    // Get here on key event or DBus call.
+    // m_layout - layout saved last time OSD occurred
+    // previousLayout - actual layout just before potential layout change
+    // We need OSD if current layout deviates from any of these
     const auto layout = m_xkb->currentLayout();
-    if (m_layout == layout) {
-        return;
+    if (m_layout != layout || previousLayout != layout) {
+        m_layout = layout;
+        notifyLayoutChange();
+        updateNotifier();
+        emit layoutChanged();
     }
-    m_layout = layout;
-    notifyLayoutChange();
-    updateNotifier();
-    emit layoutChanged();
 }
 
 void KeyboardLayout::notifyLayoutChange()
@@ -304,8 +303,9 @@ bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
     if (it == layouts.end()) {
         return false;
     }
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(it.key());
-    m_keyboardLayout->checkLayoutChange();
+    m_keyboardLayout->checkLayoutChange(previousLayout);
     return true;
 }
 

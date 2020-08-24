@@ -198,7 +198,9 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     }
 
     if (!autoRepeat) {
+        const quint32 previousLayout = m_xkb->currentLayout();
         m_xkb->updateKey(key, state);
+        m_keyboardLayout->checkLayoutChange(previousLayout);
     }
 
     const xkb_keysym_t keySym = m_xkb->currentKeysym();
@@ -227,10 +229,11 @@ void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t
     if (!m_inited) {
         return;
     }
+    const quint32 previousLayout = m_xkb->currentLayout();
     // TODO: send to proper Client and also send when active Client changes
     m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
     m_modifiersChangedSpy->updateModifiers(modifiers());
-    m_keyboardLayout->checkLayoutChange();
+    m_keyboardLayout->checkLayoutChange(previousLayout);
 }
 
 void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)

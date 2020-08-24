@@ -42,11 +42,9 @@ public:
 
     void init();
 
-    void checkLayoutChange();
+    void checkLayoutChange(quint32 previousLayout);
     void resetLayout();
     void updateNotifier();
-
-    void keyEvent(KeyEvent *event) override;
 
 Q_SIGNALS:
     void layoutChanged();
