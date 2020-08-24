@@ -107,7 +107,19 @@ XdgOutputV1Interface::XdgOutputV1Interface(QObject *parent)
 }
 
 XdgOutputV1Interface::~XdgOutputV1Interface()
-{}
+{
+    // Generated code typically cleans up resource objects when the client calls the relevant destructor
+    // In multi-cast mode our wrapper can be deleted at any time whilst a client resource exists.
+    // any existing resources that have a pending message will then crash the compositor.
+
+    // Deleting resources ahead of time also resolves this. calls to this resource will no-op
+    const QMultiMap<struct ::wl_client*, QtWaylandServer::zxdg_output_v1::Resource*> resourceMap = d->resourceMap();
+    for (auto resource : resourceMap)
+    {
+        wl_resource_destroy(resource->handle);
+    }
+
+}
 
 void XdgOutputV1Interface::setLogicalSize(const QSize &size)
 {
