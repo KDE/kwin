@@ -133,18 +133,25 @@ void VirtualKeyboard::init()
                 disconnect(m_waylandSurroundingTextConnection);
                 disconnect(m_waylandResetConnection);
                 disconnect(m_waylandEnabledConnection);
-                qApp->inputMethod()->reset();
                 if (auto t = waylandServer()->seat()->focusedTextInput()) {
                     m_waylandShowConnection = connect(t, &TextInputInterface::requestShowInputPanel, this, &VirtualKeyboard::show);
                     m_waylandHideConnection = connect(t, &TextInputInterface::requestHideInputPanel, this, &VirtualKeyboard::hide);
                     m_waylandSurroundingTextConnection = connect(t, &TextInputInterface::surroundingTextChanged, this,
-                        [] {
-                            qApp->inputMethod()->update(Qt::ImSurroundingText | Qt::ImCursorPosition | Qt::ImAnchorPosition);
+                        [t] {
+                            auto inputContext = waylandServer()->inputMethod()->context();
+                            if (!inputContext) {
+                                return;
+                            }
+                            inputContext->sendSurroundingText(QString::fromUtf8(t->surroundingText()), t->surroundingTextCursorPosition(), t->surroundingTextSelectionAnchor());
                         }
                     );
                     m_waylandHintsConnection = connect(t, &TextInputInterface::contentTypeChanged, this,
-                        [] {
-                            qApp->inputMethod()->update(Qt::ImHints);
+                        [t] {
+                            auto inputContext = waylandServer()->inputMethod()->context();
+                            if (!inputContext) {
+                                return;
+                            }
+                            inputContext->sendContentType(t->contentHints(), t->contentPurpose());
                         }
                     );
                     m_waylandResetConnection = connect(t, &TextInputInterface::requestReset, this, [t] {
@@ -156,6 +163,7 @@ void VirtualKeyboard::init()
                         inputContext->sendReset();
                         inputContext->sendSurroundingText(QString::fromUtf8(t->surroundingText()), t->surroundingTextCursorPosition(), t->surroundingTextSelectionAnchor());
                         inputContext->sendPreferredLanguage(QString::fromUtf8(t->preferredLanguage()));
+                        inputContext->sendContentType(t->contentHints(), t->contentPurpose());
                     });
                     m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this, [t, this] {
                         if (t->isEnabled()) {
@@ -167,7 +175,6 @@ void VirtualKeyboard::init()
                             waylandServer()->inputMethod()->sendDeactivate();
                             hide();
                         }
-                        qApp->inputMethod()->update(Qt::ImQueryAll);
                     });
 
                     auto newClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
@@ -188,11 +195,9 @@ void VirtualKeyboard::init()
                     m_waylandResetConnection = QMetaObject::Connection();
                     m_waylandEnabledConnection = QMetaObject::Connection();
                 }
-                qApp->inputMethod()->update(Qt::ImQueryAll);
             }
         );
     }
-    connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this, &VirtualKeyboard::updateInputPanelState);
 }
 
 void VirtualKeyboard::show()
@@ -216,7 +221,6 @@ void VirtualKeyboard::setEnabled(bool enabled)
         return;
     }
     m_enabled = enabled;
-    qApp->inputMethod()->update(Qt::ImQueryAll);
     emit enabledChanged(m_enabled);
 
     // send OSD message
