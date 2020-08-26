@@ -218,7 +218,7 @@ void Xvisit::sendPosition(const QPointF &globalPos)
     }
     m_pos.pending = true;
 
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[2] = (x << 16) | y;
     data.data32[3] = XCB_CURRENT_TIME;
@@ -273,7 +273,7 @@ void Xvisit::enter()
 
 void Xvisit::sendEnter()
 {
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[1] = m_version << 24;
 
@@ -283,7 +283,7 @@ void Xvisit::sendEnter()
     const int mimesCount = mimeTypesNames.size();
     size_t cnt = 0;
     size_t totalCnt = 0;
-    for (const auto mimeName : mimeTypesNames) {
+    for (const auto &mimeName : mimeTypesNames) {
         // 3 mimes and less can be sent directly in the XdndEnter message
         if (totalCnt == 3) {
             break;
@@ -308,7 +308,7 @@ void Xvisit::sendEnter()
         targets.resize(mimesCount);
 
         size_t cnt = 0;
-        for (const auto mimeName : mimeTypesNames) {
+        for (const auto &mimeName : mimeTypesNames) {
             const auto atom = Selection::mimeTypeToAtom(mimeName);
             if (atom != XCB_ATOM_NONE) {
                 targets[cnt] = atom;
@@ -328,7 +328,7 @@ void Xvisit::sendEnter()
 
 void Xvisit::sendDrop(uint32_t time)
 {
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[2] = time;
 
@@ -341,7 +341,7 @@ void Xvisit::sendDrop(uint32_t time)
 
 void Xvisit::sendLeave()
 {
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     Drag::sendClientMessage(m_target->window(), atoms->xdnd_leave, &data);
 }

@@ -4395,7 +4395,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = decoration()->client().data();
+        const auto c = decoration()->client().toStrongRef();
         if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
             emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
         }

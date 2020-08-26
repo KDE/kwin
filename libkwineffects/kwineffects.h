@@ -2096,7 +2096,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * @since 5.16
      */
     Q_PROPERTY(QWindow *internalWindow READ internalWindow CONSTANT)
-
+    
     /**
      * Whether this EffectWindow represents the outline.
      *
@@ -2111,7 +2111,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      *
      * @since 5.18
      */
-    Q_PROPERTY(bool outline READ isOutline CONSTANT)
+    Q_PROPERTY(pid_t pid READ pid CONSTANT)
 
 public:
     /**  Flags explaining why painting should be disabled  */

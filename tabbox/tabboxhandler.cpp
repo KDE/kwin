@@ -177,12 +177,12 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
             TabBoxClientList order = q->stackingOrder();
             int succIdx = order.count() + 1;
             for (int i=0; i<order.count(); ++i) {
-                if (order.at(i).data() == lastRaisedClient) {
+                if (order.at(i).toStrongRef() == lastRaisedClient) {
                     succIdx = i + 1;
                     break;
                 }
             }
-            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx).data() : nullptr;
+            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx).toStrongRef().data() : nullptr;
             q->raiseClient(lastRaisedClient);
         }
     }

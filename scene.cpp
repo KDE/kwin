@@ -1030,7 +1030,7 @@ WindowQuadList Scene::Window::makeContentsQuads() const
         const QRegion region = windowPixmap->shape();
         const int quadId = id++;
 
-        for (const QRectF &rect : region) {
+        for (const QRectF rect : region) {
             // Note that the window quad id is not unique if the window is shaped, i.e. the
             // region contains more than just one rectangle. We assume that the "source" quad
             // had been subdivided.

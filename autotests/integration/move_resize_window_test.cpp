@@ -388,7 +388,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(!shellSurface3.isNull());
     QScopedPointer<XdgShellSurface> shellSurface4(Test::createXdgShellStableSurface(surface4.data()));
     QVERIFY(!shellSurface4.isNull());
-    auto renderWindow = [this] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
+    auto renderWindow = [] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
         // let's render
         auto c = Test::renderAndWaitForShown(surface, QSize(10, 10), Qt::blue);
 

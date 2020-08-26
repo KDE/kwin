@@ -227,7 +227,7 @@ void XToWlDrag::setOffers(const Mimes &offers)
     // TODO: make sure that offers are not changed in between visits
 
     m_offersPending = m_offers = offers;
-    for (const auto mimePair : offers) {
+    for (const auto &mimePair : offers) {
         m_dataSource->offer(mimePair.first);
     }
 }
@@ -371,7 +371,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *event)
         for (size_t i = 0; i < 3; i++) {
             xcb_atom_t mimeAtom = data->data32[2 + i];
             const auto mimeStrings = atomToMimeTypes(mimeAtom);
-            for (const auto mime : mimeStrings ) {
+            for (const auto &mime : mimeStrings ) {
                 if (!hasMimeName(offers, mime)) {
                     offers << Mime(mime, mimeAtom);
                 }
@@ -409,7 +409,7 @@ void WlVisit::getMimesFromWinProperty(Mimes &offers)
     xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (size_t i = 0; i < reply->value_len; ++i) {
         const auto mimeStrings = atomToMimeTypes(mimeAtoms[i]);
-        for (const auto mime : mimeStrings) {
+        for (const auto &mime : mimeStrings) {
             if (!hasMimeName(offers, mime)) {
                 offers << Mime(mime, mimeAtoms[i]);
             }
@@ -495,7 +495,7 @@ void WlVisit::sendStatus()
         // accept the drop
         flags |= (1 << 0);
     }
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = m_window;
     data.data32[1] = flags;
     data.data32[4] = flags & (1 << 0) ? m_actionAtom : static_cast<uint32_t>(XCB_ATOM_NONE);
@@ -505,7 +505,7 @@ void WlVisit::sendStatus()
 void WlVisit::sendFinished()
 {
     const bool accepted = m_entered && m_action != DnDAction::None;
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = m_window;
     data.data32[1] = accepted;
     data.data32[2] = accepted ? m_actionAtom : static_cast<uint32_t>(XCB_ATOM_NONE);

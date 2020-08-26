@@ -187,7 +187,7 @@ void ScriptedEffectsTest::testEffectsHandler()
     // this triggers and tests some of the signals in EffectHandler, which is exposed to JS as context property "effects"
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    auto waitFor = [&effectOutputSpy, this](const QString &expected) {
+    auto waitFor = [&effectOutputSpy](const QString &expected) {
         QVERIFY(effectOutputSpy.count() > 0 || effectOutputSpy.wait());
         QCOMPARE(effectOutputSpy.first().first(), expected);
         effectOutputSpy.removeFirst();

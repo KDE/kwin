@@ -116,8 +116,8 @@ Workspace::Workspace()
     , workspaceInit(true)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
-    , m_sessionManager(new SessionManager(this))
     , m_quickTileCombineTimer(nullptr)
+    , m_sessionManager(new SessionManager(this))
     , m_lastTilingMode(0)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread

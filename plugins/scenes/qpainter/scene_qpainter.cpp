@@ -274,7 +274,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 void SceneQPainter::Window::renderWindowPixmap(QPainter *painter, QPainterWindowPixmap *windowPixmap)
 {
     const QRegion shape = windowPixmap->shape();
-    for (const QRectF &rect : shape) {
+    for (const QRectF rect : shape) {
         const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
         const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
 
