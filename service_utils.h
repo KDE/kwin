@@ -50,12 +50,12 @@ static QStringList fetchProcessServiceField(const QString &executablePath, const
     return fieldValues;
 }
 
-static QStringList fetchRequestedInterfaces(const QString &executablePath)
+static inline QStringList fetchRequestedInterfaces(const QString &executablePath)
 {
     return fetchProcessServiceField(executablePath, s_waylandInterfaceName);
 }
 
-static QStringList fetchRestrictedDBusInterfacesFromPid(const uint pid)
+static inline QStringList fetchRestrictedDBusInterfacesFromPid(const uint pid)
 {
     const auto executablePath = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
     return fetchProcessServiceField(executablePath, s_dbusRestrictedInterfaceName);
