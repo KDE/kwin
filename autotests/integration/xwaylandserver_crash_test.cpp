@@ -27,9 +27,9 @@ struct XcbConnectionDeleter
     }
 };
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_server-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_server_crash-0");
 
-class XwaylandServerTest : public QObject
+class XwaylandServerCrashTest : public QObject
 {
     Q_OBJECT
 
@@ -38,7 +38,7 @@ private Q_SLOTS:
     void testCrash();
 };
 
-void XwaylandServerTest::initTestCase()
+void XwaylandServerCrashTest::initTestCase()
 {
     qRegisterMetaType<Unmanaged *>();
     qRegisterMetaType<X11Client *>();
@@ -48,6 +48,12 @@ void XwaylandServerTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup xwaylandGroup = config->group("Xwayland");
+    xwaylandGroup.writeEntry(QStringLiteral("XwaylandCrashPolicy"), QStringLiteral("Stop"));
+    xwaylandGroup.sync();
+    kwinApp()->setConfig(config);
+
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
@@ -56,7 +62,7 @@ void XwaylandServerTest::initTestCase()
     waylandServer()->initWorkspace();
 }
 
-void XwaylandServerTest::testCrash()
+void XwaylandServerCrashTest::testCrash()
 {
     // This test verifies that all connected X11 clients get destroyed when Xwayland crashes.
 
@@ -122,5 +128,5 @@ void XwaylandServerTest::testCrash()
 
 } // namespace KWin
 
-WAYLANDTEST_MAIN(KWin::XwaylandServerTest)
-#include "xwaylandserver_test.moc"
+WAYLANDTEST_MAIN(KWin::XwaylandServerCrashTest)
+#include "xwaylandserver_crash_test.moc"

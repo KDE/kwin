@@ -61,6 +61,10 @@ public Q_SLOTS:
      * @see start()
      */
     void stop();
+    /**
+     * Restarts the Xwayland server. This method is equivalent to calling stop() and start().
+     */
+    void restart();
 
 Q_SIGNALS:
     /**
@@ -72,9 +76,11 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void dispatchEvents();
+    void resetCrashCount();
 
     void handleXwaylandStarted();
-    void handleXwaylandFinished(int exitCode);
+    void handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void handleXwaylandCrashed();
     void handleXwaylandError(QProcess::ProcessError error);
 
 private:
@@ -91,7 +97,9 @@ private:
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
+    QTimer *m_resetCrashCountTimer = nullptr;
     ApplicationWaylandAbstract *m_app;
+    int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)
 };

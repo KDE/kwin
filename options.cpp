@@ -95,6 +95,8 @@ Options::Options(QObject *parent)
     , m_focusStealingPreventionLevel(0)
     , m_killPingTimeout(0)
     , m_hideUtilityWindowsForInactive(false)
+    , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
+    , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
@@ -169,6 +171,24 @@ void Options::setNextFocusPrefersMouse(bool nextFocusPrefersMouse)
     }
     m_nextFocusPrefersMouse = nextFocusPrefersMouse;
     emit nextFocusPrefersMouseChanged();
+}
+
+void Options::setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy)
+{
+    if (m_xwaylandCrashPolicy == crashPolicy) {
+        return;
+    }
+    m_xwaylandCrashPolicy = crashPolicy;
+    emit xwaylandCrashPolicyChanged();
+}
+
+void Options::setXwaylandMaxCrashCount(int maxCrashCount)
+{
+    if (m_xwaylandMaxCrashCount == maxCrashCount) {
+        return;
+    }
+    m_xwaylandMaxCrashCount = maxCrashCount;
+    emit xwaylandMaxCrashCountChanged();
 }
 
 void Options::setClickRaise(bool clickRaise)
@@ -803,6 +823,8 @@ void Options::syncFromKcfgc()
     setSeparateScreenFocus(m_settings->separateScreenFocus());
     setRollOverDesktops(m_settings->rollOverDesktops());
     setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());
+    setXwaylandCrashPolicy(m_settings->xwaylandCrashPolicy());
+    setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
 
 #ifdef KWIN_BUILD_DECORATIONS
     setPlacement(m_settings->placement());

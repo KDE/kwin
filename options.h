@@ -34,18 +34,29 @@ enum HiddenPreviews {
     HiddenPreviewsAlways
 };
 
+/**
+ * This enum type specifies whether the Xwayland server must be restarted after a crash.
+ */
+enum XwaylandCrashPolicy {
+    Stop,
+    Restart,
+};
+
 class Settings;
 
 class KWIN_EXPORT Options : public QObject
 {
     Q_OBJECT
     Q_ENUMS(FocusPolicy)
+    Q_ENUMS(XwaylandCrashPolicy)
     Q_ENUMS(GlSwapStrategy)
     Q_ENUMS(MouseCommand)
     Q_ENUMS(MouseWheelCommand)
     Q_ENUMS(WindowOperation)
 
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
+    Q_PROPERTY(XwaylandCrashPolicy xwaylandCrashPolicy READ xwaylandCrashPolicy WRITE setXwaylandCrashPolicy NOTIFY xwaylandCrashPolicyChanged)
+    Q_PROPERTY(int xwaylandMaxCrashCount READ xwaylandMaxCrashCount WRITE setXwaylandMaxCrashCount NOTIFY xwaylandMaxCrashCountChanged)
     Q_PROPERTY(bool nextFocusPrefersMouse READ isNextFocusPrefersMouse WRITE setNextFocusPrefersMouse NOTIFY nextFocusPrefersMouseChanged)
     /**
      * Whether clicking on a window raises it in FocusFollowsMouse
@@ -221,6 +232,13 @@ public:
     }
     bool isNextFocusPrefersMouse() const {
         return m_nextFocusPrefersMouse;
+    }
+
+    XwaylandCrashPolicy xwaylandCrashPolicy() const {
+        return m_xwaylandCrashPolicy;
+    }
+    int xwaylandMaxCrashCount() const {
+        return m_xwaylandMaxCrashCount;
     }
 
     /**
@@ -576,6 +594,8 @@ public:
 
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
+    void setXwaylandCrashPolicy(XwaylandCrashPolicy crashPolicy);
+    void setXwaylandMaxCrashCount(int maxCrashCount);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
     void setClickRaise(bool clickRaise);
     void setAutoRaise(bool autoRaise);
@@ -735,6 +755,12 @@ public:
     static OpenGLPlatformInterface defaultGlPlatformInterface() {
         return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
     }
+    static XwaylandCrashPolicy defaultXwaylandCrashPolicy() {
+        return XwaylandCrashPolicy::Restart;
+    }
+    static int defaultXwaylandMaxCrashCount() {
+        return 3;
+    }
     /**
      * Performs loading all settings except compositing related.
      */
@@ -752,6 +778,8 @@ Q_SIGNALS:
     // for properties
     void focusPolicyChanged();
     void focusPolicyIsResonableChanged();
+    void xwaylandCrashPolicyChanged();
+    void xwaylandMaxCrashCountChanged();
     void nextFocusPrefersMouseChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
@@ -835,6 +863,8 @@ private:
     int m_focusStealingPreventionLevel;
     int m_killPingTimeout;
     bool m_hideUtilityWindowsForInactive;
+    XwaylandCrashPolicy m_xwaylandCrashPolicy;
+    int m_xwaylandMaxCrashCount;
 
     CompositingType m_compositingMode;
     bool m_useCompositing;

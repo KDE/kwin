@@ -12,6 +12,7 @@
 #include "databridge.h"
 
 #include "main_wayland.h"
+#include "options.h"
 #include "utils.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
@@ -23,6 +24,7 @@
 #include <QAbstractEventDispatcher>
 #include <QFile>
 #include <QFutureWatcher>
+#include <QTimer>
 #include <QtConcurrentRun>
 
 // system
@@ -64,6 +66,9 @@ Xwayland::Xwayland(ApplicationWaylandAbstract *app, QObject *parent)
     : XwaylandInterface(parent)
     , m_app(app)
 {
+    m_resetCrashCountTimer = new QTimer(this);
+    m_resetCrashCountTimer->setSingleShot(true);
+    connect(m_resetCrashCountTimer, &QTimer::timeout, this, &Xwayland::resetCrashCount);
 }
 
 Xwayland::~Xwayland()
@@ -161,6 +166,12 @@ void Xwayland::stop()
     waylandServer()->destroyXWaylandConnection(); // This one must be destroyed last!
 }
 
+void Xwayland::restart()
+{
+    stop();
+    start();
+}
+
 void Xwayland::dispatchEvents()
 {
     xcb_connection_t *connection = kwinApp()->x11Connection();
@@ -216,14 +227,45 @@ void Xwayland::handleXwaylandStarted()
     watcher->setFuture(QtConcurrent::run(readDisplay, m_displayFileDescriptor));
 }
 
-void Xwayland::handleXwaylandFinished(int exitCode)
+void Xwayland::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     qCDebug(KWIN_XWL) << "Xwayland process has quit with exit code" << exitCode;
 
-    // The Xwayland server has crashed... At this moment we have two choices either restart
-    // Xwayland or shut down all X11 related components. For now, we do the latter, we simply
-    // tear down everything that has any connection to X11.
-    stop();
+    switch (exitStatus) {
+    case QProcess::NormalExit:
+        stop();
+        break;
+    case QProcess::CrashExit:
+        handleXwaylandCrashed();
+        break;
+    }
+}
+
+void Xwayland::handleXwaylandCrashed()
+{
+    m_resetCrashCountTimer->stop();
+
+    switch (options->xwaylandCrashPolicy()) {
+    case XwaylandCrashPolicy::Restart:
+        if (++m_crashCount <= options->xwaylandMaxCrashCount()) {
+            restart();
+            m_resetCrashCountTimer->start(std::chrono::minutes(10));
+        } else {
+            qCWarning(KWIN_XWL, "Stopping Xwayland server because it has crashed %d times "
+                      "over the past 10 minutes", m_crashCount);
+            stop();
+        }
+        break;
+    case XwaylandCrashPolicy::Stop:
+        stop();
+        break;
+    }
+}
+
+void Xwayland::resetCrashCount()
+{
+    qCDebug(KWIN_XWL) << "Resetting the crash counter, its current value is" << m_crashCount;
+    m_crashCount = 0;
 }
 
 void Xwayland::handleXwaylandError(QProcess::ProcessError error)
@@ -234,7 +276,7 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
         emit criticalError(1);
         return;
     case QProcess::Crashed:
-        qCWarning(KWIN_XWL) << "Xwayland process crashed. Shutting down X11 components";
+        qCWarning(KWIN_XWL) << "Xwayland process crashed";
         break;
     case QProcess::Timedout:
         qCWarning(KWIN_XWL) << "Xwayland operation timed out";
