@@ -44,5 +44,5 @@ Name[zh_TW]=視窗切換器佈局
 ProvidersUrl=https://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts
 StandardResource=tmp
-InstallationCommand=kpackagetool5 --type KWin/WindowSwitcher --install %f
-UninstallCommand=kpackagetool5 --type KWin/WindowSwitcher --remove %f
+Uncompress=kpackage
+KPackageType=KWin/WindowSwitcher
