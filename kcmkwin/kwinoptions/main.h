@@ -17,6 +17,7 @@
 #include <kcmodule.h>
 
 class KWinOptionsSettings;
+class KWinOptionsKDEGlobalsSettings;
 class KFocusConfig;
 class KTitleBarActionsConfig;
 class KWindowActionsConfig;

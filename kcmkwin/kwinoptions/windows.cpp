@@ -21,6 +21,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KWindowSystem>
 
 #include "windows.h"
 #include "kwinoptions_settings.h"
@@ -28,6 +29,7 @@
 #include <kwin_effects_interface.h>
 
 #include "kwinoptions_settings.h"
+#include "kwinoptions_kdeglobals_settings.h"
 #include <KConfigDialogManager>
 
 #define  CLICK_TO_FOCUS                 0
@@ -213,19 +215,20 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
     setupUi(parent);
 }
 
-KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
+KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(this))
 {
-    if (settings) {
-        initialize(settings);
+    if (settings && globalSettings) {
+        initialize(settings, globalSettings);
     }
 }
 
-void KAdvancedConfig::initialize(KWinOptionsSettings *settings)
+void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings)
 {
     m_settings = settings;
     addConfig(m_settings, this);
+    addConfig(globalSettings, this);
 
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Smart, "Smart");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Maximizing, "Maximizing");
@@ -234,6 +237,14 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings)
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Centered, "Centered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::ZeroCornered, "ZeroCornered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::UnderMouse, "UnderMouse");
+
+    // Don't show the option to prevent KDE apps from remembering their window
+    // positions on Wayland because it doesn't work on Wayland and the feature
+    // will eventually be implemented in a different way there.
+    // This option lives in the kdeglobals file because it is consumed by
+    // kxmlgui.
+    m_ui->kcfg_AllowKDEAppsToRememberWindowPositions->setVisible(KWindowSystem::isPlatformX11());
+
     load();
 }
 

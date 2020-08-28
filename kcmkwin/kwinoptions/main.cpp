@@ -21,6 +21,7 @@
 #include "mouse.h"
 #include "windows.h"
 #include "kwinoptions_settings.h"
+#include "kwinoptions_kdeglobals_settings.h"
 
 K_PLUGIN_FACTORY_DECLARATION(KWinOptionsFactory)
 
@@ -51,9 +52,9 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, nullptr, parent)
+        : KAdvancedConfig(true, nullptr, nullptr, parent)
     {
-        initialize(new KWinOptionsSettings(this));
+        initialize(new KWinOptionsSettings(this), new KWinOptionsKDEGlobalsSettings(this));
     }
 };
 
@@ -99,7 +100,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
     connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mMoving, &KCModule::setDefaultsIndicatorsVisible);
 
-    mAdvanced = new KAdvancedConfig(false, mSettings, this);
+    mAdvanced = new KAdvancedConfig(false, mSettings, new KWinOptionsKDEGlobalsSettings(this), this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
     connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
