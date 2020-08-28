@@ -23,6 +23,7 @@
 #include <KPluginInfo>
 #include <KPackage/PackageLoader>
 #include <KPackage/Package>
+#include <KPackage/PackageStructure>
 
 #include <KNewStuff3/KNS3/Button>
 
@@ -56,6 +57,32 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     connect(ui->scriptSelector, &KPluginSelector::changed, this, qOverload<bool>(&KCModule::changed));
     connect(ui->scriptSelector, &KPluginSelector::defaulted, this, qOverload<bool>(&KCModule::defaulted));
     connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
+
+    ui->scriptSelector->setAdditionalButtonHandler([this](const KPluginInfo &info) {
+        QPushButton *button = new QPushButton(ui->scriptSelector);
+        button->setIcon(QIcon::fromTheme(QStringLiteral("delete")));
+        button->setEnabled(QFileInfo(info.entryPath()).isWritable());
+        connect(button, &QPushButton::clicked, this, [this, info](){
+            using namespace KPackage;
+            PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
+            Package package(structure);
+            // We can get the package root from the entry path
+            QDir root = QFileInfo(info.entryPath()).dir();
+            root.cdUp();
+            KJob *uninstallJob = Package(structure).uninstall(info.pluginName(), root.absolutePath());
+            connect(uninstallJob, &KJob::result, this, [this, uninstallJob](){
+                ui->scriptSelector->clearPlugins();
+                updateListViewContents();
+                // If the uninstallation is successful the entry will be immediately removed
+                if (!uninstallJob->errorString().isEmpty()) {
+                    ui->messageWidget->setText(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
+                    ui->messageWidget->setMessageType(KMessageWidget::Error);
+                    ui->messageWidget->animatedShow();
+                }
+            });
+       });
+       return button;
+    });
 
     updateListViewContents();
 }
@@ -115,7 +142,7 @@ void Module::importScriptInstallFinished(KJob *job)
 void Module::updateListViewContents()
 {
     auto filter =  [](const KPluginMetaData &md) {
-        return !md.rawData().value("X-KWin-Exclude-Listing").toBool();
+        return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
     };
 
     const QString scriptFolder = QStringLiteral("kwin/scripts/");
