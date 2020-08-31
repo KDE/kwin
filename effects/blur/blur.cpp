@@ -809,5 +809,10 @@ void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount,
     m_shader->unbind();
 }
 
+bool BlurEffect::isActive() const
+{
+    return !effects->isScreenLocked();
+}
+
 } // namespace KWin
 

@@ -43,6 +43,7 @@ public:
     void paintEffectFrame(EffectFrame *frame, const QRegion &region, double opacity, double frameOpacity) override;
 
     bool provides(Feature feature) override;
+    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 76;
