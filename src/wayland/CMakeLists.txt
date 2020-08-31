@@ -162,6 +162,12 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME text
 )
 
+
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
+    BASENAME text-input-unstable-v1
+)
+
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
     BASENAME text-input-unstable-v2

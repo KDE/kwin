@@ -11,6 +11,8 @@
 #include <QVector>
 #include <QObject>
 
+#include "textinput_interface.h"
+
 namespace KWaylandServer
 {
 class OutputInterface;
@@ -66,7 +68,7 @@ public:
 
     void sendSurroundingText(const QString &text, quint32 cursor, quint32 anchor);
     void sendReset();
-    void sendContentType(quint32 hint, quint32 purpose);
+    void sendContentType(TextInputInterface::ContentHints hint, TextInputInterface::ContentPurpose purpose);
     void sendInvokeAction(quint32 button, quint32 index);
     void sendCommitState(quint32 serial);
     void sendPreferredLanguage(const QString &language);
