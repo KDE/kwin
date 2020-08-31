@@ -140,7 +140,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         }
         data.translate(-interpolate(qMin(geo.width(), slideLength), 0.0, t));
         splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
-        region = QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
+        region &= QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
         break;
     case Location::Top:
         if (slideLength < geo.height()) {
@@ -148,7 +148,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         }
         data.translate(0.0, -interpolate(qMin(geo.height(), slideLength), 0.0, t));
         splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
-        region = QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
+        region &= QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
         break;
     case Location::Right:
         if (slideLength < geo.width()) {
@@ -156,7 +156,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         }
         data.translate(interpolate(qMin(geo.width(), slideLength), 0.0, t));
         splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
-        region = QRegion(geo.x(), geo.y(), splitPoint, geo.height());
+        region &= QRegion(geo.x(), geo.y(), splitPoint, geo.height());
         break;
     case Location::Bottom:
     default:
@@ -165,7 +165,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         }
         data.translate(0.0, interpolate(qMin(geo.height(), slideLength), 0.0, t));
         splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
-        region = QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
+        region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }
 
     effects->paintWindow(w, mask, region, data);
