@@ -287,3 +287,8 @@ Comment[x-test]=xxA graphics reset event occurredxx
 Comment[zh_CN]=发生了图形重置事件
 Comment[zh_TW]=發生了圖形重置事件
 Action=Popup
+
+[Event/xwaylandcrash]
+Name=Xwayland Crash
+Comment=Xwayland has crashed
+Action=Popup

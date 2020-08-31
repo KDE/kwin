@@ -19,6 +19,7 @@
 #include "xwayland_logging.h"
 
 #include <KLocalizedString>
+#include <KNotification>
 #include <KSelectionOwner>
 
 #include <QAbstractEventDispatcher>
@@ -243,6 +244,7 @@ void Xwayland::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitSta
 
 void Xwayland::handleXwaylandCrashed()
 {
+    KNotification::event(QStringLiteral("xwaylandcrash"), i18n("Xwayland has crashed"));
     m_resetCrashCountTimer->stop();
 
     switch (options->xwaylandCrashPolicy()) {
