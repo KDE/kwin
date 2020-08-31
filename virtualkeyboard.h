@@ -31,8 +31,6 @@ public:
     ~VirtualKeyboard() override;
 
     void init();
-
-    bool event(QEvent *e) override;
     void hide();
     void show();
 
