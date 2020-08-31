@@ -89,8 +89,7 @@ private:
 
     bool m_renderTargetsValid;
     long net_wm_blur_region;
-    QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
-    QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
+    QRegion m_paintedArea; // keeps track of all painted areas (from bottom to top)
     QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
 
     int m_downSampleIterations; // number of times the texture will be downsized to half size

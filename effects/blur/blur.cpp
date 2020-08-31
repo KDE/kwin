@@ -471,7 +471,6 @@ void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, 
 
 void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    m_damagedArea = QRegion();
     m_paintedArea = QRegion();
     m_currentBlur = QRegion();
 
@@ -499,8 +498,6 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     }
     data.clip = newClip;
 
-    const QRegion oldPaint = data.paint;
-
     // we don't have to blur a region we don't see
     m_currentBlur -= newClip;
     // if we have to paint a non-opaque part of this window that intersects with the
@@ -518,8 +515,6 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     // blur everything
     if (m_paintedArea.intersects(expandedBlur) || data.paint.intersects(blurArea)) {
         data.paint |= expandedBlur;
-        // we keep track of the "damage propagation"
-        m_damagedArea |=  (w->isDock() ? (expandedBlur & m_damagedArea) : expand(expandedBlur & m_damagedArea)) & blurArea;
         // we have to check again whether we do not damage a blurred area
         // of a window
         if (expandedBlur.intersects(m_currentBlur)) {
@@ -529,12 +524,6 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
 
     m_currentBlur |= expandedBlur;
 
-    // we don't consider damaged areas which are occluded and are not
-    // explicitly damaged by this window
-    m_damagedArea -= data.clip;
-    m_damagedArea |= oldPaint;
-
-    // in contrast to m_damagedArea does m_paintedArea keep track of all repainted areas
     m_paintedArea -= data.clip;
     m_paintedArea |= data.paint;
 }
