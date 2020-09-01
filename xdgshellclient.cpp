@@ -518,6 +518,38 @@ void XdgSurfaceClient::destroyClient()
     delete this;
 }
 
+void XdgSurfaceClient::setVirtualKeyboardGeometry(const QRect &geo)
+{
+    // No keyboard anymore
+    if (geo.isEmpty() && !keyboardGeometryRestore().isEmpty()) {
+        setFrameGeometry(keyboardGeometryRestore());
+        setKeyboardGeometryRestore(QRect());
+    } else if (geo.isEmpty()) {
+        return;
+    // The keyboard has just been opened (rather than resized) save client geometry for a restore
+    } else if (keyboardGeometryRestore().isEmpty()) {
+        setKeyboardGeometryRestore(requestedFrameGeometry().isEmpty() ? frameGeometry() : requestedFrameGeometry());
+    }
+
+    m_virtualKeyboardGeometry = geo;
+
+    // Don't resize Desktop and fullscreen windows
+    if (isFullScreen() || isDesktop()) {
+        return;
+    }
+
+    if (!geo.intersects(keyboardGeometryRestore())) {
+        return;
+    }
+
+    const QRect availableArea = workspace()->clientArea(MaximizeArea, this);
+    QRect newWindowGeometry = keyboardGeometryRestore();
+    newWindowGeometry.moveBottom(geo.top());
+    newWindowGeometry.setTop(qMax(newWindowGeometry.top(), availableArea.top()));
+
+    setFrameGeometry(newWindowGeometry);
+}
+
 void XdgSurfaceClient::cleanGrouping()
 {
     if (transientFor()) {

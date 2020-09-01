@@ -61,6 +61,7 @@ public:
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     bool isInitialPositionSet() const override;
     void destroyClient() override;
+    void setVirtualKeyboardGeometry(const QRect &geo) override;
 
     QRect frameRectToBufferRect(const QRect &rect) const;
     QRect requestedFrameGeometry() const;

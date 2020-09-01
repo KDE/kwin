@@ -757,7 +757,7 @@ public:
      * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keybaord
      * This geometry is in global coordinates
      */
-    void setVirtualKeyboardGeometry(const QRect &geo);
+    virtual void setVirtualKeyboardGeometry(const QRect &geo);
 
     /**
      * Restores the AbstractClient after it had been hidden due to show on screen edge functionality.
@@ -1210,6 +1210,11 @@ protected:
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();
 
+    // The geometry that the client should be restored when the virtual keyboard closes
+    QRect keyboardGeometryRestore() const;
+    void setKeyboardGeometryRestore(const QRect &geom);
+
+    QRect m_virtualKeyboardGeometry;
 private Q_SLOTS:
     void shadeHover();
     void shadeUnhover();
@@ -1264,7 +1269,6 @@ private:
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_clientGeometryBeforeUpdateBlocking;
-    QRect m_virtualKeyboardGeometry;
     QRect m_keyboardGeometryRestore;
     QRect m_maximizeGeometryRestore;
 

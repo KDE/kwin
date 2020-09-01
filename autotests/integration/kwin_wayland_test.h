@@ -37,7 +37,13 @@ class SubSurface;
 class Surface;
 class XdgDecorationManager;
 class OutputManagement;
+class TextInputManager;
 }
+}
+
+namespace QtWayland
+{
+class zwp_input_panel_surface_v1;
 }
 
 namespace KWin
@@ -56,6 +62,9 @@ public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     ~WaylandTestApplication() override;
 
+    void setInputMethodServerToStart(const QString &inputMethodServer) {
+        m_inputMethodServerToStart = inputMethodServer;
+    }
 protected:
     void performStartup() override;
 
@@ -66,10 +75,13 @@ private:
     void finalizeStartup();
 
     Xwl::Xwayland *m_xwayland = nullptr;
+    QString m_inputMethodServerToStart;
 };
 
 namespace Test
 {
+
+class MockInputMethod;
 
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
@@ -82,6 +94,8 @@ enum class AdditionalWaylandInterface {
     ShadowManager = 1 << 7,
     XdgDecoration = 1 << 8,
     OutputManagement = 1 << 9,
+    TextInputManagerV2 = 1 << 10,
+    InputMethodV1 = 1 << 11
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -114,6 +128,7 @@ KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
 KWayland::Client::XdgDecorationManager *xdgDecorationManager();
 KWayland::Client::OutputManagement *waylandOutputManagement();
+KWayland::Client::TextInputManager *waylandTextInputManager();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
@@ -132,6 +147,9 @@ enum class CreationSetup {
     CreateOnly,
     CreateAndConfigure, /// commit and wait for the configure event, making this surface ready to commit buffers
 };
+
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
+                                                                 KWayland::Client::Output *output);
 
 KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type,
                                                          KWayland::Client::Surface *surface,

@@ -112,7 +112,9 @@ void VirtualKeyboard::init()
                     return;
                 }
 
-                m_trackedClient->setVirtualKeyboardGeometry(m_inputClient ? m_inputClient->inputGeometry() : QRect());
+                if (m_inputClient && !m_inputClient->inputGeometry().isEmpty()) {
+                    m_trackedClient->setVirtualKeyboardGeometry(m_inputClient->inputGeometry());
+                }
             };
             connect(surface->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
             connect(surface->surface(), &QObject::destroyed, this, [this] {
@@ -120,8 +122,7 @@ void VirtualKeyboard::init()
                     m_trackedClient->setVirtualKeyboardGeometry({});
                 }
             });
-            updateInputPanelState();
-            refreshFrame();
+            connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
         });
 
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputChanged, this,
@@ -158,6 +159,7 @@ void VirtualKeyboard::init()
                     });
                     m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this, [t, this] {
                         if (t->isEnabled()) {
+                            //FIXME This sendDeactivate shouldn't be necessary?
                             waylandServer()->inputMethod()->sendDeactivate();
                             waylandServer()->inputMethod()->sendActivate();
                             adoptInputMethodContext();
@@ -177,7 +179,6 @@ void VirtualKeyboard::init()
                         }
                         m_trackedClient = newClient;
                     }
-
                     updateInputPanelState();
                 } else {
                     m_waylandShowConnection = QMetaObject::Connection();
@@ -198,6 +199,7 @@ void VirtualKeyboard::show()
 {
     auto t = waylandServer()->seat()->focusedTextInput();
     if (t) {
+        //FIXME: this shouldn't be necessary and causes double emits?
         Q_EMIT t->enabledChanged();
     }
 }

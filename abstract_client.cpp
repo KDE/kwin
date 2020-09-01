@@ -2571,6 +2571,16 @@ void AbstractClient::setVirtualKeyboardGeometry(const QRect &geo)
     setFrameGeometry(newWindowGeometry);
 }
 
+QRect AbstractClient::keyboardGeometryRestore() const
+{
+    return m_keyboardGeometryRestore;
+}
+
+void AbstractClient::setKeyboardGeometryRestore(const QRect &geom)
+{
+    m_keyboardGeometryRestore = geom;
+}
+
 bool AbstractClient::dockWantsInput() const
 {
     return false;

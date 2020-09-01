@@ -11,6 +11,8 @@
 #include "screenlockerwatcher.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "qwayland-input-method-unstable-v1.h"
+#include "virtualkeyboard.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -28,6 +30,7 @@
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/textinput.h>
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/xdgdecoration.h>
@@ -71,7 +74,59 @@ static struct {
     IdleInhibitManager *idleInhibit = nullptr;
     AppMenuManager *appMenu = nullptr;
     XdgDecorationManager *xdgDecoration = nullptr;
+    TextInputManager *textInputManager = nullptr;
+    QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
+    MockInputMethod *inputMethodV1 = nullptr;
+    QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
 } s_waylandConnection;
+
+class MockInputMethod : public QtWayland::zwp_input_method_v1
+{
+public:
+    MockInputMethod(struct wl_registry *registry, int id, int version);
+    ~MockInputMethod();
+
+protected:
+    void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
+    void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
+
+private:
+    Surface *m_inputSurface = nullptr;
+    QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
+    AbstractClient *m_client = nullptr;
+};
+
+MockInputMethod::MockInputMethod(struct wl_registry *registry, int id, int version)
+    : QtWayland::zwp_input_method_v1(registry, id, version)
+{
+    
+}
+MockInputMethod::~MockInputMethod()
+{
+}
+
+void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context)
+{
+    if (!m_inputSurface) {
+        m_inputSurface = Test::createSurface();
+        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());
+    }
+    m_client = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
+}
+
+void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context)
+{
+    zwp_input_method_context_v1_destroy(context);
+
+    if (m_inputSurface) {
+        m_inputSurface->release();
+        m_inputSurface->destroy();
+        delete m_inputSurface;
+        m_inputSurface = nullptr;
+        delete m_inputMethodSurface;
+        m_inputMethodSurface = nullptr;
+    }
+}
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
 {
@@ -121,6 +176,16 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
         QObject::connect(output, &Output::destroyed, [=]() {
             s_waylandConnection.outputs.removeOne(output);
         });
+    });
+
+    QObject::connect(registry, &Registry::interfaceAnnounced, [=](const QByteArray &interface, quint32 name, quint32 version) {
+        if (flags & AdditionalWaylandInterface::InputMethodV1) {
+            if (interface == QByteArrayLiteral("zwp_input_method_v1")) {
+                s_waylandConnection.inputMethodV1 = new MockInputMethod(*registry, name, version);
+            } else if (interface == QByteArrayLiteral("zwp_input_panel_v1")) {
+                s_waylandConnection.inputPanelV1 = new QtWayland::zwp_input_panel_v1(*registry, name, version);
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &Registry::interfacesAnnounced);
@@ -219,6 +284,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::TextInputManagerV2)) {
+        s_waylandConnection.textInputManager = registry->createTextInputManager(registry->interface(Registry::Interface::TextInputManagerUnstableV2).name, registry->interface(Registry::Interface::TextInputManagerUnstableV2).version);
+        if (!s_waylandConnection.textInputManager->isValid()) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -257,6 +328,10 @@ void destroyWaylandConnection()
     s_waylandConnection.appMenu = nullptr;
     delete s_waylandConnection.xdgDecoration;
     s_waylandConnection.xdgDecoration = nullptr;
+    delete s_waylandConnection.textInputManager;
+    s_waylandConnection.textInputManager = nullptr;
+    delete s_waylandConnection.inputPanelV1;
+    s_waylandConnection.inputPanelV1 = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
@@ -339,6 +414,11 @@ XdgDecorationManager *xdgDecorationManager()
 OutputManagement *waylandOutputManagement()
 {
     return s_waylandConnection.outputManagement;
+}
+
+TextInputManager *waylandTextInputManager()
+{
+    return s_waylandConnection.textInputManager;
 }
 
 
@@ -464,6 +544,24 @@ XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent, 
     if (creationSetup == CreationSetup::CreateAndConfigure) {
         initXdgShellSurface(surface, s);
     }
+    return s;
+}
+
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(Surface *surface, Output *output)
+{
+    if (!s_waylandConnection.inputPanelV1) {
+        qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";
+        return nullptr;
+    }
+    QtWayland::zwp_input_panel_surface_v1 *s = new QtWayland::zwp_input_panel_surface_v1(s_waylandConnection.inputPanelV1->get_input_panel_surface(*surface));
+
+    if (!s->isInitialized()) {
+        delete s;
+        return nullptr;
+    }
+
+    s->set_toplevel(output->output(), QtWayland::zwp_input_panel_surface_v1::position_center_bottom);
+
     return s;
 }
 

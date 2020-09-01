@@ -1,7 +1,20 @@
 add_subdirectory(helper)
 
-add_library(KWinIntegrationTestFramework STATIC kwin_wayland_test.cpp test_helpers.cpp generic_scene_opengl_test.cpp ../../cursor.cpp ${kwin_XWAYLAND_SRCS})
-target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test)
+set(KWinIntegrationTestFramework_SOURCES
+    ../../cursor.cpp
+
+    generic_scene_opengl_test.cpp
+    kwin_wayland_test.cpp
+    test_helpers.cpp
+
+    ${kwin_XWAYLAND_SRCS}
+)
+ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+    BASENAME input-method-unstable-v1
+)
+add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
+target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test Wayland::Client)
 
 function(integrationTest)
     set(optionArgs WAYLAND_ONLY)
@@ -12,7 +25,7 @@ function(integrationTest)
     target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework kwin Qt5::Test ${ARGS_LIBS})
     add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME})
     if (${ARGS_WAYLAND_ONLY})
-        add_executable(${ARGS_NAME}_waylandonly ${ARGS_SRCS})
+        add_executable(${ARGS_NAME}_waylandonly ${ARGS_SRCS} )
         set_target_properties(${ARGS_NAME}_waylandonly PROPERTIES COMPILE_DEFINITIONS "NO_XWAYLAND")
         target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework kwin Qt5::Test ${ARGS_LIBS})
         add_test(NAME kwin-${ARGS_NAME}-waylandonly COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME}_waylandonly)
@@ -60,6 +73,7 @@ integrationTest(WAYLAND_ONLY NAME testNoGlobalShortcuts SRCS no_global_shortcuts
 integrationTest(WAYLAND_ONLY NAME testBufferSizeChange SRCS buffer_size_change_test.cpp )
 integrationTest(WAYLAND_ONLY NAME testPlacement SRCS placement_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testActivation SRCS activation_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testVirtualKeyboard SRCS virtualkeyboard_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)
