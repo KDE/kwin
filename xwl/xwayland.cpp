@@ -84,6 +84,10 @@ QProcess *Xwayland::process() const
 
 void Xwayland::start()
 {
+    if (m_xwaylandProcess) {
+        return;
+    }
+
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
         std::cerr << "FATAL ERROR failed to create pipe to start Xwayland " << std::endl;
