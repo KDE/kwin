@@ -87,7 +87,7 @@ private:
     void installSocketNotifier();
     void uninstallSocketNotifier();
 
-    void createX11Connection();
+    bool createX11Connection();
     void destroyX11Connection();
     void continueStartupWithX();
 

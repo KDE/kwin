@@ -297,11 +297,14 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
     }
 }
 
-void Xwayland::createX11Connection()
+bool Xwayland::createX11Connection()
 {
     xcb_connection_t *connection = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
-    if (!connection) {
-        return;
+
+    const int errorCode = xcb_connection_has_error(connection);
+    if (errorCode) {
+        qCDebug(KWIN_XWL, "Failed to establish the XCB connection (error %d)", errorCode);
+        return false;
     }
 
     xcb_screen_t *screen = xcb_setup_roots_iterator(xcb_get_setup(connection)).data;
@@ -320,6 +323,8 @@ void Xwayland::createX11Connection()
     // Note that it's very important to have valid x11RootWindow(), x11ScreenNumber(), and
     // atoms when the rest of kwin is notified about the new X11 connection.
     emit m_app->x11ConnectionChanged();
+
+    return true;
 }
 
 void Xwayland::destroyX11Connection()
@@ -347,16 +352,14 @@ void Xwayland::destroyX11Connection()
 
 void Xwayland::continueStartupWithX()
 {
-    createX11Connection();
-    xcb_connection_t *xcbConn = m_app->x11Connection();
-    if (!xcbConn) {
+    if (!createX11Connection()) {
         // about to quit
         Q_EMIT criticalError(1);
         return;
     }
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
-    KSelectionOwner owner("WM_S0", xcbConn, m_app->x11RootWindow());
+    KSelectionOwner owner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     owner.claim(true);
 
     DataBridge::create(this);
