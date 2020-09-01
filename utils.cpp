@@ -133,11 +133,11 @@ void ungrabXKeyboard()
 
 void Process::setupChildProcess()
 {
-    sigset_t userSiganls;
-    sigemptyset(&userSiganls);
-    sigaddset(&userSiganls, SIGUSR1);
-    sigaddset(&userSiganls, SIGUSR2);
-    pthread_sigmask(SIG_UNBLOCK, &userSiganls, nullptr);
+    sigset_t userSignals;
+    sigemptyset(&userSignals);
+    sigaddset(&userSignals, SIGUSR1);
+    sigaddset(&userSignals, SIGUSR2);
+    pthread_sigmask(SIG_UNBLOCK, &userSignals, nullptr);
 }
 
 #endif
