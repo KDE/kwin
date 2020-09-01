@@ -74,7 +74,6 @@ X-KDE-PluginInfo-Email=vlad.zahorodnii@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_fadingpopups
 X-KDE-PluginInfo-Version=1.0
 X-KDE-PluginInfo-Category=Appearance
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Ordering=60

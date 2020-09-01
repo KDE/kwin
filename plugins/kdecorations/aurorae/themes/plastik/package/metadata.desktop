@@ -144,7 +144,6 @@ X-KDE-PluginInfo-Email=mgraesslin@kde.org
 X-KDE-PluginInfo-Name=kwin4_decoration_qml_plastik
 X-KDE-PluginInfo-Version=1.0
 
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-ServiceTypes=KWin/Decoration
 X-KWin-Config-TranslationDomain=kwin_clients

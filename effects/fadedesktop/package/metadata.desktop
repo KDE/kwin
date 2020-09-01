@@ -141,7 +141,6 @@ X-KDE-PluginInfo-Email=lmurray@undefinedfire.com, mgraesslin@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_fadedesktop
 X-KDE-PluginInfo-Version=0.2.0
 X-KDE-PluginInfo-Category=Virtual Desktop Switching Animation
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Ordering=50
