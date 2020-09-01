@@ -602,7 +602,7 @@ void PresentWindowsEffect::inputEventUpdate(const QPoint &pos, QEvent::Type type
                 mouseActionDesktop(m_leftButtonDesktop);
             }
         }
-        if (button == Qt::MidButton) {
+        if (button == Qt::MiddleButton) {
             if (hovering) {
                 // mouse is hovering above a window - use MouseActionsWindow
                 mouseActionWindow(m_middleButtonWindow);

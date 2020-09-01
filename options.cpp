@@ -1064,7 +1064,7 @@ double Options::animationTimeFactor() const
 Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons button) const
 {
     return button == Qt::RightButton ? opMaxButtonRightClick :
-           button == Qt::MidButton ?   opMaxButtonMiddleClick :
+           button == Qt::MiddleButton ?   opMaxButtonMiddleClick :
            opMaxButtonLeftClick;
 }
 

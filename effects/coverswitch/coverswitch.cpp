@@ -851,7 +851,7 @@ void CoverSwitchEffect::windowInputMouseEvent(QEvent* e)
         break;
     case Qt::LeftButton:
     case Qt::RightButton:
-    case Qt::MidButton:
+    case Qt::MiddleButton:
     default:
         QPoint pos = event->pos();
 

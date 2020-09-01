@@ -2380,7 +2380,7 @@ bool AbstractClient::processDecorationButtonPress(QMouseEvent *event, bool ignor
 
     if (event->button() == Qt::LeftButton)
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    else if (event->button() == Qt::MidButton)
+    else if (event->button() == Qt::MiddleButton)
         com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
     else if (event->button() == Qt::RightButton)
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
