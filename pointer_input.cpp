@@ -36,8 +36,6 @@
 #include <QHoverEvent>
 #include <QWindow>
 #include <QPainter>
-// Wayland
-#include <wayland-cursor.h>
 
 #include <linux/input.h>
 

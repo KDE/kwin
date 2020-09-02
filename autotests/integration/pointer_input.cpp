@@ -34,8 +34,6 @@
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/seat_interface.h>
 
-#include <wayland-cursor.h>
-
 #include <linux/input.h>
 
 namespace KWin

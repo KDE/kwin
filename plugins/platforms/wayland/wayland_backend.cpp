@@ -53,7 +53,6 @@
 #include <QThread>
 
 #include <linux/input.h>
-#include <wayland-cursor.h>
 #include <unistd.h>
 #include <gbm.h>
 #include <fcntl.h>
