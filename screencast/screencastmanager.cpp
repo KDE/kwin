@@ -128,16 +128,10 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *
 }
 
 void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *waylandStream,
-                                     ::wl_resource *outputResource,
+                                     KWaylandServer::OutputInterface *output,
                                      KWaylandServer::ScreencastInterface::CursorMode mode)
 {
-    auto outputIface = KWaylandServer::OutputInterface::get(outputResource);
-    if (!outputIface) {
-        waylandStream->sendFailed(i18n("Invalid output"));
-        return;
-    }
-
-    AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(outputIface);
+    AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(output);
 
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));

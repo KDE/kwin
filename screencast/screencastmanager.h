@@ -24,7 +24,7 @@ public:
 
     void streamWindow(KWaylandServer::ScreencastStreamInterface *stream, const QString &winid);
     void streamOutput(KWaylandServer::ScreencastStreamInterface *stream,
-                      ::wl_resource *outputResource,
+                      KWaylandServer::OutputInterface *output,
                       KWaylandServer::ScreencastInterface::CursorMode mode);
 
 private:
