@@ -588,9 +588,6 @@ void TestScreenEdges::testOverlappingEdges_data()
 void TestScreenEdges::testOverlappingEdges()
 {
     using namespace KWin;
-    QSignalSpy changedSpy(screens(), &Screens::changed);
-    QVERIFY(changedSpy.isValid());
-
     QFETCH(QRect, geo1);
     QFETCH(QRect, geo2);
 
@@ -602,8 +599,6 @@ void TestScreenEdges::testOverlappingEdges()
         Q_ARG(QVector<QRect>, QVector<QRect>::fromList(geometries)),
                               Q_ARG(QVector<int>, QVector<int>(geometries.count(), 1))
     );
-
-    QCOMPARE(changedSpy.count(), 1);
 
     auto screenEdges = ScreenEdges::self();
     screenEdges->init();
