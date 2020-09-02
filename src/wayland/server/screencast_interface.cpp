@@ -6,6 +6,8 @@
 
 #include "screencast_interface.h"
 #include "display.h"
+#include "output_interface.h"
+
 #include <QDebug>
 
 #include "qwayland-server-zkde-screencast-unstable-v1.h"
@@ -86,7 +88,7 @@ public:
 
     void zkde_screencast_unstable_v1_stream_output(Resource *resource, uint32_t streamid, struct ::wl_resource *output, uint32_t pointer) override
     {
-        Q_EMIT q->outputScreencastRequested(createStream(resource, streamid), output, ScreencastInterface::CursorMode(pointer));
+        Q_EMIT q->outputScreencastRequested(createStream(resource, streamid), OutputInterface::get(output), ScreencastInterface::CursorMode(pointer));
     }
 
     void zkde_screencast_unstable_v1_stream_window(Resource *resource, uint32_t streamid, const QString &uuid, uint32_t pointer) override

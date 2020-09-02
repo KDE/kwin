@@ -9,7 +9,6 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <KWaylandServer/kwaylandserver_export.h>
-#include <wayland-server.h>
 
 struct wl_resource;
 
@@ -56,7 +55,7 @@ public:
 
 
 Q_SIGNALS:
-    void outputScreencastRequested(ScreencastStreamInterface* stream, ::wl_resource *output, CursorMode mode);
+    void outputScreencastRequested(ScreencastStreamInterface* stream, OutputInterface *output, CursorMode mode);
     void windowScreencastRequested(ScreencastStreamInterface* stream, const QString &winid, CursorMode mode);
 
 private:
