@@ -591,12 +591,12 @@ void TestScreenEdges::testOverlappingEdges()
     QFETCH(QRect, geo1);
     QFETCH(QRect, geo2);
 
-    QList<QRect> geometries{{geo1, geo2}};
+    QVector<QRect> geometries{{geo1, geo2}};
     QMetaObject::invokeMethod(kwinApp()->platform(),
         "setVirtualOutputs",
         Qt::DirectConnection,
         Q_ARG(int, geometries.count()),
-        Q_ARG(QVector<QRect>, QVector<QRect>::fromList(geometries)),
+        Q_ARG(QVector<QRect>, geometries),
                               Q_ARG(QVector<int>, QVector<int>(geometries.count(), 1))
     );
 
