@@ -123,6 +123,8 @@ void TestScreenEdges::init()
     new MockWorkspace(this);
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     Screens::create();
+    QSignalSpy sp(screens(), &MockScreens::changed);
+    QVERIFY(sp.wait());
 
     auto vd = VirtualDesktopManager::create();
     vd->setConfig(config);
@@ -591,15 +593,12 @@ void TestScreenEdges::testOverlappingEdges()
     QFETCH(QRect, geo1);
     QFETCH(QRect, geo2);
 
-    QVector<QRect> geometries{{geo1, geo2}};
-    QMetaObject::invokeMethod(kwinApp()->platform(),
-        "setVirtualOutputs",
-        Qt::DirectConnection,
-        Q_ARG(int, geometries.count()),
-        Q_ARG(QVector<QRect>, geometries),
-                              Q_ARG(QVector<int>, QVector<int>(geometries.count(), 1))
-    );
+    MockScreens* mockScreens = static_cast<MockScreens*>(screens());
+    QSignalSpy sp(mockScreens, &MockScreens::changed);
+    mockScreens->setGeometries({geo1, geo2});
+    QVERIFY(sp.wait());
 
+    QCOMPARE(screens()->count(), 2);
     auto screenEdges = ScreenEdges::self();
     screenEdges->init();
 }
@@ -629,16 +628,6 @@ void TestScreenEdges::testPushBack()
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("Windows").writeEntry("ElectricBorderPushbackPixels", pushback);
     config->sync();
-
-    QVector<QRect> geometries{{QRect{0, 0, 1024, 768}, QRect{200, 768, 1024, 768}}};
-    QMetaObject::invokeMethod(kwinApp()->platform(),
-        "setVirtualOutputs",
-        Qt::DirectConnection,
-        Q_ARG(int, geometries.count()),
-        Q_ARG(QVector<QRect>, geometries),
-                              Q_ARG(QVector<int>, QVector<int>(geometries.count(), 1))
-    );
-
 
     auto s = ScreenEdges::self();
     s->setConfig(config);
