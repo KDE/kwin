@@ -1285,6 +1285,10 @@ QRegion WindowPixmap::shape() const
 
 QRegion WindowPixmap::opaque() const
 {
+    if (surface()) {
+        return surface()->opaque();
+    }
+
     return toplevel()->opaqueRegion().translated(toplevel()->clientPos());
 }
 
