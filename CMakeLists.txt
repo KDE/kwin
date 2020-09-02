@@ -170,7 +170,7 @@ if (epoxy_HAS_GLX)
     endif()
 endif()
 
-find_package(Wayland 1.2 REQUIRED COMPONENTS Server OPTIONAL_COMPONENTS Egl)
+find_package(Wayland 1.2 OPTIONAL_COMPONENTS Egl)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
