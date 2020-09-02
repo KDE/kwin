@@ -170,12 +170,12 @@ if (epoxy_HAS_GLX)
     endif()
 endif()
 
-find_package(Wayland 1.2 REQUIRED COMPONENTS Cursor OPTIONAL_COMPONENTS Egl)
+find_package(Wayland 1.2 OPTIONAL_COMPONENTS Egl)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
 )
-add_feature_info("Wayland::EGL" Wayland_Egl_FOUND "Enable building of Wayland backend and QPA with EGL support.")
+add_feature_info("Wayland::EGL" Wayland_Egl_FOUND "Enable building of Wayland backend.")
 set(HAVE_WAYLAND_EGL FALSE)
 if (Wayland_Egl_FOUND)
     set(HAVE_WAYLAND_EGL TRUE)
@@ -685,7 +685,6 @@ set(kwin_XCB_LIBS
 set(kwin_WAYLAND_LIBS
     KF5::WaylandClient
     Plasma::KWaylandServer
-    Wayland::Cursor
     XKB::XKB
     ${CMAKE_THREAD_LIBS_INIT}
 )
