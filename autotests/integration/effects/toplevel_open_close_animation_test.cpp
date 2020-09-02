@@ -22,7 +22,6 @@
 #include "effect_builtins.h"
 
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/xdgshell.h>
 
 using namespace KWin;
 
@@ -122,7 +121,7 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
@@ -166,7 +165,7 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     using namespace KWayland::Client;
     QScopedPointer<Surface> mainWindowSurface(Test::createSurface());
     QVERIFY(!mainWindowSurface.isNull());
-    QScopedPointer<XdgShellSurface> mainWindowShellSurface(Test::createXdgShellStableSurface(mainWindowSurface.data()));
+    QScopedPointer<Test::XdgToplevel> mainWindowShellSurface(Test::createXdgToplevelSurface(mainWindowSurface.data()));
     QVERIFY(!mainWindowShellSurface.isNull());
     AbstractClient *mainWindow = Test::renderAndWaitForShown(mainWindowSurface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(mainWindow);
@@ -183,12 +182,15 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     // Create a popup, it should not be animated.
     QScopedPointer<Surface> popupSurface(Test::createSurface());
     QVERIFY(!popupSurface.isNull());
-    XdgPositioner positioner(QSize(20, 20), QRect(0, 0, 10, 10));
-    positioner.setGravity(Qt::BottomEdge | Qt::RightEdge);
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::LeftEdge);
-    QScopedPointer<XdgShellPopup> popupShellSurface(Test::createXdgShellStablePopup(popupSurface.data(), mainWindowShellSurface.data(), positioner));
+    QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    QVERIFY(positioner);
+    positioner->set_size(20, 20);
+    positioner->set_anchor_rect(0, 0, 10, 10);
+    positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
+    positioner->set_anchor(Test::XdgPositioner::anchor_bottom_left);
+    QScopedPointer<Test::XdgPopup> popupShellSurface(Test::createXdgPopupSurface(popupSurface.data(), mainWindowShellSurface->xdgSurface(), positioner.data()));
     QVERIFY(!popupShellSurface.isNull());
-    AbstractClient *popup = Test::renderAndWaitForShown(popupSurface.data(), positioner.initialSize(), Qt::red);
+    AbstractClient *popup = Test::renderAndWaitForShown(popupSurface.data(), QSize(20, 20), Qt::red);
     QVERIFY(popup);
     QVERIFY(popup->isPopupWindow());
     QCOMPARE(popup->transientFor(), mainWindow);
