@@ -345,9 +345,10 @@ ecm_generate_export_header(KWaylandServer
 target_include_directories(KWaylandServer INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}>")
 
 target_link_libraries(KWaylandServer
-    PUBLIC Qt5::Gui
-    PRIVATE
+    PUBLIC
+        Qt5::Gui
         Wayland::Server
+    PRIVATE
         EGL::EGL
         Qt5::Concurrent
 )

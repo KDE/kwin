@@ -12,6 +12,7 @@
 #include <QSharedPointer>
 #include <functional>
 #include <KWaylandServer/kwaylandserver_export.h>
+#include <wayland-server.h>
 
 struct wl_resource;
 
