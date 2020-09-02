@@ -17,6 +17,10 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
     BASENAME wlr-layer-shell-unstable-v1
 )
+ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+    BASENAME xdg-shell
+)
 add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
 target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test Wayland::Client)
 

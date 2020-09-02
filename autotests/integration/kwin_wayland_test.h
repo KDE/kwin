@@ -18,6 +18,7 @@
 #include <KWayland/Client/xdgshell.h>
 
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
+#include "qwayland-xdg-shell.h"
 
 namespace KWayland
 {
@@ -107,6 +108,106 @@ Q_SIGNALS:
     void configureRequested(quint32 serial, const QSize &size);
 };
 
+/**
+ * The XdgShell class represents the @c xdg_wm_base global.
+ */
+class XdgShell : public QtWayland::xdg_wm_base
+{
+public:
+    ~XdgShell() override;
+};
+
+/**
+ * The XdgSurface class represents an xdg_surface object.
+ */
+class XdgSurface : public QObject, public QtWayland::xdg_surface
+{
+    Q_OBJECT
+
+public:
+    explicit XdgSurface(XdgShell *shell, KWayland::Client::Surface *surface, QObject *parent = nullptr);
+    ~XdgSurface() override;
+
+    KWayland::Client::Surface *surface() const;
+
+Q_SIGNALS:
+    void configureRequested(quint32 serial);
+
+protected:
+    void xdg_surface_configure(uint32_t serial) override;
+
+private:
+    KWayland::Client::Surface *m_surface;
+};
+
+/**
+ * The XdgToplevel class represents an xdg_toplevel surface. Note that the XdgToplevel surface
+ * takes the ownership of the underlying XdgSurface object.
+ */
+class XdgToplevel : public QObject, public QtWayland::xdg_toplevel
+{
+    Q_OBJECT
+
+public:
+    enum class State {
+        Maximized  = 1 << 0,
+        Fullscreen = 1 << 1,
+        Resizing   = 1 << 2,
+        Activated  = 1 << 3
+    };
+    Q_DECLARE_FLAGS(States, State)
+
+    explicit XdgToplevel(XdgSurface *surface, QObject *parent = nullptr);
+    ~XdgToplevel() override;
+
+    XdgSurface *xdgSurface() const;
+
+Q_SIGNALS:
+    void configureRequested(const QSize &size, KWin::Test::XdgToplevel::States states);
+    void closeRequested();
+
+protected:
+    void xdg_toplevel_configure(int32_t width, int32_t height, wl_array *states) override;
+    void xdg_toplevel_close() override;
+
+private:
+    QScopedPointer<XdgSurface> m_xdgSurface;
+};
+
+/**
+ * The XdgPositioner class represents an xdg_positioner object.
+ */
+class XdgPositioner : public QtWayland::xdg_positioner
+{
+public:
+    explicit XdgPositioner(XdgShell *shell);
+    ~XdgPositioner() override;
+};
+
+/**
+ * The XdgPopup class represents an xdg_popup surface. Note that the XdgPopup surface takes
+ * the ownership of the underlying XdgSurface object.
+ */
+class XdgPopup : public QObject, public QtWayland::xdg_popup
+{
+    Q_OBJECT
+
+public:
+    XdgPopup(XdgSurface *surface, XdgSurface *parentSurface, XdgPositioner *positioner, QObject *parent = nullptr);
+    ~XdgPopup() override;
+
+    XdgSurface *xdgSurface() const;
+
+Q_SIGNALS:
+    void configureRequested(const QRect &rect);
+
+protected:
+    void xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height) override;
+
+private:
+    QScopedPointer<XdgSurface> m_xdgSurface;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -188,6 +289,15 @@ KWayland::Client::XdgShellPopup *createXdgShellStablePopup(KWayland::Client::Sur
                                                            QObject *parent = nullptr,
                                                            CreationSetup = CreationSetup::CreateAndConfigure);
 
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr,
+                                      CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+
+XdgPositioner *createXdgPositioner();
+
+XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
+                                XdgPositioner *positioner, QObject *parent = nullptr,
+                                CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+
 
 /**
  * Commits the XdgShellSurface to the given surface, and waits for the configure event from the compositor
@@ -240,6 +350,7 @@ bool unlockScreen();
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
+Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
 int main(int argc, char *argv[]) \
