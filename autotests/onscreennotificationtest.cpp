@@ -123,5 +123,3 @@ void OnScreenNotificationTest::message()
     QCOMPARE(notification.message(), QStringLiteral("bar"));
     QCOMPARE(messageChangedSpy.count(), 2);
 }
-
-#include "onscreennotificationtest.moc"
