@@ -120,7 +120,7 @@ void TestScreenEdges::init()
     KWin::Cursors::self()->setMouse(new KWin::Cursor(this));
 
     using namespace KWin;
-    new MockWorkspace;
+    new MockWorkspace(this);
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     Screens::create();
 
