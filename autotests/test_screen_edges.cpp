@@ -318,9 +318,6 @@ void TestScreenEdges::testCreatingInitialEdges()
     static_cast<MockScreens*>(screens())->setGeometries(QList<QRect>{QRect{0, 0, 1024, 768}});
     QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
-    // first is before it's updated
-    QVERIFY(changedSpy.wait());
-    // second is after it's updated
     QVERIFY(changedSpy.wait());
 
     // let's update the layout and verify that we have edges
