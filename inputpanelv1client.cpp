@@ -27,6 +27,7 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     : WaylandClient(panelSurface->surface())
     , m_panelSurface(panelSurface)
 {
+    setSkipSwitcher(true);
     setSkipPager(true);
     setSkipTaskbar(true);
     setupCompositing();
