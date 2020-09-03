@@ -17,12 +17,12 @@ class XdgPopupInterface;
 namespace KWin
 {
 
-class WaylandXdgShellIntegration : public WaylandShellIntegration
+class XdgShellIntegration : public WaylandShellIntegration
 {
     Q_OBJECT
 
 public:
-    explicit WaylandXdgShellIntegration(QObject *parent = nullptr);
+    explicit XdgShellIntegration(QObject *parent = nullptr);
 
 private:
     void registerXdgToplevel(KWaylandServer::XdgToplevelInterface *toplevel);

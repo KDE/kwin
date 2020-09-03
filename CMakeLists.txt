@@ -538,7 +538,6 @@ set(kwin_SRCS
     wayland_server.cpp
     waylandclient.cpp
     waylandshellintegration.cpp
-    waylandxdgshellintegration.cpp
     window_property_notify_x11_filter.cpp
     workspace.cpp
     x11client.cpp
@@ -546,6 +545,7 @@ set(kwin_SRCS
     xcbutils.cpp
     xcursortheme.cpp
     xdgshellclient.cpp
+    xdgshellintegration.cpp
     xkb.cpp
     xwaylandclient.cpp
     xwl/xwayland_interface.cpp

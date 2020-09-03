@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "waylandxdgshellintegration.h"
+#include "xdgshellintegration.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
@@ -29,18 +29,18 @@ namespace KWin
  * surface role of the underlying xdg_surface object.
  */
 
-WaylandXdgShellIntegration::WaylandXdgShellIntegration(QObject *parent)
+XdgShellIntegration::XdgShellIntegration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
     XdgShellInterface *shell = waylandServer()->display()->createXdgShell(this);
 
     connect(shell, &XdgShellInterface::toplevelCreated,
-            this, &WaylandXdgShellIntegration::registerXdgToplevel);
+            this, &XdgShellIntegration::registerXdgToplevel);
     connect(shell, &XdgShellInterface::popupCreated,
-            this, &WaylandXdgShellIntegration::registerXdgPopup);
+            this, &XdgShellIntegration::registerXdgPopup);
 }
 
-void WaylandXdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
+void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
 {
     // Note that the client is going to be destroyed and immediately re-created when the
     // underlying surface is unmapped. XdgToplevelClient is re-created right away since
@@ -52,7 +52,7 @@ void WaylandXdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *tople
     createXdgToplevelClient(toplevel);
 }
 
-void WaylandXdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel)
+void XdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-toplevel surface has been created while the compositor "
@@ -63,7 +63,7 @@ void WaylandXdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *t
     emit clientCreated(new XdgToplevelClient(toplevel));
 }
 
-void WaylandXdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
+void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-popup surface has been created while the compositor is "

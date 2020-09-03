@@ -15,7 +15,7 @@
 #include "inputpanelv1integration.h"
 #include "screens.h"
 #include "layershellv1integration.h"
-#include "waylandxdgshellintegration.h"
+#include "xdgshellintegration.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
 #include "service_utils.h"
@@ -364,8 +364,8 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     connect(inputPanelV1Integration, &InputPanelV1Integration::clientCreated,
             this, &WaylandServer::registerShellClient);
 
-    auto xdgShellIntegration = new WaylandXdgShellIntegration(this);
-    connect(xdgShellIntegration, &WaylandXdgShellIntegration::clientCreated,
+    auto xdgShellIntegration = new XdgShellIntegration(this);
+    connect(xdgShellIntegration, &XdgShellIntegration::clientCreated,
             this, &WaylandServer::registerXdgGenericClient);
 
     auto layerShellV1Integration = new LayerShellV1Integration(this);
