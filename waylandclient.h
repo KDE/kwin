@@ -69,6 +69,7 @@ protected:
     void setPositionSyncMode(SyncMode syncMode);
     void setSizeSyncMode(SyncMode syncMode);
     void cleanGrouping();
+    void cleanTabBox();
 
     virtual void requestGeometry(const QRect &rect);
     virtual void updateGeometry(const QRect &rect);

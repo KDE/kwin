@@ -11,6 +11,10 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox.h"
+#endif
+
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/surface_interface.h>
@@ -303,6 +307,16 @@ void WaylandClient::cleanGrouping()
             ++it;
         }
     }
+}
+
+void WaylandClient::cleanTabBox()
+{
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+        tabBox->nextPrev(true);
+    }
+#endif
 }
 
 bool WaylandClient::isShown(bool shaded_is_shown) const

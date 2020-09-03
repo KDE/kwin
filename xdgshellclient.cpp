@@ -16,10 +16,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#ifdef KWIN_BUILD_TABBOX
-#include "tabbox.h"
-#endif
-
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KWaylandServer/appmenu_interface.h>
@@ -381,16 +377,6 @@ void XdgSurfaceClient::setVirtualKeyboardGeometry(const QRect &geo)
     newWindowGeometry.setTop(qMax(newWindowGeometry.top(), availableArea.top()));
 
     setFrameGeometry(newWindowGeometry);
-}
-
-void XdgSurfaceClient::cleanTabBox()
-{
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
-        tabBox->nextPrev(true);
-    }
-#endif
 }
 
 XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)

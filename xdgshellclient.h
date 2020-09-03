@@ -85,7 +85,6 @@ private:
     void resetHaveNextWindowGeometry();
     QRect adjustMoveResizeGeometry(const QRect &rect) const;
     void updateGeometryRestoreHack();
-    void cleanTabBox();
 
     KWaylandServer::XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
