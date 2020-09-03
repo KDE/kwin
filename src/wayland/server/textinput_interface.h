@@ -396,6 +396,11 @@ Q_SIGNALS:
      * @see surface
      **/
     void enabledChanged();
+    /**
+     * Emitted whenever TextInputInterface should commit the current state.
+     * @see requestReset
+     **/
+    void stateCommitted(uint32_t serial);
 
 protected:
     class Private;

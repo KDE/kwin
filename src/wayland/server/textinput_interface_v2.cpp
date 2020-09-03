@@ -224,11 +224,11 @@ void TextInputUnstableV2Interface::Private::updateStateCallback(wl_client *clien
 {
     auto p = cast<Private>(resource);
     Q_ASSERT(*p->client == client);
-    Q_UNUSED(serial)
     // TODO: use other reason values reason
     if (reason == ZWP_TEXT_INPUT_V2_UPDATE_STATE_RESET) {
         emit p->q_func()->requestReset();
     }
+    emit p->q_func()->stateCommitted(serial);
 }
 
 TextInputInterface::ContentHints TextInputUnstableV2Interface::Private::convertContentHint(uint32_t hint) const
