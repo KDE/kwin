@@ -7,10 +7,7 @@
 #pragma once
 
 #include <QObject>
-#include <QRect>
 #include <QScopedPointer>
-#include <QSharedPointer>
-#include <functional>
 #include <KWaylandServer/kwaylandserver_export.h>
 #include <wayland-server.h>
 
@@ -21,8 +18,6 @@ namespace KWaylandServer
 
 class Display;
 class OutputInterface;
-class Screencast;
-class ScreencastSourcePrivate;
 class ScreencastInterfacePrivate;
 class ScreencastStreamInterfacePrivate;
 class ScreencastStreamInterface;
