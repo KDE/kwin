@@ -290,5 +290,19 @@ Action=Popup
 
 [Event/xwaylandcrash]
 Name=Xwayland Crash
+Name[az]=Xwayland Qəzası
+Name[ca]=Fallada de l'Xwayland
+Name[es]=Fallo de Xwayland
+Name[nl]=Xwayland-crash
+Name[sv]=Krasch av Xwayland
+Name[uk]=Аварія Xwayland
+Name[x-test]=xxXwayland Crashxx
 Comment=Xwayland has crashed
+Comment[az]=Xwayland qəzaya uğradı
+Comment[ca]=L'Xwayland ha fallat
+Comment[es]=Xwayland ha fallado
+Comment[nl]=Xwayland is gecrasht
+Comment[sv]=Xwayland har kraschat
+Comment[uk]=Xwayland завершив роботу в аварійному режимі
+Comment[x-test]=xxXwayland has crashedxx
 Action=Popup
