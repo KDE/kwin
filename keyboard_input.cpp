@@ -222,7 +222,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
 
     m_xkb->forwardModifiers();
 
-    if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier) {
+    if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
     }
 }
