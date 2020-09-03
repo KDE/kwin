@@ -194,7 +194,6 @@ void VirtualKeyboard::init()
                         }
                         m_trackedClient = newClient;
                     }
-                    updateInputPanelState();
                 } else {
                     m_waylandShowConnection = QMetaObject::Connection();
                     m_waylandHideConnection = QMetaObject::Connection();
@@ -203,7 +202,9 @@ void VirtualKeyboard::init()
                     m_waylandResetConnection = QMetaObject::Connection();
                     m_waylandEnabledConnection = QMetaObject::Connection();
                     m_waylandStateCommittedConnection = QMetaObject::Connection();
+                    waylandServer()->inputMethod()->sendDeactivate();
                 }
+                updateInputPanelState();
             }
         );
     }
