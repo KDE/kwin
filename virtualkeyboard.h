@@ -56,6 +56,8 @@ private:
     QMetaObject::Connection m_waylandSurroundingTextConnection;
     QMetaObject::Connection m_waylandResetConnection;
     QMetaObject::Connection m_waylandEnabledConnection;
+    QMetaObject::Connection m_waylandStateCommittedConnection;
+
     KWIN_SINGLETON(VirtualKeyboard)
 };
 

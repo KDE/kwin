@@ -133,6 +133,7 @@ void VirtualKeyboard::init()
                 disconnect(m_waylandSurroundingTextConnection);
                 disconnect(m_waylandResetConnection);
                 disconnect(m_waylandEnabledConnection);
+                disconnect(m_waylandStateCommittedConnection);
                 if (auto t = waylandServer()->seat()->focusedTextInput()) {
                     m_waylandShowConnection = connect(t, &TextInputInterface::requestShowInputPanel, this, &VirtualKeyboard::show);
                     m_waylandHideConnection = connect(t, &TextInputInterface::requestHideInputPanel, this, &VirtualKeyboard::hide);
@@ -176,6 +177,13 @@ void VirtualKeyboard::init()
                             hide();
                         }
                     });
+                    m_waylandStateCommittedConnection = connect(t, &TextInputInterface::stateCommitted, this, [t](uint32_t serial) {
+                        auto inputContext = waylandServer()->inputMethod()->context();
+                        if (!inputContext) {
+                            return;
+                        }
+                        inputContext->sendCommitState(serial);
+                    });
 
                     auto newClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
                     // Reset the old client virtual keybaord geom if necessary
@@ -194,6 +202,7 @@ void VirtualKeyboard::init()
                     m_waylandSurroundingTextConnection = QMetaObject::Connection();
                     m_waylandResetConnection = QMetaObject::Connection();
                     m_waylandEnabledConnection = QMetaObject::Connection();
+                    m_waylandStateCommittedConnection = QMetaObject::Connection();
                 }
             }
         );
@@ -316,6 +325,7 @@ void VirtualKeyboard::adoptInputMethodContext()
 
     inputContext->sendSurroundingText(QString::fromUtf8(ti->surroundingText()), ti->surroundingTextCursorPosition(), ti->surroundingTextSelectionAnchor());
     inputContext->sendPreferredLanguage(QString::fromUtf8(ti->preferredLanguage()));
+    inputContext->sendContentType(ti->contentHints(), ti->contentPurpose());
 
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, waylandServer(), &keysymReceived);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, waylandServer(), &commitString);
