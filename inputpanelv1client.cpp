@@ -29,7 +29,6 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
 {
     setSkipPager(true);
     setSkipTaskbar(true);
-    setKeepAbove(true);
     setupCompositing();
 
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Client::destroyClient);
