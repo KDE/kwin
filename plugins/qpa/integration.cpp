@@ -16,13 +16,10 @@
 #include "../../main.h"
 #include "../../platform.h"
 #include "../../screens.h"
-#include "../../virtualkeyboard.h"
 
 #include <QCoreApplication>
 #include <QtConcurrentRun>
 
-#include <qpa/qplatforminputcontext.h>
-#include <qpa/qplatforminputcontextfactory_p.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qwindowsysteminterface.h>
 
@@ -40,7 +37,6 @@ Integration::Integration()
     : QObject()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
-    , m_inputContext()
 {
 }
 
@@ -84,24 +80,6 @@ void Integration::initialize()
     auto dummyScreen = new Screen(-1);
     QWindowSystemInterface::handleScreenAdded(dummyScreen);
     m_screens << dummyScreen;
-    m_inputContext.reset(QPlatformInputContextFactory::create(QStringLiteral("qtvirtualkeyboard")));
-    qunsetenv("QT_IM_MODULE");
-    if (!m_inputContext.isNull()) {
-        connect(qApp, &QGuiApplication::focusObjectChanged, this,
-            [this] {
-                if (VirtualKeyboard::self() && qApp->focusObject() != VirtualKeyboard::self()) {
-                    m_inputContext->setFocusObject(VirtualKeyboard::self());
-                }
-            }
-        );
-        connect(kwinApp(), &Application::workspaceCreated, this,
-            [this] {
-                if (VirtualKeyboard::self()) {
-                    m_inputContext->setFocusObject(VirtualKeyboard::self());
-                }
-            }
-        );
-    }
 }
 
 QAbstractEventDispatcher *Integration::createEventDispatcher() const
@@ -175,11 +153,6 @@ void Integration::initScreens()
         QWindowSystemInterface::handleScreenRemoved(m_screens.takeLast());
     }
     m_screens = newScreens;
-}
-
-QPlatformInputContext *Integration::inputContext() const
-{
-    return m_inputContext.data();
 }
 
 }

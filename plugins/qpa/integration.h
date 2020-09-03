@@ -40,7 +40,6 @@ public:
     QStringList themeNames() const override;
     QPlatformTheme *createPlatformTheme(const QString &name) const override;
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const override;
-    QPlatformInputContext *inputContext() const override;
 
     void initialize() override;
 
@@ -50,7 +49,6 @@ private:
     QScopedPointer<QPlatformFontDatabase> m_fontDb;
     QPlatformNativeInterface *m_nativeInterface;
     Screen *m_dummyScreen = nullptr;
-    QScopedPointer<QPlatformInputContext> m_inputContext;
     QVector<Screen*> m_screens;
 };
 
