@@ -33,7 +33,7 @@
 #include "primaryselectiondevicemanager_v1_interface.h"
 #include "relativepointer_interface_p.h"
 #include "seat_interface.h"
-#include "screencast_interface.h"
+#include "screencast_v1_interface.h"
 #include "server_decoration_interface.h"
 #include "server_decoration_palette_interface.h"
 #include "shadow_interface.h"
@@ -336,9 +336,9 @@ ServerSideDecorationManagerInterface *Display::createServerSideDecorationManager
     return d;
 }
 
-ScreencastInterface *Display::createScreencastInterface(QObject *parent)
+ScreencastV1Interface *Display::createScreencastV1Interface(QObject *parent)
 {
-    auto s = new ScreencastInterface(this, parent);
+    auto s = new ScreencastV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, s, [s] { delete s; });
     return s;
 }

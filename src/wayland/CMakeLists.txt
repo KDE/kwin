@@ -49,6 +49,7 @@ set(SERVER_LIB_SRCS
     relativepointer_interface.cpp
     relativepointer_interface_v1.cpp
     resource.cpp
+    screencast_v1_interface.cpp
     seat_interface.cpp
     server_decoration_interface.cpp
     server_decoration_palette_interface.cpp
@@ -67,7 +68,6 @@ set(SERVER_LIB_SRCS
     xdgforeign_v2_interface.cpp
     xdgoutput_v1_interface.cpp
     xdgshell_interface.cpp
-    screencast_interface.cpp
 )
 
 ecm_qt_declare_logging_category(SERVER_LIB_SRCS
@@ -417,7 +417,7 @@ set(SERVER_LIB_HEADERS
   region_interface.h
   relativepointer_interface.h
   resource.h
-  screencast_interface.h
+  screencast_v1_interface.h
   seat_interface.h
   server_decoration_interface.h
   server_decoration_palette_interface.h

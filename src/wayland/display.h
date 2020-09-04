@@ -77,7 +77,7 @@ class DataControlDeviceManagerV1Interface;
 class PrimarySelectionDeviceManagerV1Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class ViewporterInterface;
-class ScreencastInterface;
+class ScreencastV1Interface;
 class InputMethodV1Interface;
 class InputPanelV1Interface;
 class LayerShellV1Interface;
@@ -338,7 +338,7 @@ public:
     /**
      * Creates an interface to request video feeds of different compositor resources
      */
-    ScreencastInterface *createScreencastInterface(QObject *parent = nullptr);
+    ScreencastV1Interface *createScreencastV1Interface(QObject *parent = nullptr);
 
     /**
      * Creates the layer shell compositor extension.

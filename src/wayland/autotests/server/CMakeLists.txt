@@ -77,16 +77,16 @@ add_test(NAME kwayland-testViewporterInterface COMMAND testViewporterInterface)
 ecm_mark_as_test(testViewporterInterface)
 
 ########################################################
-# Test ScreencastInterface
+# Test ScreencastV1Interface
 ########################################################
 ecm_add_qtwayland_client_protocol(SCREENCAST_SRCS
     PROTOCOL PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
     BASENAME zkde-screencast-unstable-v1
 )
-add_executable(testScreencastInterface test_screencast.cpp ${SCREENCAST_SRCS})
-target_link_libraries(testScreencastInterface Qt5::Test Plasma::KWaylandServer Wayland::Client KF5::WaylandClient)
-add_test(NAME kwayland-testScreencastInterface COMMAND testScreencastInterface)
-ecm_mark_as_test(testScreencastInterface)
+add_executable(testScreencastV1Interface test_screencast.cpp ${SCREENCAST_SRCS})
+target_link_libraries(testScreencastV1Interface Qt5::Test Plasma::KWaylandServer Wayland::Client KF5::WaylandClient)
+add_test(NAME kwayland-testScreencastV1Interface COMMAND testScreencastV1Interface)
+ecm_mark_as_test(testScreencastV1Interface)
 
 ########################################################
 # Test InputMethod Interface
