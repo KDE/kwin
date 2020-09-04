@@ -255,7 +255,7 @@ bool PipeWireStream::createStream()
         return false;
     }
 
-    if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded) {
+    if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             if (m_cursor.lastFrameTexture) {
                 m_repainting = true;
@@ -348,7 +348,7 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         frameTexture->bind();
         glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             QImage dest(data, size.width(), size.height(), QImage::Format_RGBA8888_Premultiplied);
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
@@ -378,7 +378,7 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         frameTexture->render(damagedRegion, r, true);
 
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             if (!m_repainting) //We need to copy the last version of the stream to render the moved cursor on top
                 m_cursor.lastFrameTexture.reset(copyTexture(frameTexture));
 
@@ -404,7 +404,7 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
     }
     frameTexture->unbind();
 
-    if (m_cursor.mode == KWaylandServer::ScreencastInterface::Metadata) {
+    if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
         sendCursorData(Cursors::self()->currentCursor(),
                         (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
     }
@@ -457,7 +457,7 @@ void PipeWireStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cu
     painter.drawImage(QPoint(), image);
 }
 
-void PipeWireStream::setCursorMode(KWaylandServer::ScreencastInterface::CursorMode mode, qreal scale, const QRect &viewport)
+void PipeWireStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
 {
     m_cursor.mode = mode;
     m_cursor.scale = scale;

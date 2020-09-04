@@ -29,11 +29,11 @@ namespace KWin
 
 ScreencastManager::ScreencastManager(QObject *parent)
     : QObject(parent)
-    , m_screencast(waylandServer()->display()->createScreencastInterface(this))
+    , m_screencast(waylandServer()->display()->createScreencastV1Interface(this))
 {
-    connect(m_screencast, &KWaylandServer::ScreencastInterface::windowScreencastRequested,
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this, &ScreencastManager::streamWindow);
-    connect(m_screencast, &KWaylandServer::ScreencastInterface::outputScreencastRequested,
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested,
             this, &ScreencastManager::streamOutput);
 }
 
@@ -114,7 +114,7 @@ private:
     Toplevel *m_toplevel;
 };
 
-void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *waylandStream, const QString &winid)
+void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QString &winid)
 {
     auto *toplevel = Workspace::self()->findToplevel(winid);
 
@@ -127,9 +127,9 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *waylandStream,
+void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
                                      KWaylandServer::OutputInterface *output,
-                                     KWaylandServer::ScreencastInterface::CursorMode mode)
+                                     KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
     AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(output);
 
@@ -157,9 +157,9 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamInterface *waylandStream, PipeWireStream *stream)
+void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream)
 {
-    connect(waylandStream, &KWaylandServer::ScreencastStreamInterface::finished, stream, &PipeWireStream::stop);
+    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &PipeWireStream::stop);
     connect(stream, &PipeWireStream::stopStreaming, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         delete stream;

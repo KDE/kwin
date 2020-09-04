@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <KWaylandServer/screencast_interface.h>
+#include <KWaylandServer/screencast_v1_interface.h>
 
 namespace KWin
 {
@@ -22,15 +22,15 @@ class ScreencastManager : public QObject
 public:
     explicit ScreencastManager(QObject *parent = nullptr);
 
-    void streamWindow(KWaylandServer::ScreencastStreamInterface *stream, const QString &winid);
-    void streamOutput(KWaylandServer::ScreencastStreamInterface *stream,
+    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid);
+    void streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
                       KWaylandServer::OutputInterface *output,
-                      KWaylandServer::ScreencastInterface::CursorMode mode);
+                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
 
 private:
-    void integrateStreams(KWaylandServer::ScreencastStreamInterface *waylandStream, PipeWireStream *pipewireStream);
+    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *pipewireStream);
 
-    KWaylandServer::ScreencastInterface *m_screencast;
+    KWaylandServer::ScreencastV1Interface *m_screencast;
 };
 
 } // namespace KWin

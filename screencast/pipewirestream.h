@@ -11,7 +11,7 @@
 #include "config-kwin.h"
 #include "kwinglobals.h"
 
-#include <KWaylandServer/screencast_interface.h>
+#include <KWaylandServer/screencast_v1_interface.h>
 
 #include <QHash>
 #include <QObject>
@@ -50,7 +50,7 @@ public:
     /** Renders @p frame into the current framebuffer into the stream */
     void recordFrame(GLTexture *frame, const QRegion &damagedRegion);
 
-    void setCursorMode(KWaylandServer::ScreencastInterface::CursorMode mode, qreal scale, const QRect &viewport);
+    void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport);
 
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
@@ -84,7 +84,7 @@ private:
     const bool m_hasAlpha;
 
     struct {
-        KWaylandServer::ScreencastInterface::CursorMode mode = KWaylandServer::ScreencastInterface::Hidden;
+        KWaylandServer::ScreencastV1Interface::CursorMode mode = KWaylandServer::ScreencastV1Interface::Hidden;
         qreal scale = 1;
         QRect viewport;
         qint64 lastKey = 0;
