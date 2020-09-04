@@ -119,7 +119,7 @@ void VirtualKeyboard::init()
                 }
             };
             connect(client->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
-            connect(client->surface(), &QObject::destroyed, this, [this] {
+            connect(client, &QObject::destroyed, this, [this] {
                 if (m_trackedClient) {
                     m_trackedClient->setVirtualKeyboardGeometry({});
                 }
