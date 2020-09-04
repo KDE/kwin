@@ -50,7 +50,6 @@ public:
     bool wantsInput() const override;
     bool isInternal() const override;
     bool isLockScreen() const override;
-    bool isInputMethod() const override;
     bool isOutline() const override;
     quint32 windowId() const override;
     bool isShown(bool shaded_is_shown) const override;

@@ -239,11 +239,6 @@ bool InternalClient::isLockScreen() const
     return false;
 }
 
-bool InternalClient::isInputMethod() const
-{
-    return false;
-}
-
 bool InternalClient::isOutline() const
 {
     if (m_internalWindow) {
