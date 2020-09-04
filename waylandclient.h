@@ -34,7 +34,6 @@ public:
     quint32 windowId() const override;
     pid_t pid() const override;
     bool isLockScreen() const override;
-    bool isInputMethod() const override;
     bool isLocalhost() const override;
     double opacity() const override;
     void setOpacity(double opacity) override;

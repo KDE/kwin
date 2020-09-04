@@ -109,11 +109,6 @@ bool WaylandClient::isLockScreen() const
     return surface()->client() == waylandServer()->screenLockerClientConnection();
 }
 
-bool WaylandClient::isInputMethod() const
-{
-    return surface()->client() == waylandServer()->inputMethodConnection();
-}
-
 bool WaylandClient::isLocalhost() const
 {
     return true;
