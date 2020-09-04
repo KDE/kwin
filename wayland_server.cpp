@@ -12,7 +12,7 @@
 #include "platform.h"
 #include "composite.h"
 #include "idle_inhibition.h"
-#include "inputpanelv1client.h"
+#include "inputpanelv1integration.h"
 #include "screens.h"
 #include "layershellv1integration.h"
 #include "waylandxdgshellintegration.h"
@@ -228,13 +228,6 @@ AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface
     return outputFound;
 }
 
-AbstractClient *WaylandServer::createInputPanelClient(KWaylandServer::InputPanelSurfaceV1Interface *surface)
-{
-    auto *client = new InputPanelV1Client(surface);
-    registerShellClient(client);
-    return client;
-}
-
 class KWinDisplay : public KWaylandServer::FilteredDisplay
 {
 public:
@@ -366,6 +359,10 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 
     m_tabletManager = m_display->createTabletManagerInterface(m_display);
     m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
+
+    auto inputPanelV1Integration = new InputPanelV1Integration(this);
+    connect(inputPanelV1Integration, &InputPanelV1Integration::clientCreated,
+            this, &WaylandServer::registerShellClient);
 
     auto xdgShellIntegration = new WaylandXdgShellIntegration(this);
     connect(xdgShellIntegration, &WaylandXdgShellIntegration::clientCreated,

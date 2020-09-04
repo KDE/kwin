@@ -39,7 +39,6 @@ class Display;
 class DataDeviceInterface;
 class IdleInterface;
 class InputMethodV1Interface;
-class InputPanelSurfaceV1Interface;
 class SeatInterface;
 class DataDeviceManagerInterface;
 class ServerSideDecorationManagerInterface;
@@ -241,8 +240,6 @@ public:
     void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmabufUnstableV1Buffer *buffer) {
         m_linuxDmabufBuffers.remove(buffer);
     }
-    AbstractClient *
-    createInputPanelClient(KWaylandServer::InputPanelSurfaceV1Interface *surface);
 
     AbstractWaylandOutput *findOutput(KWaylandServer::OutputInterface *output) const;
 

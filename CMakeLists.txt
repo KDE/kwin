@@ -469,6 +469,7 @@ set(kwin_SRCS
     input_event.cpp
     input_event_spy.cpp
     inputpanelv1client.cpp
+    inputpanelv1integration.cpp
     internal_client.cpp
     keyboard_input.cpp
     keyboard_layout.cpp

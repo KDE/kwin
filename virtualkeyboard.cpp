@@ -104,9 +104,11 @@ void VirtualKeyboard::init()
         auto t2 = waylandServer()->display()->createTextInputManager(TextInputInterfaceVersion::UnstableV2, waylandServer()->display());
         t2->create();
 
-        auto inputPanel = waylandServer()->display()->createInputPanelInterface(this);
-        connect(inputPanel, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [this] (InputPanelSurfaceV1Interface *surface) {
-            m_inputClient = waylandServer()->createInputPanelClient(surface);
+        connect(workspace(), &Workspace::clientAdded, this, [this] (AbstractClient *client) {
+            if (!client->isInputMethod()) {
+                return;
+            }
+            m_inputClient = client;
             auto refreshFrame = [this] {
                 if (!m_trackedClient) {
                     return;
@@ -116,8 +118,8 @@ void VirtualKeyboard::init()
                     m_trackedClient->setVirtualKeyboardGeometry(m_inputClient->inputGeometry());
                 }
             };
-            connect(surface->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
-            connect(surface->surface(), &QObject::destroyed, this, [this] {
+            connect(client->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
+            connect(client->surface(), &QObject::destroyed, this, [this] {
                 if (m_trackedClient) {
                     m_trackedClient->setVirtualKeyboardGeometry({});
                 }
