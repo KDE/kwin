@@ -124,16 +124,16 @@ for (int i = 1; i < 21; ++i) {
 }
 DEF(I18N_NOOP("Window to Next Desktop"),           0, slotWindowToNextDesktop);
 DEF(I18N_NOOP("Window to Previous Desktop"),       0, slotWindowToPreviousDesktop);
-DEF(I18N_NOOP("Window One Desktop to the Right"),  0, slotWindowToDesktopRight);
-DEF(I18N_NOOP("Window One Desktop to the Left"),   0, slotWindowToDesktopLeft);
-DEF(I18N_NOOP("Window One Desktop Up"),            0, slotWindowToDesktopUp);
-DEF(I18N_NOOP("Window One Desktop Down"),          0, slotWindowToDesktopDown);
+DEF(I18N_NOOP("Window One Desktop to the Right"),  Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Right, slotWindowToDesktopRight);
+DEF(I18N_NOOP("Window One Desktop to the Left"),   Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Left, slotWindowToDesktopLeft);
+DEF(I18N_NOOP("Window One Desktop Up"),            Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Up, slotWindowToDesktopUp);
+DEF(I18N_NOOP("Window One Desktop Down"),          Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Down, slotWindowToDesktopDown);
 
 for (int i = 0; i < 8; ++i) {
     DEF3(I18N_NOOP("Window to Screen %1"),         0, slotWindowToScreen, i);
 }
-DEF(I18N_NOOP("Window to Next Screen"),            0, slotWindowToNextScreen);
-DEF(I18N_NOOP("Window to Previous Screen"),        0, slotWindowToPrevScreen);
+DEF(I18N_NOOP("Window to Next Screen"),            Qt::META + Qt::SHIFT + Qt::Key_Right, slotWindowToNextScreen);
+DEF(I18N_NOOP("Window to Previous Screen"),        Qt::META + Qt::SHIFT + Qt::Key_Left, slotWindowToPrevScreen);
 DEF(I18N_NOOP("Show Desktop"),                     Qt::META + Qt::Key_D, slotToggleShowDesktop);
 
 for (int i = 0; i < 8; ++i) {
