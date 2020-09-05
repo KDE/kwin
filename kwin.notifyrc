@@ -301,6 +301,7 @@ Name[x-test]=xxXwayland Crashxx
 Comment=Xwayland has crashed
 Comment[az]=Xwayland qəzaya uğradı
 Comment[ca]=L'Xwayland ha fallat
+Comment[cs]=Xwayland spadnul
 Comment[es]=Xwayland ha fallado
 Comment[nl]=Xwayland is gecrasht
 Comment[pt]=O Xwayland estoirou
