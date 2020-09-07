@@ -13,6 +13,7 @@
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
+#include "ftrace.h"
 #include "internal_client.h"
 #include "overlaywindow.h"
 #include "platform.h"
@@ -148,6 +149,7 @@ Compositor::Compositor(QObject* workspace)
 
     // register DBus
     new CompositorDBusInterface(this);
+    FTraceLogger::create();
 }
 
 Compositor::~Compositor()
@@ -593,6 +595,8 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
     }
 
     const int screenId = screenForRenderLoop(renderLoop);
+
+    fTraceDuration("Paint (", screens()->name(screenId), ")");
 
     // Create a list of all windows in the stacking order
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
