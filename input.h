@@ -417,18 +417,19 @@ public:
      * @brief First Toplevel currently at the position of the input device
      * according to the stacking order.
      * @return Toplevel* at device position.
+     *
+     * This will be null if no toplevel is at the position
      */
-    QPointer<Toplevel> at() const {
-        return m_at.at;
-    }
+    Toplevel *at() const;
     /**
      * @brief Toplevel currently having pointer input focus (this might
      * be different from the Toplevel at the position of the pointer).
      * @return Toplevel* with pointer focus.
+     *
+     * This will be null if no toplevel has focus
      */
-    QPointer<Toplevel> focus() const {
-        return m_focus.focus;
-    }
+    Toplevel *focus() const;
+
     /**
      * @brief The Decoration currently receiving events.
      * @return decoration with pointer focus.

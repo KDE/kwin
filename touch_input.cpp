@@ -109,11 +109,11 @@ void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
     seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
     m_focusGeometryConnection = connect(focusNow, &Toplevel::frameGeometryChanged, this,
         [this] {
-            if (focus().isNull()) {
+            if (!focus()) {
                 return;
             }
             auto seat = waylandServer()->seat();
-            if (focus().data()->surface() != seat->focusedTouchSurface()) {
+            if (focus()->surface() != seat->focusedTouchSurface()) {
                 return;
             }
             seat->setFocusedTouchSurfacePosition(-1 * focus()->inputTransformation().map(focus()->pos()) + focus()->pos());
