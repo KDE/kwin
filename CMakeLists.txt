@@ -469,6 +469,7 @@ set(kwin_SRCS
     egl_context_attribute_builder.cpp
     events.cpp
     focuschain.cpp
+    ftracemarker.cpp
     geometrytip.cpp
     gestures.cpp
     globalshortcuts.cpp

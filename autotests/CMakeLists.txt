@@ -424,3 +424,15 @@ target_link_libraries(testVirtualKeyboardDBus
 )
 add_test(NAME kwin-testVirtualKeyboardDBus COMMAND testVirtualKeyboardDBus)
 ecm_mark_as_test(testVirtualKeyboardDBus)
+
+
+########################################################
+# Test FTrace
+########################################################
+add_executable(testFtrace test_ftrace.cpp)
+target_link_libraries(testFtrace
+    Qt5::Test
+    kwin
+)
+add_test(NAME kwin-testFtrace COMMAND testFtrace)
+ecm_mark_as_test(testFtrace)

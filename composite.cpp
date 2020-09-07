@@ -13,6 +13,7 @@
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "effects.h"
+#include "ftracemarker.h"
 #include "internal_client.h"
 #include "overlaywindow.h"
 #include "platform.h"
@@ -118,6 +119,8 @@ Compositor::Compositor(QObject* workspace)
     , m_bufferSwapPending(false)
     , m_composeAtSwapCompletion(false)
 {
+    FTraceLogger::create(this);
+
     connect(options, &Options::configChanged, this, &Compositor::configChanged);
     connect(options, &Options::animationSpeedChanged, this, &Compositor::configChanged);
 
@@ -588,7 +591,7 @@ void Compositor::bufferSwapComplete()
 
     if (m_composeAtSwapCompletion) {
         m_composeAtSwapCompletion = false;
-        performCompositing();
+	QMetaObject::invokeMethod(this, &Compositor::performCompositing, Qt::QueuedConnection);
     }
 }
 
@@ -608,6 +611,9 @@ void Compositor::performCompositing()
         compositeTimer.stop();
         return;
     }
+
+    fTrace("Paint");
+//     QScopedPointer<FTraceTrackDuration> paintTrace(new FTraceTrackDuration("Paint"));
 
     // Create a list of all windows in the stacking order
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
@@ -719,6 +725,8 @@ void Compositor::performCompositing()
     // Stop here to ensure *we* cause the next repaint schedule - not some effect
     // through m_scene->paint().
     compositeTimer.stop();
+
+//     paintTrace.reset();
 
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
