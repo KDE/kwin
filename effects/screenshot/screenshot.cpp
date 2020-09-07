@@ -638,6 +638,7 @@ void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool capture
         return;
     }
     m_captureCursor = captureCursor;
+    m_nativeSize = true;
 
     showInfoMessage(InfoMessageMode::Screen);
     effects->startInteractivePositionSelection(
