@@ -40,7 +40,7 @@ public Q_SLOTS:
      * Starts the Xwayland server.
      *
      * This method will spawn an Xwayland process and will establish a new XCB connection to it.
-     * If a fatal error has occurred during the startup, the criticalError() signal is going to
+     * If an error has occurred during the startup, the errorOccurred() signal is going to
      * be emitted. If the Xwayland server has started successfully, the started() signal will be
      * emitted.
      *
@@ -72,7 +72,10 @@ Q_SIGNALS:
      * ready to accept and manage X11 clients.
      */
     void started();
-    void criticalError(int code);
+    /**
+     * This signal is emitted when an error occurs with the Xwayland server.
+     */
+    void errorOccurred();
 
 private Q_SLOTS:
     void dispatchEvents();

@@ -91,32 +91,32 @@ void Xwayland::start()
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
         std::cerr << "FATAL ERROR failed to create pipe to start Xwayland " << std::endl;
-        Q_EMIT criticalError(1);
+        emit errorOccurred();
         return;
     }
     int sx[2];
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
         std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
-        Q_EMIT criticalError(1);
+        emit errorOccurred();
         return;
     }
     int fd = dup(sx[1]);
     if (fd < 0) {
         std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
-        Q_EMIT criticalError(20);
+        emit errorOccurred();
         return;
     }
 
     const int waylandSocket = waylandServer()->createXWaylandConnection();
     if (waylandSocket == -1) {
         std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
-        Q_EMIT criticalError(1);
+        emit errorOccurred();
         return;
     }
     const int wlfd = dup(waylandSocket);
     if (wlfd < 0) {
         std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
-        Q_EMIT criticalError(20);
+        emit errorOccurred();
         return;
     }
 
@@ -279,7 +279,6 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
     switch (error) {
     case QProcess::FailedToStart:
         qCWarning(KWIN_XWL) << "Xwayland process failed to start";
-        emit criticalError(1);
         return;
     case QProcess::Crashed:
         qCWarning(KWIN_XWL) << "Xwayland process crashed";
@@ -295,6 +294,7 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
         qCWarning(KWIN_XWL) << "An unknown error has occurred in Xwayland";
         break;
     }
+    emit errorOccurred();
 }
 
 bool Xwayland::createX11Connection()
@@ -353,8 +353,7 @@ void Xwayland::destroyX11Connection()
 void Xwayland::continueStartupWithX()
 {
     if (!createX11Connection()) {
-        // about to quit
-        Q_EMIT criticalError(1);
+        emit errorOccurred();
         return;
     }
 

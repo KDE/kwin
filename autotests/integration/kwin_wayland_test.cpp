@@ -151,6 +151,7 @@ void WaylandTestApplication::continueStartupWithScreens()
 void WaylandTestApplication::finalizeStartup()
 {
     if (m_xwayland) {
+        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
         disconnect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     }
     notifyStarted();
@@ -172,12 +173,7 @@ void WaylandTestApplication::continueStartupWithScene()
     }
 
     m_xwayland = new Xwl::Xwayland(this);
-    connect(m_xwayland, &Xwl::Xwayland::criticalError, this, [](int code) {
-        // we currently exit on Xwayland errors always directly
-        // TODO: restart Xwayland
-        std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
-        exit(code);
-    });
+    connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
     connect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     m_xwayland->start();
 }
