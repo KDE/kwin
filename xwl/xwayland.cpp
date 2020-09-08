@@ -37,13 +37,15 @@
 #endif
 
 #include <sys/socket.h>
+#include <cerrno>
+#include <cstring>
 #include <iostream>
 
 static void readDisplay(int pipe)
 {
     QFile readPipe;
     if (!readPipe.open(pipe, QIODevice::ReadOnly)) {
-        std::cerr << "FATAL ERROR failed to open pipe to start X Server" << std::endl;
+        qCWarning(KWIN_XWL) << "Failed to open X11 display name pipe:" << readPipe.errorString();
         exit(1);
     }
     QByteArray displayNumber = readPipe.readLine();
@@ -90,32 +92,32 @@ void Xwayland::start()
 
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
-        std::cerr << "FATAL ERROR failed to create pipe to start Xwayland " << std::endl;
+        qCWarning(KWIN_XWL, "Failed to create pipe to start Xwayland: %s", strerror(errno));
         emit errorOccurred();
         return;
     }
     int sx[2];
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-        std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+        qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
         emit errorOccurred();
         return;
     }
     int fd = dup(sx[1]);
     if (fd < 0) {
-        std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+        qCWarning(KWIN_XWL, "Failed to open socket for XCB connection: %s", strerror(errno));
         emit errorOccurred();
         return;
     }
 
     const int waylandSocket = waylandServer()->createXWaylandConnection();
     if (waylandSocket == -1) {
-        std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
+        qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
         emit errorOccurred();
         return;
     }
     const int wlfd = dup(waylandSocket);
     if (wlfd < 0) {
-        std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
+        qCWarning(KWIN_XWL, "Failed to open socket for Xwayland server: %s", strerror(errno));
         emit errorOccurred();
         return;
     }
