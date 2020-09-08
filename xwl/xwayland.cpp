@@ -39,25 +39,23 @@
 #include <sys/socket.h>
 #include <cerrno>
 #include <cstring>
-#include <iostream>
 
-static void readDisplay(int pipe)
+static QByteArray readDisplay(int pipe)
 {
+    QByteArray displayName;
     QFile readPipe;
+
     if (!readPipe.open(pipe, QIODevice::ReadOnly)) {
         qCWarning(KWIN_XWL) << "Failed to open X11 display name pipe:" << readPipe.errorString();
-        exit(1);
+    } else {
+        displayName = readPipe.readLine();
+        displayName.prepend(QByteArrayLiteral(":"));
+        displayName.remove(displayName.size() - 1, 1);
     }
-    QByteArray displayNumber = readPipe.readLine();
-
-    displayNumber.prepend(QByteArray(":"));
-    displayNumber.remove(displayNumber.size() -1, 1);
-    std::cout << "X-Server started on display " << displayNumber.constData() << std::endl;
-
-    setenv("DISPLAY", displayNumber.constData(), true);
 
     // close our pipe
     close(pipe);
+    return displayName;
 }
 
 namespace KWin
@@ -228,10 +226,9 @@ void Xwayland::uninstallSocketNotifier()
 
 void Xwayland::handleXwaylandStarted()
 {
-    QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
-    connect(watcher, &QFutureWatcher<void>::finished, this, &Xwayland::continueStartupWithX);
-    connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater);
-    watcher->setFuture(QtConcurrent::run(readDisplay, m_displayFileDescriptor));
+    m_watcher = new QFutureWatcher<QByteArray>(this);
+    connect(m_watcher, &QFutureWatcher<QByteArray>::finished, this, &Xwayland::handleXwaylandReady);
+    m_watcher->setFuture(QtConcurrent::run(readDisplay, m_displayFileDescriptor));
 }
 
 void Xwayland::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -299,6 +296,36 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
     emit errorOccurred();
 }
 
+void Xwayland::handleXwaylandReady()
+{
+    m_displayName = m_watcher->result();
+
+    m_watcher->deleteLater();
+    m_watcher = nullptr;
+
+    if (!createX11Connection()) {
+        emit errorOccurred();
+        return;
+    }
+
+    qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_displayName;
+    qputenv("DISPLAY", m_displayName);
+
+    // create selection owner for WM_S0 - magic X display number expected by XWayland
+    KSelectionOwner owner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
+    owner.claim(true);
+
+    DataBridge::create(this);
+
+    auto env = m_app->processStartupEnvironment();
+    env.insert(QStringLiteral("DISPLAY"), m_displayName);
+    m_app->setProcessStartupEnvironment(env);
+
+    emit started();
+
+    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+}
+
 bool Xwayland::createX11Connection()
 {
     xcb_connection_t *connection = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
@@ -350,28 +377,6 @@ void Xwayland::destroyX11Connection()
     m_app->setX11RootWindow(XCB_WINDOW_NONE);
 
     emit m_app->x11ConnectionChanged();
-}
-
-void Xwayland::continueStartupWithX()
-{
-    if (!createX11Connection()) {
-        emit errorOccurred();
-        return;
-    }
-
-    // create selection owner for WM_S0 - magic X display number expected by XWayland
-    KSelectionOwner owner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    owner.claim(true);
-
-    DataBridge::create(this);
-
-    auto env = m_app->processStartupEnvironment();
-    env.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
-    m_app->setProcessStartupEnvironment(env);
-
-    emit started();
-
-    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 }
 
 DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)

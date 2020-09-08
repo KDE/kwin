@@ -12,6 +12,7 @@
 
 #include "xwayland_interface.h"
 
+#include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
 
@@ -85,6 +86,7 @@ private Q_SLOTS:
     void handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void handleXwaylandCrashed();
     void handleXwaylandError(QProcess::ProcessError error);
+    void handleXwaylandReady();
 
 private:
     void installSocketNotifier();
@@ -92,7 +94,6 @@ private:
 
     bool createX11Connection();
     void destroyX11Connection();
-    void continueStartupWithX();
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
@@ -101,6 +102,8 @@ private:
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
     QTimer *m_resetCrashCountTimer = nullptr;
+    QByteArray m_displayName;
+    QFutureWatcher<QByteArray> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;
     int m_crashCount = 0;
 
