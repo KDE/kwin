@@ -284,11 +284,17 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
             if (!(client && client->decorationHasAlpha())) {
                 data.clip = window->decorationShape().translated(window->pos());
             }
-            data.clip |= window->clientShape().translated(window->pos() + window->bufferOffset());
+            const WindowPixmap *windowPixmap = window->windowPixmap<WindowPixmap>();
+            if (windowPixmap) {
+                data.clip |= windowPixmap->mapToGlobal(windowPixmap->shape());
+            }
         } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
-            const QRegion clientShape = window->clientShape().translated(window->pos() + window->bufferOffset());
-            const QRegion opaqueShape = toplevel->opaqueRegion().translated(window->pos() + toplevel->clientPos());
-            data.clip = clientShape & opaqueShape;
+            const WindowPixmap *windowPixmap = window->windowPixmap<WindowPixmap>();
+            if (windowPixmap) {
+                const QRegion shape = windowPixmap->mapToGlobal(windowPixmap->shape());
+                const QRegion opaque = windowPixmap->mapToGlobal(windowPixmap->opaque());
+                data.clip = shape & opaque;
+            }
         } else {
             data.clip = QRegion();
         }
@@ -1279,6 +1285,11 @@ QRegion WindowPixmap::shape() const
     return m_window->clientShape();
 }
 
+QRegion WindowPixmap::opaque() const
+{
+    return toplevel()->opaqueRegion().translated(toplevel()->clientPos());
+}
+
 bool WindowPixmap::hasAlphaChannel() const
 {
     if (buffer())
@@ -1296,6 +1307,11 @@ QPointF WindowPixmap::mapToBuffer(const QPointF &point) const
     if (surface())
         return surface()->mapToBuffer(point);
     return point * scale();
+}
+
+QRegion WindowPixmap::mapToGlobal(const QRegion &region) const
+{
+    return region.translated(m_window->pos() + framePosition());
 }
 
 //****************************************

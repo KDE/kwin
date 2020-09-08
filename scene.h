@@ -357,9 +357,6 @@ public:
         return {};
     }
 
-protected:
-    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
-    WindowQuadList makeContentsQuads() const;
     /**
      * @brief Returns the WindowPixmap for this Window.
      *
@@ -377,6 +374,10 @@ protected:
      */
     template<typename T> T *windowPixmap() const;
     template<typename T> T *previousWindowPixmap() const;
+
+protected:
+    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
+    WindowQuadList makeContentsQuads() const;
     /**
      * @brief Factory method to create a WindowPixmap.
      *
@@ -498,6 +499,12 @@ public:
      */
     QRegion shape() const;
     /**
+     * Returns the region that specifies the opaque area inside the attached buffer.
+     *
+     * The upper left corner of the attached buffer corresponds to (0, 0).
+     */
+    QRegion opaque() const;
+    /**
      * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
      * pixmap also contains the decoration which is not rendered into this pixmap, though. This
      * contentsRect tells where inside the complete pixmap the real content is.
@@ -520,6 +527,10 @@ public:
      * Maps the specified @a point from the window pixmap coordinates to the buffer pixel coordinates.
      */
     QPointF mapToBuffer(const QPointF &point) const;
+    /**
+     * Maps the specified @a region from the window pixmap coordinates to the global screen coordinates.
+     */
+    QRegion mapToGlobal(const QRegion &region) const;
 
     /**
      * @returns the parent WindowPixmap in the sub-surface tree
