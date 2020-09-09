@@ -600,6 +600,7 @@ void Connection::applyScreenToDevice(Device *device)
             }
         }
     }
+
     device->setOutput(deviceOutput);
 
     // TODO: this is currently non-functional even on DRM. Needs orientation() override there.

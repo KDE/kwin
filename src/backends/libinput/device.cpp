@@ -131,11 +131,16 @@ struct ConfigData {
 
     explicit ConfigData(QByteArray _key, void (Device::*_setter)(Qt::ScreenOrientation), Qt::ScreenOrientation (Device::*_defaultValue)() const = nullptr)
         : key(_key)
-    { screenOrientationSetter.setter = _setter; screenOrientationSetter.defaultValue = _defaultValue; }
+    {
+        screenOrientationSetter.setter = _setter;
+        screenOrientationSetter.defaultValue = _defaultValue;
+    }
 
-    explicit ConfigData(QByteArray _key, void (Device::*_setter)(QMatrix4x4), QMatrix4x4 (Device::*_defaultValue)() const = nullptr)
+    explicit ConfigData(QByteArray _key, void (Device::*_setter)(const QMatrix4x4 &), QMatrix4x4 (Device::*_defaultValue)() const = nullptr)
         : key(_key)
-    { qMatrix4x4Setter.setter = _setter, qMatrix4x4Setter.defaultValue = _defaultValue; }
+    {
+        qMatrix4x4Setter.setter = _setter, qMatrix4x4Setter.defaultValue = _defaultValue;
+    }
 
     QByteArray key;
 
@@ -160,7 +165,7 @@ struct ConfigData {
         Qt::ScreenOrientation (Device::*defaultValue)() const;
     } screenOrientationSetter;
     struct {
-        void (Device::*setter)(QMatrix4x4) = nullptr;
+        void (Device::*setter)(const QMatrix4x4 &) = nullptr;
         QMatrix4x4 (Device::*defaultValue)() const;
     } qMatrix4x4Setter;
 };
@@ -183,14 +188,14 @@ static const QMap<ConfigKey, ConfigData> s_configData {
     {ConfigKey::ScrollFactor, ConfigData(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, ConfigData(QByteArrayLiteral("Orientation"), &Device::setOrientation, &Device::defaultOrientation)},
     {ConfigKey::Calibration, ConfigData(QByteArrayLiteral("CalibrationMatrix"), &Device::setCalibrationMatrix, &Device::defaultCalibrationMatrix)},
-    {ConfigKey::Screen, ConfigData(QByteArrayLiteral("Screen"), &Device::setScreenSlug, &Device::defaultScreenSlug)}
+    {ConfigKey::Screen, ConfigData(QByteArrayLiteral("Screen"), &Device::setScreen, &Device::defaultScreen)}
 };
 
 namespace {
-QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device*, float[6])> getter)
+QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device *, float[6])> getter)
 {
     float matrix[6];
-    if(!getter(device, matrix)) {
+    if (!getter(device, matrix)) {
         return {};
     }
     return QMatrix4x4 {
@@ -199,9 +204,11 @@ QMatrix4x4 getMatrix(libinput_device *device, std::function<int(libinput_device*
         0.0f,  0.0f, 1.0f, 0.0f,
         0.0f,  0.0f, 0.0f, 1.0f
     };
+
 }
 
-bool setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt::ScreenOrientation orientation) {
+bool setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt::ScreenOrientation orientation)
+{
     // 90 deg cw
     static const QMatrix4x4 portraitMatrix {
         0.0f, -1.0f, 1.0f, 0.0f,
@@ -240,8 +247,7 @@ bool setOrientedCalibrationMatrix(libinput_device *device, QMatrix4x4 matrix, Qt
         break;
     }
 
-    float data[6] { matrix(0,0), matrix(0,1), matrix(0,2),
-                    matrix(1,0), matrix(1,1), matrix(1,2) };
+    float data[6]{matrix(0, 0), matrix(0, 1), matrix(0, 2), matrix(1, 0), matrix(1, 1), matrix(1, 2)};
     return libinput_device_config_calibration_set_matrix(device, data) == LIBINPUT_CONFIG_STATUS_SUCCESS;
 }
 }
@@ -344,10 +350,13 @@ Device::Device(libinput_device *device, QObject *parent)
         m_alphaNumericKeyboard = checkAlphaNumericKeyboard(m_device);
     }
 
-    if (m_supportsCalibrationMatrix &&
-        m_calibrationMatrix != m_defaultCalibrationMatrix) {
-        float matrix[] {m_defaultCalibrationMatrix(0,0), m_defaultCalibrationMatrix(0,1), m_defaultCalibrationMatrix(0,2),
-                           m_defaultCalibrationMatrix(1,0), m_defaultCalibrationMatrix(1,1), m_defaultCalibrationMatrix(1,2)};
+    if (m_supportsCalibrationMatrix && m_calibrationMatrix != m_defaultCalibrationMatrix) {
+        float matrix[]{m_defaultCalibrationMatrix(0, 0),
+                       m_defaultCalibrationMatrix(0, 1),
+                       m_defaultCalibrationMatrix(0, 2),
+                       m_defaultCalibrationMatrix(1, 0),
+                       m_defaultCalibrationMatrix(1, 1),
+                       m_defaultCalibrationMatrix(1, 2)};
         libinput_device_config_calibration_set_matrix(m_device, matrix);
         m_calibrationMatrix = m_defaultCalibrationMatrix;
     }
@@ -410,20 +419,20 @@ void Device::loadConfiguration()
         readEntry(key, it.value().stringSetter, "");
         readEntry(key, it.value().qrealSetter, 1.0);
 
-        if(it.value().screenOrientationSetter.setter != nullptr) {
+        if (it.value().screenOrientationSetter.setter != nullptr) {
             auto setter = it.value().screenOrientationSetter;
             int def = setter.defaultValue ? (this->*(setter.defaultValue))() : Qt::PrimaryOrientation;
             int orientation = m_config.readEntry(key.constData(), def);
             (this->*(setter.setter))(static_cast<Qt::ScreenOrientation>(orientation));
         }
 
-        if(it.value().qMatrix4x4Setter.setter != nullptr) {
+        if (it.value().qMatrix4x4Setter.setter != nullptr) {
             auto setter = it.value().qMatrix4x4Setter;
             QList<float> list = m_config.readEntry(key.constData(), QList<float>());
             QMatrix4x4 matrix;
-            if(list.size() == 16) {
+            if (list.size() == 16) {
                 matrix = QMatrix4x4(list.toVector().constData());
-            } else if(setter.defaultValue) {
+            } else if (setter.defaultValue) {
                 matrix = (this->*(setter.defaultValue))();
             }
             (this->*(setter.setter))(matrix);
@@ -619,17 +628,18 @@ void Device::setScrollFactor(qreal factor)
     }
 }
 
-void Device::setCalibrationMatrix(QMatrix4x4 matrix) {
+void Device::setCalibrationMatrix(const QMatrix4x4 &matrix)
+{
     if (!m_supportsCalibrationMatrix || m_calibrationMatrix == matrix) {
         return;
     }
 
-    if(setOrientedCalibrationMatrix(m_device, matrix, m_orientation)) {
+    if (setOrientedCalibrationMatrix(m_device, matrix, m_orientation)) {
         QList<float> list;
         list.reserve(16);
         for (uchar row = 0; row < 4; ++row) {
             for (uchar col = 0; col < 4; ++col) {
-                list << matrix(row,col);
+                list << matrix(row, col);
             }
         }
         writeEntry(ConfigKey::Calibration, list);
@@ -651,35 +661,20 @@ void Device::setOrientation(Qt::ScreenOrientation orientation)
     }
 }
 
-void Device::setScreenSlug(QString slug) {
+void Device::setScreen(QString name)
+{
 #ifndef KWIN_BUILD_TESTING
-    if(slug.isEmpty()) {
-        return;
-    }
-
-    auto parts = slug.split(';');
-    if(parts.size() != 4) {
-        qCWarning(KWIN_LIBINPUT) << "Malformed display slug in config:" << slug << "for device:" << m_name;
-        return;
-    }
-
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    AbstractOutput *match = nullptr;
-    for(auto output : outputs) {
-        if(output->manufacturer() == parts[1] &&
-           output->model() == parts[2]) {
-            match = output;
-            // If neither serial (preferred) or name match we may not have the right screen and have to keep iterating.
-            if((!parts[3].isEmpty() && output->serialNumber() == parts[3]) || output->name() == parts[0]) {
-                break;
-            }
+    auto outputs =  kwinApp()->platform()->enabledOutputs();
+    for(int i = 0; i < outputs.count(); ++i) {
+        if (outputs[i]->name() == name) {
+            setOutput(outputs[i]);
+            writeEntry(ConfigKey::Screen, outputs[i]->uuid().toString());
+            Q_EMIT screenChanged();
+            break;
         }
     }
-    if(match) {
-        setOutput(match);
-    }
 #else
-    Q_UNUSED(slug)
+    Q_UNUSED(name)
 #endif
 }
 
@@ -691,9 +686,6 @@ AbstractOutput *Device::output() const
 void Device::setOutput(AbstractOutput *output)
 {
     m_output = output;
-
-    QString slug = output->name() + ';' + output->manufacturer() + ';' + output->model() + ';' + output->serialNumber();
-    writeEntry(ConfigKey::Screen, slug);
 }
 
 static libinput_led toLibinputLEDS(LEDs leds)

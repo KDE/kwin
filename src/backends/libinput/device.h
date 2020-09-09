@@ -349,18 +349,22 @@ public:
      */
     void setLeftHanded(bool set);
 
-    QMatrix4x4 defaultCalibrationMatrix() const {
+    QMatrix4x4 defaultCalibrationMatrix() const
+    {
         return m_defaultCalibrationMatrix;
     }
-    QMatrix4x4 calibrationMatrix() const {
+    QMatrix4x4 calibrationMatrix() const
+    {
         return m_calibrationMatrix;
     }
-    void setCalibrationMatrix(QMatrix4x4 matrix);
+    void setCalibrationMatrix(const QMatrix4x4 &matrix);
 
-    Qt::ScreenOrientation defaultOrientation() const {
+    Qt::ScreenOrientation defaultOrientation() const
+    {
         return Qt::PrimaryOrientation;
     }
-    Qt::ScreenOrientation orientation() const {
+    Qt::ScreenOrientation orientation() const
+    {
         return m_orientation;
     }
     void setOrientation(Qt::ScreenOrientation orientation);
@@ -464,8 +468,8 @@ public:
     /**
      * Used to deserialize monitor data from KConfig when initializing a device
      */
-    void setScreenSlug(QString slug);
-    QString defaultScreenSlug() const { return {}; }
+    void setScreen(QString uuid);
+    QString defaultScreen() const { return {}; }
 
     /**
      * Loads the configuration and applies it to the Device
