@@ -54,8 +54,8 @@ private:
     QScopedPointer<GLShader> m_shader;
     int m_uOffsets;
     int m_uKernel;
-    QVector2D m_offsets[16];
-    QVector4D m_kernel[16];
+    std::array<QVector2D, 16> m_offsets;
+    std::array<QVector4D, 16> m_kernel;
     Scene *m_scene;
 };
 

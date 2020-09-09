@@ -151,7 +151,7 @@ void LanczosFilter::createKernel(float delta, int *size)
         values[i] = val;
     }
 
-    memset(m_kernel, 0, 16 * sizeof(QVector4D));
+    m_kernel.fill(QVector4D());
 
     // Normalize the kernel
     for (int i = 0; i < kernelSize; i++) {
@@ -164,7 +164,7 @@ void LanczosFilter::createKernel(float delta, int *size)
 
 void LanczosFilter::createOffsets(int count, float width, Qt::Orientation direction)
 {
-    memset(m_offsets, 0, 16 * sizeof(QVector2D));
+    m_offsets.fill(QVector2D());
     for (int i = 0; i < count; i++) {
         m_offsets[i] = (direction == Qt::Horizontal) ?
                        QVector2D(i / width, 0) : QVector2D(0, i / width);
@@ -406,8 +406,8 @@ void LanczosFilter::discardCacheTexture(EffectWindow *w)
 
 void LanczosFilter::setUniforms()
 {
-    glUniform2fv(m_uOffsets, 16, (const GLfloat*)m_offsets);
-    glUniform4fv(m_uKernel, 16, (const GLfloat*)m_kernel);
+    glUniform2fv(m_uOffsets, m_offsets.size(), (const GLfloat*)m_offsets.data());
+    glUniform4fv(m_uKernel, m_kernel.size(), (const GLfloat*)m_kernel.data());
 }
 
 } // namespace
