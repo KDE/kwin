@@ -903,10 +903,10 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     if (cached_quad_list != nullptr && !force)
         return *cached_quad_list;
 
-    WindowQuadList ret;
+    WindowQuadList *ret = new WindowQuadList;
 
     if (!isShaded()) {
-        ret += makeContentsQuads();
+        *ret += makeContentsQuads();
     }
 
     if (!toplevel->frameMargins().isNull()) {
@@ -926,18 +926,18 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
 
         if (isShadedClient) {
             const QRect bounding = rects[0] | rects[1] | rects[2] | rects[3];
-            ret += makeDecorationQuads(rects, bounding, decorationScale);
+            *ret += makeDecorationQuads(rects, bounding, decorationScale);
         } else {
-            ret += makeDecorationQuads(rects, decoration, decorationScale);
+            *ret += makeDecorationQuads(rects, decoration, decorationScale);
         }
 
     }
     if (m_shadow && toplevel->wantsShadowToBeRendered()) {
-        ret << m_shadow->shadowQuads();
+        *ret << m_shadow->shadowQuads();
     }
-    effects->buildQuads(toplevel->effectWindow(), ret);
-    cached_quad_list.reset(new WindowQuadList(ret));
-    return ret;
+    effects->buildQuads(toplevel->effectWindow(), *ret);
+    cached_quad_list.reset(ret);
+    return *ret;
 }
 
 WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale) const
