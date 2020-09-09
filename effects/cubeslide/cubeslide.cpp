@@ -57,7 +57,7 @@ void CubeSlideEffect::reconfigure(ReconfigureFlags)
     CubeSlideConfig::self()->read();
     // TODO: rename rotationDuration to duration
     rotationDuration = animationTime(CubeSlideConfig::rotationDuration() != 0 ? CubeSlideConfig::rotationDuration() : 500);
-    timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+    timeLine.setEasingCurve(QEasingCurve::InOutSine);
     timeLine.setDuration(rotationDuration);
     dontSlidePanels = CubeSlideConfig::dontSlidePanels();
     dontSlideStickyWindows = CubeSlideConfig::dontSlideStickyWindows();
@@ -367,9 +367,9 @@ void CubeSlideEffect::postPaintScreen()
             }
             timeLine.setCurrentTime(0);
             if (slideRotations.count() == 1)
-                timeLine.setCurveShape(QTimeLine::EaseOutCurve);
+                timeLine.setEasingCurve(QEasingCurve::OutSine);
             else
-                timeLine.setCurveShape(QTimeLine::LinearCurve);
+                timeLine.setEasingCurve(QEasingCurve::Linear);
             if (slideRotations.empty()) {
                 for (EffectWindow* w : staticWindows) {
                     w->setData(WindowForceBlurRole, QVariant());
@@ -500,9 +500,9 @@ void CubeSlideEffect::startAnimation() {
         }
     }
     if (slideRotations.count() == 1) {
-        timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+        timeLine.setEasingCurve(QEasingCurve::InOutSine);
     } else {
-        timeLine.setCurveShape(QTimeLine::EaseInCurve);
+        timeLine.setEasingCurve(QEasingCurve::InSine);
     }
     effects->setActiveFullScreenEffect(this);
     timeLine.setCurrentTime(0);
