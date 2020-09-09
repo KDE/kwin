@@ -16,6 +16,7 @@
 #include <QVector>
 #include <QVector2D>
 #include <QVector4D>
+#include <array>
 
 namespace KWin
 {
