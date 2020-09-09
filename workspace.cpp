@@ -97,6 +97,7 @@ Workspace::Workspace()
     : QObject(nullptr)
     , m_compositor(nullptr)
     // Unsorted
+    , m_quickTileCombineTimer(nullptr)
     , active_popup(nullptr)
     , active_popup_client(nullptr)
     , m_initialDesktop(1)
@@ -116,9 +117,7 @@ Workspace::Workspace()
     , workspaceInit(true)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
-    , m_quickTileCombineTimer(nullptr)
     , m_sessionManager(new SessionManager(this))
-    , m_lastTilingMode(0)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
