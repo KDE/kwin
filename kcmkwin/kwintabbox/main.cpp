@@ -77,7 +77,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     KTitleWidget* infoLabel = new KTitleWidget(tabWidget);
     infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."),
                        KTitleWidget::InfoMessage);
-    infoLabel->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
+    infoLabel->setIcon(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
     layout->addWidget(infoLabel,0);
     layout->addWidget(tabWidget,1);
     layout->addLayout(buttonBar);
