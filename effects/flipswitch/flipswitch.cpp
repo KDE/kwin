@@ -28,7 +28,7 @@ namespace KWin
 
 FlipSwitchEffect::FlipSwitchEffect()
     : m_selectedWindow(nullptr)
-    , m_currentAnimationShape(QTimeLine::EaseInOutCurve)
+    , m_currentAnimationEasingCurve(QEasingCurve::InOutSine)
     , m_active(false)
     , m_start(false)
     , m_stop(false)
@@ -307,11 +307,11 @@ void FlipSwitchEffect::postPaintScreen()
                 m_animation = true;
                 m_timeLine.setCurrentTime(0);
                 if (m_scheduledDirections.count() == 1) {
-                    m_currentAnimationShape = QTimeLine::EaseOutCurve;
-                    m_timeLine.setCurveShape(m_currentAnimationShape);
+                    m_currentAnimationEasingCurve = QEasingCurve::OutSine;
+                    m_timeLine.setEasingCurve(m_currentAnimationEasingCurve);
                 } else {
-                    m_currentAnimationShape = QTimeLine::LinearCurve;
-                    m_timeLine.setCurveShape(m_currentAnimationShape);
+                    m_currentAnimationEasingCurve = QEasingCurve::Linear;
+                    m_timeLine.setEasingCurve(m_currentAnimationEasingCurve);
                 }
             }
             effects->addRepaintFull();
@@ -334,13 +334,13 @@ void FlipSwitchEffect::postPaintScreen()
             } else {
                 if (m_scheduledDirections.count() == 1) {
                     if (m_stop)
-                        m_currentAnimationShape = QTimeLine::LinearCurve;
+                        m_currentAnimationEasingCurve = QEasingCurve::Linear;
                     else
-                        m_currentAnimationShape = QTimeLine::EaseOutCurve;
+                        m_currentAnimationEasingCurve = QEasingCurve::OutSine;
                 } else {
-                    m_currentAnimationShape = QTimeLine::LinearCurve;
+                    m_currentAnimationEasingCurve = QEasingCurve::Linear;
                 }
-                m_timeLine.setCurveShape(m_currentAnimationShape);
+                m_timeLine.setEasingCurve(m_currentAnimationEasingCurve);
             }
         }
         if (m_start || m_stop || m_animation)
@@ -515,7 +515,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         effects->setActiveFullScreenEffect(this);
         m_active = true;
         m_start = true;
-        m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+        m_startStopTimeLine.setEasingCurve(QEasingCurve::InOutSine);
         m_activeScreen = effects->activeScreen();
         m_screenArea = effects->clientArea(ScreenArea, m_activeScreen, effects->currentDesktop());
 
@@ -623,16 +623,16 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         }
         m_stop = true;
         if (m_animation) {
-            m_startStopTimeLine.setCurveShape(QTimeLine::EaseOutCurve);
+            m_startStopTimeLine.setEasingCurve(QEasingCurve::OutSine);
             if (m_scheduledDirections.count() == 1) {
-                if (m_currentAnimationShape == QTimeLine::EaseInOutCurve)
-                    m_currentAnimationShape = QTimeLine::EaseInCurve;
-                else if (m_currentAnimationShape == QTimeLine::EaseOutCurve)
-                    m_currentAnimationShape = QTimeLine::LinearCurve;
-                m_timeLine.setCurveShape(m_currentAnimationShape);
+                if (m_currentAnimationEasingCurve == QEasingCurve::InOutSine)
+                    m_currentAnimationEasingCurve = QEasingCurve::InSine;
+                else if (m_currentAnimationEasingCurve == QEasingCurve::OutSine)
+                    m_currentAnimationEasingCurve = QEasingCurve::Linear;
+                m_timeLine.setEasingCurve(m_currentAnimationEasingCurve);
             }
         } else
-            m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+            m_startStopTimeLine.setEasingCurve(QEasingCurve::InOutSine);
         effects->stopMouseInterception(this);
         if (m_hasKeyboardGrab) {
             effects->ungrabKeyboard();
@@ -703,15 +703,15 @@ void FlipSwitchEffect::scheduleAnimation(const SwitchingDirection& direction, in
 {
     if (m_start) {
         // start is still active so change the shape to have a nice transition
-        m_startStopTimeLine.setCurveShape(QTimeLine::EaseInCurve);
+        m_startStopTimeLine.setEasingCurve(QEasingCurve::InSine);
     }
     if (!m_animation && !m_start) {
         m_animation = true;
         m_scheduledDirections.enqueue(direction);
         distance--;
         // reset shape just to make sure
-        m_currentAnimationShape = QTimeLine::EaseInOutCurve;
-        m_timeLine.setCurveShape(m_currentAnimationShape);
+        m_currentAnimationEasingCurve = QEasingCurve::InOutSine;
+        m_timeLine.setEasingCurve(m_currentAnimationEasingCurve);
     }
     for (int i = 0; i < distance; i++) {
         if (m_scheduledDirections.count() > 1 && m_scheduledDirections.last() != direction)
@@ -725,20 +725,20 @@ void FlipSwitchEffect::scheduleAnimation(const SwitchingDirection& direction, in
         }
     }
     if (m_scheduledDirections.count() > 1) {
-        QTimeLine::CurveShape newShape = QTimeLine::EaseInOutCurve;
-        switch(m_currentAnimationShape) {
-        case QTimeLine::EaseInOutCurve:
-            newShape = QTimeLine::EaseInCurve;
+        QEasingCurve curve;
+        switch (m_currentAnimationEasingCurve.type()) {
+        case QEasingCurve::InOutSine:
+            curve = QEasingCurve::InSine;
             break;
-        case QTimeLine::EaseOutCurve:
-            newShape = QTimeLine::LinearCurve;
+        case QEasingCurve::OutSine:
+            curve = QEasingCurve::Linear;
             break;
         default:
-            newShape = m_currentAnimationShape;
+            curve = m_currentAnimationEasingCurve;
         }
-        if (newShape != m_currentAnimationShape) {
-            m_currentAnimationShape = newShape;
-            m_timeLine.setCurveShape(m_currentAnimationShape);
+        if (m_currentAnimationEasingCurve != curve) {
+            m_currentAnimationEasingCurve = curve;
+            m_timeLine.setEasingCurve(curve);
         }
     }
 }
