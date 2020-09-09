@@ -72,17 +72,19 @@ void LayerShellV1Integration::destroyClient(LayerSurfaceV1Interface *shellSurfac
 
 static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *workArea)
 {
-    if (shellSurface->exclusiveEdge() == Qt::LeftEdge) {
+    switch (shellSurface->exclusiveEdge()) {
+    case Qt::LeftEdge:
         workArea->adjust(shellSurface->leftMargin() + shellSurface->exclusiveZone(), 0, 0, 0);
-    }
-    if (shellSurface->exclusiveEdge() == Qt::RightEdge) {
+        break;
+    case Qt::RightEdge:
         workArea->adjust(0, 0, -shellSurface->rightMargin() - shellSurface->exclusiveZone(), 0);
-    }
-    if (shellSurface->exclusiveEdge() == Qt::TopEdge) {
+        break;
+    case Qt::TopEdge:
         workArea->adjust(0, shellSurface->topMargin() + shellSurface->exclusiveZone(), 0, 0);
-    }
-    if (shellSurface->exclusiveEdge() == Qt::BottomEdge) {
+        break;
+    case Qt::BottomEdge:
         workArea->adjust(0, 0, 0, -shellSurface->bottomMargin() - shellSurface->exclusiveZone());
+        break;
     }
 }
 
