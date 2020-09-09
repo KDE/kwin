@@ -157,6 +157,11 @@ public:
     void setFullScreen(bool set, bool user) override;
     void closeWindow() override;
 
+    QStringList activities() const override;
+    void setOnActivities(QStringList newActivitiesList) override;
+    void setOnAllActivities(bool set) override;
+
+
     void installAppMenu(KWaylandServer::AppMenuInterface *appMenu);
     void installServerDecoration(KWaylandServer::ServerSideDecorationInterface *decoration);
     void installPalette(KWaylandServer::ServerSideDecorationPaletteInterface *palette);
@@ -216,6 +221,7 @@ private:
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
     KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
+    QStringList m_activities;
     QRect m_fullScreenGeometryRestore;
     NET::WindowType m_windowType = NET::Normal;
     MaximizeMode m_maximizeMode = MaximizeRestore;
@@ -249,6 +255,7 @@ public:
     bool wantsInput() const override;
     bool takeFocus() override;
     void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) override;
+    QStringList activities() const override;
 
 protected:
     bool acceptsFocus() const override;

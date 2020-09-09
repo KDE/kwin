@@ -20,6 +20,10 @@
 #include "tabbox.h"
 #endif
 
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
+
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KWaylandServer/appmenu_interface.h>
@@ -884,6 +888,32 @@ void XdgToplevelClient::closeWindow()
         m_shellSurface->sendClose();
     }
 }
+
+QStringList XdgToplevelClient::activities() const
+{
+    return m_activities;
+}
+
+void XdgToplevelClient::setOnActivities(QStringList newActivitiesList)
+{
+    m_activities = newActivitiesList;
+    emit activitiesChanged(this);
+    updateWindowRules(Rules::Activity);
+
+    //update visibility somewhere?
+    // ideally this should be a workspae job on reciept of activitiesChanged
+}
+
+void XdgToplevelClient::setOnAllActivities(bool set)
+{
+    if (set) {
+        setOnActivities({});
+    } else {
+        setOnActivities({Activities::self()->current()});
+    }
+}
+
+
 
 XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
 {
@@ -2145,6 +2175,15 @@ void XdgPopupClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shel
     if (shellSurface->isPositionSet()) {
         updatePosition();
     }
+}
+
+QStringList XdgPopupClient::activities() const
+{
+    const AbstractClient *parent = transientFor();
+    if (!parent) {
+        return {};
+    }
+    return parent->activities();
 }
 
 } // namespace KWin
