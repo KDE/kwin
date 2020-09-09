@@ -38,7 +38,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testCreateWindow_data();
     void testCreateWindow();
 };
 
@@ -84,13 +83,6 @@ void DontCrashNoBorder::cleanup()
     Test::destroyWaylandConnection();
 }
 
-void DontCrashNoBorder::testCreateWindow_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void DontCrashNoBorder::testCreateWindow()
 {
     // create a window and ensure that this doesn't crash
@@ -98,8 +90,7 @@ void DontCrashNoBorder::testCreateWindow()
 
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(shellSurface);
     QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
     QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);

@@ -653,16 +653,6 @@ void initXdgShellPopup(KWayland::Client::Surface *surface, KWayland::Client::Xdg
     shellPopup->ackConfigure(configureRequestedSpy.last()[1].toInt());
 }
 
-KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent, CreationSetup creationSetup)
-{
-    switch (type) {
-    case XdgShellSurfaceType::XdgShellStable:
-        return createXdgShellStableSurface(surface, parent, creationSetup);
-    default:
-        return nullptr;
-    }
-}
-
 bool waitForWindowDestroyed(AbstractClient *client)
 {
     QSignalSpy destroyedSpy(client, &QObject::destroyed);

@@ -41,10 +41,8 @@ private Q_SLOTS:
     void cleanup();
     void testStartFrame();
     void testCursorMoving();
-    void testWindow_data();
     void testWindow();
     void testWindowScaled();
-    void testCompositorRestart_data();
     void testCompositorRestart();
     void testX11Window();
 };
@@ -141,13 +139,6 @@ void SceneQPainterTest::testCursorMoving()
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
 }
 
-void SceneQPainterTest::testWindow_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void SceneQPainterTest::testWindow()
 {
     KWin::Cursors::self()->mouse()->setPos(45, 45);
@@ -156,8 +147,7 @@ void SceneQPainterTest::testWindow()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     QScopedPointer<Surface> s(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellSurface(type, s.data()));
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellStableSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
 
     auto scene = KWin::Compositor::self()->scene();
@@ -243,13 +233,6 @@ void SceneQPainterTest::testWindowScaled()
     QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
 }
 
-void SceneQPainterTest::testCompositorRestart_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void SceneQPainterTest::testCompositorRestart()
 {
     // this test verifies that the compositor/SceneQPainter survive a restart of the compositor and still render correctly
@@ -259,8 +242,7 @@ void SceneQPainterTest::testCompositorRestart()
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection());
     QScopedPointer<Surface> s(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellSurface(type, s.data()));
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellStableSurface(s.data()));
     QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
 
     // now let's try to reinitialize the compositing scene

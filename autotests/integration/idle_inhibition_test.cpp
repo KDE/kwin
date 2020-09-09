@@ -33,7 +33,6 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testInhibit_data();
     void testInhibit();
     void testDontInhibitWhenNotOnCurrentDesktop();
     void testDontInhibitWhenMinimized();
@@ -70,13 +69,6 @@ void TestIdleInhibition::cleanup()
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
 }
 
-void TestIdleInhibition::testInhibit_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase")  << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void TestIdleInhibition::testInhibit()
 {
     auto idle = waylandServer()->display()->findChild<IdleInterface*>();
@@ -87,8 +79,7 @@ void TestIdleInhibition::testInhibit()
 
     // now create window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
 
     // now create inhibition on window
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));

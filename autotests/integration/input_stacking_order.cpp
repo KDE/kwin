@@ -40,7 +40,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testPointerFocusUpdatesOnStackingOrderChange_data();
     void testPointerFocusUpdatesOnStackingOrderChange();
 
 private:
@@ -87,13 +86,6 @@ void InputStackingOrderTest::render(KWayland::Client::Surface *surface)
     Test::flushWaylandConnection();
 }
 
-void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 {
     // this test creates two windows which overlap
@@ -115,8 +107,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface1 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface1);
-    QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellSurface *shellSurface1 = Test::createXdgShellSurface(type, surface1, surface1);
+    XdgShellSurface *shellSurface1 = Test::createXdgShellStableSurface(surface1, surface1);
     QVERIFY(shellSurface1);
     render(surface1);
     QVERIFY(clientAddedSpy.wait());
@@ -125,7 +116,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 
     Surface *surface2 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface2);
-    XdgShellSurface *shellSurface2 = Test::createXdgShellSurface(type, surface2, surface2);
+    XdgShellSurface *shellSurface2 = Test::createXdgShellStableSurface(surface2, surface2);
     QVERIFY(shellSurface2);
     render(surface2);
     QVERIFY(clientAddedSpy.wait());

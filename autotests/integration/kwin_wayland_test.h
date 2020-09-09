@@ -171,10 +171,6 @@ LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface,
                                      KWayland::Client::Output *output = nullptr,
                                      LayerShellV1::layer layer = LayerShellV1::layer_top);
 
-enum class XdgShellSurfaceType {
-    XdgShellStable
-};
-
 enum class CreationSetup {
     CreateOnly,
     CreateAndConfigure, /// commit and wait for the configure event, making this surface ready to commit buffers
@@ -182,11 +178,6 @@ enum class CreationSetup {
 
 QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
                                                                  KWayland::Client::Output *output);
-
-KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type,
-                                                         KWayland::Client::Surface *surface,
-                                                         QObject *parent = nullptr,
-                                                         CreationSetup creationSetup = CreationSetup::CreateAndConfigure);
 
 KWayland::Client::XdgShellSurface *createXdgShellStableSurface(KWayland::Client::Surface *surface,
                                                                QObject *parent = nullptr,
@@ -249,7 +240,6 @@ bool unlockScreen();
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
-Q_DECLARE_METATYPE(KWin::Test::XdgShellSurfaceType)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
 int main(int argc, char *argv[]) \

@@ -30,11 +30,8 @@ private Q_SLOTS:
     void cleanup();
 
     void testNetCurrentDesktop();
-    void testLastDesktopRemoved_data();
     void testLastDesktopRemoved();
-    void testWindowOnMultipleDesktops_data();
     void testWindowOnMultipleDesktops();
-    void testRemoveDesktopWithWindow_data();
     void testRemoveDesktopWithWindow();
 };
 
@@ -118,13 +115,6 @@ void VirtualDesktopTest::testNetCurrentDesktop()
     QVERIFY(ok);
 }
 
-void VirtualDesktopTest::testLastDesktopRemoved_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void VirtualDesktopTest::testLastDesktopRemoved()
 {
     // first create a new desktop
@@ -138,8 +128,7 @@ void VirtualDesktopTest::testLastDesktopRemoved()
 
     // now create a window on this desktop
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(client);
@@ -161,13 +150,6 @@ void VirtualDesktopTest::testLastDesktopRemoved()
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), client->desktops().first());
 }
 
-void VirtualDesktopTest::testWindowOnMultipleDesktops_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void VirtualDesktopTest::testWindowOnMultipleDesktops()
 {
     // first create two new desktops
@@ -181,8 +163,7 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
 
     // now create a window on this desktop
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(client);
@@ -248,13 +229,6 @@ void VirtualDesktopTest::testWindowOnMultipleDesktops()
     QCOMPARE(client->desktops().count(), 2u);
 }
 
-void VirtualDesktopTest::testRemoveDesktopWithWindow_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void VirtualDesktopTest::testRemoveDesktopWithWindow()
 {
     // first create two new desktops
@@ -268,8 +242,7 @@ void VirtualDesktopTest::testRemoveDesktopWithWindow()
 
     // now create a window on this desktop
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(client);
