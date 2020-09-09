@@ -1062,9 +1062,7 @@ WindowQuadList Scene::Window::makeContentsQuads() const
 
         // Push the child window pixmaps onto the stack, remember we're visiting the pixmaps
         // in the depth-first search manner.
-        const auto children = windowPixmap->children();
-        for (WindowPixmap *child : children)
-            stack.push(child);
+        stack += windowPixmap->children();
     }
 
     return quads;
