@@ -97,7 +97,7 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
         if (shellSurface->layer() != layer) {
             continue;
         }
-        if (exclusive != shellSurface->exclusiveZone() > 0) {
+        if (exclusive != (shellSurface->exclusiveZone() > 0)) {
             continue;
         }
 
