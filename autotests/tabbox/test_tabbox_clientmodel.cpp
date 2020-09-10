@@ -74,7 +74,7 @@ void TestTabBoxClientModel::testCreateClientListActiveClientNotInFocusChain()
     // for that we use the closeWindow of the MockTabBoxHandler which
     // removes the Client from the Focus Chain but leaves the active window as it is
     QSharedPointer<TabBox::TabBoxClient> clientOwner = client.toStrongRef();
-    tabboxhandler.closeWindow(client.data());
+    tabboxhandler.closeWindow(clientOwner.data());
     clientModel->createClientList();
     QCOMPARE(clientModel->rowCount(), 1);
 }
