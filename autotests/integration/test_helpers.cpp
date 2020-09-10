@@ -237,6 +237,7 @@ MockInputMethod::~MockInputMethod()
 
 void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context)
 {
+    Q_UNUSED(context)
     if (!m_inputSurface) {
         m_inputSurface = Test::createSurface();
         m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());

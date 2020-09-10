@@ -246,7 +246,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (InternalClient *client : ws->internalClients()) {
         setupClientConnections(client);
     }
-    if (auto w = waylandServer()) {
+    if (waylandServer()) {
         const auto clients = waylandServer()->clients();
         for (AbstractClient *c : clients) {
             if (c->readyForPainting()) {
