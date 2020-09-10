@@ -72,6 +72,9 @@ private Q_SLOTS:
     void testUserCanSetFullscreen();
     void testUserSetFullscreen();
 
+    void testMaximizeHorizontal();
+    void testMaximizeVertical();
+    void testMaximizeFull();
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
     void testFullscreenMultipleOutputs();
@@ -1696,6 +1699,249 @@ void TestXdgShellClient::testDoubleMaximize()
     QCOMPARE(size, QSize(1280, 1024));
     states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
     QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+}
+
+void TestXdgShellClient::testMaximizeHorizontal()
+{
+    // Create the test client.
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(Test::createXdgShellStableSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(800, 600), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(800, 600));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Maximize the test client in horizontal direction.
+    workspace()->slotWindowMaximizeHorizontal();
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeHorizontal);
+    QCOMPARE(client->maximizeMode(), MaximizeRestore);
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 600));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the maximized client.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(1280, 600), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(1280, 600));
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeHorizontal);
+    QCOMPARE(client->maximizeMode(), MaximizeHorizontal);
+
+    // Restore the client.
+    workspace()->slotWindowMaximizeHorizontal();
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(client->maximizeMode(), MaximizeHorizontal);
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 4);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(800, 600));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the restored client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(800, 600), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(800, 600));
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(client->maximizeMode(), MaximizeRestore);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testMaximizeVertical()
+{
+    // Create the test client.
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(Test::createXdgShellStableSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(800, 600), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(800, 600));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Maximize the test client in vertical direction.
+    workspace()->slotWindowMaximizeVertical();
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeVertical);
+    QCOMPARE(client->maximizeMode(), MaximizeRestore);
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(800, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the maximized client.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(800, 1024), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(800, 1024));
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeVertical);
+    QCOMPARE(client->maximizeMode(), MaximizeVertical);
+
+    // Restore the client.
+    workspace()->slotWindowMaximizeVertical();
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(client->maximizeMode(), MaximizeVertical);
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 4);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(800, 600));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the restored client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(800, 600), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(800, 600));
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(client->maximizeMode(), MaximizeRestore);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testMaximizeFull()
+{
+    // Create the test client.
+    QScopedPointer<Surface> surface;
+    surface.reset(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface;
+    shellSurface.reset(Test::createXdgShellStableSurface(surface.data(), surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<QSignalSpy> configureRequestedSpy;
+    configureRequestedSpy.reset(new QSignalSpy(shellSurface.data(), &XdgShellSurface::configureRequested));
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the initial configure event.
+    XdgShellSurface::States states;
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 1);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(0, 0));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Map the client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(800, 600), Qt::blue);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QVERIFY(client->isMaximizable());
+    QCOMPARE(client->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(client->size(), QSize(800, 600));
+
+    // We should receive a configure event when the client becomes active.
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 2);
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Activated));
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Maximize the test client.
+    workspace()->slotWindowMaximize();
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(client->maximizeMode(), MaximizeRestore);
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 3);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(1280, 1024));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the maximized client.
+    QSignalSpy geometryChangedSpy(client, &AbstractClient::geometryChanged);
+    QVERIFY(geometryChangedSpy.isValid());
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(1280, 1024));
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(client->maximizeMode(), MaximizeFull);
+
+    // Restore the client.
+    workspace()->slotWindowMaximize();
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(client->maximizeMode(), MaximizeFull);
+    QVERIFY(configureRequestedSpy->wait());
+    QCOMPARE(configureRequestedSpy->count(), 4);
+    QCOMPARE(configureRequestedSpy->last().at(0).toSize(), QSize(800, 600));
+    states = configureRequestedSpy->last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(!states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Draw contents of the restored client.
+    shellSurface->ackConfigure(configureRequestedSpy->last().at(2).value<quint32>());
+    Test::render(surface.data(), QSize(800, 600), Qt::blue);
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->size(), QSize(800, 600));
+    QCOMPARE(client->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(client->maximizeMode(), MaximizeRestore);
+
+    // Destroy the client.
+    shellSurface.reset();
+    surface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 WAYLANDTEST_MAIN(TestXdgShellClient)
