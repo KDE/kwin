@@ -830,7 +830,8 @@ void X11ClientTest::testCaptionWmName()
     QVERIFY(clientAddedSpy.isValid());
 
     QProcess glxgears;
-    glxgears.start(QStringLiteral("glxgears"));
+    glxgears.setProgram(QStringLiteral("glxgears"));
+    glxgears.start();
     QVERIFY(glxgears.waitForStarted());
 
     QVERIFY(clientAddedSpy.wait());

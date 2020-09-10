@@ -126,7 +126,8 @@ void DebugConsoleTest::testX11Client()
     QVERIFY(rowsInsertedSpy.isValid());
 
     QProcess glxgears;
-    glxgears.start(QStringLiteral("glxgears"));
+    glxgears.setProgram(QStringLiteral("glxgears"));
+    glxgears.start();
     QVERIFY(glxgears.waitForStarted());
 
     QVERIFY(rowsInsertedSpy.wait());
