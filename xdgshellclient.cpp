@@ -916,9 +916,6 @@ bool XdgToplevelClient::dockWantsInput() const
 
 bool XdgToplevelClient::acceptsFocus() const
 {
-    if (isInputMethod()) {
-        return false;
-    }
     if (m_plasmaShellSurface) {
         if (m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::OnScreenDisplay ||
             m_plasmaShellSurface->role() == PlasmaShellSurfaceInterface::Role::ToolTip) {
