@@ -1,7 +1,22 @@
 [Desktop Entry]
 Comment=Animation for a window going to and leaving full screen mode
+Comment[ca]=Animació per a una finestra que entra o abandona el mode de pantalla completa
+Comment[es]=Animación para una ventana que entra en el modo de pantalla completa o sale de él
+Comment[nl]=Animatie voor een venster dat gaat naar volledig scherm en deze verlaat
+Comment[sk]=Animácia pre okno smerujúce do a opúšťajúce režim celej obrazovky
+Comment[sv]=Animering för ett fönster till och från fullskärmsläge
+Comment[uk]=Анімація для вікон під час входу до повноекранного режиму і виходу з нього
+Comment[x-test]=xxAnimation for a window going to and leaving full screen modexx
 Icon=preferences-system-windows-effect-fullscreen
 Name=Full Screen
+Name[ca]=Pantalla completa
+Name[es]=Pantalla completa
+Name[nl]=Volledig scherm
+Name[pt_BR]=Tela inteira
+Name[sk]=Celá obrazovka
+Name[sv]=Fullskärm
+Name[uk]=Повноекранний режим
+Name[x-test]=xxFull Screenxx
 Type=Service
 X-KDE-ParentApp=
 X-KDE-PluginInfo-Author=Martin Gräßlin
