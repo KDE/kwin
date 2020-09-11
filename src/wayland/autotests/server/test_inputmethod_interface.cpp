@@ -209,10 +209,6 @@ void TestInputMethodInterface::testAdd()
     QSignalSpy panelTopLevelSpy(panelSurfaceIface, &InputPanelSurfaceV1Interface::topLevel);
     panelSurface->set_toplevel(*m_output, InputPanelSurface::position_center_bottom);
     QVERIFY(panelTopLevelSpy.wait());
-
-    QSignalSpy panelDeleteSpy(panelSurfaceIface, &QObject::destroyed);
-    delete surface;
-    QVERIFY(panelDeleteSpy.wait());
 }
 
 
