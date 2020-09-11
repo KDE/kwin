@@ -128,11 +128,6 @@ public:
 class DataControlInterfaceTest : public QObject
 {
     Q_OBJECT
-public:
-    DataControlInterfaceTest()
-    {
-    }
-    ~DataControlInterfaceTest() override;
 
 private Q_SLOTS:
     void init();
@@ -158,24 +153,6 @@ private:
 
     QVector<SurfaceInterface *> m_surfaces;
 };
-
-DataControlInterfaceTest::~DataControlInterfaceTest()
-{
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
-    if (m_thread) {
-        m_thread->quit();
-        m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
-    }
-    delete m_seat;
-    m_connection->deleteLater();
-    m_connection = nullptr;
-}
-
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-test-0");
 
@@ -242,6 +219,8 @@ void DataControlInterfaceTest::cleanup()
         variable = nullptr; \
     }
     CLEANUP(m_dataControlDeviceManager)
+    CLEANUP(m_clientSeat)
+    CLEANUP(m_clientCompositor)
     CLEANUP(m_queue)
     if (m_connection) {
         m_connection->deleteLater();
@@ -253,6 +232,8 @@ void DataControlInterfaceTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
+    CLEANUP(m_seat)
+    CLEANUP(m_serverCompositor)
     CLEANUP(m_display)
 #undef CLEANUP
 }
