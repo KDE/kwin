@@ -224,6 +224,9 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWaylandServer::SurfaceInterface::get(serverSurface2->resource()), serverSurface2);
     QCOMPARE(KWaylandServer::SurfaceInterface::get(serverSurface2->id(), serverSurface2->client()), serverSurface2);
 
+    const quint32 surfaceId1 = serverSurface1->id();
+    const quint32 surfaceId2 = serverSurface2->id();
+
     // delete s2 again
     delete s2;
     QCOMPARE(KWayland::Client::Surface::all().count(), 1);
@@ -238,8 +241,8 @@ void TestWaylandSurface::testStaticAccessor()
     QVERIFY(destroyedSpy.isValid());
     QVERIFY(destroyedSpy.wait());
     QVERIFY(!KWaylandServer::SurfaceInterface::get(nullptr));
-    QVERIFY(!KWaylandServer::SurfaceInterface::get(serverSurface1->id(), nullptr));
-    QVERIFY(!KWaylandServer::SurfaceInterface::get(serverSurface2->id(), nullptr));
+    QVERIFY(!KWaylandServer::SurfaceInterface::get(surfaceId1, nullptr));
+    QVERIFY(!KWaylandServer::SurfaceInterface::get(surfaceId2, nullptr));
 }
 
 void TestWaylandSurface::testDamage()
