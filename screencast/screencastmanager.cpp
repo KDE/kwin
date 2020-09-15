@@ -86,6 +86,7 @@ private:
         connect(scene, &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
+        m_damagedRegion = m_toplevel->visibleRect();
         m_toplevel->addRepaintFull();
     }
 
