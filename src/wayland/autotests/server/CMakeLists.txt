@@ -115,3 +115,16 @@ add_executable(testLayerShellV1Interface test_layershellv1_interface.cpp ${LAYER
 target_link_libraries(testLayerShellV1Interface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testLayerShellV1Interface COMMAND testLayerShellV1Interface)
 ecm_mark_as_test(testLayerShellV1Interface)
+
+
+########################################################
+# Test TextInputV3 Interface
+########################################################
+ecm_add_qtwayland_client_protocol(TEXTINPUTV3_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+    BASENAME text-input-unstable-v3
+)
+add_executable(testTextInputV3Interface test_textinputv3_interface.cpp ${TEXTINPUTV3_SRCS})
+target_link_libraries(testTextInputV3Interface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testTextInputV3Interface COMMAND testTextInputV3Interface)
+ecm_mark_as_test(testTextInputV3Interface)

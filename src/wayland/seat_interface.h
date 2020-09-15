@@ -27,6 +27,7 @@ class AbstractDataSource;
 class Display;
 class SurfaceInterface;
 class TextInputV2Interface;
+class TextInputV3Interface;
 
 /**
  * Describes the source types for axis events. This indicates to the
@@ -686,6 +687,8 @@ public:
      * @since 5.23
      **/
     TextInputV2Interface *textInputV2() const;
+    
+    TextInputV3Interface *textInputV3() const;
     ///@}
 
     /**

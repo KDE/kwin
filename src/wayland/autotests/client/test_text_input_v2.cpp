@@ -741,7 +741,7 @@ void TextInputTest::testCommit()
     QVERIFY(committedSpy.isValid());
     ti->setCursorPosition(3, 4);
     ti->deleteSurroundingText(2, 1);
-    ti->commit(QByteArrayLiteral("foo"));
+    ti->commitString(QByteArrayLiteral("foo"));
 
     QVERIFY(committedSpy.wait());
     QCOMPARE(textInput->commitText(), QByteArrayLiteral("foo"));

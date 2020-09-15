@@ -158,7 +158,7 @@ void TextInputV2InterfacePrivate::preEdit(const QString &text, const QString &co
     }
 }
 
-void TextInputV2InterfacePrivate::commit(const QString &text)
+void TextInputV2InterfacePrivate::commitString(const QString &text)
 {
     if (!surface) {
         return;
@@ -417,9 +417,9 @@ void TextInputV2Interface::preEdit(const QString &text, const QString &commit)
     d->preEdit(text, commit);
 }
 
-void TextInputV2Interface::commit(const QString &text)
+void TextInputV2Interface::commitString(const QString &text)
 {
-    d->commit(text);
+    d->commitString(text);
 }
 
 void TextInputV2Interface::keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers)

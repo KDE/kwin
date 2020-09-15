@@ -154,7 +154,7 @@ public:
      * @see preEdit
      * @see deleteSurroundingText
      **/
-    void commit(const QString &text);
+    void commitString(const QString &text);
 
     /**
      * Sets the cursor position inside the composing text (as byte offset) relative to the

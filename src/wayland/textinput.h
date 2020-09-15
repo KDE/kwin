@@ -127,7 +127,23 @@ enum class TextInputContentPurpose {
     /**
      * input for a terminal
      */
-    Terminal
+    Terminal,
+    /**
+     * input is numeric password
+     */
+    Pin
+};
+
+enum class TextInputChangeCause {
+    /**
+     * Change caused by input method
+     */
+    InputMethod,
+
+    /**
+     * Something else other than input method caused change
+     */
+    Other
 };
 
 }
@@ -136,5 +152,6 @@ Q_DECLARE_METATYPE(KWaylandServer::TextInputContentHint)
 Q_DECLARE_METATYPE(KWaylandServer::TextInputContentHints)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::TextInputContentHints)
 Q_DECLARE_METATYPE(KWaylandServer::TextInputContentPurpose)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputChangeCause)
 
 #endif // TEXTINPUT_H_INCLUDED

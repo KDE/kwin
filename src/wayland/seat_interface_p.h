@@ -24,6 +24,7 @@ class DataDeviceInterface;
 class DataSourceInterface;
 class DataControlDeviceV1Interface;
 class TextInputV2Interface;
+class TextInputV3Interface;
 class PrimarySelectionDeviceV1Interface;
 
 class SeatInterface::Private : public Global::Private
@@ -57,6 +58,8 @@ public:
 
     // TextInput v2
     QPointer<TextInputV2Interface> textInputV2;
+    QPointer<TextInputV3Interface> textInputV3;
+
     SurfaceInterface *focusedTextInputSurface = nullptr;
     QMetaObject::Connection focusedSurfaceDestroyConnection;
 

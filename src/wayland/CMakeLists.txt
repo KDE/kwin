@@ -60,6 +60,7 @@ set(SERVER_LIB_SRCS
     surfacerole.cpp
     tablet_interface.cpp
     textinput_v2_interface.cpp
+    textinput_v3_interface.cpp
     touch_interface.cpp
     viewporter_interface.cpp
     xdgdecoration_v1_interface.cpp
@@ -164,6 +165,11 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
     BASENAME text-input-unstable-v2
+)
+
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+    BASENAME text-input-unstable-v3
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -314,6 +320,8 @@ set(SERVER_GENERATED_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v2-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v2-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v3-client-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-input-unstable-v3-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-text-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-client-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-decoration-server-protocol.h
@@ -420,6 +428,7 @@ set(SERVER_LIB_HEADERS
   tablet_interface.h
   textinput.h
   textinput_v2_interface.h
+  textinput_v3_interface.h
   touch_interface.h
   viewporter_interface.h
   xdgdecoration_v1_interface.h

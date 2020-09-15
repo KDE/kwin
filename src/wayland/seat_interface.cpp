@@ -20,6 +20,7 @@
 #include "primaryselectionsource_v1_interface.h"
 #include "surface_interface.h"
 #include "textinput_v2_interface_p.h"
+#include "textinput_v3_interface_p.h"
 // Qt
 #include <QFile>
 // Wayland
@@ -47,6 +48,7 @@ SeatInterface::Private::Private(SeatInterface *q, Display *display)
     , q(q)
 {
     textInputV2 = new TextInputV2Interface(q);
+    textInputV3 = new TextInputV3Interface(q);
 }
 
 #ifndef K_DOXYGEN
@@ -1585,6 +1587,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 
     if (d->focusedTextInputSurface != surface){
         d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
+        d->textInputV3->d->sendLeave(d->focusedTextInputSurface);
         d->focusedTextInputSurface = surface;
         emit focusedTextInputSurfaceChanged();
     }
@@ -1596,8 +1599,10 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
             }
         );
     }
-    // TODO: setFocusedSurface like in other interfaces
+    
     d->textInputV2->d->sendEnter(surface, serial);
+    d->textInputV3->d->sendEnter(surface);
+    // TODO: setFocusedSurface like in other interfaces
 }
 
 SurfaceInterface *SeatInterface::focusedTextInputSurface() const
@@ -1612,6 +1617,11 @@ TextInputV2Interface *SeatInterface::textInputV2() const
     return d->textInputV2;
 }
 
+TextInputV3Interface *SeatInterface::textInputV3() const
+{
+    Q_D();
+    return d->textInputV3;
+}
 AbstractDataSource *SeatInterface::selection() const
 {
     Q_D();

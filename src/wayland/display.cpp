@@ -41,6 +41,7 @@
 #include "subcompositor_interface.h"
 #include "tablet_interface.h"
 #include "textinput_v2_interface_p.h"
+#include "textinput_v3_interface_p.h"
 #include "viewporter_interface.h"
 #include "xdgdecoration_v1_interface.h"
 #include "xdgforeign_v2_interface.h"
@@ -349,6 +350,14 @@ TextInputManagerV2Interface *Display::createTextInputManagerV2(QObject *parent)
     connect(this, &Display::aboutToTerminate, t, [t] { delete t; });
     return t;
 }
+
+TextInputManagerV3Interface *Display::createTextInputManagerV3(QObject *parent)
+{
+    auto t = new TextInputManagerV3Interface(this, parent);
+    connect(this, &Display::aboutToTerminate, t, [t] { delete t; });
+    return t;
+}
+
 
 XdgShellInterface *Display::createXdgShell(QObject *parent)
 {
