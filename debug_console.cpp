@@ -19,6 +19,7 @@
 #include "workspace.h"
 #include "keyboard_input.h"
 #include "input_event.h"
+#include "subsurfacemonitor.h"
 #include "libinput/connection.h"
 #include "libinput/device.h"
 #include <kwinglplatform.h>
@@ -1267,36 +1268,27 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     };
     using namespace KWaylandServer;
 
-    const auto unmangeds = workspace()->unmanagedList();
-    for (auto u : unmangeds) {
-        if (!u->surface()) {
-            continue;
-        }
-        connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-    }
-    for (auto c : workspace()->allClientList()) {
+    auto watchSubsurfaces = [this, reset](AbstractClient *c) {
         if (!c->surface()) {
-            continue;
+            return;
         }
-        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+        auto monitor = new SubSurfaceMonitor(c->surface(), this);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, reset);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, reset);
+        connect (c, &QObject::destroyed, monitor, &QObject::deleteLater);
+    };
+
+    for (auto c : workspace()->allClientList()) {
+        watchSubsurfaces(c);
     }
     connect(workspace(), &Workspace::clientAdded, this,
-        [this, reset] (AbstractClient *c) {
-            if (c->surface()) {
-                connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-            }
+        [this, reset, watchSubsurfaces] (AbstractClient *c) {
+            watchSubsurfaces(c);
             reset();
         }
     );
     connect(workspace(), &Workspace::clientRemoved, this, reset);
-    connect(workspace(), &Workspace::unmanagedAdded, this,
-        [this, reset] (Unmanaged *u) {
-            if (u->surface()) {
-                connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-            }
-            reset();
-        }
-    );
+    connect(workspace(), &Workspace::unmanagedAdded, this, reset);
     connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
 }
 
