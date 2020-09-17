@@ -195,7 +195,7 @@ public:
 
     void checkBufferSwap();
 
-    WaylandOutput* getOutputAt(const QPointF globalPosition);
+    WaylandOutput* getOutputAt(const QPointF &globalPosition);
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
     QVector<WaylandOutput*> waylandOutputs() const {
