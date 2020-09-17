@@ -1132,7 +1132,7 @@ bool OpenGLWindow::beginRenderWindow(int mask, const QRegion &region, WindowPain
 
         const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
-        foreach (const WindowQuad &quad, data.quads) {
+        for (const WindowQuad &quad : qAsConst(data.quads)) {
             for (const QRect &r : filterRegion) {
                 const QRectF rf(r);
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
