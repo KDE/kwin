@@ -318,7 +318,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     // bring a reused back buffer up to date. Then union the dirty region
     // with the repaint region.
     const QRegion repaintClip = repaint_region - dirtyArea;
-    dirtyArea |= repaint_region;
+    dirtyArea |= painted_region;
 
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
