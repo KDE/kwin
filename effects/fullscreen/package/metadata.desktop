@@ -2,6 +2,8 @@
 Comment=Animation for a window going to and leaving full screen mode
 Comment[ca]=Animació per a una finestra que entra o abandona el mode de pantalla completa
 Comment[es]=Animación para una ventana que entra en el modo de pantalla completa o sale de él
+Comment[it]=Animazione per una finestra che entra e esce dalla modalità a schermo intero
+Comment[ko]=창이 전체 화면 모드로 진입하거나 벗어날 때 사용할 애니메이션
 Comment[nl]=Animatie voor een venster dat gaat naar volledig scherm en deze verlaat
 Comment[pt]=Animação para uma janela que vai entrar/sair do modo de ecrã completo
 Comment[sk]=Animácia pre okno smerujúce do a opúšťajúce režim celej obrazovky
@@ -13,6 +15,8 @@ Icon=preferences-system-windows-effect-fullscreen
 Name=Full Screen
 Name[ca]=Pantalla completa
 Name[es]=Pantalla completa
+Name[it]=Schermo intero
+Name[ko]=전체 화면
 Name[nl]=Volledig scherm
 Name[pt]=Ecrã Completo
 Name[pt_BR]=Tela inteira
