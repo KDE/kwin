@@ -104,111 +104,8 @@ void VirtualKeyboard::init()
         auto t2 = waylandServer()->display()->createTextInputManager(TextInputInterfaceVersion::UnstableV2, waylandServer()->display());
         t2->create();
 
-        connect(workspace(), &Workspace::clientAdded, this, [this] (AbstractClient *client) {
-            if (!client->isInputMethod()) {
-                return;
-            }
-            m_inputClient = client;
-            auto refreshFrame = [this] {
-                if (!m_trackedClient) {
-                    return;
-                }
-
-                if (m_inputClient && !m_inputClient->inputGeometry().isEmpty()) {
-                    m_trackedClient->setVirtualKeyboardGeometry(m_inputClient->inputGeometry());
-                }
-            };
-            connect(client->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
-            connect(client, &QObject::destroyed, this, [this] {
-                if (m_trackedClient) {
-                    m_trackedClient->setVirtualKeyboardGeometry({});
-                }
-            });
-            connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
-        });
-
-        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputChanged, this,
-            [this] {
-                disconnect(m_waylandShowConnection);
-                disconnect(m_waylandHideConnection);
-                disconnect(m_waylandHintsConnection);
-                disconnect(m_waylandSurroundingTextConnection);
-                disconnect(m_waylandResetConnection);
-                disconnect(m_waylandEnabledConnection);
-                disconnect(m_waylandStateCommittedConnection);
-                if (auto t = waylandServer()->seat()->focusedTextInput()) {
-                    m_waylandShowConnection = connect(t, &TextInputInterface::requestShowInputPanel, this, &VirtualKeyboard::show);
-                    m_waylandHideConnection = connect(t, &TextInputInterface::requestHideInputPanel, this, &VirtualKeyboard::hide);
-                    m_waylandSurroundingTextConnection = connect(t, &TextInputInterface::surroundingTextChanged, this,
-                        [t] {
-                            auto inputContext = waylandServer()->inputMethod()->context();
-                            if (!inputContext) {
-                                return;
-                            }
-                            inputContext->sendSurroundingText(QString::fromUtf8(t->surroundingText()), t->surroundingTextCursorPosition(), t->surroundingTextSelectionAnchor());
-                        }
-                    );
-                    m_waylandHintsConnection = connect(t, &TextInputInterface::contentTypeChanged, this,
-                        [t] {
-                            auto inputContext = waylandServer()->inputMethod()->context();
-                            if (!inputContext) {
-                                return;
-                            }
-                            inputContext->sendContentType(t->contentHints(), t->contentPurpose());
-                        }
-                    );
-                    m_waylandResetConnection = connect(t, &TextInputInterface::requestReset, this, [t] {
-                        auto inputContext = waylandServer()->inputMethod()->context();
-                        if (!inputContext) {
-                            return;
-                        }
-
-                        inputContext->sendReset();
-                        inputContext->sendSurroundingText(QString::fromUtf8(t->surroundingText()), t->surroundingTextCursorPosition(), t->surroundingTextSelectionAnchor());
-                        inputContext->sendPreferredLanguage(QString::fromUtf8(t->preferredLanguage()));
-                        inputContext->sendContentType(t->contentHints(), t->contentPurpose());
-                    });
-                    m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this, [t, this] {
-                        if (t->isEnabled()) {
-                            //FIXME This sendDeactivate shouldn't be necessary?
-                            waylandServer()->inputMethod()->sendDeactivate();
-                            waylandServer()->inputMethod()->sendActivate();
-                            adoptInputMethodContext();
-                        } else {
-                            waylandServer()->inputMethod()->sendDeactivate();
-                            hide();
-                        }
-                    });
-                    m_waylandStateCommittedConnection = connect(t, &TextInputInterface::stateCommitted, this, [t](uint32_t serial) {
-                        auto inputContext = waylandServer()->inputMethod()->context();
-                        if (!inputContext) {
-                            return;
-                        }
-                        inputContext->sendCommitState(serial);
-                    });
-
-                    auto newClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
-                    // Reset the old client virtual keybaord geom if necessary
-                    // Old and new clients could be the same if focus moves between subsurfaces
-                    if (newClient != m_trackedClient) {
-                        if (m_trackedClient) {
-                            m_trackedClient->setVirtualKeyboardGeometry(QRect());
-                        }
-                        m_trackedClient = newClient;
-                    }
-                } else {
-                    m_waylandShowConnection = QMetaObject::Connection();
-                    m_waylandHideConnection = QMetaObject::Connection();
-                    m_waylandHintsConnection = QMetaObject::Connection();
-                    m_waylandSurroundingTextConnection = QMetaObject::Connection();
-                    m_waylandResetConnection = QMetaObject::Connection();
-                    m_waylandEnabledConnection = QMetaObject::Connection();
-                    m_waylandStateCommittedConnection = QMetaObject::Connection();
-                    waylandServer()->inputMethod()->sendDeactivate();
-                }
-                updateInputPanelState();
-            }
-        );
+        connect(workspace(), &Workspace::clientAdded, this, &VirtualKeyboard::clientAdded);
+        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputChanged, this, &VirtualKeyboard::focusedTextInputChanged);
     }
 }
 
@@ -225,6 +122,128 @@ void VirtualKeyboard::hide()
 {
     waylandServer()->inputMethod()->sendDeactivate();
     updateInputPanelState();
+}
+
+void VirtualKeyboard::clientAdded(AbstractClient* client)
+{
+    if (!client->isInputMethod()) {
+        return;
+    }
+    m_inputClient = client;
+    auto refreshFrame = [this] {
+        if (!m_trackedClient) {
+            return;
+        }
+
+        if (m_inputClient && !m_inputClient->inputGeometry().isEmpty()) {
+            m_trackedClient->setVirtualKeyboardGeometry(m_inputClient->inputGeometry());
+        }
+    };
+    connect(client->surface(), &SurfaceInterface::inputChanged, this, refreshFrame);
+    connect(client, &QObject::destroyed, this, [this] {
+        if (m_trackedClient) {
+            m_trackedClient->setVirtualKeyboardGeometry({});
+        }
+    });
+    connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
+}
+
+void VirtualKeyboard::focusedTextInputChanged()
+{
+    disconnect(m_waylandShowConnection);
+    disconnect(m_waylandHideConnection);
+    disconnect(m_waylandHintsConnection);
+    disconnect(m_waylandSurroundingTextConnection);
+    disconnect(m_waylandResetConnection);
+    disconnect(m_waylandEnabledConnection);
+    disconnect(m_waylandStateCommittedConnection);
+    if (auto t = waylandServer()->seat()->focusedTextInput()) {
+        // connections from textinput_interface
+        m_waylandShowConnection = connect(t, &TextInputInterface::requestShowInputPanel, this, &VirtualKeyboard::show);
+        m_waylandHideConnection = connect(t, &TextInputInterface::requestHideInputPanel, this, &VirtualKeyboard::hide);
+        m_waylandSurroundingTextConnection = connect(t, &TextInputInterface::surroundingTextChanged, this, &VirtualKeyboard::surroundingTextChanged);
+        m_waylandHintsConnection = connect(t, &TextInputInterface::contentTypeChanged, this, &VirtualKeyboard::contentTypeChanged);
+        m_waylandResetConnection = connect(t, &TextInputInterface::requestReset, this, &VirtualKeyboard::requestReset);
+        m_waylandEnabledConnection = connect(t, &TextInputInterface::enabledChanged, this, &VirtualKeyboard::textInputInterfaceEnabledChanged);
+        m_waylandStateCommittedConnection = connect(t, &TextInputInterface::stateCommitted, this, &VirtualKeyboard::stateCommitted);
+
+        auto newClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
+        // Reset the old client virtual keybaord geom if necessary
+        // Old and new clients could be the same if focus moves between subsurfaces
+        if (newClient != m_trackedClient) {
+            if (m_trackedClient) {
+                m_trackedClient->setVirtualKeyboardGeometry(QRect());
+            }
+            m_trackedClient = newClient;
+        }
+    } else {
+        m_waylandShowConnection = QMetaObject::Connection();
+        m_waylandHideConnection = QMetaObject::Connection();
+        m_waylandHintsConnection = QMetaObject::Connection();
+        m_waylandSurroundingTextConnection = QMetaObject::Connection();
+        m_waylandResetConnection = QMetaObject::Connection();
+        m_waylandEnabledConnection = QMetaObject::Connection();
+        m_waylandStateCommittedConnection = QMetaObject::Connection();
+        waylandServer()->inputMethod()->sendDeactivate();
+    }
+    updateInputPanelState();
+}
+
+void VirtualKeyboard::surroundingTextChanged()
+{
+    auto t = waylandServer()->seat()->focusedTextInput();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    inputContext->sendSurroundingText(QString::fromUtf8(t->surroundingText()), t->surroundingTextCursorPosition(), t->surroundingTextSelectionAnchor());
+}
+
+void VirtualKeyboard::contentTypeChanged()
+{
+    auto t = waylandServer()->seat()->focusedTextInput();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    inputContext->sendContentType(t->contentHints(), t->contentPurpose());
+}
+
+void VirtualKeyboard::requestReset()
+{
+    auto t = waylandServer()->seat()->focusedTextInput();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    inputContext->sendReset();
+    inputContext->sendSurroundingText(QString::fromUtf8(t->surroundingText()), t->surroundingTextCursorPosition(), t->surroundingTextSelectionAnchor());
+    inputContext->sendPreferredLanguage(QString::fromUtf8(t->preferredLanguage()));
+    inputContext->sendContentType(t->contentHints(), t->contentPurpose());
+}
+
+void VirtualKeyboard::textInputInterfaceEnabledChanged()
+{
+    auto t = waylandServer()->seat()->focusedTextInput();
+    if (t->isEnabled()) {
+        //FIXME This sendDeactivate shouldn't be necessary?
+        waylandServer()->inputMethod()->sendDeactivate();
+        waylandServer()->inputMethod()->sendActivate();
+        adoptInputMethodContext();
+    } else {
+        waylandServer()->inputMethod()->sendDeactivate();
+        hide();
+    }
+}
+
+void VirtualKeyboard::stateCommitted(uint32_t serial)
+{
+    auto t = waylandServer()->seat()->focusedTextInput();
+    auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
+    inputContext->sendCommitState(serial);
 }
 
 void VirtualKeyboard::setEnabled(bool enabled)

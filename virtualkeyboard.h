@@ -37,6 +37,17 @@ public:
 Q_SIGNALS:
     void enabledChanged(bool enabled);
 
+private Q_SLOTS:
+    void clientAdded(AbstractClient* client);
+
+    // textinput interface slots
+    void focusedTextInputChanged();
+    void surroundingTextChanged();
+    void contentTypeChanged();
+    void requestReset();
+    void textInputInterfaceEnabledChanged();
+    void stateCommitted(uint32_t serial);
+
 private:
     void setEnabled(bool enable);
     void updateSni();
