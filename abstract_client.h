@@ -80,6 +80,11 @@ class KWIN_EXPORT AbstractClient : public Toplevel
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
 
     /**
+     * The activities this client is on. If it's on all activities the property is empty.
+     */
+    Q_PROPERTY(QStringList activities READ activities WRITE setOnActivities NOTIFY activitiesChanged)
+
+    /**
      * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
      */
     Q_PROPERTY(QVector<uint> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
@@ -884,6 +889,7 @@ Q_SIGNALS:
     void demandsAttentionChanged();
     void desktopPresenceChanged(KWin::AbstractClient*, int); // to be forwarded by Workspace
     void desktopChanged();
+    void activitiesChanged(KWin::AbstractClient* client);
     void x11DesktopIdsChanged();
     void shadeChanged();
     void minimizedChanged();

@@ -230,7 +230,7 @@ class KWIN_EXPORT Toplevel : public QObject
      */
     Q_PROPERTY(int windowType READ windowType)
 
-    Q_PROPERTY(QStringList activities READ activities NOTIFY activitiesChanged)
+    Q_PROPERTY(QStringList activities READ activities)
 
     /**
      * Whether this Toplevel is managed by KWin (it has control over its placement and other
@@ -608,7 +608,6 @@ Q_SIGNALS:
      * schedule a repaint of the scene.
      */
     void needsRepaint();
-    void activitiesChanged(KWin::Toplevel* toplevel);
     /**
      * Emitted whenever the Toplevel's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Toplevel's geometry changes.
