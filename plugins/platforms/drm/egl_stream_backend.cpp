@@ -627,7 +627,7 @@ bool EglStreamTexture::loadTexture(WindowPixmap *pixmap)
     using namespace KWaylandServer;
     SurfaceInterface *surface = pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
-    if (!pixmap->buffer().isNull() && st != nullptr) {
+    if (pixmap->buffer() && st != nullptr) {
 
         glGenTextures(1, &m_texture);
         texture()->setWrapMode(GL_CLAMP_TO_EDGE);
@@ -655,7 +655,7 @@ void EglStreamTexture::updateTexture(WindowPixmap *pixmap)
     using namespace KWaylandServer;
     SurfaceInterface *surface = pixmap->surface();
     const EglStreamBackend::StreamTexture *st = m_backend->lookupStreamTexture(surface);
-    if (!pixmap->buffer().isNull() && st != nullptr) {
+    if (pixmap->buffer() && st != nullptr) {
 
         if (attachBuffer(surface->buffer())) {
             createFbo();

@@ -417,7 +417,7 @@ void QPainterWindowPixmap::update()
         m_image = internalImage();
         return;
     }
-    if (b.isNull()) {
+    if (!b) {
         m_image = QImage();
         return;
     }

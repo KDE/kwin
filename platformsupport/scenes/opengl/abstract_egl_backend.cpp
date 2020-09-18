@@ -345,8 +345,8 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
 {
     // FIXME: Refactor this method.
 
-    const auto &buffer = pixmap->buffer();
-    if (buffer.isNull()) {
+    const auto buffer = pixmap->buffer();
+    if (!buffer) {
         if (updateFromFBO(pixmap->fbo())) {
             return true;
         }
@@ -371,8 +371,8 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 {
     // FIXME: Refactor this method.
 
-    const auto &buffer = pixmap->buffer();
-    if (buffer.isNull()) {
+    const auto buffer = pixmap->buffer();
+    if (!buffer) {
         if (updateFromFBO(pixmap->fbo())) {
             return;
         }

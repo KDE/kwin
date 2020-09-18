@@ -1118,11 +1118,7 @@ WindowPixmap::~WindowPixmap()
     if (m_pixmap != XCB_WINDOW_NONE) {
         xcb_free_pixmap(connection(), m_pixmap);
     }
-    if (m_buffer) {
-        using namespace KWaylandServer;
-        QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
-        m_buffer->unref();
-    }
+    clear();
 }
 
 void WindowPixmap::create()
@@ -1170,13 +1166,33 @@ void WindowPixmap::create()
     m_window->discardQuads();
 }
 
+void WindowPixmap::clear()
+{
+    setBuffer(nullptr);
+}
+
+void WindowPixmap::setBuffer(KWaylandServer::BufferInterface *buffer)
+{
+    if (buffer == m_buffer) {
+        return;
+    }
+    if (m_buffer) {
+        disconnect(m_buffer, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &WindowPixmap::clear);
+        m_buffer->unref();
+    }
+    m_buffer = buffer;
+    if (m_buffer) {
+        m_buffer->ref();
+        connect(m_buffer, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &WindowPixmap::clear);
+    }
+}
+
 void WindowPixmap::update()
 {
     using namespace KWaylandServer;
     if (SurfaceInterface *s = surface()) {
         QVector<WindowPixmap*> oldTree = m_children;
         QVector<WindowPixmap*> children;
-        using namespace KWaylandServer;
         const auto subSurfaces = s->childSubSurfaces();
         for (const auto &subSurface : subSurfaces) {
             if (subSurface.isNull()) {
@@ -1198,34 +1214,16 @@ void WindowPixmap::update()
         setChildren(children);
         qDeleteAll(oldTree);
         if (auto b = s->buffer()) {
-            if (b == m_buffer) {
-                // no change
-                return;
-            }
-            if (m_buffer) {
-                QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
-                m_buffer->unref();
-            }
-            m_buffer = b;
-            m_buffer->ref();
-            QObject::connect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
+            setBuffer(b);
         } else if (m_subSurface) {
-            if (m_buffer) {
-                QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
-                m_buffer->unref();
-                m_buffer.clear();
-            }
+            clear();
         }
     } else if (toplevel()->internalFramebufferObject()) {
         m_fbo = toplevel()->internalFramebufferObject();
     } else if (!toplevel()->internalImageObject().isNull()) {
         m_internalImage = toplevel()->internalImageObject();
     } else {
-        if (m_buffer) {
-            QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
-            m_buffer->unref();
-            m_buffer.clear();
-        }
+        clear();
     }
 }
 
@@ -1237,7 +1235,7 @@ WindowPixmap *WindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfac
 
 bool WindowPixmap::isValid() const
 {
-    if (!m_buffer.isNull() || !m_fbo.isNull() || !m_internalImage.isNull()) {
+    if (m_buffer || !m_fbo.isNull() || !m_internalImage.isNull()) {
         return true;
     }
     return m_pixmap != XCB_PIXMAP_NONE;

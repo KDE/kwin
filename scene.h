@@ -415,8 +415,9 @@ private:
  * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
  * the native pixmap to the respective rendering format.
  */
-class KWIN_EXPORT WindowPixmap
+class KWIN_EXPORT WindowPixmap : public QObject
 {
+    Q_OBJECT
 public:
     virtual ~WindowPixmap();
     /**
@@ -448,7 +449,7 @@ public:
     /**
      * @return The Wayland BufferInterface for this WindowPixmap.
      */
-    QPointer<KWaylandServer::BufferInterface> buffer() const;
+    KWaylandServer::BufferInterface *buffer() const;
     const QSharedPointer<QOpenGLFramebufferObject> &fbo() const;
     QImage internalImage() const;
     /**
@@ -575,12 +576,15 @@ protected:
     }
 
 private:
+    void setBuffer(KWaylandServer::BufferInterface *buffer);
+    void clear();
+
     Scene::Window *m_window;
     xcb_pixmap_t m_pixmap;
     QSize m_pixmapSize;
     bool m_discarded;
     QRect m_contentsRect;
-    QPointer<KWaylandServer::BufferInterface> m_buffer;
+    KWaylandServer::BufferInterface *m_buffer = nullptr;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_internalImage;
     WindowPixmap *m_parent = nullptr;
@@ -678,7 +682,7 @@ Shadow* Scene::Window::shadow()
 }
 
 inline
-QPointer<KWaylandServer::BufferInterface> WindowPixmap::buffer() const
+KWaylandServer::BufferInterface *WindowPixmap::buffer() const
 {
     return m_buffer;
 }
