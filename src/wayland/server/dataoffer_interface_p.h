@@ -8,6 +8,9 @@
 #include "dataoffer_interface.h"
 #include "datasource_interface.h"
 #include "resource_p.h"
+
+#include <QPointer>
+
 #include <wayland-server.h>
 
 namespace KWaylandServer
@@ -18,7 +21,7 @@ class Q_DECL_HIDDEN DataOfferInterface::Private : public Resource::Private
 public:
     Private(AbstractDataSource *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource);
     ~Private();
-    AbstractDataSource *source;
+    QPointer<AbstractDataSource> source;
     DataDeviceInterface *dataDevice;
     // defaults are set to sensible values for < version 3 interfaces
     DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::Copy | DataDeviceManagerInterface::DnDAction::Move;
