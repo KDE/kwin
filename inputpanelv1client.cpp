@@ -16,7 +16,7 @@
 #include <KWaylandServer/output_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/textinput_interface.h>
+#include <KWaylandServer/textinput_v2_interface.h>
 
 using namespace KWaylandServer;
 
@@ -79,7 +79,7 @@ void KWin::InputPanelV1Client::reposition()
         }   break;
         case Overlay: {
             auto textClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
-            auto textInput = waylandServer()->seat()->focusedTextInput();
+            auto textInput = waylandServer()->seat()->textInput();
             if (textClient && textInput) {
                 const auto cursorRectangle = textInput->cursorRectangle();
                 updateGeometry({textClient->pos() + textClient->clientPos() + cursorRectangle.bottomLeft(), surface()->size()});
