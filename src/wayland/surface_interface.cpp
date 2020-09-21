@@ -324,7 +324,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    pending.damage = pending.damage.united(QRect(x, y, width, height));
+    pending.damage |= QRect(x, y, width, height);
 }
 
 void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callback)
@@ -379,7 +379,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32
 void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     Q_UNUSED(resource)
-    pending.bufferDamage = pending.bufferDamage.united(QRect(x, y, width, height));
+    pending.bufferDamage |= QRect(x, y, width, height);
 }
 
 SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource *resource)
@@ -650,7 +650,7 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             const QRegion bufferDamage = q->mapFromBuffer(target->bufferDamage);
             target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
-            trackedDamage = trackedDamage.united(target->damage);
+            trackedDamage |= target->damage;
             emit q->damaged(target->damage);
             // workaround for https://bugreports.qt.io/browse/QTBUG-52092
             // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
