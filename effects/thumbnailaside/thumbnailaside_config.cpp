@@ -72,7 +72,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undoChanges();
+    m_ui->editor->undo();
 }
 
 void ThumbnailAsideEffectConfig::save()

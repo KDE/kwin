@@ -82,8 +82,8 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
 PresentWindowsEffectConfig::~PresentWindowsEffectConfig()
 {
-    // If save() is called undoChanges() has no effect
-    m_ui->shortcutEditor->undoChanges();
+    // If save() is called undo() has no effect
+    m_ui->shortcutEditor->undo();
 }
 
 void PresentWindowsEffectConfig::save()

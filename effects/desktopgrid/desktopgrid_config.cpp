@@ -85,8 +85,8 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
 
 DesktopGridEffectConfig::~DesktopGridEffectConfig()
 {
-    // If save() is called undoChanges() has no effect
-    m_ui->shortcutEditor->undoChanges();
+    // If save() is called undo() has no effect
+    m_ui->shortcutEditor->undo();
 }
 
 void DesktopGridEffectConfig::save()

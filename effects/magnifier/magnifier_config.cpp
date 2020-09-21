@@ -83,7 +83,7 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
 MagnifierEffectConfig::~MagnifierEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undoChanges();
+    m_ui->editor->undo();
 }
 
 void MagnifierEffectConfig::save()

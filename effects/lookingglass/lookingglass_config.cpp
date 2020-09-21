@@ -81,7 +81,7 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
 LookingGlassEffectConfig::~LookingGlassEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undoChanges();
+    m_ui->editor->undo();
 }
 
 void LookingGlassEffectConfig::save()

@@ -61,7 +61,7 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
 WindowGeometryConfig::~WindowGeometryConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    myUi->shortcuts->undoChanges();
+    myUi->shortcuts->undo();
 }
 
 void WindowGeometryConfig::save()

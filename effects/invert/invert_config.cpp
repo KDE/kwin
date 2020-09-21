@@ -60,7 +60,7 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 InvertEffectConfig::~InvertEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    mShortcutEditor->undoChanges();
+    mShortcutEditor->undo();
 }
 
 void InvertEffectConfig::load()
