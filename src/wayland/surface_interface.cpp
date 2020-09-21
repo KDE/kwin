@@ -298,9 +298,6 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
     Q_UNUSED(resource)
     pending.bufferIsSet = true;
     pending.offset = QPoint(x, y);
-    if (pending.buffer) {
-        delete pending.buffer;
-    }
     if (!buffer) {
         // got a null buffer, deletes content in next frame
         pending.buffer = nullptr;
@@ -308,7 +305,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
         pending.bufferDamage = QRegion();
         return;
     }
-    pending.buffer = new BufferInterface(buffer, q);
+    pending.buffer = BufferInterface::get(compositor->display(), buffer);
     QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q,
         [this](BufferInterface *buffer) {
             if (pending.buffer == buffer) {
@@ -524,7 +521,6 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
             if (emitChanged) {
                 target->buffer->unref();
             } else {
-                delete target->buffer;
                 target->buffer = nullptr;
             }
         }

@@ -27,6 +27,8 @@ class KWAYLANDSERVER_EXPORT ShadowManagerInterface : public QObject
 public:
     ~ShadowManagerInterface() override;
 
+    Display *display() const;
+
 private:
     explicit ShadowManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
@@ -51,7 +53,7 @@ public:
     QMarginsF offset() const;
 
 private:
-    explicit ShadowInterface(wl_resource *resource);
+    explicit ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource);
     friend class ShadowManagerInterfacePrivate;
 
     QScopedPointer<ShadowInterfacePrivate> d;

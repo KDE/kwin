@@ -16,7 +16,7 @@ struct wl_shm_buffer;
 
 namespace KWaylandServer
 {
-class SurfaceInterface;
+class Display;
 class LinuxDmabufBuffer;
 
 /**
@@ -51,7 +51,7 @@ class KWAYLANDSERVER_EXPORT BufferInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit BufferInterface(wl_resource *resource, SurfaceInterface *parent);
+    BufferInterface(Display *display, wl_resource *resource);
     virtual ~BufferInterface();
     /**
      * Reference the BufferInterface.
@@ -67,8 +67,7 @@ public:
      * Unreference the BufferInterface.
      *
      * If the reference counting reached @c 0 the BufferInterface is released, so that the
-     * client can use it again. The instance of this BufferInterface will be automatically
-     * deleted.
+     * client can use it again.
      *
      * @see ref
      * @see isReferenced
@@ -82,10 +81,6 @@ public:
      **/
     bool isReferenced() const;
 
-    /**
-     * @returns The SurfaceInterface this BufferInterface is attached to.
-     **/
-    SurfaceInterface *surface() const;
     /**
      * @returns The native wl_shm_buffer if the BufferInterface represents a shared memory buffer, otherwise @c nullptr.
      **/
@@ -162,7 +157,7 @@ public:
      **/
     bool hasAlphaChannel() const;
 
-    static BufferInterface *get(wl_resource *r);
+    static BufferInterface *get(Display *display, wl_resource *r);
 
 Q_SIGNALS:
     void aboutToBeDestroyed(KWaylandServer::BufferInterface*);

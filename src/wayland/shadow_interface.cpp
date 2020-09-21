@@ -19,6 +19,7 @@ public:
     ShadowManagerInterfacePrivate(ShadowManagerInterface *_q, Display *display);
 
     ShadowManagerInterface *q;
+    Display *display;
     static const quint32 s_version;
 
 protected:
@@ -32,6 +33,7 @@ const quint32 ShadowManagerInterfacePrivate::s_version = 2;
 ShadowManagerInterfacePrivate::ShadowManagerInterfacePrivate(ShadowManagerInterface *_q, Display *display)
     : QtWaylandServer::org_kde_kwin_shadow_manager(*display, s_version)
     , q(_q)
+    , display(display)
 {
 }
 
@@ -54,7 +56,7 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource 
         return;
     }
 
-    auto shadow = new ShadowInterface(shadow_resource);
+    auto shadow = new ShadowInterface(q, shadow_resource);
 
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setShadow(QPointer<ShadowInterface>(shadow));
@@ -79,6 +81,11 @@ ShadowManagerInterface::ShadowManagerInterface(Display *display, QObject *parent
 }
 
 ShadowManagerInterface::~ShadowManagerInterface() = default;
+
+Display *ShadowManagerInterface::display() const
+{
+    return d->display;
+}
 
 class ShadowInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow
 {
@@ -114,6 +121,7 @@ public:
     void commit();
     void attach(State::Flags flag, wl_resource *buffer);
 
+    ShadowManagerInterface *manager;
     State current;
     State pending;
     ShadowInterface *q;
@@ -168,7 +176,7 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 
 void ShadowInterfacePrivate::attach(ShadowInterfacePrivate::State::Flags flag, wl_resource *buffer)
 {
-    BufferInterface *b = BufferInterface::get(buffer);
+    BufferInterface *b = BufferInterface::get(manager->display(), buffer);
     if (b) {
         QObject::connect(b, &BufferInterface::aboutToBeDestroyed, q,
             [this](BufferInterface *buffer) {
@@ -345,10 +353,11 @@ ShadowInterfacePrivate::~ShadowInterfacePrivate()
 #undef CURRENT
 }
 
-ShadowInterface::ShadowInterface(wl_resource *resource)
+ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource)
     : QObject()
     , d(new ShadowInterfacePrivate(this, resource))
 {
+    d->manager = manager;
 }
 
 ShadowInterface::~ShadowInterface() = default;
