@@ -65,6 +65,19 @@ class X11Client;
 class X11EventFilter;
 enum class Predicate;
 
+class X11EventFilterContainer : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit X11EventFilterContainer(X11EventFilter *filter);
+
+    X11EventFilter *filter() const;
+
+private:
+    X11EventFilter *m_filter;
+};
+
 class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
@@ -665,8 +678,8 @@ private:
 
     QScopedPointer<KillWindow> m_windowKiller;
 
-    QList<X11EventFilter *> m_eventFilters;
-    QList<X11EventFilter *> m_genericEventFilters;
+    QList<QPointer<X11EventFilterContainer>> m_eventFilters;
+    QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     QScopedPointer<X11EventFilter> m_movingClientFilter;
 
     SessionManager *m_sessionManager;
