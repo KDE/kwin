@@ -24,6 +24,7 @@ public:
     explicit Screen(int screen);
     ~Screen() override;
 
+    QString name() const override;
     QRect geometry() const override;
     int depth() const override;
     QImage::Format format() const override;

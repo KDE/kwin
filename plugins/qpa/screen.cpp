@@ -64,5 +64,10 @@ qreal Screen::devicePixelRatio() const
     return m_screen != -1 ? screens()->scale(m_screen) : 1.0;
 }
 
+QString Screen::name() const
+{
+    return m_screen != -1 ? screens()->name(m_screen) : QString();
+}
+
 }
 }
