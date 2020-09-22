@@ -370,7 +370,8 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     }
     if (!(orig_mask & PAINT_SCREEN_BACKGROUND_FIRST)) {
         paintedArea = dirtyArea - allclips;
-        paintBackground(paintedArea);
+        if (!paintedArea.isEmpty())
+            paintBackground(paintedArea);
     }
 
     // Now walk the list bottom to top and draw the windows.
