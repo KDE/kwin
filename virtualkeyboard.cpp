@@ -238,7 +238,6 @@ void VirtualKeyboard::textInputInterfaceEnabledChanged()
 
 void VirtualKeyboard::stateCommitted(uint32_t serial)
 {
-    auto t = waylandServer()->seat()->focusedTextInput();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
         return;
