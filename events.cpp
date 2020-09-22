@@ -165,18 +165,34 @@ QVector<QByteArray> s_xcbEerrors({
 
 void Workspace::registerEventFilter(X11EventFilter *filter)
 {
-    if (filter->isGenericEvent())
-        m_genericEventFilters.append(filter);
-    else
-        m_eventFilters.append(filter);
+    if (filter->isGenericEvent()) {
+        m_genericEventFilters.append(new X11EventFilterContainer(filter));
+    } else {
+        m_eventFilters.append(new X11EventFilterContainer(filter));
+    }
+}
+
+static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
+                                                QList<QPointer<X11EventFilterContainer>> &list)
+{
+    for (int i = 0; i < list.count(); ++i) {
+        X11EventFilterContainer *container = list.at(i);
+        if (container->filter() == eventFilter) {
+            return list.takeAt(i);
+        }
+    }
+    return nullptr;
 }
 
 void Workspace::unregisterEventFilter(X11EventFilter *filter)
 {
-    if (filter->isGenericEvent())
-        m_genericEventFilters.removeOne(filter);
-    else
-        m_eventFilters.removeOne(filter);
+    X11EventFilterContainer *container = nullptr;
+    if (filter->isGenericEvent()) {
+        container = takeEventFilter(filter, m_genericEventFilters);
+    } else {
+        container = takeEventFilter(filter, m_eventFilters);
+    }
+    delete container;
 }
 
 
@@ -219,13 +235,29 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     if (eventType == XCB_GE_GENERIC) {
         xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(e);
 
-        foreach (X11EventFilter *filter, m_genericEventFilters) {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_genericEventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
             if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(e)) {
                 return true;
             }
         }
     } else {
-        foreach (X11EventFilter *filter, m_eventFilters) {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_eventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
             if (filter->eventTypes().contains(eventType) && filter->event(e)) {
                 return true;
             }

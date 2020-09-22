@@ -66,6 +66,16 @@ namespace KWin
 extern int screen_number;
 extern bool is_multihead;
 
+X11EventFilterContainer::X11EventFilterContainer(X11EventFilter *filter)
+    : m_filter(filter)
+{
+}
+
+X11EventFilter *X11EventFilterContainer::filter() const
+{
+    return m_filter;
+}
+
 ColorMapper::ColorMapper(QObject *parent)
     : QObject(parent)
     , m_default(kwinApp()->x11DefaultScreen()->default_colormap)
