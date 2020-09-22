@@ -106,7 +106,7 @@ void VirtualKeyboard::init()
 
 void VirtualKeyboard::show()
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t) {
         //FIXME: this shouldn't be necessary and causes double emits?
         Q_EMIT t->enabledChanged();
@@ -152,7 +152,7 @@ void VirtualKeyboard::focusedTextInputChanged()
     disconnect(m_waylandResetConnection);
     disconnect(m_waylandEnabledConnection);
     disconnect(m_waylandStateCommittedConnection);
-    if (auto t = waylandServer()->seat()->textInput()) {
+    if (auto t = waylandServer()->seat()->textInputV2()) {
         // connections from textinput_interface
         m_waylandShowConnection = connect(t, &TextInputV2Interface::requestShowInputPanel, this, &VirtualKeyboard::show);
         m_waylandHideConnection = connect(t, &TextInputV2Interface::requestHideInputPanel, this, &VirtualKeyboard::hide);
@@ -186,7 +186,7 @@ void VirtualKeyboard::focusedTextInputChanged()
 
 void VirtualKeyboard::surroundingTextChanged()
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
         return;
@@ -196,7 +196,7 @@ void VirtualKeyboard::surroundingTextChanged()
 
 void VirtualKeyboard::contentTypeChanged()
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
         return;
@@ -206,7 +206,7 @@ void VirtualKeyboard::contentTypeChanged()
 
 void VirtualKeyboard::requestReset()
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
         return;
@@ -219,7 +219,7 @@ void VirtualKeyboard::requestReset()
 
 void VirtualKeyboard::textInputInterfaceEnabledChanged()
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t->isEnabled()) {
         //FIXME This sendDeactivate shouldn't be necessary?
         waylandServer()->inputMethod()->sendDeactivate();
@@ -263,7 +263,7 @@ static void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool press
 {
     Q_UNUSED(serial)
     Q_UNUSED(time)
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         if (pressed) {
             t->keysymPressed(sym, modifiers);
@@ -276,7 +276,7 @@ static void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool press
 static void commitString(qint32 serial, const QString &text)
 {
     Q_UNUSED(serial)
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->commit(text.toUtf8());
         t->preEdit({}, {});
@@ -285,7 +285,7 @@ static void commitString(qint32 serial, const QString &text)
 
 static void setPreeditCursor(qint32 index)
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->setPreEditCursor(index);
     }
@@ -294,7 +294,7 @@ static void setPreeditCursor(qint32 index)
 static void setPreeditString(uint32_t serial, const QString &text, const QString &commit)
 {
     Q_UNUSED(serial)
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->preEdit(text.toUtf8(), commit.toUtf8());
     }
@@ -302,7 +302,7 @@ static void setPreeditString(uint32_t serial, const QString &text, const QString
 
 static void deleteSurroundingText(int32_t index, uint32_t length)
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->deleteSurroundingText(index, length);
     }
@@ -310,7 +310,7 @@ static void deleteSurroundingText(int32_t index, uint32_t length)
 
 static void setCursorPosition(qint32 index, qint32 anchor)
 {
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->setCursorPosition(index, anchor);
     }
@@ -319,7 +319,7 @@ static void setCursorPosition(qint32 index, qint32 anchor)
 static void setLanguage(uint32_t serial, const QString &language)
 {
     Q_UNUSED(serial)
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->setLanguage(language.toUtf8());
     }
@@ -328,7 +328,7 @@ static void setLanguage(uint32_t serial, const QString &language)
 static void setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
 {
     Q_UNUSED(serial)
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
     if (t && t->isEnabled()) {
         t->setTextDirection(direction);
     }
@@ -337,7 +337,7 @@ static void setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
 void VirtualKeyboard::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
-    TextInputV2Interface *ti = waylandServer()->seat()->textInput();
+    TextInputV2Interface *ti = waylandServer()->seat()->textInputV2();
 
     inputContext->sendSurroundingText(ti->surroundingText(), ti->surroundingTextCursorPosition(), ti->surroundingTextSelectionAnchor());
     inputContext->sendPreferredLanguage(ti->preferredLanguage());
@@ -374,7 +374,7 @@ void VirtualKeyboard::updateInputPanelState()
         return;
     }
 
-    auto t = waylandServer()->seat()->textInput();
+    auto t = waylandServer()->seat()->textInputV2();
 
     if (!t) {
         return;

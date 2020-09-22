@@ -79,7 +79,7 @@ void KWin::InputPanelV1Client::reposition()
         }   break;
         case Overlay: {
             auto textClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
-            auto textInput = waylandServer()->seat()->textInput();
+            auto textInput = waylandServer()->seat()->textInputV2();
             if (textClient && textInput) {
                 const auto cursorRectangle = textInput->cursorRectangle();
                 updateGeometry({textClient->pos() + textClient->clientPos() + cursorRectangle.bottomLeft(), surface()->size()});
