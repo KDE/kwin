@@ -590,7 +590,7 @@ void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfF
     emit tabRemoved(w, leaderOfFormerGroup);
 }
 
-void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
+void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRegion& r)
 {
     if (!t->effectWindow()) {
         // can happen during tear down of window

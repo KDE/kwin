@@ -175,7 +175,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 231
+#define KWIN_EFFECT_API_VERSION_MINOR 232
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1561,7 +1561,7 @@ Q_SIGNALS:
      * @param r Always empty.
      * @since 4.7
      */
-    void windowDamaged(KWin::EffectWindow *w, const QRect &r);
+    void windowDamaged(KWin::EffectWindow *w, const QRegion &r);
     /**
      * Signal emitted when a tabbox is added.
      * An effect who wants to replace the tabbox with itself should use refTabBox.

@@ -289,7 +289,7 @@ protected Q_SLOTS:
     void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);
     void slotFrameGeometryChanged(Toplevel *toplevel, const QRect &oldGeometry);
     void slotPaddingChanged(KWin::Toplevel *t, const QRect &old);
-    void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
+    void slotWindowDamaged(KWin::Toplevel *t, const QRegion& r);
 
 protected:
     void connectNotify(const QMetaMethod &signal) override;

@@ -45,7 +45,7 @@ Toplevel::Toplevel()
     , m_screen(0)
     , m_skipCloseAnimation(false)
 {
-    connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
+    connect(this, &Toplevel::damaged, this, &Toplevel::needsRepaint);
     connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
     connect(screens(), SIGNAL(countChanged(int,int)), SLOT(checkScreen()));
     setupCheckScreenConnection();
@@ -327,10 +327,10 @@ void Toplevel::damageNotifyEvent()
 {
     m_isDamaged = true;
 
-    // Note: The rect is supposed to specify the damage extents,
+    // Note: The damage is supposed to specify the damage extents,
     //       but we don't know it at this point. No one who connects
     //       to this signal uses the rect however.
-    emit damaged(this, QRect());
+    emit damaged(this, {});
 }
 
 bool Toplevel::compositing() const
@@ -421,12 +421,12 @@ void Toplevel::addDamageFull()
     const int offsetX = bufferRect.x() - frameRect.x();
     const int offsetY = bufferRect.y() - frameRect.y();
 
-    const QRect damagedRect = QRect(0, 0, bufferRect.width(), bufferRect.height());
+    const QRect damagedRect(0, 0, bufferRect.width(), bufferRect.height());
 
     damage_region = damagedRect;
     repaints_region |= damagedRect.translated(offsetX, offsetY);
 
-    emit damaged(this, damagedRect);
+    emit damaged(this, damage_region);
 }
 
 void Toplevel::resetDamage()
@@ -748,9 +748,7 @@ void Toplevel::addDamage(const QRegion &damage)
 {
     m_isDamaged = true;
     damage_region += damage;
-    for (const QRect &r : damage) {
-        emit damaged(this, r);
-    }
+    emit damaged(this, damage);
 }
 
 QByteArray Toplevel::windowRole() const

@@ -90,7 +90,7 @@ private:
         m_toplevel->addRepaintFull();
     }
 
-    void includeDamage(Toplevel *toplevel, const QRect &damage) {
+    void includeDamage(Toplevel *toplevel, const QRegion &damage) {
         Q_ASSERT(m_toplevel == toplevel);
         m_damagedRegion |= damage;
     }
