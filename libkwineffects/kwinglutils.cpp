@@ -471,13 +471,7 @@ bool GLShader::setUniform(int location, const QVector4D &value)
 bool GLShader::setUniform(int location, const QMatrix4x4 &value)
 {
     if (location >= 0) {
-        GLfloat m[16];
-        const auto *data = value.constData();
-        // i is column, j is row for m
-        for (int i = 0; i < 16; ++i) {
-            m[i] = data[i];
-        }
-        glUniformMatrix4fv(location, 1, GL_FALSE, m);
+        glUniformMatrix4fv(location, 1, GL_FALSE, value.constData());
     }
     return (location >= 0);
 }
