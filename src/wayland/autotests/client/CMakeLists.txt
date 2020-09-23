@@ -259,15 +259,15 @@ if (HAVE_LINUX_INPUT_H)
 endif()
 
 ########################################################
-# Test TextInput
+# Test TextInputV2
 ########################################################
-set( testTextInput_SRCS
-        test_text_input.cpp
+set( testTextInputV2_SRCS
+        test_text_input_v2.cpp
     )
-add_executable(testTextInput ${testTextInput_SRCS})
-target_link_libraries( testTextInput Qt5::Test Qt5::Gui KF5::WaylandClient Plasma::KWaylandServer)
-add_test(NAME kwayland-testTextInput COMMAND testTextInput)
-ecm_mark_as_test(testTextInput)
+add_executable(testTextInputV2 ${testTextInputV2_SRCS})
+target_link_libraries( testTextInputV2 Qt5::Test Qt5::Gui KF5::WaylandClient Plasma::KWaylandServer)
+add_test(NAME kwayland-testTextInputV2 COMMAND testTextInputV2)
+ecm_mark_as_test(testTextInputV2)
 
 ########################################################
 # Test Error
