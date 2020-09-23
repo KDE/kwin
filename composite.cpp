@@ -617,7 +617,7 @@ void Compositor::performCompositing()
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (Toplevel *win : windows) {
+    for (Toplevel *win : qAsConst(windows)) {
         if (win->resetAndFetchDamage()) {
             damaged << win;
         }
@@ -638,7 +638,7 @@ void Compositor::performCompositing()
     }
 
     // Get the replies
-    for (Toplevel *win : damaged) {
+    for (Toplevel *win : qAsConst(damaged)) {
         // Discard the cached lanczos texture
         if (win->effectWindow()) {
             const QVariant texture = win->effectWindow()->data(LanczosCacheRole);
