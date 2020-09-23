@@ -15,7 +15,7 @@ PlasmaCore.Dialog {
     id: dialog
     location: PlasmaCore.Types.Floating
     visible: osd.visible
-    flags: Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint
     type: PlasmaCore.Dialog.OnScreenDisplay
     outputOnly: true
 
