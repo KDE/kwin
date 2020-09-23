@@ -2061,11 +2061,11 @@ void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
 {
     if (WindowThumbnailItem *thumb = qobject_cast<WindowThumbnailItem*>(item)) {
         insertThumbnail(thumb);
-        connect(thumb, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
+        connect(thumb, &QObject::destroyed, this, &EffectWindowImpl::thumbnailDestroyed);
         connect(thumb, &WindowThumbnailItem::wIdChanged, this, &EffectWindowImpl::thumbnailTargetChanged);
     } else if (DesktopThumbnailItem *desktopThumb = qobject_cast<DesktopThumbnailItem*>(item)) {
         m_desktopThumbnails.append(desktopThumb);
-        connect(desktopThumb, SIGNAL(destroyed(QObject*)), SLOT(desktopThumbnailDestroyed(QObject*)));
+        connect(desktopThumb, &QObject::destroyed, this, &EffectWindowImpl::desktopThumbnailDestroyed);
     }
 }
 
@@ -2182,7 +2182,7 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
     if (m_style == EffectFrameStyled) {
         m_frame.setImagePath(QStringLiteral("widgets/background"));
         m_frame.setCacheAllRenderedFrames(true);
-        connect(m_theme, SIGNAL(themeChanged()), this, SLOT(plasmaThemeChanged()));
+        connect(m_theme, &Plasma::Theme::themeChanged, this, &EffectFrameImpl::plasmaThemeChanged);
     }
     m_selection.setImagePath(QStringLiteral("widgets/viewitem"));
     m_selection.setElementPrefix(QStringLiteral("hover"));

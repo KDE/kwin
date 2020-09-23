@@ -20,14 +20,14 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->kcfg_ElectricBorderDelay, SIGNAL(valueChanged(int)), this, SLOT(sanitizeCooldown()));
+    connect(ui->kcfg_ElectricBorderDelay, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::sanitizeCooldown);
 
     // Visual feedback of action group conflicts
-    connect(ui->kcfg_ElectricBorders, SIGNAL(currentIndexChanged(int)), this, SLOT(groupChanged()));
-    connect(ui->kcfg_ElectricBorderMaximize, SIGNAL(stateChanged(int)), this, SLOT(groupChanged()));
-    connect(ui->kcfg_ElectricBorderTiling, SIGNAL(stateChanged(int)), this, SLOT(groupChanged()));
+    connect(ui->kcfg_ElectricBorders, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinScreenEdgesConfigForm::groupChanged);
+    connect(ui->kcfg_ElectricBorderMaximize, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
+    connect(ui->kcfg_ElectricBorderTiling, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
 
-    connect(ui->electricBorderCornerRatioSpin, SIGNAL(valueChanged(int)), this, SLOT(onChanged()));
+    connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::onChanged);
 }
 
 KWinScreenEdgesConfigForm::~KWinScreenEdgesConfigForm()

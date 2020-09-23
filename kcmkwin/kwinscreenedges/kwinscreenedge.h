@@ -48,7 +48,7 @@ public:
     // reset to default settings and assess for saveNeeded and default changed
     virtual void setDefaults();
 
-private Q_SLOTS:
+public Q_SLOTS:
     void onChanged();
     void createConnection();
 

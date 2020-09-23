@@ -580,7 +580,7 @@ ScriptedEffect::ScriptedEffect()
     , m_chainPosition(0)
 {
     Q_ASSERT(effects);
-    connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
+    connect(m_engine, &QScriptEngine::signalHandlerException, this, &ScriptedEffect::signalHandlerException);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged, this, [this]() {
         Effect* fullScreenEffect = effects->activeFullScreenEffect();
         if (fullScreenEffect == m_activeFullScreenEffect) {
@@ -809,7 +809,7 @@ void ScriptedEffect::reconfigure(ReconfigureFlags flags)
 void ScriptedEffect::registerShortcut(QAction *a, QScriptValue callback)
 {
     m_shortcutCallbacks.insert(a, callback);
-    connect(a, SIGNAL(triggered(bool)), SLOT(globalShortcutTriggered()));
+    connect(a, &QAction::triggered, this, &ScriptedEffect::globalShortcutTriggered);
 }
 
 void ScriptedEffect::globalShortcutTriggered()

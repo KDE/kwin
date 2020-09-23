@@ -73,8 +73,8 @@ AuroraeTheme::AuroraeTheme(QObject* parent)
     : QObject(parent)
     , d(new AuroraeThemePrivate)
 {
-    connect(this, SIGNAL(themeChanged()), SIGNAL(borderSizesChanged()));
-    connect(this, SIGNAL(buttonSizesChanged()), SIGNAL(borderSizesChanged()));
+    connect(this, &AuroraeTheme::themeChanged, this, &AuroraeTheme::borderSizesChanged);
+    connect(this, &AuroraeTheme::buttonSizesChanged, this, &AuroraeTheme::borderSizesChanged);
 }
 
 AuroraeTheme::~AuroraeTheme()

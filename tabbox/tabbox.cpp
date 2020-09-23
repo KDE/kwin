@@ -65,11 +65,11 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
 {
     // connects for DesktopFocusChainManager
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(vds, SIGNAL(countChanged(uint,uint)), m_desktopFocusChain, SLOT(resize(uint,uint)));
-    connect(vds, SIGNAL(currentChanged(uint,uint)), m_desktopFocusChain, SLOT(addDesktop(uint,uint)));
+    connect(vds, &VirtualDesktopManager::countChanged, m_desktopFocusChain, &DesktopChainManager::resize);
+    connect(vds, &VirtualDesktopManager::currentChanged, m_desktopFocusChain, &DesktopChainManager::addDesktop);
 #ifdef KWIN_BUILD_ACTIVITIES
     if (Activities::self()) {
-        connect(Activities::self(), SIGNAL(currentChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
+        connect(Activities::self(), &Activities::currentChanged, m_desktopFocusChain, &DesktopChainManager::useChain);
     }
 #endif
 }
@@ -486,11 +486,11 @@ TabBox::TabBox(QObject *parent)
     m_desktopListConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_tabBox = new TabBoxHandlerImpl(this);
-    QTimer::singleShot(0, this, SLOT(handlerReady()));
+    QTimer::singleShot(0, this, &TabBox::handlerReady);
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
-    connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
-    connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
+    connect(&m_delayedShowTimer, &QTimer::timeout, this, &TabBox::show);
+    connect(Workspace::self(), &Workspace::configChanged, this, &TabBox::reconfigure);
 }
 
 TabBox::~TabBox()

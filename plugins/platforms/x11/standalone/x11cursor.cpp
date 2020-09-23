@@ -32,10 +32,10 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
 {
     Cursors::self()->setMouse(this);
     m_resetTimeStampTimer->setSingleShot(true);
-    connect(m_resetTimeStampTimer, SIGNAL(timeout()), SLOT(resetTimeStamp()));
+    connect(m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
     // TODO: How often do we really need to poll?
     m_mousePollingTimer->setInterval(50);
-    connect(m_mousePollingTimer, SIGNAL(timeout()), SLOT(mousePolled()));
+    connect(m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::mousePolled);
 
     connect(this, &Cursor::themeChanged, this, [this] { m_cursors.clear(); });
 

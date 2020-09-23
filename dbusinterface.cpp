@@ -49,7 +49,7 @@ DBusInterface::DBusInterface(QObject *parent)
     }
     if (!dbus.registerService(m_serviceName)) {
         QDBusServiceWatcher *dog = new QDBusServiceWatcher(m_serviceName, dbus, QDBusServiceWatcher::WatchForUnregistration, this);
-        connect (dog, SIGNAL(serviceUnregistered(QString)), SLOT(becomeKWinService(QString)));
+        connect(dog, &QDBusServiceWatcher::serviceUnregistered, this, &DBusInterface::becomeKWinService);
     } else {
         announceService();
     }

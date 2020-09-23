@@ -28,9 +28,9 @@ AbstractThumbnailItem::AbstractThumbnailItem(QQuickItem *parent)
     , m_saturation(1.0)
     , m_clipToItem()
 {
-    connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SLOT(compositingToggled()));
+    connect(Compositor::self(), &Compositor::compositingToggled, this, &AbstractThumbnailItem::compositingToggled);
     compositingToggled();
-    QTimer::singleShot(0, this, SLOT(init()));
+    QTimer::singleShot(0, this, &AbstractThumbnailItem::init);
 }
 
 AbstractThumbnailItem::~AbstractThumbnailItem()
@@ -41,8 +41,8 @@ void AbstractThumbnailItem::compositingToggled()
 {
     m_parent.clear();
     if (effects) {
-        connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(effectWindowAdded()));
-        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRegion)), SLOT(repaint(KWin::EffectWindow*)));
+        connect(effects, &EffectsHandler::windowAdded, this, &AbstractThumbnailItem::effectWindowAdded);
+        connect(effects, &EffectsHandler::windowDamaged, this, &AbstractThumbnailItem::repaint);
         effectWindowAdded();
     }
 }

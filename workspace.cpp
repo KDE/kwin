@@ -132,7 +132,7 @@ Workspace::Workspace()
         activities = Activities::create(this);
     }
     if (activities) {
-        connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
+        connect(activities, &Activities::currentChanged, this, &Workspace::updateCurrentActivity);
     }
 #endif
 
@@ -200,23 +200,23 @@ void Workspace::init()
     KSharedConfigPtr config = kwinApp()->config();
     Screens *screens = Screens::self();
     // get screen support
-    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
+    connect(screens, &Screens::changed, this, &Workspace::desktopResized);
     screens->setConfig(config);
     screens->reconfigure();
-    connect(options, SIGNAL(configChanged()), screens, SLOT(reconfigure()));
+    connect(options, &Options::configChanged, screens, &Screens::reconfigure);
     ScreenEdges *screenEdges = ScreenEdges::self();
     screenEdges->setConfig(config);
     screenEdges->init();
-    connect(options, SIGNAL(configChanged()), screenEdges, SLOT(reconfigure()));
-    connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
+    connect(options, &Options::configChanged, screenEdges, &ScreenEdges::reconfigure);
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::layoutChanged, screenEdges, &ScreenEdges::updateLayout);
     connect(this, &Workspace::clientActivated, screenEdges, &ScreenEdges::checkBlocking);
 
     FocusChain *focusChain = FocusChain::create(this);
     connect(this, &Workspace::clientRemoved, focusChain, &FocusChain::remove);
     connect(this, &Workspace::clientActivated, focusChain, &FocusChain::setActiveClient);
-    connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), focusChain, SLOT(resize(uint,uint)));
-    connect(VirtualDesktopManager::self(), SIGNAL(currentChanged(uint,uint)), focusChain, SLOT(setCurrentDesktop(uint,uint)));
-    connect(options, SIGNAL(separateScreenFocusChanged(bool)), focusChain, SLOT(setSeparateScreenFocus(bool)));
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, focusChain, &FocusChain::resize);
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, focusChain, &FocusChain::setCurrentDesktop);
+    connect(options, &Options::separateScreenFocusChanged, focusChain, &FocusChain::setSeparateScreenFocus);
     focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
     // create VirtualDesktopManager and perform dependency injection
@@ -247,10 +247,10 @@ void Workspace::init()
         }
     );
 
-    connect(vds, SIGNAL(countChanged(uint,uint)), SLOT(slotDesktopCountChanged(uint,uint)));
-    connect(vds, SIGNAL(currentChanged(uint,uint)), SLOT(slotCurrentDesktopChanged(uint,uint)));
+    connect(vds, &VirtualDesktopManager::countChanged, this, &Workspace::slotDesktopCountChanged);
+    connect(vds, &VirtualDesktopManager::currentChanged, this, &Workspace::slotCurrentDesktopChanged);
     vds->setNavigationWrappingAround(options->isRollOverDesktops());
-    connect(options, SIGNAL(rollOverDesktopsChanged(bool)), vds, SLOT(setNavigationWrappingAround(bool)));
+    connect(options, &Options::rollOverDesktopsChanged, vds, &VirtualDesktopManager::setNavigationWrappingAround);
     vds->setConfig(config);
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
@@ -269,8 +269,8 @@ void Workspace::init()
     reconfigureTimer.setSingleShot(true);
     updateToolWindowsTimer.setSingleShot(true);
 
-    connect(&reconfigureTimer, SIGNAL(timeout()), this, SLOT(slotReconfigure()));
-    connect(&updateToolWindowsTimer, SIGNAL(timeout()), this, SLOT(slotUpdateToolWindows()));
+    connect(&reconfigureTimer, &QTimer::timeout, this, &Workspace::slotReconfigure);
+    connect(&updateToolWindowsTimer, &QTimer::timeout, this, &Workspace::slotUpdateToolWindows);
 
     // TODO: do we really need to reconfigure everything when fonts change?
     // maybe just reconfigure the decorations? Move this into libkdecoration?
@@ -539,7 +539,7 @@ X11Client *Workspace::createClient(xcb_window_t w, bool is_mapped)
     if (X11Compositor *compositor = X11Compositor::self()) {
         connect(c, &X11Client::blockingCompositingChanged, compositor, &X11Compositor::updateClientCompositeBlocking);
     }
-    connect(c, SIGNAL(clientFullScreenSet(KWin::X11Client *,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
+    connect(c, &X11Client::clientFullScreenSet, ScreenEdges::self(), &ScreenEdges::checkBlocking);
     if (!c->manage(w, is_mapped)) {
         X11Client::deleteClient(c);
         return nullptr;
@@ -1249,7 +1249,7 @@ void Workspace::requestDelayFocus(AbstractClient* c)
     delayfocus_client = c;
     delete delayFocusTimer;
     delayFocusTimer = new QTimer(this);
-    connect(delayFocusTimer, SIGNAL(timeout()), this, SLOT(delayFocus()));
+    connect(delayFocusTimer, &QTimer::timeout, this, &Workspace::delayFocus);
     delayFocusTimer->setSingleShot(true);
     delayFocusTimer->start(options->delayFocusInterval());
 }

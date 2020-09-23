@@ -1407,9 +1407,10 @@ InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
     , m_currentButtons(Qt::NoButton)
 {
     Cursors::self()->setMouse(this);
-    connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(slotPosChanged(QPointF)));
-    connect(input(), SIGNAL(pointerButtonStateChanged(uint32_t,InputRedirection::PointerButtonState)),
-            SLOT(slotPointerButtonChanged()));
+    connect(input(), &InputRedirection::globalPointerChanged,
+            this, &InputRedirectionCursor::slotPosChanged);
+    connect(input(), &InputRedirection::pointerButtonStateChanged,
+            this, &InputRedirectionCursor::slotPointerButtonChanged);
 #ifndef KCMRULES
     connect(input(), &InputRedirection::keyboardModifiersChanged,
             this, &InputRedirectionCursor::slotModifiersChanged);

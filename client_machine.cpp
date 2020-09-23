@@ -50,10 +50,10 @@ GetAddrInfo::GetAddrInfo(const QByteArray &hostName, QObject *parent)
 {
     // watcher will be deleted together with the GetAddrInfo once the future
     // got canceled or finished
-    connect(m_watcher, SIGNAL(canceled()), SLOT(deleteLater()));
-    connect(m_watcher, SIGNAL(finished()), SLOT(slotResolved()));
-    connect(m_ownAddressWatcher, SIGNAL(canceled()), SLOT(deleteLater()));
-    connect(m_ownAddressWatcher, SIGNAL(finished()), SLOT(slotOwnAddressResolved()));
+    connect(m_watcher, &QFutureWatcher<int>::canceled, this, &GetAddrInfo::deleteLater);
+    connect(m_watcher, &QFutureWatcher<int>::finished, this, &GetAddrInfo::slotResolved);
+    connect(m_ownAddressWatcher, &QFutureWatcher<int>::canceled, this, &GetAddrInfo::deleteLater);
+    connect(m_ownAddressWatcher, &QFutureWatcher<int>::finished, this, &GetAddrInfo::slotOwnAddressResolved);
 }
 
 GetAddrInfo::~GetAddrInfo()
@@ -210,8 +210,8 @@ void ClientMachine::checkForLocalhost()
             // check using information from get addr info
             // GetAddrInfo gets automatically destroyed once it finished or not
             GetAddrInfo *info = new GetAddrInfo(lowerHostName, this);
-            connect(info, SIGNAL(local()), SLOT(setLocal()));
-            connect(info, SIGNAL(destroyed(QObject*)), SLOT(resolveFinished()));
+            connect(info, &GetAddrInfo::local, this, &ClientMachine::setLocal);
+            connect(info, &GetAddrInfo::destroyed, this, &ClientMachine::resolveFinished);
             info->resolve();
         }
     }

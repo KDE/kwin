@@ -34,7 +34,7 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask |
 Unmanaged::Unmanaged()
     : Toplevel()
 {
-    QTimer::singleShot(50, this, SLOT(setReadyForPainting()));
+    QTimer::singleShot(50, this, &Unmanaged::setReadyForPainting);
 }
 
 Unmanaged::~Unmanaged()

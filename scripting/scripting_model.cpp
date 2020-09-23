@@ -35,7 +35,7 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &ClientLevel::reInit);
     connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
     connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
-    connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
+    connect(model, &ClientModel::exclusionsChanged, this, &ClientLevel::reInit);
 }
 
 ClientLevel::~ClientLevel()
@@ -400,12 +400,12 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     : AbstractLevel(model, parent)
     , m_childRestrictions(childRestrictions)
 {
-    connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), SLOT(desktopCountChanged(uint,uint)));
-    connect(screens(), SIGNAL(countChanged(int,int)), SLOT(screenCountChanged(int,int)));
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, &ForkLevel::desktopCountChanged);
+    connect(screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Activities::self()) {
-        connect(activities, SIGNAL(added(QString)), SLOT(activityAdded(QString)));
-        connect(activities, SIGNAL(removed(QString)), SLOT(activityRemoved(QString)));
+        connect(activities, &Activities::added, this, &ForkLevel::activityAdded);
+        connect(activities, &Activities::removed, this, &ForkLevel::activityRemoved);
     }
 #endif
 }
@@ -531,10 +531,10 @@ int ForkLevel::count() const
 void ForkLevel::addChild(AbstractLevel *child)
 {
     m_children.append(child);
-    connect(child, SIGNAL(beginInsert(int,int,quint32)), SIGNAL(beginInsert(int,int,quint32)));
-    connect(child, SIGNAL(beginRemove(int,int,quint32)), SIGNAL(beginRemove(int,int,quint32)));
-    connect(child, SIGNAL(endInsert()), SIGNAL(endInsert()));
-    connect(child, SIGNAL(endRemove()), SIGNAL(endRemove()));
+    connect(child, &AbstractLevel::beginInsert, this, &AbstractLevel::beginInsert);
+    connect(child, &AbstractLevel::beginRemove, this, &AbstractLevel::beginRemove);
+    connect(child, &AbstractLevel::endInsert, this, &AbstractLevel::endInsert);
+    connect(child, &AbstractLevel::endRemove, this, &AbstractLevel::endRemove);
 }
 
 void ForkLevel::setActivity(const QString &activity)
@@ -654,10 +654,10 @@ void ClientModel::setLevels(QList< ClientModel::LevelRestriction > restrictions)
         delete m_root;
     }
     m_root = AbstractLevel::create(restrictions, NoRestriction, this);
-    connect(m_root, SIGNAL(beginInsert(int,int,quint32)), SLOT(levelBeginInsert(int,int,quint32)));
-    connect(m_root, SIGNAL(beginRemove(int,int,quint32)), SLOT(levelBeginRemove(int,int,quint32)));
-    connect(m_root, SIGNAL(endInsert()), SLOT(levelEndInsert()));
-    connect(m_root, SIGNAL(endRemove()), SLOT(levelEndRemove()));
+    connect(m_root, &AbstractLevel::beginInsert, this, &ClientModel::levelBeginInsert);
+    connect(m_root, &AbstractLevel::beginRemove, this, &ClientModel::levelBeginRemove);
+    connect(m_root, &AbstractLevel::endInsert, this, &ClientModel::levelEndInsert);
+    connect(m_root, &AbstractLevel::endRemove, this, &ClientModel::levelEndRemove);
     m_root->init();
     endResetModel();
 }

@@ -406,7 +406,7 @@ void Scene::addToplevel(Toplevel *c)
     Scene::Window *w = createWindow(c);
     m_windows[ c ] = w;
 
-    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
+    connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
     if (c->surface()) {
         // We generate window quads for sub-surfaces so it's quite important to discard
         // the pixmap tree and cached window quads when the sub-surface tree is changed.

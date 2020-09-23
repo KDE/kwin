@@ -66,7 +66,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
     QPushButton* ghnsButton = new QPushButton(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")), i18n("Get New Task Switchers..."));
-    connect(ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNS()));
+    connect(ghnsButton, &QAbstractButton::clicked, this, &KWinTabBoxConfig::slotGHNS);
 
     QHBoxLayout* buttonBar = new QHBoxLayout();
     QSpacerItem* buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -219,16 +219,16 @@ void KWinTabBoxConfig::setEnabledUi(KWinTabBoxConfigForm *form, const TabBoxSett
 
 void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
 {
-    connect(form, SIGNAL(effectConfigButtonClicked()), this, SLOT(configureEffectClicked()));
+    connect(form, &KWinTabBoxConfigForm::effectConfigButtonClicked, this, &KWinTabBoxConfig::configureEffectClicked);
 
-    connect(form, SIGNAL(filterScreenChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(filterDesktopChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(filterActivitiesChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(filterMinimizationChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(applicationModeChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(showDesktopModeChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(switchingModeChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(layoutNameChanged(QString)), this, SLOT(updateUnmanagedState()));
+    connect(form, &KWinTabBoxConfigForm::filterScreenChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::filterDesktopChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::filterActivitiesChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::filterMinimizationChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::applicationModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::showDesktopModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::switchingModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::layoutNameChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
 }
 
 void KWinTabBoxConfig::updateUnmanagedState()
@@ -432,8 +432,8 @@ void KWinTabBoxConfig::configureEffectClicked()
         configDialog->setLayout(new QVBoxLayout);
         configDialog->setWindowTitle(form->effectComboCurrentData(Qt::DisplayRole).toString());
         QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
-        connect(buttonBox, SIGNAL(accepted()), configDialog, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), configDialog, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::accepted, configDialog.data(), &QDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, configDialog.data(), &QDialog::reject);
 
         const QString name = form->effectComboCurrentData().toString();
         KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kwin/effects/configs/"), QString(),

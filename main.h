@@ -113,6 +113,7 @@ public:
 
     static void setCrashCount(int count);
     static bool wasCrash();
+    void resetCrashesCount();
 
     /**
      * Creates the KAboutData object for the KWin instance and registers it as
@@ -236,9 +237,6 @@ protected:
 
 protected:
     static int crashes;
-
-private Q_SLOTS:
-    void resetCrashesCount();
 
 private:
     QScopedPointer<XcbEventFilter> m_eventFilter;

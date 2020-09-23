@@ -33,7 +33,7 @@ Outline::Outline(QObject *parent)
     : QObject(parent)
     , m_active(false)
 {
-    connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SLOT(compositingChanged()));
+    connect(Compositor::self(), &Compositor::compositingToggled, this, &Outline::compositingChanged);
 }
 
 Outline::~Outline()

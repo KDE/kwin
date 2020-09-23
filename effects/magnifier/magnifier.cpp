@@ -41,17 +41,17 @@ MagnifierEffect::MagnifierEffect()
 {
     initConfig<MagnifierConfig>();
     QAction* a;
-    a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
+    a = KStandardAction::zoomIn(this, &MagnifierEffect::zoomIn, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_Equal, a);
 
-    a = KStandardAction::zoomOut(this, SLOT(zoomOut()), this);
+    a = KStandardAction::zoomOut(this, &MagnifierEffect::zoomOut, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_Minus, a);
 
-    a = KStandardAction::actualSize(this, SLOT(toggle()), this);
+    a = KStandardAction::actualSize(this, &MagnifierEffect::toggle, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_0, a);

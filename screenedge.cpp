@@ -117,7 +117,7 @@ void Edge::reserve()
 
 void Edge::reserve(QObject *object, const char *slot)
 {
-    connect(object, SIGNAL(destroyed(QObject*)), SLOT(unreserve(QObject*)));
+    connect(object, &QObject::destroyed, this, qOverload<QObject *>(&Edge::unreserve));
     m_callBacks.insert(object, QByteArray(slot));
     reserve();
 }
@@ -158,7 +158,7 @@ void Edge::unreserve(QObject *object)
 {
     if (m_callBacks.contains(object)) {
         m_callBacks.remove(object);
-        disconnect(object, SIGNAL(destroyed(QObject*)), this, SLOT(unreserve(QObject*)));
+        disconnect(object, &QObject::destroyed, this, qOverload<QObject *>(&Edge::unreserve));
         unreserve();
     }
 }
@@ -1136,9 +1136,9 @@ Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, in
             }
         }
     }
-    connect(edge, SIGNAL(approaching(ElectricBorder,qreal,QRect)), SIGNAL(approaching(ElectricBorder,qreal,QRect)));
+    connect(edge, &Edge::approaching, this, &ScreenEdges::approaching);
     if (edge->isScreenEdge()) {
-        connect(this, SIGNAL(checkBlocking()), edge, SLOT(checkBlocking()));
+        connect(this, &ScreenEdges::checkBlocking, edge, &Edge::checkBlocking);
     }
     return edge;
 }

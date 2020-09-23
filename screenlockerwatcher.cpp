@@ -40,13 +40,15 @@ ScreenLockerWatcher::~ScreenLockerWatcher()
 
 void ScreenLockerWatcher::initialize()
 {
-    connect(m_serviceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), SLOT(serviceOwnerChanged(QString,QString,QString)));
+    connect(m_serviceWatcher, &QDBusServiceWatcher::serviceOwnerChanged, this, &ScreenLockerWatcher::serviceOwnerChanged);
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForOwnerChange);
     m_serviceWatcher->addWatchedService(SCREEN_LOCKER_SERVICE_NAME);
     // check whether service is registered
     QFutureWatcher<QDBusReply<bool> > *watcher = new QFutureWatcher<QDBusReply<bool> >(this);
-    connect(watcher, SIGNAL(finished()), SLOT(serviceRegisteredQueried()));
-    connect(watcher, SIGNAL(canceled()), watcher, SLOT(deleteLater()));
+    connect(watcher, &QFutureWatcher<QDBusReply<bool>>::finished,
+            this, &ScreenLockerWatcher::serviceRegisteredQueried);
+    connect(watcher, &QFutureWatcher<QDBusReply<bool>>::canceled,
+            watcher, &QFutureWatcher<QDBusReply<bool>>::deleteLater);
     watcher->setFuture(QtConcurrent::run(QDBusConnection::sessionBus().interface(),
                                          &QDBusConnectionInterface::isServiceRegistered,
                                          SCREEN_LOCKER_SERVICE_NAME));
@@ -67,9 +69,11 @@ void ScreenLockerWatcher::serviceOwnerChanged(const QString &serviceName, const 
     if (!newOwner.isEmpty()) {
         m_interface = new OrgFreedesktopScreenSaverInterface(newOwner, QStringLiteral("/ScreenSaver"), QDBusConnection::sessionBus(), this);
         m_kdeInterface = new OrgKdeScreensaverInterface(newOwner, QStringLiteral("/ScreenSaver"), QDBusConnection::sessionBus(), this);
-        connect(m_interface, SIGNAL(ActiveChanged(bool)), SLOT(setLocked(bool)));
+        connect(m_interface, &OrgFreedesktopScreenSaverInterface::ActiveChanged,
+                this, &ScreenLockerWatcher::setLocked);
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(m_interface->GetActive(), this);
-        connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), SLOT(activeQueried(QDBusPendingCallWatcher*)));
+        connect(watcher, &QDBusPendingCallWatcher::finished,
+                this, &ScreenLockerWatcher::activeQueried);
         connect(m_kdeInterface, &OrgKdeScreensaverInterface::AboutToLock, this, &ScreenLockerWatcher::aboutToLock);
     }
 }
@@ -83,8 +87,10 @@ void ScreenLockerWatcher::serviceRegisteredQueried()
     const QDBusReply<bool> &reply = watcher->result();
     if (reply.isValid() && reply.value()) {
         QFutureWatcher<QDBusReply<QString> > *ownerWatcher = new QFutureWatcher<QDBusReply<QString> >(this);
-        connect(ownerWatcher, SIGNAL(finished()), SLOT(serviceOwnerQueried()));
-        connect(ownerWatcher, SIGNAL(canceled()), ownerWatcher, SLOT(deleteLater()));
+        connect(ownerWatcher, &QFutureWatcher<QDBusReply<QString>>::finished,
+                this, &ScreenLockerWatcher::serviceOwnerQueried);
+        connect(ownerWatcher, &QFutureWatcher<QDBusReply<QString>>::canceled,
+                ownerWatcher, &QFutureWatcher<QDBusReply<QString>>::deleteLater);
         ownerWatcher->setFuture(QtConcurrent::run(QDBusConnection::sessionBus().interface(),
                                                   &QDBusConnectionInterface::serviceOwner,
                                                   SCREEN_LOCKER_SERVICE_NAME));
