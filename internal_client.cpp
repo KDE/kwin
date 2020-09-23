@@ -213,7 +213,7 @@ bool InternalClient::isResizable() const
 
 bool InternalClient::isPlaceable() const
 {
-    return !(m_internalWindowFlags & Qt::BypassWindowManagerHint) && !(m_internalWindowFlags & Qt::Popup);
+    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
 bool InternalClient::noBorder() const
