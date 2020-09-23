@@ -100,7 +100,16 @@ void VirtualKeyboard::init()
     if (waylandServer()) {
         waylandServer()->display()->createTextInputManagerV2();
         connect(workspace(), &Workspace::clientAdded, this, &VirtualKeyboard::clientAdded);
-        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &VirtualKeyboard::focusedTextInputChanged);
+        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &VirtualKeyboard::handleFocusedSurfaceChanged);
+
+        TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
+        connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &VirtualKeyboard::show);
+        connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &VirtualKeyboard::hide);
+        connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &VirtualKeyboard::surroundingTextChanged);
+        connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &VirtualKeyboard::contentTypeChanged);
+        connect(textInputV2, &TextInputV2Interface::requestReset, this, &VirtualKeyboard::requestReset);
+        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &VirtualKeyboard::textInputInterfaceEnabledChanged);
+        connect(textInputV2, &TextInputV2Interface::stateCommitted, this, &VirtualKeyboard::stateCommitted);
     }
 }
 
@@ -143,42 +152,20 @@ void VirtualKeyboard::clientAdded(AbstractClient* client)
     connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
 }
 
-void VirtualKeyboard::focusedTextInputChanged()
+void VirtualKeyboard::handleFocusedSurfaceChanged()
 {
-    disconnect(m_waylandShowConnection);
-    disconnect(m_waylandHideConnection);
-    disconnect(m_waylandHintsConnection);
-    disconnect(m_waylandSurroundingTextConnection);
-    disconnect(m_waylandResetConnection);
-    disconnect(m_waylandEnabledConnection);
-    disconnect(m_waylandStateCommittedConnection);
-    if (auto t = waylandServer()->seat()->textInputV2()) {
-        // connections from textinput_interface
-        m_waylandShowConnection = connect(t, &TextInputV2Interface::requestShowInputPanel, this, &VirtualKeyboard::show);
-        m_waylandHideConnection = connect(t, &TextInputV2Interface::requestHideInputPanel, this, &VirtualKeyboard::hide);
-        m_waylandSurroundingTextConnection = connect(t, &TextInputV2Interface::surroundingTextChanged, this, &VirtualKeyboard::surroundingTextChanged);
-        m_waylandHintsConnection = connect(t, &TextInputV2Interface::contentTypeChanged, this, &VirtualKeyboard::contentTypeChanged);
-        m_waylandResetConnection = connect(t, &TextInputV2Interface::requestReset, this, &VirtualKeyboard::requestReset);
-        m_waylandEnabledConnection = connect(t, &TextInputV2Interface::enabledChanged, this, &VirtualKeyboard::textInputInterfaceEnabledChanged);
-        m_waylandStateCommittedConnection = connect(t, &TextInputV2Interface::stateCommitted, this, &VirtualKeyboard::stateCommitted);
-
-        auto newClient = waylandServer()->findClient(waylandServer()->seat()->focusedTextInputSurface());
+    SurfaceInterface *focusedSurface = waylandServer()->seat()->focusedTextInputSurface();
+    if (focusedSurface) {
+        AbstractClient *focusedClient = waylandServer()->findClient(focusedSurface);
         // Reset the old client virtual keybaord geom if necessary
         // Old and new clients could be the same if focus moves between subsurfaces
-        if (newClient != m_trackedClient) {
+        if (m_trackedClient != focusedClient) {
             if (m_trackedClient) {
                 m_trackedClient->setVirtualKeyboardGeometry(QRect());
             }
-            m_trackedClient = newClient;
+            m_trackedClient = focusedClient;
         }
     } else {
-        m_waylandShowConnection = QMetaObject::Connection();
-        m_waylandHideConnection = QMetaObject::Connection();
-        m_waylandHintsConnection = QMetaObject::Connection();
-        m_waylandSurroundingTextConnection = QMetaObject::Connection();
-        m_waylandResetConnection = QMetaObject::Connection();
-        m_waylandEnabledConnection = QMetaObject::Connection();
-        m_waylandStateCommittedConnection = QMetaObject::Connection();
         waylandServer()->inputMethod()->sendDeactivate();
     }
     updateInputPanelState();

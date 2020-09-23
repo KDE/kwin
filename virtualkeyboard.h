@@ -41,7 +41,7 @@ private Q_SLOTS:
     void clientAdded(AbstractClient* client);
 
     // textinput interface slots
-    void focusedTextInputChanged();
+    void handleFocusedSurfaceChanged();
     void surroundingTextChanged();
     void contentTypeChanged();
     void requestReset();
@@ -60,14 +60,6 @@ private:
     QPointer<AbstractClient> m_trackedClient;
     // If a surface loses focus immediately after being resized by the keyboard, don't react to it to avoid resize loops
     QTimer *m_floodTimer;
-
-    QMetaObject::Connection m_waylandShowConnection;
-    QMetaObject::Connection m_waylandHideConnection;
-    QMetaObject::Connection m_waylandHintsConnection;
-    QMetaObject::Connection m_waylandSurroundingTextConnection;
-    QMetaObject::Connection m_waylandResetConnection;
-    QMetaObject::Connection m_waylandEnabledConnection;
-    QMetaObject::Connection m_waylandStateCommittedConnection;
 
     KWIN_SINGLETON(VirtualKeyboard)
 };
