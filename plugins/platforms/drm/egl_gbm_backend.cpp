@@ -343,12 +343,7 @@ bool EglGbmBackend::makeContextCurrent(const Output &output) const
         return false;
     }
     if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
-        qCCritical(KWIN_DRM) << "Make Context Current failed";
-        return false;
-    }
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_DRM) << "Error occurred while creating context " << error;
+        qCCritical(KWIN_DRM) << "Make Context Current failed" << eglGetError();
         return false;
     }
     return true;
