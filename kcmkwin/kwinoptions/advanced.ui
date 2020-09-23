@@ -115,10 +115,10 @@
    <item row="2" column="1">
     <widget class="QCheckBox" name="kcfg_AllowKDEAppsToRememberWindowPositions">
      <property name="whatsThis">
-      <string>When turned on, KDE apps which are able to remember the positions of their windows are allowed to do so. This will override the window placement mode defined above.</string>
+      <string>When turned on, apps which are able to remember the positions of their windows are allowed to do so. This will override the window placement mode defined above.</string>
      </property>
      <property name="text">
-      <string>Allow KDE apps to remember the positions of their own windows</string>
+      <string>Allow apps to remember the positions of their own windows, if they support it</string>
      </property>
     </widget>
    </item>

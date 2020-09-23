@@ -252,7 +252,7 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::ZeroCornered, "ZeroCornered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::UnderMouse, "UnderMouse");
 
-    // Don't show the option to prevent KDE apps from remembering their window
+    // Don't show the option to prevent apps from remembering their window
     // positions on Wayland because it doesn't work on Wayland and the feature
     // will eventually be implemented in a different way there.
     // This option lives in the kdeglobals file because it is consumed by
