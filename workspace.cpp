@@ -1820,8 +1820,9 @@ void Workspace::addInternalClient(InternalClient *client)
     setupClientConnections(client);
     client->updateLayer();
 
-    if (client->isDecorated()) {
-        client->keepInArea(clientArea(FullScreenArea, client));
+    if (client->isPlaceable()) {
+        const QRect area = clientArea(PlacementArea, screens()->current(), client->desktop());
+        client->placeIn(area);
     }
 
     markXStackingOrderAsDirty();
