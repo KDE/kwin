@@ -42,7 +42,7 @@ void AbstractThumbnailItem::compositingToggled()
     m_parent.clear();
     if (effects) {
         connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(effectWindowAdded()));
-        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), SLOT(repaint(KWin::EffectWindow*)));
+        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRegion)), SLOT(repaint(KWin::EffectWindow*)));
         effectWindowAdded();
     }
 }
