@@ -16,9 +16,6 @@
 
 #include <abstract_client.h>
 
-class QQuickView;
-class QTimer;
-class QWindow;
 class KStatusNotifierItem;
 
 namespace KWin
@@ -58,8 +55,6 @@ private:
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
-    // If a surface loses focus immediately after being resized by the keyboard, don't react to it to avoid resize loops
-    QTimer *m_floodTimer;
 
     KWIN_SINGLETON(VirtualKeyboard)
 };

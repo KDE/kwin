@@ -14,7 +14,6 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xkb.h"
 #include "screenlockerwatcher.h"
 
 #include <KWaylandServer/display.h>
@@ -29,16 +28,6 @@
 #include <QDBusConnection>
 #include <QDBusPendingCall>
 #include <QDBusMessage>
-#include <QGuiApplication>
-#include <QQmlComponent>
-#include <QQmlContext>
-#include <QQmlEngine>
-#include <QQuickItem>
-#include <QQuickView>
-#include <QQuickWindow>
-#include <QTimer>
-// xkbcommon
-#include <xkbcommon/xkbcommon.h>
 
 using namespace KWaylandServer;
 
@@ -50,9 +39,6 @@ KWIN_SINGLETON_FACTORY(VirtualKeyboard)
 VirtualKeyboard::VirtualKeyboard(QObject *parent)
     : QObject(parent)
 {
-    m_floodTimer = new QTimer(this);
-    m_floodTimer->setSingleShot(true);
-    m_floodTimer->setInterval(250);
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
     // but without Workspace we don't have the window listed at all
