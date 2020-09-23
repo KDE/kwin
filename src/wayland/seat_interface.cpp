@@ -1585,10 +1585,10 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
 
     if (d->focusedTextInputSurface != surface){
         d->textInputV2->d->sendLeave(serial, d->focusedTextInputSurface);
+        d->focusedTextInputSurface = surface;
         emit focusedTextInputSurfaceChanged();
     }
 
-    d->focusedTextInputSurface = surface;
     if (d->focusedTextInputSurface) {
         d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this,
             [this] {
