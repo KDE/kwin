@@ -99,6 +99,7 @@ private:
         if (m_damagedRegion.isEmpty()) {
             return;
         }
+        effects->makeOpenGLContextCurrent();
         EGLFence fence(kwinApp()->platform()->sceneEglDisplay());
         QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
         const bool wasYInverted = frameTexture->isYInverted();
