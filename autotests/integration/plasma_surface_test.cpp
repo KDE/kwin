@@ -370,6 +370,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     // trigger screenedge
     QFETCH(QPoint, triggerPoint);
     KWin::Cursors::self()->mouse()->setPos(triggerPoint);
+    QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     stackingOrder = workspace()->stackingOrder();
     QCOMPARE(stackingOrder.count(), 2);
