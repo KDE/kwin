@@ -113,6 +113,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     stacking_order = new_stacking_order;
     if (changed || propagate_new_clients) {
         propagateClients(propagate_new_clients);
+        markXStackingOrderAsDirty();
         emit stackingOrderChanged();
         if (m_compositor) {
             m_compositor->addRepaintFull();
@@ -217,10 +218,6 @@ void Workspace::propagateClients(bool propagate_new_clients)
     }
     rootInfo()->setClientListStacking(cl, pos);
     delete [] cl;
-
-    // Make the cached stacking order invalid here, in case we need the new stacking order before we get
-    // the matching event, due to X being asynchronous.
-    markXStackingOrderAsDirty();
 }
 
 /**
