@@ -41,6 +41,8 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
+    connect(effects, &EffectsHandler::windowShown, this, &SlidingPopupsEffect::slideIn);
+    connect(effects, &EffectsHandler::windowHidden, this, &SlidingPopupsEffect::slideOut);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this,
         [this] {
             m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
