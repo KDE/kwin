@@ -236,6 +236,7 @@ void AbstractClient::markAsZombie()
 {
     Q_ASSERT(!m_zombie);
     m_zombie = true;
+    addWorkspaceRepaint(visibleRect());
 }
 
 Layer AbstractClient::layer() const
