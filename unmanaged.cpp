@@ -87,6 +87,7 @@ bool Unmanaged::track(xcb_window_t w)
 
 void Unmanaged::release(ReleaseReason releaseReason)
 {
+    addWorkspaceRepaint(visibleRect());
     Deleted* del = nullptr;
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         del = Deleted::create(this);
@@ -99,7 +100,6 @@ void Unmanaged::release(ReleaseReason releaseReason)
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);
-    addWorkspaceRepaint(visibleRect());
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         disownDataPassedToDeleted();
         del->unrefWindow();
