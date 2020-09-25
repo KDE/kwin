@@ -948,14 +948,14 @@ public:
         if (!hasAspect()) {
             return QSize(1, INT_MAX);
         }
-        // prevent devision by zero
+        // prevent division by zero
         return QSize(m_sizeHints->minAspect[0], qMax(m_sizeHints->minAspect[1], 1));
     }
     QSize maxAspect() const {
         if (!hasAspect()) {
             return QSize(INT_MAX, 1);
         }
-        // prevent devision by zero
+        // prevent division by zero
         return QSize(m_sizeHints->maxAspect[0], qMax(m_sizeHints->maxAspect[1], 1));
     }
 
