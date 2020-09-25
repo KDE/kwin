@@ -50,7 +50,6 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
     setSkipTaskbar(true);
     setSizeSyncMode(SyncMode::Async);
     setPositionSyncMode(SyncMode::Sync);
-    setupCompositing();
 
     connect(shellSurface, &LayerSurfaceV1Interface::aboutToBeDestroyed,
             this, &LayerShellV1Client::destroyClient);

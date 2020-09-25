@@ -41,7 +41,6 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
 {
     setSizeSyncMode(SyncMode::Async);
     setPositionSyncMode(SyncMode::Async);
-    setupCompositing();
 
     connect(shellSurface, &XdgSurfaceInterface::configureAcknowledged,
             this, &XdgSurfaceClient::handleConfigureAcknowledged);
@@ -49,8 +48,6 @@ XdgSurfaceClient::XdgSurfaceClient(XdgSurfaceInterface *shellSurface)
             this, &XdgSurfaceClient::destroyClient);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
             this, &XdgSurfaceClient::handleCommit);
-    connect(shellSurface->surface(), &SurfaceInterface::shadowChanged,
-            this, &XdgSurfaceClient::updateShadow);
 #if 0 // TODO: Refactor kwin core in order to uncomment this code.
     connect(shellSurface->surface(), &SurfaceInterface::mapped,
             this, &XdgSurfaceClient::setReadyForPainting);

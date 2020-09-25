@@ -41,13 +41,13 @@ Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 
 WaylandClient::WaylandClient(SurfaceInterface *surface)
 {
-    // Note that we cannot setup compositing here because we may need to call visibleRect(),
-    // which in its turn will call bufferGeometry(), which is a pure virtual method.
-
     setSurface(surface);
+    setupCompositing();
 
     m_windowId = waylandServer()->createWindowId(surface);
 
+    connect(surface, &SurfaceInterface::shadowChanged,
+            this, &WaylandClient::updateShadow);
     connect(this, &WaylandClient::frameGeometryChanged,
             this, &WaylandClient::updateClientOutputs);
     connect(this, &WaylandClient::desktopFileNameChanged,

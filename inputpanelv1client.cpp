@@ -32,7 +32,6 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     setSkipTaskbar(true);
     setPositionSyncMode(SyncMode::Sync);
     setSizeSyncMode(SyncMode::Sync);
-    setupCompositing();
 
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Client::destroyClient);
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Client::reposition);
