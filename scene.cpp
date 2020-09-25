@@ -276,14 +276,12 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         opaqueFullscreen = false; // TODO: do we care about unmanged windows here (maybe input windows?)
+        AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel);
         if (window->isOpaque()) {
-            AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel);
             if (client) {
                 opaqueFullscreen = client->isFullScreen();
             }
-            if (!(client && client->decorationHasAlpha())) {
-                data.clip = window->decorationShape().translated(window->pos());
-            }
+
             const WindowPixmap *windowPixmap = window->windowPixmap<WindowPixmap>();
             if (windowPixmap) {
                 data.clip |= windowPixmap->mapToGlobal(windowPixmap->shape());
@@ -302,6 +300,11 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         } else {
             data.clip = QRegion();
         }
+
+        if (client && !client->decorationHasAlpha() && toplevel->opacity() == 1.0) {
+            data.clip |= window->decorationShape().translated(window->pos());
+        }
+
         data.quads = window->buildQuads();
         // preparation step
         effects->prePaintWindow(effectWindow(window), data, time_diff);
