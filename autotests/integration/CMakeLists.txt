@@ -14,6 +14,10 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     BASENAME input-method-unstable-v1
 )
 ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+    BASENAME text-input-unstable-v3
+)
+ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     PROTOCOL protocols/wlr-layer-shell-unstable-v1.xml
     BASENAME wlr-layer-shell-unstable-v1
 )

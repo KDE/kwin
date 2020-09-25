@@ -208,6 +208,7 @@ static struct {
     MockInputMethod *inputMethodV1 = nullptr;
     QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
     LayerShellV1 *layerShellV1 = nullptr;
+    TextInputManagerV3 *textInputManagerV3 = nullptr;
 } s_waylandConnection;
 
 class MockInputMethod : public QtWayland::zwp_input_method_v1
@@ -321,6 +322,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             if (interface == QByteArrayLiteral("zwlr_layer_shell_v1")) {
                 s_waylandConnection.layerShellV1 = new LayerShellV1();
                 s_waylandConnection.layerShellV1->init(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::TextInputManagerV3) {
+            // do something
+            if (interface == QByteArrayLiteral("zwp_text_input_manager_v3")) {
+                s_waylandConnection.textInputManagerV3 = new TextInputManagerV3();
+                s_waylandConnection.textInputManagerV3->init(*registry, name, version);
             }
         }
         if (interface == QByteArrayLiteral("xdg_wm_base")) {
@@ -564,6 +572,11 @@ OutputManagement *waylandOutputManagement()
 TextInputManager *waylandTextInputManager()
 {
     return s_waylandConnection.textInputManager;
+}
+
+TextInputManagerV3 *waylandTextInputManagerV3()
+{
+    return s_waylandConnection.textInputManagerV3;
 }
 
 QVector<KWayland::Client::Output *> waylandOutputs()

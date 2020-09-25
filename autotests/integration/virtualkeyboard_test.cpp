@@ -18,6 +18,7 @@
 #include "virtualkeyboard.h"
 #include "virtualkeyboard_dbus.h"
 #include "qwayland-input-method-unstable-v1.h"
+#include "qwayland-text-input-unstable-v3.h"
 
 #include <QTest>
 #include <QSignalSpy>
@@ -33,6 +34,7 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/textinput.h>
+#include <KWayland/Client/seat.h>
 
 using namespace KWin;
 using namespace KWayland::Client;
@@ -49,6 +51,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testOpenClose();
+    void testEnableDisableV3();
 };
 
 
@@ -77,7 +80,9 @@ void VirtualKeyboardTest::initTestCase()
 void VirtualKeyboardTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
-                                         Test::AdditionalWaylandInterface::TextInputManagerV2 | Test::AdditionalWaylandInterface::InputMethodV1));
+                                         Test::AdditionalWaylandInterface::TextInputManagerV2 |
+                                         Test::AdditionalWaylandInterface::InputMethodV1 |
+                                         Test::AdditionalWaylandInterface::TextInputManagerV3));
 
     
     screens()->setCurrent(0);
@@ -147,6 +152,40 @@ void VirtualKeyboardTest::testOpenClose()
     // Destroy the test client.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void VirtualKeyboardTest::testEnableDisableV3()
+{
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
+    QVERIFY(clientAddedSpy.isValid());
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(1280, 1024), Qt::red);
+    QVERIFY(client);
+    QVERIFY(client->isActive());
+    QCOMPARE(client->frameGeometry().size(), QSize(1280, 1024));
+
+    Test::TextInputV3 *textInputV3 = new Test::TextInputV3();
+    textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
+    textInputV3->enable();
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!clientAddedSpy.wait(100));
+
+    textInputV3->commit();
+
+    QVERIFY(clientAddedSpy.wait());
+    AbstractClient *keyboardClient = clientAddedSpy.last().first().value<AbstractClient *>();
+    QVERIFY(keyboardClient);
+    QVERIFY(keyboardClient->isInputMethod());
+
+    // disable text input and ensure that it is not hiding input panel without commit
+    textInputV3->disable();
+    QVERIFY(!clientRemovedSpy.wait(100));
+    textInputV3->commit();
+    QVERIFY(clientRemovedSpy.wait());
 }
 
 WAYLANDTEST_MAIN(VirtualKeyboardTest)

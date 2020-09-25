@@ -42,14 +42,25 @@ private Q_SLOTS:
     void surroundingTextChanged();
     void contentTypeChanged();
     void requestReset();
-    void textInputInterfaceEnabledChanged();
+    void textInputInterfaceV2EnabledChanged();
+    void textInputInterfaceV3EnabledChanged();
     void stateCommitted(uint32_t serial);
+
+    // inputcontext slots
+    void setPreeditString(uint32_t serial, const QString &text, const QString &commit);
+    void setPreeditCursor(qint32 index);
 
 private:
     void setEnabled(bool enable);
     void updateSni();
     void updateInputPanelState();
     void adoptInputMethodContext();
+
+    struct {
+        QString text = QString();
+        quint32 begin = 0;
+        quint32 end = 0;
+    } preedit;
 
     bool m_enabled = false;
     KStatusNotifierItem *m_sni = nullptr;
