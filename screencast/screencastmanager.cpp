@@ -37,35 +37,6 @@ ScreencastManager::ScreencastManager(QObject *parent)
             this, &ScreencastManager::streamOutput);
 }
 
-class EGLFence : public QObject
-{
-public:
-    EGLFence(EGLDisplay eglDisplay)
-        : m_eglDisplay(eglDisplay)
-        , m_sync(eglCreateSync(eglDisplay, EGL_SYNC_FENCE_KHR, nullptr))
-    {
-        Q_ASSERT(m_sync);
-        glFinish();
-    }
-
-    bool clientWaitSync()
-    {
-        glFenceSync (GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        int ret = eglClientWaitSync(m_eglDisplay, m_sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, 0);
-        Q_ASSERT(ret == EGL_CONDITION_SATISFIED_KHR);
-        return ret == EGL_CONDITION_SATISFIED_KHR;
-    }
-
-    ~EGLFence() {
-        auto ret = eglDestroySyncKHR(m_eglDisplay, m_sync);
-        Q_ASSERT(ret == EGL_TRUE);
-    }
-
-private:
-    const EGLDisplay m_eglDisplay;
-    const EGLSyncKHR m_sync;
-};
-
 class WindowStream : public PipeWireStream
 {
 public:
@@ -100,7 +71,6 @@ private:
             return;
         }
         effects->makeOpenGLContextCurrent();
-        EGLFence fence(kwinApp()->platform()->sceneEglDisplay());
         QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
         const bool wasYInverted = frameTexture->isYInverted();
         frameTexture->setYInverted(false);
@@ -108,8 +78,7 @@ private:
         recordFrame(frameTexture.data(), m_damagedRegion);
         frameTexture->setYInverted(wasYInverted);
         m_damagedRegion = {};
-        bool b = fence.clientWaitSync();
-        Q_ASSERT(b);
+        glFinish(); // TODO: Don't stall the whole pipeline. Use EGL_ANDROID_native_fence_sync.
     }
 
     QRegion m_damagedRegion;
