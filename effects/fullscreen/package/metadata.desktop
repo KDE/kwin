@@ -1,6 +1,7 @@
 [Desktop Entry]
 Comment=Animation for a window going to and leaving full screen mode
 Comment[ca]=Animació per a una finestra que entra o abandona el mode de pantalla completa
+Comment[en_GB]=Animation for a window going to and leaving full screen mode
 Comment[es]=Animación para una ventana que entra en el modo de pantalla completa o sale de él
 Comment[fr]=Animation pour une fenêtre basculant vers ou sortant du mode « Plein écran »
 Comment[it]=Animazione per una finestra che entra e esce dalla modalità a schermo intero
@@ -18,6 +19,7 @@ Icon=preferences-system-windows-effect-fullscreen
 Name=Full Screen
 Name[ca]=Pantalla completa
 Name[cs]=Celá obrazovka
+Name[en_GB]=Full Screen
 Name[es]=Pantalla completa
 Name[fr]=Plein écran
 Name[ia]=Schermo plen
