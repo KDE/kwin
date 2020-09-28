@@ -428,7 +428,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     );
 
     m_windowManagement = m_display->createPlasmaWindowManagement(m_display);
-    m_windowManagement->create();
     m_windowManagement->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);
     connect(m_windowManagement, &PlasmaWindowManagementInterface::requestChangeShowingDesktop, this,
         [] (PlasmaWindowManagementInterface::ShowingDesktopState state) {
