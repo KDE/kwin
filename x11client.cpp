@@ -4284,15 +4284,18 @@ void X11Client::updateServerGeometry()
         resizeDecoration();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
-        // them again. If the client doesn't support frame counters, always update geometry.
-        const bool needsGeometryUpdate = !isResize() || m_syncRequest.counter == XCB_NONE;
-        if (needsGeometryUpdate) {
+        // them again.
+        if (m_frame.geometry() != m_bufferGeometry) {
             m_frame.setGeometry(m_bufferGeometry);
         }
         if (!isShade()) {
-            if (needsGeometryUpdate) {
-                m_wrapper.setGeometry(QRect(clientPos(), clientSize()));
-                m_client.setGeometry(QRect(QPoint(0, 0), clientSize()));
+            const QRect requestedWrapperGeometry(clientPos(), clientSize());
+            if (m_wrapper.geometry() != requestedWrapperGeometry) {
+                m_wrapper.setGeometry(requestedWrapperGeometry);
+            }
+            const QRect requestedClientGeometry(QPoint(0, 0), clientSize());
+            if (m_client.geometry() != requestedClientGeometry) {
+                m_client.setGeometry(requestedClientGeometry);
             }
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
