@@ -101,7 +101,6 @@ void PlasmaWindowModelTest::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
     m_pwInterface = m_display->createPlasmaWindowManagement();
-    m_pwInterface->create();
     m_plasmaVirtualDesktopManagementInterface = m_display->createPlasmaVirtualDesktopManagement(m_display);
     m_plasmaVirtualDesktopManagementInterface->createDesktop("desktop1");
     m_plasmaVirtualDesktopManagementInterface->createDesktop("desktop2");
@@ -870,7 +869,7 @@ void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy_data()
 #if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 28)
     QTest::newRow("iconname" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setThemedIconName)           << QVariant(QStringLiteral("foo"));
 #endif
-    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setIcon)                     << QVariant::fromValue(QIcon::fromTheme(QStringLiteral("foo")));
+    QTest::newRow("icon" )            << &PlasmaWindow::iconChanged                     << QVariant::fromValue(&PlasmaWindowInterface::setIcon)                     << QVariant(QIcon::fromTheme(QStringLiteral("foo")));
     QTest::newRow("vd")               << &PlasmaWindow::virtualDesktopChanged           << QVariant::fromValue(&PlasmaWindowInterface::setVirtualDesktop)           << QVariant(2u);
     QTest::newRow("unmapped")         << &PlasmaWindow::unmapped                        << QVariant::fromValue(&PlasmaWindowInterface::unmap)                       << QVariant();
 }
@@ -901,6 +900,8 @@ void PlasmaWindowModelTest::testChangeWindowAfterModelDestroy()
         (w->*(setter.value<ServerWindowStringSetter>()))(value.toString());
     } else if (QMetaType::Type(value.type()) == QMetaType::UInt) {
         (w->*(setter.value<ServerWindowQuint32Setter>()))(value.toUInt());
+    } else if (QMetaType::Type(value.type()) == QMetaType::QIcon) {
+        (w->*(setter.value<ServerWindowIconSetter>()))(value.value<QIcon>());
     } else if (!value.isValid()) {
         (w->*(setter.value<ServerWindowVoidSetter>()))();
     }

@@ -137,8 +137,6 @@ void TestWindowManagement::init()
 
 
     m_windowManagementInterface = m_display->createPlasmaWindowManagement(m_display);
-    m_windowManagementInterface->create();
-    QVERIFY(m_windowManagementInterface->isValid());
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = m_registry->createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);

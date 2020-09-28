@@ -126,8 +126,6 @@ void TestVirtualDesktop::init()
     m_plasmaVirtualDesktopManagement = registry.createPlasmaVirtualDesktopManagement(plasmaVirtualDesktopManagementSpy.first().first().value<quint32>(), plasmaVirtualDesktopManagementSpy.first().last().value<quint32>(), this);
 
     m_windowManagementInterface = m_display->createPlasmaWindowManagement(m_display);
-    m_windowManagementInterface->create();
-    QVERIFY(m_windowManagementInterface->isValid());
     m_windowManagementInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);
 
     QVERIFY(windowManagementSpy.wait());

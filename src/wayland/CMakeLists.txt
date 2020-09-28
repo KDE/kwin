@@ -102,7 +102,7 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME org-kde-plasma-virtual-desktop
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-window-management.xml
     BASENAME plasma-window-management
 )

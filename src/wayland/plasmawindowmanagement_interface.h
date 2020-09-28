@@ -10,9 +10,6 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "global.h"
-#include "resource.h"
-
 class QSize;
 
 namespace KWaylandServer
@@ -22,15 +19,17 @@ class Display;
 class PlasmaWindowInterface;
 class SurfaceInterface;
 class PlasmaVirtualDesktopManagementInterface;
+class PlasmaWindowManagementInterfacePrivate;
+class PlasmaWindowInterfacePrivate;
 
 /**
  * @todo Add documentation
  */
-class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public Global
+class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~PlasmaWindowManagementInterface();
+    ~PlasmaWindowManagementInterface() override;
     enum class ShowingDesktopState {
         Disabled,
         Enabled
@@ -84,8 +83,7 @@ Q_SIGNALS:
 private:
     friend class Display;
     explicit PlasmaWindowManagementInterface(Display *display, QObject *parent);
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<PlasmaWindowManagementInterfacePrivate> d;
 };
 
 /**
@@ -95,7 +93,7 @@ class KWAYLANDSERVER_EXPORT PlasmaWindowInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~PlasmaWindowInterface();
+    ~PlasmaWindowInterface() override;
 
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
@@ -317,10 +315,11 @@ Q_SIGNALS:
 
 private:
     friend class PlasmaWindowManagementInterface;
+    friend class PlasmaWindowInterfacePrivate;
+    friend class PlasmaWindowManagementInterfacePrivate;
     explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent);
 
-    class Private;
-    const QScopedPointer<Private> d;
+    QScopedPointer<PlasmaWindowInterfacePrivate> d;
 };
 
 }
