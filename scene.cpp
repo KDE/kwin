@@ -291,9 +291,9 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
             const WindowPixmap *windowPixmap = window->windowPixmap<WindowPixmap>();
             if (windowPixmap) {
-                const QRegion shape = windowPixmap->mapToGlobal(windowPixmap->shape());
-                const QRegion opaque = windowPixmap->mapToGlobal(windowPixmap->opaque());
-                data.clip = shape & opaque;
+                const QRegion shape = windowPixmap->shape();
+                const QRegion opaque = windowPixmap->opaque();
+                data.clip = windowPixmap->mapToGlobal(shape & opaque);
             }
         } else {
             data.clip = QRegion();
