@@ -15,7 +15,7 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "virtualkeyboard.h"
+#include "inputmethod.h"
 #include "virtualkeyboard_dbus.h"
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-text-input-unstable-v3.h"

@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "virtualkeyboard.h"
+#include "inputmethod.h"
 #include "virtualkeyboard_dbus.h"
 #include "input.h"
 #include "keyboard_input.h"
@@ -38,29 +38,29 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY(VirtualKeyboard)
+KWIN_SINGLETON_FACTORY(InputMethod)
 
-VirtualKeyboard::VirtualKeyboard(QObject *parent)
+InputMethod::InputMethod(QObject *parent)
     : QObject(parent)
 {
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
     // but without Workspace we don't have the window listed at all
-    connect(kwinApp(), &Application::workspaceCreated, this, &VirtualKeyboard::init);
+    connect(kwinApp(), &Application::workspaceCreated, this, &InputMethod::init);
 }
 
-VirtualKeyboard::~VirtualKeyboard() = default;
+InputMethod::~InputMethod() = default;
 
-void VirtualKeyboard::init()
+void InputMethod::init()
 {
-    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &VirtualKeyboard::hide);
+    connect(ScreenLockerWatcher::self(), &ScreenLockerWatcher::aboutToLock, this, &InputMethod::hide);
 
     if (waylandServer()) {
         m_enabled = !input()->hasAlphaNumericKeyboard();
         qCDebug(KWIN_VIRTUALKEYBOARD) << "enabled by default: " << m_enabled;
         connect(input(), &InputRedirection::hasAlphaNumericKeyboardChanged, this,
             [this] (bool set) {
-                qCDebug(KWIN_VIRTUALKEYBOARD) << "AlphaNumeric Keyboard changed:" << set << "toggling VirtualKeyboard.";
+                qCDebug(KWIN_VIRTUALKEYBOARD) << "AlphaNumeric Keyboard changed:" << set << "toggling virtual keyboard.";
                 setEnabled(!set);
             }
         );
@@ -78,40 +78,40 @@ void VirtualKeyboard::init()
             setEnabled(!m_enabled);
         }
     );
-    connect(this, &VirtualKeyboard::enabledChanged, this, &VirtualKeyboard::updateSni);
+    connect(this, &InputMethod::enabledChanged, this, &InputMethod::updateSni);
 
     auto dbus = new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
     dbus->setEnabled(m_enabled);
-    connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &VirtualKeyboard::setEnabled);
-    connect(this, &VirtualKeyboard::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
-    connect(input(), &InputRedirection::keyStateChanged, this, &VirtualKeyboard::hide);
+    connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &InputMethod::setEnabled);
+    connect(this, &InputMethod::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
+    connect(input(), &InputRedirection::keyStateChanged, this, &InputMethod::hide);
 
     if (waylandServer()) {
         waylandServer()->display()->createTextInputManagerV2();
         waylandServer()->display()->createTextInputManagerV3();
 
-        connect(workspace(), &Workspace::clientAdded, this, &VirtualKeyboard::clientAdded);
-        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &VirtualKeyboard::handleFocusedSurfaceChanged);
+        connect(workspace(), &Workspace::clientAdded, this, &InputMethod::clientAdded);
+        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
 
         TextInputV2Interface *textInputV2 = waylandServer()->seat()->textInputV2();
-        connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &VirtualKeyboard::show);
-        connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &VirtualKeyboard::hide);
-        connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &VirtualKeyboard::surroundingTextChanged);
-        connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &VirtualKeyboard::contentTypeChanged);
-        connect(textInputV2, &TextInputV2Interface::requestReset, this, &VirtualKeyboard::requestReset);
-        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &VirtualKeyboard::textInputInterfaceV2EnabledChanged);
-        connect(textInputV2, &TextInputV2Interface::stateCommitted, this, &VirtualKeyboard::stateCommitted);
+        connect(textInputV2, &TextInputV2Interface::requestShowInputPanel, this, &InputMethod::show);
+        connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &InputMethod::hide);
+        connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+        connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+        connect(textInputV2, &TextInputV2Interface::requestReset, this, &InputMethod::requestReset);
+        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
+        connect(textInputV2, &TextInputV2Interface::stateCommitted, this, &InputMethod::stateCommitted);
 
         TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
-        connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &VirtualKeyboard::textInputInterfaceV3EnabledChanged);
-        connect(textInputV3, &TextInputV3Interface::surroundingTextChanged, this, &VirtualKeyboard::surroundingTextChanged);
-        connect(textInputV3, &TextInputV3Interface::contentTypeChanged, this, &VirtualKeyboard::contentTypeChanged);
-        connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &VirtualKeyboard::stateCommitted);
+        connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
+        connect(textInputV3, &TextInputV3Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+        connect(textInputV3, &TextInputV3Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+        connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &InputMethod::stateCommitted);
     }
 }
 
-void VirtualKeyboard::show()
+void InputMethod::show()
 {
     auto t = waylandServer()->seat()->textInputV2();
     if (t) {
@@ -120,13 +120,13 @@ void VirtualKeyboard::show()
     }
 }
 
-void VirtualKeyboard::hide()
+void InputMethod::hide()
 {
     waylandServer()->inputMethod()->sendDeactivate();
     updateInputPanelState();
 }
 
-void VirtualKeyboard::clientAdded(AbstractClient* client)
+void InputMethod::clientAdded(AbstractClient* client)
 {
     if (!client->isInputMethod()) {
         return;
@@ -150,7 +150,7 @@ void VirtualKeyboard::clientAdded(AbstractClient* client)
     connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
 }
 
-void VirtualKeyboard::handleFocusedSurfaceChanged()
+void InputMethod::handleFocusedSurfaceChanged()
 {
     SurfaceInterface *focusedSurface = waylandServer()->seat()->focusedTextInputSurface();
     if (focusedSurface) {
@@ -169,7 +169,7 @@ void VirtualKeyboard::handleFocusedSurfaceChanged()
     updateInputPanelState();
 }
 
-void VirtualKeyboard::surroundingTextChanged()
+void InputMethod::surroundingTextChanged()
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
@@ -187,7 +187,7 @@ void VirtualKeyboard::surroundingTextChanged()
     }
 }
 
-void VirtualKeyboard::contentTypeChanged()
+void InputMethod::contentTypeChanged()
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();
@@ -203,7 +203,7 @@ void VirtualKeyboard::contentTypeChanged()
     }
 }
 
-void VirtualKeyboard::requestReset()
+void InputMethod::requestReset()
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
@@ -218,7 +218,7 @@ void VirtualKeyboard::requestReset()
     }
 }
 
-void VirtualKeyboard::textInputInterfaceV2EnabledChanged()
+void InputMethod::textInputInterfaceV2EnabledChanged()
 {
     auto t = waylandServer()->seat()->textInputV2();
     if (t->isEnabled()) {
@@ -232,7 +232,7 @@ void VirtualKeyboard::textInputInterfaceV2EnabledChanged()
     }
 }
 
-void VirtualKeyboard::textInputInterfaceV3EnabledChanged()
+void InputMethod::textInputInterfaceV3EnabledChanged()
 {
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3->isEnabled()) {
@@ -247,7 +247,7 @@ void VirtualKeyboard::textInputInterfaceV3EnabledChanged()
     }
 }
 
-void VirtualKeyboard::stateCommitted(uint32_t serial)
+void InputMethod::stateCommitted(uint32_t serial)
 {
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
@@ -256,7 +256,7 @@ void VirtualKeyboard::stateCommitted(uint32_t serial)
     inputContext->sendCommitState(serial);
 }
 
-void VirtualKeyboard::setEnabled(bool enabled)
+void InputMethod::setEnabled(bool enabled)
 {
     if (m_enabled == enabled) {
         return;
@@ -374,7 +374,7 @@ static void setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
     }
 }
 
-void VirtualKeyboard::setPreeditCursor(qint32 index)
+void InputMethod::setPreeditCursor(qint32 index)
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
@@ -389,7 +389,7 @@ void VirtualKeyboard::setPreeditCursor(qint32 index)
 }
 
 
-void VirtualKeyboard::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
+void InputMethod::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
 {
     Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
@@ -403,7 +403,7 @@ void VirtualKeyboard::setPreeditString(uint32_t serial, const QString &text, con
     }
 }
 
-void VirtualKeyboard::adoptInputMethodContext()
+void InputMethod::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
 
@@ -427,11 +427,11 @@ void VirtualKeyboard::adoptInputMethodContext()
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, waylandServer(), &commitString);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, waylandServer(), &deleteSurroundingText);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, waylandServer(), &setCursorPosition);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &VirtualKeyboard::setPreeditString);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &VirtualKeyboard::setPreeditCursor);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor);
 }
 
-void VirtualKeyboard::updateSni()
+void InputMethod::updateSni()
 {
     if (!m_sni) {
         return;
@@ -446,7 +446,7 @@ void VirtualKeyboard::updateSni()
     m_sni->setToolTipTitle(i18n("Whether to show the virtual keyboard on demand."));
 }
 
-void VirtualKeyboard::updateInputPanelState()
+void InputMethod::updateInputPanelState()
 {
     if (!waylandServer()) {
         return;

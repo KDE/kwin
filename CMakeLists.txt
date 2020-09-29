@@ -114,7 +114,7 @@ add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation"
 find_package(KF5Kirigami2 ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Kirigami2 PROPERTIES
     DESCRIPTION "A QtQuick based components set"
-    PURPOSE "Required at runtime for Virtual desktop KCM and the virtual keyboard"
+    PURPOSE "Required at runtime for Virtual desktop KCM"
     TYPE RUNTIME
 )
 
@@ -322,7 +322,6 @@ include(ECMQMLModules)
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 1.2)
 ecm_find_qmlmodule(QtQuick.Layouts 1.3)
-ecm_find_qmlmodule(QtQuick.VirtualKeyboard 2.1)
 ecm_find_qmlmodule(QtQuick.Window 2.1)
 ecm_find_qmlmodule(QtMultimedia 5.0)
 ecm_find_qmlmodule(org.kde.kquickcontrolsaddons 2.0)
@@ -532,7 +531,7 @@ set(kwin_SRCS
     utils.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
-    virtualkeyboard.cpp
+    inputmethod.cpp
     virtualkeyboard_dbus.cpp
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp

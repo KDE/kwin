@@ -21,11 +21,15 @@ class KStatusNotifierItem;
 namespace KWin
 {
 
-class KWIN_EXPORT VirtualKeyboard : public QObject
+/**
+ * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
+ * the Virtual Keyboard using supported input method client (maliit-keyboard e.g.)
+ **/
+class KWIN_EXPORT InputMethod : public QObject
 {
     Q_OBJECT
 public:
-    ~VirtualKeyboard() override;
+    ~InputMethod() override;
 
     void init();
     void hide();
@@ -67,7 +71,7 @@ private:
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
 
-    KWIN_SINGLETON(VirtualKeyboard)
+    KWIN_SINGLETON(InputMethod)
 };
 
 }

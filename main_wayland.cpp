@@ -8,7 +8,7 @@
 */
 #include "main_wayland.h"
 #include "composite.h"
-#include "virtualkeyboard.h"
+#include "inputmethod.h"
 #include "workspace.h"
 #include <config-kwin.h>
 // kwin
@@ -149,7 +149,7 @@ void ApplicationWayland::performStartup()
     // now libinput thread has been created, adjust scheduler to not leak into other processes
     gainRealTime(RealTimeFlags::ResetOnFork);
 
-    VirtualKeyboard::create(this);
+    InputMethod::create(this);
     createBackend();
     TabletModeManager::create(this);
 #ifdef PipeWire_FOUND

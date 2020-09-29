@@ -12,7 +12,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "qwayland-input-method-unstable-v1.h"
-#include "virtualkeyboard.h"
+#include "inputmethod.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>

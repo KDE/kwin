@@ -14,7 +14,7 @@
 #include "../../workspace.h"
 #include "../../xcbutils.h"
 #include "../../xwl/xwayland.h"
-#include "../../virtualkeyboard.h"
+#include "../../inputmethod.h"
 
 #include <KPluginMetaData>
 
@@ -87,7 +87,7 @@ WaylandTestApplication::~WaylandTestApplication()
 void WaylandTestApplication::performStartup()
 {
     if (!m_inputMethodServerToStart.isEmpty()) {
-        VirtualKeyboard::create();
+        InputMethod::create();
         if (m_inputMethodServerToStart != QStringLiteral("internal")) {
             int socket = dup(waylandServer()->createInputMethodConnection());
             if (socket >= 0) {
