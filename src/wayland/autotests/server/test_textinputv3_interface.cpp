@@ -24,6 +24,9 @@
 
 using namespace KWaylandServer;
 
+Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v3::content_purpose)
+Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v3::content_hint)
+
 class TextInputV3 : public QObject, public QtWayland::zwp_text_input_v3
 {
     Q_OBJECT
@@ -507,7 +510,5 @@ void TestTextInputV3Interface::testContentHints()
 }
 
 QTEST_GUILESS_MAIN(TestTextInputV3Interface)
-Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v3::content_purpose)
-Q_DECLARE_METATYPE(QtWayland::zwp_text_input_v3::content_hint)
 
 #include "test_textinputv3_interface.moc"
