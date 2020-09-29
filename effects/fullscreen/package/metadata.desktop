@@ -17,6 +17,7 @@ Comment[x-test]=xxAnimation for a window going to and leaving full screen modexx
 Icon=preferences-system-windows-effect-fullscreen
 Name=Full Screen
 Name[ca]=Pantalla completa
+Name[de]=Vollbild
 Name[en_GB]=Full Screen
 Name[es]=Pantalla completa
 Name[fr]=Plein écran
