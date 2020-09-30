@@ -97,6 +97,7 @@ QHash<int, QByteArray> EffectsModel::roleNames() const
     roleNames[ConfigurableRole] = "ConfigurableRole";
     roleNames[ScriptedRole] = QByteArrayLiteral("ScriptedRole");
     roleNames[EnabledByDefaultRole] = "EnabledByDefaultRole";
+    roleNames[ConfigModuleRole] = "ConfigModuleRole";
     return roleNames;
 }
 
@@ -174,6 +175,8 @@ QVariant EffectsModel::data(const QModelIndex &index, int role) const
         return effect.kind == Kind::Scripted;
     case EnabledByDefaultRole:
         return effect.enabledByDefault;
+    case ConfigModuleRole:
+        return effect.configModule;
     default:
         return {};
     }
@@ -215,7 +218,7 @@ bool EffectsModel::setData(const QModelIndex &index, const QVariant &value, int 
     return QAbstractItemModel::setData(index, value, role);
 }
 
-void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
+void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
 {
     const auto builtins = BuiltInEffects::availableEffects();
     for (auto builtin : builtins) {
@@ -248,12 +251,9 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPlu
         effect.exclusiveGroup = data.exclusiveCategory;
         effect.internal = data.internal;
         effect.kind = Kind::BuiltIn;
+        effect.configModule = data.configModule;
 
-        effect.configurable = std::any_of(configs.constBegin(), configs.constEnd(),
-            [data](const KPluginInfo &info) {
-                return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == data.name;
-            }
-        );
+        effect.configurable = !effect.configModule.isEmpty();
 
         if (shouldStore(effect)) {
             m_pendingEffects << effect;
@@ -306,7 +306,7 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
     }
 }
 
-void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs)
+void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 {
     const auto pluginEffects = KPluginLoader::findPlugins(
         QStringLiteral("kwin/effects/plugins/"),
@@ -332,6 +332,22 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlug
         effect.enabledByDefaultFunction = false;
         effect.internal = false;
         effect.kind = Kind::Binary;
+        effect.configModule = pluginEffect.value(QStringLiteral("X-KDE-ConfigModule"));
+
+        // Compatibility with plugins that don't have ConfigModule in their metadata
+        // TODO KF6 remove
+        if (effect.configModule.isEmpty()) {
+
+            const QList<KPluginInfo> infos = KPluginTrader::self()->query(
+                QStringLiteral("kwin/effects/configs/"),
+                QString(),
+                QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(pluginEffect.pluginId())
+            );
+
+            if (!infos.isEmpty()) {
+                effect.configModule = infos.first().pluginName();
+            }
+        }
 
         for (int i = 0; i < pluginEffect.authors().count(); ++i) {
             effect.authorName.append(pluginEffect.authors().at(i).name());
@@ -362,11 +378,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig, const KPlug
 
         effect.originalStatus = effect.status;
 
-        effect.configurable = std::any_of(configs.constBegin(), configs.constEnd(),
-            [pluginEffect](const KPluginInfo &info) {
-                return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == pluginEffect.pluginId();
-            }
-        );
+        effect.configurable = !effect.configModule.isEmpty();
 
         if (shouldStore(effect)) {
             m_pendingEffects << effect;
@@ -379,10 +391,9 @@ void EffectsModel::load(LoadOptions options)
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
     m_pendingEffects.clear();
-    const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
-    loadBuiltInEffects(kwinConfig, configs);
+    loadBuiltInEffects(kwinConfig);
     loadJavascriptEffects(kwinConfig);
-    loadPluginEffects(kwinConfig, configs);
+    loadPluginEffects(kwinConfig);
 
     std::sort(m_pendingEffects.begin(), m_pendingEffects.end(),
         [](const EffectData &a, const EffectData &b) {
@@ -585,14 +596,18 @@ QModelIndex EffectsModel::findByPluginId(const QString &pluginId) const
     return index(std::distance(m_effects.constBegin(), it), 0);
 }
 
-static KCModule *findBinaryConfig(const QString &pluginId, QObject *parent)
+static KCModule *loadBinaryConfig(const QString &configModule, QObject *parent)
 {
-    return KPluginTrader::createInstanceFromQuery<KCModule>(
-        QStringLiteral("kwin/effects/configs/"),
-        QString(),
-        QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(pluginId),
-        parent
-    );
+    const QVector<KPluginMetaData> offers = KPluginLoader::findPluginsById(QStringLiteral("kwin/effects/configs/"), configModule);
+
+    if (offers.isEmpty()) {
+        return nullptr;
+    }
+
+    KPluginLoader loader(offers.first().fileName());
+    KPluginFactory *factory = loader.factory();
+
+    return factory->create<KCModule>(parent);
 }
 
 static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
@@ -621,9 +636,17 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
 
     auto dialog = new QDialog();
 
-    KCModule *module = index.data(ScriptedRole).toBool()
-        ? findScriptedConfig(index.data(ServiceNameRole).toString(), dialog)
-        : findBinaryConfig(index.data(ServiceNameRole).toString(), dialog);
+    const bool scripted = index.data(ScriptedRole).toBool();
+
+    KCModule *module = nullptr;
+
+    if (scripted) {
+        module = findScriptedConfig(index.data(ServiceNameRole).toString(), dialog);
+    } else {
+        const QString configModule = index.data(ConfigModuleRole).toString();
+        module = loadBinaryConfig(configModule, dialog);
+    }
+
     if (!module) {
         delete dialog;
         return;

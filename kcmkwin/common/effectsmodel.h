@@ -12,7 +12,6 @@
 
 #include <kwin_export.h>
 
-#include <KPluginInfo>
 #include <KSharedConfig>
 
 #include <QAbstractItemModel>
@@ -105,7 +104,11 @@ public:
         /**
          * Whether the effect is enabled by default.
          */
-        EnabledByDefaultRole
+        EnabledByDefaultRole,
+        /**
+         * Id of the effect's config module, empty if the effect has no config.
+         */
+        ConfigModuleRole
     };
 
     /**
@@ -239,6 +242,7 @@ protected:
         bool configurable;
         Kind kind;
         bool changed = false;
+        QString configModule;
     };
 
     /**
@@ -250,9 +254,9 @@ protected:
     virtual bool shouldStore(const EffectData &data) const;
 
 private:
-    void loadBuiltInEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
+    void loadBuiltInEffects(const KConfigGroup &kwinConfig);
     void loadJavascriptEffects(const KConfigGroup &kwinConfig);
-    void loadPluginEffects(const KConfigGroup &kwinConfig, const KPluginInfo::List &configs);
+    void loadPluginEffects(const KConfigGroup &kwinConfig);
 
     QVector<EffectData> m_effects;
     QVector<EffectData> m_pendingEffects;
