@@ -40,9 +40,9 @@ using namespace KWin;
 using namespace KWayland::Client;
 using KWin::VirtualKeyboardDBus;
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_virtualkeyboard-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_inputmethod-0");
 
-class VirtualKeyboardTest : public QObject
+class InputMethodTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -55,7 +55,7 @@ private Q_SLOTS:
 };
 
 
-void VirtualKeyboardTest::initTestCase()
+void InputMethodTest::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::AbstractClient *>();
@@ -77,7 +77,7 @@ void VirtualKeyboardTest::initTestCase()
 
 }
 
-void VirtualKeyboardTest::init()
+void InputMethodTest::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
                                          Test::AdditionalWaylandInterface::TextInputManagerV2 |
@@ -95,12 +95,12 @@ void VirtualKeyboardTest::init()
     QDBusConnection::sessionBus().call(message);
 }
 
-void VirtualKeyboardTest::cleanup()
+void InputMethodTest::cleanup()
 {
     Test::destroyWaylandConnection();
 }
 
-void VirtualKeyboardTest::testOpenClose()
+void InputMethodTest::testOpenClose()
 {
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
@@ -154,7 +154,7 @@ void VirtualKeyboardTest::testOpenClose()
     QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
-void VirtualKeyboardTest::testEnableDisableV3()
+void InputMethodTest::testEnableDisableV3()
 {
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QSignalSpy clientRemovedSpy(workspace(), &Workspace::clientRemoved);
@@ -188,6 +188,6 @@ void VirtualKeyboardTest::testEnableDisableV3()
     QVERIFY(clientRemovedSpy.wait());
 }
 
-WAYLANDTEST_MAIN(VirtualKeyboardTest)
+WAYLANDTEST_MAIN(InputMethodTest)
 
 #include "virtualkeyboard_test.moc"

@@ -86,7 +86,7 @@ integrationTest(WAYLAND_ONLY NAME testNoGlobalShortcuts SRCS no_global_shortcuts
 integrationTest(WAYLAND_ONLY NAME testBufferSizeChange SRCS buffer_size_change_test.cpp )
 integrationTest(WAYLAND_ONLY NAME testPlacement SRCS placement_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testActivation SRCS activation_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testVirtualKeyboard SRCS virtualkeyboard_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testInputMethod SRCS inputmethod_test.cpp)
 
 if (XCB_ICCCM_FOUND)
     integrationTest(NAME testMoveResize SRCS move_resize_window_test.cpp LIBS XCB::ICCCM)

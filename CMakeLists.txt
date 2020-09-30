@@ -467,6 +467,7 @@ set(kwin_SRCS
     input.cpp
     input_event.cpp
     input_event_spy.cpp
+    inputmethod.cpp
     inputpanelv1client.cpp
     inputpanelv1integration.cpp
     internal_client.cpp
@@ -531,7 +532,6 @@ set(kwin_SRCS
     utils.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
-    inputmethod.cpp
     virtualkeyboard_dbus.cpp
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp
