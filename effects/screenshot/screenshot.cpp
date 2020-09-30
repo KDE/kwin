@@ -491,6 +491,11 @@ void ScreenShotEffect::screenshotWindowUnderCursor(int mask)
         return;
     }
     m_type = (ScreenShotType)mask;
+    scheduleScreenshotWindowUnderCursor();
+}
+
+void ScreenShotEffect::scheduleScreenshotWindowUnderCursor()
+{
     const QPoint cursor = effects->cursorPos();
     EffectWindowList order = effects->stackingOrder();
     EffectWindowList::const_iterator it = order.constEnd(), first = order.constBegin();
@@ -863,7 +868,7 @@ void ScreenShotEffect::windowClosed( EffectWindow* w )
 {
     if (w == m_scheduledScreenshot) {
         m_scheduledScreenshot = nullptr;
-        screenshotWindowUnderCursor(m_type);
+        scheduleScreenshotWindowUnderCursor();
     }
 }
 
