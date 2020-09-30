@@ -190,6 +190,9 @@ static void edit(const QVariantMap &data, bool whole_app)
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
+
+    KLocalizedString::setApplicationDomain("kcm_kwinrules");
+
     app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setApplicationDisplayName(i18n("KWin"));
     app.setApplicationName("kwin_rules_dialog");
