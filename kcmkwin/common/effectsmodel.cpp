@@ -597,18 +597,14 @@ static KCModule *findBinaryConfig(const QString &pluginId, QObject *parent)
 
 static KCModule *findScriptedConfig(const QString &pluginId, QObject *parent)
 {
-    const auto offers = KPluginTrader::self()->query(
-        QStringLiteral("kwin/effects/configs/"),
-        QString(),
-        QStringLiteral("[X-KDE-Library] == 'kcm_kwin4_genericscripted'")
-    );
+    const QVector<KPluginMetaData> offers = KPluginLoader::findPluginsById(QStringLiteral("kwin/effects/configs/"), QStringLiteral("kcm_kwin4_genericscripted"));
 
     if (offers.isEmpty()) {
         return nullptr;
     }
 
-    const KPluginInfo &generic = offers.first();
-    KPluginLoader loader(generic.libraryPath());
+    const KPluginMetaData &generic = offers.first();
+    KPluginLoader loader(generic.fileName());
     KPluginFactory *factory = loader.factory();
     if (!factory) {
         return nullptr;
