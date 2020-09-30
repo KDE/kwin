@@ -83,7 +83,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
 
 bool Clipboard::ownsSelection(KWaylandServer::AbstractDataSource *dsi) const
 {
-    return dsi->client() == DataBridge::self()->dataDeviceIface()->client()->client();
+    return dsi->client() == DataBridge::self()->dataDeviceIface()->client();
 }
 
 void Clipboard::checkWlSource()
@@ -105,7 +105,7 @@ void Clipboard::checkWlSource()
     // Otherwise the Wayland source gets destroyed to shield
     // against snooping X clients.
 
-    if (!dsi || (DataBridge::self()->dataDeviceIface()->client()->client() == dsi->client())) {
+    if (!dsi || (DataBridge::self()->dataDeviceIface()->client() == dsi->client())) {
         // Xwayland source or no source
         disconnect(m_checkConnection);
         m_checkConnection = QMetaObject::Connection();

@@ -388,7 +388,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_display->createPointerGestures(PointerGesturesInterfaceVersion::UnstableV1, m_display)->create();
     m_display->createPointerConstraints(PointerConstraintsInterfaceVersion::UnstableV1, m_display)->create();
     m_dataDeviceManager = m_display->createDataDeviceManager(m_display);
-    m_dataDeviceManager->create();
     m_display->createDataControlDeviceManagerV1(m_display);
     m_display->createPrimarySelectionDeviceManagerV1(m_display);
     m_idle = m_display->createIdle(m_display);

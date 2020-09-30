@@ -21,6 +21,7 @@
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/seat.h>
 
+#include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/datadevicemanager_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/seat_interface.h>
@@ -58,7 +59,7 @@ DataBridge::DataBridge(QObject *parent)
             if (m_dataDeviceInterface) {
                 return;
             }
-            if (dataDeviceInterface->client() != waylandServer()->internalConnection()) {
+            if (dataDeviceInterface->client() != *waylandServer()->internalConnection()) {
                 return;
             }
             QObject::disconnect(*dc);
