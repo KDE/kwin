@@ -11,6 +11,7 @@ import QtQuick.Controls 2.4 as Controls
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
+import org.kde.kcm 1.3 as KCM
 
 ColumnLayout {
     Layout.fillWidth: true
@@ -64,7 +65,24 @@ ColumnLayout {
                         iconSize: buttonIconSize
                         model: kcm.leftButtonsModel
                         key: "decoButtonLeft"
+
+                        Rectangle {
+                            visible: stateBindingButtonLeft.nonDefaultHighlightVisible
+                            anchors.fill: parent
+                            Layout.margins: units.smallSpacing
+                            color: "transparent"
+                            border.color: Kirigami.Theme.neutralTextColor
+                            border.width: Kirigami.Units.devicePixelRatio
+                            radius: units.smallSpacing
+                        }
+
+                        KCM.SettingStateBinding {
+                            id: stateBindingButtonLeft
+                            configObject: kcm.settings
+                            settingName: "buttonsOnLeft"
+                        }
                     }
+
                     Controls.Label {
                         id: titleBarLabel
                         Layout.fillWidth: true
@@ -77,6 +95,22 @@ ColumnLayout {
                         iconSize: buttonIconSize
                         model: kcm.rightButtonsModel
                         key: "decoButtonRight"
+
+                        Rectangle {
+                            visible: stateBindingButtonRight.nonDefaultHighlightVisible
+                            anchors.fill: parent
+                            Layout.margins: units.smallSpacing
+                            color: "transparent"
+                            border.color: Kirigami.Theme.neutralTextColor
+                            border.width: Kirigami.Units.devicePixelRatio
+                            radius: units.smallSpacing
+                        }
+
+                        KCM.SettingStateBinding {
+                            id: stateBindingButtonRight
+                            configObject: kcm.settings
+                            settingName: "buttonsOnRight"
+                        }
                     }
                 }
                 DropArea {
@@ -94,9 +128,13 @@ ColumnLayout {
                         var left = drag.x - (leftButtonsView.x + leftButtonsView.width);
                         var right = drag.x - rightButtonsView.x;
                         if (Math.abs(left) <= Math.abs(right)) {
-                            view = leftButtonsView;
+                            if (leftButtonsView.enabled) {
+                                view = leftButtonsView;
+                            }
                         } else {
-                            view = rightButtonsView;
+                            if (rightButtonsView.enabled) {
+                                view = rightButtonsView;
+                            }
                         }
                         if (!view) {
                             return;
