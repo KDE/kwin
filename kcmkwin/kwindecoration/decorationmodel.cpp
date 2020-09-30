@@ -10,7 +10,7 @@
 // KDE
 #include <KPluginLoader>
 #include <KPluginFactory>
-#include <KPluginTrader>
+#include <KPluginMetaData>
 // Qt
 #include <QDebug>
 
@@ -118,9 +118,9 @@ void DecorationsModel::init()
 {
     beginResetModel();
     m_plugins.clear();
-    const auto plugins = KPluginTrader::self()->query(s_pluginName, s_pluginName);
+    const auto plugins = KPluginLoader::findPlugins(s_pluginName);
     for (const auto &info : plugins) {
-        KPluginLoader loader(info.libraryPath());
+        KPluginLoader loader(info.fileName());
         KPluginFactory *factory = loader.factory();
         if (!factory) {
             continue;
@@ -150,7 +150,7 @@ void DecorationsModel::init()
                 const auto themesMap = themes.toMap();
                 for (auto it = themesMap.begin(); it != themesMap.end(); ++it) {
                     Data d;
-                    d.pluginName = info.pluginName();
+                    d.pluginName = info.pluginId();
                     d.themeName = it.value().toString();
                     d.visibleName = it.key();
                     QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
@@ -165,8 +165,8 @@ void DecorationsModel::init()
             data.configuration = isConfigureable(decoSettingsMap);
             data.recommendedBorderSize = recommendedBorderSize(decoSettingsMap);
         }
-        data.pluginName = info.pluginName();
-        data.visibleName = info.name().isEmpty() ? info.pluginName() : info.name();
+        data.pluginName = info.pluginId();
+        data.visibleName = info.name().isEmpty() ? info.pluginId() : info.name();
         data.themeName = data.visibleName;
 
         m_plugins.emplace_back(std::move(data));
