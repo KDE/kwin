@@ -190,4 +190,4 @@ void InputMethodTest::testEnableDisableV3()
 
 WAYLANDTEST_MAIN(InputMethodTest)
 
-#include "virtualkeyboard_test.moc"
+#include "inputmethod_test.moc"
