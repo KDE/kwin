@@ -86,7 +86,6 @@ private Q_SLOTS:
 
 private:
     bool isSaveNeeded() const override;
-    bool isDefaults() const override;
 
     int borderSizeIndexFromString(const QString &size) const;
     QString borderSizeIndexToString(int index) const;

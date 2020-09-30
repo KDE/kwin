@@ -242,11 +242,6 @@ bool KCMKWinDecoration::isSaveNeeded() const
     return !m_settings->borderSizeAuto() && borderSizeIndexFromString(m_settings->borderSize()) != m_borderSizeIndex;
 }
 
-bool KCMKWinDecoration::isDefaults() const
-{
-    return m_settings->borderSizeAuto() && recommendedBorderSize() == m_borderSizeIndex;
-}
-
 int KCMKWinDecoration::borderSizeIndexFromString(const QString &size) const
 {
     return Utils::getBorderSizeNames().keys().indexOf(Utils::stringToBorderSize(size));
