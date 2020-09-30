@@ -54,7 +54,7 @@
 #include <kwineffects.h>
 
 #ifndef EFFECT_BUILTINS
-#define EFFECT_FALLBACK nullptr, nullptr, nullptr
+#define EFFECT_FALLBACK nullptr, nullptr, nullptr,
 #else
 #define EFFECT_FALLBACK
 #endif
@@ -85,7 +85,8 @@ static const QVector<EffectData> &effectData()
         false,
         nullptr,
         nullptr,
-        nullptr
+        nullptr,
+        QString()
     }, {
         QStringLiteral("blur"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Blur"),
@@ -98,9 +99,10 @@ static const QVector<EffectData> &effectData()
 #ifdef EFFECT_BUILTINS
         &createHelper<BlurEffect>,
         &BlurEffect::supported,
-        &BlurEffect::enabledByDefault
+        &BlurEffect::enabledByDefault,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_blur_config")
     }, {
         QStringLiteral("colorpicker"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Color Picker"),
@@ -113,9 +115,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ColorPickerEffect>,
         &ColorPickerEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("contrast"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Background contrast"),
@@ -128,9 +131,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ContrastEffect>,
         &ContrastEffect::supported,
-        &ContrastEffect::enabledByDefault
+        &ContrastEffect::enabledByDefault,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("coverswitch"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Cover Switch"),
@@ -143,9 +147,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<CoverSwitchEffect>,
         &CoverSwitchEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_coverswitch_config")
     }, {
         QStringLiteral("cube"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Cube"),
@@ -158,9 +163,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<CubeEffect>,
         &CubeEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_cube_config")
     }, {
         QStringLiteral("cubeslide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Cube Animation"),
@@ -173,9 +179,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<CubeSlideEffect>,
         &CubeSlideEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_cubeslide_config")
     }, {
         QStringLiteral("desktopgrid"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Desktop Grid"),
@@ -188,9 +195,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<DesktopGridEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_desktopgrid_config")
     }, {
         QStringLiteral("diminactive"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Dim Inactive"),
@@ -203,9 +211,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<DimInactiveEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_diminactive_config")
     }, {
         QStringLiteral("fallapart"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Fall Apart"),
@@ -218,9 +227,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<FallApartEffect>,
         &FallApartEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("flipswitch"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Flip Switch"),
@@ -233,9 +243,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<FlipSwitchEffect>,
         &FlipSwitchEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_flipswitch_config")
     }, {
         QStringLiteral("glide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Glide"),
@@ -248,9 +259,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<GlideEffect>,
         &GlideEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_glide_config")
     }, {
         QStringLiteral("highlightwindow"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Highlight Window"),
@@ -263,9 +275,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<HighlightWindowEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("invert"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Invert"),
@@ -278,9 +291,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<InvertEffect>,
         &InvertEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_invert_config")
     }, {
         QStringLiteral("kscreen"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Kscreen"),
@@ -293,9 +307,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<KscreenEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("lookingglass"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Looking Glass"),
@@ -308,9 +323,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<LookingGlassEffect>,
         &LookingGlassEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_lookingglass_config")
     }, {
         QStringLiteral("magiclamp"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Magic Lamp"),
@@ -323,9 +339,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<MagicLampEffect>,
         &MagicLampEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_magiclamp_config")
     }, {
         QStringLiteral("magnifier"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Magnifier"),
@@ -338,9 +355,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<MagnifierEffect>,
         &MagnifierEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_magnifier_config")
     }, {
         QStringLiteral("mouseclick"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Mouse Click Animation"),
@@ -353,9 +371,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<MouseClickEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_mouseclick_config")
     }, {
         QStringLiteral("mousemark"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Mouse Mark"),
@@ -368,9 +387,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<MouseMarkEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_mousemark_config")
     }, {
         QStringLiteral("presentwindows"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Present Windows"),
@@ -383,9 +403,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<PresentWindowsEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_presentwindows_config")
     }, {
         QStringLiteral("resize"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Resize Window"),
@@ -398,9 +419,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ResizeEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_resize_config")
     }, {
         QStringLiteral("screenedge"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Screen Edge"),
@@ -413,9 +435,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ScreenEdgeEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("screenshot"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Screenshot"),
@@ -428,9 +451,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ScreenShotEffect>,
         &ScreenShotEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("sheet"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Sheet"),
@@ -443,9 +467,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<SheetEffect>,
         &SheetEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("showfps"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Show FPS"),
@@ -458,9 +483,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ShowFpsEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_showfps_config")
     }, {
         QStringLiteral("showpaint"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Show Paint"),
@@ -473,9 +499,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ShowPaintEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_showpaint_config")
     }, {
         QStringLiteral("slide"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Slide"),
@@ -488,9 +515,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<SlideEffect>,
         &SlideEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_slide_config")
     }, {
         QStringLiteral("slideback"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Slide Back"),
@@ -503,9 +531,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<SlideBackEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("slidingpopups"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Sliding popups"),
@@ -518,9 +547,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<SlidingPopupsEffect>,
         &SlidingPopupsEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("snaphelper"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Snap Helper"),
@@ -533,9 +563,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<SnapHelperEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("startupfeedback"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Startup Feedback"),
@@ -548,9 +579,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<StartupFeedbackEffect>,
         &StartupFeedbackEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("thumbnailaside"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Thumbnail Aside"),
@@ -563,9 +595,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ThumbnailAsideEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_thumbnailaside_config")
     }, {
         QStringLiteral("touchpoints"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Touch Points"),
@@ -578,9 +611,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<TouchPointsEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QString()
     }, {
         QStringLiteral("trackmouse"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Track Mouse"),
@@ -593,9 +627,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<TrackMouseEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_trackmouse_config")
     }, {
         QStringLiteral("windowgeometry"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Window Geometry"),
@@ -608,9 +643,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<WindowGeometry>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_windowgeometry_config")
     }, {
         QStringLiteral("wobblywindows"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Wobbly Windows"),
@@ -623,9 +659,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<WobblyWindowsEffect>,
         &WobblyWindowsEffect::supported,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_wobblywindows_config")
     }, {
         QStringLiteral("zoom"),
         i18ndc("kwin_effects", "Name of a KWin Effect", "Zoom"),
@@ -638,9 +675,10 @@ EFFECT_FALLBACK
 #ifdef EFFECT_BUILTINS
         &createHelper<ZoomEffect>,
         nullptr,
-        nullptr
+        nullptr,
 #endif
 EFFECT_FALLBACK
+        QStringLiteral("kwin_zoom_config")
     }
     };
     return s_effectData;

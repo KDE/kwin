@@ -77,6 +77,7 @@ struct EffectData {
     std::function<Effect*()> createFunction;
     std::function<bool()> supportedFunction;
     std::function<bool()> enabledFunction;
+    QString configModule;
 };
 
 KWINEFFECTS_EXPORT Effect *create(BuiltInEffect effect);
