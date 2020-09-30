@@ -36,6 +36,7 @@ class DecorationsModel;
 }
 
 class KWinDecorationSettings;
+class KWinDecorationData;
 
 class KCMKWinDecoration : public KQuickAddons::ManagedConfigModule
 {
@@ -100,5 +101,5 @@ private:
     QPointer<KNS3::DownloadDialog> m_newStuffDialog;
 
     int m_borderSizeIndex = -1;
-    KWinDecorationSettings *m_settings;
+    KWinDecorationData *m_data;
 };
