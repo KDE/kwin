@@ -13,8 +13,8 @@
 #endif
 #include "x11client.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
-#include "wayland_server.h"
 
 namespace KWin {
 namespace ScriptingClientModel {
@@ -193,9 +193,9 @@ void ClientLevel::removeClient(AbstractClient *client)
 
 void ClientLevel::init()
 {
-    const QList<X11Client *> &clients = Workspace::self()->clientList();
+    const QList<AbstractClient *> &clients = workspace()->allClientList();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        X11Client *client = *it;
+        AbstractClient *client = *it;
         setupClientConnections(client);
         if (!exclude(client) && shouldAdd(client)) {
             m_clients.insert(nextId(), client);
@@ -205,15 +205,9 @@ void ClientLevel::init()
 
 void ClientLevel::reInit()
 {
-    const QList<X11Client *> &clients = Workspace::self()->clientList();
+    const QList<AbstractClient *> &clients = workspace()->allClientList();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         checkClient((*it));
-    }
-    if (waylandServer()) {
-        const auto &clients = waylandServer()->clients();
-        for (auto *c : clients) {
-            checkClient(c);
-        }
     }
 }
 
