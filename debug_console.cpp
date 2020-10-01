@@ -15,7 +15,6 @@
 #include "scene.h"
 #include "unmanaged.h"
 #include "waylandclient.h"
-#include "wayland_server.h"
 #include "workspace.h"
 #include "keyboard_input.h"
 #include "input_event.h"
@@ -864,14 +863,8 @@ void DebugConsoleModel::remove(int parentRow, QVector<T*> &clients, T *client)
 DebugConsoleModel::DebugConsoleModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    if (waylandServer()) {
-        const auto clients = waylandServer()->clients();
-        for (auto c : clients) {
-            handleClientAdded(c);
-        }
-    }
-    const auto x11Clients = workspace()->clientList();
-    for (auto c : x11Clients) {
+    const auto clients = workspace()->allClientList();
+    for (auto c : clients) {
         handleClientAdded(c);
     }
     connect(workspace(), &Workspace::clientAdded, this, &DebugConsoleModel::handleClientAdded);
