@@ -237,8 +237,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
 
     // connect all clients
-    for (X11Client *c : ws->clientList()) {
-        setupClientConnections(c);
+    for (AbstractClient *client : ws->allClientList()) {
+        if (client->readyForPainting()) {
+            setupClientConnections(client);
+        } else {
+            connect(client, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
+        }
     }
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
@@ -246,16 +250,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (InternalClient *client : ws->internalClients()) {
         setupClientConnections(client);
     }
-    if (waylandServer()) {
-        const auto clients = waylandServer()->clients();
-        for (AbstractClient *c : clients) {
-            if (c->readyForPainting()) {
-                setupClientConnections(c);
-            } else {
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
-            }
-        }
-    }
+
     reconfigure();
 }
 
