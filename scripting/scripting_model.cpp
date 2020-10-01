@@ -8,10 +8,10 @@
 */
 #include "scripting_model.h"
 #include <config-kwin.h>
+#include "abstract_client.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "x11client.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -882,7 +882,7 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         // we do not filter out screen, desktop and activity
         return true;
     }
-    X11Client *client = qvariant_cast<KWin::X11Client *>(data);
+    AbstractClient *client = qvariant_cast<KWin::AbstractClient *>(data);
     if (!client) {
         return false;
     }
