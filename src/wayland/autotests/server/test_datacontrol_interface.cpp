@@ -43,8 +43,8 @@ using namespace KWaylandServer;
 
 // Faux-client API for tests
 
-Q_DECLARE_OPAQUE_POINTER(::zwlr_data_control_offer_v1*);
-Q_DECLARE_METATYPE(::zwlr_data_control_offer_v1*);
+Q_DECLARE_OPAQUE_POINTER(::zwlr_data_control_offer_v1*)
+Q_DECLARE_METATYPE(::zwlr_data_control_offer_v1*)
 
 class DataControlDeviceManager : public QObject, public QtWayland::zwlr_data_control_manager_v1
 {
@@ -112,12 +112,12 @@ public:
     ~TestDataSource() {
         emit unbound();
     }
-    void requestData(const QString &mimeType, qint32 fd) {
+    void requestData(const QString &mimeType, qint32 fd) override {
         Q_UNUSED(mimeType);
         Q_UNUSED(fd);
     };
-    void cancel() {};
-    QStringList mimeTypes() const {
+    void cancel() override {};
+    QStringList mimeTypes() const override {
         return {"text/test1", "text/test2"};
     }
 };
