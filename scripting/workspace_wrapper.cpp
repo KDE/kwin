@@ -13,7 +13,6 @@
 #include "../outline.h"
 #include "../screens.h"
 #include "../virtualdesktops.h"
-#include "../wayland_server.h"
 #include "../workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "../activities.h"
@@ -55,7 +54,9 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
         }
     );
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
-    foreach (KWin::X11Client *client, ws->clientList()) {
+
+    const QList<AbstractClient *> clients = ws->allClientList();
+    for (AbstractClient *client : clients) {
         setupClientConnections(client);
     }
 }
