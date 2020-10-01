@@ -14,6 +14,7 @@
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(VirtualDesktopsFactory, "kcm_kwin_virtualdesktops.json", registerPlugin<KWin::VirtualDesktops>();)
 

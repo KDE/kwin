@@ -11,6 +11,7 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <KNS3/DownloadDialog>
+#include <KPluginFactory>
 
 #include <QQuickWindow>
 #include <QWindow>

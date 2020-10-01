@@ -9,6 +9,8 @@
 
 #include "animationsmodel.h"
 
+#include <KConfigGroup>
+
 namespace KWin
 {
 
