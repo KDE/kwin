@@ -173,15 +173,16 @@ void TestWaylandServerSeat::testRepeatInfo()
     display.setSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
-    QCOMPARE(seat->keyRepeatRate(), 0);
-    QCOMPARE(seat->keyRepeatDelay(), 0);
+    seat->setHasKeyboard(true);
+    QCOMPARE(seat->keyboard()->keyRepeatRate(), 0);
+    QCOMPARE(seat->keyboard()->keyRepeatDelay(), 0);
     seat->setKeyRepeatInfo(25, 660);
-    QCOMPARE(seat->keyRepeatRate(), 25);
-    QCOMPARE(seat->keyRepeatDelay(), 660);
+    QCOMPARE(seat->keyboard()->keyRepeatRate(), 25);
+    QCOMPARE(seat->keyboard()->keyRepeatDelay(), 660);
     // setting negative values should result in 0
     seat->setKeyRepeatInfo(-25, -660);
-    QCOMPARE(seat->keyRepeatRate(), 0);
-    QCOMPARE(seat->keyRepeatDelay(), 0);
+    QCOMPARE(seat->keyboard()->keyRepeatRate(), 0);
+    QCOMPARE(seat->keyboard()->keyRepeatDelay(), 0);
 }
 
 void TestWaylandServerSeat::testMultiple()

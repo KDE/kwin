@@ -77,7 +77,6 @@ private Q_SLOTS:
     void testTouch();
     void testDisconnect();
     void testKeymap();
-    void testKeymapThroughFd();
 
 private:
     KWaylandServer::Display *m_display;
@@ -1518,7 +1517,9 @@ void TestWaylandSeat::testKeyboard()
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     // no keyboard yet
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    QVERIFY(!m_seatInterface->focusedKeyboard());
+
+    QSignalSpy keyboardCreatedSpy(m_seatInterface,  &SeatInterface::keyboardCreated);
+    QVERIFY(keyboardSpy.isValid());
 
     Keyboard *keyboard = m_seat->createKeyboard(m_seat);
     QSignalSpy repeatInfoSpy(keyboard, &Keyboard::keyRepeatChanged);
@@ -1528,9 +1529,11 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard->isKeyRepeatEnabled(), false);
     QCOMPARE(keyboard->keyRepeatDelay(), 0);
     QCOMPARE(keyboard->keyRepeatRate(), 0);
+    QVERIFY(keyboardCreatedSpy.wait());
+    QVERIFY(repeatInfoSpy.wait());
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
-    auto serverKeyboard = m_seatInterface->focusedKeyboard();
+    auto serverKeyboard = m_seatInterface->keyboard();
     QVERIFY(serverKeyboard);
 
     // we should get the repeat info announced
@@ -1541,7 +1544,6 @@ void TestWaylandSeat::testKeyboard()
 
     // let's change repeat in server
     m_seatInterface->setKeyRepeatInfo(25, 660);
-    m_seatInterface->focusedKeyboard()->client()->flush();
     QVERIFY(repeatInfoSpy.wait());
     QCOMPARE(repeatInfoSpy.count(), 2);
     QCOMPARE(keyboard->isKeyRepeatEnabled(), true);
@@ -1562,7 +1564,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(enteredSpy.isValid());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    QCOMPARE(m_seatInterface->focusedKeyboard()->focusedSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->keyboard()->focusedSurface(), serverSurface);
 
     // we get the modifiers sent after the enter
     QVERIFY(modifierSpy.wait());
@@ -1638,7 +1640,6 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(leftSpy.isValid());
     m_seatInterface->setFocusedKeyboardSurface(nullptr);
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
-    QVERIFY(!m_seatInterface->focusedKeyboard());
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.count(), 1);
     // TODO: get through API
@@ -1651,7 +1652,7 @@ void TestWaylandSeat::testKeyboard()
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    QCOMPARE(m_seatInterface->focusedKeyboard()->focusedSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->keyboard()->focusedSurface(), serverSurface);
     QCOMPARE(enteredSpy.count(), 2);
 
     QCOMPARE(keyboard->enteredSurface(), s);
@@ -1665,7 +1666,6 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(leftSpy.wait());
     QCOMPARE(serverSurfaceDestroyedSpy.count(), 1);
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
-    QVERIFY(!m_seatInterface->focusedKeyboard());
     QVERIFY(!serverKeyboard->focusedSurface());
 
     // let's create a Surface again
@@ -1676,57 +1676,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(serverSurface);
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    QCOMPARE(m_seatInterface->focusedKeyboard(), serverKeyboard);
-
-    // delete the Keyboard
-    QSignalSpy unboundSpy(serverKeyboard, &Resource::unbound);
-    QVERIFY(unboundSpy.isValid());
-    QSignalSpy destroyedSpy(serverKeyboard, &Resource::destroyed);
-    QVERIFY(destroyedSpy.isValid());
-    delete keyboard;
-    QVERIFY(unboundSpy.wait());
-    QCOMPARE(unboundSpy.count(), 1);
-    QCOMPARE(destroyedSpy.count(), 0);
-    // verify that calling into the Keyboard related functionality doesn't crash
-    m_seatInterface->setTimestamp(9);
-    m_seatInterface->keyPressed(KEY_F2);
-    m_seatInterface->setTimestamp(10);
-    m_seatInterface->keyReleased(KEY_F2);
-    m_seatInterface->setKeyRepeatInfo(30, 560);
-    m_seatInterface->setKeyRepeatInfo(25, 660);
-    m_seatInterface->updateKeyboardModifiers(5, 6, 7, 8);
-    m_seatInterface->setFocusedKeyboardSurface(nullptr);
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    QVERIFY(!m_seatInterface->focusedKeyboard());
-
-    QVERIFY(destroyedSpy.wait());
-    QCOMPARE(destroyedSpy.count(), 1);
-
-    // create a second Keyboard to verify that repeat info is announced properly
-    Keyboard *keyboard2 = m_seat->createKeyboard(m_seat);
-    QSignalSpy repeatInfoSpy2(keyboard2, &Keyboard::keyRepeatChanged);
-    QVERIFY(repeatInfoSpy2.isValid());
-    QVERIFY(keyboard2->isValid());
-    QCOMPARE(keyboard2->isKeyRepeatEnabled(), false);
-    QCOMPARE(keyboard2->keyRepeatDelay(), 0);
-    QCOMPARE(keyboard2->keyRepeatRate(), 0);
-    wl_display_flush(m_connection->display());
-    QVERIFY(repeatInfoSpy2.wait());
-    QCOMPARE(keyboard2->isKeyRepeatEnabled(), true);
-    QCOMPARE(keyboard2->keyRepeatRate(), 25);
-    QCOMPARE(keyboard2->keyRepeatDelay(), 660);
-    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    serverKeyboard = m_seatInterface->focusedKeyboard();
-    QVERIFY(serverKeyboard);
-    QSignalSpy keyboard2DestroyedSpy(serverKeyboard, &QObject::destroyed);
-    QVERIFY(keyboard2DestroyedSpy.isValid());
-    delete keyboard2;
-    QVERIFY(keyboard2DestroyedSpy.wait());
-    // this should have unset it on the server
-    QVERIFY(!m_seatInterface->focusedKeyboard());
-    // but not the surface
-    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->keyboard(), serverKeyboard);
 }
 
 void TestWaylandSeat::testCast()
@@ -1817,6 +1767,7 @@ void TestWaylandSeat::testSelection()
     Registry registry;
     QSignalSpy dataDeviceManagerSpy(&registry, SIGNAL(dataDeviceManagerAnnounced(quint32,quint32)));
     QVERIFY(dataDeviceManagerSpy.isValid());
+    m_seatInterface->setHasKeyboard(true);
     registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -1843,7 +1794,6 @@ void TestWaylandSeat::testSelection()
     QVERIFY(!m_seatInterface->selection());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-    QVERIFY(!m_seatInterface->focusedKeyboard());
     QVERIFY(selectionClearedSpy.wait());
     QVERIFY(selectionSpy.isEmpty());
     QVERIFY(!selectionClearedSpy.isEmpty());
@@ -1872,7 +1822,6 @@ void TestWaylandSeat::testSelection()
     // unset the keyboard focus
     m_seatInterface->setFocusedKeyboardSurface(nullptr);
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
-    QVERIFY(!m_seatInterface->focusedKeyboard());
     serverSurface->client()->flush();
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
@@ -1928,6 +1877,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
     QSignalSpy ddiCreatedSpy(ddmi.data(), &DataDeviceManagerInterface::dataDeviceCreated);
     QVERIFY(ddiCreatedSpy.isValid());
+    m_seatInterface->setHasKeyboard(true);
 
     // create a second Wayland client connection to use it for setSelection
     auto c = new ConnectionThread;
@@ -2273,22 +2223,11 @@ void TestWaylandSeat::testDisconnect()
     QVERIFY(pointerDestroyedSpy.isValid());
     QSignalSpy touchDestroyedSpy(serverTouch, &QObject::destroyed);
     QVERIFY(touchDestroyedSpy.isValid());
-    QSignalSpy clientDisconnectedSpy(serverKeyboard->client(), &ClientConnection::disconnected);
-    QVERIFY(clientDisconnectedSpy.isValid());
 
     if (m_connection) {
         m_connection->deleteLater();
         m_connection = nullptr;
     }
-    QVERIFY(clientDisconnectedSpy.wait());
-    QCOMPARE(clientDisconnectedSpy.count(), 1);
-    QCOMPARE(keyboardDestroyedSpy.count(), 0);
-    QCOMPARE(pointerDestroyedSpy.count(), 0);
-    QCOMPARE(touchDestroyedSpy.count(), 0);
-    QVERIFY(keyboardDestroyedSpy.wait());
-    QCOMPARE(keyboardDestroyedSpy.count(), 1);
-    QCOMPARE(pointerDestroyedSpy.count(), 1);
-    QCOMPARE(touchDestroyedSpy.count(), 1);
 
     keyboard->destroy();
     pointer->destroy();
@@ -2313,6 +2252,17 @@ void TestWaylandSeat::testKeymap()
     QVERIFY(keyboardChangedSpy.wait());
 
     QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
+
+    // create surface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surface->isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    QVERIFY(!m_seatInterface->selection());
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+
     QSignalSpy keymapChangedSpy(keyboard.data(), &Keyboard::keymapChanged);
     QVERIFY(keymapChangedSpy.isValid());
 
@@ -2338,60 +2288,6 @@ void TestWaylandSeat::testKeymap()
     QVERIFY(file.open(fd, QIODevice::ReadWrite));address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
     QVERIFY(address);
     QCOMPARE(qstrcmp(address, "bar"), 0);
-}
-
-void TestWaylandSeat::testKeymapThroughFd()
-{
-#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-
-    m_seatInterface->setHasKeyboard(true);
-    QSignalSpy keyboardChangedSpy(m_seat, &Seat::hasKeyboardChanged);
-    QVERIFY(keyboardChangedSpy.isValid());
-    QVERIFY(keyboardChangedSpy.wait());
-
-    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
-    QSignalSpy keymapChangedSpy(keyboard.data(), &Keyboard::keymapChanged);
-    QVERIFY(keymapChangedSpy.isValid());
-
-    QTemporaryFile serverFile;
-    QVERIFY(serverFile.open());
-    QByteArray data = QByteArrayLiteral("foobar");
-    QVERIFY(serverFile.resize(data.size() + 1));
-    uchar *serverAddress = serverFile.map(0, data.size() + 1);
-    QVERIFY(serverAddress);
-    QVERIFY(qstrncpy(reinterpret_cast<char *>(serverAddress), data.constData(), data.size() + 1));
-    m_seatInterface->setKeymap(serverFile.handle(), data.size());
-
-
-    QVERIFY(keymapChangedSpy.wait());
-    int fd = keymapChangedSpy.first().first().toInt();
-    QVERIFY(fd != -1);
-    QCOMPARE(keymapChangedSpy.first().last().value<quint32>(), 6u);
-    QFile file;
-    QVERIFY(file.open(fd, QIODevice::ReadOnly));
-    const char *address = reinterpret_cast<char*>(file.map(0, keymapChangedSpy.first().last().value<quint32>()));
-    QVERIFY(address);
-    QCOMPARE(qstrcmp(address, "foobar"), 0);
-
-    QScopedPointer<Keyboard> keyboard2(m_seat->createKeyboard());
-    QSignalSpy keymapChangedSpy2(keyboard2.data(), &Keyboard::keymapChanged);
-    QVERIFY(keymapChangedSpy2.isValid());
-    QVERIFY(keymapChangedSpy2.wait());
-
-    int fd2 = keymapChangedSpy2.first().first().toInt();
-    QVERIFY(fd2 != -1);
-    QCOMPARE(keymapChangedSpy2.first().last().value<quint32>(), 6u);
-    QFile file2;
-    QVERIFY(file2.open(fd2, QIODevice::ReadWrite));
-    char *address2 = reinterpret_cast<char*>(file2.map(0, keymapChangedSpy2.first().last().value<quint32>()));
-    QVERIFY(address2);
-    QCOMPARE(qstrcmp(address2, "foobar"), 0);
-    address2[0] = 'g';
-    QCOMPARE(qstrcmp(address2, "goobar"), 0);
-    QCOMPARE(qstrcmp(address, "foobar"), 0);
-#endif
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSeat)

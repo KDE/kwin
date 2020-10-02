@@ -546,13 +546,6 @@ public:
      * @name keyboard related methods
      **/
     ///@{
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 69)
-    /**
-     * @deprecated since 5.69, use setKeymapData
-     **/
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 69, "Use SeatInterface::setKeymapData()")
-    void setKeymap(int fd, quint32 size);
-#endif
     /**
      * Sets the xkb keymap with @p content for this Seat.
      * The content gets sent to all registered KeyboardInterfaces
@@ -575,37 +568,6 @@ public:
      * @since 5.5
      ***/
     void setKeyRepeatInfo(qint32 charactersPerSecond, qint32 delay);
-    quint32 depressedModifiers() const;
-    quint32 latchedModifiers() const;
-    quint32 lockedModifiers() const;
-    quint32 groupModifiers() const;
-    quint32 lastModifiersSerial() const;
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 69)
-    /**
-     * @deprecated since 5.69
-     **/
-    int KWAYLANDSERVER_DEPRECATED keymapFileDescriptor() const;
-    /**
-     * @deprecated since 5.69
-     **/
-    quint32 KWAYLANDSERVER_DEPRECATED keymapSize() const;
-#endif
-    bool isKeymapXkbCompatible() const;
-    QVector<quint32> pressedKeys() const;
-    /**
-     * @returns The key repeat in character per second
-     * @since 5.5
-     * @see setKeyRepeatInfo
-     * @see keyRepeatDelay
-     **/
-    qint32 keyRepeatRate() const;
-    /**
-     * @returns The delay on key press before starting repeating keys
-     * @since 5.5
-     * @see keyRepeatRate
-     * @see setKeyRepeatInfo
-     **/
-    qint32 keyRepeatDelay() const;
 
     /**
      * Passes keyboard focus to @p surface.
@@ -619,7 +581,7 @@ public:
      **/
     void setFocusedKeyboardSurface(SurfaceInterface *surface);
     SurfaceInterface *focusedKeyboardSurface() const;
-    KeyboardInterface *focusedKeyboard() const;
+    KeyboardInterface *keyboard() const;
     ///@}
 
     /**
@@ -783,6 +745,7 @@ private:
     friend class DataDeviceInterface;
     friend class PrimarySelectionDeviceV1Interface;
     friend class TextInputManagerV2InterfacePrivate;
+    friend class KeyboardInterface;
     explicit SeatInterface(Display *display, QObject *parent);
 
     class Private;

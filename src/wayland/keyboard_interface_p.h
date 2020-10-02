@@ -6,26 +6,35 @@
 #ifndef WAYLAND_SERVER_KEYBOARD_INTERFACE_P_H
 #define WAYLAND_SERVER_KEYBOARD_INTERFACE_P_H
 #include "keyboard_interface.h"
-#include "resource_p.h"
+
+#include <qwayland-server-wayland.h>
 
 #include <QPointer>
+#include <QHash>
 
 class QTemporaryFile;
 
 namespace KWaylandServer
 {
 
-class KeyboardInterface::Private : public Resource::Private
+class ClientConnection;
+
+class KeyboardInterfacePrivate : public QtWaylandServer::wl_keyboard
 {
 public:
-    Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q);
+    KeyboardInterfacePrivate(SeatInterface *s);
+
+
     void sendKeymap(int fd, quint32 size);
     void sendModifiers();
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
 
-    void focusChildSurface(const QPointer<SurfaceInterface> &childSurface, quint32 serial);
+    QList<Resource *> keyboardsForClient(ClientConnection *client) const;
+    void focusChildSurface(SurfaceInterface *childSurface, quint32 serial);
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, quint32 serial);
+
+    static KeyboardInterfacePrivate *get(KeyboardInterface *keyboard) { return keyboard->d.data(); }
 
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
@@ -33,8 +42,30 @@ public:
     QMetaObject::Connection destroyConnection;
     QScopedPointer<QTemporaryFile> keymap;
 
-private:
-    static const struct wl_keyboard_interface s_interface;
+    struct {
+        qint32 charactersPerSecond = 0;
+        qint32 delay = 0;
+    } keyRepeat;
+
+    struct Modifiers {
+        quint32 depressed = 0;
+        quint32 latched = 0;
+        quint32 locked = 0;
+        quint32 group = 0;
+        quint32 serial = 0;
+    };
+    Modifiers modifiers;
+
+    enum class State {
+        Released,
+        Pressed
+    };
+    QHash<quint32, State> states;
+    bool updateKey(quint32 key, State state);
+    QVector<quint32> pressedKeys() const;
+
+protected:
+    void keyboard_bind_resource(Resource *resource) override;
 };
 
 }

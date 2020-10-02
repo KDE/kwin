@@ -42,15 +42,15 @@ public:
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     void endDrag(quint32 serial);
+    quint32 nextSerial() const;
 
     QString name;
     bool pointer = false;
-    bool keyboard = false;
     bool touch = false;
     QList<wl_resource*> resources;
     quint32 timestamp = 0;
     QVector<PointerInterface*> pointers;
-    QVector<KeyboardInterface*> keyboards;
+    QScopedPointer<KeyboardInterface> keyboard;
     QVector<TouchInterface*> touchs;
     QVector<DataDeviceInterface*> dataDevices;
     QVector<PrimarySelectionDeviceV1Interface*> primarySelectionDevices;
@@ -93,41 +93,16 @@ public:
 
     // Keyboard related members
     struct Keyboard {
-        enum class State {
-            Released,
-            Pressed
-        };
-        QHash<quint32, State> states;
-        struct Keymap {
-            bool xkbcommonCompatible = false;
-            QByteArray content;
-        };
-        Keymap keymap;
-        struct Modifiers {
-            quint32 depressed = 0;
-            quint32 latched = 0;
-            quint32 locked = 0;
-            quint32 group = 0;
-            quint32 serial = 0;
-        };
-        Modifiers modifiers;
         struct Focus {
             SurfaceInterface *surface = nullptr;
-            QVector<KeyboardInterface*> keyboards;
             QMetaObject::Connection destroyConnection;
             quint32 serial = 0;
             QVector<DataDeviceInterface *> selections;
             QVector<PrimarySelectionDeviceV1Interface *> primarySelections;
         };
         Focus focus;
-        quint32 lastStateSerial = 0;
-        struct {
-            qint32 charactersPerSecond = 0;
-            qint32 delay = 0;
-        } keyRepeat;
     };
-    Keyboard keys;
-    bool updateKey(quint32 key, Keyboard::State state);
+    Keyboard globalKeyboard;
 
     // Touch related members
     struct Touch {

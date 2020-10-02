@@ -3,77 +3,79 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
 #include "display.h"
 #include "seat_interface.h"
+#include "seat_interface_p.h"
 #include "surface_interface.h"
+#include "compositor_interface.h"
 // Qt
 #include <QTemporaryFile>
 #include <QVector>
-// Wayland
-#include <wayland-server.h>
 
 #include <unistd.h>
 
 namespace KWaylandServer
 {
 
-KeyboardInterface::Private::Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q)
-    : Resource::Private(q, s, parentResource, &wl_keyboard_interface, &s_interface)
-    , seat(s)
+KeyboardInterfacePrivate::KeyboardInterfacePrivate(SeatInterface *s)
+    : seat(s)
 {
 }
 
-void KeyboardInterface::Private::focusChildSurface(const QPointer<SurfaceInterface> &childSurface, quint32 serial)
+void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
+{
+    if (resource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
+        send_repeat_info(resource->handle, keyRepeat.charactersPerSecond, keyRepeat.delay);
+    }
+    if (!keymap.isNull()) {
+        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymap->handle(), keymap->size());
+    }
+}
+
+QList<KeyboardInterfacePrivate::Resource *> KeyboardInterfacePrivate::keyboardsForClient(ClientConnection *client) const
+{
+    return resourceMap().values(client->client());
+}
+
+void KeyboardInterfacePrivate::focusChildSurface(SurfaceInterface *childSurface, quint32 serial)
 {
     if (focusedChildSurface == childSurface) {
         return;
     }
     sendLeave(focusedChildSurface.data(), serial);
-    focusedChildSurface = childSurface;
+    focusedChildSurface = QPointer<SurfaceInterface>(childSurface);
     sendEnter(focusedChildSurface.data(), serial);
 }
 
-void KeyboardInterface::Private::sendLeave(SurfaceInterface *surface, quint32 serial)
+void KeyboardInterfacePrivate::sendLeave(SurfaceInterface *surface, quint32 serial)
 {
-    if (surface && resource && surface->resource()) {
-        wl_keyboard_send_leave(resource, serial, surface->resource());
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> keyboards = keyboardsForClient(surface->client());
+    for (Resource *keyboardResource : keyboards) {
+        send_leave(keyboardResource->handle, serial, surface->resource());
     }
 }
 
-void KeyboardInterface::Private::sendEnter(SurfaceInterface *surface, quint32 serial)
+void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 serial)
 {
-    wl_array keys;
-    wl_array_init(&keys);
-    const auto states = seat->pressedKeys();
-    for (auto it = states.constBegin(); it != states.constEnd(); ++it) {
-        uint32_t *k = reinterpret_cast<uint32_t*>(wl_array_add(&keys, sizeof(uint32_t)));
-        *k = *it;
+    if (!surface) {
+        return;
     }
-    wl_keyboard_send_enter(resource, serial, surface->resource(), &keys);
-    wl_array_release(&keys);
+    const auto states = pressedKeys();
+    QByteArray data = QByteArray::fromRawData(
+        reinterpret_cast<const char*>(states.constData()),
+        sizeof(quint32) * states.size()
+    );
+
+    const QList<Resource *> keyboards = keyboardsForClient(surface->client());
+    for (Resource *keyboardResource : keyboards) {
+        send_enter(keyboardResource->handle, serial, surface->resource(), data);
+    }
 
     sendModifiers();
-}
-
-#ifndef K_DOXYGEN
-const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
-    resourceDestroyedCallback
-};
-#endif
-
-KeyboardInterface::KeyboardInterface(SeatInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(parent, parentResource, this))
-{
-}
-
-KeyboardInterface::~KeyboardInterface() = default;
-
-void KeyboardInterface::setKeymap(int fd, quint32 size)
-{
-    Q_D();
-    d->sendKeymap(fd, size);
 }
 
 void KeyboardInterface::setKeymap(const QByteArray &content)
@@ -94,35 +96,58 @@ void KeyboardInterface::setKeymap(const QByteArray &content)
         return;
     }
     tmp->unmap(address);
-    Q_D();
+
     d->sendKeymap(tmp->handle(), content.size());
     d->keymap.swap(tmp);
 }
 
-void KeyboardInterface::Private::sendKeymap(int fd, quint32 size)
+void KeyboardInterfacePrivate::sendKeymap(int fd, quint32 size)
 {
-    if (!resource) {
-        return;
+    const QList<Resource *> keyboards = resourceMap().values();
+    for (Resource *keyboardResource : keyboards) {
+        send_keymap(keyboardResource->handle, keymap_format::keymap_format_xkb_v1, fd, size);
     }
-    wl_keyboard_send_keymap(resource, WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1, fd, size);
 }
 
-void KeyboardInterface::Private::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial)
+void KeyboardInterfacePrivate::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial)
 {
-    if (!resource) {
+    if (!focusedSurface) {
         return;
     }
-    wl_keyboard_send_modifiers(resource, serial, depressed, latched, locked, group);
+    const QList<Resource *> keyboards = keyboardsForClient(focusedSurface->client());
+    for (Resource *keyboardResource : keyboards) {
+        send_modifiers(keyboardResource->handle, serial, depressed, latched, locked, group);
+    }
 }
 
-void KeyboardInterface::Private::sendModifiers()
+bool KeyboardInterfacePrivate::updateKey(quint32 key, State state)
 {
-    sendModifiers(seat->depressedModifiers(), seat->latchedModifiers(), seat->lockedModifiers(), seat->groupModifiers(), seat->lastModifiersSerial());
+    auto it = states.find(key);
+    if (it == states.end()) {
+        states.insert(key, state);
+        return true;
+    }
+    if (it.value() == state) {
+        return false;
+    }
+    it.value() = state;
+    return true;
+}
+
+KeyboardInterface::KeyboardInterface(SeatInterface *seat)
+    : d(new KeyboardInterfacePrivate(seat))
+{
+}
+
+KeyboardInterface::~KeyboardInterface() = default;
+
+void KeyboardInterfacePrivate::sendModifiers()
+{
+    sendModifiers(modifiers.depressed, modifiers.latched, modifiers.locked, modifiers.group, modifiers.serial);
 }
 
 void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
-    Q_D();
     d->sendLeave(d->focusedChildSurface, serial);
     disconnect(d->destroyConnection);
     d->focusedChildSurface.clear();
@@ -132,10 +157,8 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     }
     d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this,
         [this] {
-            Q_D();
-            if (d->resource) {
-                wl_keyboard_send_leave(d->resource, d->global->display()->nextSerial(), d->focusedSurface->resource());
-            }
+            CompositorInterface *compositor = d->focusedChildSurface->compositor();
+            d->sendLeave(d->focusedChildSurface.data(), compositor->display()->nextSerial());
             d->focusedSurface = nullptr;
             d->focusedChildSurface.clear();
         }
@@ -143,58 +166,101 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     d->focusedChildSurface = QPointer<SurfaceInterface>(surface);
 
     d->sendEnter(d->focusedSurface, serial);
-    d->client->flush();
 }
 
-void KeyboardInterface::keyPressed(quint32 key, quint32 serial)
+QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
 {
-    Q_D();
-    if (!d->resource) {
+    QVector<quint32> keys;
+    for (auto it = states.constBegin(); it != states.constEnd(); ++it) {
+        if (it.value() == State::Pressed) {
+            keys << it.key();
+        }
+    }
+    return keys;
+}
+
+
+void KeyboardInterface::keyPressed(quint32 key)
+{
+    if (!d->focusedSurface) {
         return;
     }
-    Q_ASSERT(d->focusedSurface);
-    wl_keyboard_send_key(d->resource, serial, d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_PRESSED);
-}
 
-void KeyboardInterface::keyReleased(quint32 key, quint32 serial)
-{
-    Q_D();
-    if (!d->resource) {
+    if (!d->updateKey(key, KeyboardInterfacePrivate::State::Pressed)) {
         return;
     }
-    Q_ASSERT(d->focusedSurface);
-    wl_keyboard_send_key(d->resource, serial, d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_RELEASED);
+
+    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(d->focusedSurface->client());
+    const quint32 serial = d->seat->d_func()->nextSerial();
+    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
+        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, KeyboardInterfacePrivate::key_state::key_state_pressed);
+    }
 }
 
-void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial)
+void KeyboardInterface::keyReleased(quint32 key)
 {
-    Q_D();
-    Q_ASSERT(d->focusedSurface);
-    d->sendModifiers(depressed, latched, locked, group, serial);
+    if (!d->focusedSurface) {
+        return;
+    }
+
+    if (!d->updateKey(key, KeyboardInterfacePrivate::State::Released)) {
+        return;
+    }
+
+    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(d->focusedSurface->client());
+    const quint32 serial = d->seat->d_func()->nextSerial();
+    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
+        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, KeyboardInterfacePrivate::key_state::key_state_released);
+    }
+}
+
+void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
+{
+    if (!d->focusedSurface) {
+        return;
+    }
+    bool changed = false;
+#define UPDATE( value ) \
+    if (d->modifiers.value != value) { \
+        d->modifiers.value = value; \
+        changed = true; \
+    }
+    UPDATE(depressed)
+    UPDATE(latched)
+    UPDATE(locked)
+    UPDATE(group)
+    if (!changed) {
+        return;
+    }
+    d->modifiers.serial = d->seat->d_func()->nextSerial();
+    d->sendModifiers(depressed, latched, locked, group, d->modifiers.serial);
 }
 
 void KeyboardInterface::repeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
-    Q_D();
-    if (!d->resource) {
-        return;
+    d->keyRepeat.charactersPerSecond = qMax(charactersPerSecond, 0);
+    d->keyRepeat.delay = qMax(delay, 0);
+    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->resourceMap().values();
+    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
+        if (keyboardResource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
+            d->send_repeat_info(keyboardResource->handle, d->keyRepeat.charactersPerSecond, d->keyRepeat.delay);
+        }
     }
-    if (wl_resource_get_version(d->resource) < WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
-        // only supported since version 4
-        return;
-    }
-    wl_keyboard_send_repeat_info(d->resource, charactersPerSecond, delay);
 }
 
 SurfaceInterface *KeyboardInterface::focusedSurface() const
 {
-    Q_D();
     return d->focusedSurface;
 }
 
-KeyboardInterface::Private *KeyboardInterface::d_func() const
+qint32 KeyboardInterface::keyRepeatDelay() const
 {
-    return reinterpret_cast<Private*>(d.data());
+    return d->keyRepeat.delay;
+}
+
+qint32 KeyboardInterface::keyRepeatRate() const
+{
+    return d->keyRepeat.charactersPerSecond;
 }
 
 }

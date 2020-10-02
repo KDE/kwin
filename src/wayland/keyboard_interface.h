@@ -6,44 +6,54 @@
 #ifndef WAYLAND_SERVER_KEYBOARD_INTERFACE_H
 #define WAYLAND_SERVER_KEYBOARD_INTERFACE_H
 
-#include <KWaylandServer/kwaylandserver_export.h>
+#include <QObject>
 
-#include "resource.h"
+#include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
 
 class SeatInterface;
 class SurfaceInterface;
+class KeyboardInterfacePrivate;
 
 /**
  * @brief Resource for the wl_keyboard interface.
  *
  **/
-class KWAYLANDSERVER_EXPORT KeyboardInterface : public Resource
+class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~KeyboardInterface();
+    ~KeyboardInterface() override;
 
     /**
      * @returns the focused SurfaceInterface on this keyboard resource, if any.
      **/
     SurfaceInterface *focusedSurface() const;
 
+    /**
+     * @returns The key repeat in character per second
+     **/
+    qint32 keyRepeatRate() const;
+    /**
+     * @returns The delay on key press before starting repeating keys
+     **/
+    qint32 keyRepeatDelay() const;
+
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
-    void setKeymap(int fd, quint32 size);
     void setKeymap(const QByteArray &content);
-    void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
-    void keyPressed(quint32 key, quint32 serial);
-    void keyReleased(quint32 key, quint32 serial);
+    void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+    void keyPressed(quint32 key);
+    void keyReleased(quint32 key);
     void repeatInfo(qint32 charactersPerSecond, qint32 delay);
-    friend class SeatInterface;
-    explicit KeyboardInterface(SeatInterface *parent, wl_resource *parentResource);
 
-    class Private;
-    Private *d_func() const;
+    friend class SeatInterface;
+    friend class KeyboardInterfacePrivate;
+    explicit KeyboardInterface(SeatInterface *seat);
+
+    QScopedPointer<KeyboardInterfacePrivate> d;
 };
 
 }

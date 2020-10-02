@@ -14,6 +14,7 @@
 #include "datacontrolsource_v1_interface.h"
 #include "keyboard_interface.h"
 #include "keyboard_interface_p.h"
+#include "logging.h"
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
 #include "primaryselectiondevice_v1_interface.h"
@@ -135,20 +136,6 @@ void SeatInterface::Private::updatePointerButtonState(quint32 button, Pointer::S
     it.value() = state;
 }
 
-bool SeatInterface::Private::updateKey(quint32 key, Keyboard::State state)
-{
-    auto it = keys.states.find(key);
-    if (it == keys.states.end()) {
-        keys.states.insert(key, state);
-        return true;
-    }
-    if (it.value() == state) {
-        return false;
-    }
-    it.value() = state;
-    return true;
-}
-
 void SeatInterface::Private::sendName(wl_resource *r)
 {
     if (wl_resource_get_version(r) < WL_SEAT_NAME_SINCE_VERSION) {
@@ -170,6 +157,11 @@ void SeatInterface::Private::sendCapabilities(wl_resource *r)
         capabilities |= WL_SEAT_CAPABILITY_TOUCH;
     }
     wl_seat_send_capabilities(r, capabilities);
+}
+
+quint32 SeatInterface::Private::nextSerial() const
+{
+    return display->nextSerial();
 }
 
 SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
@@ -235,11 +227,6 @@ QVector<PointerInterface *> SeatInterface::Private::pointersForSurface(SurfaceIn
     return interfacesForSurface(surface, pointers);
 }
 
-QVector<KeyboardInterface *> SeatInterface::Private::keyboardsForSurface(SurfaceInterface *surface) const
-{
-    return interfacesForSurface(surface, keyboards);
-}
-
 QVector<TouchInterface *> SeatInterface::Private::touchsForSurface(SurfaceInterface *surface) const
 {
     return interfacesForSurface(surface, touchs);
@@ -262,7 +249,7 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
     dataDevices << dataDevice;
     auto dataDeviceCleanup = [this, dataDevice] {
         dataDevices.removeOne(dataDevice);
-        keys.focus.selections.removeOne(dataDevice);
+        globalKeyboard.focus.selections.removeOne(dataDevice);
     };
     QObject::connect(dataDevice, &QObject::destroyed, q, dataDeviceCleanup);
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q,
@@ -327,10 +314,10 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
         }
     );
     // is the new DataDevice for the current keyoard focus?
-    if (keys.focus.surface) {
+    if (globalKeyboard.focus.surface) {
         // same client?
-        if (*keys.focus.surface->client() == dataDevice->client()) {
-            keys.focus.selections.append(dataDevice);
+        if (*globalKeyboard.focus.surface->client() == dataDevice->client()) {
+            globalKeyboard.focus.selections.append(dataDevice);
             if (currentSelection) {
                 dataDevice->sendSelection(currentSelection);
             }
@@ -379,7 +366,7 @@ void SeatInterface::Private::registerPrimarySelectionDevice(PrimarySelectionDevi
     primarySelectionDevices << primarySelectionDevice;
     auto dataDeviceCleanup = [this, primarySelectionDevice] {
         primarySelectionDevices.removeOne(primarySelectionDevice);
-        keys.focus.primarySelections.removeOne(primarySelectionDevice);
+        globalKeyboard.focus.primarySelections.removeOne(primarySelectionDevice);
     };
     QObject::connect(primarySelectionDevice, &QObject::destroyed, q, dataDeviceCleanup);
     QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionChanged, q,
@@ -393,10 +380,10 @@ void SeatInterface::Private::registerPrimarySelectionDevice(PrimarySelectionDevi
         }
     );
     // is the new DataDevice for the current keyoard focus?
-    if (keys.focus.surface) {
+    if (globalKeyboard.focus.surface) {
         // same client?
-        if (*keys.focus.surface->client() == primarySelectionDevice->client()) {
-            keys.focus.primarySelections.append(primarySelectionDevice);
+        if (*globalKeyboard.focus.surface->client() == primarySelectionDevice->client()) {
+            globalKeyboard.focus.primarySelections.append(primarySelectionDevice);
             if (currentPrimarySelection) {
                 primarySelectionDevice->sendSelection(currentPrimarySelection);
             }
@@ -424,7 +411,7 @@ void SeatInterface::Private::endDrag(quint32 serial)
 void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice)
 {
     // if the update is from the focussed window we should inform the active client
-    if (!(keys.focus.surface && (*keys.focus.surface->client() == dataDevice->client()))) {
+    if (!(globalKeyboard.focus.surface && (*globalKeyboard.focus.surface->client() == dataDevice->client()))) {
         return;
     }
     q->setSelection(dataDevice->selection());
@@ -433,7 +420,7 @@ void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice)
 void SeatInterface::Private::updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice)
 {
     // if the update is from the focussed window we should inform the active client
-    if (!(keys.focus.surface && (*keys.focus.surface->client() == primarySelectionDevice->client()))) {
+    if (!(globalKeyboard.focus.surface && (*globalKeyboard.focus.surface->client() == primarySelectionDevice->client()))) {
         return;
     }
     q->setPrimarySelection(primarySelectionDevice->selection());
@@ -442,10 +429,15 @@ void SeatInterface::Private::updatePrimarySelection(PrimarySelectionDeviceV1Inte
 void SeatInterface::setHasKeyboard(bool has)
 {
     Q_D();
-    if (d->keyboard == has) {
+    if (d->keyboard.isNull() != has) {
         return;
     }
-    d->keyboard = has;
+    if (has) {
+        d->keyboard.reset(new KeyboardInterface(this));
+    } else {
+        d->keyboard.reset();
+    }
+
     emit hasKeyboardChanged(d->keyboard);
 }
 
@@ -526,32 +518,12 @@ void SeatInterface::Private::getKeyboardCallback(wl_client *client, wl_resource 
 
 void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    // TODO: only create if seat has keyboard?
-    KeyboardInterface *keyboard = new KeyboardInterface(q, resource);
-    auto clientConnection = display->getConnection(client);
-    keyboard->create(clientConnection, qMin(wl_resource_get_version(resource), s_keyboardVersion) , id);
-    if (!keyboard->resource()) {
-        wl_resource_post_no_memory(resource);
-        delete keyboard;
+    if (!keyboard) {
         return;
     }
-    keyboard->repeatInfo(keys.keyRepeat.charactersPerSecond, keys.keyRepeat.delay);
-    if (keys.keymap.xkbcommonCompatible) {
-        keyboard->setKeymap(keys.keymap.content);
-    }
-    keyboards << keyboard;
-    if (keys.focus.surface && keys.focus.surface->client() == clientConnection) {
-        // this is a keyboard for the currently focused keyboard surface
-        keys.focus.keyboards << keyboard;
-        keyboard->setFocusedSurface(keys.focus.surface, keys.focus.serial);
-    }
-    QObject::connect(keyboard, &QObject::destroyed, q,
-        [keyboard,this] {
-            keyboards.removeAt(keyboards.indexOf(keyboard));
-            keys.focus.keyboards.removeOne(keyboard);
-        }
-    );
-    emit q->keyboardCreated(keyboard);
+
+    keyboard->d->add(client, id, wl_resource_get_version(resource));
+    emit q->keyboardCreated(keyboard.data());
 }
 
 void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id)
@@ -907,13 +879,11 @@ void SeatInterface::pointerButtonPressed(quint32 button)
         for (auto it = d->globalPointer.focus.pointers.constBegin(), end = d->globalPointer.focus.pointers.constEnd(); it != end; ++it) {
             (*it)->buttonPressed(button, serial);
         }
-        if (focusSurface == d->keys.focus.surface) {
+        if (focusSurface == d->globalKeyboard.focus.surface) {
             // update the focused child surface
             auto p = focusedPointer();
-            if (p) {
-                for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-                    (*it)->d_func()->focusChildSurface(p->d_func()->focusedChildSurface, serial);
-                }
+            if (p && d->keyboard) {
+                d->keyboard->d->focusChildSurface(p->d_func()->focusedChildSurface, serial);
             }
         }
     }
@@ -1100,61 +1070,54 @@ void SeatInterface::cancelPointerPinchGesture()
 void SeatInterface::keyPressed(quint32 key)
 {
     Q_D();
-    d->keys.lastStateSerial = d->display->nextSerial();
-    if (!d->updateKey(key, Private::Keyboard::State::Pressed)) {
+    if (!d->keyboard) {
+        qCWarning(KWAYLAND_SERVER) << "Can not send key event on seat without keyboard capability";
         return;
     }
-    if (d->keys.focus.surface) {
-        for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-            (*it)->keyPressed(key, d->keys.lastStateSerial);
-        }
-    }
+    d->keyboard->keyPressed(key);
 }
 
 void SeatInterface::keyReleased(quint32 key)
 {
     Q_D();
-    d->keys.lastStateSerial = d->display->nextSerial();
-    if (!d->updateKey(key, Private::Keyboard::State::Released)) {
+    if (!d->keyboard) {
         return;
     }
-    if (d->keys.focus.surface) {
-        for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-            (*it)->keyReleased(key, d->keys.lastStateSerial);
-        }
-    }
+    d->keyboard->keyReleased(key);
 }
 
 SurfaceInterface *SeatInterface::focusedKeyboardSurface() const
 {
     Q_D();
-    return d->keys.focus.surface;
+    return d->globalKeyboard.focus.surface;
 }
 
 void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
 {
     Q_D();
+    if (!d->keyboard) {
+        qCWarning(KWAYLAND_SERVER) << "Can not set focused keyboard surface without keyboard capability";
+        return;
+    }
+
     const quint32 serial = d->display->nextSerial();
-    for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-        (*it)->setFocusedSurface(nullptr, serial);
+
+    if (d->globalKeyboard.focus.surface) {
+        disconnect(d->globalKeyboard.focus.destroyConnection);
     }
-    if (d->keys.focus.surface) {
-        disconnect(d->keys.focus.destroyConnection);
-    }
-    d->keys.focus = Private::Keyboard::Focus();
-    d->keys.focus.surface = surface;
-    d->keys.focus.keyboards = d->keyboardsForSurface(surface);
-    if (d->keys.focus.surface) {
-        d->keys.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
+    d->globalKeyboard.focus = Private::Keyboard::Focus();
+    d->globalKeyboard.focus.surface = surface;
+    if (d->globalKeyboard.focus.surface) {
+        d->globalKeyboard.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
             [this] {
                 Q_D();
-                d->keys.focus = Private::Keyboard::Focus();
+                d->globalKeyboard.focus = Private::Keyboard::Focus();
             }
         );
-        d->keys.focus.serial = serial;
+        d->globalKeyboard.focus.serial = serial;
         // selection?
         const QVector<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);
-        d->keys.focus.selections = dataDevices;
+        d->globalKeyboard.focus.selections = dataDevices;
         for (auto dataDevice : dataDevices) {
             if (d->currentSelection) {
                 dataDevice->sendSelection(d->currentSelection);
@@ -1170,7 +1133,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
             }
         }
 
-        d->keys.focus.primarySelections = primarySelectionDevices;
+        d->globalKeyboard.focus.primarySelections = primarySelectionDevices;
         for (auto primaryDataDevice : primarySelectionDevices) {
             if (d->currentSelection) {
                 primaryDataDevice->sendSelection(d->currentPrimarySelection);
@@ -1179,156 +1142,49 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
             }
         }
     }
-    for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-        (*it)->setFocusedSurface(surface, serial);
-    }
+
+    d->keyboard->setFocusedSurface(surface, serial);
+
     // focused text input surface follows keyboard
     if (hasKeyboard()) {
         setFocusedTextInputSurface(surface);
     }
 }
 
-#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
-void SeatInterface::setKeymap(int fd, quint32 size)
-{
-    QFile file;
-    if (!file.open(fd, QIODevice::ReadOnly)) {
-        return;
-    }
-    const char *address = reinterpret_cast<char*>(file.map(0, size));
-    if (!address) {
-        return;
-    }
-    setKeymapData(QByteArray(address, size));
-}
-#endif
-
 void SeatInterface::setKeymapData(const QByteArray &content)
 {
     Q_D();
-    d->keys.keymap.xkbcommonCompatible = true;
-    d->keys.keymap.content = content;
-    for (auto it = d->keyboards.constBegin(); it != d->keyboards.constEnd(); ++it) {
-        (*it)->setKeymap(content);
+    if (!d->keyboard){
+        return;
+    }
+    if (!content.isNull()) {
+        d->keyboard->setKeymap(content);
     }
 }
 
 void SeatInterface::updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
     Q_D();
-    bool changed = false;
-#define UPDATE( value ) \
-    if (d->keys.modifiers.value != value) { \
-        d->keys.modifiers.value = value; \
-        changed = true; \
-    }
-    UPDATE(depressed)
-    UPDATE(latched)
-    UPDATE(locked)
-    UPDATE(group)
-    if (!changed) {
+    if (!d->keyboard) {
         return;
     }
-    const quint32 serial = d->display->nextSerial();
-    d->keys.modifiers.serial = serial;
-    if (d->keys.focus.surface) {
-        for (auto it = d->keys.focus.keyboards.constBegin(), end = d->keys.focus.keyboards.constEnd(); it != end; ++it) {
-            (*it)->updateModifiers(depressed, latched, locked, group, serial);
-        }
-    }
+    d->keyboard->updateModifiers(depressed, latched, locked, group);
 }
 
 void SeatInterface::setKeyRepeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
     Q_D();
-    d->keys.keyRepeat.charactersPerSecond = qMax(charactersPerSecond, 0);
-    d->keys.keyRepeat.delay = qMax(delay, 0);
-    for (auto it = d->keyboards.constBegin(); it != d->keyboards.constEnd(); ++it) {
-        (*it)->repeatInfo(d->keys.keyRepeat.charactersPerSecond, d->keys.keyRepeat.delay);
+    if (!d->keyboard){
+        return;
     }
+
+    d->keyboard->repeatInfo(charactersPerSecond, delay);
 }
 
-qint32 SeatInterface::keyRepeatDelay() const
+KeyboardInterface *SeatInterface::keyboard() const
 {
     Q_D();
-    return d->keys.keyRepeat.delay;
-}
-
-qint32 SeatInterface::keyRepeatRate() const
-{
-    Q_D();
-    return d->keys.keyRepeat.charactersPerSecond;
-}
-
-bool SeatInterface::isKeymapXkbCompatible() const
-{
-    Q_D();
-    return d->keys.keymap.xkbcommonCompatible;
-}
-
-#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
-int SeatInterface::keymapFileDescriptor() const
-{
-    return -1;
-}
-#endif
-
-#if KWAYLANDSERVER_BUILD_DEPRECATED_SINCE(5, 69)
-quint32 SeatInterface::keymapSize() const
-{
-    return 0;
-}
-#endif
-
-quint32 SeatInterface::depressedModifiers() const
-{
-    Q_D();
-    return d->keys.modifiers.depressed;
-}
-
-quint32 SeatInterface::groupModifiers() const
-{
-    Q_D();
-    return d->keys.modifiers.group;
-}
-
-quint32 SeatInterface::latchedModifiers() const
-{
-    Q_D();
-    return d->keys.modifiers.latched;
-}
-
-quint32 SeatInterface::lockedModifiers() const
-{
-    Q_D();
-    return d->keys.modifiers.locked;
-}
-
-quint32 SeatInterface::lastModifiersSerial() const
-{
-    Q_D();
-    return d->keys.modifiers.serial;
-}
-
-QVector< quint32 > SeatInterface::pressedKeys() const
-{
-    Q_D();
-    QVector<quint32> keys;
-    for (auto it = d->keys.states.constBegin(); it != d->keys.states.constEnd(); ++it) {
-        if (it.value() == Private::Keyboard::State::Pressed) {
-            keys << it.key();
-        }
-    }
-    return keys;
-}
-
-KeyboardInterface *SeatInterface::focusedKeyboard() const
-{
-    Q_D();
-    if (d->keys.focus.keyboards.isEmpty()) {
-        return nullptr;
-    }
-    return d->keys.focus.keyboards.first();
+    return d->keyboard.data();
 }
 
 void SeatInterface::cancelTouchSequence()
@@ -1606,7 +1462,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
             }
         );
     }
-    
+
     d->textInputV2->d->sendEnter(surface, serial);
     d->textInputV3->d->sendEnter(surface);
     // TODO: setFocusedSurface like in other interfaces
@@ -1656,7 +1512,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
 
     d->currentSelection = selection;
 
-    for (auto focussedSelection: qAsConst(d->keys.focus.selections)) {
+    for (auto focussedSelection: qAsConst(d->globalKeyboard.focus.selections)) {
         if (selection) {
             focussedSelection->sendSelection(selection);
         } else {
@@ -1695,7 +1551,7 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 
     d->currentPrimarySelection = selection;
 
-    for (auto focussedSelection: qAsConst(d->keys.focus.primarySelections)) {
+    for (auto focussedSelection: qAsConst(d->globalKeyboard.focus.primarySelections)) {
         if (selection) {
             focussedSelection->sendSelection(selection);
         } else {
