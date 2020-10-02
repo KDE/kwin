@@ -26,7 +26,7 @@ ScrollViewKCM {
     // Manage KCM pages
     Connections {
         target: kcm
-        onEditIndexChanged: {
+        function onEditIndexChanged() {
             if (kcm.editIndex < 0) {
                 // If no rule is being edited, hide RulesEdidor page
                 kcm.pop();
