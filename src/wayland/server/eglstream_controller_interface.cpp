@@ -14,13 +14,13 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 1;
+
 class EglStreamControllerInterfacePrivate : public QtWaylandServer::wl_eglstream_controller
 {
 public:
     EglStreamControllerInterfacePrivate(EglStreamControllerInterface *controller, Display *display);
-    
-private:
-    static const quint32 s_version;
+
     EglStreamControllerInterface *q;
 
 protected:
@@ -28,8 +28,6 @@ protected:
     void eglstream_controller_attach_eglstream_consumer_attribs(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream, wl_array *attribs) override;
 
 };
-
-const quint32 EglStreamControllerInterfacePrivate::s_version = 1;
 
 void EglStreamControllerInterfacePrivate::eglstream_controller_attach_eglstream_consumer(Resource *resource, wl_resource *wl_surface, wl_resource *eglStream)
 {

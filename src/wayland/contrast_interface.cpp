@@ -15,19 +15,17 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 1;
+
 class ContrastManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast_manager
 {
 public:
     ContrastManagerInterfacePrivate(Display *display);
-private:
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_contrast_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
     void org_kde_kwin_contrast_manager_unset(Resource *resource, wl_resource *surface) override;
 };
-
-const quint32 ContrastManagerInterfacePrivate::s_version = 1;
 
 ContrastManagerInterfacePrivate::ContrastManagerInterfacePrivate(Display *display)
     : QtWaylandServer::org_kde_kwin_contrast_manager(*display, s_version)

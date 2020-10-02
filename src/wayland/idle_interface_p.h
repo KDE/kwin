@@ -29,7 +29,6 @@ public:
     int inhibitCount = 0;
     QVector<IdleTimeoutInterface *> idleTimeouts;
     IdleInterface *q;
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_idle_get_idle_timeout(Resource *resource, uint32_t id, wl_resource *seat, uint32_t timeout) override;

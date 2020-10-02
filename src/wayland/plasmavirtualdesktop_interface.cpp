@@ -15,6 +15,8 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 2;
+
 class PlasmaVirtualDesktopInterfacePrivate : public QtWaylandServer::org_kde_plasma_virtual_desktop
 {
 public:
@@ -43,7 +45,6 @@ public:
     quint32 rows = 0;
     quint32 columns = 0;
     PlasmaVirtualDesktopManagementInterface *q;
-    static const quint32 s_version;
 
     inline QList<PlasmaVirtualDesktopInterface*>::const_iterator constFindDesktop(const QString &id);
     inline QList<PlasmaVirtualDesktopInterface*>::iterator findDesktop(const QString &id);
@@ -55,9 +56,6 @@ protected:
     void org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource, const QString &desktop_id) override;
     void org_kde_plasma_virtual_desktop_management_bind_resource(Resource *resource) override;
 };
-
-const quint32 PlasmaVirtualDesktopManagementInterfacePrivate::s_version = 2;
-
 
 inline QList<PlasmaVirtualDesktopInterface*>::const_iterator PlasmaVirtualDesktopManagementInterfacePrivate::constFindDesktop(const QString &id)
 {

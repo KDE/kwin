@@ -21,7 +21,6 @@ public:
     DpmsManagerInterfacePrivate(DpmsManagerInterface *q, Display *d);
 
     DpmsManagerInterface *q;
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_dpms_manager_get(Resource *resource, uint32_t id, wl_resource *output) override;

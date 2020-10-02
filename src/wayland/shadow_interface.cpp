@@ -13,6 +13,8 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 2;
+
 class ShadowManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow_manager
 {
 public:
@@ -20,15 +22,12 @@ public:
 
     ShadowManagerInterface *q;
     Display *display;
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_shadow_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
     void org_kde_kwin_shadow_manager_unset(Resource *resource, wl_resource *surface) override;
     void org_kde_kwin_shadow_manager_destroy(Resource *resource) override;
 };
-
-const quint32 ShadowManagerInterfacePrivate::s_version = 2;
 
 ShadowManagerInterfacePrivate::ShadowManagerInterfacePrivate(ShadowManagerInterface *_q, Display *display)
     : QtWaylandServer::org_kde_kwin_shadow_manager(*display, s_version)

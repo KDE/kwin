@@ -13,7 +13,7 @@
 namespace KWaylandServer
 {
 
-const quint32 TextInputManagerV2InterfacePrivate::s_version = 1;
+static const quint32 s_version = 1;
 
 // helpers
 static TextInputContentHints convertContentHint(uint32_t hint)

@@ -13,6 +13,9 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_exporterVersion = 1;
+static const quint32 s_importerVersion = 1;
+
 XdgForeignV2InterfacePrivate::XdgForeignV2InterfacePrivate(Display *display, XdgForeignV2Interface *_q)
     : QObject(nullptr)
     , q(_q)
@@ -49,15 +52,12 @@ public:
     XdgForeignV2Interface *foreignInterface;
     QHash<QString, XdgExportedV2Interface *> exportedSurfaces;
     XdgExporterV2Interface *q;
-    static const quint32 s_version;
 
 protected:
     void zxdg_exporter_v2_destroy(Resource *resource) override;
     void zxdg_exporter_v2_export_toplevel(Resource *resource, uint32_t id, wl_resource *surface) override;
 
 };
-
-const quint32 XdgExporterV2InterfacePrivate::s_version = 1;
 
 XdgExporterV2Interface::XdgExporterV2Interface(Display *display, XdgForeignV2Interface *parent)
     : QObject(parent)
@@ -122,7 +122,7 @@ void XdgExporterV2InterfacePrivate::zxdg_exporter_v2_export_toplevel(Resource *r
 }
 
 XdgExporterV2InterfacePrivate::XdgExporterV2InterfacePrivate(XdgExporterV2Interface *_q, Display *display, XdgForeignV2Interface *foreignInterface)
-    : QtWaylandServer::zxdg_exporter_v2(*display, s_version)
+    : QtWaylandServer::zxdg_exporter_v2(*display, s_exporterVersion)
     , foreignInterface(foreignInterface)
     , q(_q)
 {
@@ -141,14 +141,11 @@ public:
     //parent->child hash
     QHash<XdgImportedV2Interface *, SurfaceInterface *> children;
     XdgImporterV2Interface *q;
-    static const quint32 s_version;
 
 protected:
     void zxdg_importer_v2_destroy(Resource *resource) override;
     void zxdg_importer_v2_import_toplevel(Resource *resource, uint32_t id, const QString &handle) override;
 };
-
-const quint32 XdgImporterV2InterfacePrivate::s_version = 1;
 
 XdgImporterV2Interface::XdgImporterV2Interface(Display *display, XdgForeignV2Interface *parent)
     : QObject(parent)
@@ -264,7 +261,7 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
 }
 
 XdgImporterV2InterfacePrivate::XdgImporterV2InterfacePrivate(XdgImporterV2Interface *_q, Display *display, XdgForeignV2Interface *foreignInterface)
-    : QtWaylandServer::zxdg_importer_v2(*display, s_version)
+    : QtWaylandServer::zxdg_importer_v2(*display, s_importerVersion)
     , foreignInterface(foreignInterface)
     , q(_q)
 

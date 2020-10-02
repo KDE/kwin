@@ -22,6 +22,8 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 13;
+
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
 {
 public:
@@ -38,7 +40,6 @@ public:
     QVector<quint32> stackingOrder;
     QVector<QString> stackingOrderUuids;
     PlasmaWindowManagementInterface *q;
-    static const quint32 s_version;
 
 protected:
     void org_kde_plasma_window_management_bind_resource(Resource *resource) override;
@@ -104,8 +105,6 @@ protected:
     void org_kde_plasma_window_request_enter_new_virtual_desktop(Resource *resource) override;
     void org_kde_plasma_window_request_leave_virtual_desktop(Resource *resource, const QString &id) override;
 };
-
-const quint32 PlasmaWindowManagementInterfacePrivate::s_version = 13;
 
 PlasmaWindowManagementInterfacePrivate::PlasmaWindowManagementInterfacePrivate(PlasmaWindowManagementInterface *_q, Display *display)
     : QtWaylandServer::org_kde_plasma_window_management(*display, s_version)

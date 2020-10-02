@@ -15,6 +15,8 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 1;
+
 class ServerSideDecorationManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration_manager
 {
 public:
@@ -22,18 +24,13 @@ public:
     void setDefaultMode(ServerSideDecorationManagerInterface::Mode mode);
 
     ServerSideDecorationManagerInterface::Mode defaultMode = ServerSideDecorationManagerInterface::Mode::None;
-    
-private:
     ServerSideDecorationManagerInterface *q;
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_server_decoration_manager_bind_resource(Resource *resource) override;
     void org_kde_kwin_server_decoration_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
 
 };
-
-const quint32 ServerSideDecorationManagerInterfacePrivate::s_version = 1;
 
 static uint32_t modeWayland(ServerSideDecorationManagerInterface::Mode mode)
 {

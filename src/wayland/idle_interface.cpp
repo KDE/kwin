@@ -10,7 +10,7 @@
 namespace KWaylandServer
 {
 
-const quint32 IdleInterfacePrivate::s_version = 1;
+static const quint32 s_version = 1;
 
 IdleInterfacePrivate::IdleInterfacePrivate(IdleInterface *_q, Display *display)
     : QtWaylandServer::org_kde_kwin_idle(*display, s_version)

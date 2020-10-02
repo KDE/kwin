@@ -10,7 +10,7 @@
 namespace KWaylandServer
 {
 
-const quint32 IdleInhibitManagerV1InterfacePrivate::s_version = 1;
+static const quint32 s_version = 1;
 
 IdleInhibitManagerV1InterfacePrivate::IdleInhibitManagerV1InterfacePrivate(IdleInhibitManagerV1Interface *_q, Display *display)
     : QtWaylandServer::zwp_idle_inhibit_manager_v1(*display, s_version)

@@ -18,7 +18,6 @@ class IdleInhibitManagerV1InterfacePrivate : public QtWaylandServer::zwp_idle_in
 public:
     IdleInhibitManagerV1InterfacePrivate(IdleInhibitManagerV1Interface *_q, Display *display);
 
-    static const quint32 s_version;
     IdleInhibitManagerV1Interface *q;
 
 protected:

@@ -10,7 +10,7 @@
 namespace KWaylandServer
 {
 
-const quint32 DpmsManagerInterfacePrivate::s_version = 1;
+static const quint32 s_version = 1;
 
 DpmsManagerInterfacePrivate::DpmsManagerInterfacePrivate(DpmsManagerInterface *_q, Display *display)
     : QtWaylandServer::org_kde_kwin_dpms_manager(*display, s_version)

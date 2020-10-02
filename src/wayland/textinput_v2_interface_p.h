@@ -23,7 +23,6 @@ public:
     TextInputManagerV2InterfacePrivate(TextInputManagerV2Interface *_q, Display *display);
 
     TextInputManagerV2Interface *q;
-    static const quint32 s_version;
 
 protected:
     void zwp_text_input_manager_v2_destroy(Resource *resource) override;

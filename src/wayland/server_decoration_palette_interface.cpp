@@ -14,23 +14,21 @@
 
 namespace KWaylandServer
 {
+
+static const quint32 s_version = 1;
+
 class ServerSideDecorationPaletteManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_server_decoration_palette_manager
 {
 public:
     ServerSideDecorationPaletteManagerInterfacePrivate(ServerSideDecorationPaletteManagerInterface *q, Display *display);
 
     QVector<ServerSideDecorationPaletteInterface*> palettes;
-
-private:
     ServerSideDecorationPaletteManagerInterface *q;
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_server_decoration_palette_manager_create(Resource *resource, uint32_t id, struct ::wl_resource *surface) override;
 
 };
-
-const quint32 ServerSideDecorationPaletteManagerInterfacePrivate::s_version = 1;
 
 void ServerSideDecorationPaletteManagerInterfacePrivate::org_kde_kwin_server_decoration_palette_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
 {

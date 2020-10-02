@@ -17,22 +17,19 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 1;
+
 class BlurManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur_manager
 {
 public:
     BlurManagerInterfacePrivate(BlurManagerInterface *q, Display *d);
 
-private:
-    void createBlur(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
     BlurManagerInterface *q;
-    static const quint32 s_version;
 
 protected:
     void org_kde_kwin_blur_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
     void org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface) override;
 };
-
-const quint32 BlurManagerInterfacePrivate::s_version = 1;
 
 BlurManagerInterfacePrivate::BlurManagerInterfacePrivate(BlurManagerInterface *_q, Display *d)
     : QtWaylandServer::org_kde_kwin_blur_manager(*d, s_version)

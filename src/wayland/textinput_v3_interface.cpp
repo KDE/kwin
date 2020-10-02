@@ -13,6 +13,8 @@
 namespace KWaylandServer
 {
 
+static const quint32 s_version = 1;
+
 static TextInputContentHints convertContentHint(uint32_t hint)
 {
     const auto hints = zwp_text_input_v3_content_hint(hint);
@@ -100,8 +102,6 @@ static TextInputChangeCause convertChangeCause(uint32_t cause)
         return TextInputChangeCause::Other;
     }
 }
-
-const quint32 TextInputManagerV3InterfacePrivate::s_version = 1;
 
 TextInputManagerV3InterfacePrivate::TextInputManagerV3InterfacePrivate(TextInputManagerV3Interface *_q, Display *display)
     : QtWaylandServer::zwp_text_input_manager_v3(*display, s_version)
