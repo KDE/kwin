@@ -54,15 +54,22 @@ SurfaceInterfacePrivate::SurfaceInterfacePrivate(SurfaceInterface *q)
 
 SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
 {
-    for (KWaylandFrameCallback *frameCallback : current.frameCallbacks) {
+    // Need a copy to avoid hitting invalidated iterators in the for loop.
+    const QList<KWaylandFrameCallback *> currentFrameCallbacks = current.frameCallbacks;
+    for (KWaylandFrameCallback *frameCallback : currentFrameCallbacks) {
         frameCallback->destroy();
     }
-    for (KWaylandFrameCallback *frameCallback : pending.frameCallbacks) {
+
+    const QList<KWaylandFrameCallback *> pendingFrameCallbacks = pending.frameCallbacks;
+    for (KWaylandFrameCallback *frameCallback : pendingFrameCallbacks) {
         frameCallback->destroy();
     }
-    for (KWaylandFrameCallback *frameCallback : cached.frameCallbacks) {
+
+    const QList<KWaylandFrameCallback *> cachedFrameCallbacks = cached.frameCallbacks;
+    for (KWaylandFrameCallback *frameCallback : cachedFrameCallbacks) {
         frameCallback->destroy();
     }
+
     if (current.buffer) {
         current.buffer->unref();
     }
