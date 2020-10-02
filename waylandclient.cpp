@@ -266,7 +266,7 @@ void WaylandClient::doSetActive()
 
 void WaylandClient::updateDepth()
 {
-    if (surface()->buffer()->hasAlphaChannel() && !isDesktop()) {
+    if (surface()->buffer()->hasAlphaChannel()) {
         setDepth(32);
     } else {
         setDepth(24);
