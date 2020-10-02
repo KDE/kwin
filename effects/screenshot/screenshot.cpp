@@ -432,7 +432,7 @@ void ScreenShotEffect::sendReplyImages()
 {
     QList<QImage> outputImages;
     for (const QPoint &pos : qAsConst(m_orderImg)) {
-        auto it = m_cacheOutputsImages.find(pos);
+        auto it = m_cacheOutputsImages.constFind(pos);
         if (it != m_cacheOutputsImages.constEnd()) {
             outputImages.append(*it);
         }
