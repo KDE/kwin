@@ -9,6 +9,7 @@
 #include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
 #include "textinput.h"
 
 struct wl_resource;
@@ -67,6 +68,12 @@ class KWAYLANDSERVER_EXPORT TextInputV2Interface : public QObject
 public:
     ~TextInputV2Interface() override;
 
+    enum class UpdateReason : uint32_t {
+        StateChange = 0, // updated state because it changed
+        StateFull = 1, // full state after enter or input_method_changed event
+        StateReset = 2, // full state after reset
+        StateEnter = 3, // full state after switching focus to a different widget on client side
+    };
     /**
      * The preferred language as a RFC-3066 format language tag.
      *
@@ -220,12 +227,6 @@ Q_SIGNALS:
      **/
     void requestHideInputPanel();
     /**
-     * Invoked by the client when the input state should be
-     * reset, for example after the text was changed outside of the normal
-     * input method flow.
-     **/
-    void requestReset();
-    /**
      * Emitted whenever the preferred @p language changes.
      * @see preferredLanguage
      **/
@@ -255,10 +256,9 @@ Q_SIGNALS:
      **/
     void enabledChanged();
     /**
-     * Emitted whenever TextInputInterface should commit the current state.
-     * @see requestReset
+     * Emitted whenever TextInputInterface should update the current state.
      **/
-    void stateCommitted(uint32_t serial);
+    void stateUpdated(uint32_t serial, UpdateReason reason);
 
 private:
     friend class TextInputManagerV2InterfacePrivate;
@@ -272,5 +272,6 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWaylandServer::TextInputV2Interface *)
+Q_DECLARE_METATYPE(KWaylandServer::TextInputV2Interface::UpdateReason)
 
 #endif

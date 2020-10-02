@@ -378,11 +378,11 @@ void TextInputTest::testReset()
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
-    QSignalSpy resetRequestedSpy(ti, &TextInputV2Interface::requestReset);
-    QVERIFY(resetRequestedSpy.isValid());
+    QSignalSpy stateUpdatedSpy(ti, &TextInputV2Interface::stateUpdated);
+    QVERIFY(stateUpdatedSpy.isValid());
 
     textInput->reset();
-    QVERIFY(resetRequestedSpy.wait());
+    QVERIFY(stateUpdatedSpy.wait());
 }
 
 void TextInputTest::testSurroundingText()

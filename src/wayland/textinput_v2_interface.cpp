@@ -301,20 +301,7 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_disable(Resource *resource, 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_update_state(Resource *resource, uint32_t serial, uint32_t reason)
 {
     Q_UNUSED(resource)
-    switch (reason) {
-    case update_state::update_state_change:
-        break;
-    case update_state::update_state_full:
-        break;
-    case update_state::update_state_enter:
-        break;
-    case update_state::update_state_reset:
-        emit q->requestReset();
-        break;
-    default:
-        return;
-    }
-    emit q->stateCommitted(serial);
+    emit q->stateUpdated(serial, TextInputV2Interface::UpdateReason(reason));
 }
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_hide_input_panel(Resource *resource)
