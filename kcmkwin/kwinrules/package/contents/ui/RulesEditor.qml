@@ -25,10 +25,25 @@ ScrollViewKCM {
         clip: true
 
         model: enabledRulesModel
-        delegate: RuleItemDelegate {}
+        delegate: RuleItemDelegate {
+            ListView.onAdd: {
+                // Try to position the new added item into the visible view
+                // FIXME: It only works when moving towards the end of the list
+                ListView.view.currentIndex = index
+            }
+        }
         section {
             property: "section"
             delegate: Kirigami.ListSectionHeader { label: section }
+        }
+
+        highlightRangeMode: ListView.ApplyRange
+
+        add: Transition {
+            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration * 3 }
+        }
+        removeDisplaced: Transition {
+            NumberAnimation { property: "y"; duration: Kirigami.Units.longDuration }
         }
 
         Kirigami.PlaceholderMessage {
@@ -45,7 +60,7 @@ ScrollViewKCM {
             }
             width: parent.width - (units.largeSpacing * 4)
             helpfulAction: QQC2.Action {
-                text: i18n("Add Properties...")
+                text: i18n("Add Property...")
                 icon.name: "list-add-symbolic"
                 onTriggered: {
                     propertySheet.open();
@@ -63,7 +78,7 @@ ScrollViewKCM {
 
     footer:  RowLayout {
         QQC2.Button {
-            text: checked ? i18n("Close") : i18n("Add Properties...")
+            text: checked ? i18n("Close") : i18n("Add Property...")
             icon.name: checked ? "dialog-close" : "list-add-symbolic"
             checkable: true
             checked: propertySheet.sheetOpen
@@ -109,7 +124,7 @@ ScrollViewKCM {
         parent: view
 
         header: Kirigami.Heading {
-            text: i18n("Select properties")
+            text: i18n("Add property to the rule")
         }
         footer: Kirigami.SearchField {
             id: searchField
@@ -179,6 +194,9 @@ ScrollViewKCM {
                     if (model.suggested != null) {
                         model.value = model.suggested;
                         model.suggested = null;
+                    }
+                    if (!overlayModel.onlySuggestions) {
+                        propertySheet.close();
                     }
                 }
             }
