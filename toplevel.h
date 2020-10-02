@@ -1058,7 +1058,7 @@ inline bool Toplevel::isPopupWindow() const
     }
 }
 
-QDebug operator<<(QDebug debug, const Toplevel *toplevel);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const Toplevel *toplevel);
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::Toplevel*)
