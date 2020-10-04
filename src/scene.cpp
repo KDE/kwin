@@ -74,7 +74,6 @@
 #include "thumbnailitem.h"
 #include "composite.h"
 
-#include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/subcompositor_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -1328,20 +1327,9 @@ void WindowPixmap::clear()
     setBuffer(nullptr);
 }
 
-void WindowPixmap::setBuffer(KWaylandServer::BufferInterface *buffer)
+void WindowPixmap::setBuffer(KWaylandServer::ClientBufferRef buffer)
 {
-    if (buffer == m_buffer) {
-        return;
-    }
-    if (m_buffer) {
-        disconnect(m_buffer, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &WindowPixmap::clear);
-        m_buffer->unref();
-    }
-    m_buffer = buffer;
-    if (m_buffer) {
-        m_buffer->ref();
-        connect(m_buffer, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &WindowPixmap::clear);
-    }
+    m_buffer = std::move(buffer);
 }
 
 void WindowPixmap::update()
@@ -1392,7 +1380,7 @@ WindowPixmap *WindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *sub
 
 bool WindowPixmap::isValid() const
 {
-    if (m_buffer || !m_fbo.isNull() || !m_internalImage.isNull()) {
+    if (!m_buffer.isNull() || !m_fbo.isNull() || !m_internalImage.isNull()) {
         return true;
     }
     return m_pixmap != XCB_PIXMAP_NONE;
@@ -1463,8 +1451,9 @@ QRegion WindowPixmap::opaque() const
 
 bool WindowPixmap::hasAlphaChannel() const
 {
-    if (buffer())
-        return buffer()->hasAlphaChannel();
+    if (!m_buffer.isNull()) {
+        return m_buffer.hasAlphaChannel();
+    }
     return toplevel()->hasAlpha();
 }
 

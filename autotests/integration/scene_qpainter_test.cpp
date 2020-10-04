@@ -22,7 +22,7 @@
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/pointer.h>
-#include <KWaylandServer/buffer_interface.h>
+#include <KWaylandServer/clientbufferref.h>
 #include <KWaylandServer/surface_interface.h>
 
 #include <QPainter>
@@ -330,10 +330,10 @@ void SceneQPainterTest::testX11Window()
     }
     QVERIFY(client->surface());
     QTRY_VERIFY(client->surface()->buffer());
-    QTRY_COMPARE(client->surface()->buffer()->data().size(), client->size());
+    QTRY_COMPARE(client->surface()->buffer().toImage().size(), client->size());
     QImage compareImage(client->clientSize(), QImage::Format_RGB32);
     compareImage.fill(Qt::white);
-    QCOMPARE(client->surface()->buffer()->data().copy(QRect(client->clientPos(), client->clientSize())), compareImage);
+    QCOMPARE(client->surface()->buffer().toImage().copy(QRect(client->clientPos(), client->clientSize())), compareImage);
 
     // enough time for rendering the window
     QTest::qWait(100);

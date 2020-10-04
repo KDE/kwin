@@ -54,8 +54,6 @@ class OutputConfigurationInterface;
 class XdgForeignV2Interface;
 class XdgOutputManagerV1Interface;
 class KeyStateInterface;
-class LinuxDmabufUnstableV1Interface;
-class LinuxDmabufUnstableV1Buffer;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
@@ -133,8 +131,6 @@ public:
     }
 
     bool isKeyboardShortcutsInhibited() const;
-
-    KWaylandServer::LinuxDmabufUnstableV1Interface *linuxDmabuf();
 
     KWaylandServer::InputMethodV1Interface *inputMethod() const {
         return m_inputMethod;
@@ -231,16 +227,6 @@ public:
     void simulateUserActivity();
     void updateKeyState(KWin::Xkb::LEDs leds);
 
-    QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> linuxDmabufBuffers() const {
-        return m_linuxDmabufBuffers;
-    }
-    void addLinuxDmabufBuffer(KWaylandServer::LinuxDmabufUnstableV1Buffer *buffer) {
-        m_linuxDmabufBuffers << buffer;
-    }
-    void removeLinuxDmabufBuffer(KWaylandServer::LinuxDmabufUnstableV1Buffer *buffer) {
-        m_linuxDmabufBuffers.remove(buffer);
-    }
-
     AbstractWaylandOutput *findOutput(KWaylandServer::OutputInterface *output) const;
 
     /**
@@ -280,9 +266,7 @@ private:
     KWaylandServer::IdleInterface *m_idle = nullptr;
     KWaylandServer::XdgOutputManagerV1Interface *m_xdgOutputManagerV1 = nullptr;
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerV1 = nullptr;
-    KWaylandServer::LinuxDmabufUnstableV1Interface *m_linuxDmabuf = nullptr;
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *m_keyboardShortcutsInhibitManager = nullptr;
-    QSet<KWaylandServer::LinuxDmabufUnstableV1Buffer*> m_linuxDmabufBuffers;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
     KWaylandServer::InputMethodV1Interface *m_inputMethod = nullptr;
     KWaylandServer::ClientConnection *m_inputMethodServerConnection = nullptr;

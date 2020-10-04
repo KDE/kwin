@@ -15,10 +15,10 @@
 #include "tabbox.h"
 #endif
 
+#include <KWaylandServer/clientbufferref.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/buffer_interface.h>
 
 #include <QFileInfo>
 
@@ -249,7 +249,7 @@ void WaylandClient::doSetActive()
 
 void WaylandClient::updateDepth()
 {
-    if (surface()->buffer()->hasAlphaChannel()) {
+    if (surface()->buffer().hasAlphaChannel()) {
         setDepth(32);
     } else {
         setDepth(24);

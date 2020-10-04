@@ -29,7 +29,6 @@
 
 // KDE
 #include <KWayland/Client/surface.h>
-#include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/display.h>
 
 // Qt

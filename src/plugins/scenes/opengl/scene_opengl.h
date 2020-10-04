@@ -205,7 +205,6 @@ public:
     ~OpenGLWindowPixmap() override;
     SceneOpenGLTexture *texture() const;
     bool bind();
-    bool isValid() const override;
 protected:
     WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface) override;
 private:

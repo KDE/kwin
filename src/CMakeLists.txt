@@ -72,7 +72,6 @@ set(kwin_SRCS
     libinput/device.cpp
     libinput/events.cpp
     libinput/libinput_logging.cpp
-    linux_dmabuf.cpp
     logind.cpp
     main.cpp
     modifier_only_shortcuts.cpp

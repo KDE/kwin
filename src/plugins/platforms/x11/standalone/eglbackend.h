@@ -48,6 +48,7 @@ private:
     friend class EglBackend;
     EglTexture(SceneOpenGLTexture *texture, EglBackend *backend);
     EglBackend *m_backend;
+    EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
 };
 
 } // namespace KWin

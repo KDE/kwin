@@ -43,7 +43,6 @@
 #include <KWaylandServer/fakeinput_interface.h>
 #include <KWaylandServer/relativepointer_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/tablet_v2_interface.h>
 #include <decorations/decoratedclient.h>
@@ -1703,7 +1702,7 @@ public:
             }
 
             QImage cursorImage;
-            cursorImage = buffer->data().copy();
+            cursorImage = buffer.toImage().copy();
             cursorImage.setDevicePixelRatio(cursorSurface->bufferScale());
 
             cursor->updateCursor(cursorImage, tcursor->hotspot());

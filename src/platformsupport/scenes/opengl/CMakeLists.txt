@@ -1,6 +1,5 @@
 set(SCENE_OPENGL_BACKEND_SRCS
     abstract_egl_backend.cpp
-    egl_dmabuf.cpp
     openglbackend.cpp
     texture.cpp
 )
