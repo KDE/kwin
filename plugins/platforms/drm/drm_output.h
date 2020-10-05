@@ -31,6 +31,7 @@ class DrmPlane;
 class DrmConnector;
 class DrmCrtc;
 class Cursor;
+class DrmGpu;
 
 class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
 {
@@ -45,7 +46,7 @@ public:
     bool showCursor();
     bool hideCursor();
     void updateCursor();
-    void moveCursor(Cursor* cursor, const QPoint &globalPos);
+    void moveCursor(Cursor *cursor, const QPoint &globalPos);
     bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);
     void pageFlipped();
@@ -91,12 +92,17 @@ public:
      * @return true if the hardware realizes the transform without further assistance
      */
     bool hardwareTransforms() const;
+    
+    DrmGpu *gpu() {
+        return m_gpu;
+    }
 
 private:
+    friend class DrmGpu;
     friend class DrmBackend;
     friend class DrmCrtc;   // TODO: For use of setModeLegacy. Remove later when we allow multiple connectors per crtc
                             //       and save the connector ids in the DrmCrtc instance.
-    DrmOutput(DrmBackend *backend);
+    DrmOutput(DrmBackend *backend, DrmGpu* gpu);
 
     bool presentAtomically(DrmBuffer *buffer);
 
@@ -139,6 +145,7 @@ private:
     QMatrix4x4 matrixDisplay(const QSize &s) const;
 
     DrmBackend *m_backend;
+    DrmGpu *m_gpu;
     DrmConnector *m_conn = nullptr;
     DrmCrtc *m_crtc = nullptr;
     bool m_lastGbm = false;
@@ -150,8 +157,8 @@ private:
     QByteArray m_uuid;
 
     uint32_t m_blobId = 0;
-    DrmPlane* m_primaryPlane = nullptr;
-    DrmPlane* m_cursorPlane = nullptr;
+    DrmPlane *m_primaryPlane = nullptr;
+    DrmPlane *m_cursorPlane = nullptr;
     QVector<DrmPlane*> m_nextPlanesFlipList;
     bool m_pageFlipPending = false;
     bool m_atomicOffPending = false;

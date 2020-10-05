@@ -12,16 +12,18 @@
 #include "drm_buffer.h"
 #include "drm_pointer.h"
 #include "logging.h"
+#include "drm_gpu.h"
 
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex)
-    : DrmObject(crtc_id, backend->fd()),
+DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, DrmGpu *gpu, int resIndex)
+    : DrmObject(crtc_id, gpu->fd()),
       m_resIndex(resIndex),
-      m_backend(backend)
+      m_backend(backend),
+      m_gpu(gpu)
 {
-    DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(backend->fd(), crtc_id));
+    DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(gpu->fd(), crtc_id));
     if (modeCrtc) {
         m_gammaRampSize = modeCrtc->gamma_size;
     }
@@ -81,12 +83,12 @@ bool DrmCrtc::blank()
         return false;
     }
 
-    if (m_backend->atomicModeSetting()) {
+    if (m_gpu->atomicModeSetting()) {
         return false;
     }
 
     if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = m_backend->createBuffer(m_output->pixelSize());
+        DrmDumbBuffer *blackBuffer = m_gpu->createBuffer(m_output->pixelSize());
         if (!blackBuffer->map()) {
             delete blackBuffer;
             return false;
@@ -113,7 +115,7 @@ bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
     uint16_t *green = const_cast<uint16_t *>(gamma.green());
     uint16_t *blue = const_cast<uint16_t *>(gamma.blue());
 
-    const bool isError = drmModeCrtcSetGamma(m_backend->fd(), m_id,
+    const bool isError = drmModeCrtcSetGamma(m_gpu->fd(), m_id,
         gamma.size(), red, green, blue);
 
     return !isError;

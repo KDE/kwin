@@ -26,6 +26,7 @@
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/resource.h>
 #include <wayland-server-core.h>
+#include "drm_gpu.h"
 
 namespace KWin
 {
@@ -71,13 +72,13 @@ PFNEGLQUERYWAYLANDBUFFERWL pEglQueryWaylandBufferWL = nullptr;
 #define EGL_WAYLAND_Y_INVERTED_WL 0x31DB
 #endif    
 
-EglStreamBackend::EglStreamBackend(DrmBackend *b)
-    : AbstractEglBackend(), m_backend(b)
+EglStreamBackend::EglStreamBackend(DrmBackend *b, DrmGpu *gpu)
+    : AbstractEglBackend(), m_backend(b), m_gpu(gpu)
 {
     setIsDirectRendering(true);
     setSyncsToVBlank(true);
-    connect(m_backend, &DrmBackend::outputAdded, this, &EglStreamBackend::createOutput);
-    connect(m_backend, &DrmBackend::outputRemoved, this,
+    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglStreamBackend::createOutput);
+    connect(m_gpu, &DrmGpu::outputDisabled, this,
         [this] (DrmOutput *output) {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
                                    [output] (const Output &o) {
@@ -120,7 +121,7 @@ void EglStreamBackend::cleanupOutput(const Output &o)
 bool EglStreamBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_backend->sceneEglDisplay();
+    EGLDisplay display = eglDisplay();
     if (display == EGL_NO_DISPLAY) {
         if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_device_base")) &&
             !(hasClientExtension(QByteArrayLiteral("EGL_EXT_device_query")) &&
@@ -138,7 +139,7 @@ bool EglStreamBackend::initializeEgl()
         eglQueryDevicesEXT(numDevices, devices.data(), &numDevices);
         for (EGLDeviceEXT device : devices) {
             const char *drmDeviceFile = eglQueryDeviceStringEXT(device, EGL_DRM_DEVICE_FILE_EXT);
-            if (m_backend->devNode() != drmDeviceFile) {
+            if (m_gpu->devNode().compare(drmDeviceFile)) {
                 continue;
             }
             
@@ -150,7 +151,7 @@ bool EglStreamBackend::initializeEgl()
             }
                 
             EGLint platformAttribs[] = {
-                EGL_DRM_MASTER_FD_EXT, m_backend->fd(),
+                EGL_DRM_MASTER_FD_EXT, m_gpu->fd(),
                 EGL_NONE
             };
             display = eglGetPlatformDisplayEXT(EGL_PLATFORM_DEVICE_EXT, device, platformAttribs);
@@ -254,7 +255,7 @@ void EglStreamBackend::attachStreamConsumer(KWaylandServer::SurfaceInterface *su
 
 void EglStreamBackend::init()
 {
-    if (!m_backend->atomicModeSetting()) {
+    if (!m_gpu->atomicModeSetting()) {
         setFailed("EGLStream backend requires atomic modesetting");
         return;
     }
@@ -307,7 +308,7 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
         delete o.buffer;
     }
     // dumb buffer used for modesetting
-    o.buffer = m_backend->createBuffer(drmOutput->pixelSize());
+    o.buffer = m_gpu->createBuffer(drmOutput->pixelSize());
 
     EGLAttrib streamAttribs[] = {
         EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode

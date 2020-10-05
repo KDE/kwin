@@ -15,6 +15,7 @@
 #include "logging.h"
 #include "options.h"
 #include "screens.h"
+#include "drm_gpu.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -24,15 +25,16 @@
 namespace KWin
 {
 
-EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
+EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
     : AbstractEglBackend()
     , m_backend(drmBackend)
+    , m_gpu(gpu)
 {
     // Egl is always direct rendering.
     setIsDirectRendering(true);
     setSyncsToVBlank(true);
-    connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::createOutput);
-    connect(m_backend, &DrmBackend::outputRemoved, this, &EglGbmBackend::removeOutput);
+    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglGbmBackend::createOutput);
+    connect(m_gpu, &DrmGpu::outputDisabled, this, &EglGbmBackend::removeOutput);
 }
 
 EglGbmBackend::~EglGbmBackend()
@@ -72,7 +74,7 @@ void EglGbmBackend::cleanupOutput(Output &output)
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_backend->sceneEglDisplay();
+    EGLDisplay display = eglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
@@ -88,12 +90,12 @@ bool EglGbmBackend::initializeEgl()
             return false;
         }
 
-        auto device = gbm_create_device(m_backend->fd());
+        auto device = gbm_create_device(m_gpu->fd());
         if (!device) {
             setFailed("Could not create gbm device");
             return false;
         }
-        m_backend->setGbmDevice(device);
+        m_gpu->setGbmDevice(device);
 
         display = eglGetPlatformDisplayEXT(platform, device, nullptr);
     }
@@ -147,7 +149,7 @@ bool EglGbmBackend::initRenderingContext()
 
 std::shared_ptr<GbmSurface> EglGbmBackend::createGbmSurface(const QSize &size) const
 {
-    auto gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(),
+    auto gbmSurface = std::make_shared<GbmSurface>(m_gpu->gbmDevice(),
                                                    size.width(), size.height(),
                                                    GBM_FORMAT_XRGB8888,
                                                    GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
@@ -460,7 +462,7 @@ void EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
     } else {
         eglSwapBuffers(eglDisplay(), output.eglSurface);
     }
-    output.buffer = m_backend->createBuffer(output.gbmSurface);
+    output.buffer = new DrmSurfaceBuffer(m_gpu->fd(), output.gbmSurface);
 
     Q_EMIT output.output->outputChange(damagedRegion);
     m_backend->present(output.buffer, output.output);

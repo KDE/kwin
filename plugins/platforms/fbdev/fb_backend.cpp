@@ -90,7 +90,7 @@ void FramebufferBackend::openFrameBuffer()
     VirtualTerminal::self()->init();
     QString framebufferDevice = deviceIdentifier().constData();
     if (framebufferDevice.isEmpty()) {
-        framebufferDevice = QString(Udev().primaryFramebuffer()->devNode());
+        framebufferDevice = QString(Udev().listFramebuffers().at(0)->devNode());
     }
     int fd = LogindIntegration::self()->takeDevice(framebufferDevice.toUtf8().constData());
     qCDebug(KWIN_FB) << "Using frame buffer device:" << framebufferDevice;

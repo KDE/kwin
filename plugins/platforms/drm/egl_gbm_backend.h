@@ -22,6 +22,7 @@ class DrmBuffer;
 class DrmSurfaceBuffer;
 class DrmOutput;
 class GbmSurface;
+class DrmGpu;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
@@ -30,7 +31,7 @@ class EglGbmBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglGbmBackend(DrmBackend *drmBackend);
+    EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu);
     ~EglGbmBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
@@ -93,6 +94,7 @@ private:
     void cleanupFramebuffer(Output &output);
 
     DrmBackend *m_backend;
+    DrmGpu *m_gpu;
     QVector<Output> m_outputs;
     friend class EglGbmTexture;
 };

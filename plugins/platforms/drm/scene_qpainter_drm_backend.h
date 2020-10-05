@@ -18,12 +18,13 @@ namespace KWin
 class DrmBackend;
 class DrmDumbBuffer;
 class DrmOutput;
+class DrmGpu;
 
 class DrmQPainterBackend : public QObject, public QPainterBackend
 {
     Q_OBJECT
 public:
-    DrmQPainterBackend(DrmBackend *backend);
+    DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu);
     ~DrmQPainterBackend() override;
 
     QImage *buffer() override;
@@ -43,6 +44,7 @@ private:
     };
     QVector<Output> m_outputs;
     DrmBackend *m_backend;
+    DrmGpu *m_gpu;
 };
 }
 

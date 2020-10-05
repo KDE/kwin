@@ -19,6 +19,7 @@ namespace KWin
 class DrmBackend;
 class DrmOutput;
 class DrmBuffer;
+class DrmGpu;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
@@ -27,7 +28,7 @@ class EglStreamBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglStreamBackend(DrmBackend *b);
+    EglStreamBackend(DrmBackend *b, DrmGpu *gpu);
     ~EglStreamBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
@@ -70,6 +71,7 @@ private:
     void createOutput(DrmOutput *output);
 
     DrmBackend *m_backend;
+    DrmGpu *m_gpu;
     QVector<Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;
     QHash<KWaylandServer::SurfaceInterface *, StreamTexture> m_streamTextures;

@@ -18,11 +18,12 @@ class DrmBackend;
 class DrmBuffer;
 class DrmDumbBuffer;
 class GammaRamp;
+class DrmGpu;
 
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(uint32_t crtc_id, DrmBackend *backend, int resIndex);
+    DrmCrtc(uint32_t crtc_id, DrmBackend *backend, DrmGpu *gpu, int resIndex);
 
     ~DrmCrtc() override;
 
@@ -57,6 +58,10 @@ public:
         return m_gammaRampSize;
     }
     bool setGammaRamp(const GammaRamp &gamma);
+    
+    DrmGpu *gpu() {
+        return m_gpu;
+    }
 
 private:
     int m_resIndex;
@@ -66,6 +71,7 @@ private:
     DrmBuffer *m_nextBuffer = nullptr;
     DrmDumbBuffer *m_blackBuffer = nullptr;
     DrmBackend *m_backend;
+    DrmGpu *m_gpu;
 };
 
 }

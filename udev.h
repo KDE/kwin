@@ -11,6 +11,9 @@
 #include <memory>
 #include <kwin_export.h>
 
+#include <vector>
+#include <QVector>
+
 struct udev;
 struct udev_device;
 struct udev_monitor;
@@ -70,8 +73,8 @@ public:
     bool isValid() const {
         return m_udev != nullptr;
     }
-    UdevDevice::Ptr primaryGpu();
-    UdevDevice::Ptr primaryFramebuffer();
+    std::vector<UdevDevice::Ptr> listGPUs();
+    std::vector<UdevDevice::Ptr> listFramebuffers();
     UdevDevice::Ptr deviceFromSyspath(const char *syspath);
     UdevMonitor *monitor();
     operator udev*() const {
