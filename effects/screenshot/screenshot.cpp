@@ -720,11 +720,9 @@ void ScreenShotEffect::screenshotScreens(QDBusUnixFileDescriptor fd, const QStri
 
     const QList<QScreen *> screens = QGuiApplication::screens();
 
-    QStringList lscreensNames = screensNames;
     for (const QScreen *screen : screens) {
-        const int indexName = lscreensNames.indexOf(screen->name());
+        const int indexName = screensNames.indexOf(screen->name());
         if (indexName != -1) {
-            lscreensNames.removeAt(indexName);
             const auto screenGeom = screen->geometry();
             if (!screenGeom.isValid()) {
                 close(m_fd);
@@ -737,10 +735,10 @@ void ScreenShotEffect::screenshotScreens(QDBusUnixFileDescriptor fd, const QStri
         }
     }
 
-    if (!lscreensNames.isEmpty()) {
+    if (m_orderImg.size() != screensNames.size()) {
         close(m_fd);
         clearState();
-        sendErrorReply(s_errorScreenMissing, s_errorScreenMissingMsg + " : " + lscreensNames.join(", "));
+        sendErrorReply(s_errorScreenMissing, s_errorScreenMissingMsg);
         return;
     }
 
