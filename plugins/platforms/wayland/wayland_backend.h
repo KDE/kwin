@@ -239,8 +239,10 @@ private:
     WaylandCursor *m_waylandCursor = nullptr;
 
     bool m_pointerLockRequested = false;
+#if HAVE_GBM && HAVE_WAYLAND_EGL
     int m_drmFileDescriptor = 0;
     gbm_device *m_gbmDevice;
+#endif
 };
 
 inline
