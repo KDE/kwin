@@ -139,6 +139,18 @@ TextInputV3InterfacePrivate::TextInputV3InterfacePrivate(SeatInterface *seat, Te
 {
 }
 
+void TextInputV3InterfacePrivate::zwp_text_input_v3_bind_resource(Resource *resource)
+{
+    // we initialize the serial for the resource to be 0
+    serialHash.insert(resource, 0);
+}
+
+void TextInputV3InterfacePrivate::zwp_text_input_v3_destroy(Resource *resource)
+{
+    // drop resource from the serial hash
+    serialHash.remove(resource);
+}
+
 void TextInputV3InterfacePrivate::sendEnter(SurfaceInterface *s)
 {
     if (!s) {
@@ -204,7 +216,7 @@ void TextInputV3InterfacePrivate::done()
     const QList<Resource *> textInputs = textInputsForClient(surface->client());
     for (auto resource : textInputs) {
         // zwp_text_input_v3.done takes the serial argument which is equal to number of commit requests issued
-        send_done(resource->handle, serial);
+        send_done(resource->handle, serialHash[resource]);
     }
 }
 
@@ -273,14 +285,13 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_text_change_cause(Resour
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
 {
-    Q_UNUSED(resource)
-    serial++;
+    serialHash[resource]++;
 
     if (enabled != pending.enabled) {
         enabled = pending.enabled;
         emit q->enabledChanged();
     }
-    
+
     if (surroundingTextChangeCause != pending.surroundingTextChangeCause) {
         surroundingTextChangeCause = pending.surroundingTextChangeCause;
         pending.surroundingTextChangeCause = TextInputChangeCause::InputMethod;
@@ -293,7 +304,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
             emit q->contentTypeChanged();
         }
     }
-    
+
     if (cursorRectangle != pending.cursorRectangle) {
         cursorRectangle = pending.cursorRectangle;
         if (enabled) {
@@ -310,7 +321,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         }
     }
 
-    emit q->stateCommitted(serial);
+    emit q->stateCommitted(serialHash[resource]);
 }
 
 void TextInputV3InterfacePrivate::defaultPending()

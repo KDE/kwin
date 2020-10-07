@@ -13,6 +13,7 @@
 #include <QPointer>
 #include <QRect>
 #include <QVector>
+#include <QHash>
 
 #include <qwayland-server-text-input-unstable-v3.h>
 
@@ -71,14 +72,16 @@ public:
         qint32 surroundingTextCursorPosition = 0;
         qint32 surroundingTextSelectionAnchor = 0;
     } pending;
-    
-    quint32 serial = 0;
-    
+
+    QHash<Resource *, quint32> serialHash;
+
     void defaultPending();
 
     TextInputV3Interface *q;
 
 protected:
+    void zwp_text_input_v3_bind_resource(Resource *resource) override;
+    void zwp_text_input_v3_destroy(Resource *resource) override;
     // requests
     void zwp_text_input_v3_enable(Resource *resource) override;
     void zwp_text_input_v3_disable(Resource *resource) override;

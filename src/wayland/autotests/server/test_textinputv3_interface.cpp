@@ -92,6 +92,7 @@ private Q_SLOTS:
     void testContentPurpose();
     void testContentHints_data();
     void testContentHints();
+    void testMultipleTextinputs();
 
 private:
     KWayland::Client::ConnectionThread *m_connection;
@@ -508,6 +509,113 @@ void TestTextInputV3Interface::testContentHints()
     QVERIFY(textInputEnabledSpy.wait());
     m_totalCommits++;
 }
+
+void TestTextInputV3Interface::testMultipleTextinputs()
+{
+    // create two more text inputs
+    TextInputV3 *ti1 = new TextInputV3();
+    ti1->init(m_clientTextInputManagerV3->get_text_input(*m_clientSeat));
+    QVERIFY(ti1);
+
+    TextInputV3 *ti2 = new TextInputV3();
+    ti2->init(m_clientTextInputManagerV3->get_text_input(*m_clientSeat));
+    QVERIFY(ti2);
+
+    // create a surface
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QVERIFY(serverSurfaceCreatedSpy.isValid());
+    QScopedPointer<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
+    QVERIFY(serverSurfaceCreatedSpy.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
+    QVERIFY(serverSurface);
+
+    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    // Make sure that entering surface does not trigger the text input
+    m_seat->setFocusedTextInputSurface(serverSurface);
+    QCOMPARE(focusedSurfaceChangedSpy.count(), 1);
+
+    m_serverTextInputV3 = m_seat->textInputV3();
+    QVERIFY(m_serverTextInputV3);
+
+    QSignalSpy committedSpy(m_serverTextInputV3, &TextInputV3Interface::stateCommitted);
+    // Enable ti1
+    ti1->enable();
+    ti1->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 1);
+
+    // Send another three commits on ti1
+    ti1->enable();
+    ti1->set_surrounding_text("hello", 0, 1);
+    ti1->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 2);
+
+    ti1->enable();
+    ti1->set_content_type(QtWayland::zwp_text_input_v3::content_hint_none, QtWayland::zwp_text_input_v3::content_purpose_normal);
+    ti1->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 3);
+
+    // at this point total commit count to ti1 is 3
+    QSignalSpy doneSpy1(ti1, &TextInputV3::done);
+    QSignalSpy doneSpy2(ti2, &TextInputV3::done);
+
+    m_serverTextInputV3->commitString("Hello");
+    m_serverTextInputV3->done();
+    QVERIFY(doneSpy1.wait());
+
+    // zwp_text_input_v3.done event have serial of total commits
+    QCOMPARE(doneSpy1.last().at(0).value<quint32>(), 3);
+
+    // now ti1 is at 4 commit, while ti2 is still 0
+    ti1->disable();
+    ti1->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 4);
+
+    // first commit to ti2
+    ti2->enable();
+    ti2->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 1);
+
+    // send commit string
+    m_serverTextInputV3->commitString("Hello world");
+    m_serverTextInputV3->done();
+    QVERIFY(doneSpy2.wait());
+
+    // ti2 is at one commit
+    QCOMPARE(doneSpy2.last().at(0).value<quint32>(), 1);
+    ti2->disable();
+    ti2->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 2);
+
+    // now re-enable the ti1 and verify sending commits to t2 hasn't affected it's serial
+    // Enable ti1 : 5 commits now
+    ti1->enable();
+    ti1->commit();
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(committedSpy.last().at(0).value<quint32>(), 5);
+
+    // send done signal
+    m_serverTextInputV3->commitString("Hello");
+    m_serverTextInputV3->done();
+    QVERIFY(doneSpy1.wait());
+    QCOMPARE(doneSpy1.last().at(0).value<quint32>(), 5);
+
+    // cleanup
+    if (ti1) {
+        delete ti1;
+        ti1 = nullptr;
+    }
+    if (ti2) {
+        delete ti2;
+        ti2 = nullptr;
+    }
+}
+
 
 QTEST_GUILESS_MAIN(TestTextInputV3Interface)
 
