@@ -99,9 +99,8 @@ void InputMethod::init()
         connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &InputMethod::hide);
         connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
         connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
-        connect(textInputV2, &TextInputV2Interface::requestReset, this, &InputMethod::requestReset);
         connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
-        connect(textInputV2, &TextInputV2Interface::stateCommitted, this, &InputMethod::stateCommitted);
+        connect(textInputV2, &TextInputV2Interface::stateUpdated, this, &InputMethod::textInputInterfaceV2StateUpdated);
 
         TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
         connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
@@ -113,11 +112,7 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
-    auto t = waylandServer()->seat()->textInputV2();
-    if (t) {
-        //FIXME: this shouldn't be necessary and causes double emits?
-        Q_EMIT t->enabledChanged();
-    }
+    waylandServer()->inputMethod()->sendActivate();
 }
 
 void InputMethod::hide()
@@ -203,18 +198,32 @@ void InputMethod::contentTypeChanged()
     }
 }
 
-void InputMethod::requestReset()
+void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServer::TextInputV2Interface::UpdateReason reason)
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
     if (!inputContext) {
         return;
     }
-    inputContext->sendReset();
-    if (t2 && t2->isEnabled()) {
-        inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
-        inputContext->sendPreferredLanguage(t2->preferredLanguage());
-        inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
+    if (!t2 || !t2->isEnabled()) {
+        return;
+    }
+    switch (reason) {
+    case KWaylandServer::TextInputV2Interface::UpdateReason::StateChange:
+        inputContext->sendCommitState(serial);
+        break;
+    case KWaylandServer::TextInputV2Interface::UpdateReason::StateEnter:
+        waylandServer()->inputMethod()->sendActivate();
+        inputContext->sendCommitState(serial);
+        break;
+    case KWaylandServer::TextInputV2Interface::UpdateReason::StateFull:
+        adoptInputMethodContext();
+        inputContext->sendCommitState(serial);
+        break;
+    case KWaylandServer::TextInputV2Interface::UpdateReason::StateReset:
+        inputContext->sendReset();
+        inputContext->sendCommitState(serial);
+        break;
     }
 }
 
@@ -222,8 +231,6 @@ void InputMethod::textInputInterfaceV2EnabledChanged()
 {
     auto t = waylandServer()->seat()->textInputV2();
     if (t->isEnabled()) {
-        //FIXME This sendDeactivate shouldn't be necessary?
-        waylandServer()->inputMethod()->sendDeactivate();
         waylandServer()->inputMethod()->sendActivate();
         adoptInputMethodContext();
     } else {
@@ -237,13 +244,17 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3->isEnabled()) {
         waylandServer()->inputMethod()->sendActivate();
-        adoptInputMethodContext();
     } else {
         waylandServer()->inputMethod()->sendDeactivate();
         // reset value of preedit when textinput is disabled
         preedit.text = QString();
         preedit.begin = 0;
         preedit.end = 0;
+    }
+    auto context = waylandServer()->inputMethod()->context();
+    if (context) {
+        context->sendReset();
+        adoptInputMethodContext();
     }
 }
 
