@@ -488,7 +488,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_XdgForeign = m_display->createXdgForeignV2Interface(m_display);
 
     m_keyState = m_display->createKeyStateInterface(m_display);
-    m_keyState->create();
 
     m_inputMethod = m_display->createInputMethodInterface(m_display);
 
