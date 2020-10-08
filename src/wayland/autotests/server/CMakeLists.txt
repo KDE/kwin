@@ -95,6 +95,10 @@ ecm_add_qtwayland_client_protocol(INPUTMETHOD_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
     BASENAME input-method-unstable-v1
     )
+ecm_add_qtwayland_client_protocol(VIEWPORTER_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
+    BASENAME text-input-unstable-v1
+    )
 add_executable(testInputMethodInterface test_inputmethod_interface.cpp ${INPUTMETHOD_SRCS})
 target_link_libraries(testInputMethodInterface Qt5::Test Plasma::KWaylandServer KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testInputMethodInterface COMMAND testInputMethodInterface)
