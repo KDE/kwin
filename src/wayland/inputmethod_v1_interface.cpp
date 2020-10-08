@@ -277,8 +277,8 @@ public:
         : zwp_input_panel_surface_v1()
         , SurfaceRole(surface)
         , q(q)
-        , m_id(id)
     {
+        Q_UNUSED(id)
     }
 
     void zwp_input_panel_surface_v1_set_overlay_panel(Resource *) override
@@ -298,7 +298,6 @@ public:
     }
 
     InputPanelSurfaceV1Interface *const q;
-    const quint32 m_id;
 };
 
 InputPanelSurfaceV1Interface::InputPanelSurfaceV1Interface(SurfaceInterface *surface, quint32 id, QObject *parent)
@@ -346,11 +345,6 @@ InputPanelV1Interface::InputPanelV1Interface(Display *display, QObject *parent)
 }
 
 InputPanelV1Interface::~InputPanelV1Interface() = default;
-
-quint32 InputPanelSurfaceV1Interface::id() const
-{
-    return d->m_id;
-}
 
 SurfaceInterface *InputPanelSurfaceV1Interface::surface() const
 {
