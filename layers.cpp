@@ -727,11 +727,11 @@ void Workspace::updateXStackingOrder()
         std::unique_ptr<Xcb::Tree> tree{std::move(m_xStackingQueryTree)};
         xcb_window_t *windows = tree->children();
         const auto count = tree->data()->children_len;
-        int foundUnmanagedCount = unmanaged.count();
+        int foundUnmanagedCount = m_unmanaged.count();
         for (unsigned int i = 0;
                 i < count;
                 ++i) {
-            for (auto it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it) {
+            for (auto it = m_unmanaged.constBegin(); it != m_unmanaged.constEnd(); ++it) {
                 Unmanaged *u = *it;
                 if (u->window() == windows[i]) {
                     x_stacking.append(u);
