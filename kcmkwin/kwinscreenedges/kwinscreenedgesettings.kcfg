@@ -47,7 +47,7 @@
             <default>None</default>
         </entry>
         <entry key="TopLeft" type="String">
-            <default>PresentWindowsAll</default>
+            <default>None</default>
         </entry>
     </group>
     <group name="Effect-PresentWindows">

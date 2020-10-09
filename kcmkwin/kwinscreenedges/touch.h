@@ -20,8 +20,8 @@ class QShowEvent;
 
 namespace KWin
 {
+class KWinTouchScreenData;
 class KWinTouchScreenEdgeConfigForm;
-class KWinTouchScreenSettings;
 class KWinTouchScreenScriptSettings;
 enum class BuiltInEffect;
 
@@ -46,7 +46,7 @@ private:
     KSharedConfigPtr m_config;
     QStringList m_scripts; //list of script IDs ordered in the list they are presented in the menu
     QHash<QString, KWinTouchScreenScriptSettings*> m_scriptSettings;
-    KWinTouchScreenSettings *m_settings;
+    KWinTouchScreenData *m_data;
 
     enum EffectActions {
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
