@@ -226,7 +226,7 @@ public:
      * @return List of unmanaged "clients" currently registered in Workspace
      */
     const QList<Unmanaged *> &unmanagedList() const {
-        return unmanaged;
+        return m_unmanaged;
     }
     /**
      * @return List of deleted "clients" currently managed by Workspace
@@ -600,7 +600,7 @@ private:
 
     QList<X11Client *> clients;
     QList<AbstractClient*> m_allClients;
-    QList<Unmanaged *> unmanaged;
+    QList<Unmanaged *> m_unmanaged;
     QList<Deleted *> deleted;
     QList<InternalClient *> m_internalClients;
 
@@ -789,7 +789,7 @@ void Workspace::forEachClient(std::function< void (X11Client *) > func)
 inline
 void Workspace::forEachUnmanaged(std::function< void (Unmanaged*) > func)
 {
-    std::for_each(unmanaged.constBegin(), unmanaged.constEnd(), func);
+    std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
 }
 
 inline bool Workspace::hasClient(const X11Client *c)
