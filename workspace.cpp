@@ -469,7 +469,9 @@ void Workspace::cleanupX11()
         stacking_order.removeOne(client);
     }
 
-    for (Unmanaged *overrideRedirect : m_unmanaged) {
+    // We need a shadow copy because windows get removed as we go through them.
+    const QList<Unmanaged *> unmanaged = m_unmanaged;
+    for (Unmanaged *overrideRedirect : unmanaged) {
         overrideRedirect->release(ReleaseReason::KWinShutsDown);
         unconstrained_stacking_order.removeOne(overrideRedirect);
         stacking_order.removeOne(overrideRedirect);
@@ -510,7 +512,9 @@ Workspace::~Workspace()
         }
     }
 
-    for (InternalClient *client : m_internalClients) {
+    // We need a shadow copy because clients get removed as we go through them.
+    const QList<InternalClient *> internalClients = m_internalClients;
+    for (InternalClient *client : internalClients) {
         client->destroyClient();
     }
 
