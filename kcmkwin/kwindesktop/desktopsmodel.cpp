@@ -291,10 +291,18 @@ void DesktopsModel::syncWithServer()
 
     // Sync ids. Replace dummy ids in the process.
     for (int i = 0; i < m_serverSideDesktops.count(); ++i) {
-        const QString oldId = m_desktops.at(i);
+        const QString &oldId = m_desktops.at(i);
         const QString &newId = m_serverSideDesktops.at(i);
-        m_desktops[i] = newId;
+        // If the new and old ID are the same skip this both as an optimization
+        // and to make the code below valid.
+        if (newId == oldId) {
+            continue;
+        }
+        // Note that `m_names[newId]` is an invalid reference after `m_names.take(oldId)`
+        // if `newId == oldId` so the check above is needed to make this code valid.
         m_names[newId] = m_names.take(oldId);
+        // Must be done after the last use of `oldId`
+        m_desktops[i] = newId;
     }
 
     emit dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
@@ -610,10 +618,18 @@ void DesktopsModel::updateModifiedState(bool server)
         && m_desktops != m_serverSideDesktops) {
 
         for (int i = 0; i < m_serverSideDesktops.count(); ++i) {
-            const QString oldId = m_desktops.at(i);
+            const QString &oldId = m_desktops.at(i);
             const QString &newId = m_serverSideDesktops.at(i);
-            m_desktops[i] = newId;
+            // If the new and old ID are the same skip this both as an optimization
+            // and to make the code below valid.
+            if (newId == oldId) {
+                continue;
+            }
+            // Note that `m_names[newId]` is an invalid reference after `m_names.take(oldId)`
+            // if `newId == oldId` so the check above is needed to make this code valid.
             m_names[newId] = m_names.take(oldId);
+            // Must be done after the last use of `oldId`
+            m_desktops[i] = newId;
         }
 
         emit dataChanged(index(0, 0), index(rowCount() - 1, 0), QVector<int>{Qt::DisplayRole});
