@@ -281,7 +281,7 @@ QRect infiniteRegion()
  *  repainting to create animations.
  *
  * For each stage there are *Screen() and *Window() methods. The window method
- *  is called for every window which the screen method is usually called just
+ *  is called for every window while the screen method is usually called just
  *  once.
  *
  * @section OpenGL
