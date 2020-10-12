@@ -146,7 +146,7 @@ void Window::unmap()
 
 EGLSurface Window::eglSurface() const
 {
-    if (kwinApp()->platform()->supportsQpaContext()) {
+    if (kwinApp()->platform()->supportsSurfacelessContext()) {
         return EGL_NO_SURFACE;
     }
     return kwinApp()->platform()->sceneEglSurface();

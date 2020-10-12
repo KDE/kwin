@@ -413,7 +413,7 @@ void Platform::warpPointer(const QPointF &globalPos)
     Q_UNUSED(globalPos)
 }
 
-bool Platform::supportsQpaContext() const
+bool Platform::supportsSurfacelessContext() const
 {
     if (Compositor *c = Compositor::self()) {
         return c->scene()->supportsSurfacelessContext();
