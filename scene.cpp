@@ -674,6 +674,11 @@ void Scene::doneOpenGLContextCurrent()
 {
 }
 
+bool Scene::supportsSurfacelessContext() const
+{
+    return false;
+}
+
 void Scene::triggerFence()
 {
 }

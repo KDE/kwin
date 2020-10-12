@@ -416,7 +416,7 @@ void Platform::warpPointer(const QPointF &globalPos)
 bool Platform::supportsQpaContext() const
 {
     if (Compositor *c = Compositor::self()) {
-        return c->scene()->openGLPlatformInterfaceExtensions().contains(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
+        return c->scene()->supportsSurfacelessContext();
     }
     return false;
 }
