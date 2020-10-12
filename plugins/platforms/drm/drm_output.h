@@ -142,7 +142,6 @@ private:
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
-    QMatrix4x4 matrixDisplay(const QSize &s) const;
 
     DrmBackend *m_backend;
     DrmGpu *m_gpu;

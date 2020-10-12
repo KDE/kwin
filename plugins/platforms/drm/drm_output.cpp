@@ -133,18 +133,45 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
+static QMatrix4x4 matrixForTransform(const QRectF &rect, qreal scale, DrmOutput::Transform transform)
 {
     QMatrix4x4 matrix;
-    const int angle = rotation();
-    if (angle) {
-        const QSize center = s / 2;
 
-        matrix.translate(center.width(), center.height());
-        matrix.rotate(-angle, 0, 0, 1);
-        matrix.translate(-center.width(), -center.height());
+    matrix.scale(scale);
+
+    switch (transform) {
+    case DrmOutput::Transform::Normal:
+    case DrmOutput::Transform::Flipped:
+        break;
+    case DrmOutput::Transform::Rotated90:
+    case DrmOutput::Transform::Flipped90:
+        matrix.translate(0, rect.width());
+        matrix.rotate(-90, 0, 0, 1);
+        break;
+    case DrmOutput::Transform::Rotated180:
+    case DrmOutput::Transform::Flipped180:
+        matrix.translate(rect.width(), rect.height());
+        matrix.rotate(-180, 0, 0, 1);
+        break;
+    case DrmOutput::Transform::Rotated270:
+    case DrmOutput::Transform::Flipped270:
+        matrix.translate(rect.height(), 0);
+        matrix.rotate(-270, 0, 0, 1);
+        break;
     }
-    matrix.scale(scale());
+
+    switch (transform) {
+    case DrmOutput::Transform::Flipped:
+    case DrmOutput::Transform::Flipped180:
+    case DrmOutput::Transform::Flipped90:
+    case DrmOutput::Transform::Flipped270:
+        matrix.translate(rect.width(), 0);
+        matrix.scale(-1, 1);
+        break;
+    default:
+        break;
+    }
+
     return matrix;
 }
 
@@ -163,15 +190,13 @@ void DrmOutput::updateCursor()
 
     QPainter p;
     p.begin(c);
-    p.setWorldTransform(matrixDisplay(QSize(cursorImage.width(), cursorImage.height())).toTransform());
+    p.setWorldTransform(matrixForTransform(cursorImage.rect(), scale(), transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
 }
 
 void DrmOutput::moveCursor(Cursor *cursor, const QPoint &globalPos)
 {
-    const QMatrix4x4 hotspotMatrix = matrixDisplay(cursor->image().size());
-
     const QPoint localPos = globalPos - AbstractWaylandOutput::globalPos();
     QPoint pos = localPos;
 
@@ -197,7 +222,10 @@ void DrmOutput::moveCursor(Cursor *cursor, const QPoint &globalPos)
         Q_UNREACHABLE();
     }
     pos *= scale();
+
+    const QMatrix4x4 hotspotMatrix = matrixForTransform(cursor->image().rect(), scale(), transform());
     pos -= hotspotMatrix.map(cursor->hotspot());
+
     drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y());
 }
 
