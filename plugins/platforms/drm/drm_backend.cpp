@@ -351,6 +351,45 @@ bool DrmBackend::updateOutputs()
     return true;
 }
 
+static QString transformToString(DrmOutput::Transform transform)
+{
+    switch (transform) {
+    case DrmOutput::Transform::Normal:
+        return QStringLiteral("normal");
+    case DrmOutput::Transform::Rotated90:
+        return QStringLiteral("rotate-90");
+    case DrmOutput::Transform::Rotated180:
+        return QStringLiteral("rotate-180");
+    case DrmOutput::Transform::Rotated270:
+        return QStringLiteral("rotate-270");
+    case DrmOutput::Transform::Flipped:
+        return QStringLiteral("flip");
+    case DrmOutput::Transform::Flipped90:
+        return QStringLiteral("flip-90");
+    case DrmOutput::Transform::Flipped180:
+        return QStringLiteral("flip-180");
+    case DrmOutput::Transform::Flipped270:
+        return QStringLiteral("flip-270");
+    default:
+        return QStringLiteral("normal");
+    }
+}
+
+static DrmOutput::Transform stringToTransform(const QString &text)
+{
+    static const QHash<QString, DrmOutput::Transform> stringToTransform {
+        { QStringLiteral("normal"),     DrmOutput::Transform::Normal },
+        { QStringLiteral("rotate-90"),  DrmOutput::Transform::Rotated90 },
+        { QStringLiteral("rotate-180"), DrmOutput::Transform::Rotated180 },
+        { QStringLiteral("rotate-270"), DrmOutput::Transform::Rotated270 },
+        { QStringLiteral("flip"),       DrmOutput::Transform::Flipped },
+        { QStringLiteral("flip-90"),    DrmOutput::Transform::Flipped90 },
+        { QStringLiteral("flip-180"),   DrmOutput::Transform::Flipped180 },
+        { QStringLiteral("flip-270"),   DrmOutput::Transform::Flipped270 }
+    };
+    return stringToTransform.value(text, DrmOutput::Transform::Normal);
+}
+
 void DrmBackend::readOutputsConfiguration()
 {
     if (m_outputs.isEmpty()) {
@@ -368,6 +407,7 @@ void DrmBackend::readOutputsConfiguration()
         // TODO: add mode
         if (outputConfig.hasKey("Scale"))
             (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
+        (*it)->setTransform(stringToTransform(outputConfig.readEntry("Transform", "normal")));
         pos.setX(pos.x() + (*it)->geometry().width());
     }
 }
@@ -384,6 +424,7 @@ void DrmBackend::writeOutputsConfiguration()
         qCDebug(KWIN_DRM) << "Writing output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
         auto outputConfig = configGroup.group((*it)->uuid());
         outputConfig.writeEntry("Scale", (*it)->scale());
+        outputConfig.writeEntry("Transform", transformToString((*it)->transform()));
     }
 }
 
