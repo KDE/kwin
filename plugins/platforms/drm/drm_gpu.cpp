@@ -34,7 +34,19 @@ namespace KWin
 
 DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_backend(backend), m_devNode(devNode), m_fd(fd), m_drmId(drmId), m_atomicModeSetting(false), m_useEglStreams(false), m_gbmDevice(nullptr)
 {
-    
+    uint64_t capability = 0;
+
+    if (drmGetCap(fd, DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
+        m_cursorSize.setWidth(capability);
+    } else {
+        m_cursorSize.setWidth(64);
+    }
+
+    if (drmGetCap(fd, DRM_CAP_CURSOR_HEIGHT, &capability) == 0) {
+        m_cursorSize.setHeight(capability);
+    } else {
+        m_cursorSize.setHeight(64);
+    }
 }
 
 DrmGpu::~DrmGpu()
@@ -229,7 +241,7 @@ bool DrmGpu::updateOutputs()
                     delete output;
                     continue;
                 }
-                if (!output->initCursor(m_backend->m_cursorSize)) {
+                if (!output->initCursor(m_cursorSize)) {
                     m_backend->setSoftWareCursor(true);
                 }
                 qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid();

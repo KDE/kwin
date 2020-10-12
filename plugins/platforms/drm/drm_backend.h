@@ -132,7 +132,6 @@ private:
 
     bool m_deleteBufferAfterPageFlip;
     bool m_cursorEnabled = false;
-    QSize m_cursorSize;
     int m_pageFlipsPending = 0;
     bool m_active = false;
 #if HAVE_EGL_STREAMS

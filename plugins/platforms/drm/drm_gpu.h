@@ -89,6 +89,7 @@ private:
     DrmBackend* const m_backend;
     
     const QByteArray m_devNode;
+    QSize m_cursorSize;
     const int m_fd;
     const int m_drmId;
     bool m_atomicModeSetting;

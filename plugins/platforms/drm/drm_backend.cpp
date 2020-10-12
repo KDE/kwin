@@ -480,21 +480,6 @@ void DrmBackend::initCursor()
             }
         }
     );
-    uint64_t capability = 0;
-    QSize cursorSize;
-    cursorSize.setWidth(64);
-    for (auto gpu : m_gpus) {
-        if (drmGetCap(gpu->fd(), DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
-            cursorSize.setWidth(capability);
-        }
-    }
-    cursorSize.setHeight(64);
-    for (auto gpu : m_gpus) {
-        if (drmGetCap(gpu->fd(), DRM_CAP_CURSOR_HEIGHT, &capability) == 0) {
-            cursorSize.setHeight(capability);
-        }
-    }
-    m_cursorSize = cursorSize;
     // now we have screens and can set cursors, so start tracking
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
