@@ -10,6 +10,10 @@
 #ifndef KWIN_QPA_WINDOW_H
 #define KWIN_QPA_WINDOW_H
 
+#include <epoxy/egl.h>
+#include "fixqopengl.h"
+#include <fixx11h.h>
+
 #include <QPointer>
 #include <qpa/qplatformwindow.h>
 
@@ -39,6 +43,7 @@ public:
     QSharedPointer<QOpenGLFramebufferObject> swapFBO();
 
     InternalClient *client() const;
+    EGLSurface eglSurface() const;
 
 private:
     void createFBO();

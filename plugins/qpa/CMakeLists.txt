@@ -2,15 +2,14 @@ include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
 include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
 
 set(QPA_SOURCES
-    abstractplatformcontext.cpp
     backingstore.cpp
     eglhelpers.cpp
+    eglplatformcontext.cpp
     integration.cpp
     main.cpp
     offscreensurface.cpp
     platformcursor.cpp
     screen.cpp
-    sharingplatformcontext.cpp
     window.cpp
 )
 
