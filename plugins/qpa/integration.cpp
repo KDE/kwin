@@ -9,9 +9,9 @@
 */
 #include "integration.h"
 #include "backingstore.h"
+#include "eglplatformcontext.h"
 #include "offscreensurface.h"
 #include "screen.h"
-#include "sharingplatformcontext.h"
 #include "window.h"
 #include "../../main.h"
 #include "../../platform.h"
@@ -122,15 +122,10 @@ QStringList Integration::themeNames() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-    if (kwinApp()->platform()->supportsQpaContext()) {
-        return new SharingPlatformContext(context);
-    }
-    if (kwinApp()->platform()->sceneEglDisplay() != EGL_NO_DISPLAY) {
-        auto s = kwinApp()->platform()->sceneEglSurface();
-        if (s != EGL_NO_SURFACE) {
-            // try a SharingPlatformContext with a created surface
-            return new SharingPlatformContext(context, s, kwinApp()->platform()->sceneEglConfig());
-        }
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    if (eglDisplay != EGL_NO_DISPLAY) {
+        EGLPlatformContext *platformContext = new EGLPlatformContext(context, eglDisplay);
+        return platformContext;
     }
     return nullptr;
 }

@@ -29,7 +29,7 @@ public:
     QSurfaceFormat format() const override;
     bool isValid() const override;
 
-    EGLSurface nativeHandle() const;
+    EGLSurface eglSurface() const;
 
 private:
     QSurfaceFormat m_format;

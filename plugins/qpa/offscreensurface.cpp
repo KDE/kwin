@@ -62,7 +62,7 @@ bool OffscreenSurface::isValid() const
     return m_surface != EGL_NO_SURFACE;
 }
 
-EGLSurface OffscreenSurface::nativeHandle() const
+EGLSurface OffscreenSurface::eglSurface() const
 {
     return m_surface;
 }

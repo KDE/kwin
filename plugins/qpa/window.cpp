@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "platform.h"
 #include "screens.h"
 
 #include "internal_client.h"
@@ -141,6 +142,14 @@ void Window::unmap()
     m_handle = nullptr;
 
     m_contentFBO = nullptr;
+}
+
+EGLSurface Window::eglSurface() const
+{
+    if (kwinApp()->platform()->supportsQpaContext()) {
+        return EGL_NO_SURFACE;
+    }
+    return kwinApp()->platform()->sceneEglSurface();
 }
 
 }

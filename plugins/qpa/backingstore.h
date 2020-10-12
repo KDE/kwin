@@ -10,6 +10,10 @@
 #ifndef KWIN_QPA_BACKINGSTORE_H
 #define KWIN_QPA_BACKINGSTORE_H
 
+#include <epoxy/egl.h>
+#include "fixqopengl.h"
+#include <fixx11h.h>
+
 #include <qpa/qplatformbackingstore.h>
 
 namespace KWin
