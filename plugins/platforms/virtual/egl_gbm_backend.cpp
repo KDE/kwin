@@ -103,16 +103,14 @@ bool EglGbmBackend::initRenderingContext()
 {
     initBufferConfigs();
 
-    const char* eglExtensionsCString = eglQueryString(eglDisplay(), EGL_EXTENSIONS);
-    const QList<QByteArray> extensions = QByteArray::fromRawData(eglExtensionsCString, qstrlen(eglExtensionsCString)).split(' ');
-    if (!extensions.contains(QByteArrayLiteral("EGL_KHR_surfaceless_context"))) {
+    if (!supportsSurfacelessContext()) {
+        qCWarning(KWIN_VIRTUAL) << "EGL_KHR_surfaceless_context extension is unavailable";
         return false;
     }
 
     if (!createContext()) {
         return false;
     }
-    setSurfaceLessContext(true);
 
     return makeCurrent();
 }

@@ -139,6 +139,7 @@ public:
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
+    virtual bool supportsSurfacelessContext() const;
 
     virtual QMatrix4x4 screenProjectionMatrix() const;
 
