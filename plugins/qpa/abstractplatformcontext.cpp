@@ -77,32 +77,32 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (isOpenGLES()) {
         if (haveCreateContext && haveRobustness && haveContextPriority) {
-            auto glesRobustPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setVersion(2);
             glesRobustPriority->setRobust(true);
             glesRobustPriority->setHighPriority(true);
             candidates.push_back(std::move(glesRobustPriority));
         }
         if (haveCreateContext && haveRobustness) {
-            auto glesRobust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesRobust = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobust->setVersion(2);
             glesRobust->setRobust(true);
             candidates.push_back(std::move(glesRobust));
         }
         if (haveContextPriority) {
-            auto glesPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesPriority->setVersion(2);
             glesPriority->setHighPriority(true);
             candidates.push_back(std::move(glesPriority));
         }
-        auto gles = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+        auto gles = std::make_unique<EglOpenGLESContextAttributeBuilder>();
         gles->setVersion(2);
         candidates.push_back(std::move(gles));
     } else {
         // Try to create a 3.1 core context
         if (m_format.majorVersion() >= 3 && haveCreateContext) {
             if (haveRobustness && haveContextPriority) {
-                auto robustCorePriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
                 robustCorePriority->setVersion(m_format.majorVersion(), m_format.minorVersion());
                 robustCorePriority->setRobust(true);
                 robustCorePriority->setForwardCompatible(true);
@@ -115,7 +115,7 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
                 candidates.push_back(std::move(robustCorePriority));
             }
             if (haveRobustness) {
-                auto robustCore = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto robustCore = std::make_unique<EglContextAttributeBuilder>();
                 robustCore->setVersion(m_format.majorVersion(), m_format.minorVersion());
                 robustCore->setRobust(true);
                 robustCore->setForwardCompatible(true);
@@ -127,7 +127,7 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
                 candidates.push_back(std::move(robustCore));
             }
             if (haveContextPriority) {
-                auto corePriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto corePriority = std::make_unique<EglContextAttributeBuilder>();
                 corePriority->setVersion(m_format.majorVersion(), m_format.minorVersion());
                 corePriority->setForwardCompatible(true);
                 if (m_format.profile() == QSurfaceFormat::CoreProfile) {
@@ -138,7 +138,7 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
                 corePriority->setHighPriority(true);
                 candidates.push_back(std::move(corePriority));
             }
-            auto core = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto core = std::make_unique<EglContextAttributeBuilder>();
             core->setVersion(m_format.majorVersion(), m_format.minorVersion());
             core->setForwardCompatible(true);
             if (m_format.profile() == QSurfaceFormat::CoreProfile) {
@@ -149,13 +149,13 @@ void AbstractPlatformContext::createContext(EGLContext shareContext)
             candidates.push_back(std::move(core));
         }
         if (haveRobustness && haveCreateContext && haveContextPriority) {
-            auto robustPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto robustPriority = std::make_unique<EglContextAttributeBuilder>();
             robustPriority->setRobust(true);
             robustPriority->setHighPriority(true);
             candidates.push_back(std::move(robustPriority));
         }
         if (haveRobustness && haveCreateContext) {
-            auto robust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto robust = std::make_unique<EglContextAttributeBuilder>();
             robust->setRobust(true);
             candidates.push_back(std::move(robust));
         }
