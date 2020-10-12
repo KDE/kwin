@@ -100,7 +100,7 @@ public:
      * Whether our Compositing EGL display allows a surface less context
      * so that a sharing context could be created.
      */
-    virtual bool supportsQpaContext() const;
+    bool supportsSurfacelessContext() const;
     /**
      * The EGLDisplay used by the compositing scene.
      */
