@@ -755,10 +755,10 @@ public:
 #define KWIN_EFFECT_FACTORY_ENABLED( factoryName, className, jsonFile, enabled ) \
     KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, return true;, enabled )
 
-#define KWIN_EFFECT_FACTORY_SUPPORTED( factoryName, classname, jsonFile, supported ) \
+#define KWIN_EFFECT_FACTORY_SUPPORTED( factoryName, className, jsonFile, supported ) \
     KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, supported, return true; )
 
-#define KWIN_EFFECT_FACTORY( factoryName, classname, jsonFile ) \
+#define KWIN_EFFECT_FACTORY( factoryName, className, jsonFile ) \
     KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, return true;, return true; )
 
 
