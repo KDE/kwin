@@ -114,8 +114,7 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
         if (deviceSeat != LogindIntegration::self()->seat()) {
             continue;
         }
-        if (device->getParentWithSubsystemDevType("pci"))
-            vect.push_back(std::move(device));
+        vect.push_back(std::move(device));
     }
     return vect;
 }
@@ -140,17 +139,22 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
     std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
         auto pci1 = device1->getParentWithSubsystemDevType("pci");
         auto pci2 = device2->getParentWithSubsystemDevType("pci");
+        const char *systAttrValue;
         // if set as boot GPU, prefer 1
-        const char *systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
-        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-            return true;
+        if (pci1) {
+            systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return true;
+            }
         }
         // if set as boot GPU, prefer 2
-        systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
-        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-            return false;
+        if (pci2) {
+            systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return false;
+            }
         }
-        return udev_device_get_sysnum(pci1) > udev_device_get_sysnum(pci2);
+        return true;
     });
     return vect;
 #endif
@@ -171,17 +175,22 @@ std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
     std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
         auto pci1 = device1->getParentWithSubsystemDevType("pci");
         auto pci2 = device2->getParentWithSubsystemDevType("pci");
+        const char *systAttrValue;
         // if set as boot GPU, prefer 1
-        const char *systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
-        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-            return true;
+        if (pci1) {
+            systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return true;
+            }
         }
         // if set as boot GPU, prefer 2
-        systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
-        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-            return false;
+        if (pci2) {
+            systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return false;
+            }
         }
-        return udev_device_get_sysnum(pci1) > udev_device_get_sysnum(pci2);
+        return true;
     });
     return vect;
 }
