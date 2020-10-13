@@ -1,5 +1,4 @@
 [Desktop Entry]
-Exec=kcmshell5 kwinrules
 Icon=preferences-system-windows-actions
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 Type=Service

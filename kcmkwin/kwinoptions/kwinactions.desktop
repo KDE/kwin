@@ -2,7 +2,6 @@
 Icon=preferences-system-windows-action
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Exec=kcmshell5 kwinactions
 X-DocPath=kcontrol/windowbehaviour/index.html#titlebar-actions
 Icon=preferences-system-windows-actions
 

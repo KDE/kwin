@@ -2,7 +2,6 @@
 Icon=preferences-system-windows
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Exec=kcmshell5 kwinfocus
 X-DocPath=kcontrol/windowbehaviour/index.html#action-focus
 
 X-KDE-Library=kcm_kwinoptions
