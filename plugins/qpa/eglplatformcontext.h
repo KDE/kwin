@@ -40,6 +40,7 @@ public:
 
 private:
     void create(const QSurfaceFormat &format, EGLContext shareContext);
+    void updateFormatFromContext();
 
     EGLDisplay m_eglDisplay;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;

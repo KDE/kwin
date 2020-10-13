@@ -262,6 +262,85 @@ void EGLPlatformContext::create(const QSurfaceFormat &format, EGLContext shareCo
         return;
     }
     m_context = context;
+    updateFormatFromContext();
+}
+
+static EGLSurface createDummyPbufferSurface(EGLDisplay display, const QSurfaceFormat &format)
+{
+    const EGLConfig config = configFromFormat(display, format, EGL_PBUFFER_BIT);
+    if (config == EGL_NO_CONFIG_KHR) {
+        return EGL_NO_SURFACE;
+    }
+
+    const EGLint attribs[] = {
+        EGL_WIDTH, 16,
+        EGL_HEIGHT, 16,
+        EGL_NONE
+    };
+
+    return eglCreatePbufferSurface(display, config, attribs);
+}
+
+void EGLPlatformContext::updateFormatFromContext()
+{
+    const EGLSurface oldDrawSurface = eglGetCurrentSurface(EGL_DRAW);
+    const EGLSurface oldReadSurface = eglGetCurrentSurface(EGL_READ);
+    const EGLContext oldContext = eglGetCurrentContext();
+
+    EGLSurface dummySurface;
+    if (!kwinApp()->platform()->supportsSurfacelessContext()) {
+        dummySurface = createDummyPbufferSurface(m_eglDisplay, m_format);
+        if (dummySurface == EGL_NO_SURFACE) {
+            qCWarning(KWIN_QPA, "Failed to create dummy surface: 0x%x", eglGetError());
+            return;
+        }
+    } else {
+        dummySurface = EGL_NO_SURFACE;
+    }
+
+    eglMakeCurrent(m_eglDisplay, dummySurface, dummySurface, m_context);
+
+    const char *version = reinterpret_cast<const char *>(glGetString(GL_VERSION));
+    int major, minor;
+    if (parseOpenGLVersion(version, major, minor)) {
+        m_format.setMajorVersion(major);
+        m_format.setMinorVersion(minor);
+    } else {
+        qCWarning(KWIN_QPA) << "Unrecognized OpenGL version:" << version;
+    }
+
+    GLint value;
+
+    if (m_format.version() >= qMakePair(3, 0)) {
+        glGetIntegerv(GL_CONTEXT_FLAGS, &value);
+        if (value & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT) {
+            m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
+        }
+        if (value & GL_CONTEXT_FLAG_DEBUG_BIT) {
+            m_format.setOption(QSurfaceFormat::DebugContext);
+        }
+    } else {
+        m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
+    }
+
+    if (m_format.version() >= qMakePair(3, 2)) {
+        glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &value);
+        if (value & GL_CONTEXT_CORE_PROFILE_BIT) {
+            m_format.setProfile(QSurfaceFormat::CoreProfile);
+        } else if (value & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) {
+            m_format.setProfile(QSurfaceFormat::CompatibilityProfile);
+        } else {
+            m_format.setProfile(QSurfaceFormat::NoProfile);
+        }
+    } else {
+        m_format.setProfile(QSurfaceFormat::NoProfile);
+    }
+
+    eglMakeCurrent(m_eglDisplay, oldDrawSurface, oldReadSurface, oldContext);
+
+    if (dummySurface != EGL_NO_SURFACE) {
+        eglDestroySurface(m_eglDisplay, dummySurface);
+    }
 }
 
 } // namespace QPA
