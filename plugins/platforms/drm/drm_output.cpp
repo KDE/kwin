@@ -133,48 +133,6 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-static QMatrix4x4 matrixForTransform(const QRectF &rect, qreal scale, DrmOutput::Transform transform)
-{
-    QMatrix4x4 matrix;
-
-    matrix.scale(scale);
-
-    switch (transform) {
-    case DrmOutput::Transform::Normal:
-    case DrmOutput::Transform::Flipped:
-        break;
-    case DrmOutput::Transform::Rotated90:
-    case DrmOutput::Transform::Flipped90:
-        matrix.translate(0, rect.width());
-        matrix.rotate(-90, 0, 0, 1);
-        break;
-    case DrmOutput::Transform::Rotated180:
-    case DrmOutput::Transform::Flipped180:
-        matrix.translate(rect.width(), rect.height());
-        matrix.rotate(-180, 0, 0, 1);
-        break;
-    case DrmOutput::Transform::Rotated270:
-    case DrmOutput::Transform::Flipped270:
-        matrix.translate(rect.height(), 0);
-        matrix.rotate(-270, 0, 0, 1);
-        break;
-    }
-
-    switch (transform) {
-    case DrmOutput::Transform::Flipped:
-    case DrmOutput::Transform::Flipped180:
-    case DrmOutput::Transform::Flipped90:
-    case DrmOutput::Transform::Flipped270:
-        matrix.translate(rect.width(), 0);
-        matrix.scale(-1, 1);
-        break;
-    default:
-        break;
-    }
-
-    return matrix;
-}
-
 void DrmOutput::updateCursor()
 {
     if (m_deleted) {
@@ -190,15 +148,15 @@ void DrmOutput::updateCursor()
 
     QPainter p;
     p.begin(c);
-    p.setWorldTransform(matrixForTransform(cursorImage.rect(), scale(), transform()).toTransform());
+    p.setWorldTransform(logicalToNativeMatrix(cursorImage.rect(), scale(), transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
 }
 
 void DrmOutput::moveCursor(Cursor *cursor, const QPoint &globalPos)
 {
-    const QMatrix4x4 hotspotMatrix = matrixForTransform(cursor->image().rect(), scale(), transform());
-    const QMatrix4x4 monitorMatrix = transformation();
+    const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->image().rect(), scale(), transform());
+    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
 
     QPoint pos = monitorMatrix.map(globalPos);
     pos -= hotspotMatrix.map(cursor->hotspot());

@@ -115,7 +115,7 @@ public:
     /**
      * Returns a matrix that can translate into the display's coordinates system
      */
-    QMatrix4x4 transformation() const;
+    static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
 
 Q_SIGNALS:
     void modeChanged();

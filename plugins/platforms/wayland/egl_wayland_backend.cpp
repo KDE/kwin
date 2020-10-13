@@ -289,7 +289,9 @@ void EglWaylandBackend::present()
 static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
 {
     const int height = output->modeSize().height();
-    const QMatrix4x4 matrix = output->transformation();
+    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->geometry(),
+                                                                   output->scale(),
+                                                                   output->transform());
 
     QVector<EGLint> rects;
     rects.reserve(region.rectCount() * 4);
