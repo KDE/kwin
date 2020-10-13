@@ -378,14 +378,15 @@ void LogindIntegration::releaseDevice(int fd)
     struct stat st;
     if (fstat(fd, &st) < 0) {
         qCDebug(KWIN_CORE) << "Could not stat the file descriptor";
-        return;
+    } else {
+        QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
+                                                              m_sessionPath,
+                                                              m_sessionControllerSessionInterface,
+                                                              QStringLiteral("ReleaseDevice"));
+        message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
+        m_bus.asyncCall(message);
     }
-    QDBusMessage message = QDBusMessage::createMethodCall(m_sessionControllerService,
-                                                          m_sessionPath,
-                                                          m_sessionControllerSessionInterface,
-                                                          QStringLiteral("ReleaseDevice"));
-    message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
-    m_bus.asyncCall(message);
+    close(fd);
 }
 
 void LogindIntegration::pauseDevice(uint devMajor, uint devMinor, const QString &type)
