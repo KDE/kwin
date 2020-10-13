@@ -21,8 +21,6 @@ target_link_libraries(kwinxrenderutils
         Qt5::Core
         Qt5::Gui
 
-        Plasma::KWaylandServer
-
         XCB::RENDER
         XCB::XCB
         XCB::XFIXES
@@ -45,30 +43,18 @@ set(kwin_EFFECTSLIB_SRCS
     logging.cpp
 )
 
-set(kwineffects_QT_LIBS
-    Qt5::DBus
-    Qt5::Widgets
-    Qt5::Quick
-)
-
-set(kwineffects_KDE_LIBS
-    KF5::ConfigCore
-    KF5::CoreAddons
-    KF5::WindowSystem
-    KF5::Declarative
-)
-
-set(kwineffects_XCB_LIBS
-    XCB::XCB
-)
-
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 generate_export_header(kwineffects EXPORT_FILE_NAME kwineffects_export.h)
 target_link_libraries(kwineffects
     PUBLIC
-        ${kwineffects_QT_LIBS}
-        ${kwineffects_KDE_LIBS}
-        ${kwineffects_XCB_LIBS}
+        KF5::ConfigCore
+        KF5::CoreAddons
+        KF5::WindowSystem
+        XCB::XCB
+        Plasma::KWaylandServer
+    PRIVATE
+        Qt5::Quick
+        KF5::Declarative
         kwinglutils
 )
 if (KWIN_HAVE_XRENDER_COMPOSITING)
