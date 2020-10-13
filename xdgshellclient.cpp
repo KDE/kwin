@@ -1979,8 +1979,10 @@ void XdgPopupClient::initialize()
     parentClient->addTransient(this);
     setTransientFor(parentClient);
 
+    blockGeometryUpdates(true);
     const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
     placeIn(area);
+    blockGeometryUpdates(false);
 
     scheduleConfigure();
 }
