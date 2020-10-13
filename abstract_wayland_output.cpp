@@ -311,45 +311,48 @@ AbstractWaylandOutput::Transform AbstractWaylandOutput::transform() const
     return static_cast<Transform>(m_waylandOutputDevice->transform());
 }
 
-// TODO: Do we need to handle the flipped cases differently?
-int transformToRotation(AbstractWaylandOutput::Transform transform)
-{
-    switch (transform) {
-    case AbstractWaylandOutput::Transform::Normal:
-    case AbstractWaylandOutput::Transform::Flipped:
-        return 0;
-    case AbstractWaylandOutput::Transform::Rotated90:
-    case AbstractWaylandOutput::Transform::Flipped90:
-        return 90;
-    case AbstractWaylandOutput::Transform::Rotated180:
-    case AbstractWaylandOutput::Transform::Flipped180:
-        return 180;
-    case AbstractWaylandOutput::Transform::Rotated270:
-    case AbstractWaylandOutput::Transform::Flipped270:
-        return 270;
-    }
-    Q_UNREACHABLE();
-    return 0;
-}
-
-int AbstractWaylandOutput::rotation() const
-{
-    return transformToRotation(transform());
-}
-
 QMatrix4x4 AbstractWaylandOutput::transformation() const
 {
-    const QSize outputSize = modeSize();
-    const QSize logicalSize = pixelSize();
+    const QRect rect = geometry();
 
     QMatrix4x4 matrix;
-    matrix.translate(outputSize.width()/2, outputSize.height()/2);
-    matrix.rotate(rotation(), 0, 0, 1);
-    matrix.translate(-logicalSize.width()/2, -logicalSize.height()/2);
     matrix.scale(scale());
 
-    const QPoint topLeft = -globalPos();
-    matrix.translate(-topLeft.x(), -topLeft.y());
+    switch (transform()) {
+    case Transform::Normal:
+    case Transform::Flipped:
+        break;
+    case Transform::Rotated90:
+    case Transform::Flipped90:
+        matrix.translate(0, rect.width());
+        matrix.rotate(-90, 0, 0, 1);
+        break;
+    case Transform::Rotated180:
+    case Transform::Flipped180:
+        matrix.translate(rect.width(), rect.height());
+        matrix.rotate(-180, 0, 0, 1);
+        break;
+    case Transform::Rotated270:
+    case Transform::Flipped270:
+        matrix.translate(rect.height(), 0);
+        matrix.rotate(-270, 0, 0, 1);
+        break;
+    }
+
+    switch (transform()) {
+    case Transform::Flipped:
+    case Transform::Flipped90:
+    case Transform::Flipped180:
+    case Transform::Flipped270:
+        matrix.translate(rect.width(), 0);
+        matrix.scale(-1, 1);
+        break;
+    default:
+        break;
+    }
+
+    matrix.translate(-rect.x(), -rect.y());
+
     return matrix;
 }
 

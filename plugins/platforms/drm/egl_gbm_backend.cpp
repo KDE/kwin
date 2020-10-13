@@ -320,9 +320,38 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
 
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
-    QMatrix4x4 rotationMatrix;
-    rotationMatrix.rotate(output.output->rotation(), 0, 0, 1);
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, rotationMatrix);
+    QMatrix4x4 mvpMatrix;
+
+    const DrmOutput *drmOutput = output.output;
+    switch (drmOutput->transform()) {
+    case DrmOutput::Transform::Normal:
+    case DrmOutput::Transform::Flipped:
+        break;
+    case DrmOutput::Transform::Rotated90:
+    case DrmOutput::Transform::Flipped90:
+        mvpMatrix.rotate(90, 0, 0, 1);
+        break;
+    case DrmOutput::Transform::Rotated180:
+    case DrmOutput::Transform::Flipped180:
+        mvpMatrix.rotate(180, 0, 0, 1);
+        break;
+    case DrmOutput::Transform::Rotated270:
+    case DrmOutput::Transform::Flipped270:
+        mvpMatrix.rotate(270, 0, 0, 1);
+        break;
+    }
+    switch (drmOutput->transform()) {
+    case DrmOutput::Transform::Flipped:
+    case DrmOutput::Transform::Flipped90:
+    case DrmOutput::Transform::Flipped180:
+    case DrmOutput::Transform::Flipped270:
+        mvpMatrix.scale(-1, 1);
+        break;
+    default:
+        break;
+    }
+
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
 
     glBindTexture(GL_TEXTURE_2D, output.render.texture);
     output.render.vbo->render(GL_TRIANGLES);

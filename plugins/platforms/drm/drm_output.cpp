@@ -193,33 +193,10 @@ void DrmOutput::updateCursor()
 
 void DrmOutput::moveCursor(Cursor* cursor, const QPoint &globalPos)
 {
-    const QPoint localPos = globalPos - AbstractWaylandOutput::globalPos();
-    QPoint pos = localPos;
-
-    // TODO: Do we need to handle the flipped cases differently?
-    switch (transform()) {
-    case Transform::Normal:
-    case Transform::Flipped:
-        break;
-    case Transform::Rotated90:
-    case Transform::Flipped90:
-        pos = QPoint(localPos.y(), pixelSize().width() / scale() - localPos.x());
-        break;
-    case Transform::Rotated270:
-    case Transform::Flipped270:
-        pos = QPoint(pixelSize().height() / scale() - localPos.y(), localPos.x());
-        break;
-    case Transform::Rotated180:
-    case Transform::Flipped180:
-        pos = QPoint(pixelSize().width() / scale() - localPos.x(),
-                     pixelSize().height() / scale() - localPos.y());
-        break;
-    default:
-        Q_UNREACHABLE();
-    }
-    pos *= scale();
-
     const QMatrix4x4 hotspotMatrix = matrixForTransform(cursor->image().rect(), scale(), transform());
+    const QMatrix4x4 monitorMatrix = transformation();
+
+    QPoint pos = monitorMatrix.map(globalPos);
     pos -= hotspotMatrix.map(cursor->hotspot());
 
     drmModeMoveCursor(m_backend->fd(), m_crtc->id(), pos.x(), pos.y());
