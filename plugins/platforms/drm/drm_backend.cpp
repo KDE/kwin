@@ -255,7 +255,6 @@ void DrmBackend::openDrm()
         drmModeRes *resources = drmModeGetResources(fd);
         if (!resources) {
             qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << devNode;
-            drmModeFreeResources(resources);
             LogindIntegration::self()->releaseDevice(fd);
             continue;
         }
