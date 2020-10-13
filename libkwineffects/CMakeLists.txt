@@ -92,24 +92,17 @@ set(kwin_GLUTILSLIB_SRCS
     logging.cpp
 )
 
-macro(KWIN4_ADD_GLUTILS_BACKEND name glinclude)
-    include_directories(${glinclude})
-    add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
-    generate_export_header(${name} BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
-    target_link_libraries(${name} PUBLIC XCB::XCB KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem)
-    set_target_properties(${name} PROPERTIES
-        VERSION ${KWINEFFECTS_VERSION_STRING}
-        SOVERSION ${KWINEFFECTS_SOVERSION}
-    )
-    target_link_libraries(${name} PUBLIC ${ARGN})
+add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})
+generate_export_header(kwinglutils BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
+target_include_directories(kwinglutils PUBLIC ${epoxy_INCLUDE_DIR})
+target_link_libraries(kwinglutils PUBLIC XCB::XCB KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem ${epoxy_LIBRARY})
+set_target_properties(kwinglutils PROPERTIES
+    VERSION ${KWINEFFECTS_VERSION_STRING}
+    SOVERSION ${KWINEFFECTS_SOVERSION}
+    OUTPUT_NAME ${KWIN_NAME}glutils
+)
 
-    install(TARGETS ${name} EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-endmacro()
-
-kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
-set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
-
-target_link_libraries(kwinglutils PUBLIC ${epoxy_LIBRARY})
+install(TARGETS kwinglutils EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
