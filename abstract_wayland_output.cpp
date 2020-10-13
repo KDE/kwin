@@ -311,14 +311,12 @@ AbstractWaylandOutput::Transform AbstractWaylandOutput::transform() const
     return static_cast<Transform>(m_waylandOutputDevice->transform());
 }
 
-QMatrix4x4 AbstractWaylandOutput::transformation() const
+QMatrix4x4 AbstractWaylandOutput::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)
 {
-    const QRect rect = geometry();
-
     QMatrix4x4 matrix;
-    matrix.scale(scale());
+    matrix.scale(scale);
 
-    switch (transform()) {
+    switch (transform) {
     case Transform::Normal:
     case Transform::Flipped:
         break;
@@ -339,7 +337,7 @@ QMatrix4x4 AbstractWaylandOutput::transformation() const
         break;
     }
 
-    switch (transform()) {
+    switch (transform) {
     case Transform::Flipped:
     case Transform::Flipped90:
     case Transform::Flipped180:

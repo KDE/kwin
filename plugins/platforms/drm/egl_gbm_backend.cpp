@@ -450,7 +450,9 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
 {
     const int height = output->modeSize().height();
 
-    const QMatrix4x4 matrix = output->transformation();
+    const QMatrix4x4 matrix = DrmOutput::logicalToNativeMatrix(output->geometry(),
+                                                               output->scale(),
+                                                               output->transform());
 
     QVector<EGLint> rects;
     rects.reserve(region.rectCount() * 4);
