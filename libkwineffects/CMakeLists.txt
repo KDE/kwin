@@ -34,7 +34,7 @@ set_target_properties(kwinxrenderutils PROPERTIES
 )
 set_target_properties(kwinxrenderutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}xrenderutils)
 
-install(TARGETS kwinxrenderutils EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwinxrenderutils EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
@@ -80,7 +80,7 @@ set_target_properties(kwineffects PROPERTIES
 )
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
 
-install(TARGETS kwineffects EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwineffects EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
@@ -103,7 +103,7 @@ macro(KWIN4_ADD_GLUTILS_BACKEND name glinclude)
     )
     target_link_libraries(${name} PUBLIC ${ARGN})
 
-    install(TARGETS ${name} EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+    install(TARGETS ${name} EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
 kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
@@ -126,3 +126,19 @@ install(FILES
     kwinglutils_funcs.h
     kwinxrenderutils.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinEffects")
+
+
+install(FILES  "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfig.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfigVersion.cmake"
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        COMPONENT Devel )
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KWinEffectsConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(EXPORT KWinEffectsTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KWinEffectsTargets.cmake NAMESPACE KWinEffects:: )
