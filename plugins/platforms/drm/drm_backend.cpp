@@ -250,6 +250,17 @@ void DrmBackend::openDrm()
             qCWarning(KWIN_DRM) << "failed to open drm device at" << devNode;
             return;
         }
+
+        // try to make a simple drm get resource call, if it fails it is not useful for us
+        drmModeRes *resources = drmModeGetResources(fd);
+        if (!resources) {
+            qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << devNode;
+            drmModeFreeResources(resources);
+            LogindIntegration::self()->releaseDevice(fd);
+            continue;
+        }
+        drmModeFreeResources(resources);
+
         m_active = true;
         QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
         connect(notifier, &QSocketNotifier::activated, this,
