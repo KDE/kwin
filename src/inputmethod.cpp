@@ -106,7 +106,6 @@ void InputMethod::init()
 
     new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
-    connect(input(), &InputRedirection::keyStateChanged, this, &InputMethod::hide);
 
     if (waylandServer()) {
         new TextInputManagerV2Interface(waylandServer()->display());
