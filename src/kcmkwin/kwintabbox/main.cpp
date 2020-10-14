@@ -81,11 +81,11 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     addConfig(m_data->tabBoxConfig(), m_primaryTabBoxUi);
     addConfig(m_data->tabBoxAlternativeConfig(), m_alternativeTabBoxUi);
 
-    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    initLayoutLists();
+
+    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, this, &KWinTabBoxConfig::updateDefaultIndicator);
     createConnections(m_primaryTabBoxUi);
     createConnections(m_alternativeTabBoxUi);
-
-    initLayoutLists();
 
     // check focus policy - we don't offer configs for unreasonable focus policies
     KConfigGroup config(m_config, "Windows");
@@ -240,6 +240,15 @@ void KWinTabBoxConfig::updateUnmanagedState()
     isDefault &= updateUnmanagedIsDefault(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     unmanagedWidgetDefaultState(isDefault);
+
+    updateDefaultIndicator();
+}
+
+void KWinTabBoxConfig::updateDefaultIndicator()
+{
+    const bool visible = defaultsIndicatorsVisible();
+    updateUiDefaultIndicator(visible, m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateUiDefaultIndicator(visible, m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 }
 
 bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *form, const TabBoxSettings *config)
@@ -259,16 +268,6 @@ bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *for
 
 bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
 {
-    const bool visible = defaultsIndicatorsVisible();
-    form->setFilterScreenDefaultIndicatorVisible(visible && form->filterScreen() != config->defaultMultiScreenModeValue());
-    form->setFilterDesktopDefaultIndicatorVisible(visible && form->filterDesktop() != config->defaultDesktopModeValue());
-    form->setFilterActivitiesDefaultIndicatorVisible(visible && form->filterActivities() != config->defaultActivitiesModeValue());
-    form->setFilterMinimizationDefaultIndicatorVisible(visible && form->filterMinimization() != config->defaultMinimizedModeValue());
-    form->setApplicationModeDefaultIndicatorVisible(visible && form->applicationMode() != config->defaultApplicationsModeValue());
-    form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
-    form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
-    form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
-
     bool isDefault = true;
     isDefault &= form->filterScreen() == config->defaultMultiScreenModeValue();
     isDefault &= form->filterDesktop() == config->defaultDesktopModeValue();
@@ -280,6 +279,18 @@ bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, cons
     isDefault &= form->layoutName() == config->defaultLayoutNameValue();
 
     return isDefault;
+}
+
+void KWinTabBoxConfig::updateUiDefaultIndicator(bool visible, KWinTabBoxConfigForm *form, const TabBoxSettings *config)
+{
+    form->setFilterScreenDefaultIndicatorVisible(visible && form->filterScreen() != config->defaultMultiScreenModeValue());
+    form->setFilterDesktopDefaultIndicatorVisible(visible && form->filterDesktop() != config->defaultDesktopModeValue());
+    form->setFilterActivitiesDefaultIndicatorVisible(visible && form->filterActivities() != config->defaultActivitiesModeValue());
+    form->setFilterMinimizationDefaultIndicatorVisible(visible && form->filterMinimization() != config->defaultMinimizedModeValue());
+    form->setApplicationModeDefaultIndicatorVisible(visible && form->applicationMode() != config->defaultApplicationsModeValue());
+    form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
+    form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
+    form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
 }
 
 void KWinTabBoxConfig::load()
