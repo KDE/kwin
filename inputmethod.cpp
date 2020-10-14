@@ -85,7 +85,6 @@ void InputMethod::init()
     dbus->setEnabled(m_enabled);
     connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &InputMethod::setEnabled);
     connect(this, &InputMethod::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
-    connect(input(), &InputRedirection::keyStateChanged, this, &InputMethod::hide);
 
     if (waylandServer()) {
         waylandServer()->display()->createTextInputManagerV2();
