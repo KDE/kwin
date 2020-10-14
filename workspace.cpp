@@ -1788,7 +1788,7 @@ bool Workspace::compositing() const
 void Workspace::markXStackingOrderAsDirty()
 {
     m_xStackingDirty = true;
-    if (kwinApp()->x11Connection()) {
+    if (kwinApp()->x11Connection() && !kwinApp()->isClosingX11Connection()) {
         m_xStackingQueryTree.reset(new Xcb::Tree(kwinApp()->x11RootWindow()));
     }
 }

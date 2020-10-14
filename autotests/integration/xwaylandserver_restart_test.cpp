@@ -5,8 +5,10 @@
 */
 
 #include "kwin_wayland_test.h"
+#include "composite.h"
 #include "main.h"
 #include "platform.h"
+#include "scene.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -102,6 +104,11 @@ void XwaylandServerRestartTest::testRestart()
     QVERIFY(client);
     QCOMPARE(client->windowId(), window);
     QVERIFY(client->isDecorated());
+
+    // Render a frame to ensure that the compositor doesn't crash.
+    Compositor::self()->addRepaintFull();
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.wait());
 
     // Destroy the test window.
     xcb_destroy_window(c.data(), window);

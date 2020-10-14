@@ -149,6 +149,8 @@ void Xwayland::stop()
         return;
     }
 
+    m_app->setClosingX11Connection(true);
+
     // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
     // events will be dispatched before blocking; otherwise we will simply hang...
     uninstallSocketNotifier();
@@ -169,6 +171,8 @@ void Xwayland::stop()
     m_xwaylandProcess = nullptr;
 
     waylandServer()->destroyXWaylandConnection(); // This one must be destroyed last!
+
+    m_app->setClosingX11Connection(false);
 }
 
 void Xwayland::restart()
