@@ -38,26 +38,22 @@
 // own
 #include "kwintabboxconfigform.h"
 #include "layoutpreview.h"
+#include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"
 #include "kwinswitcheffectsettings.h"
 #include "kwinpluginssettings.h"
 
-K_PLUGIN_FACTORY(KWinTabBoxConfigFactory, registerPlugin<KWin::KWinTabBoxConfig>();)
+K_PLUGIN_FACTORY(KWinTabBoxConfigFactory, registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
 
 namespace KWin
 {
 
 using namespace TabBox;
 
-
 KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     : KCModule(parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
-    , m_tabBoxConfig(new TabBoxSettings(QStringLiteral("TabBox"), this))
-    , m_tabBoxAlternativeConfig(new TabBoxSettings(QStringLiteral("TabBoxAlternative"), this))
-    , m_coverSwitchConfig(new SwitchEffectSettings(QStringLiteral("Effect-CoverSwitch"), this))
-    , m_flipSwitchConfig(new SwitchEffectSettings(QStringLiteral("Effect-FlipSwitch"), this))
-    , m_pluginsConfig(new PluginsSettings(this))
+    , m_data(new KWinTabboxData(this))
 {
     QTabWidget* tabWidget = new QTabWidget(this);
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main, tabWidget);
@@ -83,8 +79,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     layout->addLayout(buttonBar);
     setLayout(layout);
 
-    addConfig(m_tabBoxConfig, m_primaryTabBoxUi);
-    addConfig(m_tabBoxAlternativeConfig, m_alternativeTabBoxUi);
+    addConfig(m_data->tabBoxConfig(), m_primaryTabBoxUi);
+    addConfig(m_data->tabBoxAlternativeConfig(), m_alternativeTabBoxUi);
 
     connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     createConnections(m_primaryTabBoxUi);
@@ -102,8 +98,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
         infoLabel->hide();
     }
 
-    setEnabledUi(m_primaryTabBoxUi, m_tabBoxConfig);
-    setEnabledUi(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    setEnabledUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    setEnabledUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 }
 
 KWinTabBoxConfig::~KWinTabBoxConfig()
@@ -235,14 +231,14 @@ void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
 void KWinTabBoxConfig::updateUnmanagedState()
 {
     bool isNeedSave = false;
-    isNeedSave |= updateUnmanagedIsNeedSave(m_primaryTabBoxUi, m_tabBoxConfig);
-    isNeedSave |= updateUnmanagedIsNeedSave(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    isNeedSave |= updateUnmanagedIsNeedSave(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    isNeedSave |= updateUnmanagedIsNeedSave(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     unmanagedWidgetChangeState(isNeedSave);
 
     bool isDefault = true;
-    isDefault &= updateUnmanagedIsDefault(m_primaryTabBoxUi, m_tabBoxConfig);
-    isDefault &= updateUnmanagedIsDefault(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    isDefault &= updateUnmanagedIsDefault(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    isDefault &= updateUnmanagedIsDefault(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     unmanagedWidgetDefaultState(isDefault);
 }
@@ -291,30 +287,30 @@ void KWinTabBoxConfig::load()
 {
     KCModule::load();
 
-    m_tabBoxConfig->load();
-    m_tabBoxAlternativeConfig->load();
+    m_data->tabBoxConfig()->load();
+    m_data->tabBoxAlternativeConfig()->load();
 
-    updateUiFromConfig(m_primaryTabBoxUi, m_tabBoxConfig);
-    updateUiFromConfig(m_alternativeTabBoxUi , m_tabBoxAlternativeConfig);
+    updateUiFromConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateUiFromConfig(m_alternativeTabBoxUi , m_data->tabBoxAlternativeConfig());
 
-    m_coverSwitchConfig->load();
-    m_flipSwitchConfig->load();
+    m_data->coverSwitchConfig()->load();
+    m_data->flipSwitchConfig()->load();
 
-    m_pluginsConfig->load();
+    m_data->pluginsConfig()->load();
 
-    if (m_pluginsConfig->coverswitchEnabled()) {
-        if (m_coverSwitchConfig->tabBox()) {
+    if (m_data->pluginsConfig()->coverswitchEnabled()) {
+        if (m_data->coverSwitchConfig()->tabBox()) {
             m_primaryTabBoxUi->setLayoutName(m_coverSwitch);
         }
-        if (m_coverSwitchConfig->tabBoxAlternative()) {
+        if (m_data->coverSwitchConfig()->tabBoxAlternative()) {
             m_alternativeTabBoxUi->setLayoutName(m_coverSwitch);
         }
     }
-    if (m_pluginsConfig->flipswitchEnabled()) {
-        if (m_flipSwitchConfig->tabBox()) {
+    if (m_data->pluginsConfig()->flipswitchEnabled()) {
+        if (m_data->flipSwitchConfig()->tabBox()) {
             m_primaryTabBoxUi->setLayoutName(m_flipSwitch);
         }
-        if (m_flipSwitchConfig->tabBoxAlternative()) {
+        if (m_data->flipSwitchConfig()->tabBoxAlternative()) {
             m_alternativeTabBoxUi->setLayoutName(m_flipSwitch);
         }
     }
@@ -340,29 +336,29 @@ void KWinTabBoxConfig::save()
 
     // activate effects if not active
     if (coverSwitch || coverSwitchAlternative) {
-        m_pluginsConfig->setCoverswitchEnabled(true);
+        m_data->pluginsConfig()->setCoverswitchEnabled(true);
     }
     if (flipSwitch || flipSwitchAlternative) {
-        m_pluginsConfig->setFlipswitchEnabled(true);
+        m_data->pluginsConfig()->setFlipswitchEnabled(true);
     }
     if (highlightWindows) {
-        m_pluginsConfig->setHighlightwindowEnabled(true);
+        m_data->pluginsConfig()->setHighlightwindowEnabled(true);
     }
-    m_pluginsConfig->save();
+    m_data->pluginsConfig()->save();
 
-    m_coverSwitchConfig->setTabBox(coverSwitch);
-    m_coverSwitchConfig->setTabBoxAlternative(coverSwitchAlternative);
-    m_coverSwitchConfig->save();
+    m_data->coverSwitchConfig()->setTabBox(coverSwitch);
+    m_data->coverSwitchConfig()->setTabBoxAlternative(coverSwitchAlternative);
+    m_data->coverSwitchConfig()->save();
 
-    m_flipSwitchConfig->setTabBox(flipSwitch);
-    m_flipSwitchConfig->setTabBoxAlternative(flipSwitchAlternative);
-    m_flipSwitchConfig->save();
+    m_data->flipSwitchConfig()->setTabBox(flipSwitch);
+    m_data->flipSwitchConfig()->setTabBoxAlternative(flipSwitchAlternative);
+    m_data->flipSwitchConfig()->save();
 
-    updateConfigFromUi(m_primaryTabBoxUi, m_tabBoxConfig);
-    updateConfigFromUi(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    updateConfigFromUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateConfigFromUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
-    m_tabBoxConfig->save();
-    m_tabBoxAlternativeConfig->save();
+    m_data->tabBoxConfig()->save();
+    m_data->tabBoxAlternativeConfig()->save();
 
     KCModule::save();
     updateUnmanagedState();
@@ -380,11 +376,11 @@ void KWinTabBoxConfig::save()
 
 void KWinTabBoxConfig::defaults()
 {
-    m_coverSwitchConfig->setDefaults();
-    m_flipSwitchConfig->setDefaults();
+    m_data->coverSwitchConfig()->setDefaults();
+    m_data->flipSwitchConfig()->setDefaults();
 
-    updateUiFromDefaultConfig(m_primaryTabBoxUi, m_tabBoxConfig);
-    updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    updateUiFromDefaultConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     m_primaryTabBoxUi->resetShortcuts();
     m_alternativeTabBoxUi->resetShortcuts();
