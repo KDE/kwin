@@ -100,6 +100,7 @@ private Q_SLOTS:
     void testXdgWindowGeometryMaximize();
     void testPointerInputTransform();
     void testReentrantSetFrameGeometry();
+    void testDoubleMaximize();
 };
 
 void TestXdgShellClient::initTestCase()
@@ -1556,6 +1557,39 @@ void TestXdgShellClient::testReentrantSetFrameGeometry()
     // Destroy the xdg-toplevel surface.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testDoubleMaximize()
+{
+    // This test verifies that the case where a client issues two set_maximized() requests
+    // separated by the initial commit is handled properly.
+
+    // Create the test surface.
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data(), nullptr, Test::CreationSetup::CreateOnly));
+    shellSurface->setMaximized(true);
+    surface->commit(Surface::CommitFlag::None);
+
+    // Wait for the compositor to respond with a configure event.
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
+    QSize size = configureRequestedSpy.last().at(0).value<QSize>();
+    QCOMPARE(size, QSize(1280, 1024));
+    XdgShellSurface::States states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
+
+    // Send another set_maximized() request, but do not attach any buffer yet.
+    shellSurface->setMaximized(true);
+    surface->commit(Surface::CommitFlag::None);
+
+    // The compositor must respond with another configure event even if the state hasn't changed.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
+    size = configureRequestedSpy.last().at(0).value<QSize>();
+    QCOMPARE(size, QSize(1280, 1024));
+    states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+    QVERIFY(states.testFlag(XdgShellSurface::State::Maximized));
 }
 
 WAYLANDTEST_MAIN(TestXdgShellClient)
