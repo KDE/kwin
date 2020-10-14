@@ -414,7 +414,6 @@ include_directories(BEFORE
 
 add_subdirectory(libkwineffects)
 if (KWIN_BUILD_KCMS)
-    include(KCMUtilsGenerateModuleData)
     add_subdirectory(kcmkwin)
 endif()
 
