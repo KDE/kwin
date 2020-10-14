@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(Qt5Core @REQUIRED_QT_VERSION@)
+find_dependency(Qt5Core "@QT_MIN_VERSION@")
 
 @PACKAGE_SETUP_AUTOMOC_VARIABLES@
 include("${CMAKE_CURRENT_LIST_DIR}/KWinEffectsTargets.cmake")
