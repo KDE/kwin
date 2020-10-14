@@ -5,8 +5,10 @@
 */
 
 #include "kwin_wayland_test.h"
+#include "composite.h"
 #include "main.h"
 #include "platform.h"
+#include "scene.h"
 #include "screens.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
@@ -124,6 +126,11 @@ void XwaylandServerCrashTest::testCrash()
     QCOMPARE(kwinApp()->x11DefaultScreen(), nullptr);
     QCOMPARE(kwinApp()->x11RootWindow(), XCB_WINDOW_NONE);
     QCOMPARE(kwinApp()->x11ScreenNumber(), -1);
+
+    // Render a frame to ensure that the compositor doesn't crash.
+    Compositor::self()->addRepaintFull();
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.wait());
 }
 
 } // namespace KWin
