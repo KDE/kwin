@@ -170,6 +170,10 @@ public:
     {
         return m_haveSurfacelessContext;
     }
+    bool supportsNativeFence() const
+    {
+        return m_haveNativeFence;
+    }
 
     /**
      * Returns the damage that has accumulated since a buffer of the given age was presented.
@@ -270,6 +274,11 @@ protected:
         m_haveSurfacelessContext = value;
     }
 
+    void setSupportsNativeFence(bool value)
+    {
+        m_haveNativeFence = value;
+    }
+
     /**
      * @return const QRegion& Damage of previously rendered frame
      */
@@ -323,6 +332,10 @@ private:
      * @brief Whether the backend supports EGL_KHR_surfaceless_context.
      */
     bool m_haveSurfacelessContext = false;
+    /**
+     * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.
+     */
+    bool m_haveNativeFence = false;
     /**
      * @brief Whether the initialization failed, of course default to @c false.
      */

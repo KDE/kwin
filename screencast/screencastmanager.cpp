@@ -78,7 +78,6 @@ private:
         recordFrame(frameTexture.data(), m_damagedRegion);
         frameTexture->setYInverted(wasYInverted);
         m_damagedRegion = {};
-        glFinish(); // TODO: Don't stall the whole pipeline. Use EGL_ANDROID_native_fence_sync.
     }
 
     QRegion m_damagedRegion;

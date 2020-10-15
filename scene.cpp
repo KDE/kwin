@@ -686,6 +686,11 @@ bool Scene::supportsSurfacelessContext() const
     return false;
 }
 
+bool Scene::supportsNativeFence() const
+{
+    return false;
+}
+
 void Scene::triggerFence()
 {
 }

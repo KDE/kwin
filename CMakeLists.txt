@@ -777,6 +777,7 @@ add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
 if (PipeWire_FOUND)
     target_sources(kwin_wayland
         PRIVATE
+        screencast/eglnativefence.cpp
         screencast/screencastmanager.cpp
         screencast/pipewirecore.cpp
         screencast/pipewirestream.cpp)

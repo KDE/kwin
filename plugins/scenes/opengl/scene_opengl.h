@@ -46,6 +46,7 @@ public:
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
     bool supportsSurfacelessContext() const override;
+    bool supportsNativeFence() const override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void triggerFence() override;
     virtual QMatrix4x4 projectionMatrix() const = 0;

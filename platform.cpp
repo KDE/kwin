@@ -425,6 +425,14 @@ bool Platform::supportsSurfacelessContext() const
     return false;
 }
 
+bool Platform::supportsNativeFence() const
+{
+    if (Compositor *compositor = Compositor::self()) {
+        return compositor->scene()->supportsNativeFence();
+    }
+    return false;
+}
+
 EGLDisplay KWin::Platform::sceneEglDisplay() const
 {
     return m_eglDisplay;

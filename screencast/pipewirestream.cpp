@@ -9,6 +9,7 @@
 #include "pipewirestream.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
+#include "eglnativefence.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
 #include "kwinscreencast_logging.h"
@@ -298,6 +299,11 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
     Q_ASSERT(!m_stopped);
     Q_ASSERT(frameTexture);
 
+    if (m_pendingBuffer) {
+        qCWarning(KWIN_SCREENCAST) << "Dropping a screencast frame because the compositor is slow";
+        return;
+    }
+
     if (frameTexture->size() != m_resolution) {
         m_resolution = frameTexture->size();
         newStreamParams();
@@ -409,7 +415,49 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
                         (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
     }
 
-    pw_stream_queue_buffer(pwStream, buffer);
+    tryEnqueue(buffer);
+}
+
+void PipeWireStream::tryEnqueue(pw_buffer *buffer)
+{
+    m_pendingBuffer = buffer;
+
+    // The GPU doesn't necessarily process draw commands as soon as they are issued. Thus,
+    // we need to insert a fence into the command stream and enqueue the pipewire buffer
+    // only after the fence is signaled; otherwise stream consumers will most likely see
+    // a corrupted buffer.
+    if (kwinApp()->platform()->supportsNativeFence()) {
+        Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
+        m_pendingFence = new EGLNativeFence(kwinApp()->platform()->sceneEglDisplay());
+        if (!m_pendingFence->isValid()) {
+            qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
+            glFinish();
+            enqueue();
+        } else {
+            m_pendingNotifier = new QSocketNotifier(m_pendingFence->fileDescriptor(),
+                                                    QSocketNotifier::Read, this);
+            connect(m_pendingNotifier, &QSocketNotifier::activated, this, &PipeWireStream::enqueue);
+        }
+    } else {
+        // The compositing backend doesn't support native fences. We don't have any other choice
+        // but stall the graphics pipeline. Otherwise stream consumers may see an incomplete buffer.
+        glFinish();
+        enqueue();
+    }
+}
+
+void PipeWireStream::enqueue()
+{
+    Q_ASSERT_X(m_pendingBuffer, "enqueue", "pending buffer must be valid");
+
+    delete m_pendingFence;
+    delete m_pendingNotifier;
+
+    pw_stream_queue_buffer(pwStream, m_pendingBuffer);
+
+    m_pendingBuffer = nullptr;
+    m_pendingFence = nullptr;
+    m_pendingNotifier = nullptr;
 }
 
 QRect PipeWireStream::cursorGeometry(Cursor *cursor) const

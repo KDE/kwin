@@ -865,6 +865,11 @@ bool SceneOpenGL::supportsSurfacelessContext() const
     return m_backend->supportsSurfacelessContext();
 }
 
+bool SceneOpenGL::supportsNativeFence() const
+{
+    return m_backend->supportsNativeFence();
+}
+
 Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
 {
     return new SceneOpenGL::EffectFrame(frame, this);

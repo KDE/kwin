@@ -17,6 +17,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QSize>
+#include <QSocketNotifier>
 
 #include <pipewire/pipewire.h>
 #include <spa/param/format-utils.h>
@@ -28,6 +29,7 @@ namespace KWin
 
 class Cursor;
 class DmaBufTexture;
+class EGLNativeFence;
 class GLTexture;
 class PipeWireCore;
 
@@ -68,6 +70,8 @@ private:
     void coreFailed(const QString &errorMessage);
     void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
     void newStreamParams();
+    void tryEnqueue(pw_buffer *buffer);
+    void enqueue();
 
     QSharedPointer<PipeWireCore> pwCore;
     struct pw_stream *pwStream = nullptr;
@@ -96,6 +100,10 @@ private:
     QRect cursorGeometry(Cursor *cursor) const;
 
     QHash<struct pw_buffer *, QSharedPointer<DmaBufTexture>> m_dmabufDataForPwBuffer;
+
+    pw_buffer *m_pendingBuffer = nullptr;
+    QSocketNotifier *m_pendingNotifier = nullptr;
+    EGLNativeFence *m_pendingFence = nullptr;
 };
 
 } // namespace KWin
