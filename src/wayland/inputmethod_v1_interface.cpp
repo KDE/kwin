@@ -90,7 +90,7 @@ public:
     }
     void zwp_input_method_context_v1_modifiers(Resource *, uint32_t serial, uint32_t mods_depressed, uint32_t mods_latched, uint32_t mods_locked, uint32_t group) override
     {
-        Q_EMIT q->modifiers(serial, toQtModifiers(mods_depressed), toQtModifiers(mods_latched), toQtModifiers(mods_locked), group);
+        Q_EMIT q->modifiers(serial, mods_depressed, mods_latched, mods_locked, group);
     }
     void zwp_input_method_context_v1_language(Resource *, uint32_t serial, const QString &language) override
     {
@@ -116,6 +116,10 @@ public:
     Qt::KeyboardModifiers toQtModifiers(uint32_t modifiers)
     {
         Qt::KeyboardModifiers ret = Qt::NoModifier;
+        // if we never got the modifier map from the input method, return empty modifier
+        if (mods.isEmpty()) {
+            return ret;
+        }
         for (int i = 0; modifiers >>= 1; ++i) {
             ret |= mods[i];
         }
