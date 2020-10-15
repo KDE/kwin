@@ -413,6 +413,21 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     }
 }
 
+void InputMethod::key(quint32 serial, quint32 time, quint32 key, bool pressed)
+{
+    if (pressed) {
+        waylandServer()->seat()->keyPressedDirect(key);
+    } else {
+        waylandServer()->seat()->keyReleasedDirect(key);
+    }
+}
+
+void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)
+{
+    Q_UNUSED(serial)
+    waylandServer()->seat()->updateKeyboardModifiersDirect(mods_depressed, mods_latched, mods_locked, group);
+}
+
 void InputMethod::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
@@ -434,6 +449,8 @@ void InputMethod::adoptInputMethodContext()
     }
 
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, waylandServer(), &keysymReceived);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::key, this, &InputMethod::key);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::modifiers, this, &InputMethod::modifiers);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, waylandServer(), &commitString);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, waylandServer(), &deleteSurroundingText);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, waylandServer(), &setCursorPosition);
