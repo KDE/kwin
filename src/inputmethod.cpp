@@ -446,6 +446,18 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     }
 }
 
+void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
+{
+    waylandServer()->seat()->notifyKeyboardKey(keyCode, pressed ? KWaylandServer::KeyboardKeyState::Pressed : KWaylandServer::KeyboardKeyState::Released);
+}
+
+void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)
+{
+    Q_UNUSED(serial)
+    auto xkb = input()->keyboard()->xkb();
+    xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
+}
+
 void InputMethod::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
@@ -468,6 +480,8 @@ void InputMethod::adoptInputMethodContext()
     inputContext->sendCommitState(m_serial++);
 
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, this, &InputMethod::keysymReceived, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::key, this, &InputMethod::key, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::modifiers, this, &InputMethod::modifiers, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, this, &InputMethod::commitString, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, this, &InputMethod::deleteSurroundingText, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, this, &InputMethod::setCursorPosition, Qt::UniqueConnection);
