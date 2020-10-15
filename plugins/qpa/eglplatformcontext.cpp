@@ -9,6 +9,7 @@
 */
 
 #include "eglplatformcontext.h"
+#include "composite.h"
 #include "egl_context_attribute_builder.h"
 #include "eglhelpers.h"
 #include "internal_client.h"
@@ -34,6 +35,10 @@ EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EGLDisplay displ
     : m_eglDisplay(display)
 {
     create(context->format(), kwinApp()->platform()->sceneEglContext());
+
+    // If compositing is toggled, the global share context will be lost.
+    connect(Compositor::self(), &Compositor::compositingToggled,
+            this, &EGLPlatformContext::markAsLost);
 }
 
 EGLPlatformContext::~EGLPlatformContext()
@@ -90,9 +95,14 @@ void EGLPlatformContext::doneCurrent()
     eglMakeCurrent(m_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
+void EGLPlatformContext::markAsLost()
+{
+    m_isLost = true;
+}
+
 bool EGLPlatformContext::isValid() const
 {
-    return m_context != EGL_NO_CONTEXT;
+    return m_context != EGL_NO_CONTEXT && !m_isLost;
 }
 
 bool EGLPlatformContext::isSharing() const

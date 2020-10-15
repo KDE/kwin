@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <QObject>
+
 #include <epoxy/egl.h>
 #include "fixqopengl.h"
 #include <fixx11h.h>
@@ -20,8 +22,10 @@ namespace KWin
 namespace QPA
 {
 
-class EGLPlatformContext : public QPlatformOpenGLContext
+class EGLPlatformContext : public QObject, public QPlatformOpenGLContext
 {
+    Q_OBJECT
+
 public:
     EGLPlatformContext(QOpenGLContext *context, EGLDisplay display);
     ~EGLPlatformContext() override;
@@ -40,11 +44,13 @@ public:
 
 private:
     void create(const QSurfaceFormat &format, EGLContext shareContext);
+    void markAsLost();
 
     EGLDisplay m_eglDisplay;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;
     EGLContext m_context = EGL_NO_CONTEXT;
     QSurfaceFormat m_format;
+    bool m_isLost = false;
 };
 
 } // namespace QPA
