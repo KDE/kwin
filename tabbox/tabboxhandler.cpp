@@ -9,6 +9,7 @@
 
 // own
 #include "tabboxhandler.h"
+#include "composite.h"
 #include <config-kwin.h>
 #include <kwinglobals.h>
 #include "xcbutils.h"
@@ -348,6 +349,28 @@ TabBoxHandler::TabBoxHandler(QObject *parent)
 {
     KWin::TabBox::tabBox = this;
     d = new TabBoxHandlerPrivate(this);
+
+#ifndef KWIN_UNIT_TEST
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeX11:
+        // On X11, we don't use our own QPA to share framebuffer objects. So no workarounds.
+        break;
+    case Application::OperationModeWaylandOnly:
+    case Application::OperationModeXwayland:
+        // On Wayland, every internal window that uses OpenGL is rendered into an offscreen
+        // texture and the corresponding framebuffer object is passed to kwin. The internal
+        // window needs to create an OpenGL context capable of sharing textures with kwin's
+        // context. However, if compositing is toggled, the compositor's context will be lost
+        // and so we no longer can accept framebuffer objects. Unfortunately, QtQuick does
+        // not provide any fancy way to invalidate the scene graph externally.
+        //
+        // We could use QQuickRenderControl::invalidate() to invalidate the scene graph, but
+        // the current design of tabbox, it's not an option. :(
+        connect(Compositor::self(), &Compositor::compositingToggled,
+                this, &TabBoxHandler::handleCompositingToggled);
+        break;
+    }
+#endif
 }
 
 TabBoxHandler::~TabBoxHandler()
@@ -628,6 +651,25 @@ bool TabBoxHandler::eventFilter(QObject *watched, QEvent *e)
     }
     // pass on
     return QObject::eventFilter(watched, e);
+}
+
+void TabBoxHandler::handleCompositingToggled()
+{
+#ifndef KWIN_UNIT_TEST
+    qDeleteAll(d->m_clientTabBoxes);
+    d->m_clientTabBoxes.clear();
+    qDeleteAll(d->m_desktopTabBoxes);
+    d->m_desktopTabBoxes.clear();
+
+    d->m_qmlComponent.reset();
+    d->m_qmlContext.reset();
+
+    d->m_mainItem = nullptr;
+
+    if (d->isShown) {
+        d->show();
+    }
+#endif
 }
 
 TabBoxHandler* tabBox = nullptr;

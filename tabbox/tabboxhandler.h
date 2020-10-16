@@ -338,6 +338,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void initHighlightWindows();
+    void handleCompositingToggled();
 
 private:
     friend class TabBoxHandlerPrivate;
