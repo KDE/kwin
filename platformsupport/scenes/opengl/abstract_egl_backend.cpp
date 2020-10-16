@@ -40,11 +40,61 @@ eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
 eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
 eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 
+static EGLContext s_globalShareContext = EGL_NO_CONTEXT;
+
+static bool isOpenGLES_helper()
+{
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
+    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
+}
+
+static bool ensureGlobalShareContext()
+{
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    const EGLConfig eglConfig = kwinApp()->platform()->sceneEglConfig();
+
+    if (s_globalShareContext != EGL_NO_CONTEXT) {
+        return true;
+    }
+
+    std::vector<int> attribs;
+    if (isOpenGLES_helper()) {
+        EglOpenGLESContextAttributeBuilder builder;
+        builder.setVersion(2);
+        attribs = builder.build();
+    } else {
+        EglContextAttributeBuilder builder;
+        attribs = builder.build();
+    }
+
+    s_globalShareContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, attribs.data());
+    if (s_globalShareContext == EGL_NO_CONTEXT) {
+        qCWarning(KWIN_OPENGL, "Failed to create global share context: 0x%x", eglGetError());
+    }
+
+    kwinApp()->platform()->setSceneEglGlobalShareContext(s_globalShareContext);
+
+    return s_globalShareContext != EGL_NO_CONTEXT;
+}
+
+static void destroyGlobalShareContext()
+{
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
+        return;
+    }
+    eglDestroyContext(eglDisplay, s_globalShareContext);
+    s_globalShareContext = EGL_NO_CONTEXT;
+    kwinApp()->platform()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
+}
+
 AbstractEglBackend::AbstractEglBackend()
     : QObject(nullptr)
     , OpenGLBackend()
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::unbindWaylandDisplay);
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::teardown);
 }
 
 AbstractEglBackend::~AbstractEglBackend()
@@ -52,11 +102,12 @@ AbstractEglBackend::~AbstractEglBackend()
     delete m_dmaBuf;
 }
 
-void AbstractEglBackend::unbindWaylandDisplay()
+void AbstractEglBackend::teardown()
 {
     if (eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
         eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
     }
+    destroyGlobalShareContext();
 }
 
 void AbstractEglBackend::cleanup()
@@ -199,14 +250,15 @@ void AbstractEglBackend::doneCurrent()
 
 bool AbstractEglBackend::isOpenGLES() const
 {
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
+    return isOpenGLES_helper();
 }
 
 bool AbstractEglBackend::createContext()
 {
+    if (!ensureGlobalShareContext()) {
+        return false;
+    }
+
     const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
@@ -277,7 +329,7 @@ bool AbstractEglBackend::createContext()
     EGLContext ctx = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs.data());
+        ctx = eglCreateContext(m_display, config(), s_globalShareContext, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
             qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;

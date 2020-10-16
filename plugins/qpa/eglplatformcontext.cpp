@@ -33,7 +33,7 @@ namespace QPA
 EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EGLDisplay display)
     : m_eglDisplay(display)
 {
-    create(context->format(), kwinApp()->platform()->sceneEglContext());
+    create(context->format(), kwinApp()->platform()->sceneEglGlobalShareContext());
 }
 
 EGLPlatformContext::~EGLPlatformContext()
