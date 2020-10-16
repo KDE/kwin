@@ -74,7 +74,7 @@ void EglGbmBackend::cleanupOutput(Output &output)
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = eglDisplay();
+    EGLDisplay display = m_gpu->eglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
@@ -98,6 +98,7 @@ bool EglGbmBackend::initializeEgl()
         m_gpu->setGbmDevice(device);
 
         display = eglGetPlatformDisplayEXT(platform, device, nullptr);
+        m_gpu->setEglDisplay(display);
     }
 
     if (display == EGL_NO_DISPLAY) {

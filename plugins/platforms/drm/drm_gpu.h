@@ -13,6 +13,9 @@
 #include <qobject.h>
 #include <QVector>
 
+#include <epoxy/egl.h>
+#include <fixx11h.h>
+
 #include "drm_buffer.h"
 
 struct gbm_device;
@@ -58,6 +61,10 @@ public:
     gbm_device *gbmDevice() const {
         return m_gbmDevice;
     }
+
+    EGLDisplay eglDisplay() const {
+        return m_eglDisplay;
+    }
     
     QVector<DrmPlane*> planes() const {
         return m_planes;
@@ -65,6 +72,10 @@ public:
     
     void setGbmDevice(gbm_device *d) {
         m_gbmDevice = d;
+    }
+
+    void setEglDisplay(EGLDisplay display) {
+        m_eglDisplay = display;
     }
     
     DrmDumbBuffer *createBuffer(const QSize &size) const {
@@ -95,6 +106,7 @@ private:
     bool m_atomicModeSetting;
     bool m_useEglStreams;
     gbm_device* m_gbmDevice;
+    EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     
 // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;

@@ -121,7 +121,7 @@ void EglStreamBackend::cleanupOutput(const Output &o)
 bool EglStreamBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = eglDisplay();
+    EGLDisplay display = m_gpu->eglDisplay();
     if (display == EGL_NO_DISPLAY) {
         if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_device_base")) &&
             !(hasClientExtension(QByteArrayLiteral("EGL_EXT_device_query")) &&
@@ -157,6 +157,7 @@ bool EglStreamBackend::initializeEgl()
             display = eglGetPlatformDisplayEXT(EGL_PLATFORM_DEVICE_EXT, device, platformAttribs);
             break;
         }
+        m_gpu->setEglDisplay(display);
     }
 
     if (display == EGL_NO_DISPLAY) {
