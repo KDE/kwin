@@ -1,5 +1,6 @@
 [Unit]
 Description=KDE Window Manager
+PartOf=graphical-session.target
 
 [Service]
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland

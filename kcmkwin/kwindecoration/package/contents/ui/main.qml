@@ -1,29 +1,19 @@
 /*
-   Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
+    SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License version 2 as published by the Free Software Foundation.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+    SPDX-License-Identifier: LGPL-2.0-only
 */
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4 as Controls
-import org.kde.kcm 1.1 as KCM
+import org.kde.kcm 1.3 as KCM
 import org.kde.kconfig 1.0 // for KAuthorized
 import org.kde.kirigami 2.4 as Kirigami
 
 Kirigami.Page {
+    id: root
+
     KCM.ConfigModule.quickHelp: i18n("This module lets you configure the window decorations.")
     title: kcm.name
 
@@ -74,54 +64,75 @@ Kirigami.Page {
 
                 currentIndex: tabBar.currentIndex
 
-                ColumnLayout {
-                    Themes {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        enabled: !kcm.settings.isImmutable("pluginName") && !kcm.settings.isImmutable("theme")
+                Item {
+                    KCM.SettingStateBinding {
+                        target: themes
+                        configObject: kcm.settings
+                        settingName: "pluginName"
                     }
 
-                    RowLayout {
-                        Controls.CheckBox {
-                            id: borderSizeAutoCheckbox
-                            // Let it elide but don't make it push the ComboBox away from it
+                    ColumnLayout {
+                        anchors.fill: parent
+
+                        Themes {
+                            id: themes
                             Layout.fillWidth: true
-                            Layout.maximumWidth: implicitWidth
-                            text: i18nc("checkbox label", "Use theme's default window border size")
-                            enabled: !kcm.settings.isImmutable("borderSizeAuto")
-                            checked: kcm.settings.borderSizeAuto
-                            onToggled: {
-                                kcm.settings.borderSizeAuto = checked;
-                                borderSizeComboBox.autoBorderUpdate()
-                            }
+                            Layout.fillHeight: true
                         }
-                        Controls.ComboBox {
-                            id: borderSizeComboBox
-                            enabled: !borderSizeAutoCheckbox.checked && !kcm.settings.isImmutable("borderSize")
-                            model: kcm.borderSizesModel
-                            currentIndex: kcm.borderSize
-                            onActivated: {
-                                kcm.borderSize = currentIndex
+
+                        RowLayout {
+                            Controls.CheckBox {
+                                id: borderSizeAutoCheckbox
+                                // Let it elide but don't make it push the ComboBox away from it
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: implicitWidth
+                                text: i18nc("checkbox label", "Use theme's default window border size")
+                                checked: kcm.settings.borderSizeAuto
+                                onToggled: {
+                                    kcm.settings.borderSizeAuto = checked;
+                                    borderSizeComboBox.autoBorderUpdate()
+                                }
+
+                                KCM.SettingStateBinding {
+                                    configObject: kcm.settings
+                                    settingName: "borderSizeAuto"
+                                }
+
                             }
-                            function autoBorderUpdate() {
-                                if (borderSizeAutoCheckbox.checked) {
-                                    kcm.borderSize = kcm.recommendedBorderSize
+                            Controls.ComboBox {
+                                id: borderSizeComboBox
+                                model: kcm.borderSizesModel
+                                currentIndex: kcm.borderSize
+                                onActivated: {
+                                    kcm.borderSize = currentIndex
+                                }
+
+                                KCM.SettingStateBinding {
+                                    configObject: kcm.settings
+                                    settingName: "borderSize"
+                                    extraEnabledConditions: !borderSizeAutoCheckbox.checked
+                                }
+
+                                function autoBorderUpdate() {
+                                    if (borderSizeAutoCheckbox.checked) {
+                                        kcm.borderSize = kcm.recommendedBorderSize
+                                    }
+                                }
+
+                                Connections {
+                                    target: kcm
+                                    onThemeChanged: borderSizeComboBox.autoBorderUpdate()
                                 }
                             }
-
-                            Connections {
-                                target: kcm
-                                onThemeChanged: borderSizeComboBox.autoBorderUpdate()
+                            Item {
+                                Layout.fillWidth: true
                             }
-                        }
-                        Item {
-                            Layout.fillWidth: true
-                        }
-                        Controls.Button {
-                            text: i18nc("button text", "Get New Window Decorations...")
-                            icon.name: "get-hot-new-stuff"
-                            onClicked: kcm.getNewStuff(this)
-                            visible: KAuthorized.authorize("ghns")
+                            Controls.Button {
+                                text: i18nc("button text", "Get New Window Decorations...")
+                                icon.name: "get-hot-new-stuff"
+                                onClicked: kcm.getNewStuff(this)
+                                visible: KAuthorized.authorize("ghns")
+                            }
                         }
                     }
                 }
@@ -130,17 +141,20 @@ Kirigami.Page {
                     Buttons {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        enabled: !kcm.settings.isImmutable("buttonsOnLeft") && !kcm.settings.isImmutable("buttonsOnRight")
                     }
 
                     Controls.CheckBox {
                         id: closeOnDoubleClickOnMenuCheckBox
                         text: i18nc("checkbox label", "Close windows by double clicking the menu button")
-                        enabled: !kcm.settings.isImmutable("closeOnDoubleClickOnMenu")
                         checked: kcm.settings.closeOnDoubleClickOnMenu
                         onToggled: {
                             kcm.settings.closeOnDoubleClickOnMenu = checked
                             infoLabel.visible = checked
+                        }
+
+                        KCM.SettingStateBinding {
+                            configObject: kcm.settings
+                            settingName: "closeOnDoubleClickOnMenu"
                         }
                     }
 
@@ -156,9 +170,13 @@ Kirigami.Page {
                     Controls.CheckBox {
                         id: showToolTipsCheckBox
                         text: i18nc("checkbox label", "Show titlebar button tooltips")
-                        enabled: !kcm.settings.isImmutable("showToolTips")
                         checked: kcm.settings.showToolTips
                         onToggled: kcm.settings.showToolTips = checked
+
+                        KCM.SettingStateBinding {
+                            configObject: kcm.settings
+                            settingName: "showToolTips"
+                        }
                     }
                 }
             }

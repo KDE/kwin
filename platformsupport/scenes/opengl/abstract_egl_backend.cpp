@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "abstract_egl_backend.h"
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
@@ -114,6 +103,7 @@ bool AbstractEglBackend::initEglAPI()
     qCDebug(KWIN_OPENGL) << "EGL version: " << major << "." << minor;
     const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
     setExtensions(eglExtensions.split(' '));
+    setSupportsSurfacelessContext(hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context")));
     return true;
 }
 
@@ -144,6 +134,9 @@ void AbstractEglBackend::initBufferAge()
         if (useBufferAge != "0")
             setSupportsBufferAge(true);
     }
+
+    setSupportsPartialUpdate(hasExtension(QByteArrayLiteral("EGL_KHR_partial_update")));
+    setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
 }
 
 void AbstractEglBackend::initWayland()
@@ -221,60 +214,60 @@ bool AbstractEglBackend::createContext()
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (isOpenGLES()) {
         if (haveCreateContext && haveRobustness && haveContextPriority) {
-            auto glesRobustPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setVersion(2);
             glesRobustPriority->setRobust(true);
             glesRobustPriority->setHighPriority(true);
             candidates.push_back(std::move(glesRobustPriority));
         }
         if (haveCreateContext && haveRobustness) {
-            auto glesRobust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesRobust = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobust->setVersion(2);
             glesRobust->setRobust(true);
             candidates.push_back(std::move(glesRobust));
         }
         if (haveContextPriority) {
-            auto glesPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesPriority->setVersion(2);
             glesPriority->setHighPriority(true);
             candidates.push_back(std::move(glesPriority));
         }
-        auto gles = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+        auto gles = std::make_unique<EglOpenGLESContextAttributeBuilder>();
         gles->setVersion(2);
         candidates.push_back(std::move(gles));
     } else {
         if (options->glCoreProfile() && haveCreateContext) {
             if (haveRobustness && haveContextPriority) {
-                auto robustCorePriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
                 robustCorePriority->setVersion(3, 1);
                 robustCorePriority->setRobust(true);
                 robustCorePriority->setHighPriority(true);
                 candidates.push_back(std::move(robustCorePriority));
             }
             if (haveRobustness) {
-                auto robustCore = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto robustCore = std::make_unique<EglContextAttributeBuilder>();
                 robustCore->setVersion(3, 1);
                 robustCore->setRobust(true);
                 candidates.push_back(std::move(robustCore));
             }
             if (haveContextPriority) {
-                auto corePriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto corePriority = std::make_unique<EglContextAttributeBuilder>();
                 corePriority->setVersion(3, 1);
                 corePriority->setHighPriority(true);
                 candidates.push_back(std::move(corePriority));
             }
-            auto core = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto core = std::make_unique<EglContextAttributeBuilder>();
             core->setVersion(3, 1);
             candidates.push_back(std::move(core));
         }
         if (haveRobustness && haveCreateContext && haveContextPriority) {
-            auto robustPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto robustPriority = std::make_unique<EglContextAttributeBuilder>();
             robustPriority->setRobust(true);
             robustPriority->setHighPriority(true);
             candidates.push_back(std::move(robustPriority));
         }
         if (haveRobustness && haveCreateContext) {
-            auto robust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto robust = std::make_unique<EglContextAttributeBuilder>();
             robust->setRobust(true);
             candidates.push_back(std::move(robust));
         }
@@ -353,8 +346,8 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
 {
     // FIXME: Refactor this method.
 
-    const auto &buffer = pixmap->buffer();
-    if (buffer.isNull()) {
+    const auto buffer = pixmap->buffer();
+    if (!buffer) {
         if (updateFromFBO(pixmap->fbo())) {
             return true;
         }
@@ -379,8 +372,8 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 {
     // FIXME: Refactor this method.
 
-    const auto &buffer = pixmap->buffer();
-    if (buffer.isNull()) {
+    const auto buffer = pixmap->buffer();
+    if (!buffer) {
         if (updateFromFBO(pixmap->fbo())) {
             return;
         }
@@ -400,11 +393,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         m_image = EGL_NO_IMAGE_KHR; // The wl_buffer has ownership of the image
         // The origin in a dmabuf-buffer is at the upper-left corner, so the meaning
         // of Y-inverted is the inverse of OpenGL.
-        const bool yInverted = !(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted);
-        if (m_size != dmabuf->size() || yInverted != q->isYInverted()) {
-            m_size = dmabuf->size();
-            q->setYInverted(yInverted);
-        }
+        q->setYInverted(!(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted));
         if (s) {
             s->resetTrackedDamage();
         }
@@ -560,6 +549,7 @@ bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWaylandServer::Buffe
 
     m_size = dmabuf->size();
     q->setYInverted(!(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted));
+    updateMatrix();
 
     return true;
 }

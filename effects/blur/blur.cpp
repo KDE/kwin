@@ -1,23 +1,10 @@
 /*
- *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
- *   Copyright © 2011 Philipp Knechtges <philipp-dev@knechtges.com>
- *   Copyright © 2018 Alex Nemeth <alex.nemeth329@gmail.com>
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- *   General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program; see the file COPYING.  if not, write to
- *   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- *   Boston, MA 02110-1301, USA.
- */
+    SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
+    SPDX-FileCopyrightText: 2011 Philipp Knechtges <philipp-dev@knechtges.com>
+    SPDX-FileCopyrightText: 2018 Alex Nemeth <alex.nemeth329@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "blur.h"
 #include "blurshader.h"
@@ -484,7 +471,6 @@ void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, 
 
 void BlurEffect::prePaintScreen(ScreenPrePaintData &data, int time)
 {
-    m_damagedArea = QRegion();
     m_paintedArea = QRegion();
     m_currentBlur = QRegion();
 
@@ -512,8 +498,6 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     }
     data.clip = newClip;
 
-    const QRegion oldPaint = data.paint;
-
     // we don't have to blur a region we don't see
     m_currentBlur -= newClip;
     // if we have to paint a non-opaque part of this window that intersects with the
@@ -531,8 +515,6 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     // blur everything
     if (m_paintedArea.intersects(expandedBlur) || data.paint.intersects(blurArea)) {
         data.paint |= expandedBlur;
-        // we keep track of the "damage propagation"
-        m_damagedArea |=  (w->isDock() ? (expandedBlur & m_damagedArea) : expand(expandedBlur & m_damagedArea)) & blurArea;
         // we have to check again whether we do not damage a blurred area
         // of a window
         if (expandedBlur.intersects(m_currentBlur)) {
@@ -542,12 +524,6 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
 
     m_currentBlur |= expandedBlur;
 
-    // we don't consider damaged areas which are occluded and are not
-    // explicitly damaged by this window
-    m_damagedArea -= data.clip;
-    m_damagedArea |= oldPaint;
-
-    // in contrast to m_damagedArea does m_paintedArea keep track of all repainted areas
     m_paintedArea -= data.clip;
     m_paintedArea |= data.paint;
 }
@@ -831,6 +807,11 @@ void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount,
     GLRenderTarget::popRenderTarget();
 
     m_shader->unbind();
+}
+
+bool BlurEffect::isActive() const
+{
+    return !effects->isScreenLocked();
 }
 
 } // namespace KWin

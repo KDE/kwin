@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "drm_output.h"
 #include "drm_backend.h"
 #include "drm_object_plane.h"
@@ -47,12 +36,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
 
+#include "drm_gpu.h"
+
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmBackend *backend)
+DrmOutput::DrmOutput(DrmBackend *backend, DrmGpu *gpu)
     : AbstractWaylandOutput(backend)
     , m_backend(backend)
+    , m_gpu(gpu)
 {
 }
 
@@ -107,17 +99,21 @@ void DrmOutput::releaseGbm()
 
 bool DrmOutput::hideCursor()
 {
-    return drmModeSetCursor(m_backend->fd(), m_crtc->id(), 0, 0, 0) == 0;
+    return drmModeSetCursor(m_gpu->fd(), m_crtc->id(), 0, 0, 0) == 0;
 }
 
 bool DrmOutput::showCursor(DrmDumbBuffer *c)
 {
     const QSize &s = c->size();
-    return drmModeSetCursor(m_backend->fd(), m_crtc->id(), c->handle(), s.width(), s.height()) == 0;
+    return drmModeSetCursor(m_gpu->fd(), m_crtc->id(), c->handle(), s.width(), s.height()) == 0;
 }
 
 bool DrmOutput::showCursor()
 {
+    if (m_deleted) {
+        return false;
+    }
+
     if (Q_UNLIKELY(m_backend->usesSoftwareCursor())) {
         qCCritical(KWIN_DRM) << "DrmOutput::showCursor should never be called when software cursor is enabled";
         return true;
@@ -125,6 +121,7 @@ bool DrmOutput::showCursor()
 
     const bool ret = showCursor(m_cursor[m_cursorIndex].data());
     if (!ret) {
+        qCDebug(KWIN_DRM) << "DrmOutput::showCursor(DrmDumbBuffer) failed";
         return ret;
     }
 
@@ -136,31 +133,10 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-// TODO: Do we need to handle the flipped cases differently?
-int transformToRotation(DrmOutput::Transform transform)
-{
-    switch (transform) {
-    case DrmOutput::Transform::Normal:
-    case DrmOutput::Transform::Flipped:
-        return 0;
-    case DrmOutput::Transform::Rotated90:
-    case DrmOutput::Transform::Flipped90:
-        return 90;
-    case DrmOutput::Transform::Rotated180:
-    case DrmOutput::Transform::Flipped180:
-        return 180;
-    case DrmOutput::Transform::Rotated270:
-    case DrmOutput::Transform::Flipped270:
-        return 270;
-    }
-    Q_UNREACHABLE();
-    return 0;
-}
-
 QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 {
     QMatrix4x4 matrix;
-    const int angle = transformToRotation(transform());
+    const int angle = rotation();
     if (angle) {
         const QSize center = s / 2;
 
@@ -174,6 +150,9 @@ QMatrix4x4 DrmOutput::matrixDisplay(const QSize &s) const
 
 void DrmOutput::updateCursor()
 {
+    if (m_deleted) {
+        return;
+    }
     QImage cursorImage = Cursors::self()->currentCursor()->image();
     if (cursorImage.isNull()) {
         return;
@@ -189,7 +168,7 @@ void DrmOutput::updateCursor()
     p.end();
 }
 
-void DrmOutput::moveCursor(Cursor* cursor, const QPoint &globalPos)
+void DrmOutput::moveCursor(Cursor *cursor, const QPoint &globalPos)
 {
     const QMatrix4x4 hotspotMatrix = matrixDisplay(cursor->image().size());
 
@@ -219,7 +198,7 @@ void DrmOutput::moveCursor(Cursor* cursor, const QPoint &globalPos)
     }
     pos *= scale();
     pos -= hotspotMatrix.map(cursor->hotspot());
-    drmModeMoveCursor(m_backend->fd(), m_crtc->id(), pos.x(), pos.y());
+    drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y());
 }
 
 static QHash<int, QByteArray> s_connectorNames = {
@@ -269,7 +248,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     initEdid(connector);
     initDpms(connector);
     initUuid();
-    if (m_backend->atomicModeSetting()) {
+    if (m_gpu->atomicModeSetting()) {
         if (!initPrimaryPlane()) {
             return false;
         }
@@ -280,7 +259,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     setDpmsSupported(true);
     initOutputDevice(connector);
 
-    if (!m_backend->atomicModeSetting() && !m_crtc->blank()) {
+    if (!m_gpu->atomicModeSetting() && !m_crtc->blank()) {
         // We use legacy mode and the initial output blank failed.
         return false;
     }
@@ -386,12 +365,12 @@ void DrmOutput::initEdid(drmModeConnector *connector)
 {
     DrmScopedPointer<drmModePropertyBlobRes> edid;
     for (int i = 0; i < connector->count_props; ++i) {
-        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
+        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_gpu->fd(), connector->props[i]));
         if (!property) {
             continue;
         }
         if ((property->flags & DRM_MODE_PROP_BLOB) && qstrcmp(property->name, "EDID") == 0) {
-            edid.reset(drmModeGetPropertyBlob(m_backend->fd(), connector->prop_values[i]));
+            edid.reset(drmModeGetPropertyBlob(m_gpu->fd(), connector->prop_values[i]));
         }
     }
     if (!edid) {
@@ -406,8 +385,8 @@ void DrmOutput::initEdid(drmModeConnector *connector)
 
 bool DrmOutput::initPrimaryPlane()
 {
-    for (int i = 0; i < m_backend->planes().size(); ++i) {
-        DrmPlane* p = m_backend->planes()[i];
+    for (int i = 0; i < m_gpu->planes().size(); ++i) {
+        DrmPlane *p = m_gpu->planes()[i];
         if (!p) {
             continue;
         }
@@ -434,8 +413,8 @@ bool DrmOutput::initPrimaryPlane()
 
 bool DrmOutput::initCursorPlane()       // TODO: Add call in init (but needs layer support in general first)
 {
-    for (int i = 0; i < m_backend->planes().size(); ++i) {
-        DrmPlane* p = m_backend->planes()[i];
+    for (int i = 0; i < m_gpu->planes().size(); ++i) {
+        DrmPlane *p = m_gpu->planes()[i];
         if (!p) {
             continue;
         }
@@ -462,7 +441,7 @@ bool DrmOutput::initCursorPlane()       // TODO: Add call in init (but needs lay
 bool DrmOutput::initCursor(const QSize &cursorSize)
 {
     auto createCursor = [this, cursorSize] (int index) {
-        m_cursor[index].reset(m_backend->createBuffer(cursorSize));
+        m_cursor[index].reset(m_gpu->createBuffer(cursorSize));
         if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
             return false;
         }
@@ -477,7 +456,7 @@ bool DrmOutput::initCursor(const QSize &cursorSize)
 void DrmOutput::initDpms(drmModeConnector *connector)
 {
     for (int i = 0; i < connector->count_props; ++i) {
-        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
+        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_gpu->fd(), connector->props[i]));
         if (!property) {
             continue;
         }
@@ -492,7 +471,7 @@ void DrmOutput::updateEnablement(bool enable)
 {
     if (enable) {
         m_dpmsModePending = DpmsMode::On;
-        if (m_backend->atomicModeSetting()) {
+        if (m_gpu->atomicModeSetting()) {
             atomicEnable();
         } else {
             if (dpmsLegacyApply()) {
@@ -502,7 +481,7 @@ void DrmOutput::updateEnablement(bool enable)
 
     } else {
         m_dpmsModePending = DpmsMode::Off;
-        if (m_backend->atomicModeSetting()) {
+        if (m_gpu->atomicModeSetting()) {
             atomicDisable();
         } else {
             if (dpmsLegacyApply()) {
@@ -588,7 +567,7 @@ void DrmOutput::updateDpms(KWaylandServer::OutputInterface::DpmsMode mode)
 
     m_dpmsModePending = drmMode;
 
-    if (m_backend->atomicModeSetting()) {
+    if (m_gpu->atomicModeSetting()) {
         m_modesetRequested = true;
         if (drmMode == DpmsMode::On) {
             if (m_atomicOffPending) {
@@ -614,7 +593,7 @@ void DrmOutput::dpmsFinishOn()
     waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::On));
 
     m_backend->checkOutputsAreOn();
-    if (!m_backend->atomicModeSetting()) {
+    if (!m_gpu->atomicModeSetting()) {
         m_crtc->blank();
     }
     if (Compositor *compositor = Compositor::self()) {
@@ -636,7 +615,7 @@ void DrmOutput::dpmsFinishOff()
 
 bool DrmOutput::dpmsLegacyApply()
 {
-    if (drmModeConnectorSetProperty(m_backend->fd(), m_conn->id(),
+    if (drmModeConnectorSetProperty(m_gpu->fd(), m_conn->id(),
                                     m_dpms->prop_id, uint64_t(m_dpmsModePending)) < 0) {
         m_dpmsModePending = m_dpmsMode;
         qCWarning(KWIN_DRM) << "Setting DPMS failed";
@@ -684,11 +663,6 @@ bool DrmOutput::hardwareTransforms() const
     return m_primaryPlane->transformation() == outputToPlaneTransform(transform());
 }
 
-int DrmOutput::rotation() const
-{
-    return transformToRotation(transform());
-}
-
 void DrmOutput::updateTransform(Transform transform)
 {
     const auto planeTransform = outputToPlaneTransform(transform);
@@ -723,7 +697,7 @@ void DrmOutput::updateTransform(Transform transform)
 void DrmOutput::updateMode(int modeIndex)
 {
     // get all modes on the connector
-    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_backend->fd(), m_conn->id()));
+    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_gpu->fd(), m_conn->id()));
     if (connector->count_modes <= modeIndex) {
         // TODO: error?
         return;
@@ -746,7 +720,7 @@ void DrmOutput::setWaylandMode()
 void DrmOutput::pageFlipped()
 {
     // In legacy mode we might get a page flip through a blank.
-    Q_ASSERT(m_pageFlipPending || !m_backend->atomicModeSetting());
+    Q_ASSERT(m_pageFlipPending || !m_gpu->atomicModeSetting());
     m_pageFlipPending = false;
 
     if (m_deleted) {
@@ -760,7 +734,7 @@ void DrmOutput::pageFlipped()
     // Egl based surface buffers get destroyed, QPainter based dumb buffers not
     // TODO: split up DrmOutput in two for dumb and egl/gbm surface buffer compatible subclasses completely?
     if (m_backend->deleteBufferAfterPageFlip()) {
-        if (m_backend->atomicModeSetting()) {
+        if (m_gpu->atomicModeSetting()) {
             if (!m_primaryPlane->next()) {
                 // on manual vt switch
                 // TODO: when we later use overlay planes it might happen, that we have a page flip with only
@@ -785,7 +759,7 @@ void DrmOutput::pageFlipped()
             m_crtc->flipBuffer();
         }
     } else {
-        if (m_backend->atomicModeSetting()){
+        if (m_gpu->atomicModeSetting()){
             for (DrmPlane *p : m_nextPlanesFlipList) {
                 p->flipBuffer();
             }
@@ -806,7 +780,7 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (m_dpmsModePending != DpmsMode::On) {
         return false;
     }
-    if (m_backend->atomicModeSetting()) {
+    if (m_gpu->atomicModeSetting()) {
         return presentAtomically(buffer);
     } else {
         return presentLegacy(buffer);
@@ -856,7 +830,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         return true;
     }
 #endif
-
+    
     m_primaryPlane->setNext(buffer);
     m_nextPlanesFlipList << m_primaryPlane;
 
@@ -920,7 +894,7 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
             return false;
         }
     }
-    const bool ok = drmModePageFlip(m_backend->fd(), m_crtc->id(), buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+    const bool ok = drmModePageFlip(m_gpu->fd(), m_crtc->id(), buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
     if (ok) {
         m_crtc->setNext(buffer);
     } else {
@@ -932,7 +906,7 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
 bool DrmOutput::setModeLegacy(DrmBuffer *buffer)
 {
     uint32_t connId = m_conn->id();
-    if (drmModeSetCrtc(m_backend->fd(), m_crtc->id(), buffer->bufferId(), 0, 0, &connId, 1, &m_mode) == 0) {
+    if (drmModeSetCrtc(m_gpu->fd(), m_crtc->id(), buffer->bufferId(), 0, 0, &connId, 1, &m_mode) == 0) {
         return true;
     } else {
         qCWarning(KWIN_DRM) << "Mode setting failed";
@@ -969,17 +943,16 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
     };
 
     if (!req) {
-            qCWarning(KWIN_DRM) << "DRM: couldn't allocate atomic request";
-            errorHandler();
-            return false;
+        qCWarning(KWIN_DRM) << "DRM: couldn't allocate atomic request";
+        errorHandler();
+        return false;
     }
 
     uint32_t flags = 0;
-
     // Do we need to set a new mode?
     if (m_modesetRequested) {
         if (m_dpmsModePending == DpmsMode::On) {
-            if (drmModeCreatePropertyBlob(m_backend->fd(), &m_mode, sizeof(m_mode), &m_blobId) != 0) {
+            if (drmModeCreatePropertyBlob(m_gpu->fd(), &m_mode, sizeof(m_mode), &m_blobId) != 0) {
                 qCWarning(KWIN_DRM) << "Failed to create property blob";
                 errorHandler();
                 return false;
@@ -1024,8 +997,8 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
         return false;
     }
 
-    if (drmModeAtomicCommit(m_backend->fd(), req, flags, this)) {
-        qCWarning(KWIN_DRM) << "Atomic request failed to commit:" << strerror(errno);
+    if (drmModeAtomicCommit(m_gpu->fd(), req, flags, this)) {
+        qCDebug(KWIN_DRM) << "Atomic request failed to commit: " << strerror(errno);
         errorHandler();
         return false;
     }
@@ -1103,7 +1076,7 @@ bool DrmOutput::setGammaRamp(const GammaRamp &gamma)
 
 }
 
-QDebug& operator<<(QDebug& s, const KWin::DrmOutput* output)
+QDebug& operator<<(QDebug& s, const KWin::DrmOutput *output)
 {
     if (!output)
         return s.nospace() << "DrmOutput()";

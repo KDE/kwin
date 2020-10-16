@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "selection_source.h"
 #include "selection.h"
 #include "transfer.h"
@@ -103,7 +92,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
     targets[1] = atoms->targets;
 
     size_t cnt = 2;
-    for (const auto mime : m_offers) {
+    for (const auto &mime : m_offers) {
         targets[cnt] = Selection::mimeTypeToAtom(mime);
         cnt++;
     }
@@ -247,7 +236,7 @@ void X11Source::handleTargets()
         all << mimePair;
     }
     // all left in m_offers are not in the updated targets
-    for (const auto mimePair : m_offers) {
+    for (const auto &mimePair : m_offers) {
         removed << mimePair.first;
     }
     m_offers = all;

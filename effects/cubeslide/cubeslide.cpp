@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "cubeslide.h"
 // KConfigSkeleton
@@ -68,7 +57,7 @@ void CubeSlideEffect::reconfigure(ReconfigureFlags)
     CubeSlideConfig::self()->read();
     // TODO: rename rotationDuration to duration
     rotationDuration = animationTime(CubeSlideConfig::rotationDuration() != 0 ? CubeSlideConfig::rotationDuration() : 500);
-    timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+    timeLine.setEasingCurve(QEasingCurve::InOutSine);
     timeLine.setDuration(rotationDuration);
     dontSlidePanels = CubeSlideConfig::dontSlidePanels();
     dontSlideStickyWindows = CubeSlideConfig::dontSlideStickyWindows();
@@ -378,9 +367,9 @@ void CubeSlideEffect::postPaintScreen()
             }
             timeLine.setCurrentTime(0);
             if (slideRotations.count() == 1)
-                timeLine.setCurveShape(QTimeLine::EaseOutCurve);
+                timeLine.setEasingCurve(QEasingCurve::OutSine);
             else
-                timeLine.setCurveShape(QTimeLine::LinearCurve);
+                timeLine.setEasingCurve(QEasingCurve::Linear);
             if (slideRotations.empty()) {
                 for (EffectWindow* w : staticWindows) {
                     w->setData(WindowForceBlurRole, QVariant());
@@ -511,9 +500,9 @@ void CubeSlideEffect::startAnimation() {
         }
     }
     if (slideRotations.count() == 1) {
-        timeLine.setCurveShape(QTimeLine::EaseInOutCurve);
+        timeLine.setEasingCurve(QEasingCurve::InOutSine);
     } else {
-        timeLine.setCurveShape(QTimeLine::EaseInCurve);
+        timeLine.setEasingCurve(QEasingCurve::InSine);
     }
     effects->setActiveFullScreenEffect(this);
     timeLine.setCurrentTime(0);

@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "abstract_client.h"
@@ -44,8 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/seat_interface.h>
-
-#include <wayland-cursor.h>
 
 #include <linux/input.h>
 
@@ -1016,7 +1003,7 @@ void PointerInputTest::testCursorImage()
 
     // move cursor to center of window, this should first set a null pointer, so we still show old cursor
     cursor->setPos(window->frameGeometry().center());
-    QCOMPARE(p->focus().data(), window);
+    QCOMPARE(p->focus(), window);
     QCOMPARE(cursor->image(), fallbackCursor);
     QVERIFY(enteredSpy.wait());
 
@@ -1071,7 +1058,7 @@ void PointerInputTest::testCursorImage()
 
     // move cursor somewhere else, should reset to fallback cursor
     Cursors::self()->mouse()->setPos(window->frameGeometry().bottomLeft() + QPoint(20, 20));
-    QVERIFY(p->focus().isNull());
+    QVERIFY(!p->focus());
     QVERIFY(!cursor->image().isNull());
     QCOMPARE(cursor->image(), fallbackCursor);
 }

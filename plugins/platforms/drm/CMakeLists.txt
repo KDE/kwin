@@ -11,6 +11,7 @@ set(DRM_SOURCES
     logging.cpp
     scene_qpainter_drm_backend.cpp
     screens_drm.cpp
+    drm_gpu.cpp
 )
 
 if (HAVE_GBM)

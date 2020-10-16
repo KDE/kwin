@@ -1,30 +1,24 @@
 /*
- * Copyright (C) 2015 Martin Flöser <mgraesslin@kde.org>
- * Copyright (C) 2018 David Edmundson <davidedmundson@kde.org>
- * Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2015 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2018 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "waylandclient.h"
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox.h"
+#endif
+
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/surface_interface.h>
+#include <KWaylandServer/buffer_interface.h>
 
 #include <QFileInfo>
 
@@ -38,19 +32,24 @@ using namespace KWaylandServer;
 namespace KWin
 {
 
+enum WaylandGeometryType {
+    WaylandGeometryClient = 0x1,
+    WaylandGeometryFrame = 0x2,
+    WaylandGeometryBuffer = 0x4,
+};
+Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
+
 WaylandClient::WaylandClient(SurfaceInterface *surface)
 {
-    // Note that we cannot setup compositing here because we may need to call visibleRect(),
-    // which in its turn will call bufferGeometry(), which is a pure virtual method.
-
     setSurface(surface);
+    setupCompositing();
 
     m_windowId = waylandServer()->createWindowId(surface);
 
+    connect(surface, &SurfaceInterface::shadowChanged,
+            this, &WaylandClient::updateShadow);
     connect(this, &WaylandClient::frameGeometryChanged,
             this, &WaylandClient::updateClientOutputs);
-    connect(this, &WaylandClient::frameGeometryChanged,
-            this, &WaylandClient::updateClientArea);
     connect(this, &WaylandClient::desktopFileNameChanged,
             this, &WaylandClient::updateIcon);
     connect(screens(), &Screens::changed, this,
@@ -108,11 +107,6 @@ pid_t WaylandClient::pid() const
 bool WaylandClient::isLockScreen() const
 {
     return surface()->client() == waylandServer()->screenLockerClientConnection();
-}
-
-bool WaylandClient::isInputMethod() const
-{
-    return surface()->client() == waylandServer()->inputMethodConnection();
 }
 
 bool WaylandClient::isLocalhost() const
@@ -207,13 +201,6 @@ bool WaylandClient::belongsToDesktop() const
     );
 }
 
-void WaylandClient::updateClientArea()
-{
-    if (hasStrut()) {
-        workspace()->updateClientArea();
-    }
-}
-
 void WaylandClient::updateClientOutputs()
 {
     QVector<OutputInterface *> clientOutputs;
@@ -282,6 +269,269 @@ void WaylandClient::doSetActive()
         StackingUpdatesBlocker blocker(workspace());
         workspace()->focusToNull();
     }
+}
+
+void WaylandClient::updateDepth()
+{
+    if (surface()->buffer()->hasAlphaChannel() && !isDesktop()) {
+        setDepth(32);
+    } else {
+        setDepth(24);
+    }
+}
+
+void WaylandClient::cleanGrouping()
+{
+    if (transientFor()) {
+        transientFor()->removeTransient(this);
+    }
+    for (auto it = transients().constBegin(); it != transients().constEnd();) {
+        if ((*it)->transientFor() == this) {
+            removeTransient(*it);
+            it = transients().constBegin(); // restart, just in case something more has changed with the list
+        } else {
+            ++it;
+        }
+    }
+}
+
+void WaylandClient::cleanTabBox()
+{
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
+        tabBox->nextPrev(true);
+    }
+#endif
+}
+
+bool WaylandClient::isShown(bool shaded_is_shown) const
+{
+    Q_UNUSED(shaded_is_shown)
+    return !isZombie() && !isHidden() && !isMinimized();
+}
+
+bool WaylandClient::isHiddenInternal() const
+{
+    return isHidden();
+}
+
+void WaylandClient::hideClient(bool hide)
+{
+    if (hide) {
+        internalHide();
+    } else {
+        internalShow();
+    }
+}
+
+bool WaylandClient::isHidden() const
+{
+    return m_isHidden;
+}
+
+void WaylandClient::internalShow()
+{
+    if (!isHidden()) {
+        return;
+    }
+    m_isHidden = false;
+    addRepaintFull();
+    emit windowShown(this);
+}
+
+void WaylandClient::internalHide()
+{
+    if (isHidden()) {
+        return;
+    }
+    if (isMoveResize()) {
+        leaveMoveResize();
+    }
+    m_isHidden = true;
+    addWorkspaceRepaint(visibleRect());
+    workspace()->clientHidden(this);
+    emit windowHidden(this);
+}
+
+QRect WaylandClient::frameRectToBufferRect(const QRect &rect) const
+{
+    return QRect(rect.topLeft(), surface()->size());
+}
+
+QRect WaylandClient::requestedFrameGeometry() const
+{
+    return m_requestedFrameGeometry;
+}
+
+QPoint WaylandClient::requestedPos() const
+{
+    return m_requestedFrameGeometry.topLeft();
+}
+
+QSize WaylandClient::requestedSize() const
+{
+    return m_requestedFrameGeometry.size();
+}
+
+QRect WaylandClient::requestedClientGeometry() const
+{
+    return m_requestedClientGeometry;
+}
+
+QRect WaylandClient::bufferGeometry() const
+{
+    return m_bufferGeometry;
+}
+
+QSize WaylandClient::requestedClientSize() const
+{
+    return requestedClientGeometry().size();
+}
+
+void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
+{
+    m_requestedFrameGeometry = rect;
+
+    if (isShade()) {
+        if (m_requestedFrameGeometry.height() == borderTop() + borderBottom()) {
+            qCDebug(KWIN_CORE) << "Passed shaded frame geometry to setFrameGeometry()";
+        } else {
+            m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
+            m_requestedFrameGeometry.setHeight(borderTop() + borderBottom());
+        }
+    } else {
+        m_requestedClientGeometry = frameRectToClientRect(m_requestedFrameGeometry);
+    }
+
+    if (areGeometryUpdatesBlocked()) {
+        m_frameGeometry = m_requestedFrameGeometry;
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            return;
+        }
+        if (force == ForceGeometrySet) {
+            setPendingGeometryUpdate(PendingGeometryForced);
+        } else {
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        }
+        return;
+    }
+
+    m_frameGeometry = frameGeometryBeforeUpdateBlocking();
+
+    if (requestedClientSize() != clientSize()) {
+        requestGeometry(requestedFrameGeometry());
+    } else {
+        updateGeometry(requestedFrameGeometry());
+        return;
+    }
+
+    QRect updateRect = m_frameGeometry;
+    if (m_positionSyncMode == SyncMode::Sync) {
+        updateRect.moveTopLeft(requestedPos());
+    }
+    if (m_sizeSyncMode == SyncMode::Sync) {
+        updateRect.setSize(requestedSize());
+    }
+    updateGeometry(updateRect);
+}
+
+void WaylandClient::move(int x, int y, ForceGeometry_t force)
+{
+    Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
+    QPoint p(x, y);
+    if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
+        qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
+    }
+    m_requestedFrameGeometry.moveTopLeft(p);
+    m_requestedClientGeometry.moveTopLeft(framePosToClientPos(p));
+    if (force == NormalGeometrySet && m_frameGeometry.topLeft() == p) {
+        return;
+    }
+    m_frameGeometry.moveTopLeft(m_requestedFrameGeometry.topLeft());
+    if (areGeometryUpdatesBlocked()) {
+        if (pendingGeometryUpdate() == PendingGeometryForced) {
+            return;
+        }
+        if (force == ForceGeometrySet) {
+            setPendingGeometryUpdate(PendingGeometryForced);
+        } else {
+            setPendingGeometryUpdate(PendingGeometryNormal);
+        }
+        return;
+    }
+    const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
+    const QRect oldClientGeometry = clientGeometryBeforeUpdateBlocking();
+    const QRect oldFrameGeometry = frameGeometryBeforeUpdateBlocking();
+    m_clientGeometry.moveTopLeft(m_requestedClientGeometry.topLeft());
+    m_bufferGeometry = frameRectToBufferRect(m_frameGeometry);
+    updateGeometryBeforeUpdateBlocking();
+    updateWindowRules(Rules::Position);
+    screens()->setCurrent(this);
+    workspace()->updateStackingOrder();
+    emit bufferGeometryChanged(this, oldBufferGeometry);
+    emit clientGeometryChanged(this, oldClientGeometry);
+    emit frameGeometryChanged(this, oldFrameGeometry);
+    addRepaintDuringGeometryUpdates();
+}
+
+void WaylandClient::requestGeometry(const QRect &rect)
+{
+    m_requestedFrameGeometry = rect;
+    m_requestedClientGeometry = frameRectToClientRect(rect);
+}
+
+void WaylandClient::updateGeometry(const QRect &rect)
+{
+    const QRect oldClientGeometry = m_clientGeometry;
+    const QRect oldFrameGeometry = m_frameGeometry;
+    const QRect oldBufferGeometry = m_bufferGeometry;
+
+    m_clientGeometry = frameRectToClientRect(rect);
+    m_frameGeometry = rect;
+    m_bufferGeometry = frameRectToBufferRect(rect);
+
+    WaylandGeometryTypes changedGeometries;
+
+    if (m_clientGeometry != oldClientGeometry) {
+        changedGeometries |= WaylandGeometryClient;
+    }
+    if (m_frameGeometry != oldFrameGeometry) {
+        changedGeometries |= WaylandGeometryFrame;
+    }
+    if (m_bufferGeometry != oldBufferGeometry) {
+        changedGeometries |= WaylandGeometryBuffer;
+    }
+
+    if (!changedGeometries) {
+        return;
+    }
+
+    updateWindowRules(Rules::Position | Rules::Size);
+    updateGeometryBeforeUpdateBlocking();
+
+    if (changedGeometries & WaylandGeometryBuffer) {
+        emit bufferGeometryChanged(this, oldBufferGeometry);
+    }
+    if (changedGeometries & WaylandGeometryClient) {
+        emit clientGeometryChanged(this, oldClientGeometry);
+    }
+    if (changedGeometries & WaylandGeometryFrame) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
+    emit geometryShapeChanged(this, oldFrameGeometry);
+
+    addRepaintDuringGeometryUpdates();
+}
+
+void WaylandClient::setPositionSyncMode(SyncMode syncMode)
+{
+    m_positionSyncMode = syncMode;
+}
+
+void WaylandClient::setSizeSyncMode(SyncMode syncMode)
+{
+    m_sizeSyncMode = syncMode;
 }
 
 } // namespace KWin

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "device.h"
 
 #include <QDBusConnection>
@@ -210,6 +199,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_scrollButton(libinput_device_config_scroll_get_button(m_device))
     , m_defaultPointerAcceleration(libinput_device_config_accel_get_default_speed(m_device))
     , m_pointerAcceleration(libinput_device_config_accel_get_speed(m_device))
+    , m_scrollFactor(scrollFactorDefault())
     , m_supportedPointerAccelerationProfiles(libinput_device_config_accel_get_profiles(m_device))
     , m_defaultPointerAccelerationProfile(libinput_device_config_accel_get_default_profile(m_device))
     , m_pointerAccelerationProfile(libinput_device_config_accel_get_profile(m_device))
@@ -219,7 +209,6 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
     , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
     , m_clickMethod(libinput_device_config_click_get_method(m_device))
-    , m_scrollFactor(scrollFactorDefault())
 {
     libinput_device_ref(m_device);
 

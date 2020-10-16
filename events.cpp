@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 /*
 
@@ -176,18 +165,34 @@ QVector<QByteArray> s_xcbEerrors({
 
 void Workspace::registerEventFilter(X11EventFilter *filter)
 {
-    if (filter->isGenericEvent())
-        m_genericEventFilters.append(filter);
-    else
-        m_eventFilters.append(filter);
+    if (filter->isGenericEvent()) {
+        m_genericEventFilters.append(new X11EventFilterContainer(filter));
+    } else {
+        m_eventFilters.append(new X11EventFilterContainer(filter));
+    }
+}
+
+static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
+                                                QList<QPointer<X11EventFilterContainer>> &list)
+{
+    for (int i = 0; i < list.count(); ++i) {
+        X11EventFilterContainer *container = list.at(i);
+        if (container->filter() == eventFilter) {
+            return list.takeAt(i);
+        }
+    }
+    return nullptr;
 }
 
 void Workspace::unregisterEventFilter(X11EventFilter *filter)
 {
-    if (filter->isGenericEvent())
-        m_genericEventFilters.removeOne(filter);
-    else
-        m_eventFilters.removeOne(filter);
+    X11EventFilterContainer *container = nullptr;
+    if (filter->isGenericEvent()) {
+        container = takeEventFilter(filter, m_genericEventFilters);
+    } else {
+        container = takeEventFilter(filter, m_eventFilters);
+    }
+    delete container;
 }
 
 
@@ -230,13 +235,29 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     if (eventType == XCB_GE_GENERIC) {
         xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(e);
 
-        foreach (X11EventFilter *filter, m_genericEventFilters) {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_genericEventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
             if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(e)) {
                 return true;
             }
         }
     } else {
-        foreach (X11EventFilter *filter, m_eventFilters) {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_eventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
             if (filter->eventTypes().contains(eventType) && filter->event(e)) {
                 return true;
             }
@@ -1301,7 +1322,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         // It's of course still possible that we miss the destroy in which case non-fatal
         // X errors are reported to the event loop and logged by Qt.
         m_scheduledRelease = true;
-        QTimer::singleShot(1, this, SLOT(release()));
+        QTimer::singleShot(1, this, [this]() { release(); });
         break;
     }
     case XCB_CONFIGURE_NOTIFY:

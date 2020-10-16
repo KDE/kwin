@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwin_wayland_test.h"
 
@@ -33,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effect_builtins.h"
 
 #include <KWayland/Client/surface.h>
-#include <KWayland/Client/xdgshell.h>
 
 using namespace KWin;
 
@@ -133,7 +121,7 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(!surface.isNull());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
@@ -177,7 +165,7 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     using namespace KWayland::Client;
     QScopedPointer<Surface> mainWindowSurface(Test::createSurface());
     QVERIFY(!mainWindowSurface.isNull());
-    QScopedPointer<XdgShellSurface> mainWindowShellSurface(Test::createXdgShellStableSurface(mainWindowSurface.data()));
+    QScopedPointer<Test::XdgToplevel> mainWindowShellSurface(Test::createXdgToplevelSurface(mainWindowSurface.data()));
     QVERIFY(!mainWindowShellSurface.isNull());
     AbstractClient *mainWindow = Test::renderAndWaitForShown(mainWindowSurface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(mainWindow);
@@ -194,12 +182,15 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     // Create a popup, it should not be animated.
     QScopedPointer<Surface> popupSurface(Test::createSurface());
     QVERIFY(!popupSurface.isNull());
-    XdgPositioner positioner(QSize(20, 20), QRect(0, 0, 10, 10));
-    positioner.setGravity(Qt::BottomEdge | Qt::RightEdge);
-    positioner.setAnchorEdge(Qt::BottomEdge | Qt::LeftEdge);
-    QScopedPointer<XdgShellPopup> popupShellSurface(Test::createXdgShellStablePopup(popupSurface.data(), mainWindowShellSurface.data(), positioner));
+    QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    QVERIFY(positioner);
+    positioner->set_size(20, 20);
+    positioner->set_anchor_rect(0, 0, 10, 10);
+    positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
+    positioner->set_anchor(Test::XdgPositioner::anchor_bottom_left);
+    QScopedPointer<Test::XdgPopup> popupShellSurface(Test::createXdgPopupSurface(popupSurface.data(), mainWindowShellSurface->xdgSurface(), positioner.data()));
     QVERIFY(!popupShellSurface.isNull());
-    AbstractClient *popup = Test::renderAndWaitForShown(popupSurface.data(), positioner.initialSize(), Qt::red);
+    AbstractClient *popup = Test::renderAndWaitForShown(popupSurface.data(), QSize(20, 20), Qt::red);
     QVERIFY(popup);
     QVERIFY(popup->isPopupWindow());
     QCOMPARE(popup->transientFor(), mainWindow);

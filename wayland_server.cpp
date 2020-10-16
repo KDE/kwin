@@ -1,29 +1,21 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "wayland_server.h"
+#include "abstract_wayland_output.h"
 #include "x11client.h"
 #include "platform.h"
 #include "composite.h"
 #include "idle_inhibition.h"
+#include "inputpanelv1integration.h"
 #include "screens.h"
-#include "waylandxdgshellintegration.h"
+#include "layershellv1integration.h"
+#include "xdgshellintegration.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
 #include "service_utils.h"
@@ -63,10 +55,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
 #include <KWaylandServer/xdgforeign_v2_interface.h>
-#include <KWaylandServer/xdgoutput_interface.h>
+#include <KWaylandServer/xdgoutput_v1_interface.h>
 #include <KWaylandServer/keystate_interface.h>
 #include <KWaylandServer/filtered_display.h>
 #include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
+#include <KWaylandServer/inputmethod_v1_interface.h>
 
 // Qt
 #include <QCryptographicHash>
@@ -205,9 +198,34 @@ void WaylandServer::registerXdgGenericClient(AbstractClient *client)
     XdgPopupClient *popupClient = qobject_cast<XdgPopupClient *>(client);
     if (popupClient) {
         registerShellClient(popupClient);
+
+        SurfaceInterface *surface = client->surface();
+        auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
+            [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
+                return plasmaSurface->surface() == surface;
+            }
+        );
+
+        if (it != m_plasmaShellSurfaces.end()) {
+            popupClient->installPlasmaShellSurface(*it);
+            m_plasmaShellSurfaces.erase(it);
+        }
+
         return;
     }
     qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
+}
+
+AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
+{
+    AbstractWaylandOutput *outputFound = nullptr;
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (auto output : outputs) {
+        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
+            outputFound = static_cast<AbstractWaylandOutput *>(output);
+        }
+    }
+    return outputFound;
 }
 
 class KWinDisplay : public KWaylandServer::FilteredDisplay
@@ -246,11 +264,18 @@ public:
     }
 
     const QSet<QByteArray> interfacesBlackList = {"org_kde_kwin_remote_access_manager", "org_kde_plasma_window_management", "org_kde_kwin_fake_input", "org_kde_kwin_keystate", "zkde_screencast_unstable_v1"};
+
+    const QSet<QByteArray> inputmethodInterfaces = { "zwp_input_panel_v1", "zwp_input_method_v1" };
+
     QSet<QString> m_reported;
 
     bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override {
         if (client->processId() == getpid()) {
             return true;
+        }
+
+        if (client != waylandServer()->inputMethodConnection() && inputmethodInterfaces.contains(interfaceName)) {
+            return false;
         }
 
         if (!interfacesBlackList.contains(interfaceName)) {
@@ -335,9 +360,17 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_tabletManager = m_display->createTabletManagerInterface(m_display);
     m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
 
-    auto shellIntegration = new WaylandXdgShellIntegration(this);
-    connect(shellIntegration, &WaylandXdgShellIntegration::clientCreated,
+    auto inputPanelV1Integration = new InputPanelV1Integration(this);
+    connect(inputPanelV1Integration, &InputPanelV1Integration::clientCreated,
+            this, &WaylandServer::registerShellClient);
+
+    auto xdgShellIntegration = new XdgShellIntegration(this);
+    connect(xdgShellIntegration, &XdgShellIntegration::clientCreated,
             this, &WaylandServer::registerXdgGenericClient);
+
+    auto layerShellV1Integration = new LayerShellV1Integration(this);
+    connect(layerShellV1Integration, &LayerShellV1Integration::clientCreated,
+            this, &WaylandServer::registerShellClient);
 
     m_xdgDecorationManagerV1 = m_display->createXdgDecorationManagerV1(m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this,
@@ -355,7 +388,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_display->createPointerGestures(PointerGesturesInterfaceVersion::UnstableV1, m_display)->create();
     m_display->createPointerConstraints(PointerConstraintsInterfaceVersion::UnstableV1, m_display)->create();
     m_dataDeviceManager = m_display->createDataDeviceManager(m_display);
-    m_dataDeviceManager->create();
     m_display->createDataControlDeviceManagerV1(m_display);
     m_display->createPrimarySelectionDeviceManagerV1(m_display);
     m_idle = m_display->createIdle(m_display);
@@ -366,10 +398,11 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
         [this] (PlasmaShellSurfaceInterface *surface) {
-            if (XdgToplevelClient *client = findXdgToplevelClient(surface->surface())) {
+            if (XdgSurfaceClient *client = findXdgSurfaceClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
                 return;
             }
+
             m_plasmaShellSurfaces.append(surface);
             connect(surface, &QObject::destroyed, this, [this, surface] {
                 m_plasmaShellSurfaces.removeOne(surface);
@@ -394,7 +427,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     );
 
     m_windowManagement = m_display->createPlasmaWindowManagement(m_display);
-    m_windowManagement->create();
     m_windowManagement->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);
     connect(m_windowManagement, &PlasmaWindowManagementInterface::requestChangeShowingDesktop, this,
         [] (PlasmaWindowManagementInterface::ShowingDesktopState state) {
@@ -449,15 +481,15 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     });
     m_outputManagement->create();
 
-    m_xdgOutputManager = m_display->createXdgOutputManager(m_display);
-    m_xdgOutputManager->create();
+    m_xdgOutputManagerV1 = m_display->createXdgOutputManagerV1(m_display);
 
     m_display->createSubCompositor(m_display)->create();
 
     m_XdgForeign = m_display->createXdgForeignV2Interface(m_display);
 
     m_keyState = m_display->createKeyStateInterface(m_display);
-    m_keyState->create();
+
+    m_inputMethod = m_display->createInputMethodInterface(m_display);
 
     return true;
 }
@@ -754,6 +786,11 @@ AbstractClient *WaylandServer::findClient(SurfaceInterface *surface) const
 XdgToplevelClient *WaylandServer::findXdgToplevelClient(SurfaceInterface *surface) const
 {
     return qobject_cast<XdgToplevelClient *>(findClient(surface));
+}
+
+XdgSurfaceClient *WaylandServer::findXdgSurfaceClient(SurfaceInterface *surface) const
+{
+    return qobject_cast<XdgSurfaceClient *>(findClient(surface));
 }
 
 quint32 WaylandServer::createWindowId(SurfaceInterface *surface)

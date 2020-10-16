@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_SCENE_H
 #define KWIN_SCENE_H
@@ -150,6 +139,7 @@ public:
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
+    virtual bool supportsSurfacelessContext() const;
 
     virtual QMatrix4x4 screenProjectionMatrix() const;
 
@@ -228,6 +218,13 @@ protected:
     virtual void paintSimpleScreen(int mask, const QRegion &region);
     // paint the background (not the desktop background - the whole background)
     virtual void paintBackground(const QRegion &region) = 0;
+
+    /**
+     * Notifies about starting to paint.
+     *
+     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
+     */
+    virtual void aboutToStartPainting(const QRegion &damage);
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window
@@ -270,6 +267,8 @@ private:
     QHash< Toplevel*, Window* > m_windows;
     // windows in their stacking order
     QVector< Window* > stacking_order;
+    // how many times finalPaintScreen() has been called
+    int m_paintScreenCount = 0;
 };
 
 /**
@@ -361,9 +360,6 @@ public:
         return {};
     }
 
-protected:
-    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
-    WindowQuadList makeContentsQuads() const;
     /**
      * @brief Returns the WindowPixmap for this Window.
      *
@@ -381,6 +377,10 @@ protected:
      */
     template<typename T> T *windowPixmap() const;
     template<typename T> T *previousWindowPixmap() const;
+
+protected:
+    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
+    WindowQuadList makeContentsQuads() const;
     /**
      * @brief Factory method to create a WindowPixmap.
      *
@@ -418,8 +418,9 @@ private:
  * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
  * the native pixmap to the respective rendering format.
  */
-class KWIN_EXPORT WindowPixmap
+class KWIN_EXPORT WindowPixmap : public QObject
 {
+    Q_OBJECT
 public:
     virtual ~WindowPixmap();
     /**
@@ -451,7 +452,7 @@ public:
     /**
      * @return The Wayland BufferInterface for this WindowPixmap.
      */
-    QPointer<KWaylandServer::BufferInterface> buffer() const;
+    KWaylandServer::BufferInterface *buffer() const;
     const QSharedPointer<QOpenGLFramebufferObject> &fbo() const;
     QImage internalImage() const;
     /**
@@ -502,6 +503,12 @@ public:
      */
     QRegion shape() const;
     /**
+     * Returns the region that specifies the opaque area inside the attached buffer.
+     *
+     * The upper left corner of the attached buffer corresponds to (0, 0).
+     */
+    QRegion opaque() const;
+    /**
      * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
      * pixmap also contains the decoration which is not rendered into this pixmap, though. This
      * contentsRect tells where inside the complete pixmap the real content is.
@@ -524,6 +531,10 @@ public:
      * Maps the specified @a point from the window pixmap coordinates to the buffer pixel coordinates.
      */
     QPointF mapToBuffer(const QPointF &point) const;
+    /**
+     * Maps the specified @a region from the window pixmap coordinates to the global screen coordinates.
+     */
+    QRegion mapToGlobal(const QRegion &region) const;
 
     /**
      * @returns the parent WindowPixmap in the sub-surface tree
@@ -568,12 +579,15 @@ protected:
     }
 
 private:
+    void setBuffer(KWaylandServer::BufferInterface *buffer);
+    void clear();
+
     Scene::Window *m_window;
     xcb_pixmap_t m_pixmap;
     QSize m_pixmapSize;
     bool m_discarded;
     QRect m_contentsRect;
-    QPointer<KWaylandServer::BufferInterface> m_buffer;
+    KWaylandServer::BufferInterface *m_buffer = nullptr;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_internalImage;
     WindowPixmap *m_parent = nullptr;
@@ -671,7 +685,7 @@ Shadow* Scene::Window::shadow()
 }
 
 inline
-QPointer<KWaylandServer::BufferInterface> WindowPixmap::buffer() const
+KWaylandServer::BufferInterface *WindowPixmap::buffer() const
 {
     return m_buffer;
 }

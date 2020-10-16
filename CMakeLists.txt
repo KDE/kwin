@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(KWin)
-set(PROJECT_VERSION "5.19.80")
+set(PROJECT_VERSION "5.20.80")
 set(PROJECT_VERSION_MAJOR 5)
 
-set(QT_MIN_VERSION "5.14.0")
-set(KF5_MIN_VERSION "5.73.0")
+set(QT_MIN_VERSION "5.15.0")
+set(KF5_MIN_VERSION "5.74")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
@@ -16,7 +16,7 @@ include(WriteBasicConfigVersionFile)
 include(GenerateExportHeader)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} )
 
 find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -52,7 +52,7 @@ include(ECMConfiguredInstall)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -DQT_USE_QSTRINGBUILDER -DQT_NO_URL_CAST_FROM_STRING)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5Multimedia QUIET)
@@ -114,7 +114,7 @@ add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation"
 find_package(KF5Kirigami2 ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Kirigami2 PROPERTIES
     DESCRIPTION "A QtQuick based components set"
-    PURPOSE "Required at runtime for Virtual desktop KCM and the virtual keyboard"
+    PURPOSE "Required at runtime for Virtual desktop KCM"
     TYPE RUNTIME
 )
 
@@ -170,12 +170,12 @@ if (epoxy_HAS_GLX)
     endif()
 endif()
 
-find_package(Wayland 1.2 REQUIRED COMPONENTS Cursor OPTIONAL_COMPONENTS Egl)
+find_package(Wayland 1.2 OPTIONAL_COMPONENTS Egl)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
 )
-add_feature_info("Wayland::EGL" Wayland_Egl_FOUND "Enable building of Wayland backend and QPA with EGL support.")
+add_feature_info("Wayland::EGL" Wayland_Egl_FOUND "Enable building of Wayland backend.")
 set(HAVE_WAYLAND_EGL FALSE)
 if (Wayland_Egl_FOUND)
     set(HAVE_WAYLAND_EGL TRUE)
@@ -322,7 +322,6 @@ include(ECMQMLModules)
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 1.2)
 ecm_find_qmlmodule(QtQuick.Layouts 1.3)
-ecm_find_qmlmodule(QtQuick.VirtualKeyboard 2.1)
 ecm_find_qmlmodule(QtQuick.Window 2.1)
 ecm_find_qmlmodule(QtMultimedia 5.0)
 ecm_find_qmlmodule(org.kde.kquickcontrolsaddons 2.0)
@@ -469,6 +468,9 @@ set(kwin_SRCS
     input.cpp
     input_event.cpp
     input_event_spy.cpp
+    inputmethod.cpp
+    inputpanelv1client.cpp
+    inputpanelv1integration.cpp
     internal_client.cpp
     keyboard_input.cpp
     keyboard_layout.cpp
@@ -476,6 +478,8 @@ set(kwin_SRCS
     keyboard_repeat.cpp
     killwindow.cpp
     layers.cpp
+    layershellv1client.cpp
+    layershellv1integration.cpp
     libinput/connection.cpp
     libinput/context.cpp
     libinput/device.cpp
@@ -529,13 +533,11 @@ set(kwin_SRCS
     utils.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
-    virtualkeyboard.cpp
     virtualkeyboard_dbus.cpp
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp
     waylandclient.cpp
     waylandshellintegration.cpp
-    waylandxdgshellintegration.cpp
     window_property_notify_x11_filter.cpp
     workspace.cpp
     x11client.cpp
@@ -543,6 +545,7 @@ set(kwin_SRCS
     xcbutils.cpp
     xcursortheme.cpp
     xdgshellclient.cpp
+    xdgshellintegration.cpp
     xkb.cpp
     xwaylandclient.cpp
     xwl/xwayland_interface.cpp
@@ -685,7 +688,6 @@ set(kwin_XCB_LIBS
 set(kwin_WAYLAND_LIBS
     KF5::WaylandClient
     Plasma::KWaylandServer
-    Wayland::Cursor
     XKB::XKB
     ${CMAKE_THREAD_LIBS_INIT}
 )
@@ -827,6 +829,10 @@ install(FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DI
 add_subdirectory(qml)
 
 if (BUILD_TESTING)
+    find_package(WaylandProtocols REQUIRED)
+    find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
+    find_package(Wayland REQUIRED COMPONENTS Client)
+
     add_subdirectory(autotests)
     add_subdirectory(tests)
 endif()

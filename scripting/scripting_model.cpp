@@ -1,31 +1,20 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "scripting_model.h"
 #include <config-kwin.h>
+#include "abstract_client.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "x11client.h"
 #include "screens.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
-#include "wayland_server.h"
 
 namespace KWin {
 namespace ScriptingClientModel {
@@ -46,7 +35,7 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &ClientLevel::reInit);
     connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
     connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
-    connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
+    connect(model, &ClientModel::exclusionsChanged, this, &ClientLevel::reInit);
 }
 
 ClientLevel::~ClientLevel()
@@ -209,9 +198,9 @@ void ClientLevel::removeClient(AbstractClient *client)
 
 void ClientLevel::init()
 {
-    const QList<X11Client *> &clients = Workspace::self()->clientList();
+    const QList<AbstractClient *> &clients = workspace()->allClientList();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        X11Client *client = *it;
+        AbstractClient *client = *it;
         setupClientConnections(client);
         if (!exclude(client) && shouldAdd(client)) {
             m_clients.insert(nextId(), client);
@@ -221,15 +210,9 @@ void ClientLevel::init()
 
 void ClientLevel::reInit()
 {
-    const QList<X11Client *> &clients = Workspace::self()->clientList();
+    const QList<AbstractClient *> &clients = workspace()->allClientList();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         checkClient((*it));
-    }
-    if (waylandServer()) {
-        const auto &clients = waylandServer()->clients();
-        for (auto *c : clients) {
-            checkClient(c);
-        }
     }
 }
 
@@ -416,12 +399,12 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     : AbstractLevel(model, parent)
     , m_childRestrictions(childRestrictions)
 {
-    connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), SLOT(desktopCountChanged(uint,uint)));
-    connect(screens(), SIGNAL(countChanged(int,int)), SLOT(screenCountChanged(int,int)));
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this, &ForkLevel::desktopCountChanged);
+    connect(screens(), &Screens::countChanged, this, &ForkLevel::screenCountChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     if (Activities *activities = Activities::self()) {
-        connect(activities, SIGNAL(added(QString)), SLOT(activityAdded(QString)));
-        connect(activities, SIGNAL(removed(QString)), SLOT(activityRemoved(QString)));
+        connect(activities, &Activities::added, this, &ForkLevel::activityAdded);
+        connect(activities, &Activities::removed, this, &ForkLevel::activityRemoved);
     }
 #endif
 }
@@ -547,10 +530,10 @@ int ForkLevel::count() const
 void ForkLevel::addChild(AbstractLevel *child)
 {
     m_children.append(child);
-    connect(child, SIGNAL(beginInsert(int,int,quint32)), SIGNAL(beginInsert(int,int,quint32)));
-    connect(child, SIGNAL(beginRemove(int,int,quint32)), SIGNAL(beginRemove(int,int,quint32)));
-    connect(child, SIGNAL(endInsert()), SIGNAL(endInsert()));
-    connect(child, SIGNAL(endRemove()), SIGNAL(endRemove()));
+    connect(child, &AbstractLevel::beginInsert, this, &AbstractLevel::beginInsert);
+    connect(child, &AbstractLevel::beginRemove, this, &AbstractLevel::beginRemove);
+    connect(child, &AbstractLevel::endInsert, this, &AbstractLevel::endInsert);
+    connect(child, &AbstractLevel::endRemove, this, &AbstractLevel::endRemove);
 }
 
 void ForkLevel::setActivity(const QString &activity)
@@ -670,10 +653,10 @@ void ClientModel::setLevels(QList< ClientModel::LevelRestriction > restrictions)
         delete m_root;
     }
     m_root = AbstractLevel::create(restrictions, NoRestriction, this);
-    connect(m_root, SIGNAL(beginInsert(int,int,quint32)), SLOT(levelBeginInsert(int,int,quint32)));
-    connect(m_root, SIGNAL(beginRemove(int,int,quint32)), SLOT(levelBeginRemove(int,int,quint32)));
-    connect(m_root, SIGNAL(endInsert()), SLOT(levelEndInsert()));
-    connect(m_root, SIGNAL(endRemove()), SLOT(levelEndRemove()));
+    connect(m_root, &AbstractLevel::beginInsert, this, &ClientModel::levelBeginInsert);
+    connect(m_root, &AbstractLevel::beginRemove, this, &ClientModel::levelBeginRemove);
+    connect(m_root, &AbstractLevel::endInsert, this, &ClientModel::levelEndInsert);
+    connect(m_root, &AbstractLevel::endRemove, this, &ClientModel::levelEndRemove);
     m_root->init();
     endResetModel();
 }
@@ -904,7 +887,7 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         // we do not filter out screen, desktop and activity
         return true;
     }
-    X11Client *client = qvariant_cast<KWin::X11Client *>(data);
+    AbstractClient *client = qvariant_cast<KWin::AbstractClient *>(data);
     if (!client) {
         return false;
     }

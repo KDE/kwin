@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2011 Thomas Lübking <thomas.luebking@web.de>
-Copyright (C) 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2011 Thomas Lübking <thomas.luebking@web.de>
+    SPDX-FileCopyrightText: 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwinanimationeffect.h"
 #include "anidata_p.h"
@@ -27,13 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDebug>
 #include <QVector3D>
 
+namespace KWin
+{
+
 QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2)
 {
     dbg.nospace() << fpx2[0] << "," << fpx2[1] << QString(fpx2.isValid() ? QStringLiteral(" (valid)") : QStringLiteral(" (invalid)"));
     return dbg.space();
 }
-
-namespace KWin {
 
 QElapsedTimer AnimationEffect::s_clock;
 
@@ -50,9 +40,6 @@ public:
     QWeakPointer<FullScreenEffectLock> m_fullScreenEffectLock;
     bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
 };
-}
-
-using namespace KWin;
 
 quint64 AnimationEffectPrivate::m_animCounter = 0;
 
@@ -89,7 +76,7 @@ void AnimationEffect::init()
 bool AnimationEffect::isActive() const
 {
     Q_D(const AnimationEffect);
-    return !d->m_animations.isEmpty();
+    return !d->m_animations.isEmpty() && !effects->isScreenLocked();
 }
 
 
@@ -1053,5 +1040,7 @@ AnimationEffect::AniMap AnimationEffect::state() const
     Q_D(const AnimationEffect);
     return d->m_animations;
 }
+
+} // namespace KWin
 
 #include "moc_kwinanimationeffect.cpp"

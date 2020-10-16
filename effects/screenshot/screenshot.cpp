@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- Copyright (C) 2010 Martin Gräßlin <mgraesslin@kde.org>
- Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies)
+    SPDX-FileCopyrightText: 2010 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "screenshot.h"
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -34,12 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 #include <xcb/xcb_image.h>
 #include <QPoint>
+#include <QGuiApplication>
+#include <QScreen>
 
 #include <KLocalizedString>
 #include <KNotification>
 
 #include <unistd.h>
 #include "../service_utils.h"
+
+Q_DECLARE_METATYPE(QStringList)
 
 class ComparableQPoint : public QPoint
 {
@@ -77,6 +70,8 @@ const static QString s_errorInvalidAreaMsg = QStringLiteral("Invalid area reques
 const static QString s_errorInvalidScreen = QStringLiteral("org.kde.kwin.Screenshot.Error.InvalidScreen");
 const static QString s_errorInvalidScreenMsg = QStringLiteral("Invalid screen requested");
 const static QString s_dbusInterfaceName = QStringLiteral("org.kde.kwin.Screenshot");
+const static QString s_errorScreenMissing = QStringLiteral("org.kde.kwin.Screenshot.Error.ScreenMissing");
+const static QString s_errorScreenMissingMsg = QStringLiteral("Screen not found");
 
 bool ScreenShotEffect::supported()
 {
@@ -252,7 +247,7 @@ void ScreenShotEffect::postPaintScreen()
         double right = m_scheduledScreenshot->width();
         double bottom = m_scheduledScreenshot->height();
         if (m_scheduledScreenshot->hasDecoration() && m_type & INCLUDE_DECORATION) {
-            foreach (const WindowQuad & quad, d.quads) {
+            for (const WindowQuad &quad : qAsConst(d.quads)) {
                 // we need this loop to include the decoration padding
                 left   = qMin(left, quad.left());
                 top    = qMin(top, quad.top());
@@ -265,7 +260,7 @@ void ScreenShotEffect::postPaintScreen()
             top = m_scheduledScreenshot->height();
             right = 0;
             bottom = 0;
-            foreach (const WindowQuad & quad, d.quads) {
+            for (const WindowQuad &quad : qAsConst(d.quads)) {
                 if (quad.type() == WindowQuadContents) {
                     newQuads << quad;
                     left   = qMin(left, quad.left());
@@ -333,22 +328,8 @@ void ScreenShotEffect::postPaintScreen()
                 const xcb_pixmap_t xpix = xpixmapFromImage(img);
                 emit screenshotCreated(xpix);
                 m_windowMode = WindowMode::NoCapture;
-            } else if (m_windowMode == WindowMode::File) {
+            } else if (m_windowMode == WindowMode::File || m_windowMode == WindowMode::FileDescriptor) {
                 sendReplyImage(img);
-            } else if (m_windowMode == WindowMode::FileDescriptor) {
-                QtConcurrent::run(
-                    [] (int fd, const QImage &img) {
-                        QFile file;
-                        if (file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
-                            QDataStream ds(&file);
-                            ds << img;
-                            file.close();
-                        } else {
-                            close(fd);
-                        }
-                    }, m_fd, img);
-                m_windowMode = WindowMode::NoCapture;
-                m_fd = -1;
             }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (xImage) {
@@ -380,39 +361,43 @@ void ScreenShotEffect::postPaintScreen()
             m_multipleOutputsRendered = m_multipleOutputsRendered.united(intersection);
             if (m_multipleOutputsRendered.boundingRect() == m_scheduledGeometry) {
 
-                // Recompute coordinates
-                if (m_nativeSize) {
-                    computeCoordinatesAfterScaling();
+                if (m_orderImg.isEmpty()) {
+                    // Recompute coordinates
+                    if (m_nativeSize) {
+                        computeCoordinatesAfterScaling();
+                    }
+
+                    // find the output image size
+                    int width = 0;
+                    int height = 0;
+                    QMap<ComparableQPoint, QImage>::const_iterator i;
+                    for (i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
+                        const auto pos = i.key();
+                        const auto img = i.value();
+
+                        width = qMax(width, pos.x() + img.width());
+                        height = qMax(height, pos.y() + img.height());
+                    }
+
+                    QImage multipleOutputsImage = QImage(width, height, QImage::Format_ARGB32);
+
+                    QPainter p;
+                    p.begin(&multipleOutputsImage);
+
+                    // reassemble images together
+                    for (i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
+                        auto pos = i.key();
+                        auto img = i.value();
+                        // disable dpr rendering, we already took care of this
+                        img.setDevicePixelRatio(1.0);
+                        p.drawImage(pos, img);
+                    }
+                    p.end();
+
+                    sendReplyImage(multipleOutputsImage);
+                } else {
+                    sendReplyImages();
                 }
-
-                // find the output image size
-                int width = 0;
-                int height = 0;
-                QMap<ComparableQPoint, QImage>::const_iterator i;
-                for (i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
-                    const auto pos = i.key();
-                    const auto img = i.value();
-
-                    width = qMax(width, pos.x() + img.width());
-                    height = qMax(height, pos.y() + img.height());
-                }
-
-                QImage multipleOutputsImage = QImage(width, height, QImage::Format_ARGB32);
-
-                QPainter p;
-                p.begin(&multipleOutputsImage);
-
-                // reassemble images together
-                for (i = m_cacheOutputsImages.constBegin(); i != m_cacheOutputsImages.constEnd(); ++i) {
-                    auto pos = i.key();
-                    auto img = i.value();
-                    // disable dpr rendering, we already took care of this
-                    img.setDevicePixelRatio(1.0);
-                    p.drawImage(pos, img);
-                }
-                p.end();
-
-                sendReplyImage(multipleOutputsImage);
             }
 
         } else {
@@ -436,16 +421,49 @@ void ScreenShotEffect::sendReplyImage(const QImage &img)
                     close(fd);
                 }
             }, m_fd, img);
-        m_fd = -1;
     } else {
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(saveTempImage(img)));
     }
+
+    clearState();
+}
+
+void ScreenShotEffect::sendReplyImages()
+{
+    QList<QImage> outputImages;
+    for (const QPoint &pos : qAsConst(m_orderImg)) {
+        auto it = m_cacheOutputsImages.constFind(pos);
+        if (it != m_cacheOutputsImages.constEnd()) {
+            outputImages.append(*it);
+        }
+    }
+    QtConcurrent::run(
+                [] (int fd, const QList<QImage> &outputImages) {
+        QFile file;
+        if (file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
+            QDataStream ds(&file);
+            ds.setVersion(QDataStream::Qt_DefaultCompiledVersion);
+            ds << outputImages;
+            file.close();
+        } else {
+            close(fd);
+        }
+    }, m_fd, outputImages);
+
+    clearState();
+}
+
+void ScreenShotEffect::clearState()
+{
+    m_fd = -1;
     m_scheduledGeometry = QRect();
     m_multipleOutputsRendered = QRegion();
     m_captureCursor = false;
     m_windowMode = WindowMode::NoCapture;
     m_cacheOutputsImages.clear();
     m_cachedOutputGeometry = QRect();
+    m_nativeSize = false;
+    m_orderImg.clear();
 }
 
 QString ScreenShotEffect::saveTempImage(const QImage &img)
@@ -644,6 +662,7 @@ QString ScreenShotEffect::screenshotScreen(int screen, bool captureCursor)
         return QString();
     }
     m_captureCursor = captureCursor;
+    m_nativeSize = true;
     m_replyMessage = message();
     setDelayedReply(true);
     effects->addRepaint(m_scheduledGeometry);
@@ -661,6 +680,7 @@ void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool capture
         return;
     }
     m_captureCursor = captureCursor;
+    m_nativeSize = true;
 
     showInfoMessage(InfoMessageMode::Screen);
     effects->startInteractivePositionSelection(
@@ -681,6 +701,48 @@ void ScreenShotEffect::screenshotScreen(QDBusUnixFileDescriptor fd, bool capture
             }
         }
     );
+}
+
+void ScreenShotEffect::screenshotScreens(QDBusUnixFileDescriptor fd, const QStringList &screensNames, bool captureCursor, bool shouldReturnNativeSize)
+{
+    if (!checkCall()) {
+        return;
+    }
+    m_fd = dup(fd.fileDescriptor());
+    if (m_fd == -1) {
+        sendErrorReply(s_errorFd, s_errorFdMsg);
+        return;
+    }
+    m_captureCursor = captureCursor;
+    m_nativeSize = shouldReturnNativeSize;
+    m_orderImg = QList<QPoint>();
+    m_scheduledGeometry = QRect();
+
+    const QList<QScreen *> screens = QGuiApplication::screens();
+
+    for (const QScreen *screen : screens) {
+        const int indexName = screensNames.indexOf(screen->name());
+        if (indexName != -1) {
+            const auto screenGeom = screen->geometry();
+            if (!screenGeom.isValid()) {
+                close(m_fd);
+                clearState();
+                sendErrorReply(s_errorScreenMissing, s_errorScreenMissingMsg + " : " + screen->name());
+                return;
+            }
+            m_scheduledGeometry = m_scheduledGeometry.united(screenGeom);
+            m_orderImg.insert(indexName, screenGeom.topLeft());
+        }
+    }
+
+    if (m_orderImg.size() != screensNames.size()) {
+        close(m_fd);
+        clearState();
+        sendErrorReply(s_errorScreenMissing, s_errorScreenMissingMsg);
+        return;
+    }
+
+    effects->addRepaint(m_scheduledGeometry);
 }
 
 QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height, bool captureCursor)
@@ -758,7 +820,7 @@ void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offse
 void ScreenShotEffect::convertFromGLImage(QImage &img, int w, int h)
 {
     // from QtOpenGL/qgl.cpp
-    // Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies)
+    // SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
     // see https://github.com/qt/qtbase/blob/dev/src/opengl/qgl.cpp
     if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
         // OpenGL gives RGBA; Qt wants ARGB

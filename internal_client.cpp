@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2019 Martin Flöser <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2019 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "internal_client.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
@@ -148,11 +137,6 @@ QSize InternalClient::maxSize() const
     return m_internalWindow->maximumSize();
 }
 
-void InternalClient::debug(QDebug &stream) const
-{
-    stream.nospace() << "\'InternalClient:" << m_internalWindow << "\'";
-}
-
 QRect InternalClient::transparentRect() const
 {
     return QRect();
@@ -227,6 +211,11 @@ bool InternalClient::isResizable() const
     return true;
 }
 
+bool InternalClient::isPlaceable() const
+{
+    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
+}
+
 bool InternalClient::noBorder() const
 {
     return m_userNoBorder || m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
@@ -251,14 +240,6 @@ bool InternalClient::isLockScreen() const
 {
     if (m_internalWindow) {
         return m_internalWindow->property("org_kde_ksld_emergency").toBool();
-    }
-    return false;
-}
-
-bool InternalClient::isInputMethod() const
-{
-    if (m_internalWindow) {
-        return m_internalWindow->property("__kwin_input_method").toBool();
     }
     return false;
 }
@@ -335,11 +316,6 @@ void InternalClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     }
 }
 
-bool InternalClient::supportsWindowRules() const
-{
-    return false;
-}
-
 AbstractClient *InternalClient::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)
@@ -396,15 +372,6 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     if (check_workspace_pos) {
         checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
     }
-}
-
-void InternalClient::updateColorScheme()
-{
-    AbstractClient::updateColorScheme(QString());
-}
-
-void InternalClient::showOnScreenEdge()
-{
 }
 
 void InternalClient::destroyClient()

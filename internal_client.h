@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2019 Martin Flöser <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2019 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #pragma once
 
 #include "abstract_client.h"
@@ -44,7 +33,6 @@ public:
     QPoint clientContentPos() const override;
     QSize minSize() const override;
     QSize maxSize() const override;
-    void debug(QDebug &stream) const override;
     QRect transparentRect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     double opacity() const override;
@@ -57,12 +45,12 @@ public:
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool isResizable() const override;
+    bool isPlaceable() const override;
     bool noBorder() const override;
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
     bool isInternal() const override;
     bool isLockScreen() const override;
-    bool isInputMethod() const override;
     bool isOutline() const override;
     quint32 windowId() const override;
     bool isShown(bool shaded_is_shown) const override;
@@ -70,14 +58,11 @@ public:
     void hideClient(bool hide) override;
     void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
-    bool supportsWindowRules() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void setOnAllActivities(bool set) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
-    void updateColorScheme() override;
-    void showOnScreenEdge() override;
     void destroyClient() override;
 
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);

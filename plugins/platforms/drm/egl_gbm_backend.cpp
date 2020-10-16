@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "egl_gbm_backend.h"
 // kwin
 #include "composite.h"
@@ -26,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "options.h"
 #include "screens.h"
+#include "drm_gpu.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwineglimagetexture.h>
@@ -35,15 +25,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
+EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
     : AbstractEglBackend()
     , m_backend(drmBackend)
+    , m_gpu(gpu)
 {
     // Egl is always direct rendering.
     setIsDirectRendering(true);
     setSyncsToVBlank(true);
-    connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::createOutput);
-    connect(m_backend, &DrmBackend::outputRemoved, this, &EglGbmBackend::removeOutput);
+    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglGbmBackend::createOutput);
+    connect(m_gpu, &DrmGpu::outputDisabled, this, &EglGbmBackend::removeOutput);
 }
 
 EglGbmBackend::~EglGbmBackend()
@@ -83,7 +74,7 @@ void EglGbmBackend::cleanupOutput(Output &output)
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    EGLDisplay display = m_backend->sceneEglDisplay();
+    EGLDisplay display = eglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
@@ -99,12 +90,12 @@ bool EglGbmBackend::initializeEgl()
             return false;
         }
 
-        auto device = gbm_create_device(m_backend->fd());
+        auto device = gbm_create_device(m_gpu->fd());
         if (!device) {
             setFailed("Could not create gbm device");
             return false;
         }
-        m_backend->setGbmDevice(device);
+        m_gpu->setGbmDevice(device);
 
         display = eglGetPlatformDisplayEXT(platform, device, nullptr);
     }
@@ -158,7 +149,7 @@ bool EglGbmBackend::initRenderingContext()
 
 std::shared_ptr<GbmSurface> EglGbmBackend::createGbmSurface(const QSize &size) const
 {
-    auto gbmSurface = std::make_shared<GbmSurface>(m_backend->gbmDevice(),
+    auto gbmSurface = std::make_shared<GbmSurface>(m_gpu->gbmDevice(),
                                                    size.width(), size.height(),
                                                    GBM_FORMAT_XRGB8888,
                                                    GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
@@ -354,12 +345,7 @@ bool EglGbmBackend::makeContextCurrent(const Output &output) const
         return false;
     }
     if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
-        qCCritical(KWIN_DRM) << "Make Context Current failed";
-        return false;
-    }
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_DRM) << "Error occurred while creating context " << error;
+        qCCritical(KWIN_DRM) << "Make Context Current failed" << eglGetError();
         return false;
     }
     return true;
@@ -428,10 +414,55 @@ void EglGbmBackend::present()
     // Not in use. This backend does per-screen rendering.
 }
 
+static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
+{
+    const int height = output->modeSize().height();
+
+    const QMatrix4x4 matrix = output->transformation();
+
+    QVector<EGLint> rects;
+    rects.reserve(region.rectCount() * 4);
+    for (const QRect &_rect : region) {
+        const QRect rect = matrix.mapRect(_rect);
+
+        rects << rect.left();
+        rects << height - (rect.y() + rect.height());
+        rects << rect.width();
+        rects << rect.height();
+    }
+    return rects;
+}
+
+void EglGbmBackend::aboutToStartPainting(const QRegion &damagedRegion)
+{
+    // See EglGbmBackend::endRenderingFrameForScreen comment for the reason why we only support screenId=0
+    if (m_outputs.count() > 1) {
+        return;
+    }
+
+    const Output &output = m_outputs.at(0);
+    if (output.bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
+        const QRegion region = damagedRegion & output.output->geometry();
+
+        QVector<EGLint> rects = regionToRects(region, output.output);
+        const bool correct = eglSetDamageRegionKHR(eglDisplay(), output.eglSurface,
+                                                   rects.data(), rects.count()/4);
+        if (!correct) {
+            qCWarning(KWIN_DRM) << "failed eglSetDamageRegionKHR" << eglGetError();
+        }
+    }
+}
+
 void EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
-    eglSwapBuffers(eglDisplay(), output.eglSurface);
-    output.buffer = m_backend->createBuffer(output.gbmSurface);
+    if (supportsSwapBuffersWithDamage()) {
+        QVector<EGLint> rects = regionToRects(output.damageHistory.constFirst(), output.output);
+        eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
+                                    rects.data(), rects.count()/4);
+    } else {
+        eglSwapBuffers(eglDisplay(), output.eglSurface);
+    }
+    output.buffer = new DrmSurfaceBuffer(m_gpu->fd(), output.gbmSurface);
 
     Q_EMIT output.output->outputChange(damagedRegion);
     m_backend->present(output.buffer, output.output);

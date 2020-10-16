@@ -1,19 +1,8 @@
 /*
- * Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #pragma once
 
@@ -22,6 +11,11 @@
 namespace KWin
 {
 
+enum class SyncMode {
+    Sync,
+    Async,
+};
+
 class WaylandClient : public AbstractClient
 {
     Q_OBJECT
@@ -29,6 +23,7 @@ class WaylandClient : public AbstractClient
 public:
     WaylandClient(KWaylandServer::SurfaceInterface *surface);
 
+    QRect bufferGeometry() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
     QStringList activities() const override;
@@ -39,15 +34,29 @@ public:
     quint32 windowId() const override;
     pid_t pid() const override;
     bool isLockScreen() const override;
-    bool isInputMethod() const override;
     bool isLocalhost() const override;
     double opacity() const override;
     void setOpacity(double opacity) override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
+    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
+    using AbstractClient::move;
+    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     void killWindow() override;
     QByteArray windowRole() const override;
+    bool isShown(bool shaded_is_shown) const override;
+    bool isHiddenInternal() const override;
+    void hideClient(bool hide) override;
 
+    virtual QRect frameRectToBufferRect(const QRect &rect) const;
+    QRect requestedFrameGeometry() const;
+    QPoint requestedPos() const;
+    QSize requestedSize() const;
+    QRect requestedClientGeometry() const;
+    QSize requestedClientSize() const;
+    bool isHidden() const;
+
+    void updateDepth();
     void setCaption(const QString &caption);
 
 protected:
@@ -56,16 +65,31 @@ protected:
     void doSetActive() override;
     void updateCaption() override;
 
+    void setPositionSyncMode(SyncMode syncMode);
+    void setSizeSyncMode(SyncMode syncMode);
+    void cleanGrouping();
+    void cleanTabBox();
+
+    virtual void requestGeometry(const QRect &rect);
+    virtual void updateGeometry(const QRect &rect);
+
 private:
-    void updateClientArea();
     void updateClientOutputs();
     void updateIcon();
     void updateResourceName();
+    void internalShow();
+    void internalHide();
 
     QString m_captionNormal;
     QString m_captionSuffix;
     double m_opacity = 1.0;
+    QRect m_requestedFrameGeometry;
+    QRect m_bufferGeometry;
+    QRect m_requestedClientGeometry;
+    SyncMode m_positionSyncMode = SyncMode::Sync;
+    SyncMode m_sizeSyncMode = SyncMode::Sync;
     quint32 m_windowId;
+    bool m_isHidden = false;
 };
 
 } // namespace KWin

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "udev.h"
 #include "logind.h"
 // Qt
@@ -53,7 +42,7 @@ public:
     };
     void addMatch(Match match, const char *name);
     void scan();
-    UdevDevice::Ptr find(std::function<bool(const UdevDevice::Ptr &)> test);
+    std::vector<UdevDevice::Ptr> find();
 
 private:
     Udev *m_udev;
@@ -102,14 +91,15 @@ void UdevEnumerate::scan()
     udev_enumerate_scan_devices(m_enumerate.data());
 }
 
-UdevDevice::Ptr UdevEnumerate::find(std::function<bool(const UdevDevice::Ptr &device)> test)
+std::vector<UdevDevice::Ptr> UdevEnumerate::find()
 {
+    std::vector<UdevDevice::Ptr> vect;
     if (m_enumerate.isNull()) {
-        return UdevDevice::Ptr();
+        vect.push_back( UdevDevice::Ptr() );
+        return vect;
     }
     QString defaultSeat = QStringLiteral("seat0");
     udev_list_entry *it = udev_enumerate_get_list_entry(m_enumerate.data());
-    UdevDevice::Ptr firstFound;
     while (it) {
         auto current = it;
         it = udev_list_entry_get_next(it);
@@ -124,62 +114,85 @@ UdevDevice::Ptr UdevEnumerate::find(std::function<bool(const UdevDevice::Ptr &de
         if (deviceSeat != LogindIntegration::self()->seat()) {
             continue;
         }
-        if (test(device)) {
-            return device;
-        }
-        if (!firstFound) {
-            firstFound.swap(device);
-        }
+        vect.push_back(std::move(device));
     }
-    return firstFound;
+    return vect;
 }
 
-UdevDevice::Ptr Udev::primaryGpu()
+std::vector<UdevDevice::Ptr> Udev::listGPUs()
 {
     if (!m_udev) {
-        return UdevDevice::Ptr();
+        std::vector<UdevDevice::Ptr> vect;
+        vect.push_back(UdevDevice::Ptr());
+        return vect;
     }
 #if defined(Q_OS_FREEBSD)
-    return deviceFromSyspath("/dev/dri/card0");
+    std::vector<UdevDevice::Ptr> r;
+    r.push_back(deviceFromSyspath("/dev/dri/card0"));
+    return r;
 #else
     UdevEnumerate enumerate(this);
     enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
-    enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]*");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]");
     enumerate.scan();
-    return enumerate.find([](const UdevDevice::Ptr &device) {
-        auto pci = device->getParentWithSubsystemDevType("pci");
-        if (!pci) {
-            return false;
+    auto vect = enumerate.find();
+    std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
+        auto pci1 = device1->getParentWithSubsystemDevType("pci");
+        auto pci2 = device2->getParentWithSubsystemDevType("pci");
+        const char *systAttrValue;
+        // if set as boot GPU, prefer 1
+        if (pci1) {
+            systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return true;
+            }
         }
-        const char *systAttrValue = udev_device_get_sysattr_value(pci, "boot_vga");
-        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-            return true;
+        // if set as boot GPU, prefer 2
+        if (pci2) {
+            systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return false;
+            }
         }
-        return false;
+        return true;
     });
+    return vect;
 #endif
 }
 
-UdevDevice::Ptr Udev::primaryFramebuffer()
+std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
 {
     if (!m_udev) {
-        return UdevDevice::Ptr();
+        std::vector<UdevDevice::Ptr> vect;
+        vect.push_back(UdevDevice::Ptr());
+        return vect;
     }
     UdevEnumerate enumerate(this);
     enumerate.addMatch(UdevEnumerate::Match::SubSystem, "graphics");
-    enumerate.addMatch(UdevEnumerate::Match::SysName, "fb[0-9]*");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "fb[0-9]");
     enumerate.scan();
-    return enumerate.find([](const UdevDevice::Ptr &device) {
-        auto pci = device->getParentWithSubsystemDevType("pci");
-        if (!pci) {
-            return false;
+    auto vect = enumerate.find();
+    std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
+        auto pci1 = device1->getParentWithSubsystemDevType("pci");
+        auto pci2 = device2->getParentWithSubsystemDevType("pci");
+        const char *systAttrValue;
+        // if set as boot GPU, prefer 1
+        if (pci1) {
+            systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return true;
+            }
         }
-        const char *systAttrValue = udev_device_get_sysattr_value(pci, "boot_vga");
-        if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-            return true;
+        // if set as boot GPU, prefer 2
+        if (pci2) {
+            systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
+            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
+                return false;
+            }
         }
-        return false;
+        return true;
     });
+    return vect;
 }
 
 UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)

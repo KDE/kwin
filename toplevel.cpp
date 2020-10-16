@@ -1,24 +1,14 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "toplevel.h"
 
+#include "abstract_client.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -56,9 +46,9 @@ Toplevel::Toplevel()
     , m_screen(0)
     , m_skipCloseAnimation(false)
 {
-    connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
-    connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
-    connect(screens(), SIGNAL(countChanged(int,int)), SLOT(checkScreen()));
+    connect(this, &Toplevel::damaged, this, &Toplevel::needsRepaint);
+    connect(screens(), &Screens::changed, this, &Toplevel::checkScreen);
+    connect(screens(), &Screens::countChanged, this, &Toplevel::checkScreen);
     setupCheckScreenConnection();
     connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
@@ -72,12 +62,35 @@ Toplevel::~Toplevel()
     delete info;
 }
 
-QDebug& operator<<(QDebug& stream, const Toplevel* cl)
+QDebug operator<<(QDebug debug, const Toplevel *toplevel)
 {
-    if (cl == nullptr)
-        return stream << "\'NULL\'";
-    cl->debug(stream);
-    return stream;
+    QDebugStateSaver saver(debug);
+    debug.nospace();
+    if (toplevel) {
+        debug << toplevel->metaObject()->className() << '(' << static_cast<const void *>(toplevel);
+        debug << ", windowId=0x" << Qt::hex << toplevel->windowId() << Qt::dec;
+        if (const KWaylandServer::SurfaceInterface *surface = toplevel->surface()) {
+            debug << ", surface=" << surface;
+        }
+        const AbstractClient *client = qobject_cast<const AbstractClient *>(toplevel);
+        if (client) {
+            if (!client->isPopupWindow()) {
+                debug << ", caption=" << client->caption();
+            }
+            if (client->transientFor()) {
+                debug << ", transientFor=" << client->transientFor();
+            }
+        }
+        if (debug.verbosity() > 2) {
+            debug << ", frameGeometry=" << toplevel->frameGeometry();
+            debug << ", resourceName=" << toplevel->resourceName();
+            debug << ", resourceClass=" << toplevel->resourceClass();
+        }
+        debug << ')';
+    } else {
+        debug << "Toplevel(0x0)";
+    }
+    return debug;
 }
 
 void Toplevel::detectShape(xcb_window_t id)
@@ -315,10 +328,10 @@ void Toplevel::damageNotifyEvent()
 {
     m_isDamaged = true;
 
-    // Note: The rect is supposed to specify the damage extents,
+    // Note: The damage is supposed to specify the damage extents,
     //       but we don't know it at this point. No one who connects
     //       to this signal uses the rect however.
-    emit damaged(this, QRect());
+    emit damaged(this, {});
 }
 
 bool Toplevel::compositing() const
@@ -409,12 +422,12 @@ void Toplevel::addDamageFull()
     const int offsetX = bufferRect.x() - frameRect.x();
     const int offsetY = bufferRect.y() - frameRect.y();
 
-    const QRect damagedRect = QRect(0, 0, bufferRect.width(), bufferRect.height());
+    const QRect damagedRect(0, 0, bufferRect.width(), bufferRect.height());
 
     damage_region = damagedRect;
     repaints_region |= damagedRect.translated(offsetX, offsetY);
 
-    emit damaged(this, damagedRect);
+    emit damaged(this, damage_region);
 }
 
 void Toplevel::resetDamage()
@@ -575,6 +588,7 @@ void Toplevel::updateShadow()
 {
     QRect dirtyRect;  // old & new shadow region
     const QRect oldVisibleRect = visibleRect();
+    addWorkspaceRepaint(oldVisibleRect);
     if (shadow()) {
         dirtyRect = shadow()->shadowRegion().boundingRect();
         if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
@@ -740,9 +754,7 @@ void Toplevel::addDamage(const QRegion &damage)
 {
     m_isDamaged = true;
     damage_region += damage;
-    for (const QRect &r : damage) {
-        emit damaged(this, r);
-    }
+    emit damaged(this, damage);
 }
 
 QByteArray Toplevel::windowRole() const

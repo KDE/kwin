@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "x11cursor.h"
 #include "input.h"
 #include "keyboard_input.h"
@@ -43,10 +32,10 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
 {
     Cursors::self()->setMouse(this);
     m_resetTimeStampTimer->setSingleShot(true);
-    connect(m_resetTimeStampTimer, SIGNAL(timeout()), SLOT(resetTimeStamp()));
+    connect(m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
     // TODO: How often do we really need to poll?
     m_mousePollingTimer->setInterval(50);
-    connect(m_mousePollingTimer, SIGNAL(timeout()), SLOT(mousePolled()));
+    connect(m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::mousePolled);
 
     connect(this, &Cursor::themeChanged, this, [this] { m_cursors.clear(); });
 

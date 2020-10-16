@@ -1,22 +1,8 @@
 /*
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 import QtQuick 2.14
 import QtQuick.Layouts 1.14
@@ -39,10 +25,25 @@ ScrollViewKCM {
         clip: true
 
         model: enabledRulesModel
-        delegate: RuleItemDelegate {}
+        delegate: RuleItemDelegate {
+            ListView.onAdd: {
+                // Try to position the new added item into the visible view
+                // FIXME: It only works when moving towards the end of the list
+                ListView.view.currentIndex = index
+            }
+        }
         section {
             property: "section"
             delegate: Kirigami.ListSectionHeader { label: section }
+        }
+
+        highlightRangeMode: ListView.ApplyRange
+
+        add: Transition {
+            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration * 3 }
+        }
+        removeDisplaced: Transition {
+            NumberAnimation { property: "y"; duration: Kirigami.Units.longDuration }
         }
 
         Kirigami.PlaceholderMessage {
@@ -59,7 +60,7 @@ ScrollViewKCM {
             }
             width: parent.width - (units.largeSpacing * 4)
             helpfulAction: QQC2.Action {
-                text: i18n("Add Properties...")
+                text: i18n("Add Property...")
                 icon.name: "list-add-symbolic"
                 onTriggered: {
                     propertySheet.open();
@@ -68,7 +69,6 @@ ScrollViewKCM {
         }
     }
 
-    // FIXME: InlineMessage.qml:241:13: QML Label: Binding loop detected for property "verticalAlignment"
     header: Kirigami.InlineMessage {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -78,7 +78,7 @@ ScrollViewKCM {
 
     footer:  RowLayout {
         QQC2.Button {
-            text: checked ? i18n("Close") : i18n("Add Properties...")
+            text: checked ? i18n("Close") : i18n("Add Property...")
             icon.name: checked ? "dialog-close" : "list-add-symbolic"
             checkable: true
             checked: propertySheet.sheetOpen
@@ -113,7 +113,7 @@ ScrollViewKCM {
 
     Connections {
         target: rulesModel
-        onSuggestionsChanged: {
+        function onSuggestionsChanged() {
             propertySheet.sheetOpen = true;
         }
     }
@@ -124,7 +124,7 @@ ScrollViewKCM {
         parent: view
 
         header: Kirigami.Heading {
-            text: i18n("Select properties")
+            text: i18n("Add property to the rule")
         }
         footer: Kirigami.SearchField {
             id: searchField
@@ -194,6 +194,9 @@ ScrollViewKCM {
                     if (model.suggested != null) {
                         model.value = model.suggested;
                         model.suggested = null;
+                    }
+                    if (!overlayModel.onlySuggestions) {
+                        propertySheet.close();
                     }
                 }
             }

@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "pointer_input.h"
 #include "platform.h"
 #include "x11client.h"
@@ -47,8 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHoverEvent>
 #include <QWindow>
 #include <QPainter>
-// Wayland
-#include <wayland-cursor.h>
 
 #include <linux/input.h>
 
@@ -192,7 +179,7 @@ void PointerInputRedirection::updateToReset()
         setDecoration(nullptr);
     }
     if (focus()) {
-        if (AbstractClient *c = qobject_cast<AbstractClient*>(focus().data())) {
+        if (AbstractClient *c = qobject_cast<AbstractClient*>(focus())) {
             c->leaveEvent();
         }
         disconnect(m_focusGeometryConnection);
@@ -649,7 +636,7 @@ void PointerInputRedirection::setEnableConstraints(bool set)
 
 void PointerInputRedirection::updatePointerConstraints()
 {
-    if (focus().isNull()) {
+    if (!focus()) {
         return;
     }
     const auto s = focus()->surface();
@@ -673,7 +660,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        const QRegion r = getConstraintRegion(focus().data(), cf.data());
+        const QRegion r = getConstraintRegion(focus(), cf.data());
         if (canConstrain && r.contains(m_pos.toPoint())) {
             cf->setConfined(true);
             m_confined = true;
@@ -687,7 +674,7 @@ void PointerInputRedirection::updatePointerConstraints()
                         return;
                     }
                     const auto cf = s->confinedPointer();
-                    if (!getConstraintRegion(focus().data(), cf.data()).contains(m_pos.toPoint())) {
+                    if (!getConstraintRegion(focus(), cf.data()).contains(m_pos.toPoint())) {
                         // pointer no longer in confined region, break the confinement
                         cf->setConfined(false);
                         m_confined = false;
@@ -719,7 +706,7 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        const QRegion r = getConstraintRegion(focus().data(), lock.data());
+        const QRegion r = getConstraintRegion(focus(), lock.data());
         if (canConstrain && r.contains(m_pos.toPoint())) {
             lock->setLocked(true);
             m_locked = true;
@@ -795,7 +782,7 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
         return pos;
     }
 
-    const QRegion confinementRegion = getConstraintRegion(focus().data(), cf.data());
+    const QRegion confinementRegion = getConstraintRegion(focus(), cf.data());
     if (confinementRegion.contains(pos.toPoint())) {
         return pos;
     }
@@ -1351,7 +1338,7 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::Decoration);
         return;
     }
-    if (!m_pointer->focus().isNull() && waylandServer()->seat()->focusedPointer()) {
+    if (m_pointer->focus() && waylandServer()->seat()->focusedPointer()) {
         setSource(CursorSource::PointerSurface);
         return;
     }
@@ -1420,9 +1407,10 @@ InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
     , m_currentButtons(Qt::NoButton)
 {
     Cursors::self()->setMouse(this);
-    connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(slotPosChanged(QPointF)));
-    connect(input(), SIGNAL(pointerButtonStateChanged(uint32_t,InputRedirection::PointerButtonState)),
-            SLOT(slotPointerButtonChanged()));
+    connect(input(), &InputRedirection::globalPointerChanged,
+            this, &InputRedirectionCursor::slotPosChanged);
+    connect(input(), &InputRedirection::pointerButtonStateChanged,
+            this, &InputRedirectionCursor::slotPointerButtonChanged);
 #ifndef KCMRULES
     connect(input(), &InputRedirection::keyboardModifiersChanged,
             this, &InputRedirectionCursor::slotModifiersChanged);

@@ -18,6 +18,7 @@ ki18n_wrap_ui(kcm_kwinoptions_PART_SRCS
 )
 
 kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_settings.kcfgc GENERATE_MOC)
+kconfig_add_kcfg_files(kcm_kwinoptions_PART_SRCS kwinoptions_kdeglobals_settings.kcfgc GENERATE_MOC)
 
 qt5_add_dbus_interface(kcm_kwinoptions_PART_SRCS ${KWin_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 add_library(kcm_kwinoptions MODULE ${kcm_kwinoptions_PART_SRCS})

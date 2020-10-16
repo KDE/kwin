@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2010 by Fredrik Höglund <fredrik@kde.org>
-Copyright (C) 2010 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2010 Fredrik Höglund <fredrik@kde.org>
+    SPDX-FileCopyrightText: 2010 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "lanczosfilter.h"
 #include "x11client.h"
@@ -43,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-LanczosFilter::LanczosFilter(QObject* parent)
+LanczosFilter::LanczosFilter(Scene *parent)
     : QObject(parent)
     , m_offscreenTex(nullptr)
     , m_offscreenTarget(nullptr)
@@ -51,6 +40,7 @@ LanczosFilter::LanczosFilter(QObject* parent)
     , m_shader(nullptr)
     , m_uOffsets(0)
     , m_uKernel(0)
+    , m_scene(parent)
 {
 }
 
@@ -161,7 +151,7 @@ void LanczosFilter::createKernel(float delta, int *size)
         values[i] = val;
     }
 
-    memset(m_kernel, 0, 16 * sizeof(QVector4D));
+    m_kernel.fill(QVector4D());
 
     // Normalize the kernel
     for (int i = 0; i < kernelSize; i++) {
@@ -174,7 +164,7 @@ void LanczosFilter::createKernel(float delta, int *size)
 
 void LanczosFilter::createOffsets(int count, float width, Qt::Orientation direction)
 {
-    memset(m_offsets, 0, 16 * sizeof(QVector2D));
+    m_offsets.fill(QVector2D());
     for (int i = 0; i < count; i++) {
         m_offsets[i] = (direction == Qt::Horizontal) ?
                        QVector2D(i / width, 0) : QVector2D(0, i / width);
@@ -390,6 +380,8 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
     if (event->timerId() == m_timer.timerId()) {
         m_timer.stop();
 
+        m_scene->makeOpenGLContextCurrent();
+
         delete m_offscreenTarget;
         delete m_offscreenTex;
         m_offscreenTarget = nullptr;
@@ -398,6 +390,8 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
         workspace()->forEachToplevel([this](Toplevel *toplevel) {
             discardCacheTexture(toplevel->effectWindow());
         });
+
+        m_scene->doneOpenGLContextCurrent();
     }
 }
 
@@ -412,8 +406,8 @@ void LanczosFilter::discardCacheTexture(EffectWindow *w)
 
 void LanczosFilter::setUniforms()
 {
-    glUniform2fv(m_uOffsets, 16, (const GLfloat*)m_offsets);
-    glUniform4fv(m_uKernel, 16, (const GLfloat*)m_kernel);
+    glUniform2fv(m_uOffsets, m_offsets.size(), (const GLfloat*)m_offsets.data());
+    glUniform4fv(m_uKernel, m_kernel.size(), (const GLfloat*)m_kernel.data());
 }
 
 } // namespace

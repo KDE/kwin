@@ -1,8 +1,10 @@
 [Unit]
 Description=KDE Window Manager
 Wants=plasma-kcminit.service
+PartOf=graphical-session.target
 
 [Service]
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_x11 --replace
 BusName=org.kde.KWin
 Slice=session.slice
+Restart=on-failure

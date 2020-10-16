@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_SCENE_OPENGL_BACKEND_H
 #define KWIN_SCENE_OPENGL_BACKEND_H
 
@@ -75,6 +64,13 @@ public:
      * @return A region that if not empty will be repainted in addition to the damaged region
      */
     virtual QRegion prepareRenderingFrame() = 0;
+
+    /**
+     * Notifies about starting to paint.
+     *
+     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
+     */
+    virtual void aboutToStartPainting(const QRegion &damage);
 
     /**
      * @brief Backend specific code to handle the end of rendering a frame.
@@ -161,11 +157,18 @@ public:
         return m_haveBufferAge;
     }
 
-    /**
-     * @returns whether the context is surfaceless
-     */
-    bool isSurfaceLessContext() const {
-        return m_surfaceLessContext;
+    bool supportsPartialUpdate() const
+    {
+        return m_havePartialUpdate;
+    }
+    bool supportsSwapBuffersWithDamage() const
+    {
+        return m_haveSwapBuffersWithDamage;
+    }
+
+    bool supportsSurfacelessContext() const
+    {
+        return m_haveSurfacelessContext;
     }
 
     /**
@@ -252,6 +255,21 @@ protected:
         m_haveBufferAge = value;
     }
 
+    void setSupportsPartialUpdate(bool value)
+    {
+        m_havePartialUpdate = value;
+    }
+
+    void setSupportsSwapBuffersWithDamage(bool value)
+    {
+        m_haveSwapBuffersWithDamage = value;
+    }
+
+    void setSupportsSurfacelessContext(bool value)
+    {
+        m_haveSurfacelessContext = value;
+    }
+
     /**
      * @return const QRegion& Damage of previously rendered frame
      */
@@ -268,13 +286,6 @@ protected:
      */
     void startRenderTimer() {
         m_renderTimer.start();
-    }
-
-    /**
-     * @param set whether the context is surface less
-     */
-    void setSurfaceLessContext(bool set) {
-        m_surfaceLessContext = set;
     }
 
     /**
@@ -304,6 +315,15 @@ private:
      */
     bool m_haveBufferAge;
     /**
+     * @brief Whether the backend supports EGL_KHR_partial_update
+     */
+    bool m_havePartialUpdate;
+    bool m_haveSwapBuffersWithDamage = false;
+    /**
+     * @brief Whether the backend supports EGL_KHR_surfaceless_context.
+     */
+    bool m_haveSurfacelessContext = false;
+    /**
      * @brief Whether the initialization failed, of course default to @c false.
      */
     bool m_failed;
@@ -319,7 +339,6 @@ private:
      * @brief Timer to measure how long a frame renders.
      */
     QElapsedTimer m_renderTimer;
-    bool m_surfaceLessContext = false;
 
     QList<QByteArray> m_extensions;
 };

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "scriptedeffect.h"
 #include "meta.h"
@@ -591,7 +580,7 @@ ScriptedEffect::ScriptedEffect()
     , m_chainPosition(0)
 {
     Q_ASSERT(effects);
-    connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
+    connect(m_engine, &QScriptEngine::signalHandlerException, this, &ScriptedEffect::signalHandlerException);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged, this, [this]() {
         Effect* fullScreenEffect = effects->activeFullScreenEffect();
         if (fullScreenEffect == m_activeFullScreenEffect) {
@@ -705,6 +694,11 @@ void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint met
     emit animationEnded(w, 0);
 }
 
+QString ScriptedEffect::pluginId() const
+{
+    return m_effectName;
+}
+
 bool ScriptedEffect::isActiveFullScreenEffect() const
 {
     return effects->activeFullScreenEffect() == this;
@@ -815,7 +809,7 @@ void ScriptedEffect::reconfigure(ReconfigureFlags flags)
 void ScriptedEffect::registerShortcut(QAction *a, QScriptValue callback)
 {
     m_shortcutCallbacks.insert(a, callback);
-    connect(a, SIGNAL(triggered(bool)), SLOT(globalShortcutTriggered()));
+    connect(a, &QAction::triggered, this, &ScriptedEffect::globalShortcutTriggered);
 }
 
 void ScriptedEffect::globalShortcutTriggered()

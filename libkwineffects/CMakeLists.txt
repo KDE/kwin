@@ -21,8 +21,6 @@ target_link_libraries(kwinxrenderutils
         Qt5::Core
         Qt5::Gui
 
-        Plasma::KWaylandServer
-
         XCB::RENDER
         XCB::XCB
         XCB::XFIXES
@@ -34,7 +32,7 @@ set_target_properties(kwinxrenderutils PROPERTIES
 )
 set_target_properties(kwinxrenderutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}xrenderutils)
 
-install(TARGETS kwinxrenderutils EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwinxrenderutils EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
@@ -45,30 +43,18 @@ set(kwin_EFFECTSLIB_SRCS
     logging.cpp
 )
 
-set(kwineffects_QT_LIBS
-    Qt5::DBus
-    Qt5::Widgets
-    Qt5::Quick
-)
-
-set(kwineffects_KDE_LIBS
-    KF5::ConfigCore
-    KF5::CoreAddons
-    KF5::WindowSystem
-    KF5::Declarative
-)
-
-set(kwineffects_XCB_LIBS
-    XCB::XCB
-)
-
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 generate_export_header(kwineffects EXPORT_FILE_NAME kwineffects_export.h)
 target_link_libraries(kwineffects
     PUBLIC
-        ${kwineffects_QT_LIBS}
-        ${kwineffects_KDE_LIBS}
-        ${kwineffects_XCB_LIBS}
+        KF5::ConfigCore
+        KF5::CoreAddons
+        KF5::WindowSystem
+        XCB::XCB
+        Plasma::KWaylandServer
+    PRIVATE
+        Qt5::Quick
+        KF5::Declarative
         kwinglutils
 )
 if (KWIN_HAVE_XRENDER_COMPOSITING)
@@ -80,7 +66,7 @@ set_target_properties(kwineffects PROPERTIES
 )
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
 
-install(TARGETS kwineffects EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwineffects EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
@@ -92,24 +78,17 @@ set(kwin_GLUTILSLIB_SRCS
     logging.cpp
 )
 
-macro(KWIN4_ADD_GLUTILS_BACKEND name glinclude)
-    include_directories(${glinclude})
-    add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
-    generate_export_header(${name} BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
-    target_link_libraries(${name} PUBLIC XCB::XCB KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem)
-    set_target_properties(${name} PROPERTIES
-        VERSION ${KWINEFFECTS_VERSION_STRING}
-        SOVERSION ${KWINEFFECTS_SOVERSION}
-    )
-    target_link_libraries(${name} PUBLIC ${ARGN})
+add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})
+generate_export_header(kwinglutils BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
+target_include_directories(kwinglutils PUBLIC ${epoxy_INCLUDE_DIR})
+target_link_libraries(kwinglutils PUBLIC XCB::XCB KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem ${epoxy_LIBRARY})
+set_target_properties(kwinglutils PROPERTIES
+    VERSION ${KWINEFFECTS_VERSION_STRING}
+    SOVERSION ${KWINEFFECTS_SOVERSION}
+    OUTPUT_NAME ${KWIN_NAME}glutils
+)
 
-    install(TARGETS ${name} EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-endmacro()
-
-kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
-set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
-
-target_link_libraries(kwinglutils PUBLIC ${epoxy_LIBRARY})
+install(TARGETS kwinglutils EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
@@ -126,3 +105,19 @@ install(FILES
     kwinglutils_funcs.h
     kwinxrenderutils.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinEffects")
+
+
+install(FILES  "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfig.cmake"
+               "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfigVersion.cmake"
+        DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+        COMPONENT Devel )
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KWinEffectsConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfig.cmake"
+  INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
+)
+
+install(EXPORT KWinEffectsTargets DESTINATION "${CMAKECONFIG_INSTALL_DIR}" FILE KWinEffectsTargets.cmake NAMESPACE KWinEffects:: )

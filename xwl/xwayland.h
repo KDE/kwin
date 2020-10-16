@@ -1,28 +1,18 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
-Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_XWL_XWAYLAND
 #define KWIN_XWL_XWAYLAND
 
 #include "xwayland_interface.h"
 
+#include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
 
@@ -32,15 +22,12 @@ class ApplicationWaylandAbstract;
 
 namespace Xwl
 {
-class DataBridge;
 
 class Xwayland : public XwaylandInterface
 {
     Q_OBJECT
 
 public:
-    static Xwayland *self();
-
     Xwayland(ApplicationWaylandAbstract *app, QObject *parent = nullptr);
     ~Xwayland() override;
 
@@ -54,7 +41,7 @@ public Q_SLOTS:
      * Starts the Xwayland server.
      *
      * This method will spawn an Xwayland process and will establish a new XCB connection to it.
-     * If a fatal error has occurred during the startup, the criticalError() signal is going to
+     * If an error has occurred during the startup, the errorOccurred() signal is going to
      * be emitted. If the Xwayland server has started successfully, the started() signal will be
      * emitted.
      *
@@ -75,6 +62,10 @@ public Q_SLOTS:
      * @see start()
      */
     void stop();
+    /**
+     * Restarts the Xwayland server. This method is equivalent to calling stop() and start().
+     */
+    void restart();
 
 Q_SIGNALS:
     /**
@@ -82,31 +73,39 @@ Q_SIGNALS:
      * ready to accept and manage X11 clients.
      */
     void started();
-    void criticalError(int code);
+    /**
+     * This signal is emitted when an error occurs with the Xwayland server.
+     */
+    void errorOccurred();
 
 private Q_SLOTS:
     void dispatchEvents();
+    void resetCrashCount();
 
     void handleXwaylandStarted();
-    void handleXwaylandFinished(int exitCode);
+    void handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void handleXwaylandCrashed();
     void handleXwaylandError(QProcess::ProcessError error);
+    void handleXwaylandReady();
 
 private:
     void installSocketNotifier();
     void uninstallSocketNotifier();
 
-    void createX11Connection();
+    bool createX11Connection();
     void destroyX11Connection();
-    void continueStartupWithX();
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
     int m_displayFileDescriptor = -1;
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
-    DataBridge *m_dataBridge = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
+    QTimer *m_resetCrashCountTimer = nullptr;
+    QByteArray m_displayName;
+    QFutureWatcher<QByteArray> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;
+    int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)
 };

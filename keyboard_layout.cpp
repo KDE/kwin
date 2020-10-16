@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "keyboard_layout.h"
 #include "keyboard_layout_switching.h"
 #include "keyboard_input.h"
@@ -143,20 +132,23 @@ void KeyboardLayout::initNotifierItem()
 
 void KeyboardLayout::switchToNextLayout()
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToNextLayout();
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::switchToPreviousLayout()
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToPreviousLayout();
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(index);
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::reconfigure()
@@ -211,23 +203,19 @@ void KeyboardLayout::loadShortcuts()
     }
 }
 
-void KeyboardLayout::keyEvent(KeyEvent *event)
+void KeyboardLayout::checkLayoutChange(quint32 previousLayout)
 {
-    if (!event->isAutoRepeat()) {
-        checkLayoutChange();
-    }
-}
-
-void KeyboardLayout::checkLayoutChange()
-{
+    // Get here on key event or DBus call.
+    // m_layout - layout saved last time OSD occurred
+    // previousLayout - actual layout just before potential layout change
+    // We need OSD if current layout deviates from any of these
     const auto layout = m_xkb->currentLayout();
-    if (m_layout == layout) {
-        return;
+    if (m_layout != layout || previousLayout != layout) {
+        m_layout = layout;
+        notifyLayoutChange();
+        updateNotifier();
+        emit layoutChanged();
     }
-    m_layout = layout;
-    notifyLayoutChange();
-    updateNotifier();
-    emit layoutChanged();
 }
 
 void KeyboardLayout::notifyLayoutChange()
@@ -315,8 +303,9 @@ bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
     if (it == layouts.end()) {
         return false;
     }
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(it.key());
-    m_keyboardLayout->checkLayoutChange();
+    m_keyboardLayout->checkLayoutChange(previousLayout);
     return true;
 }
 

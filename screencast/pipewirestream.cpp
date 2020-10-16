@@ -1,24 +1,10 @@
 /*
- * Copyright © 2018-2020 Red Hat, Inc
- * Copyright © 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library. If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *       Jan Grulich <jgrulich@redhat.com>
- *       Aleix Pol Gonzalez <aleixpol@kde.org>
- */
+    SPDX-FileCopyrightText: 2018-2020 Red Hat Inc
+    SPDX-FileCopyrightText: 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
+    SPDX-FileContributor: Jan Grulich <jgrulich@redhat.com>
+
+    SPDX-License-Identifier: LGPL-2.0-or-later
+*/
 
 #include "pipewirestream.h"
 #include "cursor.h"
@@ -269,7 +255,7 @@ bool PipeWireStream::createStream()
         return false;
     }
 
-    if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded) {
+    if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
             if (m_cursor.lastFrameTexture) {
                 m_repainting = true;
@@ -362,14 +348,13 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         frameTexture->bind();
         glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             QImage dest(data, size.width(), size.height(), QImage::Format_RGBA8888_Premultiplied);
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
             painter.drawImage(QRect{position, cursor->image().size()}, cursor->image());
         }
     } else {
-        using namespace KWin;
         auto &buf = m_dmabufDataForPwBuffer[buffer];
 
         spa_data->chunk->stride = buf->stride();
@@ -393,7 +378,7 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         frameTexture->render(damagedRegion, r, true);
 
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastInterface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             if (!m_repainting) //We need to copy the last version of the stream to render the moved cursor on top
                 m_cursor.lastFrameTexture.reset(copyTexture(frameTexture));
 
@@ -419,7 +404,7 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
     }
     frameTexture->unbind();
 
-    if (m_cursor.mode == KWaylandServer::ScreencastInterface::Metadata) {
+    if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
         sendCursorData(Cursors::self()->currentCursor(),
                         (spa_meta_cursor *) spa_buffer_find_meta_data (spa_buffer, SPA_META_Cursor, sizeof (spa_meta_cursor)));
     }
@@ -472,7 +457,7 @@ void PipeWireStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cu
     painter.drawImage(QPoint(), image);
 }
 
-void PipeWireStream::setCursorMode(KWaylandServer::ScreencastInterface::CursorMode mode, qreal scale, const QRect &viewport)
+void PipeWireStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
 {
     m_cursor.mode = mode;
     m_cursor.scale = scale;

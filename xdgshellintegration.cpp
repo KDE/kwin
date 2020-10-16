@@ -1,21 +1,10 @@
 /*
- * Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-#include "waylandxdgshellintegration.h"
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+#include "xdgshellintegration.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
@@ -40,18 +29,18 @@ namespace KWin
  * surface role of the underlying xdg_surface object.
  */
 
-WaylandXdgShellIntegration::WaylandXdgShellIntegration(QObject *parent)
+XdgShellIntegration::XdgShellIntegration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
     XdgShellInterface *shell = waylandServer()->display()->createXdgShell(this);
 
     connect(shell, &XdgShellInterface::toplevelCreated,
-            this, &WaylandXdgShellIntegration::registerXdgToplevel);
+            this, &XdgShellIntegration::registerXdgToplevel);
     connect(shell, &XdgShellInterface::popupCreated,
-            this, &WaylandXdgShellIntegration::registerXdgPopup);
+            this, &XdgShellIntegration::registerXdgPopup);
 }
 
-void WaylandXdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
+void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
 {
     // Note that the client is going to be destroyed and immediately re-created when the
     // underlying surface is unmapped. XdgToplevelClient is re-created right away since
@@ -63,7 +52,7 @@ void WaylandXdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *tople
     createXdgToplevelClient(toplevel);
 }
 
-void WaylandXdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel)
+void XdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *toplevel)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-toplevel surface has been created while the compositor "
@@ -74,7 +63,7 @@ void WaylandXdgShellIntegration::createXdgToplevelClient(XdgToplevelInterface *t
     emit clientCreated(new XdgToplevelClient(toplevel));
 }
 
-void WaylandXdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
+void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-popup surface has been created while the compositor is "

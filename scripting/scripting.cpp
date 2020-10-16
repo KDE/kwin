@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2010 Rohan Prabhu <rohan@rohanprabhu.com>
-Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2010 Rohan Prabhu <rohan@rohanprabhu.com>
+    SPDX-FileCopyrightText: 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "scripting.h"
 // own
@@ -65,8 +54,8 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
             stream << " ";
         }
         QScriptValue argument = context->argument(i);
-        if (KWin::X11Client *client = qscriptvalue_cast<KWin::X11Client *>(argument)) {
-            client->print<QTextStream>(stream);
+        if (KWin::AbstractClient *client = qscriptvalue_cast<KWin::AbstractClient *>(argument)) {
+            stream << client;
         } else {
             stream << argument.toString();
         }
@@ -222,7 +211,7 @@ QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
         // with a callback
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(msg), script);
         watcher->setProperty("callback", script->registerCallback(context->argument(context->argumentCount()-1)));
-        QObject::connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), script, SLOT(slotPendingDBusCall(QDBusPendingCallWatcher*)));
+        QObject::connect(watcher, &QDBusPendingCallWatcher::finished, script, &KWin::AbstractScript::slotPendingDBusCall);
     }
     return engine->undefinedValue();
 }
@@ -262,7 +251,7 @@ void KWin::AbstractScript::printMessage(const QString &message)
 void KWin::AbstractScript::registerShortcut(QAction *a, QScriptValue callback)
 {
     m_shortcutCallbacks.insert(a, callback);
-    connect(a, SIGNAL(triggered(bool)), SLOT(globalShortcutTriggered()));
+    connect(a, &QAction::triggered, this, &AbstractScript::globalShortcutTriggered);
 }
 
 void KWin::AbstractScript::globalShortcutTriggered()
@@ -416,8 +405,8 @@ QAction *KWin::AbstractScript::createAction(const QString &title, bool checkable
     action->setChecked(checked);
     // TODO: rename m_shortcutCallbacks
     m_shortcutCallbacks.insert(action, callback);
-    connect(action, SIGNAL(triggered(bool)), SLOT(globalShortcutTriggered()));
-    connect(action, SIGNAL(destroyed(QObject*)), SLOT(actionDestroyed(QObject*)));
+    connect(action, &QAction::triggered, this, &AbstractScript::globalShortcutTriggered);
+    connect(action, &QObject::destroyed, this, &AbstractScript::actionDestroyed);
     return action;
 }
 
@@ -473,7 +462,7 @@ void KWin::Script::run()
 
     m_starting = true;
     QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
-    connect(watcher, SIGNAL(finished()), SLOT(slotScriptLoadedFromFile()));
+    connect(watcher, &QFutureWatcherBase::finished, this, &Script::slotScriptLoadedFromFile);
     watcher->setFuture(QtConcurrent::run(this, &KWin::Script::loadScriptFromFile, fileName()));
 }
 
@@ -512,7 +501,7 @@ void KWin::Script::slotScriptLoadedFromFile()
                             QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty(QStringLiteral("options"), optionsValue, QScriptValue::Undeletable);
     m_engine->globalObject().setProperty(QStringLiteral("QTimer"), constructTimerClass(m_engine));
-    QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
+    QObject::connect(m_engine, &QScriptEngine::signalHandlerException, this, &Script::sigException);
     KWin::MetaScripting::supplyConfig(m_engine);
     installScriptFunctions(m_engine);
 
@@ -695,8 +684,8 @@ KWin::Scripting::Scripting(QObject *parent)
 {
     init();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
-    connect(Workspace::self(), SIGNAL(configChanged()), SLOT(start()));
-    connect(Workspace::self(), SIGNAL(workspaceInitialized()), SLOT(start()));
+    connect(Workspace::self(), &Workspace::configChanged, this, &Scripting::start);
+    connect(Workspace::self(), &Workspace::workspaceInitialized, this, &Scripting::start);
 }
 
 void KWin::Scripting::init()
@@ -730,7 +719,7 @@ void KWin::Scripting::start()
     // TODO make this threaded again once KConfigGroup is sufficiently thread safe, bug #305361 and friends
     // perform querying for the services in a thread
     QFutureWatcher<LoadScriptList> *watcher = new QFutureWatcher<LoadScriptList>(this);
-    connect(watcher, SIGNAL(finished()), this, SLOT(slotScriptsQueried()));
+    connect(watcher, &QFutureWatcher<LoadScriptList>::finished, this, &Scripting::slotScriptsQueried);
     watcher->setFuture(QtConcurrent::run(this, &KWin::Scripting::queryScriptsToLoad, pluginStates, offers));
 #else
     LoadScriptList scriptsToLoad = queryScriptsToLoad();
@@ -864,7 +853,7 @@ int KWin::Scripting::loadScript(const QString &filePath, const QString& pluginNa
     }
     const int id = scripts.size();
     KWin::Script *script = new KWin::Script(id, filePath, pluginName, this);
-    connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
+    connect(script, &QObject::destroyed, this, &Scripting::scriptDestroyed);
     scripts.append(script);
     return id;
 }
@@ -877,7 +866,7 @@ int KWin::Scripting::loadDeclarativeScript(const QString& filePath, const QStrin
     }
     const int id = scripts.size();
     KWin::DeclarativeScript *script = new KWin::DeclarativeScript(id, filePath, pluginName, this);
-    connect(script, SIGNAL(destroyed(QObject*)), SLOT(scriptDestroyed(QObject*)));
+    connect(script, &QObject::destroyed, this, &Scripting::scriptDestroyed);
     scripts.append(script);
     return id;
 }

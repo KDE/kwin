@@ -34,6 +34,7 @@ Name[pa]=ਡੈਸਕਟਾਪ ਬਦਲਣ OSD
 Name[pl]=OSD zmiany pulpitu
 Name[pt]=OSD de Mudança do Ecrã
 Name[pt_BR]=OSD de mudança de área de trabalho
+Name[ro]=OSD la schimbarea biroului
 Name[ru]=Экранные уведомления об изменении рабочего стола
 Name[sk]=OSD zmeny plochy
 Name[sl]=Prikaz na zaslonu spremembe namizja
@@ -107,7 +108,6 @@ X-KDE-PluginInfo-Email=mgraesslin@kde.org
 X-KDE-PluginInfo-Name=desktopchangeosd
 X-KDE-PluginInfo-Version=1.0
 
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-ServiceTypes=KWin/Script
 Type=Service

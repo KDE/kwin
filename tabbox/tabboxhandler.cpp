@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 // own
 #include "tabboxhandler.h"
@@ -188,12 +177,12 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
             TabBoxClientList order = q->stackingOrder();
             int succIdx = order.count() + 1;
             for (int i=0; i<order.count(); ++i) {
-                if (order.at(i).data() == lastRaisedClient) {
+                if (order.at(i).toStrongRef() == lastRaisedClient) {
                     succIdx = i + 1;
                     break;
                 }
             }
-            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx).data() : nullptr;
+            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx).toStrongRef().data() : nullptr;
             q->raiseClient(lastRaisedClient);
         }
     }
@@ -393,7 +382,7 @@ void TabBoxHandler::show()
         // QMetaObject::invokeMethod(this, "initHighlightWindows", Qt::QueuedConnection);
         // but we somehow need to cross > 1 event cycle (likely because of queued invocation in the effects)
         // to ensure the EffectWindow is present when updateHighlightWindows, thus elevating the window/tabbox
-        QTimer::singleShot(1, this, SLOT(initHighlightWindows()));
+        QTimer::singleShot(1, this, &TabBoxHandler::initHighlightWindows);
     }
 }
 

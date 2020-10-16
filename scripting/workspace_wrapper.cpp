@@ -1,30 +1,18 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2010 Rohan Prabhu <rohan@rohanprabhu.com>
-Copyright (C) 2011, 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2010 Rohan Prabhu <rohan@rohanprabhu.com>
+    SPDX-FileCopyrightText: 2011, 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "workspace_wrapper.h"
 #include "../x11client.h"
 #include "../outline.h"
 #include "../screens.h"
 #include "../virtualdesktops.h"
-#include "../wayland_server.h"
 #include "../workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "../activities.h"
@@ -45,16 +33,16 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, &Workspace::clientAdded, this, &WorkspaceWrapper::setupClientConnections);
     connect(ws, &Workspace::clientRemoved, this, &WorkspaceWrapper::clientRemoved);
     connect(ws, &Workspace::clientActivated, this, &WorkspaceWrapper::clientActivated);
-    connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
-    connect(vds, SIGNAL(layoutChanged(int,int)), SIGNAL(desktopLayoutChanged()));
+    connect(vds, &VirtualDesktopManager::countChanged, this, &WorkspaceWrapper::numberDesktopsChanged);
+    connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(ws, &Workspace::clientDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = KWin::Activities::self()) {
-        connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));
-        connect(activities, SIGNAL(added(QString)), SIGNAL(activitiesChanged(QString)));
-        connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
-        connect(activities, SIGNAL(removed(QString)), SIGNAL(activitiesChanged(QString)));
-        connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
+        connect(activities, &Activities::currentChanged, this, &WorkspaceWrapper::currentActivityChanged);
+        connect(activities, &Activities::added, this, &WorkspaceWrapper::activitiesChanged);
+        connect(activities, &Activities::added, this, &WorkspaceWrapper::activityAdded);
+        connect(activities, &Activities::removed, this, &WorkspaceWrapper::activitiesChanged);
+        connect(activities, &Activities::removed, this, &WorkspaceWrapper::activityRemoved);
     }
 #endif
     connect(screens(), &Screens::sizeChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
@@ -65,8 +53,10 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
             emit numberScreensChanged(currentCount);
         }
     );
-    connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
-    foreach (KWin::X11Client *client, ws->clientList()) {
+    connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
+
+    const QList<AbstractClient *> clients = ws->allClientList();
+    for (AbstractClient *client : clients) {
         setupClientConnections(client);
     }
 }

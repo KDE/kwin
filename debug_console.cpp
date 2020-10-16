@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "debug_console.h"
 #include "composite.h"
 #include "x11client.h"
@@ -26,10 +15,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "unmanaged.h"
 #include "waylandclient.h"
-#include "wayland_server.h"
 #include "workspace.h"
 #include "keyboard_input.h"
 #include "input_event.h"
+#include "subsurfacemonitor.h"
 #include "libinput/connection.h"
 #include "libinput/device.h"
 #include <kwinglplatform.h>
@@ -874,14 +863,8 @@ void DebugConsoleModel::remove(int parentRow, QVector<T*> &clients, T *client)
 DebugConsoleModel::DebugConsoleModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    if (waylandServer()) {
-        const auto clients = waylandServer()->clients();
-        for (auto c : clients) {
-            handleClientAdded(c);
-        }
-    }
-    const auto x11Clients = workspace()->clientList();
-    for (auto c : x11Clients) {
+    const auto clients = workspace()->allClientList();
+    for (auto c : clients) {
         handleClientAdded(c);
     }
     connect(workspace(), &Workspace::clientAdded, this, &DebugConsoleModel::handleClientAdded);
@@ -1278,36 +1261,27 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     };
     using namespace KWaylandServer;
 
-    const auto unmangeds = workspace()->unmanagedList();
-    for (auto u : unmangeds) {
-        if (!u->surface()) {
-            continue;
-        }
-        connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-    }
-    for (auto c : workspace()->allClientList()) {
+    auto watchSubsurfaces = [this, reset](AbstractClient *c) {
         if (!c->surface()) {
-            continue;
+            return;
         }
-        connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
+        auto monitor = new SubSurfaceMonitor(c->surface(), this);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, reset);
+        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, reset);
+        connect (c, &QObject::destroyed, monitor, &QObject::deleteLater);
+    };
+
+    for (auto c : workspace()->allClientList()) {
+        watchSubsurfaces(c);
     }
     connect(workspace(), &Workspace::clientAdded, this,
-        [this, reset] (AbstractClient *c) {
-            if (c->surface()) {
-                connect(c->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-            }
+        [this, reset, watchSubsurfaces] (AbstractClient *c) {
+            watchSubsurfaces(c);
             reset();
         }
     );
     connect(workspace(), &Workspace::clientRemoved, this, reset);
-    connect(workspace(), &Workspace::unmanagedAdded, this,
-        [this, reset] (Unmanaged *u) {
-            if (u->surface()) {
-                connect(u->surface(), &SurfaceInterface::subSurfaceTreeChanged, this, reset);
-            }
-            reset();
-        }
-    );
+    connect(workspace(), &Workspace::unmanagedAdded, this, reset);
     connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
 }
 

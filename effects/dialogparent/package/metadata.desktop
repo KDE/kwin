@@ -153,7 +153,6 @@ X-KDE-PluginInfo-Email=rivolaks@hot.ee, mgraesslin@kde.org
 X-KDE-PluginInfo-Name=kwin4_effect_dialogparent
 X-KDE-PluginInfo-Version=0.1.0
 X-KDE-PluginInfo-Category=Focus
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Library=kwin4_effect_dialogparent

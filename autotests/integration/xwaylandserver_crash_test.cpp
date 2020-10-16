@@ -1,26 +1,14 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwin_wayland_test.h"
+#include "composite.h"
 #include "main.h"
 #include "platform.h"
+#include "scene.h"
 #include "screens.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
@@ -41,9 +29,9 @@ struct XcbConnectionDeleter
     }
 };
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_server-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_server_crash-0");
 
-class XwaylandServerTest : public QObject
+class XwaylandServerCrashTest : public QObject
 {
     Q_OBJECT
 
@@ -52,7 +40,7 @@ private Q_SLOTS:
     void testCrash();
 };
 
-void XwaylandServerTest::initTestCase()
+void XwaylandServerCrashTest::initTestCase()
 {
     qRegisterMetaType<Unmanaged *>();
     qRegisterMetaType<X11Client *>();
@@ -62,6 +50,12 @@ void XwaylandServerTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup xwaylandGroup = config->group("Xwayland");
+    xwaylandGroup.writeEntry(QStringLiteral("XwaylandCrashPolicy"), QStringLiteral("Stop"));
+    xwaylandGroup.sync();
+    kwinApp()->setConfig(config);
+
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
@@ -70,7 +64,7 @@ void XwaylandServerTest::initTestCase()
     waylandServer()->initWorkspace();
 }
 
-void XwaylandServerTest::testCrash()
+void XwaylandServerCrashTest::testCrash()
 {
     // This test verifies that all connected X11 clients get destroyed when Xwayland crashes.
 
@@ -132,9 +126,14 @@ void XwaylandServerTest::testCrash()
     QCOMPARE(kwinApp()->x11DefaultScreen(), nullptr);
     QCOMPARE(kwinApp()->x11RootWindow(), XCB_WINDOW_NONE);
     QCOMPARE(kwinApp()->x11ScreenNumber(), -1);
+
+    // Render a frame to ensure that the compositor doesn't crash.
+    Compositor::self()->addRepaintFull();
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.wait());
 }
 
 } // namespace KWin
 
-WAYLANDTEST_MAIN(KWin::XwaylandServerTest)
-#include "xwaylandserver_test.moc"
+WAYLANDTEST_MAIN(KWin::XwaylandServerCrashTest)
+#include "xwaylandserver_crash_test.moc"

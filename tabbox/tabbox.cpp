@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 //#define QT_CLEAN_NAMESPACE
 // own
@@ -76,11 +65,11 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
 {
     // connects for DesktopFocusChainManager
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(vds, SIGNAL(countChanged(uint,uint)), m_desktopFocusChain, SLOT(resize(uint,uint)));
-    connect(vds, SIGNAL(currentChanged(uint,uint)), m_desktopFocusChain, SLOT(addDesktop(uint,uint)));
+    connect(vds, &VirtualDesktopManager::countChanged, m_desktopFocusChain, &DesktopChainManager::resize);
+    connect(vds, &VirtualDesktopManager::currentChanged, m_desktopFocusChain, &DesktopChainManager::addDesktop);
 #ifdef KWIN_BUILD_ACTIVITIES
     if (Activities::self()) {
-        connect(Activities::self(), SIGNAL(currentChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
+        connect(Activities::self(), &Activities::currentChanged, m_desktopFocusChain, &DesktopChainManager::useChain);
     }
 #endif
 }
@@ -497,11 +486,11 @@ TabBox::TabBox(QObject *parent)
     m_desktopListConfig.setShowDesktopMode(TabBoxConfig::DoNotShowDesktopClient);
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_tabBox = new TabBoxHandlerImpl(this);
-    QTimer::singleShot(0, this, SLOT(handlerReady()));
+    QTimer::singleShot(0, this, &TabBox::handlerReady);
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
-    connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
-    connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
+    connect(&m_delayedShowTimer, &QTimer::timeout, this, &TabBox::show);
+    connect(Workspace::self(), &Workspace::configChanged, this, &TabBox::reconfigure);
 }
 
 TabBox::~TabBox()
@@ -1370,7 +1359,7 @@ void TabBox::keyPress(int keyQt)
                     QTimer::singleShot(50, this, replayWithChangedTabboxMode);
                 }
                 break;
-            } else if (++j > ModeCount) { // guarding counter for invalid modes
+            } else if (++j > 2*ModeCount) { // guarding counter for invalid modes
                 qCDebug(KWIN_TABBOX) << "Invalid TabBoxMode";
                 return;
             }

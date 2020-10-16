@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "../../platform.h"
 #include "../../composite.h"
@@ -25,6 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../workspace.h"
 #include "../../xcbutils.h"
 #include "../../xwl/xwayland.h"
+#include "../../inputmethod.h"
 
 #include <KPluginMetaData>
 
@@ -96,6 +86,38 @@ WaylandTestApplication::~WaylandTestApplication()
 
 void WaylandTestApplication::performStartup()
 {
+    if (!m_inputMethodServerToStart.isEmpty()) {
+        InputMethod::create();
+        if (m_inputMethodServerToStart != QStringLiteral("internal")) {
+            int socket = dup(waylandServer()->createInputMethodConnection());
+            if (socket >= 0) {
+                QProcessEnvironment environment = processStartupEnvironment();
+                environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
+                environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+                environment.remove("DISPLAY");
+                environment.remove("WAYLAND_DISPLAY");
+                QProcess *p = new Process(this);
+                p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+                connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
+                    [p] {
+                        if (waylandServer()) {
+                            waylandServer()->destroyInputMethodConnection();
+                        }
+                        p->deleteLater();
+                    }
+                );
+                p->setProcessEnvironment(environment);
+                p->setProgram(m_inputMethodServerToStart);
+            //  p->setArguments(arguments);
+                p->start();
+                connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, p, [p] {
+                    p->kill();
+                    p->waitForFinished();
+                });
+            }
+        }
+    }
+
     // first load options - done internally by a different thread
     createOptions();
     waylandServer()->createInternalConnection();
@@ -129,6 +151,7 @@ void WaylandTestApplication::continueStartupWithScreens()
 void WaylandTestApplication::finalizeStartup()
 {
     if (m_xwayland) {
+        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
         disconnect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     }
     notifyStarted();
@@ -150,12 +173,7 @@ void WaylandTestApplication::continueStartupWithScene()
     }
 
     m_xwayland = new Xwl::Xwayland(this);
-    connect(m_xwayland, &Xwl::Xwayland::criticalError, this, [](int code) {
-        // we currently exit on Xwayland errors always directly
-        // TODO: restart Xwayland
-        std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
-        exit(code);
-    });
+    connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &WaylandTestApplication::finalizeStartup);
     connect(m_xwayland, &Xwl::Xwayland::started, this, &WaylandTestApplication::finalizeStartup);
     m_xwayland->start();
 }

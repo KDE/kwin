@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "drag_x.h"
 
 #include "databridge.h"
@@ -238,7 +227,7 @@ void XToWlDrag::setOffers(const Mimes &offers)
     // TODO: make sure that offers are not changed in between visits
 
     m_offersPending = m_offers = offers;
-    for (const auto mimePair : offers) {
+    for (const auto &mimePair : offers) {
         m_dataSource->offer(mimePair.first);
     }
 }
@@ -382,7 +371,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *event)
         for (size_t i = 0; i < 3; i++) {
             xcb_atom_t mimeAtom = data->data32[2 + i];
             const auto mimeStrings = atomToMimeTypes(mimeAtom);
-            for (const auto mime : mimeStrings ) {
+            for (const auto &mime : mimeStrings ) {
                 if (!hasMimeName(offers, mime)) {
                     offers << Mime(mime, mimeAtom);
                 }
@@ -420,7 +409,7 @@ void WlVisit::getMimesFromWinProperty(Mimes &offers)
     xcb_atom_t *mimeAtoms = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
     for (size_t i = 0; i < reply->value_len; ++i) {
         const auto mimeStrings = atomToMimeTypes(mimeAtoms[i]);
-        for (const auto mime : mimeStrings) {
+        for (const auto &mime : mimeStrings) {
             if (!hasMimeName(offers, mime)) {
                 offers << Mime(mime, mimeAtoms[i]);
             }
@@ -506,7 +495,7 @@ void WlVisit::sendStatus()
         // accept the drop
         flags |= (1 << 0);
     }
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = m_window;
     data.data32[1] = flags;
     data.data32[4] = flags & (1 << 0) ? m_actionAtom : static_cast<uint32_t>(XCB_ATOM_NONE);
@@ -516,7 +505,7 @@ void WlVisit::sendStatus()
 void WlVisit::sendFinished()
 {
     const bool accepted = m_entered && m_action != DnDAction::None;
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = m_window;
     data.data32[1] = accepted;
     data.data32[2] = accepted ? m_actionAtom : static_cast<uint32_t>(XCB_ATOM_NONE);

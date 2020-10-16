@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef MAIN_H
 #define MAIN_H
@@ -124,6 +113,7 @@ public:
 
     static void setCrashCount(int count);
     static bool wasCrash();
+    void resetCrashesCount();
 
     /**
      * Creates the KAboutData object for the KWin instance and registers it as
@@ -167,6 +157,13 @@ public:
      */
     xcb_screen_t *x11DefaultScreen() const {
         return m_defaultScreen;
+    }
+
+    /**
+     * Returns @c true if we're in the middle of destroying the X11 connection.
+     */
+    bool isClosingX11Connection() const {
+        return m_isClosingX11Connection;
     }
 
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -244,12 +241,12 @@ protected:
     void setTerminating() {
         m_terminating = true;
     }
+    void setClosingX11Connection(bool set) {
+        m_isClosingX11Connection = set;
+    }
 
 protected:
     static int crashes;
-
-private Q_SLOTS:
-    void resetCrashesCount();
 
 private:
     QScopedPointer<XcbEventFilter> m_eventFilter;
@@ -266,6 +263,7 @@ private:
 #endif
     Platform *m_platform = nullptr;
     bool m_terminating = false;
+    bool m_isClosingX11Connection = false;
 };
 
 inline static Application *kwinApp()

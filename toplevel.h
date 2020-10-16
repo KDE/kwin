@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_TOPLEVEL_H
 #define KWIN_TOPLEVEL_H
@@ -241,7 +230,7 @@ class KWIN_EXPORT Toplevel : public QObject
      */
     Q_PROPERTY(int windowType READ windowType)
 
-    Q_PROPERTY(QStringList activities READ activities NOTIFY activitiesChanged)
+    Q_PROPERTY(QStringList activities READ activities)
 
     /**
      * Whether this Toplevel is managed by KWin (it has control over its placement and other
@@ -294,6 +283,13 @@ class KWIN_EXPORT Toplevel : public QObject
      * This property holds a UUID to uniquely identify this Toplevel.
      */
     Q_PROPERTY(QUuid internalId READ internalId CONSTANT)
+
+    /**
+     * The pid of the process owning this window.
+     *
+     * @since 5.20
+     */
+    Q_PROPERTY(int pid READ pid CONSTANT)
 
 public:
     explicit Toplevel();
@@ -589,7 +585,7 @@ public:
 
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
-    void damaged(KWin::Toplevel* toplevel, const QRect& damage);
+    void damaged(KWin::Toplevel* toplevel, const QRegion& damage);
     void inputTransformationChanged();
     /**
      * This signal is emitted when the Toplevel's frame geometry changes.
@@ -612,7 +608,6 @@ Q_SIGNALS:
      * schedule a repaint of the scene.
      */
     void needsRepaint();
-    void activitiesChanged(KWin::Toplevel* toplevel);
     /**
      * Emitted whenever the Toplevel's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Toplevel's geometry changes.
@@ -711,10 +706,8 @@ protected:
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
-    virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);
     void disownDataPassedToDeleted();
-    friend QDebug& operator<<(QDebug& stream, const Toplevel*);
     void deleteEffectWindow();
     void setDepth(int depth);
     QRect m_frameGeometry;
@@ -1065,7 +1058,7 @@ inline bool Toplevel::isPopupWindow() const
     }
 }
 
-QDebug& operator<<(QDebug& stream, const Toplevel*);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const Toplevel *toplevel);
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::Toplevel*)

@@ -122,7 +122,7 @@ Comment[nn]=Klassisk KDE 3-tema
 Comment[pl]=Klasyczny wystój znany z KDE 3
 Comment[pt]=O tema clássico conhecido do KDE 3
 Comment[pt_BR]=Tema clássico do KDE 3
-Comment[ro]=Tema clasică cunoscută din KDE 3
+Comment[ro]=Tematica clasică cunoscută din KDE 3
 Comment[ru]=Классическая тема, известная со времён KDE 3.
 Comment[sk]=Klasická téma známa z KDE 3
 Comment[sl]=Klasična tema, znana iz KDE 3
@@ -144,7 +144,6 @@ X-KDE-PluginInfo-Email=mgraesslin@kde.org
 X-KDE-PluginInfo-Name=kwin4_decoration_qml_plastik
 X-KDE-PluginInfo-Version=1.0
 
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-ServiceTypes=KWin/Decoration
 X-KWin-Config-TranslationDomain=kwin_clients

@@ -1,27 +1,14 @@
 /*
- * Copyright © 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library. If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *       Jan Grulich <jgrulich@redhat.com>
- *       Aleix Pol Gonzalez <aleixpol@kde.org>
- */
+    SPDX-FileCopyrightText: 2018-2020 Red Hat Inc
+    SPDX-FileCopyrightText: 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
+    SPDX-FileContributor: Jan Grulich <jgrulich@redhat.com>
+
+    SPDX-License-Identifier: LGPL-2.0-or-later
+*/
 
 #pragma once
 
-#include <KWaylandServer/screencast_interface.h>
+#include <KWaylandServer/screencast_v1_interface.h>
 
 namespace KWin
 {
@@ -35,15 +22,15 @@ class ScreencastManager : public QObject
 public:
     explicit ScreencastManager(QObject *parent = nullptr);
 
-    void streamWindow(KWaylandServer::ScreencastStreamInterface *stream, const QString &winid);
-    void streamOutput(KWaylandServer::ScreencastStreamInterface *stream,
-                      ::wl_resource *outputResource,
-                      KWaylandServer::ScreencastInterface::CursorMode mode);
+    void streamWindow(KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid);
+    void streamOutput(KWaylandServer::ScreencastStreamV1Interface *stream,
+                      KWaylandServer::OutputInterface *output,
+                      KWaylandServer::ScreencastV1Interface::CursorMode mode);
 
 private:
-    void integrateStreams(KWaylandServer::ScreencastStreamInterface *waylandStream, PipeWireStream *pipewireStream);
+    void integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *pipewireStream);
 
-    KWaylandServer::ScreencastInterface *m_screencast;
+    KWaylandServer::ScreencastV1Interface *m_screencast;
 };
 
 } // namespace KWin

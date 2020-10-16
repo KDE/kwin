@@ -1,27 +1,16 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_ABSTRACT_WAYLAND_OUTPUT_H
 #define KWIN_ABSTRACT_WAYLAND_OUTPUT_H
 
 #include "abstract_output.h"
-#include <utils.h>
+#include "utils.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -40,7 +29,7 @@ class OutputInterface;
 class OutputDeviceInterface;
 class OutputChangeSet;
 class OutputManagementInterface;
-class XdgOutputInterface;
+class XdgOutputV1Interface;
 }
 
 namespace KWin
@@ -123,6 +112,18 @@ public:
 
     QString description() const;
 
+    /**
+     * The current rotation of the output
+     *
+     * @return rotation in degrees
+     */
+    int rotation() const;
+
+    /**
+     * Returns a matrix that can translate into the display's coordinates system
+     */
+    QMatrix4x4 transformation() const;
+
 Q_SIGNALS:
     void modeChanged();
     void outputChange(const QRegion &damagedRegion);
@@ -169,7 +170,7 @@ private:
     void setTransform(KWaylandServer::OutputDeviceInterface::Transform transform);
 
     KWaylandServer::OutputInterface *m_waylandOutput;
-    KWaylandServer::XdgOutputInterface *m_xdgOutput;
+    KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;
     KWaylandServer::OutputDeviceInterface *m_waylandOutputDevice;
     KWaylandServer::OutputInterface::DpmsMode m_dpms = KWaylandServer::OutputInterface::DpmsMode::On;
 

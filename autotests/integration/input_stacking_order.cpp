@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "abstract_client.h"
@@ -51,7 +40,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testPointerFocusUpdatesOnStackingOrderChange_data();
     void testPointerFocusUpdatesOnStackingOrderChange();
 
 private:
@@ -98,13 +86,6 @@ void InputStackingOrderTest::render(KWayland::Client::Surface *surface)
     Test::flushWaylandConnection();
 }
 
-void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 {
     // this test creates two windows which overlap
@@ -126,8 +107,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface1 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface1);
-    QFETCH(Test::XdgShellSurfaceType, type);
-    XdgShellSurface *shellSurface1 = Test::createXdgShellSurface(type, surface1, surface1);
+    XdgShellSurface *shellSurface1 = Test::createXdgShellStableSurface(surface1, surface1);
     QVERIFY(shellSurface1);
     render(surface1);
     QVERIFY(clientAddedSpy.wait());
@@ -136,7 +116,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 
     Surface *surface2 = Test::createSurface(Test::waylandCompositor());
     QVERIFY(surface2);
-    XdgShellSurface *shellSurface2 = Test::createXdgShellSurface(type, surface2, surface2);
+    XdgShellSurface *shellSurface2 = Test::createXdgShellStableSurface(surface2, surface2);
     QVERIFY(shellSurface2);
     render(surface2);
     QVERIFY(clientAddedSpy.wait());

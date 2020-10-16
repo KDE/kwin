@@ -302,4 +302,16 @@
             <min>0</min>
         </entry>
     </group>
+    <group name="Xwayland">
+        <entry name="XwaylandCrashPolicy" type="Enum">
+            <choices name="KWin::XwaylandCrashPolicy">
+                <choice name="Stop"/>
+                <choice name="Restart"/>
+            </choices>
+            <default>XwaylandCrashPolicy::Restart</default>
+        </entry>
+        <entry name="XwaylandMaxCrashCount" type="UInt">
+            <default>3</default>
+        </entry>
+    </group>
 </kcfg>

@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "effects.h"
 
@@ -248,8 +237,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     }
 
     // connect all clients
-    for (X11Client *c : ws->clientList()) {
-        setupClientConnections(c);
+    for (AbstractClient *client : ws->allClientList()) {
+        if (client->readyForPainting()) {
+            setupClientConnections(client);
+        } else {
+            connect(client, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
+        }
     }
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
@@ -257,16 +250,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (InternalClient *client : ws->internalClients()) {
         setupClientConnections(client);
     }
-    if (auto w = waylandServer()) {
-        const auto clients = waylandServer()->clients();
-        for (AbstractClient *c : clients) {
-            if (c->readyForPainting()) {
-                setupClientConnections(c);
-            } else {
-                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
-            }
-        }
-    }
+
     reconfigure();
 }
 
@@ -602,7 +586,7 @@ void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfF
     emit tabRemoved(w, leaderOfFormerGroup);
 }
 
-void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
+void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRegion& r)
 {
     if (!t->effectWindow()) {
         // can happen during tear down of window
@@ -2068,11 +2052,11 @@ void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
 {
     if (WindowThumbnailItem *thumb = qobject_cast<WindowThumbnailItem*>(item)) {
         insertThumbnail(thumb);
-        connect(thumb, SIGNAL(destroyed(QObject*)), SLOT(thumbnailDestroyed(QObject*)));
+        connect(thumb, &QObject::destroyed, this, &EffectWindowImpl::thumbnailDestroyed);
         connect(thumb, &WindowThumbnailItem::wIdChanged, this, &EffectWindowImpl::thumbnailTargetChanged);
     } else if (DesktopThumbnailItem *desktopThumb = qobject_cast<DesktopThumbnailItem*>(item)) {
         m_desktopThumbnails.append(desktopThumb);
-        connect(desktopThumb, SIGNAL(destroyed(QObject*)), SLOT(desktopThumbnailDestroyed(QObject*)));
+        connect(desktopThumb, &QObject::destroyed, this, &EffectWindowImpl::desktopThumbnailDestroyed);
     }
 }
 
@@ -2189,7 +2173,7 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
     if (m_style == EffectFrameStyled) {
         m_frame.setImagePath(QStringLiteral("widgets/background"));
         m_frame.setCacheAllRenderedFrames(true);
-        connect(m_theme, SIGNAL(themeChanged()), this, SLOT(plasmaThemeChanged()));
+        connect(m_theme, &Plasma::Theme::themeChanged, this, &EffectFrameImpl::plasmaThemeChanged);
     }
     m_selection.setImagePath(QStringLiteral("widgets/viewitem"));
     m_selection.setElementPrefix(QStringLiteral("hover"));

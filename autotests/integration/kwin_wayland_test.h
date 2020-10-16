@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
@@ -27,6 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWayland
 #include <KWayland/Client/xdgshell.h>
+
+#include "qwayland-wlr-layer-shell-unstable-v1.h"
+#include "qwayland-text-input-unstable-v3.h"
+#include "qwayland-xdg-shell.h"
 
 namespace KWayland
 {
@@ -48,7 +41,15 @@ class SubSurface;
 class Surface;
 class XdgDecorationManager;
 class OutputManagement;
+class TextInputManager;
 }
+}
+
+namespace QtWayland
+{
+class zwp_input_panel_surface_v1;
+class zwp_text_input_v3;
+class zwp_text_input_manager_v3;
 }
 
 namespace KWin
@@ -67,6 +68,9 @@ public:
     WaylandTestApplication(OperationMode mode, int &argc, char **argv);
     ~WaylandTestApplication() override;
 
+    void setInputMethodServerToStart(const QString &inputMethodServer) {
+        m_inputMethodServerToStart = inputMethodServer;
+    }
 protected:
     void performStartup() override;
 
@@ -77,10 +81,146 @@ private:
     void finalizeStartup();
 
     Xwl::Xwayland *m_xwayland = nullptr;
+    QString m_inputMethodServerToStart;
 };
 
 namespace Test
 {
+
+class MockInputMethod;
+
+class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
+{
+public:
+    ~TextInputManagerV3() override { destroy(); }
+};
+
+class TextInputV3 : public QtWayland::zwp_text_input_v3
+{
+    ~TextInputV3() override { destroy(); }
+};
+
+class LayerShellV1 : public QtWayland::zwlr_layer_shell_v1
+{
+public:
+    ~LayerShellV1() override;
+};
+
+class LayerSurfaceV1 : public QObject, public QtWayland::zwlr_layer_surface_v1
+{
+    Q_OBJECT
+
+public:
+    ~LayerSurfaceV1() override;
+
+protected:
+    void zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height) override;
+    void zwlr_layer_surface_v1_closed() override;
+
+Q_SIGNALS:
+    void closeRequested();
+    void configureRequested(quint32 serial, const QSize &size);
+};
+
+/**
+ * The XdgShell class represents the @c xdg_wm_base global.
+ */
+class XdgShell : public QtWayland::xdg_wm_base
+{
+public:
+    ~XdgShell() override;
+};
+
+/**
+ * The XdgSurface class represents an xdg_surface object.
+ */
+class XdgSurface : public QObject, public QtWayland::xdg_surface
+{
+    Q_OBJECT
+
+public:
+    explicit XdgSurface(XdgShell *shell, KWayland::Client::Surface *surface, QObject *parent = nullptr);
+    ~XdgSurface() override;
+
+    KWayland::Client::Surface *surface() const;
+
+Q_SIGNALS:
+    void configureRequested(quint32 serial);
+
+protected:
+    void xdg_surface_configure(uint32_t serial) override;
+
+private:
+    KWayland::Client::Surface *m_surface;
+};
+
+/**
+ * The XdgToplevel class represents an xdg_toplevel surface. Note that the XdgToplevel surface
+ * takes the ownership of the underlying XdgSurface object.
+ */
+class XdgToplevel : public QObject, public QtWayland::xdg_toplevel
+{
+    Q_OBJECT
+
+public:
+    enum class State {
+        Maximized  = 1 << 0,
+        Fullscreen = 1 << 1,
+        Resizing   = 1 << 2,
+        Activated  = 1 << 3
+    };
+    Q_DECLARE_FLAGS(States, State)
+
+    explicit XdgToplevel(XdgSurface *surface, QObject *parent = nullptr);
+    ~XdgToplevel() override;
+
+    XdgSurface *xdgSurface() const;
+
+Q_SIGNALS:
+    void configureRequested(const QSize &size, KWin::Test::XdgToplevel::States states);
+    void closeRequested();
+
+protected:
+    void xdg_toplevel_configure(int32_t width, int32_t height, wl_array *states) override;
+    void xdg_toplevel_close() override;
+
+private:
+    QScopedPointer<XdgSurface> m_xdgSurface;
+};
+
+/**
+ * The XdgPositioner class represents an xdg_positioner object.
+ */
+class XdgPositioner : public QtWayland::xdg_positioner
+{
+public:
+    explicit XdgPositioner(XdgShell *shell);
+    ~XdgPositioner() override;
+};
+
+/**
+ * The XdgPopup class represents an xdg_popup surface. Note that the XdgPopup surface takes
+ * the ownership of the underlying XdgSurface object.
+ */
+class XdgPopup : public QObject, public QtWayland::xdg_popup
+{
+    Q_OBJECT
+
+public:
+    XdgPopup(XdgSurface *surface, XdgSurface *parentSurface, XdgPositioner *positioner, QObject *parent = nullptr);
+    ~XdgPopup() override;
+
+    XdgSurface *xdgSurface() const;
+
+Q_SIGNALS:
+    void configureRequested(const QRect &rect);
+
+protected:
+    void xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height) override;
+
+private:
+    QScopedPointer<XdgSurface> m_xdgSurface;
+};
 
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
@@ -93,6 +233,10 @@ enum class AdditionalWaylandInterface {
     ShadowManager = 1 << 7,
     XdgDecoration = 1 << 8,
     OutputManagement = 1 << 9,
+    TextInputManagerV2 = 1 << 10,
+    InputMethodV1 = 1 << 11,
+    LayerShellV1 = 1 << 12,
+    TextInputManagerV3 = 1 << 13
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -125,6 +269,8 @@ KWayland::Client::IdleInhibitManager *waylandIdleInhibitManager();
 KWayland::Client::AppMenuManager *waylandAppMenuManager();
 KWayland::Client::XdgDecorationManager *xdgDecorationManager();
 KWayland::Client::OutputManagement *waylandOutputManagement();
+KWayland::Client::TextInputManager *waylandTextInputManager();
+QVector<KWayland::Client::Output *> waylandOutputs();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
@@ -135,19 +281,21 @@ void flushWaylandConnection();
 KWayland::Client::Surface *createSurface(QObject *parent = nullptr);
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
-enum class XdgShellSurfaceType {
-    XdgShellStable
-};
+
+LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface,
+                                     const QString &scope,
+                                     KWayland::Client::Output *output = nullptr,
+                                     LayerShellV1::layer layer = LayerShellV1::layer_top);
+
+TextInputManagerV3 *waylandTextInputManagerV3();
 
 enum class CreationSetup {
     CreateOnly,
     CreateAndConfigure, /// commit and wait for the configure event, making this surface ready to commit buffers
 };
 
-KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type,
-                                                         KWayland::Client::Surface *surface,
-                                                         QObject *parent = nullptr,
-                                                         CreationSetup creationSetup = CreationSetup::CreateAndConfigure);
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
+                                                                 KWayland::Client::Output *output);
 
 KWayland::Client::XdgShellSurface *createXdgShellStableSurface(KWayland::Client::Surface *surface,
                                                                QObject *parent = nullptr,
@@ -157,6 +305,15 @@ KWayland::Client::XdgShellPopup *createXdgShellStablePopup(KWayland::Client::Sur
                                                            const KWayland::Client::XdgPositioner &positioner,
                                                            QObject *parent = nullptr,
                                                            CreationSetup = CreationSetup::CreateAndConfigure);
+
+XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr,
+                                      CreationSetup configureMode = CreationSetup::CreateAndConfigure);
+
+XdgPositioner *createXdgPositioner();
+
+XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
+                                XdgPositioner *positioner, QObject *parent = nullptr,
+                                CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
 
 /**
@@ -210,7 +367,7 @@ bool unlockScreen();
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Test::AdditionalWaylandInterfaces)
-Q_DECLARE_METATYPE(KWin::Test::XdgShellSurfaceType)
+Q_DECLARE_METATYPE(KWin::Test::XdgToplevel::States)
 
 #define WAYLANDTEST_MAIN_HELPER(TestObject, DPI, OperationMode) \
 int main(int argc, char *argv[]) \

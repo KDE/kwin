@@ -1,21 +1,8 @@
 /*
- *
- * Copyright (c) 2001 Waldo Bastian <bastian@kde.org>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
+    SPDX-FileCopyrightText: 2001 Waldo Bastian <bastian@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "main.h"
 
@@ -34,6 +21,7 @@
 #include "mouse.h"
 #include "windows.h"
 #include "kwinoptions_settings.h"
+#include "kwinoptions_kdeglobals_settings.h"
 
 K_PLUGIN_FACTORY_DECLARATION(KWinOptionsFactory)
 
@@ -64,9 +52,9 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, nullptr, parent)
+        : KAdvancedConfig(true, nullptr, nullptr, parent)
     {
-        initialize(new KWinOptionsSettings(this));
+        initialize(new KWinOptionsSettings(this), new KWinOptionsKDEGlobalsSettings(this));
     }
 };
 
@@ -112,7 +100,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
     connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mMoving, &KCModule::setDefaultsIndicatorsVisible);
 
-    mAdvanced = new KAdvancedConfig(false, mSettings, this);
+    mAdvanced = new KAdvancedConfig(false, mSettings, new KWinOptionsKDEGlobalsSettings(this), this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
     connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));

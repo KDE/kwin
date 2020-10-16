@@ -1,23 +1,12 @@
 
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "atoms.h"
 #include "platform.h"
@@ -66,7 +55,6 @@ private Q_SLOTS:
     void testGrowShrink();
     void testPointerMoveEnd_data();
     void testPointerMoveEnd();
-    void testClientSideMove_data();
     void testClientSideMove();
     void testPlasmaShellSurfaceMovable_data();
     void testPlasmaShellSurfaceMovable();
@@ -399,7 +387,7 @@ void MoveResizeWindowTest::testPackAgainstClient()
     QVERIFY(!shellSurface3.isNull());
     QScopedPointer<XdgShellSurface> shellSurface4(Test::createXdgShellStableSurface(surface4.data()));
     QVERIFY(!shellSurface4.isNull());
-    auto renderWindow = [this] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
+    auto renderWindow = [] (Surface *surface, const QString &methodCall, const QRect &expectedGeometry) {
         // let's render
         auto c = Test::renderAndWaitForShown(surface, QSize(10, 10), Qt::blue);
 
@@ -545,13 +533,6 @@ void MoveResizeWindowTest::testPointerMoveEnd()
     surface.reset();
     QVERIFY(Test::waitForWindowDestroyed(c));
 }
-void MoveResizeWindowTest::testClientSideMove_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void MoveResizeWindowTest::testClientSideMove()
 {
     using namespace KWayland::Client;
@@ -565,8 +546,7 @@ void MoveResizeWindowTest::testClientSideMove()
     QVERIFY(buttonSpy.isValid());
 
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
 

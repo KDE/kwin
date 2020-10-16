@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
-Copyright 2020 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "abstract_wayland_output.h"
 
 #include "screens.h"
@@ -26,10 +15,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWayland
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/outputchangeset.h>
-#include <KWaylandServer/xdgoutput_interface.h>
+#include <KWaylandServer/xdgoutput_v1_interface.h>
 // KF5
 #include <KLocalizedString>
 
+#include <QMatrix4x4>
 #include <cmath>
 
 namespace KWin
@@ -40,12 +30,16 @@ AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
 {
     m_waylandOutput = waylandServer()->display()->createOutput(this);
     m_waylandOutputDevice = waylandServer()->display()->createOutputDevice(this);
-    m_xdgOutput = waylandServer()->xdgOutputManager()->createXdgOutput(m_waylandOutput, this);
+    m_xdgOutputV1 = waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput, this);
 
     connect(m_waylandOutput, &KWaylandServer::OutputInterface::dpmsModeRequested, this,
             [this] (KWaylandServer::OutputInterface::DpmsMode mode) {
         updateDpms(mode);
     });
+
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::globalPositionChanged, this, &AbstractWaylandOutput::geometryChanged);
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::pixelSizeChanged, this, &AbstractWaylandOutput::geometryChanged);
+    connect(m_waylandOutput, &KWaylandServer::OutputInterface::scaleChanged, this, &AbstractWaylandOutput::geometryChanged);
 }
 
 AbstractWaylandOutput::~AbstractWaylandOutput()
@@ -87,8 +81,8 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
     m_waylandOutputDevice->setGlobalPosition(pos);
 
     m_waylandOutput->setGlobalPosition(pos);
-    m_xdgOutput->setLogicalPosition(pos);
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalPosition(pos);
+    m_xdgOutputV1->done();
 }
 
 QSize AbstractWaylandOutput::modeSize() const
@@ -117,8 +111,8 @@ void AbstractWaylandOutput::setScale(qreal scale)
     // or maybe even set this to 3 when we're scaling to 1.5
     // don't treat this like it's chosen deliberately
     m_waylandOutput->setScale(std::ceil(scale));
-    m_xdgOutput->setLogicalSize(pixelSize() / scale);
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale);
+    m_xdgOutputV1->done();
 }
 
 using DeviceInterface = KWaylandServer::OutputDeviceInterface;
@@ -153,8 +147,8 @@ void AbstractWaylandOutput::setTransform(DeviceInterface::Transform transform)
     m_waylandOutputDevice->setTransform(transform);
 
     m_waylandOutput->setTransform(toOutputTransform(transform));
-    m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_xdgOutputV1->done();
 }
 
 inline
@@ -242,8 +236,8 @@ QString AbstractWaylandOutput::description() const
 void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 {
     m_waylandOutput->setCurrentMode(size, refreshRate);
-    m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->done();
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_xdgOutputV1->done();
 }
 
 void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &manufacturer,
@@ -285,10 +279,10 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
     // start off enabled
 
     m_waylandOutput->create();
-    m_xdgOutput->setName(name());
-    m_xdgOutput->setDescription(description());
-    m_xdgOutput->setLogicalSize(pixelSize() / scale());
-    m_xdgOutput->done();
+    m_xdgOutputV1->setName(name());
+    m_xdgOutputV1->setDescription(description());
+    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_xdgOutputV1->done();
 }
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
@@ -315,6 +309,48 @@ void AbstractWaylandOutput::setTransform(Transform transform)
 AbstractWaylandOutput::Transform AbstractWaylandOutput::transform() const
 {
     return static_cast<Transform>(m_waylandOutputDevice->transform());
+}
+
+// TODO: Do we need to handle the flipped cases differently?
+int transformToRotation(AbstractWaylandOutput::Transform transform)
+{
+    switch (transform) {
+    case AbstractWaylandOutput::Transform::Normal:
+    case AbstractWaylandOutput::Transform::Flipped:
+        return 0;
+    case AbstractWaylandOutput::Transform::Rotated90:
+    case AbstractWaylandOutput::Transform::Flipped90:
+        return 90;
+    case AbstractWaylandOutput::Transform::Rotated180:
+    case AbstractWaylandOutput::Transform::Flipped180:
+        return 180;
+    case AbstractWaylandOutput::Transform::Rotated270:
+    case AbstractWaylandOutput::Transform::Flipped270:
+        return 270;
+    }
+    Q_UNREACHABLE();
+    return 0;
+}
+
+int AbstractWaylandOutput::rotation() const
+{
+    return transformToRotation(transform());
+}
+
+QMatrix4x4 AbstractWaylandOutput::transformation() const
+{
+    const QSize outputSize = modeSize();
+    const QSize logicalSize = pixelSize();
+
+    QMatrix4x4 matrix;
+    matrix.translate(outputSize.width()/2, outputSize.height()/2);
+    matrix.rotate(rotation(), 0, 0, 1);
+    matrix.translate(-logicalSize.width()/2, -logicalSize.height()/2);
+    matrix.scale(scale());
+
+    const QPoint topLeft = -globalPos();
+    matrix.translate(-topLeft.x(), -topLeft.y());
+    return matrix;
 }
 
 }

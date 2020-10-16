@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2019 NVIDIA Inc.
+    SPDX-FileCopyrightText: 2019 NVIDIA Inc.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_EGL_STREAM_BACKEND_H
 #define KWIN_EGL_STREAM_BACKEND_H
 #include "abstract_egl_backend.h"
@@ -30,6 +19,7 @@ namespace KWin
 class DrmBackend;
 class DrmOutput;
 class DrmBuffer;
+class DrmGpu;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
@@ -38,7 +28,7 @@ class EglStreamBackend : public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglStreamBackend(DrmBackend *b);
+    EglStreamBackend(DrmBackend *b, DrmGpu *gpu);
     ~EglStreamBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
@@ -81,6 +71,7 @@ private:
     void createOutput(DrmOutput *output);
 
     DrmBackend *m_backend;
+    DrmGpu *m_gpu;
     QVector<Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;
     QHash<KWaylandServer::SurfaceInterface *, StreamTexture> m_streamTextures;

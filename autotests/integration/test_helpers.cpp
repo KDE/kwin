@@ -1,27 +1,18 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "screenlockerwatcher.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "qwayland-input-method-unstable-v1.h"
+#include "inputmethod.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -39,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/textinput.h>
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/xdgshell.h>
 #include <KWayland/Client/xdgdecoration.h>
@@ -62,6 +54,134 @@ namespace KWin
 namespace Test
 {
 
+LayerShellV1::~LayerShellV1()
+{
+    destroy();
+}
+
+LayerSurfaceV1::~LayerSurfaceV1()
+{
+    destroy();
+}
+
+void LayerSurfaceV1::zwlr_layer_surface_v1_configure(uint32_t serial, uint32_t width, uint32_t height)
+{
+    emit configureRequested(serial, QSize(width, height));
+}
+
+void LayerSurfaceV1::zwlr_layer_surface_v1_closed()
+{
+    emit closeRequested();
+}
+
+XdgShell::~XdgShell()
+{
+    destroy();
+}
+
+XdgSurface::XdgSurface(XdgShell *shell, Surface *surface, QObject *parent)
+    : QObject(parent)
+    , QtWayland::xdg_surface(shell->get_xdg_surface(*surface))
+    , m_surface(surface)
+{
+}
+
+XdgSurface::~XdgSurface()
+{
+    destroy();
+}
+
+Surface *XdgSurface::surface() const
+{
+    return m_surface;
+}
+
+void XdgSurface::xdg_surface_configure(uint32_t serial)
+{
+    emit configureRequested(serial);
+}
+
+XdgToplevel::XdgToplevel(XdgSurface *surface, QObject *parent)
+    : QObject(parent)
+    , QtWayland::xdg_toplevel(surface->get_toplevel())
+    , m_xdgSurface(surface)
+{
+}
+
+XdgToplevel::~XdgToplevel()
+{
+    destroy();
+}
+
+XdgSurface *XdgToplevel::xdgSurface() const
+{
+    return m_xdgSurface.data();
+}
+
+void XdgToplevel::xdg_toplevel_configure(int32_t width, int32_t height, wl_array *states)
+{
+    States requestedStates;
+
+    const uint32_t *stateData = static_cast<const uint32_t *>(states->data);
+    const size_t stateCount = states->size / sizeof(uint32_t);
+
+    for (size_t i = 0; i < stateCount; ++i) {
+        switch (stateData[i]) {
+        case QtWayland::xdg_toplevel::state_maximized:
+            requestedStates |= State::Maximized;
+            break;
+        case QtWayland::xdg_toplevel::state_fullscreen:
+            requestedStates |= State::Fullscreen;
+            break;
+        case QtWayland::xdg_toplevel::state_resizing:
+            requestedStates |= State::Resizing;
+            break;
+        case QtWayland::xdg_toplevel::state_activated:
+            requestedStates |= State::Activated;
+            break;
+        }
+    }
+
+    emit configureRequested(QSize(width, height), requestedStates);
+}
+
+void XdgToplevel::xdg_toplevel_close()
+{
+    emit closeRequested();
+}
+
+XdgPositioner::XdgPositioner(XdgShell *shell)
+    : QtWayland::xdg_positioner(shell->create_positioner())
+{
+}
+
+XdgPositioner::~XdgPositioner()
+{
+    destroy();
+}
+
+XdgPopup::XdgPopup(XdgSurface *surface, XdgSurface *parentSurface, XdgPositioner *positioner, QObject *parent)
+    : QObject(parent)
+    , QtWayland::xdg_popup(surface->get_popup(parentSurface->object(), positioner->object()))
+    , m_xdgSurface(surface)
+{
+}
+
+XdgPopup::~XdgPopup()
+{
+    destroy();
+}
+
+XdgSurface *XdgPopup::xdgSurface() const
+{
+    return m_xdgSurface.data();
+}
+
+void XdgPopup::xdg_popup_configure(int32_t x, int32_t y, int32_t width, int32_t height)
+{
+    emit configureRequested(QRect(x, y, width, height));
+}
+
 static struct {
     ConnectionThread *connection = nullptr;
     EventQueue *queue = nullptr;
@@ -69,7 +189,8 @@ static struct {
     SubCompositor *subCompositor = nullptr;
     ServerSideDecorationManager *decoration = nullptr;
     ShadowManager *shadowManager = nullptr;
-    XdgShell *xdgShellStable = nullptr;
+    KWayland::Client::XdgShell *xdgShellStable = nullptr;
+    XdgShell *xdgShell = nullptr;
     ShmPool *shm = nullptr;
     Seat *seat = nullptr;
     PlasmaShell *plasmaShell = nullptr;
@@ -82,7 +203,62 @@ static struct {
     IdleInhibitManager *idleInhibit = nullptr;
     AppMenuManager *appMenu = nullptr;
     XdgDecorationManager *xdgDecoration = nullptr;
+    TextInputManager *textInputManager = nullptr;
+    QtWayland::zwp_input_panel_v1 *inputPanelV1 = nullptr;
+    MockInputMethod *inputMethodV1 = nullptr;
+    QtWayland::zwp_input_method_context_v1 *inputMethodContextV1 = nullptr;
+    LayerShellV1 *layerShellV1 = nullptr;
+    TextInputManagerV3 *textInputManagerV3 = nullptr;
 } s_waylandConnection;
+
+class MockInputMethod : public QtWayland::zwp_input_method_v1
+{
+public:
+    MockInputMethod(struct wl_registry *registry, int id, int version);
+    ~MockInputMethod();
+
+protected:
+    void zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context) override;
+    void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override;
+
+private:
+    Surface *m_inputSurface = nullptr;
+    QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
+    AbstractClient *m_client = nullptr;
+};
+
+MockInputMethod::MockInputMethod(struct wl_registry *registry, int id, int version)
+    : QtWayland::zwp_input_method_v1(registry, id, version)
+{
+    
+}
+MockInputMethod::~MockInputMethod()
+{
+}
+
+void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context)
+{
+    Q_UNUSED(context)
+    if (!m_inputSurface) {
+        m_inputSurface = Test::createSurface();
+        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface, s_waylandConnection.outputs.first());
+    }
+    m_client = Test::renderAndWaitForShown(m_inputSurface, QSize(1280, 400), Qt::blue);
+}
+
+void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context)
+{
+    zwp_input_method_context_v1_destroy(context);
+
+    if (m_inputSurface) {
+        m_inputSurface->release();
+        m_inputSurface->destroy();
+        delete m_inputSurface;
+        m_inputSurface = nullptr;
+        delete m_inputMethodSurface;
+        m_inputMethodSurface = nullptr;
+    }
+}
 
 bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
 {
@@ -129,6 +305,36 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             output->deleteLater();
             s_waylandConnection.outputs.removeOne(output);
         });
+        QObject::connect(output, &Output::destroyed, [=]() {
+            s_waylandConnection.outputs.removeOne(output);
+        });
+    });
+
+    QObject::connect(registry, &Registry::interfaceAnnounced, [=](const QByteArray &interface, quint32 name, quint32 version) {
+        if (flags & AdditionalWaylandInterface::InputMethodV1) {
+            if (interface == QByteArrayLiteral("zwp_input_method_v1")) {
+                s_waylandConnection.inputMethodV1 = new MockInputMethod(*registry, name, version);
+            } else if (interface == QByteArrayLiteral("zwp_input_panel_v1")) {
+                s_waylandConnection.inputPanelV1 = new QtWayland::zwp_input_panel_v1(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::LayerShellV1) {
+            if (interface == QByteArrayLiteral("zwlr_layer_shell_v1")) {
+                s_waylandConnection.layerShellV1 = new LayerShellV1();
+                s_waylandConnection.layerShellV1->init(*registry, name, version);
+            }
+        }
+        if (flags & AdditionalWaylandInterface::TextInputManagerV3) {
+            // do something
+            if (interface == QByteArrayLiteral("zwp_text_input_manager_v3")) {
+                s_waylandConnection.textInputManagerV3 = new TextInputManagerV3();
+                s_waylandConnection.textInputManagerV3->init(*registry, name, version);
+            }
+        }
+        if (interface == QByteArrayLiteral("xdg_wm_base")) {
+            s_waylandConnection.xdgShell = new XdgShell();
+            s_waylandConnection.xdgShell->init(*registry, name, version);
+        }
     });
 
     QSignalSpy allAnnounced(registry, &Registry::interfacesAnnounced);
@@ -227,6 +433,12 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             return false;
         }
     }
+    if (flags.testFlag(AdditionalWaylandInterface::TextInputManagerV2)) {
+        s_waylandConnection.textInputManager = registry->createTextInputManager(registry->interface(Registry::Interface::TextInputManagerUnstableV2).name, registry->interface(Registry::Interface::TextInputManagerUnstableV2).version);
+        if (!s_waylandConnection.textInputManager->isValid()) {
+            return false;
+        }
+    }
 
     return true;
 }
@@ -251,6 +463,8 @@ void destroyWaylandConnection()
     s_waylandConnection.pointerConstraints = nullptr;
     delete s_waylandConnection.xdgShellStable;
     s_waylandConnection.xdgShellStable = nullptr;
+    delete s_waylandConnection.xdgShell;
+    s_waylandConnection.xdgShell = nullptr;
     delete s_waylandConnection.shadowManager;
     s_waylandConnection.shadowManager = nullptr;
     delete s_waylandConnection.idleInhibit;
@@ -265,6 +479,12 @@ void destroyWaylandConnection()
     s_waylandConnection.appMenu = nullptr;
     delete s_waylandConnection.xdgDecoration;
     s_waylandConnection.xdgDecoration = nullptr;
+    delete s_waylandConnection.textInputManager;
+    s_waylandConnection.textInputManager = nullptr;
+    delete s_waylandConnection.inputPanelV1;
+    s_waylandConnection.inputPanelV1 = nullptr;
+    delete s_waylandConnection.layerShellV1;
+    s_waylandConnection.layerShellV1 = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
@@ -349,6 +569,20 @@ OutputManagement *waylandOutputManagement()
     return s_waylandConnection.outputManagement;
 }
 
+TextInputManager *waylandTextInputManager()
+{
+    return s_waylandConnection.textInputManager;
+}
+
+TextInputManagerV3 *waylandTextInputManagerV3()
+{
+    return s_waylandConnection.textInputManagerV3;
+}
+
+QVector<KWayland::Client::Output *> waylandOutputs()
+{
+    return s_waylandConnection.outputs;
+}
 
 bool waitForWaylandPointer()
 {
@@ -459,6 +693,25 @@ SubSurface *createSubSurface(Surface *surface, Surface *parentSurface, QObject *
     return s;
 }
 
+LayerSurfaceV1 *createLayerSurfaceV1(Surface *surface, const QString &scope, Output *output, LayerShellV1::layer layer)
+{
+    LayerShellV1 *shell = s_waylandConnection.layerShellV1;
+    if (!shell) {
+        qWarning() << "Could not create a layer surface because the layer shell global is not bound";
+        return nullptr;
+    }
+
+    struct ::wl_output *nativeOutput = nullptr;
+    if (output) {
+        nativeOutput = *output;
+    }
+
+    LayerSurfaceV1 *shellSurface = new LayerSurfaceV1();
+    shellSurface->init(shell->get_layer_surface(*surface, nativeOutput, layer, scope));
+
+    return shellSurface;
+}
+
 XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellStable) {
@@ -475,7 +728,25 @@ XdgShellSurface *createXdgShellStableSurface(Surface *surface, QObject *parent, 
     return s;
 }
 
-XdgShellPopup *createXdgShellStablePopup(Surface *surface, XdgShellSurface *parentSurface, const XdgPositioner &positioner, QObject *parent, CreationSetup creationSetup)
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(Surface *surface, Output *output)
+{
+    if (!s_waylandConnection.inputPanelV1) {
+        qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";
+        return nullptr;
+    }
+    QtWayland::zwp_input_panel_surface_v1 *s = new QtWayland::zwp_input_panel_surface_v1(s_waylandConnection.inputPanelV1->get_input_panel_surface(*surface));
+
+    if (!s->isInitialized()) {
+        delete s;
+        return nullptr;
+    }
+
+    s->set_toplevel(output->output(), QtWayland::zwp_input_panel_surface_v1::position_center_bottom);
+
+    return s;
+}
+
+XdgShellPopup *createXdgShellStablePopup(Surface *surface, XdgShellSurface *parentSurface, const KWayland::Client::XdgPositioner &positioner, QObject *parent, CreationSetup creationSetup)
 {
     if (!s_waylandConnection.xdgShellStable) {
         return nullptr;
@@ -511,14 +782,66 @@ void initXdgShellPopup(KWayland::Client::Surface *surface, KWayland::Client::Xdg
     shellPopup->ackConfigure(configureRequestedSpy.last()[1].toInt());
 }
 
-KWayland::Client::XdgShellSurface *createXdgShellSurface(XdgShellSurfaceType type, KWayland::Client::Surface *surface, QObject *parent, CreationSetup creationSetup)
+static void waitForConfigured(XdgSurface *shellSurface)
 {
-    switch (type) {
-    case XdgShellSurfaceType::XdgShellStable:
-        return createXdgShellStableSurface(surface, parent, creationSetup);
-    default:
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface, &XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.isValid());
+
+    shellSurface->surface()->commit(Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    shellSurface->ack_configure(surfaceConfigureRequestedSpy.last().first().toUInt());
+}
+
+XdgToplevel *createXdgToplevelSurface(Surface *surface, QObject *parent, CreationSetup configureMode)
+{
+    XdgShell *shell = s_waylandConnection.xdgShell;
+
+    if (!shell) {
+        qWarning() << "Could not create an xdg_toplevel surface because xdg_wm_base global is not bound";
         return nullptr;
     }
+
+    XdgSurface *xdgSurface = new XdgSurface(shell, surface, parent);
+    XdgToplevel *xdgToplevel = new XdgToplevel(xdgSurface, parent);
+
+    if (configureMode == CreationSetup::CreateAndConfigure) {
+        waitForConfigured(xdgSurface);
+    }
+
+    return xdgToplevel;
+}
+
+XdgPositioner *createXdgPositioner()
+{
+    XdgShell *shell = s_waylandConnection.xdgShell;
+
+    if (!shell) {
+        qWarning() << "Could not create an xdg_positioner object because xdg_wm_base global is not bound";
+        return nullptr;
+    }
+
+    return new XdgPositioner(shell);
+}
+
+XdgPopup *createXdgPopupSurface(Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner,
+                                QObject *parent, CreationSetup configureMode)
+{
+    XdgShell *shell = s_waylandConnection.xdgShell;
+
+    if (!shell) {
+        qWarning() << "Could not create an xdg_popup surface because xdg_wm_base global is not bound";
+        return nullptr;
+    }
+
+    XdgSurface *xdgSurface = new XdgSurface(shell, surface, parent);
+    XdgPopup *xdgPopup = new XdgPopup(xdgSurface, parentSurface, positioner, parent);
+
+    if (configureMode == CreationSetup::CreateAndConfigure) {
+        waitForConfigured(xdgSurface);
+    }
+
+    return xdgPopup;
 }
 
 bool waitForWindowDestroyed(AbstractClient *client)

@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 // own
 #include "x11client.h"
 // kwin
@@ -393,7 +382,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
-    auto colorSchemeCookie = fetchColorScheme();
+    auto colorSchemeCookie = fetchPreferredColorScheme();
     auto firstInTabBoxCookie = fetchFirstInTabBox();
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
@@ -671,7 +660,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         }
     }
 
-    readColorScheme(colorSchemeCookie);
+    setColorScheme(readPreferredColorScheme(colorSchemeCookie));
 
     readApplicationMenuServiceName(applicationMenuServiceNameCookie);
     readApplicationMenuObjectPath(applicationMenuObjectPathCookie);
@@ -2598,12 +2587,6 @@ void X11Client::updateAllowedActions(bool force)
     }
 }
 
-void X11Client::debug(QDebug& stream) const
-{
-    stream.nospace();
-    print<QDebug>(stream);
-}
-
 Xcb::StringProperty X11Client::fetchActivities() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -2700,20 +2683,20 @@ void X11Client::updateFirstInTabBox()
     readFirstInTabBox(property);
 }
 
-Xcb::StringProperty X11Client::fetchColorScheme() const
+Xcb::StringProperty X11Client::fetchPreferredColorScheme() const
 {
     return Xcb::StringProperty(m_client, atoms->kde_color_sheme);
 }
 
-void X11Client::readColorScheme(Xcb::StringProperty &property)
+QString X11Client::readPreferredColorScheme(Xcb::StringProperty &property) const
 {
-    AbstractClient::updateColorScheme(rules()->checkDecoColor(QString::fromUtf8(property)));
+    return rules()->checkDecoColor(QString::fromUtf8(property));
 }
 
-void X11Client::updateColorScheme()
+QString X11Client::preferredColorScheme() const
 {
-    Xcb::StringProperty property = fetchColorScheme();
-    readColorScheme(property);
+    Xcb::StringProperty property = fetchPreferredColorScheme();
+    return readPreferredColorScheme(property);
 }
 
 bool X11Client::isClient() const
@@ -4462,15 +4445,18 @@ void X11Client::updateServerGeometry()
         resizeDecoration();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
-        // them again. If the client doesn't support frame counters, always update geometry.
-        const bool needsGeometryUpdate = !isResize() || m_syncRequest.counter == XCB_NONE;
-        if (needsGeometryUpdate) {
+        // them again.
+        if (m_frame.geometry() != m_bufferGeometry) {
             m_frame.setGeometry(m_bufferGeometry);
         }
         if (!isShade()) {
-            if (needsGeometryUpdate) {
-                m_wrapper.setGeometry(QRect(clientPos(), clientSize()));
-                m_client.setGeometry(QRect(QPoint(0, 0), clientSize()));
+            const QRect requestedWrapperGeometry(clientPos(), clientSize());
+            if (m_wrapper.geometry() != requestedWrapperGeometry) {
+                m_wrapper.setGeometry(requestedWrapperGeometry);
+            }
+            const QRect requestedClientGeometry(QPoint(0, 0), clientSize());
+            if (m_client.geometry() != requestedClientGeometry) {
+                m_client.setGeometry(requestedClientGeometry);
             }
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
@@ -4602,7 +4588,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = decoration()->client().data();
+        const auto c = decoration()->client().toStrongRef();
         if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
             emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
         }
@@ -5008,80 +4994,6 @@ void X11Client::doPerformMoveResize()
     }                                        // (leads to sync request races in some clients)
 }
 
-/**
- * Returns \a area with the client's strut taken into account.
- *
- * Used from Workspace in updateClientArea.
- */
-// TODO move to Workspace?
-
-QRect X11Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) const
-{
-    QRect r = area;
-    NETExtendedStrut str = strut();
-    QRect stareaL = QRect(
-                        0,
-                        str . left_start,
-                        str . left_width,
-                        str . left_end - str . left_start + 1);
-    QRect stareaR = QRect(
-                        desktopArea . right() - str . right_width + 1,
-                        str . right_start,
-                        str . right_width,
-                        str . right_end - str . right_start + 1);
-    QRect stareaT = QRect(
-                        str . top_start,
-                        0,
-                        str . top_end - str . top_start + 1,
-                        str . top_width);
-    QRect stareaB = QRect(
-                        str . bottom_start,
-                        desktopArea . bottom() - str . bottom_width + 1,
-                        str . bottom_end - str . bottom_start + 1,
-                        str . bottom_width);
-
-    QRect screenarea = workspace()->clientArea(ScreenArea, this);
-    // HACK: workarea handling is not xinerama aware, so if this strut
-    // reserves place at a xinerama edge that's inside the virtual screen,
-    // ignore the strut for workspace setting.
-    if (area == QRect(QPoint(0, 0), screens()->displaySize())) {
-        if (stareaL.left() < screenarea.left())
-            stareaL = QRect();
-        if (stareaR.right() > screenarea.right())
-            stareaR = QRect();
-        if (stareaT.top() < screenarea.top())
-            stareaT = QRect();
-        if (stareaB.bottom() < screenarea.bottom())
-            stareaB = QRect();
-    }
-    // Handle struts at xinerama edges that are inside the virtual screen.
-    // They're given in virtual screen coordinates, make them affect only
-    // their xinerama screen.
-    stareaL.setLeft(qMax(stareaL.left(), screenarea.left()));
-    stareaR.setRight(qMin(stareaR.right(), screenarea.right()));
-    stareaT.setTop(qMax(stareaT.top(), screenarea.top()));
-    stareaB.setBottom(qMin(stareaB.bottom(), screenarea.bottom()));
-
-    if (stareaL . intersects(area)) {
-//        qDebug() << "Moving left of: " << r << " to " << stareaL.right() + 1;
-        r . setLeft(stareaL . right() + 1);
-    }
-    if (stareaR . intersects(area)) {
-//        qDebug() << "Moving right of: " << r << " to " << stareaR.left() - 1;
-        r . setRight(stareaR . left() - 1);
-    }
-    if (stareaT . intersects(area)) {
-//        qDebug() << "Moving top of: " << r << " to " << stareaT.bottom() + 1;
-        r . setTop(stareaT . bottom() + 1);
-    }
-    if (stareaB . intersects(area)) {
-//        qDebug() << "Moving bottom of: " << r << " to " << stareaB.top() - 1;
-        r . setBottom(stareaB . top() - 1);
-    }
-
-    return r;
-}
-
 NETExtendedStrut X11Client::strut() const
 {
     NETExtendedStrut ext = info->extendedStrut();
@@ -5154,16 +5066,6 @@ StrutRect X11Client::strutRect(StrutArea area) const
     return StrutRect(); // Null rect
 }
 
-StrutRects X11Client::strutRects() const
-{
-    StrutRects region;
-    region += strutRect(StrutAreaTop);
-    region += strutRect(StrutAreaRight);
-    region += strutRect(StrutAreaBottom);
-    region += strutRect(StrutAreaLeft);
-    return region;
-}
-
 bool X11Client::hasStrut() const
 {
     NETExtendedStrut ext = strut();
@@ -5172,27 +5074,15 @@ bool X11Client::hasStrut() const
     return true;
 }
 
-bool X11Client::hasOffscreenXineramaStrut() const
-{
-    // Get strut as a QRegion
-    QRegion region;
-    region += strutRect(StrutAreaTop);
-    region += strutRect(StrutAreaRight);
-    region += strutRect(StrutAreaBottom);
-    region += strutRect(StrutAreaLeft);
-
-    // Remove all visible areas so that only the invisible remain
-    for (int i = 0; i < screens()->count(); i ++)
-        region -= screens()->geometry(i);
-
-    // If there's anything left then we have an offscreen strut
-    return !region.isEmpty();
-}
-
 void X11Client::applyWindowRules()
 {
     AbstractClient::applyWindowRules();
     setBlockingCompositing(info->isBlockingCompositing());
+}
+
+bool X11Client::supportsWindowRules() const
+{
+    return true;
 }
 
 void X11Client::damageNotifyEvent()

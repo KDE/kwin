@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "unmanaged.h"
 
@@ -45,7 +34,7 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask |
 Unmanaged::Unmanaged()
     : Toplevel()
 {
-    QTimer::singleShot(50, this, SLOT(setReadyForPainting()));
+    QTimer::singleShot(50, this, &Unmanaged::setReadyForPainting);
 }
 
 Unmanaged::~Unmanaged()
@@ -98,6 +87,7 @@ bool Unmanaged::track(xcb_window_t w)
 
 void Unmanaged::release(ReleaseReason releaseReason)
 {
+    addWorkspaceRepaint(visibleRect());
     Deleted* del = nullptr;
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         del = Deleted::create(this);
@@ -110,7 +100,6 @@ void Unmanaged::release(ReleaseReason releaseReason)
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     workspace()->removeUnmanaged(this);
-    addWorkspaceRepaint(visibleRect());
     if (releaseReason != ReleaseReason::KWinShutsDown) {
         disownDataPassedToDeleted();
         del->unrefWindow();
@@ -156,11 +145,6 @@ QPoint Unmanaged::clientPos() const
 QRect Unmanaged::transparentRect() const
 {
     return QRect(clientPos(), clientSize());
-}
-
-void Unmanaged::debug(QDebug& stream) const
-{
-    stream << "\'ID:" << window() << "\'";
 }
 
 NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "keyboard_input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
@@ -208,6 +197,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         Q_UNREACHABLE();
     }
 
+    const quint32 previousLayout = m_xkb->currentLayout();
     if (!autoRepeat) {
         m_xkb->updateKey(key, state);
     }
@@ -231,6 +221,10 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
+
+    if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier) {
+        m_keyboardLayout->checkLayoutChange(previousLayout);
+    }
 }
 
 void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -238,10 +232,11 @@ void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t
     if (!m_inited) {
         return;
     }
+    const quint32 previousLayout = m_xkb->currentLayout();
     // TODO: send to proper Client and also send when active Client changes
     m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
     m_modifiersChangedSpy->updateModifiers(modifiers());
-    m_keyboardLayout->checkLayoutChange();
+    m_keyboardLayout->checkLayoutChange(previousLayout);
 }
 
 void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)

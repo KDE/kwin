@@ -1,21 +1,9 @@
 /*
- * Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
- * Copyright (c) 2019 Cyril Rossi <cyril.rossi@enioka.com>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License version 2 as published by the Free Software Foundation.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public License
- * along with this library; see the file COPYING.LIB.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02110-1301, USA.
- */
+    SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
+    SPDX-FileCopyrightText: 2019 Cyril Rossi <cyril.rossi@enioka.com>
+
+    SPDX-License-Identifier: LGPL-2.0-only
+*/
 
 #pragma once
 
@@ -48,6 +36,7 @@ class DecorationsModel;
 }
 
 class KWinDecorationSettings;
+class KWinDecorationData;
 
 class KCMKWinDecoration : public KQuickAddons::ManagedConfigModule
 {
@@ -98,7 +87,6 @@ private Q_SLOTS:
 
 private:
     bool isSaveNeeded() const override;
-    bool isDefaults() const override;
 
     int borderSizeIndexFromString(const QString &size) const;
     QString borderSizeIndexToString(int index) const;
@@ -113,5 +101,5 @@ private:
     QPointer<KNS3::DownloadDialog> m_newStuffDialog;
 
     int m_borderSizeIndex = -1;
-    KWinDecorationSettings *m_settings;
+    KWinDecorationData *m_data;
 };

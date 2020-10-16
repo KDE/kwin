@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
-Copyright (C) 2020 Cyril Rossi <cyril.rossi@enioka.com>
+    SPDX-FileCopyrightText: 2009 Lucas Murray <lmurray@undefinedfire.com>
+    SPDX-FileCopyrightText: 2020 Cyril Rossi <cyril.rossi@enioka.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwinscreenedgeconfigform.h"
 #include "ui_main.h"
@@ -31,14 +20,15 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(ui->kcfg_ElectricBorderDelay, SIGNAL(valueChanged(int)), this, SLOT(sanitizeCooldown()));
+    connect(ui->kcfg_ElectricBorderDelay, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::sanitizeCooldown);
 
     // Visual feedback of action group conflicts
-    connect(ui->kcfg_ElectricBorders, SIGNAL(currentIndexChanged(int)), this, SLOT(groupChanged()));
-    connect(ui->kcfg_ElectricBorderMaximize, SIGNAL(stateChanged(int)), this, SLOT(groupChanged()));
-    connect(ui->kcfg_ElectricBorderTiling, SIGNAL(stateChanged(int)), this, SLOT(groupChanged()));
+    connect(ui->kcfg_ElectricBorders, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinScreenEdgesConfigForm::groupChanged);
+    connect(ui->kcfg_ElectricBorderMaximize, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
+    connect(ui->kcfg_ElectricBorderTiling, &QCheckBox::stateChanged, this, &KWinScreenEdgesConfigForm::groupChanged);
 
-    connect(ui->electricBorderCornerRatioSpin, SIGNAL(valueChanged(int)), this, SLOT(onChanged()));
+    connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::onChanged);
+    connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::updateDefaultIndicators);
 }
 
 KWinScreenEdgesConfigForm::~KWinScreenEdgesConfigForm()
@@ -64,7 +54,7 @@ double KWinScreenEdgesConfigForm::electricBorderCornerRatio() const
 
 void KWinScreenEdgesConfigForm::setElectricBorderCornerRatioEnabled(bool enable)
 {
-    return ui->electricBorderCornerRatioSpin->setEnabled(enable);
+    ui->electricBorderCornerRatioSpin->setEnabled(enable);
 }
 
 void KWinScreenEdgesConfigForm::reload()
@@ -77,6 +67,14 @@ void KWinScreenEdgesConfigForm::setDefaults()
 {
     ui->electricBorderCornerRatioSpin->setValue(m_defaultCornerRatio * 100.);
     KWinScreenEdge::setDefaults();
+}
+
+void KWinScreenEdgesConfigForm::setDefaultsIndicatorsVisible(bool visible)
+{
+    if (m_defaultIndicatorVisible != visible) {
+        m_defaultIndicatorVisible = visible;
+        updateDefaultIndicators();
+    }
 }
 
 Monitor *KWinScreenEdgesConfigForm::monitor() const
@@ -110,6 +108,12 @@ void KWinScreenEdgesConfigForm::groupChanged()
     monitorHideEdge(ElectricRight, hide);
     monitorHideEdge(ElectricBottom, hide);
     monitorHideEdge(ElectricLeft, hide);
+}
+
+void KWinScreenEdgesConfigForm::updateDefaultIndicators()
+{
+    ui->electricBorderCornerRatioSpin->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && (electricBorderCornerRatio() != m_defaultCornerRatio));
+    ui->electricBorderCornerRatioSpin->update();
 }
 
 } // namespace

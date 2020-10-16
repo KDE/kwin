@@ -1,22 +1,10 @@
 /*
- * Copyright © 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library. If not, see <http://www.gnu.org/licenses/>.
- *
- * Authors:
- *       Aleix Pol Gonzalez <aleixpol@kde.org>
- */
+    SPDX-FileCopyrightText: 2018-2020 Red Hat Inc
+    SPDX-FileCopyrightText: 2020 Aleix Pol Gonzalez <aleixpol@kde.org>
+    SPDX-FileContributor: Jan Grulich <jgrulich@redhat.com>
+
+    SPDX-License-Identifier: LGPL-2.0-or-later
+*/
 
 #include "screencastmanager.h"
 #include "abstract_client.h"
@@ -41,42 +29,13 @@ namespace KWin
 
 ScreencastManager::ScreencastManager(QObject *parent)
     : QObject(parent)
-    , m_screencast(waylandServer()->display()->createScreencastInterface(this))
+    , m_screencast(waylandServer()->display()->createScreencastV1Interface(this))
 {
-    connect(m_screencast, &KWaylandServer::ScreencastInterface::windowScreencastRequested,
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this, &ScreencastManager::streamWindow);
-    connect(m_screencast, &KWaylandServer::ScreencastInterface::outputScreencastRequested,
+    connect(m_screencast, &KWaylandServer::ScreencastV1Interface::outputScreencastRequested,
             this, &ScreencastManager::streamOutput);
 }
-
-class EGLFence : public QObject
-{
-public:
-    EGLFence(EGLDisplay eglDisplay)
-        : m_eglDisplay(eglDisplay)
-        , m_sync(eglCreateSync(eglDisplay, EGL_SYNC_FENCE_KHR, nullptr))
-    {
-        Q_ASSERT(m_sync);
-        glFinish();
-    }
-
-    bool clientWaitSync()
-    {
-        glFenceSync (GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        int ret = eglClientWaitSync(m_eglDisplay, m_sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, 0);
-        Q_ASSERT(ret == EGL_CONDITION_SATISFIED_KHR);
-        return ret == EGL_CONDITION_SATISFIED_KHR;
-    }
-
-    ~EGLFence() {
-        auto ret = eglDestroySyncKHR(m_eglDisplay, m_sync);
-        Q_ASSERT(ret == EGL_TRUE);
-    }
-
-private:
-    const EGLDisplay m_eglDisplay;
-    const EGLSyncKHR m_sync;
-};
 
 class WindowStream : public PipeWireStream
 {
@@ -98,10 +57,11 @@ private:
         connect(scene, &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_toplevel, &Toplevel::damaged, this, &WindowStream::includeDamage);
-        m_toplevel->damaged(m_toplevel, m_toplevel->frameGeometry());
+        m_damagedRegion = m_toplevel->visibleRect();
+        m_toplevel->addRepaintFull();
     }
 
-    void includeDamage(Toplevel *toplevel, const QRect &damage) {
+    void includeDamage(Toplevel *toplevel, const QRegion &damage) {
         Q_ASSERT(m_toplevel == toplevel);
         m_damagedRegion |= damage;
     }
@@ -110,7 +70,7 @@ private:
         if (m_damagedRegion.isEmpty()) {
             return;
         }
-        EGLFence fence(kwinApp()->platform()->sceneEglDisplay());
+        effects->makeOpenGLContextCurrent();
         QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
         const bool wasYInverted = frameTexture->isYInverted();
         frameTexture->setYInverted(false);
@@ -118,15 +78,14 @@ private:
         recordFrame(frameTexture.data(), m_damagedRegion);
         frameTexture->setYInverted(wasYInverted);
         m_damagedRegion = {};
-        bool b = fence.clientWaitSync();
-        Q_ASSERT(b);
+        glFinish(); // TODO: Don't stall the whole pipeline. Use EGL_ANDROID_native_fence_sync.
     }
 
     QRegion m_damagedRegion;
     Toplevel *m_toplevel;
 };
 
-void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *waylandStream, const QString &winid)
+void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream, const QString &winid)
 {
     auto *toplevel = Workspace::self()->findToplevel(winid);
 
@@ -139,23 +98,11 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamInterface *
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *waylandStream,
-                                     ::wl_resource *outputResource,
-                                     KWaylandServer::ScreencastInterface::CursorMode mode)
+void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface *waylandStream,
+                                     KWaylandServer::OutputInterface *output,
+                                     KWaylandServer::ScreencastV1Interface::CursorMode mode)
 {
-    auto outputIface = KWaylandServer::OutputInterface::get(outputResource);
-    if (!outputIface) {
-        waylandStream->sendFailed(i18n("Invalid output"));
-        return;
-    }
-
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    AbstractWaylandOutput *streamOutput = nullptr;
-    for (auto output : outputs) {
-        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
-            streamOutput = static_cast<AbstractWaylandOutput *>(output);
-        }
-    }
+    AbstractWaylandOutput *streamOutput = waylandServer()->findOutput(output);
 
     if (!streamOutput) {
         waylandStream->sendFailed(i18n("Could not find output"));
@@ -181,9 +128,9 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamInterface *
     integrateStreams(waylandStream, stream);
 }
 
-void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamInterface *waylandStream, PipeWireStream *stream)
+void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Interface *waylandStream, PipeWireStream *stream)
 {
-    connect(waylandStream, &KWaylandServer::ScreencastStreamInterface::finished, stream, &PipeWireStream::stop);
+    connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &PipeWireStream::stop);
     connect(stream, &PipeWireStream::stopStreaming, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         delete stream;

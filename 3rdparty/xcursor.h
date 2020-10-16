@@ -30,8 +30,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 typedef int		XcursorBool;
-typedef unsigned int	XcursorUInt;
+typedef uint32_t	XcursorUInt;
 
 typedef XcursorUInt	XcursorDim;
 typedef XcursorUInt	XcursorPixel;
