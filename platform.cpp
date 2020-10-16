@@ -567,4 +567,14 @@ QString Platform::supportInformation() const
     return QStringLiteral("Name: %1\n").arg(metaObject()->className());
 }
 
+EGLContext Platform::sceneEglGlobalShareContext() const
+{
+    return m_globalShareContext;
+}
+
+void Platform::setSceneEglGlobalShareContext(EGLContext context)
+{
+    m_globalShareContext = context;
+}
+
 }

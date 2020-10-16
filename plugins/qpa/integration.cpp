@@ -10,6 +10,7 @@
 #include "integration.h"
 #include "backingstore.h"
 #include "eglplatformcontext.h"
+#include "logging.h"
 #include "offscreensurface.h"
 #include "screen.h"
 #include "window.h"
@@ -122,6 +123,10 @@ QStringList Integration::themeNames() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
+    if (kwinApp()->platform()->sceneEglGlobalShareContext() == EGL_NO_CONTEXT) {
+        qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
+        return nullptr;
+    }
     const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
     if (eglDisplay != EGL_NO_DISPLAY) {
         EGLPlatformContext *platformContext = new EGLPlatformContext(context, eglDisplay);

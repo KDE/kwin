@@ -119,6 +119,19 @@ public:
         m_context = context;
     }
     /**
+     * Returns the compositor-wide shared EGL context. This function may return EGL_NO_CONTEXT
+     * if the underlying rendering backend does not use EGL.
+     *
+     * Note that the returned context should never be made current. Instead, create a context
+     * that shares with this one and make the new context current.
+     */
+    EGLContext sceneEglGlobalShareContext() const;
+    /**
+     * Sets the global share context to @a context. This function is intended to be called only
+     * by rendering backends.
+     */
+    void setSceneEglGlobalShareContext(EGLContext context);
+    /**
      * The first (in case of multiple) EGLSurface used by the compositing scene.
      */
     EGLSurface sceneEglSurface() const {
@@ -544,6 +557,7 @@ private:
     EGLDisplay m_eglDisplay;
     EGLConfig m_eglConfig = nullptr;
     EGLContext m_context = EGL_NO_CONTEXT;
+    EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     EGLSurface m_surface = EGL_NO_SURFACE;
     int m_hideCursorCounter = 0;
     ColorCorrect::Manager *m_colorCorrect = nullptr;
