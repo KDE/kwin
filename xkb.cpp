@@ -285,27 +285,7 @@ void Xkb::createKeymapFile()
     if (keymapString.isNull()) {
         return;
     }
-    const uint size = qstrlen(keymapString.data()) + 1;
-
-    QTemporaryFile *tmp = new QTemporaryFile(this);
-    if (!tmp->open()) {
-        delete tmp;
-        return;
-    }
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(size)) {
-        delete tmp;
-        return;
-    }
-    uchar *address = tmp->map(0, size);
-    if (!address) {
-        return;
-    }
-    if (qstrncpy(reinterpret_cast<char*>(address), keymapString.data(), size) == nullptr) {
-        delete tmp;
-        return;
-    }
-    m_seat->setKeymap(tmp->handle(), size);
+    m_seat->setKeymapData(keymapString.data());
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)

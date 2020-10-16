@@ -31,8 +31,8 @@ KeyboardRepeat::~KeyboardRepeat() = default;
 void KeyboardRepeat::handleKeyRepeat()
 {
     // TODO: don't depend on WaylandServer
-    if (waylandServer()->seat()->keyRepeatRate() != 0) {
-        m_timer->setInterval(1000 / waylandServer()->seat()->keyRepeatRate());
+    if (waylandServer()->seat()->keyboard()->keyRepeatRate() != 0) {
+        m_timer->setInterval(1000 / waylandServer()->seat()->keyboard()->keyRepeatRate());
     }
     // TODO: better time
     emit keyRepeat(m_key, m_time);
@@ -46,8 +46,8 @@ void KeyboardRepeat::keyEvent(KeyEvent *event)
     const quint32 key = event->nativeScanCode();
     if (event->type() == QEvent::KeyPress) {
         // TODO: don't get these values from WaylandServer
-        if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyRepeatDelay() != 0) {
-            m_timer->setInterval(waylandServer()->seat()->keyRepeatDelay());
+        if (m_xkb->shouldKeyRepeat(key) && waylandServer()->seat()->keyboard()->keyRepeatDelay() != 0) {
+            m_timer->setInterval(waylandServer()->seat()->keyboard()->keyRepeatDelay());
             m_key = key;
             m_time = event->timestamp();
             m_timer->start();
