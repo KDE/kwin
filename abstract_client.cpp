@@ -28,6 +28,7 @@
 #include "wayland_server.h"
 #include <KWaylandServer/plasmawindowmanagement_interface.h>
 
+#include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 
 #include <KDesktopFile>
@@ -2303,6 +2304,10 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
     if (decoration) {
         QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
         connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged,
+                this, &AbstractClient::updateDecorationInputShape);
+        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
+                this, &AbstractClient::updateDecorationInputShape);
         connect(decoration, &KDecoration2::Decoration::bordersChanged, this, [this]() {
             GeometryUpdatesBlocker blocker(this);
             const QRect oldGeometry = frameGeometry();
@@ -2311,9 +2316,12 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
             }
             emit geometryShapeChanged(this, oldGeometry);
         });
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
+                this, &AbstractClient::updateDecorationInputShape);
     }
     setDecoration(decoration);
     setFrameGeometry(QRect(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
+    updateDecorationInputShape();
 
     emit geometryShapeChanged(this, oldGeometry);
 }
@@ -2322,6 +2330,22 @@ void AbstractClient::destroyDecoration()
 {
     delete m_decoration.decoration;
     m_decoration.decoration = nullptr;
+    m_decoration.inputRegion = QRegion();
+}
+
+void AbstractClient::updateDecorationInputShape()
+{
+    if (!isDecorated()) {
+        return;
+    }
+
+    const QMargins borders = decoration()->borders();
+    const QMargins resizeBorders = decoration()->resizeOnlyBorders();
+
+    const QRect innerRect = QRect(QPoint(borderLeft(), borderTop()), decoratedClient()->size());
+    const QRect outerRect = innerRect + borders + resizeBorders;
+
+    m_decoration.inputRegion = QRegion(outerRect) - innerRect;
 }
 
 bool AbstractClient::decorationHasAlpha() const

@@ -1192,6 +1192,7 @@ protected:
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
+    void updateDecorationInputShape();
 
     void setDesktopFileName(QByteArray name);
     QString iconFromDesktopFile() const;
@@ -1299,6 +1300,7 @@ private:
         KDecoration2::Decoration *decoration = nullptr;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
+        QRegion inputRegion;
     } m_decoration;
     QByteArray m_desktopFileName;
 
