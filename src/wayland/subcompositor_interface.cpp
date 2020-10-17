@@ -158,7 +158,6 @@ void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 vers
     surfacePrivate->cached.contrastIsSet = false;
     surfacePrivate->cached.frameCallbacks.clear();
     surfacePrivate->cached.inputIsSet = false;
-    surfacePrivate->cached.inputIsInfinite = true;
     surfacePrivate->cached.opaqueIsSet = false;
     surfacePrivate->cached.shadowIsSet = false;
     surfacePrivate->cached.slideIsSet = false;

@@ -163,7 +163,6 @@ public:
     QRegion damage() const;
     QRegion opaque() const;
     QRegion input() const;
-    bool inputIsInfinite() const;
     qint32 bufferScale() const;
     /**
      * Returns the buffer transform that had been applied to the buffer to compensate for

@@ -358,8 +358,7 @@ void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struc
 {
     Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
-    pending.input = r ? r->region() : QRegion();
-    pending.inputIsInfinite = !r;
+    pending.input = r ? r->region() : infiniteRegion();
     pending.inputIsSet = true;
 }
 
@@ -522,6 +521,7 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
     const QSize oldSize = target->size;
     const QSize oldBufferSize = bufferSize;
     const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
+    const QRegion oldInputRegion = inputRegion;
     if (bufferChanged) {
         // TODO: is the reffing correct for subsurfaces?
         if (target->buffer) {
@@ -574,7 +574,6 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
     }
     if (inputRegionChanged) {
         target->input = source->input;
-        target->inputIsInfinite = source->inputIsInfinite;
         target->inputIsSet = true;
     }
     if (opaqueRegionChanged) {
@@ -631,11 +630,12 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
     }
     surfaceToBufferMatrix = buildSurfaceToBufferMatrix(target);
     bufferToSurfaceMatrix = surfaceToBufferMatrix.inverted();
+    inputRegion = target->input & QRect(QPoint(0, 0), target->size);
     if (opaqueRegionChanged) {
         emit q->opaqueChanged(target->opaque);
     }
-    if (inputRegionChanged) {
-        emit q->inputChanged(target->input);
+    if (oldInputRegion != inputRegion) {
+        emit q->inputChanged(inputRegion);
     }
     if (scaleFactorChanged) {
         emit q->bufferScaleChanged(target->bufferScale);
@@ -748,12 +748,7 @@ QRegion SurfaceInterface::opaque() const
 
 QRegion SurfaceInterface::input() const
 {
-    return d->current.input;
-}
-
-bool SurfaceInterface::inputIsInfinite() const
-{
-    return d->current.inputIsInfinite;
+    return d->inputRegion;
 }
 
 qint32 SurfaceInterface::bufferScale() const
@@ -951,7 +946,7 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
     }
     // check whether the geometry and input region contain the pos
     if (!size().isEmpty() && QRectF(QPoint(0, 0), size()).contains(position) &&
-            (inputIsInfinite() || input().contains(position.toPoint()))) {
+            input().contains(position.toPoint())) {
         return this;
     }
     return nullptr;

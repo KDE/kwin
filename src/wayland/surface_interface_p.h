@@ -8,6 +8,7 @@
 #define WAYLAND_SERVER_SURFACE_INTERFACE_P_H
 
 #include "surface_interface.h"
+#include "utils.h"
 // Qt
 #include <QHash>
 #include <QVector>
@@ -41,7 +42,7 @@ public:
         QRegion damage = QRegion();
         QRegion bufferDamage = QRegion();
         QRegion opaque = QRegion();
-        QRegion input = QRegion();
+        QRegion input = infiniteRegion();
         QRectF sourceGeometry = QRectF();
         QSize destinationSize = QSize();
         QSize size = QSize();
@@ -54,7 +55,6 @@ public:
         bool blurIsSet = false;
         bool contrastIsSet = false;
         bool slideIsSet = false;
-        bool inputIsInfinite = true;
         bool childrenChanged = false;
         bool bufferScaleIsSet = false;
         bool bufferTransformIsSet = false;
@@ -104,6 +104,7 @@ public:
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;
     QSize bufferSize;
+    QRegion inputRegion;
 
     // workaround for https://bugreports.qt.io/browse/QTBUG-52192
     // A subsurface needs to be considered mapped even if it doesn't have a buffer attached

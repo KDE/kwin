@@ -430,6 +430,7 @@ set(SERVER_LIB_HEADERS
   textinput_v2_interface.h
   textinput_v3_interface.h
   touch_interface.h
+  utils.h
   viewporter_interface.h
   xdgdecoration_v1_interface.h
   xdgforeign_v2_interface.h

@@ -479,14 +479,12 @@ void TestWaylandSurface::testAttachBuffer()
 
     // commit a different value shouldn't change our buffer
     QCOMPARE(serverSurface->buffer(), buffer3);
-    QVERIFY(serverSurface->input().isNull());
     damageSpy.clear();
     s->setInputRegion(m_compositor->createRegion(QRegion(0, 0, 24, 24)).get());
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
-    QCOMPARE(serverSurface->input(), QRegion(0, 0, 24, 24));
     QCOMPARE(serverSurface->buffer(), buffer3);
     QVERIFY(damageSpy.isEmpty());
     QCOMPARE(mappedSpy.count(), 1);
@@ -669,53 +667,59 @@ void TestWaylandSurface::testInput()
     QVERIFY(serverSurface);
     QSignalSpy inputRegionChangedSpy(serverSurface, SIGNAL(inputChanged(QRegion)));
     QVERIFY(inputRegionChangedSpy.isValid());
+    QSignalSpy committedSpy(serverSurface, &SurfaceInterface::committed);
+    QVERIFY(committedSpy.isValid());
 
-    // by default there should be an empty == infinite input region
+    // the input region should be empty if the surface has no buffer
+    QVERIFY(!serverSurface->isMapped());
     QCOMPARE(serverSurface->input(), QRegion());
-    QCOMPARE(serverSurface->inputIsInfinite(), true);
+
+    // the default input region is infinite
+    QImage black(100, 50, QImage::Format_RGB32);
+    black.fill(Qt::black);
+    QSharedPointer<KWayland::Client::Buffer> buffer1 = m_shm->createBuffer(black).toStrongRef();
+    QVERIFY(buffer1);
+    s->attachBuffer(buffer1);
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QVERIFY(serverSurface->isMapped());
+    QCOMPARE(inputRegionChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->input(), QRegion(0, 0, 100, 50));
 
     // let's install an input region
     s->setInputRegion(m_compositor->createRegion(QRegion(0, 10, 20, 30)).get());
     // the region should only be applied after the surface got committed
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(serverSurface->input(), QRegion());
-    QCOMPARE(serverSurface->inputIsInfinite(), true);
-    QCOMPARE(inputRegionChangedSpy.count(), 0);
+    QCOMPARE(inputRegionChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->input(), QRegion(0, 0, 100, 50));
 
     // so let's commit to get the new region
     s->commit(Surface::CommitFlag::None);
-    QVERIFY(inputRegionChangedSpy.wait());
-    QCOMPARE(inputRegionChangedSpy.count(), 1);
-    QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion(0, 10, 20, 30));
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(inputRegionChangedSpy.count(), 2);
     QCOMPARE(serverSurface->input(), QRegion(0, 10, 20, 30));
-    QCOMPARE(serverSurface->inputIsInfinite(), false);
 
     // committing without setting a new region shouldn't change
     s->commit(Surface::CommitFlag::None);
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
-    QCOMPARE(inputRegionChangedSpy.count(), 1);
+    QCOMPARE(inputRegionChangedSpy.count(), 2);
     QCOMPARE(serverSurface->input(), QRegion(0, 10, 20, 30));
-    QCOMPARE(serverSurface->inputIsInfinite(), false);
 
-    // let's change the input region
+    // let's change the input region, note that the new input region is cropped
     s->setInputRegion(m_compositor->createRegion(QRegion(10, 20, 30, 40)).get());
     s->commit(Surface::CommitFlag::None);
-    QVERIFY(inputRegionChangedSpy.wait());
-    QCOMPARE(inputRegionChangedSpy.count(), 2);
-    QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 30, 40));
-    QCOMPARE(serverSurface->input(), QRegion(10, 20, 30, 40));
-    QCOMPARE(serverSurface->inputIsInfinite(), false);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(inputRegionChangedSpy.count(), 3);
+    QCOMPARE(serverSurface->input(), QRegion(10, 20, 30, 30));
 
     // and let's go back to an empty region
     s->setInputRegion();
     s->commit(Surface::CommitFlag::None);
-    QVERIFY(inputRegionChangedSpy.wait());
-    QCOMPARE(inputRegionChangedSpy.count(), 3);
-    QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion());
-    QCOMPARE(serverSurface->input(), QRegion());
-    QCOMPARE(serverSurface->inputIsInfinite(), true);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(inputRegionChangedSpy.count(), 4);
+    QCOMPARE(serverSurface->input(), QRegion(0, 0, 100, 50));
 }
 
 void TestWaylandSurface::testScale()
