@@ -1714,7 +1714,7 @@ public:
 
         switch (event->type()) {
         case QEvent::TabletMove: {
-            const auto pos = event->globalPosF() - toplevel->bufferGeometry().topLeft();
+            const auto pos = toplevel->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
             m_cursorByTool[tool]->setPos(event->globalPos());
             break;
@@ -1725,7 +1725,7 @@ public:
             tool->sendProximityOut();
             break;
         case QEvent::TabletPress: {
-            const auto pos = event->globalPosF() - toplevel->bufferGeometry().topLeft();
+            const auto pos = toplevel->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
             m_cursorByTool[tool]->setPos(event->globalPos());
             tool->sendDown();

@@ -381,6 +381,18 @@ public:
     virtual bool isClient() const;
     virtual bool isDeleted() const;
 
+    /**
+     * Maps the specified @a point from the global screen coordinates to the frame coordinates.
+     */
+    QPoint mapToFrame(const QPoint &point) const;
+    /**
+     * Maps the specified @a point from the global screen coordinates to the surface-local
+     * coordinates of the main surface. For X11 clients, this function maps the specified point
+     * from the global screen coordinates to the buffer-local coordinates.
+     */
+    QPoint mapToLocal(const QPoint &point) const;
+    QPointF mapToLocal(const QPointF &point) const;
+
     // prefer isXXX() instead
     // 0 for supported types means default for managed/unmanaged types
     virtual NET::WindowType windowType(bool direct = false, int supported_types = 0) const = 0;

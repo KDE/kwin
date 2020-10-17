@@ -789,6 +789,21 @@ QMatrix4x4 Toplevel::inputTransformation() const
     return m;
 }
 
+QPoint Toplevel::mapToFrame(const QPoint &point) const
+{
+    return point - frameGeometry().topLeft();
+}
+
+QPoint Toplevel::mapToLocal(const QPoint &point) const
+{
+    return point - bufferGeometry().topLeft();
+}
+
+QPointF Toplevel::mapToLocal(const QPointF &point) const
+{
+    return point - bufferGeometry().topLeft();
+}
+
 quint32 Toplevel::windowId() const
 {
     return window();
