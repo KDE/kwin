@@ -754,6 +754,7 @@ public:
     virtual void showContextHelp();
 
     QRect inputGeometry() const override;
+    bool hitTest(const QPoint &point) const override;
 
     /**
      * @returns the geometry of the virtual keyboard

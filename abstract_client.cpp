@@ -2575,6 +2575,16 @@ QRect AbstractClient::inputGeometry() const
     return Toplevel::inputGeometry();
 }
 
+bool AbstractClient::hitTest(const QPoint &point) const
+{
+    if (isDecorated()) {
+        if (m_decoration.inputRegion.contains(mapToFrame(point))) {
+            return true;
+        }
+    }
+    return Toplevel::hitTest(point);
+}
+
 QRect AbstractClient::virtualKeyboardGeometry() const
 {
     return m_virtualKeyboardGeometry;

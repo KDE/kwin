@@ -2418,17 +2418,6 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
     return m_pointer->buttons();
 }
 
-static bool acceptsInput(Toplevel *t, const QPoint &pos)
-{
-    const QRegion input = t->inputShape();
-    if (input.isEmpty()) {
-        return true;
-    }
-    // TODO: What about sub-surfaces sticking outside the main surface?
-    const QPoint localPoint = pos - t->bufferGeometry().topLeft();
-    return input.contains(localPoint);
-}
-
 Toplevel *InputRedirection::findToplevel(const QPoint &pos)
 {
     if (!Workspace::self()) {
@@ -2443,7 +2432,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
         }
         const QList<Unmanaged *> &unmanaged = Workspace::self()->unmanagedList();
         foreach (Unmanaged *u, unmanaged) {
-            if (u->inputGeometry().contains(pos) && acceptsInput(u, pos)) {
+            if (u->hitTest(pos)) {
                 return u;
             }
         }
@@ -2482,7 +2471,7 @@ Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
                 continue;
             }
         }
-        if (t->inputGeometry().contains(pos) && acceptsInput(t, pos)) {
+        if (t->hitTest(pos)) {
             return t;
         }
     } while (it != stacking.begin());

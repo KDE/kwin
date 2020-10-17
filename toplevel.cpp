@@ -789,6 +789,14 @@ QMatrix4x4 Toplevel::inputTransformation() const
     return m;
 }
 
+bool Toplevel::hitTest(const QPoint &point) const
+{
+    if (m_surface && m_surface->isMapped()) {
+        return m_surface->inputSurfaceAt(mapToLocal(point));
+    }
+    return inputGeometry().contains(point);
+}
+
 QPoint Toplevel::mapToFrame(const QPoint &point) const
 {
     return point - frameGeometry().topLeft();

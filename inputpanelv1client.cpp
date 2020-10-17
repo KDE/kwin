@@ -107,9 +107,6 @@ NET::WindowType InputPanelV1Client::windowType(bool, int) const
 
 QRect InputPanelV1Client::inputGeometry() const
 {
-    if (surface()->inputIsInfinite()) {
-        return frameGeometry();
-    }
     return surface()->input().boundingRect().translated(pos());
 }
 

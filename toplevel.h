@@ -541,6 +541,11 @@ public:
     virtual QMatrix4x4 inputTransformation() const;
 
     /**
+     * Returns @c true if the toplevel can accept input at the specified position @a point.
+     */
+    virtual bool hitTest(const QPoint &point) const;
+
+    /**
      * The window has a popup grab. This means that when it got mapped the
      * parent window had an implicit (pointer) grab.
      *

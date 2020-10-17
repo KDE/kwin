@@ -25,6 +25,7 @@
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
+#include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
@@ -123,6 +124,8 @@ private Q_SLOTS:
     void testResizeCursor();
     void testMoveCursor();
     void testHideShowCursor();
+    void testDefaultInputRegion();
+    void testEmptyInputRegion();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -1617,6 +1620,52 @@ void PointerInputTest::testHideShowCursor()
     QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
     kwinApp()->platform()->showCursor();
     QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+}
+
+void PointerInputTest::testDefaultInputRegion()
+{
+    // This test verifies that a surface that hasn't specified the input region can be focused.
+
+    // Create a test client.
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+
+    // Move the point to the center of the surface.
+    Cursors::self()->mouse()->setPos(client->frameGeometry().center());
+    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
+
+    // Destroy the test client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void PointerInputTest::testEmptyInputRegion()
+{
+    // This test verifies that a surface that has specified an empty input region can't be focused.
+
+    // Create a test client.
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    std::unique_ptr<KWayland::Client::Region> inputRegion(m_compositor->createRegion(QRegion()));
+    surface->setInputRegion(inputRegion.get());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+
+    // Move the point to the center of the surface.
+    Cursors::self()->mouse()->setPos(client->frameGeometry().center());
+    QVERIFY(!waylandServer()->seat()->focusedPointerSurface());
+
+    // Destroy the test client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 }
