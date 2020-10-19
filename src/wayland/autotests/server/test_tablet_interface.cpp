@@ -137,7 +137,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-tablet-t
 
 void TestTabletInterface::initTestCase()
 {
-    m_display.setSocketName(s_socketName);
+    m_display.addSocketName(s_socketName);
     m_display.start();
     QVERIFY(m_display.isRunning());
 

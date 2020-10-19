@@ -158,8 +158,8 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-tes
 
 void DataControlInterfaceTest::init()
 {
-    m_display = new Display;
-    m_display->setSocketName(s_socketName);
+    m_display = new Display();
+    m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
 

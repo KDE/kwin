@@ -66,20 +66,18 @@ class Display::Private
 {
 public:
     Private(Display *q);
-    void flush();
-    void dispatch();
-    void setRunning(bool running);
-    void installSocketNotifier();
 
+    void registerSocketName(const QString &socketName);
+
+    QSocketNotifier *socketNotifier = nullptr;
     wl_display *display = nullptr;
     wl_event_loop *loop = nullptr;
-    QString socketName = QStringLiteral("wayland-0");
     bool running = false;
-    bool automaticSocketNaming = false;
     QList<OutputInterface*> outputs;
     QList<OutputDeviceInterface*> outputdevices;
     QVector<SeatInterface*> seats;
     QVector<ClientConnection*> clients;
+    QStringList socketNames;
     EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
 private:
@@ -91,20 +89,10 @@ Display::Private::Private(Display *q)
 {
 }
 
-void Display::Private::installSocketNotifier()
+void Display::Private::registerSocketName(const QString &socketName)
 {
-    if (!QThread::currentThread()) {
-        return;
-    }
-    int fd = wl_event_loop_get_fd(loop);
-    if (fd == -1) {
-        qCWarning(KWAYLAND_SERVER) << "Did not get the file descriptor for the event loop";
-        return;
-    }
-    QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, q);
-    QObject::connect(m_notifier, &QSocketNotifier::activated, q, [this] { dispatch(); } );
-    QObject::connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, q, [this] { flush(); });
-    setRunning(true);
+    socketNames.append(socketName);
+    emit q->socketNamesChanged();
 }
 
 Display::Display(QObject *parent)
@@ -112,6 +100,7 @@ Display::Display(QObject *parent)
     , d(new Private(this))
 {
     d->display = wl_display_create();
+    d->loop = wl_display_get_event_loop(d->display);
 }
 
 Display::~Display()
@@ -120,96 +109,73 @@ Display::~Display()
     wl_display_destroy(d->display);
 }
 
-void Display::Private::flush()
+bool Display::addSocketFileDescriptor(int fileDescriptor)
 {
-    if (!display || !loop) {
-        return;
+    if (wl_display_add_socket_fd(d->display, fileDescriptor)) {
+        qCWarning(KWAYLAND_SERVER, "Failed to add %d fd to display", fileDescriptor);
+        return false;
     }
-    wl_display_flush_clients(display);
+    return true;
 }
 
-void Display::Private::dispatch()
+bool Display::addSocketName(const QString &name)
 {
-    if (!display || !loop) {
-        return;
+    if (name.isEmpty()) {
+        const char *socket = wl_display_add_socket_auto(d->display);
+        if (!socket) {
+            qCWarning(KWAYLAND_SERVER, "Failed to find a free display socket");
+            return false;
+        }
+        d->registerSocketName(QString::fromUtf8(socket));
+    } else {
+        if (wl_display_add_socket(d->display, qPrintable(name))) {
+            qCWarning(KWAYLAND_SERVER, "Failed to add %s socket to display", qPrintable(name));
+            return false;
+        }
+        d->registerSocketName(name);
     }
-    if (wl_event_loop_dispatch(loop, 0) != 0) {
+    return true;
+}
+
+QStringList Display::socketNames() const
+{
+    return d->socketNames;
+}
+
+bool Display::start()
+{
+    if (d->running) {
+        return true;
+    }
+
+    const int fileDescriptor = wl_event_loop_get_fd(d->loop);
+    if (fileDescriptor == -1) {
+        qCWarning(KWAYLAND_SERVER) << "Did not get the file descriptor for the event loop";
+        return false;
+    }
+
+    d->socketNotifier = new QSocketNotifier(fileDescriptor, QSocketNotifier::Read, this);
+    connect(d->socketNotifier, &QSocketNotifier::activated, this, &Display::dispatchEvents);
+
+    QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
+    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Display::flush);
+
+    d->running = true;
+    emit runningChanged(true);
+
+    return true;
+}
+
+void Display::dispatchEvents()
+{
+    if (wl_event_loop_dispatch(d->loop, 0) != 0) {
         qCWarning(KWAYLAND_SERVER) << "Error on dispatching Wayland event loop";
     }
 }
 
-void Display::setSocketName(const QString &name)
+void Display::flush()
 {
-    if (d->socketName == name) {
-        return;
-    }
-    d->socketName = name;
-    emit socketNameChanged(d->socketName);
-}
-
-QString Display::socketName() const
-{
-    return d->socketName;
-}
-
-void Display::setAutomaticSocketNaming(bool automaticSocketNaming)
-{
-    if (d->automaticSocketNaming == automaticSocketNaming) {
-        return;
-    }
-    d->automaticSocketNaming = automaticSocketNaming;
-    emit automaticSocketNamingChanged(automaticSocketNaming);
-}
-
-bool Display::automaticSocketNaming() const
-{
-    return d->automaticSocketNaming;
-}
-
-bool Display::start(StartMode mode)
-{
-    Q_ASSERT(!d->running);
-    if (mode == StartMode::ConnectToSocket) {
-        if (d->automaticSocketNaming) {
-            const char *socket = wl_display_add_socket_auto(d->display);
-            if (socket == nullptr) {
-                qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
-                return false;
-            }
-
-            const QString newEffectiveSocketName = QString::fromUtf8(socket);
-            if (d->socketName != newEffectiveSocketName) {
-                d->socketName = newEffectiveSocketName;
-                emit socketNameChanged(d->socketName);
-            }
-        } else if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
-            qCWarning(KWAYLAND_SERVER) << "Failed to create Wayland socket";
-            return false;
-        }
-    }
-
-    d->loop = wl_display_get_event_loop(d->display);
-    d->installSocketNotifier();
-
-    return d->running;
-}
-
-void Display::dispatchEvents(int msecTimeout)
-{
-    Q_ASSERT(d->display);
-    if (d->running) {
-        d->dispatch();
-    } else if (d->loop) {
-        wl_event_loop_dispatch(d->loop, msecTimeout);
-        wl_display_flush_clients(d->display);
-    }
-}
-
-void Display::Private::setRunning(bool r)
-{
-    Q_ASSERT(running != r);
-    running = r;
-    emit q->runningChanged(running);
+    wl_display_flush_clients(d->display);
 }
 
 OutputInterface *Display::createOutput(QObject *parent)

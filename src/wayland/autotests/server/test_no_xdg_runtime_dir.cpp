@@ -31,10 +31,8 @@ void NoXdgRuntimeDirTest::testCreate()
     Display display;
     QSignalSpy runningSpy(&display, &Display::runningChanged);
     QVERIFY(runningSpy.isValid());
-    display.setSocketName(testSocketName);
-    QVERIFY(!display.isRunning());
+    QVERIFY(!display.addSocketName(testSocketName));
     display.start();
-    QVERIFY(!display.isRunning());
 
     // call into dispatchEvents should not crash
     display.dispatchEvents();

@@ -87,54 +87,47 @@ class LayerShellV1Interface;
 class KWAYLANDSERVER_EXPORT Display : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString socketName READ socketName WRITE setSocketName NOTIFY socketNameChanged)
-    Q_PROPERTY(bool automaticSocketNaming READ automaticSocketNaming WRITE setAutomaticSocketNaming NOTIFY automaticSocketNamingChanged)
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
 public:
     explicit Display(QObject *parent = nullptr);
     virtual ~Display();
 
     /**
-     * Sets the basename of the socket to @p name. If @p name is empty, it will use
-     * wl_display_add_socket_auto to get a free socket with a filename "wayland-%d".
-     **/
-    void setSocketName(const QString &name);
-    QString socketName() const;
+     * Adds a socket with the given @p fileDescriptor to the Wayland display. This function
+     * returns @c true if the socket has been added successfully; otherwise returns @c false.
+     *
+     * The compositor can call this function even after the display has been started.
+     *
+     * @see start()
+     */
+    bool addSocketFileDescriptor(int fileDescriptor);
+    /**
+     * Adds a UNIX socket with the specified @p name to the Wayland display. This function
+     * returns @c true if the socket has been added successfully; otherwise returns @c false.
+     *
+     * If the specified socket name @p name is empty, the display will pick a free socket with
+     * a filename "wayland-%d".
+     *
+     * The compositor can call this function even after the display has been started.
+     *
+     * @see start()
+     */
+    bool addSocketName(const QString &name = QString());
 
     /**
-     * If automaticSocketNaming is true, the manually set socketName is ignored
-     * and it will use wl_display_add_socket_auto on start to get a free socket with
-     * a filename "wayland-%d" instead. The effective socket is written into socketName.
-     * @since 5.55
-     **/
-    void setAutomaticSocketNaming(bool automaticSocketNaming);
-    bool automaticSocketNaming() const;
+     * Returns the list of socket names that the display listens for client connections.
+     */
+    QStringList socketNames() const;
 
     quint32 serial();
     quint32 nextSerial();
 
     /**
-     * How to setup the server connection.
-     * @li ConnectToSocket: the server will open the socket identified by the socket name
-     * @li ConnectClientsOnly: only connections through createClient are possible
-     **/
-    enum class StartMode {
-        ConnectToSocket,
-        ConnectClientsOnly
-    };
-    /**
      * Start accepting client connections. If the display has started successfully, this
      * function returns @c true; otherwise @c false is returned.
      */
-    bool start(StartMode mode = StartMode::ConnectToSocket);
-    /**
-     * Dispatches pending events in a blocking way. May only be used if the Display is
-     * created and started before the QCoreApplication is created. Once the QCoreApplication
-     * is created and the event loop is started this method delegates to the normal dispatch
-     * handling.
-     * @see startLoop
-     **/
-    void dispatchEvents(int msecTimeout = -1);
+    bool start();
+    void dispatchEvents();
 
     /**
      * Create a client for the given file descriptor.
@@ -374,9 +367,11 @@ public:
      **/
     void *eglDisplay() const;
 
+private Q_SLOTS:
+    void flush();
+
 Q_SIGNALS:
-    void socketNameChanged(const QString&);
-    void automaticSocketNamingChanged(bool);
+    void socketNamesChanged();
     void runningChanged(bool);
     void clientConnected(KWaylandServer::ClientConnection*);
     void clientDisconnected(KWaylandServer::ClientConnection*);

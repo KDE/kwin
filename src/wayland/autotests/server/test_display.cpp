@@ -35,17 +35,16 @@ private Q_SLOTS:
 void TestWaylandServerDisplay::testSocketName()
 {
     Display display;
-    QSignalSpy changedSpy(&display, SIGNAL(socketNameChanged(QString)));
+    QSignalSpy changedSpy(&display, &Display::socketNamesChanged);
     QVERIFY(changedSpy.isValid());
-    QCOMPARE(display.socketName(), QStringLiteral("wayland-0"));
+    QCOMPARE(display.socketNames(), QStringList());
     const QString testSName = QStringLiteral("fooBar");
-    display.setSocketName(testSName);
-    QCOMPARE(display.socketName(), testSName);
+    display.addSocketName(testSName);
+    QCOMPARE(display.socketNames(), QStringList { testSName });
     QCOMPARE(changedSpy.count(), 1);
-    QCOMPARE(changedSpy.first().first().toString(), testSName);
 
     // changing to same name again should not emit signal
-    display.setSocketName(testSName);
+    display.addSocketName(testSName);
     QCOMPARE(changedSpy.count(), 1);
 }
 
@@ -59,7 +58,7 @@ void TestWaylandServerDisplay::testStartStop()
     QScopedPointer<Display> display(new Display);
     QSignalSpy runningSpy(display.data(), SIGNAL(runningChanged(bool)));
     QVERIFY(runningSpy.isValid());
-    display->setSocketName(testSocketName);
+    display->addSocketName(testSocketName);
     QVERIFY(!display->isRunning());
     display->start();
 //     QVERIFY(runningSpy.wait());
@@ -75,7 +74,7 @@ void TestWaylandServerDisplay::testStartStop()
 void TestWaylandServerDisplay::testAddRemoveOutput()
 {
     Display display;
-    display.setSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
+    display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
     display.start();
 
     OutputInterface *output = display.createOutput();
@@ -98,7 +97,7 @@ void TestWaylandServerDisplay::testAddRemoveOutput()
 void TestWaylandServerDisplay::testClientConnection()
 {
     Display display;
-    display.setSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
+    display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
     display.start();
     QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWaylandServer::ClientConnection*)));
     QVERIFY(connectedSpy.isValid());
@@ -174,7 +173,7 @@ void TestWaylandServerDisplay::testClientConnection()
 void TestWaylandServerDisplay::testConnectNoSocket()
 {
     Display display;
-    display.start(Display::StartMode::ConnectClientsOnly);
+    display.start();
     QVERIFY(display.isRunning());
 
     // let's try connecting a client
@@ -191,7 +190,7 @@ void TestWaylandServerDisplay::testConnectNoSocket()
 void TestWaylandServerDisplay::testOutputManagement()
 {
     Display display;
-    display.setSocketName("kwayland-test-0");
+    display.addSocketName("kwayland-test-0");
     display.start();
     auto kwin = display.createOutputManagement(this);
     kwin->create();
@@ -205,20 +204,20 @@ void TestWaylandServerDisplay::testAutoSocketName()
     QVERIFY(qputenv("XDG_RUNTIME_DIR", runtimeDir.path().toUtf8()));
 
     Display display0;
-    display0.setAutomaticSocketNaming(true);
-    QSignalSpy socketNameChangedSpy0(&display0, SIGNAL(socketNameChanged(QString)));
+    QSignalSpy socketNameChangedSpy0(&display0, &Display::socketNamesChanged);
+    QVERIFY(socketNameChangedSpy0.isValid());
+    QVERIFY(display0.addSocketName());
     display0.start();
     QVERIFY(display0.isRunning());
-    QCOMPARE(socketNameChangedSpy0.count(), 0);
-    QCOMPARE(display0.socketName(), QStringLiteral("wayland-0"));
+    QCOMPARE(socketNameChangedSpy0.count(), 1);
 
     Display display1;
-    display1.setAutomaticSocketNaming(true);
-    QSignalSpy socketNameChangedSpy1(&display1, SIGNAL(socketNameChanged(QString)));
+    QSignalSpy socketNameChangedSpy1(&display1, &Display::socketNamesChanged);
+    QVERIFY(socketNameChangedSpy1.isValid());
+    QVERIFY(display1.addSocketName());
     display1.start();
     QVERIFY(display1.isRunning());
     QCOMPARE(socketNameChangedSpy1.count(), 1);
-    QCOMPARE(display1.socketName(), QStringLiteral("wayland-1"));
 }
 
 

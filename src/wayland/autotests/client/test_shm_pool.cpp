@@ -60,7 +60,7 @@ void TestShmPool::init()
     using namespace KWaylandServer;
     delete m_display;
     m_display = new Display(this);
-    m_display->setSocketName(s_socketName);
+    m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
 

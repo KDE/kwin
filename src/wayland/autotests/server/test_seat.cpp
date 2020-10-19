@@ -30,7 +30,7 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-tes
 void TestWaylandServerSeat::testCapabilities()
 {
     Display display;
-    display.setSocketName(s_socketName);
+    display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
     QVERIFY(!seat->hasKeyboard());
@@ -80,7 +80,7 @@ void TestWaylandServerSeat::testCapabilities()
 void TestWaylandServerSeat::testName()
 {
     Display display;
-    display.setSocketName(s_socketName);
+    display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
     QCOMPARE(seat->name(), QString());
@@ -99,7 +99,7 @@ void TestWaylandServerSeat::testName()
 void TestWaylandServerSeat::testPointerButton()
 {
     Display display;
-    display.setSocketName(s_socketName);
+    display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
     PointerInterface *pointer = seat->focusedPointer();
@@ -129,7 +129,7 @@ void TestWaylandServerSeat::testPointerButton()
 void TestWaylandServerSeat::testPointerPos()
 {
     Display display;
-    display.setSocketName(s_socketName);
+    display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
     QSignalSpy seatPosSpy(seat, SIGNAL(pointerPosChanged(QPointF)));
@@ -157,7 +157,7 @@ void TestWaylandServerSeat::testPointerPos()
 void TestWaylandServerSeat::testRepeatInfo()
 {
     Display display;
-    display.setSocketName(s_socketName);
+    display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
     seat->setHasKeyboard(true);
@@ -175,7 +175,7 @@ void TestWaylandServerSeat::testRepeatInfo()
 void TestWaylandServerSeat::testMultiple()
 {
     Display display;
-    display.setSocketName(s_socketName);
+    display.addSocketName(s_socketName);
     display.start();
     QVERIFY(display.seats().isEmpty());
     SeatInterface *seat1 = display.createSeat();
