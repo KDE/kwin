@@ -131,19 +131,6 @@ public:
      * by rendering backends.
      */
     void setSceneEglGlobalShareContext(EGLContext context);
-    /**
-     * The first (in case of multiple) EGLSurface used by the compositing scene.
-     */
-    EGLSurface sceneEglSurface() const {
-        return m_surface;
-    }
-    /**
-     * Sets the first @p surface used by the compositing scene.
-     * @see sceneEglSurface
-     */
-    void setSceneEglSurface(EGLSurface surface) {
-        m_surface = surface;
-    }
 
     /**
      * The EglConfig used by the compositing scene.
@@ -558,7 +545,6 @@ private:
     EGLConfig m_eglConfig = nullptr;
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
-    EGLSurface m_surface = EGL_NO_SURFACE;
     int m_hideCursorCounter = 0;
     ColorCorrect::Manager *m_colorCorrect = nullptr;
     bool m_supportsGammaControl = false;

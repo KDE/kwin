@@ -118,7 +118,6 @@ void AbstractEglBackend::cleanup()
     cleanupSurfaces();
     eglReleaseThread();
     kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
-    kwinApp()->platform()->setSceneEglSurface(EGL_NO_SURFACE);
     kwinApp()->platform()->setSceneEglConfig(nullptr);
 }
 
@@ -359,7 +358,6 @@ void AbstractEglBackend::setConfig(const EGLConfig &config)
 void AbstractEglBackend::setSurface(const EGLSurface &surface)
 {
     m_surface = surface;
-    kwinApp()->platform()->setSceneEglSurface(surface);
 }
 
 QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *requestedOutput) const
