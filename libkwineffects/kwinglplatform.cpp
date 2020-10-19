@@ -905,12 +905,12 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
 
         // softpipe
-        else if (m_vendor == "VMware, Inc." && m_chipset == "softpipe" ) {
+        else if (m_chipset == "softpipe") {
             m_driver = Driver_Softpipe;
         }
 
         // llvmpipe
-        else if (m_vendor == "VMware, Inc." && m_chipset == "llvmpipe") {
+        else if (m_chipset == "llvmpipe") {
             m_driver = Driver_Llvmpipe;
         }
 
