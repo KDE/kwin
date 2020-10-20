@@ -70,10 +70,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
         // Wayland native client provides new selection
         if (!m_checkConnection) {
             m_checkConnection = connect(workspace(), &Workspace::clientActivated,
-                                        this, [this](AbstractClient *ac) {
-                                            Q_UNUSED(ac);
-                                            checkWlSource();
-                                        });
+                                        this, &Clipboard::checkWlSource);
         }
         // remove previous source so checkWlSource() can create a new one
         setWlSource(nullptr);
