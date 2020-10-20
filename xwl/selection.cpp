@@ -158,7 +158,7 @@ void Selection::registerXfixes()
     const uint32_t mask = XCB_XFIXES_SELECTION_EVENT_MASK_SET_SELECTION_OWNER |
             XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_WINDOW_DESTROY |
             XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_CLIENT_CLOSE;
-    xcb_xfixes_select_selection_input(kwinApp()->x11Connection(),
+    xcb_xfixes_select_selection_input(xcbConn,
                                       m_window,
                                       m_atom,
                                       mask);
