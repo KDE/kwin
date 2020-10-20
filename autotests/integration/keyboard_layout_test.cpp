@@ -237,10 +237,9 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     QVERIFY(!reply.isError());
     QCOMPARE(reply.reply().arguments().first().toBool(), true);
     QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
-    // FIXME: need to pass
-//    QVERIFY(layoutChangedSpy.wait(1000));
-//    QCOMPARE(layoutChangedSpy.count(), 1);
-//    layoutChangedSpy.clear();
+    QVERIFY(layoutChangedSpy.wait(1000));
+    QCOMPARE(layoutChangedSpy.count(), 1);
+    layoutChangedSpy.clear();
 
     // switching to same layout should also work
     reply = changeLayout(QStringLiteral("German"));
