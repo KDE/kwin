@@ -41,7 +41,8 @@ public:
     enum Change {
         MakeFirst,
         MakeLast,
-        Update
+        Update,
+        MakeFirstMinimized = MakeFirst
     };
     ~FocusChain() override;
     /**
