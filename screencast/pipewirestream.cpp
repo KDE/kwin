@@ -252,6 +252,7 @@ bool PipeWireStream::createStream()
     if (pw_stream_connect(pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, &param, 1) != 0) {
         qCWarning(KWIN_SCREENCAST) << "Could not connect to stream";
         pw_stream_destroy(pwStream);
+        pwStream = nullptr;
         return false;
     }
 
