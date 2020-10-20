@@ -866,45 +866,39 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     ret.verts[ 2 ].oy = y2;
     ret.verts[ 3 ].oy = y2;
 
-    const double my_u0 = verts[0].tx;
-    const double my_u1 = verts[2].tx;
-    const double my_v0 = verts[0].ty;
-    const double my_v1 = verts[2].ty;
+    const double xOrigin = left();
+    const double yOrigin = top();
 
-    const double width  = right() - left();
-    const double height = bottom() - top();
-
-    const double texWidth  = my_u1 - my_u0;
-    const double texHeight = my_v1 - my_v0;
+    const double widthReciprocal  = 1 / (right() - xOrigin);
+    const double heightReciprocal = 1 / (bottom() - yOrigin);
 
     if (!uvAxisSwapped()) {
-        const double u0 = (x1 - left()) / width  * texWidth  + my_u0;
-        const double u1 = (x2 - left()) / width  * texWidth  + my_u0;
-        const double v0 = (y1 - top())  / height * texHeight + my_v0;
-        const double v1 = (y2 - top())  / height * texHeight + my_v0;
+        for (int i = 0; i < 4; ++i) {
+            const double w1 = (ret.verts[i].px - xOrigin) * widthReciprocal;
+            const double w2 = (ret.verts[i].py - yOrigin) * heightReciprocal;
 
-        ret.verts[0].tx = u0;
-        ret.verts[3].tx = u0;
-        ret.verts[1].tx = u1;
-        ret.verts[2].tx = u1;
-        ret.verts[0].ty = v0;
-        ret.verts[1].ty = v0;
-        ret.verts[2].ty = v1;
-        ret.verts[3].ty = v1;
+            // Use bilinear interpolation to compute the texture coords.
+            ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
+                    w1 * (1 - w2) * verts[1].tx +
+                    w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[3].tx;
+            ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
+                    w1 * (1 - w2) * verts[1].ty +
+                    w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[3].ty;
+        }
     } else {
-        const double u0 = (y1 - top())  / height * texWidth  + my_u0;
-        const double u1 = (y2 - top())  / height * texWidth  + my_u0;
-        const double v0 = (x1 - left()) / width  * texHeight + my_v0;
-        const double v1 = (x2 - left()) / width  * texHeight + my_v0;
+        // Same as above, with just verts[1] and verts[3] being swapped.
+        for (int i = 0; i < 4; ++i) {
+            const double w1 = (ret.verts[i].py - yOrigin) * heightReciprocal;
+            const double w2 = (ret.verts[i].px - xOrigin) * widthReciprocal;
 
-        ret.verts[0].tx = u0;
-        ret.verts[1].tx = u0;
-        ret.verts[2].tx = u1;
-        ret.verts[3].tx = u1;
-        ret.verts[0].ty = v0;
-        ret.verts[3].ty = v0;
-        ret.verts[1].ty = v1;
-        ret.verts[2].ty = v1;
+            // Use bilinear interpolation to compute the texture coords.
+            ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
+                    w1 * (1 - w2) * verts[3].tx +
+                    w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[1].tx;
+            ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
+                    w1 * (1 - w2) * verts[3].ty +
+                    w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[1].ty;
+        }
     }
 
     ret.setUVAxisSwapped(uvAxisSwapped());
