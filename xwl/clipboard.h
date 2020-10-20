@@ -53,6 +53,7 @@ private:
     QMetaObject::Connection m_checkConnection;
 
     Q_DISABLE_COPY(Clipboard)
+    bool m_waitingForTargets = false;
 };
 
 } // namespace Xwl
