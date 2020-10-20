@@ -109,7 +109,7 @@ void Clipboard::checkWlSource()
         removeSource();
         return;
     }
-    if (!workspace()->activeClient() || !workspace()->activeClient()->inherits("KWin::X11Client")) {
+    if (!qobject_cast<KWin::X11Client*>(workspace()->activeClient())) {
         // no active client or active client is Wayland native
         removeSource();
         return;
