@@ -295,6 +295,9 @@
         <entry name="LayoutName" type="String">
             <default>thumbnails</default>
         </entry>
+        <entry name="MoveMinimizedWindowsToEndOfTabBoxFocusChain" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
     <group name="KDE">
         <entry name="AnimationDurationFactor" type="Double">

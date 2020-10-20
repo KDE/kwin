@@ -111,6 +111,7 @@ Options::Options(QObject *parent)
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , m_glPlatformInterface(Options::defaultGlPlatformInterface())
     , m_windowsBlockCompositing(true)
+    , m_MoveMinimizedWindowsToEndOfTabBoxFocusChain(false)
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -679,6 +680,15 @@ void Options::setWindowsBlockCompositing(bool value)
     emit windowsBlockCompositingChanged();
 }
 
+void Options::setMoveMinimizedWindowsToEndOfTabBoxFocusChain(bool value)
+{
+    if (m_MoveMinimizedWindowsToEndOfTabBoxFocusChain == value) {
+        return;
+    }
+    m_MoveMinimizedWindowsToEndOfTabBoxFocusChain = value;
+
+}
+
 void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
 {
     if (glPreferBufferSwap == 'a') {
@@ -849,6 +859,7 @@ void Options::syncFromKcfgc()
     setElectricBorderTiling(m_settings->electricBorderTiling());
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
     setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
+    setMoveMinimizedWindowsToEndOfTabBoxFocusChain(m_settings->moveMinimizedWindowsToEndOfTabBoxFocusChain());
 
 }
 

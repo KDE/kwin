@@ -227,14 +227,18 @@ AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint deskt
 void FocusChain::makeFirstInChain(AbstractClient *client, Chain &chain)
 {
     chain.removeAll(client);
-    if (client->isMinimized()) { // add it before the first minimized ...
-        for (int i = chain.count()-1; i >= 0; --i) {
-            if (chain.at(i)->isMinimized()) {
-                chain.insert(i+1, client);
-                return;
+    if (options->moveMinimizedWindowsToEndOfTabBoxFocusChain()) {
+        if (client->isMinimized()) { // add it before the first minimized ...
+            for (int i = chain.count()-1; i >= 0; --i) {
+                if (chain.at(i)->isMinimized()) {
+                    chain.insert(i+1, client);
+                    return;
+                }
             }
+            chain.prepend(client); // ... or at end of chain
+        } else {
+            chain.append(client);
         }
-        chain.prepend(client); // ... or at end of chain
     } else {
         chain.append(client);
     }

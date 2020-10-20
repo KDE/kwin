@@ -590,6 +590,10 @@ public:
         return m_windowsBlockCompositing;
     }
 
+    bool moveMinimizedWindowsToEndOfTabBoxFocusChain() const {
+        return m_MoveMinimizedWindowsToEndOfTabBoxFocusChain;
+    }
+
     QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
 
     // setters
@@ -651,6 +655,7 @@ public:
     void setGlPreferBufferSwap(char glPreferBufferSwap);
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setWindowsBlockCompositing(bool set);
+    void setMoveMinimizedWindowsToEndOfTabBoxFocusChain(bool set);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick() {
@@ -881,6 +886,7 @@ private:
     GlSwapStrategy m_glPreferBufferSwap;
     OpenGLPlatformInterface m_glPlatformInterface;
     bool m_windowsBlockCompositing;
+    bool m_MoveMinimizedWindowsToEndOfTabBoxFocusChain;
 
     WindowOperation OpTitlebarDblClick;
     WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
