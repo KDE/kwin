@@ -141,6 +141,7 @@ public:
     virtual void doneOpenGLContextCurrent();
     virtual bool supportsSurfacelessContext() const;
     virtual bool supportsNativeFence() const;
+    virtual bool supportsExportDmaBuf() const;
 
     virtual QMatrix4x4 screenProjectionMatrix() const;
 

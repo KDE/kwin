@@ -19,7 +19,6 @@
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
-#include "gbm_dmabuf.h"
 #endif
 // system
 #include <algorithm>

@@ -28,10 +28,20 @@ namespace KWin
 {
 
 class Cursor;
-class DmaBufTexture;
+class DmaBufHandle;
 class EGLNativeFence;
+class GLRenderTarget;
 class GLTexture;
 class PipeWireCore;
+
+struct ScreenCastDmaBufFrameData
+{
+    ~ScreenCastDmaBufFrameData();
+
+    QScopedPointer<DmaBufHandle> handle;
+    QScopedPointer<GLRenderTarget> renderTarget;
+    QScopedPointer<GLTexture> texture;
+};
 
 class KWIN_EXPORT PipeWireStream : public QObject
 {
@@ -99,7 +109,7 @@ private:
     bool m_repainting = false;
     QRect cursorGeometry(Cursor *cursor) const;
 
-    QHash<struct pw_buffer *, QSharedPointer<DmaBufTexture>> m_dmabufDataForPwBuffer;
+    QHash<struct pw_buffer *, QSharedPointer<ScreenCastDmaBufFrameData>> m_dmabufDataForPwBuffer;
 
     pw_buffer *m_pendingBuffer = nullptr;
     QSocketNotifier *m_pendingNotifier = nullptr;

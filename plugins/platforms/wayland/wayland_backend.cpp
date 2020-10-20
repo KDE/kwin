@@ -13,10 +13,6 @@
 
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
-#if HAVE_GBM
-#include "../drm/gbm_dmabuf.h"
-#include <gbm.h>
-#endif
 #endif
 #include "logging.h"
 #include "scene_qpainter_wayland_backend.h"
@@ -447,18 +443,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
 {
     supportsOutputChanges();
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
-
-
-#if HAVE_GBM && HAVE_WAYLAND_EGL
-    char const *drm_render_node = "/dev/dri/renderD128";
-    m_drmFileDescriptor = open(drm_render_node, O_RDWR);
-    if (m_drmFileDescriptor < 0) {
-        qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
-        m_gbmDevice = nullptr;
-        return;
-    }
-    m_gbmDevice = gbm_create_device(m_drmFileDescriptor);
-#endif
 }
 
 WaylandBackend::~WaylandBackend()
@@ -483,10 +467,6 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->quit();
     m_connectionThread->wait();
     m_connectionThreadObject->deleteLater();
-#if HAVE_GBM && HAVE_WAYLAND_EGL
-    gbm_device_destroy(m_gbmDevice);
-    close(m_drmFileDescriptor);
-#endif
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
@@ -836,15 +816,6 @@ Outputs WaylandBackend::enabledOutputs() const
 {
     // all outputs are enabled
     return m_outputs;
-}
-
-DmaBufTexture *WaylandBackend::createDmaBufTexture(const QSize& size)
-{
-#if HAVE_GBM && HAVE_WAYLAND_EGL
-    return GbmDmaBuf::createBuffer(size, m_gbmDevice);
-#else
-    return nullptr;
-#endif
 }
 
 }

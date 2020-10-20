@@ -174,6 +174,10 @@ public:
     {
         return m_haveNativeFence;
     }
+    bool supportsExportDmaBuf() const
+    {
+        return m_haveExportDmaBuf;
+    }
 
     /**
      * Returns the damage that has accumulated since a buffer of the given age was presented.
@@ -279,6 +283,11 @@ protected:
         m_haveNativeFence = value;
     }
 
+    void setSupportsExportDmaBuf(bool value)
+    {
+        m_haveExportDmaBuf = value;
+    }
+
     /**
      * @return const QRegion& Damage of previously rendered frame
      */
@@ -336,6 +345,10 @@ private:
      * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.
      */
     bool m_haveNativeFence = false;
+    /**
+     * @brief Whether the backend supports EGL_MESA_image_dma_buf_export.
+     */
+    bool m_haveExportDmaBuf = false;
     /**
      * @brief Whether the initialization failed, of course default to @c false.
      */

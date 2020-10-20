@@ -35,7 +35,6 @@ class Manager;
 class AbstractOutput;
 class Edge;
 class Compositor;
-class DmaBufTexture;
 class OverlayWindow;
 class OpenGLBackend;
 class Outline;
@@ -73,10 +72,6 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
-    virtual DmaBufTexture *createDmaBufTexture(const QSize &size) {
-        Q_UNUSED(size);
-        return nullptr;
-    }
 
     /**
      * Informs the Platform that it is about to go down and shall do appropriate cleanup.
@@ -105,6 +100,10 @@ public:
      * Whether our Compositing EGL display supports creating native EGL fences.
      */
     bool supportsNativeFence() const;
+    /**
+     * Whether our Compositing EGL display allows exporting images as dma-bufs.
+     */
+    bool supportsExportDmaBuf() const;
     /**
      * The EGLDisplay used by the compositing scene.
      */

@@ -7,9 +7,6 @@ set(WAYLAND_BACKEND_SOURCES
 
 if (HAVE_WAYLAND_EGL)
     set(WAYLAND_BACKEND_SOURCES egl_wayland_backend.cpp ${WAYLAND_BACKEND_SOURCES})
-    if (HAVE_GBM)
-        list(APPEND WAYLAND_BACKEND_SOURCES ../drm/gbm_dmabuf.cpp)
-    endif()
 endif()
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
@@ -19,9 +16,6 @@ target_link_libraries(KWinWaylandWaylandBackend kwin KF5::WaylandClient SceneQPa
 
 if (HAVE_WAYLAND_EGL)
     target_link_libraries(KWinWaylandWaylandBackend SceneOpenGLBackend Wayland::Egl)
-    if (HAVE_GBM)
-       target_link_libraries(KWinWaylandWaylandBackend gbm::gbm)
-    endif()
 endif()
 
 install(

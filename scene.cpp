@@ -691,6 +691,11 @@ bool Scene::supportsNativeFence() const
     return false;
 }
 
+bool Scene::supportsExportDmaBuf() const
+{
+    return false;
+}
+
 void Scene::triggerFence()
 {
 }

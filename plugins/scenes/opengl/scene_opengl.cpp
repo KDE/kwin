@@ -870,6 +870,11 @@ bool SceneOpenGL::supportsNativeFence() const
     return m_backend->supportsNativeFence();
 }
 
+bool SceneOpenGL::supportsExportDmaBuf() const
+{
+    return m_backend->supportsExportDmaBuf();
+}
+
 Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
 {
     return new SceneOpenGL::EffectFrame(frame, this);

@@ -433,6 +433,14 @@ bool Platform::supportsNativeFence() const
     return false;
 }
 
+bool Platform::supportsExportDmaBuf() const
+{
+    if (Compositor::compositing()) {
+        return Compositor::self()->scene()->supportsExportDmaBuf();
+    }
+    return false;
+}
+
 EGLDisplay KWin::Platform::sceneEglDisplay() const
 {
     return m_eglDisplay;

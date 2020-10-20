@@ -23,7 +23,6 @@
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
-#include "gbm_dmabuf.h"
 #endif
 #if HAVE_EGL_STREAMS
 #include "egl_stream_backend.h"
@@ -665,18 +664,6 @@ QString DrmBackend::supportInformation() const
     s << "Using EGL Streams: " << m_useEglStreams << Qt::endl;
 #endif
     return supportInfo;
-}
-
-DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
-{
-#if HAVE_GBM
-    // gpu_index is a fixed 0 here
-    // as the first GPU is assumed to always be the one used for scene rendering
-    // and this function is only used for Pipewire
-    return GbmDmaBuf::createBuffer(size, m_gpus.at(0)->gbmDevice());
-#else
-    return nullptr;
-#endif
 }
 
 }

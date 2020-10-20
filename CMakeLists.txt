@@ -453,7 +453,6 @@ set(kwin_SRCS
     decorations/decorations_logging.cpp
     decorations/settings.cpp
     deleted.cpp
-    dmabuftexture.cpp
     effectloader.cpp
     effects.cpp
     egl_context_attribute_builder.cpp
@@ -777,6 +776,7 @@ add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
 if (PipeWire_FOUND)
     target_sources(kwin_wayland
         PRIVATE
+        screencast/dmabufhandle.cpp
         screencast/eglnativefence.cpp
         screencast/screencastmanager.cpp
         screencast/pipewirecore.cpp

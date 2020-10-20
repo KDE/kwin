@@ -155,6 +155,7 @@ bool AbstractEglBackend::initEglAPI()
     setExtensions(eglExtensions.split(' '));
     setSupportsSurfacelessContext(hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context")));
     setSupportsNativeFence(hasExtension(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")));
+    setSupportsExportDmaBuf(hasExtension(QByteArrayLiteral("EGL_MESA_image_dma_buf_export")));
     return true;
 }
 

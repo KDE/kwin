@@ -19,7 +19,6 @@ if (HAVE_GBM)
         egl_gbm_backend.cpp
         drm_buffer_gbm.cpp
         gbm_surface.cpp
-        gbm_dmabuf.cpp
     )
 endif()
 

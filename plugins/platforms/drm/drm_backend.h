@@ -57,7 +57,6 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
-    DmaBufTexture *createDmaBufTexture(const QSize &size) override;
 
     void init() override;
     void prepareShutdown() override;

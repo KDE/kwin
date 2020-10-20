@@ -25,7 +25,6 @@ struct wl_buffer;
 struct wl_display;
 struct wl_event_queue;
 struct wl_seat;
-struct gbm_device;
 
 namespace KWayland
 {
@@ -174,7 +173,6 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
-    DmaBufTexture *createDmaBufTexture(const QSize &size) override;
 
     void flush();
 
@@ -239,10 +237,6 @@ private:
     WaylandCursor *m_waylandCursor = nullptr;
 
     bool m_pointerLockRequested = false;
-#if HAVE_GBM && HAVE_WAYLAND_EGL
-    int m_drmFileDescriptor = 0;
-    gbm_device *m_gbmDevice;
-#endif
 };
 
 inline

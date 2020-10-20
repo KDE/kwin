@@ -7,8 +7,9 @@
 */
 
 #include "pipewirestream.h"
+#include "composite.h"
 #include "cursor.h"
-#include "dmabuftexture.h"
+#include "dmabufhandle.h"
 #include "eglnativefence.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
@@ -16,6 +17,7 @@
 #include "main.h"
 #include "pipewirecore.h"
 #include "platform.h"
+#include "scene.h"
 #include "utils.h"
 
 #include <KLocalizedString>
@@ -31,6 +33,19 @@
 
 namespace KWin
 {
+
+ScreenCastDmaBufFrameData::~ScreenCastDmaBufFrameData()
+{
+    if (Compositor::compositing()) {
+        Compositor::self()->scene()->makeOpenGLContextCurrent();
+    } else {
+        qCCritical(KWIN_SCREENCAST) << "Destroying frame data without current OpenGL context";
+    }
+
+    handle.reset();
+    renderTarget.reset();
+    texture.reset();
+}
 
 void PipeWireStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
@@ -111,48 +126,63 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
     spa_data->mapoffset = 0;
     spa_data->flags = SPA_DATA_FLAG_READWRITE;
 
-    QSharedPointer<DmaBufTexture> dmabuf(kwinApp()->platform()->createDmaBufTexture(stream->m_resolution));
-    if (dmabuf) {
-      spa_data->type = SPA_DATA_DmaBuf;
-      spa_data->fd = dmabuf->fd();
-      spa_data->data = nullptr;
-      spa_data->maxsize = dmabuf->stride() * stream->m_resolution.height();
+    if (kwinApp()->platform()->supportsExportDmaBuf()) {
+        Compositor::self()->scene()->makeOpenGLContextCurrent();
 
-      stream->m_dmabufDataForPwBuffer.insert(buffer, dmabuf);
-#ifdef F_SEAL_SEAL //Disable memfd on systems that don't have it, like BSD < 12
-    } else {
-        const int bytesPerPixel = stream->m_hasAlpha ? 4 : 3;
-        const int stride = SPA_ROUND_UP_N (stream->m_resolution.width() * bytesPerPixel, 4);
-        spa_data->maxsize = stride * stream->m_resolution.height();
-        spa_data->type = SPA_DATA_MemFd;
-        spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
-        if (spa_data->fd == -1) {
-            qCCritical(KWIN_SCREENCAST) << "memfd: Can't create memfd";
+        QScopedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, stream->m_resolution));
+        QScopedPointer<DmaBufHandle> handle(new DmaBufHandle());
+        handle->setTexture(texture.data());
+        handle->setContext(kwinApp()->platform()->sceneEglContext()); // TODO: Create a local OpenGL context.
+        if (handle->create()) {
+            auto frameData = QSharedPointer<ScreenCastDmaBufFrameData>::create();
+            frameData->texture.reset(texture.take());
+            frameData->handle.reset(handle.take());
+            frameData->renderTarget.reset(new GLRenderTarget(*frameData->texture));
+            stream->m_dmabufDataForPwBuffer.insert(buffer, frameData);
+
+            spa_data->type = SPA_DATA_DmaBuf;
+            spa_data->fd = frameData->handle->fileDescriptor(0);
+            spa_data->data = nullptr;
+            spa_data->maxsize = frameData->handle->stride(0) * stream->m_resolution.height();
+
             return;
+        } else {
+            qCDebug(KWIN_SCREENCAST, "Failed to create an exported texture. Falling back to MemFd");
         }
-        spa_data->mapoffset = 0;
-
-        if (ftruncate (spa_data->fd, spa_data->maxsize) < 0) {
-            qCCritical(KWIN_SCREENCAST) << "memfd: Can't truncate to" << spa_data->maxsize;
-            return;
-        }
-
-        unsigned int seals = F_SEAL_GROW | F_SEAL_SHRINK | F_SEAL_SEAL;
-        if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1)
-            qCWarning(KWIN_SCREENCAST) << "memfd: Failed to add seals";
-
-        spa_data->data = mmap(nullptr,
-                              spa_data->maxsize,
-                              PROT_READ | PROT_WRITE,
-                              MAP_SHARED,
-                              spa_data->fd,
-                              spa_data->mapoffset);
-        if (spa_data->data == MAP_FAILED)
-            qCCritical(KWIN_SCREENCAST) << "memfd: Failed to mmap memory";
-        else
-            qCDebug(KWIN_SCREENCAST) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
-#endif
     }
+
+#ifdef F_SEAL_SEAL //Disable memfd on systems that don't have it, like BSD < 12
+    const int bytesPerPixel = stream->m_hasAlpha ? 4 : 3;
+    const int stride = SPA_ROUND_UP_N (stream->m_resolution.width() * bytesPerPixel, 4);
+    spa_data->maxsize = stride * stream->m_resolution.height();
+    spa_data->type = SPA_DATA_MemFd;
+    spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
+    if (spa_data->fd == -1) {
+        qCCritical(KWIN_SCREENCAST) << "memfd: Can't create memfd";
+        return;
+    }
+    spa_data->mapoffset = 0;
+
+    if (ftruncate (spa_data->fd, spa_data->maxsize) < 0) {
+        qCCritical(KWIN_SCREENCAST) << "memfd: Can't truncate to" << spa_data->maxsize;
+        return;
+    }
+
+    unsigned int seals = F_SEAL_GROW | F_SEAL_SHRINK | F_SEAL_SEAL;
+    if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1)
+        qCWarning(KWIN_SCREENCAST) << "memfd: Failed to add seals";
+
+    spa_data->data = mmap(nullptr,
+                          spa_data->maxsize,
+                          PROT_READ | PROT_WRITE,
+                          MAP_SHARED,
+                          spa_data->fd,
+                          spa_data->mapoffset);
+    if (spa_data->data == MAP_FAILED)
+        qCCritical(KWIN_SCREENCAST) << "memfd: Failed to mmap memory";
+    else
+        qCDebug(KWIN_SCREENCAST) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
+#endif
 }
 
 void PipeWireStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
@@ -364,10 +394,10 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
     } else {
         auto &buf = m_dmabufDataForPwBuffer[buffer];
 
-        spa_data->chunk->stride = buf->stride();
+        spa_data->chunk->stride = buf->handle->stride(0);
         spa_data->chunk->size = spa_data->maxsize;
 
-        GLRenderTarget::pushRenderTarget(buf->framebuffer());
+        GLRenderTarget::pushRenderTarget(buf->renderTarget.data());
         frameTexture->bind();
 
         QRect r(QPoint(), size);
