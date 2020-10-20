@@ -66,7 +66,7 @@ Clipboard::Clipboard(xcb_atom_t atom, QObject *parent)
 
 void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
 {
-    if (dsi && !ownsSelection(dsi)) {
+    if (!ownsSelection(dsi)) {
         // Wayland native client provides new selection
         if (!m_checkConnection) {
             m_checkConnection = connect(workspace(), &Workspace::clientActivated,
@@ -80,7 +80,7 @@ void Clipboard::wlSelectionChanged(KWaylandServer::AbstractDataSource *dsi)
 
 bool Clipboard::ownsSelection(KWaylandServer::AbstractDataSource *dsi) const
 {
-    return dsi->client() == DataBridge::self()->dataDeviceIface()->client();
+    return dsi && dsi->client() == DataBridge::self()->dataDeviceIface()->client();
 }
 
 void Clipboard::checkWlSource()
@@ -173,7 +173,7 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
         }
     } else {
         KWaylandServer::AbstractDataSource *currentSelection = waylandServer()->seat()->selection();
-        if (currentSelection && !ownsSelection(currentSelection)) {
+        if (!ownsSelection(currentSelection)) {
             waylandServer()->seat()->setSelection(nullptr);
         }
     }
