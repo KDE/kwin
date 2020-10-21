@@ -133,8 +133,7 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     connect(this, &OutputDeviceInterface::globalPositionChanged, this, [d] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::modelChanged,          this, [d] { d->updateGeometry(); });
     connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::scaleFChanged,          this, [d] { d->updateScale(); });
-    connect(this, &OutputDeviceInterface::scaleChanged,          this, [d] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::scaleFChanged,         this, [d] { d->updateScale(); });
     connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [d] { d->updateColorCurves(); });
 }
 
