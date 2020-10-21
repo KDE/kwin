@@ -37,7 +37,7 @@ PresentWindowsEffectConfigForm::PresentWindowsEffectConfigForm(QWidget* parent) 
 }
 
 PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule(KAboutData::pluginData(QStringLiteral("presentwindows")), parent, args)
+    :   KCModule(parent, args)
 {
     m_ui = new PresentWindowsEffectConfigForm(this);
 

@@ -38,7 +38,7 @@ ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget* parent) 
 }
 
 ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("thumbnailaside")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new ThumbnailAsideEffectConfigForm(this);
 

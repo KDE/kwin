@@ -37,7 +37,7 @@ ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
 }
 
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("zoom")), parent, args)
+    KCModule(parent, args)
 {
     ZoomConfig::instance(KWIN_CONFIG);
     m_ui = new ZoomEffectConfigForm(this);

@@ -38,7 +38,7 @@ MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget* parent) : QWidget(
 }
 
 MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("mousemark")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new MouseMarkEffectConfigForm(this);
 

@@ -26,7 +26,7 @@ namespace KWin
 {
 
 ShowPaintEffectConfig::ShowPaintEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(KAboutData::pluginData(QStringLiteral("showpaint")), parent, args)
+    : KCModule(parent, args)
     , m_ui(new Ui::ShowPaintEffectConfig)
 {
     m_ui->setupUi(this);

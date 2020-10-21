@@ -30,7 +30,7 @@ CoverSwitchEffectConfigForm::CoverSwitchEffectConfigForm(QWidget* parent) : QWid
 }
 
 CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("coverswitch")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new CoverSwitchEffectConfigForm(this);
 

@@ -34,7 +34,7 @@ WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget* parent) : QWidget(pa
 }
 
 WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& args)
-    : KCModule(KAboutData::pluginData(QStringLiteral("windowgeometry")), parent, args)
+    : KCModule(parent, args)
 {
     WindowGeometryConfiguration::instance(KWIN_CONFIG);
     QVBoxLayout* layout = new QVBoxLayout(this);

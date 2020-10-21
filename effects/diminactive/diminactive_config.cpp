@@ -27,7 +27,7 @@ namespace KWin
 {
 
 DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(KAboutData::pluginData(QStringLiteral("diminactive")), parent, args)
+    : KCModule(parent, args)
 {
     m_ui.setupUi(this);
     DimInactiveConfig::instance(KWIN_CONFIG);

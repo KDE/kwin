@@ -31,7 +31,7 @@ ResizeEffectConfigForm::ResizeEffectConfigForm(QWidget* parent) : QWidget(parent
 }
 
 ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("resize")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new ResizeEffectConfigForm(this);
 

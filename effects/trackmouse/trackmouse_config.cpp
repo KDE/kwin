@@ -41,7 +41,7 @@ TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget* parent) : QWidge
 }
 
 TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("trackmouse")), parent, args)
+    KCModule(parent, args)
 {
     TrackMouseConfig::instance(KWIN_CONFIG);
     m_ui = new TrackMouseEffectConfigForm(this);

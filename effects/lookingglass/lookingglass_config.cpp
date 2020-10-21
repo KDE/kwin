@@ -40,7 +40,7 @@ LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget* parent) : QW
 }
 
 LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("lookingglass")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new LookingGlassEffectConfigForm(this);
 

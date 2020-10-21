@@ -22,7 +22,7 @@ namespace KWin
 {
 
 GlideEffectConfig::GlideEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(KAboutData::pluginData(QStringLiteral("glide")), parent, args)
+    : KCModule(parent, args)
 {
     ui.setupUi(this);
     GlideConfig::instance(KWIN_CONFIG);

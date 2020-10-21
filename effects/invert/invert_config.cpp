@@ -29,7 +29,7 @@ namespace KWin
 {
 
 InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("invert")), parent, args)
+    KCModule(parent, args)
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
 

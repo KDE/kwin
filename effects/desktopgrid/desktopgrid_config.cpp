@@ -38,7 +38,7 @@ DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget* parent) : QWid
 }
 
 DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule(KAboutData::pluginData(QStringLiteral("desktopgrid")), parent, args)
+    :   KCModule(parent, args)
 {
     m_ui = new DesktopGridEffectConfigForm(this);
 

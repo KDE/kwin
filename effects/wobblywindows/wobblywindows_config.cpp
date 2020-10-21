@@ -70,7 +70,7 @@ ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 //-----------------------------------------------------------------------------
 
 WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("wobblywindows")), parent, args)
+    KCModule(parent, args)
 {
     WobblyWindowsConfig::instance(KWIN_CONFIG);
     m_ui.setupUi(this);

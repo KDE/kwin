@@ -36,7 +36,7 @@ MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget* parent) : QWidge
 }
 
 MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("mouseclick")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new MouseClickEffectConfigForm(this);
 

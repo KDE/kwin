@@ -36,7 +36,7 @@ FlipSwitchEffectConfigForm::FlipSwitchEffectConfigForm(QWidget* parent) : QWidge
 }
 
 FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("flipswitch")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new FlipSwitchEffectConfigForm(this);
 

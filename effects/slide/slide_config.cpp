@@ -25,7 +25,7 @@ namespace KWin
 {
 
 SlideEffectConfig::SlideEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(KAboutData::pluginData(QStringLiteral("slide")), parent, args)
+    : KCModule(parent, args)
 {
     m_ui.setupUi(this);
     SlideConfig::instance(KWIN_CONFIG);

@@ -21,7 +21,7 @@ namespace KWin
 {
 
 BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(KAboutData::pluginData(QStringLiteral("blur")), parent, args)
+    : KCModule(parent, args)
 {
     ui.setupUi(this);
     BlurConfig::instance(KWIN_CONFIG);

@@ -39,7 +39,7 @@ MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget* parent) : QWidget(
 }
 
 MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("magnifier")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new MagnifierEffectConfigForm(this);
 

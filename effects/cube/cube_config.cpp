@@ -38,7 +38,7 @@ CubeEffectConfigForm::CubeEffectConfigForm(QWidget* parent) : QWidget(parent)
 }
 
 CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("cube")), parent, args)
+    KCModule(parent, args)
 {
     m_ui = new CubeEffectConfigForm(this);
 
