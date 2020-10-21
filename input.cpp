@@ -1941,7 +1941,6 @@ InputRedirection::InputRedirection(QObject *parent)
         }
     }
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
-    reconfigure();
 }
 
 InputRedirection::~InputRedirection()
@@ -2294,6 +2293,7 @@ void InputRedirection::setupLibInput()
     }
 
     setupTouchpadShortcuts();
+    reconfigure();
 }
 
 void InputRedirection::setupTouchpadShortcuts()
