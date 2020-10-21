@@ -38,7 +38,6 @@ private:
     void render(const QSize &size);
     void render();
     void setupRegistry(KWayland::Client::Registry *registry);
-    void toggleTimer();
     QThread *m_connectionThread;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     KWayland::Client::EventQueue *m_eventQueue;

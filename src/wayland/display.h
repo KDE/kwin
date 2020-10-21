@@ -177,7 +177,6 @@ public:
     OutputManagementInterface *createOutputManagement(QObject *parent = nullptr);
     PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
     PlasmaWindowManagementInterface *createPlasmaWindowManagement(QObject *parent = nullptr);
-    QtSurfaceExtensionInterface *createQtSurfaceExtension(QObject *parent = nullptr);
     IdleInterface *createIdle(QObject *parent = nullptr);
     FakeInputInterface *createFakeInput(QObject *parent = nullptr);
     ShadowManagerInterface *createShadowManager(QObject *parent = nullptr);
