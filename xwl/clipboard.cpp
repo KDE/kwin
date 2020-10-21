@@ -137,12 +137,11 @@ void Clipboard::checkWlSource()
 
 void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
-    createX11Source(nullptr);
-
     const AbstractClient *client = workspace()->activeClient();
     if (!qobject_cast<const X11Client *>(client)) {
         // clipboard is only allowed to be acquired when Xwayland has focus
         // TODO: can we make this stronger (window id comparison)?
+        createX11Source(nullptr);
         return;
     }
 
