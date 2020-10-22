@@ -208,8 +208,10 @@ QVariant RuleItem::typedValue(const QVariant &value) const
             }
             return typesMask;
         }
-        case Point:
-            return value.toPoint();
+        case Point: {
+            const QPoint point = value.toPoint();
+            return (point == invalidPoint) ? QPoint(0, 0) : point;
+        }
         case Size:
             return value.toSize();
         case String:
