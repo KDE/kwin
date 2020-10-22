@@ -506,9 +506,14 @@ bool ScreenShotEffect::checkCall() const
 
 QString ScreenShotEffect::interactive(int mask)
 {
-    if (!checkCall()) {
+    if (!calledFromDBus()) {
         return QString();
     }
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+        return QString();
+    }
+
     m_type = (ScreenShotType) mask;
     m_windowMode = WindowMode::File;
     m_replyMessage = message();
@@ -532,9 +537,14 @@ QString ScreenShotEffect::interactive(int mask)
 
 void ScreenShotEffect::interactive(QDBusUnixFileDescriptor fd, int mask)
 {
-    if (!checkCall()) {
+    if (!calledFromDBus()) {
         return;
     }
+    if (isTakingScreenshot()) {
+        sendErrorReply(s_errorAlreadyTaking, s_errorAlreadyTakingMsg);
+        return;
+    }
+
     m_fd = dup(fd.fileDescriptor());
     if (m_fd == -1) {
         sendErrorReply(s_errorFd, s_errorFdMsg);
