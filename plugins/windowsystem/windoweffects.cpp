@@ -67,13 +67,6 @@ void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation locati
     w->setProperty("kwin_slide_offset", offset);
 }
 
-#if KWINDOWSYSTEM_VERSION <= QT_VERSION_CHECK(5, 61, 0)
-void WindowEffects::slideWindow(QWidget *widget, KWindowEffects::SlideFromLocation location)
-{
-    slideWindow(widget->winId(), location, 0);
-}
-#endif
-
 QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
 {
     Q_UNUSED(ids)
