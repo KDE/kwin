@@ -12,7 +12,6 @@
 
 #include <kwinconfig.h>
 #include <QFile>
-#include <QFont>
 #include <QIcon>
 #include <QMatrix4x4>
 #include <QMouseEvent>
@@ -20,7 +19,6 @@
 #include <KLocalizedString>
 #include <kcolorscheme.h>
 
-#include <kwinglutils.h>
 #include <kwinglplatform.h>
 
 #include <cmath>

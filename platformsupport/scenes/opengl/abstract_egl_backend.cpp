@@ -9,7 +9,6 @@
 #include "abstract_egl_backend.h"
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
-#include "texture.h"
 #include "composite.h"
 #include "egl_context_attribute_builder.h"
 #include "options.h"

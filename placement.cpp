@@ -20,7 +20,6 @@
 #include "screens.h"
 #endif
 
-#include <QRect>
 #include <QTextStream>
 #include <QTimer>
 

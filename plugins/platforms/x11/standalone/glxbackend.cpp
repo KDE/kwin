@@ -23,7 +23,6 @@
 #include "scene.h"
 #include "screens.h"
 #include "xcbutils.h"
-#include "texture.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -61,7 +60,6 @@ typedef struct xcb_glx_buffer_swap_complete_event_t {
 #endif
 
 #include <tuple>
-#include <memory>
 
 namespace KWin
 {

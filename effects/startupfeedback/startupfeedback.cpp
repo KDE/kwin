@@ -17,7 +17,6 @@
 // KDE
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <KStartupInfo>
 #include <KSelectionOwner>
 #include <KWindowSystem>
 // KWin

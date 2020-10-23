@@ -13,7 +13,6 @@
 #include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
-#include "options.h"
 #include "platform.h"
 #include "workspace.h"
 

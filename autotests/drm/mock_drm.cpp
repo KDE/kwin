@@ -9,7 +9,6 @@
 #include "mock_drm.h"
 
 #include <QMap>
-#include <QVector>
 
 static QMap<int, QVector<_drmModeProperty>> s_drmProperties{};
 

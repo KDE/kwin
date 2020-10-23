@@ -6,7 +6,6 @@
 */
 
 #include "rulesmodel.h"
-#include <rules.h>
 
 #include <QFileInfo>
 #include <QIcon>

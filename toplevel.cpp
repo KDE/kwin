@@ -19,7 +19,6 @@
 #include "screens.h"
 #include "shadow.h"
 #include "workspace.h"
-#include "xcbutils.h"
 
 #include <KWaylandServer/surface_interface.h>
 

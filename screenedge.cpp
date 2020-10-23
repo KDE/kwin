@@ -40,7 +40,6 @@
 #include <QMouseEvent>
 #include <QSharedPointer>
 #include <QTimer>
-#include <QVector>
 #include <QTextStream>
 #include <QDBusInterface>
 #include <QDBusPendingCall>

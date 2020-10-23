@@ -9,7 +9,6 @@
 */
 #include "touch_input.h"
 #include "abstract_client.h"
-#include "input.h"
 #include "pointer_input.h"
 #include "input_event_spy.h"
 #include "toplevel.h"

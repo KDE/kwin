@@ -20,12 +20,9 @@
 #include "wayland_server.h"
 #include <kwinglplatform.h>
 #include <QOpenGLContext>
-#include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/buffer_interface.h>
-#include <KWaylandServer/eglstream_controller_interface.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/resource.h>
-#include <wayland-server-core.h>
 #include "drm_gpu.h"
 
 namespace KWin

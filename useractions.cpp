@@ -46,7 +46,6 @@
 #include <QAction>
 #include <QCheckBox>
 #include <QtConcurrentRun>
-#include <QPointer>
 #include <QPushButton>
 
 #include <KGlobalAccel>

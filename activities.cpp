@@ -12,7 +12,6 @@
 #include "workspace.h"
 // KDE
 #include <KConfigGroup>
-#include <kactivities/controller.h>
 // Qt
 #include <QtConcurrentRun>
 #include <QDBusInterface>

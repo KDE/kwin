@@ -15,7 +15,6 @@
 #include <QDataStream>
 #include <QTemporaryFile>
 #include <QDir>
-#include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusReply>
 #include <QVarLengthArray>

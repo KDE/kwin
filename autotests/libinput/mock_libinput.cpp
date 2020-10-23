@@ -6,7 +6,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <libinput.h>
 #include "mock_libinput.h"
 #include <config-kwin.h>
 

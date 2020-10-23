@@ -12,10 +12,8 @@
 #include "mouseclickconfig.h"
 
 #include <QAction>
-#include <kwinglutils.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <kwinxrenderutils.h>
 #include <xcb/xcb.h>
 #include <xcb/render.h>
 #endif

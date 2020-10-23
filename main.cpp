@@ -9,7 +9,6 @@
 */
 
 #include "main.h"
-#include <config-kwin.h>
 // kwin
 #include "platform.h"
 #include "atoms.h"
@@ -30,7 +29,6 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <KPluginMetaData>
-#include <KSharedConfig>
 #include <KWaylandServer/surface_interface.h>
 // Qt
 #include <qplatformdefs.h>

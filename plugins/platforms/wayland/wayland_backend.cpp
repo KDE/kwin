@@ -9,7 +9,6 @@
 */
 #include "wayland_backend.h"
 
-#include <config-kwin.h>
 
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"

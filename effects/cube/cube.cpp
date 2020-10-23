@@ -10,7 +10,6 @@
 // KConfigSkeleton
 #include "cubeconfig.h"
 
-#include "cube_inside.h"
 
 #include <QAction>
 #include <KGlobalAccel>
@@ -30,7 +29,6 @@
 
 #include <cmath>
 
-#include <kwinglutils.h>
 #include <kwinglplatform.h>
 
 namespace KWin

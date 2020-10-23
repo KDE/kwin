@@ -18,7 +18,6 @@
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/seat_interface.h>
-#include <KWaylandServer/textinput_v2_interface.h>
 #include <KWaylandServer/textinput_v3_interface.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/inputmethod_v1_interface.h>

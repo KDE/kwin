@@ -12,9 +12,7 @@
 
 #include <QAction>
 #include <kwinconfig.h>
-#include <QFont>
 #include <QKeyEvent>
-#include <QMatrix4x4>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

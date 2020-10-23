@@ -24,7 +24,6 @@
 
 #include <QAbstractEventDispatcher>
 #include <QFile>
-#include <QFutureWatcher>
 #include <QTimer>
 #include <QtConcurrentRun>
 

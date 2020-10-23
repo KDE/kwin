@@ -14,10 +14,7 @@
 #include "decorations_logging.h"
 
 #include <KConfigGroup>
-#include <KSharedConfig>
-#include <KColorScheme>
 
-#include <QPalette>
 #include <QFileInfo>
 #include <QStandardPaths>
 

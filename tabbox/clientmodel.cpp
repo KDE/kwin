@@ -11,7 +11,6 @@
 #include "clientmodel.h"
 // tabbox
 #include "tabboxconfig.h"
-#include "tabboxhandler.h"
 // Qt
 #include <QIcon>
 #include <QUuid>

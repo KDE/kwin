@@ -13,7 +13,6 @@
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationpalette.h"
 #include "decorations/decorationbridge.h"
-#include "cursor.h"
 #include "effects.h"
 #include "focuschain.h"
 #include "outline.h"

@@ -44,7 +44,6 @@
 #include <unistd.h>
 // drm
 #include <xf86drm.h>
-#include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
 
 #include "drm_gpu.h"

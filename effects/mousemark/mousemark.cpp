@@ -16,7 +16,6 @@
 #include <QAction>
 #include <kwinconfig.h>
 #include <kwinglplatform.h>
-#include <kwinglutils.h>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 

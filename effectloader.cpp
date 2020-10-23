@@ -23,7 +23,6 @@
 #include <QtConcurrentRun>
 #include <QDebug>
 #include <QFutureWatcher>
-#include <QMap>
 #include <QStringList>
 
 namespace KWin

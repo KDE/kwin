@@ -27,7 +27,6 @@
 #include <KWaylandServer/server_decoration_palette_interface.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
-#include <KWaylandServer/xdgshell_interface.h>
 
 using namespace KWaylandServer;
 

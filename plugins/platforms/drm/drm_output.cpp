@@ -8,7 +8,6 @@
 */
 #include "drm_output.h"
 #include "drm_backend.h"
-#include "drm_object_plane.h"
 #include "drm_object_crtc.h"
 #include "drm_object_connector.h"
 
@@ -33,7 +32,6 @@
 #include <cerrno>
 // drm
 #include <xf86drm.h>
-#include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
 
 #include "drm_gpu.h"

@@ -11,7 +11,6 @@
 
 #include <KLocalizedString>
 
-#include <QDebug>
 #include <QSocketNotifier>
 
 namespace KWin

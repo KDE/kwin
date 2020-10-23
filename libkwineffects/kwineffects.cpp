@@ -17,12 +17,10 @@
 #endif
 
 #include <QVariant>
-#include <QList>
 #include <QTimeLine>
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPixmap>
-#include <QVector2D>
 #include <QGraphicsRotation>
 #include <QGraphicsScale>
 #include <QtMath>

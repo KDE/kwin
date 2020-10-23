@@ -10,7 +10,6 @@
 
 #include <QCoreApplication>
 #include <QDebug>
-#include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusPendingCallWatcher>
 #include <QDBusServiceWatcher>

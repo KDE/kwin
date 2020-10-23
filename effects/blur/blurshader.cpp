@@ -9,7 +9,6 @@
 
 #include <kwineffects.h>
 #include <kwinglplatform.h>
-#include <kwinglutils.h>
 
 #include <QByteArray>
 #include <QTextStream>

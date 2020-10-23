@@ -15,14 +15,12 @@
 // tabbox
 #include "clientmodel.h"
 #include "desktopmodel.h"
-#include "tabboxconfig.h"
 #include "thumbnailitem.h"
 #include "scripting/scripting.h"
 #include "switcheritem.h"
 #include "tabbox_logging.h"
 // Qt
 #include <QKeyEvent>
-#include <QModelIndex>
 #include <QStandardPaths>
 #include <QTimer>
 #include <QQmlContext>

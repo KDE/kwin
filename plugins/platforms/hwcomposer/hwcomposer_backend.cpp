@@ -11,7 +11,6 @@
 #include "logging.h"
 #include "screens_hwcomposer.h"
 #include "composite.h"
-#include "input.h"
 #include "main.h"
 #include "wayland_server.h"
 // KWayland

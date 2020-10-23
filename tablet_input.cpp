@@ -9,7 +9,6 @@
 #include "tablet_input.h"
 #include "abstract_client.h"
 #include "decorations/decoratedclient.h"
-#include "input.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "libinput/device.h"

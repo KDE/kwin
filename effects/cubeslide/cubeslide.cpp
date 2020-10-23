@@ -12,7 +12,6 @@
 #include "cubeslideconfig.h"
 
 #include <kwinconfig.h>
-#include <kwinglutils.h>
 
 #include <QVector3D>
 

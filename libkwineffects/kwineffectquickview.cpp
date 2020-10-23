@@ -10,7 +10,6 @@
 #include "kwineffectquickview.h"
 
 #include "kwinglutils.h"
-#include "kwineffects.h"
 #include "logging_p.h"
 
 #include <QQmlEngine>
@@ -19,7 +18,6 @@
 #include <QQmlComponent>
 #include <QQuickView>
 #include <QQuickRenderControl>
-#include <QUrl>
 
 #include <QOffscreenSurface>
 #include <QOpenGLContext>

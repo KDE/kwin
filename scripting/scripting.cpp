@@ -26,7 +26,6 @@
 #include <KPackage/PackageLoader>
 // Qt
 #include <QDBusConnection>
-#include <QDBusMessage>
 #include <QDBusPendingCallWatcher>
 #include <QDebug>
 #include <QFutureWatcher>
