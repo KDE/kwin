@@ -66,11 +66,6 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_udevMonitor(m_udev->monitor())
     , m_dpmsFilter()
 {
-#if HAVE_EGL_STREAMS
-    if (qEnvironmentVariableIsSet("KWIN_DRM_USE_EGL_STREAMS")) {
-        m_useEglStreams = true;
-    }
-#endif
     setSupportsGammaControl(true);
     supportsOutputChanges();
 }
@@ -270,6 +265,17 @@ void DrmBackend::openDrm()
         }
     );
     m_drmId = device->sysNum();
+
+#if HAVE_EGL_STREAMS
+    if (qEnvironmentVariableIsSet("KWIN_DRM_USE_EGL_STREAMS")) {
+        m_useEglStreams = true;
+    } else {
+        // If KWIN_DRM_USE_EGL_STREAMS is not set and we know that we are running with
+        // the nvidia proprietary driver, enable the EGLStreams backend anyway.
+        DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
+        m_useEglStreams = version->name == QByteArrayLiteral("nvidia-drm");
+    }
+#endif
 
     // trying to activate Atomic Mode Setting (this means also Universal Planes)
     if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS")) {
