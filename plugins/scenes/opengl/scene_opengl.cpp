@@ -585,8 +585,9 @@ void SceneOpenGL2::paintCursor()
     }
 
     // get cursor position in projection coordinates
+    const qreal scale = cursor->image().devicePixelRatio();
     const QPoint cursorPos = cursor->pos() - cursor->hotspot();
-    const QRect cursorRect(0, 0, m_cursorTexture->width(), m_cursorTexture->height());
+    const QRect cursorRect(QPoint(0, 0), m_cursorTexture->size() / scale);
     QMatrix4x4 mvp = m_projectionMatrix;
     mvp.translate(cursorPos.x(), cursorPos.y());
 
