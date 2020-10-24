@@ -1155,6 +1155,7 @@ void CursorImage::updateDragCursor()
         if (auto dragIcon = ddi->icon()) {
             if (auto buffer = dragIcon->buffer()) {
                 additionalIcon = buffer->data().copy();
+                additionalIcon.setDevicePixelRatio(dragIcon->bufferScale());
                 additionalIcon.setOffset(dragIcon->offset());
             }
         }
@@ -1187,32 +1188,39 @@ void CursorImage::updateDragCursor()
         }
         return;
     }
-    m_drag.cursor.hotspot = c->hotspot();
+
+    QImage cursorImage = buffer->data();
+    cursorImage.setDevicePixelRatio(cursorSurface->bufferScale());
 
     if (additionalIcon.isNull()) {
-        m_drag.cursor.image = buffer->data().copy();
-        m_drag.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
+        m_drag.cursor.image = cursorImage.copy();
+        m_drag.cursor.hotspot = c->hotspot();
     } else {
-        QRect cursorRect = buffer->data().rect();
-        QRect iconRect = additionalIcon.rect();
+        QRect cursorRect(QPoint(0, 0), cursorImage.size() / cursorImage.devicePixelRatio());
+        QRect iconRect(QPoint(0, 0), additionalIcon.size() / additionalIcon.devicePixelRatio());
 
-        if (-m_drag.cursor.hotspot.x() < additionalIcon.offset().x()) {
-            iconRect.moveLeft(m_drag.cursor.hotspot.x() - additionalIcon.offset().x());
+        if (-c->hotspot().x() < additionalIcon.offset().x()) {
+            iconRect.moveLeft(c->hotspot().x() - additionalIcon.offset().x());
         } else {
-            cursorRect.moveLeft(-additionalIcon.offset().x() - m_drag.cursor.hotspot.x());
+            cursorRect.moveLeft(-additionalIcon.offset().x() - c->hotspot().x());
         }
-        if (-m_drag.cursor.hotspot.y() < additionalIcon.offset().y()) {
-            iconRect.moveTop(m_drag.cursor.hotspot.y() - additionalIcon.offset().y());
+        if (-c->hotspot().y() < additionalIcon.offset().y()) {
+            iconRect.moveTop(c->hotspot().y() - additionalIcon.offset().y());
         } else {
-            cursorRect.moveTop(-additionalIcon.offset().y() - m_drag.cursor.hotspot.y());
+            cursorRect.moveTop(-additionalIcon.offset().y() - c->hotspot().y());
         }
 
-        m_drag.cursor.image = QImage(cursorRect.united(iconRect).size(), QImage::Format_ARGB32_Premultiplied);
-        m_drag.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
+        const QRect viewport = cursorRect.united(iconRect);
+        const qreal scale = cursorSurface->bufferScale();
+
+        m_drag.cursor.image = QImage(viewport.size() * scale, QImage::Format_ARGB32_Premultiplied);
+        m_drag.cursor.image.setDevicePixelRatio(scale);
         m_drag.cursor.image.fill(Qt::transparent);
+        m_drag.cursor.hotspot = cursorRect.topLeft() + c->hotspot();
+
         QPainter p(&m_drag.cursor.image);
         p.drawImage(iconRect, additionalIcon);
-        p.drawImage(cursorRect, buffer->data());
+        p.drawImage(cursorRect, cursorImage);
         p.end();
     }
 
