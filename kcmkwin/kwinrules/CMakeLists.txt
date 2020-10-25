@@ -21,6 +21,15 @@ set(kwinrules_SRCS
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulesettings.kcfgc)
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulebooksettingsbase.kcfgc)
 
+kcmutils_generate_module_data(
+    kwinrules_SRCS
+    MODULE_DATA_HEADER rulebookdata.h
+    MODULE_DATA_CLASS_NAME RuleBookData
+    SETTINGS_HEADERS rulebooksettings.h
+    SETTINGS_CLASSES RuleBookSettings
+    NAMESPACE KWin
+)
+
 add_library(KWinRulesObjects STATIC ${kwinrules_SRCS})
 
 set(kwin_kcm_rules_XCB_LIBS
@@ -34,6 +43,7 @@ set(kcm_libs
     Qt5::QuickWidgets
 
     KF5::I18n
+    KF5::KCMUtils
     KF5::QuickAddons
     KF5::WindowSystem
     KF5::XmlGui

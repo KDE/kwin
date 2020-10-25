@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "rulebooksettings.h"
 #include <rules.h>
 
 #include <QAbstractListModel>
@@ -14,6 +13,8 @@
 
 namespace KWin
 {
+
+class RuleBookData;
 
 class RuleBookModel : public QAbstractListModel
 {
@@ -43,7 +44,7 @@ public:
     void save();
 
 private:
-    RuleBookSettings *m_ruleBook;
+    RuleBookData *m_ruleBookData;
     QVector<Rules *> m_rules;
 };
 

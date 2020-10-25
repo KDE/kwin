@@ -6,13 +6,15 @@
 
 #include "rulebookmodel.h"
 
+#include "rulebookdata.h"
+#include "rulebooksettings.h"
 
 namespace KWin
 {
 
 RuleBookModel::RuleBookModel(QObject *parent)
     : QAbstractListModel(parent)
-    , m_ruleBook(new RuleBookSettings(this))
+    , m_ruleBookData(new RuleBookData(this))
 {
 }
 
@@ -70,7 +72,7 @@ bool RuleBookModel::insertRows(int row, int count, const QModelIndex &parent)
         m_rules.insert(row + i, newRule);
     }
 
-    m_ruleBook->setCount(m_rules.count());
+    m_ruleBookData->settings()->setCount(m_rules.count());
 
     endInsertRows();
     return true;
@@ -87,7 +89,7 @@ bool RuleBookModel::removeRows(int row, int count, const QModelIndex &parent)
         delete m_rules.at(row + i);
     }
     m_rules.remove(row, count);
-    m_ruleBook->setCount(m_rules.count());
+    m_ruleBookData->settings()->setCount(m_rules.count());
 
     endRemoveRows();
     return true;
@@ -157,17 +159,17 @@ void RuleBookModel::load()
 {
     beginResetModel();
 
-    m_ruleBook->load();
+    m_ruleBookData->settings()->load();
     qDeleteAll(m_rules);
-    m_rules = m_ruleBook->rules();
+    m_rules = m_ruleBookData->settings()->rules();
 
     endResetModel();
 }
 
 void RuleBookModel::save()
 {
-    m_ruleBook->setRules(m_rules);
-    m_ruleBook->save();
+    m_ruleBookData->settings()->setRules(m_rules);
+    m_ruleBookData->settings()->save();
 }
 
 } // namespace
