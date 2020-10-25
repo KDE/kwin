@@ -224,9 +224,17 @@ qint64 Manager::scheduledTransitionDuration() const
 
 void Manager::initShortcuts()
 {
+    // legacy shortcut with localized key (to avoid breaking existing config)
+    if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
+        QAction toggleActionLegacy;
+        toggleActionLegacy.setProperty("componentName", QStringLiteral(KWIN_NAME));
+        toggleActionLegacy.setObjectName(i18n("Toggle Night Color"));
+        KGlobalAccel::self()->removeAllShortcuts(&toggleActionLegacy);
+    }
+
     QAction *toggleAction = new QAction(this);
     toggleAction->setProperty("componentName", QStringLiteral(KWIN_NAME));
-    toggleAction->setObjectName(i18n("Toggle Night Color"));
+    toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
     toggleAction->setText(i18n("Toggle Night Color"));
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
     input()->registerShortcut(QKeySequence(), toggleAction, this, &Manager::toggle);
