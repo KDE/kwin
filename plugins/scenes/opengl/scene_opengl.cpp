@@ -568,8 +568,7 @@ void SceneOpenGL2::paintCursor(const QRegion &rendered)
 
     // figure out which part of the cursor needs to be repainted
     const QPoint cursorPos = cursor->pos() - cursor->hotspot();
-    const qreal scale = cursor->image().devicePixelRatio();
-    const QRect cursorRect(QPoint(0, 0), cursor->image().size() / scale);
+    const QRect cursorRect = cursor->rect();
     QRegion region;
     for (const QRect &rect : rendered) {
         region |= rect.translated(-cursorPos).intersected(cursorRect);
