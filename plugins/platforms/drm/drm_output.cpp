@@ -136,7 +136,8 @@ void DrmOutput::updateCursor()
     if (m_deleted) {
         return;
     }
-    QImage cursorImage = Cursors::self()->currentCursor()->image();
+    const Cursor *cursor = Cursors::self()->currentCursor();
+    const QImage cursorImage = cursor->image();
     if (cursorImage.isNull()) {
         return;
     }
@@ -146,14 +147,14 @@ void DrmOutput::updateCursor()
 
     QPainter p;
     p.begin(c);
-    p.setWorldTransform(logicalToNativeMatrix(cursorImage.rect(), scale(), transform()).toTransform());
+    p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), scale(), transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
 }
 
 void DrmOutput::moveCursor(Cursor *cursor, const QPoint &globalPos)
 {
-    const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->image().rect(), scale(), transform());
+    const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
 
     QPoint pos = monitorMatrix.map(globalPos);

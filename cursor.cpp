@@ -147,6 +147,11 @@ QRect Cursor::geometry() const
     return QRect(m_pos - hotspot(), image().size());
 }
 
+QRect Cursor::rect() const
+{
+    return QRect(QPoint(0, 0), image().size() / image().devicePixelRatio());
+}
+
 QPoint Cursor::pos()
 {
     doGetPos();

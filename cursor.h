@@ -163,6 +163,7 @@ public:
     QImage image() const { return m_image; }
     QPoint hotspot() const { return m_hotspot; }
     QRect geometry() const;
+    QRect rect() const;
 
     void updateCursor(const QImage &image, const QPoint &hotspot);
     void markAsRendered() {
