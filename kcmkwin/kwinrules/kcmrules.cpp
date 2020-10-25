@@ -7,8 +7,6 @@
 
 #include "kcmrules.h"
 
-#include "rulebookdata.h"
-
 #include <QDBusConnection>
 #include <QDBusMessage>
 
@@ -235,9 +233,7 @@ void KCMKWinRules::importFromFile(const QUrl &path)
     updateNeedsSave();
 }
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMKWinRulesFactory, "kcm_kwinrules.json",
-                           registerPlugin<KWin::KCMKWinRules>();
-                           registerPlugin<KWin::RuleBookData>(););
+K_PLUGIN_CLASS_WITH_JSON(KCMKWinRules, "kcm_kwinrules.json");
 
 } // namespace
 

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "rulebookdata.h"
+#include "rulebooksettings.h"
 #include <rules.h>
 
 #include <QAbstractListModel>
@@ -43,7 +43,7 @@ public:
     void save();
 
 private:
-    RuleBookData *m_ruleBookData;
+    RuleBookSettings *m_ruleBook;
     QVector<Rules *> m_rules;
 };
 
