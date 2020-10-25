@@ -41,6 +41,7 @@ bool DrmConnector::initProps()
 {
     setPropertyNames( {
         QByteArrayLiteral("CRTC_ID"),
+        QByteArrayLiteral("non-desktop")
     });
 
     DrmScopedPointer<drmModeObjectProperties> properties(

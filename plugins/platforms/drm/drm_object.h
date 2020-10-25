@@ -122,6 +122,9 @@ protected:
         const QByteArray &name() const {
             return m_propName;
         }
+        bool isImmutable() const {
+            return m_immutable;
+        }
 
     private:
         uint32_t m_propId = 0;
@@ -130,6 +133,7 @@ protected:
         uint64_t m_value = 0;
         QVector<uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
+        bool m_immutable = false;
     };
 
 private:

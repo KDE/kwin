@@ -47,7 +47,7 @@ void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QBy
         }
 
         if (prop->name == m_propsNames[n]) {
-            qCDebug(KWIN_DRM).nospace() << m_id << ": " << prop->name << "' (id " << prop->prop_id
+            qCDebug(KWIN_DRM).nospace() << m_id << ": '" << prop->name << "' (id " << prop->prop_id
                               << "): " << properties->prop_values[i];
             m_props[n] = new Property(prop.data(), properties->prop_values[i], enumNames);
             return;
@@ -67,7 +67,7 @@ bool DrmObject::doAtomicPopulate(drmModeAtomicReq *req, int firstProperty) const
 
     for (int i = firstProperty; i < m_props.size(); i++) {
         auto property = m_props.at(i);
-        if (!property) {
+        if (!property || property->isImmutable()) {
             continue;
         }
         ret &= atomicAddProperty(req, property);
@@ -113,6 +113,7 @@ DrmObject::Property::Property(drmModePropertyRes *prop, uint64_t val, QVector<QB
     : m_propId(prop->prop_id)
     , m_propName(prop->name)
     , m_value(val)
+    , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
 {
     if (!enumNames.isEmpty()) {
         qCDebug(KWIN_DRM) << m_propName << " can have enums:" << enumNames;

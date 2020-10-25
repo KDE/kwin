@@ -135,6 +135,10 @@ bool DrmGpu::updateOutputs()
                 delete c;
                 continue;
             }
+            if (c->isNonDesktop()) {
+                delete c;
+                continue;
+            }
             m_connectors << c;
         } else {
             oldConnectors.removeOne(*it);

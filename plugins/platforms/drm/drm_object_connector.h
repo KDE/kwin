@@ -25,6 +25,7 @@ public:
 
     enum class PropertyIndex {
         CrtcId = 0,
+        NonDesktop = 1,
         Count
     };
 
@@ -34,8 +35,10 @@ public:
     
     bool initProps() override;
     bool isConnected();
-
-
+    
+    bool isNonDesktop() const {
+        return m_props.at(static_cast<int>(PropertyIndex::NonDesktop))->value();
+    }
 private:
     QVector<uint32_t> m_encoders;
 };
