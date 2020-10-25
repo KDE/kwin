@@ -65,7 +65,7 @@ void DrmOutput::teardown()
         // TODO: when having multiple planes, also clean up these
         m_primaryPlane->setOutput(nullptr);
 
-        if (m_backend->deleteBufferAfterPageFlip()) {
+        if (m_gpu->deleteBufferAfterPageFlip()) {
             delete m_primaryPlane->current();
         }
         m_primaryPlane->setCurrent(nullptr);
@@ -694,7 +694,7 @@ void DrmOutput::pageFlipped()
     }
     // Egl based surface buffers get destroyed, QPainter based dumb buffers not
     // TODO: split up DrmOutput in two for dumb and egl/gbm surface buffer compatible subclasses completely?
-    if (m_backend->deleteBufferAfterPageFlip()) {
+    if (m_gpu->deleteBufferAfterPageFlip()) {
         if (m_gpu->atomicModeSetting()) {
             if (!m_primaryPlane->next()) {
                 // on manual vt switch
@@ -784,7 +784,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
     }
 
 #if HAVE_EGL_STREAMS
-    if (m_backend->useEglStreams() && !m_modesetRequested) {
+    if (m_gpu->useEglStreams() && !m_modesetRequested) {
         // EglStreamBackend queues normal page flips through EGL,
         // modesets are still performed through DRM-KMS
         m_pageFlipPending = true;
@@ -935,7 +935,7 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
             }
 
 #if HAVE_EGL_STREAMS
-            if (!m_backend->useEglStreams())
+            if (!m_gpu->useEglStreams())
                 // EglStreamBackend uses the NV_output_drm_flip_event EGL extension
                 // to register the flip event through eglStreamConsumerAcquireAttribNV
 #endif
@@ -988,7 +988,7 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), mSize.height());
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), m_crtc->id());
     } else {
-        if (m_backend->deleteBufferAfterPageFlip()) {
+        if (m_gpu->deleteBufferAfterPageFlip()) {
             delete m_primaryPlane->current();
             delete m_primaryPlane->next();
         }

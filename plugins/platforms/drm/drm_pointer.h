@@ -13,12 +13,22 @@
 #include <QScopedPointer>
 
 #include <xf86drmMode.h>
+#include <xf86drm.h>
 
 namespace KWin
 {
 
 template <typename T>
 struct DrmDeleter;
+
+template <>
+struct DrmDeleter<drmVersion>
+{
+    static void cleanup(drmVersion *version)
+    {
+        drmFreeVersion(version);
+    }
+};
 
 template <>
 struct DrmDeleter<drmModeAtomicReq>

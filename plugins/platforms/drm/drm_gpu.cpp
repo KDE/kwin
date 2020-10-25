@@ -32,7 +32,7 @@
 namespace KWin
 {
 
-DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_backend(backend), m_devNode(devNode), m_fd(fd), m_drmId(drmId), m_atomicModeSetting(false), m_useEglStreams(false), m_gbmDevice(nullptr)
+DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_backend(backend), m_devNode(devNode), m_fd(fd), m_drmId(drmId), m_atomicModeSetting(false), m_gbmDevice(nullptr)
 {
     uint64_t capability = 0;
 
@@ -47,6 +47,12 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
     } else {
         m_cursorSize.setHeight(64);
     }
+    
+    // find out if this GPU is using the NVidia proprietary driver
+    DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
+    m_useEglStreams = strstr(version->name, "nvidia-drm");
+
+    m_deleteBufferAfterPageFlip = !m_useEglStreams;
 }
 
 DrmGpu::~DrmGpu()

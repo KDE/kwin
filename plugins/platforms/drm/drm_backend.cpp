@@ -67,11 +67,6 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_udevMonitor(m_udev->monitor())
     , m_dpmsFilter()
 {
-#if HAVE_EGL_STREAMS
-    if (qEnvironmentVariableIsSet("KWIN_DRM_USE_EGL_STREAMS")) {
-        m_useEglStreams = true;
-    }
-#endif
     setSupportsGammaControl(true);
     supportsOutputChanges();
 }
@@ -482,7 +477,7 @@ DrmOutput *DrmBackend::findOutput(quint32 connector)
 bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
 {
     if (!buffer || buffer->bufferId() == 0) {
-        if (m_deleteBufferAfterPageFlip) {
+        if (output->gpu()->deleteBufferAfterPageFlip()) {
             delete buffer;
         }
         return false;
@@ -494,7 +489,7 @@ bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
             Compositor::self()->aboutToSwapBuffers();
         }
         return true;
-    } else if (m_deleteBufferAfterPageFlip) {
+    } else if (output->gpu()->deleteBufferAfterPageFlip()) {
         delete buffer;
     }
     return false;
@@ -506,9 +501,14 @@ void DrmBackend::initCursor()
 #if HAVE_EGL_STREAMS
     // Hardware cursors aren't currently supported with EGLStream backend,
     // possibly an NVIDIA driver bug
-    if (m_useEglStreams) {
-        setSoftWareCursor(true);
+    bool needsSoftwareCursor = false;
+    for (auto gpu : qAsConst(m_gpus)) {
+        if (gpu->useEglStreams()) {
+            needsSoftwareCursor = true;
+            break;
+        }
     }
+    setSoftWareCursor(needsSoftwareCursor);
 #endif
 
     m_cursorEnabled = waylandServer()->seat()->hasPointer();
@@ -604,21 +604,19 @@ Screens *DrmBackend::createScreens(QObject *parent)
 
 QPainterBackend *DrmBackend::createQPainterBackend()
 {
-    m_deleteBufferAfterPageFlip = false;
+    m_gpus.at(0)->setDeleteBufferAfterPageFlip(false);
     return new DrmQPainterBackend(this, m_gpus.at(0));
 }
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
 #if HAVE_EGL_STREAMS
-    if (m_useEglStreams) {
-        m_deleteBufferAfterPageFlip = false;
+    if (m_gpus.at(0)->useEglStreams()) {
         return new EglStreamBackend(this, m_gpus.at(0));
     }
 #endif
 
 #if HAVE_GBM
-    m_deleteBufferAfterPageFlip = true;
     return new EglGbmBackend(this, m_gpus.at(0));
 #else
     return Platform::createOpenGLBackend();
@@ -642,7 +640,7 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
 #if HAVE_GBM
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
 #elif HAVE_EGL_STREAMS
-    return m_useEglStreams ?
+    return m_gpus.at(0)->useEglStreams() ?
         QVector<CompositingType>{OpenGLCompositing, QPainterCompositing} :
         QVector<CompositingType>{QPainterCompositing};
 #else
@@ -661,7 +659,7 @@ QString DrmBackend::supportInformation() const
         s << "Atomic Mode Setting on GPU " << g << ": " << m_gpus.at(g)->atomicModeSetting() << Qt::endl;
     }
 #if HAVE_EGL_STREAMS
-    s << "Using EGL Streams: " << m_useEglStreams << Qt::endl;
+    s << "Using EGL Streams: " << m_gpus.at(0)->useEglStreams() << Qt::endl;
 #endif
     return supportInfo;
 }

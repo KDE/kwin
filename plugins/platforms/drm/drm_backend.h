@@ -78,17 +78,6 @@ public:
     void createDpmsFilter();
     void checkOutputsAreOn();
 
-    // QPainter reuses buffers
-    bool deleteBufferAfterPageFlip() const {
-        return m_deleteBufferAfterPageFlip;
-    }
-
-#if HAVE_EGL_STREAMS
-    bool useEglStreams() const {
-        return m_useEglStreams;
-    }
-#endif
-
     QVector<CompositingType> supportedCompositors() const override;
 
     QString supportInformation() const override;
@@ -130,13 +119,9 @@ private:
     // active and enabled pipelines (above + wl_output)
     QVector<DrmOutput*> m_enabledOutputs;
 
-    bool m_deleteBufferAfterPageFlip;
     bool m_cursorEnabled = false;
     int m_pageFlipsPending = 0;
     bool m_active = false;
-#if HAVE_EGL_STREAMS
-    bool m_useEglStreams = false;
-#endif
     QVector<DrmGpu*> m_gpus;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;
 };
