@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "rulebookdata.h"
 #include <rules.h>
 
 #include <QAbstractListModel>
@@ -13,8 +14,6 @@
 
 namespace KWin
 {
-
-class RuleBookData;
 
 class RuleBookModel : public QAbstractListModel
 {

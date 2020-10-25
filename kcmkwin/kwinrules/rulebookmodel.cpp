@@ -6,8 +6,8 @@
 
 #include "rulebookmodel.h"
 
-#include "rulebookdata.h"
 #include "rulebooksettings.h"
+
 
 namespace KWin
 {
