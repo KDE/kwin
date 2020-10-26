@@ -56,12 +56,19 @@ public:
      */
     QByteArray vendor() const;
 
+    /**
+     * Returns the raw edid
+     */
+    QByteArray raw() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
     QByteArray m_eisaId;
     QByteArray m_monitorName;
     QByteArray m_serialNumber;
+
+    QByteArray m_raw;
     bool m_isValid = false;
 };
 

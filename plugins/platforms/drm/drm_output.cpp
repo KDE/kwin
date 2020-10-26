@@ -318,7 +318,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         physicalSize = overwriteSize;
     }
     setName(connectorName);
-    initInterfaces(model, manufacturer, m_uuid, physicalSize, modes);
+    initInterfaces(model, manufacturer, m_uuid, physicalSize, modes, m_edid.raw());
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -352,6 +352,7 @@ void DrmOutput::initEdid(drmModeConnector *connector)
         }
     }
     if (!edid) {
+        qDebug() << "could not find edid for connector" << connector << connector->connector_id;
         return;
     }
 

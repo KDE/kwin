@@ -51,7 +51,7 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     // Physicial size must be adjusted, such that QPA calculates correct sizes of
     // internal elements.
     const QSize physicalSize = pixelSize / 96.0 * 25.4 / m_backend->initialOutputScale();
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode });
+    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(m_backend->initialOutputScale());
 

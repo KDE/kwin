@@ -242,7 +242,8 @@ void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 
 void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &manufacturer,
                                            const QByteArray &uuid, const QSize &physicalSize,
-                                           const QVector<DeviceInterface::Mode> &modes)
+                                           const QVector<DeviceInterface::Mode> &modes,
+                                           const QByteArray &edid)
 {
     m_waylandOutputDevice->setUuid(uuid);
 
@@ -251,6 +252,7 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
     } else {
         m_waylandOutputDevice->setManufacturer(i18n("unknown"));
     }
+    m_waylandOutputDevice->setEdid(edid);
 
     m_waylandOutputDevice->setModel(model);
     m_waylandOutputDevice->setPhysicalSize(physicalSize);

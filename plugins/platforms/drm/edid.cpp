@@ -154,6 +154,9 @@ Edid::Edid()
 
 Edid::Edid(const void *data, uint32_t size)
 {
+    m_raw.resize(size);
+    memcpy(m_raw.data(), data, size);
+
     const uint8_t *bytes = static_cast<const uint8_t *>(data);
 
     if (size < 128) {
@@ -201,6 +204,11 @@ QByteArray Edid::serialNumber() const
 QByteArray Edid::vendor() const
 {
     return m_vendor;
+}
+
+QByteArray Edid::raw() const
+{
+    return m_raw;
 }
 
 } // namespace KWin

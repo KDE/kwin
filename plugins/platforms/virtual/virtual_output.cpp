@@ -31,7 +31,7 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode });
+    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode }, {});
     setGeometry(QRect(logicalPosition, pixelSize));
 }
 

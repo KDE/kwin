@@ -39,7 +39,7 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = 60000;  // TODO: get actual refresh rate of fb device?
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode });
+    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
 }
 
 FramebufferBackend::FramebufferBackend(QObject *parent)
