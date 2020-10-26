@@ -70,8 +70,13 @@ protected:
     virtual void handleRoleCommit();
     virtual bool stateCompare() const;
 
+    enum ConfigureFlag {
+        ConfigureRequired = 0x1,
+    };
+    Q_DECLARE_FLAGS(ConfigureFlags, ConfigureFlag)
+
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
-    void scheduleConfigure();
+    void scheduleConfigure(ConfigureFlags flags = ConfigureFlags());
     void sendConfigure();
 
     QPointer<KWaylandServer::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
@@ -91,6 +96,7 @@ private:
     QQueue<XdgSurfaceConfigure *> m_configureEvents;
     QScopedPointer<XdgSurfaceConfigure> m_lastAcknowledgedConfigure;
     QRect m_windowGeometry;
+    ConfigureFlags m_configureFlags;
     bool m_haveNextWindowGeometry = false;
 };
 

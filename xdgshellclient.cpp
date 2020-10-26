@@ -128,13 +128,15 @@ bool XdgSurfaceClient::stateCompare() const
     return false;
 }
 
-void XdgSurfaceClient::scheduleConfigure()
+void XdgSurfaceClient::scheduleConfigure(ConfigureFlags flags)
 {
     if (isZombie()) {
         return;
     }
 
-    if (stateCompare()) {
+    m_configureFlags |= flags;
+
+    if ((m_configureFlags & ConfigureRequired) || stateCompare()) {
         m_configureTimer->start();
     } else {
         m_configureTimer->stop();
@@ -153,6 +155,7 @@ void XdgSurfaceClient::sendConfigure()
     }
 
     m_configureEvents.append(configureEvent);
+    m_configureFlags = ConfigureFlags();
 }
 
 void XdgSurfaceClient::handleConfigureAcknowledged(quint32 serial)
@@ -1039,7 +1042,7 @@ void XdgToplevelClient::handleMaximizeRequested()
 {
     if (m_isInitialized) {
         maximize(MaximizeFull);
-        scheduleConfigure();
+        scheduleConfigure(ConfigureRequired);
     } else {
         m_initialStates |= XdgToplevelInterface::State::Maximized;
     }
@@ -1049,7 +1052,7 @@ void XdgToplevelClient::handleUnmaximizeRequested()
 {
     if (m_isInitialized) {
         maximize(MaximizeRestore);
-        scheduleConfigure();
+        scheduleConfigure(ConfigureRequired);
     } else {
         m_initialStates &= ~XdgToplevelInterface::State::Maximized;
     }
@@ -1060,7 +1063,7 @@ void XdgToplevelClient::handleFullscreenRequested(OutputInterface *output)
     Q_UNUSED(output)
     if (m_isInitialized) {
         setFullScreen(/* set */ true, /* user */ false);
-        scheduleConfigure();
+        scheduleConfigure(ConfigureRequired);
     } else {
         m_initialStates |= XdgToplevelInterface::State::FullScreen;
     }
@@ -1070,7 +1073,7 @@ void XdgToplevelClient::handleUnfullscreenRequested()
 {
     if (m_isInitialized) {
         setFullScreen(/* set */ false, /* user */ false);
-        scheduleConfigure();
+        scheduleConfigure(ConfigureRequired);
     } else {
         m_initialStates &= ~XdgToplevelInterface::State::FullScreen;
     }
@@ -1226,7 +1229,7 @@ void XdgToplevelClient::initialize()
     }
 
     blockGeometryUpdates(false);
-    scheduleConfigure();
+    scheduleConfigure(ConfigureRequired);
     updateColorScheme();
     m_isInitialized = true;
 }
@@ -1983,7 +1986,7 @@ void XdgPopupClient::initialize()
     placeIn(area);
     blockGeometryUpdates(false);
 
-    scheduleConfigure();
+    scheduleConfigure(ConfigureRequired);
 }
 void XdgPopupClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface)
 {
