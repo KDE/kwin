@@ -56,6 +56,11 @@ void PipeWireCore::onCoreError(void* data, uint32_t id, int seq, int res, const 
 bool PipeWireCore::init()
 {
     pwMainLoop = pw_loop_new(nullptr);
+    if (!pwMainLoop) {
+        qCWarning(KWIN_SCREENCAST, "Failed to create PipeWire loop: %s", strerror(errno));
+        m_error = i18n("Failed to start main PipeWire loop");
+        return false;
+    }
     pw_loop_enter(pwMainLoop);
 
     QSocketNotifier *notifier = new QSocketNotifier(pw_loop_get_fd(pwMainLoop), QSocketNotifier::Read, this);
