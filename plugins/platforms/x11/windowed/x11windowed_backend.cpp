@@ -481,7 +481,6 @@ void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hots
     }
     m_cursor = cid;
     xcb_flush(m_connection);
-    Cursors::self()->currentCursor()->markAsRendered();
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const

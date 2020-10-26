@@ -601,9 +601,6 @@ void SceneOpenGL2::paintCursor()
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
     m_cursorTexture->render(QRegion(cursorRect), cursorRect);
     m_cursorTexture->unbind();
-
-    cursor->markAsRendered();
-
     glDisable(GL_BLEND);
 }
 

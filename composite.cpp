@@ -705,6 +705,9 @@ void Compositor::performCompositing()
                 surface->frameRendered(currentTime);
             }
         }
+        if (!kwinApp()->platform()->isCursorHidden()) {
+            Cursors::self()->currentCursor()->markAsRendered();
+        }
     }
 
     // Stop here to ensure *we* cause the next repaint schedule - not some effect
