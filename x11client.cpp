@@ -1912,7 +1912,7 @@ void X11Client::setOnActivities(QStringList newActivitiesList)
     }
     QString joinedActivitiesList = newActivitiesList.join(QStringLiteral(","));
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
-    newActivitiesList = joinedActivitiesList.split(u',', QString::SkipEmptyParts);
+    newActivitiesList = joinedActivitiesList.split(u',', Qt::SkipEmptyParts);
 
     QStringList allActivities = Activities::self()->all();
 
