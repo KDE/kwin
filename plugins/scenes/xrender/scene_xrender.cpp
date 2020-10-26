@@ -1326,9 +1326,9 @@ Scene *XRenderFactory::create(QObject *parent) const
 #endif
 
 
-void KWin::SceneXrender::paintCursor()
+void KWin::SceneXrender::paintCursor(const QRegion &region)
 {
-
+    Q_UNUSED(region)
 }
 
 void KWin::SceneXrender::paintEffectQuickView(KWin::EffectQuickView *w)

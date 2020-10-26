@@ -197,6 +197,7 @@ void Platform::setSoftWareCursor(bool set)
         disconnect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
         disconnect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
     }
+    triggerCursorRepaint();
 }
 
 void Platform::triggerCursorRepaint()

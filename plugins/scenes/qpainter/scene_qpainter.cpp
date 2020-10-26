@@ -110,7 +110,7 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
             QRegion updateRegion, validRegion;
             paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
             overallUpdate = overallUpdate.united(updateRegion);
-            paintCursor();
+            paintCursor(updateRegion);
 
             m_painter->restore();
             m_painter->end();
@@ -128,7 +128,7 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
         QRegion updateRegion, validRegion;
         paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
 
-        paintCursor();
+        paintCursor(updateRegion);
         m_backend->showOverlay();
 
         m_painter->end();
@@ -149,7 +149,7 @@ void SceneQPainter::paintBackground(const QRegion &region)
     }
 }
 
-void SceneQPainter::paintCursor()
+void SceneQPainter::paintCursor(const QRegion &rendered)
 {
     if (!kwinApp()->platform()->usesSoftwareCursor()) {
         return;
@@ -160,9 +160,11 @@ void SceneQPainter::paintCursor()
     if (img.isNull()) {
         return;
     }
-    const QPoint cursorPos = cursor->pos();
-    const QPoint hotspot = cursor->hotspot();
-    m_painter->drawImage(cursorPos - hotspot, img);
+
+    m_painter->save();
+    m_painter->setClipRegion(rendered.intersected(cursor->geometry()));
+    m_painter->drawImage(cursor->geometry(), img);
+    m_painter->restore();
 }
 
 void SceneQPainter::paintEffectQuickView(EffectQuickView *w)
