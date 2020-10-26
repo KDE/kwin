@@ -122,7 +122,7 @@ protected:
     Scene::Window *createWindow(Toplevel *t) override;
     void finalDrawWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data) override;
     void updateProjectionMatrix() override;
-    void paintCursor() override;
+    void paintCursor(const QRegion &region) override;
 
 private:
     void performPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);

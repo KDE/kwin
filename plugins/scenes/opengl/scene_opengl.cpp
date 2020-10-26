@@ -555,7 +555,7 @@ void SceneOpenGL::insertWait()
  * Render cursor texture in case hardware cursor is disabled.
  * Useful for screen recording apps or backends that can't do planes.
  */
-void SceneOpenGL2::paintCursor()
+void SceneOpenGL2::paintCursor(const QRegion &rendered)
 {
     Cursor* cursor = Cursors::self()->currentCursor();
 
@@ -563,6 +563,18 @@ void SceneOpenGL2::paintCursor()
     if (!kwinApp()->platform()->usesSoftwareCursor() ||
         kwinApp()->platform()->isCursorHidden() ||
         cursor->image().isNull()) {
+        return;
+    }
+
+    // figure out which part of the cursor needs to be repainted
+    const QPoint cursorPos = cursor->pos() - cursor->hotspot();
+    const qreal scale = cursor->image().devicePixelRatio();
+    const QRect cursorRect(QPoint(0, 0), cursor->image().size() / scale);
+    QRegion region;
+    for (const QRect &rect : rendered) {
+        region |= rect.translated(-cursorPos).intersected(cursorRect);
+    }
+    if (region.isEmpty()) {
         return;
     }
 
@@ -585,9 +597,6 @@ void SceneOpenGL2::paintCursor()
     }
 
     // get cursor position in projection coordinates
-    const qreal scale = cursor->image().devicePixelRatio();
-    const QPoint cursorPos = cursor->pos() - cursor->hotspot();
-    const QRect cursorRect(QPoint(0, 0), m_cursorTexture->size() / scale);
     QMatrix4x4 mvp = m_projectionMatrix;
     mvp.translate(cursorPos.x(), cursorPos.y());
 
@@ -599,7 +608,7 @@ void SceneOpenGL2::paintCursor()
     m_cursorTexture->bind();
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursorTexture->render(QRegion(cursorRect), cursorRect);
+    m_cursorTexture->render(region, cursorRect);
     m_cursorTexture->unbind();
     glDisable(GL_BLEND);
 }
@@ -645,7 +654,7 @@ qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplev
             updateProjectionMatrix();
 
             paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix(), geo, scaling);   // call generic implementation
-            paintCursor();
+            paintCursor(valid);
 
             GLVertexBuffer::streamingBuffer()->endOfFrame();
 

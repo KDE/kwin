@@ -166,7 +166,7 @@ protected:
     void paintBackground(const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
-    void paintCursor() override;
+    void paintCursor(const QRegion &region) override;
     void paintEffectQuickView(EffectQuickView *w) override;
 private:
     explicit SceneXrender(XRenderBackend *backend, QObject *parent = nullptr);
