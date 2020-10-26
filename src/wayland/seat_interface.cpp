@@ -234,6 +234,9 @@ QVector<TouchInterface *> SeatInterface::Private::touchsForSurface(SurfaceInterf
 
 QVector<DataDeviceInterface *> SeatInterface::Private::dataDevicesForSurface(SurfaceInterface *surface) const
 {
+    if (!surface) {
+        return {};
+    }
     QVector<DataDeviceInterface *> primarySelectionDevices;
     for (auto it = dataDevices.constBegin(); it != dataDevices.constEnd(); ++it) {
         if ((*it)->client() == *surface->client()) {
