@@ -341,11 +341,14 @@ bool DrmBackend::updateOutputs()
     if (m_gpus.size() == 0) {
         return false;
     }
+    const auto oldOutputs = m_outputs;
     for (auto gpu : m_gpus)
         gpu->updateOutputs();
     
     std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
-    readOutputsConfiguration();
+    if (oldOutputs != m_outputs) {
+        readOutputsConfiguration();
+    }
     updateOutputsEnabled();
     if (!m_outputs.isEmpty()) {
         emit screensQueried();

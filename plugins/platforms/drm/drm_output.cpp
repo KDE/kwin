@@ -352,7 +352,7 @@ void DrmOutput::initEdid(drmModeConnector *connector)
         }
     }
     if (!edid) {
-        qDebug() << "could not find edid for connector" << connector << connector->connector_id;
+        qCWarning(KWIN_DRM) << "Could not find edid for connector" << connector << connector->connector_id;
         return;
     }
 
