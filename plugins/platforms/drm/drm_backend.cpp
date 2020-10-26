@@ -680,8 +680,6 @@ void DrmBackend::setCursor()
             }
         }
     }
-
-    Cursors::self()->currentCursor()->markAsRendered();
 }
 
 void DrmBackend::updateCursor()

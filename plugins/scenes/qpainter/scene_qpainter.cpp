@@ -163,7 +163,6 @@ void SceneQPainter::paintCursor()
     const QPoint cursorPos = cursor->pos();
     const QPoint hotspot = cursor->hotspot();
     m_painter->drawImage(cursorPos - hotspot, img);
-    cursor->markAsRendered();
 }
 
 void SceneQPainter::paintEffectQuickView(EffectQuickView *w)
