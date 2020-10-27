@@ -125,11 +125,8 @@ QVariant RuleItem::suggestedValue() const
     return m_suggestedValue;
 }
 
-void RuleItem::setSuggestedValue(QVariant value, bool forceValue)
+void RuleItem::setSuggestedValue(QVariant value)
 {
-    if (forceValue) {
-        setValue(value);
-    }
     m_suggestedValue = value.isNull() ? QVariant() : typedValue(value);
 }
 

@@ -70,7 +70,7 @@ public:
     void importFromRules(Rules *rules);
     Rules *exportToRules() const;
 
-    void setWindowProperties(const QVariantMap &info, bool forceValue = false);
+    void setSuggestedProperties(const QVariantMap &info);
 
     QString description() const;
     void setDescription(const QString &description);

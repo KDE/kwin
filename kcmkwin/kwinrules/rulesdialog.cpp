@@ -57,7 +57,7 @@ Rules* RulesDialog::edit(Rules* r, const QVariantMap& info, bool show_hints)
 
     m_rulesModel->importFromRules(m_rules);
     if (!info.isEmpty()) {
-        m_rulesModel->setWindowProperties(info, true);
+        m_rulesModel->setSuggestedProperties(info);
     }
 
     exec();

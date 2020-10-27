@@ -74,7 +74,7 @@ public:
     QVariant value() const;
     void setValue(QVariant value);
     QVariant suggestedValue() const;
-    void setSuggestedValue(QVariant value, bool forceValue = false);
+    void setSuggestedValue(QVariant value);
 
     QVariant options() const;
     void setOptionsData(const QList<OptionsModel::Data> &data);
