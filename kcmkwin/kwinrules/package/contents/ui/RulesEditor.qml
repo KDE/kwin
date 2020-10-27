@@ -94,7 +94,6 @@ ScrollViewKCM {
             text: i18n("Detect Window Properties")
             icon.name: "edit-find"
             onClicked: {
-                overlayModel.onlySuggestions = true;
                 rulesModel.detectWindowProperties(delaySpin.value);
             }
         }
@@ -113,7 +112,8 @@ ScrollViewKCM {
 
     Connections {
         target: rulesModel
-        function onSuggestionsChanged() {
+        function onShowSuggestions() {
+            overlayModel.onlySuggestions = true;
             propertySheet.sheetOpen = true;
         }
     }
