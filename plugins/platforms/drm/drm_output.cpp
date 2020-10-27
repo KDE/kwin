@@ -649,7 +649,7 @@ void DrmOutput::updateTransform(Transform transform)
     m_modesetRequested = true;
 
     // show cursor only if is enabled, i.e if pointer device is presentP
-    if (m_backend->isCursorEnabled() && !m_backend->usesSoftwareCursor()) {
+    if (!m_backend->isCursorHidden() && !m_backend->usesSoftwareCursor()) {
         // the cursor might need to get rotated
         updateCursor();
         showCursor();
@@ -809,7 +809,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
             }
             m_modesetRequested = true;
-            if (m_backend->isCursorEnabled()) {
+            if (!m_backend->isCursorHidden()) {
                 // the cursor might need to get rotated
                 updateCursor();
                 showCursor();

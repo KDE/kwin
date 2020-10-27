@@ -511,22 +511,18 @@ void DrmBackend::initCursor()
     setSoftWareCursor(needsSoftwareCursor);
 #endif
 
-    m_cursorEnabled = waylandServer()->seat()->hasPointer();
+    if (waylandServer()->seat()->hasPointer()) {
+        // The cursor is visible by default, do nothing.
+    } else {
+        hideCursor();
+    }
+
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged, this,
         [this] {
-            m_cursorEnabled = waylandServer()->seat()->hasPointer();
-            if (usesSoftwareCursor()) {
-                return;
-            }
-            for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-                if (m_cursorEnabled) {
-                    if (!(*it)->showCursor()) {
-                        setSoftWareCursor(true);
-                        break;
-                    }
-                } else {
-                    (*it)->hideCursor();
-                }
+            if (waylandServer()->seat()->hasPointer()) {
+                showCursor();
+            } else {
+                hideCursor();
             }
         }
     );
@@ -537,11 +533,9 @@ void DrmBackend::initCursor()
 
 void DrmBackend::setCursor()
 {
-    if (m_cursorEnabled) {
-        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-            if (!(*it)->showCursor()) {
-                setSoftWareCursor(true);
-            }
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        if (!(*it)->showCursor()) {
+            setSoftWareCursor(true);
         }
     }
 }
@@ -577,7 +571,7 @@ void DrmBackend::doShowCursor()
 
 void DrmBackend::doHideCursor()
 {
-    if (!m_cursorEnabled || usesSoftwareCursor()) {
+    if (usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
@@ -587,7 +581,7 @@ void DrmBackend::doHideCursor()
 
 void DrmBackend::moveCursor(Cursor *cursor, const QPoint &pos)
 {
-    if (!m_cursorEnabled || isCursorHidden() || usesSoftwareCursor()) {
+    if (isCursorHidden() || usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {

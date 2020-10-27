@@ -82,10 +82,6 @@ public:
 
     QString supportInformation() const override;
 
-    bool isCursorEnabled() const {
-        return m_cursorEnabled;
-    };
-
 public Q_SLOTS:
     void turnOutputsOn();
 
@@ -119,7 +115,6 @@ private:
     // active and enabled pipelines (above + wl_output)
     QVector<DrmOutput*> m_enabledOutputs;
 
-    bool m_cursorEnabled = false;
     int m_pageFlipsPending = 0;
     bool m_active = false;
     QVector<DrmGpu*> m_gpus;
