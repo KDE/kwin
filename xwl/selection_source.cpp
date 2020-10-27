@@ -197,9 +197,11 @@ void X11Source::handleTargets()
                                                         );
     auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
     if (!reply) {
+        qCDebug(KWIN_XWL) << "Failed to get selection property";
         return;
     }
     if (reply->type != XCB_ATOM_ATOM) {
+        qCDebug(KWIN_XWL) << "Wrong reply type";
         free(reply);
         return;
     }

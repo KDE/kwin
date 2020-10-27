@@ -145,6 +145,8 @@ void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 
     if (X11Source *source = x11Source()) {
         source->getTargets();
+    } else {
+        qCWarning(KWIN_XWL) << "Could not create a source from" << event << Qt::hex << (event ? event->owner : -1);
     }
 }
 
@@ -152,6 +154,7 @@ void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &re
 {
     X11Source *source = x11Source();
     if (!source) {
+        qCWarning(KWIN_XWL) << "offers changed when not having an X11Source!?";
         return;
     }
 
