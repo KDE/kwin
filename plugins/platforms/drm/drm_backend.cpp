@@ -171,15 +171,13 @@ void DrmBackend::reactivate()
     }
     m_active = true;
     if (!usesSoftwareCursor()) {
-        Cursor* cursor = Cursors::self()->mouse();
-        const QPoint cp = cursor->pos() - cursor->hotspot();
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
             // only relevant in atomic mode
             o->m_modesetRequested = true;
             o->m_crtc->blank();
             o->showCursor();
-            o->moveCursor(cursor, cp);
+            o->moveCursor();
         }
     }
     // restart compositor
@@ -561,7 +559,7 @@ void DrmBackend::updateCursor()
 
     setCursor();
 
-    moveCursor(cursor, cursor->pos());
+    moveCursor();
 }
 
 void DrmBackend::doShowCursor()
@@ -579,13 +577,13 @@ void DrmBackend::doHideCursor()
     }
 }
 
-void DrmBackend::moveCursor(Cursor *cursor, const QPoint &pos)
+void DrmBackend::moveCursor()
 {
     if (isCursorHidden() || usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->moveCursor(cursor, pos);
+        (*it)->moveCursor();
     }
 }
 

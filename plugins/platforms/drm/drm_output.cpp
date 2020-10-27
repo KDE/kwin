@@ -152,12 +152,13 @@ void DrmOutput::updateCursor()
     p.end();
 }
 
-void DrmOutput::moveCursor(Cursor *cursor, const QPoint &globalPos)
+void DrmOutput::moveCursor()
 {
+    Cursor *cursor = Cursors::self()->currentCursor();
     const QMatrix4x4 hotspotMatrix = logicalToNativeMatrix(cursor->rect(), scale(), transform());
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(geometry(), scale(), transform());
 
-    QPoint pos = monitorMatrix.map(globalPos);
+    QPoint pos = monitorMatrix.map(cursor->pos());
     pos -= hotspotMatrix.map(cursor->hotspot());
 
     drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y());

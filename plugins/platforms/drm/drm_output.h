@@ -46,7 +46,7 @@ public:
     bool showCursor();
     bool hideCursor();
     void updateCursor();
-    void moveCursor(Cursor *cursor, const QPoint &globalPos);
+    void moveCursor();
     bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);
     void pageFlipped();

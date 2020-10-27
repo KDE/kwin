@@ -100,7 +100,7 @@ private:
     bool updateOutputs();
     void setCursor();
     void updateCursor();
-    void moveCursor(Cursor *cursor, const QPoint &pos);
+    void moveCursor();
     void initCursor();
     void readOutputsConfiguration();
     void writeOutputsConfiguration();
