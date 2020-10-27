@@ -294,18 +294,20 @@ void OutputConfigurationInterface::Private::sendFailed()
 
 OutputChangeSet* OutputConfigurationInterface::Private::pendingChanges(OutputDeviceInterface *outputdevice)
 {
-    if (!changes.keys().contains(outputdevice)) {
-        changes[outputdevice] = new OutputChangeSet(outputdevice, q);
+    auto &change = changes[outputdevice];
+    if (!change) {
+        change = new OutputChangeSet(outputdevice, q);
     }
-    return changes[outputdevice];
+    return change;
 }
 
 bool OutputConfigurationInterface::Private::hasPendingChanges(OutputDeviceInterface *outputdevice) const
 {
-    if (!changes.keys().contains(outputdevice)) {
+    auto it = changes.constFind(outputdevice);
+    if (it == changes.constEnd()) {
         return false;
     }
-    auto c = changes[outputdevice];
+    auto c = *it;
     return c->enabledChanged() ||
     c->modeChanged() ||
     c->transformChanged() ||
