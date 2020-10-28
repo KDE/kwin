@@ -59,7 +59,7 @@ void VirtualBackend::init()
         m_enabledOutputs << dummyOutput ;
     }
 
-    setSoftwareCursor(true);
+    setSoftwareCursorForced(true);
     setReady(true);
     waylandServer()->seat()->setHasPointer(true);
     waylandServer()->seat()->setHasKeyboard(true);

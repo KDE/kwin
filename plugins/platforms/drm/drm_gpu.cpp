@@ -252,7 +252,7 @@ bool DrmGpu::updateOutputs()
                     continue;
                 }
                 if (!output->initCursor(m_cursorSize)) {
-                    m_backend->setSoftwareCursor(true);
+                    m_backend->setSoftwareCursorForced(true);
                 }
                 qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid();
 

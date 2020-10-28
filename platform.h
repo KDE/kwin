@@ -285,6 +285,21 @@ public:
     bool usesSoftwareCursor() const;
 
     /**
+     * Returns @c true if the software cursor is being forced; otherwise returns @c false.
+     *
+     * Note that the value returned by this function not always matches usesSoftwareCursor().
+     * If this function returns @c true, then it is guaranteed that the compositor will
+     * use the software cursor. However, this doesn't apply vice versa.
+     *
+     * If the compositor uses a software cursor, this function may return @c false. This
+     * is typically the case if the current cursor image can't be displayed using hardware
+     * cursors, for example due to buffer size limitations, etc.
+     *
+     * @see usesSoftwareCursor()
+     */
+    bool isSoftwareCursorForced() const;
+
+    /**
      * Returns a PlatformCursorImage. By default this is created by softwareCursor and
      * softwareCursorHotspot. An implementing subclass can use this to provide a better
      * suited PlatformCursorImage.
@@ -487,6 +502,7 @@ Q_SIGNALS:
 protected:
     explicit Platform(QObject *parent = nullptr);
     void setSoftwareCursor(bool set);
+    void setSoftwareCursorForced(bool forced);
     void repaint(const QRect &rect);
     void setReady(bool ready);
     QSize initialWindowSize() const {
@@ -532,10 +548,12 @@ protected:
      * @see showCursor
      */
     virtual void doShowCursor();
+    virtual void doSetSoftwareCursor();
 
 private:
     void triggerCursorRepaint();
     bool m_softwareCursor = false;
+    bool m_softwareCursorForced = false;
     struct {
         QRect lastRenderedGeometry;
     } m_cursor;

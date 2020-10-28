@@ -112,11 +112,6 @@ bool DrmOutput::showCursor()
         return false;
     }
 
-    if (Q_UNLIKELY(m_backend->usesSoftwareCursor())) {
-        qCCritical(KWIN_DRM) << "DrmOutput::showCursor should never be called when software cursor is enabled";
-        return true;
-    }
-
     const bool ret = showCursor(m_cursor[m_cursorIndex].data());
     if (!ret) {
         qCDebug(KWIN_DRM) << "DrmOutput::showCursor(DrmDumbBuffer) failed";
@@ -131,25 +126,45 @@ bool DrmOutput::showCursor()
     return ret;
 }
 
-void DrmOutput::updateCursor()
+static bool isCursorSpriteCompatible(const QImage *buffer, const QImage *sprite)
+{
+    // Note that we need compare the rects in the device independent pixels because the
+    // buffer and the cursor sprite image may have different scale factors.
+    const QRect bufferRect(QPoint(0, 0), buffer->size() / buffer->devicePixelRatio());
+    const QRect spriteRect(QPoint(0, 0), sprite->size() / sprite->devicePixelRatio());
+
+    return bufferRect.contains(spriteRect);
+}
+
+bool DrmOutput::updateCursor()
 {
     if (m_deleted) {
-        return;
+        return false;
     }
     const Cursor *cursor = Cursors::self()->currentCursor();
     const QImage cursorImage = cursor->image();
     if (cursorImage.isNull()) {
-        return;
+        return false;
     }
-    m_hasNewCursor = true;
+
     QImage *c = m_cursor[m_cursorIndex]->image();
+    c->setDevicePixelRatio(scale());
+
+    if (!isCursorSpriteCompatible(c, &cursorImage)) {
+        // If the cursor image is too big, fall back to rendering the software cursor.
+        return false;
+    }
+
+    m_hasNewCursor = true;
     c->fill(Qt::transparent);
 
     QPainter p;
     p.begin(c);
-    p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), scale(), transform()).toTransform());
+    p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
+
+    return true;
 }
 
 void DrmOutput::moveCursor()

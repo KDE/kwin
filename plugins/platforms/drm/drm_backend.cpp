@@ -506,7 +506,7 @@ void DrmBackend::initCursor()
             break;
         }
     }
-    setSoftwareCursor(needsSoftwareCursor);
+    setSoftwareCursorForced(needsSoftwareCursor);
 #endif
 
     if (waylandServer()->seat()->hasPointer()) {
@@ -529,47 +529,58 @@ void DrmBackend::initCursor()
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
 }
 
-void DrmBackend::setCursor()
-{
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        if (!(*it)->showCursor()) {
-            setSoftwareCursor(true);
-        }
-    }
-}
-
 void DrmBackend::updateCursor()
 {
-    if (usesSoftwareCursor()) {
-        return;
-    }
-    if (isCursorHidden()) {
+    if (isSoftwareCursorForced() || isCursorHidden()) {
         return;
     }
 
     auto cursor = Cursors::self()->currentCursor();
-    const QImage &cursorImage = cursor->image();
-    if (cursorImage.isNull()) {
+    if (cursor->image().isNull()) {
         doHideCursor();
         return;
     }
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->updateCursor();
+
+    bool success = true;
+
+    for (DrmOutput *output : qAsConst(m_outputs)) {
+        success = output->updateCursor();
+        if (!success) {
+            qCDebug(KWIN_DRM) << "Failed to update cursor on output" << output->name();
+            break;
+        }
+        success = output->showCursor();
+        if (!success) {
+            qCDebug(KWIN_DRM) << "Failed to show cursor on output" << output->name();
+            break;
+        }
+        output->moveCursor();
     }
 
-    setCursor();
-
-    moveCursor();
+    setSoftwareCursor(!success);
 }
 
 void DrmBackend::doShowCursor()
 {
+    if (usesSoftwareCursor()) {
+        return;
+    }
     updateCursor();
 }
 
 void DrmBackend::doHideCursor()
 {
     if (usesSoftwareCursor()) {
+        return;
+    }
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->hideCursor();
+    }
+}
+
+void DrmBackend::doSetSoftwareCursor()
+{
+    if (isCursorHidden() || !usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {

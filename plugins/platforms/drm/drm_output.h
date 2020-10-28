@@ -45,7 +45,7 @@ public:
     bool showCursor(DrmDumbBuffer *buffer);
     bool showCursor();
     bool hideCursor();
-    void updateCursor();
+    bool updateCursor();
     void moveCursor();
     bool init(drmModeConnector *connector);
     bool present(DrmBuffer *buffer);

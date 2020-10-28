@@ -37,7 +37,7 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    setSoftwareCursor(false);
+    setSoftwareCursorForced(false);
     m_colorCorrect = new ColorCorrect::Manager(this);
     connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
 }
@@ -188,13 +188,11 @@ bool Platform::usesSoftwareCursor() const
 
 void Platform::setSoftwareCursor(bool set)
 {
-    if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
-        set = true;
-    }
     if (m_softwareCursor == set) {
         return;
     }
     m_softwareCursor = set;
+    doSetSoftwareCursor();
     if (m_softwareCursor) {
         connect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
@@ -203,6 +201,33 @@ void Platform::setSoftwareCursor(bool set)
         disconnect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
     }
     triggerCursorRepaint();
+}
+
+void Platform::doSetSoftwareCursor()
+{
+}
+
+bool Platform::isSoftwareCursorForced() const
+{
+    return m_softwareCursorForced;
+}
+
+void Platform::setSoftwareCursorForced(bool forced)
+{
+    if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
+        forced = true;
+    }
+    if (m_softwareCursorForced == forced) {
+        return;
+    }
+    m_softwareCursorForced = forced;
+    if (m_softwareCursorForced) {
+        setSoftwareCursor(true);
+    } else {
+        // Do not unset the software cursor yet, the platform will choose the right
+        // moment when it can be done. There is still a chance that we must continue
+        // using the software cursor.
+    }
 }
 
 void Platform::triggerCursorRepaint()

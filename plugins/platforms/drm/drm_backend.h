@@ -88,6 +88,8 @@ public Q_SLOTS:
 protected:
     void doHideCursor() override;
     void doShowCursor() override;
+    void doSetSoftwareCursor() override;
+
 private:
     friend class DrmGpu;
     void addOutput(DrmOutput* output);
@@ -98,7 +100,6 @@ private:
     void reactivate();
     void deactivate();
     bool updateOutputs();
-    void setCursor();
     void updateCursor();
     void moveCursor();
     void initCursor();
