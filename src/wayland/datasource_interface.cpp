@@ -70,6 +70,13 @@ void DataSourceInterfacePrivate::offer(const QString &mimeType)
 
 void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uint32_t dnd_actions)
 {
+    // verify that the no other actions are sent
+    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy |
+                        QtWaylandServer::wl_data_device_manager::dnd_action_move |
+                        QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
+        wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
+        return;
+    }
     DataDeviceManagerInterface::DnDActions supportedActions;
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_copy) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Copy;
@@ -79,11 +86,6 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
     }
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_ask) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Ask;
-    }
-    // verify that the no other actions are sent
-    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy | QtWaylandServer::wl_data_device_manager::dnd_action_move | QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
-        wl_resource_post_error(resource->handle, QtWaylandServer::wl_data_source::error_invalid_action_mask, "Invalid action mask");
-        return;
     }
     if (supportedDnDActions!= supportedActions) {
         supportedDnDActions = supportedActions;

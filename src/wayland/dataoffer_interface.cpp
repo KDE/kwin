@@ -82,6 +82,22 @@ void DataOfferInterfacePrivate::data_offer_finish(Resource *resource)
 void DataOfferInterfacePrivate::data_offer_set_actions(Resource *resource, uint32_t dnd_actions, uint32_t preferred_action)
 {
     // TODO: check it's drag and drop, otherwise send error
+    // verify that the no other actions are sent
+    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy |
+                        QtWaylandServer::wl_data_device_manager::dnd_action_move |
+                        QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
+        wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
+        return;
+    }
+
+    if (preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_copy &&
+        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_move &&
+        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_ask &&
+        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_none) {
+        wl_resource_post_error(resource->handle, error_invalid_action, "Invalid preferred action");
+        return;
+    }
+
     DataDeviceManagerInterface::DnDActions supportedActions;
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_copy) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Copy;
@@ -91,18 +107,6 @@ void DataOfferInterfacePrivate::data_offer_set_actions(Resource *resource, uint3
     }
     if (dnd_actions & QtWaylandServer::wl_data_device_manager::dnd_action_ask) {
         supportedActions |= DataDeviceManagerInterface::DnDAction::Ask;
-    }
-    // verify that the no other actions are sent
-    if (dnd_actions & ~(QtWaylandServer::wl_data_device_manager::dnd_action_copy | QtWaylandServer::wl_data_device_manager::dnd_action_move | QtWaylandServer::wl_data_device_manager::dnd_action_ask)) {
-        wl_resource_post_error(resource->handle, error_invalid_action_mask, "Invalid action mask");
-        return;
-    }
-    if (preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_copy &&
-        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_move &&
-        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_ask &&
-        preferred_action != QtWaylandServer::wl_data_device_manager::dnd_action_none) {
-        wl_resource_post_error(resource->handle, error_invalid_action, "Invalid preferred action");
-        return;
     }
 
     DataDeviceManagerInterface::DnDAction preferredAction = DataDeviceManagerInterface::DnDAction::None;
