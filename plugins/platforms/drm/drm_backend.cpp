@@ -506,7 +506,7 @@ void DrmBackend::initCursor()
             break;
         }
     }
-    setSoftWareCursor(needsSoftwareCursor);
+    setSoftwareCursor(needsSoftwareCursor);
 #endif
 
     if (waylandServer()->seat()->hasPointer()) {
@@ -533,7 +533,7 @@ void DrmBackend::setCursor()
 {
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         if (!(*it)->showCursor()) {
-            setSoftWareCursor(true);
+            setSoftwareCursor(true);
         }
     }
 }

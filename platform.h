@@ -279,9 +279,10 @@ public:
      */
     virtual void setupActionForGlobalAccel(QAction *action);
 
-    bool usesSoftwareCursor() const {
-        return m_softWareCursor;
-    }
+    /**
+     * Returns @c true if the software cursor is being used; otherwise returns @c false.
+     */
+    bool usesSoftwareCursor() const;
 
     /**
      * Returns a PlatformCursorImage. By default this is created by softwareCursor and
@@ -485,7 +486,7 @@ Q_SIGNALS:
 
 protected:
     explicit Platform(QObject *parent = nullptr);
-    void setSoftWareCursor(bool set);
+    void setSoftwareCursor(bool set);
     void repaint(const QRect &rect);
     void setReady(bool ready);
     QSize initialWindowSize() const {
@@ -534,7 +535,7 @@ protected:
 
 private:
     void triggerCursorRepaint();
-    bool m_softWareCursor = false;
+    bool m_softwareCursor = false;
     struct {
         QRect lastRenderedGeometry;
     } m_cursor;

@@ -37,7 +37,7 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    setSoftWareCursor(false);
+    setSoftwareCursor(false);
     m_colorCorrect = new ColorCorrect::Manager(this);
     connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
 }
@@ -181,16 +181,21 @@ AbstractOutput *Platform::findOutput(const QByteArray &uuid)
     return nullptr;
 }
 
-void Platform::setSoftWareCursor(bool set)
+bool Platform::usesSoftwareCursor() const
+{
+    return m_softwareCursor;
+}
+
+void Platform::setSoftwareCursor(bool set)
 {
     if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
         set = true;
     }
-    if (m_softWareCursor == set) {
+    if (m_softwareCursor == set) {
         return;
     }
-    m_softWareCursor = set;
-    if (m_softWareCursor) {
+    m_softwareCursor = set;
+    if (m_softwareCursor) {
         connect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
     } else {
@@ -211,7 +216,7 @@ void Platform::triggerCursorRepaint()
 
 void Platform::cursorRendered(const QRect &geometry)
 {
-    if (m_softWareCursor) {
+    if (m_softwareCursor) {
         m_cursor.lastRenderedGeometry = geometry;
     }
 }

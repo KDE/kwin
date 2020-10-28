@@ -67,7 +67,7 @@ QPainterBackend *FramebufferBackend::createQPainterBackend()
 
 void FramebufferBackend::init()
 {
-    setSoftWareCursor(true);
+    setSoftwareCursor(true);
     LogindIntegration *logind = LogindIntegration::self();
     auto takeControl = [logind, this]() {
         if (logind->hasSessionControl()) {
