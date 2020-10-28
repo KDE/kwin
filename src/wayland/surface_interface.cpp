@@ -325,8 +325,8 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
                 current.buffer->unref();
                 current.buffer = nullptr;
             }
-        }
-    );
+        },
+        Qt::UniqueConnection);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
