@@ -586,6 +586,7 @@ void SceneOpenGL2::paintCursor(const QRegion &rendered)
                 return;
             }
             m_cursorTexture.reset(new GLTexture(img));
+            m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         };
 
         // init now
