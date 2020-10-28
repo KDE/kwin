@@ -396,16 +396,28 @@ void SeatInterface::Private::registerPrimarySelectionDevice(PrimarySelectionDevi
 
 void SeatInterface::Private::endDrag(quint32 serial)
 {
-    auto target = drag.target;
     QObject::disconnect(drag.destroyConnection);
     QObject::disconnect(drag.dragSourceDestroyConnection);
-    if (drag.source && drag.source->dragSource()) {
-        drag.source->dragSource()->dropPerformed();
+
+    DataDeviceInterface *dragTarget = drag.target;
+    DataSourceInterface *dragSource = drag.source ? drag.source->dragSource() : nullptr;
+    if (dragSource) {
+        // TODO: Also check the current drag-and-drop action.
+        if (dragTarget && dragSource->isAccepted()) {
+            dragTarget->drop();
+            dragSource->dropPerformed();
+        } else {
+            if (wl_resource_get_version(dragSource->resource()) >=
+                    WL_DATA_SOURCE_DND_FINISHED_SINCE_VERSION) {
+                dragSource->cancel();
+            }
+        }
     }
-    if (target) {
-        target->drop();
-        target->updateDragTarget(nullptr, serial);
+
+    if (dragTarget) {
+        dragTarget->updateDragTarget(nullptr, serial);
     }
+
     drag = Drag();
     emit q->dragSurfaceChanged();
     emit q->dragEnded();

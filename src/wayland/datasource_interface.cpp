@@ -26,6 +26,7 @@ public:
     DataSourceInterface *q;
     QStringList mimeTypes;
     DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::None;
+    bool isAccepted = false;
 
 protected:
     void data_source_destroy_resource(Resource *resource) override;
@@ -107,6 +108,7 @@ DataSourceInterface::~DataSourceInterface() = default;
 void DataSourceInterface::accept(const QString &mimeType)
 {
     d->send_target(mimeType);
+    d->isAccepted = !mimeType.isNull();
 }
 
 void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
@@ -179,6 +181,16 @@ wl_resource *DataSourceInterface::resource() const
 wl_client *DataSourceInterface::client() const
 {
     return d->resource()->client();
+}
+
+bool DataSourceInterface::isAccepted() const
+{
+    return d->isAccepted;
+}
+
+void DataSourceInterface::setAccepted(bool accepted)
+{
+    d->isAccepted = accepted;
 }
 
 }

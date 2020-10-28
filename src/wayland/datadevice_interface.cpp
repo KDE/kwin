@@ -247,6 +247,9 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         return;
     }
     auto *source = d->seat->dragSource()->dragSource();
+    if (source) {
+        source->setAccepted(false);
+    }
     DataOfferInterface *offer = d->createDataOffer(source);
     d->drag.surface = surface;
     if (d->seat->isDragPointer()) {

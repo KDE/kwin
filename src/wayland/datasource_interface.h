@@ -49,6 +49,9 @@ public:
 
     wl_client *client() const override;
 
+    bool isAccepted() const;
+    void setAccepted(bool accepted);
+
 private:
     friend class DataDeviceManagerInterfacePrivate;
     explicit DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *parentResource);
