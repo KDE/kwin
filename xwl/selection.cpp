@@ -167,9 +167,11 @@ void Selection::registerXfixes()
 
 void Selection::setWlSource(WlSource *source)
 {
-    delete m_waylandSource;
+    if (m_waylandSource) {
+        m_waylandSource->deleteLater();
+        m_waylandSource = nullptr;
+    }
     delete m_xSource;
-    m_waylandSource = nullptr;
     m_xSource = nullptr;
     if (source) {
         m_waylandSource = source;
@@ -179,10 +181,7 @@ void Selection::setWlSource(WlSource *source)
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 {
-    delete m_waylandSource;
-    delete m_xSource;
-    m_waylandSource = nullptr;
-    m_xSource = nullptr;
+    setWlSource(nullptr);
     if (!event || event->owner == XCB_WINDOW_NONE) {
         return;
     }
