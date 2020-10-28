@@ -76,9 +76,7 @@ public:
     void setDescription(const QString &description);
     QString warningMessage() const;
 
-
-public slots:
-    void detectWindowProperties(int secs);
+    Q_INVOKABLE void detectWindowProperties(int miliseconds);
 
 signals:
     void descriptionChanged();

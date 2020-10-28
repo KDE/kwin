@@ -93,12 +93,16 @@ ScrollViewKCM {
         QQC2.Button {
             text: i18n("Detect Window Properties")
             icon.name: "edit-find"
+            enabled: !propertySheet.sheetOpen
             onClicked: {
-                rulesModel.detectWindowProperties(delaySpin.value);
+                overlayModel.onlySuggestions = true;
+                rulesModel.detectWindowProperties(Math.max(delaySpin.value * 1000,
+                                                           Kirigami.Units.shortDuration));
             }
         }
         QQC2.SpinBox {
             id: delaySpin
+            enabled: !propertySheet.sheetOpen
             Layout.preferredWidth: Kirigami.Units.gridUnit * 8
             from: 0
             to: 30

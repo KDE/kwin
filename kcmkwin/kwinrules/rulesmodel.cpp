@@ -809,9 +809,9 @@ QList<OptionsModel::Data> RulesModel::colorSchemesModelData() const
     return modelData;
 }
 
-void RulesModel::detectWindowProperties(int secs)
+void RulesModel::detectWindowProperties(int miliseconds)
 {
-    QTimer::singleShot(secs*1000, this, &RulesModel::selectX11Window);
+    QTimer::singleShot(miliseconds, this, &RulesModel::selectX11Window);
 }
 
 void RulesModel::selectX11Window()
