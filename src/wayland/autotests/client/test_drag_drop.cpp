@@ -245,6 +245,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QCOMPARE(m_dataDevice->dragOffer()->offeredMimeTypes().count(), 1);
     QCOMPARE(m_dataDevice->dragOffer()->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
     QTRY_COMPARE(offer->sourceDragAndDropActions(), DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
+    offer->accept(QStringLiteral("text/plain"), dragEnteredSpy.last().at(0).toUInt());
     offer->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move, DataDeviceManager::DnDAction::Move);
     QVERIFY(offerActionChangedSpy.wait());
     QCOMPARE(offerActionChangedSpy.count(), 1);
@@ -344,6 +345,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QCOMPARE(m_dataDevice->dragOffer()->offeredMimeTypes().count(), 1);
     QCOMPARE(m_dataDevice->dragOffer()->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
     QTRY_COMPARE(offer->sourceDragAndDropActions(), DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
+    offer->accept(QStringLiteral("text/plain"), dragEnteredSpy.last().at(0).toUInt());
     offer->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move, DataDeviceManager::DnDAction::Move);
     QVERIFY(offerActionChangedSpy.wait());
     QCOMPARE(offerActionChangedSpy.count(), 1);
@@ -438,6 +440,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QCOMPARE(m_dataDevice->dragOffer()->offeredMimeTypes().count(), 1);
     QCOMPARE(m_dataDevice->dragOffer()->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
     QTRY_COMPARE(offer->sourceDragAndDropActions(), DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
+    offer->accept(QStringLiteral("text/plain"), dragEnteredSpy.last().at(0).toUInt());
     offer->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move, DataDeviceManager::DnDAction::Move);
     QVERIFY(offerActionChangedSpy.wait());
     QCOMPARE(offerActionChangedSpy.count(), 1);
@@ -541,11 +544,11 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->setPointerPos(QPointF(50, 50));
 
     // last but not least, simulate the drop
-    QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
-    QVERIFY(droppedSpy.isValid());
+    QSignalSpy cancelledSpy(m_dataSource, &DataSource::cancelled);
+    QVERIFY(cancelledSpy.isValid());
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->pointerButtonReleased(1);
-    QVERIFY(droppedSpy.wait());
+    QVERIFY(cancelledSpy.wait());
 
     // all the changes should have been ignored
     QCOMPARE(axisSpy.count(), 1);
