@@ -1480,6 +1480,13 @@ QString Workspace::supportInformation() const
     support.append(kwinApp()->platform()->supportInformation());
     support.append(QStringLiteral("\n"));
 
+    const Cursor *cursor = Cursors::self()->mouse();
+    support.append(QLatin1String("Cursor\n"));
+    support.append(QLatin1String("======\n"));
+    support.append(QLatin1String("themeName: ") + cursor->themeName() + QLatin1Char('\n'));
+    support.append(QLatin1String("themeSize: ") + QString::number(cursor->themeSize()) + QLatin1Char('\n'));
+    support.append(QLatin1Char('\n'));
+
     support.append(QStringLiteral("Options\n"));
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();
