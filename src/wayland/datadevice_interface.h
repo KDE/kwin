@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -23,6 +24,36 @@ class AbstractDataSource;
 class SeatInterface;
 class SurfaceInterface;
 class DataDeviceInterfacePrivate;
+class DragAndDropIconPrivate;
+
+/**
+ * The DragAndDropIcon class represents a drag-and-drop icon.
+ *
+ * Note that the lifetime of the drag-and-drop icon is bound to the lifetime of the underlying
+ * icon surface.
+ */
+class KWAYLANDSERVER_EXPORT DragAndDropIcon : public QObject
+{
+    Q_OBJECT
+
+public:
+    ~DragAndDropIcon() override;
+
+    /**
+     * Returns the position of the icon relative to the cursor's hotspot.
+     */
+    QPoint position() const;
+
+    /**
+     * Returns the underlying icon surface. This function always returns a valid surface.
+     */
+    SurfaceInterface *surface() const;
+
+private:
+    explicit DragAndDropIcon(SurfaceInterface *surface, QObject *parent = nullptr);
+    friend class DataDeviceInterfacePrivate;
+    QScopedPointer<DragAndDropIconPrivate> d;
+};
 
 /**
  * @brief DataDeviceInterface allows clients to share data by copy-and-paste and drag-and-drop.
@@ -44,7 +75,11 @@ public:
     SeatInterface *seat() const;
     DataSourceInterface *dragSource() const;
     SurfaceInterface *origin() const;
-    SurfaceInterface *icon() const;
+    /**
+     * Returns the additional icon attached to the cursor during a drag-and-drop operation.
+     * This function returns @c null if no drag-and-drop icon has been attached.
+     */
+    DragAndDropIcon *icon() const;
 
     /**
      * @returns the serial of the implicit grab which started the drag
@@ -91,6 +126,7 @@ private:
     friend class DataDeviceManagerInterfacePrivate;
     explicit DataDeviceInterface(SeatInterface *seat, wl_resource *resource);
     QScopedPointer<DataDeviceInterfacePrivate> d;
+    friend class DataDeviceInterfacePrivate;
 };
 
 }

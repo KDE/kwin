@@ -9,6 +9,7 @@
 #include "seat_interface_p.h"
 #include "display.h"
 #include "datadevice_interface.h"
+#include "datadevice_interface_p.h"
 #include "datasource_interface.h"
 #include "datacontroldevice_v1_interface.h"
 #include "datacontrolsource_v1_interface.h"
@@ -399,12 +400,13 @@ void SeatInterface::Private::endDrag(quint32 serial)
     QObject::disconnect(drag.destroyConnection);
     QObject::disconnect(drag.dragSourceDestroyConnection);
 
-    DataDeviceInterface *dragTarget = drag.target;
-    DataSourceInterface *dragSource = drag.source ? drag.source->dragSource() : nullptr;
+    DataDeviceInterface *dragTargetDevice = drag.target;
+    DataDeviceInterface *dragSourceDevice = drag.source;
+    DataSourceInterface *dragSource = dragSourceDevice ? dragSourceDevice->dragSource() : nullptr;
     if (dragSource) {
         // TODO: Also check the current drag-and-drop action.
-        if (dragTarget && dragSource->isAccepted()) {
-            dragTarget->drop();
+        if (dragTargetDevice && dragSource->isAccepted()) {
+            dragTargetDevice->drop();
             dragSource->dropPerformed();
         } else {
             if (wl_resource_get_version(dragSource->resource()) >=
@@ -414,8 +416,12 @@ void SeatInterface::Private::endDrag(quint32 serial)
         }
     }
 
-    if (dragTarget) {
-        dragTarget->updateDragTarget(nullptr, serial);
+    if (dragTargetDevice) {
+        dragTargetDevice->updateDragTarget(nullptr, serial);
+    }
+    if (dragSourceDevice) {
+        auto devicePrivate = DataDeviceInterfacePrivate::get(dragSourceDevice);
+        devicePrivate->endDrag();
     }
 
     drag = Drag();

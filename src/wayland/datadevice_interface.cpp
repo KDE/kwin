@@ -1,57 +1,69 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "datadevice_interface.h"
+#include "datadevice_interface_p.h"
 #include "datadevicemanager_interface.h"
 #include "datasource_interface.h"
 #include "dataoffer_interface.h"
 #include "display.h"
-#include "resource_p.h"
 #include "pointer_interface.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "surface_interface.h"
-#include <qwayland-server-wayland.h>
+#include "surfacerole_p.h"
 
 namespace KWaylandServer
 {
 
-class DataDeviceInterfacePrivate : public QtWaylandServer::wl_data_device
+class DragAndDropIconPrivate : public SurfaceRole
 {
 public:
-    DataDeviceInterfacePrivate(SeatInterface *seat, DataDeviceInterface *_q, wl_resource *resource);
+    explicit DragAndDropIconPrivate(SurfaceInterface *surface);
 
-    DataOfferInterface *createDataOffer(AbstractDataSource *source);
+    void commit() override;
 
-    SeatInterface *seat;
-    DataSourceInterface *source = nullptr;
-    SurfaceInterface *surface = nullptr;
-    QPointer<SurfaceInterface> icon;
-    QPointer<DataSourceInterface> selection;
-
-    struct Drag {
-        SurfaceInterface *surface = nullptr;
-        QMetaObject::Connection destroyConnection;
-        QMetaObject::Connection posConnection;
-        QMetaObject::Connection sourceActionConnection;
-        QMetaObject::Connection targetActionConnection;
-        quint32 serial = 0;
-    };
-    Drag drag;
-
-    DataDeviceInterface *q;
-
-    QPointer<SurfaceInterface> proxyRemoteSurface;
-
-protected:
-    void data_device_destroy_resource(Resource *resource) override;
-    void data_device_start_drag(Resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial) override;
-    void data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial) override;
-    void data_device_release(Resource *resource) override;
+    QPoint position;
 };
+
+DragAndDropIconPrivate::DragAndDropIconPrivate(SurfaceInterface *surface)
+    : SurfaceRole(surface, QByteArrayLiteral("dnd_icon"))
+{
+}
+
+void DragAndDropIconPrivate::commit()
+{
+    position += surface()->offset();
+}
+
+DragAndDropIcon::DragAndDropIcon(SurfaceInterface *surface, QObject *parent)
+    : QObject(parent)
+    , d(new DragAndDropIconPrivate(surface))
+{
+}
+
+DragAndDropIcon::~DragAndDropIcon()
+{
+}
+
+QPoint DragAndDropIcon::position() const
+{
+    return d->position;
+}
+
+SurfaceInterface *DragAndDropIcon::surface() const
+{
+    return d->surface();
+}
+
+DataDeviceInterfacePrivate *DataDeviceInterfacePrivate::get(DataDeviceInterface *device)
+{
+    return device->d.data();
+}
 
 DataDeviceInterfacePrivate::DataDeviceInterfacePrivate(SeatInterface *seat, DataDeviceInterface *_q, wl_resource *resource)
     : QtWaylandServer::wl_data_device(resource)
@@ -60,11 +72,24 @@ DataDeviceInterfacePrivate::DataDeviceInterfacePrivate(SeatInterface *seat, Data
 {
 }
 
+void DataDeviceInterfacePrivate::endDrag()
+{
+    icon.reset();
+}
+
 void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource, wl_resource *sourceResource, wl_resource *originResource, wl_resource *iconResource, uint32_t serial)
 {
-    Q_UNUSED(resource)
+    SurfaceInterface *iconSurface = SurfaceInterface::get(iconResource);
+
+    const SurfaceRole *surfaceRole = SurfaceRole::get(iconSurface);
+    if (surfaceRole) {
+        wl_resource_post_error(resource->handle, error_role,
+                               "the icon surface already has a role assigned %s",
+                               surfaceRole->name().constData());
+        return;
+    }
+
     SurfaceInterface *focusSurface = SurfaceInterface::get(originResource);
-    SurfaceInterface *i = SurfaceInterface::get(iconResource);
     DataSourceInterface *dataSource = nullptr;
     if (sourceResource) {
         dataSource = DataSourceInterface::get(sourceResource);
@@ -88,8 +113,11 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource, wl_r
     if (dataSource) {
         QObject::connect(dataSource, &AbstractDataSource::aboutToBeDestroyed, q, [this] { source = nullptr; });
     }
+    if (iconSurface) {
+        icon.reset(new DragAndDropIcon(iconSurface));
+        QObject::connect(iconSurface, &SurfaceInterface::aboutToBeDestroyed, icon.data(), [this] { icon.reset(); });
+    }
     surface = focusSurface;
-    icon = i;
     drag.serial = serial;
     emit q->dragStarted();
 }
@@ -169,9 +197,9 @@ DataSourceInterface *DataDeviceInterface::dragSource() const
     return d->source;
 }
 
-SurfaceInterface *DataDeviceInterface::icon() const
+DragAndDropIcon *DataDeviceInterface::icon() const
 {
-    return d->icon;
+    return d->icon.data();
 }
 
 SurfaceInterface *DataDeviceInterface::origin() const

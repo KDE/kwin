@@ -352,7 +352,12 @@ void TestDataDevice::testDragInternally()
     QCOMPARE(!dragStartedSpy.isEmpty(), success);
     QVERIFY(!deviceInterface->dragSource());
     QCOMPARE(deviceInterface->origin(), success ? surfaceInterface : nullptr);
-    QCOMPARE(deviceInterface->icon(), success ? iconSurfaceInterface : nullptr);
+
+    if (success) {
+        QCOMPARE(deviceInterface->icon()->surface(), iconSurfaceInterface);
+    } else {
+        QCOMPARE(deviceInterface->icon(), nullptr);
+    }
 }
 
 void TestDataDevice::testSetSelection()
