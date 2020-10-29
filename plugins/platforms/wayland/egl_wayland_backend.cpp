@@ -400,7 +400,7 @@ void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &
 {
     EglWaylandOutput *output = m_outputs[screenId];
     QRegion damage = damagedRegion.intersected(output->m_waylandOutput->geometry());
-    if (damage.isEmpty() && screenId == 0) {
+    if (damage.isEmpty()) {
 
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
@@ -413,17 +413,12 @@ void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &
             glFlush();
         }
 
-        for (auto *o : qAsConst(m_outputs)) {
-            o->m_bufferAge = 1;
-        }
+        output->m_bufferAge = 1;
         return;
     }
     presentOnSurface(output, damage);
 
-    // Save the damaged region to history
-    // Note: damage history is only collected for the first screen. See EglGbmBackend
-    // for mor information regarding this limitation.
-    if (supportsBufferAge() && screenId == 0) {
+    if (supportsBufferAge()) {
         if (output->m_damageHistory.count() > 10) {
             output->m_damageHistory.removeLast();
         }
