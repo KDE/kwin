@@ -113,8 +113,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     ready_for_painting = c->ready_for_painting;
     damage_handle = XCB_NONE;
     damage_region = c->damage_region;
-    repaints_region = c->repaints_region;
-    layer_repaints_region = c->layer_repaints_region;
     is_shape = c->is_shape;
     effect_window = c->effect_window;
     if (effect_window != nullptr)
@@ -311,7 +309,6 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
 
     damage_handle = XCB_NONE;
     damage_region = QRegion();
-    repaints_region = QRegion();
     effect_window = nullptr;
 }
 
@@ -404,7 +401,7 @@ void Toplevel::getDamageRegionReply()
     const QRect frameRect = frameGeometry();
 
     damage_region += region;
-    repaints_region += region.translated(bufferRect.topLeft() - frameRect.topLeft());
+    addRepaint(region.translated(bufferRect.topLeft() - frameRect.topLeft()));
 
     free(reply);
 }
@@ -423,7 +420,7 @@ void Toplevel::addDamageFull()
     const QRect damagedRect(0, 0, bufferRect.width(), bufferRect.height());
 
     damage_region = damagedRect;
-    repaints_region |= damagedRect.translated(offsetX, offsetY);
+    addRepaint(damagedRect.translated(offsetX, offsetY));
 
     emit damaged(this, damage_region);
 }
@@ -433,63 +430,47 @@ void Toplevel::resetDamage()
     damage_region = QRegion();
 }
 
-void Toplevel::addRepaint(const QRect& r)
+void Toplevel::addRepaint(const QRect &rect)
 {
-    if (!compositing()) {
+    addRepaint(QRegion(rect));
+}
+
+void Toplevel::addRepaint(int x, int y, int width, int height)
+{
+    addRepaint(QRegion(x, y, width, height));
+}
+
+void Toplevel::addRepaint(const QRegion &region)
+{
+    if (!effectWindow() || !effectWindow()->sceneWindow()) {
         return;
     }
-    repaints_region += r;
+    effectWindow()->sceneWindow()->addRepaint(region);
     emit needsRepaint();
 }
 
-void Toplevel::addRepaint(int x, int y, int w, int h)
+void Toplevel::addLayerRepaint(const QRect &rect)
 {
-    QRect r(x, y, w, h);
-    addRepaint(r);
+    addLayerRepaint(QRegion(rect));
 }
 
-void Toplevel::addRepaint(const QRegion& r)
+void Toplevel::addLayerRepaint(int x, int y, int width, int height)
 {
-    if (!compositing()) {
+    addLayerRepaint(QRegion(x, y, width, height));
+}
+
+void Toplevel::addLayerRepaint(const QRegion &region)
+{
+    if (!effectWindow() || !effectWindow()->sceneWindow()) {
         return;
     }
-    repaints_region += r;
-    emit needsRepaint();
-}
-
-void Toplevel::addLayerRepaint(const QRect& r)
-{
-    if (!compositing()) {
-        return;
-    }
-    layer_repaints_region += r;
-    emit needsRepaint();
-}
-
-void Toplevel::addLayerRepaint(int x, int y, int w, int h)
-{
-    QRect r(x, y, w, h);
-    addLayerRepaint(r);
-}
-
-void Toplevel::addLayerRepaint(const QRegion& r)
-{
-    if (!compositing())
-        return;
-    layer_repaints_region += r;
+    effectWindow()->sceneWindow()->addLayerRepaint(region);
     emit needsRepaint();
 }
 
 void Toplevel::addRepaintFull()
 {
-    repaints_region = visibleRect().translated(-pos());
-    emit needsRepaint();
-}
-
-void Toplevel::resetRepaints()
-{
-    repaints_region = QRegion();
-    layer_repaints_region = QRegion();
+    addRepaint(visibleRect().translated(-pos()));
 }
 
 void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
@@ -509,6 +490,14 @@ void Toplevel::addWorkspaceRepaint(const QRegion &region)
     if (compositing()) {
         Compositor::self()->addRepaint(region);
     }
+}
+
+bool Toplevel::wantsRepaint() const
+{
+    if (!effectWindow() || !effectWindow()->sceneWindow()) {
+        return false;
+    }
+    return effectWindow()->sceneWindow()->wantsRepaint();
 }
 
 void Toplevel::setReadyForPainting()

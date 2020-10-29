@@ -165,7 +165,7 @@ bool Unmanaged::isOutline() const
 
 void Unmanaged::addDamage(const QRegion &damage)
 {
-    repaints_region += damage;
+    addRepaint(damage);
     Toplevel::addDamage(damage);
 }
 

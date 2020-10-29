@@ -467,8 +467,7 @@ public:
     void addWorkspaceRepaint(const QRect& r);
     void addWorkspaceRepaint(int x, int y, int w, int h);
     void addWorkspaceRepaint(const QRegion &region);
-    QRegion repaints() const;
-    void resetRepaints();
+    bool wantsRepaint() const;
     QRegion damage() const;
     void resetDamage();
     EffectWindowImpl* effectWindow();
@@ -734,8 +733,6 @@ protected:
     int bit_depth;
     NETWinInfo* info;
     bool ready_for_painting;
-    QRegion repaints_region; // updating, repaint just requires repaint of that area
-    QRegion layer_repaints_region;
     /**
      * An FBO object KWin internal windows might render to.
      */
@@ -937,11 +934,6 @@ inline bool Toplevel::isOutline() const
 inline QRegion Toplevel::damage() const
 {
     return damage_region;
-}
-
-inline QRegion Toplevel::repaints() const
-{
-    return repaints_region.translated(pos()) | layer_repaints_region;
 }
 
 inline bool Toplevel::shape() const

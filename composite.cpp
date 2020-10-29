@@ -729,7 +729,7 @@ template <class T>
 static bool repaintsPending(const QList<T*> &windows)
 {
     return std::any_of(windows.begin(), windows.end(),
-                       [](T *t) { return !t->repaints().isEmpty(); });
+                       [](const T *t) { return t->wantsRepaint(); });
 }
 
 bool Compositor::windowRepaintsPending() const
@@ -745,16 +745,16 @@ bool Compositor::windowRepaintsPending() const
     }
     if (auto *server = waylandServer()) {
         const auto &clients = server->clients();
-        auto test = [](AbstractClient *c) {
-            return c->readyForPainting() && !c->repaints().isEmpty();
+        auto test = [](const AbstractClient *c) {
+            return c->readyForPainting() && c->wantsRepaint();
         };
         if (std::any_of(clients.begin(), clients.end(), test)) {
             return true;
         }
     }
     const auto &internalClients = workspace()->internalClients();
-    auto internalTest = [] (InternalClient *client) {
-        return client->isShown(true) && !client->repaints().isEmpty();
+    auto internalTest = [] (const InternalClient *client) {
+        return client->isShown(true) && client->wantsRepaint();
     };
     if (std::any_of(internalClients.begin(), internalClients.end(), internalTest)) {
         return true;

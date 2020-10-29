@@ -240,6 +240,7 @@ bool SceneXrender::initFailed() const
 // the entry point for painting
 qint64 SceneXrender::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
+    painted_screen = -1;
     QElapsedTimer renderTimer;
     renderTimer.start();
 

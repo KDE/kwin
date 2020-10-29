@@ -322,7 +322,7 @@ void XdgSurfaceClient::addDamage(const QRegion &damage)
 {
     const int offsetX = bufferGeometry().x() - frameGeometry().x();
     const int offsetY = bufferGeometry().y() - frameGeometry().y();
-    repaints_region += damage.translated(offsetX, offsetY);
+    addRepaint(damage.translated(offsetX, offsetY));
     Toplevel::addDamage(damage);
 }
 

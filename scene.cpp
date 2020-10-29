@@ -68,8 +68,8 @@
 #include "shadow.h"
 #include "subsurfacemonitor.h"
 #include "wayland_server.h"
-
 #include "thumbnailitem.h"
+#include "composite.h"
 
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/subcompositor_interface.h>
@@ -91,6 +91,16 @@ Scene::Scene(QObject *parent)
 Scene::~Scene()
 {
     Q_ASSERT(m_windows.isEmpty());
+}
+
+bool Scene::isPerScreenRenderingEnabled() const
+{
+    return m_isPerScreenRenderingEnabled;
+}
+
+void Scene::setPerScreenRenderingEnabled(bool enabled)
+{
+    m_isPerScreenRenderingEnabled = enabled;
 }
 
 // returns mask and possibly modified region
@@ -197,15 +207,13 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
     QVector<Phase2Data> phase2;
     phase2.reserve(stacking_order.size());
     foreach (Window * w, stacking_order) { // bottom to top
-        Toplevel* topw = w->window();
-
         // Let the scene window update the window pixmap tree.
         w->preprocess();
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
-        topw->resetRepaints();
+        w->resetRepaints(painted_screen);
 
         WindowPrePaintData data;
         data.mask = orig_mask | (w->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
@@ -264,7 +272,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         data.mask = orig_mask | (window->isOpaque() ? PAINT_WINDOW_OPAQUE : PAINT_WINDOW_TRANSLUCENT);
         window->resetPaintingEnabled();
         data.paint = region;
-        data.paint |= toplevel->repaints();
+        data.paint |= window->repaints(painted_screen);
 
         // Let the scene window update the window pixmap tree.
         window->preprocess();
@@ -272,7 +280,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
         // the next frame within Effects::prePaintWindow.
-        toplevel->resetRepaints();
+        window->resetRepaints(painted_screen);
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
         opaqueFullscreen = false; // TODO: do we care about unmanged windows here (maybe input windows?)
@@ -735,10 +743,22 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     , disable_painting(0)
     , cached_quad_list(nullptr)
 {
+    const Scene *scene = Compositor::self()->scene();
+    if (scene->isPerScreenRenderingEnabled()) {
+        connect(screens(), &Screens::countChanged, this, &Window::reallocRepaints);
+    }
+    reallocRepaints();
 }
 
 Scene::Window::~Window()
 {
+    for (int i = 0; i < m_repaints.count(); ++i) {
+        const QRegion dirty = repaints(i);
+        if (!dirty.isEmpty()) {
+            Compositor::self()->addRepaint(dirty);
+        }
+    }
+
     delete m_shadow;
 }
 
@@ -1107,6 +1127,64 @@ void Scene::Window::preprocess()
     if (!m_currentPixmap || !window()->damage().isEmpty()) {
         updatePixmap();
     }
+}
+
+void Scene::Window::addRepaint(const QRegion &region)
+{
+    for (int screen = 0; screen < m_repaints.count(); ++screen) {
+        m_repaints[screen] += region;
+    }
+}
+
+void Scene::Window::addLayerRepaint(const QRegion &region)
+{
+    for (int screen = 0; screen < m_layerRepaints.count(); ++screen) {
+        m_layerRepaints[screen] += region;
+    }
+}
+
+QRegion Scene::Window::repaints(int screen) const
+{
+    Q_ASSERT(!m_repaints.isEmpty() && !m_layerRepaints.isEmpty());
+    const int index = screen != -1 ? screen : 0;
+    if (m_repaints[index] == infiniteRegion() || m_layerRepaints[index] == infiniteRegion()) {
+        return QRect(QPoint(0, 0), screens()->size());
+    }
+    return m_repaints[index].translated(pos()) + m_layerRepaints[index];
+}
+
+void Scene::Window::resetRepaints(int screen)
+{
+    Q_ASSERT(!m_repaints.isEmpty() && !m_layerRepaints.isEmpty());
+    const int index = screen != -1 ? screen : 0;
+    m_repaints[index] = QRegion();
+    m_layerRepaints[index] = QRegion();
+}
+
+void Scene::Window::reallocRepaints()
+{
+    const Scene *scene = Compositor::self()->scene();
+    if (scene->isPerScreenRenderingEnabled()) {
+        m_repaints.resize(screens()->count());
+        m_layerRepaints.resize(screens()->count());
+    } else {
+        m_repaints.resize(1);
+        m_layerRepaints.resize(1);
+    }
+
+    m_repaints.fill(infiniteRegion());
+    m_layerRepaints.fill(infiniteRegion());
+}
+
+static bool wantsRepaint_test(const QRegion &region)
+{
+    return !region.isEmpty();
+}
+
+bool Scene::Window::wantsRepaint() const
+{
+    return std::any_of(m_repaints.begin(), m_repaints.end(), wantsRepaint_test) ||
+            std::any_of(m_layerRepaints.begin(), m_layerRepaints.end(), wantsRepaint_test);
 }
 
 //****************************************

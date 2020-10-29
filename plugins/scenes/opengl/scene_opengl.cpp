@@ -350,6 +350,8 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
             qCDebug(KWIN_OPENGL) << "Explicit synchronization with the X command stream disabled by environment variable";
         }
     }
+
+    setPerScreenRenderingEnabled(m_backend->perScreenRendering());
 }
 
 SceneOpenGL::~SceneOpenGL()
@@ -633,6 +635,7 @@ qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplev
         // trigger start render timer
         m_backend->prepareRenderingFrame();
         for (int i = 0; i < screens()->count(); ++i) {
+            painted_screen = i;
             const QRect &geo = screens()->geometry(i);
             const qreal scaling = screens()->scale(i);
             QRegion update;
@@ -663,6 +666,7 @@ qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplev
             GLVertexBuffer::streamingBuffer()->framePosted();
         }
     } else {
+        painted_screen = -1;
         m_backend->makeCurrent();
         QRegion repaint = m_backend->prepareRenderingFrame();
 

@@ -136,6 +136,7 @@ public:
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
     virtual OverlayWindow* overlayWindow() const = 0;
+    bool isPerScreenRenderingEnabled() const;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
@@ -202,6 +203,7 @@ public Q_SLOTS:
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
     virtual Window *createWindow(Toplevel *toplevel) = 0;
+    void setPerScreenRenderingEnabled(bool enabled);
     void createStackingOrder(const QList<Toplevel *> &toplevels);
     void clearStackingOrder();
     // shared implementation, starts painting the screen
@@ -262,6 +264,8 @@ protected:
     // time since last repaint
     int time_diff;
     QElapsedTimer last_time;
+    // The screen that is being currently painted
+    int painted_screen = -1;
 private:
     void paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
@@ -270,6 +274,7 @@ private:
     QVector< Window* > stacking_order;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
+    bool m_isPerScreenRenderingEnabled = false;
 };
 
 /**
@@ -354,6 +359,11 @@ public:
     void unreferencePreviousPixmap();
     void discardQuads();
     void preprocess();
+    void addRepaint(const QRegion &region);
+    void addLayerRepaint(const QRegion &region);
+    QRegion repaints(int screen) const;
+    void resetRepaints(int screen);
+    bool wantsRepaint() const;
 
     virtual QSharedPointer<GLTexture> windowTexture() {
         return {};
@@ -391,8 +401,12 @@ protected:
     ImageFilterType filter;
     Shadow *m_shadow;
 private:
+    void reallocRepaints();
+
     QScopedPointer<WindowPixmap> m_currentPixmap;
     QScopedPointer<WindowPixmap> m_previousPixmap;
+    QVector<QRegion> m_repaints;
+    QVector<QRegion> m_layerRepaints;
     int m_referencePixmapCounter;
     int disable_painting;
     mutable QRegion m_bufferShape;

@@ -55,6 +55,7 @@ SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
     , m_backend(backend)
     , m_painter(new QPainter())
 {
+    setPerScreenRenderingEnabled(m_backend->perScreenRendering());
 }
 
 SceneQPainter::~SceneQPainter()
@@ -98,6 +99,7 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
         }
         QRegion overallUpdate;
         for (int i = 0; i < screens()->count(); ++i) {
+            painted_screen = i;
             const QRect geometry = screens()->geometry(i);
             QImage *buffer = m_backend->bufferForScreen(i);
             if (!buffer || buffer->isNull()) {
@@ -118,6 +120,7 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
         m_backend->showOverlay();
         m_backend->present(mask, overallUpdate);
     } else {
+        painted_screen = -1;
         m_painter->begin(m_backend->buffer());
         m_painter->setClipping(true);
         m_painter->setClipRegion(damage);
