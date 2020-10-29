@@ -246,7 +246,7 @@ void WindowSelector::selectWindowId(xcb_window_t window_to_select)
     if (client) {
         m_callback(client);
     } else {
-        m_callback(Workspace::self()->findUnmanaged(window));
+        m_callback(Workspace::self()->findUnmanaged(window_to_select));
     }
 }
 
