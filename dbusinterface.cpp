@@ -22,6 +22,7 @@
 #include "platform.h"
 #include "kwinadaptor.h"
 #include "scene.h"
+#include "unmanaged.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -218,10 +219,14 @@ QVariantMap DBusInterface::queryWindowInfo()
         [this] (Toplevel *t) {
             if (auto c = qobject_cast<AbstractClient*>(t)) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createReply(clientToVariantMap(c)));
-            } else {
+            } else if (qobject_cast<Unmanaged*>(t)) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
                     QStringLiteral("org.kde.KWin.Error.InvalidWindow"),
                     QStringLiteral("Tried to query information about an unmanaged window")));
+            } else {
+                QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(
+                    QStringLiteral("org.kde.KWin.Error.UserCancel"),
+                    QStringLiteral("User cancelled the query")));
             }
         }
     );
