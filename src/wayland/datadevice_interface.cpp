@@ -29,8 +29,7 @@ public:
     SeatInterface *seat;
     DataSourceInterface *source = nullptr;
     SurfaceInterface *surface = nullptr;
-    SurfaceInterface *icon = nullptr;
-
+    QPointer<SurfaceInterface> icon;
     QPointer<DataSourceInterface> selection;
 
     struct Drag {
