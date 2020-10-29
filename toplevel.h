@@ -454,6 +454,7 @@ public:
     // these call workspace->addRepaint(), but first transform the damage if needed
     void addWorkspaceRepaint(const QRect& r);
     void addWorkspaceRepaint(int x, int y, int w, int h);
+    void addWorkspaceRepaint(const QRegion &region);
     QRegion repaints() const;
     void resetRepaints();
     QRegion damage() const;

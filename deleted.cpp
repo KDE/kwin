@@ -47,6 +47,11 @@ Deleted::Deleted()
 
 Deleted::~Deleted()
 {
+    const QRegion dirty = repaints();
+    if (!dirty.isEmpty()) {
+        addWorkspaceRepaint(dirty);
+    }
+
     if (delete_refcount != 0)
         qCCritical(KWIN_CORE) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
     Q_ASSERT(delete_refcount == 0);

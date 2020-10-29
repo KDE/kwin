@@ -505,6 +505,13 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
     Compositor::self()->addRepaint(r2);
 }
 
+void Toplevel::addWorkspaceRepaint(const QRegion &region)
+{
+    if (compositing()) {
+        Compositor::self()->addRepaint(region);
+    }
+}
+
 void Toplevel::setReadyForPainting()
 {
     if (!ready_for_painting) {
