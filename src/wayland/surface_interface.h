@@ -480,6 +480,8 @@ Q_SIGNALS:
     void committed();
 
 private:
+    void handleBufferRemoved(BufferInterface *buffer);
+
     QScopedPointer<SurfaceInterfacePrivate> d;
     friend class SurfaceInterfacePrivate;
 };

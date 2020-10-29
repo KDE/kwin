@@ -313,20 +313,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
         return;
     }
     pending.buffer = BufferInterface::get(compositor->display(), buffer);
-    QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q,
-        [this](BufferInterface *buffer) {
-            if (pending.buffer == buffer) {
-                pending.buffer = nullptr;
-            }
-            if (cached.buffer == buffer) {
-                cached.buffer = nullptr;
-            }
-            if (current.buffer == buffer) {
-                current.buffer->unref();
-                current.buffer = nullptr;
-            }
-        },
-        Qt::UniqueConnection);
+    QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q, &SurfaceInterface::handleBufferRemoved,  Qt::UniqueConnection);
 }
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
@@ -1009,6 +996,20 @@ QRegion SurfaceInterface::mapFromBuffer(const QRegion &region) const
 QMatrix4x4 SurfaceInterface::surfaceToBufferMatrix() const
 {
     return d->surfaceToBufferMatrix;
+}
+
+void SurfaceInterface::handleBufferRemoved(BufferInterface *buffer)
+{
+    if (d->pending.buffer == buffer) {
+        d->pending.buffer = nullptr;
+    }
+    if (d->cached.buffer == buffer) {
+        d->cached.buffer = nullptr;
+    }
+    if (d->current.buffer == buffer) {
+        d->current.buffer->unref();
+        d->current.buffer = nullptr;
+    }
 }
 
 } // namespace KWaylandServer
