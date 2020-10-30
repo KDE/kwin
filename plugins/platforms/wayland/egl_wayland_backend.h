@@ -82,7 +82,7 @@ public:
         return m_havePlatformBase;
     }
 
-    void aboutToStartPainting(const QRegion &damage) override;
+    void aboutToStartPainting(int screenId, const QRegion &damage) override;
 
 private:
     bool initializeEgl();

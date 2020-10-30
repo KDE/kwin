@@ -236,7 +236,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
 
     damaged_region = QRegion(QRect {{}, screens()->size()});
     if (m_paintScreenCount == 1) {
-        aboutToStartPainting(damaged_region);
+        aboutToStartPainting(painted_screen, damaged_region);
 
         if (orig_mask & PAINT_SCREEN_BACKGROUND_FIRST) {
             paintBackground(infiniteRegion());
@@ -377,7 +377,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
     QRegion paintedArea;
     // Fill any areas of the root window not covered by opaque windows
     if (m_paintScreenCount == 1) {
-        aboutToStartPainting(dirtyArea);
+        aboutToStartPainting(painted_screen, dirtyArea);
 
         if (orig_mask & PAINT_SCREEN_BACKGROUND_FIRST) {
             paintBackground(infiniteRegion());
@@ -636,8 +636,9 @@ void Scene::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPai
     static_cast<EffectsHandlerImpl*>(effects)->paintDesktop(desktop, mask, region, data);
 }
 
-void Scene::aboutToStartPainting(const QRegion &damage)
+void Scene::aboutToStartPainting(int screenId, const QRegion &damage)
 {
+    Q_UNUSED(screenId)
     Q_UNUSED(damage)
 }
 

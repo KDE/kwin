@@ -48,7 +48,7 @@ public:
 protected:
     void present() override;
     void cleanupSurfaces() override;
-    void aboutToStartPainting(const QRegion &damage) override;
+    void aboutToStartPainting(int screenId, const QRegion &damage) override;
 
 private:
     bool initializeEgl();

@@ -615,9 +615,9 @@ void SceneOpenGL2::paintCursor(const QRegion &rendered)
     glDisable(GL_BLEND);
 }
 
-void SceneOpenGL::aboutToStartPainting(const QRegion &damage)
+void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
 {
-    m_backend->aboutToStartPainting(damage);
+    m_backend->aboutToStartPainting(screenId, damage);
 }
 
 qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)

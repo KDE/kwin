@@ -111,8 +111,9 @@ QSharedPointer<KWin::GLTexture> OpenGLBackend::textureForOutput(AbstractOutput* 
     return {};
 }
 
-void OpenGLBackend::aboutToStartPainting(const QRegion &damage)
+void OpenGLBackend::aboutToStartPainting(int screenId, const QRegion &damage)
 {
+    Q_UNUSED(screenId)
     Q_UNUSED(damage)
 }
 

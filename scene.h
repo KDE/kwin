@@ -227,7 +227,7 @@ protected:
      *
      * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
-    virtual void aboutToStartPainting(const QRegion &damage);
+    virtual void aboutToStartPainting(int screenId, const QRegion &damage);
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl* w, int mask, const QRegion &region, WindowPaintData& data);
     // shared implementation, starts painting the window

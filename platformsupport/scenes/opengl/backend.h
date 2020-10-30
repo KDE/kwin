@@ -70,7 +70,7 @@ public:
      *
      * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
-    virtual void aboutToStartPainting(const QRegion &damage);
+    virtual void aboutToStartPainting(int screenId, const QRegion &damage);
 
     /**
      * @brief Backend specific code to handle the end of rendering a frame.

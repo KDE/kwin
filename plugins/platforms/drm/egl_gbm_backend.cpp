@@ -465,14 +465,10 @@ static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutpu
     return rects;
 }
 
-void EglGbmBackend::aboutToStartPainting(const QRegion &damagedRegion)
+void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedRegion)
 {
-    // See EglGbmBackend::endRenderingFrameForScreen comment for the reason why we only support screenId=0
-    if (m_outputs.count() > 1) {
-        return;
-    }
-
-    const Output &output = m_outputs.at(0);
+    Q_ASSERT_X(screenId != -1, "aboutToStartPainting", "not using per screen rendering");
+    const Output &output = m_outputs.at(screenId);
     if (output.bufferAge > 0 && !damagedRegion.isEmpty() && supportsPartialUpdate()) {
         const QRegion region = damagedRegion & output.output->geometry();
 
