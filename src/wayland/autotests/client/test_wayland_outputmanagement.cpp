@@ -200,14 +200,13 @@ void TestWaylandOutputManagement::cleanup()
         m_thread = nullptr;
     }
 
-    if (m_outputManagementInterface) {
-        delete m_outputManagementInterface;
-        m_outputManagementInterface = nullptr;
-    }
     delete m_display;
     m_display = nullptr;
     m_serverOutputs.clear();
     m_clientOutputs.clear();
+
+    // these are the children of the display
+    m_outputManagementInterface = nullptr;
 }
 
 void TestWaylandOutputManagement::applyPendingChanges(KWaylandServer::OutputConfigurationInterface *configurationInterface)

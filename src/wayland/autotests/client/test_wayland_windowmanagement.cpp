@@ -223,16 +223,15 @@ void TestWindowManagement::cleanup()
     m_connection = nullptr;
 
     m_display->dispatchEvents();
-    delete m_windowManagementInterface;
-    m_windowManagementInterface = nullptr;
-
-    delete m_windowInterface;
-    m_windowInterface = nullptr;
 
     QVERIFY(m_surfaceInterface.isNull());
 
     delete m_display;
     m_display = nullptr;
+
+    // these are the children of the display
+    m_windowManagementInterface = nullptr;
+    m_windowInterface = nullptr;
 }
 
 void TestWindowManagement::testUseAfterUnmap()

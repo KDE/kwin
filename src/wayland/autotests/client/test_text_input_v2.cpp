@@ -153,11 +153,13 @@ void TextInputTest::cleanup()
         m_thread = nullptr;
     }
 
-    CLEANUP(m_textInputManagerV2Interface)
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_seatInterface)
     CLEANUP(m_display)
 #undef CLEANUP
+
+    // these are the children of the display
+    m_textInputManagerV2Interface = nullptr;
+    m_compositorInterface = nullptr;
+    m_seatInterface = nullptr;
 }
 
 SurfaceInterface *TextInputTest::waitForSurface()

@@ -21,7 +21,6 @@ private Q_SLOTS:
     void testName();
     void testPointerButton();
     void testPointerPos();
-    void testDestroyThroughTerminate();
     void testRepeatInfo();
     void testMultiple();
 };
@@ -153,18 +152,6 @@ void TestWaylandServerSeat::testPointerPos()
     QCOMPARE(seatPosSpy.count(), 2);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
     QCOMPARE(seatPosSpy.last().first().toPointF(), QPointF(5, 7));
-}
-
-void TestWaylandServerSeat::testDestroyThroughTerminate()
-{
-    QScopedPointer<Display> display(new Display());
-    display->setSocketName(s_socketName);
-    display->start();
-    SeatInterface *seat = display->createSeat();
-    QSignalSpy destroyedSpy(seat, SIGNAL(destroyed(QObject*)));
-    QVERIFY(destroyedSpy.isValid());
-    display.reset();
-    QVERIFY(!destroyedSpy.isEmpty());
 }
 
 void TestWaylandServerSeat::testRepeatInfo()

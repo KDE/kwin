@@ -118,11 +118,11 @@ void TestWaylandOutput::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_serverOutput;
-    m_serverOutput = nullptr;
-
     delete m_display;
     m_display = nullptr;
+
+    // these are the children of the display
+    m_serverOutput = nullptr;
 }
 
 void TestWaylandOutput::testRegistry()

@@ -126,10 +126,12 @@ void TestBlur::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_blurManagerInterface)
     CLEANUP(m_display)
 #undef CLEANUP
+
+    // these are the children of the display
+    m_compositorInterface = nullptr;
+    m_blurManagerInterface = nullptr;
 }
 
 void TestBlur::testCreate()

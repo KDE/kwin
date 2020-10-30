@@ -120,10 +120,12 @@ void ShadowTest::cleanup()
         m_thread = nullptr;
     }
 
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_shadowInterface)
     CLEANUP(m_display)
 #undef CLEANUP
+
+    // these are the children of the display
+    m_compositorInterface = nullptr;
+    m_shadowInterface = nullptr;
 }
 
 void ShadowTest::testCreateShadow()

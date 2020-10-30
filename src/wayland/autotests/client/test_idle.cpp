@@ -114,10 +114,12 @@ void IdleTest::cleanup()
         m_thread = nullptr;
     }
 
-    CLEANUP(m_idleInterface)
-    CLEANUP(m_seatInterface)
     CLEANUP(m_display)
 #undef CLEANUP
+
+    // these are the children of the display
+    m_idleInterface = nullptr;
+    m_seatInterface = nullptr;
 }
 
 void IdleTest::testTimeout()

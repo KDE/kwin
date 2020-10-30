@@ -8,11 +8,15 @@
 
 #include "global.h"
 
-struct wl_client;
-struct wl_interface;
+#include <wayland-server-core.h>
 
 namespace KWaylandServer
 {
+
+struct DisplayDestroyListener : public wl_listener
+{
+    Global *global = nullptr;
+};
 
 class Global::Private
 {
@@ -23,6 +27,7 @@ public:
 
     Display *display = nullptr;
     wl_global *global = nullptr;
+    DisplayDestroyListener displayDestroyListener;
 
 protected:
     Private(Display *d, const wl_interface *interface, quint32 version);

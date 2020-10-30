@@ -378,7 +378,6 @@ Q_SIGNALS:
     void socketNameChanged(const QString&);
     void automaticSocketNamingChanged(bool);
     void runningChanged(bool);
-    void aboutToTerminate();
     void clientConnected(KWaylandServer::ClientConnection*);
     void clientDisconnected(KWaylandServer::ClientConnection*);
 

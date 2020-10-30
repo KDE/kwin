@@ -113,10 +113,11 @@ void ErrorTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_psi)
-    CLEANUP(m_ci)
     CLEANUP(m_display)
 #undef CLEANUP
+    // these are the children of the display
+    m_psi = nullptr;
+    m_ci = nullptr;
 }
 
 void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()

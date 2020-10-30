@@ -169,14 +169,12 @@ void TestWaylandSurface::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_compositorInterface;
-    m_compositorInterface = nullptr;
-
-    delete m_idleInhibitInterface;
-    m_idleInhibitInterface = nullptr;
-
     delete m_display;
     m_display = nullptr;
+
+    // these are the children of the display
+    m_compositorInterface = nullptr;
+    m_idleInhibitInterface = nullptr;
 }
 
 void TestWaylandSurface::testStaticAccessor()

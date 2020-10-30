@@ -33,15 +33,28 @@ void Global::Private::create()
     global = wl_global_create(*display, m_interface, m_version, this, bind);
 }
 
+static void handleDisplayDestroyed(struct wl_listener *listener, void *data)
+{
+    Q_UNUSED(data)
+    Global *global = static_cast<DisplayDestroyListener *>(listener)->global;
+    global->destroy();
+}
+
 Global::Global(Global::Private *d, QObject *parent)
     : QObject(parent)
     , d(d)
 {
+    d->displayDestroyListener.notify = handleDisplayDestroyed;
+    d->displayDestroyListener.global = this;
+    d->displayDestroyListener.link.next = nullptr;
+    d->displayDestroyListener.link.prev = nullptr;
+    wl_display_add_destroy_listener(*d->display, &d->displayDestroyListener);
 }
 
 Global::~Global()
 {
     destroy();
+    wl_list_remove(&d->displayDestroyListener.link);
 }
 
 void Global::create()

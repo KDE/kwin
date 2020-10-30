@@ -231,10 +231,12 @@ void DataControlInterfaceTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_seat)
-    CLEANUP(m_serverCompositor)
     CLEANUP(m_display)
 #undef CLEANUP
+
+    // these are the children of the display
+    m_seat = nullptr;
+    m_serverCompositor = nullptr;
 }
 
 void DataControlInterfaceTest::testCopyToControl()

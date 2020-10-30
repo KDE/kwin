@@ -189,13 +189,15 @@ void XdgShellTest::cleanup()
         m_thread = nullptr;
     }
 
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_xdgShellInterface)
-    CLEANUP(m_o1Interface);
-    CLEANUP(m_o2Interface);
-    CLEANUP(m_seatInterface);
     CLEANUP(m_display)
 #undef CLEANUP
+
+    // these are the children of the display
+    m_compositorInterface = nullptr;
+    m_xdgShellInterface = nullptr;
+    m_o1Interface = nullptr;
+    m_o2Interface = nullptr;
+    m_seatInterface = nullptr;
 }
 
 void XdgShellTest::testCreateSurface()

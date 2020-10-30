@@ -236,23 +236,15 @@ void TestWaylandSeat::cleanup()
         m_thread = nullptr;
     }
 
-    delete m_compositorInterface;
-    m_compositorInterface = nullptr;
-
-    delete m_seatInterface;
-    m_seatInterface = nullptr;
-
-    delete m_subCompositorInterface;
-    m_subCompositorInterface = nullptr;
-
-    delete m_relativePointerManagerV1Interface;
-    m_relativePointerManagerV1Interface = nullptr;
-
-    delete m_pointerGesturesV1Interface;
-    m_pointerGesturesV1Interface = nullptr;
-
     delete m_display;
     m_display = nullptr;
+
+    // these are the children of the display
+    m_compositorInterface = nullptr;
+    m_seatInterface = nullptr;
+    m_subCompositorInterface = nullptr;
+    m_relativePointerManagerV1Interface = nullptr;
+    m_pointerGesturesV1Interface = nullptr;
 }
 
 void TestWaylandSeat::testName()
