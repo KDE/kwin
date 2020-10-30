@@ -186,26 +186,25 @@ void DataControlInterfaceTest::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    auto registry = new KWayland::Client::Registry(this);
-    connect(registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, registry](const QByteArray &interface, quint32 name, quint32 version) {
+    KWayland::Client::Registry registry;
+    connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry](const QByteArray &interface, quint32 name, quint32 version) {
         if (interface == "zwlr_data_control_manager_v1") {
             m_dataControlDeviceManager = new DataControlDeviceManager;
-            m_dataControlDeviceManager->init(registry->registry(), name, version);
-            m_dataControlDeviceManager->setParent(registry);
+            m_dataControlDeviceManager->init(registry.registry(), name, version);
         }
     });
-    connect(registry, &KWayland::Client::Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_clientSeat = registry->createSeat(name, version);
+    connect(&registry, &KWayland::Client::Registry::seatAnnounced, this, [this, &registry](quint32 name, quint32 version) {
+        m_clientSeat = registry.createSeat(name, version);
     });
-    registry->setEventQueue(m_queue);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    registry->create(m_connection->display());
-    QVERIFY(registry->isValid());
-    registry->setup();
+    registry.setEventQueue(m_queue);
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
     wl_display_flush(m_connection->display());
 
     QVERIFY(compositorSpy.wait());
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_clientCompositor->isValid());
 
     QVERIFY(m_dataControlDeviceManager);
