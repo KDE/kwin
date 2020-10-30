@@ -59,7 +59,10 @@
 #include <KStartupInfo>
 // Qt
 #include <QtConcurrentRun>
-#include <runners/windowsrunnerinterface.h>
+
+#ifdef KF5Runner_FOUND
+    #include <runners/windowsrunnerinterface.h>
+#endif
 
 namespace KWin
 {
@@ -198,7 +201,9 @@ Workspace::Workspace()
     });
 
     new DBusInterface(this);
+#ifdef KF5Runner_FOUND
     new WindowsRunner(this);
+#endif
     Outline::create(this);
 
     initShortcuts();
