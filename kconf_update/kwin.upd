@@ -37,3 +37,9 @@ Id=animation-speed
 File=kwinrc,kdeglobals
 Group=Compositing,KDE
 Script=kwin-5.18-move-animspeed.py,python3
+
+# In the Desktop Grid effect, replace the PresentWindows boolean with an enum
+Id=desktop-grid-click-behavior
+File=kwinrc
+Group=Effect-DesktopGrid
+Script=kwin-5.21-desktop-grid-click-behavior.py,python

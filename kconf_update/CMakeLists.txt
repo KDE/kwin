@@ -4,6 +4,8 @@ install(PROGRAMS kwin-5.16-auto-bordersize.sh
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 install(PROGRAMS kwin-5.18-move-animspeed.py
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.21-desktop-grid-click-behavior.py
+        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 
 install(FILES kwinrules.upd
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})

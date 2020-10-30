@@ -48,6 +48,7 @@ DesktopGridEffect::DesktopGridEffect()
     , isValidMove(false)
     , windowMove(nullptr)
     , windowMoveDiff()
+    , windowMoveElevateTimer(new QTimer(this))
     , gridSize()
     , orientation(Qt::Horizontal)
     , activeCell(1, 1)
@@ -79,10 +80,18 @@ DesktopGridEffect::DesktopGridEffect()
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
         setActive(false);
+        windowMoveElevateTimer->stop();
         if (keyboardGrab) {
             effects->ungrabKeyboard();
             keyboardGrab = false;
         }
+    });
+
+    windowMoveElevateTimer->setInterval(QApplication::startDragTime());
+    windowMoveElevateTimer->setSingleShot(true);
+    connect(windowMoveElevateTimer, &QTimer::timeout, this, [this]() {
+        effects->setElevatedWindow(windowMove, true);
+        wasWindowMove = true;
     });
 
     // Load all other configuration details
@@ -115,7 +124,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     desktopNameAlignment = Qt::Alignment(DesktopGridConfig::desktopNameAlignment());
     layoutMode = DesktopGridConfig::layoutMode();
     customLayoutRows = DesktopGridConfig::customLayoutRows();
-    m_usePresentWindows = DesktopGridConfig::presentWindows();
+    clickBehavior = DesktopGridConfig::clickBehavior();
 
     // deactivate and activate all touch border
     const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
@@ -457,6 +466,10 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
         if (windowMove != nullptr &&
                 (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             // Handle window moving
+            if (windowMoveElevateTimer->isActive()) { // Window started moving, but is not elevated yet!
+                windowMoveElevateTimer->stop();
+                effects->setElevatedWindow(windowMove, true);
+            }
             if (!wasWindowMove) { // Activate on move
                 if (isUsingPresentWindows()) {
                     foreach (const int i, desktopList(windowMove)) {
@@ -574,7 +587,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 // Prepare it for moving
                 windowMoveDiff = w->pos() - unscalePos(me->pos(), nullptr);
                 windowMove = w;
-                effects->setElevatedWindow(windowMove, true);
+                windowMoveElevateTimer->start();
             }
         } else if ((me->buttons() == Qt::MiddleButton || me->buttons() == Qt::RightButton) && windowMove == nullptr) {
             EffectWindow* w = windowAt(me->pos());
@@ -607,8 +620,16 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
     }
     if (e->type() == QEvent::MouseButtonRelease && me->button() == Qt::LeftButton) {
         isValidMove = false;
-        if (windowMove)
-            effects->activateWindow(windowMove);
+        if (windowMove) {
+            if (windowMoveElevateTimer->isActive()) {
+                // no need to elevate window, it was just a click
+                windowMoveElevateTimer->stop();
+            }
+            if (clickBehavior == SwitchDesktopAndActivateWindow || wasWindowMove) {
+                // activate window if relevant config is set or window was moved
+                effects->activateWindow(windowMove);
+            }
+        }
         if (wasWindowMove || wasDesktopMove) { // reset pointer
             effects->defineCursor(Qt::PointingHandCursor);
         } else { // click -> exit
@@ -1068,7 +1089,7 @@ void DesktopGridEffect::setup()
     setCurrentDesktop(effects->currentDesktop());
 
     // setup the motion managers
-    if (m_usePresentWindows)
+    if (clickBehavior == SwitchDesktopAndActivateWindow)
         m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows)));
     if (isUsingPresentWindows()) {
         m_proxy->reCreateGrids(); // revalidation on multiscreen, bug #351724
@@ -1191,6 +1212,8 @@ void DesktopGridEffect::finish()
         qDeleteAll(desktopNames);
         desktopNames.clear();
     }
+
+    windowMoveElevateTimer->stop();
 
     if (keyboardGrab)
         effects->ungrabKeyboard();
