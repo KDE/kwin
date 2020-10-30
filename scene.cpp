@@ -1378,7 +1378,7 @@ qreal WindowPixmap::scale() const
 QRegion WindowPixmap::shape() const
 {
     if (subSurface())
-        return QRect(QPoint(), surface()->size());
+        return surface() ? QRect(QPoint(), surface()->size()) : QRegion();
     return m_window->clientShape();
 }
 
