@@ -11,8 +11,9 @@
 namespace KWaylandServer
 {
 
-SurfaceRole::SurfaceRole(SurfaceInterface *surface)
+SurfaceRole::SurfaceRole(SurfaceInterface *surface, const QByteArray &name)
     : m_surface(surface)
+    , m_name(name)
 {
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(surface);
     surfacePrivate->role = this;
@@ -25,6 +26,11 @@ SurfaceRole::~SurfaceRole()
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(m_surface);
         surfacePrivate->role = nullptr;
     }
+}
+
+QByteArray SurfaceRole::name() const
+{
+    return m_name;
 }
 
 SurfaceRole *SurfaceRole::get(SurfaceInterface *surface)

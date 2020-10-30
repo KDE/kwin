@@ -7,6 +7,7 @@
 #ifndef KWAYLAND_SERVER_SURFACEROLE_P_H
 #define KWAYLAND_SERVER_SURFACEROLE_P_H
 
+#include <QByteArray>
 #include <QPointer>
 
 namespace KWaylandServer
@@ -17,9 +18,10 @@ class SurfaceInterface;
 class SurfaceRole
 {
 public:
-    explicit SurfaceRole(SurfaceInterface *surface);
+    SurfaceRole(SurfaceInterface *surface, const QByteArray &name);
     virtual ~SurfaceRole();
 
+    QByteArray name() const;
     const QPointer<SurfaceInterface> &surface() const
     {
         return m_surface;
@@ -31,6 +33,7 @@ public:
 
 private:
     QPointer<SurfaceInterface> m_surface;
+    QByteArray m_name;
 
     Q_DISABLE_COPY(SurfaceRole)
 };

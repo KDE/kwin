@@ -110,7 +110,8 @@ void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_get_layer_surface(Resourc
     SurfaceRole *surfaceRole = SurfaceRole::get(surface);
     if (surfaceRole) {
         wl_resource_post_error(resource->handle, error_role,
-                               "the wl_surface already has a role assigned");
+                               "the wl_surface already has a role assigned %s",
+                               surfaceRole->name().constData());
         return;
     }
 
@@ -150,7 +151,7 @@ Display *LayerShellV1Interface::display() const
 
 LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Interface *q,
                                                                SurfaceInterface *surface)
-    : SurfaceRole(surface)
+    : SurfaceRole(surface, QByteArrayLiteral("layer_surface_v1"))
     , q(q)
     , surface(surface)
 {

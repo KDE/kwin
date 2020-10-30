@@ -186,9 +186,11 @@ void XdgSurfaceInterfacePrivate::xdg_surface_destroy(Resource *resource)
 
 void XdgSurfaceInterfacePrivate::xdg_surface_get_toplevel(Resource *resource, uint32_t id)
 {
-    if (SurfaceRole::get(surface)) {
+    const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
+    if (surfaceRole) {
         wl_resource_post_error(resource->handle, error_already_constructed,
-                               "xdg_surface has already been constructured");
+                               "the surface already has a role assigned %s",
+                               surfaceRole->name().constData());
         return;
     }
 
@@ -203,9 +205,11 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
                                                        ::wl_resource *parentResource,
                                                        ::wl_resource *positionerResource)
 {
-    if (SurfaceRole::get(surface)) {
+    const SurfaceRole *surfaceRole = SurfaceRole::get(surface);
+    if (surfaceRole) {
         wl_resource_post_error(resource->handle, error_already_constructed,
-                               "xdg_surface has already been constructured");
+                               "the surface already has a role assigned %s",
+                               surfaceRole->name().constData());
         return;
     }
 
@@ -305,7 +309,7 @@ XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
 
 XdgToplevelInterfacePrivate::XdgToplevelInterfacePrivate(XdgToplevelInterface *toplevel,
                                                          XdgSurfaceInterface *surface)
-    : SurfaceRole(surface->surface())
+    : SurfaceRole(surface->surface(), QByteArrayLiteral("xdg_toplevel"))
     , q(toplevel)
     , xdgSurface(surface)
 {
@@ -637,7 +641,7 @@ XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup
 
 XdgPopupInterfacePrivate::XdgPopupInterfacePrivate(XdgPopupInterface *popup,
                                                    XdgSurfaceInterface *surface)
-    : SurfaceRole(surface->surface())
+    : SurfaceRole(surface->surface(), QByteArrayLiteral("xdg_popup"))
     , q(popup)
     , xdgSurface(surface)
 {
