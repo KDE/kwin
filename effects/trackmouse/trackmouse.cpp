@@ -267,8 +267,8 @@ void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&,
 
 void TrackMouseEffect::loadTexture()
 {
-    QString f[2] = {QStandardPaths::locate(QStandardPaths::DataLocation, QStringLiteral("tm_outer.png")),
-                    QStandardPaths::locate(QStandardPaths::DataLocation, QStringLiteral("tm_inner.png"))};
+    QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
+                    QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
     if (f[0].isEmpty() || f[1].isEmpty())
         return;
 
