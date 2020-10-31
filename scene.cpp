@@ -1198,7 +1198,7 @@ WindowPixmap::WindowPixmap(Scene::Window *window)
 {
 }
 
-WindowPixmap::WindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent)
+WindowPixmap::WindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent)
     : m_window(parent->m_window)
     , m_pixmap(XCB_PIXMAP_NONE)
     , m_discarded(false)
@@ -1291,7 +1291,7 @@ void WindowPixmap::update()
         QVector<WindowPixmap*> children;
         const auto subSurfaces = s->childSubSurfaces();
         for (const auto &subSurface : subSurfaces) {
-            if (subSurface.isNull()) {
+            if (!subSurface) {
                 continue;
             }
             auto it = std::find_if(oldTree.begin(), oldTree.end(), [subSurface] (WindowPixmap *p) { return p->m_subSurface == subSurface; });
@@ -1323,7 +1323,7 @@ void WindowPixmap::update()
     }
 }
 
-WindowPixmap *WindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface)
+WindowPixmap *WindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *subSurface)
 {
     Q_UNUSED(subSurface)
     return nullptr;
@@ -1342,10 +1342,15 @@ bool WindowPixmap::isRoot() const
     return !m_parent;
 }
 
+KWaylandServer::SubSurfaceInterface *WindowPixmap::subSurface() const
+{
+    return m_subSurface;
+}
+
 KWaylandServer::SurfaceInterface *WindowPixmap::surface() const
 {
     if (!m_subSurface.isNull()) {
-        return m_subSurface->surface().data();
+        return m_subSurface->surface();
     } else {
         return toplevel()->surface();
     }

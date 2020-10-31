@@ -1320,7 +1320,7 @@ QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &pare
         if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(parent.internalPointer())) {
             const auto &children = surface->childSubSurfaces();
             if (row < children.count()) {
-                return createIndex(row, column, children.at(row)->surface().data());
+                return createIndex(row, column, children.at(row)->surface());
             }
         }
         return QModelIndex();
@@ -1346,11 +1346,11 @@ QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
     using namespace KWaylandServer;
     if (SurfaceInterface *surface = static_cast<SurfaceInterface*>(child.internalPointer())) {
         const auto &subsurface = surface->subSurface();
-        if (subsurface.isNull()) {
+        if (!subsurface) {
             // doesn't reference a subsurface, this is a top-level window
             return QModelIndex();
         }
-        SurfaceInterface *parent = subsurface->parentSurface().data();
+        SurfaceInterface *parent = subsurface->parentSurface();
         if (!parent) {
             // something is wrong
             return QModelIndex();
@@ -1358,13 +1358,13 @@ QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
         // is the parent a subsurface itself?
         if (parent->subSurface()) {
             auto grandParent = parent->subSurface()->parentSurface();
-            if (grandParent.isNull()) {
+            if (!grandParent) {
                 // something is wrong
                 return QModelIndex();
             }
             const auto &children = grandParent->childSubSurfaces();
             for (int row = 0; row < children.count(); row++) {
-                if (children.at(row).data() == parent->subSurface().data()) {
+                if (children.at(row) == parent->subSurface()) {
                     return createIndex(row, 0, parent);
                 }
             }

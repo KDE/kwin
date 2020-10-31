@@ -72,9 +72,9 @@ public:
     const QImage &image();
 
 protected:
-    WindowPixmap *createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface) override;
+    WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface) override;
 private:
-    explicit QPainterWindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
+    explicit QPainterWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent);
     QImage m_image;
 };
 

@@ -566,9 +566,7 @@ public:
     /**
      * @returns the subsurface this WindowPixmap is for if it is not for a root window
      */
-    QPointer<KWaylandServer::SubSurfaceInterface> subSurface() const {
-        return m_subSurface;
-    }
+    KWaylandServer::SubSurfaceInterface *subSurface() const;
 
     /**
      * @returns the surface this WindowPixmap references, might be @c null.
@@ -577,8 +575,8 @@ public:
 
 protected:
     explicit WindowPixmap(Scene::Window *window);
-    explicit WindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent);
-    virtual WindowPixmap *createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface);
+    explicit WindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent);
+    virtual WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface);
     /**
      * @return The Window this WindowPixmap belongs to
      */

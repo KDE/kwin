@@ -1600,7 +1600,7 @@ OpenGLWindowPixmap::OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL* scene
 {
 }
 
-OpenGLWindowPixmap::OpenGLWindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent, SceneOpenGL *scene)
+OpenGLWindowPixmap::OpenGLWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent, SceneOpenGL *scene)
     : WindowPixmap(subSurface, parent)
     , m_texture(scene->createTexture())
     , m_scene(scene)
@@ -1640,7 +1640,7 @@ bool OpenGLWindowPixmap::bind()
             // mipmaps need to be updated
             m_texture->setDirty();
         }
-        if (subSurface().isNull()) {
+        if (!subSurface()) {
             toplevel()->resetDamage();
         }
         // also bind all children
@@ -1659,7 +1659,7 @@ bool OpenGLWindowPixmap::bind()
     bool success = m_texture->load(this);
 
     if (success) {
-        if (subSurface().isNull()) {
+        if (!subSurface()) {
             toplevel()->resetDamage();
         }
     } else
@@ -1667,7 +1667,7 @@ bool OpenGLWindowPixmap::bind()
     return success;
 }
 
-WindowPixmap *OpenGLWindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface)
+WindowPixmap *OpenGLWindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *subSurface)
 {
     return new OpenGLWindowPixmap(subSurface, this, m_scene);
 }

@@ -210,9 +210,9 @@ public:
     bool bind();
     bool isValid() const override;
 protected:
-    WindowPixmap *createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface) override;
+    WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface) override;
 private:
-    explicit OpenGLWindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent, SceneOpenGL *scene);
+    explicit OpenGLWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent, SceneOpenGL *scene);
     QScopedPointer<SceneOpenGLTexture> m_texture;
     SceneOpenGL *m_scene;
 };

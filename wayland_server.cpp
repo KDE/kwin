@@ -483,7 +483,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 
     m_xdgOutputManagerV1 = m_display->createXdgOutputManagerV1(m_display);
 
-    m_display->createSubCompositor(m_display)->create();
+    m_display->createSubCompositor(m_display);
 
     m_XdgForeign = m_display->createXdgForeignV2Interface(m_display);
 

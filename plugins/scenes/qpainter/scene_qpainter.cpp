@@ -376,7 +376,7 @@ QPainterWindowPixmap::QPainterWindowPixmap(Scene::Window *window)
 {
 }
 
-QPainterWindowPixmap::QPainterWindowPixmap(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface, WindowPixmap *parent)
+QPainterWindowPixmap::QPainterWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent)
     : WindowPixmap(subSurface, parent)
 {
 }
@@ -406,7 +406,7 @@ void QPainterWindowPixmap::create()
     }
 }
 
-WindowPixmap *QPainterWindowPixmap::createChild(const QPointer<KWaylandServer::SubSurfaceInterface> &subSurface)
+WindowPixmap *QPainterWindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *subSurface)
 {
     return new QPainterWindowPixmap(subSurface, this);
 }
