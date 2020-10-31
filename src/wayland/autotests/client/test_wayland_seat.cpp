@@ -131,8 +131,6 @@ void TestWaylandSeat::init()
     m_compositorInterface = m_display->createCompositor(m_display);
     m_subCompositorInterface = m_display->createSubCompositor(m_display);
     QVERIFY(m_subCompositorInterface);
-    m_subCompositorInterface->create();
-    QVERIFY(m_subCompositorInterface->isValid());
 
     m_relativePointerManagerInterface = m_display->createRelativePointerManager(RelativePointerInterfaceVersion::UnstableV1, m_display);
     QVERIFY(m_relativePointerManagerInterface);

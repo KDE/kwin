@@ -64,7 +64,7 @@ public:
         QPoint offset = QPoint();
         BufferInterface *buffer = nullptr;
         // stacking order: bottom (first) -> top (last)
-        QList<QPointer<SubSurfaceInterface>> children;
+        QList<SubSurfaceInterface *> children;
         QPointer<ShadowInterface> shadow;
         QPointer<BlurInterface> blur;
         QPointer<ContrastInterface> contrast;
@@ -76,10 +76,10 @@ public:
     explicit SurfaceInterfacePrivate(SurfaceInterface *q);
     ~SurfaceInterfacePrivate() override;
 
-    void addChild(QPointer<SubSurfaceInterface> subsurface);
-    void removeChild(QPointer<SubSurfaceInterface> subsurface);
-    bool raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
-    bool lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
+    void addChild(SubSurfaceInterface *subsurface);
+    void removeChild(SubSurfaceInterface *subsurface);
+    bool raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling);
+    bool lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling);
     void setShadow(const QPointer<ShadowInterface> &shadow);
     void setBlur(const QPointer<BlurInterface> &blur);
     void setContrast(const QPointer<ContrastInterface> &contrast);
@@ -88,9 +88,9 @@ public:
     void installPointerConstraint(ConfinedPointerInterface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
-    void commitSubSurface();
     void commit();
     QMatrix4x4 buildSurfaceToBufferMatrix(const State *state);
+    void swapStates(State *source, State *target, bool emitChanged);
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
@@ -99,7 +99,7 @@ public:
     State current;
     State pending;
     State cached;
-    QPointer<SubSurfaceInterface> subSurface;
+    SubSurfaceInterface *subSurface = nullptr;
     QRegion trackedDamage;
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;
@@ -139,8 +139,6 @@ protected:
     void surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height) override;
 
 private:
-    void swapStates(State *source, State *target, bool emitChanged);
-
     QMetaObject::Connection constrainsOneShotConnection;
     QMetaObject::Connection constrainsUnboundConnection;
 };

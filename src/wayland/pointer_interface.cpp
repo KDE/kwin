@@ -98,7 +98,7 @@ void PointerInterface::Private::registerPinchGesture(PointerPinchGestureInterfac
 namespace {
 static QPointF surfacePosition(SurfaceInterface *surface) {
     if (surface && surface->subSurface()) {
-        return surface->subSurface()->position() + surfacePosition(surface->subSurface()->parentSurface().data());
+        return surface->subSurface()->position() + surfacePosition(surface->subSurface()->parentSurface());
     }
     return QPointF();
 }

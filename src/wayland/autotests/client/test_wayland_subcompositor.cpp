@@ -85,8 +85,6 @@ void TestSubCompositor::init()
 
     m_subcompositorInterface = m_display->createSubCompositor(m_display);
     QVERIFY(m_subcompositorInterface);
-    m_subcompositorInterface->create();
-    QVERIFY(m_subcompositorInterface->isValid());
 
     QVERIFY(subCompositorSpy.wait());
     m_subCompositor = registry.createSubCompositor(subCompositorSpy.first().first().value<quint32>(), subCompositorSpy.first().last().value<quint32>(), this);

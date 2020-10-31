@@ -202,11 +202,11 @@ public:
     /**
      * @returns The SubSurface for this Surface in case there is one.
      **/
-    QPointer<SubSurfaceInterface> subSurface() const;
+    SubSurfaceInterface *subSurface() const;
     /**
      * @returns Children in stacking order from bottom (first) to top (last).
      **/
-    QList<QPointer<SubSurfaceInterface>> childSubSurfaces() const;
+    QList<SubSurfaceInterface *> childSubSurfaces() const;
 
     /**
      * @returns The Shadow for this Surface.

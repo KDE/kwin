@@ -76,7 +76,7 @@ SurfaceInterfacePrivate::~SurfaceInterfacePrivate()
     surfaces.removeOne(q);
 }
 
-void SurfaceInterfacePrivate::addChild(QPointer<SubSurfaceInterface> child)
+void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.children.append(child);
@@ -84,13 +84,13 @@ void SurfaceInterfacePrivate::addChild(QPointer<SubSurfaceInterface> child)
     current.children.append(child);
     emit q->childSubSurfaceAdded(child);
     emit q->subSurfaceTreeChanged();
-    QObject::connect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    QObject::connect(child->surface().data(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    QObject::connect(child->surface().data(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
-    QObject::connect(child->surface().data(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child, &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child->surface(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child->surface(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::connect(child->surface(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
 }
 
-void SurfaceInterfacePrivate::removeChild(QPointer<SubSurfaceInterface> child)
+void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
 {
     // protocol is not precise on how to handle the addition of new sub surfaces
     pending.children.removeAll(child);
@@ -98,15 +98,15 @@ void SurfaceInterfacePrivate::removeChild(QPointer<SubSurfaceInterface> child)
     current.children.removeAll(child);
     emit q->childSubSurfaceRemoved(child);
     emit q->subSurfaceTreeChanged();
-    QObject::disconnect(child.data(), &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    if (!child->surface().isNull()) {
-        QObject::disconnect(child->surface().data(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
-        QObject::disconnect(child->surface().data(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
-        QObject::disconnect(child->surface().data(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    QObject::disconnect(child, &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    if (child->surface()) {
+        QObject::disconnect(child->surface(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
+        QObject::disconnect(child->surface(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
+        QObject::disconnect(child->surface(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
     }
 }
 
-bool SurfaceInterfacePrivate::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
+bool SurfaceInterfacePrivate::raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling)
 {
     auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
     if (it == pending.children.end()) {
@@ -141,7 +141,7 @@ bool SurfaceInterfacePrivate::raiseChild(QPointer<SubSurfaceInterface> subsurfac
     return true;
 }
 
-bool SurfaceInterfacePrivate::lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
+bool SurfaceInterfacePrivate::lowerChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling)
 {
     auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
     if (it == pending.children.end()) {
@@ -423,11 +423,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
         frameCallback->destroy();
     }
     for (auto it = d->current.children.constBegin(); it != d->current.children.constEnd(); ++it) {
-        const auto &subSurface = *it;
-        if (subSurface.isNull() || subSurface->d_func()->surface.isNull()) {
-            continue;
-        }
-        subSurface->d_func()->surface->frameRendered(msec);
+        (*it)->surface()->frameRendered(msec);
     }
     if (needsFlush)  {
         client()->flush();
@@ -684,43 +680,22 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
 
 void SurfaceInterfacePrivate::commit()
 {
-    if (!subSurface.isNull() && subSurface->isSynchronized()) {
-        swapStates(&pending, &cached, false);
-    } else {
+    if (!subSurface) {
         swapStates(&pending, &current, true);
-        if (!subSurface.isNull()) {
-            subSurface->d_func()->commit();
-        }
-        // commit all subSurfaces to apply position changes
-        // "The cached state is applied to the sub-surface immediately after the parent surface's state is applied"
-        for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
-            const auto &subSurface = *it;
-            if (subSurface.isNull()) {
-                continue;
-            }
-            subSurface->d_func()->commit();
+
+        // The position of a sub-surface is applied when its parent is committed.
+        const QList<SubSurfaceInterface *> children = current.children;
+        for (SubSurfaceInterface *subsurface : children) {
+            auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
+            subsurfacePrivate->parentCommit();
         }
     }
+
     if (role) {
         role->commit();
     }
-    emit q->committed();
-}
 
-void SurfaceInterfacePrivate::commitSubSurface()
-{
-    if (subSurface.isNull() || !subSurface->isSynchronized()) {
-        return;
-    }
-    swapStates(&cached, &current, true);
-    // "The cached state is applied to the sub-surface immediately after the parent surface's state is applied"
-    for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
-        const auto &subSurface = *it;
-        if (subSurface.isNull() || !subSurface->isSynchronized()) {
-            continue;
-        }
-        subSurface->d_func()->commit();
-    }
+    emit q->committed();
 }
 
 QRegion SurfaceInterface::damage() const
@@ -777,12 +752,12 @@ SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *clie
     return nullptr;
 }
 
-QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const
+QList<SubSurfaceInterface *> SurfaceInterface::childSubSurfaces() const
 {
     return d->current.children;
 }
 
-QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
+SubSurfaceInterface *SurfaceInterface::subSurface() const
 {
     return d->subSurface;
 }
@@ -796,7 +771,7 @@ QRect SurfaceInterface::boundingRect() const
 {
     QRect rect(QPoint(0, 0), size());
 
-    const QList<QPointer<SubSurfaceInterface>> subSurfaces = childSubSurfaces();
+    const QList<SubSurfaceInterface *> subSurfaces = childSubSurfaces();
     for (const SubSurfaceInterface *subSurface : subSurfaces) {
         const SurfaceInterface *childSurface = subSurface->surface();
         rect |= childSurface->boundingRect().translated(subSurface->position());
@@ -830,7 +805,7 @@ bool SurfaceInterface::isMapped() const
     if (d->subSurface) {
         // from spec:
         // "A sub-surface becomes mapped, when a non-NULL wl_buffer is applied and the parent surface is mapped."
-        return d->subSurfaceIsMapped && !d->subSurface->parentSurface().isNull() && d->subSurface->parentSurface()->isMapped();
+        return d->subSurfaceIsMapped && d->subSurface->parentSurface() && d->subSurface->parentSurface()->isMapped();
     }
     return d->current.buffer != nullptr;
 }
@@ -892,14 +867,11 @@ SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
         return nullptr;
     }
     // go from top to bottom. Top most child is last in list
-    QListIterator<QPointer<SubSurfaceInterface>> it(d->current.children);
+    QListIterator<SubSurfaceInterface *> it(d->current.children);
     it.toBack();
     while (it.hasPrevious()) {
         const auto &current = it.previous();
         auto surface = current->surface();
-        if (surface.isNull()) {
-            continue;
-        }
         if (auto s = surface->surfaceAt(position - current->position())) {
             return s;
         }
@@ -919,14 +891,11 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
         return nullptr;
     }
     // go from top to bottom. Top most child is last in list
-    QListIterator<QPointer<SubSurfaceInterface>> it(d->current.children);
+    QListIterator<SubSurfaceInterface *> it(d->current.children);
     it.toBack();
     while (it.hasPrevious()) {
         const auto &current = it.previous();
         auto surface = current->surface();
-        if (surface.isNull()) {
-            continue;
-        }
         if (auto s = surface->inputSurfaceAt(position - current->position())) {
             return s;
         }

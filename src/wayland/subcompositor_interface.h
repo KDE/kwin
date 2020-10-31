@@ -1,18 +1,15 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef WAYLAND_SERVER_SUBCOMPOSITOR_INTERFACE_H
-#define WAYLAND_SERVER_SUBCOMPOSITOR_INTERFACE_H
+
+#pragma once
 
 #include <QObject>
-#include <QPointer>
 
 #include <KWaylandServer/kwaylandserver_export.h>
-
-#include "global.h"
-#include "resource.h"
 
 struct wl_resource;
 
@@ -20,95 +17,110 @@ namespace KWaylandServer
 {
 
 class Display;
+class SubCompositorInterfacePrivate;
 class SurfaceInterface;
 class SubSurfaceInterface;
+class SubSurfaceInterfacePrivate;
 
 /**
- * @todo Add documentation
+ * The SubCompositorInterface compositor extension provides applications a way to offload
+ * compositing work within a window from clients to the compositor. This may reduce the power
+ * usage for applications such as video players, etc.
+ *
+ * The SubCompositorInterface corresponds to the Wayland interface @c wl_subcompositor.
  */
-class KWAYLANDSERVER_EXPORT SubCompositorInterface : public Global
+class KWAYLANDSERVER_EXPORT SubCompositorInterface : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual ~SubCompositorInterface();
+    explicit SubCompositorInterface(Display *display, QObject *parent = nullptr);
+    ~SubCompositorInterface() override;
 
 Q_SIGNALS:
-    void subSurfaceCreated(KWaylandServer::SubSurfaceInterface*);
+    /**
+     * This signal is emitted when a new sub-surface @subsurface has been created.
+     */
+    void subSurfaceCreated(KWaylandServer::SubSurfaceInterface *subsurface);
 
 private:
-    explicit SubCompositorInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
-    class Private;
+    QScopedPointer<SubCompositorInterfacePrivate> d;
 };
 
 /**
- * @todo Add documentation
+ * The SubSurfaceInterface corresponds to the Wayland interface @c wl_subsurface.
  */
-class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public Resource
+class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QPoint position READ position NOTIFY positionChanged)
-    Q_PROPERTY(KWaylandServer::SubSurfaceInterface::Mode mode READ mode NOTIFY modeChanged)
-public:
-    virtual ~SubSurfaceInterface();
 
+public:
+    ~SubSurfaceInterface() override;
+
+    /**
+     * Returns the position of the sub-surface relative to the upper-left corner of its parent.
+     */
     QPoint position() const;
 
+    /**
+     * This enum type is used to specify the commit behavior for a subsurface.
+     */
     enum class Mode {
         Synchronized,
         Desynchronized
     };
+
+    /**
+     * Returns the current commit mode.
+     *
+     * @see isSynchronized
+     */
     Mode mode() const;
 
     /**
-     * Whether this SubSurfaceInterface is in synchronized mode.
-     * A SubSurface is in synchronized mode if either {@link mode} is
-     * @c Mode::Synchronized or if the parent surface is in synchronized
-     * mode. If a SubSurfaceInterface is in synchronized mode all child
-     * SubSurfaceInterfaces are also in synchronized mode ignoring the actual mode.
-     * @returns Whether this SubSurfaceInterface is in synchronized mode.
+     * Returns @c true if the sub-surface is in synchronized mode; otherwise returns @c false.
+     *
+     * This method checks whether this sub-surface or any of its ancestors is in the synchronized
+     * mode. Note that this function is not equivalent to calling mode() and checking whether
+     * the return value is Mode::Synchronized.
+     *
      * @see mode
-     * @since 5.22
-     **/
+     */
     bool isSynchronized() const;
 
-    // TODO: remove with ABI break (KF6)
-    QPointer<SurfaceInterface> surface();
     /**
-     * @returns The surface this SubSurfaceInterface was created on.
-     * @since 5.22
-     **/
-    QPointer<SurfaceInterface> surface() const;
-    // TODO: remove with ABI break (KF6)
-    QPointer<SurfaceInterface> parentSurface();
-    /**
-     * @returns The parent surface for which this SubSurfaceInterface is a child
-     * @since 5.22
-     **/
-    QPointer<SurfaceInterface> parentSurface() const;
+     * Returns the SurfaceInterface for this SubSurfaceInterface. This function never returns a
+     * @c null.
+     */
+    SurfaceInterface *surface() const;
 
     /**
-     * @returns the main surface for the sub-surface tree, that is the first surface without a parent
-     * @since 5.22
-     **/
-    QPointer<SurfaceInterface> mainSurface() const;
+     * Returns the parent surface for this SubSurfaceInterface. This function may return @c null.
+     */
+    SurfaceInterface *parentSurface() const;
+
+    /**
+     * Returns the main surface for the sub-surface tree, that is the first surface without a parent
+     */
+    SurfaceInterface *mainSurface() const;
 
 Q_SIGNALS:
-    void positionChanged(const QPoint&);
-    void modeChanged(KWaylandServer::SubSurfaceInterface::Mode);
+    /**
+     * This signal is emitted when the position of the sub-surface has changed.
+     */
+    void positionChanged(const QPoint &position);
+    /**
+     * This signal is emitted when the commit mode of the sub-surface has changed.
+     */
+    void modeChanged(KWaylandServer::SubSurfaceInterface::Mode mode);
 
 private:
-    friend class SubCompositorInterface;
-    friend class SurfaceInterface;
-    friend class SurfaceInterfacePrivate;
-    explicit SubSurfaceInterface(SubCompositorInterface *parent, wl_resource *parentResource);
-
-    class Private;
-    Private *d_func() const;
+    SubSurfaceInterface(SurfaceInterface *surface, SurfaceInterface *parent, wl_resource *resource);
+    QScopedPointer<SubSurfaceInterfacePrivate> d;
+    friend class SubSurfaceInterfacePrivate;
+    friend class SubCompositorInterfacePrivate;
 };
 
-}
+} // namespace KWaylandServer
 
 Q_DECLARE_METATYPE(KWaylandServer::SubSurfaceInterface::Mode)
-
-#endif
