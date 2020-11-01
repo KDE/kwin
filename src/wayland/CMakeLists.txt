@@ -90,7 +90,7 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME org_kde_kwin_outputdevice
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-shell.xml
     BASENAME plasma-shell
 )

@@ -68,7 +68,6 @@ void TestPlasmaShell::init()
     m_display->createShm();
 
     m_plasmaShellInterface = m_display->createPlasmaShell(m_display);
-    m_plasmaShellInterface->create();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -181,9 +180,6 @@ void TestPlasmaShell::testRole()
     QVERIFY(sps);
     QVERIFY(sps->surface());
     QCOMPARE(sps->surface(), surfaceCreatedSpy.first().first().value<SurfaceInterface*>());
-    QCOMPARE(sps->shell(), m_plasmaShellInterface);
-    QCOMPARE(PlasmaShellSurfaceInterface::get(sps->resource()), sps);
-    QVERIFY(!PlasmaShellSurfaceInterface::get(nullptr));
 
     // default role should be normal
     QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Normal);
@@ -465,16 +461,12 @@ void TestPlasmaShell::testDisconnect()
     QVERIFY(sps);
 
     // disconnect
-    QSignalSpy clientDisconnectedSpy(sps->client(), &ClientConnection::disconnected);
-    QVERIFY(clientDisconnectedSpy.isValid());
     QSignalSpy surfaceDestroyedSpy(sps, &QObject::destroyed);
     QVERIFY(surfaceDestroyedSpy.isValid());
     if (m_connection) {
         m_connection->deleteLater();
         m_connection = nullptr;
     }
-    QVERIFY(clientDisconnectedSpy.wait());
-    QCOMPARE(clientDisconnectedSpy.count(), 1);
     QCOMPARE(surfaceDestroyedSpy.count(), 0);
     QVERIFY(surfaceDestroyedSpy.wait());
     QCOMPARE(surfaceDestroyedSpy.count(), 1);

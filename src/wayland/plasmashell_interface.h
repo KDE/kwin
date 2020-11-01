@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -10,9 +11,6 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "global.h"
-#include "resource.h"
-
 class QSize;
 struct wl_resource;
 
@@ -22,6 +20,9 @@ namespace KWaylandServer
 class Display;
 class SurfaceInterface;
 class PlasmaShellSurfaceInterface;
+
+class PlasmaShellInterfacePrivate;
+class PlasmaShellSurfaceInterfacePrivate;
 
 /**
  * @brief Global for the org_kde_plasma_shell interface.
@@ -35,7 +36,7 @@ class PlasmaShellSurfaceInterface;
  *
  * @since 5.4
  **/
-class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public Global
+class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -50,7 +51,7 @@ Q_SIGNALS:
 private:
     friend class Display;
     explicit PlasmaShellInterface(Display *display, QObject *parent);
-    class Private;
+    QScopedPointer<PlasmaShellInterfacePrivate> d;
 };
 
 /**
@@ -60,7 +61,7 @@ private:
  *
  * @since 5.4
  **/
-class KWAYLANDSERVER_EXPORT PlasmaShellSurfaceInterface : public Resource
+class KWAYLANDSERVER_EXPORT PlasmaShellSurfaceInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -70,11 +71,6 @@ public:
      * @returns the SurfaceInterface this PlasmaShellSurfaceInterface got created for
      **/
     SurfaceInterface *surface() const;
-    /**
-     * @returns The PlasmaShellInterface which created this PlasmaShellSurfaceInterface.
-     **/
-    PlasmaShellInterface *shell() const;
-
     /**
      * @returns the requested position in global coordinates.
      **/
@@ -227,10 +223,9 @@ Q_SIGNALS:
     void panelTakesFocusChanged();
 
 private:
-    friend class PlasmaShellInterface;
-    explicit PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource);
-    class Private;
-    Private *d_func() const;
+    friend class PlasmaShellInterfacePrivate;
+    explicit PlasmaShellSurfaceInterface(SurfaceInterface *surface, wl_resource *resource);
+    QScopedPointer<PlasmaShellSurfaceInterfacePrivate> d;
 };
 
 }
