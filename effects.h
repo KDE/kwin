@@ -454,7 +454,6 @@ public:
     bool isX11Client() const override;
 
     pid_t pid() const override;
-    qlonglong windowId() const override;
 
     QRect decorationInnerRect() const override;
     QByteArray readProperty(long atom, long type, int format) const override;
