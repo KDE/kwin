@@ -2440,6 +2440,11 @@ public:
     virtual pid_t pid() const = 0;
 
     /**
+     * @since 5.21
+     */
+    virtual qlonglong windowId() const = 0;
+
+    /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.
      *
      * Invoking this method will emit the signal EffectsHandler::windowDataChanged.
