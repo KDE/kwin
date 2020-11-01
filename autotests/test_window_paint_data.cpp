@@ -253,6 +253,9 @@ public:
     pid_t pid() const override {
         return 0;
     }
+    qlonglong windowId() const override {
+        return 0;
+    }
 
 private:
     qreal m_opacity = 1.0;
