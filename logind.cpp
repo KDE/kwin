@@ -220,6 +220,13 @@ void LogindIntegration::logindServiceRegistered()
             emit connectedChanged();
         }
     );
+
+    m_bus.connect(m_sessionControllerService,
+                  m_sessionPath,
+                  m_sessionControllerManagerInterface,
+                  QStringLiteral("PrepareForSleep"),
+                  this,
+                  SIGNAL(prepareForSleep(bool)));
 }
 
 void LogindIntegration::connectSessionPropertiesChanged()

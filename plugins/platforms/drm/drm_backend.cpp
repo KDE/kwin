@@ -98,6 +98,11 @@ void DrmBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
+    connect(logind, &LogindIntegration::prepareForSleep, this, [this] (bool active) {
+        if (!active) {
+            turnOutputsOn();
+        }
+    });
 }
 
 void DrmBackend::prepareShutdown()

@@ -54,6 +54,7 @@ Q_SIGNALS:
     void hasSessionControlChanged(bool);
     void sessionActiveChanged(bool);
     void virtualTerminalChanged(int);
+    void prepareForSleep(bool prepare);
 
 private Q_SLOTS:
     void getSessionActive();
