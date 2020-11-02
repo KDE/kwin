@@ -1581,7 +1581,7 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
         data.setXTranslation(bufferOffset().x());
         data.setYTranslation(geo.height() + bufferOffset().y());
 
-        performPaint(Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_WINDOW_LANCZOS, geo, data);
+        performPaint(Scene::PAINT_WINDOW_TRANSFORMED, geo, data);
         GLRenderTarget::popRenderTarget();
         GLVertexBuffer::setVirtualScreenGeometry(renderVSG);
         GLRenderTarget::setVirtualScreenGeometry(renderVSG);
