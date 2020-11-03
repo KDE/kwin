@@ -407,30 +407,6 @@ void Scene::addToplevel(Toplevel *c)
     m_windows[ c ] = w;
 
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
-    if (c->surface()) {
-        // We generate window quads for sub-surfaces so it's quite important to discard
-        // the pixmap tree and cached window quads when the sub-surface tree is changed.
-        SubSurfaceMonitor *monitor = new SubSurfaceMonitor(c->surface(), this);
-
-        // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, w, &Window::discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, w, &Window::discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, w, &Window::discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, w, &Window::discardPixmap);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceBufferSizeChanged, w, &Window::discardPixmap);
-
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, w, &Window::discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, w, &Window::discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMoved, w, &Window::discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceResized, w, &Window::discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceMapped, w, &Window::discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceUnmapped, w, &Window::discardQuads);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged, w, &Window::discardQuads);
-
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::bufferSizeChanged, w, &Window::discardPixmap);
-        connect(c->surface(), &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged, w, &Window::discardQuads);
-    }
-
     connect(c, &Toplevel::screenScaleChanged, w, &Window::discardQuads);
     connect(c, &Toplevel::shadowChanged, w, &Window::discardQuads);
     connect(c, &Toplevel::geometryShapeChanged, w, &Window::discardShape);
@@ -723,11 +699,62 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     , disable_painting(0)
     , cached_quad_list(nullptr)
 {
+    KWaylandServer::SurfaceInterface *surface = toplevel->surface();
+    if (surface) {
+        // We generate window quads for sub-surfaces so it's quite important to discard
+        // the pixmap tree and cached window quads when the sub-surface tree is changed.
+        m_subsurfaceMonitor = new SubSurfaceMonitor(surface, this);
+
+        // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceAdded,
+                this, &Window::discardPixmap);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceRemoved,
+                this, &Window::discardPixmap);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceMapped,
+                this, &Window::discardPixmap);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceUnmapped,
+                this, &Window::discardPixmap);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceBufferSizeChanged,
+                this, &Window::discardPixmap);
+
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceAdded,
+                this, &Window::discardQuads);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceRemoved,
+                this, &Window::discardQuads);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceMoved,
+                this, &Window::discardQuads);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceResized,
+                this, &Window::discardQuads);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceMapped,
+                this, &Window::discardQuads);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceUnmapped,
+                this, &Window::discardQuads);
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged,
+                this, &Window::discardQuads);
+
+        connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged,
+                this, &Window::discardPixmap);
+        connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
+                this, &Window::discardQuads);
+    }
 }
 
 Scene::Window::~Window()
 {
     delete m_shadow;
+}
+
+void Scene::Window::updateToplevel(Deleted *deleted)
+{
+    delete m_subsurfaceMonitor;
+    m_subsurfaceMonitor = nullptr;
+
+    KWaylandServer::SurfaceInterface *surface = toplevel->surface();
+    if (surface) {
+        disconnect(surface, nullptr, this, nullptr);
+    }
+
+    toplevel = deleted;
 }
 
 void Scene::Window::referencePreviousPixmap()
