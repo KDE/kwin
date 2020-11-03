@@ -422,9 +422,6 @@ void Scene::addToplevel(Toplevel *c)
     m_windows[ c ] = w;
 
     connect(c, &Toplevel::windowClosed, this, &Scene::windowClosed);
-    connect(c, &Toplevel::screenScaleChanged, w, &Window::discardQuads);
-    connect(c, &Toplevel::shadowChanged, w, &Window::discardQuads);
-    connect(c, &Toplevel::geometryShapeChanged, w, &Window::discardShape);
 
     c->effectWindow()->setSceneWindow(w);
     c->updateShadow();
@@ -764,6 +761,10 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
         connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
                 this, &Window::discardQuads);
     }
+
+    connect(toplevel, &Toplevel::screenScaleChanged, this, &Window::discardQuads);
+    connect(toplevel, &Toplevel::shadowChanged, this, &Window::discardQuads);
+    connect(toplevel, &Toplevel::geometryShapeChanged, this, &Window::discardShape);
 }
 
 Scene::Window::~Window()
