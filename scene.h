@@ -43,6 +43,7 @@ class Shadow;
 class WindowPixmap;
 class GLTexture;
 class AbstractOutput;
+class SubSurfaceMonitor;
 
 // The base class for compositing backends.
 class KWIN_EXPORT Scene : public QObject
@@ -349,7 +350,7 @@ public:
     QRegion decorationShape() const;
     QPoint bufferOffset() const;
     void discardShape();
-    void updateToplevel(Toplevel* c);
+    void updateToplevel(Deleted *deleted);
     // creates initial quad list for the window
     virtual WindowQuadList buildQuads(bool force = false) const;
     void updateShadow(Shadow* shadow);
@@ -407,6 +408,7 @@ private:
     QScopedPointer<WindowPixmap> m_previousPixmap;
     QVector<QRegion> m_repaints;
     QVector<QRegion> m_layerRepaints;
+    SubSurfaceMonitor *m_subsurfaceMonitor = nullptr;
     int m_referencePixmapCounter;
     int disable_painting;
     mutable QRegion m_bufferShape;
@@ -675,12 +677,6 @@ inline
 Toplevel* Scene::Window::window() const
 {
     return toplevel;
-}
-
-inline
-void Scene::Window::updateToplevel(Toplevel* c)
-{
-    toplevel = c;
 }
 
 inline
