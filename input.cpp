@@ -41,7 +41,7 @@
 #include <KGlobalAccel>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/fakeinput_interface.h>
-#include <KWaylandServer/relativepointer_interface.h>
+#include <KWaylandServer/relativepointer_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/surface_interface.h>
@@ -2177,7 +2177,7 @@ void InputRedirection::setupLibInput()
 
         if (waylandServer()) {
             // create relative pointer manager
-            waylandServer()->display()->createRelativePointerManager(KWaylandServer::RelativePointerInterfaceVersion::UnstableV1, waylandServer()->display())->create();
+            waylandServer()->display()->createRelativePointerManagerV1(waylandServer()->display());
         }
 
         conn->setInputConfig(InputConfig::self()->inputConfig());
