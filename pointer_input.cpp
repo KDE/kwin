@@ -25,7 +25,7 @@
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/display.h>
-#include <KWaylandServer/pointerconstraints_interface.h>
+#include <KWaylandServer/pointerconstraints_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 // screenlocker
@@ -659,11 +659,11 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        const QRegion r = getConstraintRegion(focus(), cf.data());
+        const QRegion r = getConstraintRegion(focus(), cf);
         if (canConstrain && r.contains(m_pos.toPoint())) {
             cf->setConfined(true);
             m_confined = true;
-            m_confinedPointerRegionConnection = connect(cf.data(), &KWaylandServer::ConfinedPointerInterface::regionChanged, this,
+            m_confinedPointerRegionConnection = connect(cf, &KWaylandServer::ConfinedPointerV1Interface::regionChanged, this,
                 [this] {
                     if (!focus()) {
                         return;
@@ -673,7 +673,7 @@ void PointerInputRedirection::updatePointerConstraints()
                         return;
                     }
                     const auto cf = s->confinedPointer();
-                    if (!getConstraintRegion(focus(), cf.data()).contains(m_pos.toPoint())) {
+                    if (!getConstraintRegion(focus(), cf).contains(m_pos.toPoint())) {
                         // pointer no longer in confined region, break the confinement
                         cf->setConfined(false);
                         m_confined = false;
@@ -705,14 +705,14 @@ void PointerInputRedirection::updatePointerConstraints()
             }
             return;
         }
-        const QRegion r = getConstraintRegion(focus(), lock.data());
+        const QRegion r = getConstraintRegion(focus(), lock);
         if (canConstrain && r.contains(m_pos.toPoint())) {
             lock->setLocked(true);
             m_locked = true;
 
             // The client might cancel pointer locking from its side by unbinding the LockedPointerInterface.
             // In this case the cached cursor position hint must be fetched before the resource goes away
-            m_lockedPointerAboutToBeUnboundConnection = connect(lock.data(), &KWaylandServer::LockedPointerInterface::aboutToBeUnbound, this,
+            m_lockedPointerAboutToBeUnboundConnection = connect(lock, &KWaylandServer::LockedPointerV1Interface::aboutToBeDestroyed, this,
                 [this, lock]() {
                     const auto hint = lock->cursorPositionHint();
                     if (hint.x() < 0 || hint.y() < 0 || !focus()) {
@@ -721,7 +721,7 @@ void PointerInputRedirection::updatePointerConstraints()
                     auto globalHint = focus()->pos() - focus()->clientContentPos() + hint;
 
                     // When the resource finally goes away, reposition the cursor according to the hint
-                    connect(lock.data(), &KWaylandServer::LockedPointerInterface::unbound, this,
+                    connect(lock, &KWaylandServer::LockedPointerV1Interface::destroyed, this,
                         [this, globalHint]() {
                             processMotion(globalHint, waylandServer()->seat()->timestamp());
                     });
@@ -781,7 +781,7 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
         return pos;
     }
 
-    const QRegion confinementRegion = getConstraintRegion(focus(), cf.data());
+    const QRegion confinementRegion = getConstraintRegion(focus(), cf);
     if (confinementRegion.contains(pos.toPoint())) {
         return pos;
     }
