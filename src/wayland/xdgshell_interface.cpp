@@ -216,7 +216,9 @@ void XdgSurfaceInterfacePrivate::xdg_surface_get_popup(Resource *resource, uint3
 
     XdgPositioner positioner = XdgPositioner::get(positionerResource);
     if (!positioner.isComplete()) {
-        wl_resource_post_error(resource->handle, QtWaylandServer::xdg_wm_base::error_invalid_positioner,
+        auto shellPrivate = XdgShellInterfacePrivate::get(shell);
+        wl_resource_post_error(shellPrivate->resourceForXdgSurface(q)->handle,
+                               QtWaylandServer::xdg_wm_base::error_invalid_positioner,
                                "xdg_positioner is incomplete");
         return;
     }
