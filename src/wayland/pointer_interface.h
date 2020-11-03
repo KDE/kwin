@@ -15,7 +15,6 @@ namespace KWaylandServer
 
 class Cursor;
 class PointerGesturesUnstableV1Interface;
-class RelativePointerManagerUnstableV1Interface;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -63,7 +62,7 @@ private:
     void axis(Qt::Orientation orientation, quint32 delta);
     void relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
     friend class SeatInterface;
-    friend class RelativePointerManagerUnstableV1Interface;
+    friend class RelativePointerV1Interface;
     friend class PointerGesturesUnstableV1Interface;
     explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;

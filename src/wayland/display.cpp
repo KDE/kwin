@@ -31,7 +31,7 @@
 #include "pointerconstraints_interface_p.h"
 #include "pointergestures_interface_p.h"
 #include "primaryselectiondevicemanager_v1_interface.h"
-#include "relativepointer_interface_p.h"
+#include "relativepointer_v1_interface.h"
 #include "seat_interface.h"
 #include "screencast_v1_interface.h"
 #include "server_decoration_interface.h"
@@ -366,14 +366,9 @@ XdgShellInterface *Display::createXdgShell(QObject *parent)
     return shell;
 }
 
-RelativePointerManagerInterface *Display::createRelativePointerManager(const RelativePointerInterfaceVersion &version, QObject *parent)
+RelativePointerManagerV1Interface *Display::createRelativePointerManagerV1(QObject *parent)
 {
-    RelativePointerManagerInterface *r = nullptr;
-    switch (version) {
-    case RelativePointerInterfaceVersion::UnstableV1:
-        r = new RelativePointerManagerUnstableV1Interface(this, parent);
-        break;
-    }
+    RelativePointerManagerV1Interface *r = new RelativePointerManagerV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, r, [r] { delete r; });
     return r;
 }

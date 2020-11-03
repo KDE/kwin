@@ -31,7 +31,7 @@
 #include "../../src/server/keyboard_interface.h"
 #include "../../src/server/pointer_interface.h"
 #include "../../src/server/pointergestures_interface.h"
-#include "../../src/server/relativepointer_interface.h"
+#include "../../src/server/relativepointer_v1_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/subcompositor_interface.h"
 #include "../../src/server/surface_interface.h"
@@ -83,7 +83,7 @@ private:
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::SeatInterface *m_seatInterface;
     KWaylandServer::SubCompositorInterface *m_subCompositorInterface;
-    KWaylandServer::RelativePointerManagerInterface *m_relativePointerManagerInterface;
+    KWaylandServer::RelativePointerManagerV1Interface *m_relativePointerManagerV1Interface;
     KWaylandServer::PointerGesturesInterface *m_pointerGesturesInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -104,7 +104,7 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
     , m_compositorInterface(nullptr)
     , m_seatInterface(nullptr)
     , m_subCompositorInterface(nullptr)
-    , m_relativePointerManagerInterface(nullptr)
+    , m_relativePointerManagerV1Interface(nullptr)
     , m_pointerGesturesInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
@@ -132,11 +132,7 @@ void TestWaylandSeat::init()
     m_subCompositorInterface = m_display->createSubCompositor(m_display);
     QVERIFY(m_subCompositorInterface);
 
-    m_relativePointerManagerInterface = m_display->createRelativePointerManager(RelativePointerInterfaceVersion::UnstableV1, m_display);
-    QVERIFY(m_relativePointerManagerInterface);
-    m_relativePointerManagerInterface->create();
-    QVERIFY(m_relativePointerManagerInterface->isValid());
-
+    m_relativePointerManagerV1Interface = m_display->createRelativePointerManagerV1(m_display);
     m_pointerGesturesInterface = m_display->createPointerGestures(PointerGesturesInterfaceVersion::UnstableV1, m_display);
     QVERIFY(m_pointerGesturesInterface);
     m_pointerGesturesInterface->create();
@@ -252,8 +248,8 @@ void TestWaylandSeat::cleanup()
     delete m_subCompositorInterface;
     m_subCompositorInterface = nullptr;
 
-    delete m_relativePointerManagerInterface;
-    m_relativePointerManagerInterface = nullptr;
+    delete m_relativePointerManagerV1Interface;
+    m_relativePointerManagerV1Interface = nullptr;
 
     delete m_pointerGesturesInterface;
     m_pointerGesturesInterface = nullptr;
@@ -1740,7 +1736,7 @@ void TestWaylandSeat::testDestroy()
     m_compositorInterface = nullptr;
     m_seatInterface = nullptr;
     m_subCompositorInterface = nullptr;
-    m_relativePointerManagerInterface = nullptr;
+    m_relativePointerManagerV1Interface = nullptr;
     m_pointerGesturesInterface = nullptr;
     QVERIFY(connectionDiedSpy.wait());
 

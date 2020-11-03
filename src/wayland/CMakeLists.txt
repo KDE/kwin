@@ -46,8 +46,7 @@ set(SERVER_LIB_SRCS
     primaryselectionoffer_v1_interface.cpp
     primaryselectionsource_v1_interface.cpp
     region_interface.cpp
-    relativepointer_interface.cpp
-    relativepointer_interface_v1.cpp
+    relativepointer_v1_interface.cpp
     resource.cpp
     screencast_v1_interface.cpp
     seat_interface.cpp
@@ -142,9 +141,9 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME contrast
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/relative-pointer/relative-pointer-unstable-v1.xml
-    BASENAME relativepointer-unstable-v1
+    BASENAME relative-pointer-unstable-v1
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -415,7 +414,7 @@ set(SERVER_LIB_HEADERS
   pointergestures_interface.h
   primaryselectiondevicemanager_v1_interface.h
   region_interface.h
-  relativepointer_interface.h
+  relativepointer_v1_interface.h
   resource.h
   screencast_v1_interface.h
   seat_interface.h

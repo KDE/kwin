@@ -8,7 +8,7 @@
 #include "pointerconstraints_interface.h"
 #include "pointergestures_interface_p.h"
 #include "resource_p.h"
-#include "relativepointer_interface_p.h"
+#include "relativepointer_v1_interface_p.h"
 #include "seat_interface.h"
 #include "display.h"
 #include "subcompositor_interface.h"
@@ -64,16 +64,17 @@ void PointerInterface::Private::sendLeave(SurfaceInterface *surface, quint32 ser
     }
 }
 
-void PointerInterface::Private::registerRelativePointer(RelativePointerInterface *relativePointer)
+void PointerInterface::Private::registerRelativePointerV1(RelativePointerV1Interface *relativePointer)
 {
-    relativePointers << relativePointer;
-    QObject::connect(relativePointer, &QObject::destroyed, q,
-        [this, relativePointer] {
-            relativePointers.removeOne(relativePointer);
-        }
-    );
+    Q_ASSERT(!relativePointersV1.contains(relativePointer));
+    relativePointersV1.append(relativePointer);
 }
 
+void PointerInterface::Private::unregisterRelativePointerV1(RelativePointerV1Interface *relativePointer)
+{
+    Q_ASSERT(relativePointersV1.contains(relativePointer));
+    relativePointersV1.removeOne(relativePointer);
+}
 
 void PointerInterface::Private::registerSwipeGesture(PointerSwipeGestureInterface *gesture)
 {
@@ -383,11 +384,15 @@ Cursor *PointerInterface::cursor() const
 void PointerInterface::relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
 {
     Q_D();
-    if (d->relativePointers.isEmpty()) {
+    if (d->relativePointersV1.isEmpty()) {
         return;
     }
-    for (auto it = d->relativePointers.constBegin(), end = d->relativePointers.constEnd(); it != end; it++) {
-        (*it)->relativeMotion(delta, deltaNonAccelerated, microseconds);
+    for (RelativePointerV1Interface *relativePointer : qAsConst(d->relativePointersV1)) {
+        relativePointer->send_relative_motion(microseconds >> 32, microseconds & 0xffffffff,
+                                              wl_fixed_from_double(delta.width()),
+                                              wl_fixed_from_double(delta.height()),
+                                              wl_fixed_from_double(deltaNonAccelerated.width()),
+                                              wl_fixed_from_double(deltaNonAccelerated.height()));
     }
     d->sendFrame();
 }
