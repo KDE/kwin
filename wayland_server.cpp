@@ -43,7 +43,7 @@
 #include <KWaylandServer/plasmavirtualdesktop_interface.h>
 #include <KWaylandServer/plasmawindowmanagement_interface.h>
 #include <KWaylandServer/pointerconstraints_interface.h>
-#include <KWaylandServer/pointergestures_interface.h>
+#include <KWaylandServer/pointergestures_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/server_decoration_interface.h>
 #include <KWaylandServer/server_decoration_palette_interface.h>
@@ -385,7 +385,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
-    m_display->createPointerGestures(PointerGesturesInterfaceVersion::UnstableV1, m_display)->create();
+    m_display->createPointerGesturesV1(m_display);
     m_display->createPointerConstraints(PointerConstraintsInterfaceVersion::UnstableV1, m_display)->create();
     m_dataDeviceManager = m_display->createDataDeviceManager(m_display);
     m_display->createDataControlDeviceManagerV1(m_display);
