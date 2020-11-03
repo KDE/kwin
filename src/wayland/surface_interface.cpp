@@ -16,6 +16,7 @@
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
 #include "surfacerole_p.h"
+#include "utils.h"
 // std
 #include <algorithm>
 
@@ -735,8 +736,8 @@ QPoint SurfaceInterface::offset() const
 
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 {
-    if (auto surface = SurfaceInterfacePrivate::Resource::fromResource(native)) {
-        return static_cast<SurfaceInterfacePrivate *>(surface->object())->q;
+    if (auto surfacePrivate = resource_cast<SurfaceInterfacePrivate *>(native)) {
+        return surfacePrivate->q;
     }
     return nullptr;
 }

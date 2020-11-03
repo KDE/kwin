@@ -6,6 +6,7 @@
 #include "primaryselectionsource_v1_interface.h"
 #include "primaryselectiondevicemanager_v1_interface.h"
 #include "clientconnection.h"
+#include "utils.h"
 // Qt
 #include <QStringList>
 // Wayland
@@ -84,8 +85,10 @@ wl_client *PrimarySelectionSourceV1Interface::client() const
 
 PrimarySelectionSourceV1Interface *PrimarySelectionSourceV1Interface::get(wl_resource *native)
 {
-    auto priv = static_cast<PrimarySelectionSourceV1InterfacePrivate*>(QtWaylandServer::zwp_primary_selection_source_v1::Resource::fromResource(native)->object());
-    return priv->q;
+    if (auto sourcePrivate = resource_cast<PrimarySelectionSourceV1InterfacePrivate *>(native)) {
+        return sourcePrivate->q;
+    }
+    return nullptr;
 }
 
 }

@@ -11,6 +11,9 @@
 #include <QRegion>
 
 #include <limits>
+#include <type_traits>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
@@ -24,6 +27,16 @@ inline QRegion KWAYLANDSERVER_EXPORT infiniteRegion()
                    std::numeric_limits<int>::min() / 2,
                    std::numeric_limits<int>::max(),
                    std::numeric_limits<int>::max());
+}
+
+template <typename T>
+T resource_cast(::wl_resource *resource)
+{
+    using ObjectType = std::remove_pointer_t<std::remove_cv_t<T>>;
+    if (auto resourceContainer = ObjectType::Resource::fromResource(resource)) {
+        return static_cast<T>(resourceContainer->object());
+    }
+    return T();
 }
 
 } // namespace KWaylandServer

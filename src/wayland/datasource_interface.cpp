@@ -7,7 +7,7 @@
 #include "datasource_interface.h"
 #include "datadevicemanager_interface.h"
 #include "clientconnection.h"
-#include "resource_p.h"
+#include "utils.h"
 // Qt
 #include <QStringList>
 // Wayland
@@ -129,11 +129,10 @@ QStringList DataSourceInterface::mimeTypes() const
 
 DataSourceInterface *DataSourceInterface::get(wl_resource *native)
 {
-    if (!native) {
-        return nullptr;
+    if (auto sourcePrivate = resource_cast<DataSourceInterfacePrivate *>(native)) {
+        return sourcePrivate->q;
     }
-    auto priv = static_cast<DataSourceInterfacePrivate*>(QtWaylandServer::wl_data_source::Resource::fromResource(native)->object());
-    return priv->q;
+    return nullptr;
 }
 
 DataDeviceManagerInterface::DnDActions DataSourceInterface::supportedDragAndDropActions() const

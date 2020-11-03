@@ -6,6 +6,7 @@
 */
 #include "region_interface.h"
 #include "compositor_interface.h"
+#include "utils.h"
 
 #include "qwayland-server-wayland.h"
 
@@ -72,8 +73,8 @@ QRegion RegionInterface::region() const
 
 RegionInterface *RegionInterface::get(wl_resource *native)
 {
-    if (auto region = RegionInterfacePrivate::Resource::fromResource(native)) {
-        return static_cast<RegionInterfacePrivate *>(region->object())->q;
+    if (auto regionPrivate = resource_cast<RegionInterfacePrivate *>(native)) {
+        return regionPrivate->q;
     }
     return nullptr;
 }

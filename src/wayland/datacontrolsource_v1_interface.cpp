@@ -6,7 +6,7 @@
 #include "datacontrolsource_v1_interface.h"
 #include "datacontroldevicemanager_v1_interface.h"
 #include "clientconnection.h"
-#include "resource_p.h"
+#include "utils.h"
 // Qt
 #include <QStringList>
 // Wayland
@@ -86,8 +86,10 @@ wl_client *DataControlSourceV1Interface::client() const
 
 DataControlSourceV1Interface *DataControlSourceV1Interface::get(wl_resource *native)
 {
-    auto priv = static_cast<DataControlSourceV1InterfacePrivate*>(QtWaylandServer::zwlr_data_control_source_v1::Resource::fromResource(native)->object());
-    return priv->q;
+    if (auto sourcePrivate = resource_cast<DataControlSourceV1InterfacePrivate *>(native)) {
+        return sourcePrivate->q;
+    }
+    return nullptr;
 }
 
 }

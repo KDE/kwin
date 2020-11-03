@@ -10,6 +10,7 @@
 #include "display.h"
 #include "output_interface.h"
 #include "seat_interface.h"
+#include "utils.h"
 
 #include <QTimer>
 
@@ -302,8 +303,9 @@ QRect XdgSurfaceInterface::windowGeometry() const
 
 XdgSurfaceInterface *XdgSurfaceInterface::get(::wl_resource *resource)
 {
-    if (auto surface = QtWaylandServer::xdg_surface::Resource::fromResource(resource))
-        return static_cast<XdgSurfaceInterfacePrivate *>(surface->object())->q;
+    if (auto surfacePrivate = resource_cast<XdgSurfaceInterfacePrivate *>(resource)) {
+        return surfacePrivate->q;
+    }
     return nullptr;
 }
 
@@ -513,9 +515,7 @@ XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(XdgToplevelInterfa
 
 XdgToplevelInterfacePrivate *XdgToplevelInterfacePrivate::get(wl_resource *resource)
 {
-    if (auto toplevel = QtWaylandServer::xdg_toplevel::Resource::fromResource(resource))
-        return static_cast<XdgToplevelInterfacePrivate *>(toplevel->object());
-    return nullptr;
+    return resource_cast<XdgToplevelInterfacePrivate *>(resource);
 }
 
 XdgToplevelInterface::XdgToplevelInterface(XdgSurfaceInterface *surface, ::wl_resource *resource)
@@ -628,8 +628,8 @@ void XdgToplevelInterface::sendClose()
 
 XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
 {
-    if (auto toplevel = QtWaylandServer::xdg_toplevel::Resource::fromResource(resource)) {
-        return static_cast<XdgToplevelInterfacePrivate *>(toplevel->object())->q;
+    if (auto toplevelPrivate = resource_cast<XdgToplevelInterfacePrivate *>(resource)) {
+        return toplevelPrivate->q;
     }
     return nullptr;
 }
@@ -763,8 +763,9 @@ void XdgPopupInterface::sendPopupDone()
 
 XdgPopupInterface *XdgPopupInterface::get(::wl_resource *resource)
 {
-    if (auto popup = QtWaylandServer::xdg_popup::Resource::fromResource(resource))
-        return static_cast<XdgPopupInterfacePrivate *>(popup->object())->q;
+    if (auto popupPrivate = resource_cast<XdgPopupInterfacePrivate *>(resource)) {
+        return popupPrivate->q;
+    }
     return nullptr;
 }
 
@@ -776,9 +777,7 @@ XdgPositionerPrivate::XdgPositionerPrivate(::wl_resource *resource)
 
 XdgPositionerPrivate *XdgPositionerPrivate::get(wl_resource *resource)
 {
-    if (auto positioner = QtWaylandServer::xdg_positioner::Resource::fromResource(resource))
-        return static_cast<XdgPositionerPrivate *>(positioner->object());
-    return nullptr;
+    return resource_cast<XdgPositionerPrivate *>(resource);
 }
 
 void XdgPositionerPrivate::xdg_positioner_destroy_resource(Resource *resource)
