@@ -78,6 +78,7 @@ private:
     GLShader *m_blinkingShader;
     int m_cursorSize;
     KConfigWatcher::Ptr m_configWatcher;
+    bool m_splashVisible;
 };
 } // namespace
 
