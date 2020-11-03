@@ -39,8 +39,7 @@ set(SERVER_LIB_SRCS
     pointer_interface.cpp
     pointerconstraints_interface.cpp
     pointerconstraints_interface_v1.cpp
-    pointergestures_interface.cpp
-    pointergestures_interface_v1.cpp
+    pointergestures_v1_interface.cpp
     primaryselectiondevice_v1_interface.cpp
     primaryselectiondevicemanager_v1_interface.cpp
     primaryselectionoffer_v1_interface.cpp
@@ -171,7 +170,7 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME text-input-unstable-v3
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
     BASENAME pointer-gestures-unstable-v1
 )
@@ -411,7 +410,7 @@ set(SERVER_LIB_HEADERS
   plasmawindowmanagement_interface.h
   pointer_interface.h
   pointerconstraints_interface.h
-  pointergestures_interface.h
+  pointergestures_v1_interface.h
   primaryselectiondevicemanager_v1_interface.h
   region_interface.h
   relativepointer_v1_interface.h

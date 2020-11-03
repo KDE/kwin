@@ -6,7 +6,7 @@
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
 #include "pointerconstraints_interface.h"
-#include "pointergestures_interface_p.h"
+#include "pointergestures_v1_interface_p.h"
 #include "resource_p.h"
 #include "relativepointer_v1_interface_p.h"
 #include "seat_interface.h"
@@ -76,24 +76,28 @@ void PointerInterface::Private::unregisterRelativePointerV1(RelativePointerV1Int
     relativePointersV1.removeOne(relativePointer);
 }
 
-void PointerInterface::Private::registerSwipeGesture(PointerSwipeGestureInterface *gesture)
+void PointerInterface::Private::registerSwipeGestureV1(PointerSwipeGestureV1Interface *gesture)
 {
-    swipeGestures << gesture;
-    QObject::connect(gesture, &QObject::destroyed, q,
-        [this, gesture] {
-            swipeGestures.removeOne(gesture);
-        }
-    );
+    Q_ASSERT(!swipeGesturesV1.contains(gesture));
+    swipeGesturesV1.append(gesture);
 }
 
-void PointerInterface::Private::registerPinchGesture(PointerPinchGestureInterface *gesture)
+void PointerInterface::Private::unregisterSwipeGestureV1(PointerSwipeGestureV1Interface *gesture)
 {
-    pinchGestures << gesture;
-    QObject::connect(gesture, &QObject::destroyed, q,
-        [this, gesture] {
-            pinchGestures.removeOne(gesture);
-        }
-    );
+    Q_ASSERT(swipeGesturesV1.contains(gesture));
+    swipeGesturesV1.removeOne(gesture);
+}
+
+void PointerInterface::Private::registerPinchGestureV1(PointerPinchGestureV1Interface *gesture)
+{
+    Q_ASSERT(!pinchGesturesV1.contains(gesture));
+    pinchGesturesV1.append(gesture);
+}
+
+void PointerInterface::Private::unregisterPinchGestureV1(PointerPinchGestureV1Interface *gesture)
+{
+    Q_ASSERT(pinchGesturesV1.contains(gesture));
+    pinchGesturesV1.removeOne(gesture);
 }
 
 namespace {
@@ -118,81 +122,69 @@ void PointerInterface::Private::sendEnter(SurfaceInterface *surface, const QPoin
 
 void PointerInterface::Private::startSwipeGesture(quint32 serial, quint32 fingerCount)
 {
-    if (swipeGestures.isEmpty()) {
+    if (!focusedSurface) {
         return;
     }
-    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
-        (*it)->start(serial, fingerCount);
+    for (PointerSwipeGestureV1Interface *gesture : qAsConst(swipeGesturesV1)) {
+        gesture->send_begin(serial, seat->timestamp(), focusedSurface->resource(), fingerCount);
     }
 }
 
 void PointerInterface::Private::updateSwipeGesture(const QSizeF &delta)
 {
-    if (swipeGestures.isEmpty()) {
-        return;
-    }
-    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
-        (*it)->update(delta);
+    for (PointerSwipeGestureV1Interface *gesture : qAsConst(swipeGesturesV1)) {
+        gesture->send_update(seat->timestamp(),
+                             wl_fixed_from_double(delta.width()),
+                             wl_fixed_from_double(delta.height()));
     }
 }
 
 void PointerInterface::Private::endSwipeGesture(quint32 serial)
 {
-    if (swipeGestures.isEmpty()) {
-        return;
-    }
-    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
-        (*it)->end(serial);
+    for (PointerSwipeGestureV1Interface *gesture : qAsConst(swipeGesturesV1)) {
+        gesture->send_end(serial, seat->timestamp(), false);
     }
 }
 
 void PointerInterface::Private::cancelSwipeGesture(quint32 serial)
 {
-    if (swipeGestures.isEmpty()) {
-        return;
-    }
-    for (auto it = swipeGestures.constBegin(), end = swipeGestures.constEnd(); it != end; it++) {
-        (*it)->cancel(serial);
+    for (PointerSwipeGestureV1Interface *gesture : qAsConst(swipeGesturesV1)) {
+        gesture->send_end(serial, seat->timestamp(), true);
     }
 }
 
 void PointerInterface::Private::startPinchGesture(quint32 serial, quint32 fingerCount)
 {
-    if (pinchGestures.isEmpty()) {
+    if (!focusedSurface) {
         return;
     }
-    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
-        (*it)->start(serial, fingerCount);
+    for (PointerPinchGestureV1Interface *gesture : qAsConst(pinchGesturesV1)) {
+        gesture->send_begin(serial, seat->timestamp(), focusedSurface->resource(), fingerCount);
     }
 }
 
 void PointerInterface::Private::updatePinchGesture(const QSizeF &delta, qreal scale, qreal rotation)
 {
-    if (pinchGestures.isEmpty()) {
-        return;
-    }
-    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
-        (*it)->update(delta, scale, rotation);
+    for (PointerPinchGestureV1Interface *gesture : qAsConst(pinchGesturesV1)) {
+        gesture->send_update(seat->timestamp(),
+                             wl_fixed_from_double(delta.width()),
+                             wl_fixed_from_double(delta.height()),
+                             wl_fixed_from_double(scale),
+                             wl_fixed_from_double(rotation));
     }
 }
 
 void PointerInterface::Private::endPinchGesture(quint32 serial)
 {
-    if (pinchGestures.isEmpty()) {
-        return;
-    }
-    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
-        (*it)->end(serial);
+    for (PointerPinchGestureV1Interface *gesture : qAsConst(pinchGesturesV1)) {
+        gesture->send_end(serial, seat->timestamp(), false);
     }
 }
 
 void PointerInterface::Private::cancelPinchGesture(quint32 serial)
 {
-    if (pinchGestures.isEmpty()) {
-        return;
-    }
-    for (auto it = pinchGestures.constBegin(), end = pinchGestures.constEnd(); it != end; it++) {
-        (*it)->cancel(serial);
+    for (PointerPinchGestureV1Interface *gesture : qAsConst(pinchGesturesV1)) {
+        gesture->send_end(serial, seat->timestamp(), true);
     }
 }
 

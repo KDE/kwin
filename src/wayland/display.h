@@ -58,8 +58,7 @@ class TextInputManagerV2Interface;
 class TextInputManagerV3Interface;
 class XdgShellInterface;
 class RelativePointerManagerV1Interface;
-enum class PointerGesturesInterfaceVersion;
-class PointerGesturesInterface;
+class PointerGesturesV1Interface;
 enum class PointerConstraintsInterfaceVersion;
 class PointerConstraintsInterface;
 class XdgForeignV2Interface;
@@ -221,12 +220,12 @@ public:
     RelativePointerManagerV1Interface *createRelativePointerManagerV1(QObject *parent = nullptr);
 
     /**
-     * Creates the PointerGesturesInterface in interface @p version
+     * Creates the PointerGesturesV1Interface
      *
      * @returns The created manager object
      * @since 5.29
      **/
-    PointerGesturesInterface *createPointerGestures(const PointerGesturesInterfaceVersion &version, QObject *parent = nullptr);
+    PointerGesturesV1Interface *createPointerGesturesV1(QObject *parent = nullptr);
 
     /**
      * Creates the PointerConstraintsInterface in interface @p version

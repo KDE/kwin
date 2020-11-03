@@ -29,7 +29,7 @@
 #include "plasmavirtualdesktop_interface.h"
 #include "plasmawindowmanagement_interface.h"
 #include "pointerconstraints_interface_p.h"
-#include "pointergestures_interface_p.h"
+#include "pointergestures_v1_interface.h"
 #include "primaryselectiondevicemanager_v1_interface.h"
 #include "relativepointer_v1_interface.h"
 #include "seat_interface.h"
@@ -373,14 +373,9 @@ RelativePointerManagerV1Interface *Display::createRelativePointerManagerV1(QObje
     return r;
 }
 
-PointerGesturesInterface *Display::createPointerGestures(const PointerGesturesInterfaceVersion &version, QObject *parent)
+PointerGesturesV1Interface *Display::createPointerGesturesV1(QObject *parent)
 {
-    PointerGesturesInterface *p = nullptr;
-    switch (version) {
-    case PointerGesturesInterfaceVersion::UnstableV1:
-        p = new PointerGesturesUnstableV1Interface(this, parent);
-        break;
-    }
+    PointerGesturesV1Interface *p = new PointerGesturesV1Interface(this, parent);
     connect(this, &Display::aboutToTerminate, p, [p] { delete p; });
     return p;
 }

@@ -13,8 +13,8 @@
 
 namespace KWaylandServer
 {
-class PointerPinchGestureInterface;
-class PointerSwipeGestureInterface;
+class PointerPinchGestureV1Interface;
+class PointerSwipeGestureV1Interface;
 class RelativePointerV1Interface;
 
 class PointerInterface::Private : public Resource::Private
@@ -28,18 +28,20 @@ public:
     QMetaObject::Connection destroyConnection;
     Cursor *cursor = nullptr;
     QVector<RelativePointerV1Interface *> relativePointersV1;
-    QVector<PointerSwipeGestureInterface*> swipeGestures;
-    QVector<PointerPinchGestureInterface*> pinchGestures;
+    QVector<PointerSwipeGestureV1Interface *> swipeGesturesV1;
+    QVector<PointerPinchGestureV1Interface *> pinchGesturesV1;
 
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, const QPointF &parentSurfacePosition, quint32 serial);
     void sendFrame();
 
     void registerRelativePointerV1(RelativePointerV1Interface *relativePointer);
-    void registerSwipeGesture(PointerSwipeGestureInterface *gesture);
-    void registerPinchGesture(PointerPinchGestureInterface *gesture);
+    void registerSwipeGestureV1(PointerSwipeGestureV1Interface *gesture);
+    void registerPinchGestureV1(PointerPinchGestureV1Interface *gesture);
 
     void unregisterRelativePointerV1(RelativePointerV1Interface *relativePointer);
+    void unregisterSwipeGestureV1(PointerSwipeGestureV1Interface *gesture);
+    void unregisterPinchGestureV1(PointerPinchGestureV1Interface *gesture);
 
     void startSwipeGesture(quint32 serial, quint32 fingerCount);
     void updateSwipeGesture(const QSizeF &delta);

@@ -14,7 +14,6 @@ namespace KWaylandServer
 {
 
 class Cursor;
-class PointerGesturesUnstableV1Interface;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -63,7 +62,8 @@ private:
     void relativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
     friend class SeatInterface;
     friend class RelativePointerV1Interface;
-    friend class PointerGesturesUnstableV1Interface;
+    friend class PointerPinchGestureV1Interface;
+    friend class PointerSwipeGestureV1Interface;
     explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;
     Private *d_func() const;
