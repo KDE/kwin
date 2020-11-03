@@ -694,15 +694,12 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, const qreal scale
     QImage img;
     if (effects->isOpenGLCompositing())
     {
-        int width = geometry.width();
-        int height = geometry.height();
+        const QSize nativeSize = geometry.size() * scale;
+
         if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
 
-            width = static_cast<int>(width * scale);
-            height = static_cast<int>(height * scale);
-
-            img = QImage(width, height, QImage::Format_ARGB32);
-            GLTexture tex(GL_RGBA8, width, height);
+            img = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
+            GLTexture tex(GL_RGBA8, nativeSize.width(), nativeSize.height());
             GLRenderTarget target(tex);
             target.blitFromFramebuffer(geometry);
             // copy content from framebuffer into image
@@ -710,10 +707,10 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, const qreal scale
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, static_cast<GLvoid*>(img.bits()));
             tex.unbind();
         } else {
-            img = QImage(width, height, QImage::Format_ARGB32);
-            glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+            img = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
+            glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
         }
-        ScreenShotEffect::convertFromGLImage(img, width, height);
+        ScreenShotEffect::convertFromGLImage(img, nativeSize.width(), nativeSize.height());
     }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
