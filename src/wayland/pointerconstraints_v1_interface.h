@@ -1,96 +1,72 @@
 /*
     SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef KWAYLAND_SERVER_POINTERCONSTRAINTS_INTERFACE_H
-#define KWAYLAND_SERVER_POINTERCONSTRAINTS_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
+#pragma once
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
+#include <QObject>
 #include <QRegion>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
 
+class ConfinedPointerV1InterfacePrivate;
 class Display;
+class LockedPointerV1InterfacePrivate;
+class PointerConstraintsV1InterfacePrivate;
 class SurfaceInterface;
-
-/**
- * Enum describing the interface versions the PointerConstraintsInterface can support.
- *
- * @since 5.29
- **/
-enum class PointerConstraintsInterfaceVersion {
-    /**
-     * zwp_pointer_constraints_v1
-     **/
-     UnstableV1
-};
 
 /**
  * Manager object to create pointer constraints.
  *
- * To create this manager use {@link Display::createPointerConstraints}
+ * To create this manager use {@link Display::createPointerConstraintsV1}
  *
- * @see ConfinedPointerInterface
- * @see LockedPointerInterface
- * @see Display::createPointerConstraints
- * @since 5.29
- **/
-class KWAYLANDSERVER_EXPORT PointerConstraintsInterface : public Global
+ * @see ConfinedPointerV1Interface
+ * @see LockedPointerV1Interface
+ */
+class KWAYLANDSERVER_EXPORT PointerConstraintsV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual ~PointerConstraintsInterface();
-
-    /**
-     * @returns The interface version used by this PointerConstraintsInterface
-     **/
-    PointerConstraintsInterfaceVersion interfaceVersion() const;
-
-protected:
-    class Private;
-    explicit PointerConstraintsInterface(Private *d, QObject *parent = nullptr);
+    explicit PointerConstraintsV1Interface(Display *display, QObject *parent = nullptr);
+    ~PointerConstraintsV1Interface() override;
 
 private:
-    Private *d_func() const;
+    QScopedPointer<PointerConstraintsV1InterfacePrivate> d;
 };
 
 /**
- * The LockedPointerInterface lets the client request to disable movements of
+ * The LockedPointerV1Interface lets the client request to disable movements of
  * the virtual pointer (i.e. the cursor), effectively locking the pointer
  * to a position.
  *
  * It is up to the compositor whether the lock gets activated.
- * To activate it needs to use {@link LockedPointerInterface::setLocked}.
+ * To activate it needs to use {@link LockedPointerV1Interface::setLocked}.
  * The compositor needs to ensure that the SurfaceInterface has pointer focus
- * and that the pointer is inside the {@link LockedPointerInterface::region} when
+ * and that the pointer is inside the {@link LockedPointerV1Interface::region} when
  * it activates the lock.
  *
  * While the lock is active the PointerInterface does no longer emit pointer motion
  * events, but still emits relative pointer motion events.
- *
- * @since 5.29
- **/
-class KWAYLANDSERVER_EXPORT LockedPointerInterface : public Resource
+ */
+class KWAYLANDSERVER_EXPORT LockedPointerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
+    ~LockedPointerV1Interface() override;
 
-    virtual ~LockedPointerInterface();
-
-    /**
-     * @returns The interface version used by this LockedPointerInterface
-     **/
-    PointerConstraintsInterfaceVersion interfaceVersion() const;
-
-    enum class LifeTime {
-        OneShot,
-        Persistent
+    enum class LifeTime : uint {
+        OneShot = 1,
+        Persistent = 2
     };
 
     LifeTime lifeTime() const;
@@ -105,7 +81,7 @@ public:
      *
      * @see regionChanged
      * @see SurfaceInterface::input
-     **/
+     */
     QRegion region() const;
 
     /**
@@ -122,22 +98,21 @@ public:
      * call this function when the aboutToBeUnbound signal has been emitted.
      *
      * @see cursorPositionHintChanged
-     * @since 5.49
-     **/
+     */
     QPointF cursorPositionHint() const;
 
     /**
      * Whether the Compositor set this pointer lock to be active.
      * @see setLocked
      * @see lockedChanged
-     **/
+     */
     bool isLocked() const;
 
     /**
      * Activates or deactivates the lock.
      *
      * A pointer lock can only be activated if the SurfaceInterface
-     * this LockedPointerInterface was created for has pointer focus
+     * this LockedPointerV1Interface was created for has pointer focus
      * and the pointer is inside the {@link region}.
      *
      * Unlocking resets the cursor position hint.
@@ -145,74 +120,69 @@ public:
      * @param locked Whether the lock should be active
      * @see isLocked
      * @see lockedChanged
-     **/
+     */
     void setLocked(bool locked);
 
 Q_SIGNALS:
     /**
+     * This is signal is emitted when the locked pointer is about to be destroyed.
+     */
+    void aboutToBeDestroyed();
+
+    /**
      * Emitted whenever the region changes.
      * This happens when the parent SurfaceInterface gets committed
      * @see region
-     **/
+     */
     void regionChanged();
 
     /**
      * Emitted whenever the cursor position hint changes.
      * This happens when the parent SurfaceInterface gets committed
      * @see cursorPositionHint
-     * @since 5.49
-     **/
+     */
     void cursorPositionHintChanged();
 
     /**
      * Emitted whenever the {@link isLocked} state changes.
      * @see isLocked
      * @see setLocked
-     **/
+     */
     void lockedChanged();
 
-protected:
-    class Private;
-    explicit LockedPointerInterface(Private *p, QObject *parent = nullptr);
-
 private:
-    Private *d_func() const;
-    friend class SurfaceInterfacePrivate;
+    LockedPointerV1Interface(LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    QScopedPointer<LockedPointerV1InterfacePrivate> d;
+    friend class LockedPointerV1InterfacePrivate;
+    friend class PointerConstraintsV1InterfacePrivate;
 };
 
 /**
  *
- * The ConfinedPointerInterface gets installed on a SurfaceInterface.
+ * The ConfinedPointerV1Interface gets installed on a SurfaceInterface.
  * The confinement indicates that the SurfaceInterface wants to confine the
  * pointer to a region of the SurfaceInterface.
  *
  * It is up to the compositor whether the confinement gets activated.
- * To activate it needs to use {@link ConfinedPointerInterface::setConfined}.
+ * To activate it needs to use {@link ConfinedPointerV1Interface::setConfined}.
  * The compositor needs to ensure that the SurfaceInterface has pointer focus
- * and that the pointer is inside the {@link ConfinedPointerInterface::region} when
+ * and that the pointer is inside the {@link ConfinedPointerV1Interface::region} when
  * it activates the confinement.
  *
- * From client side the confinement gets deactivated by destroying the ConfinedPointerInterface.
+ * From client side the confinement gets deactivated by destroying the ConfinedPointerV1Interface.
  * From compositor side the confinement can be deactivated by setting
- * {@link ConfinedPointerInterface::setConfined} to @c false.
- *
- * @since 5.29
- **/
-class KWAYLANDSERVER_EXPORT ConfinedPointerInterface : public Resource
+ * {@link ConfinedPointerV1Interface::setConfined} to @c false.
+ */
+class KWAYLANDSERVER_EXPORT ConfinedPointerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
+    ~ConfinedPointerV1Interface() override;
 
-    virtual ~ConfinedPointerInterface();
-
-    /**
-     * @returns The interface version used by this ConfinedPointerInterface
-     **/
-    PointerConstraintsInterfaceVersion interfaceVersion() const;
-
-    enum class LifeTime {
-        OneShot,
-        Persistent
+    enum class LifeTime : uint {
+        OneShot = 1,
+        Persistent = 2
     };
 
     LifeTime lifeTime() const;
@@ -227,27 +197,27 @@ public:
      *
      * @see regionChanged
      * @see SurfaceInterface::input
-     **/
+     */
     QRegion region() const;
 
     /**
      * Whether the Compositor set this pointer confinement to be active.
      * @see setConfined
      * @see confinedChanged
-     **/
+     */
     bool isConfined() const;
 
     /**
      * Activates or deactivates the confinement.
      *
      * A pointer confinement can only be activated if the SurfaceInterface
-     * this ConfinedPointerInterface was created for has pointer focus
+     * this ConfinedPointerV1Interface was created for has pointer focus
      * and the pointer is inside the {@link region}.
      *
      * @param confined Whether the confinement should be active
      * @see isConfined
      * @see confinedChanged
-     **/
+     */
     void setConfined(bool confined);
 
 Q_SIGNALS:
@@ -255,25 +225,21 @@ Q_SIGNALS:
      * Emitted whenever the region changes.
      * This happens when the parent SurfaceInterface gets committed
      * @see region
-     **/
+     */
     void regionChanged();
 
     /**
      * Emitted whenever the {@link isConfined} state changes.
      * @see isConfined
      * @see setConfined
-     **/
+     */
     void confinedChanged();
 
-protected:
-    class Private;
-    explicit ConfinedPointerInterface(Private *p, QObject *parent = nullptr);
-
 private:
-    Private *d_func() const;
-    friend class SurfaceInterfacePrivate;
+    ConfinedPointerV1Interface(LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    QScopedPointer<ConfinedPointerV1InterfacePrivate> d;
+    friend class ConfinedPointerV1InterfacePrivate;
+    friend class PointerConstraintsV1InterfacePrivate;
 };
 
-}
-
-#endif
+} // namespace KWaylandServer

@@ -17,7 +17,7 @@
 // server
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/pointerconstraints_interface.h"
+#include "../../src/server/pointerconstraints_v1_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/surface_interface.h"
 
@@ -25,8 +25,8 @@ using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(KWayland::Client::PointerConstraints::LifeTime)
-Q_DECLARE_METATYPE(KWaylandServer::ConfinedPointerInterface::LifeTime)
-Q_DECLARE_METATYPE(KWaylandServer::LockedPointerInterface::LifeTime)
+Q_DECLARE_METATYPE(KWaylandServer::ConfinedPointerV1Interface::LifeTime)
+Q_DECLARE_METATYPE(KWaylandServer::LockedPointerV1Interface::LifeTime)
 
 class TestPointerConstraints : public QObject
 {
@@ -47,7 +47,7 @@ private:
     Display *m_display = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
-    PointerConstraintsInterface *m_pointerConstraintsInterface = nullptr;
+    PointerConstraintsV1Interface *m_pointerConstraintsInterface = nullptr;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
@@ -71,8 +71,7 @@ void TestPointerConstraints::init()
     m_seatInterface->setHasPointer(true);
     m_seatInterface->create();
     m_compositorInterface = m_display->createCompositor(m_display);
-    m_pointerConstraintsInterface = m_display->createPointerConstraints(PointerConstraintsInterfaceVersion::UnstableV1, m_display);
-    m_pointerConstraintsInterface->create();
+    m_pointerConstraintsInterface = m_display->createPointerConstraintsV1(m_display);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -153,12 +152,12 @@ void TestPointerConstraints::cleanup()
 void TestPointerConstraints::testLockPointer_data()
 {
     QTest::addColumn<PointerConstraints::LifeTime>("clientLifeTime");
-    QTest::addColumn<LockedPointerInterface::LifeTime>("serverLifeTime");
+    QTest::addColumn<LockedPointerV1Interface::LifeTime>("serverLifeTime");
     QTest::addColumn<bool>("hasConstraintAfterUnlock");
     QTest::addColumn<int>("pointerChangedCount");
 
-    QTest::newRow("persistent") << PointerConstraints::LifeTime::Persistent << LockedPointerInterface::LifeTime::Persistent << true << 1;
-    QTest::newRow("oneshot") << PointerConstraints::LifeTime::OneShot << LockedPointerInterface::LifeTime::OneShot << false << 2;
+    QTest::newRow("persistent") << PointerConstraints::LifeTime::Persistent << LockedPointerV1Interface::LifeTime::Persistent << true << 1;
+    QTest::newRow("oneshot") << PointerConstraints::LifeTime::OneShot << LockedPointerV1Interface::LifeTime::OneShot << false << 2;
 }
 
 void TestPointerConstraints::testLockPointer()
@@ -173,8 +172,8 @@ void TestPointerConstraints::testLockPointer()
 
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
     QVERIFY(serverSurface);
-    QVERIFY(serverSurface->lockedPointer().isNull());
-    QVERIFY(serverSurface->confinedPointer().isNull());
+    QVERIFY(!serverSurface->lockedPointer());
+    QVERIFY(!serverSurface->confinedPointer());
 
     // now create the locked pointer
     QSignalSpy pointerConstraintsChangedSpy(serverSurface, &SurfaceInterface::pointerConstraintsChanged);
@@ -190,20 +189,20 @@ void TestPointerConstraints::testLockPointer()
 
     auto serverLockedPointer = serverSurface->lockedPointer();
     QVERIFY(serverLockedPointer);
-    QVERIFY(serverSurface->confinedPointer().isNull());
+    QVERIFY(!serverSurface->confinedPointer());
 
     QCOMPARE(serverLockedPointer->isLocked(), false);
     QCOMPARE(serverLockedPointer->region(), QRegion());
-    QFETCH(LockedPointerInterface::LifeTime, serverLifeTime);
+    QFETCH(LockedPointerV1Interface::LifeTime, serverLifeTime);
     QCOMPARE(serverLockedPointer->lifeTime(), serverLifeTime);
     // setting to unlocked now should not trigger an unlocked spy
     serverLockedPointer->setLocked(false);
     QVERIFY(!unlockedSpy.wait(500));
 
     // try setting a region
-    QSignalSpy destroyedSpy(serverLockedPointer.data(), &QObject::destroyed);
+    QSignalSpy destroyedSpy(serverLockedPointer, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
-    QSignalSpy regionChangedSpy(serverLockedPointer.data(), &LockedPointerInterface::regionChanged);
+    QSignalSpy regionChangedSpy(serverLockedPointer, &LockedPointerV1Interface::regionChanged);
     QVERIFY(regionChangedSpy.isValid());
     lockedPointer->setRegion(m_compositor->createRegion(QRegion(0, 5, 10, 20), m_compositor));
     // it's double buffered
@@ -218,7 +217,7 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(serverLockedPointer->region(), QRegion());
 
     // let's lock the surface
-    QSignalSpy lockedChangedSpy(serverLockedPointer.data(), &LockedPointerInterface::lockedChanged);
+    QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
     QVERIFY(lockedChangedSpy.isValid());
     m_seatInterface->setFocusedPointerSurface(serverSurface);
     QSignalSpy pointerMotionSpy(m_pointer, &Pointer::motion);
@@ -236,7 +235,7 @@ void TestPointerConstraints::testLockPointer()
     QVERIFY(unlockedSpy.isEmpty());
 
     const QPointF hint = QPointF(1.5, 0.5);
-    QSignalSpy hintChangedSpy(serverLockedPointer.data(), &LockedPointerInterface::cursorPositionHintChanged);
+    QSignalSpy hintChangedSpy(serverLockedPointer, &LockedPointerV1Interface::cursorPositionHintChanged);
     lockedPointer->setCursorPositionHint(hint);
     QCOMPARE(serverLockedPointer->cursorPositionHint(), QPointF(-1., -1.));
     surface->commit(Surface::CommitFlag::None);
@@ -248,7 +247,7 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(serverLockedPointer->isLocked(), false);
     QCOMPARE(serverLockedPointer->cursorPositionHint(), QPointF(-1., -1.));
     QCOMPARE(lockedChangedSpy.count(), 2);
-    QTEST(!serverSurface->lockedPointer().isNull(), "hasConstraintAfterUnlock");
+    QTEST(bool(serverSurface->lockedPointer()), "hasConstraintAfterUnlock");
     QTEST(pointerConstraintsChangedSpy.count(), "pointerChangedCount");
     QVERIFY(unlockedSpy.wait());
     QCOMPARE(unlockedSpy.count(), 1);
@@ -267,12 +266,12 @@ void TestPointerConstraints::testLockPointer()
 void TestPointerConstraints::testConfinePointer_data()
 {
     QTest::addColumn<PointerConstraints::LifeTime>("clientLifeTime");
-    QTest::addColumn<ConfinedPointerInterface::LifeTime>("serverLifeTime");
+    QTest::addColumn<ConfinedPointerV1Interface::LifeTime>("serverLifeTime");
     QTest::addColumn<bool>("hasConstraintAfterUnlock");
     QTest::addColumn<int>("pointerChangedCount");
 
-    QTest::newRow("persistent") << PointerConstraints::LifeTime::Persistent << ConfinedPointerInterface::LifeTime::Persistent << true << 1;
-    QTest::newRow("oneshot") << PointerConstraints::LifeTime::OneShot << ConfinedPointerInterface::LifeTime::OneShot << false << 2;
+    QTest::newRow("persistent") << PointerConstraints::LifeTime::Persistent << ConfinedPointerV1Interface::LifeTime::Persistent << true << 1;
+    QTest::newRow("oneshot") << PointerConstraints::LifeTime::OneShot << ConfinedPointerV1Interface::LifeTime::OneShot << false << 2;
 }
 
 void TestPointerConstraints::testConfinePointer()
@@ -287,8 +286,8 @@ void TestPointerConstraints::testConfinePointer()
 
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
     QVERIFY(serverSurface);
-    QVERIFY(serverSurface->lockedPointer().isNull());
-    QVERIFY(serverSurface->confinedPointer().isNull());
+    QVERIFY(!serverSurface->lockedPointer());
+    QVERIFY(!serverSurface->confinedPointer());
 
     // now create the confined pointer
     QSignalSpy pointerConstraintsChangedSpy(serverSurface, &SurfaceInterface::pointerConstraintsChanged);
@@ -304,20 +303,20 @@ void TestPointerConstraints::testConfinePointer()
 
     auto serverConfinedPointer = serverSurface->confinedPointer();
     QVERIFY(serverConfinedPointer);
-    QVERIFY(serverSurface->lockedPointer().isNull());
+    QVERIFY(!serverSurface->lockedPointer());
 
     QCOMPARE(serverConfinedPointer->isConfined(), false);
     QCOMPARE(serverConfinedPointer->region(), QRegion());
-    QFETCH(ConfinedPointerInterface::LifeTime, serverLifeTime);
+    QFETCH(ConfinedPointerV1Interface::LifeTime, serverLifeTime);
     QCOMPARE(serverConfinedPointer->lifeTime(), serverLifeTime);
     // setting to unconfined now should not trigger an unconfined spy
     serverConfinedPointer->setConfined(false);
     QVERIFY(!unconfinedSpy.wait(500));
 
     // try setting a region
-    QSignalSpy destroyedSpy(serverConfinedPointer.data(), &QObject::destroyed);
+    QSignalSpy destroyedSpy(serverConfinedPointer, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
-    QSignalSpy regionChangedSpy(serverConfinedPointer.data(), &ConfinedPointerInterface::regionChanged);
+    QSignalSpy regionChangedSpy(serverConfinedPointer, &ConfinedPointerV1Interface::regionChanged);
     QVERIFY(regionChangedSpy.isValid());
     confinedPointer->setRegion(m_compositor->createRegion(QRegion(0, 5, 10, 20), m_compositor));
     // it's double buffered
@@ -332,7 +331,7 @@ void TestPointerConstraints::testConfinePointer()
     QCOMPARE(serverConfinedPointer->region(), QRegion());
 
     // let's confine the surface
-    QSignalSpy confinedChangedSpy(serverConfinedPointer.data(), &ConfinedPointerInterface::confinedChanged);
+    QSignalSpy confinedChangedSpy(serverConfinedPointer, &ConfinedPointerV1Interface::confinedChanged);
     QVERIFY(confinedChangedSpy.isValid());
     m_seatInterface->setFocusedPointerSurface(serverSurface);
     serverConfinedPointer->setConfined(true);
@@ -346,7 +345,7 @@ void TestPointerConstraints::testConfinePointer()
     serverConfinedPointer->setConfined(false);
     QCOMPARE(serverConfinedPointer->isConfined(), false);
     QCOMPARE(confinedChangedSpy.count(), 2);
-    QTEST(!serverSurface->confinedPointer().isNull(), "hasConstraintAfterUnlock");
+    QTEST(bool(serverSurface->confinedPointer()), "hasConstraintAfterUnlock");
     QTEST(pointerConstraintsChangedSpy.count(), "pointerChangedCount");
     QVERIFY(unconfinedSpy.wait());
     QCOMPARE(unconfinedSpy.count(), 1);

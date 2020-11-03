@@ -59,8 +59,7 @@ class TextInputManagerV3Interface;
 class XdgShellInterface;
 class RelativePointerManagerV1Interface;
 class PointerGesturesV1Interface;
-enum class PointerConstraintsInterfaceVersion;
-class PointerConstraintsInterface;
+class PointerConstraintsV1Interface;
 class XdgForeignV2Interface;
 class AppMenuManagerInterface;
 class ServerSideDecorationPaletteManagerInterface;
@@ -228,12 +227,12 @@ public:
     PointerGesturesV1Interface *createPointerGesturesV1(QObject *parent = nullptr);
 
     /**
-     * Creates the PointerConstraintsInterface in interface @p version
+     * Creates the PointerConstraintsV1Interface
      *
      * @returns The created manager object
      * @since 5.29
      **/
-    PointerConstraintsInterface *createPointerConstraints(const PointerConstraintsInterfaceVersion &version, QObject *parent = nullptr);
+    PointerConstraintsV1Interface *createPointerConstraintsV1(QObject *parent = nullptr);
 
     /**
      * Creates the XdgForeignV2Interface in interface @p version

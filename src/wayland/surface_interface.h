@@ -20,10 +20,10 @@ namespace KWaylandServer
 {
 class BlurInterface;
 class BufferInterface;
-class ConfinedPointerInterface;
+class ConfinedPointerV1Interface;
 class ContrastInterface;
 class CompositorInterface;
-class LockedPointerInterface;
+class LockedPointerV1Interface;
 class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
@@ -323,14 +323,14 @@ public:
      * @see pointerConstraintsChanged
      * @since 5.29
      **/
-    QPointer<ConfinedPointerInterface> confinedPointer() const;
+    ConfinedPointerV1Interface *confinedPointer() const;
 
     /**
      * Pointer lock installed on this SurfaceInterface.
      * @see pointerConstraintsChanged
      * @since 5.29
      **/
-    QPointer<LockedPointerInterface> lockedPointer() const;
+    LockedPointerV1Interface *lockedPointer() const;
 
     /**
      * @returns Whether this SurfaceInterface wants idle to be inhibited on the Output it is shown

@@ -11,7 +11,7 @@
 #include "compositor_interface.h"
 #include "display.h"
 #include "idleinhibit_v1_interface_p.h"
-#include "pointerconstraints_interface_p.h"
+#include "pointerconstraints_v1_interface_p.h"
 #include "region_interface.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
@@ -202,14 +202,15 @@ void SurfaceInterfacePrivate::setContrast(const QPointer<ContrastInterface> &con
     pending.contrastIsSet = true;
 }
 
-void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerInterface *lock)
+void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerV1Interface *lock)
 {
-    Q_ASSERT(lockedPointer.isNull());
-    Q_ASSERT(confinedPointer.isNull());
-    lockedPointer = QPointer<LockedPointerInterface>(lock);
+    Q_ASSERT(!lockedPointer);
+    Q_ASSERT(!confinedPointer);
+
+    lockedPointer = lock;
 
     auto cleanUp = [this]() {
-        lockedPointer.clear();
+        lockedPointer = nullptr;
         QObject::disconnect(constrainsOneShotConnection);
         constrainsOneShotConnection = QMetaObject::Connection();
         QObject::disconnect(constrainsUnboundConnection);
@@ -217,35 +218,29 @@ void SurfaceInterfacePrivate::installPointerConstraint(LockedPointerInterface *l
         emit q->pointerConstraintsChanged();
     };
 
-    if (lock->lifeTime() == LockedPointerInterface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerInterface::lockedChanged, q,
+    if (lock->lifeTime() == LockedPointerV1Interface::LifeTime::OneShot) {
+        constrainsOneShotConnection = QObject::connect(lock, &LockedPointerV1Interface::lockedChanged, q,
             [this, cleanUp] {
-                if (lockedPointer.isNull() || lockedPointer->isLocked()) {
+                if (lockedPointer->isLocked()) {
                     return;
                 }
                 cleanUp();
             }
         );
     }
-    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerInterface::unbound, q,
-        [this, cleanUp] {
-            if (lockedPointer.isNull()) {
-                return;
-            }
-            cleanUp();
-        }
-    );
+    constrainsUnboundConnection = QObject::connect(lock, &LockedPointerV1Interface::destroyed, q, cleanUp);
     emit q->pointerConstraintsChanged();
 }
 
-void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerInterface *confinement)
+void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interface *confinement)
 {
-    Q_ASSERT(lockedPointer.isNull());
-    Q_ASSERT(confinedPointer.isNull());
-    confinedPointer = QPointer<ConfinedPointerInterface>(confinement);
+    Q_ASSERT(!lockedPointer);
+    Q_ASSERT(!confinedPointer);
+
+    confinedPointer = confinement;
 
     auto cleanUp = [this]() {
-        confinedPointer.clear();
+        confinedPointer = nullptr;
         QObject::disconnect(constrainsOneShotConnection);
         constrainsOneShotConnection = QMetaObject::Connection();
         QObject::disconnect(constrainsUnboundConnection);
@@ -253,24 +248,17 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerInterface 
         emit q->pointerConstraintsChanged();
     };
 
-    if (confinement->lifeTime() == ConfinedPointerInterface::LifeTime::OneShot) {
-        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerInterface::confinedChanged, q,
+    if (confinement->lifeTime() == ConfinedPointerV1Interface::LifeTime::OneShot) {
+        constrainsOneShotConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::confinedChanged, q,
             [this, cleanUp] {
-                if (confinedPointer.isNull() || confinedPointer->isConfined()) {
+                if (confinedPointer->isConfined()) {
                     return;
                 }
                 cleanUp();
             }
         );
     }
-    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerInterface::unbound, q,
-        [this, cleanUp] {
-            if (confinedPointer.isNull()) {
-                return;
-            }
-            cleanUp();
-        }
-    );
+    constrainsUnboundConnection = QObject::connect(confinement, &ConfinedPointerV1Interface::destroyed, q, cleanUp);
     emit q->pointerConstraintsChanged();
 }
 
@@ -572,11 +560,13 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
         target->bufferTransform = source->bufferTransform;
         target->bufferTransformIsSet = true;
     }
-    if (!lockedPointer.isNull()) {
-        lockedPointer->d_func()->commit();
+    if (lockedPointer) {
+        auto lockedPointerPrivate = LockedPointerV1InterfacePrivate::get(lockedPointer);
+        lockedPointerPrivate->commit();
     }
-    if (!confinedPointer.isNull()) {
-        confinedPointer->d_func()->commit();
+    if (confinedPointer) {
+        auto confinedPointerPrivate = ConfinedPointerV1InterfacePrivate::get(confinedPointer);
+        confinedPointerPrivate->commit();
     }
 
     *source = State{};
@@ -909,12 +899,12 @@ SurfaceInterface *SurfaceInterface::inputSurfaceAt(const QPointF &position)
     return nullptr;
 }
 
-QPointer<LockedPointerInterface> SurfaceInterface::lockedPointer() const
+LockedPointerV1Interface *SurfaceInterface::lockedPointer() const
 {
     return d->lockedPointer;
 }
 
-QPointer<ConfinedPointerInterface> SurfaceInterface::confinedPointer() const
+ConfinedPointerV1Interface *SurfaceInterface::confinedPointer() const
 {
     return d->confinedPointer;
 }

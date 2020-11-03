@@ -84,8 +84,8 @@ public:
     void setBlur(const QPointer<BlurInterface> &blur);
     void setContrast(const QPointer<ContrastInterface> &contrast);
     void setSlide(const QPointer<SlideInterface> &slide);
-    void installPointerConstraint(LockedPointerInterface *lock);
-    void installPointerConstraint(ConfinedPointerInterface *confinement);
+    void installPointerConstraint(LockedPointerV1Interface *lock);
+    void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
     void commit();
@@ -114,8 +114,8 @@ public:
 
     QVector<OutputInterface *> outputs;
 
-    QPointer<LockedPointerInterface> lockedPointer;
-    QPointer<ConfinedPointerInterface> confinedPointer;
+    LockedPointerV1Interface *lockedPointer = nullptr;
+    ConfinedPointerV1Interface *confinedPointer = nullptr;
     QHash<OutputInterface*, QMetaObject::Connection> outputDestroyedConnections;
     QVector<IdleInhibitorV1Interface*> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;

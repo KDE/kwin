@@ -37,8 +37,7 @@ set(SERVER_LIB_SRCS
     plasmavirtualdesktop_interface.cpp
     plasmawindowmanagement_interface.cpp
     pointer_interface.cpp
-    pointerconstraints_interface.cpp
-    pointerconstraints_interface_v1.cpp
+    pointerconstraints_v1_interface.cpp
     pointergestures_v1_interface.cpp
     primaryselectiondevice_v1_interface.cpp
     primaryselectiondevicemanager_v1_interface.cpp
@@ -175,7 +174,7 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME pointer-gestures-unstable-v1
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml
     BASENAME pointer-constraints-unstable-v1
 )
@@ -409,7 +408,7 @@ set(SERVER_LIB_HEADERS
   plasmavirtualdesktop_interface.h
   plasmawindowmanagement_interface.h
   pointer_interface.h
-  pointerconstraints_interface.h
+  pointerconstraints_v1_interface.h
   pointergestures_v1_interface.h
   primaryselectiondevicemanager_v1_interface.h
   region_interface.h

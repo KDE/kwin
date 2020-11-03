@@ -5,7 +5,7 @@
 */
 #include "pointer_interface.h"
 #include "pointer_interface_p.h"
-#include "pointerconstraints_interface.h"
+#include "pointerconstraints_v1_interface.h"
 #include "pointergestures_v1_interface_p.h"
 #include "resource_p.h"
 #include "relativepointer_v1_interface_p.h"
@@ -220,7 +220,7 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
                 return;
             }
         }
-        if (!d->focusedSurface->lockedPointer().isNull() && d->focusedSurface->lockedPointer()->isLocked()) {
+        if (d->focusedSurface->lockedPointer() && d->focusedSurface->lockedPointer()->isLocked()) {
             return;
         }
         const QPointF pos = d->seat->focusedPointerSurfaceTransformation().map(d->seat->pointerPos());
