@@ -1164,10 +1164,6 @@ void OpenGLWindow::endRenderWindow()
 GLTexture *OpenGLWindow::getDecorationTexture() const
 {
     if (AbstractClient *client = dynamic_cast<AbstractClient *>(toplevel)) {
-        if (client->noBorder()) {
-            return nullptr;
-        }
-
         if (!client->isDecorated()) {
             return nullptr;
         }
@@ -1177,7 +1173,7 @@ GLTexture *OpenGLWindow::getDecorationTexture() const
         }
     } else if (toplevel->isDeleted()) {
         Deleted *deleted = static_cast<Deleted *>(toplevel);
-        if (!deleted->wasClient() || deleted->noBorder()) {
+        if (!deleted->wasDecorated()) {
             return nullptr;
         }
         if (const SceneOpenGLDecorationRenderer *renderer = static_cast<const SceneOpenGLDecorationRenderer*>(deleted->decorationRenderer())) {
