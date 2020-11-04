@@ -981,6 +981,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
 
         if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
             client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
+        } else if (Deleted *deleted = qobject_cast<Deleted *>(deleted)) {
+            deleted->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
         }
 
         *ret += makeDecorationQuads(rects, decorationShape());
