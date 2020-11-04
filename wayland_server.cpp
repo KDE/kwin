@@ -370,7 +370,7 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
         }
     );
 
-    m_tabletManager = m_display->createTabletManagerInterface(m_display);
+    m_tabletManagerV2 = m_display->createTabletManagerV2(m_display);
     m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
 
     auto inputPanelV1Integration = new InputPanelV1Integration(this);

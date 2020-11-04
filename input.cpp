@@ -45,7 +45,7 @@
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/surface_interface.h>
-#include <KWaylandServer/tablet_interface.h>
+#include <KWaylandServer/tablet_v2_interface.h>
 #include <decorations/decoratedclient.h>
 
 //screenlocker
@@ -1560,20 +1560,20 @@ public:
     {
     }
 
-    static KWaylandServer::TabletSeatInterface *findTabletSeat()
+    static KWaylandServer::TabletSeatV2Interface *findTabletSeat()
     {
         auto server = waylandServer();
         if (!server) {
             return nullptr;
         }
-        KWaylandServer::TabletManagerInterface *manager = server->tabletManager();
+        KWaylandServer::TabletManagerV2Interface *manager = server->tabletManagerV2();
         return manager->seat(findSeat());
     }
 
     void integrateDevice(LibInput::Device *device)
     {
         if (device->isTabletTool()) {
-            KWaylandServer::TabletSeatInterface *tabletSeat = findTabletSeat();
+            KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
             if (!tabletSeat) {
                 qCCritical(KWIN_CORE) << "Could not find tablet manager";
                 return;
@@ -1585,7 +1585,7 @@ public:
     }
     void removeDevice(const QString &sysname)
     {
-        KWaylandServer::TabletSeatInterface *tabletSeat = findTabletSeat();
+        KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
         if (tabletSeat)
             tabletSeat->removeTablet(sysname);
         else
@@ -1598,7 +1598,7 @@ public:
             return false;
         }
 
-        KWaylandServer::TabletSeatInterface *tabletSeat = findTabletSeat();
+        KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
         if (!tabletSeat) {
             qCCritical(KWIN_CORE) << "Could not find tablet manager";
             return false;
@@ -1611,52 +1611,52 @@ public:
             const auto f = [](InputRedirection::Capability cap) {
                 switch (cap) {
                 case InputRedirection::Tilt:
-                    return TabletToolInterface::Tilt;
+                    return TabletToolV2Interface::Tilt;
                 case InputRedirection::Pressure:
-                    return TabletToolInterface::Pressure;
+                    return TabletToolV2Interface::Pressure;
                 case InputRedirection::Distance:
-                    return TabletToolInterface::Distance;
+                    return TabletToolV2Interface::Distance;
                 case InputRedirection::Rotation:
-                    return TabletToolInterface::Rotation;
+                    return TabletToolV2Interface::Rotation;
                 case InputRedirection::Slider:
-                    return TabletToolInterface::Slider;
+                    return TabletToolV2Interface::Slider;
                 case InputRedirection::Wheel:
-                    return TabletToolInterface::Wheel;
+                    return TabletToolV2Interface::Wheel;
                 }
-                return TabletToolInterface::Wheel;
+                return TabletToolV2Interface::Wheel;
             };
-            QVector<TabletToolInterface::Capability> ifaceCapabilities;
+            QVector<TabletToolV2Interface::Capability> ifaceCapabilities;
             ifaceCapabilities.resize(capabilities.size());
             std::transform(capabilities.constBegin(), capabilities.constEnd(), ifaceCapabilities.begin(), f);
 
-            TabletToolInterface::Type toolType = TabletToolInterface::Type::Pen;
+            TabletToolV2Interface::Type toolType = TabletToolV2Interface::Type::Pen;
             switch (event->toolType()) {
             case InputRedirection::Pen:
-                toolType = TabletToolInterface::Type::Pen;
+                toolType = TabletToolV2Interface::Type::Pen;
                 break;
             case InputRedirection::Eraser:
-                toolType = TabletToolInterface::Type::Eraser;
+                toolType = TabletToolV2Interface::Type::Eraser;
                 break;
             case InputRedirection::Brush:
-                toolType = TabletToolInterface::Type::Brush;
+                toolType = TabletToolV2Interface::Type::Brush;
                 break;
             case InputRedirection::Pencil:
-                toolType = TabletToolInterface::Type::Pencil;
+                toolType = TabletToolV2Interface::Type::Pencil;
                 break;
             case InputRedirection::Airbrush:
-                toolType = TabletToolInterface::Type::Airbrush;
+                toolType = TabletToolV2Interface::Type::Airbrush;
                 break;
             case InputRedirection::Finger:
-                toolType = TabletToolInterface::Type::Finger;
+                toolType = TabletToolV2Interface::Type::Finger;
                 break;
             case InputRedirection::Mouse:
-                toolType = TabletToolInterface::Type::Mouse;
+                toolType = TabletToolV2Interface::Type::Mouse;
                 break;
             case InputRedirection::Lens:
-                toolType = TabletToolInterface::Type::Lens;
+                toolType = TabletToolV2Interface::Type::Lens;
                 break;
             case InputRedirection::Totem:
-                toolType = TabletToolInterface::Type::Totem;
+                toolType = TabletToolV2Interface::Type::Totem;
                 break;
             }
             tool = tabletSeat->addTool(toolType, event->serialId(), event->uniqueId(), ifaceCapabilities);
@@ -1665,8 +1665,8 @@ public:
             Cursors::self()->addCursor(cursor);
             m_cursorByTool[tool] = cursor;
 
-            connect(tool, &TabletToolInterface::cursorChanged, cursor, &Cursor::cursorChanged);
-            connect(tool, &TabletToolInterface::cursorChanged, cursor, [cursor] (TabletCursor* tcursor) {
+            connect(tool, &TabletToolV2Interface::cursorChanged, cursor, &Cursor::cursorChanged);
+            connect(tool, &TabletToolV2Interface::cursorChanged, cursor, [cursor] (TabletCursorV2 *tcursor) {
                 static const auto createDefaultCursor = [] {
                     WaylandCursorImage defaultCursor;
                     WaylandCursorImage::Image ret;
@@ -1698,7 +1698,7 @@ public:
             emit cursor->cursorChanged();
         }
 
-        KWaylandServer::TabletInterface *tablet = tabletSeat->tabletByName(event->tabletSysName());
+        KWaylandServer::TabletV2Interface *tablet = tabletSeat->tabletByName(event->tabletSysName());
 
         Toplevel *toplevel = input()->findToplevel(event->globalPos());
         if (!toplevel || !toplevel->surface()) {
@@ -1773,7 +1773,7 @@ public:
         waylandServer()->simulateUserActivity();
         return true;
     }
-    QHash<KWaylandServer::TabletToolInterface*, Cursor*> m_cursorByTool;
+    QHash<KWaylandServer::TabletToolV2Interface*, Cursor*> m_cursorByTool;
 };
 
 class DragAndDropInputFilter : public InputEventFilter

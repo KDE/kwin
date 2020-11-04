@@ -56,7 +56,7 @@ class XdgOutputManagerV1Interface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
 class LinuxDmabufUnstableV1Buffer;
-class TabletManagerInterface;
+class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
 }
@@ -103,9 +103,9 @@ public:
     {
         return m_seat;
     }
-    KWaylandServer::TabletManagerInterface *tabletManager() const
+    KWaylandServer::TabletManagerV2Interface *tabletManagerV2() const
     {
-        return m_tabletManager;
+        return m_tabletManagerV2;
     }
     KWaylandServer::DataDeviceManagerInterface *dataDeviceManager() const
     {
@@ -263,7 +263,7 @@ private:
     KWaylandServer::Display *m_display = nullptr;
     KWaylandServer::CompositorInterface *m_compositor = nullptr;
     KWaylandServer::SeatInterface *m_seat = nullptr;
-    KWaylandServer::TabletManagerInterface *m_tabletManager = nullptr;
+    KWaylandServer::TabletManagerV2Interface *m_tabletManagerV2 = nullptr;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManager = nullptr;
     KWaylandServer::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
