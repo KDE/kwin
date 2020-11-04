@@ -977,27 +977,13 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     }
 
     if (!toplevel->frameMargins().isNull()) {
-        AbstractClient *client = dynamic_cast<AbstractClient*>(toplevel);
-        QRegion center = toplevel->transparentRect();
-        const QRegion decoration = decorationShape();
-        qreal decorationScale = 1.0;
-
         QRect rects[4];
-        bool isShadedClient = false;
 
-        if (client) {
+        if (AbstractClient *client = qobject_cast<AbstractClient *>(toplevel)) {
             client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
-            decorationScale = client->screenScale();
-            isShadedClient = client->isShade() || center.isEmpty();
         }
 
-        if (isShadedClient) {
-            const QRect bounding = rects[0] | rects[1] | rects[2] | rects[3];
-            *ret += makeDecorationQuads(rects, bounding, decorationScale);
-        } else {
-            *ret += makeDecorationQuads(rects, decoration, decorationScale);
-        }
-
+        *ret += makeDecorationQuads(rects, decorationShape());
     }
     if (m_shadow && toplevel->wantsShadowToBeRendered()) {
         *ret << m_shadow->shadowQuads();
@@ -1007,10 +993,11 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     return *ret;
 }
 
-WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale) const
+WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QRegion &region) const
 {
     WindowQuadList list;
 
+    const qreal textureScale = toplevel->screenScale();
     const int padding = 1;
 
     const QPoint topSpritePosition(padding, padding);

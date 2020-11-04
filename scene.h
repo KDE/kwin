@@ -389,7 +389,7 @@ public:
     template<typename T> T *previousWindowPixmap() const;
 
 protected:
-    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region, qreal textureScale = 1.0) const;
+    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
     WindowQuadList makeContentsQuads() const;
     /**
      * @brief Factory method to create a WindowPixmap.
