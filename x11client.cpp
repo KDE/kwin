@@ -2015,10 +2015,10 @@ bool X11Client::takeFocus()
     if (rules()->checkAcceptFocus(info->input())) {
         xcb_void_cookie_t cookie = xcb_set_input_focus_checked(connection(),
                                                                XCB_INPUT_FOCUS_POINTER_ROOT,
-                                                               windowId(), XCB_TIME_CURRENT_TIME);
+                                                               window(), XCB_TIME_CURRENT_TIME);
         ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
         if (error) {
-            qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", windowId(), error->error_code);
+            qCWarning(KWIN_CORE, "Failed to focus 0x%x (error %d)", window(), error->error_code);
             return false;
         }
     } else {

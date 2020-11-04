@@ -163,7 +163,7 @@ DELEGATE2(QIcon, icon)
 DELEGATE(bool, isKeepAbove, keepAbove)
 DELEGATE(bool, isKeepBelow, keepBelow)
 DELEGATE(bool, isShaded, isShade)
-DELEGATE(WId, windowId, windowId)
+DELEGATE(WId, windowId, window)
 DELEGATE(WId, decorationId, frameId)
 
 #undef DELEGATE

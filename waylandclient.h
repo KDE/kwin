@@ -31,7 +31,6 @@ public:
     void blockActivityUpdates(bool b = true) override;
     QPoint clientContentPos() const override;
     QRect transparentRect() const override;
-    quint32 windowId() const override;
     pid_t pid() const override;
     bool isLockScreen() const override;
     bool isLocalhost() const override;
@@ -88,7 +87,6 @@ private:
     QRect m_requestedClientGeometry;
     SyncMode m_positionSyncMode = SyncMode::Sync;
     SyncMode m_sizeSyncMode = SyncMode::Sync;
-    quint32 m_windowId;
     bool m_isHidden = false;
 };
 

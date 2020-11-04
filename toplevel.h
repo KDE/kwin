@@ -112,7 +112,7 @@ class KWIN_EXPORT Toplevel : public QObject
     Q_PROPERTY(QRect visibleRect READ visibleRect)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
-    Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
+    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
     Q_PROPERTY(int desktop READ desktop)
 
     /**
@@ -295,10 +295,6 @@ public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
-    /**
-     * @return a unique identifier for the Toplevel. On X11 same as @ref window
-     */
-    virtual quint32 windowId() const;
     /**
      * Returns the geometry of the pixmap or buffer attached to this Toplevel.
      *

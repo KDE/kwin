@@ -52,7 +52,6 @@ public:
     bool isInternal() const override;
     bool isLockScreen() const override;
     bool isOutline() const override;
-    quint32 windowId() const override;
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
@@ -89,7 +88,6 @@ private:
     QString m_captionSuffix;
     double m_opacity = 1.0;
     NET::WindowType m_windowType = NET::Normal;
-    quint32 m_windowId = 0;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;
 

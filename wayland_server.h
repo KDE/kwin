@@ -142,7 +142,6 @@ public:
         return m_clients;
     }
     void removeClient(AbstractClient *c);
-    AbstractClient *findClient(quint32 id) const;
     AbstractClient *findClient(KWaylandServer::SurfaceInterface *surface) const;
     XdgToplevelClient *findXdgToplevelClient(KWaylandServer::SurfaceInterface *surface) const;
     XdgSurfaceClient *findXdgSurfaceClient(KWaylandServer::SurfaceInterface *surface) const;
@@ -207,7 +206,6 @@ public:
         return m_internalConnection.registry;
     }
     void dispatch();
-    quint32 createWindowId(KWaylandServer::SurfaceInterface *surface);
 
     /**
      * Struct containing information for a created Wayland connection through a
@@ -253,7 +251,6 @@ Q_SIGNALS:
 private:
     int createScreenLockerConnection();
     void shellClientShown(Toplevel *t);
-    quint16 createClientId(KWaylandServer::ClientConnection *c);
     void destroyInternalConnection();
     void initScreenLocker();
     void registerXdgGenericClient(AbstractClient *client);
@@ -296,7 +293,6 @@ private:
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::KeyStateInterface *m_keyState = nullptr;
     QList<AbstractClient *> m_clients;
-    QHash<KWaylandServer::ClientConnection*, quint16> m_clientIds;
     InitializationFlags m_initFlags;
     QVector<KWaylandServer::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
     KWIN_SINGLETON(WaylandServer)

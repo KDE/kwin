@@ -188,7 +188,7 @@ void UserActionsMenu::helperDialog(const QString& message, AbstractClient* clien
         args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
     }
     if (client)
-        args << QStringLiteral("--embed") << QString::number(client->windowId());
+        args << QStringLiteral("--embed") << QString::number(client->window());
     QtConcurrent::run([args]() {
         KProcess::startDetached(QStringLiteral("kdialog"), args);
     });

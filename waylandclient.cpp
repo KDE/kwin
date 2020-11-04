@@ -44,8 +44,6 @@ WaylandClient::WaylandClient(SurfaceInterface *surface)
     setSurface(surface);
     setupCompositing();
 
-    m_windowId = waylandServer()->createWindowId(surface);
-
     connect(surface, &SurfaceInterface::shadowChanged,
             this, &WaylandClient::updateShadow);
     connect(this, &WaylandClient::frameGeometryChanged,
@@ -92,11 +90,6 @@ QPoint WaylandClient::clientContentPos() const
 QRect WaylandClient::transparentRect() const
 {
     return QRect();
-}
-
-quint32 WaylandClient::windowId() const
-{
-    return m_windowId;
 }
 
 pid_t WaylandClient::pid() const

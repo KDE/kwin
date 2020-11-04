@@ -102,7 +102,7 @@ void XwaylandServerRestartTest::testRestart()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), window);
+    QCOMPARE(client->window(), window);
     QVERIFY(client->isDecorated());
 
     // Render a frame to ensure that the compositor doesn't crash.

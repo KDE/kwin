@@ -1053,11 +1053,6 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
         return w->effectWindow();
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
-    if (waylandServer()) {
-        if (AbstractClient *w = waylandServer()->findClient(id)) {
-            return w->effectWindow();
-        }
-    }
     return nullptr;
 }
 

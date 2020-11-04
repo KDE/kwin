@@ -726,7 +726,7 @@ void X11ClientTest::testX11WindowId()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QVERIFY(client->isActive());
     QCOMPARE(client->window(), w);
     QCOMPARE(client->internalId().isNull(), false);
@@ -801,7 +801,7 @@ void X11ClientTest::testCaptionChanges()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QCOMPARE(client->caption(), QStringLiteral("foo"));
 
     QSignalSpy captionChangedSpy(client, &X11Client::captionChanged);
@@ -873,7 +873,7 @@ void X11ClientTest::testCaptionMultipleWindows()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QCOMPARE(client->caption(), QStringLiteral("foo"));
 
     // create second window with same caption
@@ -895,7 +895,7 @@ void X11ClientTest::testCaptionMultipleWindows()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client2 = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client2);
-    QCOMPARE(client2->windowId(), w2);
+    QCOMPARE(client2->window(), w2);
     QCOMPARE(client2->caption(), QStringLiteral("foo <2>\u200E"));
     NETWinInfo info3(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
     QCOMPARE(QByteArray(info3.visibleName()), QByteArrayLiteral("foo <2>\u200E"));
@@ -948,7 +948,7 @@ void X11ClientTest::testFullscreenWindowGroups()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QCOMPARE(client->isActive(), true);
 
     QCOMPARE(client->isFullScreen(), false);
@@ -979,7 +979,7 @@ void X11ClientTest::testFullscreenWindowGroups()
     X11Client *client2 = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client2);
     QVERIFY(client != client2);
-    QCOMPARE(client2->windowId(), w2);
+    QCOMPARE(client2->window(), w2);
     QCOMPARE(client2->isActive(), true);
     QCOMPARE(client2->group(), client->group());
     // first client should be moved back to normal layer
@@ -1024,7 +1024,7 @@ void X11ClientTest::testActivateFocusedWindow()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client1 = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client1);
-    QCOMPARE(client1->windowId(), window1);
+    QCOMPARE(client1->window(), window1);
     QCOMPARE(client1->isActive(), true);
 
     // Create the second test window.
@@ -1041,7 +1041,7 @@ void X11ClientTest::testActivateFocusedWindow()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client2 = windowCreatedSpy.last().first().value<X11Client *>();
     QVERIFY(client2);
-    QCOMPARE(client2->windowId(), window2);
+    QCOMPARE(client2->window(), window2);
     QCOMPARE(client2->isActive(), true);
 
     // When the second test window is destroyed, the window manager will attempt to activate the

@@ -27,7 +27,6 @@ namespace KWin
 
 InternalClient::InternalClient(QWindow *window)
     : m_internalWindow(window)
-    , m_windowId(window->winId())
     , m_internalWindowFlags(window->flags())
 {
     connect(m_internalWindow, &QWindow::xChanged, this, &InternalClient::updateInternalWindowGeometry);
@@ -250,11 +249,6 @@ bool InternalClient::isOutline() const
         return m_internalWindow->property("__kwin_outline").toBool();
     }
     return false;
-}
-
-quint32 InternalClient::windowId() const
-{
-    return m_windowId;
 }
 
 bool InternalClient::isShown(bool shaded_is_shown) const

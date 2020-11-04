@@ -80,7 +80,6 @@ private Q_SLOTS:
     void testCaptionMultipleWindows();
     void testUnresponsiveWindow_data();
     void testUnresponsiveWindow();
-    void testX11WindowId();
     void testAppMenu();
     void testNoDecorationModeRequested();
     void testSendClientWithTransientToDesktop();
@@ -862,16 +861,6 @@ void TestXdgShellClient::testUnresponsiveWindow()
 
     auto elapsed2 = QDateTime::currentMSecsSinceEpoch() - startTime;
     QVERIFY(elapsed2 > 1800); //second ping comes in a second later
-}
-
-void TestXdgShellClient::testX11WindowId()
-{
-    QScopedPointer<Surface> surface(Test::createSurface());
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-    QVERIFY(c->windowId() != 0);
-    QCOMPARE(c->window(), 0u);
 }
 
 void TestXdgShellClient::testAppMenu()

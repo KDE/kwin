@@ -66,7 +66,9 @@ QDebug operator<<(QDebug debug, const Toplevel *toplevel)
     debug.nospace();
     if (toplevel) {
         debug << toplevel->metaObject()->className() << '(' << static_cast<const void *>(toplevel);
-        debug << ", windowId=0x" << Qt::hex << toplevel->windowId() << Qt::dec;
+        if (toplevel->window()) {
+            debug << ", windowId=0x" << Qt::hex << toplevel->window() << Qt::dec;
+        }
         if (const KWaylandServer::SurfaceInterface *surface = toplevel->surface()) {
             debug << ", surface=" << surface;
         }
@@ -807,11 +809,6 @@ QPoint Toplevel::mapToLocal(const QPoint &point) const
 QPointF Toplevel::mapToLocal(const QPointF &point) const
 {
     return point - bufferGeometry().topLeft();
-}
-
-quint32 Toplevel::windowId() const
-{
-    return window();
 }
 
 QRect Toplevel::inputGeometry() const
