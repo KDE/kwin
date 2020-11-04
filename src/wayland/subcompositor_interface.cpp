@@ -50,6 +50,19 @@ void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resou
         return;
     }
 
+    if (surface == parent) {
+        wl_resource_post_error(resource->handle, error_bad_surface,
+                               "wl_surface@%d cannot be its own parent",
+                               wl_resource_get_id(surface_resource));
+        return;
+    }
+    if (parent->subSurface() && parent->subSurface()->mainSurface() == surface) {
+        wl_resource_post_error(resource->handle, error_bad_surface,
+                               "wl_surface@%d is an ancestor of parent",
+                               wl_resource_get_id(surface_resource));
+        return;
+    }
+
     wl_resource *subsurfaceResource = wl_resource_create(resource->client(), &wl_subsurface_interface,
                                                          resource->version(), id);
     if (!subsurfaceResource) {
