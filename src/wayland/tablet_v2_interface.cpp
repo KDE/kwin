@@ -12,14 +12,15 @@
 #include "qwayland-server-tablet-unstable-v2.h"
 #include <QHash>
 
-using namespace KWaylandServer;
+namespace KWaylandServer
+{
 
 static int s_version = 1;
 
-class TabletV2Interface::Private : public QtWaylandServer::zwp_tablet_v2
+class TabletV2InterfacePrivate : public QtWaylandServer::zwp_tablet_v2
 {
 public:
-    Private(TabletV2Interface *q, uint32_t vendorId, uint32_t productId, const QString name, const QStringList &paths)
+    TabletV2InterfacePrivate(TabletV2Interface *q, uint32_t vendorId, uint32_t productId, const QString name, const QStringList &paths)
         : zwp_tablet_v2()
         , q(q)
         , m_vendorId(vendorId)
@@ -56,7 +57,7 @@ TabletV2Interface::TabletV2Interface(uint32_t vendorId, uint32_t productId,
                                      const QString &name, const QStringList &paths,
                                      QObject *parent)
     : QObject(parent)
-    , d(new Private(this, vendorId, productId, name, paths))
+    , d(new TabletV2InterfacePrivate(this, vendorId, productId, name, paths))
 {
 }
 
@@ -75,10 +76,10 @@ void TabletV2Interface::sendRemoved()
     }
 }
 
-class TabletCursorV2::Private
+class TabletCursorV2Private
 {
 public:
-    Private(TabletCursorV2 *q) : q(q) {}
+    TabletCursorV2Private(TabletCursorV2 *q) : q(q) {}
 
     void update(quint32 serial, SurfaceInterface *surface, const QPoint &hotspot)
     {
@@ -99,7 +100,7 @@ public:
 
 TabletCursorV2::TabletCursorV2()
     : QObject()
-    , d(new Private(this))
+    , d(new TabletCursorV2Private(this))
 {
 }
 
@@ -120,11 +121,13 @@ SurfaceInterface *TabletCursorV2::surface() const
     return d->m_surface;
 }
 
-class TabletToolV2Interface::Private : public QtWaylandServer::zwp_tablet_tool_v2
+class TabletToolV2InterfacePrivate : public QtWaylandServer::zwp_tablet_tool_v2
 {
 public:
-    Private(TabletToolV2Interface *q, Display *display, Type type, uint32_t hsh, uint32_t hsl, uint32_t hih,
-            uint32_t hil, const QVector<Capability>& capabilities)
+    TabletToolV2InterfacePrivate(TabletToolV2Interface *q, Display *display,
+                                 TabletToolV2Interface::Type type, uint32_t hsh, uint32_t hsl,
+                                 uint32_t hih, uint32_t hil,
+                                 const QVector<TabletToolV2Interface::Capability>& capabilities)
         : zwp_tablet_tool_v2()
         , m_display(display)
         , m_type(type)
@@ -183,7 +186,7 @@ public:
     const uint32_t m_type;
     const uint32_t m_hardwareSerialHigh, m_hardwareSerialLow;
     const uint32_t m_hardwareIdHigh, m_hardwareIdLow;
-    const QVector<Capability> m_capabilities;
+    const QVector<TabletToolV2Interface::Capability> m_capabilities;
     QHash<wl_resource *, TabletCursorV2 *> m_cursors;
     TabletToolV2Interface *const q;
 };
@@ -193,7 +196,7 @@ TabletToolV2Interface::TabletToolV2Interface(Display *display, Type type, uint32
                                              const QVector<Capability>& capabilities,
                                              QObject *parent)
     : QObject(parent)
-    , d(new Private(this, display, type, hsh, hsl, hih, hil, capabilities))
+    , d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities))
 {
 }
 
@@ -312,10 +315,10 @@ void TabletToolV2Interface::sendRemoved()
     }
 }
 
-class TabletSeatV2Interface::Private : public QtWaylandServer::zwp_tablet_seat_v2
+class TabletSeatV2InterfacePrivate : public QtWaylandServer::zwp_tablet_seat_v2
 {
 public:
-    Private(Display *display, TabletSeatV2Interface *q)
+    TabletSeatV2InterfacePrivate(Display *display, TabletSeatV2Interface *q)
         : zwp_tablet_seat_v2()
         , q(q)
         , m_display(display)
@@ -371,7 +374,7 @@ public:
 
 TabletSeatV2Interface::TabletSeatV2Interface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new Private(display, this))
+    , d(new TabletSeatV2InterfacePrivate(display, this))
 {
 }
 
@@ -445,10 +448,10 @@ TabletV2Interface *TabletSeatV2Interface::tabletByName(const QString &name) cons
     return d->m_tablets.value(name);
 }
 
-class TabletManagerV2Interface::Private : public QtWaylandServer::zwp_tablet_manager_v2
+class TabletManagerV2InterfacePrivate : public QtWaylandServer::zwp_tablet_manager_v2
 {
 public:
-    Private(Display *display, TabletManagerV2Interface *q)
+    TabletManagerV2InterfacePrivate(Display *display, TabletManagerV2Interface *q)
         : zwp_tablet_manager_v2(*display, s_version)
         , q(q)
         , m_display(display)
@@ -478,7 +481,7 @@ public:
 
 TabletManagerV2Interface::TabletManagerV2Interface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new Private(display, this))
+    , d(new TabletManagerV2InterfacePrivate(display, this))
 {
 }
 
@@ -488,3 +491,5 @@ TabletSeatV2Interface *TabletManagerV2Interface::seat(SeatInterface *seat) const
 }
 
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;
+
+} // namespace KWaylandServer

@@ -14,12 +14,17 @@
 
 namespace KWaylandServer
 {
-class TabletSeatV2Interface;
 class Display;
 class SeatInterface;
 class SurfaceInterface;
-class TabletV2Interface;
 class TabletCursorV2;
+class TabletCursorV2Private;
+class TabletManagerV2InterfacePrivate;
+class TabletSeatV2Interface;
+class TabletSeatV2InterfacePrivate;
+class TabletToolV2InterfacePrivate;
+class TabletV2Interface;
+class TabletV2InterfacePrivate;
 
 /**
  * This is an implementation of wayland-protocols/unstable/tablet/tablet-unstable-v2.xml
@@ -41,8 +46,7 @@ public:
 private:
     friend class Display;
     explicit TabletManagerV2Interface(Display *d, QObject *parent);
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<TabletManagerV2InterfacePrivate> d;
 };
 
 class KWAYLANDSERVER_EXPORT TabletToolV2Interface : public QObject
@@ -103,10 +107,10 @@ Q_SIGNALS:
     void cursorChanged(TabletCursorV2 *cursor) const;
 
 private:
+    friend class TabletSeatV2InterfacePrivate;
     friend class TabletSeatV2Interface;
     explicit TabletToolV2Interface(Display *display, Type type, quint32 hsh, quint32 hsl, quint32 hih, quint32 hil, const QVector<Capability> &capability, QObject *parent);
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<TabletToolV2InterfacePrivate> d;
 };
 
 class KWAYLANDSERVER_EXPORT TabletCursorV2 : public QObject
@@ -122,10 +126,9 @@ Q_SIGNALS:
     void changed();
 
 private:
-    friend class TabletToolV2Interface;
     TabletCursorV2();
-    class Private;
-    const QScopedPointer<Private> d;
+    const QScopedPointer<TabletCursorV2Private> d;
+    friend class TabletToolV2InterfacePrivate;
 };
 
 class KWAYLANDSERVER_EXPORT TabletV2Interface : public QObject
@@ -143,10 +146,10 @@ public:
 
 private:
     friend class TabletSeatV2Interface;
+    friend class TabletSeatV2InterfacePrivate;
     friend class TabletToolV2Interface;
     explicit TabletV2Interface(quint32 vendorId, quint32 productId, const QString &name, const QStringList &paths, QObject *parent);
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<TabletV2InterfacePrivate> d;
 };
 
 class KWAYLANDSERVER_EXPORT TabletSeatV2Interface : public QObject
@@ -165,10 +168,9 @@ public:
     void removeTablet(const QString &sysname);
 
 private:
-    friend class TabletManagerV2Interface;
+    friend class TabletManagerV2InterfacePrivate;
     explicit TabletSeatV2Interface(Display *display, QObject *parent);
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<TabletSeatV2InterfacePrivate> d;
 };
 
 }
