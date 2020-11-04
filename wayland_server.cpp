@@ -19,6 +19,7 @@
 #include "workspace.h"
 #include "xdgshellclient.h"
 #include "service_utils.h"
+#include "unmanaged.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>
@@ -348,12 +349,24 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
                 // setting surface is only relevat for Xwayland clients
                 return;
             }
-            auto check = [surface] (const Toplevel *t) {
-                return t->surfaceId() == surface->id();
-            };
-            if (Toplevel *t = ws->findToplevel(check)) {
-                t->setSurface(surface);
+
+            X11Client *client = ws->findClient([surface](const X11Client *client) {
+                return client->surfaceId() == surface->id();
+            });
+            if (client) {
+                client->setSurface(surface);
+                return;
             }
+
+            Unmanaged *unmanaged = ws->findUnmanaged([surface](const Unmanaged *unmanaged) {
+                return unmanaged->surfaceId() == surface->id();
+            });
+            if (unmanaged) {
+                unmanaged->setSurface(surface);
+                return;
+            }
+
+            // The surface will be bound later when a WL_SURFACE_ID message is received.
         }
     );
 
