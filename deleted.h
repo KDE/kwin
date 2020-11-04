@@ -46,9 +46,7 @@ public:
     QRect transparentRect() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    bool noBorder() const {
-        return no_border;
-    }
+    bool wasDecorated() const;
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
     Layer layer() const override {
         return m_layer;
@@ -198,7 +196,6 @@ private:
     xcb_window_t m_frame;
     QVector <VirtualDesktop *> m_desktops;
 
-    bool no_border;
     QRect decoration_left;
     QRect decoration_right;
     QRect decoration_top;
@@ -224,6 +221,7 @@ private:
     QList<Deleted *> m_transients;
     bool m_wasPopupWindow;
     bool m_wasOutline;
+    bool m_wasDecorated;
     qreal m_bufferScale = 1;
 };
 
