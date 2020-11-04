@@ -55,7 +55,7 @@ set(SERVER_LIB_SRCS
     subcompositor_interface.cpp
     surface_interface.cpp
     surfacerole.cpp
-    tablet_interface.cpp
+    tablet_v2_interface.cpp
     textinput_v2_interface.cpp
     textinput_v3_interface.cpp
     touch_interface.cpp
@@ -422,7 +422,7 @@ set(SERVER_LIB_HEADERS
   slide_interface.h
   subcompositor_interface.h
   surface_interface.h
-  tablet_interface.h
+  tablet_v2_interface.h
   textinput.h
   textinput_v2_interface.h
   textinput_v3_interface.h

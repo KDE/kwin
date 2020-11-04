@@ -69,7 +69,7 @@ class XdgDecorationManagerV1Interface;
 class EglStreamControllerInterface;
 class KeyStateInterface;
 class LinuxDmabufUnstableV1Interface;
-class TabletManagerInterface;
+class TabletManagerV2Interface;
 class DataControlDeviceManagerV1Interface;
 class PrimarySelectionDeviceManagerV1Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
@@ -321,7 +321,7 @@ public:
      *
      * @since 5.67
      */
-    TabletManagerInterface *createTabletManagerInterface(QObject *parent = nullptr);
+    TabletManagerV2Interface *createTabletManagerV2(QObject *parent = nullptr);
 
     /**
      * Creates the KeyboardShortcutsInhibitorV1Interface

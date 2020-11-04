@@ -39,7 +39,7 @@
 #include "shadow_interface.h"
 #include "slide_interface.h"
 #include "subcompositor_interface.h"
-#include "tablet_interface.h"
+#include "tablet_v2_interface.h"
 #include "textinput_v2_interface_p.h"
 #include "textinput_v3_interface_p.h"
 #include "viewporter_interface.h"
@@ -457,9 +457,9 @@ KeyStateInterface *Display::createKeyStateInterface(QObject *parent)
     return d;
 }
 
-TabletManagerInterface *Display::createTabletManagerInterface(QObject *parent)
+TabletManagerV2Interface *Display::createTabletManagerV2(QObject *parent)
 {
-    auto d = new TabletManagerInterface(this, parent);
+    auto d = new TabletManagerV2Interface(this, parent);
     connect(this, &Display::aboutToTerminate, d, [d] { delete d; });
     return d;
 }

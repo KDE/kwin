@@ -25,7 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/seat_interface.h"
-#include "../../src/server/tablet_interface.h"
+#include "../../src/server/tablet_v2_interface.h"
 
 #include "KWayland/Client/compositor.h"
 #include "KWayland/Client/connection_thread.h"
@@ -125,10 +125,10 @@ private:
     CompositorInterface *m_serverCompositor;
 
     TabletSeat *m_tabletSeatClient = nullptr;
-    TabletManagerInterface *m_tabletManager;
+    TabletManagerV2Interface *m_tabletManager;
 
-    TabletInterface *m_tablet;
-    TabletToolInterface *m_tool;
+    TabletV2Interface *m_tablet;
+    TabletToolV2Interface *m_tool;
 
     QVector<SurfaceInterface *> m_surfaces;
 };
@@ -144,7 +144,7 @@ void TestTabletInterface::initTestCase()
     m_seat = m_display.createSeat(this);
     m_seat->create();
     m_serverCompositor = m_display.createCompositor(this);
-    m_tabletManager = m_display.createTabletManagerInterface(this);
+    m_tabletManager = m_display.createTabletManagerV2(this);
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
@@ -218,7 +218,7 @@ TestTabletInterface::~TestTabletInterface()
 
 void TestTabletInterface::testAdd()
 {
-    TabletSeatInterface *seatInterface = m_tabletManager->seat(m_seat);
+    TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat);
     QVERIFY(seatInterface);
 
     QSignalSpy tabletSpy(m_tabletSeatClient, &TabletSeat::tabletAdded);
@@ -228,7 +228,7 @@ void TestTabletInterface::testAdd()
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
     QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
-    m_tool = seatInterface->addTool(KWaylandServer::TabletToolInterface::Pen, 0, 0, {TabletToolInterface::Tilt, TabletToolInterface::Pressure});
+    m_tool = seatInterface->addTool(KWaylandServer::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure});
     QVERIFY(m_tool);
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);
