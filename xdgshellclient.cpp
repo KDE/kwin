@@ -1301,11 +1301,16 @@ void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *d
 {
     m_xdgDecoration = decoration;
 
+    // The xdg decoration must be destroyed before the xdg toplevel surface. However, if
+    // we destroy the server-side decoration immediately and the window is about to be
+    // closed, the window will be frameless while it's being animated, which doesn't look
+    // very eyecandy. In order to work around this, we delay the destruction of the ssd.
+
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed, this, [this] {
         if (!isZombie() && m_isInitialized) {
             updateDecoration(/* check_workspace_pos */ true);
         }
-    });
+    }, Qt::QueuedConnection);
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
         if (m_isInitialized) {
             // force is true as we must send a new configure response.
