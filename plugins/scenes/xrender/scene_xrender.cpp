@@ -456,8 +456,7 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     X11Client *client = dynamic_cast<X11Client *>(toplevel);
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
     const QRect decorationRect = toplevel->rect();
-    if (((client && !client->noBorder()) || (deleted && !deleted->noBorder())) &&
-                                                        true) {
+    if ((client && client->isDecorated()) || (deleted && deleted->wasDecorated())) {
         // decorated client
         transformed_shape = decorationRect;
         if (toplevel->shape()) {
@@ -526,7 +525,7 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     // This solves a number of glitches and on top of this
     // it optimizes painting quite a bit
     const bool blitInTempPixmap = xRenderOffscreen() || (data.crossFadeProgress() < 1.0 && !opaque) ||
-                                 (scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder())));
+                                 (scaled && (wantShadow || (client && client->isDecorated()) || (deleted && deleted->wasDecorated())));
 
     xcb_render_picture_t renderTarget = m_scene->xrenderBufferPicture();
     if (blitInTempPixmap) {
@@ -571,22 +570,17 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     xcb_render_picture_t bottom = XCB_RENDER_PICTURE_NONE;
     QRect dtr, dlr, drr, dbr;
     const SceneXRenderDecorationRenderer *renderer = nullptr;
-    if (client) {
-        if (client && !client->noBorder()) {
-            if (client->isDecorated()) {
-                SceneXRenderDecorationRenderer *r = static_cast<SceneXRenderDecorationRenderer*>(client->decoratedClient()->renderer());
-                if (r) {
-                    r->render();
-                    renderer = r;
-                }
-            }
-            noBorder = client->noBorder();
-            client->layoutDecorationRects(dlr, dtr, drr, dbr);
+    if (client && client->isDecorated()) {
+        SceneXRenderDecorationRenderer *r = static_cast<SceneXRenderDecorationRenderer*>(client->decoratedClient()->renderer());
+        if (r) {
+            r->render();
+            renderer = r;
         }
-    }
-    if (deleted && !deleted->noBorder()) {
+        noBorder = false;
+        client->layoutDecorationRects(dlr, dtr, drr, dbr);
+    } else if (deleted && deleted->wasDecorated()) {
         renderer = static_cast<const SceneXRenderDecorationRenderer*>(deleted->decorationRenderer());
-        noBorder = deleted->noBorder();
+        noBorder = false;
         deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
     }
     if (renderer) {

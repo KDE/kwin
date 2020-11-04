@@ -331,24 +331,19 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
         return;
     }
 
-    bool noBorder = true;
     const SceneQPainterDecorationRenderer *renderer = nullptr;
     QRect dtr, dlr, drr, dbr;
-    if (client && !client->noBorder()) {
-        if (client->isDecorated()) {
-            if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(client->decoratedClient()->renderer())) {
-                r->render();
-                renderer = r;
-            }
+    if (client && client->isDecorated()) {
+        if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(client->decoratedClient()->renderer())) {
+            r->render();
+            renderer = r;
         }
         client->layoutDecorationRects(dlr, dtr, drr, dbr);
-        noBorder = false;
-    } else if (deleted && !deleted->noBorder()) {
-        noBorder = false;
+    } else if (deleted && deleted->wasDecorated()) {
         deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
         renderer = static_cast<const SceneQPainterDecorationRenderer *>(deleted->decorationRenderer());
     }
-    if (noBorder || !renderer) {
+    if (!renderer) {
         return;
     }
 
