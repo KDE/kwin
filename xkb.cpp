@@ -17,7 +17,6 @@
 #include <QTemporaryFile>
 #include <QKeyEvent>
 // xkbcommon
-#include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
@@ -145,7 +144,7 @@ static bool stringIsEmptyOrNull(const char *str)
  * As kwin_wayland may have the CAP_SET_NICE capability, it returns nullptr
  * so we need to do it ourselves (see xkb_context_sanitize_rule_names).
 **/
-static void applyEnvironmentRules(xkb_rule_names &ruleNames)
+void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
 {
     if (stringIsEmptyOrNull(ruleNames.rules)) {
         ruleNames.rules = getenv("XKB_DEFAULT_RULES");
@@ -163,6 +162,8 @@ static void applyEnvironmentRules(xkb_rule_names &ruleNames)
     if (ruleNames.options == nullptr) {
         ruleNames.options = getenv("XKB_DEFAULT_OPTIONS");
     }
+
+    m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
 }
 
 xkb_keymap *Xkb::loadKeymapFromConfig()
@@ -383,6 +384,11 @@ void Xkb::forwardModifiers()
 QString Xkb::layoutName() const
 {
     return layoutName(m_currentLayout);
+}
+
+const QString &Xkb::layoutShortName() const
+{
+    return m_layoutList.at(m_currentLayout);
 }
 
 QString Xkb::layoutName(xkb_layout_index_t layout) const

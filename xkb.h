@@ -9,6 +9,7 @@
 #ifndef KWIN_XKB_H
 #define KWIN_XKB_H
 #include "input.h"
+#include <xkbcommon/xkbcommon.h>
 
 #include <kwin_export.h>
 
@@ -90,6 +91,7 @@ public:
         return m_currentLayout;
     }
     QString layoutName() const;
+    const QString &layoutShortName() const;
     QMap<xkb_layout_index_t, QString> layoutNames() const;
     quint32 numberOfLayouts() const;
 
@@ -104,6 +106,7 @@ Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
 
 private:
+    void applyEnvironmentRules(xkb_rule_names &);
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
     void updateKeymap(xkb_keymap *keymap);
@@ -113,6 +116,7 @@ private:
     QString layoutName(xkb_layout_index_t layout) const;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
+    QStringList m_layoutList;
     xkb_state *m_state;
     xkb_mod_index_t m_shiftModifier;
     xkb_mod_index_t m_capsModifier;

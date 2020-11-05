@@ -314,6 +314,11 @@ QString KeyboardLayoutDBusInterface::getCurrentLayout()
     return m_xkb->layoutName();
 }
 
+QString KeyboardLayoutDBusInterface::getCurrentLayoutLongName() const
+{
+    return translatedLayout(m_xkb->layoutName());
+}
+
 QStringList KeyboardLayoutDBusInterface::getLayoutsList()
 {
     const auto layouts = m_xkb->layoutNames();
@@ -326,7 +331,10 @@ QStringList KeyboardLayoutDBusInterface::getLayoutsList()
 
 QString KeyboardLayoutDBusInterface::getLayoutDisplayName(const QString &layout)
 {
-    return translatedLayout(layout);
+    // TODO: remove arguments from the DBus API methods
+    Q_UNUSED(layout)
+
+    return m_xkb->layoutShortName();
 }
 
 }
