@@ -89,7 +89,6 @@ private:
     void setHaveNextWindowGeometry();
     void resetHaveNextWindowGeometry();
     QRect adjustMoveResizeGeometry(const QRect &rect) const;
-    void updateGeometryRestoreHack();
 
     KWaylandServer::XdgSurfaceInterface *m_shellSurface;
     QTimer *m_configureTimer;
