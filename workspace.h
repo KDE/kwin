@@ -518,7 +518,7 @@ Q_SIGNALS:
     void configChanged();
     void showingDesktopChanged(bool showing);
     /**
-     * This signels is emitted when ever the stacking order is change, ie. a window is risen
+     * This signal is emitted when the stacking order changed, i.e. a window is risen
      * or lowered
      */
     void stackingOrderChanged();
