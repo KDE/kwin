@@ -312,6 +312,11 @@ X11Client *WorkspaceWrapper::getClient(qulonglong windowId)
     return Workspace::self()->findClient(Predicate::WindowMatch, windowId);
 }
 
+void WorkspaceWrapper::activateClient(AbstractClient* client)
+{
+    Workspace::self()->activateClient(client);
+}
+
 QSize WorkspaceWrapper::desktopGridSize() const
 {
     return VirtualDesktopManager::self()->grid().size();

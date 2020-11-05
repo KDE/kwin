@@ -266,6 +266,8 @@ void setter( rettype val );
      */
     Q_SCRIPTABLE KWin::X11Client *getClient(qulonglong windowId);
 
+    Q_SCRIPTABLE void activateClient(AbstractClient* client);
+
 public Q_SLOTS:
     // all the available key bindings
     void slotSwitchDesktopNext();
