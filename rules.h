@@ -53,7 +53,7 @@ public:
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
     int checkDesktop(int desktop, bool init = false) const;
     int checkScreen(int screen, bool init = false) const;
-    QString checkActivity(QString activity, bool init = false) const;
+    QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;
     bool checkMinimize(bool minimized, bool init = false) const;
@@ -147,7 +147,7 @@ public:
     bool applyIgnoreGeometry(bool& ignore, bool init) const;
     bool applyDesktop(int& desktop, bool init) const;
     bool applyScreen(int& desktop, bool init) const;
-    bool applyActivity(QString& activity, bool init) const;
+    bool applyActivity(QStringList& activity, bool init) const;
     bool applyType(NET::WindowType& type) const;
     bool applyMaximizeVert(MaximizeMode& mode, bool init) const;
     bool applyMaximizeHoriz(MaximizeMode& mode, bool init) const;
@@ -221,7 +221,7 @@ private:
     SetRule desktoprule;
     int screen;
     SetRule screenrule;
-    QString activity;
+    QStringList activity;
     SetRule activityrule;
     NET::WindowType type; // type for setting
     ForceRule typerule;

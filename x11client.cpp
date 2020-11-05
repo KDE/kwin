@@ -527,10 +527,10 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
     workspace()->updateOnAllDesktopsOfTransients(this);   // SELI TODO
     //onAllDesktopsChange(); // Decoration doesn't exist here yet
 
-    QString activitiesList;
+    QStringList activitiesList;
     activitiesList = rules()->checkActivity(activitiesList, !isMapped);
     if (!activitiesList.isEmpty())
-        setOnActivities(activitiesList.split(QStringLiteral(",")));
+        setOnActivities(activitiesList);
 
     QRect geom(windowGeometry.rect());
     bool placementDone = false;
@@ -1912,9 +1912,7 @@ void X11Client::setOnActivities(QStringList newActivitiesList)
     if (!Activities::self()) {
         return;
     }
-    QString joinedActivitiesList = newActivitiesList.join(QStringLiteral(","));
-    joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
-    newActivitiesList = joinedActivitiesList.split(u',', Qt::SkipEmptyParts);
+    newActivitiesList = rules()->checkActivity(newActivitiesList);
 
     QStringList allActivities = Activities::self()->all();
 
@@ -1928,7 +1926,7 @@ void X11Client::setOnActivities(QStringList newActivitiesList)
     }
 
     if (// If we got the request to be on all activities explicitly
-        newActivitiesList.isEmpty() || joinedActivitiesList == Activities::nullUuid() ||
+        newActivitiesList.isEmpty() || newActivitiesList.contains(Activities::nullUuid()) ||
         // If we got a list of activities that covers all activities
         (newActivitiesList.count() > 1 && newActivitiesList.count() == allActivities.count())) {
 
@@ -1937,7 +1935,7 @@ void X11Client::setOnActivities(QStringList newActivitiesList)
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
 
     } else {
-        QByteArray joined = joinedActivitiesList.toLatin1();
+        QByteArray joined = newActivitiesList.join(QStringLiteral(",")).toLatin1();
         activityList = newActivitiesList;
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" 
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
   <kcfgfile arg="true">
@@ -169,7 +169,7 @@
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
 
-    <entry name="activity" type="String">
+    <entry name="activity" type="StringList">
       <label>Activity</label>
     </entry>
     <entry name="activityrule" type="Int">

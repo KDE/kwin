@@ -451,10 +451,8 @@ bool Rules::update(AbstractClient* c, int selection)
         screen = c->screen();
     }
     if NOW_REMEMBER(Activity, activity) {
-        // TODO: ivan - multiple activities support
-        const QString & joinedActivities = c->activities().join(QStringLiteral(","));
-        updated = updated || activity != joinedActivities;
-        activity = joinedActivities;
+        updated = updated || activity != c->activities();
+        activity = c->activities();
     }
     if NOW_REMEMBER(MaximizeVert, maximizevert) {
         updated = updated || maximizevert != bool(c->maximizeMode() & MaximizeVertical);
@@ -565,7 +563,7 @@ APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 
 APPLY_RULE(desktop, Desktop, int)
 APPLY_RULE(screen, Screen, int)
-APPLY_RULE(activity, Activity, QString)
+APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
 
 bool Rules::applyMaximizeHoriz(MaximizeMode& mode, bool init) const
@@ -779,7 +777,7 @@ CHECK_FORCE_RULE(OpacityInactive, int)
 CHECK_RULE(IgnoreGeometry, bool)
 
 CHECK_RULE(Desktop, int)
-CHECK_RULE(Activity, QString)
+CHECK_RULE(Activity, QStringList)
 CHECK_FORCE_RULE(Type, NET::WindowType)
 CHECK_RULE(MaximizeVert, MaximizeMode)
 CHECK_RULE(MaximizeHoriz, MaximizeMode)
