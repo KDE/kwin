@@ -19,7 +19,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "tablet_v2_interface.h"
 #include "display.h"
-#include "resource_p.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
 

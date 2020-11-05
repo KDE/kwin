@@ -21,9 +21,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define WAYLAND_SERVER_TABLET_INTERFACE_H
 
 #include <KWaylandServer/kwaylandserver_export.h>
-#include <QVector>
 
-#include "resource.h"
+#include <QObject>
+#include <QVector>
 
 namespace KWaylandServer
 {
