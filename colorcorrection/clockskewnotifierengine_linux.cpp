@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <sys/timerfd.h>
 #include <unistd.h>
+#include <cerrno>
 
 #ifndef TFD_TIMER_CANCEL_ON_SET // only available in newer glib
 #define TFD_TIMER_CANCEL_ON_SET (1 << 1)
