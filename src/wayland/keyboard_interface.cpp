@@ -5,6 +5,7 @@
 */
 #include "keyboard_interface_p.h"
 #include "display.h"
+#include "logging.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "surface_interface.h"
@@ -80,6 +81,9 @@ void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 seri
 
 void KeyboardInterface::setKeymap(const QByteArray &content)
 {
+    if (content.isNull()) {
+        return;
+    }
     QScopedPointer<QTemporaryFile> tmp{new QTemporaryFile(this)};
     if (!tmp->open()) {
         return;
@@ -236,7 +240,7 @@ void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quin
     d->sendModifiers(depressed, latched, locked, group, d->modifiers.serial);
 }
 
-void KeyboardInterface::repeatInfo(qint32 charactersPerSecond, qint32 delay)
+void KeyboardInterface::setRepeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
     d->keyRepeat.charactersPerSecond = qMax(charactersPerSecond, 0);
     d->keyRepeat.delay = qMax(delay, 0);

@@ -1092,25 +1092,6 @@ void SeatInterface::cancelPointerPinchGesture()
     d->globalPointer.gestureSurface.clear();
 }
 
-void SeatInterface::keyPressed(quint32 key)
-{
-    Q_D();
-    if (!d->keyboard) {
-        qCWarning(KWAYLAND_SERVER) << "Can not send key event on seat without keyboard capability";
-        return;
-    }
-    d->keyboard->keyPressed(key);
-}
-
-void SeatInterface::keyReleased(quint32 key)
-{
-    Q_D();
-    if (!d->keyboard) {
-        return;
-    }
-    d->keyboard->keyReleased(key);
-}
-
 SurfaceInterface *SeatInterface::focusedKeyboardSurface() const
 {
     Q_D();
@@ -1174,36 +1155,6 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
     if (hasKeyboard()) {
         setFocusedTextInputSurface(surface);
     }
-}
-
-void SeatInterface::setKeymapData(const QByteArray &content)
-{
-    Q_D();
-    if (!d->keyboard){
-        return;
-    }
-    if (!content.isNull()) {
-        d->keyboard->setKeymap(content);
-    }
-}
-
-void SeatInterface::updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
-{
-    Q_D();
-    if (!d->keyboard) {
-        return;
-    }
-    d->keyboard->updateModifiers(depressed, latched, locked, group);
-}
-
-void SeatInterface::setKeyRepeatInfo(qint32 charactersPerSecond, qint32 delay)
-{
-    Q_D();
-    if (!d->keyboard){
-        return;
-    }
-
-    d->keyboard->repeatInfo(charactersPerSecond, delay);
 }
 
 KeyboardInterface *SeatInterface::keyboard() const

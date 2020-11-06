@@ -163,11 +163,11 @@ void TestWaylandServerSeat::testRepeatInfo()
     seat->setHasKeyboard(true);
     QCOMPARE(seat->keyboard()->keyRepeatRate(), 0);
     QCOMPARE(seat->keyboard()->keyRepeatDelay(), 0);
-    seat->setKeyRepeatInfo(25, 660);
+    seat->keyboard()->setRepeatInfo(25, 660);
     QCOMPARE(seat->keyboard()->keyRepeatRate(), 25);
     QCOMPARE(seat->keyboard()->keyRepeatDelay(), 660);
     // setting negative values should result in 0
-    seat->setKeyRepeatInfo(-25, -660);
+    seat->keyboard()->setRepeatInfo(-25, -660);
     QCOMPARE(seat->keyboard()->keyRepeatRate(), 0);
     QCOMPARE(seat->keyboard()->keyRepeatDelay(), 0);
 }

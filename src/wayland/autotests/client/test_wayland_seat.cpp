@@ -1526,7 +1526,7 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard->keyRepeatRate(), 0);
 
     // let's change repeat in server
-    m_seatInterface->setKeyRepeatInfo(25, 660);
+    m_seatInterface->keyboard()->setRepeatInfo(25, 660);
     QVERIFY(repeatInfoSpy.wait());
     QCOMPARE(repeatInfoSpy.count(), 2);
     QCOMPARE(keyboard->isKeyRepeatEnabled(), true);
@@ -1534,11 +1534,11 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard->keyRepeatDelay(), 660);
 
     m_seatInterface->setTimestamp(1);
-    m_seatInterface->keyPressed(KEY_K);
+    m_seatInterface->keyboard()->keyPressed(KEY_K);
     m_seatInterface->setTimestamp(2);
-    m_seatInterface->keyPressed(KEY_D);
+    m_seatInterface->keyboard()->keyPressed(KEY_D);
     m_seatInterface->setTimestamp(3);
-    m_seatInterface->keyPressed(KEY_E);
+    m_seatInterface->keyboard()->keyPressed(KEY_E);
 
     QSignalSpy modifierSpy(keyboard, SIGNAL(modifiersChanged(quint32,quint32,quint32,quint32)));
     QVERIFY(modifierSpy.isValid());
@@ -1564,19 +1564,19 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(keyChangedSpy.isValid());
 
     m_seatInterface->setTimestamp(4);
-    m_seatInterface->keyReleased(KEY_E);
+    m_seatInterface->keyboard()->keyReleased(KEY_E);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(5);
-    m_seatInterface->keyReleased(KEY_D);
+    m_seatInterface->keyboard()->keyReleased(KEY_D);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(6);
-    m_seatInterface->keyReleased(KEY_K);
+    m_seatInterface->keyboard()->keyReleased(KEY_K);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(7);
-    m_seatInterface->keyPressed(KEY_F1);
+    m_seatInterface->keyboard()->keyPressed(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(8);
-    m_seatInterface->keyReleased(KEY_F1);
+    m_seatInterface->keyboard()->keyReleased(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
 
     QCOMPARE(keyChangedSpy.count(), 5);
@@ -1597,21 +1597,21 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyChangedSpy.at(4).at(2).value<quint32>(), quint32(8));
 
     // releasing a key which is already released should not set a key changed
-    m_seatInterface->keyReleased(KEY_F1);
+    m_seatInterface->keyboard()->keyReleased(KEY_F1);
     QVERIFY(!keyChangedSpy.wait(200));
     // let's press it again
-    m_seatInterface->keyPressed(KEY_F1);
+    m_seatInterface->keyboard()->keyPressed(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 6);
     // press again should be ignored
-    m_seatInterface->keyPressed(KEY_F1);
+    m_seatInterface->keyboard()->keyPressed(KEY_F1);
     QVERIFY(!keyChangedSpy.wait(200));
     // and release
-    m_seatInterface->keyReleased(KEY_F1);
+    m_seatInterface->keyboard()->keyReleased(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 7);
 
-    m_seatInterface->updateKeyboardModifiers(1, 2, 3, 4);
+    m_seatInterface->keyboard()->updateModifiers(1, 2, 3, 4);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.count(), 2);
     QCOMPARE(modifierSpy.last().at(0).value<quint32>(), quint32(1));
@@ -2249,7 +2249,7 @@ void TestWaylandSeat::testKeymap()
     QSignalSpy keymapChangedSpy(keyboard.data(), &Keyboard::keymapChanged);
     QVERIFY(keymapChangedSpy.isValid());
 
-    m_seatInterface->setKeymapData(QByteArrayLiteral("foo"));
+    m_seatInterface->keyboard()->setKeymap(QByteArrayLiteral("foo"));
     QVERIFY(keymapChangedSpy.wait());
     int fd = keymapChangedSpy.first().first().toInt();
     QVERIFY(fd != -1);
@@ -2263,7 +2263,7 @@ void TestWaylandSeat::testKeymap()
 
     // change the keymap
     keymapChangedSpy.clear();
-    m_seatInterface->setKeymapData(QByteArrayLiteral("bar"));
+    m_seatInterface->keyboard()->setKeymap(QByteArrayLiteral("bar"));
     QVERIFY(keymapChangedSpy.wait());
     fd = keymapChangedSpy.first().first().toInt();
     QVERIFY(fd != -1);

@@ -543,33 +543,6 @@ public:
     ///@}
 
     /**
-     * @name keyboard related methods
-     **/
-    ///@{
-    /**
-     * Sets the xkb keymap with @p content for this Seat.
-     * The content gets sent to all registered KeyboardInterfaces
-     * @since 5.69
-     **/
-    void setKeymapData(const QByteArray &content);
-    void keyPressed(quint32 key);
-    void keyReleased(quint32 key);
-    void updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
-    /**
-     * Sets the key repeat information to be forwarded to all bound keyboards.
-     *
-     * To disable key repeat set a @p charactersPerSecond of @c 0.
-     *
-     * Requires wl_seat version 4.
-     *
-     * @param charactersPerSecond The characters per second rate, value of @c 0 disables key repeating
-     * @param delay The delay on key press before starting repeating keys
-     *
-     * @since 5.5
-     ***/
-    void setKeyRepeatInfo(qint32 charactersPerSecond, qint32 delay);
-
-    /**
      * Passes keyboard focus to @p surface.
      *
      * If the SeatInterface has the keyboard capability, also the focused
