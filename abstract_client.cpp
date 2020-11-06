@@ -2654,6 +2654,10 @@ void AbstractClient::setDesktopFileName(QByteArray name)
 
 QString AbstractClient::iconFromDesktopFile() const
 {
+    if (m_desktopFileName.isEmpty()) {
+        return {};
+    }
+
     const QString desktopFileName = QString::fromUtf8(m_desktopFileName);
     QString desktopFilePath;
 
