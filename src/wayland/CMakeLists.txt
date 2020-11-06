@@ -61,6 +61,7 @@ set(SERVER_LIB_SRCS
     textinput_v3_interface.cpp
     touch_interface.cpp
     viewporter_interface.cpp
+    xdgactivation_v1_interface.cpp
     xdgdecoration_v1_interface.cpp
     xdgforeign_v2_interface.cpp
     xdgoutput_v1_interface.cpp
@@ -270,6 +271,11 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     BASENAME input-method-unstable-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-activation/xdg-activation-v1.xml
+    BASENAME xdg-activation-v1
+)
+
 add_library(KWaylandServer ${SERVER_LIB_SRCS})
 add_library(Plasma::KWaylandServer ALIAS KWaylandServer)
 ecm_generate_export_header(KWaylandServer
@@ -369,6 +375,7 @@ set(SERVER_LIB_HEADERS
   touch_interface.h
   utils.h
   viewporter_interface.h
+  xdgactivation_v1_interface.h
   xdgdecoration_v1_interface.h
   xdgforeign_v2_interface.h
   xdgoutput_v1_interface.h
