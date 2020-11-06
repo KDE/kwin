@@ -211,10 +211,10 @@ void InputEventFilter::passToWaylandServer(QKeyEvent *event)
     }
     switch (event->type()) {
     case QEvent::KeyPress:
-        waylandServer()->seat()->keyPressed(event->nativeScanCode());
+        waylandServer()->seat()->keyboard()->keyPressed(event->nativeScanCode());
         break;
     case QEvent::KeyRelease:
-        waylandServer()->seat()->keyReleased(event->nativeScanCode());
+        waylandServer()->seat()->keyboard()->keyReleased(event->nativeScanCode());
         break;
     default:
         break;
@@ -311,10 +311,10 @@ public:
         }
         switch (event->type()) {
         case QEvent::KeyPress:
-            seat->keyPressed(event->nativeScanCode());
+            seat->keyboard()->keyPressed(event->nativeScanCode());
             break;
         case QEvent::KeyRelease:
-            seat->keyReleased(event->nativeScanCode());
+            seat->keyboard()->keyReleased(event->nativeScanCode());
             break;
         default:
             break;
@@ -2159,7 +2159,7 @@ void InputRedirection::reconfigure()
         const int rate = config.readEntry("RepeatRate", 25);
         const bool enabled = config.readEntry("KeyboardRepeating", 0) == 0;
 
-        waylandServer()->seat()->setKeyRepeatInfo(enabled ? rate : 0, delay);
+        waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
     }
 }
 

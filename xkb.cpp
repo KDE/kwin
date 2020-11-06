@@ -285,7 +285,7 @@ void Xkb::createKeymapFile()
     if (keymapString.isNull()) {
         return;
     }
-    m_seat->setKeymapData(keymapString.data());
+    m_seat->keyboard()->setKeymap(keymapString.data());
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -374,10 +374,10 @@ void Xkb::forwardModifiers()
     if (!m_seat) {
         return;
     }
-    m_seat->updateKeyboardModifiers(m_modifierState.depressed,
-                                                     m_modifierState.latched,
-                                                     m_modifierState.locked,
-                                                     m_currentLayout);
+    m_seat->keyboard()->updateModifiers(m_modifierState.depressed,
+                                        m_modifierState.latched,
+                                        m_modifierState.locked,
+                                        m_currentLayout);
 }
 
 QString Xkb::layoutName() const

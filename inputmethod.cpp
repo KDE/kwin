@@ -321,9 +321,9 @@ static void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool press
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
         if (pressed) {
-            waylandServer()->seat()->keyPressed(keysymToKeycode(sym));
+            waylandServer()->seat()->keyboard()->keyPressed(keysymToKeycode(sym));
         } else {
-            waylandServer()->seat()->keyReleased(keysymToKeycode(sym));
+            waylandServer()->seat()->keyboard()->keyReleased(keysymToKeycode(sym));
         }
         return;
     }
