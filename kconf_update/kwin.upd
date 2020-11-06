@@ -42,4 +42,4 @@ Script=kwin-5.18-move-animspeed.py,python3
 Id=desktop-grid-click-behavior
 File=kwinrc
 Group=Effect-DesktopGrid
-Script=kwin-5.21-desktop-grid-click-behavior.py,python
+Script=kwin-5.21-desktop-grid-click-behavior.py,python3
