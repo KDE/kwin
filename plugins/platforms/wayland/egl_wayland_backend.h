@@ -87,7 +87,7 @@ private:
     bool initBufferConfigs();
     bool initRenderingContext();
 
-    bool createEglWaylandOutput(WaylandOutput *output);
+    bool createEglWaylandOutput(AbstractOutput *output);
 
     void cleanupSurfaces() override;
     void cleanupOutput(EglWaylandOutput *output);

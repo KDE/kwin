@@ -137,7 +137,7 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this,
-        [this] (WaylandOutput *waylandOutput) {
+        [this] (AbstractOutput *waylandOutput) {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
                 [waylandOutput] (WaylandQPainterOutput *output) {
                     return output->m_waylandOutput == waylandOutput;
@@ -161,9 +161,9 @@ bool WaylandQPainterBackend::perScreenRendering() const
     return true;
 }
 
-void WaylandQPainterBackend::createOutput(WaylandOutput *waylandOutput)
+void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
 {
-    auto *output = new WaylandQPainterOutput(waylandOutput, this);
+    auto *output = new WaylandQPainterOutput(static_cast<WaylandOutput *>(waylandOutput), this);
     output->init(m_backend->shmPool());
     m_outputs << output;
 }

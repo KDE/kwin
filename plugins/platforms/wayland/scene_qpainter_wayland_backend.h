@@ -27,6 +27,7 @@ class Buffer;
 
 namespace KWin
 {
+class AbstractOutput;
 namespace Wayland
 {
 class WaylandBackend;
@@ -79,7 +80,7 @@ public:
     bool perScreenRendering() const override;
 
 private:
-    void createOutput(WaylandOutput *waylandOutput);
+    void createOutput(AbstractOutput *waylandOutput);
     void frameRendered();
 
     WaylandBackend *m_backend;

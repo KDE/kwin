@@ -498,6 +498,8 @@ Q_SIGNALS:
      * Emitted by backends using a one screen (nested window) approach and when the size of that changes.
      */
     void screenSizeChanged();
+    void outputAdded(AbstractOutput *output);
+    void outputRemoved(AbstractOutput *output);
 
 protected:
     explicit Platform(QObject *parent = nullptr);

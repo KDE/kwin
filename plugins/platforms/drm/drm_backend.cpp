@@ -332,6 +332,7 @@ void DrmBackend::addOutput(DrmOutput *o)
     m_outputs.append(o);
     m_enabledOutputs.append(o);
     emit o->gpu()->outputEnabled(o);
+    emit outputAdded(o);
 }
 
 void DrmBackend::removeOutput(DrmOutput *o)
@@ -339,6 +340,7 @@ void DrmBackend::removeOutput(DrmOutput *o)
     emit o->gpu()->outputDisabled(o);
     m_outputs.removeOne(o);
     m_enabledOutputs.removeOne(o);
+    emit outputRemoved(o);
 }
 
 bool DrmBackend::updateOutputs()

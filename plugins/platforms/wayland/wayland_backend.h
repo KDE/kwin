@@ -203,9 +203,6 @@ public:
     }
 
 Q_SIGNALS:
-    void outputAdded(WaylandOutput *output);
-    void outputRemoved(WaylandOutput *output);
-
     void systemCompositorDied();
     void connectionFailed();
 

@@ -105,7 +105,7 @@ EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
 
     connect(m_backend, &WaylandBackend::outputAdded, this, &EglWaylandBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this,
-        [this] (WaylandOutput *output) {
+        [this] (AbstractOutput *output) {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
                 [output] (const EglWaylandOutput *o) {
                     return o->m_waylandOutput == output;
@@ -133,9 +133,9 @@ void EglWaylandBackend::cleanupSurfaces()
     m_outputs.clear();
 }
 
-bool EglWaylandBackend::createEglWaylandOutput(WaylandOutput *waylandOutput)
+bool EglWaylandBackend::createEglWaylandOutput(AbstractOutput *waylandOutput)
 {
-    auto *output = new EglWaylandOutput(waylandOutput, this);
+    auto *output = new EglWaylandOutput(static_cast<WaylandOutput *>(waylandOutput), this);
     if (!output->init(this)) {
         return false;
     }
