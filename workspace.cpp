@@ -33,6 +33,7 @@
 #include "netinfo.h"
 #include "outline.h"
 #include "placement.h"
+#include "pluginmanager.h"
 #include "rules.h"
 #include "screenedge.h"
 #include "screens.h"
@@ -1668,6 +1669,20 @@ QString Workspace::supportInformation() const
         foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
             support.append(static_cast<EffectsHandlerImpl*>(effects)->supportInformation(effect));
             support.append(QStringLiteral("\n"));
+        }
+        support.append(QLatin1String("\nLoaded Plugins:\n"));
+        support.append(QLatin1String("---------------\n"));
+        QStringList loadedPlugins = PluginManager::self()->loadedPlugins();
+        loadedPlugins.sort();
+        for (const QString &plugin : qAsConst(loadedPlugins)) {
+            support.append(plugin + QLatin1Char('\n'));
+        }
+        support.append(QLatin1String("\nAvailable Plugins:\n"));
+        support.append(QLatin1String("------------------\n"));
+        QStringList availablePlugins = PluginManager::self()->availablePlugins();
+        availablePlugins.sort();
+        for (const QString &plugin : qAsConst(availablePlugins)) {
+            support.append(plugin + QLatin1Char('\n'));
         }
     } else {
         support.append(QStringLiteral("Compositing is not active\n"));

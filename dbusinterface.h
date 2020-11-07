@@ -19,6 +19,7 @@ namespace KWin
 {
 
 class Compositor;
+class PluginManager;
 class VirtualDesktopManager;
 
 /**
@@ -236,6 +237,28 @@ public Q_SLOTS:
 
 private:
     VirtualDesktopManager *m_manager;
+};
+
+class PluginManagerDBusInterface : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.Plugins")
+
+    Q_PROPERTY(QStringList LoadedPlugins READ loadedPlugins)
+    Q_PROPERTY(QStringList AvailablePlugins READ availablePlugins)
+
+public:
+    explicit PluginManagerDBusInterface(PluginManager *manager);
+
+    QStringList loadedPlugins() const;
+    QStringList availablePlugins() const;
+
+public Q_SLOTS:
+    bool LoadPlugin(const QString &name);
+    void UnloadPlugin(const QString &name);
+
+private:
+    PluginManager *m_manager;
 };
 
 } // namespace

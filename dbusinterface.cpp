@@ -10,6 +10,7 @@
 // own
 #include "dbusinterface.h"
 #include "compositingadaptor.h"
+#include "pluginsadaptor.h"
 #include "virtualdesktopmanageradaptor.h"
 
 // kwin
@@ -20,6 +21,7 @@
 #include "main.h"
 #include "placement.h"
 #include "platform.h"
+#include "pluginmanager.h"
 #include "kwinadaptor.h"
 #include "scene.h"
 #include "unmanaged.h"
@@ -513,6 +515,37 @@ void VirtualDesktopManagerDBusInterface::setDesktopName(const QString &id, const
 void VirtualDesktopManagerDBusInterface::removeDesktop(const QString &id)
 {
     m_manager->removeVirtualDesktop(id.toUtf8());
+}
+
+PluginManagerDBusInterface::PluginManagerDBusInterface(PluginManager *manager)
+    : QObject(manager)
+    , m_manager(manager)
+{
+    new PluginsAdaptor(this);
+
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Plugins"),
+                                                 QStringLiteral("org.kde.KWin.Plugins"),
+                                                 this);
+}
+
+QStringList PluginManagerDBusInterface::loadedPlugins() const
+{
+    return m_manager->loadedPlugins();
+}
+
+QStringList PluginManagerDBusInterface::availablePlugins() const
+{
+    return m_manager->availablePlugins();
+}
+
+bool PluginManagerDBusInterface::LoadPlugin(const QString &name)
+{
+    return m_manager->loadPlugin(name);
+}
+
+void PluginManagerDBusInterface::UnloadPlugin(const QString &name)
+{
+    m_manager->unloadPlugin(name);
 }
 
 } // namespace

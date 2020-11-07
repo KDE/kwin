@@ -14,11 +14,9 @@
 // kwin
 #include "platform.h"
 #include "effects.h"
+#include "pluginmanager.h"
 #include "tabletmodemanager.h"
 
-#ifdef PipeWire_FOUND
-#include "screencast/screencastmanager.h"
-#endif
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
 
@@ -64,6 +62,9 @@ Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
 Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 Q_IMPORT_PLUGIN(KWinIdleTimePoller)
+#ifdef PipeWire_FOUND
+Q_IMPORT_PLUGIN(ScreencastManagerFactory)
+#endif
 
 namespace KWin
 {
@@ -157,9 +158,7 @@ void ApplicationWayland::performStartup()
     InputMethod::create(this);
     createBackend();
     TabletModeManager::create(this);
-#ifdef PipeWire_FOUND
-    new ScreencastManager(this);
-#endif
+    PluginManager::create(this);
 }
 
 void ApplicationWayland::createBackend()

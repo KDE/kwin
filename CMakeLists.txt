@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-project(KWin)
-set(PROJECT_VERSION "5.20.80")
-set(PROJECT_VERSION_MAJOR 5)
+set(PROJECT_VERSION "5.20.80") # Handled by release scripts
+project(KWin VERSION ${PROJECT_VERSION})
 
 set(QT_MIN_VERSION "5.15.0")
 set(KF5_MIN_VERSION "5.74")
@@ -506,6 +505,8 @@ set(kwin_SRCS
     overlaywindow.cpp
     placement.cpp
     platform.cpp
+    plugin.cpp
+    pluginmanager.cpp
     pointer_input.cpp
     popup_input_filter.cpp
     rootinfo_filter.cpp
@@ -633,6 +634,7 @@ qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/col
 qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
+qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
 if (KWIN_BUILD_RUNNERS)
     qt5_add_dbus_adaptor(kwin_SRCS "runners/org.kde.krunner1.xml" runners/windowsrunnerinterface.h KWin::WindowsRunner)
 endif()
@@ -781,30 +783,8 @@ set(kwin_WAYLAND_SRCS
    main_wayland.cpp
    tabletmodemanager.cpp
 )
-ecm_qt_declare_logging_category(kwin_WAYLAND_SRCS
-    HEADER
-        kwinscreencast_logging.h
-    IDENTIFIER
-        KWIN_SCREENCAST
-    CATEGORY_NAME
-        kwin_screencast
-    DEFAULT_SEVERITY
-        Warning
-)
 
 add_executable(kwin_wayland ${kwin_WAYLAND_SRCS} ${kwin_XWAYLAND_SRCS})
-
-
-if (PipeWire_FOUND)
-    target_sources(kwin_wayland
-        PRIVATE
-        screencast/eglnativefence.cpp
-        screencast/screencastmanager.cpp
-        screencast/pipewirecore.cpp
-        screencast/pipewirestream.cpp)
-    target_link_libraries(kwin_wayland PkgConfig::PipeWire)
-endif()
-
 target_link_libraries(kwin_wayland
                       kwin
                       KF5::Crash
@@ -834,6 +814,10 @@ target_link_libraries(kwin_wayland
     KF5IdleTimeKWinPlugin
 )
 
+if (PipeWire_FOUND)
+    target_link_libraries(kwin_wayland KWinScreencastPlugin)
+endif()
+
 ########### install files ###############
 
 install(FILES kwin.kcfg DESTINATION ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}.kcfg)
@@ -846,6 +830,7 @@ install(
         org.kde.kwin.ColorCorrect.xml
         org.kde.kwin.Compositing.xml
         org.kde.kwin.Effects.xml
+        org.kde.KWin.Plugins.xml
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )

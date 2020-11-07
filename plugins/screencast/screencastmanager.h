@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "plugin.h"
+
 #include <KWaylandServer/screencast_v1_interface.h>
 
 namespace KWin
@@ -15,7 +17,7 @@ namespace KWin
 
 class PipeWireStream;
 
-class ScreencastManager : public QObject
+class ScreencastManager : public Plugin
 {
     Q_OBJECT
 

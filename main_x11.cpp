@@ -13,6 +13,7 @@
 #include <config-kwin.h>
 
 #include "platform.h"
+#include "pluginmanager.h"
 #include "sm.h"
 #include "workspace.h"
 #include "xcbutils.h"
@@ -248,6 +249,7 @@ void ApplicationX11::performStartup()
         connect(platform(), &Platform::screensQueried, this,
             [this] {
                 createWorkspace();
+                PluginManager::create(this);
 
                 Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 

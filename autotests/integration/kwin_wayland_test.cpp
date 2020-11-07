@@ -8,6 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 #include "../../platform.h"
+#include "../../pluginmanager.h"
 #include "../../composite.h"
 #include "../../effects.h"
 #include "../../wayland_server.h"
@@ -130,6 +131,7 @@ void WaylandTestApplication::performStartup()
     // try creating the Wayland Backend
     createInput();
     createBackend();
+    PluginManager::create(this);
 }
 
 void WaylandTestApplication::createBackend()
