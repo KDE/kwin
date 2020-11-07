@@ -147,7 +147,7 @@ public:
         return m_clients;
     }
     void removeClient(AbstractClient *c);
-    AbstractClient *findClient(KWaylandServer::SurfaceInterface *surface) const;
+    AbstractClient *findClient(const KWaylandServer::SurfaceInterface *surface) const;
     XdgToplevelClient *findXdgToplevelClient(KWaylandServer::SurfaceInterface *surface) const;
     XdgSurfaceClient *findXdgSurfaceClient(KWaylandServer::SurfaceInterface *surface) const;
 

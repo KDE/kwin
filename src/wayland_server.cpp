@@ -15,9 +15,11 @@
 #include "inputpanelv1integration.h"
 #include "screens.h"
 #include "layershellv1integration.h"
+#include "main.h"
 #include "xdgshellintegration.h"
 #include "workspace.h"
 #include "xdgshellclient.h"
+#include "xdgactivationv1.h"
 #include "service_utils.h"
 #include "unmanaged.h"
 #include "waylandoutput.h"
@@ -55,6 +57,7 @@
 #include <KWaylandServer/blur_interface.h>
 #include <KWaylandServer/outputmanagement_interface.h>
 #include <KWaylandServer/outputconfiguration_interface.h>
+#include <KWaylandServer/xdgactivation_v1_interface.h>
 #include <KWaylandServer/xdgdecoration_v1_interface.h>
 #include <KWaylandServer/xdgshell_interface.h>
 #include <KWaylandServer/xdgforeign_v2_interface.h>
@@ -521,6 +524,16 @@ bool WaylandServer::init(InitializationFlags flags)
     m_keyState = new KeyStateInterface(m_display, m_display);
     m_inputMethod = new InputMethodV1Interface(m_display, m_display);
 
+    auto activation = new KWaylandServer::XdgActivationV1Interface(m_display, this);
+    auto init = [this, activation] {
+        new XdgActivationV1Integration(activation, this);
+    };
+    if (Workspace::self()) {
+        init();
+    } else {
+        connect(static_cast<Application*>(qApp), &Application::workspaceCreated, this, init);
+    }
+
     return true;
 }
 
@@ -769,7 +782,7 @@ void WaylandServer::dispatch()
     m_display->dispatchEvents();
 }
 
-static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, KWaylandServer::SurfaceInterface *surface)
+static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, const KWaylandServer::SurfaceInterface *surface)
 {
     auto it = std::find_if(clients.begin(), clients.end(),
         [surface] (AbstractClient *c) {
@@ -782,7 +795,7 @@ static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, 
     return *it;
 }
 
-AbstractClient *WaylandServer::findClient(SurfaceInterface *surface) const
+AbstractClient *WaylandServer::findClient(const KWaylandServer::SurfaceInterface *surface) const
 {
     if (!surface) {
         return nullptr;
