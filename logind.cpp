@@ -429,12 +429,8 @@ void LogindIntegration::getSeat()
             DBusLogindSeat seat = qdbus_cast<DBusLogindSeat>(reply.value().value<QDBusArgument>());
             const QString seatPath = seat.path.path();
             qCDebug(KWIN_CORE) << m_sessionControllerName << " seat:" << seat.name << "/" << seatPath;
-            if (m_seatPath != seatPath) {
-                m_seatPath = seatPath;
-            }
-            if (m_seatName != seat.name) {
-                m_seatName = seat.name;
-            }
+            m_seatPath = seatPath;
+            m_seatName = seat.name;
         }
     );
 }
