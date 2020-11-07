@@ -28,7 +28,6 @@
 #include "group.h"
 #include "input.h"
 #include "internal_client.h"
-#include "logind.h"
 #include "moving_client_x11_filter.h"
 #include "killwindow.h"
 #include "netinfo.h"
