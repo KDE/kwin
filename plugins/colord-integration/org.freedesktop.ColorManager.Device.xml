@@ -1,0 +1,40 @@
+<!DOCTYPE node PUBLIC
+"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"https://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/" xmlns:doc="https://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <interface name='org.freedesktop.ColorManager.Device'>
+    <doc:doc>
+      <doc:description>
+        <doc:para>
+          The interface used for querying color parameters for a specific device.
+        </doc:para>
+      </doc:description>
+    </doc:doc>
+
+    <!--***********************************************************-->
+    <property name='Profiles' type='ao' access='read'>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            The profile paths associated with this device.
+            Profiles are returned even if the device is disabled or
+            is profiling, and clients should not assume that the first
+            profile in this array should be applied.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+    </property>
+
+    <!-- ************************************************************ -->
+    <signal name='Changed'>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Some value on the interface has changed.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+    </signal>
+
+  </interface>
+</node>

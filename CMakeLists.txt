@@ -236,6 +236,14 @@ set_package_properties(X11 PROPERTIES
 add_feature_info("XInput" X11_Xinput_FOUND "Required for poll-free mouse cursor updates")
 set(HAVE_X11_XINPUT ${X11_Xinput_FOUND})
 
+find_package(lcms2)
+set_package_properties(lcms2 PROPERTIES
+    DESCRIPTION "Small-footprint color management engine"
+    URL "http://www.littlecms.com"
+    TYPE OPTIONAL
+)
+set(HAVE_LCMS2 ${lcms2_FOUND})
+
 # All the required XCB components
 find_package(XCB 1.10 REQUIRED COMPONENTS
     COMPOSITE
