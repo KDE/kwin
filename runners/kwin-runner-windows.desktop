@@ -2,6 +2,7 @@
 # ctxt: plasma runner
 Name=Windows
 Name[ca]=Finestres
+Name[en_GB]=Windows
 Name[es]=Ventanas
 Name[fr]=Fenêtres
 Name[it]=Finestre
@@ -16,6 +17,7 @@ Name[uk]=Вікна
 Name[x-test]=xxWindowsxx
 Comment=List windows and desktops and switch them
 Comment[ca]=Llista finestres i escriptoris, i canvia entre ells
+Comment[en_GB]=List windows and desktops and switch them
 Comment[es]=Listar ventanas y escritorios y cambiar entre ellos
 Comment[fr]=Lister les fenêtres et les bureaux pour pouvoir passer de l'un à l'autre.
 Comment[it]=Elenca e scambia le finestre ed i desktop

@@ -22,6 +22,7 @@ Comment[uk]=Анімація для вікон під час входу до п�
 Comment[x-test]=xxAnimation for a window going to and leaving full screen modexx
 Icon=preferences-system-windows-effect-fullscreen
 Name=Full Screen
+Name[ast]=Pantalla completa
 Name[ca]=Pantalla completa
 Name[cs]=Celá obrazovka
 Name[de]=Vollbild
