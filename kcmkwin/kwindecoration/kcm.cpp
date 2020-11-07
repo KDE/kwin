@@ -68,6 +68,10 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     connect(m_data->settings(), &KWinDecorationSettings::themeChanged, this, &KCMKWinDecoration::themeChanged);
     connect(m_data->settings(), &KWinDecorationSettings::borderSizeChanged, this, &KCMKWinDecoration::borderSizeChanged);
 
+    connect(m_data->settings(), &KWinDecorationSettings::borderSizeAutoChanged, this, &KCMKWinDecoration::borderIndexChanged);
+    connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::borderIndexChanged);
+    connect(this, &KCMKWinDecoration::themeChanged, this, &KCMKWinDecoration::borderIndexChanged);
+
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsInserted, this, &KCMKWinDecoration::onLeftButtonsChanged);
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsMoved, this, &KCMKWinDecoration::onLeftButtonsChanged);
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsRemoved, this, &KCMKWinDecoration::onLeftButtonsChanged);
@@ -188,7 +192,24 @@ QAbstractListModel *KCMKWinDecoration::availableButtonsModel() const
 
 QStringList KCMKWinDecoration::borderSizesModel() const
 {
-    return Utils::getBorderSizeNames().values();
+    // Use index 0 for borderSizeAuto == true
+    // The rest of indexes get offset by 1
+    QStringList model = Utils::getBorderSizeNames().values();
+    model.insert(0, i18nc("%1 is the name of a border size",
+                          "Theme's default (%1)", model.at(recommendedBorderSize())));
+    return model;
+}
+
+int KCMKWinDecoration::borderIndex() const
+{
+    return settings()->borderSizeAuto() ? 0 : m_borderSizeIndex + 1;
+}
+
+void KCMKWinDecoration::setBorderIndex(int index)
+{
+    const bool borderAuto = (index == 0);
+    settings()->setBorderSizeAuto(borderAuto);
+    setBorderSize(borderAuto ? recommendedBorderSize() : index - 1);
 }
 
 int KCMKWinDecoration::borderSize() const

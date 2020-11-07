@@ -7,7 +7,7 @@
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.4 as Controls
-import org.kde.kcm 1.3 as KCM
+import org.kde.kcm 1.5 as KCM
 import org.kde.kconfig 1.0 // for KAuthorized
 import org.kde.kirigami 2.4 as Kirigami
 
@@ -81,49 +81,18 @@ Kirigami.Page {
                         }
 
                         RowLayout {
-                            Controls.CheckBox {
-                                id: borderSizeAutoCheckbox
-                                // Let it elide but don't make it push the ComboBox away from it
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: implicitWidth
-                                text: i18nc("checkbox label", "Use theme's default window border size")
-                                checked: kcm.settings.borderSizeAuto
-                                onToggled: {
-                                    kcm.settings.borderSizeAuto = checked;
-                                    borderSizeComboBox.autoBorderUpdate()
-                                }
-
-                                KCM.SettingStateBinding {
-                                    configObject: kcm.settings
-                                    settingName: "borderSizeAuto"
-                                }
-
+                            Controls.Label {
+                                text: i18nc("Selector label", "Window border size:")
                             }
                             Controls.ComboBox {
                                 id: borderSizeComboBox
                                 model: kcm.borderSizesModel
-                                currentIndex: kcm.borderSize
+                                currentIndex: kcm.borderIndex
                                 onActivated: {
-                                    kcm.borderSize = currentIndex
+                                    kcm.borderIndex = currentIndex
                                 }
-
-                                KCM.SettingStateBinding {
-                                    configObject: kcm.settings
-                                    settingName: "borderSize"
-                                    extraEnabledConditions: !borderSizeAutoCheckbox.checked
-                                }
-
-                                function autoBorderUpdate() {
-                                    if (borderSizeAutoCheckbox.checked) {
-                                        kcm.borderSize = kcm.recommendedBorderSize
-                                    }
-                                }
-
-                                Connections {
-                                    target: kcm
-                                    function onThemeChanged() {
-                                        borderSizeComboBox.autoBorderUpdate()
-                                    }
+                                KCM.SettingHighlighter {
+                                    highlight: kcm.borderIndex != 0
                                 }
                             }
                             Item {
