@@ -1,6 +1,7 @@
 [Desktop Entry]
 # ctxt: plasma runner
 Name=Windows
+Name[az]=Pəncərələr
 Name[ca]=Finestres
 Name[en_GB]=Windows
 Name[es]=Ventanas
@@ -16,6 +17,7 @@ Name[sv]=Fönster
 Name[uk]=Вікна
 Name[x-test]=xxWindowsxx
 Comment=List windows and desktops and switch them
+Comment[az]=Pəncərələrin, İş Masalarının siyahısı və onlar arası keçid
 Comment[ca]=Llista finestres i escriptoris, i canvia entre ells
 Comment[en_GB]=List windows and desktops and switch them
 Comment[es]=Listar ventanas y escritorios y cambiar entre ellos

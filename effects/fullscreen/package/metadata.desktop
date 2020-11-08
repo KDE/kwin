@@ -1,5 +1,6 @@
 [Desktop Entry]
 Comment=Animation for a window going to and leaving full screen mode
+Comment[az]=Tam ekran rejiminə keçid və ondan çıxış pəncərəsi animasiyası
 Comment[ca]=Animació per a una finestra que entra o abandona el mode de pantalla completa
 Comment[en_GB]=Animation for a window going to and leaving full screen mode
 Comment[es]=Animación para una ventana que entra en el modo de pantalla completa o sale de él
@@ -23,6 +24,7 @@ Comment[x-test]=xxAnimation for a window going to and leaving full screen modexx
 Icon=preferences-system-windows-effect-fullscreen
 Name=Full Screen
 Name[ast]=Pantalla completa
+Name[az]=Tam Ekran
 Name[ca]=Pantalla completa
 Name[cs]=Celá obrazovka
 Name[de]=Vollbild
