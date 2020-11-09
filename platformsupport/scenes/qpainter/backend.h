@@ -14,33 +14,15 @@ class QRegion;
 class QSize;
 class QString;
 
-namespace KWin {
-class OverlayWindow;
+namespace KWin
+{
 
 class QPainterBackend
 {
 public:
     virtual ~QPainterBackend();
     virtual void present(int mask, const QRegion &damage) = 0;
-
-    /**
-     * @brief Returns the OverlayWindow used by the backend.
-     *
-     * A backend does not have to use an OverlayWindow, this is mostly for the X world.
-     * In case the backend does not use an OverlayWindow it is allowed to return @c null.
-     * It's the task of the caller to check whether it is @c null.
-     *
-     * @return :OverlayWindow*
-     */
-    virtual OverlayWindow *overlayWindow();
-    virtual bool usesOverlayWindow() const = 0;
     virtual void prepareRenderingFrame() = 0;
-    /**
-     * @brief Shows the Overlay Window
-     *
-     * Default implementation does nothing.
-     */
-    virtual void showOverlay();
     /**
      * @brief React on screen geometry changes.
      *

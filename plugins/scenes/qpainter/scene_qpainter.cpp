@@ -117,7 +117,6 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
         m_painter->restore();
         m_painter->end();
     }
-    m_backend->showOverlay();
     m_backend->present(mask, overallUpdate);
 
     // do cleanup

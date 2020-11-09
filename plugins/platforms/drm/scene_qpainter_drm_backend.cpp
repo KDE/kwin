@@ -124,11 +124,6 @@ void DrmQPainterBackend::present(int mask, const QRegion &damage)
     }
 }
 
-bool DrmQPainterBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
 bool DrmQPainterBackend::perScreenRendering() const
 {
     return true;

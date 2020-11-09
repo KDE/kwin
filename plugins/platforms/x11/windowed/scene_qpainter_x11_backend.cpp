@@ -80,11 +80,6 @@ void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
     }
 }
 
-bool X11WindowedQPainterBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
 bool X11WindowedQPainterBackend::perScreenRendering() const
 {
     return true;

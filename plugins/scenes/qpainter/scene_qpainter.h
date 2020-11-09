@@ -169,13 +169,13 @@ public:
 inline
 bool SceneQPainter::usesOverlayWindow() const
 {
-    return m_backend->usesOverlayWindow();
+    return false;
 }
 
 inline
 OverlayWindow* SceneQPainter::overlayWindow() const
 {
-    return m_backend->overlayWindow();
+    return nullptr;
 }
 
 inline

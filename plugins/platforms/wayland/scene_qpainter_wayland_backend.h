@@ -64,8 +64,6 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    bool usesOverlayWindow() const override;
-
     QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;
 

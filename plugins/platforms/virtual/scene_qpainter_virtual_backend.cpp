@@ -65,11 +65,6 @@ void VirtualQPainterBackend::present(int mask, const QRegion &damage)
     }
 }
 
-bool VirtualQPainterBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
 bool VirtualQPainterBackend::perScreenRendering() const
 {
     return true;

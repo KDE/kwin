@@ -23,15 +23,6 @@ QPainterBackend::~QPainterBackend()
 {
 }
 
-OverlayWindow* QPainterBackend::overlayWindow()
-{
-    return nullptr;
-}
-
-void QPainterBackend::showOverlay()
-{
-}
-
 void QPainterBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)
