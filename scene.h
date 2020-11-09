@@ -179,7 +179,7 @@ public:
      * The render buffer used by a QPainter based compositor.
      * Default implementation returns @c nullptr.
      */
-    virtual QImage *qpainterRenderBuffer() const;
+    virtual QImage *qpainterRenderBuffer(int screenId) const;
 
     /**
      * The backend specific extensions (e.g. EGL/GLX extensions).

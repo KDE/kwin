@@ -179,9 +179,9 @@ void SceneQPainter::screenGeometryChanged(const QSize &size)
     m_backend->screenGeometryChanged(size);
 }
 
-QImage *SceneQPainter::qpainterRenderBuffer() const
+QImage *SceneQPainter::qpainterRenderBuffer(int screenId) const
 {
-    return m_backend->bufferForScreen(0);
+    return m_backend->bufferForScreen(screenId);
 }
 
 //****************************************

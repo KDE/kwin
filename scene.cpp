@@ -692,8 +692,9 @@ QPainter *Scene::scenePainter() const
     return nullptr;
 }
 
-QImage *Scene::qpainterRenderBuffer() const
+QImage *Scene::qpainterRenderBuffer(int screenId) const
 {
+    Q_UNUSED(screenId)
     return nullptr;
 }
 
