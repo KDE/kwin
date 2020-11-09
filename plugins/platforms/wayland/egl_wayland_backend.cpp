@@ -325,10 +325,7 @@ void EglWaylandBackend::aboutToStartPainting(int screenId, const QRegion &damage
 void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion &damage)
 {
     output->m_waylandOutput->surface()->setupFrameCallback();
-    if (!m_swapping) {
-        m_swapping = true;
-        Compositor::self()->aboutToSwapBuffers();
-    }
+    Compositor::self()->aboutToSwapBuffers();
 
     Q_EMIT output->m_waylandOutput->outputChange(damage);
 
@@ -363,15 +360,10 @@ SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTe
     return new EglWaylandTexture(texture, this);
 }
 
-QRegion EglWaylandBackend::prepareRenderingFrame()
-{
-    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-    m_swapping = false;
-    return QRegion();
-}
-
 QRegion EglWaylandBackend::prepareRenderingForScreen(int screenId)
 {
+    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+
     auto *output = m_outputs.at(screenId);
     makeContextCurrent(output);
     if (supportsBufferAge()) {
@@ -388,12 +380,6 @@ QRegion EglWaylandBackend::prepareRenderingForScreen(int screenId)
         return region;
     }
     return QRegion();
-}
-
-void EglWaylandBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(renderedRegion)
-    Q_UNUSED(damagedRegion)
 }
 
 void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)

@@ -384,8 +384,9 @@ SceneOpenGLTexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGLTextur
     return new EglTexture(texture, this);
 }
 
-QRegion EglOnXBackend::prepareRenderingFrame()
+QRegion EglOnXBackend::prepareRenderingForScreen(int screenId)
 {
+    Q_UNUSED(screenId)
     QRegion repaint;
 
     if (gs_tripleBufferNeedsDetection) {
@@ -407,8 +408,10 @@ QRegion EglOnXBackend::prepareRenderingFrame()
     return repaint;
 }
 
-void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglOnXBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(screenId)
+
     if (damagedRegion.isEmpty()) {
         setLastDamage(QRegion());
 

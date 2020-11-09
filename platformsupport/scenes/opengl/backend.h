@@ -51,27 +51,11 @@ public:
     virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) = 0;
 
     /**
-     * @brief Backend specific code to prepare the rendering of a frame including flushing the
-     * previously rendered frame to the screen if the backend works this way.
-     *
-     * @return A region that if not empty will be repainted in addition to the damaged region
-     */
-    virtual QRegion prepareRenderingFrame() = 0;
-
-    /**
      * Notifies about starting to paint.
      *
      * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
     virtual void aboutToStartPainting(int screenId, const QRegion &damage);
-
-    /**
-     * @brief Backend specific code to handle the end of rendering a frame.
-     *
-     * @param renderedRegion The possibly larger region that has been rendered
-     * @param damagedRegion The damaged region that should be posted
-     */
-    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) = 0;
     virtual void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;

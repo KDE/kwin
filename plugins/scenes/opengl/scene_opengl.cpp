@@ -639,12 +639,11 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
     qreal scaling;
 
     // prepare rendering makes context current on the output
+    repaint = m_backend->prepareRenderingForScreen(screenId);
     if (screenId != -1) {
-        repaint = m_backend->prepareRenderingForScreen(screenId);
         geo = screens()->geometry(screenId);
         scaling = screens()->scale(screenId);
     } else {
-        repaint = m_backend->prepareRenderingFrame();
         geo = screens()->geometry();
         scaling = 1;
     }
@@ -680,11 +679,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         }
 
         GLVertexBuffer::streamingBuffer()->endOfFrame();
-        if (screenId != -1) {
-            m_backend->endRenderingFrameForScreen(screenId, valid, update);
-        } else {
-            m_backend->endRenderingFrame(valid, update);
-        }
+        m_backend->endRenderingFrameForScreen(screenId, valid, update);
         GLVertexBuffer::streamingBuffer()->framePosted();
 
         if (m_currentFence) {

@@ -140,8 +140,9 @@ void EglHwcomposerBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-QRegion EglHwcomposerBackend::prepareRenderingFrame()
+QRegion EglHwcomposerBackend::prepareRenderingFrame(int screenId)
 {
+    Q_UNUSED(screenId)
     present();
 
     // TODO: buffer age?
@@ -149,8 +150,9 @@ QRegion EglHwcomposerBackend::prepareRenderingFrame()
     return QRegion(QRect(QPoint(0, 0), m_backend->size()));
 }
 
-void EglHwcomposerBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglHwcomposerBackend::endRenderingFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(screenId)
     Q_UNUSED(damagedRegion)
     setLastDamage(renderedRegion);
 }

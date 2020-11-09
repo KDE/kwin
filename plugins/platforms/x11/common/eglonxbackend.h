@@ -27,8 +27,8 @@ public:
     ~EglOnXBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    QRegion prepareRenderingFrame() override;
-    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion prepareRenderingForScreen(int screenId) override;
+    void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     OverlayWindow* overlayWindow() const override;
     bool usesOverlayWindow() const override;
     void init() override;

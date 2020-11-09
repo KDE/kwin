@@ -162,8 +162,9 @@ SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTextur
     return new EglGbmTexture(texture, this);
 }
 
-QRegion EglGbmBackend::prepareRenderingFrame()
+QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
 {
+    Q_UNUSED(screenId)
     if (!lastDamage().isEmpty()) {
         present();
     }
@@ -204,8 +205,9 @@ static void convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
-void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglGbmBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(screenId)
     Q_UNUSED(damagedRegion)
     glFlush();
     if (m_backend->saveFrames()) {

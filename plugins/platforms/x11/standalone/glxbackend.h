@@ -61,8 +61,8 @@ public:
     ~GlxBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    QRegion prepareRenderingFrame() override;
-    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion prepareRenderingForScreen(int screenId) override;
+    void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     bool makeCurrent() override;
     void doneCurrent() override;
     OverlayWindow* overlayWindow() const override;

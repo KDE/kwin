@@ -70,9 +70,7 @@ public:
     ~EglWaylandBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    QRegion prepareRenderingFrame() override;
     QRegion prepareRenderingForScreen(int screenId) override;
-    void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
@@ -101,7 +99,6 @@ private:
     WaylandBackend *m_backend;
     QVector<EglWaylandOutput*> m_outputs;
     bool m_havePlatformBase;
-    bool m_swapping = false;
     friend class EglWaylandTexture;
 };
 

@@ -23,8 +23,6 @@ class EglX11Backend : public EglOnXBackend
 public:
     explicit EglX11Backend(X11WindowedBackend *backend);
     ~EglX11Backend() override;
-    QRegion prepareRenderingFrame() override;
-    void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
     QRegion prepareRenderingForScreen(int screenId) override;

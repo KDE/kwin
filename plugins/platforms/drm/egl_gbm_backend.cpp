@@ -511,11 +511,6 @@ SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTextur
     return new EglGbmTexture(texture, this);
 }
 
-QRegion EglGbmBackend::prepareRenderingFrame()
-{
-    return QRegion();
-}
-
 void EglGbmBackend::setViewport(const Output &output) const
 {
     const QSize &overall = screens()->size();
@@ -548,12 +543,6 @@ QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
         return region;
     }
     return output.output->geometry();
-}
-
-void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(renderedRegion)
-    Q_UNUSED(damagedRegion)
 }
 
 void EglGbmBackend::endRenderingFrameForScreen(int screenId,

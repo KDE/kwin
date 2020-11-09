@@ -60,17 +60,6 @@ void EglX11Backend::present()
     xcb_flush(m_backend->connection());
 }
 
-QRegion EglX11Backend::prepareRenderingFrame()
-{
-    return QRegion();
-}
-
-void EglX11Backend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    Q_UNUSED(renderedRegion)
-    Q_UNUSED(damagedRegion)
-}
-
 bool EglX11Backend::usesOverlayWindow() const
 {
     return false;

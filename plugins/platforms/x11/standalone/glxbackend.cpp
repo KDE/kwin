@@ -781,8 +781,9 @@ SceneOpenGLTexturePrivate *GlxBackend::createBackendTexture(SceneOpenGLTexture *
     return new GlxTexture(texture, this);
 }
 
-QRegion GlxBackend::prepareRenderingFrame()
+QRegion GlxBackend::prepareRenderingForScreen(int screenId)
 {
+    Q_UNUSED(screenId)
     QRegion repaint;
 
     if (gs_tripleBufferNeedsDetection) {
@@ -794,6 +795,7 @@ QRegion GlxBackend::prepareRenderingFrame()
         usleep(1000);
     }
 
+    makeCurrent();
     present();
 
     if (supportsBufferAge())
@@ -804,8 +806,10 @@ QRegion GlxBackend::prepareRenderingFrame()
     return repaint;
 }
 
-void GlxBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(screenId)
+
     if (damagedRegion.isEmpty()) {
         setLastDamage(QRegion());
 
