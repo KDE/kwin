@@ -71,11 +71,11 @@ private:
     bool m_active;
     int m_frame;
     int m_progress;
-    GLTexture* m_bouncingTextures[5];
-    GLTexture* m_texture; // for passive and blinking
+    QScopedPointer<GLTexture> m_bouncingTextures[5];
+    QScopedPointer<GLTexture> m_texture; // for passive and blinking
     FeedbackType m_type;
     QRect m_currentGeometry, m_dirtyRect;
-    GLShader *m_blinkingShader;
+    QScopedPointer<GLShader> m_blinkingShader;
     int m_cursorSize;
     KConfigWatcher::Ptr m_configWatcher;
     bool m_splashVisible;

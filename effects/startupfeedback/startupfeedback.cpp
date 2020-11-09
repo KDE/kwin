@@ -68,16 +68,11 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_active(false)
     , m_frame(0)
     , m_progress(0)
-    , m_texture(nullptr)
     , m_type(BouncingFeedback)
-    , m_blinkingShader(nullptr)
     , m_cursorSize(24)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
     , m_splashVisible(false)
 {
-    for (int i = 0; i < 5; ++i) {
-        m_bouncingTextures[i] = nullptr;
-    }
     if (KWindowSystem::isPlatformX11()) {
         m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", xcbConnection(), x11RootWindow(), this);
         m_selection->claim(true);
@@ -108,11 +103,6 @@ StartupFeedbackEffect::~StartupFeedbackEffect()
     if (m_active) {
         effects->stopMousePolling();
     }
-    for (int i = 0; i < 5; ++i) {
-        delete m_bouncingTextures[i];
-    }
-    delete m_texture;
-    delete m_blinkingShader;
 }
 
 bool StartupFeedbackEffect::supported()
@@ -137,8 +127,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     else if (busyBlinking) {
         m_type = BlinkingFeedback;
         if (effects->compositingType() == OpenGL2Compositing) {
-            delete m_blinkingShader;
-            m_blinkingShader = ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("blinking-startup-fragment.glsl"));
+            m_blinkingShader.reset(ShaderManager::instance()->generateShaderFromResources(ShaderTrait::MapTexture, QString(), QStringLiteral("blinking-startup-fragment.glsl")));
             if (m_blinkingShader->isValid()) {
                 qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
             } else {
@@ -182,11 +171,11 @@ void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenP
         GLTexture* texture;
         switch(m_type) {
         case BouncingFeedback:
-            texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]];
+            texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]].get();
             break;
         case BlinkingFeedback: // fall through
         case PassiveFeedback:
-            texture = m_texture;
+            texture = m_texture.get();
             break;
         default:
             return; // safety
@@ -196,7 +185,7 @@ void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenP
         texture->bind();
         if (m_type == BlinkingFeedback && m_blinkingShader && m_blinkingShader->isValid()) {
             const QColor& blinkingColor = BLINKING_COLORS[ FRAME_TO_BLINKING_COLOR[ m_frame ]];
-            ShaderManager::instance()->pushShader(m_blinkingShader);
+            ShaderManager::instance()->pushShader(m_blinkingShader.get());
             m_blinkingShader->setUniform(GLShader::Color, blinkingColor);
         } else {
             ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -304,14 +293,12 @@ void StartupFeedbackEffect::stop()
     switch(m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
-            delete m_bouncingTextures[i];
-            m_bouncingTextures[i] = nullptr;
+            m_bouncingTextures[i].reset();
         }
         break;
     case BlinkingFeedback:
     case PassiveFeedback:
-        delete m_texture;
-        m_texture = nullptr;
+        m_texture.reset();
         break;
     case NoFeedback:
         return; // don't want the full repaint
@@ -327,13 +314,12 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
     switch(m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
-            delete m_bouncingTextures[i];
-            m_bouncingTextures[i] = new GLTexture(scalePixmap(pix, BOUNCE_SIZES[i]));
+            m_bouncingTextures[i].reset(new GLTexture(scalePixmap(pix, BOUNCE_SIZES[i])));
         }
         break;
     case BlinkingFeedback:
     case PassiveFeedback:
-        m_texture = new GLTexture(pix);
+        m_texture.reset(new GLTexture(pix));
         break;
     default:
         // for safety
@@ -373,12 +359,12 @@ QRect StartupFeedbackEffect::feedbackRect() const
     int yOffset = 0;
     switch(m_type) {
     case BouncingFeedback:
-        texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]];
+        texture = m_bouncingTextures[ FRAME_TO_BOUNCE_TEXTURE[ m_frame ]].get();
         yOffset = FRAME_TO_BOUNCE_YOFFSET[ m_frame ] * m_bounceSizesRatio;
         break;
     case BlinkingFeedback: // fall through
     case PassiveFeedback:
-        texture = m_texture;
+        texture = m_texture.get();
         break;
     default:
         // nothing
