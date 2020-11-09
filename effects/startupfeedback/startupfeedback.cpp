@@ -250,7 +250,7 @@ void StartupFeedbackEffect::gotRemoveStartup(const KStartupInfoId& id, const KSt
 {
     Q_UNUSED( data )
     m_startups.remove(id);
-    if (m_startups.count() == 0) {
+    if (m_startups.isEmpty()) {
         m_currentStartup = KStartupInfoId(); // null
         stop();
         return;
