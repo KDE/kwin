@@ -90,34 +90,31 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
     createStackingOrder(toplevels);
     QRegion damage = _damage;
 
-    int mask = 0;
-    m_backend->prepareRenderingFrame();
-    const bool needsFullRepaint = m_backend->needsFullRepaint();
-    if (needsFullRepaint) {
-        mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
-        damage = screens()->geometry();
-    }
-    QRegion overallUpdate;
     for (int i = 0; i < screens()->count(); ++i) {
+        int mask = 0;
+
         painted_screen = i;
+        m_backend->prepareRenderingFrame(i);
+        const bool needsFullRepaint = m_backend->needsFullRepaint(i);
+        if (needsFullRepaint) {
+            mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
+            damage = screens()->geometry();
+        }
         const QRect geometry = screens()->geometry(i);
         QImage *buffer = m_backend->bufferForScreen(i);
         if (!buffer || buffer->isNull()) {
             continue;
         }
         m_painter->begin(buffer);
-        m_painter->save();
         m_painter->setWindow(geometry);
 
         QRegion updateRegion, validRegion;
         paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
-        overallUpdate = overallUpdate.united(updateRegion);
         paintCursor(updateRegion);
 
-        m_painter->restore();
         m_painter->end();
+        m_backend->present(i, mask, updateRegion);
     }
-    m_backend->present(mask, overallUpdate);
 
     // do cleanup
     clearStackingOrder();
@@ -184,7 +181,7 @@ void SceneQPainter::screenGeometryChanged(const QSize &size)
 
 QImage *SceneQPainter::qpainterRenderBuffer() const
 {
-    return m_backend->buffer();
+    return m_backend->bufferForScreen(0);
 }
 
 //****************************************

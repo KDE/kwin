@@ -21,8 +21,8 @@ class QPainterBackend
 {
 public:
     virtual ~QPainterBackend();
-    virtual void present(int mask, const QRegion &damage) = 0;
-    virtual void prepareRenderingFrame() = 0;
+    virtual void present(int screenId, int mask, const QRegion &damage) = 0;
+    virtual void prepareRenderingFrame(int screenId) = 0;
     /**
      * @brief React on screen geometry changes.
      *
@@ -42,16 +42,14 @@ public:
     bool isFailed() const {
         return m_failed;
     }
-
-    virtual QImage *buffer() = 0;
     /**
      * Overload for the case that there is a different buffer per screen.
      * Default implementation just calls buffer.
      * @param screenId The id of the screen as used in Screens
      * @todo Get a better identifier for screen then a counter variable
      */
-    virtual QImage *bufferForScreen(int screenId);
-    virtual bool needsFullRepaint() const = 0;
+    virtual QImage *bufferForScreen(int screenId) = 0;
+    virtual bool needsFullRepaint(int screenId) const = 0;
     /**
      * Whether the rendering needs to be split per screen.
      * Default implementation returns @c false.

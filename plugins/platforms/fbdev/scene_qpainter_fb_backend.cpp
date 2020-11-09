@@ -47,29 +47,27 @@ FramebufferQPainterBackend::FramebufferQPainterBackend(FramebufferBackend *backe
 
 FramebufferQPainterBackend::~FramebufferQPainterBackend() = default;
 
-QImage* FramebufferQPainterBackend::buffer()
-{
-    return bufferForScreen(0);
-}
-
 QImage* FramebufferQPainterBackend::bufferForScreen(int screenId)
 {
     Q_UNUSED(screenId)
     return &m_renderBuffer;
 }
 
-bool FramebufferQPainterBackend::needsFullRepaint() const
+bool FramebufferQPainterBackend::needsFullRepaint(int screenId) const
 {
+    Q_UNUSED(screenId)
     return m_needsFullRepaint;
 }
 
-void FramebufferQPainterBackend::prepareRenderingFrame()
+void FramebufferQPainterBackend::prepareRenderingFrame(int screenId)
 {
+    Q_UNUSED(screenId)
     m_needsFullRepaint = true;
 }
 
-void FramebufferQPainterBackend::present(int mask, const QRegion &damage)
+void FramebufferQPainterBackend::present(int screenId, int mask, const QRegion &damage)
 {
+    Q_UNUSED(screenId)
     Q_UNUSED(mask)
     Q_UNUSED(damage)
 

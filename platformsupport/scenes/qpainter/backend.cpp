@@ -39,10 +39,4 @@ bool QPainterBackend::perScreenRendering() const
     return false;
 }
 
-QImage *QPainterBackend::bufferForScreen(int screenId)
-{
-    Q_UNUSED(screenId)
-    return buffer();
-}
-
 }

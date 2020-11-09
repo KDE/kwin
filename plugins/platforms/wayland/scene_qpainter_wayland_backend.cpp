@@ -36,6 +36,16 @@ WaylandQPainterOutput::~WaylandQPainterOutput()
     }
 }
 
+bool WaylandQPainterOutput::needsFullRepaint() const
+{
+    return m_needsFullRepaint;
+}
+
+void WaylandQPainterOutput::setNeedsFullRepaint(bool set)
+{
+    m_needsFullRepaint = set;
+}
+
 bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
 {
     m_pool = pool;
@@ -111,10 +121,14 @@ void WaylandQPainterOutput::prepareRenderingFrame()
 //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
 }
 
+QRegion WaylandQPainterOutput::mapToLocal(const QRegion &region) const
+{
+    return region.translated(-m_waylandOutput->geometry().topLeft());
+}
+
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
     , m_backend(b)
-    , m_needsFullRepaint(true)
 {
 
     const auto waylandOutputs = m_backend->waylandOutputs();
@@ -154,21 +168,19 @@ void WaylandQPainterBackend::createOutput(WaylandOutput *waylandOutput)
     m_outputs << output;
 }
 
-void WaylandQPainterBackend::present(int mask, const QRegion &damage)
+void WaylandQPainterBackend::present(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
 
-    Compositor::self()->aboutToSwapBuffers();
-    m_needsFullRepaint = false;
+    WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
 
-    for (auto *output : m_outputs) {
-        output->present(damage);
+    if (screenId == 0) {
+        Compositor::self()->aboutToSwapBuffers();
     }
-}
 
-QImage *WaylandQPainterBackend::buffer()
-{
-    return bufferForScreen(0);
+    rendererOutput->setNeedsFullRepaint(false);
+    rendererOutput->present(rendererOutput->mapToLocal(damage));
 }
 
 QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
@@ -177,17 +189,20 @@ QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
     return &output->m_backBuffer;
 }
 
-void WaylandQPainterBackend::prepareRenderingFrame()
+void WaylandQPainterBackend::prepareRenderingFrame(int screenId)
 {
-    for (auto *output : m_outputs) {
-        output->prepareRenderingFrame();
-    }
-    m_needsFullRepaint = true;
+    WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
+
+    rendererOutput->prepareRenderingFrame();
+    rendererOutput->setNeedsFullRepaint(true);
 }
 
-bool WaylandQPainterBackend::needsFullRepaint() const
+bool WaylandQPainterBackend::needsFullRepaint(int screenId) const
 {
-    return m_needsFullRepaint;
+    const WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
+    return rendererOutput->needsFullRepaint();
 }
 
 }

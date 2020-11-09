@@ -88,40 +88,34 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
     m_outputs << o;
 }
 
-QImage *DrmQPainterBackend::buffer()
-{
-    return bufferForScreen(0);
-}
-
 QImage *DrmQPainterBackend::bufferForScreen(int screenId)
 {
     const Output &o = m_outputs.at(screenId);
     return o.buffer[o.index]->image();
 }
 
-bool DrmQPainterBackend::needsFullRepaint() const
+bool DrmQPainterBackend::needsFullRepaint(int screenId) const
 {
+    Q_UNUSED(screenId)
     return true;
 }
 
-void DrmQPainterBackend::prepareRenderingFrame()
+void DrmQPainterBackend::prepareRenderingFrame(int screenId)
 {
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        (*it).index = ((*it).index + 1) % 2;
-    }
+    Output &rendererOutput = m_outputs[screenId];
+    rendererOutput.index = (rendererOutput.index + 1) % 2;
 }
 
-void DrmQPainterBackend::present(int mask, const QRegion &damage)
+void DrmQPainterBackend::present(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
     if (!LogindIntegration::self()->isActiveSession()) {
         return;
     }
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        const Output &o = *it;
-        m_backend->present(o.buffer[o.index], o.output);
-    }
+
+    const Output &rendererOutput = m_outputs[screenId];
+    m_backend->present(rendererOutput.buffer[rendererOutput.index], rendererOutput.output);
 }
 
 bool DrmQPainterBackend::perScreenRendering() const

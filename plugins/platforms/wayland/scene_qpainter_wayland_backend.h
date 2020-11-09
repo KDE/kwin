@@ -47,12 +47,18 @@ public:
     void prepareRenderingFrame();
     void present(const QRegion &damage);
 
+    bool needsFullRepaint() const;
+    void setNeedsFullRepaint(bool set);
+
+    QRegion mapToLocal(const QRegion &region) const;
+
 private:
     WaylandOutput *m_waylandOutput;
     KWayland::Client::ShmPool *m_pool;
 
     QWeakPointer<KWayland::Client::Buffer> m_buffer;
     QImage m_backBuffer;
+    bool m_needsFullRepaint = true;
 
     friend class WaylandQPainterBackend;
 };
@@ -64,13 +70,12 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;
 
-    void present(int mask, const QRegion& damage) override;
-    void prepareRenderingFrame() override;
+    void present(int screenId, int mask, const QRegion& damage) override;
+    void prepareRenderingFrame(int screenId) override;
 
-    bool needsFullRepaint() const override;
+    bool needsFullRepaint(int screenId) const override;
     bool perScreenRendering() const override;
 
 private:
@@ -78,8 +83,6 @@ private:
     void frameRendered();
 
     WaylandBackend *m_backend;
-    bool m_needsFullRepaint;
-
     QVector<WaylandQPainterOutput*> m_outputs;
 };
 
