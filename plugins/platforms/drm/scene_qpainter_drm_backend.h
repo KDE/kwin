@@ -29,8 +29,8 @@ public:
 
     QImage *bufferForScreen(int screenId) override;
     bool needsFullRepaint(int screenId) const override;
-    void prepareRenderingFrame(int screenId) override;
-    void present(int screenId, int mask, const QRegion &damage) override;
+    void beginFrame(int screenId) override;
+    void endFrame(int screenId, int mask, const QRegion &damage) override;
     bool perScreenRendering() const override;
 
 private:

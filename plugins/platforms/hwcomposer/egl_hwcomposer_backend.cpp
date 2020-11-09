@@ -140,7 +140,7 @@ void EglHwcomposerBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-QRegion EglHwcomposerBackend::prepareRenderingFrame(int screenId)
+QRegion EglHwcomposerBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
     present();
@@ -150,7 +150,7 @@ QRegion EglHwcomposerBackend::prepareRenderingFrame(int screenId)
     return QRegion(QRect(QPoint(0, 0), m_backend->size()));
 }
 
-void EglHwcomposerBackend::endRenderingFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglHwcomposerBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
     Q_UNUSED(damagedRegion)

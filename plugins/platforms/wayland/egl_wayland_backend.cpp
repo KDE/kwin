@@ -360,7 +360,7 @@ SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTe
     return new EglWaylandTexture(texture, this);
 }
 
-QRegion EglWaylandBackend::prepareRenderingForScreen(int screenId)
+QRegion EglWaylandBackend::beginFrame(int screenId)
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
@@ -382,7 +382,7 @@ QRegion EglWaylandBackend::prepareRenderingForScreen(int screenId)
     return QRegion();
 }
 
-void EglWaylandBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglWaylandBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     EglWaylandOutput *output = m_outputs[screenId];
     QRegion damage = damagedRegion.intersected(output->m_waylandOutput->geometry());

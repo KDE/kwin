@@ -56,7 +56,6 @@ public:
      * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
     virtual void aboutToStartPainting(int screenId, const QRegion &damage);
-    virtual void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
     virtual bool usesOverlayWindow() const = 0;
@@ -65,7 +64,8 @@ public:
      * Default implementation returns @c false.
      */
     virtual bool perScreenRendering() const;
-    virtual QRegion prepareRenderingForScreen(int screenId);
+    virtual QRegion beginFrame(int screenId) = 0;
+    virtual void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      */

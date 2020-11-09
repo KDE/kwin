@@ -781,7 +781,7 @@ SceneOpenGLTexturePrivate *GlxBackend::createBackendTexture(SceneOpenGLTexture *
     return new GlxTexture(texture, this);
 }
 
-QRegion GlxBackend::prepareRenderingForScreen(int screenId)
+QRegion GlxBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
     QRegion repaint;
@@ -806,7 +806,7 @@ QRegion GlxBackend::prepareRenderingForScreen(int screenId)
     return repaint;
 }
 
-void GlxBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
 

@@ -74,19 +74,6 @@ OverlayWindow* OpenGLBackend::overlayWindow() const
     return nullptr;
 }
 
-QRegion OpenGLBackend::prepareRenderingForScreen(int screenId)
-{
-    // fallback to repaint complete screen
-    return screens()->geometry(screenId);
-}
-
-void OpenGLBackend::endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion)
-{
-    Q_UNUSED(screenId)
-    Q_UNUSED(damage)
-    Q_UNUSED(damagedRegion)
-}
-
 bool OpenGLBackend::perScreenRendering() const
 {
     return false;

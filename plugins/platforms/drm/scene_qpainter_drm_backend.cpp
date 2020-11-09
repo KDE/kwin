@@ -100,13 +100,13 @@ bool DrmQPainterBackend::needsFullRepaint(int screenId) const
     return true;
 }
 
-void DrmQPainterBackend::prepareRenderingFrame(int screenId)
+void DrmQPainterBackend::beginFrame(int screenId)
 {
     Output &rendererOutput = m_outputs[screenId];
     rendererOutput.index = (rendererOutput.index + 1) % 2;
 }
 
-void DrmQPainterBackend::present(int screenId, int mask, const QRegion &damage)
+void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)

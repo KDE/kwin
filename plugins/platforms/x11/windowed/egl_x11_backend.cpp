@@ -70,7 +70,7 @@ bool EglX11Backend::perScreenRendering() const
     return true;
 }
 
-QRegion EglX11Backend::prepareRenderingForScreen(int screenId)
+QRegion EglX11Backend::beginFrame(int screenId)
 {
     makeContextCurrent(m_surfaces.at(screenId));
     setupViewport(screenId);
@@ -88,7 +88,7 @@ void EglX11Backend::setupViewport(int screenId)
     glViewport(-v.x(), v.height() - overall.height() + v.y(), overall.width() * scale, overall.height() * scale);
 }
 
-void EglX11Backend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglX11Backend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(damagedRegion)
     const QRect &outputGeometry = screens()->geometry(screenId);

@@ -21,8 +21,8 @@ class QPainterBackend
 {
 public:
     virtual ~QPainterBackend();
-    virtual void present(int screenId, int mask, const QRegion &damage) = 0;
-    virtual void prepareRenderingFrame(int screenId) = 0;
+    virtual void endFrame(int screenId, int mask, const QRegion &damage) = 0;
+    virtual void beginFrame(int screenId) = 0;
     /**
      * @brief React on screen geometry changes.
      *

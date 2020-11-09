@@ -91,7 +91,7 @@ void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Topl
 
     int mask = 0;
 
-    m_backend->prepareRenderingFrame(screenId);
+    m_backend->beginFrame(screenId);
     const bool needsFullRepaint = m_backend->needsFullRepaint(screenId);
     if (needsFullRepaint) {
         mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
@@ -108,7 +108,7 @@ void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Topl
         paintCursor(updateRegion);
 
         m_painter->end();
-        m_backend->present(screenId, mask, updateRegion);
+        m_backend->endFrame(screenId, mask, updateRegion);
     }
 
     // do cleanup

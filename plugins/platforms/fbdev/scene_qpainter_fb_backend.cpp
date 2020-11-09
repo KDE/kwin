@@ -59,13 +59,13 @@ bool FramebufferQPainterBackend::needsFullRepaint(int screenId) const
     return m_needsFullRepaint;
 }
 
-void FramebufferQPainterBackend::prepareRenderingFrame(int screenId)
+void FramebufferQPainterBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
     m_needsFullRepaint = true;
 }
 
-void FramebufferQPainterBackend::present(int screenId, int mask, const QRegion &damage)
+void FramebufferQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(screenId)
     Q_UNUSED(mask)

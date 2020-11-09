@@ -521,7 +521,7 @@ void EglGbmBackend::setViewport(const Output &output) const
                overall.width() * scale, overall.height() * scale);
 }
 
-QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
+QRegion EglGbmBackend::beginFrame(int screenId)
 {
     const Output &output = m_outputs.at(screenId);
 
@@ -545,9 +545,8 @@ QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
     return output.output->geometry();
 }
 
-void EglGbmBackend::endRenderingFrameForScreen(int screenId,
-                                               const QRegion &renderedRegion,
-                                               const QRegion &damagedRegion)
+void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
+                             const QRegion &damagedRegion)
 {
     Output &output = m_outputs[screenId];
     renderFramebufferToSurface(output);

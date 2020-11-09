@@ -53,12 +53,12 @@ bool X11WindowedQPainterBackend::needsFullRepaint(int screenId) const
     return rendererOutput->needsFullRepaint;
 }
 
-void X11WindowedQPainterBackend::prepareRenderingFrame(int screenId)
+void X11WindowedQPainterBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
 }
 
-void X11WindowedQPainterBackend::present(int screenId, int mask, const QRegion &damage)
+void X11WindowedQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)

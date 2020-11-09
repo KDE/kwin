@@ -36,7 +36,7 @@ bool VirtualQPainterBackend::needsFullRepaint(int screenId) const
     return true;
 }
 
-void VirtualQPainterBackend::prepareRenderingFrame(int screenId)
+void VirtualQPainterBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
 }
@@ -51,7 +51,7 @@ void VirtualQPainterBackend::createOutputs()
     }
 }
 
-void VirtualQPainterBackend::present(int screenId, int mask, const QRegion &damage)
+void VirtualQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)

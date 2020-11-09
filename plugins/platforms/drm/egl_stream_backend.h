@@ -32,10 +32,10 @@ public:
     ~EglStreamBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
-    QRegion prepareRenderingForScreen(int screenId) override;
+    QRegion beginFrame(int screenId) override;
+    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
 
 protected:

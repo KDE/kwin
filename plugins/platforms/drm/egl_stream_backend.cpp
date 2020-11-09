@@ -475,14 +475,14 @@ SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTex
     return new EglStreamTexture(texture, this);
 }
 
-QRegion EglStreamBackend::prepareRenderingForScreen(int screenId)
+QRegion EglStreamBackend::beginFrame(int screenId)
 {
     const Output &o = m_outputs.at(screenId);
     makeContextCurrent(o);
     return o.output->geometry();
 }
 
-void EglStreamBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion);
     Q_UNUSED(damagedRegion);

@@ -70,8 +70,8 @@ public:
     ~EglWaylandBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    QRegion prepareRenderingForScreen(int screenId) override;
-    void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    QRegion beginFrame(int screenId) override;
+    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
     void init() override;
