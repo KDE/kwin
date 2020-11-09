@@ -80,9 +80,4 @@ void FramebufferQPainterBackend::endFrame(int screenId, int mask, const QRegion 
     p.drawImage(QPoint(0, 0), m_backend->isBGR() ? m_renderBuffer.rgbSwapped() : m_renderBuffer);
 }
 
-bool FramebufferQPainterBackend::perScreenRendering() const
-{
-    return true;
-}
-
 }

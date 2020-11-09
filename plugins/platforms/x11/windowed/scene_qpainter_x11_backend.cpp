@@ -81,9 +81,4 @@ void X11WindowedQPainterBackend::endFrame(int screenId, int mask, const QRegion 
     rendererOutput->needsFullRepaint = false;
 }
 
-bool X11WindowedQPainterBackend::perScreenRendering() const
-{
-    return true;
-}
-
 }

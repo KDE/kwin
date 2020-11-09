@@ -56,6 +56,7 @@
 */
 
 #include "scene.h"
+#include "platform.h"
 
 #include <QQuickWindow>
 #include <QVector2D>
@@ -91,16 +92,6 @@ Scene::Scene(QObject *parent)
 Scene::~Scene()
 {
     Q_ASSERT(m_windows.isEmpty());
-}
-
-bool Scene::isPerScreenRenderingEnabled() const
-{
-    return m_isPerScreenRenderingEnabled;
-}
-
-void Scene::setPerScreenRenderingEnabled(bool enabled)
-{
-    m_isPerScreenRenderingEnabled = enabled;
 }
 
 // returns mask and possibly modified region
@@ -718,8 +709,7 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     , disable_painting(0)
     , cached_quad_list(nullptr)
 {
-    const Scene *scene = Compositor::self()->scene();
-    if (scene->isPerScreenRenderingEnabled()) {
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         connect(screens(), &Screens::countChanged, this, &Window::reallocRepaints);
     }
     reallocRepaints();
@@ -1183,8 +1173,7 @@ void Scene::Window::resetRepaints(int screen)
 
 void Scene::Window::reallocRepaints()
 {
-    const Scene *scene = Compositor::self()->scene();
-    if (scene->isPerScreenRenderingEnabled()) {
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         m_repaints.resize(screens()->count());
         m_layerRepaints.resize(screens()->count());
     } else {

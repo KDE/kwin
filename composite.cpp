@@ -685,7 +685,7 @@ void Compositor::performCompositing()
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
     m_renderTimer.start();
-    if (m_scene->isPerScreenRenderingEnabled()) {
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         for (int screenId = 0; screenId < screens()->count(); ++screenId) {
             m_scene->paint(screenId, repaints, windows);
         }

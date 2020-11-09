@@ -55,7 +55,6 @@ SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
     , m_backend(backend)
     , m_painter(new QPainter())
 {
-    setPerScreenRenderingEnabled(m_backend->perScreenRendering());
 }
 
 SceneQPainter::~SceneQPainter()
@@ -83,7 +82,7 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
 
 void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Toplevel *> &toplevels)
 {
-    Q_ASSERT(m_backend->perScreenRendering());
+    Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
     painted_screen = screenId;
 
     createStackingOrder(toplevels);

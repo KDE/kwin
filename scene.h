@@ -137,7 +137,6 @@ public:
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
     virtual OverlayWindow* overlayWindow() const = 0;
-    bool isPerScreenRenderingEnabled() const;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
@@ -204,7 +203,6 @@ public Q_SLOTS:
     void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
     virtual Window *createWindow(Toplevel *toplevel) = 0;
-    void setPerScreenRenderingEnabled(bool enabled);
     void createStackingOrder(const QList<Toplevel *> &toplevels);
     void clearStackingOrder();
     // shared implementation, starts painting the screen
@@ -275,7 +273,6 @@ private:
     QVector< Window* > stacking_order;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
-    bool m_isPerScreenRenderingEnabled = false;
 };
 
 /**

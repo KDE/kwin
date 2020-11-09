@@ -77,7 +77,6 @@ public:
     void beginFrame(int screenId) override;
 
     bool needsFullRepaint(int screenId) const override;
-    bool perScreenRendering() const override;
 
 private:
     void createOutput(AbstractOutput *waylandOutput);

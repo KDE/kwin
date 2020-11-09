@@ -60,9 +60,4 @@ void VirtualQPainterBackend::endFrame(int screenId, int mask, const QRegion &dam
     }
 }
 
-bool VirtualQPainterBackend::perScreenRendering() const
-{
-    return true;
-}
-
 }

@@ -74,11 +74,6 @@ OverlayWindow* OpenGLBackend::overlayWindow() const
     return nullptr;
 }
 
-bool OpenGLBackend::perScreenRendering() const
-{
-    return false;
-}
-
 void OpenGLBackend::copyPixels(const QRegion &region)
 {
     const int height = screens()->size().height();

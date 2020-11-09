@@ -418,11 +418,6 @@ bool EglWaylandBackend::usesOverlayWindow() const
     return false;
 }
 
-bool EglWaylandBackend::perScreenRendering() const
-{
-    return true;
-}
-
 /************************************************
  * EglTexture
  ************************************************/

@@ -33,7 +33,6 @@ public:
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
     bool usesOverlayWindow() const override;
-    bool perScreenRendering() const override;
 
     void screenGeometryChanged(const QSize &size) override;
 

@@ -33,7 +33,6 @@ public:
     bool needsFullRepaint(int screenId) const override;
     void beginFrame(int screenId) override;
     void endFrame(int screenId, int mask, const QRegion &damage) override;
-    bool perScreenRendering() const override;
 
 private:
     void createOutputs();

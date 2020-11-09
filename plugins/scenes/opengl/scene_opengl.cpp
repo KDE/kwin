@@ -350,8 +350,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
             qCDebug(KWIN_OPENGL) << "Explicit synchronization with the X command stream disabled by environment variable";
         }
     }
-
-    setPerScreenRenderingEnabled(m_backend->perScreenRendering());
 }
 
 SceneOpenGL::~SceneOpenGL()

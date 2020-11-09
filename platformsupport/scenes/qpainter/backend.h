@@ -50,11 +50,6 @@ public:
      */
     virtual QImage *bufferForScreen(int screenId) = 0;
     virtual bool needsFullRepaint(int screenId) const = 0;
-    /**
-     * Whether the rendering needs to be split per screen.
-     * Default implementation returns @c false.
-     */
-    virtual bool perScreenRendering() const;
 
 protected:
     QPainterBackend();

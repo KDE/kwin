@@ -454,6 +454,11 @@ public:
         m_selectedCompositor = type;
     }
 
+    /**
+     * Returns @c true if rendering is split per screen; otherwise returns @c false.
+     */
+    bool isPerScreenRenderingEnabled() const;
+
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -500,6 +505,7 @@ protected:
     void setSoftwareCursorForced(bool forced);
     void repaint(const QRect &rect);
     void setReady(bool ready);
+    void setPerScreenRenderingEnabled(bool enabled);
     QSize initialWindowSize() const {
         return m_initialWindowSize;
     }
@@ -566,6 +572,7 @@ private:
     int m_hideCursorCounter = 0;
     bool m_supportsGammaControl = false;
     bool m_supportsOutputChanges = false;
+    bool m_isPerScreenRenderingEnabled = false;
     CompositingType m_selectedCompositor = NoCompositing;
 };
 

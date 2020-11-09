@@ -44,6 +44,7 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : Platform(parent)
 {
     setSupportsPointerWarping(true);
+    setPerScreenRenderingEnabled(true);
     connect(this, &X11WindowedBackend::sizeChanged, this, &X11WindowedBackend::screenSizeChanged);
 }
 

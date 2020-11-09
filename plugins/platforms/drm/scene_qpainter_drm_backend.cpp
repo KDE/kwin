@@ -118,9 +118,4 @@ void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
     m_backend->present(rendererOutput.buffer[rendererOutput.index], rendererOutput.output);
 }
 
-bool DrmQPainterBackend::perScreenRendering() const
-{
-    return true;
-}
-
 }

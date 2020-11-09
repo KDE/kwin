@@ -111,11 +111,6 @@ bool EglMultiBackend::usesOverlayWindow() const
     return false;
 }
 
-bool EglMultiBackend::perScreenRendering() const
-{
-    return true;
-}
-
 void EglMultiBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)

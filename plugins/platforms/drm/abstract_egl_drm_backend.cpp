@@ -39,8 +39,3 @@ bool AbstractEglDrmBackend::usesOverlayWindow() const
 {
     return false;
 }
-
-bool AbstractEglDrmBackend::perScreenRendering() const
-{
-    return true;
-}

@@ -64,6 +64,7 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 #endif
 
     setSupportsGammaControl(true);
+    setPerScreenRenderingEnabled(false);
 }
 
 X11StandalonePlatform::~X11StandalonePlatform()

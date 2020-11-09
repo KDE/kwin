@@ -24,7 +24,6 @@ public:
     explicit EglX11Backend(X11WindowedBackend *backend);
     ~EglX11Backend() override;
     bool usesOverlayWindow() const override;
-    bool perScreenRendering() const override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
 

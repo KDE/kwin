@@ -45,6 +45,7 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
 FramebufferBackend::FramebufferBackend(QObject *parent)
     : Platform(parent)
 {
+    setPerScreenRenderingEnabled(true);
 }
 
 FramebufferBackend::~FramebufferBackend()

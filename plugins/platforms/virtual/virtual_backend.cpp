@@ -38,6 +38,7 @@ VirtualBackend::VirtualBackend(QObject *parent)
     }
     setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
+    setPerScreenRenderingEnabled(true);
 }
 
 VirtualBackend::~VirtualBackend()

@@ -69,6 +69,7 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_dpmsFilter()
 {
     setSupportsGammaControl(true);
+    setPerScreenRenderingEnabled(true);
     supportsOutputChanges();
 }
 

@@ -434,6 +434,16 @@ void Platform::setReady(bool ready)
     emit readyChanged(m_ready);
 }
 
+bool Platform::isPerScreenRenderingEnabled() const
+{
+    return m_isPerScreenRenderingEnabled;
+}
+
+void Platform::setPerScreenRenderingEnabled(bool enabled)
+{
+    m_isPerScreenRenderingEnabled = enabled;
+}
+
 void Platform::warpPointer(const QPointF &globalPos)
 {
     Q_UNUSED(globalPos)
