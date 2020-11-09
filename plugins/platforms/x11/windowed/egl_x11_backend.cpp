@@ -62,7 +62,6 @@ void EglX11Backend::present()
 
 QRegion EglX11Backend::prepareRenderingFrame()
 {
-    startRenderTimer();
     return QRegion();
 }
 

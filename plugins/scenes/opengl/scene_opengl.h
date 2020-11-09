@@ -35,7 +35,7 @@ public:
     ~SceneOpenGL() override;
     bool initFailed() const override;
     bool hasPendingFlush() const override;
-    qint64 paint(const QRegion &damage, const QList<Toplevel *> &windows) override;
+    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
@@ -95,6 +95,7 @@ private:
     bool viewportLimitsMatched(const QSize &size) const;
 
 private:
+    bool m_resetOccurred = false;
     bool m_debug;
     OpenGLBackend *m_backend;
     SyncManager *m_syncManager;

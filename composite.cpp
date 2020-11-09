@@ -686,7 +686,15 @@ void Compositor::performCompositing()
     if (m_framesToTestForSafety > 0 && (m_scene->compositingType() & OpenGLCompositing)) {
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
-    m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+    m_renderTimer.start();
+    if (m_scene->isPerScreenRenderingEnabled()) {
+        for (int screenId = 0; screenId < screens()->count(); ++screenId) {
+            m_scene->paint(screenId, repaints, windows);
+        }
+    } else {
+        m_scene->paint(-1, repaints, windows);
+    }
+    m_timeSinceLastVBlank = m_renderTimer.elapsed();
     if (m_framesToTestForSafety > 0) {
         if (m_scene->compositingType() & OpenGLCompositing) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);

@@ -238,11 +238,9 @@ bool SceneXrender::initFailed() const
 }
 
 // the entry point for painting
-qint64 SceneXrender::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
+void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
-    painted_screen = -1;
-    QElapsedTimer renderTimer;
-    renderTimer.start();
+    painted_screen = screenId;
 
     createStackingOrder(toplevels);
 
@@ -255,8 +253,6 @@ qint64 SceneXrender::paint(const QRegion &damage, const QList<Toplevel *> &tople
     m_backend->present(mask, updateRegion);
     // do cleanup
     clearStackingOrder();
-
-    return renderTimer.nsecsElapsed();
 }
 
 void SceneXrender::paintGenericScreen(int mask, const ScreenPaintData &data)

@@ -513,7 +513,6 @@ SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTextur
 
 QRegion EglGbmBackend::prepareRenderingFrame()
 {
-    startRenderTimer();
     return QRegion();
 }
 

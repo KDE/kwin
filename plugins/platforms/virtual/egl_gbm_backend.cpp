@@ -167,7 +167,6 @@ QRegion EglGbmBackend::prepareRenderingFrame()
     if (!lastDamage().isEmpty()) {
         present();
     }
-    startRenderTimer();
     if (!GLRenderTarget::isRenderTargetBound()) {
         GLRenderTarget::pushRenderTarget(m_fbo);
     }

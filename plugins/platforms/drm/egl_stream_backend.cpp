@@ -477,7 +477,6 @@ SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTex
 
 QRegion EglStreamBackend::prepareRenderingFrame()
 {
-    startRenderTimer();
     return QRegion();
 }
 

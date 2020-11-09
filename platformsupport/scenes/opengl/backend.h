@@ -10,7 +10,6 @@
 #ifndef KWIN_SCENE_OPENGL_BACKEND_H
 #define KWIN_SCENE_OPENGL_BACKEND_H
 
-#include <QElapsedTimer>
 #include <QRegion>
 
 #include <kwin_export.h>
@@ -47,13 +46,7 @@ public:
     virtual ~OpenGLBackend();
 
     virtual void init() = 0;
-    /**
-     * @return Time passes since start of rendering current frame.
-     * @see startRenderTimer
-     */
-    qint64 renderTime() {
-        return m_renderTimer.nsecsElapsed();
-    }
+
     virtual void screenGeometryChanged(const QSize &size) = 0;
     virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) = 0;
 
@@ -288,14 +281,6 @@ protected:
     void setLastDamage(const QRegion &damage) {
         m_lastDamage = damage;
     }
-    /**
-     * @brief Starts the timer for how long it takes to render the frame.
-     *
-     * @see renderTime
-     */
-    void startRenderTimer() {
-        m_renderTimer.start();
-    }
 
     /**
      * Sets the platform-specific @p extensions.
@@ -348,11 +333,6 @@ private:
      * @brief The damage history for the past 10 frames.
      */
     QList<QRegion> m_damageHistory;
-    /**
-     * @brief Timer to measure how long a frame renders.
-     */
-    QElapsedTimer m_renderTimer;
-
     QList<QByteArray> m_extensions;
 };
 

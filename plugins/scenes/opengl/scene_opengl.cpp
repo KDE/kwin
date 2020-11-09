@@ -535,6 +535,8 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     QMetaObject::invokeMethod(this, "resetCompositing", Qt::QueuedConnection);
 
     KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
+
+    m_resetOccurred = true;
 }
 
 
@@ -620,105 +622,84 @@ void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
     m_backend->aboutToStartPainting(screenId, damage);
 }
 
-qint64 SceneOpenGL::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
+void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
+    if (m_resetOccurred) {
+        return; // A graphics reset has occurred, do nothing.
+    }
+
+    painted_screen = screenId;
     // actually paint the frame, flushed with the NEXT frame
     createStackingOrder(toplevels);
 
-    // After this call, updateRegion will contain the damaged region in the
-    // back buffer. This is the region that needs to be posted to repair
-    // the front buffer. It doesn't include the additional damage returned
-    // by prepareRenderingFrame(). validRegion is the region that has been
-    // repainted, and may be larger than updateRegion.
-    QRegion updateRegion, validRegion;
-    if (m_backend->perScreenRendering()) {
-        // trigger start render timer
-        m_backend->prepareRenderingFrame();
-        for (int i = 0; i < screens()->count(); ++i) {
-            painted_screen = i;
-            const QRect &geo = screens()->geometry(i);
-            const qreal scaling = screens()->scale(i);
-            QRegion update;
-            QRegion valid;
-            // prepare rendering makes context current on the output
-            QRegion repaint = m_backend->prepareRenderingForScreen(i);
-            GLVertexBuffer::setVirtualScreenGeometry(geo);
-            GLRenderTarget::setVirtualScreenGeometry(geo);
-            GLVertexBuffer::setVirtualScreenScale(scaling);
-            GLRenderTarget::setVirtualScreenScale(scaling);
+    QRegion update;
+    QRegion valid;
+    QRegion repaint;
+    QRect geo;
+    qreal scaling;
 
-            const GLenum status = glGetGraphicsResetStatus();
-            if (status != GL_NO_ERROR) {
-                handleGraphicsReset(status);
-                return 0;
-            }
-
-            int mask = 0;
-            updateProjectionMatrix();
-
-            paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix(), geo, scaling);   // call generic implementation
-            paintCursor(valid);
-
-            GLVertexBuffer::streamingBuffer()->endOfFrame();
-
-            m_backend->endRenderingFrameForScreen(i, valid, update);
-
-            GLVertexBuffer::streamingBuffer()->framePosted();
-        }
+    // prepare rendering makes context current on the output
+    if (screenId != -1) {
+        repaint = m_backend->prepareRenderingForScreen(screenId);
+        geo = screens()->geometry(screenId);
+        scaling = screens()->scale(screenId);
     } else {
-        painted_screen = -1;
-        m_backend->makeCurrent();
-        QRegion repaint = m_backend->prepareRenderingFrame();
+        repaint = m_backend->prepareRenderingFrame();
+        geo = screens()->geometry();
+        scaling = 1;
+    }
 
-        const GLenum status = glGetGraphicsResetStatus();
-        if (status != GL_NO_ERROR) {
-            handleGraphicsReset(status);
-            return 0;
-        }
-        GLVertexBuffer::setVirtualScreenGeometry(screens()->geometry());
-        GLRenderTarget::setVirtualScreenGeometry(screens()->geometry());
-        GLVertexBuffer::setVirtualScreenScale(1);
-        GLRenderTarget::setVirtualScreenScale(1);
+    GLVertexBuffer::setVirtualScreenGeometry(geo);
+    GLRenderTarget::setVirtualScreenGeometry(geo);
+    GLVertexBuffer::setVirtualScreenScale(scaling);
+    GLRenderTarget::setVirtualScreenScale(scaling);
 
+    const GLenum status = glGetGraphicsResetStatus();
+    if (status != GL_NO_ERROR) {
+        handleGraphicsReset(status);
+    } else {
         int mask = 0;
         updateProjectionMatrix();
-        paintScreen(&mask, damage, repaint, &updateRegion, &validRegion, projectionMatrix());   // call generic implementation
 
-        if (!GLPlatform::instance()->isGLES()) {
+        paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix(), geo, scaling);   // call generic implementation
+        paintCursor(valid);
+
+        if (!GLPlatform::instance()->isGLES() && screenId == -1) {
             const QSize &screenSize = screens()->size();
             const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
 
             // copy dirty parts from front to backbuffer
             if (!m_backend->supportsBufferAge() &&
                 options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
-                validRegion != displayRegion) {
+                valid != displayRegion) {
                 glReadBuffer(GL_FRONT);
-                m_backend->copyPixels(displayRegion - validRegion);
+                m_backend->copyPixels(displayRegion - valid);
                 glReadBuffer(GL_BACK);
-                validRegion = displayRegion;
+                valid = displayRegion;
             }
         }
 
         GLVertexBuffer::streamingBuffer()->endOfFrame();
-
-        m_backend->endRenderingFrame(validRegion, updateRegion);
-
-        GLVertexBuffer::streamingBuffer()->framePosted();
-    }
-
-    if (m_currentFence) {
-        if (!m_syncManager->updateFences()) {
-            qCDebug(KWIN_OPENGL) << "Aborting explicit synchronization with the X command stream.";
-            qCDebug(KWIN_OPENGL) << "Future frames will be rendered unsynchronized.";
-            delete m_syncManager;
-            m_syncManager = nullptr;
+        if (screenId != -1) {
+            m_backend->endRenderingFrameForScreen(screenId, valid, update);
+        } else {
+            m_backend->endRenderingFrame(valid, update);
         }
-        m_currentFence = nullptr;
+        GLVertexBuffer::streamingBuffer()->framePosted();
+
+        if (m_currentFence) {
+            if (!m_syncManager->updateFences()) {
+                qCDebug(KWIN_OPENGL) << "Aborting explicit synchronization with the X command stream.";
+                qCDebug(KWIN_OPENGL) << "Future frames will be rendered unsynchronized.";
+                delete m_syncManager;
+                m_syncManager = nullptr;
+            }
+            m_currentFence = nullptr;
+        }
     }
 
     // do cleanup
     clearStackingOrder();
-    return m_backend->renderTime();
 }
 
 QMatrix4x4 SceneOpenGL::transformation(int mask, const ScreenPaintData &data) const

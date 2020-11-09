@@ -402,7 +402,6 @@ QRegion EglOnXBackend::prepareRenderingFrame()
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
-    startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
     return repaint;

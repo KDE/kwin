@@ -157,6 +157,7 @@ private:
     bool m_composeAtSwapCompletion;
 
     int m_framesToTestForSafety = 3;
+    QElapsedTimer m_renderTimer;
     QElapsedTimer m_monotonicClock;
 };
 

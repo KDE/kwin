@@ -366,7 +366,6 @@ SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTe
 QRegion EglWaylandBackend::prepareRenderingFrame()
 {
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-    startRenderTimer();
     m_swapping = false;
     return QRegion();
 }

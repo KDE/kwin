@@ -81,30 +81,25 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &toplevels)
+void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Toplevel *> &toplevels)
 {
     Q_ASSERT(m_backend->perScreenRendering());
-    QElapsedTimer renderTimer;
-    renderTimer.start();
+    painted_screen = screenId;
 
     createStackingOrder(toplevels);
     QRegion damage = _damage;
 
-    for (int i = 0; i < screens()->count(); ++i) {
-        int mask = 0;
+    int mask = 0;
 
-        painted_screen = i;
-        m_backend->prepareRenderingFrame(i);
-        const bool needsFullRepaint = m_backend->needsFullRepaint(i);
-        if (needsFullRepaint) {
-            mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
-            damage = screens()->geometry();
-        }
-        const QRect geometry = screens()->geometry(i);
-        QImage *buffer = m_backend->bufferForScreen(i);
-        if (!buffer || buffer->isNull()) {
-            continue;
-        }
+    m_backend->prepareRenderingFrame(screenId);
+    const bool needsFullRepaint = m_backend->needsFullRepaint(screenId);
+    if (needsFullRepaint) {
+        mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
+        damage = screens()->geometry(screenId);
+    }
+    const QRect geometry = screens()->geometry(screenId);
+    QImage *buffer = m_backend->bufferForScreen(screenId);
+    if (buffer && !buffer->isNull()) {
         m_painter->begin(buffer);
         m_painter->setWindow(geometry);
 
@@ -113,13 +108,11 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
         paintCursor(updateRegion);
 
         m_painter->end();
-        m_backend->present(i, mask, updateRegion);
+        m_backend->present(screenId, mask, updateRegion);
     }
 
     // do cleanup
     clearStackingOrder();
-
-    return renderTimer.nsecsElapsed();
 }
 
 void SceneQPainter::paintBackground(const QRegion &region)

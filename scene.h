@@ -65,7 +65,7 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual qint64 paint(const QRegion &damage, const QList<Toplevel *> &windows) = 0;
+    virtual void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows) = 0;
 
     /**
      * Adds the Toplevel to the Scene.

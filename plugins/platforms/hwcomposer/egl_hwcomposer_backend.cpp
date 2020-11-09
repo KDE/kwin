@@ -145,7 +145,6 @@ QRegion EglHwcomposerBackend::prepareRenderingFrame()
     present();
 
     // TODO: buffer age?
-    startRenderTimer();
     // triggers always a full repaint
     return QRegion(QRect(QPoint(0, 0), m_backend->size()));
 }

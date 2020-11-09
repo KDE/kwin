@@ -799,7 +799,6 @@ QRegion GlxBackend::prepareRenderingFrame()
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
-    startRenderTimer();
     glXWaitX();
 
     return repaint;
