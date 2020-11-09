@@ -277,13 +277,11 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (!m_active)
         effects->startMousePolling();
     m_active = true;
-    auto readCursorSize = []() -> int {
-        // read details about the mouse-cursor theme define per default
-        KConfigGroup mousecfg(effects->inputConfig(), "Mouse");
-        int cursorSize  = mousecfg.readEntry("cursorSize", 24);
-        return cursorSize;
-    };
-    m_cursorSize = readCursorSize();
+
+    // read details about the mouse-cursor theme define per default
+    KConfigGroup mousecfg(effects->inputConfig(), "Mouse");
+    m_cursorSize = mousecfg.readEntry("cursorSize", 24);
+
     int iconSize = m_cursorSize / 1.5;
     if (!iconSize) {
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_SmallIconSize);
