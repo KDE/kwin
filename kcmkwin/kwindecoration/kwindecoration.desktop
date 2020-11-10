@@ -6,7 +6,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 X-KDE-Library=kcm_kwindecoration
 X-KDE-ParentApp=kcontrol
-X-KDE-System-Settings-Parent-Category=applicationstyle
+X-KDE-System-Settings-Parent-Category=appearance
 X-KDE-Weight=40
 X-DocPath=kcontrol/kwindecoration/index.html
 
