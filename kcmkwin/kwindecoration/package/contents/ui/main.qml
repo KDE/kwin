@@ -6,7 +6,8 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.4 as Controls
+import QtQuick.Controls 2.4 as QQC2
+
 import org.kde.kcm 1.5 as KCM
 import org.kde.kconfig 1.0 // for KAuthorized
 import org.kde.kirigami 2.4 as Kirigami
@@ -38,7 +39,7 @@ Kirigami.Page {
         anchors.fill: parent
         spacing: 0
 
-        Controls.TabBar {
+        QQC2.TabBar {
             id: tabBar
             // Tab styles generally assume that they're touching the inner layout,
             // not the frame, so we need to move the tab bar down a pixel and make
@@ -47,15 +48,15 @@ Kirigami.Page {
             Layout.bottomMargin: -1
             Layout.fillWidth: true
 
-            Controls.TabButton {
+            QQC2.TabButton {
                 text: i18nc("tab label", "Theme")
             }
 
-            Controls.TabButton {
+            QQC2.TabButton {
                 text: i18nc("tab label", "Titlebar Buttons")
             }
         }
-        Controls.Frame {
+        QQC2.Frame {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -81,10 +82,10 @@ Kirigami.Page {
                         }
 
                         RowLayout {
-                            Controls.Label {
+                            QQC2.Label {
                                 text: i18nc("Selector label", "Window border size:")
                             }
-                            Controls.ComboBox {
+                            QQC2.ComboBox {
                                 id: borderSizeComboBox
                                 model: kcm.borderSizesModel
                                 currentIndex: kcm.borderIndex
@@ -98,7 +99,7 @@ Kirigami.Page {
                             Item {
                                 Layout.fillWidth: true
                             }
-                            Controls.Button {
+                            QQC2.Button {
                                 text: i18nc("button text", "Get New Window Decorations...")
                                 icon.name: "get-hot-new-stuff"
                                 onClicked: kcm.getNewStuff(this)
@@ -112,9 +113,10 @@ Kirigami.Page {
                     Buttons {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        Layout.margins: Kirigami.Units.smallSpacing
                     }
 
-                    Controls.CheckBox {
+                    QQC2.CheckBox {
                         id: closeOnDoubleClickOnMenuCheckBox
                         text: i18nc("checkbox label", "Close windows by double clicking the menu button")
                         checked: kcm.settings.closeOnDoubleClickOnMenu
@@ -138,7 +140,7 @@ Kirigami.Page {
                         visible: false
                     }
 
-                    Controls.CheckBox {
+                    QQC2.CheckBox {
                         id: showToolTipsCheckBox
                         text: i18nc("checkbox label", "Show titlebar button tooltips")
                         checked: kcm.settings.showToolTips
