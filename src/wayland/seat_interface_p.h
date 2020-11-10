@@ -126,7 +126,7 @@ public:
         };
         Mode mode = Mode::None;
         DataDeviceInterface *source = nullptr;
-        DataDeviceInterface *target = nullptr;
+        QPointer<DataDeviceInterface> target;
         SurfaceInterface *surface = nullptr;
         PointerInterface *sourcePointer = nullptr;
         TouchInterface *sourceTouch = nullptr;
