@@ -83,6 +83,7 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
 
 qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &toplevels)
 {
+    Q_ASSERT(m_backend->perScreenRendering());
     QElapsedTimer renderTimer;
     renderTimer.start();
 
@@ -91,52 +92,33 @@ qint64 SceneQPainter::paint(const QRegion &_damage, const QList<Toplevel *> &top
 
     int mask = 0;
     m_backend->prepareRenderingFrame();
-    if (m_backend->perScreenRendering()) {
-        const bool needsFullRepaint = m_backend->needsFullRepaint();
-        if (needsFullRepaint) {
-            mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
-            damage = screens()->geometry();
-        }
-        QRegion overallUpdate;
-        for (int i = 0; i < screens()->count(); ++i) {
-            painted_screen = i;
-            const QRect geometry = screens()->geometry(i);
-            QImage *buffer = m_backend->bufferForScreen(i);
-            if (!buffer || buffer->isNull()) {
-                continue;
-            }
-            m_painter->begin(buffer);
-            m_painter->save();
-            m_painter->setWindow(geometry);
-
-            QRegion updateRegion, validRegion;
-            paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
-            overallUpdate = overallUpdate.united(updateRegion);
-            paintCursor(updateRegion);
-
-            m_painter->restore();
-            m_painter->end();
-        }
-        m_backend->showOverlay();
-        m_backend->present(mask, overallUpdate);
-    } else {
-        painted_screen = -1;
-        m_painter->begin(m_backend->buffer());
-        m_painter->setClipping(true);
-        m_painter->setClipRegion(damage);
-        if (m_backend->needsFullRepaint()) {
-            mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
-            damage = screens()->geometry();
-        }
-        QRegion updateRegion, validRegion;
-        paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
-
-        paintCursor(updateRegion);
-        m_backend->showOverlay();
-
-        m_painter->end();
-        m_backend->present(mask, updateRegion);
+    const bool needsFullRepaint = m_backend->needsFullRepaint();
+    if (needsFullRepaint) {
+        mask |= Scene::PAINT_SCREEN_BACKGROUND_FIRST;
+        damage = screens()->geometry();
     }
+    QRegion overallUpdate;
+    for (int i = 0; i < screens()->count(); ++i) {
+        painted_screen = i;
+        const QRect geometry = screens()->geometry(i);
+        QImage *buffer = m_backend->bufferForScreen(i);
+        if (!buffer || buffer->isNull()) {
+            continue;
+        }
+        m_painter->begin(buffer);
+        m_painter->save();
+        m_painter->setWindow(geometry);
+
+        QRegion updateRegion, validRegion;
+        paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
+        overallUpdate = overallUpdate.united(updateRegion);
+        paintCursor(updateRegion);
+
+        m_painter->restore();
+        m_painter->end();
+    }
+    m_backend->showOverlay();
+    m_backend->present(mask, overallUpdate);
 
     // do cleanup
     clearStackingOrder();
