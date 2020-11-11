@@ -576,8 +576,6 @@ void Compositor::timerEvent(QTimerEvent *te)
 
 void Compositor::aboutToSwapBuffers()
 {
-    Q_ASSERT(!m_bufferSwapPending);
-
     m_bufferSwapPending = true;
 }
 
