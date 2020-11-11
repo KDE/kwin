@@ -121,7 +121,9 @@ Kirigami.Page {
 
                                 Connections {
                                     target: kcm
-                                    onThemeChanged: borderSizeComboBox.autoBorderUpdate()
+                                    function onThemeChanged() {
+                                        borderSizeComboBox.autoBorderUpdate()
+                                    }
                                 }
                             }
                             Item {

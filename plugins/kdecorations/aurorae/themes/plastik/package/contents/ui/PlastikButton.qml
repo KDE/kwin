@@ -140,10 +140,14 @@ DecorationButton {
     onPressedChanged: colorize()
     Connections {
         target: decoration.client
-        onActiveChanged: button.colorize()
+        function onActiveChanged() {
+            button.colorize()
+        }
     }
     Connections {
         target: options
-        onColorsChanged: button.colorize();
+        function onColorsChanged() {
+            button.colorize();
+        }
     }
 }

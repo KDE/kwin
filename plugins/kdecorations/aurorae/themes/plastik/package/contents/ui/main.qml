@@ -405,10 +405,14 @@ Decoration {
     }
     Connections {
         target: decoration
-        onConfigChanged: root.readConfig()
+        function onConfigChanged() {
+            root.readConfig()
+        }
     }
     Connections {
         target: decorationSettings
-        onBorderSizeChanged: root.readBorderSize();
+        function onBorderSizeChanged() {
+            root.readBorderSize();
+        }
     }
 }

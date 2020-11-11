@@ -20,11 +20,11 @@ ScrollViewKCM {
     Connections {
         target: kcm.desktopsModel
 
-        onReadyChanged: {
+        function onReadyChanged() {
             rowsSpinBox.value = kcm.desktopsModel.rows;
         }
 
-        onRowsChanged: {
+        function onRowsChanged() {
             rowsSpinBox.value = kcm.desktopsModel.rows;
         }
     }

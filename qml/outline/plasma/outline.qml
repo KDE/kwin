@@ -47,7 +47,7 @@ Window {
         target: outline
         // when unified geometry changes, this means our window position changed and any
         // animation will potentially be offset and/or cut off, skip the animation in this case
-        onUnifiedGeometryChanged: {
+        function onUnifiedGeometryChanged() {
             if (window.visible) {
                 window.animationEnabled = false
                 svg.setGeometry(outline.geometry)
