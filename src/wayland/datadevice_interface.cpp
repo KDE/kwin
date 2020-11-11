@@ -175,6 +175,7 @@ DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSour
 void DataDeviceInterfacePrivate::data_device_destroy_resource(QtWaylandServer::wl_data_device::Resource *resource)
 {
     Q_UNUSED(resource)
+    emit q->aboutToBeDestroyed();
     delete q;
 }
 

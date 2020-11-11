@@ -118,6 +118,7 @@ public:
     wl_client *client();
 
 Q_SIGNALS:
+    void aboutToBeDestroyed();
     void dragStarted();
     void selectionChanged(KWaylandServer::DataSourceInterface*);
     void selectionCleared();

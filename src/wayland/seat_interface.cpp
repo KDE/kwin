@@ -293,20 +293,15 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
             }
             drag.source = dataDevice;
             drag.sourcePointer = interfaceForSurface(originSurface, pointers);
-            drag.destroyConnection = QObject::connect(dataDevice, &QObject::destroyed, q,
+            drag.destroyConnection = QObject::connect(dataDevice, &DataDeviceInterface::aboutToBeDestroyed, q,
                 [this] {
-                    endDrag(display->nextSerial());
+                    cancelDrag(display->nextSerial());
                 }
             );
             if (dataDevice->dragSource()) {
                 drag.dragSourceDestroyConnection = QObject::connect(dataDevice->dragSource(), &AbstractDataSource::aboutToBeDestroyed, q,
                     [this] {
-                        const auto serial = display->nextSerial();
-                        if (drag.target) {
-                            drag.target->updateDragTarget(nullptr, serial);
-                            drag.target = nullptr;
-                        }
-                        endDrag(serial);
+                        cancelDrag(display->nextSerial());
                     }
                 );
             } else {
@@ -393,6 +388,15 @@ void SeatInterface::Private::registerPrimarySelectionDevice(PrimarySelectionDevi
             }
         }
     }
+}
+
+void SeatInterface::Private::cancelDrag(quint32 serial)
+{
+    if (drag.target) {
+        drag.target->updateDragTarget(nullptr, serial);
+        drag.target = nullptr;
+    }
+    endDrag(serial);
 }
 
 void SeatInterface::Private::endDrag(quint32 serial)
@@ -1215,14 +1219,8 @@ void SeatInterface::cancelTouchSequence()
         (*it)->cancel();
     }
     if (d->drag.mode == Private::Drag::Mode::Touch) {
-        // cancel the drag, don't drop.
-        if (d->drag.target) {
-            // remove the current target
-            d->drag.target->updateDragTarget(nullptr, 0);
-            d->drag.target = nullptr;
-        }
-        // and end the drag for the source, serial does not matter
-        d->endDrag(0);
+        // cancel the drag, don't drop. serial does not matter
+        d->cancelDrag(0);
     }
     d->globalTouch.ids.clear();
 }

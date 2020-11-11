@@ -42,6 +42,7 @@ public:
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     void endDrag(quint32 serial);
+    void cancelDrag(quint32 serial);
     quint32 nextSerial() const;
 
     QString name;
