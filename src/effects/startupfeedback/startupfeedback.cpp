@@ -74,13 +74,28 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
     , m_splashVisible(false)
 {
+    // TODO: move somewhere that is x11-specific
     if (KWindowSystem::isPlatformX11()) {
         m_selection = new KSelectionOwner("_KDE_STARTUP_FEEDBACK", xcbConnection(), x11RootWindow(), this);
         m_selection->claim(true);
     }
-    connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, &StartupFeedbackEffect::gotNewStartup);
-    connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, &StartupFeedbackEffect::gotRemoveStartup);
-    connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, &StartupFeedbackEffect::gotStartupChange);
+    connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
+        const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
+        Q_EMIT effects->startupAdded(id.id(), icon);
+    });
+    connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
+        Q_UNUSED(data);
+        Q_EMIT effects->startupRemoved(id.id());
+    });
+    connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
+        const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
+        Q_EMIT effects->startupChanged(id.id(), icon);
+    });
+
+    connect(effects, &EffectsHandler::startupAdded, this, &StartupFeedbackEffect::gotNewStartup);
+    connect(effects, &EffectsHandler::startupRemoved, this, &StartupFeedbackEffect::gotRemoveStartup);
+    connect(effects, &EffectsHandler::startupChanged, this, &StartupFeedbackEffect::gotStartupChange);
+
     connect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this]() {
         reconfigure(ReconfigureAll);
@@ -95,7 +110,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     });
     connect(serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, [this] {
         m_splashVisible = false;
-        gotRemoveStartup(KStartupInfoId(), KStartupInfoData()); // Start the next feedback
+        gotRemoveStartup({}); // Start the next feedback
     });
 }
 
@@ -234,20 +249,18 @@ void StartupFeedbackEffect::slotMouseChanged(const QPoint& pos, const QPoint& ol
     }
 }
 
-void StartupFeedbackEffect::gotNewStartup(const KStartupInfoId& id, const KStartupInfoData& data)
+void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
 {
-    const QString& icon = data.findIcon();
     m_currentStartup = id;
     m_startups[ id ] = icon;
     start(icon);
 }
 
-void StartupFeedbackEffect::gotRemoveStartup(const KStartupInfoId& id, const KStartupInfoData& data)
+void StartupFeedbackEffect::gotRemoveStartup(const QString &id)
 {
-    Q_UNUSED( data )
     m_startups.remove(id);
     if (m_startups.isEmpty()) {
-        m_currentStartup = KStartupInfoId(); // null
+        m_currentStartup.clear();
         stop();
         return;
     }
@@ -255,18 +268,17 @@ void StartupFeedbackEffect::gotRemoveStartup(const KStartupInfoId& id, const KSt
     start(m_startups[ m_currentStartup ]);
 }
 
-void StartupFeedbackEffect::gotStartupChange(const KStartupInfoId& id, const KStartupInfoData& data)
+void StartupFeedbackEffect::gotStartupChange(const QString &id, const QIcon &icon)
 {
     if (m_currentStartup == id) {
-        const QString& icon = data.findIcon();
-        if (!icon.isEmpty() && icon != m_startups[ m_currentStartup ]) {
+        if (!icon.isNull() && icon.name() != m_startups[m_currentStartup].name()) {
             m_startups[ id ] = icon;
             start(icon);
         }
     }
 }
 
-void StartupFeedbackEffect::start(const QString& icon)
+void StartupFeedbackEffect::start(const QIcon &icon)
 {
     if (m_type == NoFeedback || m_splashVisible)
         return;
@@ -285,7 +297,7 @@ void StartupFeedbackEffect::start(const QString& icon)
     // get ratio for bouncing cursor so we don't need to manually calculate the sizes for each icon size
     if (m_type == BouncingFeedback)
         m_bounceSizesRatio = iconSize / 16.0;
-    const QPixmap iconPixmap = QIcon::fromTheme(icon, QIcon::fromTheme(QStringLiteral("system-run"))).pixmap(iconSize);
+    const QPixmap iconPixmap = icon.pixmap(iconSize);
     prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);

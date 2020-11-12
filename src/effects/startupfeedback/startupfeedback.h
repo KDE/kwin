@@ -45,9 +45,9 @@ public:
     static bool supported();
 
 private Q_SLOTS:
-    void gotNewStartup(const KStartupInfoId& id, const KStartupInfoData& data);
-    void gotRemoveStartup(const KStartupInfoId& id, const KStartupInfoData& data);
-    void gotStartupChange(const KStartupInfoId& id, const KStartupInfoData& data);
+    void gotNewStartup(const QString &id, const QIcon &icon);
+    void gotRemoveStartup(const QString &id);
+    void gotStartupChange(const QString &id, const QIcon &icon);
     void slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
@@ -57,7 +57,7 @@ private:
         BlinkingFeedback,
         PassiveFeedback
     };
-    void start(const QString& icon);
+    void start(const QIcon &icon);
     void stop();
     QImage scalePixmap(const QPixmap& pm, const QSize& size) const;
     void prepareTextures(const QPixmap& pix);
@@ -66,8 +66,8 @@ private:
     qreal m_bounceSizesRatio;
     KStartupInfo* m_startupInfo;
     KSelectionOwner* m_selection;
-    KStartupInfoId m_currentStartup;
-    QMap< KStartupInfoId, QString > m_startups; // QString == pixmap
+    QString m_currentStartup;
+    QMap<QString, QIcon> m_startups; // QString == pixmap
     bool m_active;
     int m_frame;
     int m_progress;
