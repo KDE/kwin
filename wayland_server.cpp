@@ -408,7 +408,6 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
     connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerClient);
     m_display->createIdleInhibitManagerV1(m_display);
     m_plasmaShell = m_display->createPlasmaShell(m_display);
-    m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
         [this] (PlasmaShellSurfaceInterface *surface) {
             if (XdgSurfaceClient *client = findXdgSurfaceClient(surface->surface())) {
