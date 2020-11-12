@@ -878,6 +878,13 @@ public:
 
     QRect fullscreenGeometryRestore() const;
 
+    /**
+     * Helper function to compute the icon out of an application id defined by @p fileName
+     *
+     * @returns an icon name that can be used with QIcon::fromTheme()
+     */
+    static QString iconFromDesktopFile(const QString &fileName);
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
