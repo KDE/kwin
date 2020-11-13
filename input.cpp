@@ -2157,7 +2157,10 @@ void InputRedirection::reconfigure()
         const auto config = inputConfig->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
         const int rate = config.readEntry("RepeatRate", 25);
-        const bool enabled = config.readEntry("KeyboardRepeating", 0) == 0;
+        const QString repeatMode = config.readEntry("KeyRepeat", "accent");
+        // when the clients will repeat the character or turn repeat key events into an accent character selection, we want
+        // to tell the clients that we are indeed repeating keys.
+        const bool enabled = repeatMode == QLatin1String("accent") || repeatMode == QLatin1String("repeat");
 
         waylandServer()->seat()->keyboard()->setRepeatInfo(enabled ? rate : 0, delay);
     }
