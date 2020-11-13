@@ -72,6 +72,12 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::borderIndexChanged);
     connect(this, &KCMKWinDecoration::themeChanged, this, &KCMKWinDecoration::borderIndexChanged);
 
+    connect(this, &KCMKWinDecoration::themeChanged, this, [=](){
+        if (m_data->settings()->borderSizeAuto()) {
+            setBorderSize(recommendedBorderSize());
+        }
+    });
+
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsInserted, this, &KCMKWinDecoration::onLeftButtonsChanged);
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsMoved, this, &KCMKWinDecoration::onLeftButtonsChanged);
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsRemoved, this, &KCMKWinDecoration::onLeftButtonsChanged);
