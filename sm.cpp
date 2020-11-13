@@ -379,5 +379,10 @@ void SessionManager::finishSaveSession(const QString &name)
     emit finishSessionSaveRequested(name);
 }
 
+void SessionManager::quit()
+{
+    qApp->quit();
+}
+
 } // namespace
 

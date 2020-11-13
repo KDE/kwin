@@ -19,6 +19,9 @@
       <method name="finishSaveSession">
           <arg name="name" type="s" direction="in" />
       </method>
+      <!-- Shutdown kwin at the end of the session -->
+      <method name="quit">
+      </method>
    </interface>
 </node>
 

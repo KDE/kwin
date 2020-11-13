@@ -43,6 +43,7 @@ public Q_SLOTS: // DBus API
     void loadSession(const QString &name);
     void aboutToSaveSession(const QString &name);
     void finishSaveSession(const QString &name);
+    void quit();
 
 private:
     void setState(SessionState state);
