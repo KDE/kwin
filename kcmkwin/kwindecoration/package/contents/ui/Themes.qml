@@ -43,6 +43,9 @@ KCM.GridView {
             KDecoration.Settings {
                 id: settingsItem
                 bridge: bridgeItem.bridge
+                Component.onCompleted: {
+                    settingsItem.borderSizesIndex = kcm.borderSize
+                }
             }
             KDecoration.Decoration {
                 id: inactivePreview
