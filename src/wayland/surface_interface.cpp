@@ -83,6 +83,9 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     pending.children.append(child);
     cached.children.append(child);
     current.children.append(child);
+
+    child->surface()->setOutputs(outputs);
+
     emit q->childSubSurfaceAdded(child);
     emit q->subSurfaceTreeChanged();
     QObject::connect(child, &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
@@ -850,6 +853,9 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     // TODO: send enter when the client binds the OutputInterface another time
 
     d->outputs = outputs;
+    for (auto child : d->current.children) {
+        child->surface()->setOutputs(outputs);
+    }
 }
 
 SurfaceInterface *SurfaceInterface::surfaceAt(const QPointF &position)
