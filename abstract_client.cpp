@@ -3142,7 +3142,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     if (isFullScreen()) {
-        QRect area = workspace()->clientArea(FullScreenArea, this);
+        QRect area = workspace()->clientArea(FullScreenArea, geometryRestore().center(), desktop());
         if (frameGeometry() != area)
             setFrameGeometry(area);
         return;
