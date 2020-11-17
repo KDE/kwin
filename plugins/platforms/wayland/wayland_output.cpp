@@ -121,7 +121,7 @@ void XdgShellOutput::updateWindowTitle()
         grab = i18n("Press right control key to grab pointer");
     }
     const QString title = i18nc("Title of nested KWin Wayland with Wayland socket identifier as argument",
-                                "KDE Wayland Compositor #%1 (%2)", m_number, waylandServer()->display()->socketName());
+                                "KDE Wayland Compositor #%1 (%2)", m_number, waylandServer()->socketName());
 
     if (grab.isEmpty()) {
         m_xdgShellSurface->setTitle(title);

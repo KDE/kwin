@@ -241,6 +241,12 @@ public:
 
     AbstractWaylandOutput *findOutput(KWaylandServer::OutputInterface *output) const;
 
+    /**
+     * Returns the first socket name that can be used to connect to this server.
+     * For a full list, use display()->socketNames()
+     */
+    QString socketName() const;
+
 Q_SIGNALS:
     void shellClientAdded(KWin::AbstractClient *);
     void shellClientRemoved(KWin::AbstractClient *);

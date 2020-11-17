@@ -331,10 +331,8 @@ bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags
 {
     m_initFlags = flags;
     m_display = new KWinDisplay(this);
-    if (!socketName.isNull() && !socketName.isEmpty()) {
-        m_display->setSocketName(QString::fromUtf8(socketName));
-    } else {
-        m_display->setAutomaticSocketNaming(true);
+    if (!m_display->addSocketName(QString::fromUtf8(socketName))) {
+        return false;
     }
     m_compositor = m_display->createCompositor(m_display);
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,
@@ -744,7 +742,7 @@ void WaylandServer::dispatch()
     if (m_internalConnection.server) {
         m_internalConnection.server->flush();
     }
-    m_display->dispatchEvents(0);
+    m_display->dispatchEvents();
 }
 
 static AbstractClient *findClientInList(const QList<AbstractClient *> &clients, KWaylandServer::SurfaceInterface *surface)
@@ -825,6 +823,15 @@ bool WaylandServer::isKeyboardShortcutsInhibited() const
         return inhibitor && inhibitor->isActive();
     }
     return false;
+}
+
+QString WaylandServer::socketName() const
+{
+    const QStringList socketNames = display()->socketNames();
+    if (!socketNames.isEmpty()) {
+        return socketNames.first();
+    }
+    return QString();
 }
 
 }
