@@ -317,9 +317,19 @@ static const QString s_hwcomposerPlugin = QStringLiteral("KWinWaylandHwcomposerB
 #endif
 static const QString s_virtualPlugin = QStringLiteral("KWinWaylandVirtualBackend");
 
-static QString automaticBackendSelection()
+
+enum SpawnMode {
+    Standalone,
+    ReusedSocket
+};
+
+static QString automaticBackendSelection(SpawnMode spawnMode)
 {
-    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
+    /* WAYLAND_DISPLAY is set by the kwin_wayland_wrapper, so we can't use it for automatic detection.
+    * If kwin_wayland_wrapper is used nested on wayland, we won't be in this path as
+    * it explicitly sets '--socket' which means a backend is set and we won't be in this path anyway
+    */
+    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY") && spawnMode == Standalone) {
         return s_waylandPlugin;
     }
     if (qEnvironmentVariableIsSet("DISPLAY")) {
@@ -497,10 +507,16 @@ int main(int argc, char * argv[])
                                     QStringLiteral("count"));
     outputCountOption.setDefaultValue(QString::number(1));
 
+    QCommandLineOption waylandSocketFdOption(QStringLiteral("wayland_fd"),
+                                    i18n("Wayland socket to use for incoming connections."),
+                                    QStringLiteral("wayland_fd"));
+
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
+    parser.addOption(waylandSocketFdOption);
+
     if (hasX11Option) {
         parser.addOption(x11DisplayOption);
     }
@@ -653,7 +669,7 @@ int main(int argc, char * argv[])
 
     if (pluginName.isEmpty()) {
         std::cerr << "No backend specified through command line argument, trying auto resolution" << std::endl;
-        pluginName = KWin::automaticBackendSelection();
+        pluginName = KWin::automaticBackendSelection(parser.isSet(waylandSocketFdOption) ? KWin::ReusedSocket : KWin::Standalone);
     }
 
     auto pluginIt = std::find_if(availablePlugins.begin(), availablePlugins.end(),
@@ -678,7 +694,29 @@ int main(int argc, char * argv[])
     if (parser.isSet(noGlobalShortcutsOption)) {
         flags |= KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts;
     }
-    if (!server->init(parser.value(waylandSocketOption), flags)) {
+
+
+    if (parser.isSet(waylandSocketFdOption)) {
+        bool ok;
+        int fd = parser.value(waylandSocketFdOption).toInt(&ok);
+        if (ok ) {
+            // make sure we don't leak this FD to children
+            fcntl(fd, F_SETFD, O_CLOEXEC);
+            server->display()->addSocketFileDescriptor(fd);
+        } else {
+            std::cerr << "FATAL ERROR: could not parse socket FD" << std::endl;
+            return 1;
+        }
+    } else {
+        const QString socketName = parser.value(waylandSocketOption);
+        // being empty is fine here, addSocketName will automatically pick one
+        if (!server->display()->addSocketName(socketName)) {
+            std::cerr << "FATAL ERROR: could not add wayland socket " << qPrintable(socketName) << std::endl;
+            return 1;
+        }
+    }
+
+    if (!server->init(flags)) {
         std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
         return 1;
     }
@@ -698,7 +736,9 @@ int main(int argc, char * argv[])
     a.platform()->setInitialOutputCount(outputCount);
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
-    environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
+    if (!server->socketName().isEmpty()) {
+        environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
+    }
     a.setProcessStartupEnvironment(environment);
     a.setStartXwayland(parser.isSet(xwaylandOption));
     a.setApplicationsToStart(parser.positionalArguments());

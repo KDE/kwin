@@ -87,7 +87,9 @@ public:
     Q_DECLARE_FLAGS(InitializationFlags, InitializationFlag)
 
     ~WaylandServer() override;
-    bool init(const QString &socketName = QString(), InitializationFlags flags = InitializationFlag::NoOptions);
+    bool init(const QString &socketName, InitializationFlags flags = InitializationFlag::NoOptions);
+    bool init(InitializationFlags flags = InitializationFlag::NoOptions);
+
     bool start();
     void terminateClientConnections();
 
