@@ -131,13 +131,15 @@ bool DrmGpu::updateOutputs()
         auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
         if (it == m_connectors.constEnd()) {
             auto c = new DrmConnector(currentConnector, m_fd);
-            if (m_atomicModeSetting && !c->atomicInit()) {
-                delete c;
-                continue;
-            }
-            if (c->isNonDesktop()) {
-                delete c;
-                continue;
+            if (m_atomicModeSetting) {
+                if (!c->atomicInit()) {
+                    delete c;
+                    continue;
+                }
+                if (c->isNonDesktop()) {
+                    delete c;
+                    continue;
+                }
             }
             m_connectors << c;
         } else {

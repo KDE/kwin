@@ -37,7 +37,11 @@ public:
     bool isConnected();
     
     bool isNonDesktop() const {
-        return m_props.at(static_cast<int>(PropertyIndex::NonDesktop))->value();
+        auto prop = m_props.at(static_cast<int>(PropertyIndex::NonDesktop));
+        if (!prop) {
+            return false;
+        }
+        return prop->value();
     }
 private:
     QVector<uint32_t> m_encoders;
