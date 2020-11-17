@@ -186,6 +186,16 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
         .options = options.constData()
     };
     applyEnvironmentRules(ruleNames);
+
+    const QStringList displayNames = config.readEntry("DisplayNames", QStringList());
+    const int range = qMin(m_layoutList.size(), displayNames.size());
+    for (int i = 0; i < range; ++i) {
+        const QString &displayName = displayNames.at(i);
+        if ( !displayName.isEmpty() ) {
+            m_layoutList.replace(i, displayName);
+        }
+    }
+
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
