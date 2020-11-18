@@ -47,13 +47,7 @@ class Settings;
 class KWIN_EXPORT Options : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(FocusPolicy)
     Q_ENUMS(XwaylandCrashPolicy)
-    Q_ENUMS(GlSwapStrategy)
-    Q_ENUMS(MouseCommand)
-    Q_ENUMS(MouseWheelCommand)
-    Q_ENUMS(WindowOperation)
-
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
     Q_PROPERTY(XwaylandCrashPolicy xwaylandCrashPolicy READ xwaylandCrashPolicy WRITE setXwaylandCrashPolicy NOTIFY xwaylandCrashPolicyChanged)
     Q_PROPERTY(int xwaylandMaxCrashCount READ xwaylandMaxCrashCount WRITE setXwaylandMaxCrashCount NOTIFY xwaylandMaxCrashCountChanged)
@@ -226,6 +220,7 @@ public:
          */
         FocusStrictlyUnderMouse
     };
+    Q_ENUM(FocusPolicy)
 
     FocusPolicy focusPolicy() const {
         return m_focusPolicy;
@@ -369,6 +364,7 @@ public:
         SetupWindowShortcutOp,
         ApplicationRulesOp,
     };
+    Q_ENUM(WindowOperation)
 
     WindowOperation operationTitlebarDblClick() const {
         return OpTitlebarDblClick;
@@ -400,6 +396,7 @@ public:
         MouseClose,
         MouseNothing
     };
+    Q_ENUM(MouseCommand)
 
     enum MouseWheelCommand {
         MouseWheelRaiseLower, MouseWheelShadeUnshade, MouseWheelMaximizeRestore,
@@ -407,6 +404,7 @@ public:
         MouseWheelChangeOpacity,
         MouseWheelNothing
     };
+    Q_ENUM(MouseWheelCommand)
 
     MouseCommand operationTitlebarMouseWheel(int delta) const {
         return wheelToMouseCommand(CmdTitlebarWheel, delta);
@@ -581,6 +579,7 @@ public:
     }
 
     enum GlSwapStrategy { NoSwapEncourage = 0, CopyFrontBuffer = 'c', PaintFullScreen = 'p', ExtendDamage = 'e', AutoSwapStrategy = 'a' };
+    Q_ENUM(GlSwapStrategy)
     GlSwapStrategy glPreferBufferSwap() const {
         return m_glPreferBufferSwap;
     }
