@@ -88,151 +88,6 @@ namespace KWin
 
 KWIN_SINGLETON_FACTORY(WaylandServer)
 
-WaylandServer::WaylandServer(QObject *parent)
-    : QObject(parent)
-{
-    qRegisterMetaType<KWaylandServer::OutputInterface::DpmsMode>();
-}
-
-WaylandServer::~WaylandServer()
-{
-    destroyInputMethodConnection();
-}
-
-KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
-{
-    return m_xwaylandConnection;
-}
-
-void WaylandServer::destroyInternalConnection()
-{
-    emit terminatingInternalClientConnection();
-    if (m_internalConnection.client) {
-        // delete all connections hold by plugins like e.g. widget style
-        const auto connections = KWayland::Client::ConnectionThread::connections();
-        for (auto c : connections) {
-            if (c == m_internalConnection.client) {
-                continue;
-            }
-            emit c->connectionDied();
-        }
-
-        delete m_internalConnection.registry;
-        delete m_internalConnection.compositor;
-        delete m_internalConnection.seat;
-        delete m_internalConnection.ddm;
-        dispatch();
-        m_internalConnection.client->deleteLater();
-        m_internalConnection.clientThread->quit();
-        m_internalConnection.clientThread->wait();
-        delete m_internalConnection.clientThread;
-        m_internalConnection.client = nullptr;
-        m_internalConnection.server->destroy();
-        m_internalConnection.server = nullptr;
-    }
-}
-
-void WaylandServer::terminateClientConnections()
-{
-    destroyInternalConnection();
-    destroyInputMethodConnection();
-    if (m_display) {
-        const auto connections = m_display->connections();
-        for (auto it = connections.begin(); it != connections.end(); ++it) {
-            (*it)->destroy();
-        }
-    }
-}
-
-void WaylandServer::registerShellClient(AbstractClient *client)
-{
-    if (client->readyForPainting()) {
-        emit shellClientAdded(client);
-    } else {
-        connect(client, &AbstractClient::windowShown, this, &WaylandServer::shellClientShown);
-    }
-    m_clients << client;
-}
-
-void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
-{
-    // TODO: Find a better way and more generic to install extensions.
-
-    SurfaceInterface *surface = client->surface();
-
-    if (surface->client() == m_screenLockerClientConnection) {
-        ScreenLocker::KSldApp::self()->lockScreenShown();
-    }
-
-    registerShellClient(client);
-
-    auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
-        [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
-            return plasmaSurface->surface() == surface;
-        }
-    );
-    if (it != m_plasmaShellSurfaces.end()) {
-        client->installPlasmaShellSurface(*it);
-        m_plasmaShellSurfaces.erase(it);
-    }
-    if (auto decoration = ServerSideDecorationInterface::get(surface)) {
-        client->installServerDecoration(decoration);
-    }
-    if (auto decoration = XdgToplevelDecorationV1Interface::get(client->shellSurface())) {
-        client->installXdgDecoration(decoration);
-    }
-    if (auto menu = m_appMenuManager->appMenuForSurface(surface)) {
-        client->installAppMenu(menu);
-    }
-    if (auto palette = m_paletteManager->paletteForSurface(surface)) {
-        client->installPalette(palette);
-    }
-
-    connect(m_XdgForeign, &XdgForeignV2Interface::transientChanged, client, [this](SurfaceInterface *child) {
-        emit foreignTransientChanged(child);
-    });
-}
-
-void WaylandServer::registerXdgGenericClient(AbstractClient *client)
-{
-    XdgToplevelClient *toplevelClient = qobject_cast<XdgToplevelClient *>(client);
-    if (toplevelClient) {
-        registerXdgToplevelClient(toplevelClient);
-        return;
-    }
-    XdgPopupClient *popupClient = qobject_cast<XdgPopupClient *>(client);
-    if (popupClient) {
-        registerShellClient(popupClient);
-
-        SurfaceInterface *surface = client->surface();
-        auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
-            [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
-                return plasmaSurface->surface() == surface;
-            }
-        );
-
-        if (it != m_plasmaShellSurfaces.end()) {
-            popupClient->installPlasmaShellSurface(*it);
-            m_plasmaShellSurfaces.erase(it);
-        }
-
-        return;
-    }
-    qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
-}
-
-AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
-{
-    AbstractWaylandOutput *outputFound = nullptr;
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (auto output : outputs) {
-        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
-            outputFound = static_cast<AbstractWaylandOutput *>(output);
-        }
-    }
-    return outputFound;
-}
-
 class KWinDisplay : public KWaylandServer::FilteredDisplay
 {
 public:
@@ -325,6 +180,150 @@ public:
         return true;
     }
 };
+
+WaylandServer::WaylandServer(QObject *parent)
+    : QObject(parent)
+    , m_display(new KWinDisplay(this))
+{
+    qRegisterMetaType<KWaylandServer::OutputInterface::DpmsMode>();
+}
+
+WaylandServer::~WaylandServer()
+{
+    destroyInputMethodConnection();
+}
+
+KWaylandServer::ClientConnection *WaylandServer::xWaylandConnection() const
+{
+    return m_xwaylandConnection;
+}
+
+void WaylandServer::destroyInternalConnection()
+{
+    emit terminatingInternalClientConnection();
+    if (m_internalConnection.client) {
+        // delete all connections hold by plugins like e.g. widget style
+        const auto connections = KWayland::Client::ConnectionThread::connections();
+        for (auto c : connections) {
+            if (c == m_internalConnection.client) {
+                continue;
+            }
+            emit c->connectionDied();
+        }
+
+        delete m_internalConnection.registry;
+        delete m_internalConnection.compositor;
+        delete m_internalConnection.seat;
+        delete m_internalConnection.ddm;
+        dispatch();
+        m_internalConnection.client->deleteLater();
+        m_internalConnection.clientThread->quit();
+        m_internalConnection.clientThread->wait();
+        delete m_internalConnection.clientThread;
+        m_internalConnection.client = nullptr;
+        m_internalConnection.server->destroy();
+        m_internalConnection.server = nullptr;
+    }
+}
+
+void WaylandServer::terminateClientConnections()
+{
+    destroyInternalConnection();
+    destroyInputMethodConnection();
+    const auto connections = m_display->connections();
+    for (auto it = connections.begin(); it != connections.end(); ++it) {
+        (*it)->destroy();
+    }
+}
+
+void WaylandServer::registerShellClient(AbstractClient *client)
+{
+    if (client->readyForPainting()) {
+        emit shellClientAdded(client);
+    } else {
+        connect(client, &AbstractClient::windowShown, this, &WaylandServer::shellClientShown);
+    }
+    m_clients << client;
+}
+
+void WaylandServer::registerXdgToplevelClient(XdgToplevelClient *client)
+{
+    // TODO: Find a better way and more generic to install extensions.
+
+    SurfaceInterface *surface = client->surface();
+
+    if (surface->client() == m_screenLockerClientConnection) {
+        ScreenLocker::KSldApp::self()->lockScreenShown();
+    }
+
+    registerShellClient(client);
+
+    auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
+        [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
+            return plasmaSurface->surface() == surface;
+        }
+    );
+    if (it != m_plasmaShellSurfaces.end()) {
+        client->installPlasmaShellSurface(*it);
+        m_plasmaShellSurfaces.erase(it);
+    }
+    if (auto decoration = ServerSideDecorationInterface::get(surface)) {
+        client->installServerDecoration(decoration);
+    }
+    if (auto decoration = XdgToplevelDecorationV1Interface::get(client->shellSurface())) {
+        client->installXdgDecoration(decoration);
+    }
+    if (auto menu = m_appMenuManager->appMenuForSurface(surface)) {
+        client->installAppMenu(menu);
+    }
+    if (auto palette = m_paletteManager->paletteForSurface(surface)) {
+        client->installPalette(palette);
+    }
+
+    connect(m_XdgForeign, &XdgForeignV2Interface::transientChanged, client, [this](SurfaceInterface *child) {
+        emit foreignTransientChanged(child);
+    });
+}
+
+void WaylandServer::registerXdgGenericClient(AbstractClient *client)
+{
+    XdgToplevelClient *toplevelClient = qobject_cast<XdgToplevelClient *>(client);
+    if (toplevelClient) {
+        registerXdgToplevelClient(toplevelClient);
+        return;
+    }
+    XdgPopupClient *popupClient = qobject_cast<XdgPopupClient *>(client);
+    if (popupClient) {
+        registerShellClient(popupClient);
+
+        SurfaceInterface *surface = client->surface();
+        auto it = std::find_if(m_plasmaShellSurfaces.begin(), m_plasmaShellSurfaces.end(),
+            [surface] (PlasmaShellSurfaceInterface *plasmaSurface) {
+                return plasmaSurface->surface() == surface;
+            }
+        );
+
+        if (it != m_plasmaShellSurfaces.end()) {
+            popupClient->installPlasmaShellSurface(*it);
+            m_plasmaShellSurfaces.erase(it);
+        }
+
+        return;
+    }
+    qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
+}
+
+AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
+{
+    AbstractWaylandOutput *outputFound = nullptr;
+    const auto outputs = kwinApp()->platform()->enabledOutputs();
+    for (auto output : outputs) {
+        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
+            outputFound = static_cast<AbstractWaylandOutput *>(output);
+        }
+    }
+    return outputFound;
+}
 
 bool WaylandServer::start()
 {
