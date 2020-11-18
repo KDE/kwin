@@ -140,13 +140,13 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 QRect panelScreen = effects->clientArea(ScreenArea, panel);
                 if (panel->width() >= panel->height()) {
                     // horizontal panel
-                    if (panel->y() == panelScreen.y())
+                    if (panel->y() <= panelScreen.height()/2)
                         position = Top;
                     else
                         position = Bottom;
                 } else {
                     // vertical panel
-                    if (panel->x() == panelScreen.x())
+                    if (panel->x() <= panelScreen.width()/2)
                         position = Left;
                     else
                         position = Right;
