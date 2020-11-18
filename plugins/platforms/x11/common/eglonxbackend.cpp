@@ -62,18 +62,12 @@ EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb
     setIsDirectRendering(true);
 }
 
-static bool gs_tripleBufferUndetected = true;
-static bool gs_tripleBufferNeedsDetection = false;
-
 EglOnXBackend::~EglOnXBackend()
 {
     if (isFailed() && m_overlayWindow) {
         m_overlayWindow->destroy();
     }
     cleanup();
-
-    gs_tripleBufferUndetected = true;
-    gs_tripleBufferNeedsDetection = false;
 
     if (m_overlayWindow) {
         if (overlayWindow()->window()) {
@@ -118,8 +112,6 @@ void EglOnXBackend::init()
 
     setSyncsToVBlank(false);
     setBlocksForRetrace(false);
-    gs_tripleBufferNeedsDetection = false;
-    m_swapProfiler.init();
     if (surfaceHasSubPost) {
         qCDebug(KWIN_CORE) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
@@ -131,12 +123,6 @@ void EglOnXBackend::init()
                 if (eglSwapInterval(eglDisplay(), 1)) {
                     qCDebug(KWIN_CORE) << "Enabled v-sync";
                     setSyncsToVBlank(true);
-                    const QByteArray tripleBuffer = qgetenv("KWIN_TRIPLE_BUFFER");
-                    if (!tripleBuffer.isEmpty()) {
-                        setBlocksForRetrace(qstrcmp(tripleBuffer, "0") == 0);
-                        gs_tripleBufferUndetected = false;
-                    }
-                    gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
                 }
             } else {
                 qCWarning(KWIN_CORE) << "Cannot enable v-sync as max. swap interval is" << val;
@@ -318,32 +304,8 @@ void EglOnXBackend::presentSurface(EGLSurface surface, const QRegion &damage, co
     const bool fullRepaint = supportsBufferAge() || (damage == screenGeometry);
 
     if (fullRepaint || !surfaceHasSubPost) {
-        if (gs_tripleBufferNeedsDetection) {
-            eglWaitGL();
-            m_swapProfiler.begin();
-        }
         // the entire screen changed, or we cannot do partial updates (which implies we enabled surface preservation)
         eglSwapBuffers(eglDisplay(), surface);
-        if (gs_tripleBufferNeedsDetection) {
-            eglWaitGL();
-            if (char result = m_swapProfiler.end()) {
-                gs_tripleBufferUndetected = gs_tripleBufferNeedsDetection = false;
-                if (result == 'd' && GLPlatform::instance()->driver() == Driver_NVidia) {
-                    // TODO this is a workaround, we should get __GL_YIELD set before libGL checks it
-                    if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
-                        options->setGlPreferBufferSwap(0);
-                        eglSwapInterval(eglDisplay(), 0);
-                        result = 0; // hint proper behavior
-                        qCWarning(KWIN_CORE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
-                                          "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
-                                          "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
-                                          "For this reason, the tearing prevention has been disabled.\n"
-                                          "See https://bugs.kde.org/show_bug.cgi?id=322060\n";
-                    }
-                }
-                setBlocksForRetrace(result == 'd');
-            }
-        }
         if (supportsBufferAge()) {
             eglQuerySurface(eglDisplay(), surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         }
@@ -374,16 +336,6 @@ QRegion EglOnXBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
     QRegion repaint;
-
-    if (gs_tripleBufferNeedsDetection) {
-        // the composite timer floors the repaint frequency. This can pollute our triple buffering
-        // detection because the glXSwapBuffers call for the new frame has to wait until the pending
-        // one scanned out.
-        // So we compensate for that by waiting an extra milisecond to give the driver the chance to
-        // fllush the buffer queue
-        usleep(1000);
-    }
-
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
