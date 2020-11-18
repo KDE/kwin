@@ -782,7 +782,7 @@ void TabBox::reconfigure()
             actions.insert(ElectricBorder(i), a);
         }
     };
-    touchConfig(QStringLiteral("TouchBorderActivate"), m_touchActivate, TabBoxWindowsMode, QStringList{QString::number(int(ElectricLeft))});
+    touchConfig(QStringLiteral("TouchBorderActivate"), m_touchActivate, TabBoxWindowsMode);
     touchConfig(QStringLiteral("TouchBorderAlternativeActivate"), m_touchAlternativeActivate, TabBoxWindowsAlternativeMode);
 }
 
