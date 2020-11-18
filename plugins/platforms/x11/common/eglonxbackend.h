@@ -41,7 +41,6 @@ public:
     }
 
 protected:
-    void present() override;
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     virtual bool createSurfaces();
     EGLSurface createSurface(xcb_window_t window);

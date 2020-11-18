@@ -103,11 +103,6 @@ GlxBackend::GlxBackend(Display *display)
     , haveSwapInterval(false)
     , m_x11Display(display)
 {
-     // Ensures calls to glXSwapBuffers will always block until the next
-     // retrace when using the proprietary NVIDIA driver. This must be
-     // set before libGL.so is loaded.
-     setenv("__GL_MaxFramesAllowed", "1", true);
-
      // Force initialization of GLX integration in the Qt's xcb backend
      // to make it call XESetWireToEvent callbacks, which is required
      // by Mesa when using DRI2.
@@ -709,14 +704,15 @@ void GlxBackend::waitSync()
     }
 }
 
-void GlxBackend::present()
+void GlxBackend::present(const QRegion &damage)
 {
-    if (lastDamage().isEmpty())
+    if (damage.isEmpty()) {
         return;
+    }
 
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
-    const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
+    const bool fullRepaint = supportsBufferAge() || (damage == displayRegion);
 
     if (fullRepaint) {
         if (m_haveINTELSwapEvent)
@@ -743,18 +739,17 @@ void GlxBackend::present()
             glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
         }
     } else if (m_haveMESACopySubBuffer) {
-        for (const QRect &r : lastDamage()) {
+        for (const QRect &r : damage) {
             // convert to OpenGL coordinates
             int y = screenSize.height() - r.y() - r.height();
             glXCopySubBufferMESA(display(), glxWindow, r.x(), y, r.width(), r.height());
         }
     } else { // Copy Pixels (horribly slow on Mesa)
         glDrawBuffer(GL_FRONT);
-        copyPixels(lastDamage());
+        copyPixels(damage);
         glDrawBuffer(GL_BACK);
     }
 
-    setLastDamage(QRegion());
     if (!supportsBufferAge()) {
         glXWaitGL();
         XFlush(display());
@@ -796,7 +791,6 @@ QRegion GlxBackend::beginFrame(int screenId)
     }
 
     makeCurrent();
-    present();
 
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
@@ -811,8 +805,6 @@ void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
     Q_UNUSED(screenId)
 
     if (damagedRegion.isEmpty()) {
-        setLastDamage(QRegion());
-
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
         // buffer, making it identical to the front buffer.
@@ -827,17 +819,7 @@ void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
         return;
     }
 
-    setLastDamage(renderedRegion);
-
-    if (!blocksForRetrace()) {
-        // This also sets lastDamage to empty which prevents the frame from
-        // being posted again when prepareRenderingFrame() is called.
-        present();
-    } else {
-        // Make sure that the GPU begins processing the command stream
-        // now and not the next time prepareRenderingFrame() is called.
-        glFlush();
-    }
+    present(renderedRegion);
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long

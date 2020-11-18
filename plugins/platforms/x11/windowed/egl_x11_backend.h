@@ -28,7 +28,6 @@ public:
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
 
 protected:
-    void present() override;
     void cleanupSurfaces() override;
     bool createSurfaces() override;
 

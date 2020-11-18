@@ -37,14 +37,6 @@ void OpenGLBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-void OpenGLBackend::idle()
-{
-    if (hasPendingFlush()) {
-        effects->makeOpenGLContextCurrent();
-        present();
-    }
-}
-
 void OpenGLBackend::addToDamageHistory(const QRegion &region)
 {
     if (m_damageHistory.count() > 10)

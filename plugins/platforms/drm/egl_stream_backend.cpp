@@ -438,14 +438,6 @@ bool EglStreamBackend::initBufferConfigs()
     return true;
 }
 
-void EglStreamBackend::present()
-{
-    for (auto &o : m_outputs) {
-        makeContextCurrent(o);
-        presentOnOutput(o);
-    }
-}
-
 void EglStreamBackend::presentOnOutput(EglStreamBackend::Output &o)
 {
     eglSwapBuffers(eglDisplay(), o.eglSurface);

@@ -34,7 +34,6 @@ public:
     class EffectFrame;
     ~SceneOpenGL() override;
     bool initFailed() const override;
-    bool hasPendingFlush() const override;
     void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
                std::chrono::milliseconds presentTime) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
@@ -54,8 +53,6 @@ public:
     bool animationsSupported() const override;
 
     void insertWait();
-
-    void idle() override;
 
     bool debug() const { return m_debug; }
     void initDebugOutput();
@@ -308,11 +305,6 @@ private:
     void resizeTexture();
     QScopedPointer<GLTexture> m_texture;
 };
-
-inline bool SceneOpenGL::hasPendingFlush() const
-{
-    return m_backend->hasPendingFlush();
-}
 
 inline bool SceneOpenGL::usesOverlayWindow() const
 {

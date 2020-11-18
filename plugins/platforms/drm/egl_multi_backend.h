@@ -38,9 +38,6 @@ public:
 
     void addBackend(AbstractEglDrmBackend *backend);
 
-protected:
-    void present() override;
-
 private:
     QVector<AbstractEglDrmBackend*> m_backends;
 

@@ -116,11 +116,6 @@ void EglMultiBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-void EglMultiBackend::present()
-{
-    Q_UNREACHABLE();
-}
-
 AbstractEglDrmBackend *EglMultiBackend::findBackend(int screenId, int& internalScreenId)
 {
     int screens = 0;

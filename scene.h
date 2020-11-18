@@ -59,8 +59,6 @@ public:
     virtual bool initFailed() const = 0;
     virtual CompositingType compositingType() const = 0;
 
-    virtual bool hasPendingFlush() const { return false; }
-
     // Repaints the given screen areas, windows provides the stacking order.
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
@@ -134,7 +132,7 @@ public:
     // types of filtering available
     enum ImageFilterType { ImageFilterFast, ImageFilterGood };
     // there's nothing to paint (adjust time_diff later)
-    virtual void idle();
+    void idle();
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
     virtual OverlayWindow* overlayWindow() const = 0;

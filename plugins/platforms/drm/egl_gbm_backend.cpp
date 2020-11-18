@@ -552,12 +552,6 @@ bool EglGbmBackend::initBufferConfigs()
     return false;
 }
 
-void EglGbmBackend::present()
-{
-    Q_UNREACHABLE();
-    // Not in use. This backend does per-screen rendering.
-}
-
 static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
 {
     const int height = output->modeSize().height();

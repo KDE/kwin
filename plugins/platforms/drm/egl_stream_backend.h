@@ -40,7 +40,6 @@ public:
     void removeOutput(DrmOutput *output) override;
 
 protected:
-    void present() override;
     void cleanupSurfaces() override;
 
 private:

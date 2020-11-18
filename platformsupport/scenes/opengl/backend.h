@@ -61,17 +61,6 @@ public:
     virtual bool usesOverlayWindow() const = 0;
     virtual QRegion beginFrame(int screenId) = 0;
     virtual void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) = 0;
-    /**
-     * @brief Compositor is going into idle mode, flushes any pending paints.
-     */
-    void idle();
-
-    /**
-     * @return bool Whether the scene needs to flush a frame.
-     */
-    bool hasPendingFlush() const {
-        return !m_lastDamage.isEmpty();
-    }
 
     /**
      * @brief Returns the OverlayWindow used by the backend.
@@ -182,10 +171,6 @@ public:
 
 protected:
     /**
-     * @brief Backend specific flushing of frame to screen.
-     */
-    virtual void present() = 0;
-    /**
      * @brief Sets the backend initialization to failed.
      *
      * This method should be called by the concrete subclass in case the initialization failed.
@@ -252,16 +237,6 @@ protected:
     }
 
     /**
-     * @return const QRegion& Damage of previously rendered frame
-     */
-    const QRegion &lastDamage() const {
-        return m_lastDamage;
-    }
-    void setLastDamage(const QRegion &damage) {
-        m_lastDamage = damage;
-    }
-
-    /**
      * Sets the platform-specific @p extensions.
      *
      * These are the EGL/GLX extensions, not the OpenGL extensions
@@ -304,10 +279,6 @@ private:
      * @brief Whether the initialization failed, of course default to @c false.
      */
     bool m_failed;
-    /**
-     * @brief Damaged region of previously rendered frame.
-     */
-    QRegion m_lastDamage;
     /**
      * @brief The damage history for the past 10 frames.
      */

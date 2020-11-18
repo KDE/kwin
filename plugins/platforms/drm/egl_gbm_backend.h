@@ -50,7 +50,6 @@ public:
     QRegion beginFrameForSecondaryGpu(AbstractOutput *output) override;
 
 protected:
-    void present() override;
     void cleanupSurfaces() override;
     void aboutToStartPainting(int screenId, const QRegion &damage) override;
 

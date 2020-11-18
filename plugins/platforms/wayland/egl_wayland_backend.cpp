@@ -272,14 +272,6 @@ bool EglWaylandBackend::initBufferConfigs()
     return true;
 }
 
-void EglWaylandBackend::present()
-{
-    for (auto *output: qAsConst(m_outputs)) {
-        makeContextCurrent(output);
-        presentOnSurface(output, output->m_waylandOutput->geometry());
-    }
-}
-
 static QVector<EGLint> regionToRects(const QRegion &region, AbstractWaylandOutput *output)
 {
     const int height = output->modeSize().height();

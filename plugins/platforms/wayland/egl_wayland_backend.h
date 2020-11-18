@@ -91,7 +91,6 @@ private:
     void cleanupOutput(EglWaylandOutput *output);
 
     bool makeContextCurrent(EglWaylandOutput *output);
-    void present() override;
     void presentOnSurface(EglWaylandOutput *output, const QRegion &damagedRegion);
 
     WaylandBackend *m_backend;

@@ -69,10 +69,8 @@ public:
     bool usesOverlayWindow() const override;
     void init() override;
 
-protected:
-    void present() override;
-
 private:
+    void present(const QRegion &damage);
     bool initBuffer();
     bool checkVersion();
     void initExtensions();

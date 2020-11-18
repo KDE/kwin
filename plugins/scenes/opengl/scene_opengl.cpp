@@ -492,12 +492,6 @@ bool SceneOpenGL::blocksForRetrace() const
     return m_backend->blocksForRetrace();
 }
 
-void SceneOpenGL::idle()
-{
-    m_backend->idle();
-    Scene::idle();
-}
-
 bool SceneOpenGL::initFailed() const
 {
     return !init_ok;

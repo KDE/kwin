@@ -310,20 +310,6 @@ bool EglOnXBackend::initBufferConfigs()
     return true;
 }
 
-void EglOnXBackend::present()
-{
-    if (lastDamage().isEmpty())
-        return;
-
-    presentSurface(surface(), lastDamage(), screens()->geometry());
-
-    setLastDamage(QRegion());
-    if (!supportsBufferAge()) {
-        eglWaitGL();
-        xcb_flush(m_connection);
-    }
-}
-
 void EglOnXBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
 {
     if (damage.isEmpty()) {
@@ -398,8 +384,6 @@ QRegion EglOnXBackend::beginFrame(int screenId)
         usleep(1000);
     }
 
-    present();
-
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
@@ -413,7 +397,6 @@ void EglOnXBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
     Q_UNUSED(screenId)
 
     if (damagedRegion.isEmpty()) {
-        setLastDamage(QRegion());
 
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
@@ -429,17 +412,7 @@ void EglOnXBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
         return;
     }
 
-    setLastDamage(renderedRegion);
-
-    if (!blocksForRetrace()) {
-        // This also sets lastDamage to empty which prevents the frame from
-        // being posted again when prepareRenderingFrame() is called.
-        present();
-    } else {
-        // Make sure that the GPU begins processing the command stream
-        // now and not the next time prepareRenderingFrame() is called.
-        glFlush();
-    }
+    presentSurface(surface(), renderedRegion, screens()->geometry());
 
     if (m_overlayWindow && overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long

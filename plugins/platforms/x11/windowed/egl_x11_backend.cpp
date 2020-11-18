@@ -48,18 +48,6 @@ bool EglX11Backend::createSurfaces()
     return true;
 }
 
-void EglX11Backend::present()
-{
-    for (int i = 0; i < screens()->count(); ++i) {
-        EGLSurface s = m_surfaces.at(i);
-        makeContextCurrent(s);
-        setupViewport(i);
-        presentSurface(s, screens()->geometry(i), screens()->geometry(i));
-    }
-    eglWaitGL();
-    xcb_flush(m_backend->connection());
-}
-
 bool EglX11Backend::usesOverlayWindow() const
 {
     return false;

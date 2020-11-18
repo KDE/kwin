@@ -31,9 +31,6 @@ public:
     bool usesOverlayWindow() const override;
     void init() override;
 
-protected:
-    void present() override;
-
 private:
     bool initializeEgl();
     bool initBufferConfigs();
