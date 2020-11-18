@@ -88,10 +88,10 @@ PreviewSettings::PreviewSettings(DecorationSettings *parent)
     connect(this, &PreviewSettings::closeOnDoubleClickOnMenuChanged, parent, &DecorationSettings::closeOnDoubleClickOnMenuChanged);
     connect(this, &PreviewSettings::fontChanged, parent, &DecorationSettings::fontChanged);
     auto updateLeft = [this, parent]() {
-        parent->decorationButtonsLeftChanged(decorationButtonsLeft());
+        emit parent->decorationButtonsLeftChanged(decorationButtonsLeft());
     };
     auto updateRight = [this, parent]() {
-        parent->decorationButtonsRightChanged(decorationButtonsRight());
+        emit parent->decorationButtonsRightChanged(decorationButtonsRight());
     };
     connect(m_leftButtons,  &QAbstractItemModel::rowsRemoved,  this, updateLeft);
     connect(m_leftButtons,  &QAbstractItemModel::rowsMoved,    this, updateLeft);

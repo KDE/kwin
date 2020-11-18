@@ -222,7 +222,7 @@ void DesktopsModel::setDesktopName(const QString &id, const QString &name)
 
     const QModelIndex &idx = index(m_desktops.indexOf(id), 0);
 
-    dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
+    emit dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
 
     updateModifiedState();
 }
@@ -573,7 +573,7 @@ void DesktopsModel::desktopDataChanged(const QString &id, const KWin::DBusDeskto
 
         const QModelIndex &idx = index(desktopIndex, 0);
 
-        dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
+        emit dataChanged(idx, idx, QVector<int>{Qt::DisplayRole});
     } else {
         updateModifiedState(/* server */ true);
     }

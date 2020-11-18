@@ -562,7 +562,7 @@ void WaylandBackend::init()
             }
             m_waylandCursor->installImage();
             auto c = Cursors::self()->currentCursor();
-            c->rendered(c->geometry());
+            emit c->rendered(c->geometry());
         }
     );
     connect(this, &WaylandBackend::pointerLockChanged, this, [this] (bool locked) {

@@ -260,7 +260,7 @@ void EffectQuickView::setVisible(bool visible)
     d->m_visible = visible;
 
     if (visible){
-        d->m_renderControl->renderRequested();
+        emit d->m_renderControl->renderRequested();
     } else {
         // deferred to not change GL context
         QTimer::singleShot(0, this, [this]() {

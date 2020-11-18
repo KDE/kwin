@@ -152,7 +152,7 @@ void KWin::TabletModeManager::setTabletModeAvailable(bool detecting)
 {
     if (m_detecting != detecting) {
         m_detecting = detecting;
-        tabletModeAvailableChanged(detecting);
+        emit tabletModeAvailableChanged(detecting);
     }
 }
 

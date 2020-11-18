@@ -91,7 +91,7 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
         emit paletteChanged(m_palette.palette());
     });
     auto emitEdgesChanged = [this, c]() {
-        c->adjacentScreenEdgesChanged(adjacentScreenEdges());
+        emit c->adjacentScreenEdgesChanged(adjacentScreenEdges());
     };
     connect(this, &PreviewClient::bordersTopEdgeChanged,    this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
