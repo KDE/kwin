@@ -111,7 +111,6 @@ void EglOnXBackend::init()
     }
 
     setSyncsToVBlank(false);
-    setBlocksForRetrace(false);
     if (surfaceHasSubPost) {
         qCDebug(KWIN_CORE) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 

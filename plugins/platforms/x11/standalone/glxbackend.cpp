@@ -216,7 +216,6 @@ void GlxBackend::init()
     }
 
     setSyncsToVBlank(false);
-    setBlocksForRetrace(false);
     haveWaitSync = false;
     const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
     if (wantSync && glXIsDirect(display(), ctx)) {
@@ -227,7 +226,6 @@ void GlxBackend::init()
             unsigned int sync;
             if (glXGetVideoSyncSGI(&sync) == 0 && glXWaitVideoSyncSGI(1, 0, &sync) == 0) {
                 setSyncsToVBlank(true);
-                setBlocksForRetrace(true);
                 haveWaitSync = true;
             } else
                 qCWarning(KWIN_X11STANDALONE) << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";

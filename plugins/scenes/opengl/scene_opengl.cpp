@@ -487,11 +487,6 @@ bool SceneOpenGL::syncsToVBlank() const
     return m_backend->syncsToVBlank();
 }
 
-bool SceneOpenGL::blocksForRetrace() const
-{
-    return m_backend->blocksForRetrace();
-}
-
 bool SceneOpenGL::initFailed() const
 {
     return !init_ok;

@@ -615,11 +615,6 @@ void Scene::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     Q_UNUSED(opaqueFullscreen);
 }
 
-bool Scene::blocksForRetrace() const
-{
-    return false;
-}
-
 bool Scene::syncsToVBlank() const
 {
     return false;

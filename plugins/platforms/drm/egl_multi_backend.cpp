@@ -34,17 +34,11 @@ void EglMultiBackend::init()
     for (auto b : qAsConst(m_backends)) {
         b->init();
     }
-    // set all the values:
-    // if any block, set it to be blocking
-    setBlocksForRetrace(false);
     // if any don't support it set it to not supported
     setSupportsBufferAge(true);
     setSupportsPartialUpdate(true);
     setSupportsSwapBuffersWithDamage(true);
     for (auto b : qAsConst(m_backends)) {
-        if (b->blocksForRetrace()) {
-            setBlocksForRetrace(true);
-        }
         if (!b->supportsBufferAge()) {
             setSupportsBufferAge(false);
         }
