@@ -547,6 +547,11 @@ bool XdgToplevelClient::isMinimizable() const
     return true;
 }
 
+bool XdgToplevelClient::isPlaceable() const
+{
+    return !m_plasmaShellSurface || !m_plasmaShellSurface->isPositionSet();
+}
+
 bool XdgToplevelClient::isTransient() const
 {
     return m_isTransient;

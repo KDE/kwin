@@ -132,6 +132,7 @@ public:
     bool isFullScreenable() const override;
     bool isMaximizable() const override;
     bool isMinimizable() const override;
+    bool isPlaceable() const override;
     bool isTransient() const override;
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
