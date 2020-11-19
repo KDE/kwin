@@ -11,12 +11,16 @@
 namespace KWin
 {
 
+class SoftwareVsyncMonitor;
+class X11StandalonePlatform;
+
 class EglBackend : public EglOnXBackend
 {
     Q_OBJECT
 
 public:
-    explicit EglBackend(Display *display);
+    EglBackend(Display *display, X11StandalonePlatform *platform);
+    ~EglBackend() override;
 
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion beginFrame(int screenId) override;
@@ -25,7 +29,10 @@ public:
 
 private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
+    void vblank(std::chrono::nanoseconds timestamp);
 
+    X11StandalonePlatform *m_backend;
+    SoftwareVsyncMonitor *m_vsyncMonitor;
     int m_bufferAge = 0;
 };
 

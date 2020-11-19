@@ -171,8 +171,6 @@ void WaylandQPainterBackend::endFrame(int screenId, int mask, const QRegion &dam
     WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
     Q_ASSERT(rendererOutput);
 
-    Compositor::self()->aboutToSwapBuffers();
-
     rendererOutput->setNeedsFullRepaint(false);
     rendererOutput->present(rendererOutput->mapToLocal(damage));
 }

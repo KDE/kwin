@@ -210,11 +210,6 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     Q_ASSERT(!PaintClipper::clip());
 }
 
-// Painting pass is optimized away.
-void Scene::idle()
-{
-}
-
 // the function that'll be eventually called by paintScreen() above
 void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData& data)
 {
@@ -661,11 +656,6 @@ void Scene::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
 {
     Q_UNUSED(region);
     Q_UNUSED(opaqueFullscreen);
-}
-
-bool Scene::syncsToVBlank() const
-{
-    return false;
 }
 
 void Scene::screenGeometryChanged(const QSize &size)

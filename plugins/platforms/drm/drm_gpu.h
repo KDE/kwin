@@ -101,6 +101,12 @@ public:
         m_eglBackend = eglBackend;
     }
 
+    /**
+     * Returns the clock from which presentation timestamps are sourced. The returned value
+     * can be either CLOCK_MONOTONIC or CLOCK_REALTIME.
+     */
+    clockid_t presentationClock() const;
+
 Q_SIGNALS:
     void outputAdded(DrmOutput *output);
     void outputRemoved(DrmOutput *output);
@@ -128,6 +134,7 @@ private:
     bool m_deleteBufferAfterPageFlip;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
+    clockid_t m_presentationClock;
 
 // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;

@@ -8,8 +8,11 @@
 */
 #include "egl_x11_backend.h"
 // kwin
+#include "main.h"
 #include "screens.h"
+#include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
+#include "x11windowed_output.h"
 // kwin libs
 #include <kwinglplatform.h>
 
@@ -82,6 +85,10 @@ void EglX11Backend::setupViewport(int screenId)
 void EglX11Backend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(damagedRegion)
+
+    X11WindowedOutput *output = static_cast<X11WindowedOutput *>(kwinApp()->platform()->findOutput(screenId));
+    output->vsyncMonitor()->arm();
+
     const QRect &outputGeometry = screens()->geometry(screenId);
     presentSurface(m_surfaces.at(screenId), renderedRegion, outputGeometry);
 }

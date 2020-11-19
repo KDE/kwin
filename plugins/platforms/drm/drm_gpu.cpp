@@ -48,6 +48,13 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
         m_cursorSize.setHeight(64);
     }
 
+    int ret = drmGetCap(fd, DRM_CAP_TIMESTAMP_MONOTONIC, &capability);
+    if (ret == 0 && capability == 1) {
+        m_presentationClock = CLOCK_MONOTONIC;
+    } else {
+        m_presentationClock = CLOCK_REALTIME;
+    }
+
     // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_useEglStreams = strstr(version->name, "nvidia-drm");
@@ -67,6 +74,11 @@ DrmGpu::~DrmGpu()
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
     close(m_fd);
+}
+
+clockid_t DrmGpu::presentationClock() const
+{
+    return m_presentationClock;
 }
 
 void DrmGpu::tryAMS()

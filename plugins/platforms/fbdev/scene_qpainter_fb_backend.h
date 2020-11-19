@@ -30,6 +30,9 @@ public:
     void endFrame(int screenId, int mask, const QRegion &damage) override;
 
 private:
+    void reactivate();
+    void deactivate();
+
     /**
      * @brief mapped memory buffer on fb device
      */

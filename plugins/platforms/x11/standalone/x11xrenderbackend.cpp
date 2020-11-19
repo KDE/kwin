@@ -13,8 +13,10 @@
 #include "main.h"
 #include "platform.h"
 #include "overlaywindow.h"
+#include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
+#include "softwarevsyncmonitor.h"
 #include "utils.h"
 #include "x11_platform.h"
 
@@ -30,11 +32,26 @@ X11XRenderBackend::X11XRenderBackend(X11StandalonePlatform *backend)
     , m_front(XCB_RENDER_PICTURE_NONE)
     , m_format(0)
 {
+    // Fallback to software vblank events for now. Maybe use the Present extension or
+    // something to get notified when the overlay window is actually presented?
+    m_vsyncMonitor = SoftwareVsyncMonitor::create(this);
+    connect(backend->renderLoop(), &RenderLoop::refreshRateChanged, this, [this, backend]() {
+        m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
+    });
+    m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
+
+    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &X11XRenderBackend::vblank);
+
     init(true);
 }
 
 X11XRenderBackend::~X11XRenderBackend()
 {
+    // No completion events will be received for in-flight frames, this may lock the
+    // render loop. We need to ensure that the render loop is back to its initial state
+    // if the render backend is about to be destroyed.
+    RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
+
     if (m_front) {
         xcb_render_free_picture(connection(), m_front);
     }
@@ -100,6 +117,8 @@ void X11XRenderBackend::createBuffer()
 
 void X11XRenderBackend::present(int mask, const QRegion &damage)
 {
+    m_vsyncMonitor->arm();
+
     const auto displaySize = screens()->displaySize();
     if (mask & Scene::PAINT_SCREEN_REGION) {
         // Use the damage region as the clip region for the root window
@@ -117,6 +136,12 @@ void X11XRenderBackend::present(int mask, const QRegion &damage)
     }
 
     xcb_flush(connection());
+}
+
+void X11XRenderBackend::vblank(std::chrono::nanoseconds timestamp)
+{
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 void X11XRenderBackend::screenGeometryChanged(const QSize &size)

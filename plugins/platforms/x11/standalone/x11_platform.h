@@ -67,6 +67,7 @@ public:
     void scheduleUpdateOutputs();
     void updateOutputs();
 
+    RenderLoop *renderLoop() const override;
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
 
@@ -98,6 +99,7 @@ private:
     QScopedPointer<WindowSelector> m_windowSelector;
     QScopedPointer<X11EventFilter> m_screenEdgesFilter;
     QScopedPointer<X11EventFilter> m_randrEventFilter;
+    RenderLoop *m_renderLoop;
     QVector<AbstractOutput *> m_outputs;
 };
 

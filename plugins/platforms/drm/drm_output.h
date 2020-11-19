@@ -39,6 +39,9 @@ class KWIN_EXPORT DrmOutput : public AbstractWaylandOutput
 public:
     ///deletes the output, calling this whilst a page flip is pending will result in an error
     ~DrmOutput() override;
+
+    RenderLoop *renderLoop() const override;
+
     ///queues deleting the output after a page flip has completed.
     void teardown();
     void releaseGbm();
@@ -153,6 +156,7 @@ private:
     DpmsMode m_dpmsMode = DpmsMode::On;
     DpmsMode m_dpmsModePending = DpmsMode::On;
     QByteArray m_uuid;
+    RenderLoop *m_renderLoop;
 
     uint32_t m_blobId = 0;
     DrmPlane *m_primaryPlane = nullptr;

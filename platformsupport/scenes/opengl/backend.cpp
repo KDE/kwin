@@ -19,8 +19,7 @@ namespace KWin
 {
 
 OpenGLBackend::OpenGLBackend()
-    : m_syncsToVBlank(false)
-    , m_directRendering(false)
+    : m_directRendering(false)
     , m_haveBufferAge(false)
     , m_failed(false)
 {

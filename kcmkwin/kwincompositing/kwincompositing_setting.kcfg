@@ -69,6 +69,17 @@
            <default>true</default>
        </entry>
 
+       <entry name="LatencyPolicy" type="Enum">
+           <choices name="LatencyPolicy">
+               <choice name="LatencyExtremelyLow" value="ExtremelyLow"/>
+               <choice name="LatencyLow" value="Low"/>
+               <choice name="LatencyMedium" value="Medium"/>
+               <choice name="LatencyHigh" value="High"/>
+               <choice name="LatencyExtremelyHigh" value="ExtremelyHigh"/>
+           </choices>
+           <default>LatencyMedium</default>
+       </entry>
+
     </group>
 
 </kcfg>

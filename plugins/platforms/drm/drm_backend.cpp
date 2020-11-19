@@ -16,6 +16,7 @@
 #include "logging.h"
 #include "logind.h"
 #include "main.h"
+#include "renderloop_p.h"
 #include "scene_qpainter_drm_backend.h"
 #include "udev.h"
 #include "wayland_server.h"
@@ -188,8 +189,11 @@ void DrmBackend::reactivate()
     }
     // restart compositor
     m_pageFlipsPending = 0;
+
+    for (DrmOutput *output : qAsConst(m_outputs)) {
+        output->renderLoop()->uninhibit();
+    }
     if (Compositor *compositor = Compositor::self()) {
-        compositor->bufferSwapComplete();
         compositor->addRepaintFull();
     }
 }
@@ -199,36 +203,61 @@ void DrmBackend::deactivate()
     if (!m_active) {
         return;
     }
-    // block compositor
-    if (m_pageFlipsPending == 0 && Compositor::self()) {
-        Compositor::self()->aboutToSwapBuffers();
+
+    for (DrmOutput *output : qAsConst(m_outputs)) {
+        output->hideCursor();
+        output->renderLoop()->inhibit();
     }
-    // hide cursor and disable
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        DrmOutput *o = *it;
-        o->hideCursor();
-    }
+
     m_active = false;
+}
+
+static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
+{
+    return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
+}
+
+static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_t targetClock,
+                                                 const timespec &timestamp)
+{
+    if (sourceClock == targetClock) {
+        return convertTimestamp(timestamp);
+    }
+
+    timespec sourceCurrentTime = {};
+    timespec targetCurrentTime = {};
+
+    clock_gettime(sourceClock, &sourceCurrentTime);
+    clock_gettime(targetClock, &targetCurrentTime);
+
+    const auto delta = convertTimestamp(sourceCurrentTime) - convertTimestamp(timestamp);
+    return convertTimestamp(targetCurrentTime) - delta;
 }
 
 void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
 {
     Q_UNUSED(fd)
     Q_UNUSED(frame)
-    Q_UNUSED(sec)
-    Q_UNUSED(usec)
-    auto output = reinterpret_cast<DrmOutput*>(data);
+
+    auto output = static_cast<DrmOutput *>(data);
+
+    DrmGpu *gpu = output->gpu();
+    DrmBackend *backend = output->m_backend;
+
+    std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(),
+                                                          CLOCK_MONOTONIC,
+                                                          { sec, usec * 1000 });
+    if (timestamp == std::chrono::nanoseconds::zero()) {
+        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
+                sec, usec, qPrintable(output->name()));
+        timestamp = std::chrono::steady_clock::now().time_since_epoch();
+    }
 
     output->pageFlipped();
-    output->m_backend->m_pageFlipsPending--;
-    if (output->m_backend->m_pageFlipsPending == 0) {
-        // TODO: improve, this currently means we wait for all page flips or all outputs.
-        // It would be better to driver the repaint per output
+    backend->m_pageFlipsPending--;
 
-        if (Compositor::self()) {
-            Compositor::self()->bufferSwapComplete();
-        }
-    }
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 void DrmBackend::openDrm()
@@ -526,9 +555,6 @@ bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
 
     if (output->present(buffer)) {
         m_pageFlipsPending++;
-        if (m_pageFlipsPending == 1 && Compositor::self()) {
-            Compositor::self()->aboutToSwapBuffers();
-        }
         return true;
     } else if (output->gpu()->deleteBufferAfterPageFlip()) {
         delete buffer;

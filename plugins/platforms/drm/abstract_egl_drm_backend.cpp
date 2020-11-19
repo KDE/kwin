@@ -20,7 +20,6 @@ AbstractEglDrmBackend::AbstractEglDrmBackend(DrmBackend *drmBackend, DrmGpu *gpu
     m_gpu->setEglBackend(this);
     // Egl is always direct rendering.
     setIsDirectRendering(true);
-    setSyncsToVBlank(true);
     connect(m_gpu, &DrmGpu::outputEnabled, this, &AbstractEglDrmBackend::addOutput);
     connect(m_gpu, &DrmGpu::outputDisabled, this, &AbstractEglDrmBackend::removeOutput);
 }

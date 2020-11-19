@@ -22,6 +22,8 @@ class NETWinInfo;
 
 namespace KWin
 {
+
+class SoftwareVsyncMonitor;
 class X11WindowedBackend;
 
 /**
@@ -33,6 +35,9 @@ class KWIN_EXPORT X11WindowedOutput : public AbstractWaylandOutput
 public:
     explicit X11WindowedOutput(X11WindowedBackend *backend);
     ~X11WindowedOutput() override;
+
+    RenderLoop *renderLoop() const override;
+    SoftwareVsyncMonitor *vsyncMonitor() const;
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
@@ -62,10 +67,12 @@ public:
 
 private:
     void initXInputForWindow();
+    void vblank(std::chrono::nanoseconds timestamp);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     NETWinInfo *m_winInfo = nullptr;
-
+    RenderLoop *m_renderLoop;
+    SoftwareVsyncMonitor *m_vsyncMonitor;
     QPoint m_hostPosition;
 
     X11WindowedBackend *m_backend;

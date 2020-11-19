@@ -30,50 +30,6 @@ namespace KWin
 
 #ifndef KCMRULES
 
-int currentRefreshRate()
-{
-    return Options::currentRefreshRate();
-}
-
-int Options::currentRefreshRate()
-{
-    int rate = -1;
-    QString syncScreenName(QLatin1String("primary screen"));
-    if (options->refreshRate() > 0) {  // use manually configured refresh rate
-        rate = options->refreshRate();
-    } else if (Screens::self()->count() > 0) {
-        // prefer the refreshrate calculated from the screens mode information
-        // at least the nvidia driver reports 50Hz BS ... *again*!
-        int syncScreen = 0;
-        if (Screens::self()->count() > 1) {
-            const QByteArray syncDisplayDevice(qgetenv("__GL_SYNC_DISPLAY_DEVICE"));
-            // if __GL_SYNC_DISPLAY_DEVICE is exported, the GPU shall sync to that device
-            // so we try to use its refresh rate
-            if (!syncDisplayDevice.isEmpty()) {
-                for (int i = 0; i < Screens::self()->count(); ++i) {
-                    if (Screens::self()->name(i) == syncDisplayDevice) {
-                        syncScreenName = Screens::self()->name(i);
-                        syncScreen = i;
-                        break;
-                    }
-                }
-            }
-        }
-        rate = qRound(Screens::self()->refreshRate(syncScreen)); // TODO forward float precision?
-    }
-
-    // 0Hz or less is invalid, so we fallback to a default rate
-    if (rate <= 0)
-        rate = 60; // and not shitty 50Hz for sure! *grrr*
-
-    // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
-    // however, additional throttling prevents very high rates from taking place anyway
-    else if (rate > 1000)
-        rate = 1000;
-    qCDebug(KWIN_CORE) << "Vertical Refresh rate " << rate << "Hz (" << syncScreenName << ")";
-    return rate;
-}
-
 Options::Options(QObject *parent)
     : QObject(parent)
     , m_settings(new Settings(kwinApp()->config()))
@@ -97,14 +53,12 @@ Options::Options(QObject *parent)
     , m_hideUtilityWindowsForInactive(false)
     , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
+    , m_latencyPolicy(Options::defaultLatencyPolicy())
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
-    , m_maxFpsInterval(Options::defaultMaxFpsInterval())
-    , m_refreshRate(Options::defaultRefreshRate())
-    , m_vBlankTime(Options::defaultVBlankTime())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
     , m_glCoreProfile(Options::defaultGLCoreProfile())
@@ -617,33 +571,6 @@ void Options::setXrenderSmoothScale(bool xrenderSmoothScale)
     emit xrenderSmoothScaleChanged();
 }
 
-void Options::setMaxFpsInterval(qint64 maxFpsInterval)
-{
-    if (m_maxFpsInterval == maxFpsInterval) {
-        return;
-    }
-    m_maxFpsInterval = maxFpsInterval;
-    emit maxFpsIntervalChanged();
-}
-
-void Options::setRefreshRate(uint refreshRate)
-{
-    if (m_refreshRate == refreshRate) {
-        return;
-    }
-    m_refreshRate = refreshRate;
-    emit refreshRateChanged();
-}
-
-void Options::setVBlankTime(qint64 vBlankTime)
-{
-    if (m_vBlankTime == vBlankTime) {
-        return;
-    }
-    m_vBlankTime = vBlankTime;
-    emit vBlankTimeChanged();
-}
-
 void Options::setGlStrictBinding(bool glStrictBinding)
 {
     if (m_glStrictBinding == glStrictBinding) {
@@ -705,6 +632,20 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
     }
     m_glPreferBufferSwap = (GlSwapStrategy)glPreferBufferSwap;
     emit glPreferBufferSwapChanged();
+}
+
+LatencyPolicy Options::latencyPolicy() const
+{
+    return m_latencyPolicy;
+}
+
+void Options::setLatencyPolicy(LatencyPolicy policy)
+{
+    if (m_latencyPolicy == policy) {
+        return;
+    }
+    m_latencyPolicy = policy;
+    emit latencyPolicyChanged();
 }
 
 void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
@@ -800,12 +741,6 @@ void Options::loadConfig()
     setCommandAll2(mouseCommand(config.readEntry("CommandAll2", "Toggle raise and lower"), false));
     setCommandAll3(mouseCommand(config.readEntry("CommandAll3", "Resize"), false));
 
-    // TODO: should they be moved into reloadCompositingSettings?
-    config = KConfigGroup(m_settings->config(), "Compositing");
-    setMaxFpsInterval(1 * 1000 * 1000 * 1000 / config.readEntry("MaxFPS", Options::defaultMaxFps()));
-    setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
-    setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()) * 1000); // config in micro, value in nano resolution
-
     // Modifier Only Shortcuts
     config = KConfigGroup(m_settings->config(), "ModifierOnlyShortcuts");
     m_modifierOnlyShortcuts.clear();
@@ -860,7 +795,7 @@ void Options::syncFromKcfgc()
     setElectricBorderCornerRatio(m_settings->electricBorderCornerRatio());
     setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
     setMoveMinimizedWindowsToEndOfTabBoxFocusChain(m_settings->moveMinimizedWindowsToEndOfTabBoxFocusChain());
-
+    setLatencyPolicy(m_settings->latencyPolicy());
 }
 
 bool Options::loadCompositingConfig (bool force)

@@ -12,6 +12,8 @@
 #include "virtual_backend.h"
 #include "options.h"
 #include "screens.h"
+#include "softwarevsyncmonitor.h"
+#include "virtual_output.h"
 #include <logging.h>
 // kwin libs
 #include <kwinglplatform.h>
@@ -194,10 +196,13 @@ static void convertFromGLImage(QImage &img, int w, int h)
 
 void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(screenId)
     Q_UNUSED(renderedRegion)
     Q_UNUSED(damagedRegion)
     glFlush();
+
+    VirtualOutput *output = static_cast<VirtualOutput *>(m_backend->findOutput(screenId));
+    output->vsyncMonitor()->arm();
+
     if (m_backend->saveFrames()) {
         QImage img = QImage(QSize(m_backBuffer->width(), m_backBuffer->height()), QImage::Format_ARGB32);
         glReadnPixels(0, 0, m_backBuffer->width(), m_backBuffer->height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), (GLvoid*)img.bits());
@@ -206,9 +211,7 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
     }
     GLRenderTarget::popRenderTarget();
 
-    Compositor::self()->aboutToSwapBuffers();
     eglSwapBuffers(eglDisplay(), surface());
-    Compositor::self()->bufferSwapComplete();
 }
 
 bool EglGbmBackend::usesOverlayWindow() const

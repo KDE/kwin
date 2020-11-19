@@ -1,0 +1,132 @@
+/*
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+#include "omlsynccontrolvsyncmonitor.h"
+#include "logging.h"
+
+#include <QX11Info>
+
+namespace KWin
+{
+
+OMLSyncControlVsyncMonitor *OMLSyncControlVsyncMonitor::create(QObject *parent)
+{
+    const char *extensions = glXQueryExtensionsString(QX11Info::display(),
+                                                      QX11Info::appScreen());
+    if (!strstr(extensions, "GLX_OML_sync_control")) {
+        return nullptr; // GLX_OML_sync_control is unsupported.
+    }
+
+    OMLSyncControlVsyncMonitor *monitor = new OMLSyncControlVsyncMonitor(parent);
+    if (monitor->isValid()) {
+        return monitor;
+    }
+    delete monitor;
+    return nullptr;
+}
+
+OMLSyncControlVsyncMonitorHelper::OMLSyncControlVsyncMonitorHelper(QObject *parent)
+    : QObject(parent)
+{
+    // Establish a new X11 connection to avoid locking up the main X11 connection.
+    m_display = XOpenDisplay(DisplayString(QX11Info::display()));
+    if (!m_display) {
+        qCDebug(KWIN_X11STANDALONE) << "Failed to establish vsync monitor X11 connection";
+        return;
+    }
+
+    const int attribs[] = {
+        GLX_RENDER_TYPE, GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+        0
+    };
+
+    int count;
+    GLXFBConfig *configs = glXChooseFBConfig(m_display, DefaultScreen(m_display),
+                                             attribs, &count);
+    if (!count) {
+        qCDebug(KWIN_X11STANDALONE) << "Couldn't find any suitable FBConfig for vsync monitor";
+        return;
+    }
+
+    GLXFBConfig config = configs[0];
+    XFree(configs);
+
+    m_localContext = glXCreateNewContext(m_display, config, GLX_RGBA_TYPE, 0, true);
+    if (!m_localContext) {
+        qCDebug(KWIN_X11STANDALONE) << "Failed to create opengl context for vsync monitor";
+        return;
+    }
+
+    m_drawable = DefaultRootWindow(m_display);
+}
+
+OMLSyncControlVsyncMonitorHelper::~OMLSyncControlVsyncMonitorHelper()
+{
+    if (m_localContext) {
+        glXDestroyContext(m_display, m_localContext);
+    }
+    if (m_display) {
+        XCloseDisplay(m_display);
+    }
+}
+
+bool OMLSyncControlVsyncMonitorHelper::isValid() const
+{
+    return m_display && m_localContext && m_drawable;
+}
+
+void OMLSyncControlVsyncMonitorHelper::poll()
+{
+    if (!glXMakeCurrent(m_display, m_drawable, m_localContext)) {
+        qCDebug(KWIN_X11STANDALONE) << "Failed to make vsync monitor OpenGL context current";
+        return;
+    }
+
+    int64_t ust, msc, sbc;
+
+    glXGetSyncValuesOML(m_display, m_drawable, &ust, &msc, &sbc);
+    glXWaitForMscOML(m_display, m_drawable, 0, 2, (msc + 1) % 2, &ust, &msc, &sbc);
+
+    emit vblankOccurred(std::chrono::microseconds(ust));
+}
+
+OMLSyncControlVsyncMonitor::OMLSyncControlVsyncMonitor(QObject *parent)
+    : VsyncMonitor(parent)
+    , m_thread(new QThread)
+    , m_helper(new OMLSyncControlVsyncMonitorHelper)
+{
+    m_helper->moveToThread(m_thread);
+
+    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::errorOccurred,
+            this, &OMLSyncControlVsyncMonitor::errorOccurred);
+    connect(m_helper, &OMLSyncControlVsyncMonitorHelper::vblankOccurred,
+            this, &OMLSyncControlVsyncMonitor::vblankOccurred);
+
+    m_thread->setObjectName(QStringLiteral("vsync event monitor"));
+    m_thread->start();
+}
+
+OMLSyncControlVsyncMonitor::~OMLSyncControlVsyncMonitor()
+{
+    m_thread->quit();
+    m_thread->wait();
+
+    delete m_helper;
+    delete m_thread;
+}
+
+bool OMLSyncControlVsyncMonitor::isValid() const
+{
+    return m_helper->isValid();
+}
+
+void OMLSyncControlVsyncMonitor::arm()
+{
+    QMetaObject::invokeMethod(m_helper, &OMLSyncControlVsyncMonitorHelper::poll);
+}
+
+} // namespace KWin

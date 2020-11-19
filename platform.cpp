@@ -445,6 +445,11 @@ void Platform::setPerScreenRenderingEnabled(bool enabled)
     m_isPerScreenRenderingEnabled = enabled;
 }
 
+RenderLoop *Platform::renderLoop() const
+{
+    return nullptr;
+}
+
 void Platform::warpPointer(const QPointF &globalPos)
 {
     Q_UNUSED(globalPos)

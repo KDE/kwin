@@ -99,7 +99,6 @@ void EglOnXBackend::init()
         }
     }
 
-    setSyncsToVBlank(false);
     if (surfaceHasSubPost) {
         qCDebug(KWIN_CORE) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
@@ -110,7 +109,6 @@ void EglOnXBackend::init()
             if (val >= 1) {
                 if (eglSwapInterval(eglDisplay(), 1)) {
                     qCDebug(KWIN_CORE) << "Enabled v-sync";
-                    setSyncsToVBlank(true);
                 }
             } else {
                 qCWarning(KWIN_CORE) << "Cannot enable v-sync as max. swap interval is" << val;

@@ -192,8 +192,6 @@ public:
 
     QVector<CompositingType> supportedCompositors() const override;
 
-    void checkBufferSwap();
-
     WaylandOutput* getOutputAt(const QPointF &globalPosition);
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;

@@ -7,9 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter_virtual_backend.h"
-#include "virtual_backend.h"
 #include "cursor.h"
 #include "screens.h"
+#include "softwarevsyncmonitor.h"
+#include "virtual_backend.h"
+#include "virtual_output.h"
 
 #include <QPainter>
 
@@ -55,6 +57,10 @@ void VirtualQPainterBackend::endFrame(int screenId, int mask, const QRegion &dam
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
+
+    VirtualOutput *output = static_cast<VirtualOutput *>(m_backend->findOutput(screenId));
+    output->vsyncMonitor()->arm();
+
     if (m_backend->saveFrames()) {
         m_backBuffers[screenId].save(QStringLiteral("%1/screen%2-%3.png").arg(m_backend->screenshotDirPath(), QString::number(screenId), QString::number(m_frameCounter++)));
     }

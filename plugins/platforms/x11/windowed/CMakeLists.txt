@@ -7,9 +7,11 @@ set(X11BACKEND_SOURCES
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
+include_directories(${CMAKE_SOURCE_DIR}/platformsupport/vsyncconvenience)
+
 add_library(KWinWaylandX11Backend MODULE ${X11BACKEND_SOURCES})
 set_target_properties(KWinWaylandX11Backend PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.waylandbackends/")
-target_link_libraries(KWinWaylandX11Backend eglx11common kwin kwinxrenderutils X11::XCB SceneQPainterBackend SceneOpenGLBackend)
+target_link_libraries(KWinWaylandX11Backend eglx11common kwin kwinxrenderutils X11::XCB SceneQPainterBackend SceneOpenGLBackend VsyncSupport)
 if (X11_Xinput_FOUND)
     target_link_libraries(KWinWaylandX11Backend ${X11_Xinput_LIB})
 endif()

@@ -103,6 +103,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     qRegisterMetaType<KWin::EffectWindow*>();
     qRegisterMetaType<KWaylandServer::SurfaceInterface *>("KWaylandServer::SurfaceInterface *");
     qRegisterMetaType<KSharedConfigPtr>();
+    qRegisterMetaType<std::chrono::nanoseconds>();
 }
 
 void Application::setConfigLock(bool lock)

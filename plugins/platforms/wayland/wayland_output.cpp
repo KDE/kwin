@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_output.h"
+#include "renderloop.h"
 #include "wayland_backend.h"
-
 #include "wayland_server.h"
 
 #include <KWayland/Client/pointerconstraints.h>
@@ -27,6 +27,7 @@ using namespace KWayland::Client;
 
 WaylandOutput::WaylandOutput(Surface *surface, WaylandBackend *backend)
     : AbstractWaylandOutput(backend)
+    , m_renderLoop(new RenderLoop(this))
     , m_surface(surface)
     , m_backend(backend)
 {
@@ -46,13 +47,21 @@ WaylandOutput::~WaylandOutput()
     delete m_surface;
 }
 
+RenderLoop *WaylandOutput::renderLoop() const
+{
+    return m_renderLoop;
+}
+
 void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
+    const int refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
+    m_renderLoop->setRefreshRate(refreshRate);
+
     KWaylandServer::OutputDeviceInterface::Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
-    mode.refreshRate = 60000;  // TODO: can we get refresh rate data from Wayland host?
+    mode.refreshRate = refreshRate;
     initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode }, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(backend()->initialOutputScale());

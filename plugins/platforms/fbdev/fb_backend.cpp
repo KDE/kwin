@@ -7,11 +7,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "fb_backend.h"
+#include "fbvsyncmonitor.h"
 
 #include "composite.h"
 #include "logging.h"
 #include "logind.h"
+#include "renderloop_p.h"
 #include "scene_qpainter_fb_backend.h"
+#include "softwarevsyncmonitor.h"
 #include "virtual_terminal.h"
 #include "udev.h"
 // system
@@ -25,20 +28,54 @@
 namespace KWin
 {
 
-FramebufferOutput::FramebufferOutput(QObject *parent):
-    AbstractWaylandOutput(parent)
+FramebufferOutput::FramebufferOutput(FramebufferBackend *backend, QObject *parent)
+    : AbstractWaylandOutput(parent)
+    , m_renderLoop(new RenderLoop(this))
 {
     setName("FB-0");
+
+    if (!qEnvironmentVariableIsSet("KWIN_FB_NO_HW_VSYNC")) {
+        m_vsyncMonitor = FramebufferVsyncMonitor::create(backend->fileDescriptor(), this);
+    }
+    if (!m_vsyncMonitor) {
+        SoftwareVsyncMonitor *monitor = SoftwareVsyncMonitor::create(this);
+        monitor->setRefreshRate(m_renderLoop->refreshRate());
+        connect(m_renderLoop, &RenderLoop::refreshRateChanged, this, [this, monitor]() {
+            monitor->setRefreshRate(m_renderLoop->refreshRate());
+        });
+        m_vsyncMonitor = monitor;
+    }
+
+    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &FramebufferOutput::vblank);
+}
+
+RenderLoop *FramebufferOutput::renderLoop() const
+{
+    return m_renderLoop;
+}
+
+VsyncMonitor *FramebufferOutput::vsyncMonitor() const
+{
+    return m_vsyncMonitor;
 }
 
 void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
 {
+    const int refreshRate = 60000; // TODO: get actual refresh rate of fb device?
+    m_renderLoop->setRefreshRate(refreshRate);
+
     KWaylandServer::OutputDeviceInterface::Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
-    mode.refreshRate = 60000;  // TODO: get actual refresh rate of fb device?
+    mode.refreshRate = refreshRate;
     initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
+}
+
+void FramebufferOutput::vblank(std::chrono::nanoseconds timestamp)
+{
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 FramebufferBackend::FramebufferBackend(QObject *parent)
@@ -78,6 +115,11 @@ void FramebufferBackend::init()
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
     VirtualTerminal::create(this);
+}
+
+int FramebufferBackend::fileDescriptor() const
+{
+    return m_fd;
 }
 
 void FramebufferBackend::openFrameBuffer()

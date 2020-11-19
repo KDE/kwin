@@ -118,4 +118,9 @@ QString AbstractOutput::serialNumber() const
     return QString();
 }
 
+RenderLoop *AbstractOutput::renderLoop() const
+{
+    return nullptr;
+}
+
 } // namespace KWin

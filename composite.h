@@ -12,14 +12,15 @@
 #include <kwinglobals.h>
 
 #include <QObject>
-#include <QElapsedTimer>
 #include <QTimer>
-#include <QBasicTimer>
 #include <QRegion>
 
 namespace KWin
 {
+
+class AbstractOutput;
 class CompositorSelectionOwner;
+class RenderLoop;
 class Scene;
 class X11Client;
 
@@ -50,18 +51,6 @@ public:
     void scheduleRepaint();
 
     /**
-     * Notifies the compositor that SwapBuffers() is about to be called.
-     * Rendering of the next frame will be deferred until bufferSwapComplete()
-     * is called.
-     */
-    void aboutToSwapBuffers();
-
-    /**
-     * Notifies the compositor that a pending buffer swap has completed.
-     */
-    void bufferSwapComplete();
-
-    /**
      * Toggles compositing, that is if the Compositor is suspended it will be resumed
      * and if the Compositor is active it will be suspended.
      * Invoked by keybinding (shortcut default: Shift + Alt + F12).
@@ -79,7 +68,6 @@ public:
      * not shutting down itself.
      */
     bool isActive();
-    virtual int refreshRate() const = 0;
 
     Scene *scene() const {
         return m_scene;
@@ -103,11 +91,9 @@ Q_SIGNALS:
     void aboutToDestroy();
     void aboutToToggleCompositing();
     void sceneCreated();
-    void bufferSwapCompleted();
 
 protected:
     explicit Compositor(QObject *parent = nullptr);
-    void timerEvent(QTimerEvent *te) override;
 
     virtual void start() = 0;
     void stop();
@@ -121,7 +107,6 @@ protected:
      * Continues the startup after Scene And Workspace are created
      */
     void startupWithWorkspace();
-    virtual void performCompositing();
 
     virtual void configChanged();
 
@@ -129,34 +114,33 @@ protected:
 
     static Compositor *s_compositor;
 
+protected Q_SLOTS:
+    virtual void handleFrameRequested(RenderLoop *renderLoop);
+
+private Q_SLOTS:
+    void handleOutputEnabled(AbstractOutput *output);
+    void handleOutputDisabled(AbstractOutput *output);
+
 private:
     void initializeX11();
     void cleanupX11();
 
-    void setCompositeTimer();
-
     void releaseCompositorSelection();
     void deleteUnusedSupportProperties();
 
+    int screenForRenderLoop(RenderLoop *renderLoop) const;
+    void registerRenderLoop(RenderLoop *renderLoop, AbstractOutput *output);
+    void unregisterRenderLoop(RenderLoop *renderLoop);
+
     State m_state;
 
-    QBasicTimer compositeTimer;
     CompositorSelectionOwner *m_selectionOwner;
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
-    qint64 vBlankInterval, fpsInterval;
-
-    qint64 m_timeSinceLastVBlank;
-
     Scene *m_scene;
-
-    bool m_bufferSwapPending;
-    bool m_composeAtSwapCompletion;
-
     int m_framesToTestForSafety = 3;
-    QElapsedTimer m_renderTimer;
-    QElapsedTimer m_monotonicClock;
+    QMap<RenderLoop *, AbstractOutput *> m_renderLoops;
 };
 
 class KWIN_EXPORT WaylandCompositor : public Compositor
@@ -164,8 +148,6 @@ class KWIN_EXPORT WaylandCompositor : public Compositor
     Q_OBJECT
 public:
     static WaylandCompositor *create(QObject *parent = nullptr);
-
-    int refreshRate() const override;
 
     void toggleCompositing() override;
 
@@ -239,15 +221,13 @@ public:
      */
     bool isOverlayWindowVisible() const;
 
-    int refreshRate() const override;
-
     void updateClientCompositeBlocking(X11Client *client = nullptr);
 
     static X11Compositor *self();
 
 protected:
     void start() override;
-    void performCompositing() override;
+    void handleFrameRequested(RenderLoop *renderLoop) override;
 
 private:
     explicit X11Compositor(QObject *parent);
@@ -255,8 +235,6 @@ private:
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      */
     SuspendReasons m_suspended;
-
-    int m_xrrRefreshRate;
 };
 
 }

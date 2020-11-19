@@ -191,6 +191,8 @@ private:
 
 } // namespace
 
+Q_DECLARE_METATYPE(std::chrono::nanoseconds)
+
 #define KWIN_SINGLETON_VARIABLE(ClassName, variableName) \
 public: \
     static ClassName *create(QObject *parent = nullptr);\

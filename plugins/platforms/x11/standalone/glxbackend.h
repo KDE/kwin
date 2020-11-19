@@ -15,10 +15,12 @@
 #include <xcb/glx.h>
 #include <epoxy/glx.h>
 #include <fixx11h.h>
-#include <memory>
 
 namespace KWin
 {
+
+class VsyncMonitor;
+class X11StandalonePlatform;
 
 // GLX_MESA_swap_interval
 using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
@@ -53,10 +55,12 @@ private:
 /**
  * @brief OpenGL Backend using GLX over an X overlay window.
  */
-class GlxBackend : public OpenGLBackend
+class GlxBackend : public QObject, public OpenGLBackend
 {
+    Q_OBJECT
+
 public:
-    GlxBackend(Display *display);
+    GlxBackend(Display *display, X11StandalonePlatform *backend);
     ~GlxBackend() override;
     void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
@@ -69,6 +73,7 @@ public:
     void init() override;
 
 private:
+    void vblank(std::chrono::nanoseconds timestamp);
     void present(const QRegion &damage);
     bool initBuffer();
     bool checkVersion();
@@ -102,6 +107,8 @@ private:
     bool m_haveSGISwapControl = false;
     bool m_haveINTELSwapEvent = false;
     Display *m_x11Display;
+    X11StandalonePlatform *m_backend;
+    VsyncMonitor *m_vsyncMonitor = nullptr;
     friend class GlxTexture;
 };
 

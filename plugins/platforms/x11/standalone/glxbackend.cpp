@@ -15,11 +15,16 @@
 #include "glxbackend.h"
 #include "logging.h"
 #include "glx_context_attribute_builder.h"
+#include "omlsynccontrolvsyncmonitor.h"
+#include "sgivideosyncvsyncmonitor.h"
+#include "softwarevsyncmonitor.h"
+#include "x11_platform.h"
 // kwin
 #include "options.h"
 #include "overlaywindow.h"
 #include "composite.h"
 #include "platform.h"
+#include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
 #include "xcbutils.h"
@@ -73,26 +78,23 @@ SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glx
 
 bool SwapEventFilter::event(xcb_generic_event_t *event)
 {
-    xcb_glx_buffer_swap_complete_event_t *ev =
+    const xcb_glx_buffer_swap_complete_event_t *swapEvent =
             reinterpret_cast<xcb_glx_buffer_swap_complete_event_t *>(event);
-
-    // The drawable field is the X drawable when the event was synthesized
-    // by a WireToEvent handler, and the GLX drawable when the event was
-    // received over the wire
-    if (ev->drawable == m_drawable || ev->drawable == m_glxDrawable) {
-        Compositor::self()->bufferSwapComplete();
-        return true;
+    if (swapEvent->drawable != m_drawable && swapEvent->drawable != m_glxDrawable) {
+        return false;
     }
 
-    return false;
+    // The clock for the UST timestamp is left unspecified in the spec, however, usually,
+    // it's CLOCK_MONOTONIC, so no special conversions are needed.
+    const std::chrono::microseconds timestamp((uint64_t(swapEvent->ust_hi) << 32) | swapEvent->ust_lo);
+
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(kwinApp()->platform()->renderLoop());
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
+
+    return true;
 }
 
-
-// -----------------------------------------------------------------------
-
-
-
-GlxBackend::GlxBackend(Display *display)
+GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     : OpenGLBackend()
     , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
     , window(None)
@@ -101,6 +103,7 @@ GlxBackend::GlxBackend(Display *display)
     , ctx(nullptr)
     , m_bufferAge(0)
     , m_x11Display(display)
+    , m_backend(backend)
 {
      // Force initialization of GLX integration in the Qt's xcb backend
      // to make it call XESetWireToEvent callbacks, which is required
@@ -110,6 +113,13 @@ GlxBackend::GlxBackend(Display *display)
 
 GlxBackend::~GlxBackend()
 {
+    delete m_vsyncMonitor;
+
+    // No completion events will be received for in-flight frames, this may lock the
+    // render loop. We need to ensure that the render loop is back to its initial state
+    // if the render backend is about to be destroyed.
+    RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
+
     if (isFailed()) {
         m_overlayWindow->destroy();
     }
@@ -194,14 +204,8 @@ void GlxBackend::init()
     m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
     m_haveSGISwapControl    = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
-    // only enable Intel swap event if env variable is set, see BUG 342582
     m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
-                                && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1");
-
-    if (m_haveINTELSwapEvent) {
-        m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
-        glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
-    }
+                                && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") != QByteArrayLiteral("0");
 
     bool haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
@@ -214,12 +218,16 @@ void GlxBackend::init()
             setSupportsBufferAge(true);
     }
 
-    setSyncsToVBlank(false);
+    // If the buffer age extension is unsupported, glXSwapBuffers() is not guaranteed to
+    // be called. Therefore, there is no point for creating the swap event filter.
+    if (!supportsBufferAge()) {
+        m_haveINTELSwapEvent = false;
+    }
+
     const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
     if (wantSync && glXIsDirect(display(), ctx)) {
         if (haveSwapInterval) { // glXSwapInterval is preferred being more reliable
             setSwapInterval(1);
-            setSyncsToVBlank(true);
         } else {
             qCWarning(KWIN_X11STANDALONE) << "glSwapInterval is unsupported";
         }
@@ -232,6 +240,36 @@ void GlxBackend::init()
         // this should actually be in kwinglutils_funcs, but QueryDrawable seems not to be provided by an extension
         // and the GLPlatform has not been initialized at the moment when initGLX() is called.
         glXQueryDrawable = nullptr;
+    }
+
+    if (m_haveINTELSwapEvent) {
+        // Nice, the GLX_INTEL_swap_event extension is available. We are going to receive
+        // the presentation timestamp (UST) after glXSwapBuffers() via the X command stream.
+        m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
+        glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
+    } else {
+        // If the GLX_INTEL_swap_event extension is unavailble, we are going to wait for
+        // the next vblank event after swapping buffers. This is a bit racy solution, e.g.
+        // the vblank may occur right in between querying video sync counter and the act
+        // of swapping buffers, but on the other hand, there is no any better alternative
+        // option. NVIDIA doesn't provide any extension such as GLX_INTEL_swap_event.
+        if (!m_vsyncMonitor) {
+            m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create(this);
+        }
+        if (!m_vsyncMonitor) {
+            m_vsyncMonitor = OMLSyncControlVsyncMonitor::create(this);
+        }
+        if (!m_vsyncMonitor) {
+            SoftwareVsyncMonitor *monitor = SoftwareVsyncMonitor::create(this);
+            RenderLoop *renderLoop = m_backend->renderLoop();
+            monitor->setRefreshRate(renderLoop->refreshRate());
+            connect(renderLoop, &RenderLoop::refreshRateChanged, this, [this, monitor]() {
+                monitor->setRefreshRate(m_backend->renderLoop()->refreshRate());
+            });
+            m_vsyncMonitor = monitor;
+        }
+
+        connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &GlxBackend::vblank);
     }
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
@@ -670,9 +708,6 @@ void GlxBackend::present(const QRegion &damage)
     const bool fullRepaint = supportsBufferAge() || (damage == displayRegion);
 
     if (fullRepaint) {
-        if (m_haveINTELSwapEvent)
-            Compositor::self()->aboutToSwapBuffers();
-
         glXSwapBuffers(display(), glxWindow);
         if (supportsBufferAge()) {
             glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
@@ -718,6 +753,7 @@ SceneOpenGLTexturePrivate *GlxBackend::createBackendTexture(SceneOpenGLTexture *
 QRegion GlxBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
+
     QRegion repaint;
     makeCurrent();
 
@@ -733,6 +769,12 @@ void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
 {
     Q_UNUSED(screenId)
 
+    // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,
+    // assume that the frame will be presented at the next vblank event, this is racy.
+    if (m_vsyncMonitor) {
+        m_vsyncMonitor->arm();
+    }
+
     present(renderedRegion);
 
     if (overlayWindow()->window())  // show the window only after the first pass,
@@ -741,6 +783,12 @@ void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
     // Save the damaged region to history
     if (supportsBufferAge())
         addToDamageHistory(damagedRegion);
+}
+
+void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
+{
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 bool GlxBackend::makeCurrent()

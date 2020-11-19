@@ -17,7 +17,6 @@ EglMultiBackend::EglMultiBackend(AbstractEglDrmBackend *backend0) : OpenGLBacken
 {
     m_backends.append(backend0);
     setIsDirectRendering(true);
-    setSyncsToVBlank(true);
 }
 
 EglMultiBackend::~EglMultiBackend()

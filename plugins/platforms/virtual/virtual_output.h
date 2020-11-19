@@ -16,6 +16,8 @@
 
 namespace KWin
 {
+
+class SoftwareVsyncMonitor;
 class VirtualBackend;
 
 class VirtualOutput : public AbstractWaylandOutput
@@ -25,6 +27,9 @@ class VirtualOutput : public AbstractWaylandOutput
 public:
     VirtualOutput(QObject *parent = nullptr);
     ~VirtualOutput() override;
+
+    RenderLoop *renderLoop() const override;
+    SoftwareVsyncMonitor *vsyncMonitor() const;
 
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
@@ -39,9 +44,13 @@ public:
     }
 
 private:
+    void vblank(std::chrono::nanoseconds timestamp);
+
     Q_DISABLE_COPY(VirtualOutput);
     friend class VirtualBackend;
 
+    RenderLoop *m_renderLoop;
+    SoftwareVsyncMonitor *m_vsyncMonitor;
     int m_gammaSize = 200;
     bool m_gammaResult = true;
 };

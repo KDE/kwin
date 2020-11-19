@@ -10,6 +10,7 @@
 
 #include "abstract_client.h"
 #include "composite.h"
+#include "scene.h"
 #include "wayland_server.h"
 
 #include <KWayland/Client/xdgshell.h>
@@ -54,10 +55,10 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QVERIFY(client);
 
     // add a first repaint
-    QSignalSpy swapSpy(Compositor::self(), &Compositor::bufferSwapCompleted);
-    QVERIFY(swapSpy.isValid());
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
     Compositor::self()->addRepaintFull();
-    QVERIFY(swapSpy.wait());
+    QVERIFY(frameRenderedSpy.wait());
 
     // now change buffer size
     Test::render(surface.data(), QSize(30, 10), Qt::red);
@@ -66,7 +67,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QVERIFY(damagedSpy.isValid());
     QVERIFY(damagedSpy.wait());
     KWin::Compositor::self()->addRepaintFull();
-    QVERIFY(swapSpy.wait());
+    QVERIFY(frameRenderedSpy.wait());
 }
 
 void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
@@ -91,10 +92,10 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     QVERIFY(parent);
 
     // add a first repaint
-    QSignalSpy swapSpy(Compositor::self(), &Compositor::bufferSwapCompleted);
-    QVERIFY(swapSpy.isValid());
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QVERIFY(frameRenderedSpy.isValid());
     Compositor::self()->addRepaintFull();
-    QVERIFY(swapSpy.wait());
+    QVERIFY(frameRenderedSpy.wait());
 
     // change buffer size of sub surface
     QSignalSpy damagedParentSpy(parent, &AbstractClient::damaged);
@@ -106,7 +107,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
 
     // add a second repaint
     KWin::Compositor::self()->addRepaintFull();
-    QVERIFY(swapSpy.wait());
+    QVERIFY(frameRenderedSpy.wait());
 }
 
 }

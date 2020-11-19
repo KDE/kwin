@@ -42,6 +42,8 @@ public:
     WaylandOutput(KWayland::Client::Surface *surface, WaylandBackend *backend);
     ~WaylandOutput() override;
 
+    RenderLoop *renderLoop() const override;
+
     void init(const QPoint &logicalPosition, const QSize &pixelSize);
 
     virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock) {
@@ -79,6 +81,7 @@ protected:
     }
 
 private:
+    RenderLoop *m_renderLoop;
     KWayland::Client::Surface *m_surface;
     WaylandBackend *m_backend;
 

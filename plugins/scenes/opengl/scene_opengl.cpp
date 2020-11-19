@@ -75,9 +75,6 @@
 namespace KWin
 {
 
-extern int currentRefreshRate();
-
-
 /**
  * SyncObject represents a fence used to synchronize operations in
  * the kwin command stream with operations in the X command stream.
@@ -480,11 +477,6 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 OverlayWindow *SceneOpenGL::overlayWindow() const
 {
     return m_backend->overlayWindow();
-}
-
-bool SceneOpenGL::syncsToVBlank() const
-{
-    return m_backend->syncsToVBlank();
 }
 
 bool SceneOpenGL::initFailed() const

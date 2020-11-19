@@ -8,15 +8,38 @@
 #include "eglbackend.h"
 #include "options.h"
 #include "overlaywindow.h"
+#include "platform.h"
+#include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
+#include "softwarevsyncmonitor.h"
+#include "x11_platform.h"
 
 namespace KWin
 {
 
-EglBackend::EglBackend(Display *display)
+EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     : EglOnXBackend(display)
+    , m_backend(backend)
 {
+    // There is no any way to determine when a buffer swap completes with EGL. Fallback
+    // to software vblank events. Could we use the Present extension to get notified when
+    // the overlay window is actually presented on the screen?
+    m_vsyncMonitor = SoftwareVsyncMonitor::create(this);
+    connect(backend->renderLoop(), &RenderLoop::refreshRateChanged, this, [this, backend]() {
+        m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
+    });
+    m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
+
+    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &EglBackend::vblank);
+}
+
+EglBackend::~EglBackend()
+{
+    // No completion events will be received for in-flight frames, this may lock the
+    // render loop. We need to ensure that the render loop is back to its initial state
+    // if the render backend is about to be destroyed.
+    RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
 }
 
 SceneOpenGLTexturePrivate *EglBackend::createBackendTexture(SceneOpenGLTexture *texture)
@@ -37,6 +60,7 @@ void EglBackend::screenGeometryChanged(const QSize &size)
 QRegion EglBackend::beginFrame(int screenId)
 {
     Q_UNUSED(screenId)
+
     QRegion repaint;
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
@@ -49,6 +73,10 @@ QRegion EglBackend::beginFrame(int screenId)
 void EglBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
+
+    // Start the software vsync monitor. There is no any reliable way to determine when
+    // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.
+    m_vsyncMonitor->arm();
 
     presentSurface(surface(), renderedRegion, screens()->geometry());
 
@@ -78,6 +106,12 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
             eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
         }
     }
+}
+
+void EglBackend::vblank(std::chrono::nanoseconds timestamp)
+{
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 /************************************************

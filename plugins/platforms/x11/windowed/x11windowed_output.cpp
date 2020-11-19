@@ -7,7 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11windowed_output.h"
-
+#include "renderloop_p.h"
+#include "softwarevsyncmonitor.h"
 #include "x11windowed_backend.h"
 
 #include <NETWM>
@@ -23,6 +24,8 @@ namespace KWin
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : AbstractWaylandOutput(backend)
+    , m_renderLoop(new RenderLoop(this))
+    , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());
@@ -30,6 +33,8 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     static int identifier = -1;
     identifier++;
     setName("X11-" + QString::number(identifier));
+
+    connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &X11WindowedOutput::vblank);
 }
 
 X11WindowedOutput::~X11WindowedOutput()
@@ -40,13 +45,27 @@ X11WindowedOutput::~X11WindowedOutput()
     xcb_flush(m_backend->connection());
 }
 
+RenderLoop *X11WindowedOutput::renderLoop() const
+{
+    return m_renderLoop;
+}
+
+SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
+{
+    return m_vsyncMonitor;
+}
+
 void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
 {
+    const int refreshRate = 60000; // TODO: get refresh rate via randr
+    m_renderLoop->setRefreshRate(refreshRate);
+    m_vsyncMonitor->setRefreshRate(refreshRate);
+
     KWaylandServer::OutputDeviceInterface::Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
-    mode.refreshRate = 60000;  // TODO: get refresh rate via randr
+    mode.refreshRate = refreshRate;
 
     // Physicial size must be adjusted, such that QPA calculates correct sizes of
     // internal elements.
@@ -152,6 +171,12 @@ void X11WindowedOutput::setHostPosition(const QPoint &pos)
 QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 {
     return (pos - hostPosition() + internalPosition()) / scale();
+}
+
+void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
+{
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 }

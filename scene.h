@@ -142,9 +142,6 @@ public:
     };
     // types of filtering available
     enum ImageFilterType { ImageFilterFast, ImageFilterGood };
-    // there's nothing to paint (adjust time_diff later)
-    void idle();
-    virtual bool syncsToVBlank() const;
     virtual OverlayWindow* overlayWindow() const = 0;
 
     virtual bool makeOpenGLContextCurrent();
