@@ -273,7 +273,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
 void Xkb::createKeymapFile()
 {
-    if (!m_seat) {
+    if (!m_seat || !m_seat->keyboard()) {
         return;
     }
     // TODO: uninstall keymap on server?
@@ -371,7 +371,7 @@ void Xkb::updateModifiers()
 
 void Xkb::forwardModifiers()
 {
-    if (!m_seat) {
+    if (!m_seat || !m_seat->keyboard()) {
         return;
     }
     m_seat->keyboard()->updateModifiers(m_modifierState.depressed,
