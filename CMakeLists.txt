@@ -826,6 +826,7 @@ endif()
 
 add_subdirectory(platformsupport)
 add_subdirectory(plugins)
+target_link_libraries(kwin_wayland KWinQpaPlugin)
 
 ########### install files ###############
 

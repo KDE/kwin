@@ -60,6 +60,8 @@
 #include <iostream>
 #include <iomanip>
 
+Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
+
 namespace KWin
 {
 

@@ -30,6 +30,8 @@
 #include <sys/socket.h>
 #include <iostream>
 
+Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
+
 namespace KWin
 {
 

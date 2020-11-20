@@ -26,7 +26,7 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     BASENAME xdg-shell
 )
 add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
-target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test Wayland::Client)
+target_link_libraries(KWinIntegrationTestFramework kwin Qt5::Test Wayland::Client KWinQpaPlugin)
 
 function(integrationTest)
     set(optionArgs WAYLAND_ONLY)
