@@ -2127,6 +2127,12 @@ void Workspace::updateClientArea(bool force)
             continue;
         }
         QRect r = adjustClientArea(client, desktopArea);
+
+        // This happens sometimes when the workspace size changes and the
+        // struted clients haven't repositioned yet
+        if (!r.isValid()) {
+            continue;
+        }
         // sanity check that a strut doesn't exclude a complete screen geometry
         // this is a violation to EWMH, as KWin just ignores the strut
         for (int i = 0; i < Screens::self()->count(); i++) {
