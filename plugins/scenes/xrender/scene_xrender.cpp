@@ -75,7 +75,8 @@ bool SceneXrender::initFailed() const
 }
 
 // the entry point for painting
-void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels)
+void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
+                         std::chrono::milliseconds presentTime)
 {
     painted_screen = screenId;
 
@@ -83,7 +84,7 @@ void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplev
 
     int mask = 0;
     QRegion updateRegion, validRegion;
-    paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
+    paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion, presentTime);
 
     m_backend->showOverlay();
 

@@ -27,7 +27,7 @@ class TouchPointsEffect
 public:
     TouchPointsEffect();
     ~TouchPointsEffect() override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -80,6 +80,7 @@ private:
     QVector<TouchPoint> m_points;
     QHash<quint32, QPointF> m_latestPositions;
     QHash<quint32, Qt::GlobalColor> m_colors;
+    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
 };
 

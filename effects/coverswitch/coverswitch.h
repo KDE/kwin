@@ -42,7 +42,7 @@ public:
     ~CoverSwitchEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
@@ -123,6 +123,7 @@ private:
     bool stopRequested;
     bool startRequested;
     TimeLine timeLine;
+    std::chrono::milliseconds lastPresentTime;
     QRect area;
     float zPosition;
     float scaleFactor;

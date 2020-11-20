@@ -34,6 +34,7 @@ CoverSwitchEffect::CoverSwitchEffect()
     , stop(false)
     , stopRequested(false)
     , startRequested(false)
+    , lastPresentTime(std::chrono::milliseconds::zero())
     , zPosition(900.0)
     , scaleFactor(0.0)
     , direction(Left)
@@ -103,17 +104,23 @@ void CoverSwitchEffect::reconfigure(ReconfigureFlags)
 
 }
 
-void CoverSwitchEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void CoverSwitchEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
+    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+    if (lastPresentTime.count()) {
+        delta = presentTime - lastPresentTime;
+    }
+    lastPresentTime = presentTime;
+
     if (mActivated || stop || stopRequested) {
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         if (animation || start || stop) {
-            timeLine.update(std::chrono::milliseconds(time));
+            timeLine.update(delta);
         }
         if (selected_window == nullptr)
             abort();
     }
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 void CoverSwitchEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
@@ -285,6 +292,7 @@ void CoverSwitchEffect::postPaintScreen()
                 }
                 referrencedWindows.clear();
                 currentWindowList.clear();
+                lastPresentTime = std::chrono::milliseconds::zero();
                 if (startRequested) {
                     startRequested = false;
                     mActivated = true;
@@ -538,6 +546,7 @@ void CoverSwitchEffect::slotTabBoxClosed()
             start = false;
             animation = false;
             timeLine.reset();
+            lastPresentTime = std::chrono::milliseconds::zero();
         }
         mActivated = false;
         effects->unrefTabBox();
@@ -907,6 +916,7 @@ void CoverSwitchEffect::abort()
     }
     effects->setActiveFullScreenEffect(nullptr);
     timeLine.reset();
+    lastPresentTime = std::chrono::milliseconds::zero();
     mActivated = false;
     stop = false;
     stopRequested = false;

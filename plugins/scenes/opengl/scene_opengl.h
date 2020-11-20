@@ -35,7 +35,8 @@ public:
     ~SceneOpenGL() override;
     bool initFailed() const override;
     bool hasPendingFlush() const override;
-    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows) override;
+    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+               std::chrono::milliseconds presentTime) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;

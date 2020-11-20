@@ -28,8 +28,8 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
 
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
@@ -54,6 +54,7 @@ private:
     struct Animation {
         TimeLine timeLine;
         int parentY;
+        std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
     };
 
     QHash<EffectWindow*, Animation> m_animations;

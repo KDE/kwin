@@ -34,7 +34,7 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
 
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintScreen() override;
 
@@ -77,6 +77,7 @@ private:
     const EffectWindowGroup *m_activeWindowGroup;
     QHash<EffectWindow*, TimeLine> m_transitions;
     QHash<EffectWindow*, qreal> m_forceDim;
+    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     struct {
         bool active = false;

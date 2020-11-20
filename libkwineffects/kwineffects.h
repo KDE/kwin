@@ -402,8 +402,12 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
+     *
+     * @a presentTime specifies the expected monotonic time when the rendered frame
+     * will be displayed on the screen.
     */
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time);
+    virtual void prePaintScreen(ScreenPrePaintData &data,
+                                std::chrono::milliseconds presentTime);
     /**
      * In this method you can:
      * @li paint something on top of the windows (by painting after calling
@@ -436,8 +440,12 @@ public:
      *
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
+     *
+     * @a presentTime specifies the expected monotonic time when the rendered frame
+     * will be displayed on the screen.
      */
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
+    virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data,
+                                std::chrono::milliseconds presentTime);
     /**
      * This is the main method for painting windows.
      * In this method you can:
@@ -824,10 +832,10 @@ public:
     explicit EffectsHandler(CompositingType type);
     ~EffectsHandler() override;
     // for use by effects
-    virtual void prePaintScreen(ScreenPrePaintData& data, int time) = 0;
+    virtual void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) = 0;
     virtual void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) = 0;
     virtual void postPaintScreen() = 0;
-    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) = 0;
+    virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) = 0;
     virtual void paintWindow(EffectWindow* w, int mask, const QRegion &region, WindowPaintData& data) = 0;
     virtual void postPaintWindow(EffectWindow* w) = 0;
     virtual void paintEffectFrame(EffectFrame* frame, const QRegion &region, double opacity, double frameOpacity) = 0;

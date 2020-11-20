@@ -126,8 +126,14 @@ QRect SlideBackEffect::getSlideDestination(const QRect &windowUnderGeometry, con
     return slideRect;
 }
 
-void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    int time = 0;
+    if (m_lastPresentTime.count()) {
+        time = (presentTime - m_lastPresentTime).count();
+    }
+    m_lastPresentTime = presentTime;
+
     if (motionManager.managingWindows()) {
         motionManager.calculate(time);
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
@@ -137,7 +143,7 @@ void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, int time)
         w->setData(WindowForceBlurRole, QVariant(true));
     }
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 void SlideBackEffect::postPaintScreen()
@@ -153,13 +159,13 @@ void SlideBackEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void SlideBackEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void SlideBackEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (motionManager.isManaging(w)) {
         data.setTransformed();
     }
 
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
@@ -241,6 +247,9 @@ void SlideBackEffect::postPaintWindow(EffectWindow* w)
                 }
             }
         }
+    }
+    if (!isActive()) {
+        m_lastPresentTime = std::chrono::milliseconds::zero();
     }
     effects->postPaintWindow(w);
 }

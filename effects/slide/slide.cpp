@@ -62,14 +62,20 @@ void SlideEffect::reconfigure(ReconfigureFlags)
     m_slideBackground = SlideConfig::slideBackground();
 }
 
-void SlideEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void SlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    m_timeLine.update(std::chrono::milliseconds(time));
+    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+    if (m_lastPresentTime.count()) {
+        delta = presentTime - m_lastPresentTime;
+    }
+    m_lastPresentTime = presentTime;
+
+    m_timeLine.update(delta);
 
     data.mask |= PAINT_SCREEN_TRANSFORMED
               |  PAINT_SCREEN_BACKGROUND_FIRST;
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 /**
@@ -249,7 +255,7 @@ bool SlideEffect::isPainted(const EffectWindow *w) const
     return false;
 }
 
-void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     const bool painted = isPainted(w);
     if (painted) {
@@ -260,7 +266,7 @@ void SlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int 
     if (painted && isTranslated(w)) {
         data.setTransformed();
     }
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
@@ -392,6 +398,7 @@ void SlideEffect::stop()
     m_paintCtx.fullscreenWindows.clear();
     m_movingWindow = nullptr;
     m_active = false;
+    m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->setActiveFullScreenEffect(nullptr);
 }
 

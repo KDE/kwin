@@ -391,11 +391,11 @@ bool AnimationEffect::cancel(quint64 animationId)
     return false;
 }
 
-void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
+void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, std::chrono::milliseconds presentTime )
 {
     Q_D(AnimationEffect);
     if (d->m_animations.isEmpty()) {
-        effects->prePaintScreen(data, time);
+        effects->prePaintScreen(data, presentTime);
         return;
     }
 
@@ -415,7 +415,10 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                     continue;
                 }
             } else {
-                anim->timeLine.update(std::chrono::milliseconds(time));
+                if (anim->lastPresentTime.count()) {
+                    anim->timeLine.update(presentTime - anim->lastPresentTime);
+                }
+                anim->lastPresentTime = presentTime;
             }
 
             if (anim->isActive()) {
@@ -465,7 +468,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         disconnectGeometryChanges();
     }
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 static int xCoord(const QRect &r, int flag) {
@@ -561,7 +564,7 @@ void AnimationEffect::disconnectGeometryChanges()
 }
 
 
-void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time )
+void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime )
 {
     Q_D(AnimationEffect);
     if ( d->m_animated ) {
@@ -596,7 +599,7 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
             }
         }
     }
-    effects->prePaintWindow( w, data, time );
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 static inline float geometryCompensation(int flags, float v)

@@ -620,7 +620,8 @@ void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
     m_backend->aboutToStartPainting(screenId, damage);
 }
 
-void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels)
+void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
+                        std::chrono::milliseconds presentTime)
 {
     if (m_resetOccurred) {
         return; // A graphics reset has occurred, do nothing.
@@ -658,7 +659,8 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         int mask = 0;
         updateProjectionMatrix();
 
-        paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid, projectionMatrix(), geo, scaling);   // call generic implementation
+        paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid,
+                    presentTime, projectionMatrix(), geo, scaling);   // call generic implementation
         paintCursor(valid);
 
         if (!GLPlatform::instance()->isGLES() && screenId == -1) {

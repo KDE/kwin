@@ -41,6 +41,7 @@ namespace KWin
 
 KscreenEffect::KscreenEffect()
     : Effect()
+    , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_state(StateNormal)
     , m_atom(effects->announceSupportProperty("_KDE_KWIN_KSCREEN_SUPPORT", this))
 {
@@ -67,15 +68,27 @@ void KscreenEffect::reconfigure(ReconfigureFlags flags)
         std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
 }
 
-void KscreenEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void KscreenEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+    if (m_lastPresentTime.count()) {
+        delta = presentTime - m_lastPresentTime;
+    }
+
     if (m_state == StateFadingIn || m_state == StateFadingOut) {
-        m_timeLine.update(std::chrono::milliseconds(time));
+        m_timeLine.update(delta);
         if (m_timeLine.done()) {
             switchState();
         }
     }
-    effects->prePaintScreen(data, time);
+
+    if (isActive()) {
+        m_lastPresentTime = presentTime;
+    } else {
+        m_lastPresentTime = std::chrono::milliseconds::zero();
+    }
+
+    effects->prePaintScreen(data, presentTime);
 }
 
 void KscreenEffect::postPaintScreen()
@@ -85,12 +98,12 @@ void KscreenEffect::postPaintScreen()
     }
 }
 
-void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void KscreenEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (m_state != StateNormal) {
         data.setTranslucent();
     }
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void KscreenEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)

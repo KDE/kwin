@@ -68,29 +68,33 @@ void GlideEffect::reconfigure(ReconfigureFlags flags)
     m_outParams.opacity.to = GlideConfig::outOpacity();
 }
 
-void GlideEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void GlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    const std::chrono::milliseconds delta(time);
-
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
-        (*animationIt).update(delta);
+        std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+        if (animationIt->lastPresentTime.count()) {
+            delta = presentTime - animationIt->lastPresentTime;
+        }
+        animationIt->lastPresentTime = presentTime;
+
+        (*animationIt).timeLine.update(delta);
         ++animationIt;
     }
 
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
-void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (m_animations.contains(w)) {
         data.setTransformed();
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
     }
 
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
@@ -123,7 +127,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.translate(offset.x(), offset.y());
 
     const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
-    const qreal t = (*animationIt).value();
+    const qreal t = (*animationIt).timeLine.value();
 
     switch (params.edge) {
     case RotationEdge::Top:
@@ -168,7 +172,7 @@ void GlideEffect::postPaintScreen()
 {
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
-        if ((*animationIt).done()) {
+        if ((*animationIt).timeLine.done()) {
             EffectWindow *w = animationIt.key();
             if (w->isDeleted()) {
                 w->unrefWindow();
@@ -215,11 +219,11 @@ void GlideEffect::windowAdded(EffectWindow *w)
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
 
-    TimeLine &timeLine = m_animations[w];
-    timeLine.reset();
-    timeLine.setDirection(TimeLine::Forward);
-    timeLine.setDuration(m_duration);
-    timeLine.setEasingCurve(QEasingCurve::InCurve);
+    GlideAnimation &animation = m_animations[w];
+    animation.timeLine.reset();
+    animation.timeLine.setDirection(TimeLine::Forward);
+    animation.timeLine.setDuration(m_duration);
+    animation.timeLine.setEasingCurve(QEasingCurve::InCurve);
 
     effects->addRepaintFull();
 }
@@ -246,11 +250,11 @@ void GlideEffect::windowClosed(EffectWindow *w)
     w->refWindow();
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
 
-    TimeLine &timeLine = m_animations[w];
-    timeLine.reset();
-    timeLine.setDirection(TimeLine::Forward);
-    timeLine.setDuration(m_duration);
-    timeLine.setEasingCurve(QEasingCurve::OutCurve);
+    GlideAnimation &animation = m_animations[w];
+    animation.timeLine.reset();
+    animation.timeLine.setDirection(TimeLine::Forward);
+    animation.timeLine.setDuration(m_duration);
+    animation.timeLine.setEasingCurve(QEasingCurve::OutCurve);
 
     effects->addRepaintFull();
 }

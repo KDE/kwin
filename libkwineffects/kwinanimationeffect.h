@@ -198,8 +198,8 @@ public:
 
     // Reimplemented from KWin::Effect.
     QString debug(const QString &parameter) const override;
-    void prePaintScreen( ScreenPrePaintData& data, int time ) override;
-    void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, int time ) override;
+    void prePaintScreen( ScreenPrePaintData& data, std::chrono::milliseconds presentTime ) override;
+    void prePaintWindow( EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime ) override;
     void paintWindow( EffectWindow* w, int mask, QRegion region, WindowPaintData& data ) override;
     void postPaintScreen() override;
 

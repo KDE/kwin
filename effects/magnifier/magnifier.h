@@ -30,7 +30,7 @@ public:
     MagnifierEffect();
     ~MagnifierEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -56,6 +56,7 @@ private:
     double zoom;
     double target_zoom;
     bool polling; // Mouse polling
+    std::chrono::milliseconds m_lastPresentTime;
     QSize magnifier_size;
     GLTexture *m_texture;
     GLRenderTarget *m_fbo;

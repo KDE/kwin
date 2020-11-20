@@ -43,8 +43,8 @@ public:
     ~WobblyWindowsEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -151,6 +151,8 @@ private:
         // for resizing. Only sides that have moved will wobble
         bool can_wobble_top, can_wobble_left, can_wobble_right, can_wobble_bottom;
         QRect resize_original_rect;
+
+        std::chrono::milliseconds lastPresentTime;
     };
 
     QHash< const EffectWindow*,  WindowWobblyInfos > windows;

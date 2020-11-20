@@ -336,19 +336,19 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
     vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
 }
 
-void ContrastEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void ContrastEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     m_paintedArea = QRegion();
     m_currentContrast = QRegion();
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
-void ContrastEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void ContrastEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     // this effect relies on prePaintWindow being called in the bottom to top order
 
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 
     if (!w->isPaintingEnabled()) {
         return;

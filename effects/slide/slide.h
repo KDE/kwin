@@ -33,11 +33,11 @@ public:
 
     void reconfigure(ReconfigureFlags) override;
 
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
 
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     bool isActive() const override {
@@ -88,6 +88,7 @@ private:
     QPoint m_startPos;
     QPoint m_diff;
     EffectWindow *m_movingWindow = nullptr;
+    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     struct {
         int desktop;

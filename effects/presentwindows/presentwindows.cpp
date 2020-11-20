@@ -46,6 +46,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_managerWindow(nullptr)
     , m_needInitialSelection(false)
     , m_highlightedWindow(nullptr)
+    , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_filterFrame(nullptr)
     , m_closeView(nullptr)
     , m_exposeAction(new QAction(this))
@@ -199,8 +200,17 @@ void PresentWindowsEffect::toggleActiveClass()
 //-----------------------------------------------------------------------------
 // Screen painting
 
-void PresentWindowsEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void PresentWindowsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    // The animation code assumes that the time diff cannot be 0, let's work around it.
+    int time;
+    if (m_lastPresentTime.count()) {
+        time = std::max(1, int((presentTime - m_lastPresentTime).count()));
+    } else {
+        time = 1;
+    }
+    m_lastPresentTime = presentTime;
+
     m_motionManager.calculate(time);
 
     // We need to mark the screen as having been transformed otherwise there will be no repainting
@@ -212,7 +222,7 @@ void PresentWindowsEffect::prePaintScreen(ScreenPrePaintData &data, int time)
     else
         m_decalOpacity = qMax(0.0, m_decalOpacity - time / m_fadeDuration);
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 void PresentWindowsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
@@ -229,43 +239,58 @@ void PresentWindowsEffect::paintScreen(int mask, const QRegion &region, ScreenPa
 
 void PresentWindowsEffect::postPaintScreen()
 {
-    if (m_motionManager.areWindowsMoving())
+    if (m_motionManager.areWindowsMoving()) {
         effects->addRepaintFull();
-    else if (!m_activated && m_motionManager.managingWindows() && !(m_closeView && m_closeView->isVisible())) {
-        // We have finished moving them back, stop processing
-        m_motionManager.unmanageAll();
+    } else {
+        m_lastPresentTime = std::chrono::milliseconds::zero();
 
-        DataHash::iterator i = m_windowData.begin();
-        while (i != m_windowData.end()) {
-            delete i.value().textFrame;
-            delete i.value().iconFrame;
-            ++i;
-        }
-        m_windowData.clear();
+        if (!m_activated && m_motionManager.managingWindows() && !(m_closeView && m_closeView->isVisible())) {
+            // We have finished moving them back, stop processing
+            m_motionManager.unmanageAll();
 
-        foreach (EffectWindow * w, effects->stackingOrder()) {
-            w->setData(WindowForceBlurRole, QVariant());
-            w->setData(WindowForceBackgroundContrastRole, QVariant());
+            DataHash::iterator i = m_windowData.begin();
+            while (i != m_windowData.end()) {
+                delete i.value().textFrame;
+                delete i.value().iconFrame;
+                ++i;
+            }
+            m_windowData.clear();
+
+            foreach (EffectWindow * w, effects->stackingOrder()) {
+                w->setData(WindowForceBlurRole, QVariant());
+                w->setData(WindowForceBackgroundContrastRole, QVariant());
+            }
+            effects->setActiveFullScreenEffect(nullptr);
+            effects->addRepaintFull();
+        } else if (m_activated && m_needInitialSelection) {
+            m_needInitialSelection = false;
+            QMouseEvent me(QEvent::MouseMove, cursorPos(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+            windowInputMouseEvent(&me);
         }
-        effects->setActiveFullScreenEffect(nullptr);
-        effects->addRepaintFull();
-    } else if (m_activated && m_needInitialSelection) {
-        m_needInitialSelection = false;
-        QMouseEvent me(QEvent::MouseMove, cursorPos(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-        windowInputMouseEvent(&me);
     }
 
     // Update windows that are changing brightness or opacity
-    DataHash::const_iterator i;
-    for (i = m_windowData.constBegin(); i != m_windowData.constEnd(); ++i) {
-        if (i.value().opacity > 0.0 && i.value().opacity < 1.0)
+    for (auto i = m_windowData.begin(); i != m_windowData.end(); ++i) {
+        bool resetLastPresentTime = true;
+
+        if (i.value().opacity > 0.0 && i.value().opacity < 1.0) {
             i.key()->addRepaintFull();
-        if (i.key()->isDesktop() && !m_motionManager.isManaging(i.key())) {
-            if (i.value().highlight != 0.3)
-                i.key()->addRepaintFull();
+            resetLastPresentTime = false;
         }
-        else if (i.value().highlight > 0.0 && i.value().highlight < 1.0)
+        if (i.key()->isDesktop() && !m_motionManager.isManaging(i.key())) {
+            if (i.value().highlight != 0.3) {
+                i.key()->addRepaintFull();
+                resetLastPresentTime = false;
+            }
+        }
+        else if (i.value().highlight > 0.0 && i.value().highlight < 1.0) {
             i.key()->addRepaintFull();
+            resetLastPresentTime = false;
+        }
+
+        if (resetLastPresentTime) {
+            i->lastPresentTime = std::chrono::milliseconds::zero();
+        }
     }
 
     effects->postPaintScreen();
@@ -274,18 +299,27 @@ void PresentWindowsEffect::postPaintScreen()
 //-----------------------------------------------------------------------------
 // Window painting
 
-void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     // TODO: We should also check to see if any windows are fading just in case fading takes longer
     //       than moving the windows when the effect is deactivated.
     if (m_activated || m_motionManager.areWindowsMoving() || m_closeView) {
         DataHash::iterator winData = m_windowData.find(w);
         if (winData == m_windowData.end()) {
-            effects->prePaintWindow(w, data, time);
+            effects->prePaintWindow(w, data, presentTime);
             return;
         }
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);   // Display always
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
+
+        // The animation code assumes that the time diff cannot be 0, let's work around it.
+        int time;
+        if (winData->lastPresentTime.count()) {
+            time = std::max(1, int((presentTime - winData->lastPresentTime).count()));
+        } else {
+            time = 1;
+        }
+        winData->lastPresentTime = presentTime;
 
         // Calculate window's opacity
         // TODO: Minimized windows or windows not on the current desktop are only 75% visible?
@@ -333,7 +367,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
         if (isInMotion)
             data.setTransformed(); // We will be moving this window
     }
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)

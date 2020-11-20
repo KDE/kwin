@@ -47,10 +47,10 @@ public:
     CubeEffect();
     ~CubeEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     bool borderActivated(ElectricBorder border) override;
     void grabbedKeyboardEvent(QKeyEvent* e) override;
@@ -200,6 +200,7 @@ private:
     VerticalAnimationState verticalAnimationState;
     TimeLine verticalTimeLine;
     QQueue<VerticalAnimationState> verticalAnimations;
+    std::chrono::milliseconds lastPresentTime;
 
     bool reflectionPainting;
     std::chrono::milliseconds rotationDuration;

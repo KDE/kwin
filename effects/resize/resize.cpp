@@ -40,19 +40,19 @@ ResizeEffect::~ResizeEffect()
 {
 }
 
-void ResizeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void ResizeEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     if (m_active) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
-    AnimationEffect::prePaintScreen(data, time);
+    AnimationEffect::prePaintScreen(data, presentTime);
 }
 
-void ResizeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void ResizeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     if (m_active && w == m_resizeWindow)
         data.mask |= PAINT_WINDOW_TRANSFORMED;
-    AnimationEffect::prePaintWindow(w, data, time);
+    AnimationEffect::prePaintWindow(w, data, presentTime);
 }
 
 void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)

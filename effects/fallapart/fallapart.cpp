@@ -36,18 +36,25 @@ void FallApartEffect::reconfigure(ReconfigureFlags)
     blockSize = FallApartConfig::blockSize();
 }
 
-void FallApartEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void FallApartEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     if (!windows.isEmpty())
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
-void FallApartEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void FallApartEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
-    if (windows.contains(w) && isRealWindow(w)) {
-        if (windows[ w ] < 1) {
-            windows[ w ] += time / animationTime(1000.);
+    auto animationIt = windows.find(w);
+    if (animationIt != windows.end() && isRealWindow(w)) {
+        if (animationIt->progress < 1) {
+            int time = 0;
+            if (animationIt->lastPresentTime.count()) {
+                time = (presentTime - animationIt->lastPresentTime).count();
+            }
+            animationIt->lastPresentTime = presentTime;
+
+            animationIt->progress += time / animationTime(1000.);
             data.setTransformed();
             w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
             // Request the window to be divided into cells
@@ -57,13 +64,14 @@ void FallApartEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, 
             w->unrefWindow();
         }
     }
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void FallApartEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (windows.contains(w) && isRealWindow(w)) {
-        const qreal t = windows[w];
+    auto animationIt = windows.constFind(w);
+    if (animationIt != windows.constEnd() && isRealWindow(w)) {
+        const qreal t = animationIt->progress;
         WindowQuadList new_quads;
         int cnt = 0;
         foreach (WindowQuad quad, data.quads) { // krazy:exclude=foreach
@@ -99,7 +107,7 @@ void FallApartEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 double x = quad[ j ].x() - center.x();
                 double y = quad[ j ].y() - center.y();
                 double angle = atan2(y, x);
-                angle += windows[ w ] * adiff;
+                angle += animationIt->progress * adiff;
                 double dist = sqrt(x * x + y * y);
                 x = dist * cos(angle);
                 y = dist * sin(angle);
@@ -156,7 +164,7 @@ void FallApartEffect::slotWindowClosed(EffectWindow* c)
     if (e && e != this)
         return;
     c->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
-    windows[ c ] = 0;
+    windows[ c ].progress = 0;
     c->refWindow();
 }
 

@@ -19,6 +19,12 @@
 namespace KWin
 {
 
+struct GlideAnimation
+{
+    TimeLine timeLine;
+    std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
+};
+
 class GlideEffect : public Effect
 {
     Q_OBJECT
@@ -38,8 +44,8 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
 
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintScreen() override;
 
@@ -76,7 +82,7 @@ private:
     bool isGlideWindow(EffectWindow *w) const;
 
     std::chrono::milliseconds m_duration;
-    QHash<EffectWindow*, TimeLine> m_animations;
+    QHash<EffectWindow *, GlideAnimation> m_animations;
 
     struct GlideParams {
         RotationEdge edge;

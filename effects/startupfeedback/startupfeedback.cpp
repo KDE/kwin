@@ -68,6 +68,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_active(false)
     , m_frame(0)
     , m_progress(0)
+    , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_type(BouncingFeedback)
     , m_cursorSize(24)
     , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
@@ -142,8 +143,14 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     }
 }
 
-void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
+    int time = 0;
+    if (m_lastPresentTime.count()) {
+        time = (presentTime - m_lastPresentTime).count();
+    }
+    m_lastPresentTime = presentTime;
+
     if (m_active) {
         // need the unclipped version
         switch(m_type) {
@@ -161,7 +168,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             break; // nothing
         }
     }
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 void StartupFeedbackEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
@@ -289,6 +296,7 @@ void StartupFeedbackEffect::stop()
     if (m_active)
         effects->stopMousePolling();
     m_active = false;
+    m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->makeOpenGLContextCurrent();
     switch(m_type) {
     case BouncingFeedback:
@@ -324,6 +332,7 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
     default:
         // for safety
         m_active = false;
+        m_lastPresentTime = std::chrono::milliseconds::zero();
         break;
     }
 }

@@ -22,9 +22,9 @@ public:
     KscreenEffect();
     ~KscreenEffect() override;
 
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     void reconfigure(ReconfigureFlags flags) override;
@@ -46,6 +46,7 @@ private:
         StateFadingIn
     };
     TimeLine m_timeLine;
+    std::chrono::milliseconds m_lastPresentTime;
     FadeOutState m_state;
     xcb_atom_t m_atom;
 };

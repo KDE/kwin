@@ -65,7 +65,8 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows) = 0;
+    virtual void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
+                       std::chrono::milliseconds presentTime) = 0;
 
     /**
      * Adds the Toplevel to the Scene.
@@ -207,7 +208,10 @@ protected:
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
-                     QRegion *updateRegion, QRegion *validRegion, const QMatrix4x4 &projection = QMatrix4x4(), const QRect &outputGeometry = QRect(), const qreal screenScale = 1.0);
+                     QRegion *updateRegion, QRegion *validRegion,
+                     std::chrono::milliseconds presentTime,
+                     const QMatrix4x4 &projection = QMatrix4x4(),
+                     const QRect &outputGeometry = QRect(), qreal screenScale = 1.0);
     // Render cursor texture in case hardware cursor is disabled/non-applicable
     virtual void paintCursor(const QRegion &region) = 0;
     friend class EffectsHandlerImpl;
@@ -240,8 +244,6 @@ protected:
 
     virtual void paintEffectQuickView(EffectQuickView *w) = 0;
 
-    // compute time since the last repaint
-    void updateTimeDiff();
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data {
         Window *window = nullptr;
@@ -260,14 +262,12 @@ protected:
     QRegion repaint_region;
     // The dirty region before it was unioned with repaint_region
     QRegion damaged_region;
-    // time since last repaint
-    int time_diff;
-    QElapsedTimer last_time;
     // The screen that is being currently painted
     int painted_screen = -1;
 private:
     void paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
+    std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QHash< Toplevel*, Window* > m_windows;
     // windows in their stacking order
     QVector< Window* > stacking_order;

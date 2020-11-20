@@ -28,8 +28,8 @@ public:
         return ef == Effect::Resize;
     }
     inline bool isActive() const override { return m_active || AnimationEffect::isActive(); }
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void reconfigure(ReconfigureFlags) override;
 

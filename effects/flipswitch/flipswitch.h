@@ -35,10 +35,10 @@ public:
     ~FlipSwitchEffect() override;
 
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void grabbedKeyboardEvent(QKeyEvent* e) override;
     void windowInputMouseEvent(QEvent* e) override;
@@ -112,6 +112,7 @@ private:
     QTimeLine m_timeLine;
     QTimeLine m_startStopTimeLine;
     QEasingCurve m_currentAnimationEasingCurve;
+    std::chrono::milliseconds m_lastPresentTime;
     QRect m_screenArea;
     int m_activeScreen;
     bool m_active;

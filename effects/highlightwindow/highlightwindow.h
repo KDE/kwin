@@ -15,6 +15,12 @@
 namespace KWin
 {
 
+struct HightlightWindowData
+{
+    std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
+    float opacity = 0;
+};
+
 class HighlightWindowEffect
     : public Effect
 {
@@ -23,7 +29,7 @@ public:
     HighlightWindowEffect();
     ~HighlightWindowEffect() override;
 
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time) override;
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     bool isActive() const override;
 
@@ -49,7 +55,7 @@ private:
     bool m_finishing;
 
     float m_fadeDuration;
-    QHash<EffectWindow*, float> m_windowOpacity;
+    QHash<EffectWindow *, HightlightWindowData> m_animations;
 
     long m_atom;
     QList<EffectWindow*> m_highlightedWindows;

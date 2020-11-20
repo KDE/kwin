@@ -44,29 +44,33 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     m_duration = std::chrono::milliseconds(static_cast<int>(d));
 }
 
-void SheetEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void SheetEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    const std::chrono::milliseconds delta(time);
-
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
+        std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+        if (animationIt->lastPresentTime.count()) {
+            delta = presentTime - animationIt->lastPresentTime;
+        }
+        animationIt->lastPresentTime = presentTime;
+
         (*animationIt).timeLine.update(delta);
         ++animationIt;
     }
 
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
-void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     if (m_animations.contains(w)) {
         data.setTransformed();
         w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
     }
 
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)

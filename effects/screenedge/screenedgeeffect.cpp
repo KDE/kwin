@@ -65,9 +65,9 @@ void ScreenEdgeEffect::cleanup()
     m_borders.clear();
 }
 
-void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+void ScreenEdgeEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
     for (QHash<ElectricBorder, Glow*>::iterator it = m_borders.begin();
             it != m_borders.end();
             ++it) {

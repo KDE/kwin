@@ -22,6 +22,7 @@ namespace KWin
 
 CubeSlideEffect::CubeSlideEffect()
     : stickyPainting(false)
+    , lastPresentTime(std::chrono::milliseconds::zero())
     , windowMoving(false)
     , desktopChangedWhileMoving(false)
     , progressRestriction(0.0f)
@@ -64,15 +65,21 @@ void CubeSlideEffect::reconfigure(ReconfigureFlags)
     useWindowMoving = CubeSlideConfig::useWindowMoving();
 }
 
-void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void CubeSlideEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
+    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+    if (lastPresentTime.count()) {
+        delta = presentTime - lastPresentTime;
+    }
+    lastPresentTime = presentTime;
+
     if (isActive()) {
         data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
-        timeLine.setCurrentTime(timeLine.currentTime() + time);
+        timeLine.setCurrentTime(timeLine.currentTime() + delta.count());
         if (windowMoving && timeLine.currentTime() > progressRestriction * (qreal)timeLine.duration())
             timeLine.setCurrentTime(progressRestriction * (qreal)timeLine.duration());
     }
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 void CubeSlideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
@@ -169,7 +176,7 @@ void CubeSlideEffect::paintSlideCube(int mask, QRegion region, ScreenPaintData& 
     painting_desktop = effects->currentDesktop();
 }
 
-void CubeSlideEffect::prePaintWindow(EffectWindow* w,  WindowPrePaintData& data, int time)
+void CubeSlideEffect::prePaintWindow(EffectWindow* w,  WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     if (stickyPainting) {
         if (staticWindows.contains(w)) {
@@ -180,7 +187,7 @@ void CubeSlideEffect::prePaintWindow(EffectWindow* w,  WindowPrePaintData& data,
     } else if (isActive() && cube_painting) {
         if (staticWindows.contains(w)) {
             w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-            effects->prePaintWindow(w, data, time);
+            effects->prePaintWindow(w, data, presentTime);
             return;
         }
         QRect rect = effects->clientArea(FullArea, effects->activeScreen(), painting_desktop);
@@ -230,7 +237,7 @@ void CubeSlideEffect::prePaintWindow(EffectWindow* w,  WindowPrePaintData& data,
         } else
             w->disablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
     }
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void CubeSlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
@@ -375,6 +382,7 @@ void CubeSlideEffect::postPaintScreen()
                     w->setData(WindowForceBackgroundContrastRole, QVariant());
                 }
                 staticWindows.clear();
+                lastPresentTime = std::chrono::milliseconds::zero();
                 effects->setActiveFullScreenEffect(nullptr);
             }
         }
@@ -572,6 +580,7 @@ void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
         windowMoving = false;
         desktopChangedWhileMoving = false;
         timeLine.setCurrentTime(0);
+        lastPresentTime = std::chrono::milliseconds::zero();
         if (!slideRotations.isEmpty())
             slideRotations.clear();
         effects->setActiveFullScreenEffect(nullptr);
@@ -652,6 +661,7 @@ void CubeSlideEffect::slotNumberDesktopsChanged()
 
     slideRotations.clear();
     staticWindows.clear();
+    lastPresentTime = std::chrono::milliseconds::zero();
 
     effects->setActiveFullScreenEffect(nullptr);
 }

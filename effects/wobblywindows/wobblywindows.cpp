@@ -228,7 +228,7 @@ void WobblyWindowsEffect::setDrag(qreal drag)
     m_drag = drag;
 }
 
-void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     // We need to mark the screen windows as transformed. Otherwise the whole
     // screen won't be repainted, resulting in artefacts.
@@ -237,16 +237,22 @@ void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         m_updateRegion = QRegion();
     }
 
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 const qreal maxTime = 10.0;
-void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
-    if (windows.contains(w)) {
+    auto infoIt = windows.find(w);
+    if (infoIt != windows.end()) {
         data.setTransformed();
         data.quads = data.quads.makeRegularGrid(m_xTesselation, m_yTesselation);
         bool stop = false;
-        qreal updateTime = time;
+
+        qreal updateTime = 0;
+        if (infoIt->lastPresentTime.count()) {
+            updateTime = (presentTime - infoIt->lastPresentTime).count();
+        }
+        infoIt->lastPresentTime = presentTime;
 
         // We have to reset the clip region in order to render clients below
         // opaque wobbly windows.
@@ -264,7 +270,7 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
         }
     }
 
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
@@ -464,6 +470,7 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
     wwi.bezierSurface = new Pair[wwi.bezierCount];
 
     wwi.status = Moving;
+    wwi.lastPresentTime = std::chrono::milliseconds::zero();
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();

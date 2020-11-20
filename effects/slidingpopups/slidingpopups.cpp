@@ -91,19 +91,25 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     }
 }
 
-void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time)
+void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt == m_animations.end()) {
-        effects->prePaintWindow(w, data, time);
+        effects->prePaintWindow(w, data, presentTime);
         return;
     }
 
-    (*animationIt).timeLine.update(std::chrono::milliseconds(time));
+    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+    if (animationIt->lastPresentTime.count()) {
+        delta = presentTime - animationIt->lastPresentTime;
+    }
+    animationIt->lastPresentTime = presentTime;
+
+    (*animationIt).timeLine.update(delta);
     data.setTransformed();
     w->enablePainting(EffectWindow::PAINT_DISABLED | EffectWindow::PAINT_DISABLED_BY_DELETE);
 
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)

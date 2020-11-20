@@ -33,6 +33,7 @@ MagnifierEffect::MagnifierEffect()
     : zoom(1)
     , target_zoom(1)
     , polling(false)
+    , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_texture(nullptr)
     , m_fbo(nullptr)
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -104,8 +105,10 @@ void MagnifierEffect::reconfigure(ReconfigureFlags)
         toggle();
 }
 
-void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
+    const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
+
     if (zoom != target_zoom) {
         double diff = time / animationTime(500.0);
         if (target_zoom > zoom)
@@ -122,7 +125,14 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             }
         }
     }
-    effects->prePaintScreen(data, time);
+
+    if (zoom != target_zoom) {
+        m_lastPresentTime = presentTime;
+    } else {
+        m_lastPresentTime = std::chrono::milliseconds::zero();
+    }
+
+    effects->prePaintScreen(data, presentTime);
     if (zoom != 1.0)
         data.paint |= magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
 }

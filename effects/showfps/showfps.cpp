@@ -110,12 +110,12 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
     }
 }
 
-void ShowFpsEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void ShowFpsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     frames[ frames_pos ] = QDateTime::currentMSecsSinceEpoch();
     if (++frames_pos == MAX_FPS)
         frames_pos = 0;
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
     data.paint += fps_rect;
 
     paint_size[ paints_pos ] = 0;

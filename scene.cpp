@@ -86,7 +86,6 @@ namespace KWin
 Scene::Scene(QObject *parent)
     : QObject(parent)
 {
-    last_time.invalidate(); // Initialize the timer
 }
 
 Scene::~Scene()
@@ -96,13 +95,22 @@ Scene::~Scene()
 
 // returns mask and possibly modified region
 void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint,
-                        QRegion *updateRegion, QRegion *validRegion, const QMatrix4x4 &projection, const QRect &outputGeometry, const qreal screenScale)
+                        QRegion *updateRegion, QRegion *validRegion,
+                        std::chrono::milliseconds presentTime,
+                        const QMatrix4x4 &projection, const QRect &outputGeometry,
+                        qreal screenScale)
 {
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
     *mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
 
-    updateTimeDiff();
+    if (Q_UNLIKELY(presentTime < m_expectedPresentTimestamp)) {
+        qCDebug(KWIN_CORE, "Provided presentation timestamp is invalid: %ld (current: %ld)",
+                presentTime.count(), m_expectedPresentTimestamp.count());
+    } else {
+        m_expectedPresentTimestamp = presentTime;
+    }
+
     // preparation step
     static_cast<EffectsHandlerImpl*>(effects)->startPaint();
 
@@ -112,7 +120,7 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     pdata.mask = *mask;
     pdata.paint = region;
 
-    effects->prePaintScreen(pdata, time_diff);
+    effects->prePaintScreen(pdata, m_expectedPresentTimestamp);
     *mask = pdata.mask;
     region = pdata.paint;
 
@@ -154,29 +162,9 @@ void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint
     Q_ASSERT(!PaintClipper::clip());
 }
 
-// Compute time since the last painting pass.
-void Scene::updateTimeDiff()
-{
-    if (!last_time.isValid()) {
-        // Painting has been idle (optimized out) for some time,
-        // which means time_diff would be huge and would break animations.
-        // Simply set it to one (zero would mean no change at all and could
-        // cause problems).
-        time_diff = 1;
-        last_time.start();
-    } else
-
-    time_diff = last_time.restart();
-
-    if (time_diff < 0)   // check time rollback
-        time_diff = 1;
-}
-
 // Painting pass is optimized away.
 void Scene::idle()
 {
-    // Don't break time since last paint for the next pass.
-    last_time.invalidate();
 }
 
 // the function that'll be eventually called by paintScreen() above
@@ -213,7 +201,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
         data.clip = QRegion();
         data.quads = w->buildQuads();
         // preparation step
-        effects->prePaintWindow(effectWindow(w), data, time_diff);
+        effects->prePaintWindow(effectWindow(w), data, m_expectedPresentTimestamp);
 #if !defined(QT_NO_DEBUG)
         if (data.quads.isTransformed()) {
             qFatal("Pre-paint calls are not allowed to transform quads!");
@@ -306,7 +294,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
 
         data.quads = window->buildQuads();
         // preparation step
-        effects->prePaintWindow(effectWindow(window), data, time_diff);
+        effects->prePaintWindow(effectWindow(window), data, m_expectedPresentTimestamp);
 #if !defined(QT_NO_DEBUG)
         if (data.quads.isTransformed()) {
             qFatal("Pre-paint calls are not allowed to transform quads!");

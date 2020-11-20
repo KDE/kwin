@@ -74,8 +74,10 @@ void MouseClickEffect::reconfigure(ReconfigureFlags)
     m_font = MouseClickConfig::font();
 }
 
-void MouseClickEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void MouseClickEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
+    const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
+
     foreach (MouseEvent* click, m_clicks) {
         click->m_time += time;
     }
@@ -95,7 +97,13 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         delete first;
     }
 
-    effects->prePaintScreen(data, time);
+    if (isActive()) {
+        m_lastPresentTime = presentTime;
+    } else {
+        m_lastPresentTime = std::chrono::milliseconds::zero();
+    }
+
+    effects->prePaintScreen(data, presentTime);
 }
 
 void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)

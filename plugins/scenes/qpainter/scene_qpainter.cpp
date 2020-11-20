@@ -80,7 +80,8 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
     m_painter->restore();
 }
 
-void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Toplevel *> &toplevels)
+void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Toplevel *> &toplevels,
+                          std::chrono::milliseconds presentTime)
 {
     Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
     painted_screen = screenId;
@@ -103,7 +104,8 @@ void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Topl
         m_painter->setWindow(geometry);
 
         QRegion updateRegion, validRegion;
-        paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion);
+        paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion,
+                    presentTime);
         paintCursor(updateRegion);
 
         m_painter->end();

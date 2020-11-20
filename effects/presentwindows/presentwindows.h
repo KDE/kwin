@@ -64,6 +64,7 @@ class PresentWindowsEffect
 private:
     // Structures
     struct WindowData {
+        std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
         bool visible;
         bool deleted;
         bool referenced;
@@ -86,12 +87,12 @@ public:
     void* proxy() override;
 
     // Screen painting
-    void prePaintScreen(ScreenPrePaintData &data, int time) override;
+    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
 
     // Window painting
-    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time) override;
+    void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     // User interaction
@@ -278,6 +279,9 @@ private:
     WindowMotionManager m_motionManager;
     DataHash m_windowData;
     EffectWindow *m_highlightedWindow;
+
+    // Timing
+    std::chrono::milliseconds m_lastPresentTime;
 
     // Grid layout info
     QList<GridSize> m_gridSizes;

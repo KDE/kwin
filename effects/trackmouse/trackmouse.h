@@ -29,7 +29,7 @@ class TrackMouseEffect
 public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
     void reconfigure(ReconfigureFlags) override;

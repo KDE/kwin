@@ -167,8 +167,8 @@ public:
     void paintWindow(KWin::EffectWindow *, int, const QRegion &, KWin::WindowPaintData &) override {}
     void postPaintScreen() override {}
     void postPaintWindow(KWin::EffectWindow *) override {}
-    void prePaintScreen(KWin::ScreenPrePaintData &, int) override {}
-    void prePaintWindow(KWin::EffectWindow *, KWin::WindowPrePaintData &, int) override {}
+    void prePaintScreen(KWin::ScreenPrePaintData &, std::chrono::milliseconds) override {}
+    void prePaintWindow(KWin::EffectWindow *, KWin::WindowPrePaintData &, std::chrono::milliseconds) override {}
     QByteArray readRootProperty(long int, long int, int) const override {
         return QByteArray();
     }

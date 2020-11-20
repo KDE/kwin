@@ -50,6 +50,7 @@ CubeEffect::CubeEffect()
     , wallpaper(nullptr)
     , texturedCaps(true)
     , capTexture(nullptr)
+    , lastPresentTime(std::chrono::milliseconds::zero())
     , reflectionPainting(false)
     , activeScreen(0)
     , bottomCap(false)
@@ -360,8 +361,14 @@ void CubeEffect::startVerticalAnimation(VerticalAnimationState state)
     verticalAnimationState = state;
 }
 
-void CubeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
+void CubeEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
+    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+    if (lastPresentTime.count()) {
+        delta = presentTime - lastPresentTime;
+    }
+    lastPresentTime = presentTime;
+
     if (activated) {
         data.mask |= PAINT_SCREEN_TRANSFORMED | Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS | PAINT_SCREEN_BACKGROUND_FIRST;
         if (animationState == AnimationState::None && !animations.empty()) {
@@ -373,15 +380,15 @@ void CubeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
         if (animationState != AnimationState::None || verticalAnimationState != VerticalAnimationState::None) {
             if (animationState != AnimationState::None) {
-                timeLine.update(std::chrono::milliseconds(time));
+                timeLine.update(delta);
             }
             if (verticalAnimationState != VerticalAnimationState::None) {
-                verticalTimeLine.update(std::chrono::milliseconds(time));
+                verticalTimeLine.update(delta);
             }
             rotateCube();
         }
     }
-    effects->prePaintScreen(data, time);
+    effects->prePaintScreen(data, presentTime);
 }
 
 void CubeEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData& data)
@@ -973,6 +980,7 @@ void CubeEffect::postPaintScreen()
             animations.clear();
             verticalAnimationState = VerticalAnimationState::None;
             verticalAnimations.clear();
+            lastPresentTime = std::chrono::milliseconds::zero();
         } else {
             if (!animations.empty())
                 startAnimation(animations.dequeue());
@@ -991,10 +999,12 @@ void CubeEffect::postPaintScreen()
     /* Repaint if there is any animation */
     if (animation) {
         effects->addRepaintFull();
+    } else {
+        lastPresentTime = std::chrono::milliseconds::zero();
     }
 }
 
-void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     if (activated) {
         if (cube_painting) {
@@ -1046,7 +1056,7 @@ void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
                             data.quads = data.quads.splitAtY(rect.height() - w->y());
                         }
                         data.setTransformed();
-                        effects->prePaintWindow(w, data, time);
+                        effects->prePaintWindow(w, data, presentTime);
                         return;
                     }
                 }
@@ -1066,7 +1076,7 @@ void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
                             data.quads = data.quads.splitAtY(rect.height() - w->y());
                         }
                         data.setTransformed();
-                        effects->prePaintWindow(w, data, time);
+                        effects->prePaintWindow(w, data, presentTime);
                         return;
                     }
                 }
@@ -1074,7 +1084,7 @@ void CubeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
             }
         }
     }
-    effects->prePaintWindow(w, data, time);
+    effects->prePaintWindow(w, data, presentTime);
 }
 
 void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)

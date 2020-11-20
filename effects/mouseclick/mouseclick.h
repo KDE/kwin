@@ -92,7 +92,7 @@ public:
     MouseClickEffect();
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void prePaintScreen(ScreenPrePaintData& data, int time) override;
+    void prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void postPaintScreen() override;
     bool isActive() const override;
@@ -161,6 +161,7 @@ private:
     float m_ringMaxSize;
     bool m_showText;
     QFont m_font;
+    std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
     QList<MouseEvent*> m_clicks;
     MouseButton* m_buttons[BUTTON_COUNT];
