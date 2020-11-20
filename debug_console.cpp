@@ -501,53 +501,51 @@ void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolButtonEvent(const QSet<uint> &pressedButtons)
+void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId)
 {
-    QString buttons;
-    for (uint b : pressedButtons) {
-        buttons += QString::number(b) + ' ';
-    }
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
-                 + tableRow(i18n("Pressed Buttons"), buttons)
+                 + tableRow(i18n("Button"), button)
+                 + tableRow(i18n("Pressed"), pressed)
+                 + tableRow(i18n("Tablet"), tabletToolId.m_tabletSysName)
                  + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadButtonEvent(const QSet<uint> &pressedButtons)
+void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const QString &deviceSysName)
 {
-    QString buttons;
-    for (uint b : pressedButtons) {
-        buttons += QString::number(b) + ' ';
-    }
     QString text = s_hr + s_tableStart
                  + tableHeaderRow(i18n("Tablet Pad Button"))
-                 + tableRow(i18n("Pressed Buttons"), buttons)
+                 + tableRow(i18n("Button"), button)
+                 + tableRow(i18n("Pressed"), pressed)
+                 + tableRow(i18n("Tablet"), deviceSysName)
                  + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger)
+void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Strip"))
                  + tableRow(i18n("Number"), number)
                  + tableRow(i18n("Position"), position)
                  + tableRow(i18n("isFinger"), isFinger)
+                 + tableRow(i18n("Tablet"), deviceSysName)
                  + s_tableEnd;
 
     m_textEdit->insertHtml(text);
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger)
+void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger, const QString &deviceSysName)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Ring"))
                  + tableRow(i18n("Number"), number)
                  + tableRow(i18n("Position"), position)
                  + tableRow(i18n("isFinger"), isFinger)
+                 + tableRow(i18n("Tablet"), deviceSysName)
                  + s_tableEnd;
 
     m_textEdit->insertHtml(text);

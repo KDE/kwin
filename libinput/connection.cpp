@@ -19,6 +19,7 @@
 #include "../screens.h"
 #endif
 
+#include "../input_event.h"
 #include "../logind.h"
 #include "../udev.h"
 #include "libinput_logging.h"
@@ -270,6 +271,62 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractWayl
 }
 #endif
 
+KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, const QString &sysName)
+{
+    auto serial = libinput_tablet_tool_get_serial(tool);
+    auto toolId = libinput_tablet_tool_get_tool_id(tool);
+    auto type = libinput_tablet_tool_get_type(tool);
+    InputRedirection::TabletToolType toolType;
+    switch (type) {
+    case LIBINPUT_TABLET_TOOL_TYPE_PEN:
+        toolType = InputRedirection::Pen;
+        break;
+    case LIBINPUT_TABLET_TOOL_TYPE_ERASER:
+        toolType = InputRedirection::Eraser;
+        break;
+    case LIBINPUT_TABLET_TOOL_TYPE_BRUSH:
+        toolType = InputRedirection::Brush;
+        break;
+    case LIBINPUT_TABLET_TOOL_TYPE_PENCIL:
+        toolType = InputRedirection::Pencil;
+        break;
+    case LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH:
+        toolType = InputRedirection::Airbrush;
+        break;
+    case LIBINPUT_TABLET_TOOL_TYPE_MOUSE:
+        toolType = InputRedirection::Mouse;
+        break;
+    case LIBINPUT_TABLET_TOOL_TYPE_LENS:
+        toolType = InputRedirection::Lens;
+        break;
+#ifdef LIBINPUT_HAS_TOTEM
+    case LIBINPUT_TABLET_TOOL_TYPE_TOTEM:
+        toolType = InputRedirection::Totem;
+        break;
+#endif
+    }
+    QVector<InputRedirection::Capability> capabilities;
+    if (libinput_tablet_tool_has_pressure(tool)) {
+        capabilities << InputRedirection::Pressure;
+    }
+    if (libinput_tablet_tool_has_distance(tool)) {
+        capabilities << InputRedirection::Distance;
+    }
+    if (libinput_tablet_tool_has_rotation(tool)) {
+        capabilities << InputRedirection::Rotation;
+    }
+    if (libinput_tablet_tool_has_tilt(tool)) {
+        capabilities << InputRedirection::Tilt;
+    }
+    if (libinput_tablet_tool_has_slider(tool)) {
+        capabilities << InputRedirection::Slider;
+    }
+    if (libinput_tablet_tool_has_wheel(tool)) {
+        capabilities << InputRedirection::Wheel;
+    }
+    return {toolType, capabilities, serial, toolId, sysName};
+}
+
 void Connection::processEvents()
 {
     QMutexLocker locker(&m_mutex);
@@ -515,57 +572,6 @@ void Connection::processEvents()
                     tabletEventType = KWin::InputRedirection::Tip;
                     break;
                 }
-                auto serial = libinput_tablet_tool_get_serial(tte->tool());
-                auto toolId = libinput_tablet_tool_get_tool_id(tte->tool());
-                auto type = libinput_tablet_tool_get_type(tte->tool());
-                InputRedirection::TabletToolType toolType;
-                switch (type) {
-                case LIBINPUT_TABLET_TOOL_TYPE_PEN:
-                    toolType = InputRedirection::Pen;
-                    break;
-                case LIBINPUT_TABLET_TOOL_TYPE_ERASER:
-                    toolType = InputRedirection::Eraser;
-                    break;
-                case LIBINPUT_TABLET_TOOL_TYPE_BRUSH:
-                    toolType = InputRedirection::Brush;
-                    break;
-                case LIBINPUT_TABLET_TOOL_TYPE_PENCIL:
-                    toolType = InputRedirection::Pencil;
-                    break;
-                case LIBINPUT_TABLET_TOOL_TYPE_AIRBRUSH:
-                    toolType = InputRedirection::Airbrush;
-                    break;
-                case LIBINPUT_TABLET_TOOL_TYPE_MOUSE:
-                    toolType = InputRedirection::Mouse;
-                    break;
-                case LIBINPUT_TABLET_TOOL_TYPE_LENS:
-                    toolType = InputRedirection::Lens;
-                    break;
-#ifdef LIBINPUT_HAS_TOTEM
-                case LIBINPUT_TABLET_TOOL_TYPE_TOTEM:
-                    toolType = InputRedirection::Totem;
-                    break;
-#endif
-                }
-                QVector<InputRedirection::Capability> capabilities;
-                if (libinput_tablet_tool_has_pressure(tte->tool())) {
-                    capabilities << InputRedirection::Pressure;
-                }
-                if (libinput_tablet_tool_has_distance(tte->tool())) {
-                    capabilities << InputRedirection::Distance;
-                }
-                if (libinput_tablet_tool_has_rotation(tte->tool())) {
-                    capabilities << InputRedirection::Rotation;
-                }
-                if (libinput_tablet_tool_has_tilt(tte->tool())) {
-                    capabilities << InputRedirection::Tilt;
-                }
-                if (libinput_tablet_tool_has_slider(tte->tool())) {
-                    capabilities << InputRedirection::Slider;
-                }
-                if (libinput_tablet_tool_has_wheel(tte->tool())) {
-                    capabilities << InputRedirection::Wheel;
-                }
 
 #ifndef KWIN_BUILD_TESTING
                 const auto *output = static_cast<AbstractWaylandOutput*>(
@@ -579,29 +585,31 @@ void Connection::processEvents()
                 emit tabletToolEvent(tabletEventType,
                                      globalPos, tte->pressure(),
                                      tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                     tte->isTipDown(), tte->isNearby(), serial,
-                                     toolId, toolType, capabilities, tte->time(),
-                                     event->device());
+                                     tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->sysName()), tte->time());
                 break;
             }
             case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
                 auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.data());
                 emit tabletToolButtonEvent(tabletEvent->buttonId(),
-                                           tabletEvent->isButtonPressed());
+                                           tabletEvent->isButtonPressed(),
+                                           createTabletId(tabletEvent->tool(), event->device()->sysName()));
                 break;
             }
             case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
                 auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.data());
                 emit tabletPadButtonEvent(tabletEvent->buttonId(),
-                                          tabletEvent->isButtonPressed());
+                                          tabletEvent->isButtonPressed(),
+                                          event->device()->sysName());
                 break;
             }
             case LIBINPUT_EVENT_TABLET_PAD_RING: {
                 auto *tabletEvent = static_cast<TabletPadRingEvent *>(event.data());
+                tabletEvent->position();
                 emit tabletPadRingEvent(tabletEvent->number(),
                                         tabletEvent->position(),
                                         tabletEvent->source() ==
-                                            LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER);
+                                          LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
+                                           event->device()->sysName());
                 break;
             }
             case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
@@ -609,7 +617,8 @@ void Connection::processEvents()
                 emit tabletPadStripEvent(tabletEvent->number(),
                                          tabletEvent->position(),
                                          tabletEvent->source() ==
-                                             LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER);
+                                             LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
+                                           event->device()->sysName());
                 break;
             }
             default:

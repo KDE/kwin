@@ -115,27 +115,33 @@ void InputEventSpy::tabletToolEvent(TabletEvent *event)
     Q_UNUSED(event)
 }
 
-void InputEventSpy::tabletToolButtonEvent(const QSet<uint> &pressedButtons)
+void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId)
 {
-    Q_UNUSED(pressedButtons)
+    Q_UNUSED(button)
+    Q_UNUSED(pressed)
+    Q_UNUSED(tabletToolId)
 }
 
-void InputEventSpy::tabletPadButtonEvent(const QSet<uint> &pressedButtons)
+void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const QString &deviceSysName)
 {
-    Q_UNUSED(pressedButtons)
+    Q_UNUSED(button)
+    Q_UNUSED(pressed)
+    Q_UNUSED(deviceSysName)
 }
 
-void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger)
+void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
+    Q_UNUSED(deviceSysName)
 }
 
-void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger)
+void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const QString &deviceSysName)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
+    Q_UNUSED(deviceSysName)
 }
 }

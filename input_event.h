@@ -165,6 +165,16 @@ private:
     LibInput::Device *m_device;
 };
 
+class TabletToolId
+{
+public:
+    const InputRedirection::TabletToolType m_toolType;
+    const QVector<InputRedirection::Capability> m_capabilities;
+    const quint64 m_serialId;
+    const quint64 m_uniqueId;
+    const QString m_tabletSysName;
+};
+
 class TabletEvent : public QTabletEvent
 {
 public:
@@ -172,20 +182,14 @@ public:
                 int device, int pointerType, qreal pressure, int xTilt, int yTilt,
                 qreal tangentialPressure, qreal rotation, int z,
                 Qt::KeyboardModifiers keyState, qint64 uniqueID,
-                Qt::MouseButton button, Qt::MouseButtons buttons, InputRedirection::TabletToolType toolType,
-                const QVector<InputRedirection::Capability> &capabilities,
-                quint64 serialId, const QString &tabletSysname);
+                Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId);
 
-    InputRedirection::TabletToolType toolType() const { return m_toolType; }
-    QVector<InputRedirection::Capability> capabilities() const { return m_capabilities; }
-    quint64 serialId() const { return m_serialId; }
-    QString tabletSysName() { return m_tabletSysName; }
+    const TabletToolId &tabletId() const {
+        return m_id;
+    }
 
 private:
-    const InputRedirection::TabletToolType m_toolType;
-    const QVector<InputRedirection::Capability> m_capabilities;
-    const quint64 m_serialId;
-    const QString m_tabletSysName;
+    const TabletToolId m_id;
 };
 
 }

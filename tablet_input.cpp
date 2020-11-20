@@ -45,14 +45,10 @@ void TabletInputRedirection::init()
     connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
 }
 
-void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type,
-                                             const QPointF &pos, qreal pressure,
-                                             int xTilt, int yTilt, qreal rotation,
-                                             bool tipDown, bool tipNear, quint64 serialId,
-                                             quint64 toolId,
-                                             InputRedirection::TabletToolType toolType,
-                                             const QVector<InputRedirection::Capability> &capabilities,
-                                             quint32 time, LibInput::Device *device)
+void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
+                                             qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                                             bool tipNear, const TabletToolId &tabletToolId,
+                                             quint32 time)
 {
     if (!inited()) {
         return;
@@ -78,7 +74,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
                     0, // tangentialPressure
                     rotation,
                     0, // z
-                    Qt::NoModifier, toolId, button, button, toolType, capabilities, serialId, device->sysName());
+                    Qt::NoModifier, tabletToolId.m_uniqueId, button, button, tabletToolId);
 
     ev.setTimestamp(time);
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
@@ -89,47 +85,40 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     m_tipNear = tipNear;
 }
 
-void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed)
+void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed,
+                                                         const TabletToolId &tabletToolId)
 {
-    if (isPressed)
-        m_toolPressedButtons.insert(button);
-    else
-        m_toolPressedButtons.remove(button);
-
     input()->processSpies(std::bind(&InputEventSpy::tabletToolButtonEvent,
-                                    std::placeholders::_1, m_toolPressedButtons));
+                                    std::placeholders::_1, button, isPressed, tabletToolId));
     input()->processFilters(std::bind( &InputEventFilter::tabletToolButtonEvent,
-                                      std::placeholders::_1, m_toolPressedButtons));
+                                      std::placeholders::_1, button, isPressed, tabletToolId));
 }
 
-void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed)
+void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed,
+                                                        const QString &deviceSysName)
 {
-    if (isPressed) {
-        m_padPressedButtons.insert(button);
-    } else {
-        m_padPressedButtons.remove(button);
-    }
-
     input()->processSpies(std::bind( &InputEventSpy::tabletPadButtonEvent,
-                                     std::placeholders::_1, m_padPressedButtons));
+                                     std::placeholders::_1, button, isPressed, deviceSysName));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadButtonEvent,
-                                       std::placeholders::_1, m_padPressedButtons));
+                                       std::placeholders::_1, button, isPressed, deviceSysName));
 }
 
-void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger)
+void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger,
+                                                       const QString &deviceSysName)
 {
     input()->processSpies(std::bind( &InputEventSpy::tabletPadStripEvent,
-                                     std::placeholders::_1, number, position, isFinger));
+                                     std::placeholders::_1, number, position, isFinger, deviceSysName));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadStripEvent,
-                                       std::placeholders::_1, number, position, isFinger));
+                                       std::placeholders::_1, number, position, isFinger, deviceSysName));
 }
 
-void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger)
+void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger,
+                                                      const QString &deviceSysName)
 {
     input()->processSpies(std::bind( &InputEventSpy::tabletPadRingEvent,
-                                     std::placeholders::_1, number, position, isFinger));
+                                     std::placeholders::_1, number, position, isFinger, deviceSysName));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadRingEvent,
-                                       std::placeholders::_1, number, position, isFinger));
+                                       std::placeholders::_1, number, position, isFinger, deviceSysName));
 }
 
 void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old,

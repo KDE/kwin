@@ -296,6 +296,10 @@ public:
         return state == LIBINPUT_BUTTON_STATE_PRESSED;
     }
 
+    struct libinput_tablet_tool *tool() {
+        return libinput_event_tablet_tool_get_tool(m_tabletToolEvent);
+    }
+
 private:
     libinput_event_tablet_tool *m_tabletToolEvent;
 };
