@@ -56,6 +56,7 @@
 */
 
 #include "scene.h"
+#include "abstract_output.h"
 #include "platform.h"
 
 #include <QQuickWindow>
@@ -86,11 +87,58 @@ namespace KWin
 Scene::Scene(QObject *parent)
     : QObject(parent)
 {
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        connect(screens(), &Screens::countChanged, this, &Scene::reallocRepaints);
+    }
+    reallocRepaints();
 }
 
 Scene::~Scene()
 {
     Q_ASSERT(m_windows.isEmpty());
+}
+
+void Scene::addRepaint(const QRegion &region)
+{
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        if (m_repaints.count() != screens()->count()) {
+            return; // Repaints haven't been reallocated yet, do nothing.
+        }
+        for (int screenId = 0; screenId < m_repaints.count(); ++screenId) {
+            AbstractOutput *output = kwinApp()->platform()->findOutput(screenId);
+            const QRegion dirtyRegion = region & output->geometry();
+            if (!dirtyRegion.isEmpty()) {
+                m_repaints[screenId] += dirtyRegion;
+            }
+        }
+    } else {
+        m_repaints[0] += region;
+    }
+
+    Compositor::self()->scheduleRepaint();
+}
+
+QRegion Scene::repaints(int screenId) const
+{
+    const int index = screenId == -1 ? 0 : screenId;
+    return m_repaints[index];
+}
+
+void Scene::resetRepaints(int screenId)
+{
+    const int index = screenId == -1 ? 0 : screenId;
+    m_repaints[index] = QRegion();
+}
+
+void Scene::reallocRepaints()
+{
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        m_repaints.resize(screens()->count());
+    } else {
+        m_repaints.resize(1);
+    }
+
+    m_repaints.fill(infiniteRegion());
 }
 
 // returns mask and possibly modified region

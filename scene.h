@@ -55,6 +55,17 @@ public:
     class EffectFrame;
     class Window;
 
+    /**
+     * Schedules a repaint for the specified @a region.
+     */
+    void addRepaint(const QRegion &region);
+
+    /**
+     * Returns the repaints region for output with the specified @a screenId.
+     */
+    QRegion repaints(int screenId) const;
+    void resetRepaints(int screenId);
+
     // Returns true if the ctor failed to properly initialize.
     virtual bool initFailed() const = 0;
     virtual CompositingType compositingType() const = 0;
@@ -265,9 +276,11 @@ private:
     void paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
+    void reallocRepaints();
     QHash< Toplevel*, Window* > m_windows;
     // windows in their stacking order
     QVector< Window* > stacking_order;
+    QVector<QRegion> m_repaints;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
 };

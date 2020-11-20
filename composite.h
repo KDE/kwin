@@ -146,7 +146,6 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     qint64 vBlankInterval, fpsInterval;
-    QRegion repaints_region;
 
     qint64 m_timeSinceLastVBlank;
 

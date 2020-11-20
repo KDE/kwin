@@ -448,7 +448,6 @@ void Compositor::stop()
     delete m_scene;
     m_scene = nullptr;
     compositeTimer.stop();
-    repaints_region = QRegion();
 
     m_state = State::Off;
     emit compositingToggled(false);
@@ -529,41 +528,26 @@ void Compositor::reinitialize()
     }
 }
 
-void Compositor::addRepaint(int x, int y, int w, int h)
+void Compositor::addRepaint(int x, int y, int width, int height)
 {
-    if (m_state != State::On) {
-        return;
-    }
-    repaints_region += QRegion(x, y, w, h);
-    scheduleRepaint();
+    addRepaint(QRegion(x, y, width, height));
 }
 
-void Compositor::addRepaint(const QRect& r)
+void Compositor::addRepaint(const QRect &rect)
 {
-    if (m_state != State::On) {
-        return;
-    }
-    repaints_region += r;
-    scheduleRepaint();
+    addRepaint(QRegion(rect));
 }
 
-void Compositor::addRepaint(const QRegion& r)
+void Compositor::addRepaint(const QRegion &region)
 {
-    if (m_state != State::On) {
-        return;
+    if (m_scene) {
+        m_scene->addRepaint(region);
     }
-    repaints_region += r;
-    scheduleRepaint();
 }
 
 void Compositor::addRepaintFull()
 {
-    if (m_state != State::On) {
-        return;
-    }
-    const QSize &s = screens()->size();
-    repaints_region = QRegion(0, 0, s.width(), s.height());
-    scheduleRepaint();
+    addRepaint(screens()->geometry());
 }
 
 void Compositor::timerEvent(QTimerEvent *te)
@@ -666,10 +650,6 @@ void Compositor::performCompositing()
         }
     }
 
-    QRegion repaints = repaints_region;
-    // clear all repaints, so that post-pass can add repaints for the next repaint
-    repaints_region = QRegion();
-
     const std::chrono::nanoseconds now = std::chrono::steady_clock::now().time_since_epoch();
     const std::chrono::milliseconds presentTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(now);
@@ -680,9 +660,15 @@ void Compositor::performCompositing()
     m_renderTimer.start();
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         for (int screenId = 0; screenId < screens()->count(); ++screenId) {
+            const QRegion repaints = m_scene->repaints(screenId);
+            m_scene->resetRepaints(screenId);
+
             m_scene->paint(screenId, repaints, windows, presentTime);
         }
     } else {
+        const QRegion repaints = m_scene->repaints(-1);
+        m_scene->resetRepaints(-1);
+
         m_scene->paint(-1, repaints, windows, presentTime);
     }
     m_timeSinceLastVBlank = m_renderTimer.elapsed();
