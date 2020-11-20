@@ -42,8 +42,7 @@ public:
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
-protected:
-    void addDamage(const QRegion &damage) override;
+
 private:
     ~Unmanaged() override; // use release()
     // handlers for X11 events

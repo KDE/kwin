@@ -1144,6 +1144,7 @@ void Scene::Window::addRepaint(const QRegion &region)
     for (int screen = 0; screen < m_repaints.count(); ++screen) {
         m_repaints[screen] += region;
     }
+    Compositor::self()->scheduleRepaint();
 }
 
 void Scene::Window::addLayerRepaint(const QRegion &region)
@@ -1151,6 +1152,7 @@ void Scene::Window::addLayerRepaint(const QRegion &region)
     for (int screen = 0; screen < m_layerRepaints.count(); ++screen) {
         m_layerRepaints[screen] += region;
     }
+    Compositor::self()->scheduleRepaint();
 }
 
 QRegion Scene::Window::repaints(int screen) const

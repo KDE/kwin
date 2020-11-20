@@ -404,7 +404,6 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 
     setDepth(32);
     addDamageFull();
-    addRepaintFull();
 }
 
 void InternalClient::present(const QImage &image, const QRegion &damage)
@@ -424,7 +423,6 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
 
     setDepth(32);
     addDamage(damage);
-    addRepaint(damage.translated(borderLeft(), borderTop()));
 }
 
 QWindow *InternalClient::internalWindow() const

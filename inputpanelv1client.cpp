@@ -36,7 +36,6 @@ InputPanelV1Client::InputPanelV1Client(InputPanelSurfaceV1Interface *panelSurfac
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Client::destroyClient);
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Client::reposition);
     connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Client::updateDepth);
-    connect(surface(), &SurfaceInterface::damaged, this, QOverload<const QRegion &>::of(&WaylandClient::addRepaint));
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Client::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Client::showOverlayPanel);

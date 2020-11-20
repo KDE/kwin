@@ -48,7 +48,6 @@ protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;
     void requestGeometry(const QRect &rect) override;
-    void addDamage(const QRegion &region) override;
 
 private:
     void handleSizeChanged();

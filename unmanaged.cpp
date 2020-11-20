@@ -163,12 +163,6 @@ bool Unmanaged::isOutline() const
     return m_outline;
 }
 
-void Unmanaged::addDamage(const QRegion &damage)
-{
-    addRepaint(damage);
-    Toplevel::addDamage(damage);
-}
-
 QWindow *Unmanaged::findInternalWindow() const
 {
     const QWindowList windows = kwinApp()->topLevelWindows();

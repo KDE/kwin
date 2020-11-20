@@ -64,7 +64,6 @@ public:
 
 protected:
     void requestGeometry(const QRect &rect) override;
-    void addDamage(const QRegion &damage) override;
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();

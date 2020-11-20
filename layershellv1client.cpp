@@ -216,12 +216,6 @@ bool LayerShellV1Client::acceptsFocus() const
     return m_shellSurface->acceptsFocus();
 }
 
-void LayerShellV1Client::addDamage(const QRegion &region)
-{
-    addRepaint(region);
-    WaylandClient::addDamage(region);
-}
-
 void LayerShellV1Client::requestGeometry(const QRect &rect)
 {
     WaylandClient::requestGeometry(rect);

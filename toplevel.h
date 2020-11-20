@@ -617,11 +617,6 @@ Q_SIGNALS:
      */
     void shapedChanged();
     /**
-     * Emitted whenever the state changes in a way, that the Compositor should
-     * schedule a repaint of the scene.
-     */
-    void needsRepaint();
-    /**
      * Emitted whenever the Toplevel's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Toplevel's geometry changes.
      * @since 4.11

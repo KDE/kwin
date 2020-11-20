@@ -44,7 +44,6 @@ Toplevel::Toplevel()
     , m_screen(0)
     , m_skipCloseAnimation(false)
 {
-    connect(this, &Toplevel::damaged, this, &Toplevel::needsRepaint);
     connect(screens(), &Screens::changed, this, &Toplevel::checkScreen);
     connect(screens(), &Screens::countChanged, this, &Toplevel::checkScreen);
     setupCheckScreenConnection();
@@ -325,6 +324,9 @@ void Toplevel::damageNotifyEvent()
 {
     m_isDamaged = true;
 
+    // The damaged region will be fetched at the next compositing cycle.
+    Compositor::self()->scheduleRepaint();
+
     // Note: The damage is supposed to specify the damage extents,
     //       but we don't know it at this point. No one who connects
     //       to this signal uses the rect however.
@@ -398,14 +400,9 @@ void Toplevel::getDamageRegionReply()
     } else
         region += QRect(reply->extents.x, reply->extents.y,
                         reply->extents.width, reply->extents.height);
-
-    const QRect bufferRect = bufferGeometry();
-    const QRect frameRect = frameGeometry();
-
-    damage_region += region;
-    addRepaint(region.translated(bufferRect.topLeft() - frameRect.topLeft()));
-
     free(reply);
+
+    addDamage(region);
 }
 
 void Toplevel::addDamageFull()
@@ -448,7 +445,6 @@ void Toplevel::addRepaint(const QRegion &region)
         return;
     }
     effectWindow()->sceneWindow()->addRepaint(region);
-    emit needsRepaint();
 }
 
 void Toplevel::addLayerRepaint(const QRect &rect)
@@ -467,7 +463,6 @@ void Toplevel::addLayerRepaint(const QRegion &region)
         return;
     }
     effectWindow()->sceneWindow()->addLayerRepaint(region);
-    emit needsRepaint();
 }
 
 void Toplevel::addRepaintFull()
@@ -746,8 +741,13 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
 
 void Toplevel::addDamage(const QRegion &damage)
 {
+    const QRect bufferRect = bufferGeometry();
+    const QRect frameRect = frameGeometry();
+
     m_isDamaged = true;
     damage_region += damage;
+    addRepaint(damage.translated(bufferRect.topLeft() - frameRect.topLeft()));
+
     emit damaged(this, damage);
 }
 

@@ -2794,7 +2794,6 @@ void X11Client::addDamage(const QRegion &damage)
             setupWindowManagementInterface();
         }
     }
-    addRepaint(damage.translated(bufferGeometry().topLeft() - frameGeometry().topLeft()));
     Toplevel::addDamage(damage);
 }
 
