@@ -73,7 +73,6 @@ public:
      */
     void unclutterDesktop();
 
-    static Policy policyFromString(const QString& policy, bool no_special);
     static const char* policyToString(Policy policy);
 
 private:

@@ -639,31 +639,6 @@ void Placement::unclutterDesktop()
 
 #endif
 
-
-Placement::Policy Placement::policyFromString(const QString& policy, bool no_special)
-{
-    if (policy == QStringLiteral("NoPlacement"))
-        return NoPlacement;
-    else if (policy == QStringLiteral("Default") && !no_special)
-        return Default;
-    else if (policy == QStringLiteral("Random"))
-        return Random;
-    else if (policy == QStringLiteral("Cascade"))
-        return Cascade;
-    else if (policy == QStringLiteral("Centered"))
-        return Centered;
-    else if (policy == QStringLiteral("ZeroCornered"))
-        return ZeroCornered;
-    else if (policy == QStringLiteral("UnderMouse"))
-        return UnderMouse;
-    else if (policy == QStringLiteral("OnMainWindow") && !no_special)
-        return OnMainWindow;
-    else if (policy == QStringLiteral("Maximizing"))
-        return Maximizing;
-    else
-        return Smart;
-}
-
 const char* Placement::policyToString(Policy policy)
 {
     const char* const policies[] = {
