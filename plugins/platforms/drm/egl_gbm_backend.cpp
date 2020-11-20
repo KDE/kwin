@@ -667,25 +667,10 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
     Output &output = m_outputs[screenId];
     renderFramebufferToSurface(output);
 
-    const QRegion dirty = damagedRegion.intersected(output.output->geometry());
-    if (dirty.isEmpty()) {
-
-        // If the damaged region of a window is fully occluded, the only
-        // rendering done, if any, will have been to repair a reused back
-        // buffer, making it identical to the front buffer.
-        //
-        // In this case we won't post the back buffer. Instead we'll just
-        // set the buffer age to 1, so the repaired regions won't be
-        // rendered again in the next frame.
-        if (!renderedRegion.intersected(output.output->geometry()).isEmpty())
-            glFlush();
-
-        output.bufferAge = 1;
-        return;
-    }
     presentOnOutput(output, damagedRegion);
 
     if (supportsBufferAge()) {
+        const QRegion dirty = damagedRegion.intersected(output.output->geometry());
         if (output.damageHistory.count() > 10) {
             output.damageHistory.removeLast();
         }
