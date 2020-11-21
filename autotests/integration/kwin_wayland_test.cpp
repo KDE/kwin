@@ -31,6 +31,7 @@
 #include <iostream>
 
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
+Q_IMPORT_PLUGIN(KGlobalAccelImpl)
 
 namespace KWin
 {

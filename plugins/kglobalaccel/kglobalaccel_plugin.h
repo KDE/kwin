@@ -16,7 +16,7 @@
 class KGlobalAccelImpl : public KGlobalAccelInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.kglobalaccel5.KGlobalAccelInterface" FILE "kwin.json")
+    Q_PLUGIN_METADATA(IID KGlobalAccelInterface_iid FILE "kwin.json")
     Q_INTERFACES(KGlobalAccelInterface)
 
 public:
