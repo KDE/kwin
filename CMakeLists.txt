@@ -831,6 +831,7 @@ target_link_libraries(kwin_wayland
     KWinQpaPlugin
     KF5GlobalAccelPrivateKWin
     KF5WindowSystemKWinPrivatePlugin
+    KF5IdleTimeKWinWaylandPrivatePlugin
 )
 
 ########### install files ###############

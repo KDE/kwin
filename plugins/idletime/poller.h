@@ -23,15 +23,15 @@ class IdleTimeout;
 }
 }
 
-class Poller : public AbstractSystemPoller
+class KWinIdleTimePoller : public AbstractSystemPoller
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.kidletime.AbstractSystemPoller" FILE "kwin.json")
+    Q_PLUGIN_METADATA(IID AbstractSystemPoller_iid FILE "kwin.json")
     Q_INTERFACES(AbstractSystemPoller)
 
 public:
-    Poller(QObject *parent = nullptr);
-    ~Poller() override;
+    KWinIdleTimePoller(QObject *parent = nullptr);
+    ~KWinIdleTimePoller() override;
 
     bool isAvailable() override;
     bool setUpPoller() override;
