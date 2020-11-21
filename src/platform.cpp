@@ -182,6 +182,17 @@ AbstractOutput *Platform::findOutput(const QByteArray &uuid)
     return nullptr;
 }
 
+AbstractOutput *Platform::findOutput(const QString &name) const
+{
+    const QVector<AbstractOutput *> outputs = enabledOutputs();
+    for (AbstractOutput *output : outputs) {
+        if (output->name() == name) {
+            return output;
+        }
+    }
+    return nullptr;
+}
+
 bool Platform::usesSoftwareCursor() const
 {
     return m_softwareCursor;

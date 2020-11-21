@@ -428,6 +428,7 @@ public:
     }
     AbstractOutput *findOutput(int screenId);
     AbstractOutput *findOutput(const QByteArray &uuid);
+    AbstractOutput *findOutput(const QString &name) const;
 
     /**
      * A string of information to include in kwin debug output

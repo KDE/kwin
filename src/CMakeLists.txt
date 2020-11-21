@@ -84,6 +84,7 @@ set(kwin_SRCS
     outline.cpp
     overlaywindow.cpp
     placement.cpp
+    placementtracker.cpp
     platform.cpp
     plugin.cpp
     pluginmanager.cpp

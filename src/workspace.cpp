@@ -33,6 +33,7 @@
 #include "netinfo.h"
 #include "outline.h"
 #include "placement.h"
+#include "placementtracker.h"
 #include "pluginmanager.h"
 #include "rules.h"
 #include "screenedge.h"
@@ -135,6 +136,8 @@ Workspace::Workspace()
     ApplicationMenu::create(this);
 
     _self = this;
+
+    m_placementTracker = new PlacementTracker(this);
 
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
@@ -1968,6 +1971,16 @@ void Workspace::checkTransients(xcb_window_t w)
  */
 void Workspace::desktopResized()
 {
+    // The geometry might be changed more than once during the relayout process.
+    std::vector<std::unique_ptr<GeometryUpdatesBlocker>> blockers;
+    blockers.reserve(m_allClients.count());
+    for (AbstractClient *client : qAsConst(m_allClients)) {
+        blockers.emplace_back(std::make_unique<GeometryUpdatesBlocker>(client));
+    }
+
+    // Try to move windows back to their original screens.
+    m_placementTracker->rearrange();
+
     QRect geom = screens()->geometry();
     if (rootInfo()) {
         NETSize desktop_geometry;

@@ -47,6 +47,7 @@ class Deleted;
 class Group;
 class InternalClient;
 class KillWindow;
+class PlacementTracker;
 class ShortcutDialog;
 class Toplevel;
 class Unmanaged;
@@ -252,6 +253,7 @@ public:
     void stackScreenEdgesUnderOverrideRedirect();
 
     SessionManager *sessionManager() const;
+    PlacementTracker *placementTracker() const;
 
 public:
     QPoint cascadeOffset(const AbstractClient *c) const;
@@ -674,6 +676,8 @@ private:
     QScopedPointer<X11EventFilter> m_syncAlarmFilter;
 
     SessionManager *m_sessionManager;
+    PlacementTracker *m_placementTracker;
+
 private:
     friend bool performTransiencyCheck();
     friend Workspace *workspace();
@@ -753,6 +757,11 @@ inline bool Workspace::wasUserInteraction() const
 inline SessionManager *Workspace::sessionManager() const
 {
     return m_sessionManager;
+}
+
+inline PlacementTracker *Workspace::placementTracker() const
+{
+    return m_placementTracker;
 }
 
 inline bool Workspace::showingDesktop() const

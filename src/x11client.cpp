@@ -23,6 +23,7 @@
 #include "geometrytip.h"
 #include "group.h"
 #include "netinfo.h"
+#include "placementtracker.h"
 #include "screens.h"
 #include "shadow.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -1493,7 +1494,6 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
         QSize s(adjustedSize());
         shade_geometry_change = false;
         plainResize(s);
-        setGeometryRestore(frameGeometry());
         if ((shadeMode() == ShadeHover || shadeMode() == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
         if (shadeMode() == ShadeHover) {
@@ -3985,7 +3985,7 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
             }
         }
     }
-    setGeometryRestore(frameGeometry());
+    workspace()->placementTracker()->update(this);
     // No need to send synthetic configure notify event here, either it's sent together
     // with geometry change, or there's no need to send it.
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
