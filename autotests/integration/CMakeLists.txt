@@ -33,9 +33,9 @@ target_link_libraries(KWinIntegrationTestFramework
 
     # Static plugins
     KWinQpaPlugin
-    KF5GlobalAccelPrivateKWin
-    KF5WindowSystemKWinPrivatePlugin
-    KF5IdleTimeKWinWaylandPrivatePlugin
+    KF5GlobalAccelKWinPlugin
+    KF5WindowSystemKWinPlugin
+    KF5IdleTimeKWinPlugin
 )
 
 function(integrationTest)

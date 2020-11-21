@@ -829,9 +829,9 @@ add_subdirectory(plugins)
 
 target_link_libraries(kwin_wayland
     KWinQpaPlugin
-    KF5GlobalAccelPrivateKWin
-    KF5WindowSystemKWinPrivatePlugin
-    KF5IdleTimeKWinWaylandPrivatePlugin
+    KF5GlobalAccelKWinPlugin
+    KF5WindowSystemKWinPlugin
+    KF5IdleTimeKWinPlugin
 )
 
 ########### install files ###############
