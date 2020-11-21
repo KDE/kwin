@@ -62,6 +62,7 @@
 
 Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
+Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 
 namespace KWin
 {
