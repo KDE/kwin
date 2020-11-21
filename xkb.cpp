@@ -175,13 +175,14 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
     const KConfigGroup config = m_config->group("Layout");
     const QByteArray model = config.readEntry("Model", "pc104").toLocal8Bit();
     const QByteArray layout = config.readEntry("LayoutList", "").toLocal8Bit();
+    const QByteArray variant = config.readEntry("VariantList").toLatin1();
     const QByteArray options = config.readEntry("Options", "").toLocal8Bit();
 
     xkb_rule_names ruleNames = {
         .rules = nullptr,
         .model = model.constData(),
         .layout = layout.constData(),
-        .variant = nullptr,
+        .variant = variant.constData(),
         .options = options.constData()
     };
     applyEnvironmentRules(ruleNames);
