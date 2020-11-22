@@ -226,10 +226,9 @@ void DecoratedClientImpl::requestHideToolTip()
     m_toolTipShowing = false;
 }
 
-void DecoratedClientImpl::requestShowWindowMenu()
+void DecoratedClientImpl::requestShowWindowMenu(const QRect &rect)
 {
-    // TODO: add rect to requestShowWindowMenu
-    Workspace::self()->showWindowMenu(QRect(Cursors::self()->mouse()->pos(), Cursors::self()->mouse()->pos()), m_client);
+    Workspace::self()->showWindowMenu(QRect(m_client->pos() + rect.topLeft(), m_client->pos() + rect.bottomRight()), m_client);
 }
 
 void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)

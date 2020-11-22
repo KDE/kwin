@@ -391,8 +391,9 @@ void PreviewClient::requestToggleKeepBelow()
     setKeepBelow(!isKeepBelow());
 }
 
-void PreviewClient::requestShowWindowMenu()
+void PreviewClient::requestShowWindowMenu(const QRect &rect)
 {
+    Q_UNUSED(rect)
     emit showWindowMenuRequested();
 }
 

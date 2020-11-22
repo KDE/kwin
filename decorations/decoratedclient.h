@@ -70,7 +70,7 @@ public:
     void requestContextHelp() override;
     void requestToggleMaximization(Qt::MouseButtons buttons) override;
     void requestMinimize() override;
-    void requestShowWindowMenu() override;
+    void requestShowWindowMenu(const QRect &rect) override;
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleKeepAbove() override;
     void requestToggleKeepBelow() override;
