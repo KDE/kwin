@@ -43,6 +43,8 @@ public:
     void init();
 
     void checkLayoutChange(quint32 previousLayout);
+    void switchToNextLayout();
+    void switchToPreviousLayout();
     void resetLayout();
     void updateNotifier();
 
@@ -57,8 +59,6 @@ private:
     void initDBusInterface();
     void notifyLayoutChange();
     void initNotifierItem();
-    void switchToNextLayout();
-    void switchToPreviousLayout();
     void switchToLayout(xkb_layout_index_t index);
     void reinitNotifierMenu();
     void loadShortcuts();
@@ -81,6 +81,8 @@ public:
     ~KeyboardLayoutDBusInterface() override;
 
 public Q_SLOTS:
+    void switchToNextLayout();
+    void switchToPreviousLayout();
     bool setLayout(const QString &layout);
     QString getCurrentLayout();
     QString getCurrentLayoutLongName() const;

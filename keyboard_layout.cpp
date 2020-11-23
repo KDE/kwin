@@ -291,6 +291,16 @@ KeyboardLayoutDBusInterface::~KeyboardLayoutDBusInterface()
     QDBusConnection::sessionBus().unregisterService(s_keyboardService);
 }
 
+void KeyboardLayoutDBusInterface::switchToNextLayout()
+{
+    m_keyboardLayout->switchToNextLayout();
+}
+
+void KeyboardLayoutDBusInterface::switchToPreviousLayout()
+{
+    m_keyboardLayout->switchToPreviousLayout();
+}
+
 bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
 {
     const auto layouts = m_xkb->layoutNames();
