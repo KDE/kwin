@@ -64,8 +64,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     QAction* exposeAction = m_exposeAction;
     exposeAction->setObjectName(QStringLiteral("Expose"));
     exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
-    KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
-    KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
+    KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9 << Qt::META + QT::SHIFT + Qt::Key_Tab);
+    KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9 << Qt::META + QT::SHIFT + Qt::Key_Tab);
     shortcut = KGlobalAccel::self()->shortcut(exposeAction);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F9, exposeAction);
     connect(exposeAction, &QAction::triggered, this, &PresentWindowsEffect::toggleActive);

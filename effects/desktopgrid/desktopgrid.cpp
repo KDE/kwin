@@ -64,8 +64,8 @@ DesktopGridEffect::DesktopGridEffect()
     QAction* a = m_activateAction;
     a->setObjectName(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
-    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8 << Qt::META + Qt::Key_Tab);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8 << Qt::META + Qt::Key_Tab);
     shortcut = KGlobalAccel::self()->shortcut(a);
     effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F8, a);
     effects->registerTouchpadSwipeShortcut(SwipeDirection::Up, a);
