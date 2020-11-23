@@ -9,7 +9,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xdgshellclient.h"
+#include "abstract_wayland_output.h"
 #include "deleted.h"
+#include "platform.h"
 #include "screenedge.h"
 #include "screens.h"
 #include "subsurfacemonitor.h"
@@ -1060,7 +1062,8 @@ void XdgToplevelClient::handleUnmaximizeRequested()
 
 void XdgToplevelClient::handleFullscreenRequested(OutputInterface *output)
 {
-    Q_UNUSED(output)
+    m_fullScreenRequestedOutput = waylandServer()->findOutput(output);
+
     if (m_isInitialized) {
         setFullScreen(/* set */ true, /* user */ false);
         scheduleConfigure(ConfigureRequired);
@@ -1071,6 +1074,7 @@ void XdgToplevelClient::handleFullscreenRequested(OutputInterface *output)
 
 void XdgToplevelClient::handleUnfullscreenRequested()
 {
+    m_fullScreenRequestedOutput.clear();
     if (m_isInitialized) {
         setFullScreen(/* set */ false, /* user */ false);
         scheduleConfigure(ConfigureRequired);
@@ -1560,8 +1564,10 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     updateDecoration(false, false);
 
     if (set) {
-        setFrameGeometry(workspace()->clientArea(FullScreenArea, this));
+        const int screen = m_fullScreenRequestedOutput ? kwinApp()->platform()->enabledOutputs().indexOf(m_fullScreenRequestedOutput) : screens()->number(frameGeometry().center());
+        setFrameGeometry(workspace()->clientArea(FullScreenArea, screen, desktop()));
     } else {
+        m_fullScreenRequestedOutput.clear();
         if (m_fullScreenGeometryRestore.isValid()) {
             int currentScreen = screen();
             setFrameGeometry(QRect(m_fullScreenGeometryRestore.topLeft(),

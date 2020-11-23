@@ -29,6 +29,7 @@ class XdgToplevelDecorationV1Interface;
 
 namespace KWin
 {
+class AbstractOutput;
 
 class XdgSurfaceConfigure
 {
@@ -216,6 +217,7 @@ private:
     bool m_isInitialized = false;
     bool m_userNoBorder = false;
     bool m_isTransient = false;
+    QPointer<AbstractOutput> m_fullScreenRequestedOutput;
 };
 
 class XdgPopupClient final : public XdgSurfaceClient

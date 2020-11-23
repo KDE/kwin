@@ -9,6 +9,7 @@
 */
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
+#include "abstract_wayland_output.h"
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
@@ -73,6 +74,7 @@ private Q_SLOTS:
 
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
+    void testFullscreenMultipleOutputs();
     void testWindowOpensLargerThanScreen();
     void testHidden();
     void testDesktopFileName();
@@ -624,6 +626,59 @@ void TestXdgShellClient::testMaximizedToFullscreen()
     // Destroy the client.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void TestXdgShellClient::testFullscreenMultipleOutputs()
+{
+    // this test verifies that kwin will place fullscreen windows in the outputs its instructed to
+
+    for (int i = 0; i < screens()->count(); ++i) {
+        XdgShellSurface::States states;
+
+        QSharedPointer<Surface> surface(Test::createSurface());
+        QSharedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+
+        QVERIFY(surface);
+        QVERIFY(shellSurface);
+
+        auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+        QVERIFY(client);
+        QVERIFY(client->isActive());
+        QVERIFY(!client->isFullScreen());
+        QCOMPARE(client->clientSize(), QSize(100, 50));
+        QVERIFY(!client->isDecorated());
+
+        QSignalSpy fullscreenChangedSpy(client, &AbstractClient::fullScreenChanged);
+        QVERIFY(fullscreenChangedSpy.isValid());
+        QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
+        QVERIFY(frameGeometryChangedSpy.isValid());
+        QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+        QVERIFY(configureRequestedSpy.isValid());
+
+        // Wait for the compositor to send a configure event with the Activated state.
+        QVERIFY(configureRequestedSpy.wait());
+        QCOMPARE(configureRequestedSpy.count(), 1);
+        states = configureRequestedSpy.last().at(1).value<XdgShellSurface::States>();
+        QVERIFY(states & XdgShellSurface::State::Activated);
+
+        // Ask the compositor to show the window in full screen mode.
+        shellSurface->setFullscreen(true, Test::waylandOutputs()[i]);
+        QVERIFY(configureRequestedSpy.wait());
+        QCOMPARE(configureRequestedSpy.count(), 2);
+        QCOMPARE(configureRequestedSpy.last().at(0).value<QSize>(), screens()->size(i));
+
+        shellSurface->ackConfigure(configureRequestedSpy.last().at(2).value<quint32>());
+        Test::render(surface.data(), configureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+
+        QVERIFY(!fullscreenChangedSpy.isEmpty() || fullscreenChangedSpy.wait());
+        QCOMPARE(fullscreenChangedSpy.count(), 1);
+
+        QVERIFY(!frameGeometryChangedSpy.isEmpty() || frameGeometryChangedSpy.wait());
+
+        QVERIFY(client->isFullScreen());
+
+        QCOMPARE(client->frameGeometry(), screens()->geometry(i));
+    }
 }
 
 void TestXdgShellClient::testWindowOpensLargerThanScreen()
