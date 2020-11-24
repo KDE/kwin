@@ -185,7 +185,12 @@ void AbstractEglBackend::initBufferAge()
             setSupportsBufferAge(true);
     }
 
-    setSupportsPartialUpdate(hasExtension(QByteArrayLiteral("EGL_KHR_partial_update")));
+    if (hasExtension(QByteArrayLiteral("EGL_KHR_partial_update"))) {
+        const QByteArray usePartialUpdate = qgetenv("KWIN_USE_PARTIAL_UPDATE");
+        if (usePartialUpdate != "0") {
+            setSupportsPartialUpdate(true);
+        }
+    }
     setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
 }
 
