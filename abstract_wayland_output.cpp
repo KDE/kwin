@@ -85,6 +85,21 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
     m_xdgOutputV1->done();
 }
 
+QString AbstractWaylandOutput::manufacturer() const
+{
+    return m_waylandOutputDevice->manufacturer();
+}
+
+QString AbstractWaylandOutput::model() const
+{
+    return m_waylandOutputDevice->model();
+}
+
+QString AbstractWaylandOutput::serialNumber() const
+{
+    return m_waylandOutputDevice->serialNumber();
+}
+
 QSize AbstractWaylandOutput::modeSize() const
 {
     return m_waylandOutputDevice->pixelSize();

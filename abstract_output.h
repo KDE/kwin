@@ -164,6 +164,19 @@ public:
     /** Returns the resolution of the output.  */
     virtual QSize pixelSize() const = 0;
 
+    /**
+     * Returns the manufacturer of the screen.
+     */
+    virtual QString manufacturer() const;
+    /**
+     * Returns the model of the screen.
+     */
+    virtual QString model() const;
+    /**
+     * Returns the serial number of the screen.
+     */
+    virtual QString serialNumber() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.

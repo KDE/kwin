@@ -92,6 +92,10 @@ public:
         return m_internal;
     }
 
+    QString manufacturer() const override;
+    QString model() const override;
+    QString serialNumber() const override;
+
     void setGlobalPos(const QPoint &pos);
     void setScale(qreal scale);
 

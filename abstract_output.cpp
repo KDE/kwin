@@ -103,4 +103,19 @@ bool AbstractOutput::setGammaRamp(const GammaRamp &gamma)
     return false;
 }
 
+QString AbstractOutput::manufacturer() const
+{
+    return QString();
+}
+
+QString AbstractOutput::model() const
+{
+    return QString();
+}
+
+QString AbstractOutput::serialNumber() const
+{
+    return QString();
+}
+
 } // namespace KWin
