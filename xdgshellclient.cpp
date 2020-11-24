@@ -1550,7 +1550,9 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     }
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
-    dontMoveResize();
+    if (set) {
+        dontMoveResize();
+    }
 
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
     updateDecoration(false, false);
@@ -1612,7 +1614,9 @@ void XdgToplevelClient::changeMaximize(bool horizontal, bool vertical, bool adju
     }
 
     StackingUpdatesBlocker blocker(workspace());
-    dontMoveResize();
+    if (m_requestedMaximizeMode != MaximizeRestore) {
+        dontMoveResize();
+    }
 
     // call into decoration update borders
     if (isDecorated() && decoration()->client() && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
