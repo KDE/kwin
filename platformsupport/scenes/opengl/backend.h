@@ -295,7 +295,7 @@ private:
     /**
      * @brief Whether the backend supports EGL_KHR_partial_update
      */
-    bool m_havePartialUpdate;
+    bool m_havePartialUpdate = false;
     bool m_haveSwapBuffersWithDamage = false;
     /**
      * @brief Whether the backend supports EGL_KHR_surfaceless_context.
