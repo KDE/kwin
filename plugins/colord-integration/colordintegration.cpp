@@ -44,6 +44,25 @@ void ColordIntegration::handleOutputAdded(AbstractOutput *output)
     properties.insert(QStringLiteral("Kind"), QStringLiteral("display"));
     properties.insert(QStringLiteral("Colorspace"), QStringLiteral("RGB"));
 
+    const QString vendor = output->manufacturer();
+    if (!vendor.isEmpty()) {
+        properties.insert(QStringLiteral("Vendor"), vendor);
+    }
+
+    const QString model = output->model();
+    if (!model.isEmpty()) {
+        properties.insert(QStringLiteral("Model"), model);
+    }
+
+    const QString serialNumber = output->serialNumber();
+    if (!serialNumber.isEmpty()) {
+        properties.insert(QStringLiteral("Serial"), serialNumber);
+    }
+
+    if (output->isInternal()) {
+        properties.insert(QStringLiteral("Embedded"), QString());
+    }
+
     QDBusPendingReply<QDBusObjectPath> reply =
             m_colordInterface->CreateDevice(output->name(), QStringLiteral("temp"), properties);
 
