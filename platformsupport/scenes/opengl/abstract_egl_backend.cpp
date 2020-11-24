@@ -181,8 +181,9 @@ void AbstractEglBackend::initBufferAge()
     if (hasExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
-        if (useBufferAge != "0")
+        if (useBufferAge != "0") {
             setSupportsBufferAge(true);
+        }
     }
 
     if (hasExtension(QByteArrayLiteral("EGL_KHR_partial_update"))) {
