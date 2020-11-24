@@ -607,12 +607,6 @@ if (KWIN_BUILD_ACTIVITIES)
     )
 endif()
 
-if (KWIN_BUILD_RUNNERS)
-    set(kwin_SRCS ${kwin_SRCS}
-        runners/windowsrunnerinterface.cpp
-    )
-endif()
-
 if (HAVE_LINUX_VT_H)
     set(kwin_SRCS ${kwin_SRCS}
         virtual_terminal.cpp
@@ -643,9 +637,6 @@ qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsH
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin::PluginManagerDBusInterface)
-if (KWIN_BUILD_RUNNERS)
-    qt5_add_dbus_adaptor(kwin_SRCS "runners/org.kde.krunner1.xml" runners/windowsrunnerinterface.h KWin::WindowsRunner)
-endif()
 
 qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
 qt5_add_dbus_interface(kwin_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
@@ -720,10 +711,6 @@ set(kwin_WAYLAND_LIBS
 
 if (KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
-endif()
-
-if (KWIN_BUILD_RUNNERS)
-    set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Runner)
 endif()
 
 set(kwinLibs
@@ -846,11 +833,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_IN
 
 # Install the KWin/Script service type
 install(FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
-
-# install KWin krunner runner
-if (KWIN_BUILD_RUNNERS)
-    install(FILES runners/kwin-runner-windows.desktop DESTINATION ${KDE_INSTALL_DATAROOTDIR}/krunner/dbusplugins)
-endif()
 
 add_subdirectory(qml)
 

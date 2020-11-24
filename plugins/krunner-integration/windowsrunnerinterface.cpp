@@ -20,7 +20,20 @@
 namespace KWin
 {
 WindowsRunner::WindowsRunner(QObject *parent)
-    : QObject(parent)
+    : Plugin(parent)
+{
+    if (workspace()) {
+        initialize();
+    } else {
+        connect(kwinApp(), &Application::workspaceCreated, this, &WindowsRunner::initialize);
+    }
+}
+
+WindowsRunner::~WindowsRunner()
+{
+}
+
+void WindowsRunner::initialize()
 {
     new Krunner1Adaptor(this);
     qDBusRegisterMetaType<RemoteMatch>();
@@ -29,10 +42,6 @@ WindowsRunner::WindowsRunner(QObject *parent)
     qDBusRegisterMetaType<RemoteActions>();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/WindowsRunner"), this);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin"));
-}
-
-WindowsRunner::~WindowsRunner()
-{
 }
 
 RemoteActions WindowsRunner::Actions()
