@@ -28,9 +28,6 @@ class OutputConfigurationInterface;
 
 namespace KWin
 {
-namespace ColorCorrect {
-class Manager;
-}
 
 class AbstractOutput;
 class Edge;
@@ -418,10 +415,6 @@ public:
         return m_supportsGammaControl;
     }
 
-    ColorCorrect::Manager *colorCorrectManager() {
-        return m_colorCorrect;
-    }
-
     // outputs with connections (org_kde_kwin_outputdevice)
     virtual Outputs outputs() const {
         return Outputs();
@@ -571,7 +564,6 @@ private:
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     int m_hideCursorCounter = 0;
-    ColorCorrect::Manager *m_colorCorrect = nullptr;
     bool m_supportsGammaControl = false;
     bool m_supportsOutputChanges = false;
     CompositingType m_selectedCompositor = NoCompositing;

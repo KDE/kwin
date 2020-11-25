@@ -25,7 +25,6 @@
 #include "useractions.h"
 #include "cursor.h"
 #include "x11client.h"
-#include "colorcorrection/manager.h"
 #include "composite.h"
 #include "input.h"
 #include "workspace.h"
@@ -967,7 +966,6 @@ void Workspace::initShortcuts()
     TabBox::TabBox::self()->initShortcuts();
 #endif
     VirtualDesktopManager::self()->initShortcuts();
-    kwinApp()->platform()->colorCorrectManager()->initShortcuts();
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 

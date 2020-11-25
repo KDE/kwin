@@ -1,0 +1,8 @@
+File=nightcolorsettings.kcfg
+NameSpace=KWin
+ClassName=NightColorSettings
+Singleton=true
+Mutators=true
+# nightcolormanager.h is needed for NightColorMode
+IncludeFiles=nightcolormanager.h
+UseEnumTypes=true

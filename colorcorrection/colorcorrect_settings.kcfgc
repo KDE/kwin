@@ -1,8 +1,0 @@
-File=colorcorrect_settings.kcfg
-NameSpace=KWin::ColorCorrect
-ClassName=Settings
-Singleton=true
-Mutators=true
-# manager.h is needed for NightColorMode
-IncludeFiles=colorcorrection/manager.h
-UseEnumTypes=true

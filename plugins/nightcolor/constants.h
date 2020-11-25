@@ -11,8 +11,6 @@
 
 namespace KWin
 {
-namespace ColorCorrect
-{
 
 static const int MSC_DAY = 86400000;
 static const int MIN_TEMPERATURE = 1000;
@@ -272,7 +270,6 @@ static const float blackbodyColor[] = {
     0.62740336, 0.75282962, 1.00000000
 };
 
-}
 }
 
 #endif // KWIN_NIGHTCOLOR_CONSTANTS_H

@@ -16,9 +16,6 @@
 namespace KWin
 {
 
-namespace ColorCorrect
-{
-
 /**
  * Calculates for a given location and date two of the
  * following sun timings in their temporal order:
@@ -29,8 +26,6 @@ namespace ColorCorrect
 
 QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning);
 
-
-}
 }
 
 #endif // KWIN_SUNCALCULATOR_H

@@ -6,11 +6,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_COLORCORRECT_MANAGER_H
-#define KWIN_COLORCORRECT_MANAGER_H
+
+#pragma once
 
 #include "constants.h"
-#include <kwin_export.h>
+#include "plugin.h"
 
 #include <QObject>
 #include <QPair>
@@ -22,15 +22,10 @@ namespace KWin
 {
 
 class ClockSkewNotifier;
-class Workspace;
-
-namespace ColorCorrect
-{
+class NightColorDBusInterface;
 
 typedef QPair<QDateTime,QDateTime> DateTimes;
 typedef QPair<QTime,QTime> Times;
-
-class ColorCorrectDBusInterface;
 
 /**
  * This enum type is used to specify operation mode of the night color manager.
@@ -76,12 +71,14 @@ enum NightColorMode {
  *
  * With the Constant mode, screen color temperature is always constant.
  */
-class KWIN_EXPORT Manager : public QObject
+class KWIN_EXPORT NightColorManager : public Plugin
 {
     Q_OBJECT
 
 public:
-    Manager(QObject *parent);
+    explicit NightColorManager(QObject *parent = nullptr);
+    ~NightColorManager() override;
+
     void init();
 
     /**
@@ -190,6 +187,7 @@ public:
 
     // for auto tests
     void reparseConfigAndReset();
+    static NightColorManager *self();
 
 public Q_SLOTS:
     void resetSlowUpdateStartTimer();
@@ -239,7 +237,6 @@ Q_SIGNALS:
     void scheduledTransitionTimingsChanged();
 
 private:
-    void initShortcuts();
     void readConfig();
     void hardReset();
     void slowUpdate(int targetTemp);
@@ -268,7 +265,7 @@ private:
     void setCurrentTemperature(int temperature);
     void setMode(NightColorMode mode);
 
-    ColorCorrectDBusInterface *m_iface;
+    NightColorDBusInterface *m_iface;
     ClockSkewNotifier *m_skewNotifier;
 
     // Specifies whether Night Color is enabled.
@@ -309,12 +306,6 @@ private:
 
     int m_failedCommitAttempts = 0;
     int m_inhibitReferenceCount = 0;
-
-    // The Workspace class needs to call initShortcuts during initialization.
-    friend class KWin::Workspace;
 };
 
-}
-}
-
-#endif // KWIN_COLORCORRECT_MANAGER_H
+} // namespace KWin

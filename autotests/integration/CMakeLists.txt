@@ -89,7 +89,7 @@ integrationTest(WAYLAND_ONLY NAME testLayerShellV1Client SRCS layershellv1client
 integrationTest(WAYLAND_ONLY NAME testVirtualDesktop SRCS virtual_desktop_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testXdgShellClientRules SRCS xdgshellclient_rules_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testIdleInhibition SRCS idle_inhibition_test.cpp)
-integrationTest(WAYLAND_ONLY NAME testColorCorrectNightColor SRCS colorcorrect_nightcolor_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testNightColor SRCS nightcolor_test.cpp LIBS KWinNightColorPlugin)
 integrationTest(WAYLAND_ONLY NAME testDontCrashCursorPhysicalSizeEmpty SRCS dont_crash_cursor_physical_size_empty.cpp)
 integrationTest(WAYLAND_ONLY NAME testDontCrashReinitializeCompositor SRCS dont_crash_reinitialize_compositor.cpp)
 integrationTest(WAYLAND_ONLY NAME testNoGlobalShortcuts SRCS no_global_shortcuts_test.cpp)

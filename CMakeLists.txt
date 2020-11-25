@@ -452,11 +452,6 @@ set(kwin_SRCS
     appmenu.cpp
     atoms.cpp
     client_machine.cpp
-    colorcorrection/clockskewnotifier.cpp
-    colorcorrection/clockskewnotifierengine.cpp
-    colorcorrection/colorcorrectdbusinterface.cpp
-    colorcorrection/manager.cpp
-    colorcorrection/suncalc.cpp
     composite.cpp
     cursor.cpp
     dbusinterface.cpp
@@ -567,25 +562,6 @@ set(kwin_SRCS
     xwl/xwayland_interface.cpp
 )
 
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set(kwin_SRCS
-        ${kwin_SRCS}
-        colorcorrection/clockskewnotifierengine_linux.cpp
-    )
-endif()
-
-include(ECMQtDeclareLoggingCategory)
-ecm_qt_declare_logging_category(kwin_SRCS
-    HEADER
-        colorcorrect_logging.h
-    IDENTIFIER
-        KWIN_COLORCORRECTION
-    CATEGORY_NAME
-        kwin_colorcorrection
-    DEFAULT_SEVERITY
-        Critical
-)
-
 if (KWIN_BUILD_TABBOX)
     include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
     set(kwin_SRCS ${kwin_SRCS}
@@ -626,13 +602,11 @@ if(KWIN_TTY_PREFIX)
 endif()    
 
 kconfig_add_kcfg_files(kwin_SRCS settings.kcfgc)
-kconfig_add_kcfg_files(kwin_SRCS colorcorrection/colorcorrect_settings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS rulesettings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS rulebooksettingsbase.kcfgc)
 
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.Compositing.xml dbusinterface.h KWin::CompositorDBusInterface)
-qt5_add_dbus_adaptor(kwin_SRCS org.kde.kwin.ColorCorrect.xml colorcorrection/colorcorrectdbusinterface.h KWin::ColorCorrect::ColorCorrectDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS ${kwin_effects_dbus_xml} effects.h KWin::EffectsHandlerImpl)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.VirtualDesktopManager.xml dbusinterface.h KWin::VirtualDesktopManagerDBusInterface)
 qt5_add_dbus_adaptor(kwin_SRCS org.kde.KWin.Session.xml sm.h KWin::SessionManager)
@@ -816,13 +790,11 @@ endif()
 ########### install files ###############
 
 install(FILES kwin.kcfg DESTINATION ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}.kcfg)
-install(FILES colorcorrection/colorcorrect_settings.kcfg DESTINATION ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}_colorcorrect.kcfg)
 install(FILES kwin.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR} RENAME ${KWIN_NAME}.notifyrc)
 install(
     FILES
         org.kde.KWin.VirtualDesktopManager.xml
         org.kde.KWin.xml
-        org.kde.kwin.ColorCorrect.xml
         org.kde.kwin.Compositing.xml
         org.kde.kwin.Effects.xml
         org.kde.KWin.Plugins.xml

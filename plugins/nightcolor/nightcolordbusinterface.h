@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_NIGHTCOLOR_DBUS_INTERFACE_H
-#define KWIN_NIGHTCOLOR_DBUS_INTERFACE_H
+#pragma once
 
 #include <QObject>
 #include <QtDBus>
@@ -16,12 +15,9 @@
 namespace KWin
 {
 
-namespace ColorCorrect
-{
+class NightColorManager;
 
-class Manager;
-
-class ColorCorrectDBusInterface : public QObject, public QDBusContext
+class NightColorDBusInterface : public QObject, public QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.ColorCorrect")
@@ -38,8 +34,8 @@ class ColorCorrectDBusInterface : public QObject, public QDBusContext
     Q_PROPERTY(quint32 scheduledTransitionDuration READ scheduledTransitionDuration)
 
 public:
-    explicit ColorCorrectDBusInterface(Manager *parent);
-    ~ColorCorrectDBusInterface() override = default;
+    explicit NightColorDBusInterface(NightColorManager *parent);
+    ~NightColorDBusInterface() override = default;
 
     bool isInhibited() const;
     bool isEnabled() const;
@@ -143,14 +139,10 @@ private Q_SLOTS:
 private:
     void uninhibit(const QString &serviceName, uint cookie);
 
-    Manager *m_manager;
+    NightColorManager *m_manager;
     QDBusServiceWatcher *m_inhibitorWatcher;
     QMultiHash<QString, uint> m_inhibitors;
     uint m_lastInhibitionCookie = 0;
 };
 
 }
-
-}
-
-#endif // KWIN_NIGHTCOLOR_DBUS_INTERFACE_H

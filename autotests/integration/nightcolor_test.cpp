@@ -7,19 +7,19 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-
 #include "platform.h"
 #include "wayland_server.h"
-#include "colorcorrection/manager.h"
-#include "colorcorrection/constants.h"
+
+#include "plugins/nightcolor/nightcolormanager.h"
+#include "plugins/nightcolor/constants.h"
 
 #include <KConfigGroup>
 
 using namespace KWin;
 
-static const QString s_socketName = QStringLiteral("wayland_test_kwin_colorcorrect_nightcolor-0");
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_nightcolor-0");
 
-class ColorCorrectNightColorTest : public QObject
+class NightColorTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testAutoLocationUpdate();
 };
 
-void ColorCorrectNightColorTest::initTestCase()
+void NightColorTest::initTestCase()
 {
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -47,19 +47,22 @@ void ColorCorrectNightColorTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     waylandServer()->initWorkspace();
+
+    NightColorManager *manager = NightColorManager::self();
+    QVERIFY(manager);
 }
 
-void ColorCorrectNightColorTest::init()
+void NightColorTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
 }
 
-void ColorCorrectNightColorTest::cleanup()
+void NightColorTest::cleanup()
 {
     Test::destroyWaylandConnection();
 }
 
-void ColorCorrectNightColorTest::testConfigRead_data()
+void NightColorTest::testConfigRead_data()
 {
     QTest::addColumn<QString>("active");
     QTest::addColumn<int>("mode");
@@ -79,7 +82,7 @@ void ColorCorrectNightColorTest::testConfigRead_data()
     QTest::newRow("wrongData2") << "fa" << 4 << 7000 << 91. << -181. << "060" << "800" << -2 << false;
 }
 
-void ColorCorrectNightColorTest::testConfigRead()
+void NightColorTest::testConfigRead()
 {
     QFETCH(QString, active);
     QFETCH(int, mode);
@@ -93,7 +96,7 @@ void ColorCorrectNightColorTest::testConfigRead()
 
     const bool activeDefault = true;
     const int modeDefault = 0;
-    const int nightTemperatureUpperEnd = ColorCorrect::NEUTRAL_TEMPERATURE;
+    const int nightTemperatureUpperEnd = NEUTRAL_TEMPERATURE;
     const double latitudeFixedDefault = 0;
     const double longitudeFixedDefault = 0;
     const QTime morningBeginFixedDefault = QTime(6,0,0);
@@ -111,7 +114,7 @@ void ColorCorrectNightColorTest::testConfigRead()
     cfgGroup.writeEntry("EveningBeginFixed", eveningBeginFixedDefault.toString("hhmm"));
     cfgGroup.writeEntry("TransitionTime", transitionTimeDefault);
 
-    ColorCorrect::Manager *manager = kwinApp()->platform()->colorCorrectManager();
+    NightColorManager *manager = NightColorManager::self();
     manager->reparseConfigAndReset();
     auto info = manager->info();
     QVERIFY(!info.isEmpty());
@@ -159,7 +162,7 @@ void ColorCorrectNightColorTest::testConfigRead()
     }
 }
 
-void ColorCorrectNightColorTest::testChangeConfiguration_data()
+void NightColorTest::testChangeConfiguration_data()
 {
     QTest::addColumn<bool>("activeReadIn");
     QTest::addColumn<int>("modeReadIn");
@@ -186,7 +189,7 @@ void ColorCorrectNightColorTest::testChangeConfiguration_data()
     QTest::newRow("wrongData8") << true << 0 << 4500 << 0. << 0. << QTime(1,0,0) << QTime(23,30,0) << 90 << false;
 }
 
-void ColorCorrectNightColorTest::testChangeConfiguration()
+void NightColorTest::testChangeConfiguration()
 {
     QFETCH(bool, activeReadIn);
     QFETCH(int, modeReadIn);
@@ -200,7 +203,7 @@ void ColorCorrectNightColorTest::testChangeConfiguration()
 
     const bool activeDefault = true;
     const int modeDefault = 0;
-    const int nightTemperatureDefault = ColorCorrect::DEFAULT_NIGHT_TEMPERATURE;
+    const int nightTemperatureDefault = DEFAULT_NIGHT_TEMPERATURE;
     const double latitudeFixedDefault = 0;
     const double longitudeFixedDefault = 0;
     const QTime morningBeginFixedDefault = QTime(6,0,0);
@@ -258,7 +261,7 @@ void ColorCorrectNightColorTest::testChangeConfiguration()
         QCOMPARE(info.value("TransitionTime").toInt(), transitionTimeExpect);
     };
 
-    ColorCorrect::Manager *manager = kwinApp()->platform()->colorCorrectManager();
+    NightColorManager *manager = NightColorManager::self();
 
     // test with default values
     setData();
@@ -292,9 +295,9 @@ void ColorCorrectNightColorTest::testChangeConfiguration()
     compareValues(manager->info());
 }
 
-void ColorCorrectNightColorTest::testAutoLocationUpdate()
+void NightColorTest::testAutoLocationUpdate()
 {
-    ColorCorrect::Manager *manager = kwinApp()->platform()->colorCorrectManager();
+    NightColorManager *manager = NightColorManager::self();
     auto info = manager->info();
     QCOMPARE(info.value("LatitudeAuto").toDouble(), 0.);
     QCOMPARE(info.value("LongitudeAuto").toDouble(), 0.);
@@ -324,5 +327,5 @@ void ColorCorrectNightColorTest::testAutoLocationUpdate()
     QCOMPARE(info.value("LatitudeAuto").toDouble(), 50.);
 }
 
-WAYLANDTEST_MAIN(ColorCorrectNightColorTest)
-#include "colorcorrect_nightcolor_test.moc"
+WAYLANDTEST_MAIN(NightColorTest)
+#include "nightcolor_test.moc"

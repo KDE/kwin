@@ -14,7 +14,6 @@
 #include <QtMath>
 
 namespace KWin {
-namespace ColorCorrect {
 
 #define TWILIGHT_NAUT       -12.0
 #define TWILIGHT_CIVIL       -6.0
@@ -159,5 +158,4 @@ QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, doubl
     return { dateTimeBegin, dateTimeEnd };
 }
 
-}
 }

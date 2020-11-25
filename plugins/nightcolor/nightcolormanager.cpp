@@ -6,11 +6,12 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "manager.h"
+#include "nightcolormanager.h"
 #include "clockskewnotifier.h"
-#include "colorcorrectdbusinterface.h"
+#include "nightcolordbusinterface.h"
+#include "nightcolorlogging.h"
+#include "nightcolorsettings.h"
 #include "suncalc.h"
-#include <colorcorrect_logging.h>
 
 #include <main.h>
 #include <platform.h>
@@ -18,8 +19,6 @@
 #include <screens.h>
 #include <workspace.h>
 #include <logind.h>
-
-#include <colorcorrect_settings.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -29,26 +28,31 @@
 #include <QTimer>
 
 namespace KWin {
-namespace ColorCorrect {
 
 static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
+static NightColorManager *s_instance = nullptr;
 
 static bool checkLocation(double lat, double lng)
 {
     return -90 <= lat && lat <= 90 && -180 <= lng && lng <= 180;
 }
 
-Manager::Manager(QObject *parent)
-    : QObject(parent)
+NightColorManager *NightColorManager::self()
 {
-    m_iface = new ColorCorrectDBusInterface(this);
+    return s_instance;
+}
+
+NightColorManager::NightColorManager(QObject *parent)
+    : Plugin(parent)
+{
+    s_instance = this;
+
+    m_iface = new NightColorDBusInterface(this);
     m_skewNotifier = new ClockSkewNotifier(this);
 
-    connect(kwinApp(), &Application::workspaceCreated, this, &Manager::init);
-
     // Display a message when Night Color is (un)inhibited.
-    connect(this, &Manager::inhibitedChanged, this, [this] {
+    connect(this, &NightColorManager::inhibitedChanged, this, [this] {
         // TODO: Maybe use different icons?
         const QString iconName = isInhibited()
             ? QStringLiteral("preferences-desktop-display-nightcolor-off")
@@ -67,11 +71,22 @@ Manager::Manager(QObject *parent)
 
         QDBusConnection::sessionBus().asyncCall(message);
     });
+
+    if (workspace()) {
+        init();
+    } else {
+        connect(kwinApp(), &Application::workspaceCreated, this, &NightColorManager::init);
+    }
 }
 
-void Manager::init()
+NightColorManager::~NightColorManager()
 {
-    Settings::instance(kwinApp()->config());
+    s_instance = nullptr;
+}
+
+void NightColorManager::init()
+{
+    NightColorSettings::instance(kwinApp()->config());
     // we may always read in the current config
     readConfig();
 
@@ -79,7 +94,22 @@ void Manager::init()
         return;
     }
 
-    connect(Screens::self(), &Screens::countChanged, this, &Manager::hardReset);
+    // legacy shortcut with localized key (to avoid breaking existing config)
+    if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
+        QAction toggleActionLegacy;
+        toggleActionLegacy.setProperty("componentName", QStringLiteral(KWIN_NAME));
+        toggleActionLegacy.setObjectName(i18n("Toggle Night Color"));
+        KGlobalAccel::self()->removeAllShortcuts(&toggleActionLegacy);
+    }
+
+    QAction *toggleAction = new QAction(this);
+    toggleAction->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
+    toggleAction->setText(i18n("Toggle Night Color"));
+    KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
+    input()->registerShortcut(QKeySequence(), toggleAction, this, &NightColorManager::toggle);
+
+    connect(Screens::self(), &Screens::countChanged, this, &NightColorManager::hardReset);
 
     connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this,
             [this](bool active) {
@@ -105,7 +135,7 @@ void Manager::init()
         if (reply.isValid()) {
             comingFromSuspend = reply.value().toBool();
         } else {
-            qCDebug(KWIN_COLORCORRECTION) << "Failed to get PreparingForSleep Property of logind session:" << reply.error().message();
+            qCDebug(KWIN_NIGHTCOLOR) << "Failed to get PreparingForSleep Property of logind session:" << reply.error().message();
             // Always do a hard reset in case we have no further information.
             comingFromSuspend = true;
         }
@@ -120,7 +150,7 @@ void Manager::init()
     hardReset();
 }
 
-void Manager::hardReset()
+void NightColorManager::hardReset()
 {
     cancelAllTimers();
 
@@ -134,25 +164,25 @@ void Manager::hardReset()
     resetAllTimers();
 }
 
-void Manager::reparseConfigAndReset()
+void NightColorManager::reparseConfigAndReset()
 {
     cancelAllTimers();
     readConfig();
     hardReset();
 }
 
-void Manager::toggle()
+void NightColorManager::toggle()
 {
     m_isGloballyInhibited = !m_isGloballyInhibited;
     m_isGloballyInhibited ? inhibit() : uninhibit();
 }
 
-bool Manager::isInhibited() const
+bool NightColorManager::isInhibited() const
 {
     return m_inhibitReferenceCount;
 }
 
-void Manager::inhibit()
+void NightColorManager::inhibit()
 {
     m_inhibitReferenceCount++;
 
@@ -162,7 +192,7 @@ void Manager::inhibit()
     }
 }
 
-void Manager::uninhibit()
+void NightColorManager::uninhibit()
 {
     m_inhibitReferenceCount--;
 
@@ -172,77 +202,59 @@ void Manager::uninhibit()
     }
 }
 
-bool Manager::isEnabled() const
+bool NightColorManager::isEnabled() const
 {
     return m_active;
 }
 
-bool Manager::isRunning() const
+bool NightColorManager::isRunning() const
 {
     return m_running;
 }
 
-bool Manager::isAvailable() const
+bool NightColorManager::isAvailable() const
 {
     return kwinApp()->platform()->supportsGammaControl();
 }
 
-int Manager::currentTemperature() const
+int NightColorManager::currentTemperature() const
 {
     return m_currentTemp;
 }
 
-int Manager::targetTemperature() const
+int NightColorManager::targetTemperature() const
 {
     return m_targetTemperature;
 }
 
-NightColorMode Manager::mode() const
+NightColorMode NightColorManager::mode() const
 {
     return m_mode;
 }
 
-QDateTime Manager::previousTransitionDateTime() const
+QDateTime NightColorManager::previousTransitionDateTime() const
 {
     return m_prev.first;
 }
 
-qint64 Manager::previousTransitionDuration() const
+qint64 NightColorManager::previousTransitionDuration() const
 {
     return m_prev.first.msecsTo(m_prev.second);
 }
 
-QDateTime Manager::scheduledTransitionDateTime() const
+QDateTime NightColorManager::scheduledTransitionDateTime() const
 {
     return m_next.first;
 }
 
-qint64 Manager::scheduledTransitionDuration() const
+qint64 NightColorManager::scheduledTransitionDuration() const
 {
     return m_next.first.msecsTo(m_next.second);
 }
 
-void Manager::initShortcuts()
+void NightColorManager::readConfig()
 {
-    // legacy shortcut with localized key (to avoid breaking existing config)
-    if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
-        QAction toggleActionLegacy;
-        toggleActionLegacy.setProperty("componentName", QStringLiteral(KWIN_NAME));
-        toggleActionLegacy.setObjectName(i18n("Toggle Night Color"));
-        KGlobalAccel::self()->removeAllShortcuts(&toggleActionLegacy);
-    }
-
-    QAction *toggleAction = new QAction(this);
-    toggleAction->setProperty("componentName", QStringLiteral(KWIN_NAME));
-    toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
-    toggleAction->setText(i18n("Toggle Night Color"));
-    KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
-    input()->registerShortcut(QKeySequence(), toggleAction, this, &Manager::toggle);
-}
-
-void Manager::readConfig()
-{
-    Settings *s = Settings::self();
+    NightColorSettings *s = NightColorSettings::self();
     s->load();
 
     setEnabled(s->active());
@@ -309,7 +321,7 @@ void Manager::readConfig()
     m_trTime = qMax(trTime / 1000 / 60, 1);
 }
 
-void Manager::resetAllTimers()
+void NightColorManager::resetAllTimers()
 {
     cancelAllTimers();
     if (isAvailable()) {
@@ -321,7 +333,7 @@ void Manager::resetAllTimers()
     }
 }
 
-void Manager::cancelAllTimers()
+void NightColorManager::cancelAllTimers()
 {
     delete m_slowUpdateStartTimer;
     delete m_slowUpdateTimer;
@@ -332,7 +344,7 @@ void Manager::cancelAllTimers()
     m_quickAdjustTimer = nullptr;
 }
 
-void Manager::resetQuickAdjustTimer()
+void NightColorManager::resetQuickAdjustTimer()
 {
     updateTransitionTimings(false);
     updateTargetTemperature();
@@ -343,7 +355,7 @@ void Manager::resetQuickAdjustTimer()
         cancelAllTimers();
         m_quickAdjustTimer = new QTimer(this);
         m_quickAdjustTimer->setSingleShot(false);
-        connect(m_quickAdjustTimer, &QTimer::timeout, this, &Manager::quickAdjust);
+        connect(m_quickAdjustTimer, &QTimer::timeout, this, &NightColorManager::quickAdjust);
 
         int interval = QUICK_ADJUST_DURATION / (tempDiff / TEMPERATURE_STEP);
         if (interval == 0) {
@@ -355,7 +367,7 @@ void Manager::resetQuickAdjustTimer()
     }
 }
 
-void Manager::quickAdjust()
+void NightColorManager::quickAdjust()
 {
     if (!m_quickAdjustTimer) {
         return;
@@ -379,7 +391,7 @@ void Manager::quickAdjust()
     }
 }
 
-void Manager::resetSlowUpdateStartTimer()
+void NightColorManager::resetSlowUpdateStartTimer()
 {
     delete m_slowUpdateStartTimer;
     m_slowUpdateStartTimer = nullptr;
@@ -398,14 +410,14 @@ void Manager::resetSlowUpdateStartTimer()
     // set up the next slow update
     m_slowUpdateStartTimer = new QTimer(this);
     m_slowUpdateStartTimer->setSingleShot(true);
-    connect(m_slowUpdateStartTimer, &QTimer::timeout, this, &Manager::resetSlowUpdateStartTimer);
+    connect(m_slowUpdateStartTimer, &QTimer::timeout, this, &NightColorManager::resetSlowUpdateStartTimer);
 
     updateTransitionTimings(false);
     updateTargetTemperature();
 
     const int diff = QDateTime::currentDateTime().msecsTo(m_next.first);
     if (diff <= 0) {
-        qCCritical(KWIN_COLORCORRECTION) << "Error in time calculation. Deactivating Night Color.";
+        qCCritical(KWIN_NIGHTCOLOR) << "Error in time calculation. Deactivating Night Color.";
         return;
     }
     m_slowUpdateStartTimer->start(diff);
@@ -414,7 +426,7 @@ void Manager::resetSlowUpdateStartTimer()
     resetSlowUpdateTimer();
 }
 
-void Manager::resetSlowUpdateTimer()
+void NightColorManager::resetSlowUpdateTimer()
 {
     delete m_slowUpdateTimer;
     m_slowUpdateTimer = nullptr;
@@ -448,7 +460,7 @@ void Manager::resetSlowUpdateTimer()
     }
 }
 
-void Manager::slowUpdate(int targetTemp)
+void NightColorManager::slowUpdate(int targetTemp)
 {
     if (!m_slowUpdateTimer) {
         return;
@@ -467,7 +479,7 @@ void Manager::slowUpdate(int targetTemp)
     }
 }
 
-void Manager::updateTargetTemperature()
+void NightColorManager::updateTargetTemperature()
 {
     const int targetTemperature = mode() != NightColorMode::Constant && daylight() ? m_dayTargetTemp : m_nightTargetTemp;
 
@@ -480,7 +492,7 @@ void Manager::updateTargetTemperature()
     emit targetTemperatureChanged();
 }
 
-void Manager::updateTransitionTimings(bool force)
+void NightColorManager::updateTransitionTimings(bool force)
 {
     if (m_mode == NightColorMode::Constant) {
         m_next = DateTimes();
@@ -557,7 +569,7 @@ void Manager::updateTransitionTimings(bool force)
     emit scheduledTransitionTimingsChanged();
 }
 
-DateTimes Manager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
+DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
 {
     DateTimes dateTimes = calculateSunTimings(dateTime, latitude, longitude, morning);
     // At locations near the poles it is possible, that we can't
@@ -582,7 +594,7 @@ DateTimes Manager::getSunTimings(const QDateTime &dateTime, double latitude, dou
     return dateTimes;
 }
 
-bool Manager::checkAutomaticSunTimings() const
+bool NightColorManager::checkAutomaticSunTimings() const
 {
     if (m_prev.first.isValid() && m_prev.second.isValid() &&
             m_next.first.isValid() && m_next.second.isValid()) {
@@ -593,12 +605,12 @@ bool Manager::checkAutomaticSunTimings() const
     return false;
 }
 
-bool Manager::daylight() const
+bool NightColorManager::daylight() const
 {
     return m_prev.first.date() == m_next.first.date();
 }
 
-int Manager::currentTargetTemp() const
+int NightColorManager::currentTargetTemp() const
 {
     if (!m_running) {
         return NEUTRAL_TEMPERATURE;
@@ -630,7 +642,7 @@ int Manager::currentTargetTemp() const
     }
 }
 
-void Manager::commitGammaRamps(int temperature)
+void NightColorManager::commitGammaRamps(int temperature)
 {
     const auto outs = kwinApp()->platform()->outputs();
 
@@ -674,11 +686,11 @@ void Manager::commitGammaRamps(int temperature)
         } else {
             m_failedCommitAttempts++;
             if (m_failedCommitAttempts < 10) {
-                qCWarning(KWIN_COLORCORRECTION).nospace() << "Committing Gamma Ramp failed for output " << o->name() <<
+                qCWarning(KWIN_NIGHTCOLOR).nospace() << "Committing Gamma Ramp failed for output " << o->name() <<
                          ". Trying " << (10 - m_failedCommitAttempts) << " times more.";
             } else {
                 // TODO: On multi monitor setups we could try to rollback earlier changes for already committed outputs
-                qCWarning(KWIN_COLORCORRECTION) << "Gamma Ramp commit failed too often. Deactivating color correction for now.";
+                qCWarning(KWIN_NIGHTCOLOR) << "Gamma Ramp commit failed too often. Deactivating Night Color for now.";
                 m_failedCommitAttempts = 0; // reset so we can try again later (i.e. after suspend phase or config change)
                 setRunning(false);
                 cancelAllTimers();
@@ -687,7 +699,7 @@ void Manager::commitGammaRamps(int temperature)
     }
 }
 
-QHash<QString, QVariant> Manager::info() const
+QHash<QString, QVariant> NightColorManager::info() const
 {
     return QHash<QString, QVariant> {
         { QStringLiteral("Available"), isAvailable() },
@@ -718,7 +730,7 @@ QHash<QString, QVariant> Manager::info() const
     };
 }
 
-bool Manager::changeConfiguration(QHash<QString, QVariant> data)
+bool NightColorManager::changeConfiguration(QHash<QString, QVariant> data)
 {
     bool activeUpdate, modeUpdate, tempUpdate, locUpdate, timeUpdate;
     activeUpdate = modeUpdate = tempUpdate = locUpdate = timeUpdate = false;
@@ -841,7 +853,7 @@ bool Manager::changeConfiguration(QHash<QString, QVariant> data)
         cancelAllTimers();
     }
 
-    Settings *s = Settings::self();
+    NightColorSettings *s = NightColorSettings::self();
     if (activeUpdate) {
         setEnabled(active);
         s->setActive(active);
@@ -881,9 +893,9 @@ bool Manager::changeConfiguration(QHash<QString, QVariant> data)
     return true;
 }
 
-void Manager::autoLocationUpdate(double latitude, double longitude)
+void NightColorManager::autoLocationUpdate(double latitude, double longitude)
 {
-    qCDebug(KWIN_COLORCORRECTION, "Received new location (lat: %f, lng: %f)", latitude, longitude);
+    qCDebug(KWIN_NIGHTCOLOR, "Received new location (lat: %f, lng: %f)", latitude, longitude);
 
     if (!checkLocation(latitude, longitude)) {
         return;
@@ -897,7 +909,7 @@ void Manager::autoLocationUpdate(double latitude, double longitude)
     m_latAuto = latitude;
     m_lngAuto = longitude;
 
-    Settings *s = Settings::self();
+    NightColorSettings *s = NightColorSettings::self();
     s->setLatitudeAuto(latitude);
     s->setLongitudeAuto(longitude);
     s->save();
@@ -906,7 +918,7 @@ void Manager::autoLocationUpdate(double latitude, double longitude)
     emit configChange(info());
 }
 
-void Manager::setEnabled(bool enabled)
+void NightColorManager::setEnabled(bool enabled)
 {
     if (m_active == enabled) {
         return;
@@ -916,7 +928,7 @@ void Manager::setEnabled(bool enabled)
     emit enabledChanged();
 }
 
-void Manager::setRunning(bool running)
+void NightColorManager::setRunning(bool running)
 {
     if (m_running == running) {
         return;
@@ -925,7 +937,7 @@ void Manager::setRunning(bool running)
     emit runningChanged();
 }
 
-void Manager::setCurrentTemperature(int temperature)
+void NightColorManager::setCurrentTemperature(int temperature)
 {
     if (m_currentTemp == temperature) {
         return;
@@ -934,7 +946,7 @@ void Manager::setCurrentTemperature(int temperature)
     emit currentTemperatureChanged();
 }
 
-void Manager::setMode(NightColorMode mode)
+void NightColorManager::setMode(NightColorMode mode)
 {
     if (m_mode == mode) {
         return;
@@ -943,5 +955,4 @@ void Manager::setMode(NightColorMode mode)
     emit modeChanged();
 }
 
-}
-}
+} // namespace KWin

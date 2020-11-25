@@ -21,7 +21,6 @@
 #include "screens.h"
 #include "screenedge.h"
 #include "wayland_server.h"
-#include "colorcorrection/manager.h"
 
 #include <KWaylandServer/outputconfiguration_interface.h>
 #include <KWaylandServer/outputchangeset.h>
@@ -38,7 +37,6 @@ Platform::Platform(QObject *parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
     setSoftwareCursorForced(false);
-    m_colorCorrect = new ColorCorrect::Manager(this);
     connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
 }
 
