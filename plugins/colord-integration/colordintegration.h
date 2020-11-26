@@ -30,6 +30,9 @@ private Q_SLOTS:
     void handleOutputRemoved(AbstractOutput *output);
 
 private:
+    void initialize();
+    void teardown();
+
     QHash<AbstractOutput *, ColordDevice *> m_outputToDevice;
     CdInterface *m_colordInterface;
 };

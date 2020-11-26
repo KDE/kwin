@@ -12,6 +12,7 @@
 #include "platform.h"
 
 #include <QDBusPendingCallWatcher>
+#include <QDBusServiceWatcher>
 
 namespace KWin
 {
@@ -21,6 +22,22 @@ ColordIntegration::ColordIntegration(QObject *parent)
 {
     qDBusRegisterMetaType<CdStringMap>();
 
+    auto watcher = new QDBusServiceWatcher(QStringLiteral("org.freedesktop.ColorManager"),
+                                           QDBusConnection::systemBus(),
+                                           QDBusServiceWatcher::WatchForRegistration |
+                                           QDBusServiceWatcher::WatchForUnregistration, this);
+
+    connect(watcher, &QDBusServiceWatcher::serviceRegistered, this, &ColordIntegration::initialize);
+    connect(watcher, &QDBusServiceWatcher::serviceUnregistered, this, &ColordIntegration::teardown);
+
+    QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
+    if (interface->isServiceRegistered(QStringLiteral("org.freedesktop.ColorManager"))) {
+        initialize();
+    }
+}
+
+void ColordIntegration::initialize()
+{
     const Platform *platform = kwinApp()->platform();
 
     m_colordInterface = new CdInterface(QStringLiteral("org.freedesktop.ColorManager"),
@@ -34,6 +51,22 @@ ColordIntegration::ColordIntegration(QObject *parent)
 
     connect(platform, &Platform::outputAdded, this, &ColordIntegration::handleOutputAdded);
     connect(platform, &Platform::outputRemoved, this, &ColordIntegration::handleOutputRemoved);
+}
+
+void ColordIntegration::teardown()
+{
+    const Platform *platform = kwinApp()->platform();
+
+    const QVector<AbstractOutput *> outputs = platform->outputs();
+    for (AbstractOutput *output : outputs) {
+        handleOutputRemoved(output);
+    }
+
+    delete m_colordInterface;
+    m_colordInterface = nullptr;
+
+    disconnect(platform, &Platform::outputAdded, this, &ColordIntegration::handleOutputAdded);
+    disconnect(platform, &Platform::outputRemoved, this, &ColordIntegration::handleOutputRemoved);
 }
 
 void ColordIntegration::handleOutputAdded(AbstractOutput *output)
