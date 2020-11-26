@@ -17,6 +17,7 @@
 #include "input.h"
 #include "logind.h"
 #include "options.h"
+#include "pluginmanager.h"
 #include "screens.h"
 #include "screenlockerwatcher.h"
 #include "sm.h"
@@ -296,6 +297,11 @@ void Application::createOptions()
     options = new Options;
 }
 
+void Application::createPlugins()
+{
+    PluginManager::create(this);
+}
+
 void Application::installNativeX11EventFilter()
 {
     installNativeEventFilter(m_eventFilter.data());
@@ -314,6 +320,11 @@ void Application::destroyWorkspace()
 void Application::destroyCompositor()
 {
     delete Compositor::self();
+}
+
+void Application::destroyPlugins()
+{
+    delete PluginManager::self();
 }
 
 void Application::updateX11Time(xcb_generic_event_t *event)

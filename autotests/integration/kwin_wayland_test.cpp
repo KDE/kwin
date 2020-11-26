@@ -79,6 +79,7 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
+    destroyPlugins();
     delete m_xwayland;
     m_xwayland = nullptr;
     destroyWorkspace();
@@ -131,7 +132,7 @@ void WaylandTestApplication::performStartup()
     // try creating the Wayland Backend
     createInput();
     createBackend();
-    PluginManager::create(this);
+    createPlugins();
 }
 
 void WaylandTestApplication::createBackend()

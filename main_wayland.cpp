@@ -14,7 +14,6 @@
 // kwin
 #include "platform.h"
 #include "effects.h"
-#include "pluginmanager.h"
 #include "tabletmodemanager.h"
 
 #include "wayland_server.h"
@@ -129,6 +128,7 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
+    destroyPlugins();
     delete m_xwayland;
     m_xwayland = nullptr;
     destroyWorkspace();
@@ -158,7 +158,7 @@ void ApplicationWayland::performStartup()
     InputMethod::create(this);
     createBackend();
     TabletModeManager::create(this);
-    PluginManager::create(this);
+    createPlugins();
 }
 
 void ApplicationWayland::createBackend()

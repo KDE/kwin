@@ -13,7 +13,6 @@
 #include <config-kwin.h>
 
 #include "platform.h"
-#include "pluginmanager.h"
 #include "sm.h"
 #include "workspace.h"
 #include "xcbutils.h"
@@ -191,6 +190,7 @@ void ApplicationX11::setReplace(bool replace)
 void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
+    destroyPlugins();
     destroyCompositor();
     destroyWorkspace();
     // Remove windowmanager privileges
@@ -249,7 +249,7 @@ void ApplicationX11::performStartup()
         connect(platform(), &Platform::screensQueried, this,
             [this] {
                 createWorkspace();
-                PluginManager::create(this);
+                createPlugins();
 
                 Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
