@@ -235,7 +235,10 @@ bool PipeWireStream::createStream()
 
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
-    const auto format = m_hasAlpha ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    auto canCreateDmaBuf = [this] () -> bool {
+        return QSharedPointer<DmaBufTexture>(kwinApp()->platform()->createDmaBufTexture(m_resolution));
+    };
+    const auto format = m_hasAlpha || canCreateDmaBuf() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
 
     const spa_pod *param = (spa_pod*)spa_pod_builder_add_object(&podBuilder,
                                         SPA_TYPE_OBJECT_Format, SPA_PARAM_EnumFormat,
