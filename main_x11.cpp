@@ -191,6 +191,7 @@ void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
     destroyPlugins();
+    destroyColorManager();
     destroyCompositor();
     destroyWorkspace();
     // Remove windowmanager privileges
@@ -230,6 +231,7 @@ void ApplicationX11::performStartup()
         installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
+        createColorManager();
 
         // Check  whether another windowmanager is running
         const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};

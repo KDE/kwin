@@ -8,6 +8,8 @@
 */
 #include "nightcolormanager.h"
 #include "clockskewnotifier.h"
+#include "colordevice.h"
+#include "colormanager.h"
 #include "nightcolordbusinterface.h"
 #include "nightcolorlogging.h"
 #include "nightcolorsettings.h"
@@ -15,7 +17,6 @@
 
 #include <main.h>
 #include <platform.h>
-#include <abstract_output.h>
 #include <screens.h>
 #include <workspace.h>
 #include <logind.h>
@@ -644,59 +645,12 @@ int NightColorManager::currentTargetTemp() const
 
 void NightColorManager::commitGammaRamps(int temperature)
 {
-    const auto outs = kwinApp()->platform()->outputs();
-
-    for (auto *o : outs) {
-        int rampsize = o->gammaRampSize();
-        GammaRamp ramp(rampsize);
-
-        /*
-         * The gamma calculation below is based on the Redshift app:
-         * https://github.com/jonls/redshift
-         */
-        uint16_t *red = ramp.red();
-        uint16_t *green = ramp.green();
-        uint16_t *blue = ramp.blue();
-
-        // linear default state
-        for (int i = 0; i < rampsize; i++) {
-                uint16_t value = (double)i / rampsize * (UINT16_MAX + 1);
-                red[i] = value;
-                green[i] = value;
-                blue[i] = value;
-        }
-
-        // approximate white point
-        float whitePoint[3];
-        float alpha = (temperature % 100) / 100.;
-        int bbCIndex = ((temperature - 1000) / 100) * 3;
-        whitePoint[0] = (1. - alpha) * blackbodyColor[bbCIndex] + alpha * blackbodyColor[bbCIndex + 3];
-        whitePoint[1] = (1. - alpha) * blackbodyColor[bbCIndex + 1] + alpha * blackbodyColor[bbCIndex + 4];
-        whitePoint[2] = (1. - alpha) * blackbodyColor[bbCIndex + 2] + alpha * blackbodyColor[bbCIndex + 5];
-
-        for (int i = 0; i < rampsize; i++) {
-            red[i] = qreal(red[i]) / (UINT16_MAX+1) * whitePoint[0] * (UINT16_MAX+1);
-            green[i] = qreal(green[i]) / (UINT16_MAX+1) * whitePoint[1] * (UINT16_MAX+1);
-            blue[i] = qreal(blue[i]) / (UINT16_MAX+1) * whitePoint[2] * (UINT16_MAX+1);
-        }
-
-        if (o->setGammaRamp(ramp)) {
-            setCurrentTemperature(temperature);
-            m_failedCommitAttempts = 0;
-        } else {
-            m_failedCommitAttempts++;
-            if (m_failedCommitAttempts < 10) {
-                qCWarning(KWIN_NIGHTCOLOR).nospace() << "Committing Gamma Ramp failed for output " << o->name() <<
-                         ". Trying " << (10 - m_failedCommitAttempts) << " times more.";
-            } else {
-                // TODO: On multi monitor setups we could try to rollback earlier changes for already committed outputs
-                qCWarning(KWIN_NIGHTCOLOR) << "Gamma Ramp commit failed too often. Deactivating Night Color for now.";
-                m_failedCommitAttempts = 0; // reset so we can try again later (i.e. after suspend phase or config change)
-                setRunning(false);
-                cancelAllTimers();
-            }
-        }
+    const QVector<ColorDevice *> devices = ColorManager::self()->devices();
+    for (ColorDevice *device : devices) {
+        device->setTemperature(temperature);
     }
+
+    setCurrentTemperature(temperature);
 }
 
 QHash<QString, QVariant> NightColorManager::info() const

@@ -33,5 +33,5 @@ qt5_add_dbus_interface(colordintegration_SOURCES ${COLORD_PROFILE_XML} colordpro
 
 add_library(colordintegration MODULE ${colordintegration_SOURCES})
 set_target_properties(colordintegration PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/kwin/plugins/")
-target_link_libraries(colordintegration kwin lcms2::lcms2)
+target_link_libraries(colordintegration kwin)
 install(TARGETS colordintegration DESTINATION ${PLUGIN_INSTALL_DIR}/kwin/plugins/)

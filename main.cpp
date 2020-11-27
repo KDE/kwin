@@ -12,6 +12,9 @@
 // kwin
 #include "platform.h"
 #include "atoms.h"
+#ifdef KWIN_BUILD_CMS
+#include "colormanager.h"
+#endif
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
@@ -302,6 +305,13 @@ void Application::createPlugins()
     PluginManager::create(this);
 }
 
+void Application::createColorManager()
+{
+#ifdef KWIN_BUILD_CMS
+    ColorManager::create(this);
+#endif
+}
+
 void Application::installNativeX11EventFilter()
 {
     installNativeEventFilter(m_eventFilter.data());
@@ -325,6 +335,13 @@ void Application::destroyCompositor()
 void Application::destroyPlugins()
 {
     delete PluginManager::self();
+}
+
+void Application::destroyColorManager()
+{
+#ifdef KWIN_BUILD_CMS
+    delete ColorManager::self();
+#endif
 }
 
 void Application::updateX11Time(xcb_generic_event_t *event)

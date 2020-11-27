@@ -139,6 +139,7 @@ ApplicationWayland::~ApplicationWayland()
     }
     waylandServer()->terminateClientConnections();
     destroyCompositor();
+    destroyColorManager();
 }
 
 void ApplicationWayland::performStartup()
@@ -148,6 +149,7 @@ void ApplicationWayland::performStartup()
     }
     // first load options - done internally by a different thread
     createOptions();
+    createColorManager();
     waylandServer()->createInternalConnection();
 
     // try creating the Wayland Backend

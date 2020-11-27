@@ -304,7 +304,6 @@ private:
     int m_dayTargetTemp = NEUTRAL_TEMPERATURE;
     int m_nightTargetTemp = DEFAULT_NIGHT_TEMPERATURE;
 
-    int m_failedCommitAttempts = 0;
     int m_inhibitReferenceCount = 0;
 };
 

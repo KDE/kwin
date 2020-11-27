@@ -6,10 +6,10 @@
 
 #include "colorddevice.h"
 #include "abstract_output.h"
+#include "colordevice.h"
 #include "colordlogging.h"
+#include "colormanager.h"
 #include "colordprofileinterface.h"
-
-#include <lcms2.h>
 
 namespace KWin
 {
@@ -54,42 +54,9 @@ void ColordDevice::updateProfile()
         return;
     }
 
-    cmsHPROFILE handle = cmsOpenProfileFromFile(profile.filename().toUtf8(), "r");
-    if (!handle) {
-        qCWarning(KWIN_COLORD) << "Failed to open profile file" << profile.filename();
-        return;
-    }
-
-    GammaRamp ramp(m_output->gammaRampSize());
-    uint16_t *redChannel = ramp.red();
-    uint16_t *greenChannel = ramp.green();
-    uint16_t *blueChannel = ramp.blue();
-
-    cmsToneCurve **vcgt = static_cast<cmsToneCurve **>(cmsReadTag(handle, cmsSigVcgtTag));
-    if (!vcgt || !vcgt[0]) {
-        qCDebug(KWIN_COLORD) << "Profile" << profile.filename() << "has no VCGT tag";
-
-        for (uint32_t i = 0; i < ramp.size(); ++i) {
-            const uint16_t value = (i * 0xffff) / (ramp.size() - 1);
-
-            redChannel[i] = value;
-            greenChannel[i] = value;
-            blueChannel[i] = value;
-        }
-    } else {
-        for (uint32_t i = 0; i < ramp.size(); ++i) {
-            const uint16_t index = (i * 0xffff) / (ramp.size() - 1);
-
-            redChannel[i] = cmsEvalToneCurve16(vcgt[0], index);
-            greenChannel[i] = cmsEvalToneCurve16(vcgt[1], index);
-            blueChannel[i] = cmsEvalToneCurve16(vcgt[2], index);
-        }
-    }
-
-    cmsCloseProfile(handle);
-
-    if (!m_output->setGammaRamp(ramp)) {
-        qCWarning(KWIN_COLORD) << "Failed to apply color profilie on output" << m_output->name();
+    ColorDevice *device = ColorManager::self()->findDevice(m_output);
+    if (device) {
+        device->setProfile(profile.filename());
     }
 }
 
