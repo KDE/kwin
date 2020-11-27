@@ -789,6 +789,9 @@ void X11Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 
 void X11Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
 {
+    if (waylandServer()) {
+        return;
+    }
     if (e->event != frameId())
         return; // care only about entering the whole frame
 
@@ -804,6 +807,9 @@ void X11Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
 
 void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
 {
+    if (waylandServer()) {
+        return;
+    }
     if (e->event != frameId())
         return; // care only about leaving the whole frame
     if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
@@ -897,6 +903,10 @@ void X11Client::establishCommandAllGrab(uint8_t button)
 
 void X11Client::updateMouseGrab()
 {
+    if (waylandServer()) {
+        return;
+    }
+
     xcb_ungrab_button(connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
 
     if (TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
@@ -959,6 +969,9 @@ static bool modKeyDown(int state) {
 // return value matters only when filtering events before decoration gets them
 bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time)
 {
+    if (waylandServer()) {
+        return true;
+    }
     if (isMoveResizePointerButtonDown()) {
         if (w == wrapperId())
             xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
@@ -1072,6 +1085,9 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
 // return value matters only when filtering events before decoration gets them
 bool X11Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
 {
+    if (waylandServer()) {
+        return true;
+    }
     if (w == frameId() && isDecorated()) {
         // wheel handled on buttonPress
         if (button < 4 || button > 7) {
@@ -1118,6 +1134,9 @@ bool X11Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
 // return value matters only when filtering events before decoration gets them
 bool X11Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
 {
+    if (waylandServer()) {
+        return true;
+    }
     if (w == frameId() && isDecorated() && !isMinimized()) {
         // TODO Mouse move event dependent on state
         QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
