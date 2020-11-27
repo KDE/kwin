@@ -2472,7 +2472,7 @@ bool SceneOpenGLShadow::prepareBackend()
     p.drawPixmap(0, height - bottomLeft.height(), bottomLeft.width(), bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
     p.drawPixmap(innerRectLeft, height - bottom.height(), bottom.width(), bottom.height(), shadowPixmap(ShadowElementBottom));
     p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), bottomRight.width(), bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
-    
+
     p.end();
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format

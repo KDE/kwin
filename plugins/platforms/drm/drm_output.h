@@ -92,7 +92,7 @@ public:
      * @return true if the hardware realizes the transform without further assistance
      */
     bool hardwareTransforms() const;
-    
+
     DrmGpu *gpu() {
         return m_gpu;
     }

@@ -61,7 +61,7 @@ public:
 
     void init() override;
     void prepareShutdown() override;
-    
+
     bool present(DrmBuffer *buffer, DrmOutput *output);
 
     Outputs outputs() const override;
@@ -110,7 +110,7 @@ private:
     void updateOutputsEnabled();
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
-    
+
     // active output pipelines (planes + crtc + encoder + connector)
     QVector<DrmOutput*> m_outputs;
     // active and enabled pipelines (above + wl_output)

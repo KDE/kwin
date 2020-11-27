@@ -230,7 +230,7 @@ private:
 MockInputMethod::MockInputMethod(struct wl_registry *registry, int id, int version)
     : QtWayland::zwp_input_method_v1(registry, id, version)
 {
-    
+
 }
 MockInputMethod::~MockInputMethod()
 {

@@ -809,7 +809,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
         return true;
     }
 #endif
-    
+
     m_primaryPlane->setNext(buffer);
     m_nextPlanesFlipList << m_primaryPlane;
 

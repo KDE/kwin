@@ -350,7 +350,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (c == nullptr)
                 c = createUnmanaged(event->window);
             if (c) {
-                // if hasScheduledRelease is true, it means a unamp and map sequence has occurred. 
+                // if hasScheduledRelease is true, it means a unamp and map sequence has occurred.
                 // since release is scheduled after map notify, this old Unmanaged will get released
                 // before KWIN has chance to remanage it again. so release it right now.
                 if (c->hasScheduledRelease()) {

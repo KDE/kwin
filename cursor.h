@@ -285,7 +285,7 @@ public:
     Cursor* currentCursor() const {
         return m_currentCursor;
     }
-    
+
     static Cursors* self();
 
 Q_SIGNALS:

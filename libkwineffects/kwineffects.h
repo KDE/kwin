@@ -2095,7 +2095,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * @since 5.16
      */
     Q_PROPERTY(QWindow *internalWindow READ internalWindow CONSTANT)
-    
+
     /**
      * Whether this EffectWindow represents the outline.
      *

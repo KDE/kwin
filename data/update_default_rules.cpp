@@ -54,5 +54,5 @@ int main( int argc, char* argv[] )
     QDBusMessage message =
         QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
- 
+
     }

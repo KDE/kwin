@@ -32,10 +32,10 @@ public:
     QVector<uint32_t> encoders() {
         return m_encoders;
     }
-    
+
     bool initProps() override;
     bool isConnected();
-    
+
     bool isNonDesktop() const {
         auto prop = m_props.at(static_cast<int>(PropertyIndex::NonDesktop));
         if (!prop) {

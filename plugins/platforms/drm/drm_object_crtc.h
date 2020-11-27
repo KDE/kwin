@@ -58,7 +58,7 @@ public:
         return m_gammaRampSize;
     }
     bool setGammaRamp(const GammaRamp &gamma);
-    
+
     DrmGpu *gpu() {
         return m_gpu;
     }

@@ -232,7 +232,7 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
             minMargin = 0;
             maxMargin = 0;
         }
-        
+
         left = qBound(minMargin, d->themeConfig.borderLeft(), maxMargin);
         right = qBound(minMargin, d->themeConfig.borderRight(), maxMargin);
         bottom = qBound(minMargin, d->themeConfig.borderBottom(), maxMargin);

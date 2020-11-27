@@ -22,50 +22,50 @@ struct gbm_device;
 
 namespace KWin
 {
-    
+
 class DrmOutput;
 class DrmPlane;
 class DrmCrtc;
 class DrmConnector;
 class DrmBackend;
 class AbstractEglBackend;
-    
+
 class DrmGpu : public QObject
 {
     Q_OBJECT
 public:
     DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId);
     ~DrmGpu();
-    
+
     // getters
     QVector<DrmOutput*> outputs() const {
         return m_outputs;
     }
-    
+
     int fd() const {
         return m_fd;
     }
-    
+
     int drmId() const {
         return m_drmId;
     }
-    
+
     bool atomicModeSetting() const {
         return m_atomicModeSetting;
     }
-    
+
     bool useEglStreams() const {
         return m_useEglStreams;
     }
-    
+
     bool deleteBufferAfterPageFlip() const {
         return m_deleteBufferAfterPageFlip;
     }
-    
+
     QByteArray devNode() const {
         return m_devNode;
     }
-    
+
     gbm_device *gbmDevice() const {
         return m_gbmDevice;
     }
@@ -73,11 +73,11 @@ public:
     EGLDisplay eglDisplay() const {
         return m_eglDisplay;
     }
-    
+
     QVector<DrmPlane*> planes() const {
         return m_planes;
     }
-    
+
     void setGbmDevice(gbm_device *d) {
         m_gbmDevice = d;
     }
@@ -85,32 +85,32 @@ public:
     void setEglDisplay(EGLDisplay display) {
         m_eglDisplay = display;
     }
-    
+
     void setDeleteBufferAfterPageFlip(bool deleteBuffer) {
         m_deleteBufferAfterPageFlip = deleteBuffer;
     }
-    
+
     DrmDumbBuffer *createBuffer(const QSize &size) const {
         return new DrmDumbBuffer(m_fd, size);
     }
-    
+
 Q_SIGNALS:
     void outputAdded(DrmOutput *output);
     void outputRemoved(DrmOutput *output);
     void outputEnabled(DrmOutput *output);
     void outputDisabled(DrmOutput *output);
-    
+
 protected:
-    
+
     friend class DrmBackend;
     void tryAMS();
     bool updateOutputs();
-    
+
 private:
     DrmOutput *findOutput(quint32 connector);
-    
+
     DrmBackend* const m_backend;
-    
+
     const QByteArray m_devNode;
     QSize m_cursorSize;
     const int m_fd;
@@ -120,7 +120,7 @@ private:
     bool m_deleteBufferAfterPageFlip;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
-    
+
 // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
     QVector<DrmPlane*> m_overlayPlanes;

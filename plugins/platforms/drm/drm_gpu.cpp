@@ -47,7 +47,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
     } else {
         m_cursorSize.setHeight(64);
     }
-    
+
     // find out if this GPU is using the NVidia proprietary driver
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_useEglStreams = strstr(version->name, "nvidia-drm");
@@ -72,7 +72,7 @@ void DrmGpu::tryAMS()
     if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
         bool ams = true;
         QVector<DrmPlane*> planes, overlayPlanes;
-        
+
         DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (!planeResources) {
             qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << m_devNode;
@@ -81,7 +81,7 @@ void DrmGpu::tryAMS()
         if (ams) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
             qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
-            
+
             // create the plane objects
             for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
                 DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
@@ -168,7 +168,7 @@ bool DrmGpu::updateOutputs()
     for (auto c : qAsConst(oldCrtcs)) {
         m_crtcs.removeOne(c);
     }
-    
+
     QVector<DrmOutput*> connectedOutputs;
     QVector<DrmConnector*> pendingConnectors;
 
@@ -197,7 +197,7 @@ bool DrmGpu::updateOutputs()
         it = m_outputs.erase(it);
         removedOutputs.append(removed);
     }
-    
+
     for (DrmConnector *con : qAsConst(pendingConnectors)) {
         DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_fd, con->id()));
         if (!connector) {
@@ -218,7 +218,7 @@ bool DrmGpu::updateOutputs()
                 if (!(encoder->possible_crtcs & (1 << crtc->resIndex()))) {
                     continue;
                 }
-                
+
                 // check if crtc isn't used yet -- currently we don't allow multiple outputs on one crtc (cloned mode)
                 auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(),
                     [crtc] (DrmOutput *o) {
@@ -270,14 +270,14 @@ bool DrmGpu::updateOutputs()
     }
     std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
     m_outputs = connectedOutputs;
-    
+
     for(DrmOutput *removedOutput : removedOutputs) {
         emit outputRemoved(removedOutput);
         removedOutput->teardown();
         removedOutput->m_crtc = nullptr;
         removedOutput->m_conn = nullptr;
     }
-    
+
     qDeleteAll(oldConnectors);
     qDeleteAll(oldCrtcs);
     return true;

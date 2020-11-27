@@ -171,7 +171,7 @@ void KWinCompositingKCM::init()
 void KWinCompositingKCM::onBackendChanged()
 {
     const int currentType = m_form.backend->currentData().toInt();
-    
+
     m_form.kcfg_glTextureFilter->setVisible(currentType != CompositingTypeIndex::XRENDER_INDEX);
     m_form.kcfg_XRenderSmoothScale->setVisible(currentType == CompositingTypeIndex::XRENDER_INDEX);
 

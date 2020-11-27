@@ -46,7 +46,7 @@ private:
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    struct StreamTexture 
+    struct StreamTexture
     {
         EGLStreamKHR stream;
         GLuint texture;
@@ -55,7 +55,7 @@ private:
     void attachStreamConsumer(KWaylandServer::SurfaceInterface *surface,
                               void *eglStream,
                               wl_array *attribs);
-    struct Output 
+    struct Output
     {
         DrmOutput *output = nullptr;
         DrmBuffer *buffer = nullptr;

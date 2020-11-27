@@ -10,7 +10,7 @@
 #define KWINCONFIG_H
 
 /*
- 
+
  These should be primarily used to detect what kind of compositing
  support is available.
 

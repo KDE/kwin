@@ -238,7 +238,7 @@ void DrmBackend::openDrm()
         qCWarning(KWIN_DRM) << "Did not find a GPU";
         return;
     }
-    
+
     for (unsigned int gpu_index = 0; gpu_index < devices.size(); gpu_index++) {
         auto device = std::move(devices.at(gpu_index));
         auto devNode = QByteArray(device->devNode());
@@ -277,7 +277,7 @@ void DrmBackend::openDrm()
         m_gpus.append(gpu);
         break;
     }
-    
+
     // trying to activate Atomic Mode Setting (this means also Universal Planes)
     if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS")) {
         for (auto gpu : m_gpus)
@@ -291,7 +291,7 @@ void DrmBackend::openDrm()
     if (m_outputs.isEmpty()) {
         qCDebug(KWIN_DRM) << "No connected outputs found on startup.";
     }
-    
+
     // setup udevMonitor
     if (m_udevMonitor) {
         m_udevMonitor->filterSubsystemDevType("drm");
@@ -351,7 +351,7 @@ bool DrmBackend::updateOutputs()
     const auto oldOutputs = m_outputs;
     for (auto gpu : m_gpus)
         gpu->updateOutputs();
-    
+
     std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
     if (oldOutputs != m_outputs) {
         readOutputsConfiguration();

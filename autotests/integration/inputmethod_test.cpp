@@ -84,10 +84,10 @@ void InputMethodTest::init()
                                          Test::AdditionalWaylandInterface::InputMethodV1 |
                                          Test::AdditionalWaylandInterface::TextInputManagerV3));
 
-    
+
     screens()->setCurrent(0);
     KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
-    
+
     const QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kwin.testvirtualkeyboard"),
                                                                 QStringLiteral("/VirtualKeyboard"),
                                                                 QStringLiteral("org.kde.kwin.VirtualKeyboard"),
