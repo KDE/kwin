@@ -1539,7 +1539,7 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
     } else {
         auto effectWindow = window()->effectWindow();
-        QRect geo(pos(), window()->clientSize());
+        const QRect geo = window()->clientGeometry();
         QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, geo.size()));
 
         QScopedPointer<GLRenderTarget> framebuffer(new KWin::GLRenderTarget(*texture));
@@ -1550,14 +1550,10 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
         GLRenderTarget::setVirtualScreenGeometry(geo);
 
         QMatrix4x4 mvp;
-        mvp.ortho(geo);
+        mvp.ortho(geo.x(), geo.x() + geo.width(), geo.y(), geo.y() + geo.height(), -1, 1);
 
         WindowPaintData data(effectWindow);
         data.setProjectionMatrix(mvp);
-        QSizeF size(geo.size());
-        data.setYScale(-1);
-        data.setXTranslation(bufferOffset().x());
-        data.setYTranslation(geo.height() + bufferOffset().y());
 
         performPaint(Scene::PAINT_WINDOW_TRANSFORMED, geo, data);
         GLRenderTarget::popRenderTarget();
