@@ -33,6 +33,7 @@ public:
     Q_INVOKABLE void createRule();
     Q_INVOKABLE void removeRule(int index);
     Q_INVOKABLE void moveRule(int sourceIndex, int destIndex);
+    Q_INVOKABLE void duplicateRule(int index);
 
     Q_INVOKABLE void exportToFile(const QUrl &path, const QList<int> &indexes);
     Q_INVOKABLE void importFromFile(const QUrl &path);

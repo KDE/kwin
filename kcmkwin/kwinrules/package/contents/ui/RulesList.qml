@@ -204,6 +204,15 @@ ScrollViewKCM {
                 }
                 ,
                 Kirigami.Action {
+                    text: i18n("Duplicate")
+                    iconName: "edit-duplicate"
+                    visible: !exportInfo.visible
+                    onTriggered: {
+                        kcm.duplicateRule(index);
+                    }
+                }
+                ,
+                Kirigami.Action {
                     text: i18n("Delete")
                     iconName: "entry-delete"
                     visible: !exportInfo.visible

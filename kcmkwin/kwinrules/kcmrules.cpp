@@ -161,6 +161,22 @@ void KCMKWinRules::moveRule(int sourceIndex, int destIndex)
     updateNeedsSave();
 }
 
+void KCMKWinRules::duplicateRule(int index)
+{
+    if (index < 0 || index >= m_ruleBookModel->rowCount()) {
+        return;
+    }
+
+    Rules *newRule = new Rules(*(m_ruleBookModel->ruleAt(index)));
+    const QString newDescription = i18n("Copy of %1", m_ruleBookModel->descriptionAt(index));
+
+    m_ruleBookModel->insertRow(index + 1);
+    m_ruleBookModel->setRuleAt(index + 1, newRule);
+    m_ruleBookModel->setDescriptionAt(index + 1, newDescription);
+
+    updateNeedsSave();
+}
+
 void KCMKWinRules::exportToFile(const QUrl &path, const QList<int> &indexes)
 {
     if (indexes.isEmpty()) {
