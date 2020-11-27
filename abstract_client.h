@@ -819,10 +819,6 @@ public:
 
     bool unresponsive() const;
 
-    virtual bool isInitialPositionSet() const {
-        return false;
-    }
-
     /**
      * Default implementation returns @c null.
      * Mostly intended for X11 clients, from EWMH:

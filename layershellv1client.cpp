@@ -127,11 +127,6 @@ bool LayerShellV1Client::isResizable() const
     return false;
 }
 
-bool LayerShellV1Client::isInitialPositionSet() const
-{
-    return true;
-}
-
 bool LayerShellV1Client::takeFocus()
 {
     setActive(true);

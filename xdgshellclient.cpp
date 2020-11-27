@@ -284,11 +284,6 @@ QRect XdgSurfaceClient::adjustMoveResizeGeometry(const QRect &rect) const
     return geometry;
 }
 
-bool XdgSurfaceClient::isInitialPositionSet() const
-{
-    return m_plasmaShellSurface ? m_plasmaShellSurface->isPositionSet() : false;
-}
-
 void XdgSurfaceClient::requestGeometry(const QRect &rect)
 {
     WaylandClient::requestGeometry(rect);
@@ -1189,7 +1184,7 @@ void XdgToplevelClient::initialize()
 {
     blockGeometryUpdates(true);
 
-    bool needsPlacement = !isInitialPositionSet();
+    bool needsPlacement = isPlaceable();
 
     updateDecoration(false, false);
 

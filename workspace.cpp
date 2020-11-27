@@ -721,9 +721,6 @@ void Workspace::addShellClient(AbstractClient *client)
     if (client->isPlaceable()) {
         const QRect area = clientArea(PlacementArea, Screens::self()->current(), client->desktop());
         bool placementDone = false;
-        if (client->isInitialPositionSet()) {
-            placementDone = true;
-        }
         if (client->isFullScreen()) {
             placementDone = true;
         }

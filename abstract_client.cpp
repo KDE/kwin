@@ -78,7 +78,7 @@ AbstractClient::AbstractClient()
     connect(this, &AbstractClient::frameGeometryChanged, this,
         [this] (Toplevel *c, const QRect &old) {
             Q_UNUSED(c)
-            if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && !isInitialPositionSet()) {
+            if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
                 GeometryUpdatesBlocker blocker(this);
                 const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
                 Placement::self()->place(this, area);

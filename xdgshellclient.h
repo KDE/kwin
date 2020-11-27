@@ -57,7 +57,6 @@ public:
     QRect frameRectToBufferRect(const QRect &rect) const override;
     QRect inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
-    bool isInitialPositionSet() const override;
     void destroyClient() override;
     void setVirtualKeyboardGeometry(const QRect &geo) override;
 

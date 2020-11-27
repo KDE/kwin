@@ -40,7 +40,6 @@ public:
     bool takeFocus() override { return false; }
     bool wantsInput() const override { return false; }
     bool isInputMethod() const override { return true; }
-    bool isInitialPositionSet() const override { return true; }
     NET::WindowType windowType(bool /*direct*/, int /*supported_types*/) const override;
     QRect inputGeometry() const override;
 

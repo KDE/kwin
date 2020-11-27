@@ -253,7 +253,7 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
     auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
 
     QVERIFY(c);
-    QVERIFY(c->isInitialPositionSet());
+    QVERIFY(!c->isPlaceable());
     QCOMPARE(c->windowType(), NET::OnScreenDisplay);
     QVERIFY(c->isOnScreenDisplay());
     QCOMPARE(c->frameGeometry(), QRect(50, 70, 100, 50));
