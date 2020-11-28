@@ -1164,14 +1164,6 @@ void Scene::Window::preprocess()
     }
 }
 
-void Scene::Window::addRepaint(const QRegion &region)
-{
-    for (int screen = 0; screen < m_repaints.count(); ++screen) {
-        m_repaints[screen] += region;
-    }
-    Compositor::self()->scheduleRepaint();
-}
-
 void Scene::Window::addLayerRepaint(const QRegion &region)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
@@ -1182,46 +1174,42 @@ void Scene::Window::addLayerRepaint(const QRegion &region)
             AbstractOutput *output = kwinApp()->platform()->findOutput(screenId);
             const QRegion dirtyRegion = region & output->geometry();
             if (!dirtyRegion.isEmpty()) {
-                m_layerRepaints[screenId] += dirtyRegion;
+                m_repaints[screenId] += dirtyRegion;
                 output->renderLoop()->scheduleRepaint();
             }
         }
     } else {
-        m_layerRepaints[0] += region;
+        m_repaints[0] += region;
         kwinApp()->platform()->renderLoop()->scheduleRepaint();
     }
 }
 
 QRegion Scene::Window::repaints(int screen) const
 {
-    Q_ASSERT(!m_repaints.isEmpty() && !m_layerRepaints.isEmpty());
+    Q_ASSERT(!m_repaints.isEmpty());
     const int index = screen != -1 ? screen : 0;
-    if (m_repaints[index] == infiniteRegion() || m_layerRepaints[index] == infiniteRegion()) {
+    if (m_repaints[index] == infiniteRegion()) {
         return QRect(QPoint(0, 0), screens()->size());
     }
-    return m_repaints[index].translated(pos()) + m_layerRepaints[index];
+    return m_repaints[index];
 }
 
 void Scene::Window::resetRepaints(int screen)
 {
-    Q_ASSERT(!m_repaints.isEmpty() && !m_layerRepaints.isEmpty());
+    Q_ASSERT(!m_repaints.isEmpty());
     const int index = screen != -1 ? screen : 0;
     m_repaints[index] = QRegion();
-    m_layerRepaints[index] = QRegion();
 }
 
 void Scene::Window::reallocRepaints()
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
         m_repaints.resize(screens()->count());
-        m_layerRepaints.resize(screens()->count());
     } else {
         m_repaints.resize(1);
-        m_layerRepaints.resize(1);
     }
 
     m_repaints.fill(infiniteRegion());
-    m_layerRepaints.fill(infiniteRegion());
 }
 
 //****************************************

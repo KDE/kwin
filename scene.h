@@ -364,7 +364,6 @@ public:
     void unreferencePreviousPixmap();
     void discardQuads();
     void preprocess();
-    void addRepaint(const QRegion &region);
     void addLayerRepaint(const QRegion &region);
     QRegion repaints(int screen) const;
     void resetRepaints(int screen);
@@ -410,7 +409,6 @@ private:
     QScopedPointer<WindowPixmap> m_currentPixmap;
     QScopedPointer<WindowPixmap> m_previousPixmap;
     QVector<QRegion> m_repaints;
-    QVector<QRegion> m_layerRepaints;
     SubSurfaceMonitor *m_subsurfaceMonitor = nullptr;
     int m_referencePixmapCounter;
     int disable_painting;
