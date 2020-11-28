@@ -66,6 +66,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#include "renderloop.h"
 #include "screens.h"
 #include "shadow.h"
 #include "subsurfacemonitor.h"
@@ -109,13 +110,13 @@ void Scene::addRepaint(const QRegion &region)
             const QRegion dirtyRegion = region & output->geometry();
             if (!dirtyRegion.isEmpty()) {
                 m_repaints[screenId] += dirtyRegion;
+                output->renderLoop()->scheduleRepaint();
             }
         }
     } else {
         m_repaints[0] += region;
+        kwinApp()->platform()->renderLoop()->scheduleRepaint();
     }
-
-    Compositor::self()->scheduleRepaint();
 }
 
 QRegion Scene::repaints(int screenId) const
