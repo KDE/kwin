@@ -358,7 +358,6 @@ public:
     void addLayerRepaint(const QRegion &region);
     QRegion repaints(int screen) const;
     void resetRepaints(int screen);
-    bool wantsRepaint() const;
 
     virtual QSharedPointer<GLTexture> windowTexture() {
         return {};

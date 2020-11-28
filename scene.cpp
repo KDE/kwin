@@ -1173,17 +1173,6 @@ void Scene::Window::reallocRepaints()
     m_layerRepaints.fill(infiniteRegion());
 }
 
-static bool wantsRepaint_test(const QRegion &region)
-{
-    return !region.isEmpty();
-}
-
-bool Scene::Window::wantsRepaint() const
-{
-    return std::any_of(m_repaints.begin(), m_repaints.end(), wantsRepaint_test) ||
-            std::any_of(m_layerRepaints.begin(), m_layerRepaints.end(), wantsRepaint_test);
-}
-
 //****************************************
 // WindowPixmap
 //****************************************

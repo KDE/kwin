@@ -649,17 +649,6 @@ void Compositor::performCompositing()
         win->getDamageRegionReply();
     }
 
-    if (repaints_region.isEmpty() && !windowRepaintsPending()) {
-        m_scene->idle();
-        m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now"
-        // Note: It would seem here we should undo suspended unredirect, but when scenes need
-        // it for some reason, e.g. transformations or translucency, the next pass that does not
-        // need this anymore and paints normally will also reset the suspended unredirect.
-        // Otherwise the window would not be painted normally anyway.
-        compositeTimer.stop();
-        return;
-    }
-
     // Skip windows that are not yet ready for being painted and if screen is locked skip windows
     // that are neither lockscreen nor inputmethod windows.
     //
@@ -733,43 +722,6 @@ void Compositor::performCompositing()
     } else {
         scheduleRepaint();
     }
-}
-
-template <class T>
-static bool repaintsPending(const QList<T*> &windows)
-{
-    return std::any_of(windows.begin(), windows.end(),
-                       [](const T *t) { return t->wantsRepaint(); });
-}
-
-bool Compositor::windowRepaintsPending() const
-{
-    if (repaintsPending(Workspace::self()->clientList())) {
-        return true;
-    }
-    if (repaintsPending(Workspace::self()->unmanagedList())) {
-        return true;
-    }
-    if (repaintsPending(Workspace::self()->deletedList())) {
-        return true;
-    }
-    if (auto *server = waylandServer()) {
-        const auto &clients = server->clients();
-        auto test = [](const AbstractClient *c) {
-            return c->readyForPainting() && c->wantsRepaint();
-        };
-        if (std::any_of(clients.begin(), clients.end(), test)) {
-            return true;
-        }
-    }
-    const auto &internalClients = workspace()->internalClients();
-    auto internalTest = [] (const InternalClient *client) {
-        return client->isShown(true) && client->wantsRepaint();
-    };
-    if (std::any_of(internalClients.begin(), internalClients.end(), internalTest)) {
-        return true;
-    }
-    return false;
 }
 
 void Compositor::setCompositeTimer()

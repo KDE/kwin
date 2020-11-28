@@ -489,14 +489,6 @@ void Toplevel::addWorkspaceRepaint(const QRegion &region)
     }
 }
 
-bool Toplevel::wantsRepaint() const
-{
-    if (!effectWindow() || !effectWindow()->sceneWindow()) {
-        return false;
-    }
-    return effectWindow()->sceneWindow()->wantsRepaint();
-}
-
 void Toplevel::setReadyForPainting()
 {
     if (!ready_for_painting) {

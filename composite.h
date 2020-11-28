@@ -134,7 +134,6 @@ private:
     void cleanupX11();
 
     void setCompositeTimer();
-    bool windowRepaintsPending() const;
 
     void releaseCompositorSelection();
     void deleteUnusedSupportProperties();

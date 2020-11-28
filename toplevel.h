@@ -463,7 +463,6 @@ public:
     void addWorkspaceRepaint(const QRect& r);
     void addWorkspaceRepaint(int x, int y, int w, int h);
     void addWorkspaceRepaint(const QRegion &region);
-    bool wantsRepaint() const;
     QRegion damage() const;
     void resetDamage();
     EffectWindowImpl* effectWindow();
