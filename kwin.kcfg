@@ -255,6 +255,14 @@
             </choices>
             <default>LatencyMedium</default>
         </entry>
+        <entry name="RenderTimeEstimator" type="Enum">
+            <choices name="KWin::RenderTimeEstimator">
+                <choice name="RenderTimeEstimatorMinimum" value="Minimum"/>
+                <choice name="RenderTimeEstimatorMaximum" value="Maximum"/>
+                <choice name="RenderTimeEstimatorAverage" value="Average"/>
+            </choices>
+            <default>RenderTimeEstimatorMaximum</default>
+        </entry>
     </group>
     <group name="TabBox">
         <entry name="ShowDelay" type="Bool">

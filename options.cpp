@@ -54,6 +54,7 @@ Options::Options(QObject *parent)
     , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
     , m_latencyPolicy(Options::defaultLatencyPolicy())
+    , m_renderTimeEstimator(Options::defaultRenderTimeEstimator())
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
@@ -648,6 +649,20 @@ void Options::setLatencyPolicy(LatencyPolicy policy)
     emit latencyPolicyChanged();
 }
 
+RenderTimeEstimator Options::renderTimeEstimator() const
+{
+    return m_renderTimeEstimator;
+}
+
+void Options::setRenderTimeEstimator(RenderTimeEstimator estimator)
+{
+    if (m_renderTimeEstimator == estimator) {
+        return;
+    }
+    m_renderTimeEstimator = estimator;
+    emit renderTimeEstimatorChanged();
+}
+
 void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
 {
     // check environment variable
@@ -796,6 +811,7 @@ void Options::syncFromKcfgc()
     setWindowsBlockCompositing(m_settings->windowsBlockCompositing());
     setMoveMinimizedWindowsToEndOfTabBoxFocusChain(m_settings->moveMinimizedWindowsToEndOfTabBoxFocusChain());
     setLatencyPolicy(m_settings->latencyPolicy());
+    setRenderTimeEstimator(m_settings->renderTimeEstimator());
 }
 
 bool Options::loadCompositingConfig (bool force)

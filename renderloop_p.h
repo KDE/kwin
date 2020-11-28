@@ -7,6 +7,7 @@
 #pragma once
 
 #include "renderloop.h"
+#include "renderjournal.h"
 
 #include <QTimer>
 
@@ -32,6 +33,7 @@ public:
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
     QTimer compositeTimer;
+    RenderJournal renderJournal;
     int refreshRate = 60000;
     int pendingFrameCount = 0;
     int inhibitCount = 0;
