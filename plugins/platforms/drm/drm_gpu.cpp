@@ -256,7 +256,7 @@ bool DrmGpu::updateOutputs()
                 if (!output->initCursor(m_cursorSize)) {
                     m_backend->setSoftwareCursorForced(true);
                 }
-                qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid();
+                qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid() << "on gpu" << m_devNode;
 
                 connectedOutputs << output;
                 emit outputAdded(output);

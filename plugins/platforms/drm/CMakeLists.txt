@@ -12,6 +12,8 @@ set(DRM_SOURCES
     scene_qpainter_drm_backend.cpp
     screens_drm.cpp
     drm_gpu.cpp
+    egl_multi_backend.cpp
+    abstract_egl_drm_backend.cpp
 )
 
 if (HAVE_GBM)

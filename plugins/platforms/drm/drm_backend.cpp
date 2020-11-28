@@ -47,6 +47,7 @@
 #include <libdrm/drm_mode.h>
 
 #include "drm_gpu.h"
+#include "egl_multi_backend.h"
 
 #ifndef DRM_CAP_CURSOR_WIDTH
 #define DRM_CAP_CURSOR_WIDTH 0x8
@@ -274,8 +275,15 @@ void DrmBackend::openDrm()
         DrmGpu *gpu = new DrmGpu(this, devNode, fd, device->sysNum());
         connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
         connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-        m_gpus.append(gpu);
-        break;
+        if (gpu->useEglStreams()) {
+            // TODO this needs to be removed once EglStreamBackend supports multi-gpu operation
+            if (gpu_index == 0) {
+                m_gpus.append(gpu);
+                break;
+            }
+        } else {
+            m_gpus.append(gpu);
+        }
     }
 
     // trying to activate Atomic Mode Setting (this means also Universal Planes)
@@ -349,8 +357,9 @@ bool DrmBackend::updateOutputs()
         return false;
     }
     const auto oldOutputs = m_outputs;
-    for (auto gpu : m_gpus)
+    for (auto gpu : m_gpus) {
         gpu->updateOutputs();
+    }
 
     std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
     if (oldOutputs != m_outputs) {
@@ -623,12 +632,21 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
 #if HAVE_EGL_STREAMS
     if (m_gpus.at(0)->useEglStreams()) {
-        return new EglStreamBackend(this, m_gpus.at(0));
+        auto backend = new EglStreamBackend(this, m_gpus.at(0));
+        AbstractEglBackend::setPrimaryBackend(backend);
+        return backend;
     }
 #endif
 
 #if HAVE_GBM
-    return new EglGbmBackend(this, m_gpus.at(0));
+    auto backend0 = new EglGbmBackend(this, m_gpus.at(0));
+    AbstractEglBackend::setPrimaryBackend(backend0);
+    EglMultiBackend *backend = new EglMultiBackend(backend0);
+    for (int i = 1; i < m_gpus.count(); i++) {
+        auto backendi = new EglGbmBackend(this, m_gpus.at(i));
+        backend->addBackend(backendi);
+    }
+    return backend;
 #else
     return Platform::createOpenGLBackend();
 #endif
@@ -678,9 +696,9 @@ QString DrmBackend::supportInformation() const
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
 {
 #if HAVE_GBM
-    // gpu_index is a fixed 0 here
     // as the first GPU is assumed to always be the one used for scene rendering
-    // and this function is only used for Pipewire
+    // make sure we're on the right context:
+    m_gpus.at(0)->eglBackend()->makeCurrent();
     return GbmDmaBuf::createBuffer(size, m_gpus.at(0)->gbmDevice());
 #else
     return nullptr;

@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_EGL_STREAM_BACKEND_H
 #define KWIN_EGL_STREAM_BACKEND_H
-#include "abstract_egl_backend.h"
+#include "abstract_egl_drm_backend.h"
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
 #include <wayland-server-core.h>
@@ -16,27 +16,25 @@
 namespace KWin
 {
 
-class DrmBackend;
 class DrmOutput;
 class DrmBuffer;
-class DrmGpu;
 
 /**
  * @brief OpenGL Backend using Egl with an EGLDevice.
  */
-class EglStreamBackend : public AbstractEglBackend
+class EglStreamBackend : public AbstractEglDrmBackend
 {
     Q_OBJECT
 public:
     EglStreamBackend(DrmBackend *b, DrmGpu *gpu);
-    ~EglStreamBackend() override;
-    void screenGeometryChanged(const QSize &size) override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    bool usesOverlayWindow() const override;
-    bool perScreenRendering() const override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
+
+    int screenCount() const override {
+        return m_outputs.count();
+    }
 
 protected:
     void present() override;
@@ -68,8 +66,6 @@ private:
     void cleanupOutput(const Output &output);
     void createOutput(DrmOutput *output);
 
-    DrmBackend *m_backend;
-    DrmGpu *m_gpu;
     QVector<Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;
     QHash<KWaylandServer::SurfaceInterface *, StreamTexture> m_streamTextures;

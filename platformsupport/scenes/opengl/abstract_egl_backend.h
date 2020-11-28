@@ -51,6 +51,17 @@ public:
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const override;
 
+    static void setPrimaryBackend(AbstractEglBackend *primaryBackend) {
+        s_primaryBackend = primaryBackend;
+    }
+    static AbstractEglBackend *primaryBackend() {
+        return s_primaryBackend;
+    }
+
+    bool isPrimary() const {
+        return this == s_primaryBackend;
+    }
+
 protected:
     AbstractEglBackend();
     void setEglDisplay(const EGLDisplay &display);
@@ -65,7 +76,6 @@ protected:
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
-
     bool createContext();
 
 private:
@@ -75,8 +85,11 @@ private:
     EGLSurface m_surface = EGL_NO_SURFACE;
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLConfig m_config = nullptr;
-    QList<QByteArray> m_clientExtensions;
+    // note: m_dmaBuf is nullptr if this is not the primary backend
     EglDmabuf *m_dmaBuf = nullptr;
+    QList<QByteArray> m_clientExtensions;
+
+    static AbstractEglBackend * s_primaryBackend;
 };
 
 class KWIN_EXPORT AbstractEglTexture : public SceneOpenGLTexturePrivate

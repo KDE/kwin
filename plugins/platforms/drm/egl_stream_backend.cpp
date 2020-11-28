@@ -69,11 +69,9 @@ PFNEGLQUERYWAYLANDBUFFERWL pEglQueryWaylandBufferWL = nullptr;
 #define EGL_WAYLAND_Y_INVERTED_WL 0x31DB
 #endif
 
-EglStreamBackend::EglStreamBackend(DrmBackend *b, DrmGpu *gpu)
-    : AbstractEglBackend(), m_backend(b), m_gpu(gpu)
+EglStreamBackend::EglStreamBackend(DrmBackend *drmBackend, DrmGpu *gpu)
+    : AbstractEglDrmBackend(drmBackend, gpu)
 {
-    setIsDirectRendering(true);
-    setSyncsToVBlank(true);
     connect(m_gpu, &DrmGpu::outputEnabled, this, &EglStreamBackend::createOutput);
     connect(m_gpu, &DrmGpu::outputDisabled, this,
         [this] (DrmOutput *output) {
@@ -87,11 +85,6 @@ EglStreamBackend::EglStreamBackend(DrmBackend *b, DrmGpu *gpu)
             cleanupOutput(*it);
             m_outputs.erase(it);
         });
-}
-
-EglStreamBackend::~EglStreamBackend()
-{
-    cleanup();
 }
 
 void EglStreamBackend::cleanupSurfaces()
@@ -285,7 +278,7 @@ bool EglStreamBackend::initRenderingContext()
         return false;
     }
 
-    const auto outputs = m_backend->drmOutputs();
+    const auto outputs = m_gpu->outputs();
     for (DrmOutput *drmOutput : outputs) {
         createOutput(drmOutput);
     }
@@ -465,11 +458,6 @@ void EglStreamBackend::presentOnOutput(EglStreamBackend::Output &o)
     }
 }
 
-void EglStreamBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-}
-
 SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTexture *texture)
 {
     return new EglStreamTexture(texture, this);
@@ -488,16 +476,6 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
     Q_UNUSED(damagedRegion);
     Output &o = m_outputs[screenId];
     presentOnOutput(o);
-}
-
-bool EglStreamBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
-bool EglStreamBackend::perScreenRendering() const
-{
-    return true;
 }
 
 /************************************************

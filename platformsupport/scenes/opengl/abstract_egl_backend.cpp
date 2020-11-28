@@ -89,10 +89,15 @@ static void destroyGlobalShareContext()
     kwinApp()->platform()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
+AbstractEglBackend *AbstractEglBackend::s_primaryBackend = nullptr;
+
 AbstractEglBackend::AbstractEglBackend()
     : QObject(nullptr)
     , OpenGLBackend()
 {
+    if (s_primaryBackend == nullptr) {
+        setPrimaryBackend(this);
+    }
     connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::teardown);
 }
 
@@ -346,19 +351,25 @@ bool AbstractEglBackend::createContext()
         return false;
     }
     m_context = ctx;
-    kwinApp()->platform()->setSceneEglContext(m_context);
+    if (isPrimary()) {
+        kwinApp()->platform()->setSceneEglContext(m_context);
+    }
     return true;
 }
 
 void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
     m_display = display;
-    kwinApp()->platform()->setSceneEglDisplay(display);
+    if (isPrimary()) {
+        kwinApp()->platform()->setSceneEglDisplay(display);
+    }
 }
 
 void AbstractEglBackend::setConfig(const EGLConfig &config)
 {
     m_config = config;
-    kwinApp()->platform()->setSceneEglConfig(config);
+    if (isPrimary()) {
+        kwinApp()->platform()->setSceneEglConfig(config);
+    }
 }
 
 void AbstractEglBackend::setSurface(const EGLSurface &surface)
