@@ -1174,10 +1174,22 @@ void Scene::Window::addRepaint(const QRegion &region)
 
 void Scene::Window::addLayerRepaint(const QRegion &region)
 {
-    for (int screen = 0; screen < m_layerRepaints.count(); ++screen) {
-        m_layerRepaints[screen] += region;
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        if (m_repaints.count() != screens()->count()) {
+            return; // Repaints haven't been reallocated yet, do nothing.
+        }
+        for (int screenId = 0; screenId < m_repaints.count(); ++screenId) {
+            AbstractOutput *output = kwinApp()->platform()->findOutput(screenId);
+            const QRegion dirtyRegion = region & output->geometry();
+            if (!dirtyRegion.isEmpty()) {
+                m_layerRepaints[screenId] += dirtyRegion;
+                output->renderLoop()->scheduleRepaint();
+            }
+        }
+    } else {
+        m_layerRepaints[0] += region;
+        kwinApp()->platform()->renderLoop()->scheduleRepaint();
     }
-    Compositor::self()->scheduleRepaint();
 }
 
 QRegion Scene::Window::repaints(int screen) const
