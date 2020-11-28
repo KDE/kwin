@@ -424,7 +424,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     auto fallback = [this]() {
         auto *o = new X11Output(this);
         o->setGammaRampSize(0);
-        o->setRefreshRate(-1.0f);
+        o->setRefreshRate(60000);
         o->setName(QStringLiteral("Xinerama"));
         m_outputs << o;
     };
