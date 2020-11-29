@@ -95,7 +95,7 @@ private:
     void renderFramebufferToSurface(Output &output);
     QRegion prepareRenderingForOutput(const Output &output) const;
 
-    void presentOnOutput(Output &output, const QRegion &damagedRegion);
+    bool presentOnOutput(Output &output, const QRegion &damagedRegion);
 
     void cleanupOutput(Output &output);
     void cleanupFramebuffer(Output &output);

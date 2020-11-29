@@ -101,6 +101,16 @@ void RenderLoopPrivate::maybeScheduleRepaint()
     }
 }
 
+void RenderLoopPrivate::notifyFrameFailed()
+{
+    Q_ASSERT(pendingFrameCount > 0);
+    pendingFrameCount--;
+
+    if (!inhibitCount) {
+        maybeScheduleRepaint();
+    }
+}
+
 void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(pendingFrameCount > 0);

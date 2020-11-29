@@ -27,6 +27,7 @@ public:
     void scheduleRepaint();
     void maybeScheduleRepaint();
 
+    void notifyFrameFailed();
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp);
 
     RenderLoop *q;

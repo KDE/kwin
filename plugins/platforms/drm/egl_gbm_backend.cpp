@@ -14,6 +14,7 @@
 #include "gbm_surface.h"
 #include "logging.h"
 #include "options.h"
+#include "renderloop_p.h"
 #include "screens.h"
 #include "drm_gpu.h"
 // kwin libs
@@ -589,30 +590,39 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
     }
 }
 
-void EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
+bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
     if (isPrimary()) {
         if (supportsSwapBuffersWithDamage()) {
             QVector<EGLint> rects = regionToRects(output.damageHistory.constFirst(), output.output);
-            eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
-                                        rects.data(), rects.count()/4);
+            if (!eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
+                                             rects.data(), rects.count() / 4)) {
+                qCCritical(KWIN_DRM, "eglSwapBuffersWithDamageEXT() failed: %x", eglGetError());
+                return false;
+            }
         } else {
-            eglSwapBuffers(eglDisplay(), output.eglSurface);
+            if (!eglSwapBuffers(eglDisplay(), output.eglSurface)) {
+                qCCritical(KWIN_DRM, "eglSwapBuffers() failed: %x", eglGetError());
+                return false;
+            }
         }
         output.buffer = new DrmSurfaceBuffer(m_gpu->fd(), output.gbmSurface);
     } else if (output.importedGbmBo == nullptr) {
         qCDebug(KWIN_DRM) << "imported gbm_bo does not exist!";
-        return;
+        return false;
     } else {
         output.buffer = new DrmSurfaceBuffer(m_gpu->fd(), output.importedGbmBo);
     }
 
     Q_EMIT output.output->outputChange(damagedRegion);
-    m_backend->present(output.buffer, output.output);
+    if (!m_backend->present(output.buffer, output.output)) {
+        return false;
+    }
 
     if (supportsBufferAge()) {
         eglQuerySurface(eglDisplay(), output.eglSurface, EGL_BUFFER_AGE_EXT, &output.bufferAge);
     }
+    return true;
 }
 
 SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTexture *texture)
@@ -664,10 +674,19 @@ QRegion EglGbmBackend::prepareRenderingForOutput(const Output &output) const
 void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
                              const QRegion &damagedRegion)
 {
+    Q_UNUSED(renderedRegion)
+
     Output &output = m_outputs[screenId];
+    DrmOutput *drmOutput = output.output;
+
     renderFramebufferToSurface(output);
 
-    presentOnOutput(output, damagedRegion);
+    if (!presentOnOutput(output, damagedRegion)) {
+        output.damageHistory.clear();
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
+        renderLoopPrivate->notifyFrameFailed();
+        return;
+    }
 
     if (supportsBufferAge()) {
         const QRegion dirty = damagedRegion.intersected(output.output->geometry());

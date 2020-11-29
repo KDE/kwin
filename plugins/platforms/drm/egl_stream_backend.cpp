@@ -15,6 +15,7 @@
 #include "logging.h"
 #include "logind.h"
 #include "options.h"
+#include "renderloop_p.h"
 #include "scene.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -438,20 +439,14 @@ bool EglStreamBackend::initBufferConfigs()
     return true;
 }
 
-void EglStreamBackend::presentOnOutput(EglStreamBackend::Output &o)
+bool EglStreamBackend::presentOnOutput(EglStreamBackend::Output &o)
 {
-    eglSwapBuffers(eglDisplay(), o.eglSurface);
-    if (!m_backend->present(o.buffer, o.output)) {
-        return;
+    if (!eglSwapBuffers(eglDisplay(), o.eglSurface)) {
+        qCCritical(KWIN_DRM, "eglSwapBuffers() failed: %x", eglGetError());
+        return false;
     }
 
-    EGLAttrib acquireAttribs[] = {
-        EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)o.output,
-        EGL_NONE,
-    };
-    if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), o.eglStream, acquireAttribs)) {
-        qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame";
-    }
+    return m_backend->present(o.buffer, o.output);
 }
 
 SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTexture *texture)
@@ -470,8 +465,23 @@ void EglStreamBackend::endFrame(int screenId, const QRegion &renderedRegion, con
 {
     Q_UNUSED(renderedRegion);
     Q_UNUSED(damagedRegion);
-    Output &o = m_outputs[screenId];
-    presentOnOutput(o);
+
+    Output &renderOutput = m_outputs[screenId];
+    DrmOutput *drmOutput = renderOutput.output;
+
+    if (!presentOnOutput(renderOutput)) {
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
+        renderLoopPrivate->notifyFrameFailed();
+        return;
+    }
+
+    EGLAttrib acquireAttribs[] = {
+        EGL_DRM_FLIP_EVENT_DATA_NV, (EGLAttrib)drmOutput,
+        EGL_NONE,
+    };
+    if (!pEglStreamConsumerAcquireAttribNV(eglDisplay(), renderOutput.eglStream, acquireAttribs)) {
+        qCWarning(KWIN_DRM) << "Failed to acquire output EGL stream frame";
+    }
 }
 
 /************************************************

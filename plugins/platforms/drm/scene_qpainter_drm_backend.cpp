@@ -9,8 +9,8 @@
 #include "scene_qpainter_drm_backend.h"
 #include "drm_backend.h"
 #include "drm_output.h"
-#include "logind.h"
 #include "drm_gpu.h"
+#include "renderloop_p.h"
 
 namespace KWin
 {
@@ -110,12 +110,14 @@ void DrmQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
-    if (!LogindIntegration::self()->isActiveSession()) {
-        return;
-    }
 
     const Output &rendererOutput = m_outputs[screenId];
-    m_backend->present(rendererOutput.buffer[rendererOutput.index], rendererOutput.output);
+    DrmOutput *drmOutput = rendererOutput.output;
+
+    if (!m_backend->present(rendererOutput.buffer[rendererOutput.index], drmOutput)) {
+        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
+        renderLoopPrivate->notifyFrameFailed();
+    }
 }
 
 }
