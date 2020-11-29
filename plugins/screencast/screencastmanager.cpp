@@ -70,7 +70,6 @@ private:
         if (m_damagedRegion.isEmpty()) {
             return;
         }
-        effects->makeOpenGLContextCurrent();
         QSharedPointer<GLTexture> frameTexture(m_toplevel->effectWindow()->sceneWindow()->windowTexture());
         const bool wasYInverted = frameTexture->isYInverted();
         frameTexture->setYInverted(false);
