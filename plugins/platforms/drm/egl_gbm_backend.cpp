@@ -22,6 +22,7 @@
 // system
 #include <gbm.h>
 #include <unistd.h>
+#include <errno.h>
 
 namespace KWin
 {
