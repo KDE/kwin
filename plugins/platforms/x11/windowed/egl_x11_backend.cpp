@@ -20,10 +20,18 @@ EglX11Backend::EglX11Backend(X11WindowedBackend *backend)
     : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow(), backend->screenNumer(), XCB_WINDOW_NONE)
     , m_backend(backend)
 {
-    setX11TextureFromPixmapSupported(false);
 }
 
 EglX11Backend::~EglX11Backend() = default;
+
+void EglX11Backend::init()
+{
+    EglOnXBackend::init();
+
+    if (!isFailed()) {
+        initWayland();
+    }
+}
 
 void EglX11Backend::cleanupSurfaces()
 {
@@ -76,6 +84,47 @@ void EglX11Backend::endFrame(int screenId, const QRegion &renderedRegion, const 
     Q_UNUSED(damagedRegion)
     const QRect &outputGeometry = screens()->geometry(screenId);
     presentSurface(m_surfaces.at(screenId), renderedRegion, outputGeometry);
+}
+
+void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
+{
+    if (damage.isEmpty()) {
+        return;
+    }
+    const bool fullRepaint = supportsBufferAge() || (damage == screenGeometry);
+
+    if (fullRepaint || !havePostSubBuffer()) {
+        // the entire screen changed, or we cannot do partial updates (which implies we enabled surface preservation)
+        eglSwapBuffers(eglDisplay(), surface);
+    } else {
+        // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
+        for (const QRect &r : damage) {
+            eglPostSubBufferNV(eglDisplay(), surface, r.left(), screenGeometry.height() - r.bottom() - 1, r.width(), r.height());
+        }
+    }
+}
+
+SceneOpenGLTexturePrivate *EglX11Backend::createBackendTexture(SceneOpenGLTexture *texture)
+{
+    return new EglX11Texture(texture, this);
+}
+
+void EglX11Backend::screenGeometryChanged(const QSize &size)
+{
+    Q_UNUSED(size)
+}
+
+/************************************************
+ * EglX11Texture
+ ************************************************/
+
+EglX11Texture::EglX11Texture(KWin::SceneOpenGLTexture *texture, EglX11Backend *backend)
+    : AbstractEglTexture(texture, backend)
+{
+}
+
+EglX11Texture::~EglX11Texture()
+{
 }
 
 } // namespace

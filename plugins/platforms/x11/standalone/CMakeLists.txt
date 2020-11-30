@@ -2,6 +2,7 @@ set(X11PLATFORM_SOURCES
     edge.cpp
     effects_mouse_interception_x11_filter.cpp
     effects_x11.cpp
+    eglbackend.cpp
     logging.cpp
     non_composited_outline.cpp
     overlaywindow_x11.cpp

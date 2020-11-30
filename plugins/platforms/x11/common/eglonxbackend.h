@@ -27,20 +27,11 @@ public:
     EglOnXBackend(Display *display);
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
     ~EglOnXBackend() override;
-    void screenGeometryChanged(const QSize &size) override;
-    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
-    QRegion beginFrame(int screenId) override;
-    void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     OverlayWindow* overlayWindow() const override;
     bool usesOverlayWindow() const override;
     void init() override;
 
-    bool isX11TextureFromPixmapSupported() const {
-        return m_x11TextureFromPixmapSupported;
-    }
-
 protected:
-    void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     virtual bool createSurfaces();
     EGLSurface createSurface(xcb_window_t window);
     void setHavePlatformBase(bool have) {
@@ -49,11 +40,10 @@ protected:
     bool havePlatformBase() const {
         return m_havePlatformBase;
     }
-    bool makeContextCurrent(const EGLSurface &surface);
-
-    void setX11TextureFromPixmapSupported(bool set) {
-        m_x11TextureFromPixmapSupported = set;
+    bool havePostSubBuffer() const {
+        return surfaceHasSubPost;
     }
+    bool makeContextCurrent(const EGLSurface &surface);
 
 private:
     bool initBufferConfigs();
@@ -63,7 +53,6 @@ private:
      */
     OverlayWindow *m_overlayWindow;
     int surfaceHasSubPost;
-    int m_bufferAge;
     bool m_usesOverlayWindow;
     xcb_connection_t *m_connection;
     Display *m_x11Display;
@@ -71,25 +60,6 @@ private:
     int m_x11ScreenNumber;
     xcb_window_t m_renderingWindow = XCB_WINDOW_NONE;
     bool m_havePlatformBase = false;
-    bool m_x11TextureFromPixmapSupported = true;
-    friend class EglTexture;
-};
-
-/**
- * @brief Texture using an EGLImageKHR.
- */
-class EglTexture : public AbstractEglTexture
-{
-public:
-    ~EglTexture() override;
-    void onDamage() override;
-    bool loadTexture(WindowPixmap *pixmap) override;
-
-private:
-    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
-    friend class EglOnXBackend;
-    EglTexture(SceneOpenGLTexture *texture, EglOnXBackend *backend);
-    EglOnXBackend *m_backend;
 };
 
 } // namespace
