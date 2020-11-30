@@ -535,6 +535,7 @@ set(kwin_SRCS
     syncalarmx11filter.cpp
     tablet_input.cpp
     thumbnailitem.cpp
+    thumbnailitem2.cpp
     toplevel.cpp
     touch_hide_cursor_spy.cpp
     touch_input.cpp

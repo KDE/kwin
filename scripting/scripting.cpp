@@ -19,6 +19,7 @@
 #include "scripting_logging.h"
 #include "../x11client.h"
 #include "../thumbnailitem.h"
+#include "../thumbnailitem2.h"
 #include "../options.h"
 #include "../workspace.h"
 // KDE
@@ -690,7 +691,7 @@ KWin::Scripting::Scripting(QObject *parent)
 void KWin::Scripting::init()
 {
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+    qmlRegisterType<ThumbnailItem2>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 2, 0, "ScreenEdgeItem");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
