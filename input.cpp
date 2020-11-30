@@ -1987,7 +1987,6 @@ void InputRedirection::setupWorkspace()
     if (waylandServer()) {
         using namespace KWaylandServer;
         FakeInputInterface *fakeInput = waylandServer()->display()->createFakeInput(this);
-        fakeInput->create();
         connect(fakeInput, &FakeInputInterface::deviceCreated, this,
             [this] (FakeInputDevice *device) {
                 connect(device, &FakeInputDevice::authenticationRequested, this,
