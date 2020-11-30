@@ -17,7 +17,7 @@
 namespace KWaylandServer
 {
 
-static const int s_version = 2;
+static const int s_version = 3;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
@@ -705,6 +705,13 @@ void XdgPopupInterfacePrivate::xdg_popup_grab(Resource *resource, ::wl_resource 
     emit q->grabRequested(seat, serial);
 }
 
+void XdgPopupInterfacePrivate::xdg_popup_reposition(Resource *resource, ::wl_resource *positionerResource, uint32_t token)
+{
+    Q_UNUSED(resource)
+    positioner = XdgPositioner::get(positionerResource);
+    emit q->repositionRequested(token);
+}
+
 XdgPopupInterface::XdgPopupInterface(XdgSurfaceInterface *surface,
                                      SurfaceInterface *parentSurface,
                                      const XdgPositioner &positioner,
@@ -761,6 +768,12 @@ quint32 XdgPopupInterface::sendConfigure(const QRect &rect)
 void XdgPopupInterface::sendPopupDone()
 {
     d->send_popup_done();
+}
+
+void XdgPopupInterface::sendRepositioned(quint32 token)
+{
+    Q_ASSERT(d->resource()->version() >= XDG_POPUP_REPOSITIONED_SINCE_VERSION);
+    d->send_repositioned(token);
 }
 
 XdgPopupInterface *XdgPopupInterface::get(::wl_resource *resource)
@@ -850,6 +863,24 @@ void XdgPositionerPrivate::xdg_positioner_set_anchor(Resource *resource, uint32_
         data->anchorEdges = Qt::Edges();
         break;
     }
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_parent_size(Resource *resource, int32_t width, int32_t height)
+{
+    Q_UNUSED(resource)
+    data->parentSize = QSize(width, height);
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_reactive(Resource *resource)
+{
+    Q_UNUSED(resource)
+    data->isReactive = true;
+}
+
+void XdgPositionerPrivate::xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial)
+{
+    Q_UNUSED(resource)
+    data->parentConfigure = serial;
 }
 
 void XdgPositionerPrivate::xdg_positioner_set_gravity(Resource *resource, uint32_t gravity)
@@ -1001,6 +1032,21 @@ QRect XdgPositioner::anchorRect() const
 QPoint XdgPositioner::offset() const
 {
     return d->offset;
+}
+
+QSize XdgPositioner::parentSize() const
+{
+    return d->parentSize;
+}
+
+bool XdgPositioner::isReactive() const
+{
+    return d->isReactive;
+}
+
+quint32 XdgPositioner::parentConfigure() const
+{
+    return d->parentConfigure;
 }
 
 XdgPositioner XdgPositioner::get(::wl_resource *resource)

@@ -56,6 +56,9 @@ public:
     QPoint offset;
     QSize size;
     QRect anchorRect;
+    bool isReactive;
+    QSize parentSize;
+    quint32 parentConfigure;
 };
 
 class XdgPositionerPrivate : public QtWaylandServer::xdg_positioner
@@ -76,6 +79,9 @@ protected:
     void xdg_positioner_set_gravity(Resource *resource, uint32_t gravity) override;
     void xdg_positioner_set_constraint_adjustment(Resource *resource, uint32_t constraint_adjustment) override;
     void xdg_positioner_set_offset(Resource *resource, int32_t x, int32_t y) override;
+    void xdg_positioner_set_reactive(Resource *resource) override;
+    void xdg_positioner_set_parent_size(Resource *resource, int32_t width, int32_t height) override;
+    void xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial) override;
 };
 
 class XdgSurfaceInterfacePrivate : public QtWaylandServer::xdg_surface
@@ -178,6 +184,7 @@ protected:
     void xdg_popup_destroy_resource(Resource *resource) override;
     void xdg_popup_destroy(Resource *resource) override;
     void xdg_popup_grab(Resource *resource, ::wl_resource *seat, uint32_t serial) override;
+    void xdg_popup_reposition(Resource *resource, struct ::wl_resource *positioner, uint32_t token) override;
 };
 
 } // namespace KWaylandServer

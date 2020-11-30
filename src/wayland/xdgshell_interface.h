@@ -454,6 +454,21 @@ public:
     QPoint offset() const;
 
     /**
+     * Returns whether the surface should respond to movements in its parent window.
+     */
+    bool isReactive() const;
+
+    /**
+     * Returns the parent size to use when positioning the popup.
+     */
+    QSize parentSize() const;
+
+    /**
+     * Returns the serial of the configure event for the parent window.
+     */
+    quint32 parentConfigure() const;
+
+    /**
      * Returns the current state of the xdg positioner object identified by \a resource.
      */
     static XdgPositioner get(::wl_resource *resource);
@@ -522,6 +537,11 @@ public:
     void sendPopupDone();
 
     /**
+     * Sends a popup repositioned event to the client.
+     */
+    void sendRepositioned(quint32 token);
+
+    /**
      * Returns the XdgPopupInterface for the specified wayland resource object \a resource.
      */
     static XdgPopupInterface *get(::wl_resource *resource);
@@ -533,6 +553,7 @@ Q_SIGNALS:
      */
     void initializeRequested();
     void grabRequested(SeatInterface *seat, quint32 serial);
+    void repositionRequested(quint32 token);
 
 private:
     QScopedPointer<XdgPopupInterfacePrivate> d;
