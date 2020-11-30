@@ -62,7 +62,6 @@ void FakeInputTest::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
     m_fakeInputInterface = m_display->createFakeInput();
-    m_fakeInputInterface->create();
     QSignalSpy deviceCreatedSpy(m_fakeInputInterface, &FakeInputInterface::deviceCreated);
     QVERIFY(deviceCreatedSpy.isValid());
 

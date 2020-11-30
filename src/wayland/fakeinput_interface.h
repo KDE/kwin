@@ -6,8 +6,11 @@
 #ifndef KWAYLAND_SERVER_FAKEINPUT_INTERFACE_H
 #define KWAYLAND_SERVER_FAKEINPUT_INTERFACE_H
 
+#include <QPointF>
+#include <QSizeF>
+#include <QObject>
+
 #include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
 
 struct wl_resource;
 
@@ -16,6 +19,8 @@ namespace KWaylandServer
 
 class Display;
 class FakeInputDevice;
+class FakeInputDevicePrivate;
+class FakeInputInterfacePrivate;
 
 /**
  * @brief Represents the Global for org_kde_kwin_fake_input interface.
@@ -34,11 +39,11 @@ class FakeInputDevice;
  * @see FakeInputDevice
  * @since 5.4
  **/
-class KWAYLANDSERVER_EXPORT FakeInputInterface : public Global
+class KWAYLANDSERVER_EXPORT FakeInputInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~FakeInputInterface();
+    ~FakeInputInterface() override;
 
 Q_SIGNALS:
     /**
@@ -50,7 +55,7 @@ Q_SIGNALS:
 private:
     explicit FakeInputInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<FakeInputInterfacePrivate> d;
 };
 
 /**
@@ -63,7 +68,7 @@ class KWAYLANDSERVER_EXPORT FakeInputDevice : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~FakeInputDevice();
+    ~FakeInputDevice() override;
     /**
      * @returns the native wl_resource.
      **/
@@ -159,10 +164,9 @@ Q_SIGNALS:
     void keyboardKeyReleaseRequested(quint32 key);
 
 private:
-    friend class FakeInputInterface;
-    FakeInputDevice(wl_resource *resource, FakeInputInterface *parent);
-    class Private;
-    QScopedPointer<Private> d;
+    friend class FakeInputInterfacePrivate;
+    FakeInputDevice(FakeInputInterface *parent, wl_resource *resource);
+    QScopedPointer<FakeInputDevicePrivate> d;
 };
 
 }

@@ -115,7 +115,7 @@ ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     BASENAME idle
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
     BASENAME fake-input
 )
