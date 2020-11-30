@@ -133,7 +133,8 @@ void TestXdgShellClient::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
-    KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
+    //put mouse in the middle of screen one
+    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
 }
 
 void TestXdgShellClient::cleanup()
