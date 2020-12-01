@@ -86,7 +86,7 @@ void TestPointerConstraints::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
-    KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
 }
 
 void TestPointerConstraints::cleanup()
@@ -140,7 +140,7 @@ void TestPointerConstraints::testConfinedPointer()
     // picking a position outside the window geometry should not move pointer
     QSignalSpy pointerPositionChangedSpy(input(), &InputRedirection::globalPointerChanged);
     QVERIFY(pointerPositionChangedSpy.isValid());
-    KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
     QVERIFY(pointerPositionChangedSpy.isEmpty());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), c->frameGeometry().center());
 

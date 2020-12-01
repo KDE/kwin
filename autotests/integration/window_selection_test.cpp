@@ -74,7 +74,7 @@ void TestWindowSelection::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     screens()->setCurrent(0);
-    KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
 }
 
 void TestWindowSelection::cleanup()

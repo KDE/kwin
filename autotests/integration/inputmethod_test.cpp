@@ -86,7 +86,7 @@ void InputMethodTest::init()
 
 
     screens()->setCurrent(0);
-    KWin::Cursors::self()->mouse()->setPos(QPoint(1280, 512));
+    KWin::Cursors::self()->mouse()->setPos(QPoint(512, 512));
 
     const QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kwin.testvirtualkeyboard"),
                                                                 QStringLiteral("/VirtualKeyboard"),
