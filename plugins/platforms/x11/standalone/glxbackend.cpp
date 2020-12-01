@@ -126,7 +126,7 @@ GlxBackend::~GlxBackend()
     // do cleanup after initBuffer()
     cleanupGL();
     doneCurrent();
-    EffectQuickView::setShareContext(nullptr);
+    EffectQuickView::setUsingShareContexts(false);
 
     gs_tripleBufferUndetected = true;
     gs_tripleBufferNeedsDetection = false;
@@ -284,6 +284,7 @@ void GlxBackend::initExtensions()
 bool GlxBackend::initRenderingContext()
 {
     const bool direct = true;
+    bool usingSharedContext = false;
 
     // Use glXCreateContextAttribsARB() when it's available
     if (hasExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
@@ -326,9 +327,16 @@ bool GlxBackend::initRenderingContext()
         }
         for (auto it = candidates.begin(); it != candidates.end(); it++) {
             const auto attribs = it->build();
-            ctx = glXCreateContextAttribsARB(display(), fbconfig, nullptr, true, attribs.data());
+
+            auto share = QOpenGLContext::globalShareContext();
+            GLXContext shareHandle = nullptr;
+            if (QOpenGLContext::globalShareContext()) {
+                shareHandle = QOpenGLContext::globalShareContext()->nativeHandle().value<QGLXNativeContext>().context();
+            }
+            ctx = glXCreateContextAttribsARB(display(), fbconfig, shareHandle, true, attribs.data());
             if (ctx) {
                 qCDebug(KWIN_X11STANDALONE) << "Created GLX context with attributes:" << &(*it);
+                usingSharedContext = shareHandle != nullptr;
                 break;
             }
         }
@@ -349,11 +357,7 @@ bool GlxBackend::initRenderingContext()
         return false;
     }
 
-    auto qtContext = new QOpenGLContext;
-    QGLXNativeContext native(ctx, display());
-    qtContext->setNativeHandle(QVariant::fromValue(native));
-    qtContext->create();
-    EffectQuickView::setShareContext(std::unique_ptr<QOpenGLContext>(qtContext));
+    EffectQuickView::setUsingShareContexts(usingSharedContext);
 
     return true;
 }

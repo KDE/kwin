@@ -424,6 +424,7 @@ int main(int argc, char * argv[])
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
     // KSMServer talks to us directly on DBus.
     QCoreApplication::setAttribute(Qt::AA_DisableSessionManager);
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
     KWin::ApplicationX11 a(argc, argv);
     a.setupTranslator();

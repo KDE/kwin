@@ -49,7 +49,7 @@ class KWINEFFECTS_EXPORT EffectQuickView : public QObject
     Q_OBJECT
 
 public:
-    static void setShareContext(std::unique_ptr<QOpenGLContext> context);
+    static void setUsingShareContexts(bool);
 
     enum class ExportMode {
         /** The contents will be available as a texture in the shared contexts. Image will be blank*/
