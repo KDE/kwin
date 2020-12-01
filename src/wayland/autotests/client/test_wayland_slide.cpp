@@ -101,8 +101,6 @@ void TestSlide::init()
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
     m_slideManagerInterface = m_display->createSlideManager(m_display);
-    m_slideManagerInterface->create();
-    QVERIFY(m_slideManagerInterface->isValid());
 
     QVERIFY(slideSpy.wait());
     m_slideManager = registry.createSlideManager(slideSpy.first().first().value<quint32>(), slideSpy.first().last().value<quint32>(), this);
@@ -128,10 +126,12 @@ void TestSlide::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_slideManagerInterface)
     CLEANUP(m_display)
 #undef CLEANUP
+    // these are the children of the display
+    m_compositorInterface = nullptr;
+    m_slideManagerInterface = nullptr;
+
 }
 
 void TestSlide::testCreate()

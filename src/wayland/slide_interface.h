@@ -6,46 +6,43 @@
 #ifndef KWAYLAND_SERVER_SLIDE_INTERFACE_H
 #define KWAYLAND_SERVER_SLIDE_INTERFACE_H
 
-#include "global.h"
-#include "resource.h"
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
+
+struct wl_resource;
 
 namespace KWaylandServer
 {
 
 class Display;
+class SlideManagerInterfacePrivate;
+class SlideInterfacePrivate;
 
-/**
- * TODO
- */
-class KWAYLANDSERVER_EXPORT SlideManagerInterface : public Global
+class KWAYLANDSERVER_EXPORT SlideManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~SlideManagerInterface();
+    ~SlideManagerInterface() override;
 
 private:
     explicit SlideManagerInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    class Private;
+    QScopedPointer<SlideManagerInterfacePrivate> d;
 };
 
-/**
- * TODO
- */
-class KWAYLANDSERVER_EXPORT SlideInterface : public Resource
+class KWAYLANDSERVER_EXPORT SlideInterface : public QObject
 {
     Q_OBJECT
 public:
     enum Location {
         Left = 0, /**< Slide from the left edge of the screen */
-        Top, /**< Slide from the top edge of the screen */
-        Right, /**< Slide from the bottom edge of the screen */
-        Bottom /**< Slide from the bottom edge of the screen */
+        Top = 1, /**< Slide from the top edge of the screen */
+        Right = 2, /**< Slide from the bottom edge of the screen */
+        Bottom = 3 /**< Slide from the bottom edge of the screen */
     };
 
-    virtual ~SlideInterface();
+    ~SlideInterface() override;
 
     /**
      * @returns the location the window will be slided from
@@ -59,11 +56,10 @@ public:
     qint32 offset() const;
 
 private:
-    explicit SlideInterface(SlideManagerInterface *parent, wl_resource *parentResource);
-    friend class SlideManagerInterface;
+    explicit SlideInterface(SlideManagerInterface *manager, wl_resource *resource);
+    friend class SlideManagerInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<SlideInterfacePrivate> d;
 };
 
 
