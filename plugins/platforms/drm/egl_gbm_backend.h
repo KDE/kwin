@@ -43,12 +43,11 @@ public:
         return m_outputs.count();
     }
 
-    void addSecondaryGpuOutput(AbstractOutput *output) override;
+    void addOutput(DrmOutput *output) override;
+    void removeOutput(DrmOutput *output) override;
     int getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32_t *format, uint32_t *stride) override;
     void cleanupDmabufForSecondaryGpuOutput(AbstractOutput *output) override;
-    void removeSecondaryGpuOutput(AbstractOutput *output) override;
     QRegion beginFrameForSecondaryGpu(AbstractOutput *output) override;
-    void renderFramebufferToSurface(AbstractOutput *output) override;
 
 protected:
     void present() override;
@@ -83,7 +82,6 @@ private:
         gbm_bo *importedGbmBo = nullptr;
     };
 
-    void createOutput(DrmOutput *drmOutput);
     bool resetOutput(Output &output, DrmOutput *drmOutput);
     std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size, const bool linear) const;
     EGLSurface createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const;
@@ -100,7 +98,6 @@ private:
 
     void presentOnOutput(Output &output, const QRegion &damagedRegion);
 
-    void removeOutput(DrmOutput *drmOutput);
     void cleanupOutput(Output &output);
     void cleanupFramebuffer(Output &output);
 

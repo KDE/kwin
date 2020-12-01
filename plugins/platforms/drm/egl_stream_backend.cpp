@@ -72,19 +72,6 @@ PFNEGLQUERYWAYLANDBUFFERWL pEglQueryWaylandBufferWL = nullptr;
 EglStreamBackend::EglStreamBackend(DrmBackend *drmBackend, DrmGpu *gpu)
     : AbstractEglDrmBackend(drmBackend, gpu)
 {
-    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglStreamBackend::createOutput);
-    connect(m_gpu, &DrmGpu::outputDisabled, this,
-        [this] (DrmOutput *output) {
-            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
-                                   [output] (const Output &o) {
-                                       return o.output == output;
-                                   });
-            if (it == m_outputs.end()) {
-                return;
-            }
-            cleanupOutput(*it);
-            m_outputs.erase(it);
-        });
 }
 
 void EglStreamBackend::cleanupSurfaces()
@@ -280,7 +267,7 @@ bool EglStreamBackend::initRenderingContext()
 
     const auto outputs = m_gpu->outputs();
     for (DrmOutput *drmOutput : outputs) {
-        createOutput(drmOutput);
+        addOutput(drmOutput);
     }
     if (m_outputs.isEmpty()) {
         qCCritical(KWIN_DRM) << "Failed to create output surface";
@@ -358,8 +345,9 @@ bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
     return true;
 }
 
-void EglStreamBackend::createOutput(DrmOutput *drmOutput)
+void EglStreamBackend::addOutput(DrmOutput *drmOutput)
 {
+    Q_ASSERT(drmOutput->gpu() == m_gpu);
     Output o;
     if (!resetOutput(o, drmOutput)) {
         return;
@@ -379,6 +367,21 @@ void EglStreamBackend::createOutput(DrmOutput *drmOutput)
         }
     );
     m_outputs << o;
+}
+
+void EglStreamBackend::removeOutput(DrmOutput *drmOutput)
+{
+    Q_ASSERT(drmOutput->gpu() == m_gpu);
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+        [drmOutput] (const Output &o) {
+            return o.output == drmOutput;
+        }
+    );
+    if (it == m_outputs.end()) {
+        return;
+    }
+    cleanupOutput(*it);
+    m_outputs.erase(it);
 }
 
 bool EglStreamBackend::makeContextCurrent(const Output &output)

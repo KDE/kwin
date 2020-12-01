@@ -30,8 +30,6 @@ namespace KWin
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
     : AbstractEglDrmBackend(drmBackend, gpu)
 {
-    connect(m_gpu, &DrmGpu::outputEnabled, this, &EglGbmBackend::createOutput);
-    connect(m_gpu, &DrmGpu::outputDisabled, this, &EglGbmBackend::removeOutput);
 }
 
 void EglGbmBackend::cleanupSurfaces()
@@ -139,7 +137,7 @@ bool EglGbmBackend::initRenderingContext()
     const auto outputs = m_gpu->outputs();
 
     for (DrmOutput *drmOutput: outputs) {
-        createOutput(drmOutput);
+        addOutput(drmOutput);
     }
 
     if (m_outputs.isEmpty() && !outputs.isEmpty()) {
@@ -213,73 +211,52 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     return true;
 }
 
-void EglGbmBackend::createOutput(DrmOutput *drmOutput)
+void EglGbmBackend::addOutput(DrmOutput *drmOutput)
 {
     if (isPrimary()) {
         Output newOutput;
         if (resetOutput(newOutput, drmOutput)) {
+            QVector<Output> &outputs = drmOutput->gpu() == m_gpu ? m_outputs : m_secondaryGpuOutputs;
             connect(drmOutput, &DrmOutput::modeChanged, this,
-                [drmOutput, this] {
-                    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                [drmOutput, &outputs, this] {
+                    auto it = std::find_if(outputs.begin(), outputs.end(),
                         [drmOutput] (const auto &output) {
                             return output.output == drmOutput;
                         }
                     );
-                    if (it == m_outputs.end()) {
+                    if (it == outputs.end()) {
                         return;
                     }
                     resetOutput(*it, drmOutput);
                 }
             );
-            m_outputs << newOutput;
+            outputs << newOutput;
         }
     } else {
         Output newOutput;
         newOutput.output = drmOutput;
-        renderingBackend()->addSecondaryGpuOutput(drmOutput);
+        renderingBackend()->addOutput(drmOutput);
         m_outputs << newOutput;
     }
 }
 
 void EglGbmBackend::removeOutput(DrmOutput *drmOutput)
 {
-    auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+    QVector<Output> &outputs = drmOutput->gpu() == m_gpu ? m_outputs : m_secondaryGpuOutputs;
+    auto it = std::find_if(outputs.begin(), outputs.end(),
         [drmOutput] (const Output &output) {
             return output.output == drmOutput;
         }
     );
-    if (it == m_outputs.end()) {
+    if (it == outputs.end()) {
         return;
     }
-    if (this != primaryBackend()) {
-        renderingBackend()->removeSecondaryGpuOutput((*it).output);
-    } else {
+    if (isPrimary()) {
         cleanupOutput(*it);
+    } else {
+        renderingBackend()->removeOutput((*it).output);
     }
-    m_outputs.erase(it);
-}
-
-void EglGbmBackend::addSecondaryGpuOutput(AbstractOutput *output)
-{
-    DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
-    Output newOutput;
-    newOutput.onSecondaryGPU = true;
-    if (resetOutput(newOutput, drmOutput)) {
-        connect(drmOutput, &DrmOutput::modeChanged, this,
-            [drmOutput, this] {
-                auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-                    [drmOutput] (const auto &output) {
-                        return output.output == drmOutput;
-                    }
-                );
-                if (it == m_secondaryGpuOutputs.end()) {
-                    return;
-                }
-                resetOutput(*it, drmOutput);
-            }
-        );
-        m_secondaryGpuOutputs << newOutput;
-    }
+    outputs.erase(it);
 }
 
 int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32_t *format, uint32_t *stride)
@@ -293,6 +270,7 @@ int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32
     if (it == m_secondaryGpuOutputs.end()) {
         return -1;
     }
+    renderFramebufferToSurface(*it);
     auto error = eglSwapBuffers(eglDisplay(), it->eglSurface);
     if (error != EGL_TRUE) {
         qCDebug(KWIN_DRM) << "an error occurred while swapping buffers" << error;
@@ -331,21 +309,6 @@ void EglGbmBackend::cleanupDmabufForSecondaryGpuOutput(AbstractOutput *output)
     }
 }
 
-void EglGbmBackend::removeSecondaryGpuOutput(AbstractOutput *output)
-{
-    DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return;
-    }
-    cleanupOutput(*it);
-    m_secondaryGpuOutputs.erase(it);
-}
-
 QRegion EglGbmBackend::beginFrameForSecondaryGpu(AbstractOutput *output)
 {
     DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
@@ -358,20 +321,6 @@ QRegion EglGbmBackend::beginFrameForSecondaryGpu(AbstractOutput *output)
         return QRegion();
     }
     return prepareRenderingForOutput(*it);
-}
-
-void EglGbmBackend::renderFramebufferToSurface(AbstractOutput *output)
-{
-    DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return;
-    }
-    renderFramebufferToSurface(*it);
 }
 
 const float vertices[] = {
@@ -503,7 +452,6 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
         glBindTexture(GL_TEXTURE_2D, 0);
     } else {
         // secondary GPU: render on primary and import framebuffer
-        renderingBackend()->renderFramebufferToSurface(output.output);
         uint32_t stride = 0;
         uint32_t format = 0;
         int fd = renderingBackend()->getDmabufForSecondaryGpuOutput(output.output, &format, &stride);

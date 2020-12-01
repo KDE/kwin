@@ -11,6 +11,7 @@
 
 #include "drm_backend.h"
 #include "drm_gpu.h"
+#include "drm_output.h"
 
 using namespace KWin;
 
@@ -20,6 +21,8 @@ AbstractEglDrmBackend::AbstractEglDrmBackend(DrmBackend *drmBackend, DrmGpu *gpu
     // Egl is always direct rendering.
     setIsDirectRendering(true);
     setSyncsToVBlank(true);
+    connect(m_gpu, &DrmGpu::outputEnabled, this, &AbstractEglDrmBackend::addOutput);
+    connect(m_gpu, &DrmGpu::outputDisabled, this, &AbstractEglDrmBackend::removeOutput);
 }
 
 AbstractEglDrmBackend::~AbstractEglDrmBackend()

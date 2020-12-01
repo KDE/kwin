@@ -36,6 +36,9 @@ public:
         return m_outputs.count();
     }
 
+    void addOutput(DrmOutput *output) override;
+    void removeOutput(DrmOutput *output) override;
+
 protected:
     void present() override;
     void cleanupSurfaces() override;
@@ -64,7 +67,6 @@ private:
     bool makeContextCurrent(const Output &output);
     void presentOnOutput(Output &output);
     void cleanupOutput(const Output &output);
-    void createOutput(DrmOutput *output);
 
     QVector<Output> m_outputs;
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;

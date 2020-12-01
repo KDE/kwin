@@ -17,6 +17,7 @@ namespace KWin
 
 class DrmBackend;
 class DrmGpu;
+class DrmOutput;
 
 class AbstractEglDrmBackend : public AbstractEglBackend
 {
@@ -28,9 +29,8 @@ public:
     void screenGeometryChanged(const QSize &size) override;
 
     virtual int screenCount() const = 0;
-    virtual void addSecondaryGpuOutput(AbstractOutput *output) {
-        Q_UNUSED(output)
-    }
+    virtual void addOutput(DrmOutput *output) = 0;
+    virtual void removeOutput(DrmOutput *output) = 0;
     virtual int getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32_t *format, uint32_t *stride) {
         Q_UNUSED(output)
         Q_UNUSED(format)
@@ -40,15 +40,9 @@ public:
     virtual void cleanupDmabufForSecondaryGpuOutput(AbstractOutput *output) {
         Q_UNUSED(output)
     }
-    virtual void removeSecondaryGpuOutput(AbstractOutput *output) {
-        Q_UNUSED(output)
-    }
     virtual QRegion beginFrameForSecondaryGpu(AbstractOutput *output) {
         Q_UNUSED(output)
         return QRegion();
-    }
-    virtual void renderFramebufferToSurface(AbstractOutput *output) {
-        Q_UNUSED(output)
     }
 
     static AbstractEglDrmBackend *renderingBackend() {
