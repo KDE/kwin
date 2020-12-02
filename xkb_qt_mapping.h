@@ -116,6 +116,7 @@ static const std::map<xkb_keysym_t, Qt::Key> s_mapping{
     { XKB_KEY_XF86AudioMute, Qt::Key_VolumeMute },
     { XKB_KEY_XF86AudioRaiseVolume, Qt::Key_VolumeUp },
     { XKB_KEY_XF86AudioPlay, Qt::Key_MediaPlay },
+    { XKB_KEY_XF86AudioPause, Qt::Key_MediaPause },
     { XKB_KEY_XF86AudioStop, Qt::Key_MediaStop },
     { XKB_KEY_XF86AudioPrev, Qt::Key_MediaPrevious },
     { XKB_KEY_XF86AudioNext, Qt::Key_MediaNext },

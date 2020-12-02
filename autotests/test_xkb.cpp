@@ -128,6 +128,7 @@ static const TransKey g_rgQtToSymX[] = {
     { Qt::Key_VolumeMute,              XKB_KEY_XF86AudioMute, Qt::KeyboardModifiers() },
     { Qt::Key_VolumeUp,                XKB_KEY_XF86AudioRaiseVolume, Qt::KeyboardModifiers() },
     { Qt::Key_MediaPlay,               XKB_KEY_XF86AudioPlay, Qt::KeyboardModifiers() },
+    { Qt::Key_MediaPause,              XKB_KEY_XF86AudioPause, Qt::KeyboardModifiers() },
     { Qt::Key_MediaStop,               XKB_KEY_XF86AudioStop, Qt::KeyboardModifiers() },
     { Qt::Key_MediaPrevious,           XKB_KEY_XF86AudioPrev, Qt::KeyboardModifiers() },
     { Qt::Key_MediaNext,               XKB_KEY_XF86AudioNext, Qt::KeyboardModifiers() },
