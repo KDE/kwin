@@ -345,14 +345,14 @@ const float texCoords[] = {
 
 bool EglGbmBackend::resetFramebuffer(Output &output)
 {
+    cleanupFramebuffer(output);
+
     if (output.output->hardwareTransforms() && !output.onSecondaryGPU) {
         // No need for an extra render target.
         return true;
     }
 
     makeContextCurrent(output);
-
-    cleanupFramebuffer(output);
 
     glGenFramebuffers(1, &output.render.framebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, output.render.framebuffer);
