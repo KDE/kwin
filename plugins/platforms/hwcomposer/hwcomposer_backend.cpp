@@ -217,6 +217,8 @@ void HwcomposerBackend::init()
         m_vsyncInterval = 1000000/m_output->refreshRate();
     }
 
+    emit outputAdded(m_output.data());
+
     if (m_lights) {
         using namespace KWaylandServer;
 
