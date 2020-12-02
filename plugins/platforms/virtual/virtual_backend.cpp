@@ -60,7 +60,6 @@ void VirtualBackend::init()
         VirtualOutput *dummyOutput = new VirtualOutput(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
-        m_enabledOutputs << dummyOutput ;
     }
 
     setSoftwareCursorForced(true);
@@ -102,7 +101,7 @@ Outputs VirtualBackend::outputs() const
 
 Outputs VirtualBackend::enabledOutputs() const
 {
-    return m_enabledOutputs;
+    return m_outputs;
 }
 
 void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVector<int> scales)
@@ -113,7 +112,6 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     bool countChanged = m_outputs.size() != count;
     qDeleteAll(m_outputs.begin(), m_outputs.end());
     m_outputs.resize(count);
-    m_enabledOutputs.resize(count);
 
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
@@ -128,7 +126,7 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         if (scales.size()) {
             vo->setScale(scales.at(i));
         }
-        m_outputs[i] = m_enabledOutputs[i] = vo;
+        m_outputs[i] = vo;
     }
 
     emit virtualOutputsSet(countChanged);

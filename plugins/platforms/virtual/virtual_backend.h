@@ -58,8 +58,6 @@ Q_SIGNALS:
 
 private:
     QVector<VirtualOutput*> m_outputs;
-    QVector<VirtualOutput*> m_enabledOutputs;
-
     QScopedPointer<QTemporaryDir> m_screenshotDir;
 };
 
