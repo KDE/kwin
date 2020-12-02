@@ -177,6 +177,7 @@ void X11WindowedBackend::createOutputs()
 
         logicalWidthSum += logicalWidth;
         m_outputs << output;
+        emit outputAdded(output);
     }
 
     updateWindowTitle();
@@ -381,6 +382,7 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
                     x += (*it)->geometry().width();
                 }
 
+                emit outputRemoved(removedOutput);
                 delete removedOutput;
                 QMetaObject::invokeMethod(screens(), "updateCount");
             }

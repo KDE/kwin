@@ -431,13 +431,17 @@ void X11StandalonePlatform::doUpdateOutputs()
         o->setRefreshRate(60000);
         o->setName(QStringLiteral("Xinerama"));
         m_outputs << o;
+        emit outputAdded(o);
     };
 
     // TODO: instead of resetting all outputs, check if new output is added/removed
     //       or still available and leave still available outputs in m_outputs
     //       untouched (like in DRM backend)
-    qDeleteAll(m_outputs);
-    m_outputs.clear();
+    while (!m_outputs.isEmpty()) {
+        X11Output *output = m_outputs.takeLast();
+        emit outputRemoved(output);
+        delete output;
+    }
 
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         fallback();
@@ -523,6 +527,7 @@ void X11StandalonePlatform::doUpdateOutputs()
             }
 
             m_outputs << o;
+            emit outputAdded(o);
         }
     }
 
