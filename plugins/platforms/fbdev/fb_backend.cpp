@@ -145,6 +145,7 @@ bool FramebufferBackend::handleScreenInfo()
     auto *output = new FramebufferOutput(this);
     output->init(QSize(varinfo.xres, varinfo.yres), QSize(varinfo.width, varinfo.height));
     m_outputs << output;
+    emit outputAdded(output);
 
     m_id = QByteArray(fixinfo.id);
     m_red = {varinfo.red.offset, varinfo.red.length};
