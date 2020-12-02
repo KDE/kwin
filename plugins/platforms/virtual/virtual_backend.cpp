@@ -42,6 +42,9 @@ VirtualBackend::VirtualBackend(QObject *parent)
 
 VirtualBackend::~VirtualBackend()
 {
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
+    }
 }
 
 void VirtualBackend::init()

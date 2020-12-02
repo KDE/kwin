@@ -462,6 +462,10 @@ WaylandBackend::WaylandBackend(QObject *parent)
 
 WaylandBackend::~WaylandBackend()
 {
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
+    }
+
     if (m_pointerConstraints) {
         m_pointerConstraints->release();
     }

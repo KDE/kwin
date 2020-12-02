@@ -147,6 +147,9 @@ HwcomposerBackend::~HwcomposerBackend()
     if (!m_outputBlank) {
         toggleBlankOutput();
     }
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
+    }
 }
 
 void HwcomposerBackend::init()

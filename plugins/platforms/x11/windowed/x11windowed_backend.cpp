@@ -49,6 +49,9 @@ X11WindowedBackend::X11WindowedBackend(QObject *parent)
 
 X11WindowedBackend::~X11WindowedBackend()
 {
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
+    }
     if (m_connection) {
         if (m_keySymbols) {
             xcb_key_symbols_free(m_keySymbols);

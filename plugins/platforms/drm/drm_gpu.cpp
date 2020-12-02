@@ -57,6 +57,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
 
 DrmGpu::~DrmGpu()
 {
+    if (m_eglDisplay != EGL_NO_DISPLAY) {
+        eglTerminate(m_eglDisplay);
+    }
 #if HAVE_GBM
     gbm_device_destroy(m_gbmDevice);
 #endif
