@@ -10,18 +10,24 @@
 #define KWIN_QPA_SCREEN_H
 
 #include <qpa/qplatformscreen.h>
+
+#include <QPointer>
 #include <QScopedPointer>
 
 namespace KWin
 {
+class AbstractOutput;
+
 namespace QPA
 {
 class PlatformCursor;
 
-class Screen : public QPlatformScreen
+class Screen : public QObject, public QPlatformScreen
 {
+    Q_OBJECT
+
 public:
-    explicit Screen(int screen);
+    explicit Screen(AbstractOutput *output);
     ~Screen() override;
 
     QString name() const override;
@@ -33,9 +39,18 @@ public:
     QDpi logicalDpi() const override;
     qreal devicePixelRatio() const override;
 
+private Q_SLOTS:
+    void handleGeometryChanged();
+
 private:
-    int m_screen;
+    QPointer<AbstractOutput> m_output;
     QScopedPointer<PlatformCursor> m_cursor;
+};
+
+class PlaceholderScreen : public QPlatformPlaceholderScreen
+{
+public:
+    QDpi logicalDpi() const override;
 };
 
 }

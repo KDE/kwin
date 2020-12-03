@@ -7,19 +7,27 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screen.h"
+#include "abstract_output.h"
+#include "logging.h"
 #include "platformcursor.h"
-#include "screens.h"
+
+#include <qpa/qwindowsysteminterface.h>
 
 namespace KWin
 {
 namespace QPA
 {
 
-Screen::Screen(int screen)
-    : QPlatformScreen()
-    , m_screen(screen)
+static int forcedDpi()
+{
+    return qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;
+}
+
+Screen::Screen(AbstractOutput *output)
+    : m_output(output)
     , m_cursor(new PlatformCursor)
 {
+    connect(output, &AbstractOutput::geometryChanged, this, &Screen::handleGeometryChanged);
 }
 
 Screen::~Screen() = default;
@@ -36,12 +44,20 @@ QImage::Format Screen::format() const
 
 QRect Screen::geometry() const
 {
-    return m_screen != -1 ? screens()->geometry(m_screen) : QRect(0, 0, 1, 1);
+    if (Q_UNLIKELY(!m_output)) {
+        qCCritical(KWIN_QPA) << "Attempting to get the geometry of a destroyed output";
+        return QRect();
+    }
+    return m_output->geometry();
 }
 
 QSizeF Screen::physicalSize() const
 {
-    return m_screen != -1 ? screens()->physicalSize(m_screen) : QPlatformScreen::physicalSize();
+    if (Q_UNLIKELY(!m_output)) {
+        qCCritical(KWIN_QPA) << "Attempting to get the physical size of a destroyed output";
+        return QSizeF();
+    }
+    return m_output->physicalSize();
 }
 
 QPlatformCursor *Screen::cursor() const
@@ -51,22 +67,37 @@ QPlatformCursor *Screen::cursor() const
 
 QDpi Screen::logicalDpi() const
 {
-    static int forceDpi = qEnvironmentVariableIsSet("QT_WAYLAND_FORCE_DPI") ? qEnvironmentVariableIntValue("QT_WAYLAND_FORCE_DPI") : -1;
-    if (forceDpi > 0) {
-        return QDpi(forceDpi, forceDpi);
-    }
-
-    return QDpi(96, 96);
+    const int dpi = forcedDpi();
+    return dpi > 0 ? QDpi(dpi, dpi) : QDpi(96, 96);
 }
 
 qreal Screen::devicePixelRatio() const
 {
-    return m_screen != -1 ? screens()->scale(m_screen) : 1.0;
+    if (Q_UNLIKELY(!m_output)) {
+        qCCritical(KWIN_QPA) << "Attempting to get the scale factor of a destroyed output";
+        return 1;
+    }
+    return m_output->scale();
 }
 
 QString Screen::name() const
 {
-    return m_screen != -1 ? screens()->name(m_screen) : QString();
+    if (Q_UNLIKELY(!m_output)) {
+        qCCritical(KWIN_QPA) << "Attempting to get the name of a destroyed output";
+        return QString();
+    }
+    return m_output->name();
+}
+
+void Screen::handleGeometryChanged()
+{
+    QWindowSystemInterface::handleScreenGeometryChange(screen(), geometry(), geometry());
+}
+
+QDpi PlaceholderScreen::logicalDpi() const
+{
+    const int dpi = forcedDpi();
+    return dpi > 0 ? QDpi(dpi, dpi) : QDpi(96, 96);
 }
 
 }

@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "integration.h"
+#include "abstract_output.h"
 #include "backingstore.h"
 #include "eglplatformcontext.h"
 #include "logging.h"
@@ -46,6 +47,9 @@ Integration::~Integration()
     for (QPlatformScreen *platformScreen : m_screens) {
         QWindowSystemInterface::handleScreenRemoved(platformScreen);
     }
+    if (m_dummyScreen) {
+        QWindowSystemInterface::handleScreenRemoved(m_dummyScreen);
+    }
 }
 
 bool Integration::hasCapability(Capability cap) const
@@ -71,16 +75,13 @@ bool Integration::hasCapability(Capability cap) const
 
 void Integration::initialize()
 {
-    connect(kwinApp(), &Application::screensCreated, this,
-        [this] {
-            connect(screens(), &Screens::changed, this, &Integration::initScreens);
-            initScreens();
-        }
-    );
+    // The QPA is initialized before the platform plugin is loaded.
+    connect(kwinApp(), &Application::platformCreated, this, &Integration::handlePlatformCreated);
+
     QPlatformIntegration::initialize();
-    auto dummyScreen = new Screen(-1);
-    QWindowSystemInterface::handleScreenAdded(dummyScreen);
-    m_screens << dummyScreen;
+
+    m_dummyScreen = new PlaceholderScreen();
+    QWindowSystemInterface::handleScreenAdded(m_dummyScreen);
 }
 
 QAbstractEventDispatcher *Integration::createEventDispatcher() const
@@ -135,24 +136,44 @@ QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext 
     return nullptr;
 }
 
-void Integration::initScreens()
+void Integration::handlePlatformCreated()
 {
-    QVector<Screen*> newScreens;
-    newScreens.reserve(qMax(screens()->count(), 1));
-    for (int i = 0; i < screens()->count(); i++) {
-        auto screen = new Screen(i);
-        QWindowSystemInterface::handleScreenAdded(screen);
-        newScreens << screen;
+    connect(kwinApp()->platform(), &Platform::outputEnabled,
+            this, &Integration::handleOutputEnabled);
+    connect(kwinApp()->platform(), &Platform::outputDisabled,
+            this, &Integration::handleOutputDisabled);
+
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    for (AbstractOutput *output : outputs) {
+        handleOutputEnabled(output);
     }
-    if (newScreens.isEmpty()) {
-        auto dummyScreen = new Screen(-1);
-        QWindowSystemInterface::handleScreenAdded(dummyScreen);
-        newScreens << dummyScreen;
+}
+
+void Integration::handleOutputEnabled(AbstractOutput *output)
+{
+    Screen *platformScreen = new Screen(output);
+    QWindowSystemInterface::handleScreenAdded(platformScreen);
+
+    if (m_dummyScreen) {
+        QWindowSystemInterface::handleScreenRemoved(m_dummyScreen);
+        m_dummyScreen = nullptr;
     }
-    while (!m_screens.isEmpty()) {
-        QWindowSystemInterface::handleScreenRemoved(m_screens.takeLast());
+}
+
+void Integration::handleOutputDisabled(AbstractOutput *output)
+{
+    Screen *platformScreen = m_screens.take(output);
+    if (!platformScreen) {
+        qCWarning(KWIN_QPA) << "Unknown output" << output;
+        return;
     }
-    m_screens = newScreens;
+
+    if (m_screens.isEmpty()) {
+        m_dummyScreen = new PlaceholderScreen();
+        QWindowSystemInterface::handleScreenAdded(m_dummyScreen);
+    }
+
+    QWindowSystemInterface::handleScreenRemoved(platformScreen);
 }
 
 }

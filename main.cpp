@@ -450,6 +450,7 @@ void Application::initPlatform(const KPluginMetaData &plugin)
                 }
             }
         }
+        emit platformCreated();
     }
 }
 

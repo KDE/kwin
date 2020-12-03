@@ -197,6 +197,7 @@ Q_SIGNALS:
     void x11ConnectionAboutToBeDestroyed();
     void workspaceCreated();
     void screensCreated();
+    void platformCreated();
     void virtualTerminalCreated();
     void started();
 
