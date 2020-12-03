@@ -1148,7 +1148,7 @@ QVariant DebugConsoleModel::clientData(const QModelIndex &index, int role, const
     }
     auto c = clients.at(index.row());
     if (role == Qt::DisplayRole) {
-        return QStringLiteral("%1: %2").arg(c->window()).arg(c->caption());
+        return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption());
     } else if (role == Qt::DecorationRole) {
         return c->icon();
     }
@@ -1204,7 +1204,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             }
             auto u = m_unmanageds.at(index.row());
             if (role == Qt::DisplayRole) {
-                return u->window();
+                return QStringLiteral("0x%1").arg(u->window(), 0, 16);
             }
             break;
         }
