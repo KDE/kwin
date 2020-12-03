@@ -79,8 +79,8 @@ public:
 
 protected:
     void resetSurface();
-    virtual void doInstallImage(wl_buffer *image, const QSize &size);
-    void drawSurface(wl_buffer *image, const QSize &size);
+    virtual void doInstallImage(wl_buffer *image, const QSize &size, qreal scale);
+    void drawSurface(wl_buffer *image, const QSize &size, qreal scale);
 
     KWayland::Client::Surface *surface() const {
         return m_surface;
@@ -108,7 +108,7 @@ public:
 
 private:
     void changeOutput(WaylandOutput *output);
-    void doInstallImage(wl_buffer *image, const QSize &size) override;
+    void doInstallImage(wl_buffer *image, const QSize &size, qreal scale) override;
     void createSubSurface();
 
     QPointF absoluteToRelativePosition(const QPointF &position);

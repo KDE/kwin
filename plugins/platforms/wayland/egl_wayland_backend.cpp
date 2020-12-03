@@ -50,8 +50,8 @@ EglWaylandOutput::EglWaylandOutput(WaylandOutput *output, QObject *parent)
 bool EglWaylandOutput::init(EglWaylandBackend *backend)
 {
     auto surface = m_waylandOutput->surface();
-    const QSize &size = m_waylandOutput->geometry().size();
-    auto overlay = wl_egl_window_create(*surface, size.width(), size.height());
+    const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
+    auto overlay = wl_egl_window_create(*surface, nativeSize.width(), nativeSize.height());
     if (!overlay) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Egl window failed";
         return false;
@@ -71,19 +71,15 @@ bool EglWaylandOutput::init(EglWaylandBackend *backend)
     m_eglSurface = eglSurface;
 
     connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &EglWaylandOutput::updateSize);
-    connect(m_waylandOutput, &WaylandOutput::modeChanged, this, &EglWaylandOutput::updateMode);
+    connect(m_waylandOutput, &WaylandOutput::modeChanged, this, &EglWaylandOutput::updateSize);
 
     return true;
 }
 
-void EglWaylandOutput::updateSize(const QSize &size)
+void EglWaylandOutput::updateSize()
 {
-    wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
-}
-
-void EglWaylandOutput::updateMode()
-{
-    updateSize(m_waylandOutput->geometry().size());
+    const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
+    wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
 }
 
 EglWaylandBackend::EglWaylandBackend(WaylandBackend *b)
@@ -240,9 +236,7 @@ bool EglWaylandBackend::makeContextCurrent(EglWaylandOutput *output)
     }
 
     const QRect &v = output->m_waylandOutput->geometry();
-
-    //The output is in scaled coordinates
-    const qreal scale = 1;
+    const qreal scale = output->m_waylandOutput->scale();
 
     const QSize overall = screens()->size();
     glViewport(-v.x() * scale, (v.height() - overall.height() + v.y()) * scale,
@@ -324,13 +318,15 @@ void EglWaylandBackend::aboutToStartPainting(int screenId, const QRegion &damage
 
 void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion &damage)
 {
-    output->m_waylandOutput->surface()->setupFrameCallback();
-    Compositor::self()->aboutToSwapBuffers();
+    WaylandOutput *waylandOutput = output->m_waylandOutput;
 
-    Q_EMIT output->m_waylandOutput->outputChange(damage);
+    waylandOutput->surface()->setupFrameCallback();
+    waylandOutput->surface()->setScale(waylandOutput->scale());
+    Compositor::self()->aboutToSwapBuffers();
+    Q_EMIT waylandOutput->outputChange(damage);
 
     if (supportsSwapBuffersWithDamage() && !output->m_damageHistory.isEmpty()) {
-        QVector<EGLint> rects = regionToRects(output->m_damageHistory.constFirst(), output->m_waylandOutput);
+        QVector<EGLint> rects = regionToRects(output->m_damageHistory.constFirst(), waylandOutput);
         eglSwapBuffersWithDamageEXT(eglDisplay(), output->m_eglSurface,
                                     rects.data(), rects.count()/4);
     } else {

@@ -86,6 +86,7 @@ void WaylandQPainterOutput::present(const QRegion &damage)
     auto s = m_waylandOutput->surface();
     s->attachBuffer(m_buffer);
     s->damage(damage);
+    s->setScale(m_waylandOutput->scale());
     s->commit();
 }
 
@@ -104,9 +105,9 @@ void WaylandQPainterOutput::prepareRenderingFrame()
     }
     m_buffer.clear();
 
-    const QSize size(m_waylandOutput->geometry().size());
+    const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
 
-    m_buffer = m_pool->getBuffer(size, size.width() * 4);
+    m_buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4);
     if (!m_buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
         m_backBuffer = QImage();
@@ -116,7 +117,7 @@ void WaylandQPainterOutput::prepareRenderingFrame()
     auto b = m_buffer.toStrongRef();
     b->setUsed(true);
 
-    m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
+    m_backBuffer = QImage(b->address(), nativeSize.width(), nativeSize.height(), QImage::Format_RGB32);
     m_backBuffer.fill(Qt::transparent);
 //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
 }

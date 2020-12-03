@@ -34,8 +34,7 @@ public:
     ~EglWaylandOutput() override = default;
 
     bool init(EglWaylandBackend *backend);
-    void updateSize(const QSize &size);
-    void updateMode();
+    void updateSize();
 
 private:
     WaylandOutput *m_waylandOutput;

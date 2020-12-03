@@ -92,29 +92,30 @@ void WaylandCursor::installImage()
 {
     const QImage image = Cursors::self()->currentCursor()->image();
     if (image.isNull() || image.size().isEmpty()) {
-        doInstallImage(nullptr, QSize());
+        doInstallImage(nullptr, QSize(), 1);
         return;
     }
 
     auto buffer = m_backend->shmPool()->createBuffer(image).toStrongRef();
     wl_buffer *imageBuffer = *buffer.data();
-    doInstallImage(imageBuffer, image.size());
+    doInstallImage(imageBuffer, image.size(), image.devicePixelRatio());
 }
 
-void WaylandCursor::doInstallImage(wl_buffer *image, const QSize &size)
+void WaylandCursor::doInstallImage(wl_buffer *image, const QSize &size, qreal scale)
 {
     auto *pointer = m_backend->seat()->pointer();
     if (!pointer || !pointer->isValid()) {
         return;
     }
     pointer->setCursor(m_surface, image ? Cursors::self()->currentCursor()->hotspot() : QPoint());
-    drawSurface(image, size);
+    drawSurface(image, size, scale);
 }
 
-void WaylandCursor::drawSurface(wl_buffer *image, const QSize &size)
+void WaylandCursor::drawSurface(wl_buffer *image, const QSize &size, qreal scale)
 {
     m_surface->attachBuffer(image);
-    m_surface->damage(QRect(QPoint(0,0), size));
+    m_surface->setScale(scale);
+    m_surface->damageBuffer(QRect(QPoint(0, 0), size));
     m_surface->commit(Surface::CommitFlag::None);
     m_backend->flush();
 }
@@ -161,7 +162,7 @@ void WaylandSubSurfaceCursor::createSubSurface()
     m_subSurface->setMode(SubSurface::Mode::Desynchronized);
 }
 
-void WaylandSubSurfaceCursor::doInstallImage(wl_buffer *image, const QSize &size)
+void WaylandSubSurfaceCursor::doInstallImage(wl_buffer *image, const QSize &size, qreal scale)
 {
     if (!image) {
         delete m_subSurface;
@@ -171,7 +172,7 @@ void WaylandSubSurfaceCursor::doInstallImage(wl_buffer *image, const QSize &size
     createSubSurface();
     // cursor position might have changed due to different cursor hot spot
     move(input()->pointer()->pos());
-    drawSurface(image, size);
+    drawSurface(image, size, scale);
 }
 
 QPointF WaylandSubSurfaceCursor::absoluteToRelativePosition(const QPointF &position)
@@ -496,11 +497,12 @@ WaylandBackend::~WaylandBackend()
 
 void WaylandBackend::init()
 {
-    connect(m_registry, &Registry::compositorAnnounced, this,
-        [this](quint32 name) {
-            m_compositor->setup(m_registry->bindCompositor(name, 1));
+    connect(m_registry, &Registry::compositorAnnounced, this, [this](quint32 name, quint32 version) {
+        if (version < 4) {
+            qFatal("wl_compositor version 4 or later is required");
         }
-    );
+        m_compositor->setup(m_registry->bindCompositor(name, version));
+    });
     connect(m_registry, &Registry::subCompositorAnnounced, this,
         [this](quint32 name) {
             m_subCompositor->setup(m_registry->bindSubCompositor(name, 1));
