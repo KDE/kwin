@@ -112,6 +112,7 @@ void QuickTilingTest::init()
     m_compositor = Test::waylandCompositor();
 
     screens()->setCurrent(0);
+    Cursors::self()->mouse()->setPos(QPoint(640, 512));
 }
 
 void QuickTilingTest::cleanup()
