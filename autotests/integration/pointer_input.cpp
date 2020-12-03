@@ -319,8 +319,6 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // this test verifies that a pointer enter event is generated when the cursor changes to another
     // screen due to removal of screen
     using namespace KWayland::Client;
-    // ensure cursor is on second screen
-    Cursors::self()->mouse()->setPos(1500, 300);
 
     // create pointer and signal spy for enter and motion
     auto pointer = m_seat->createPointer(m_seat);
@@ -328,6 +326,8 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(pointer->isValid());
     QSignalSpy enteredSpy(pointer, &Pointer::entered);
     QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
 
     // create a window
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
@@ -340,7 +340,13 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(clientAddedSpy.wait());
     AbstractClient *window = workspace()->activeClient();
     QVERIFY(window);
+    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QTRY_COMPARE(enteredSpy.count(), 1);
+
+    // move the cursor to the second screen
+    Cursors::self()->mouse()->setPos(1500, 300);
     QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(leftSpy.wait());
 
     QSignalSpy screensChangedSpy(screens(), &Screens::changed);
     QVERIFY(screensChangedSpy.isValid());
@@ -357,7 +363,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
 
     // and we should get an enter event
-    QTRY_COMPARE(enteredSpy.count(), 1);
+    QTRY_COMPARE(enteredSpy.count(), 2);
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
