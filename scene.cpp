@@ -1248,20 +1248,23 @@ void WindowPixmap::create()
     Xcb::WindowAttributes windowAttributes(toplevel()->frameId());
     Xcb::WindowGeometry windowGeometry(toplevel()->frameId());
     if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
-        qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << error->error_code;
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (error code %d)",
+                toplevel()->window(), error->error_code);
         free(error);
         return;
     }
     // check that the received pixmap is valid and actually matches what we
     // know about the window (i.e. size)
     if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
-        qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << this;
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (not viewable)",
+                toplevel()->window());
         xcb_free_pixmap(connection(), pix);
         return;
     }
     const QRect bufferGeometry = toplevel()->bufferGeometry();
     if (windowGeometry.size() != bufferGeometry.size()) {
-        qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << this;
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)",
+                toplevel()->window());
         xcb_free_pixmap(connection(), pix);
         return;
     }
