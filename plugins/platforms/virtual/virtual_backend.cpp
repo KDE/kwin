@@ -60,6 +60,7 @@ void VirtualBackend::init()
         VirtualOutput *dummyOutput = new VirtualOutput(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
+        emit outputAdded(dummyOutput);
     }
 
     setSoftwareCursorForced(true);
