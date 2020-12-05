@@ -90,6 +90,11 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
+XRenderBackend *Platform::createXRenderBackend()
+{
+    return nullptr;
+}
+
 void Platform::prepareShutdown()
 {
     setOutputsEnabled(false);

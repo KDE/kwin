@@ -10,6 +10,7 @@
 #include "x11cursor.h"
 #include "edge.h"
 #include "windowselector.h"
+#include "x11xrenderbackend.h"
 #include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -117,6 +118,11 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
         // no backend available
         return nullptr;
     }
+}
+
+XRenderBackend *X11StandalonePlatform::createXRenderBackend()
+{
+    return new X11XRenderBackend(this);
 }
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
