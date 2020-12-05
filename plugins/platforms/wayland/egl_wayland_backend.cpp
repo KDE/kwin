@@ -327,10 +327,14 @@ void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion
 
     if (supportsSwapBuffersWithDamage() && !output->m_damageHistory.isEmpty()) {
         QVector<EGLint> rects = regionToRects(output->m_damageHistory.constFirst(), waylandOutput);
-        eglSwapBuffersWithDamageEXT(eglDisplay(), output->m_eglSurface,
-                                    rects.data(), rects.count()/4);
+        if (!eglSwapBuffersWithDamageEXT(eglDisplay(), output->m_eglSurface,
+                                         rects.data(), rects.count() / 4)) {
+            qCCritical(KWIN_WAYLAND_BACKEND, "eglSwapBuffersWithDamage() failed: %x", eglGetError());
+        }
     } else {
-        eglSwapBuffers(eglDisplay(), output->m_eglSurface);
+        if (!eglSwapBuffers(eglDisplay(), output->m_eglSurface)) {
+            qCCritical(KWIN_WAYLAND_BACKEND, "eglSwapBuffers() failed: %x", eglGetError());
+        }
     }
 
     if (supportsBufferAge()) {
