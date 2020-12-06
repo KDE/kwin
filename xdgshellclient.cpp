@@ -974,7 +974,11 @@ void XdgToplevelClient::handleMoveRequested(SeatInterface *seat, quint32 serial)
     if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)) {
         return;
     }
-    performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
+    if (isMovable()) {
+        performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
+    } else {
+        qCDebug(KWIN_CORE) << this << "is immovable, ignoring the move request";
+    }
 }
 
 void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edges, quint32 serial)
