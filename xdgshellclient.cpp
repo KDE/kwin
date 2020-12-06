@@ -971,15 +971,17 @@ void XdgToplevelClient::handleWindowMenuRequested(SeatInterface *seat, const QPo
 
 void XdgToplevelClient::handleMoveRequested(SeatInterface *seat, quint32 serial)
 {
-    Q_UNUSED(seat)
-    Q_UNUSED(serial)
+    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)) {
+        return;
+    }
     performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
 }
 
 void XdgToplevelClient::handleResizeRequested(SeatInterface *seat, Qt::Edges edges, quint32 serial)
 {
-    Q_UNUSED(seat)
-    Q_UNUSED(serial)
+    if (!seat->hasImplicitPointerGrab(serial) && !seat->hasImplicitTouchGrab(serial)) {
+        return;
+    }
     if (!isResizable() || isShade()) {
         return;
     }
