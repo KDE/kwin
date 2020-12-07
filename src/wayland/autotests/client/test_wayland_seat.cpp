@@ -1489,6 +1489,9 @@ void TestWaylandSeat::testKeyboard()
     m_seatInterface->setHasKeyboard(true);
     QVERIFY(keyboardSpy.wait());
 
+    // update modifiers before any surface focused
+    m_seatInterface->keyboard()->updateModifiers(4, 3, 2, 1);
+
     // create the surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
     QVERIFY(surfaceCreatedSpy.isValid());
@@ -1552,10 +1555,10 @@ void TestWaylandSeat::testKeyboard()
     // we get the modifiers sent after the enter
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.count(), 1);
-    QCOMPARE(modifierSpy.first().at(0).value<quint32>(), quint32(0));
-    QCOMPARE(modifierSpy.first().at(1).value<quint32>(), quint32(0));
-    QCOMPARE(modifierSpy.first().at(2).value<quint32>(), quint32(0));
-    QCOMPARE(modifierSpy.first().at(3).value<quint32>(), quint32(0));
+    QCOMPARE(modifierSpy.first().at(0).value<quint32>(), quint32(4));
+    QCOMPARE(modifierSpy.first().at(1).value<quint32>(), quint32(3));
+    QCOMPARE(modifierSpy.first().at(2).value<quint32>(), quint32(2));
+    QCOMPARE(modifierSpy.first().at(3).value<quint32>(), quint32(1));
     QCOMPARE(enteredSpy.count(), 1);
     // TODO: get through API
     QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial() - 1);

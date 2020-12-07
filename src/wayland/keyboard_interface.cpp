@@ -220,9 +220,6 @@ void KeyboardInterface::keyReleased(quint32 key)
 
 void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
-    if (!d->focusedSurface) {
-        return;
-    }
     bool changed = false;
 #define UPDATE( value ) \
     if (d->modifiers.value != value) { \
@@ -236,6 +233,11 @@ void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quin
     if (!changed) {
         return;
     }
+
+    if (!d->focusedSurface) {
+        return;
+    }
+
     d->modifiers.serial = d->seat->d_func()->nextSerial();
     d->sendModifiers(depressed, latched, locked, group, d->modifiers.serial);
 }
