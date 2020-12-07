@@ -665,10 +665,6 @@ void GlxBackend::setSwapInterval(int interval)
 
 void GlxBackend::present(const QRegion &damage)
 {
-    if (damage.isEmpty()) {
-        return;
-    }
-
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
     const bool fullRepaint = supportsBufferAge() || (damage == displayRegion);
@@ -736,21 +732,6 @@ QRegion GlxBackend::beginFrame(int screenId)
 void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
-
-    if (damagedRegion.isEmpty()) {
-        // If the damaged region of a window is fully occluded, the only
-        // rendering done, if any, will have been to repair a reused back
-        // buffer, making it identical to the front buffer.
-        //
-        // In this case we won't post the back buffer. Instead we'll just
-        // set the buffer age to 1, so the repaired regions won't be
-        // rendered again in the next frame.
-        if (!renderedRegion.isEmpty())
-            glFlush();
-
-        m_bufferAge = 1;
-        return;
-    }
 
     present(renderedRegion);
 

@@ -50,22 +50,6 @@ void EglBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
 {
     Q_UNUSED(screenId)
 
-    if (damagedRegion.isEmpty()) {
-
-        // If the damaged region of a window is fully occluded, the only
-        // rendering done, if any, will have been to repair a reused back
-        // buffer, making it identical to the front buffer.
-        //
-        // In this case we won't post the back buffer. Instead we'll just
-        // set the buffer age to 1, so the repaired regions won't be
-        // rendered again in the next frame.
-        if (!renderedRegion.isEmpty())
-            glFlush();
-
-        m_bufferAge = 1;
-        return;
-    }
-
     presentSurface(surface(), renderedRegion, screens()->geometry());
 
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
@@ -80,9 +64,6 @@ void EglBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRe
 
 void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
 {
-    if (damage.isEmpty()) {
-        return;
-    }
     const bool fullRepaint = supportsBufferAge() || (damage == screenGeometry);
 
     if (fullRepaint || !havePostSubBuffer()) {
