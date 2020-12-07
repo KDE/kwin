@@ -197,9 +197,14 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         Q_UNREACHABLE();
     }
 
-    const quint32 previousLayout = m_xkb->currentLayout();
     if (!autoRepeat) {
+        const quint32 previousLayout = m_xkb->currentLayout();
+
         m_xkb->updateKey(key, state);
+
+        if (m_xkb->modifiers() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
+            m_keyboardLayout->checkLayoutChange(previousLayout);
+        }
     }
 
     const xkb_keysym_t keySym = m_xkb->currentKeysym();
@@ -221,10 +226,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
-
-    if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
-        m_keyboardLayout->checkLayoutChange(previousLayout);
-    }
 }
 
 void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
