@@ -208,7 +208,8 @@ QVariantMap clientToVariantMap(const AbstractClient *c)
         {QStringLiteral("skipPager"), c->skipPager()},
         {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
         {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
-        {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical}
+        {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
+        {QStringLiteral("blocksNotifications"), c->blocksNotifications()}
     };
 }
 }

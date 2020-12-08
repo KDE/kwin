@@ -320,6 +320,8 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      */
     Q_PROPERTY(QString colorScheme READ colorScheme NOTIFY colorSchemeChanged)
 
+    Q_PROPERTY(bool blocksNotifications READ blocksNotifications WRITE setBlocksNotifications NOTIFY blocksNotificationsChanged)
+
 public:
     ~AbstractClient() override;
 
@@ -811,6 +813,9 @@ public:
     QString colorScheme() const;
     void setColorScheme(const QString &colorScheme);
 
+    bool blocksNotifications() const;
+    void setBlocksNotifications(bool blocksNotifications);
+
     /**
      * Request showing the application menu bar
      * @param actionId The DBus menu ID of the action that should be highlighted, 0 for the root menu
@@ -914,6 +919,7 @@ Q_SIGNALS:
     void hasApplicationMenuChanged(bool);
     void applicationMenuActiveChanged(bool);
     void unresponsiveChanged(bool);
+    void blocksNotificationsChanged(bool);
 
 protected:
     AbstractClient();
@@ -1306,6 +1312,7 @@ private:
     QString m_applicationMenuObjectPath;
 
     bool m_unresponsive = false;
+    bool m_blocksNotifications = false;
 
     QKeySequence _shortcut;
 

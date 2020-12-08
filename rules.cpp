@@ -75,6 +75,7 @@ Rules::Rules()
     , shortcutrule(UnusedSetRule)
     , disableglobalshortcutsrule(UnusedForceRule)
     , desktopfilerule(UnusedSetRule)
+    , blocknotifications(UnusedForceRule)
 {
 }
 
@@ -173,6 +174,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(shortcut);
     READ_FORCE_RULE(disableglobalshortcuts,);
     READ_SET_RULE(desktopfile);
+    READ_FORCE_RULE(blocknotifications,);
 }
 
 #undef READ_MATCH_STRING
@@ -254,6 +256,7 @@ void Rules::write(RuleSettings *settings) const
     WRITE_SET_RULE(shortcut, Shortcut,);
     WRITE_FORCE_RULE(disableglobalshortcuts, Disableglobalshortcuts,);
     WRITE_SET_RULE(desktopfile, Desktopfile,);
+    WRITE_FORCE_RULE(blocknotifications, Blocknotifications,);
 }
 
 #undef WRITE_MATCH_STRING
@@ -298,7 +301,8 @@ bool Rules::isEmpty() const
            && strictgeometryrule == UnusedForceRule
            && shortcutrule == UnusedSetRule
            && disableglobalshortcutsrule == UnusedForceRule
-           && desktopfilerule == UnusedSetRule);
+           && desktopfilerule == UnusedSetRule
+           && blocknotifications == UnusedForceRule);
 }
 
 Rules::ForceRule Rules::convertForceRule(int v)
@@ -615,6 +619,7 @@ APPLY_FORCE_RULE(strictgeometry, StrictGeometry, bool)
 APPLY_RULE(shortcut, Shortcut, QString)
 APPLY_FORCE_RULE(disableglobalshortcuts, DisableGlobalShortcuts, bool)
 APPLY_RULE(desktopfile, DesktopFile, QString)
+APPLY_FORCE_RULE(blocknotifications, BlockNotifications, bool)
 
 
 #undef APPLY_RULE
@@ -690,6 +695,7 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(shortcut);
     DISCARD_USED_FORCE_RULE(disableglobalshortcuts);
     DISCARD_USED_SET_RULE(desktopfile);
+    DISCARD_USED_FORCE_RULE(blocknotifications);
 
     return changed;
 }
@@ -827,6 +833,7 @@ CHECK_FORCE_RULE(StrictGeometry, bool)
 CHECK_RULE(Shortcut, QString)
 CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
 CHECK_RULE(DesktopFile, QString)
+CHECK_FORCE_RULE(BlockNotifications, bool)
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE
@@ -894,6 +901,8 @@ void AbstractClient::applyWindowRules()
     } else
         setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
+    qDebug() << "apply win rules" << rules()->checkBlockNotifications(blocksNotifications());
+    setBlocksNotifications(rules()->checkBlockNotifications(blocksNotifications()));
 }
 
 void X11Client::updateWindowRules(Rules::Types selection)

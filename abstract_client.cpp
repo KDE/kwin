@@ -15,6 +15,7 @@
 #include "decorations/decorationbridge.h"
 #include "effects.h"
 #include "focuschain.h"
+#include "notification_inhibition.h"
 #include "outline.h"
 #include "screens.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -809,6 +810,27 @@ void AbstractClient::updateColorScheme()
 void AbstractClient::handlePaletteChange()
 {
     emit paletteChanged(palette());
+}
+
+bool AbstractClient::blocksNotifications() const
+{
+    return m_blocksNotifications;
+}
+
+void AbstractClient::setBlocksNotifications(bool block)
+{
+    if (m_blocksNotifications == block) {
+        return;
+    }
+
+    m_blocksNotifications = block;
+
+    if (block) {
+        // Create inhibition tracker only the first time a client is actually blocking notifications
+        NotificationInhibition::self().registerClient(this);
+    }
+
+    emit blocksNotificationsChanged(block);
 }
 
 void AbstractClient::keepInArea(QRect area, bool partial)

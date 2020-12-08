@@ -635,6 +635,11 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Block compositing"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("composite-track-on")));
+
+    addRule(new RuleItem(QLatin1String("blocknotifications"),
+                         RulePolicy::ForceRule, RuleItem::Boolean,
+                         i18nc("Enable do not disturb mode", "Do not disturb"), i18n("Appearance & Fixes"),
+                         QIcon::fromTheme("notifications-disabled")));
 }
 
 
@@ -657,7 +662,8 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         { "skipPager",          "skippager"     },
         { "skipSwitcher",       "skipswitcher"  },
         { "type",               "type"          },
-        { "desktopFile",        "desktopfile"   }
+        { "desktopFile",        "desktopfile"   },
+        { "blocksNotifications","blocknotifications" },
     };
     return propertyToRule;
 };

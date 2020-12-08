@@ -78,6 +78,7 @@ public:
     QString checkShortcut(QString s, bool init = false) const;
     bool checkDisableGlobalShortcuts(bool disable) const;
     QString checkDesktopFile(QString desktopFile, bool init = false) const;
+    bool checkBlockNotifications(bool block) const;
 private:
     MaximizeMode checkMaximizeVert(MaximizeMode mode, bool init) const;
     MaximizeMode checkMaximizeHoriz(MaximizeMode mode, bool init) const;
@@ -173,6 +174,7 @@ public:
     bool applyShortcut(QString& shortcut, bool init) const;
     bool applyDisableGlobalShortcuts(bool& disable) const;
     bool applyDesktopFile(QString &desktopFile, bool init) const;
+    bool applyBlockNotifications(bool& inhibits) const;
 private:
 #endif
     bool matchType(NET::WindowType match_type) const;
@@ -273,6 +275,8 @@ private:
     ForceRule disableglobalshortcutsrule;
     QString desktopfile;
     SetRule desktopfilerule;
+    bool blocknotifications;
+    ForceRule blocknotificationsrule;
     friend QDebug& operator<<(QDebug& stream, const Rules*);
 };
 

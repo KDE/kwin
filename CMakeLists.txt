@@ -500,6 +500,7 @@ set(kwin_SRCS
     modifier_only_shortcuts.cpp
     moving_client_x11_filter.cpp
     netinfo.cpp
+    notification_inhibition.cpp
     onscreennotification.cpp
     options.cpp
     osd.cpp

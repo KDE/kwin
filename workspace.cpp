@@ -29,6 +29,7 @@
 #include "input.h"
 #include "internal_client.h"
 #include "moving_client_x11_filter.h"
+#include "notification_inhibition.h"
 #include "killwindow.h"
 #include "netinfo.h"
 #include "outline.h"
