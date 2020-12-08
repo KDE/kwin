@@ -10,7 +10,9 @@
 #include "x11cursor.h"
 #include "edge.h"
 #include "windowselector.h"
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "x11xrenderbackend.h"
+#endif
 #include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -120,10 +122,12 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
     }
 }
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 XRenderBackend *X11StandalonePlatform::createXRenderBackend()
 {
     return new X11XRenderBackend(this);
 }
+#endif
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {

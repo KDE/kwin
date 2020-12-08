@@ -90,10 +90,12 @@ QPainterBackend *Platform::createQPainterBackend()
     return nullptr;
 }
 
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 XRenderBackend *Platform::createXRenderBackend()
 {
     return nullptr;
 }
+#endif
 
 void Platform::prepareShutdown()
 {

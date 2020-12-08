@@ -42,7 +42,9 @@ class Scene;
 class Screens;
 class ScreenEdges;
 class Toplevel;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
 class XRenderBackend;
+#endif
 
 namespace Decoration
 {
@@ -71,7 +73,9 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     virtual XRenderBackend *createXRenderBackend();
+#endif
     virtual DmaBufTexture *createDmaBufTexture(const QSize &size) {
         Q_UNUSED(size);
         return nullptr;

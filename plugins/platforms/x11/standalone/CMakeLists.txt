@@ -12,7 +12,6 @@ set(X11PLATFORM_SOURCES
     x11_output.cpp
     x11_platform.cpp
     x11cursor.cpp
-    x11xrenderbackend.cpp
     xfixes_cursor_event_filter.cpp
 )
 
@@ -29,9 +28,14 @@ include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/xrender)
 
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
 set_target_properties(KWinX11Platform PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.platforms/")
-target_link_libraries(KWinX11Platform eglx11common kwin kwinxrenderutils SceneOpenGLBackend SceneXRenderBackend Qt5::X11Extras XCB::CURSOR KF5::Crash )
+target_link_libraries(KWinX11Platform eglx11common kwin kwinxrenderutils SceneOpenGLBackend Qt5::X11Extras XCB::CURSOR KF5::Crash )
 if (X11_Xinput_FOUND)
     target_link_libraries(KWinX11Platform ${X11_Xinput_LIB})
+endif()
+
+if (KWIN_BUILD_XRENDER_COMPOSITING)
+    target_sources(KWinX11Platform PRIVATE x11xrenderbackend.cpp)
+    target_link_libraries(KWinX11Platform SceneXRenderBackend)
 endif()
 
 if (HAVE_DL_LIBRARY)
