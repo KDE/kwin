@@ -1,39 +1,29 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_SCENE_OPENGL_BACKEND_H
 #define KWIN_SCENE_OPENGL_BACKEND_H
 
-#include <QElapsedTimer>
 #include <QRegion>
 
 #include <kwin_export.h>
 
 namespace KWin
 {
+class AbstractOutput;
 class OpenGLBackend;
 class OverlayWindow;
 class SceneOpenGL;
 class SceneOpenGLTexture;
 class SceneOpenGLTexturePrivate;
 class WindowPixmap;
+class GLTexture;
 
 /**
  * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
@@ -56,41 +46,21 @@ public:
     virtual ~OpenGLBackend();
 
     virtual void init() = 0;
-    /**
-     * @return Time passes since start of rendering current frame.
-     * @see startRenderTimer
-     */
-    qint64 renderTime() {
-        return m_renderTimer.nsecsElapsed();
-    }
+
     virtual void screenGeometryChanged(const QSize &size) = 0;
     virtual SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) = 0;
 
     /**
-     * @brief Backend specific code to prepare the rendering of a frame including flushing the
-     * previously rendered frame to the screen if the backend works this way.
+     * Notifies about starting to paint.
      *
-     * @return A region that if not empty will be repainted in addition to the damaged region
+     * @p damage contains the reported damage as suggested by windows and effects on prepaint calls.
      */
-    virtual QRegion prepareRenderingFrame() = 0;
-
-    /**
-     * @brief Backend specific code to handle the end of rendering a frame.
-     *
-     * @param renderedRegion The possibly larger region that has been rendered
-     * @param damagedRegion The damaged region that should be posted
-     */
-    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) = 0;
-    virtual void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion);
+    virtual void aboutToStartPainting(int screenId, const QRegion &damage);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
     virtual bool usesOverlayWindow() const = 0;
-    /**
-     * Whether the rendering needs to be split per screen.
-     * Default implementation returns @c false.
-     */
-    virtual bool perScreenRendering() const;
-    virtual QRegion prepareRenderingForScreen(int screenId);
+    virtual QRegion beginFrame(int screenId) = 0;
+    virtual void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      */
@@ -159,11 +129,22 @@ public:
         return m_haveBufferAge;
     }
 
-    /**
-     * @returns whether the context is surfaceless
-     */
-    bool isSurfaceLessContext() const {
-        return m_surfaceLessContext;
+    bool supportsPartialUpdate() const
+    {
+        return m_havePartialUpdate;
+    }
+    bool supportsSwapBuffersWithDamage() const
+    {
+        return m_haveSwapBuffersWithDamage;
+    }
+
+    bool supportsSurfacelessContext() const
+    {
+        return m_haveSurfacelessContext;
+    }
+    bool supportsNativeFence() const
+    {
+        return m_haveNativeFence;
     }
 
     /**
@@ -196,6 +177,8 @@ public:
      * Copy a region of pixels from the current read to the current draw buffer
      */
     void copyPixels(const QRegion &region);
+
+    virtual QSharedPointer<GLTexture> textureForOutput(AbstractOutput *output) const;
 
 protected:
     /**
@@ -248,6 +231,26 @@ protected:
         m_haveBufferAge = value;
     }
 
+    void setSupportsPartialUpdate(bool value)
+    {
+        m_havePartialUpdate = value;
+    }
+
+    void setSupportsSwapBuffersWithDamage(bool value)
+    {
+        m_haveSwapBuffersWithDamage = value;
+    }
+
+    void setSupportsSurfacelessContext(bool value)
+    {
+        m_haveSurfacelessContext = value;
+    }
+
+    void setSupportsNativeFence(bool value)
+    {
+        m_haveNativeFence = value;
+    }
+
     /**
      * @return const QRegion& Damage of previously rendered frame
      */
@@ -256,21 +259,6 @@ protected:
     }
     void setLastDamage(const QRegion &damage) {
         m_lastDamage = damage;
-    }
-    /**
-     * @brief Starts the timer for how long it takes to render the frame.
-     *
-     * @see renderTime
-     */
-    void startRenderTimer() {
-        m_renderTimer.start();
-    }
-
-    /**
-     * @param set whether the context is surface less
-     */
-    void setSurfaceLessContext(bool set) {
-        m_surfaceLessContext = set;
     }
 
     /**
@@ -300,6 +288,19 @@ private:
      */
     bool m_haveBufferAge;
     /**
+     * @brief Whether the backend supports EGL_KHR_partial_update
+     */
+    bool m_havePartialUpdate = false;
+    bool m_haveSwapBuffersWithDamage = false;
+    /**
+     * @brief Whether the backend supports EGL_KHR_surfaceless_context.
+     */
+    bool m_haveSurfacelessContext = false;
+    /**
+     * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.
+     */
+    bool m_haveNativeFence = false;
+    /**
      * @brief Whether the initialization failed, of course default to @c false.
      */
     bool m_failed;
@@ -311,12 +312,6 @@ private:
      * @brief The damage history for the past 10 frames.
      */
     QList<QRegion> m_damageHistory;
-    /**
-     * @brief Timer to measure how long a frame renders.
-     */
-    QElapsedTimer m_renderTimer;
-    bool m_surfaceLessContext = false;
-
     QList<QByteArray> m_extensions;
 };
 

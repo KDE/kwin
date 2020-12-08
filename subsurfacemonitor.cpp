@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2020 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "subsurfacemonitor.h"
 
@@ -46,6 +35,10 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
             this, &SubSurfaceMonitor::subSurfaceMapped);
     connect(surface, &SurfaceInterface::unmapped,
             this, &SubSurfaceMonitor::subSurfaceUnmapped);
+    connect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
+            this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
+    connect(surface, &SurfaceInterface::bufferSizeChanged,
+            this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
 
     registerSurface(surface);
 }
@@ -64,6 +57,10 @@ void SubSurfaceMonitor::unregisterSubSurface(SubSurfaceInterface *subSurface)
                this, &SubSurfaceMonitor::subSurfaceMapped);
     disconnect(surface, &SurfaceInterface::unmapped,
                this, &SubSurfaceMonitor::subSurfaceUnmapped);
+    disconnect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
+               this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
+    disconnect(surface, &SurfaceInterface::bufferSizeChanged,
+               this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
 
     unregisterSurface(surface);
 }

@@ -1,23 +1,12 @@
-/**************************************************************************
- * KWin - the KDE window manager                                          *
- * This file is part of the KDE project.                                  *
- *                                                                        *
- * Copyright (C) 2013 Antonis Tsiapaliokas <kok3rs@gmail.com>             *
- * Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>                 *
- *                                                                        *
- * This program is free software; you can redistribute it and/or modify   *
- * it under the terms of the GNU General Public License as published by   *
- * the Free Software Foundation; either version 2 of the License, or      *
- * (at your option) any later version.                                    *
- *                                                                        *
- * This program is distributed in the hope that it will be useful,        *
- * but WITHOUT ANY WARRANTY; without even the implied warranty of         *
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
- * GNU General Public License for more details.                           *
- *                                                                        *
- * You should have received a copy of the GNU General Public License      *
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.  *
- **************************************************************************/
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
+
+    SPDX-FileCopyrightText: 2013 Antonis Tsiapaliokas <kok3rs@gmail.com>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 
 #include "ui_compositing.h"
@@ -70,11 +59,6 @@ private:
 
     OrgKdeKwinCompositingInterface *m_compositingInterface;
     KWinCompositingSetting *m_settings;
-
-    // unmanaged states
-    int m_backend;
-    bool m_glCore;
-    double m_animationDurationFactor;
 };
 
 static const QVector<qreal> s_animationMultipliers = {8, 4, 2, 1, 0.5, 0.25, 0.125, 0};
@@ -187,7 +171,7 @@ void KWinCompositingKCM::init()
 void KWinCompositingKCM::onBackendChanged()
 {
     const int currentType = m_form.backend->currentData().toInt();
-    
+
     m_form.kcfg_glTextureFilter->setVisible(currentType != CompositingTypeIndex::XRENDER_INDEX);
     m_form.kcfg_XRenderSmoothScale->setVisible(currentType == CompositingTypeIndex::XRENDER_INDEX);
 
@@ -215,10 +199,10 @@ void KWinCompositingKCM::updateUnmanagedItemStatus()
 
     const bool inPlasma = isRunningPlasma();
 
-    bool changed = glCore != m_glCore;
-    changed |= backend != m_backend;
+    bool changed = glCore != m_settings->glCore();
+    changed |= backend != m_settings->backend();
     if (!inPlasma) {
-      changed |= (animationDuration != m_animationDurationFactor);
+      changed |= (animationDuration != m_settings->animationDurationFactor());
     }
     unmanagedWidgetChangeState(changed);
 
@@ -244,10 +228,9 @@ void KWinCompositingKCM::load()
 
     m_settings->findItem("Backend")->readConfig(m_settings->config());
     m_settings->findItem("glCore")->readConfig(m_settings->config());
-    m_backend = m_settings->backend();
-    m_glCore = m_settings->glCore();
-    if (m_backend == KWinCompositingSetting::EnumBackend::OpenGL) {
-        if (m_glCore) {
+
+    if (m_settings->backend() == KWinCompositingSetting::EnumBackend::OpenGL) {
+        if (m_settings->glCore()) {
             m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL31_INDEX);
         } else {
             m_form.backend->setCurrentIndex(CompositingTypeIndex::OPENGL20_INDEX);

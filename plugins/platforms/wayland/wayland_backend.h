@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
-Copyright 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_WAYLAND_BACKEND_H
 #define KWIN_WAYLAND_BACKEND_H
 // KWin
@@ -36,6 +25,7 @@ struct wl_buffer;
 struct wl_display;
 struct wl_event_queue;
 struct wl_seat;
+struct gbm_device;
 
 namespace KWayland
 {
@@ -66,8 +56,6 @@ class XdgShell;
 
 namespace KWin
 {
-class WaylandCursorTheme;
-
 namespace Wayland
 {
 
@@ -91,8 +79,8 @@ public:
 
 protected:
     void resetSurface();
-    virtual void doInstallImage(wl_buffer *image, const QSize &size);
-    void drawSurface(wl_buffer *image, const QSize &size);
+    virtual void doInstallImage(wl_buffer *image, const QSize &size, qreal scale);
+    void drawSurface(wl_buffer *image, const QSize &size, qreal scale);
 
     KWayland::Client::Surface *surface() const {
         return m_surface;
@@ -120,7 +108,7 @@ public:
 
 private:
     void changeOutput(WaylandOutput *output);
-    void doInstallImage(wl_buffer *image, const QSize &size) override;
+    void doInstallImage(wl_buffer *image, const QSize &size, qreal scale) override;
     void createSubSurface();
 
     QPointF absoluteToRelativePosition(const QPointF &position);
@@ -186,6 +174,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
+    DmaBufTexture *createDmaBufTexture(const QSize &size) override;
 
     void flush();
 
@@ -206,7 +195,7 @@ public:
 
     void checkBufferSwap();
 
-    WaylandOutput* getOutputAt(const QPointF globalPosition);
+    WaylandOutput* getOutputAt(const QPointF &globalPosition);
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
     QVector<WaylandOutput*> waylandOutputs() const {
@@ -214,9 +203,6 @@ public:
     }
 
 Q_SIGNALS:
-    void outputAdded(WaylandOutput *output);
-    void outputRemoved(WaylandOutput *output);
-
     void systemCompositorDied();
     void connectionFailed();
 
@@ -250,6 +236,10 @@ private:
     WaylandCursor *m_waylandCursor = nullptr;
 
     bool m_pointerLockRequested = false;
+#if HAVE_GBM && HAVE_WAYLAND_EGL
+    int m_drmFileDescriptor = 0;
+    gbm_device *m_gbmDevice;
+#endif
 };
 
 inline

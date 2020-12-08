@@ -443,7 +443,7 @@ the window.
 
 <para>
 This bottom section, allows you to configure additional actions, when
-a modifier key (by default &Alt;) is pressed, and a mouse click is
+a modifier key (by default &Meta;) is pressed, and a mouse click is
 made on a window.</para>
 
 <para>

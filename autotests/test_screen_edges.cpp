@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 // kwin
 #include "../atoms.h"
 #include "../cursor.h"
@@ -28,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../utils.h"
 #include "../virtualdesktops.h"
 #include "../xcbutils.h"
+#include "../platform.h"
 #include "mock_screens.h"
 #include "mock_workspace.h"
 #include "mock_x11client.h"
@@ -101,6 +91,8 @@ private Q_SLOTS:
     void testCreatingInitialEdges();
     void testCallback();
     void testCallbackWithCheck();
+    void testOverlappingEdges_data();
+    void testOverlappingEdges();
     void testPushBack_data();
     void testPushBack();
     void testFullScreenBlocking();
@@ -128,9 +120,11 @@ void TestScreenEdges::init()
     KWin::Cursors::self()->setMouse(new KWin::Cursor(this));
 
     using namespace KWin;
-    new MockWorkspace;
+    new MockWorkspace(this);
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     Screens::create();
+    QSignalSpy sp(screens(), &MockScreens::changed);
+    QVERIFY(sp.wait());
 
     auto vd = VirtualDesktopManager::create();
     vd->setConfig(config);
@@ -324,9 +318,6 @@ void TestScreenEdges::testCreatingInitialEdges()
     static_cast<MockScreens*>(screens())->setGeometries(QList<QRect>{QRect{0, 0, 1024, 768}});
     QSignalSpy changedSpy(screens(), &Screens::changed);
     QVERIFY(changedSpy.isValid());
-    // first is before it's updated
-    QVERIFY(changedSpy.wait());
-    // second is after it's updated
     QVERIFY(changedSpy.wait());
 
     // let's update the layout and verify that we have edges
@@ -578,6 +569,37 @@ void TestScreenEdges::testCallbackWithCheck()
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(98, 50));
 }
 
+void TestScreenEdges::testOverlappingEdges_data()
+{
+    QTest::addColumn<QRect>("geo1");
+    QTest::addColumn<QRect>("geo2");
+
+    QTest::newRow("topleft-1x1") << QRect{0, 1, 1024, 768} << QRect{1, 0, 1024, 768};
+    QTest::newRow("left-1x1-same") << QRect{0, 1, 1024, 766} << QRect{1, 0, 1024, 768};
+    QTest::newRow("left-1x1-exchanged") << QRect{0, 1, 1024, 768} << QRect{1, 0, 1024, 766};
+    QTest::newRow("bottomleft-1x1") << QRect{0, 0, 1024, 768} << QRect{1, 0, 1024, 769};
+    QTest::newRow("bottomright-1x1") << QRect{0, 0, 1024, 768} << QRect{0, 0, 1023, 769};
+    QTest::newRow("right-1x1-same") << QRect{0, 0, 1024, 768} << QRect{0, 1, 1025, 766};
+    QTest::newRow("right-1x1-exchanged") << QRect{0, 0, 1024, 768} << QRect{1, 1, 1024, 768};
+}
+
+
+void TestScreenEdges::testOverlappingEdges()
+{
+    using namespace KWin;
+    QFETCH(QRect, geo1);
+    QFETCH(QRect, geo2);
+
+    MockScreens* mockScreens = static_cast<MockScreens*>(screens());
+    QSignalSpy sp(mockScreens, &MockScreens::changed);
+    mockScreens->setGeometries({geo1, geo2});
+    QVERIFY(sp.wait());
+
+    QCOMPARE(screens()->count(), 2);
+    auto screenEdges = ScreenEdges::self();
+    screenEdges->init();
+}
+
 void TestScreenEdges::testPushBack_data()
 {
     QTest::addColumn<KWin::ElectricBorder>("border");
@@ -603,8 +625,6 @@ void TestScreenEdges::testPushBack()
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("Windows").writeEntry("ElectricBorderPushbackPixels", pushback);
     config->sync();
-
-    // TODO: add screens
 
     auto s = ScreenEdges::self();
     s->setConfig(config);

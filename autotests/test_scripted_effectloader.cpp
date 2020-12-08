@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "../effectloader.h"
 #include "mock_effectshandler.h"
 #include "../scripting/scriptedeffect.h"
@@ -144,6 +133,7 @@ void TestScriptedEffectLoader::testHasEffect_data()
     QTest::newRow("FadeDesktop")                 << QStringLiteral("kwin4_effect_fadedesktop")      << true;
     QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups")     << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")        << true;
+    QTest::newRow("FullScreen")                  << QStringLiteral("kwin4_effect_fullscreen")       << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")            << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")           << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")         << true;
@@ -216,6 +206,7 @@ void TestScriptedEffectLoader::testLoadEffect_data()
     QTest::newRow("FadeDesktop")                 << QStringLiteral("kwin4_effect_fadedesktop")      << true;
     QTest::newRow("FadingPopups")                << QStringLiteral("kwin4_effect_fadingpopups")     << true;
     QTest::newRow("FrozenApp")                   << QStringLiteral("kwin4_effect_frozenapp")        << true;
+    QTest::newRow("FullScreen")                  << QStringLiteral("kwin4_effect_fullscreen")       << true;
     QTest::newRow("Login")                       << QStringLiteral("kwin4_effect_login")            << true;
     QTest::newRow("Logout")                      << QStringLiteral("kwin4_effect_logout")           << true;
     QTest::newRow("Maximize")                    << QStringLiteral("kwin4_effect_maximize")         << true;
@@ -375,6 +366,7 @@ void TestScriptedEffectLoader::testLoadAllEffects()
     plugins.writeEntry(kwin4 + QStringLiteral("fadedesktopEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("fadingpopupsEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("frozenappEnabled"), false);
+    plugins.writeEntry(kwin4 + QStringLiteral("fullscreenEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("loginEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("logoutEnabled"), false);
     plugins.writeEntry(kwin4 + QStringLiteral("maximizeEnabled"), false);

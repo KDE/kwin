@@ -1,21 +1,9 @@
 /*
- * Copyright (c) 2019 Valerio Pilo <vpilo@coldshock.net>
- * Copyright (c) 2019 Cyril Rossi <cyril.rossi@enioka.com>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License version 2 as published by the Free Software Foundation.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public License
- * along with this library; see the file COPYING.LIB.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
- * Boston, MA 02110-1301, USA.
- */
+    SPDX-FileCopyrightText: 2019 Valerio Pilo <vpilo@coldshock.net>
+    SPDX-FileCopyrightText: 2019 Cyril Rossi <cyril.rossi@enioka.com>
+
+    SPDX-License-Identifier: LGPL-2.0-only
+*/
 
 #include "kcm.h"
 #include "decorationmodel.h"
@@ -37,9 +25,10 @@
 
 #include <KNewStuff3/KNS3/DownloadDialog>
 
+#include "kwindecorationdata.h"
 #include "kwindecorationsettings.h"
 
-K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>();)
+K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kwindecoration.json", registerPlugin<KCMKWinDecoration>();registerPlugin<KWinDecorationData>();)
 
 Q_DECLARE_METATYPE(KDecoration2::BorderSize)
 
@@ -56,7 +45,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_rightButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
     , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
-    , m_settings(new KWinDecorationSettings(this))
+    , m_data(new KWinDecorationData(this))
 {
     auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
                                 i18n("Window Decorations"),
@@ -68,22 +57,26 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
                      QStringLiteral("vpilo@coldshock.net"));
     setAboutData(about);
     setButtons(Apply | Default | Help);
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    qmlRegisterType<QAbstractListModel>();
-    qmlRegisterType<QSortFilterProxyModel>();
-    qmlRegisterType<KWinDecorationSettings>();
-#else
     qmlRegisterAnonymousType<QAbstractListModel>("org.kde.kwin.KWinDecoration", 1);
     qmlRegisterAnonymousType<QSortFilterProxyModel>("org.kde.kwin.KWinDecoration", 1);
     qmlRegisterAnonymousType<KWinDecorationSettings>("org.kde.kwin.KWinDecoration", 1);
-#endif
     m_proxyThemesModel->setSourceModel(m_themesModel);
     m_proxyThemesModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyThemesModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     m_proxyThemesModel->sort(0);
 
-    connect(m_settings, &KWinDecorationSettings::themeChanged, this, &KCMKWinDecoration::themeChanged);
-    connect(m_settings, &KWinDecorationSettings::borderSizeChanged, this, &KCMKWinDecoration::borderSizeChanged);
+    connect(m_data->settings(), &KWinDecorationSettings::themeChanged, this, &KCMKWinDecoration::themeChanged);
+    connect(m_data->settings(), &KWinDecorationSettings::borderSizeChanged, this, &KCMKWinDecoration::borderSizeChanged);
+
+    connect(m_data->settings(), &KWinDecorationSettings::borderSizeAutoChanged, this, &KCMKWinDecoration::borderIndexChanged);
+    connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::borderIndexChanged);
+    connect(this, &KCMKWinDecoration::themeChanged, this, &KCMKWinDecoration::borderIndexChanged);
+
+    connect(this, &KCMKWinDecoration::themeChanged, this, [=](){
+        if (m_data->settings()->borderSizeAuto()) {
+            setBorderSize(recommendedBorderSize());
+        }
+    });
 
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsInserted, this, &KCMKWinDecoration::onLeftButtonsChanged);
     connect(m_leftButtonsModel, &QAbstractItemModel::rowsMoved, this, &KCMKWinDecoration::onLeftButtonsChanged);
@@ -107,7 +100,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
 
 KWinDecorationSettings *KCMKWinDecoration::settings() const
 {
-    return m_settings;
+    return m_data->settings();
 }
 
 void KCMKWinDecoration::reloadKWinSettings()
@@ -138,20 +131,20 @@ void KCMKWinDecoration::load()
 {
     ManagedConfigModule::load();
 
-    m_leftButtonsModel->replace(Utils::buttonsFromString(m_settings->buttonsOnLeft()));
-    m_rightButtonsModel->replace(Utils::buttonsFromString(m_settings->buttonsOnRight()));
+    m_leftButtonsModel->replace(Utils::buttonsFromString(settings()->buttonsOnLeft()));
+    m_rightButtonsModel->replace(Utils::buttonsFromString(settings()->buttonsOnRight()));
 
-    setBorderSize(borderSizeIndexFromString(m_settings->borderSize()));
+    setBorderSize(borderSizeIndexFromString(settings()->borderSize()));
 
     emit themeChanged();
 }
 
 void KCMKWinDecoration::save()
 {
-    if (!m_settings->borderSizeAuto()) {
-        m_settings->setBorderSize(borderSizeIndexToString(m_borderSizeIndex));
+    if (!settings()->borderSizeAuto()) {
+        settings()->setBorderSize(borderSizeIndexToString(m_borderSizeIndex));
     } else {
-        m_settings->setBorderSize(m_settings->defaultBorderSizeValue());
+        settings()->setBorderSize(settings()->defaultBorderSizeValue());
     }
 
     ManagedConfigModule::save();
@@ -169,18 +162,18 @@ void KCMKWinDecoration::defaults()
 
     setBorderSize(recommendedBorderSize());
 
-    m_leftButtonsModel->replace(Utils::buttonsFromString(m_settings->buttonsOnLeft()));
-    m_rightButtonsModel->replace(Utils::buttonsFromString(m_settings->buttonsOnRight()));
+    m_leftButtonsModel->replace(Utils::buttonsFromString(settings()->buttonsOnLeft()));
+    m_rightButtonsModel->replace(Utils::buttonsFromString(settings()->buttonsOnRight()));
 }
 
 void KCMKWinDecoration::onLeftButtonsChanged()
 {
-    m_settings->setButtonsOnLeft(Utils::buttonsToString(m_leftButtonsModel->buttons()));
+    settings()->setButtonsOnLeft(Utils::buttonsToString(m_leftButtonsModel->buttons()));
 }
 
 void KCMKWinDecoration::onRightButtonsChanged()
 {
-    m_settings->setButtonsOnRight(Utils::buttonsToString(m_rightButtonsModel->buttons()));
+    settings()->setButtonsOnRight(Utils::buttonsToString(m_rightButtonsModel->buttons()));
 }
 
 QSortFilterProxyModel *KCMKWinDecoration::themesModel() const
@@ -205,7 +198,24 @@ QAbstractListModel *KCMKWinDecoration::availableButtonsModel() const
 
 QStringList KCMKWinDecoration::borderSizesModel() const
 {
-    return Utils::getBorderSizeNames().values();
+    // Use index 0 for borderSizeAuto == true
+    // The rest of indexes get offset by 1
+    QStringList model = Utils::getBorderSizeNames().values();
+    model.insert(0, i18nc("%1 is the name of a border size",
+                          "Theme's default (%1)", model.at(recommendedBorderSize())));
+    return model;
+}
+
+int KCMKWinDecoration::borderIndex() const
+{
+    return settings()->borderSizeAuto() ? 0 : m_borderSizeIndex + 1;
+}
+
+void KCMKWinDecoration::setBorderIndex(int index)
+{
+    const bool borderAuto = (index == 0);
+    settings()->setBorderSizeAuto(borderAuto);
+    setBorderSize(borderAuto ? recommendedBorderSize() : index - 1);
 }
 
 int KCMKWinDecoration::borderSize() const
@@ -229,7 +239,7 @@ int KCMKWinDecoration::recommendedBorderSize() const
 
 int KCMKWinDecoration::theme() const
 {
-    return m_proxyThemesModel->mapFromSource(m_themesModel->findDecoration(m_settings->pluginName(), m_settings->theme())).row();
+    return m_proxyThemesModel->mapFromSource(m_themesModel->findDecoration(settings()->pluginName(), settings()->theme())).row();
 }
 
 void KCMKWinDecoration::setBorderSize(int index)
@@ -242,27 +252,22 @@ void KCMKWinDecoration::setBorderSize(int index)
 
 void KCMKWinDecoration::setBorderSize(KDecoration2::BorderSize size)
 {
-    m_settings->setBorderSize(Utils::borderSizeToString(size));
+    settings()->setBorderSize(Utils::borderSizeToString(size));
 }
 
 void KCMKWinDecoration::setTheme(int index)
 {
     QModelIndex dataIndex = m_proxyThemesModel->index(index, 0);
     if (dataIndex.isValid()) {
-        m_settings->setTheme(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString());
-        m_settings->setPluginName(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString());
+        settings()->setTheme(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::ThemeNameRole).toString());
+        settings()->setPluginName(m_proxyThemesModel->data(dataIndex, KDecoration2::Configuration::DecorationsModel::PluginNameRole).toString());
         emit themeChanged();
     }
 }
 
 bool KCMKWinDecoration::isSaveNeeded() const
 {
-    return !m_settings->borderSizeAuto() && borderSizeIndexFromString(m_settings->borderSize()) != m_borderSizeIndex;
-}
-
-bool KCMKWinDecoration::isDefaults() const
-{
-    return m_settings->borderSizeAuto() && recommendedBorderSize() == m_borderSizeIndex;
+    return !settings()->borderSizeAuto() && borderSizeIndexFromString(settings()->borderSize()) != m_borderSizeIndex;
 }
 
 int KCMKWinDecoration::borderSizeIndexFromString(const QString &size) const

@@ -9,7 +9,7 @@
             <default>Nothing</default>
         </entry>
         <entry name="CommandAllKey" type="String">
-            <default>Alt</default>
+            <default>Meta</default>
         </entry>
         <entry name="CommandAllWheel" type="String">
             <default>Nothing</default>
@@ -295,11 +295,26 @@
         <entry name="LayoutName" type="String">
             <default>thumbnails</default>
         </entry>
+        <entry name="MoveMinimizedWindowsToEndOfTabBoxFocusChain" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
     <group name="KDE">
         <entry name="AnimationDurationFactor" type="Double">
             <default>1</default>
             <min>0</min>
+        </entry>
+    </group>
+    <group name="Xwayland">
+        <entry name="XwaylandCrashPolicy" type="Enum">
+            <choices name="KWin::XwaylandCrashPolicy">
+                <choice name="Stop"/>
+                <choice name="Restart"/>
+            </choices>
+            <default>XwaylandCrashPolicy::Restart</default>
+        </entry>
+        <entry name="XwaylandMaxCrashCount" type="UInt">
+            <default>3</default>
         </entry>
     </group>
 </kcfg>

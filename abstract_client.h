@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_ABSTRACT_CLIENT_H
 #define KWIN_ABSTRACT_CLIENT_H
 
@@ -89,6 +78,11 @@ class KWIN_EXPORT AbstractClient : public Toplevel
      * Whether the Client is on all desktops. That is desktop is -1.
      */
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
+
+    /**
+     * The activities this client is on. If it's on all activities the property is empty.
+     */
+    Q_PROPERTY(QStringList activities READ activities WRITE setOnActivities NOTIFY activitiesChanged)
 
     /**
      * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
@@ -358,6 +352,7 @@ public:
         return m_icon;
     }
 
+    bool isZombie() const;
     bool isActive() const {
         return m_active;
     }
@@ -415,6 +410,7 @@ public:
      * @see captionNormal
      */
     virtual QString captionSuffix() const = 0;
+    virtual bool isPlaceable() const;
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
@@ -502,8 +498,8 @@ public:
      * Sets the maximization according to @p vertically and @p horizontally.
      */
     Q_INVOKABLE void setMaximize(bool vertically, bool horizontally);
-    virtual bool noBorder() const = 0;
-    virtual void setNoBorder(bool set) = 0;
+    virtual bool noBorder() const;
+    virtual void setNoBorder(bool set);
     virtual void blockActivityUpdates(bool b = true) = 0;
     QPalette palette() const;
     const Decoration::DecorationPalette *decorationPalette() const;
@@ -538,7 +534,7 @@ public:
     virtual bool isMinimizable() const;
     virtual QRect iconGeometry() const;
     virtual bool userCanSetFullScreen() const;
-    virtual bool userCanSetNoBorder() const = 0;
+    virtual bool userCanSetNoBorder() const;
     virtual void checkNoBorder();
     virtual void setOnActivities(QStringList newActivitiesList);
     virtual void setOnAllActivities(bool set) = 0;
@@ -549,7 +545,7 @@ public:
     void setupWindowRules(bool ignore_temporary);
     void evaluateWindowRules();
     virtual void applyWindowRules();
-    virtual void takeFocus() = 0;
+    virtual bool takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     /**
      * Whether a dock window wants input.
@@ -696,6 +692,8 @@ public:
         return m_moveResize.cursor;
     }
 
+    virtual StrutRect strutRect(StrutArea area) const;
+    StrutRects strutRects() const;
     virtual bool hasStrut() const;
 
     void setModal(bool modal);
@@ -733,7 +731,7 @@ public:
     /**
      * TODO: fix boolean traps
      */
-    virtual void updateDecoration(bool check_workspace_pos, bool force = false) = 0;
+    virtual void updateDecoration(bool check_workspace_pos, bool force = false);
 
     /**
      * Returns whether the window provides context help or not. If it does,
@@ -756,6 +754,7 @@ public:
     virtual void showContextHelp();
 
     QRect inputGeometry() const override;
+    bool hitTest(const QPoint &point) const override;
 
     /**
      * @returns the geometry of the virtual keyboard
@@ -767,14 +766,14 @@ public:
      * Sets the geometry of the virtual keyboard, The window may resize itself in order to make space for the keybaord
      * This geometry is in global coordinates
      */
-    void setVirtualKeyboardGeometry(const QRect &geo);
+    virtual void setVirtualKeyboardGeometry(const QRect &geo);
 
     /**
      * Restores the AbstractClient after it had been hidden due to show on screen edge functionality.
      * The AbstractClient also gets raised (e.g. Panel mode windows can cover) and the AbstractClient
      * gets informed in a window specific way that it is shown and raised again.
      */
-    virtual void showOnScreenEdge() = 0;
+    virtual void showOnScreenEdge();
 
     QByteArray desktopFileName() const {
         return m_desktopFileName;
@@ -807,9 +806,10 @@ public:
     QString applicationMenuObjectPath() const {
         return m_applicationMenuObjectPath;
     }
-    QString colorScheme() const {
-        return m_colorScheme;
-    }
+
+    virtual QString preferredColorScheme() const;
+    QString colorScheme() const;
+    void setColorScheme(const QString &colorScheme);
 
     /**
      * Request showing the application menu bar
@@ -818,10 +818,6 @@ public:
     void showApplicationMenu(int actionId);
 
     bool unresponsive() const;
-
-    virtual bool isInitialPositionSet() const {
-        return false;
-    }
 
     /**
      * Default implementation returns @c null.
@@ -861,7 +857,7 @@ public:
     /**
      * Returns whether window rules can be applied to this client.
      *
-     * Default implementation returns @c true.
+     * Default implementation returns @c false.
      */
     virtual bool supportsWindowRules() const;
 
@@ -890,6 +886,7 @@ Q_SIGNALS:
     void demandsAttentionChanged();
     void desktopPresenceChanged(KWin::AbstractClient*, int); // to be forwarded by Workspace
     void desktopChanged();
+    void activitiesChanged(KWin::AbstractClient* client);
     void x11DesktopIdsChanged();
     void shadeChanged();
     void minimizedChanged();
@@ -926,6 +923,8 @@ protected:
     void setIcon(const QIcon &icon);
     void startAutoRaise();
     void autoRaise();
+    bool isMostRecentlyRaised() const;
+    void markAsZombie();
     /**
      * Whether the window accepts focus.
      * The difference to wantsInput is that the implementation should not check rules and return
@@ -980,20 +979,18 @@ protected:
     virtual void doSetSkipPager();
     virtual void doSetSkipSwitcher();
     virtual void doSetDemandsAttention();
+    virtual void doSetQuickTileMode();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();
-
-    void updateColorScheme(QString path);
-    virtual void updateColorScheme() = 0;
-
+    void updateColorScheme();
     void setTransientFor(AbstractClient *transientFor);
     /**
      * Just removes the @p cl from the transients without any further checks.
      */
     void removeTransientFromList(AbstractClient* cl);
 
-    Layer belongsToLayer() const;
+    virtual Layer belongsToLayer() const;
     virtual bool belongsToDesktop() const;
     void invalidateLayer();
     bool isActiveFullScreen() const;
@@ -1040,6 +1037,7 @@ protected:
     void setPendingGeometryUpdate(PendingGeometry_t update);
     QRect bufferGeometryBeforeUpdateBlocking() const;
     QRect frameGeometryBeforeUpdateBlocking() const;
+    QRect clientGeometryBeforeUpdateBlocking() const;
     void updateGeometryBeforeUpdateBlocking();
     /**
      * Schedules a repaint for the visibleRect before and after a
@@ -1129,6 +1127,7 @@ protected:
      * Base implementation returns @c true.
      */
     virtual bool doStartMoveResize();
+    virtual void doFinishMoveResize();
     void finishMoveResize(bool cancel);
     /**
      * Leaves the move resize mode.
@@ -1190,6 +1189,7 @@ protected:
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
     void invalidateDecorationDoubleClickTimer();
+    void updateDecorationInputShape();
 
     void setDesktopFileName(QByteArray name);
     QString iconFromDesktopFile() const;
@@ -1217,6 +1217,11 @@ protected:
     void startShadeHoverTimer();
     void startShadeUnhoverTimer();
 
+    // The geometry that the client should be restored when the virtual keyboard closes
+    QRect keyboardGeometryRestore() const;
+    void setKeyboardGeometryRestore(const QRect &geom);
+
+    QRect m_virtualKeyboardGeometry;
 private Q_SLOTS:
     void shadeHover();
     void shadeUnhover();
@@ -1234,6 +1239,7 @@ private:
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;
+    bool m_zombie = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;
@@ -1269,7 +1275,7 @@ private:
     QRect m_visibleRectBeforeGeometryUpdate;
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
-    QRect m_virtualKeyboardGeometry;
+    QRect m_clientGeometryBeforeUpdateBlocking;
     QRect m_keyboardGeometryRestore;
     QRect m_maximizeGeometryRestore;
 
@@ -1291,6 +1297,7 @@ private:
         KDecoration2::Decoration *decoration = nullptr;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
+        QRegion inputRegion;
     } m_decoration;
     QByteArray m_desktopFileName;
 

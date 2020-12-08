@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KWin Script
+Name[az]=Kwin skripti
 Name[ca]=Script del KWin
 Name[ca@valencia]=Script de KWin
 Name[cs]=Skript KWinu
@@ -25,6 +26,7 @@ Name[pa]=KWin ਸਕ੍ਰਿਪਟ
 Name[pl]=Skrypt KWin
 Name[pt]=Programa do KWin
 Name[pt_BR]=Script do KWin
+Name[ro]=Script KWin
 Name[ru]=Сценарий KWin
 Name[sk]=KWin skript
 Name[sl]=Skript KWin

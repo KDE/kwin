@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
-Copyright 2013, 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2013, 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "scene_qpainter_wayland_backend.h"
 #include "wayland_backend.h"
 #include "wayland_output.h"
@@ -45,6 +34,16 @@ WaylandQPainterOutput::~WaylandQPainterOutput()
     if (m_buffer) {
         m_buffer.toStrongRef()->setUsed(false);
     }
+}
+
+bool WaylandQPainterOutput::needsFullRepaint() const
+{
+    return m_needsFullRepaint;
+}
+
+void WaylandQPainterOutput::setNeedsFullRepaint(bool set)
+{
+    m_needsFullRepaint = set;
 }
 
 bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
@@ -87,6 +86,7 @@ void WaylandQPainterOutput::present(const QRegion &damage)
     auto s = m_waylandOutput->surface();
     s->attachBuffer(m_buffer);
     s->damage(damage);
+    s->setScale(m_waylandOutput->scale());
     s->commit();
 }
 
@@ -105,9 +105,9 @@ void WaylandQPainterOutput::prepareRenderingFrame()
     }
     m_buffer.clear();
 
-    const QSize size(m_waylandOutput->geometry().size());
+    const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
 
-    m_buffer = m_pool->getBuffer(size, size.width() * 4);
+    m_buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4);
     if (!m_buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
         m_backBuffer = QImage();
@@ -117,15 +117,19 @@ void WaylandQPainterOutput::prepareRenderingFrame()
     auto b = m_buffer.toStrongRef();
     b->setUsed(true);
 
-    m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
+    m_backBuffer = QImage(b->address(), nativeSize.width(), nativeSize.height(), QImage::Format_RGB32);
     m_backBuffer.fill(Qt::transparent);
 //    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer for output surface" << m_waylandOutput->surface();
+}
+
+QRegion WaylandQPainterOutput::mapToLocal(const QRegion &region) const
+{
+    return region.translated(-m_waylandOutput->geometry().topLeft());
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
     , m_backend(b)
-    , m_needsFullRepaint(true)
 {
 
     const auto waylandOutputs = m_backend->waylandOutputs();
@@ -134,7 +138,7 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this,
-        [this] (WaylandOutput *waylandOutput) {
+        [this] (AbstractOutput *waylandOutput) {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
                 [waylandOutput] (WaylandQPainterOutput *output) {
                     return output->m_waylandOutput == waylandOutput;
@@ -153,38 +157,24 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 {
 }
 
-bool WaylandQPainterBackend::usesOverlayWindow() const
+void WaylandQPainterBackend::createOutput(AbstractOutput *waylandOutput)
 {
-    return false;
-}
-
-bool WaylandQPainterBackend::perScreenRendering() const
-{
-    return true;
-}
-
-void WaylandQPainterBackend::createOutput(WaylandOutput *waylandOutput)
-{
-    auto *output = new WaylandQPainterOutput(waylandOutput, this);
+    auto *output = new WaylandQPainterOutput(static_cast<WaylandOutput *>(waylandOutput), this);
     output->init(m_backend->shmPool());
     m_outputs << output;
 }
 
-void WaylandQPainterBackend::present(int mask, const QRegion &damage)
+void WaylandQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
 
+    WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
+
     Compositor::self()->aboutToSwapBuffers();
-    m_needsFullRepaint = false;
 
-    for (auto *output : m_outputs) {
-        output->present(damage);
-    }
-}
-
-QImage *WaylandQPainterBackend::buffer()
-{
-    return bufferForScreen(0);
+    rendererOutput->setNeedsFullRepaint(false);
+    rendererOutput->present(rendererOutput->mapToLocal(damage));
 }
 
 QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
@@ -193,17 +183,20 @@ QImage *WaylandQPainterBackend::bufferForScreen(int screenId)
     return &output->m_backBuffer;
 }
 
-void WaylandQPainterBackend::prepareRenderingFrame()
+void WaylandQPainterBackend::beginFrame(int screenId)
 {
-    for (auto *output : m_outputs) {
-        output->prepareRenderingFrame();
-    }
-    m_needsFullRepaint = true;
+    WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
+
+    rendererOutput->prepareRenderingFrame();
+    rendererOutput->setNeedsFullRepaint(true);
 }
 
-bool WaylandQPainterBackend::needsFullRepaint() const
+bool WaylandQPainterBackend::needsFullRepaint(int screenId) const
 {
-    return m_needsFullRepaint;
+    const WaylandQPainterOutput *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
+    return rendererOutput->needsFullRepaint();
 }
 
 }

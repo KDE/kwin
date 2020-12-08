@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2014  Martin Gräßlin <mgraesslin@kde.org>
-Copyright 2014  Hugo Pereira Da Costa <hugo.pereira@free.fr>
-Copyright 2015  Mika Allan Rauhala <mika.allan.rauhala@gmail.com>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Hugo Pereira Da Costa <hugo.pereira@free.fr>
+    SPDX-FileCopyrightText: 2015 Mika Allan Rauhala <mika.allan.rauhala@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_DECORATION_PALETTE_H
 #define KWIN_DECORATION_PALETTE_H
@@ -26,6 +15,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationSettings>
 #include <QFileSystemWatcher>
 #include <QPalette>
+#include <KSharedConfig>
+#include <KColorScheme>
+#include <KConfigWatcher>
+
+#include <optional>
 
 namespace KWin
 {
@@ -49,19 +43,31 @@ private:
     void update();
 
     QString m_colorScheme;
-    QFileSystemWatcher m_watcher;
+    KConfigWatcher::Ptr m_watcher;
 
-    QPalette m_palette;
+    struct LegacyPalette {
+        QPalette palette;
 
-    QColor m_activeTitleBarColor;
-    QColor m_inactiveTitleBarColor;
+        QColor activeTitleBarColor;
+        QColor inactiveTitleBarColor;
 
-    QColor m_activeFrameColor;
-    QColor m_inactiveFrameColor;
+        QColor activeFrameColor;
+        QColor inactiveFrameColor;
 
-    QColor m_activeForegroundColor;
-    QColor m_inactiveForegroundColor;
-    QColor m_warningForegroundColor;
+        QColor activeForegroundColor;
+        QColor inactiveForegroundColor;
+        QColor warningForegroundColor;
+    };
+
+    struct ModernPalette {
+        KColorScheme active;
+        KColorScheme inactive;
+    };
+
+    std::optional<LegacyPalette> m_legacyPalette;
+    KSharedConfig::Ptr m_colorSchemeConfig;
+
+    ModernPalette m_palette;
 };
 
 }

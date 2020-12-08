@@ -1,27 +1,16 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2009 Fredrik Höglund <fredrik@kde.org>
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009 Fredrik Höglund <fredrik@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "scene_xrender.h"
-
 #include "utils.h"
+#include "xrenderbackend.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
@@ -55,177 +44,14 @@ ScreenPaintData SceneXrender::screen_paint;
 #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
 #define FIXED_TO_DOUBLE(f) ((double) ((f) / 65536.0))
 
-
-//****************************************
-// XRenderBackend
-//****************************************
-XRenderBackend::XRenderBackend()
-    : m_buffer(XCB_RENDER_PICTURE_NONE)
-    , m_failed(false)
-{
-    if (!Xcb::Extensions::self()->isRenderAvailable()) {
-        setFailed("No XRender extension available");
-        return;
-    }
-    if (!Xcb::Extensions::self()->isFixesRegionAvailable()) {
-        setFailed("No XFixes v3+ extension available");
-        return;
-    }
-}
-
-XRenderBackend::~XRenderBackend()
-{
-    if (m_buffer) {
-        xcb_render_free_picture(connection(), m_buffer);
-    }
-}
-
-OverlayWindow* XRenderBackend::overlayWindow()
-{
-    return nullptr;
-}
-
-void XRenderBackend::showOverlay()
-{
-}
-
-void XRenderBackend::setBuffer(xcb_render_picture_t buffer)
-{
-    if (m_buffer != XCB_RENDER_PICTURE_NONE) {
-        xcb_render_free_picture(connection(), m_buffer);
-    }
-    m_buffer = buffer;
-}
-
-void XRenderBackend::setFailed(const QString& reason)
-{
-    qCCritical(KWIN_XRENDER) << "Creating the XRender backend failed: " << reason;
-    m_failed = true;
-}
-
-void XRenderBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-}
-
-
-//****************************************
-// X11XRenderBackend
-//****************************************
-X11XRenderBackend::X11XRenderBackend()
-    : XRenderBackend()
-    , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
-    , m_front(XCB_RENDER_PICTURE_NONE)
-    , m_format(0)
-{
-    init(true);
-}
-
-X11XRenderBackend::~X11XRenderBackend()
-{
-    if (m_front) {
-        xcb_render_free_picture(connection(), m_front);
-    }
-    m_overlayWindow->destroy();
-}
-
-OverlayWindow* X11XRenderBackend::overlayWindow()
-{
-    return m_overlayWindow.data();
-}
-
-void X11XRenderBackend::showOverlay()
-{
-    if (m_overlayWindow->window())  // show the window only after the first pass, since
-        m_overlayWindow->show();   // that pass may take long
-}
-
-void X11XRenderBackend::init(bool createOverlay)
-{
-    if (m_front != XCB_RENDER_PICTURE_NONE)
-        xcb_render_free_picture(connection(), m_front);
-    bool haveOverlay = createOverlay ? m_overlayWindow->create() : (m_overlayWindow->window() != XCB_WINDOW_NONE);
-    if (haveOverlay) {
-        m_overlayWindow->setup(XCB_WINDOW_NONE);
-        ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(connection(),
-            xcb_get_window_attributes_unchecked(connection(), m_overlayWindow->window()), nullptr));
-        if (!attribs) {
-            setFailed("Failed getting window attributes for overlay window");
-            return;
-        }
-        m_format = XRenderUtils::findPictFormat(attribs->visual);
-        if (m_format == 0) {
-            setFailed("Failed to find XRender format for overlay window");
-            return;
-        }
-        m_front = xcb_generate_id(connection());
-        xcb_render_create_picture(connection(), m_front, m_overlayWindow->window(), m_format, 0, nullptr);
-    } else {
-        // create XRender picture for the root window
-        m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
-        if (m_format == 0) {
-            setFailed("Failed to find XRender format for root window");
-            return; // error
-        }
-        m_front = xcb_generate_id(connection());
-        const uint32_t values[] = {XCB_SUBWINDOW_MODE_INCLUDE_INFERIORS};
-        xcb_render_create_picture(connection(), m_front, rootWindow(), m_format, XCB_RENDER_CP_SUBWINDOW_MODE, values);
-    }
-    createBuffer();
-}
-
-void X11XRenderBackend::createBuffer()
-{
-    xcb_pixmap_t pixmap = xcb_generate_id(connection());
-    const auto displaySize = screens()->displaySize();
-    xcb_create_pixmap(connection(), Xcb::defaultDepth(), pixmap, rootWindow(), displaySize.width(), displaySize.height());
-    xcb_render_picture_t b = xcb_generate_id(connection());
-    xcb_render_create_picture(connection(), b, pixmap, m_format, 0, nullptr);
-    xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
-    setBuffer(b);
-}
-
-void X11XRenderBackend::present(int mask, const QRegion &damage)
-{
-    const auto displaySize = screens()->displaySize();
-    if (mask & Scene::PAINT_SCREEN_REGION) {
-        // Use the damage region as the clip region for the root window
-        XFixesRegion frontRegion(damage);
-        xcb_xfixes_set_picture_clip_region(connection(), m_front, frontRegion, 0, 0);
-        // copy composed buffer to the root window
-        xcb_xfixes_set_picture_clip_region(connection(), buffer(), XCB_XFIXES_REGION_NONE, 0, 0);
-        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer(), XCB_RENDER_PICTURE_NONE,
-                             m_front, 0, 0, 0, 0, 0, 0, displaySize.width(), displaySize.height());
-        xcb_xfixes_set_picture_clip_region(connection(), m_front, XCB_XFIXES_REGION_NONE, 0, 0);
-        xcb_flush(connection());
-    } else {
-        // copy composed buffer to the root window
-        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer(), XCB_RENDER_PICTURE_NONE,
-                             m_front, 0, 0, 0, 0, 0, 0, displaySize.width(), displaySize.height());
-        xcb_flush(connection());
-    }
-}
-
-void X11XRenderBackend::screenGeometryChanged(const QSize &size)
-{
-    Q_UNUSED(size)
-    init(false);
-}
-
-bool X11XRenderBackend::usesOverlayWindow() const
-{
-    return true;
-}
-
 //****************************************
 // SceneXrender
 //****************************************
 
 SceneXrender* SceneXrender::createScene(QObject *parent)
 {
-    QScopedPointer<XRenderBackend> backend;
-    backend.reset(new X11XRenderBackend);
-    if (backend->isFailed()) {
+    QScopedPointer<XRenderBackend> backend(kwinApp()->platform()->createXRenderBackend());
+    if (!backend || backend->isFailed()) {
         return nullptr;
     }
     return new SceneXrender(backend.take(), parent);
@@ -249,10 +75,9 @@ bool SceneXrender::initFailed() const
 }
 
 // the entry point for painting
-qint64 SceneXrender::paint(const QRegion &damage, const QList<Toplevel *> &toplevels)
+void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels)
 {
-    QElapsedTimer renderTimer;
-    renderTimer.start();
+    painted_screen = screenId;
 
     createStackingOrder(toplevels);
 
@@ -265,8 +90,6 @@ qint64 SceneXrender::paint(const QRegion &damage, const QList<Toplevel *> &tople
     m_backend->present(mask, updateRegion);
     // do cleanup
     clearStackingOrder();
-
-    return renderTimer.nsecsElapsed();
 }
 
 void SceneXrender::paintGenericScreen(int mask, const ScreenPaintData &data)
@@ -793,6 +616,21 @@ void SceneXrender::screenGeometryChanged(const QSize &size)
 {
     Scene::screenGeometryChanged(size);
     m_backend->screenGeometryChanged(size);
+}
+
+xcb_render_picture_t SceneXrender::xrenderBufferPicture() const
+{
+    return m_backend->buffer();
+}
+
+OverlayWindow *SceneXrender::overlayWindow() const
+{
+    return m_backend->overlayWindow();
+}
+
+bool SceneXrender::usesOverlayWindow() const
+{
+    return m_backend->usesOverlayWindow();
 }
 
 //****************************************
@@ -1337,9 +1175,9 @@ Scene *XRenderFactory::create(QObject *parent) const
 #endif
 
 
-void KWin::SceneXrender::paintCursor()
+void KWin::SceneXrender::paintCursor(const QRegion &region)
 {
-
+    Q_UNUSED(region)
 }
 
 void KWin::SceneXrender::paintEffectQuickView(KWin::EffectQuickView *w)

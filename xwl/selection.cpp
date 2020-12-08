@@ -1,30 +1,20 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "selection.h"
 #include "databridge.h"
 #include "selection_source.h"
 #include "transfer.h"
 
 #include "atoms.h"
-#include "x11client.h"
 #include "workspace.h"
+#include "x11client.h"
+#include "xcbutils.h"
 
 #include <xcb/xcb_event.h>
 #include <xcb/xfixes.h>
@@ -127,26 +117,17 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
 {
     switch (event->response_type & XCB_EVENT_RESPONSE_TYPE_MASK) {
     case XCB_SELECTION_NOTIFY:
-        if (handleSelectionNotify(reinterpret_cast<xcb_selection_notify_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handleSelectionNotify(reinterpret_cast<xcb_selection_notify_event_t *>(event));
     case XCB_PROPERTY_NOTIFY:
-        if (handlePropertyNotify(reinterpret_cast<xcb_property_notify_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handlePropertyNotify(reinterpret_cast<xcb_property_notify_event_t *>(event));
     case XCB_SELECTION_REQUEST:
-        if (handleSelectionRequest(reinterpret_cast<xcb_selection_request_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handleSelectionRequest(reinterpret_cast<xcb_selection_request_event_t *>(event));
     case XCB_CLIENT_MESSAGE:
-        if (handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event))) {
-            return true;
-        }
-        Q_FALLTHROUGH();
+        return handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(event));
     default:
+        if (event->response_type == Xcb::Extensions::self()->fixesSelectionNotifyEvent()) {
+            return handleXfixesNotify(reinterpret_cast<xcb_xfixes_selection_notify_event_t *>(event));
+        }
         return false;
     }
 }
@@ -177,7 +158,7 @@ void Selection::registerXfixes()
     const uint32_t mask = XCB_XFIXES_SELECTION_EVENT_MASK_SET_SELECTION_OWNER |
             XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_WINDOW_DESTROY |
             XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_CLIENT_CLOSE;
-    xcb_xfixes_select_selection_input(kwinApp()->x11Connection(),
+    xcb_xfixes_select_selection_input(xcbConn,
                                       m_window,
                                       m_atom,
                                       mask);
@@ -186,9 +167,11 @@ void Selection::registerXfixes()
 
 void Selection::setWlSource(WlSource *source)
 {
-    delete m_waylandSource;
+    if (m_waylandSource) {
+        m_waylandSource->deleteLater();
+        m_waylandSource = nullptr;
+    }
     delete m_xSource;
-    m_waylandSource = nullptr;
     m_xSource = nullptr;
     if (source) {
         m_waylandSource = source;
@@ -198,10 +181,7 @@ void Selection::setWlSource(WlSource *source)
 
 void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 {
-    delete m_waylandSource;
-    delete m_xSource;
-    m_waylandSource = nullptr;
-    m_xSource = nullptr;
+    setWlSource(nullptr);
     if (!event || event->owner == XCB_WINDOW_NONE) {
         return;
     }

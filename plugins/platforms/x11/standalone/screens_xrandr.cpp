@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "screens_xrandr.h"
 #include "x11_platform.h"
 
@@ -78,7 +67,7 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
 
     // update default screen
     auto *xrrEvent = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(event);
-    xcb_screen_t *screen = defaultScreen();
+    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
     if (xrrEvent->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
         screen->width_in_pixels = xrrEvent->height;
         screen->height_in_pixels = xrrEvent->width;
@@ -96,7 +85,7 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
 
 QSize XRandRScreens::displaySize() const
 {
-    xcb_screen_t *screen = defaultScreen();
+    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
     if (!screen) {
         return Screens::size();
     }

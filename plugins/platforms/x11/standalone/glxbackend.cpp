@@ -1,26 +1,15 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-Based on glcompmgr code by Felix Bellaby.
-Using code from Compiz and Beryl.
+    Based on glcompmgr code by Felix Bellaby.
+    Using code from Compiz and Beryl.
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 // own
 #include "glxbackend.h"
@@ -34,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "screens.h"
 #include "xcbutils.h"
-#include "texture.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -72,7 +60,6 @@ typedef struct xcb_glx_buffer_swap_complete_event_t {
 #endif
 
 #include <tuple>
-#include <memory>
 
 namespace KWin
 {
@@ -794,8 +781,9 @@ SceneOpenGLTexturePrivate *GlxBackend::createBackendTexture(SceneOpenGLTexture *
     return new GlxTexture(texture, this);
 }
 
-QRegion GlxBackend::prepareRenderingFrame()
+QRegion GlxBackend::beginFrame(int screenId)
 {
+    Q_UNUSED(screenId)
     QRegion repaint;
 
     if (gs_tripleBufferNeedsDetection) {
@@ -807,19 +795,21 @@ QRegion GlxBackend::prepareRenderingFrame()
         usleep(1000);
     }
 
+    makeCurrent();
     present();
 
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
-    startRenderTimer();
     glXWaitX();
 
     return repaint;
 }
 
-void GlxBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(screenId)
+
     if (damagedRegion.isEmpty()) {
         setLastDamage(QRegion());
 

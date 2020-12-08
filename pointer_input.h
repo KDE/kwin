@@ -1,29 +1,19 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2018 Roman Gilg <subdiff@gmail.com>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2013, 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_POINTER_INPUT_H
 #define KWIN_POINTER_INPUT_H
 
 #include "input.h"
 #include "cursor.h"
+#include "xcursortheme.h"
 
 #include <QElapsedTimer>
 #include <QObject>
@@ -42,7 +32,6 @@ namespace KWin
 class CursorImage;
 class InputRedirection;
 class Toplevel;
-class WaylandCursorTheme;
 class CursorShape;
 
 namespace Decoration
@@ -181,22 +170,25 @@ class WaylandCursorImage : public QObject
 {
     Q_OBJECT
 public:
-    void loadTheme();
+    explicit WaylandCursorImage(QObject *parent = nullptr);
+
     struct Image {
         QImage image;
         QPoint hotspot;
     };
-    template <typename T>
-    void loadThemeCursor(const T &shape, Image *image);
 
-    template <typename T>
-    void loadThemeCursor(const T &shape, QHash<T, Image> &cursors, Image *image);
+    void loadThemeCursor(const CursorShape &shape, Image *cursorImage);
+    void loadThemeCursor(const QByteArray &name, Image *cursorImage);
 
 Q_SIGNALS:
     void themeChanged();
 
 private:
-    WaylandCursorTheme *m_cursorTheme = nullptr;
+    bool loadThemeCursor_helper(const QByteArray &name, Image *cursorImage);
+    bool ensureCursorTheme();
+    void invalidateCursorTheme();
+
+    KXcursorTheme m_cursorTheme;
 };
 
 class CursorImage : public QObject
@@ -253,8 +245,6 @@ private:
     WaylandCursorImage::Image m_fallbackCursor;
     WaylandCursorImage::Image m_moveResizeCursor;
     WaylandCursorImage::Image m_windowSelectionCursor;
-    QHash<CursorShape, WaylandCursorImage::Image> m_cursors;
-    QHash<QByteArray, WaylandCursorImage::Image> m_cursorsByName;
     QElapsedTimer m_surfaceRenderedTimer;
     struct {
         WaylandCursorImage::Image cursor;

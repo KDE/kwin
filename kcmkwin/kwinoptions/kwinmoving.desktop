@@ -2,7 +2,6 @@
 Icon=preferences-system-windows-movement
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Exec=kcmshell5 kwinmoving
 X-DocPath=kcontrol/windowbehaviour/index.html#action-moving
 Icon=preferences-system-windows-move
 
@@ -10,6 +9,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinmoving
 
 Name=Window Movement
+Name[az]=Pəncərə yerdəyişdirilməsi
 Name[ca]=Moviment de les finestres
 Name[cs]=Pohyb oken
 Name[da]=Flytning af vinduer
@@ -30,6 +30,7 @@ Name[nn]=Vidaugs­flytting
 Name[pl]=Przesuwanie okien
 Name[pt]=Movimentação das Janelas
 Name[pt_BR]=Movimento da janela
+Name[ro]=Mutare ferestre
 Name[ru]=Перемещение окон
 Name[sk]=Presuny okien
 Name[sl]=Premikanje oken
@@ -40,6 +41,7 @@ Name[zh_CN]=窗口移动
 Name[zh_TW]=視窗移動
 
 Comment=Configure window movement options
+Comment[az]=Pəncərə yerdəyişdirilməsinin tənzimlənməsi
 Comment[ca]=Configura les opcions de moviment de les finestres
 Comment[cs]=Nastavit volby pohybu oken
 Comment[da]=Indstil flytning af vinduer
@@ -60,6 +62,7 @@ Comment[nn]=Set opp vindaugsflytting
 Comment[pl]=Ustawienia opcji przesuwania okien
 Comment[pt]=Configurar as opções de movimentação das janelas
 Comment[pt_BR]=Configure as opções de movimento da janela
+Comment[ro]=Configurează opțiuni de mutare a ferestrelor
 Comment[ru]=Настройка поведения при перемещении окон
 Comment[sk]=Nastavenie spôsobu presunu okien
 Comment[sl]=Nastavi možnosti premikanja okna
@@ -70,6 +73,7 @@ Comment[zh_CN]=配置窗口移动选项
 Comment[zh_TW]=設定視窗移動選項
 
 X-KDE-Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
+X-KDE-Keywords[az]=köçürmə,yerdəyişmə,ağıllı,kaskad,genişləndirmə,qopma zonası,çərçivə
 X-KDE-Keywords[bs]=pomjeranje,pametno,kaskada,povećali,povećalo,namjestiti zonu,namjestiti,granica
 X-KDE-Keywords[ca]=moviment,intel·ligent,cascada,maximització,zona d'ajust,ajust,vora
 X-KDE-Keywords[ca@valencia]=moviment,intel·ligent,cascada,maximització,zona d'ajust,ajust,vora
@@ -98,6 +102,7 @@ X-KDE-Keywords[nn]=flytting,smart,kaskade,maksimering,gripesone,gripa,kant
 X-KDE-Keywords[pl]=przesuwanie,elegancki,kaskada,maksymalizuj,obszar przyciągania,przyciągaj,obramowanie
 X-KDE-Keywords[pt]=movimento,inteligente,cascata,maximizar,ajuste à zona,ajuste,contorno
 X-KDE-Keywords[pt_BR]=movimento,movimentação,inteligente,cascata,maximizar,ajuste à área,ajuste,borda
+X-KDE-Keywords[ro]=mutare,inteligent,cascadă,maximizează,minimizează,zonă magnetică,magnet,contur
 X-KDE-Keywords[ru]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,перемещение,каскад,распахнуть,свернуть,захват,привязка,граница
 X-KDE-Keywords[sk]=presun,smart,kaskáda,maximalizácia,miinmalizácia,oblasť prichytenia,prichytenie,rám
 X-KDE-Keywords[sl]=premikanje,pametno premikanje,kaskada,povečaj,razpni,območje pripenjanja,pripenjanje,rob,robovi,obroba,obrobe

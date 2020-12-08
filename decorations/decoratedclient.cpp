@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "decoratedclient.h"
 #include "decorationbridge.h"
 #include "decorationpalette.h"
@@ -24,7 +13,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_client.h"
 #include "composite.h"
 #include "cursor.h"
-#include "options.h"
 #include "platform.h"
 #include "workspace.h"
 
@@ -54,7 +42,7 @@ DecoratedClientImpl::DecoratedClientImpl(AbstractClient *client, KDecoration2::D
             emit decoratedClient->activeChanged(client->isActive());
         }
     );
-    connect(client, &AbstractClient::frameGeometryChanged, this,
+    connect(client, &AbstractClient::clientGeometryChanged, this,
         [decoratedClient, this]() {
             if (m_client->clientSize() == m_clientSize) {
                 return;
@@ -175,7 +163,7 @@ DELEGATE2(QIcon, icon)
 DELEGATE(bool, isKeepAbove, keepAbove)
 DELEGATE(bool, isKeepBelow, keepBelow)
 DELEGATE(bool, isShaded, isShade)
-DELEGATE(WId, windowId, windowId)
+DELEGATE(WId, windowId, window)
 DELEGATE(WId, decorationId, frameId)
 
 #undef DELEGATE
@@ -238,10 +226,9 @@ void DecoratedClientImpl::requestHideToolTip()
     m_toolTipShowing = false;
 }
 
-void DecoratedClientImpl::requestShowWindowMenu()
+void DecoratedClientImpl::requestShowWindowMenu(const QRect &rect)
 {
-    // TODO: add rect to requestShowWindowMenu
-    Workspace::self()->showWindowMenu(QRect(Cursors::self()->mouse()->pos(), Cursors::self()->mouse()->pos()), m_client);
+    Workspace::self()->showWindowMenu(QRect(m_client->pos() + rect.topLeft(), m_client->pos() + rect.bottomRight()), m_client);
 }
 
 void DecoratedClientImpl::requestShowApplicationMenu(const QRect &rect, int actionId)

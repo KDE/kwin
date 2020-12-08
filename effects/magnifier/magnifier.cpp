@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
-Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2007 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2007 Christian Nitschkowski <christian.nitschkowski@kdemail.net>
+    SPDX-FileCopyrightText: 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "magnifier.h"
 // KConfigSkeleton
@@ -52,17 +41,17 @@ MagnifierEffect::MagnifierEffect()
 {
     initConfig<MagnifierConfig>();
     QAction* a;
-    a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
+    a = KStandardAction::zoomIn(this, &MagnifierEffect::zoomIn, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_Equal, a);
 
-    a = KStandardAction::zoomOut(this, SLOT(zoomOut()), this);
+    a = KStandardAction::zoomOut(this, &MagnifierEffect::zoomOut, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_Minus, a);
 
-    a = KStandardAction::actualSize(this, SLOT(toggle()), this);
+    a = KStandardAction::actualSize(this, &MagnifierEffect::toggle, this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_0, a);

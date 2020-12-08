@@ -13,7 +13,7 @@
             <default>true</default>
         </entry>
         <entry name="DontSlideStickyWindows" type="Bool">
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="UsePagerLayout" type="Bool">
             <default>true</default>

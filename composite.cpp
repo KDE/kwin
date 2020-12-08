@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "composite.h"
 
 #include "dbusinterface.h"
@@ -194,7 +183,7 @@ bool Compositor::setupStart()
 
     options->reloadCompositingSettings(true);
 
-    setupX11Support();
+    initializeX11();
 
     // There might still be a deleted around, needs to be cleared before
     // creating the scene (BUG 333275).
@@ -306,8 +295,13 @@ bool Compositor::setupStart()
     return true;
 }
 
-void Compositor::claimCompositorSelection()
+void Compositor::initializeX11()
 {
+    xcb_connection_t *connection = kwinApp()->x11Connection();
+    if (!connection) {
+        return;
+    }
+
     if (!m_selectionOwner) {
         char selection_name[ 100 ];
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
@@ -315,40 +309,34 @@ void Compositor::claimCompositorSelection()
         connect(m_selectionOwner, &CompositorSelectionOwner::lostOwnership,
                 this, &Compositor::stop);
     }
-
-    if (!m_selectionOwner) {
-        // No X11 yet.
-        return;
-    }
     if (!m_selectionOwner->owning()) {
         // Force claim ownership.
         m_selectionOwner->claim(true);
         m_selectionOwner->setOwning(true);
     }
+
+    xcb_composite_redirect_subwindows(connection, kwinApp()->x11RootWindow(),
+                                      XCB_COMPOSITE_REDIRECT_MANUAL);
 }
 
-void Compositor::setupX11Support()
+void Compositor::cleanupX11()
 {
-    auto *con = kwinApp()->x11Connection();
-    if (!con) {
-        delete m_selectionOwner;
-        m_selectionOwner = nullptr;
-        return;
-    }
-    claimCompositorSelection();
-    xcb_composite_redirect_subwindows(con, kwinApp()->x11RootWindow(),
-                                      XCB_COMPOSITE_REDIRECT_MANUAL);
+    delete m_selectionOwner;
+    m_selectionOwner = nullptr;
 }
 
 void Compositor::startupWithWorkspace()
 {
     connect(kwinApp(), &Application::x11ConnectionChanged,
-            this, &Compositor::setupX11Support, Qt::UniqueConnection);
+            this, &Compositor::initializeX11, Qt::UniqueConnection);
+    connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed,
+            this, &Compositor::cleanupX11, Qt::UniqueConnection);
+    initializeX11();
+
     Workspace::self()->markXStackingOrderAsDirty();
     Q_ASSERT(m_scene);
 
     connect(workspace(), &Workspace::destroyed, this, [this] { compositeTimer.stop(); });
-    setupX11Support();
     fpsInterval = options->maxFpsInterval();
 
     if (m_scene->syncsToVBlank()) {
@@ -588,8 +576,6 @@ void Compositor::timerEvent(QTimerEvent *te)
 
 void Compositor::aboutToSwapBuffers()
 {
-    Q_ASSERT(!m_bufferSwapPending);
-
     m_bufferSwapPending = true;
 }
 
@@ -629,7 +615,7 @@ void Compositor::performCompositing()
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (Toplevel *win : windows) {
+    for (Toplevel *win : qAsConst(windows)) {
         if (win->resetAndFetchDamage()) {
             damaged << win;
         }
@@ -650,7 +636,7 @@ void Compositor::performCompositing()
     }
 
     // Get the replies
-    for (Toplevel *win : damaged) {
+    for (Toplevel *win : qAsConst(damaged)) {
         // Discard the cached lanczos texture
         if (win->effectWindow()) {
             const QVariant texture = win->effectWindow()->data(LanczosCacheRole);
@@ -698,7 +684,15 @@ void Compositor::performCompositing()
     if (m_framesToTestForSafety > 0 && (m_scene->compositingType() & OpenGLCompositing)) {
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
-    m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+    m_renderTimer.start();
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        for (int screenId = 0; screenId < screens()->count(); ++screenId) {
+            m_scene->paint(screenId, repaints, windows);
+        }
+    } else {
+        m_scene->paint(-1, repaints, windows);
+    }
+    m_timeSinceLastVBlank = m_renderTimer.elapsed();
     if (m_framesToTestForSafety > 0) {
         if (m_scene->compositingType() & OpenGLCompositing) {
             kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
@@ -716,6 +710,9 @@ void Compositor::performCompositing()
             if (auto surface = win->surface()) {
                 surface->frameRendered(currentTime);
             }
+        }
+        if (!kwinApp()->platform()->isCursorHidden()) {
+            Cursors::self()->currentCursor()->markAsRendered();
         }
     }
 
@@ -738,7 +735,7 @@ template <class T>
 static bool repaintsPending(const QList<T*> &windows)
 {
     return std::any_of(windows.begin(), windows.end(),
-                       [](T *t) { return !t->repaints().isEmpty(); });
+                       [](const T *t) { return t->wantsRepaint(); });
 }
 
 bool Compositor::windowRepaintsPending() const
@@ -754,16 +751,16 @@ bool Compositor::windowRepaintsPending() const
     }
     if (auto *server = waylandServer()) {
         const auto &clients = server->clients();
-        auto test = [](AbstractClient *c) {
-            return c->readyForPainting() && !c->repaints().isEmpty();
+        auto test = [](const AbstractClient *c) {
+            return c->readyForPainting() && c->wantsRepaint();
         };
         if (std::any_of(clients.begin(), clients.end(), test)) {
             return true;
         }
     }
     const auto &internalClients = workspace()->internalClients();
-    auto internalTest = [] (InternalClient *client) {
-        return client->isShown(true) && !client->repaints().isEmpty();
+    auto internalTest = [] (const InternalClient *client) {
+        return client->isShown(true) && client->wantsRepaint();
     };
     if (std::any_of(internalClients.begin(), internalClients.end(), internalTest)) {
         return true;

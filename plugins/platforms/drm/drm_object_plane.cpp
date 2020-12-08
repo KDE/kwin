@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "drm_object_plane.h"
 #include "drm_buffer.h"
 #include "drm_pointer.h"
@@ -112,21 +101,19 @@ bool DrmPlane::initProps()
             initProp(j, properties.data(), rotationNames);
             m_supportedTransformations = Transformations();
 
-            auto checkSupport = [j, this] (uint64_t value, Transformation t, const QString &name) {
+            auto checkSupport = [j, this] (uint64_t value, Transformation t) {
                 if (propHasEnum(j, value)) {
-                    qCDebug(KWIN_DRM) << name;
                     m_supportedTransformations |= t;
                 }
             };
-            qCDebug(KWIN_DRM).nospace() << "Supported Transformations on plane " << m_id << ":";
-            checkSupport(0, Transformation::Rotate0,   "rotate-0");
-            checkSupport(1, Transformation::Rotate90,  "rotate-90");
-            checkSupport(2, Transformation::Rotate180, "rotate-180");
-            checkSupport(3, Transformation::Rotate270, "rotate-270");
-            checkSupport(4, Transformation::ReflectX,  "reflect-x");
-            checkSupport(5, Transformation::ReflectY,  "reflect-y");
-            qCDebug(KWIN_DRM) << "";
+            checkSupport(0, Transformation::Rotate0);
+            checkSupport(1, Transformation::Rotate90);
+            checkSupport(2, Transformation::Rotate180);
+            checkSupport(3, Transformation::Rotate270);
+            checkSupport(4, Transformation::ReflectX);
+            checkSupport(5, Transformation::ReflectY);
 
+            qCDebug(KWIN_DRM) << "Supported Transformations on plane" << m_id << "are" << m_supportedTransformations;
         } else {
             initProp(j, properties.data());
         }

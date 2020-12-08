@@ -1,0 +1,7 @@
+Version=5
+
+# Replace `placement` string policy to its enum value equivalent
+Id=replace-placement-string-to-enum
+File=kwinrulesrc
+Script=kwinrules-5.19-placement.pl,perl
+

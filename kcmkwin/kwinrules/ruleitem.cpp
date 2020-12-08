@@ -1,22 +1,8 @@
 /*
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 #include "ruleitem.h"
 
@@ -41,6 +27,7 @@ RuleItem::RuleItem(const QString &key,
     , m_enabled(false)
     , m_policy(new RulePolicy(policyType))
     , m_options(nullptr)
+    , m_optionsMask(0U - 1)
 {
     reset();
 }
@@ -54,7 +41,7 @@ RuleItem::~RuleItem()
 void RuleItem::reset()
 {
     m_enabled = hasFlag(AlwaysEnabled) | hasFlag(StartEnabled);
-    m_value = typedValue(QVariant(), m_type);
+    m_value = typedValue(QVariant());
     m_suggestedValue = QVariant();
     m_policy->resetValue();
     if (m_options) {
@@ -99,7 +86,7 @@ bool RuleItem::isEnabled() const
 
 void RuleItem::setEnabled(bool enabled)
 {
-    m_enabled = enabled | hasFlag(AlwaysEnabled);
+    m_enabled = (enabled && !hasFlag(SuggestionOnly)) || hasFlag(AlwaysEnabled);
 }
 
 bool RuleItem::hasFlag(RuleItem::Flags flag) const
@@ -130,7 +117,7 @@ void RuleItem::setValue(QVariant value)
     if (m_options && m_type == Option) {
         m_options->setValue(value);
     }
-    m_value = typedValue(value, m_type);
+    m_value = typedValue(value);
 }
 
 QVariant RuleItem::suggestedValue() const
@@ -138,12 +125,9 @@ QVariant RuleItem::suggestedValue() const
     return m_suggestedValue;
 }
 
-void RuleItem::setSuggestedValue(QVariant value, bool forceValue)
+void RuleItem::setSuggestedValue(QVariant value)
 {
-    if (forceValue) {
-        setValue(value);
-    }
-    m_suggestedValue = value.isNull() ? QVariant() : typedValue(value, m_type);
+    m_suggestedValue = value.isNull() ? QVariant() : typedValue(value);
 }
 
 QVariant RuleItem::options() const
@@ -157,13 +141,25 @@ QVariant RuleItem::options() const
 void RuleItem::setOptionsData(const QList<OptionsModel::Data> &data)
 {
     if (!m_options) {
-        if (m_type != Option && m_type != FlagsOption) {
+        if (m_type != Option && m_type != NetTypes) {
             return;
         }
         m_options = new OptionsModel();
     }
     m_options->updateModelData(data);
     m_options->setValue(m_value);
+
+    if (m_type == NetTypes) {
+        m_optionsMask = 0;
+        for (const OptionsModel::Data &dataItem : data) {
+            m_optionsMask += 1 << dataItem.value.toUInt();
+        }
+    }
+}
+
+uint RuleItem::optionsMask() const
+{
+    return m_optionsMask;
 }
 
 int RuleItem::policy() const
@@ -191,9 +187,9 @@ QString RuleItem::policyKey() const
     return m_policy->policyKey(m_key);
 }
 
-QVariant RuleItem::typedValue(const QVariant &value, const RuleItem::Type type)
+QVariant RuleItem::typedValue(const QVariant &value) const
 {
-    switch (type) {
+    switch (type()) {
         case Undefined:
         case Option:
             return value;
@@ -202,14 +198,17 @@ QVariant RuleItem::typedValue(const QVariant &value, const RuleItem::Type type)
         case Integer:
         case Percentage:
             return value.toInt();
-        case FlagsOption:
-            // HACK: Currently, the only user of this is "types" property
-            if (value.toInt() == -1) { //NET:AllTypesMask
-                return 0x3FF - 0x040;  //All possible flags minus NET::Override (deprecated)
+        case NetTypes: {
+            const uint typesMask = value.toUInt() & optionsMask();  // filter by the allowed mask in the model
+            if (typesMask == 0 || typesMask == optionsMask()) {     // if no types or all of them are selected
+                return 0U - 1;                                      // return an all active mask (NET:AllTypesMask)
             }
-            return value.toInt();
-        case Point:
-            return value.toPoint();
+            return typesMask;
+        }
+        case Point: {
+            const QPoint point = value.toPoint();
+            return (point == invalidPoint) ? QPoint(0, 0) : point;
+        }
         case Size:
             return value.toSize();
         case String:

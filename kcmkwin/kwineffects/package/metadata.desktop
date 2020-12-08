@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Effects
+Name[az]=İş Masası effektləri
 Name[bs]=Efekti površi
 Name[ca]=Efectes de l'escriptori
 Name[ca@valencia]=Efectes d'escriptori
@@ -48,6 +49,7 @@ Name[zh_CN]=桌面特效
 Name[zh_TW]=桌面效果
 
 Comment=Desktop Effects
+Comment[az]=İş Masası effektləri
 Comment[bs]=Efekti površi
 Comment[ca]=Efectes de l'escriptori
 Comment[ca@valencia]=Efectes d'escriptori

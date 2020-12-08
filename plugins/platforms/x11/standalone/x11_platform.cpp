@@ -1,26 +1,18 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "x11_platform.h"
 #include "x11cursor.h"
 #include "edge.h"
 #include "windowselector.h"
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#include "x11xrenderbackend.h"
+#endif
 #include <config-kwin.h>
 #include <kwinconfig.h>
 #if HAVE_EPOXY_GLX
@@ -75,6 +67,7 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 #endif
 
     setSupportsGammaControl(true);
+    setPerScreenRenderingEnabled(false);
 }
 
 X11StandalonePlatform::~X11StandalonePlatform()
@@ -83,6 +76,9 @@ X11StandalonePlatform::~X11StandalonePlatform()
         m_openGLFreezeProtectionThread->quit();
         m_openGLFreezeProtectionThread->wait();
         delete m_openGLFreezeProtectionThread;
+    }
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
     }
     if (isReady()) {
         XRenderUtils::cleanup();
@@ -125,6 +121,13 @@ OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
         return nullptr;
     }
 }
+
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+XRenderBackend *X11StandalonePlatform::createXRenderBackend()
+{
+    return new X11XRenderBackend(this);
+}
+#endif
 
 Edge *X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
 {
@@ -198,11 +201,11 @@ bool X11StandalonePlatform::compositingPossible() const
 
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
-        qCDebug(KWIN_CORE) << "No composite extension available";
+        qCDebug(KWIN_X11STANDALONE) << "No composite extension available";
         return false;
     }
     if (!Xcb::Extensions::self()->isDamageAvailable()) {
-        qCDebug(KWIN_CORE) << "No damage extension available";
+        qCDebug(KWIN_X11STANDALONE) << "No damage extension available";
         return false;
     }
     if (hasGlx())
@@ -216,7 +219,7 @@ bool X11StandalonePlatform::compositingPossible() const
     } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
         return true;
     }
-    qCDebug(KWIN_CORE) << "No OpenGL or XRender/XFixes support";
+    qCDebug(KWIN_X11STANDALONE) << "No OpenGL or XRender/XFixes support";
     return false;
 }
 
@@ -376,7 +379,7 @@ void X11StandalonePlatform::invertScreen()
                     continue;
                 }
                 if (gamma->size) {
-                    qCDebug(KWIN_CORE) << "inverting screen using xcb_randr_set_crtc_gamma";
+                    qCDebug(KWIN_X11STANDALONE) << "inverting screen using xcb_randr_set_crtc_gamma";
                     const int half = gamma->size / 2 + 1;
 
                     uint16_t *red = gamma.red();
@@ -435,16 +438,20 @@ void X11StandalonePlatform::doUpdateOutputs()
     auto fallback = [this]() {
         auto *o = new X11Output(this);
         o->setGammaRampSize(0);
-        o->setRefreshRate(-1.0f);
+        o->setRefreshRate(60000);
         o->setName(QStringLiteral("Xinerama"));
         m_outputs << o;
+        emit outputAdded(o);
     };
 
     // TODO: instead of resetting all outputs, check if new output is added/removed
     //       or still available and leave still available outputs in m_outputs
     //       untouched (like in DRM backend)
-    qDeleteAll(m_outputs);
-    m_outputs.clear();
+    while (!m_outputs.isEmpty()) {
+        X11Output *output = m_outputs.takeLast();
+        emit outputRemoved(output);
+        delete output;
+    }
 
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         fallback();
@@ -506,16 +513,31 @@ void X11StandalonePlatform::doUpdateOutputs()
             o->setGeometry(geo);
             o->setRefreshRate(refreshRate * 1000);
 
-            QString name;
             for (int j = 0; j < info->num_outputs; ++j) {
                 Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
-                if (crtc == outputInfo->crtc) {
-                    name = outputInfo.name();
+                if (outputInfo->crtc != crtc) {
+                    continue;
+                }
+                QSize physicalSize(outputInfo->mm_width, outputInfo->mm_height);
+                switch (info->rotation) {
+                case XCB_RANDR_ROTATION_ROTATE_0:
+                case XCB_RANDR_ROTATION_ROTATE_180:
+                    break;
+                case XCB_RANDR_ROTATION_ROTATE_90:
+                case XCB_RANDR_ROTATION_ROTATE_270:
+                    physicalSize.transpose();
+                    break;
+                case XCB_RANDR_ROTATION_REFLECT_X:
+                case XCB_RANDR_ROTATION_REFLECT_Y:
                     break;
                 }
+                o->setName(outputInfo.name());
+                o->setPhysicalSize(physicalSize);
+                break;
             }
-            o->setName(name);
+
             m_outputs << o;
+            emit outputAdded(o);
         }
     }
 

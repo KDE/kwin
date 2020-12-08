@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006-2007 Rivo Laks <rivolaks@hot.ee>
-Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2012 Philipp Knechtges <philipp-dev@knechtges.com>
+    SPDX-FileCopyrightText: 2006-2007 Rivo Laks <rivolaks@hot.ee>
+    SPDX-FileCopyrightText: 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2012 Philipp Knechtges <philipp-dev@knechtges.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
 
@@ -33,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
-#include <QMatrix4x4>
 
 namespace KWin
 {
@@ -190,7 +178,7 @@ GLTexture::GLTexture(const QString& fileName)
 {
 }
 
-GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
+GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels, bool needsMutability)
      : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
@@ -209,7 +197,7 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
-        if (d->s_supportsTextureStorage) {
+        if (d->s_supportsTextureStorage && !needsMutability) {
             glTexStorage2D(d->m_target, levels, internalFormat, width, height);
             d->m_immutable = true;
         } else {
@@ -234,8 +222,8 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
     unbind();
 }
 
-GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels)
-    : GLTexture(internalFormat, size.width(), size.height(), levels)
+GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
+    : GLTexture(internalFormat, size.width(), size.height(), levels, needsMutability)
 {
 }
 
@@ -628,6 +616,9 @@ bool GLTexture::isYInverted() const
 void GLTexture::setYInverted(bool inverted)
 {
     Q_D(GLTexture);
+    if (d->m_yInverted == inverted)
+        return;
+
     d->m_yInverted = inverted;
     d->updateMatrix();
 }
@@ -678,6 +669,13 @@ bool GLTexture::supportsSwizzle()
 bool GLTexture::supportsFormatRG()
 {
     return GLTexturePrivate::s_supportsTextureFormatRG;
+}
+
+QImage GLTexture::toImage() const
+{
+    QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
+    glGetTextureImage(texture(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.sizeInBytes(), ret.bits());
+    return ret;
 }
 
 } // namespace KWin

@@ -1,0 +1,6 @@
+File=kwinoptions_kdeglobals_settings.kcfg
+ClassName=KWinOptionsKDEGlobalsSettings
+IncludeFiles=options.h
+Mutators=true
+DefaultValueGetters=true
+ParentInConstructor=true

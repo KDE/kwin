@@ -11,6 +11,7 @@ set(kcm_kwintabbox_PART_SRCS
     main.cpp
     thumbnailitem.cpp
     kwintabboxconfigform.cpp
+    kwintabboxdata.cpp
 )
 
 ki18n_wrap_ui(kcm_kwintabbox_PART_SRCS main.ui)

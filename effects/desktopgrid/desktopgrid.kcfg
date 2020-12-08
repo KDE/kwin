@@ -22,8 +22,8 @@
             <entry name="CustomLayoutRows" type="Int">
                 <default>2</default>
             </entry>
-            <entry name="PresentWindows" type="Bool">
-                <default>true</default>
+            <entry name="ClickBehavior" type="Int">
+                <default code="true">0</default>
             </entry>
             <entry name="ShowAddRemove" type="Bool">
                 <default>true</default>

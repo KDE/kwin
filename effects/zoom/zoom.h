@@ -1,26 +1,17 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2010 Sebastian Sauer <sebsauer@kdab.com>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2010 Sebastian Sauer <sebsauer@kdab.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_ZOOM_H
 #define KWIN_ZOOM_H
+
+#include <config-kwin.h>
 
 #include <kwineffects.h>
 #include <QTime>
@@ -28,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+
+#if HAVE_ACCESSIBILITY
+class ZoomAccessibilityIntegration;
+#endif
 
 class GLTexture;
 class XRenderPicture;
@@ -39,8 +34,8 @@ class ZoomEffect
     Q_PROPERTY(qreal zoomFactor READ configuredZoomFactor)
     Q_PROPERTY(int mousePointer READ configuredMousePointer)
     Q_PROPERTY(int mouseTracking READ configuredMouseTracking)
-    Q_PROPERTY(bool enableFocusTracking READ isEnableFocusTracking)
-    Q_PROPERTY(bool followFocus READ isFollowFocus)
+    Q_PROPERTY(bool focusTrackingEnabled READ isFocusTrackingEnabled)
+    Q_PROPERTY(bool textCaretTrackingEnabled READ isTextCaretTrackingEnabled)
     Q_PROPERTY(int focusDelay READ configuredFocusDelay)
     Q_PROPERTY(qreal moveFactor READ configuredMoveFactor)
     Q_PROPERTY(qreal targetZoom READ targetZoom)
@@ -62,12 +57,8 @@ public:
     int configuredMouseTracking() const {
         return mouseTracking;
     }
-    bool isEnableFocusTracking() const {
-        return enableFocusTracking;
-    }
-    bool isFollowFocus() const {
-        return followFocus;
-    }
+    bool isFocusTrackingEnabled() const;
+    bool isTextCaretTrackingEnabled() const;
     int configuredFocusDelay() const {
         return focusDelay;
     }
@@ -89,7 +80,7 @@ private Q_SLOTS:
     void moveMouseToFocus();
     void moveMouseToCenter();
     void timelineFrameChanged(int frame);
-    void focusChanged(int px, int py, int rx, int ry, int rwidth, int rheight);
+    void moveFocus(const QPoint &point);
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
@@ -99,6 +90,9 @@ private:
     void hideCursor();
     void moveZoom(int x, int y);
 private:
+#if HAVE_ACCESSIBILITY
+    ZoomAccessibilityIntegration *m_accessibilityIntegration = nullptr;
+#endif
     double zoom;
     double target_zoom;
     double source_zoom;
@@ -106,8 +100,6 @@ private:
     double zoomFactor;
     enum MouseTrackingType { MouseTrackingProportional = 0, MouseTrackingCentred = 1, MouseTrackingPush = 2, MouseTrackingDisabled = 3 };
     MouseTrackingType mouseTracking;
-    bool enableFocusTracking;
-    bool followFocus;
     enum MousePointerType { MousePointerScale = 0, MousePointerKeep = 1, MousePointerHide = 2 };
     MousePointerType mousePointer;
     int focusDelay;

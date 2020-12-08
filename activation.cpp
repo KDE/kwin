@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 /*
 
@@ -340,12 +329,12 @@ void Workspace::activateClient(AbstractClient* c, bool force)
  *
  * @see activateClient
  */
-void Workspace::requestFocus(AbstractClient* c, bool force)
+bool Workspace::requestFocus(AbstractClient* c, bool force)
 {
-    takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
+    return takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
 }
 
-void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
+bool Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
 {
     // the 'if ( c == active_client ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (c != active_client))
@@ -353,7 +342,7 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
 
     if (!c) {
         focusToNull();
-        return;
+        return true;
     }
 
     if (flags & ActivityFocus) {
@@ -390,16 +379,20 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
     }
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
         qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
-        return;
+        return false;
     }
 
+    bool ret = true;
+
     if (flags & ActivityFocus)
-        c->takeFocus();
+        ret &= c->takeFocus();
     if (flags & ActivityRaise)
         workspace()->raiseClient(c);
 
     if (!c->isOnActiveScreen())
         screens()->setCurrent(c->screen());
+
+    return ret;
 }
 
 /**
@@ -660,9 +653,13 @@ bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timest
     return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
 
-// called from Client after FocusIn that wasn't initiated by KWin and the client
-// wasn't allowed to activate
-void Workspace::restoreFocus()
+/**
+ * Called from X11Client after FocusIn that wasn't initiated by KWin and the client wasn't
+ * allowed to activate.
+ *
+ * Returns @c true if the focus has been restored successfully; otherwise returns @c false.
+ */
+bool Workspace::restoreFocus()
 {
     // this updateXTime() is necessary - as FocusIn events don't have
     // a timestamp *sigh*, kwin's timestamp would be older than the timestamp
@@ -670,9 +667,10 @@ void Workspace::restoreFocus()
     // the attempt to restore the focus would fail due to old timestamp
     updateXTime();
     if (should_get_focus.count() > 0)
-        requestFocus(should_get_focus.last());
+        return requestFocus(should_get_focus.last());
     else if (last_active_client)
-        requestFocus(last_active_client);
+        return requestFocus(last_active_client);
+    return true;
 }
 
 void Workspace::clientAttentionChanged(AbstractClient* c, bool set)

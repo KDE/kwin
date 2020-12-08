@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
-Copyright 2013, 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2013, 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
@@ -38,6 +27,7 @@ class Buffer;
 
 namespace KWin
 {
+class AbstractOutput;
 namespace Wayland
 {
 class WaylandBackend;
@@ -58,12 +48,18 @@ public:
     void prepareRenderingFrame();
     void present(const QRegion &damage);
 
+    bool needsFullRepaint() const;
+    void setNeedsFullRepaint(bool set);
+
+    QRegion mapToLocal(const QRegion &region) const;
+
 private:
     WaylandOutput *m_waylandOutput;
     KWayland::Client::ShmPool *m_pool;
 
     QWeakPointer<KWayland::Client::Buffer> m_buffer;
     QImage m_backBuffer;
+    bool m_needsFullRepaint = true;
 
     friend class WaylandQPainterBackend;
 };
@@ -75,24 +71,18 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
-    bool usesOverlayWindow() const override;
-
-    QImage *buffer() override;
     QImage *bufferForScreen(int screenId) override;
 
-    void present(int mask, const QRegion& damage) override;
-    void prepareRenderingFrame() override;
+    void endFrame(int screenId, int mask, const QRegion& damage) override;
+    void beginFrame(int screenId) override;
 
-    bool needsFullRepaint() const override;
-    bool perScreenRendering() const override;
+    bool needsFullRepaint(int screenId) const override;
 
 private:
-    void createOutput(WaylandOutput *waylandOutput);
+    void createOutput(AbstractOutput *waylandOutput);
     void frameRendered();
 
     WaylandBackend *m_backend;
-    bool m_needsFullRepaint;
-
     QVector<WaylandQPainterOutput*> m_outputs;
 };
 

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 // own
 #include "client_machine.h"
 #include "utils.h"
@@ -61,10 +50,10 @@ GetAddrInfo::GetAddrInfo(const QByteArray &hostName, QObject *parent)
 {
     // watcher will be deleted together with the GetAddrInfo once the future
     // got canceled or finished
-    connect(m_watcher, SIGNAL(canceled()), SLOT(deleteLater()));
-    connect(m_watcher, SIGNAL(finished()), SLOT(slotResolved()));
-    connect(m_ownAddressWatcher, SIGNAL(canceled()), SLOT(deleteLater()));
-    connect(m_ownAddressWatcher, SIGNAL(finished()), SLOT(slotOwnAddressResolved()));
+    connect(m_watcher, &QFutureWatcher<int>::canceled, this, &GetAddrInfo::deleteLater);
+    connect(m_watcher, &QFutureWatcher<int>::finished, this, &GetAddrInfo::slotResolved);
+    connect(m_ownAddressWatcher, &QFutureWatcher<int>::canceled, this, &GetAddrInfo::deleteLater);
+    connect(m_ownAddressWatcher, &QFutureWatcher<int>::finished, this, &GetAddrInfo::slotOwnAddressResolved);
 }
 
 GetAddrInfo::~GetAddrInfo()
@@ -221,8 +210,8 @@ void ClientMachine::checkForLocalhost()
             // check using information from get addr info
             // GetAddrInfo gets automatically destroyed once it finished or not
             GetAddrInfo *info = new GetAddrInfo(lowerHostName, this);
-            connect(info, SIGNAL(local()), SLOT(setLocal()));
-            connect(info, SIGNAL(destroyed(QObject*)), SLOT(resolveFinished()));
+            connect(info, &GetAddrInfo::local, this, &ClientMachine::setLocal);
+            connect(info, &GetAddrInfo::destroyed, this, &ClientMachine::resolveFinished);
             info->resolve();
         }
     }

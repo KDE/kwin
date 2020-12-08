@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "abstract_client.h"
@@ -27,15 +16,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "screenedge.h"
 #include "screens.h"
-#include "wayland_cursor_theme.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xcursortheme.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
+#include <KWayland/Client/region.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
@@ -45,53 +35,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/seat_interface.h>
 
-#include <wayland-cursor.h>
-
 #include <linux/input.h>
 
 namespace KWin
 {
 
-template <typename T>
-PlatformCursorImage loadReferenceThemeCursor(const T &shape)
+static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &theme,
+                                                           const QByteArray &name)
 {
-    if (!waylandServer()->internalShmPool()) {
+    const QVector<KXcursorSprite> sprites = theme.shape(name);
+    if (sprites.isEmpty()) {
         return PlatformCursorImage();
     }
 
-    QScopedPointer<WaylandCursorTheme> cursorTheme;
-    cursorTheme.reset(new WaylandCursorTheme(waylandServer()->internalShmPool()));
+    QImage cursorImage = sprites.first().data();
+    cursorImage.setDevicePixelRatio(theme.devicePixelRatio());
 
-    wl_cursor_image *cursor = cursorTheme->get(shape);
-    if (!cursor) {
+    QPoint cursorHotspot = sprites.first().hotspot();
+
+    return PlatformCursorImage(cursorImage, cursorHotspot);
+}
+
+static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
+{
+    const Cursor *pointerCursor = Cursors::self()->mouse();
+
+    const KXcursorTheme theme = KXcursorTheme::fromTheme(pointerCursor->themeName(),
+                                                         pointerCursor->themeSize(),
+                                                         screens()->maxScale());
+    if (theme.isEmpty()) {
         return PlatformCursorImage();
     }
 
-    wl_buffer *b = wl_cursor_image_get_buffer(cursor);
-    if (!b) {
-        return PlatformCursorImage();
+    PlatformCursorImage platformCursorImage = loadReferenceThemeCursor_helper(theme, name);
+    if (!platformCursorImage.isNull()) {
+        return platformCursorImage;
     }
 
-    waylandServer()->internalClientConection()->flush();
-    waylandServer()->dispatch();
-
-    auto buffer = KWaylandServer::BufferInterface::get(
-        waylandServer()->internalConnection()->getResource(
-            KWayland::Client::Buffer::getId(b)));
-    if (!buffer) {
-        return PlatformCursorImage{};
+    const QVector<QByteArray> alternativeNames = Cursor::cursorAlternativeNames(name);
+    for (const QByteArray &alternativeName : alternativeNames) {
+        platformCursorImage = loadReferenceThemeCursor_helper(theme, alternativeName);
+        if (!platformCursorImage.isNull()) {
+            break;
+        }
     }
 
-    const qreal scale = screens()->maxScale();
-    QImage image = buffer->data().copy();
-    image.setDevicePixelRatio(scale);
+    return platformCursorImage;
+}
 
-    const QPoint hotSpot(
-        qRound(cursor->hotspot_x / scale),
-        qRound(cursor->hotspot_y / scale)
-    );
-
-    return PlatformCursorImage(image, hotSpot);
+static PlatformCursorImage loadReferenceThemeCursor(const CursorShape &shape)
+{
+    return loadReferenceThemeCursor(shape.name());
 }
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_pointer_input-0");
@@ -130,6 +124,8 @@ private Q_SLOTS:
     void testResizeCursor();
     void testMoveCursor();
     void testHideShowCursor();
+    void testDefaultInputRegion();
+    void testEmptyInputRegion();
 
 private:
     void render(KWayland::Client::Surface *surface, const QSize &size = QSize(100, 50));
@@ -141,8 +137,8 @@ void PointerInputTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<KWin::Deleted*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
@@ -159,7 +155,7 @@ void PointerInputTest::initTestCase()
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -203,7 +199,7 @@ void PointerInputTest::testWarpingUpdatesFocus()
     QVERIFY(leftSpy.isValid());
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -251,7 +247,7 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QVERIFY(movedSpy.isValid());
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -291,7 +287,7 @@ void PointerInputTest::testWarpingDuringFilter()
     Cursors::self()->mouse()->setPos(10, 10);
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -323,8 +319,6 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // this test verifies that a pointer enter event is generated when the cursor changes to another
     // screen due to removal of screen
     using namespace KWayland::Client;
-    // ensure cursor is on second screen
-    Cursors::self()->mouse()->setPos(1500, 300);
 
     // create pointer and signal spy for enter and motion
     auto pointer = m_seat->createPointer(m_seat);
@@ -332,9 +326,11 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(pointer->isValid());
     QSignalSpy enteredSpy(pointer, &Pointer::entered);
     QVERIFY(enteredSpy.isValid());
+    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QVERIFY(leftSpy.isValid());
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -344,7 +340,13 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(clientAddedSpy.wait());
     AbstractClient *window = workspace()->activeClient();
     QVERIFY(window);
+    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QTRY_COMPARE(enteredSpy.count(), 1);
+
+    // move the cursor to the second screen
+    Cursors::self()->mouse()->setPos(1500, 300);
     QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(leftSpy.wait());
 
     QSignalSpy screensChangedSpy(screens(), &Screens::changed);
     QVERIFY(screensChangedSpy.isValid());
@@ -361,7 +363,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
 
     // and we should get an enter event
-    QTRY_COMPARE(enteredSpy.count(), 1);
+    QTRY_COMPARE(enteredSpy.count(), 2);
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
@@ -430,7 +432,7 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -485,19 +487,19 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.writeEntry("CommandAll2", "Move");
     group.writeEntry("CommandAll3", "Move");
     group.sync();
     workspace()->slotReconfigure();
-    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
     QCOMPARE(options->commandAll2(), Options::MouseUnrestrictedMove);
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -518,12 +520,12 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
 
     // simulate modifier+click
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     QVERIFY(!window->isMove());
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(!window->isMove());
     // release modifier should not change it
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QVERIFY(!window->isMove());
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
 
@@ -570,7 +572,7 @@ void PointerInputTest::testModifierScrollOpacity()
     workspace()->slotReconfigure();
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -623,13 +625,13 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAllWheel", "change opacity");
     group.sync();
     workspace()->slotReconfigure();
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -653,12 +655,12 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
 
     // simulate modifier+wheel
     quint32 timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     kwinApp()->platform()->pointerAxisVertical(-5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
     kwinApp()->platform()->pointerAxisVertical(5, timestamp++);
     QCOMPARE(window->opacity(), 0.5);
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
     workspace()->disableGlobalShortcutsForClient(false);
 }
@@ -679,7 +681,7 @@ void  PointerInputTest::testScrollAction()
     group.sync();
     workspace()->slotReconfigure();
     // create two windows
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface1 = Test::createSurface(m_compositor);
     QVERIFY(surface1);
@@ -739,7 +741,7 @@ void PointerInputTest::testFocusFollowsMouse()
     QCOMPARE(options->delayFocusInterval(), 200);
 
     // create two windows
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface1 = Test::createSurface(m_compositor);
     QVERIFY(surface1);
@@ -825,7 +827,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     workspace()->slotReconfigure();
 
     // create two windows
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface1 = Test::createSurface(m_compositor);
     QVERIFY(surface1);
@@ -915,7 +917,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     QCOMPARE(options->isClickRaise(), clickRaise);
 
     // create two windows
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface1 = Test::createSurface(m_compositor);
     QVERIFY(surface1);
@@ -997,7 +999,7 @@ void PointerInputTest::testCursorImage()
     QVERIFY(!fallbackCursor.isNull());
 
     // create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -1010,7 +1012,7 @@ void PointerInputTest::testCursorImage()
 
     // move cursor to center of window, this should first set a null pointer, so we still show old cursor
     cursor->setPos(window->frameGeometry().center());
-    QCOMPARE(p->focus().data(), window);
+    QCOMPARE(p->focus(), window);
     QCOMPARE(cursor->image(), fallbackCursor);
     QVERIFY(enteredSpy.wait());
 
@@ -1065,7 +1067,7 @@ void PointerInputTest::testCursorImage()
 
     // move cursor somewhere else, should reset to fallback cursor
     Cursors::self()->mouse()->setPos(window->frameGeometry().bottomLeft() + QPoint(20, 20));
-    QVERIFY(p->focus().isNull());
+    QVERIFY(!p->focus());
     QVERIFY(!cursor->image().isNull());
     QCOMPARE(cursor->image(), fallbackCursor);
 }
@@ -1098,7 +1100,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QVERIFY(!fallback.isNull());
 
     // now let's create a window
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -1174,7 +1176,7 @@ void PointerInputTest::testPopup()
 
     Cursors::self()->mouse()->setPos(800, 800);
 
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -1255,7 +1257,7 @@ void PointerInputTest::testDecoCancelsPopup()
     QVERIFY(motionSpy.isValid());
 
     Cursors::self()->mouse()->setPos(800, 800);
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -1332,7 +1334,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QVERIFY(leftSpy.isValid());
 
     Cursors::self()->mouse()->setPos(800, 800);
-    QSignalSpy clientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
     Surface *surface = Test::createSurface(m_compositor);
     QVERIFY(surface);
@@ -1487,11 +1489,11 @@ void PointerInputTest::testResizeCursor()
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll3", "Resize");
     group.sync();
     workspace()->slotReconfigure();
-    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedResize);
 
     // create a test client
@@ -1526,24 +1528,24 @@ void PointerInputTest::testResizeCursor()
     Cursors::self()->mouse()->setPos(cursorPos);
 
     const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
-    QVERIFY(!arrowCursor.image().isNull());
+    QVERIFY(!arrowCursor.isNull());
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 
     // start resizing the client
     int timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     kwinApp()->platform()->pointerButtonPressed(BTN_RIGHT, timestamp++);
     QVERIFY(c->isResize());
 
     QFETCH(KWin::CursorShape, cursorShape);
     const PlatformCursorImage resizeCursor = loadReferenceThemeCursor(cursorShape);
-    QVERIFY(!resizeCursor.image().isNull());
+    QVERIFY(!resizeCursor.isNull());
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), resizeCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), resizeCursor.hotSpot());
 
     // finish resizing the client
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     kwinApp()->platform()->pointerButtonReleased(BTN_RIGHT, timestamp++);
     QVERIFY(!c->isResize());
 
@@ -1557,11 +1559,11 @@ void PointerInputTest::testMoveCursor()
 
     // first modify the config for this run
     KConfigGroup group = kwinApp()->config()->group("MouseBindings");
-    group.writeEntry("CommandAllKey", "Alt");
+    group.writeEntry("CommandAllKey", "Meta");
     group.writeEntry("CommandAll1", "Move");
     group.sync();
     workspace()->slotReconfigure();
-    QCOMPARE(options->commandAllModifier(), Qt::AltModifier);
+    QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
 
     // create a test client
@@ -1577,23 +1579,23 @@ void PointerInputTest::testMoveCursor()
     Cursors::self()->mouse()->setPos(c->frameGeometry().center());
 
     const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
-    QVERIFY(!arrowCursor.image().isNull());
+    QVERIFY(!arrowCursor.isNull());
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 
     // start moving the client
     int timestamp = 1;
-    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
     kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(c->isMove());
 
     const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
-    QVERIFY(!sizeAllCursor.image().isNull());
+    QVERIFY(!sizeAllCursor.isNull());
     QCOMPARE(kwinApp()->platform()->cursorImage().image(), sizeAllCursor.image());
     QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
 
     // finish moving the client
-    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    kwinApp()->platform()->keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     kwinApp()->platform()->pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!c->isMove());
 
@@ -1624,6 +1626,52 @@ void PointerInputTest::testHideShowCursor()
     QCOMPARE(kwinApp()->platform()->isCursorHidden(), true);
     kwinApp()->platform()->showCursor();
     QCOMPARE(kwinApp()->platform()->isCursorHidden(), false);
+}
+
+void PointerInputTest::testDefaultInputRegion()
+{
+    // This test verifies that a surface that hasn't specified the input region can be focused.
+
+    // Create a test client.
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+
+    // Move the point to the center of the surface.
+    Cursors::self()->mouse()->setPos(client->frameGeometry().center());
+    QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
+
+    // Destroy the test client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
+}
+
+void PointerInputTest::testEmptyInputRegion()
+{
+    // This test verifies that a surface that has specified an empty input region can't be focused.
+
+    // Create a test client.
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QVERIFY(!surface.isNull());
+    std::unique_ptr<KWayland::Client::Region> inputRegion(m_compositor->createRegion(QRegion()));
+    surface->setInputRegion(inputRegion.get());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    QVERIFY(!shellSurface.isNull());
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(client);
+
+    // Move the point to the center of the surface.
+    Cursors::self()->mouse()->setPos(client->frameGeometry().center());
+    QVERIFY(!waylandServer()->seat()->focusedPointerSurface());
+
+    // Destroy the test client.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 }

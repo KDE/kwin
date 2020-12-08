@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "../virtualdesktops.h"
 #include "../input.h"
 // KDE
@@ -621,12 +610,9 @@ void TestVirtualDesktops::load()
     config->group("Desktops").writeEntry("Number", 4);
     vds->load();
     QCOMPARE(vds->count(), (uint)4);
-    // setting the screen number should reset to one desktop as config value is missing
-    screen_number = 2;
-    vds->load();
-    QCOMPARE(vds->count(), (uint)1);
-    // creating the respective group should properly load
-    config->group("Desktops-screen-2").writeEntry("Number", 5);
+
+    // setting the config value and reloading should update
+    config->group("Desktops").writeEntry("Number", 5);
     vds->load();
     QCOMPARE(vds->count(), (uint)5);
 }
@@ -650,23 +636,6 @@ void TestVirtualDesktops::save()
     QCOMPARE(desktops.hasKey("Name_2"), false);
     QCOMPARE(desktops.hasKey("Name_3"), false);
     QCOMPARE(desktops.hasKey("Name_4"), false);
-
-    // change screen number
-    screen_number = 3;
-    QCOMPARE(config->hasGroup("Desktops-screen-3"), false);
-    vds->setCount(3);
-    vds->save();
-    QCOMPARE(config->hasGroup("Desktops-screen-3"), true);
-    // old one should be unchanged
-    desktops = config->group("Desktops");
-    QCOMPARE(desktops.readEntry<int>("Number", 1), 4);
-    desktops = config->group("Desktops-screen-3");
-    QCOMPARE(desktops.readEntry<int>("Number", 1), 3);
-    QCOMPARE(desktops.hasKey("Name_1"), false);
-    QCOMPARE(desktops.hasKey("Name_2"), false);
-    QCOMPARE(desktops.hasKey("Name_3"), false);
-    QCOMPARE(desktops.hasKey("Name_4"), false);
-
 }
 
 QTEST_MAIN(TestVirtualDesktops)

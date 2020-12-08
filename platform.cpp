@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "platform.h"
 
 #include "abstract_output.h"
@@ -32,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "screenedge.h"
 #include "wayland_server.h"
-#include "colorcorrection/manager.h"
 
 #include <KWaylandServer/outputconfiguration_interface.h>
 #include <KWaylandServer/outputchangeset.h>
@@ -48,16 +36,12 @@ Platform::Platform(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
-    setSoftWareCursor(false);
-    m_colorCorrect = new ColorCorrect::Manager(this);
+    setSoftwareCursorForced(false);
     connect(Cursors::self(), &Cursors::currentCursorRendered, this, &Platform::cursorRendered);
 }
 
 Platform::~Platform()
 {
-    if (m_eglDisplay != EGL_NO_DISPLAY) {
-        eglTerminate(m_eglDisplay);
-    }
 }
 
 PlatformCursorImage Platform::cursorImage() const
@@ -105,6 +89,13 @@ QPainterBackend *Platform::createQPainterBackend()
 {
     return nullptr;
 }
+
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+XRenderBackend *Platform::createXRenderBackend()
+{
+    return nullptr;
+}
+#endif
 
 void Platform::prepareShutdown()
 {
@@ -174,6 +165,11 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
     config->setApplied();
 }
 
+AbstractOutput *Platform::findOutput(int screenId)
+{
+    return enabledOutputs().value(screenId);
+}
+
 AbstractOutput *Platform::findOutput(const QByteArray &uuid)
 {
     const auto outs = outputs();
@@ -187,21 +183,52 @@ AbstractOutput *Platform::findOutput(const QByteArray &uuid)
     return nullptr;
 }
 
-void Platform::setSoftWareCursor(bool set)
+bool Platform::usesSoftwareCursor() const
 {
-    if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
-        set = true;
-    }
-    if (m_softWareCursor == set) {
+    return m_softwareCursor;
+}
+
+void Platform::setSoftwareCursor(bool set)
+{
+    if (m_softwareCursor == set) {
         return;
     }
-    m_softWareCursor = set;
-    if (m_softWareCursor) {
+    m_softwareCursor = set;
+    doSetSoftwareCursor();
+    if (m_softwareCursor) {
         connect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
     } else {
         disconnect(Cursors::self(), &Cursors::positionChanged, this, &Platform::triggerCursorRepaint);
         disconnect(Cursors::self(), &Cursors::currentCursorChanged, this, &Platform::triggerCursorRepaint);
+    }
+    triggerCursorRepaint();
+}
+
+void Platform::doSetSoftwareCursor()
+{
+}
+
+bool Platform::isSoftwareCursorForced() const
+{
+    return m_softwareCursorForced;
+}
+
+void Platform::setSoftwareCursorForced(bool forced)
+{
+    if (qEnvironmentVariableIsSet("KWIN_FORCE_SW_CURSOR")) {
+        forced = true;
+    }
+    if (m_softwareCursorForced == forced) {
+        return;
+    }
+    m_softwareCursorForced = forced;
+    if (m_softwareCursorForced) {
+        setSoftwareCursor(true);
+    } else {
+        // Do not unset the software cursor yet, the platform will choose the right
+        // moment when it can be done. There is still a chance that we must continue
+        // using the software cursor.
     }
 }
 
@@ -216,7 +243,7 @@ void Platform::triggerCursorRepaint()
 
 void Platform::cursorRendered(const QRect &geometry)
 {
-    if (m_softWareCursor) {
+    if (m_softwareCursor) {
         m_cursor.lastRenderedGeometry = geometry;
     }
 }
@@ -414,15 +441,37 @@ void Platform::setReady(bool ready)
     emit readyChanged(m_ready);
 }
 
+bool Platform::isPerScreenRenderingEnabled() const
+{
+    return m_isPerScreenRenderingEnabled;
+}
+
+void Platform::setPerScreenRenderingEnabled(bool enabled)
+{
+    m_isPerScreenRenderingEnabled = enabled;
+}
+
 void Platform::warpPointer(const QPointF &globalPos)
 {
     Q_UNUSED(globalPos)
 }
 
-bool Platform::supportsQpaContext() const
+bool Platform::supportsSurfacelessContext() const
 {
-    if (Compositor *c = Compositor::self()) {
-        return c->scene()->openGLPlatformInterfaceExtensions().contains(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
+    Compositor *compositor = Compositor::self();
+    if (Q_UNLIKELY(!compositor)) {
+        return false;
+    }
+    if (Scene *scene = compositor->scene()) {
+        return scene->supportsSurfacelessContext();
+    }
+    return false;
+}
+
+bool Platform::supportsNativeFence() const
+{
+    if (Compositor *compositor = Compositor::self()) {
+        return compositor->scene()->supportsNativeFence();
     }
     return false;
 }
@@ -567,6 +616,16 @@ void Platform::createEffectsHandler(Compositor *compositor, Scene *scene)
 QString Platform::supportInformation() const
 {
     return QStringLiteral("Name: %1\n").arg(metaObject()->className());
+}
+
+EGLContext Platform::sceneEglGlobalShareContext() const
+{
+    return m_globalShareContext;
+}
+
+void Platform::setSceneEglGlobalShareContext(EGLContext context)
+{
+    m_globalShareContext = context;
 }
 
 }

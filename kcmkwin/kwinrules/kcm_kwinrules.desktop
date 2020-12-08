@@ -1,5 +1,4 @@
 [Desktop Entry]
-Exec=kcmshell5 kwinrules
 Icon=preferences-system-windows-actions
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 Type=Service
@@ -14,6 +13,7 @@ X-KDE-FormFactors=desktop,tablet
 
 Name=Window Rules
 Name[ar]=قواعد النوافذ
+Name[az]=Pəncərə qaydaları
 Name[bg]=Правила за прозорци
 Name[bs]=Pravila prozora
 Name[ca]=Regles de les finestres
@@ -55,7 +55,7 @@ Name[pa]=ਵਿੰਡੋ ਨਿਯਮ
 Name[pl]=Zasady okien
 Name[pt]=Regras das Janelas
 Name[pt_BR]=Regras das janelas
-Name[ro]=Reguli fereastră
+Name[ro]=Reguli ferestre
 Name[ru]=Особые параметры окон
 Name[si]=කවුළු නීති
 Name[sk]=Pravidlá okien
@@ -75,6 +75,7 @@ Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
 Comment=Individual Window Behavior
+Comment[az]=İndividual pəncərə davranışları
 Comment[bs]=Ponašanje pojedinog prozora
 Comment[ca]=Comportament individual de les finestres
 Comment[ca@valencia]=Comportament individual de les finestres
@@ -105,6 +106,7 @@ Comment[pa]=ਵੱਖ-ਵੱਖ ਵਿੰਡੋ ਰਵੱਈਆ
 Comment[pl]=Wyjątkowe okna
 Comment[pt]=Comportamento das Janelas Individuais
 Comment[pt_BR]=Comportamento das janelas individuais
+Comment[ro]=Comportament al ferestrelor individuale
 Comment[ru]=Особые параметры конкретных окон
 Comment[sk]=Individuálne správanie okien
 Comment[sl]=Obnašanje posameznih oken
@@ -120,6 +122,7 @@ Comment[zh_CN]=个别窗口行为
 Comment[zh_TW]=個別視窗行為
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
+X-KDE-Keywords[az]=ölçü,mövqe,bölgə,pəncərə davranışı,pəncərələr,xüsusi,iş sahəsi,xatırlama,rollar
 X-KDE-Keywords[bs]=veličina,pozicija,grad,reagiranje prozora,prozori,specifičan,workarounds,sjećati se,pravila
 X-KDE-Keywords[ca]=mida,posició,estat,comportament de la finestra,finestres,específic,solucions alternatives,recorda,regles
 X-KDE-Keywords[ca@valencia]=mida,posició,estat,comportament de la finestra,finestres,específic,solucions alternatives,recorda,regles
@@ -149,6 +152,7 @@ X-KDE-Keywords[nn]=storleik,plassering,tilstand,vindaugsåtferd,vindauge,einskil
 X-KDE-Keywords[pl]=rozmiar,pozycja,stan,zachowanie okna,okna,specyficzne,obejścia,zapamiętaj,reguły
 X-KDE-Keywords[pt]=tamanho,posição,estado,comportamento da janela,janelas,específico,alternativas,recordar,regras
 X-KDE-Keywords[pt_BR]=tamanho,posição,estado,comportamento da janela,janelas,específico,alternativas,lembrar,regras
+X-KDE-Keywords[ro]=dimensiune,poziție,stare,comportament ferestre,ferestre,specific,ține minte,reguli
 X-KDE-Keywords[ru]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,размер,позиция,состояние,поведение окон,окна,специальный,специальные возможности,запомнить,правила
 X-KDE-Keywords[sk]=veľkosť,poloha,stav,správanie okien,okná,špecifický,workaroundy,pamätať,pravidlá
 X-KDE-Keywords[sl]=velikost,položaj,stanje,obnašanje oken,okna,določeno,popravki,pomnjenje,pravila

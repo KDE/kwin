@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef MAIN_H
 #define MAIN_H
@@ -54,7 +43,6 @@ class KWIN_EXPORT Application : public  QApplication
     Q_PROPERTY(int x11ScreenNumber READ x11ScreenNumber CONSTANT)
     Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
     Q_PROPERTY(KSharedConfigPtr kxkbConfig READ kxkbConfig WRITE setKxkbConfig)
-    Q_PROPERTY(KSharedConfigPtr inputConfig READ inputConfig WRITE setInputConfig)
 public:
     /**
      * @brief This enum provides the various operation modes of KWin depending on the available
@@ -94,13 +82,6 @@ public:
         m_kxkbConfig = std::move(config);
     }
 
-    KSharedConfigPtr inputConfig() const {
-        return m_inputConfig;
-    }
-    void setInputConfig(KSharedConfigPtr config) {
-        m_inputConfig = std::move(config);
-    }
-
     void start();
     /**
      * @brief The operation mode used by KWin.
@@ -132,6 +113,7 @@ public:
 
     static void setCrashCount(int count);
     static bool wasCrash();
+    void resetCrashesCount();
 
     /**
      * Creates the KAboutData object for the KWin instance and registers it as
@@ -170,6 +152,20 @@ public:
         return m_connection;
     }
 
+    /**
+     * @returns the X11 default screen
+     */
+    xcb_screen_t *x11DefaultScreen() const {
+        return m_defaultScreen;
+    }
+
+    /**
+     * Returns @c true if we're in the middle of destroying the X11 connection.
+     */
+    bool isClosingX11Connection() const {
+        return m_isClosingX11Connection;
+    }
+
 #ifdef KWIN_BUILD_ACTIVITIES
     bool usesKActivities() const {
         return m_useKActivities;
@@ -202,19 +198,24 @@ Q_SIGNALS:
     void workspaceCreated();
     void screensCreated();
     void virtualTerminalCreated();
+    void started();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
 
     void notifyKSplash();
+    void notifyStarted();
     void createInput();
     void createWorkspace();
     void createAtoms();
     void createOptions();
-    void setupEventFilters();
+    void createPlugins();
+    void installNativeX11EventFilter();
+    void removeNativeX11EventFilter();
     void destroyWorkspace();
     void destroyCompositor();
+    void destroyPlugins();
     /**
      * Inheriting classes should use this method to set the X11 root window
      * before accessing any X11 specific code pathes.
@@ -228,7 +229,13 @@ protected:
      */
     void setX11Connection(xcb_connection_t *c) {
         m_connection = c;
-        emit x11ConnectionChanged();
+    }
+    /**
+     * Inheriting classes should use this method to set the default screen
+     * before accessing any X11 specific code pathes.
+     */
+    void setX11DefaultScreen(xcb_screen_t *screen) {
+        m_defaultScreen = screen;
     }
     void destroyAtoms();
     void destroyPlatform();
@@ -236,28 +243,29 @@ protected:
     void setTerminating() {
         m_terminating = true;
     }
+    void setClosingX11Connection(bool set) {
+        m_isClosingX11Connection = set;
+    }
 
 protected:
     static int crashes;
-
-private Q_SLOTS:
-    void resetCrashesCount();
 
 private:
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_configLock;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
-    KSharedConfigPtr m_inputConfig;
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
+    xcb_screen_t *m_defaultScreen = nullptr;
 #ifdef KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif
     Platform *m_platform = nullptr;
     bool m_terminating = false;
+    bool m_isClosingX11Connection = false;
 };
 
 inline static Application *kwinApp()

@@ -1,22 +1,8 @@
 /*
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 import QtQuick 2.14
 import QtQuick.Layouts 1.14
@@ -39,10 +25,25 @@ ScrollViewKCM {
         clip: true
 
         model: enabledRulesModel
-        delegate: RuleItemDelegate {}
+        delegate: RuleItemDelegate {
+            ListView.onAdd: {
+                // Try to position the new added item into the visible view
+                // FIXME: It only works when moving towards the end of the list
+                ListView.view.currentIndex = index
+            }
+        }
         section {
             property: "section"
             delegate: Kirigami.ListSectionHeader { label: section }
+        }
+
+        highlightRangeMode: ListView.ApplyRange
+
+        add: Transition {
+            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: Kirigami.Units.longDuration * 3 }
+        }
+        removeDisplaced: Transition {
+            NumberAnimation { property: "y"; duration: Kirigami.Units.longDuration }
         }
 
         Kirigami.PlaceholderMessage {
@@ -59,7 +60,7 @@ ScrollViewKCM {
             }
             width: parent.width - (units.largeSpacing * 4)
             helpfulAction: QQC2.Action {
-                text: i18n("Add Properties...")
+                text: i18n("Add Property...")
                 icon.name: "list-add-symbolic"
                 onTriggered: {
                     propertySheet.open();
@@ -68,7 +69,6 @@ ScrollViewKCM {
         }
     }
 
-    // FIXME: InlineMessage.qml:241:13: QML Label: Binding loop detected for property "verticalAlignment"
     header: Kirigami.InlineMessage {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -78,7 +78,7 @@ ScrollViewKCM {
 
     footer:  RowLayout {
         QQC2.Button {
-            text: checked ? i18n("Close") : i18n("Add Properties...")
+            text: checked ? i18n("Close") : i18n("Add Property...")
             icon.name: checked ? "dialog-close" : "list-add-symbolic"
             checkable: true
             checked: propertySheet.sheetOpen
@@ -91,15 +91,19 @@ ScrollViewKCM {
             Layout.fillWidth: true
         }
         QQC2.Button {
+            id: detectButton
             text: i18n("Detect Window Properties")
             icon.name: "edit-find"
+            enabled: !propertySheet.sheetOpen && !errorSheet.sheetOpen
             onClicked: {
                 overlayModel.onlySuggestions = true;
-                rulesModel.detectWindowProperties(delaySpin.value);
+                rulesModel.detectWindowProperties(Math.max(delaySpin.value * 1000,
+                                                           Kirigami.Units.shortDuration));
             }
         }
         QQC2.SpinBox {
             id: delaySpin
+            enabled: detectButton.enabled
             Layout.preferredWidth: Kirigami.Units.gridUnit * 8
             from: 0
             to: 30
@@ -113,8 +117,26 @@ ScrollViewKCM {
 
     Connections {
         target: rulesModel
-        onSuggestionsChanged: {
+        function onShowSuggestions() {
+            overlayModel.onlySuggestions = true;
             propertySheet.sheetOpen = true;
+        }
+        function onShowErrorMessage(message) {
+            errorLabel.text = message
+            errorSheet.open()
+        }
+    }
+
+    Kirigami.OverlaySheet {
+        id: errorSheet
+        header: Kirigami.Heading {
+            text: i18n("Error")
+        }
+        Kirigami.Heading {
+            id: errorLabel
+            level: 3
+            wrapMode: Text.WordWrap
+            Layout.fillWidth: true
         }
     }
 
@@ -124,7 +146,7 @@ ScrollViewKCM {
         parent: view
 
         header: Kirigami.Heading {
-            text: i18n("Select properties")
+            text: i18n("Add property to the rule")
         }
         footer: Kirigami.SearchField {
             id: searchField
@@ -162,7 +184,7 @@ ScrollViewKCM {
                         Layout.alignment: Qt.AlignVCenter
                         QQC2.ToolTip {
                             text: model.description
-                            visible: hovered && (model.description != "")
+                            visible: hovered && (model.description.length > 0)
                         }
                     }
                     QQC2.Label {
@@ -195,6 +217,9 @@ ScrollViewKCM {
                         model.value = model.suggested;
                         model.suggested = null;
                     }
+                    if (!overlayModel.onlySuggestions) {
+                        propertySheet.close();
+                    }
                 }
             }
         }
@@ -202,6 +227,7 @@ ScrollViewKCM {
         onSheetOpenChanged: {
             searchField.text = "";
             if (sheetOpen) {
+                overlayModel.ready = true;
                 searchField.forceActiveFocus();
             } else {
                 overlayModel.onlySuggestions = false;
@@ -224,7 +250,7 @@ ScrollViewKCM {
                 return i18nc("Size (width, height)", "(%1, %2)", value.width, value.height);
             case RuleItem.Option:
                 return options.textOfValue(value);
-            case RuleItem.FlagsOption:
+            case RuleItem.NetTypes:
                 var selectedValue = value.toString(2).length - 1;
                 return options.textOfValue(selectedValue);
         }
@@ -249,8 +275,19 @@ ScrollViewKCM {
             invalidateFilter();
         }
 
+        // Delay the model filtering until `ready` is set
+        // FIXME: Workaround https://bugs.kde.org/show_bug.cgi?id=422289
+        property bool ready: false
+        onReadyChanged: {
+            invalidateFilter();
+        }
+
         filterString: searchField.text.trim().toLowerCase()
         filterRowCallback: (source_row, source_parent) => {
+            if (!ready) {
+                return false;
+            }
+
             var index = sourceModel.index(source_row, 0, source_parent);
 
             var hasSuggestion = sourceModel.data(index, RulesModel.SuggestedValueRole) != null;
@@ -262,7 +299,7 @@ ScrollViewKCM {
             if (!showItem) {
                 return false;
             }
-            if (filterString != "") {
+            if (filterString.length > 0) {
                 return sourceModel.data(index, RulesModel.NameRole).toLowerCase().includes(filterString)
             }
             return true;

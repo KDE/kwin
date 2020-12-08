@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_SCENE_XRENDER_H
 #define KWIN_SCENE_XRENDER_H
@@ -30,118 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-namespace Xcb
-{
-    class Shm;
-}
-
-/**
- * @brief Backend for the SceneXRender to hold the compositing buffer and take care of buffer
- * swapping.
- *
- * This class is intended as a small abstraction to support multiple compositing backends in the
- * SceneXRender.
- */
-class XRenderBackend
-{
-public:
-    virtual ~XRenderBackend();
-    virtual void present(int mask, const QRegion &damage) = 0;
-
-    /**
-     * @brief Returns the OverlayWindow used by the backend.
-     *
-     * A backend does not have to use an OverlayWindow, this is mostly for the X world.
-     * In case the backend does not use an OverlayWindow it is allowed to return @c null.
-     * It's the task of the caller to check whether it is @c null.
-     *
-     * @return :OverlayWindow*
-     */
-    virtual OverlayWindow *overlayWindow();
-    virtual bool usesOverlayWindow() const = 0;
-    /**
-     * @brief Shows the Overlay Window
-     *
-     * Default implementation does nothing.
-     */
-    virtual void showOverlay();
-    /**
-     * @brief React on screen geometry changes.
-     *
-     * Default implementation does nothing. Override if specific functionality is required.
-     *
-     * @param size The new screen size
-     */
-    virtual void screenGeometryChanged(const QSize &size);
-    /**
-     * @brief The compositing buffer hold by this backend.
-     *
-     * The Scene composites the new frame into this buffer.
-     *
-     * @return xcb_render_picture_t
-     */
-    xcb_render_picture_t buffer() const {
-        return m_buffer;
-    }
-    /**
-     * @brief Whether the creation of the Backend failed.
-     *
-     * The SceneXRender should test whether the Backend got constructed correctly. If this method
-     * returns @c true, the SceneXRender should not try to start the rendering.
-     *
-     * @return bool @c true if the creation of the Backend failed, @c false otherwise.
-     */
-    bool isFailed() const {
-        return m_failed;
-    }
-
-protected:
-    XRenderBackend();
-    /**
-     * @brief A subclass needs to call this method once it created the compositing back buffer.
-     *
-     * @param buffer The buffer to use for compositing
-     * @return void
-     */
-    void setBuffer(xcb_render_picture_t buffer);
-    /**
-     * @brief Sets the backend initialization to failed.
-     *
-     * This method should be called by the concrete subclass in case the initialization failed.
-     * The given @p reason is logged as a warning.
-     *
-     * @param reason The reason why the initialization failed.
-     */
-    void setFailed(const QString &reason);
-
-private:
-    // Create the compositing buffer. The root window is not double-buffered,
-    // so it is done manually using this buffer,
-    xcb_render_picture_t m_buffer;
-    bool m_failed;
-};
-
-/**
- * @brief XRenderBackend using an X11 Overlay Window as compositing target.
- */
-class X11XRenderBackend : public XRenderBackend
-{
-public:
-    X11XRenderBackend();
-    ~X11XRenderBackend() override;
-
-    void present(int mask, const QRegion &damage) override;
-    OverlayWindow* overlayWindow() override;
-    void showOverlay() override;
-    void screenGeometryChanged(const QSize &size) override;
-    bool usesOverlayWindow() const override;
-private:
-    void init(bool createOverlay);
-    void createBuffer();
-    QScopedPointer<OverlayWindow> m_overlayWindow;
-    xcb_render_picture_t m_front;
-    xcb_render_pictformat_t m_format;
-};
+class XRenderBackend;
 
 class SceneXrender
     : public Scene
@@ -154,17 +32,13 @@ public:
     CompositingType compositingType() const override {
         return XRenderCompositing;
     }
-    qint64 paint(const QRegion &damage, const QList<Toplevel *> &windows) override;
+    void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows) override;
     Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t xrenderBufferPicture() const override;
-    OverlayWindow *overlayWindow() const override {
-        return m_backend->overlayWindow();
-    }
-    bool usesOverlayWindow() const override {
-        return m_backend->usesOverlayWindow();
-    }
+    OverlayWindow *overlayWindow() const override;
+    bool usesOverlayWindow() const override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
 
     bool animationsSupported() const override {
@@ -177,7 +51,7 @@ protected:
     void paintBackground(const QRegion &region) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data) override;
-    void paintCursor() override;
+    void paintCursor(const QRegion &region) override;
     void paintEffectQuickView(EffectQuickView *w) override;
 private:
     explicit SceneXrender(XRenderBackend *backend, QObject *parent = nullptr);
@@ -186,9 +60,10 @@ private:
     QScopedPointer<XRenderBackend> m_backend;
 };
 
-class SceneXrender::Window
-    : public Scene::Window
+class SceneXrender::Window : public Scene::Window
 {
+    Q_OBJECT
+
 public:
     Window(Toplevel* c, SceneXrender *scene);
     ~Window() override;
@@ -252,12 +127,6 @@ private:
     XRenderPicture* m_selectionPicture;
     static XRenderPicture* s_effectFrameCircle;
 };
-
-inline
-xcb_render_picture_t SceneXrender::xrenderBufferPicture() const
-{
-    return m_backend->buffer();
-}
 
 inline
 QRegion SceneXrender::Window::transformedShape() const

@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2019 Martin Flöser <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2019 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "internal_client.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
@@ -38,8 +27,6 @@ namespace KWin
 
 InternalClient::InternalClient(QWindow *window)
     : m_internalWindow(window)
-    , m_clientSize(window->size())
-    , m_windowId(window->winId())
     , m_internalWindowFlags(window->flags())
 {
     connect(m_internalWindow, &QWindow::xChanged, this, &InternalClient::updateInternalWindowGeometry);
@@ -101,7 +88,7 @@ bool InternalClient::eventFilter(QObject *watched, QEvent *event)
 
 QRect InternalClient::bufferGeometry() const
 {
-    return frameGeometry() - frameMargins();
+    return m_clientGeometry;
 }
 
 QStringList InternalClient::activities() const
@@ -139,11 +126,6 @@ QPoint InternalClient::clientContentPos() const
     return -1 * clientPos();
 }
 
-QSize InternalClient::clientSize() const
-{
-    return m_clientSize;
-}
-
 QSize InternalClient::minSize() const
 {
     return m_internalWindow->minimumSize();
@@ -152,11 +134,6 @@ QSize InternalClient::minSize() const
 QSize InternalClient::maxSize() const
 {
     return m_internalWindow->maximumSize();
-}
-
-void InternalClient::debug(QDebug &stream) const
-{
-    stream.nospace() << "\'InternalClient:" << m_internalWindow << "\'";
 }
 
 QRect InternalClient::transparentRect() const
@@ -233,6 +210,11 @@ bool InternalClient::isResizable() const
     return true;
 }
 
+bool InternalClient::isPlaceable() const
+{
+    return !m_internalWindowFlags.testFlag(Qt::BypassWindowManagerHint) && !m_internalWindowFlags.testFlag(Qt::Popup);
+}
+
 bool InternalClient::noBorder() const
 {
     return m_userNoBorder || m_internalWindowFlags.testFlag(Qt::FramelessWindowHint) || m_internalWindowFlags.testFlag(Qt::Popup);
@@ -261,25 +243,12 @@ bool InternalClient::isLockScreen() const
     return false;
 }
 
-bool InternalClient::isInputMethod() const
-{
-    if (m_internalWindow) {
-        return m_internalWindow->property("__kwin_input_method").toBool();
-    }
-    return false;
-}
-
 bool InternalClient::isOutline() const
 {
     if (m_internalWindow) {
         return m_internalWindow->property("__kwin_outline").toBool();
     }
     return false;
-}
-
-quint32 InternalClient::windowId() const
-{
-    return m_windowId;
 }
 
 bool InternalClient::isShown(bool shaded_is_shown) const
@@ -334,16 +303,11 @@ void InternalClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 
     const QRect newClientGeometry = frameRectToClientRect(rect);
 
-    if (m_clientSize == newClientGeometry.size()) {
+    if (clientSize() == newClientGeometry.size()) {
         commitGeometry(rect);
     } else {
         requestGeometry(rect);
     }
-}
-
-bool InternalClient::supportsWindowRules() const
-{
-    return false;
 }
 
 AbstractClient *InternalClient::findModal(bool allow_itself)
@@ -359,8 +323,9 @@ void InternalClient::setOnAllActivities(bool set)
     // Internal clients do not support activities.
 }
 
-void InternalClient::takeFocus()
+bool InternalClient::takeFocus()
 {
+    return false;
 }
 
 void InternalClient::setNoBorder(bool set)
@@ -403,17 +368,9 @@ void InternalClient::updateDecoration(bool check_workspace_pos, bool force)
     }
 }
 
-void InternalClient::updateColorScheme()
-{
-    AbstractClient::updateColorScheme(QString());
-}
-
-void InternalClient::showOnScreenEdge()
-{
-}
-
 void InternalClient::destroyClient()
 {
+    markAsZombie();
     if (isMoveResize()) {
         leaveMoveResize();
     }
@@ -447,7 +404,6 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 
     setDepth(32);
     addDamageFull();
-    addRepaintFull();
 }
 
 void InternalClient::present(const QImage &image, const QRegion &damage)
@@ -467,7 +423,6 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
 
     setDepth(32);
     addDamage(damage);
-    addRepaint(damage.translated(borderLeft(), borderTop()));
 }
 
 QWindow *InternalClient::internalWindow() const
@@ -530,18 +485,25 @@ void InternalClient::commitGeometry(const QRect &rect)
         return;
     }
 
+    // The client geometry and the buffer geometry are the same.
+    const QRect oldClientGeometry = m_clientGeometry;
+    const QRect oldFrameGeometry = m_frameGeometry;
+
+    m_clientGeometry = frameRectToClientRect(rect);
     m_frameGeometry = rect;
 
-    m_clientSize = frameRectToClientRect(frameGeometry()).size();
-
     addWorkspaceRepaint(visibleRect());
+    updateGeometryBeforeUpdateBlocking();
     syncGeometryToInternalWindow();
 
-    if (frameGeometryBeforeUpdateBlocking() != frameGeometry()) {
-        emit frameGeometryChanged(this, frameGeometryBeforeUpdateBlocking());
+    if (oldClientGeometry != m_clientGeometry) {
+        emit bufferGeometryChanged(this, oldClientGeometry);
+        emit clientGeometryChanged(this, oldClientGeometry);
     }
-    emit geometryShapeChanged(this, frameGeometryBeforeUpdateBlocking());
-    updateGeometryBeforeUpdateBlocking();
+    if (oldFrameGeometry != m_frameGeometry) {
+        emit frameGeometryChanged(this, oldFrameGeometry);
+    }
+    emit geometryShapeChanged(this, oldFrameGeometry);
 
     if (isResize()) {
         performMoveResize();

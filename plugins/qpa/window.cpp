@@ -1,24 +1,15 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "window.h"
+#include "eglhelpers.h"
+#include "platform.h"
 #include "screens.h"
 
 #include "internal_client.h"
@@ -36,13 +27,23 @@ static quint32 s_windowId = 0;
 
 Window::Window(QWindow *window)
     : QPlatformWindow(window)
+    , m_eglDisplay(kwinApp()->platform()->sceneEglDisplay())
     , m_windowId(++s_windowId)
     , m_scale(screens()->maxScale())
 {
+    if (window->surfaceType() == QSurface::OpenGLSurface) {
+        // The window will use OpenGL for drawing.
+        if (!kwinApp()->platform()->supportsSurfacelessContext()) {
+            createPbuffer();
+        }
+    }
 }
 
 Window::~Window()
 {
+    if (m_eglSurface != EGL_NO_SURFACE) {
+        eglDestroySurface(m_eglDisplay, m_eglSurface);
+    }
     unmap();
 }
 
@@ -55,6 +56,11 @@ void Window::setVisible(bool visible)
     }
 
     QPlatformWindow::setVisible(visible);
+}
+
+QSurfaceFormat Window::format() const
+{
+    return m_format;
 }
 
 void Window::setGeometry(const QRect &rect)
@@ -133,6 +139,32 @@ void Window::createFBO()
     m_resized = false;
 }
 
+void Window::createPbuffer()
+{
+    const QSurfaceFormat requestedFormat = window()->requestedFormat();
+    const EGLConfig config = configFromFormat(m_eglDisplay,
+                                              requestedFormat,
+                                              EGL_PBUFFER_BIT);
+    if (config == EGL_NO_CONFIG_KHR) {
+        qCWarning(KWIN_QPA) << "Could not find any EGL config for:" << requestedFormat;
+        return;
+    }
+
+    // The size doesn't matter as we render into a framebuffer object.
+    const EGLint attribs[] = {
+        EGL_WIDTH, 16,
+        EGL_HEIGHT, 16,
+        EGL_NONE
+    };
+
+    m_eglSurface = eglCreatePbufferSurface(m_eglDisplay, config, attribs);
+    if (m_eglSurface != EGL_NO_SURFACE) {
+        m_format = formatFromConfig(m_eglDisplay, config);
+    } else {
+        qCWarning(KWIN_QPA, "Failed to create a pbuffer for window: 0x%x", eglGetError());
+    }
+}
+
 void Window::map()
 {
     if (m_handle) {
@@ -152,6 +184,11 @@ void Window::unmap()
     m_handle = nullptr;
 
     m_contentFBO = nullptr;
+}
+
+EGLSurface Window::eglSurface() const
+{
+    return m_eglSurface;
 }
 
 }

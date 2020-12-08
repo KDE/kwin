@@ -1,22 +1,8 @@
 /*
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 #ifndef KWIN_RULES_MODEL_H
 #define KWIN_RULES_MODEL_H
@@ -60,6 +46,7 @@ public:
         PolicyRole,
         PolicyModelRole,
         OptionsModelRole,
+        OptionsMaskRole,
         SuggestedValueRole
     };
     Q_ENUM(RulesRole)
@@ -73,6 +60,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex & index, const QVariant & value, int role) override;
 
+    QModelIndex indexOf(const QString &key) const;
     bool hasRule(const QString &key) const;
     RuleItem *ruleItem(const QString &key) const;
 
@@ -82,20 +70,20 @@ public:
     void importFromRules(Rules *rules);
     Rules *exportToRules() const;
 
-    void setWindowProperties(const QVariantMap &info, bool forceValue = false);
+    void setSuggestedProperties(const QVariantMap &info);
 
     QString description() const;
     void setDescription(const QString &description);
     QString warningMessage() const;
 
-
-public slots:
-    void detectWindowProperties(int secs);
+    Q_INVOKABLE void detectWindowProperties(int miliseconds);
 
 signals:
     void descriptionChanged();
     void warningMessageChanged();
-    void suggestionsChanged();
+
+    void showSuggestions();
+    void showErrorMessage(const QString &message);
 
     void virtualDesktopsUpdated();
 
@@ -104,6 +92,7 @@ private:
     bool wmclassWarning() const;
     RuleItem *addRule(RuleItem *rule);
     QString defaultDescription() const;
+    void processSuggestion(const QString &key, const QVariant &value);
 
     static const QHash<QString, QString> x11PropertyHash();
     void updateVirtualDesktops();

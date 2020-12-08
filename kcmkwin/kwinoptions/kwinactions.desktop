@@ -2,7 +2,6 @@
 Icon=preferences-system-windows-action
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Exec=kcmshell5 kwinactions
 X-DocPath=kcontrol/windowbehaviour/index.html#titlebar-actions
 Icon=preferences-system-windows-actions
 
@@ -10,6 +9,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinactions
 
 Name=Window Actions
+Name[az]=Pəncərə fəaliyyətləri
 Name[ca]=Accions de la finestra
 Name[cs]=Činnosti oken
 Name[da]=Vindueshandlinger
@@ -31,6 +31,7 @@ Name[nn]=Handlingar for vindauge
 Name[pl]=Zachowanie okien
 Name[pt]=Acções das Janelas
 Name[pt_BR]=Ações da janela
+Name[ro]=Acțiuni fereastră
 Name[ru]=Действия с окнами
 Name[sk]=Akcie okna
 Name[sl]=Dejavnosti oken
@@ -41,7 +42,8 @@ Name[zh_CN]=窗口动作
 Name[zh_TW]=視窗動作
 
 Comment=Configure mouse actions for windows and titlebars
-Comment[ca]=Configura les accions de ratolí per a les finestres i les barres de títol
+Comment[az]=Pəncərələr və başlıqlar üçün siçan fəaliyyətlərinin tənzimlənməsi
+Comment[ca]=Configura les accions del ratolí per a les finestres i les barres de títol
 Comment[cs]=Nastavení činností myši na oknech a pruhu titulku
 Comment[da]=Indstil mushandlinger for vinduer og titellinjer
 Comment[de]=Mausaktionen für Fenster und Titelleisten einrichten
@@ -62,6 +64,7 @@ Comment[nn]=Set opp musehandlingar for vindauge og tittellinjer
 Comment[pl]=Ustawienia działań myszy dla okien i pasków tytułu
 Comment[pt]=Configurar as acções do rato para as janelas e barras do título
 Comment[pt_BR]=Configura as ações do mouse para as janelas e barras de títulos
+Comment[ro]=Configurează acțiunile mausului pentru ferestre și bare de titlu
 Comment[ru]=Настройка действий для окон и их заголовков
 Comment[sk]=Nastavenie akcií myši pre okná a záhlavia
 Comment[sl]=Nastavi aktivnosti miške za okna in naslovne vrstice
@@ -72,6 +75,7 @@ Comment[zh_CN]=配置窗口和标题栏的鼠标动作
 Comment[zh_TW]=設定視窗及標題列的滑鼠動作
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+X-KDE-Keywords[az]=kölgə,genişlənmə,genişləndirmə,yığılma,zəif,əməliyyat menyusu,başlıq,ölçü dəyişmə
 X-KDE-Keywords[bs]=sjena,povećali,povećala,smanjiti,umanjiti,sniziti,izbornik operacija,naslovnica,promjena veličine
 X-KDE-Keywords[ca]=ombra,maximitza,maximitza,minimitza,minimitza,abaixa,menú d'operacions,barra de títol,redimensiona
 X-KDE-Keywords[ca@valencia]=ombra,maximitza,maximitza,minimitza,minimitza,abaixa,menú d'operacions,barra de títol,redimensiona
@@ -101,6 +105,7 @@ X-KDE-Keywords[nn]=rull,fald saman,fald ut,samanfalding,maksimer,minimer,senk,ha
 X-KDE-Keywords[pl]=zwiń,maksymalizuj,minimalizuj,obniż,operacje na menu,pasek tytułu,zmień rozmiar
 X-KDE-Keywords[pt]=enrolar,maximizar,minimizar,baixar,menu de operações,barra de título,dimensionar
 X-KDE-Keywords[pt_BR]=enrolar,maximizar,minimizar,baixar,menu de operações,barra de título,redimensionar
+X-KDE-Keywords[ro]=strânge,maximizează,minimizează,coboară,meniu operații,bară de titlu,redimensionează
 X-KDE-Keywords[ru]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,свернуть,распахнуть,убрать вниз,меню операций,меню действий,заголовок окна,заголовок,изменить размер
 X-KDE-Keywords[sk]=tieň,maximalizácia,maximalizovanie,minimalizácia,minimalizovanie,nižší,ponuka operácií,záhlavie,zmeniť veľkosť
 X-KDE-Keywords[sl]=zvij,povečaj,razpni,pomanjšaj,skrči,dvigni,spusti,naslovna vrstica,spremeni velikost,okenski meni,meni okna

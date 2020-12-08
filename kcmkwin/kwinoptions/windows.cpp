@@ -1,25 +1,11 @@
 /*
- * windows.cpp
- *
- * Copyright (c) 1997 Patrick Dowler dowler@morgul.fsh.uvic.ca
- * Copyright (c) 2001 Waldo Bastian bastian@kde.org
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- *
- *
- */
+    windows.cpp
+
+    SPDX-FileCopyrightText: 1997 Patrick Dowler <dowler@morgul.fsh.uvic.ca>
+    SPDX-FileCopyrightText: 2001 Waldo Bastian <bastian@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include <QApplication>
 #include <QCheckBox>
@@ -28,7 +14,6 @@
 #include <KComboBox>
 #include <QHBoxLayout>
 #include <QFormLayout>
-#include <QDesktopWidget>
 #include <QtDBus>
 #include <QGroupBox>
 #include <QScreen>
@@ -36,6 +21,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KWindowSystem>
 
 #include "windows.h"
 #include "kwinoptions_settings.h"
@@ -43,6 +29,7 @@
 #include <kwin_effects_interface.h>
 
 #include "kwinoptions_settings.h"
+#include "kwinoptions_kdeglobals_settings.h"
 #include <KConfigDialogManager>
 
 #define  CLICK_TO_FOCUS                 0
@@ -51,6 +38,11 @@
 #define  FOCUS_FOLLOWS_MOUSE_PRECEDENT  3
 #define  FOCUS_UNDER_MOUSE              4
 #define  FOCUS_STRICTLY_UNDER_MOUSE     5
+
+namespace
+{
+constexpr int defaultFocusPolicyIndex = CLICK_TO_FOCUS;
+}
 
 KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
     : QWidget(parent)
@@ -61,11 +53,20 @@ KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
 KFocusConfig::KFocusConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget * parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinFocusConfigForm(this))
-    , m_settings(settings)
 {
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KFocusConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
     addConfig(m_settings, this);
 
     connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::focusPolicyChanged);
+    connect(m_ui->windowFocusPolicy, qOverload<int>(&QComboBox::currentIndexChanged), this, &KFocusConfig::updateDefaultIndicator);
+    connect(this, SIGNAL(defaultsIndicatorsVisibleChanged(bool)), this, SLOT(updateDefaultIndicator()));
 
     connect(qApp, &QGuiApplication::screenAdded, this, &KFocusConfig::updateMultiScreen);
     connect(qApp, &QGuiApplication::screenRemoved, this, &KFocusConfig::updateMultiScreen);
@@ -79,6 +80,13 @@ void KFocusConfig::updateMultiScreen()
     m_ui->multiscreenBehaviorLabel->setVisible(QApplication::screens().count() > 1);
     m_ui->kcfg_ActiveMouseScreen->setVisible(QApplication::screens().count() > 1);
     m_ui->kcfg_SeparateScreenFocus->setVisible(QApplication::screens().count() > 1);
+}
+
+void KFocusConfig::updateDefaultIndicator()
+{
+    const bool isDefault = m_ui->windowFocusPolicy->currentIndex() == defaultFocusPolicyIndex;
+    m_ui->windowFocusPolicy->setProperty("_kde_highlight_neutral", defaultsIndicatorsVisible() && !isDefault);
+    m_ui->windowFocusPolicy->update();
 }
 
 void KFocusConfig::focusPolicyChanged()
@@ -121,7 +129,7 @@ void KFocusConfig::focusPolicyChanged()
     unmanagedWidgetChangeState(changed);
     emit unmanagedWidgetStateChanged(changed);
 
-    const bool isDefault = focusPolicy == CLICK_TO_FOCUS;
+    const bool isDefault = focusPolicy == defaultFocusPolicyIndex;
     unmanagedWidgetDefaultState(isDefault);
     emit unmanagedWidgetDefaulted(isDefault);
 
@@ -212,7 +220,7 @@ void KFocusConfig::save(void)
 void KFocusConfig::defaults()
 {
     KCModule::defaults();
-    m_ui->windowFocusPolicy->setCurrentIndex(CLICK_TO_FOCUS);
+    m_ui->windowFocusPolicy->setCurrentIndex(defaultFocusPolicyIndex);
 }
 
 KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
@@ -221,12 +229,20 @@ KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
     setupUi(parent);
 }
 
-KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
+KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(this))
-    , m_settings(settings)
 {
+    if (settings && globalSettings) {
+        initialize(settings, globalSettings);
+    }
+}
+
+void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings)
+{
+    m_settings = settings;
     addConfig(m_settings, this);
+    addConfig(globalSettings, this);
 
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Smart, "Smart");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Maximizing, "Maximizing");
@@ -235,6 +251,14 @@ KAdvancedConfig::KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Centered, "Centered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::ZeroCornered, "ZeroCornered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::UnderMouse, "UnderMouse");
+
+    // Don't show the option to prevent apps from remembering their window
+    // positions on Wayland because it doesn't work on Wayland and the feature
+    // will eventually be implemented in a different way there.
+    // This option lives in the kdeglobals file because it is consumed by
+    // kxmlgui.
+    m_ui->kcfg_AllowKDEAppsToRememberWindowPositions->setVisible(KWindowSystem::isPlatformX11());
+
     load();
 }
 
@@ -267,10 +291,18 @@ KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
 }
 
 KMovingConfig::KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
-    : KCModule(parent), m_config(settings), standAlone(_standAlone)
+    : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(this))
 {
-    addConfig(m_config, this);
+    if (settings) {
+        initialize(settings);
+    }
+}
+
+void KMovingConfig::initialize(KWinOptionsSettings *settings)
+{
+    m_settings = settings;
+    addConfig(m_settings, this);
     load();
 }
 
@@ -297,7 +329,7 @@ void KMovingConfig::save(void)
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    if (m_config->geometryTip()) {
+    if (m_settings->geometryTip()) {
         interface.loadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
     } else {
         interface.unloadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));

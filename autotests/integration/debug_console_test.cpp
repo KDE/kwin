@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "debug_console.h"
@@ -50,7 +39,6 @@ private Q_SLOTS:
     void topLevelTest();
     void testX11Client();
     void testX11Unmanaged();
-    void testWaylandClient_data();
     void testWaylandClient();
     void testInternalWindow();
     void testClosingDebugConsole();
@@ -60,14 +48,14 @@ void DebugConsoleTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWin::InternalClient *>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -138,7 +126,8 @@ void DebugConsoleTest::testX11Client()
     QVERIFY(rowsInsertedSpy.isValid());
 
     QProcess glxgears;
-    glxgears.start(QStringLiteral("glxgears"));
+    glxgears.setProgram(QStringLiteral("glxgears"));
+    glxgears.start();
     QVERIFY(glxgears.waitForStarted());
 
     QVERIFY(rowsInsertedSpy.wait());
@@ -295,13 +284,6 @@ void DebugConsoleTest::testX11Unmanaged()
     QVERIFY(!model2.hasChildren(model2.index(1, 0, QModelIndex())));
 }
 
-void DebugConsoleTest::testWaylandClient_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void DebugConsoleTest::testWaylandClient()
 {
     DebugConsoleModel model;
@@ -328,8 +310,7 @@ void DebugConsoleTest::testWaylandClient()
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
     Test::render(surface.data(), QSize(10, 10), Qt::red);
 
@@ -388,16 +369,8 @@ void DebugConsoleTest::testWaylandClient()
 
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
-    shellSurface.reset();
-    Test::flushWaylandConnection();
-    qDebug() << rowsRemovedSpy.count();
-    QEXPECT_FAIL("wlShell", "Deleting a ShellSurface does not result in the server removing the XdgShellClient", Continue);
-    QVERIFY(rowsRemovedSpy.wait(500));
-    surface.reset();
+    QVERIFY(rowsRemovedSpy.wait());
 
-    if (rowsRemovedSpy.isEmpty()) {
-        QVERIFY(rowsRemovedSpy.wait());
-    }
     QCOMPARE(rowsRemovedSpy.count(), 1);
     QCOMPARE(rowsRemovedSpy.first().first().value<QModelIndex>(), waylandTopLevelIndex);
     QCOMPARE(rowsRemovedSpy.first().at(1).value<int>(), 0);

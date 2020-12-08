@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
-Copyright (C) 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2009 Lucas Murray <lmurray@undefinedfire.com>
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "virtualdesktops.h"
 #include "input.h"
 // KDE
@@ -35,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 namespace KWin {
 
-extern int screen_number;
 static bool s_loadingDesktopSettings = false;
 
 static QByteArray generateDesktopId()
@@ -159,7 +147,7 @@ void VirtualDesktop::setName(const QString &name)
 VirtualDesktopGrid::VirtualDesktopGrid()
     : m_size(1, 2) // Default to tow rows
     , m_grid(QVector<QVector<VirtualDesktop*>>{QVector<VirtualDesktop*>{}, QVector<VirtualDesktop*>{}})
-{    
+{
 }
 
 VirtualDesktopGrid::~VirtualDesktopGrid() = default;
@@ -247,6 +235,13 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
 
     // Nothing will be connected to rootInfo
     if (m_rootInfo) {
+        int columns = count() / m_rows;
+        if (count() % m_rows > 0) {
+            columns++;
+        }
+        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
+        updateRootInfo();
+        m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
         for (auto *vd : m_desktops) {
             m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
         }
@@ -694,13 +689,8 @@ void VirtualDesktopManager::load()
     if (!m_config) {
         return;
     }
-    QString groupname;
-    if (screen_number == 0) {
-        groupname = QStringLiteral("Desktops");
-    } else {
-        groupname = QStringLiteral("Desktops-screen-%1").arg(screen_number);
-    }
-    KConfigGroup group(m_config, groupname);
+
+    KConfigGroup group(m_config, QStringLiteral("Desktops"));
     const int n = group.readEntry("Number", 1);
     setCount(n);
 
@@ -713,7 +703,6 @@ void VirtualDesktopManager::load()
 
         const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
 
-        //load gets called 2 times, see workspace.cpp line 416 and BUG 385260
         if (m_desktops[i-1]->id().isEmpty()) {
             m_desktops[i-1]->setId(sId.isEmpty() ? generateDesktopId() : sId.toUtf8());
         } else {
@@ -727,16 +716,6 @@ void VirtualDesktopManager::load()
     int rows = group.readEntry<int>("Rows", 2);
     m_rows = qBound(1, rows, n);
 
-    if (m_rootInfo) {
-        // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
-        int columns = n / m_rows;
-        if (n % m_rows > 0) {
-            columns++;
-        }
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
-        m_rootInfo->activate();
-    }
-
     s_loadingDesktopSettings = false;
 }
 
@@ -748,13 +727,7 @@ void VirtualDesktopManager::save()
     if (!m_config) {
         return;
     }
-    QString groupname;
-    if (screen_number == 0) {
-        groupname = QStringLiteral("Desktops");
-    } else {
-        groupname = QStringLiteral("Desktops-screen-%1").arg(screen_number);
-    }
-    KConfigGroup group(m_config, groupname);
+    KConfigGroup group(m_config, QStringLiteral("Desktops"));
 
     for (int i = count() + 1;  group.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
         group.deleteEntry(QStringLiteral("Id_%1").arg(i));

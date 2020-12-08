@@ -1,26 +1,16 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #pragma once
 
 #include "drm_object.h"
 
+#include <qobjectdefs.h>
 #include <xf86drmMode.h>
 
 namespace KWin
@@ -30,6 +20,7 @@ class DrmBuffer;
 
 class DrmPlane : public DrmObject
 {
+    Q_GADGET
 public:
     DrmPlane(uint32_t plane_id, int fd);
 
@@ -50,6 +41,7 @@ public:
         Rotation,
         Count
     };
+    Q_ENUM(PropertyIndex)
 
     enum class TypeIndex {
         Overlay = 0,
@@ -57,6 +49,7 @@ public:
         Cursor,
         Count
     };
+    Q_ENUM(TypeIndex)
 
     enum class Transformation {
         Rotate0     = 1 << 0,
@@ -66,6 +59,7 @@ public:
         ReflectX    = 1 << 4,
         ReflectY    = 1 << 5
     };
+    Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
     bool atomicInit() override;

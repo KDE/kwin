@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "virtual_backend.h"
 #include "virtual_output.h"
 #include "scene_qpainter_virtual_backend.h"
@@ -49,10 +38,14 @@ VirtualBackend::VirtualBackend(QObject *parent)
     }
     setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
+    setPerScreenRenderingEnabled(true);
 }
 
 VirtualBackend::~VirtualBackend()
 {
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
+    }
 }
 
 void VirtualBackend::init()
@@ -67,10 +60,10 @@ void VirtualBackend::init()
         VirtualOutput *dummyOutput = new VirtualOutput(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
-        m_enabledOutputs << dummyOutput ;
+        emit outputAdded(dummyOutput);
     }
 
-    setSoftWareCursor(true);
+    setSoftwareCursorForced(true);
     setReady(true);
     waylandServer()->seat()->setHasPointer(true);
     waylandServer()->seat()->setHasKeyboard(true);
@@ -109,7 +102,7 @@ Outputs VirtualBackend::outputs() const
 
 Outputs VirtualBackend::enabledOutputs() const
 {
-    return m_enabledOutputs;
+    return m_outputs;
 }
 
 void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVector<int> scales)
@@ -118,9 +111,12 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     Q_ASSERT(scales.size() == 0 || scales.size() == count);
 
     bool countChanged = m_outputs.size() != count;
-    qDeleteAll(m_outputs.begin(), m_outputs.end());
-    m_outputs.resize(count);
-    m_enabledOutputs.resize(count);
+
+    while (!m_outputs.isEmpty()) {
+        VirtualOutput *output = m_outputs.takeLast();
+        emit outputRemoved(output);
+        delete output;
+    }
 
     int sumWidth = 0;
     for (int i = 0; i < count; i++) {
@@ -135,7 +131,8 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         if (scales.size()) {
             vo->setScale(scales.at(i));
         }
-        m_outputs[i] = m_enabledOutputs[i] = vo;
+        m_outputs.append(vo);
+        emit outputAdded(vo);
     }
 
     emit virtualOutputsSet(countChanged);

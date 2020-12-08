@@ -1,24 +1,14 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "toplevel.h"
 
+#include "abstract_client.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -29,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "shadow.h"
 #include "workspace.h"
-#include "xcbutils.h"
 
 #include <KWaylandServer/surface_interface.h>
 
@@ -55,10 +44,10 @@ Toplevel::Toplevel()
     , m_screen(0)
     , m_skipCloseAnimation(false)
 {
-    connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
-    connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
-    connect(screens(), SIGNAL(countChanged(int,int)), SLOT(checkScreen()));
+    connect(screens(), &Screens::changed, this, &Toplevel::checkScreen);
+    connect(screens(), &Screens::countChanged, this, &Toplevel::checkScreen);
     setupCheckScreenConnection();
+    connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
     // Only for compatibility reasons, drop in the next major release.
     connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::geometryChanged);
@@ -70,12 +59,37 @@ Toplevel::~Toplevel()
     delete info;
 }
 
-QDebug& operator<<(QDebug& stream, const Toplevel* cl)
+QDebug operator<<(QDebug debug, const Toplevel *toplevel)
 {
-    if (cl == nullptr)
-        return stream << "\'NULL\'";
-    cl->debug(stream);
-    return stream;
+    QDebugStateSaver saver(debug);
+    debug.nospace();
+    if (toplevel) {
+        debug << toplevel->metaObject()->className() << '(' << static_cast<const void *>(toplevel);
+        if (toplevel->window()) {
+            debug << ", windowId=0x" << Qt::hex << toplevel->window() << Qt::dec;
+        }
+        if (const KWaylandServer::SurfaceInterface *surface = toplevel->surface()) {
+            debug << ", surface=" << surface;
+        }
+        const AbstractClient *client = qobject_cast<const AbstractClient *>(toplevel);
+        if (client) {
+            if (!client->isPopupWindow()) {
+                debug << ", caption=" << client->caption();
+            }
+            if (client->transientFor()) {
+                debug << ", transientFor=" << client->transientFor();
+            }
+        }
+        if (debug.verbosity() > 2) {
+            debug << ", frameGeometry=" << toplevel->frameGeometry();
+            debug << ", resourceName=" << toplevel->resourceName();
+            debug << ", resourceClass=" << toplevel->resourceClass();
+        }
+        debug << ')';
+    } else {
+        debug << "Toplevel(0x0)";
+    }
+    return debug;
 }
 
 void Toplevel::detectShape(xcb_window_t id)
@@ -92,6 +106,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
 {
     m_internalId = c->internalId();
     m_frameGeometry = c->m_frameGeometry;
+    m_clientGeometry = c->m_clientGeometry;
     m_visual = c->m_visual;
     bit_depth = c->bit_depth;
     info = c->info;
@@ -99,8 +114,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     ready_for_painting = c->ready_for_painting;
     damage_handle = XCB_NONE;
     damage_region = c->damage_region;
-    repaints_region = c->repaints_region;
-    layer_repaints_region = c->layer_repaints_region;
     is_shape = c->is_shape;
     effect_window = c->effect_window;
     if (effect_window != nullptr)
@@ -297,7 +310,6 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
 
     damage_handle = XCB_NONE;
     damage_region = QRegion();
-    repaints_region = QRegion();
     effect_window = nullptr;
 }
 
@@ -312,10 +324,13 @@ void Toplevel::damageNotifyEvent()
 {
     m_isDamaged = true;
 
-    // Note: The rect is supposed to specify the damage extents,
+    // The damaged region will be fetched at the next compositing cycle.
+    Compositor::self()->scheduleRepaint();
+
+    // Note: The damage is supposed to specify the damage extents,
     //       but we don't know it at this point. No one who connects
     //       to this signal uses the rect however.
-    emit damaged(this, QRect());
+    emit damaged(this, {});
 }
 
 bool Toplevel::compositing() const
@@ -385,14 +400,9 @@ void Toplevel::getDamageRegionReply()
     } else
         region += QRect(reply->extents.x, reply->extents.y,
                         reply->extents.width, reply->extents.height);
-
-    const QRect bufferRect = bufferGeometry();
-    const QRect frameRect = frameGeometry();
-
-    damage_region += region;
-    repaints_region += region.translated(bufferRect.topLeft() - frameRect.topLeft());
-
     free(reply);
+
+    addDamage(region);
 }
 
 void Toplevel::addDamageFull()
@@ -406,12 +416,12 @@ void Toplevel::addDamageFull()
     const int offsetX = bufferRect.x() - frameRect.x();
     const int offsetY = bufferRect.y() - frameRect.y();
 
-    const QRect damagedRect = QRect(0, 0, bufferRect.width(), bufferRect.height());
+    const QRect damagedRect(0, 0, bufferRect.width(), bufferRect.height());
 
     damage_region = damagedRect;
-    repaints_region |= damagedRect.translated(offsetX, offsetY);
+    addRepaint(damagedRect.translated(offsetX, offsetY));
 
-    emit damaged(this, damagedRect);
+    emit damaged(this, damage_region);
 }
 
 void Toplevel::resetDamage()
@@ -419,63 +429,45 @@ void Toplevel::resetDamage()
     damage_region = QRegion();
 }
 
-void Toplevel::addRepaint(const QRect& r)
+void Toplevel::addRepaint(const QRect &rect)
 {
-    if (!compositing()) {
+    addRepaint(QRegion(rect));
+}
+
+void Toplevel::addRepaint(int x, int y, int width, int height)
+{
+    addRepaint(QRegion(x, y, width, height));
+}
+
+void Toplevel::addRepaint(const QRegion &region)
+{
+    if (!effectWindow() || !effectWindow()->sceneWindow()) {
         return;
     }
-    repaints_region += r;
-    emit needsRepaint();
+    effectWindow()->sceneWindow()->addRepaint(region);
 }
 
-void Toplevel::addRepaint(int x, int y, int w, int h)
+void Toplevel::addLayerRepaint(const QRect &rect)
 {
-    QRect r(x, y, w, h);
-    addRepaint(r);
+    addLayerRepaint(QRegion(rect));
 }
 
-void Toplevel::addRepaint(const QRegion& r)
+void Toplevel::addLayerRepaint(int x, int y, int width, int height)
 {
-    if (!compositing()) {
+    addLayerRepaint(QRegion(x, y, width, height));
+}
+
+void Toplevel::addLayerRepaint(const QRegion &region)
+{
+    if (!effectWindow() || !effectWindow()->sceneWindow()) {
         return;
     }
-    repaints_region += r;
-    emit needsRepaint();
-}
-
-void Toplevel::addLayerRepaint(const QRect& r)
-{
-    if (!compositing()) {
-        return;
-    }
-    layer_repaints_region += r;
-    emit needsRepaint();
-}
-
-void Toplevel::addLayerRepaint(int x, int y, int w, int h)
-{
-    QRect r(x, y, w, h);
-    addLayerRepaint(r);
-}
-
-void Toplevel::addLayerRepaint(const QRegion& r)
-{
-    if (!compositing())
-        return;
-    layer_repaints_region += r;
-    emit needsRepaint();
+    effectWindow()->sceneWindow()->addLayerRepaint(region);
 }
 
 void Toplevel::addRepaintFull()
 {
-    repaints_region = visibleRect().translated(-pos());
-    emit needsRepaint();
-}
-
-void Toplevel::resetRepaints()
-{
-    repaints_region = QRegion();
-    layer_repaints_region = QRegion();
+    addRepaint(visibleRect().translated(-pos()));
 }
 
 void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
@@ -488,6 +480,21 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
     if (!compositing())
         return;
     Compositor::self()->addRepaint(r2);
+}
+
+void Toplevel::addWorkspaceRepaint(const QRegion &region)
+{
+    if (compositing()) {
+        Compositor::self()->addRepaint(region);
+    }
+}
+
+bool Toplevel::wantsRepaint() const
+{
+    if (!effectWindow() || !effectWindow()->sceneWindow()) {
+        return false;
+    }
+    return effectWindow()->sceneWindow()->wantsRepaint();
 }
 
 void Toplevel::setReadyForPainting()
@@ -551,7 +558,7 @@ qreal Toplevel::screenScale() const
 
 qreal Toplevel::bufferScale() const
 {
-    return surface() ? surface()->scale() : 1;
+    return surface() ? surface()->bufferScale() : 1;
 }
 
 bool Toplevel::isOnScreen(int screen) const
@@ -568,6 +575,7 @@ void Toplevel::updateShadow()
 {
     QRect dirtyRect;  // old & new shadow region
     const QRect oldVisibleRect = visibleRect();
+    addWorkspaceRepaint(oldVisibleRect);
     if (shadow()) {
         dirtyRect = shadow()->shadowRegion().boundingRect();
         if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
@@ -724,18 +732,23 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
     connect(m_surface, &SurfaceInterface::destroyed, this,
         [this] {
             m_surface = nullptr;
+            m_surfaceId = 0;
         }
     );
+    m_surfaceId = surface->id();
     emit surfaceChanged();
 }
 
 void Toplevel::addDamage(const QRegion &damage)
 {
+    const QRect bufferRect = bufferGeometry();
+    const QRect frameRect = frameGeometry();
+
     m_isDamaged = true;
     damage_region += damage;
-    for (const QRect &r : damage) {
-        emit damaged(this, r);
-    }
+    addRepaint(damage.translated(bufferRect.topLeft() - frameRect.topLeft()));
+
+    emit damaged(this, damage);
 }
 
 QByteArray Toplevel::windowRole() const
@@ -775,9 +788,27 @@ QMatrix4x4 Toplevel::inputTransformation() const
     return m;
 }
 
-quint32 Toplevel::windowId() const
+bool Toplevel::hitTest(const QPoint &point) const
 {
-    return window();
+    if (m_surface && m_surface->isMapped()) {
+        return m_surface->inputSurfaceAt(mapToLocal(point));
+    }
+    return inputGeometry().contains(point);
+}
+
+QPoint Toplevel::mapToFrame(const QPoint &point) const
+{
+    return point - frameGeometry().topLeft();
+}
+
+QPoint Toplevel::mapToLocal(const QPoint &point) const
+{
+    return point - bufferGeometry().topLeft();
+}
+
+QPointF Toplevel::mapToLocal(const QPointF &point) const
+{
+    return point - bufferGeometry().topLeft();
 }
 
 QRect Toplevel::inputGeometry() const

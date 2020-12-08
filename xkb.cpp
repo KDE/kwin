@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013, 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013, 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "xkb.h"
 #include "xkb_qt_mapping.h"
 #include "utils.h"
@@ -28,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryFile>
 #include <QKeyEvent>
 // xkbcommon
-#include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 // system
@@ -45,23 +33,27 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
 {
     Q_UNUSED(context)
     char buf[1024];
-    if (std::vsnprintf(buf, 1023, format, args) <= 0) {
+    int length = std::vsnprintf(buf, 1023, format, args);
+    while (length > 0 && std::isspace(buf[length - 1])) {
+        --length;
+    }
+    if (length <= 0) {
         return;
     }
     switch (priority) {
     case XKB_LOG_LEVEL_DEBUG:
-        qCDebug(KWIN_XKB) << "XKB:" << buf;
+        qCDebug(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     case XKB_LOG_LEVEL_INFO:
-        qCInfo(KWIN_XKB) << "XKB:" << buf;
+        qCInfo(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     case XKB_LOG_LEVEL_WARNING:
-        qCWarning(KWIN_XKB) << "XKB:" << buf;
+        qCWarning(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     case XKB_LOG_LEVEL_ERROR:
     case XKB_LOG_LEVEL_CRITICAL:
     default:
-        qCCritical(KWIN_XKB) << "XKB:" << buf;
+        qCCritical(KWIN_XKB, "XKB: %.*s", length, buf);
         break;
     }
 }
@@ -152,7 +144,7 @@ static bool stringIsEmptyOrNull(const char *str)
  * As kwin_wayland may have the CAP_SET_NICE capability, it returns nullptr
  * so we need to do it ourselves (see xkb_context_sanitize_rule_names).
 **/
-static void applyEnvironmentRules(xkb_rule_names &ruleNames)
+void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
 {
     if (stringIsEmptyOrNull(ruleNames.rules)) {
         ruleNames.rules = getenv("XKB_DEFAULT_RULES");
@@ -170,6 +162,8 @@ static void applyEnvironmentRules(xkb_rule_names &ruleNames)
     if (ruleNames.options == nullptr) {
         ruleNames.options = getenv("XKB_DEFAULT_OPTIONS");
     }
+
+    m_layoutList = QString::fromLatin1(ruleNames.layout).split(QLatin1Char(','));
 }
 
 xkb_keymap *Xkb::loadKeymapFromConfig()
@@ -181,16 +175,27 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
     const KConfigGroup config = m_config->group("Layout");
     const QByteArray model = config.readEntry("Model", "pc104").toLocal8Bit();
     const QByteArray layout = config.readEntry("LayoutList", "").toLocal8Bit();
+    const QByteArray variant = config.readEntry("VariantList").toLatin1();
     const QByteArray options = config.readEntry("Options", "").toLocal8Bit();
 
     xkb_rule_names ruleNames = {
         .rules = nullptr,
         .model = model.constData(),
         .layout = layout.constData(),
-        .variant = nullptr,
+        .variant = variant.constData(),
         .options = options.constData()
     };
     applyEnvironmentRules(ruleNames);
+
+    const QStringList displayNames = config.readEntry("DisplayNames", QStringList());
+    const int range = qMin(m_layoutList.size(), displayNames.size());
+    for (int i = 0; i < range; ++i) {
+        const QString &displayName = displayNames.at(i);
+        if ( !displayName.isEmpty() ) {
+            m_layoutList.replace(i, displayName);
+        }
+    }
+
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
@@ -280,7 +285,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
 void Xkb::createKeymapFile()
 {
-    if (!m_seat) {
+    if (!m_seat || !m_seat->keyboard()) {
         return;
     }
     // TODO: uninstall keymap on server?
@@ -292,27 +297,7 @@ void Xkb::createKeymapFile()
     if (keymapString.isNull()) {
         return;
     }
-    const uint size = qstrlen(keymapString.data()) + 1;
-
-    QTemporaryFile *tmp = new QTemporaryFile(this);
-    if (!tmp->open()) {
-        delete tmp;
-        return;
-    }
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(size)) {
-        delete tmp;
-        return;
-    }
-    uchar *address = tmp->map(0, size);
-    if (!address) {
-        return;
-    }
-    if (qstrncpy(reinterpret_cast<char*>(address), keymapString.data(), size) == nullptr) {
-        delete tmp;
-        return;
-    }
-    m_seat->setKeymap(tmp->handle(), size);
+    m_seat->keyboard()->setKeymap(keymapString.data());
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -398,18 +383,23 @@ void Xkb::updateModifiers()
 
 void Xkb::forwardModifiers()
 {
-    if (!m_seat) {
+    if (!m_seat || !m_seat->keyboard()) {
         return;
     }
-    m_seat->updateKeyboardModifiers(m_modifierState.depressed,
-                                                     m_modifierState.latched,
-                                                     m_modifierState.locked,
-                                                     m_currentLayout);
+    m_seat->keyboard()->updateModifiers(m_modifierState.depressed,
+                                        m_modifierState.latched,
+                                        m_modifierState.locked,
+                                        m_currentLayout);
 }
 
 QString Xkb::layoutName() const
 {
     return layoutName(m_currentLayout);
+}
+
+const QString &Xkb::layoutShortName() const
+{
+    return m_layoutList.at(m_currentLayout);
 }
 
 QString Xkb::layoutName(xkb_layout_index_t layout) const

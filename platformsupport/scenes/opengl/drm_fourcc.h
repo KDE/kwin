@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Intel Corporation
+ * SPDX-FileCopyrightText: 2011 Intel Corporation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,8 +27,15 @@
 //#include "drm.h"
 
 // These typedefs are copied from drm.h
+#if   defined(__linux__)
+
+#include <linux/types.h>
+#include <asm/ioctl.h>
+
+#else /* One of the BSDs */
 typedef uint32_t __u32;
 typedef uint64_t __u64;
+#endif
 
 #if defined(__cplusplus)
 extern "C" {

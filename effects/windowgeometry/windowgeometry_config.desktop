@@ -6,6 +6,7 @@ X-KDE-Library=kwin_windowgeometry_config
 X-KDE-ParentComponents=windowgeometry
 
 Name=WindowGeometry
+Name[az]=Pəncərənin mövqeyi
 Name[bg]=Геометрия на прозореца
 Name[bs]=Geometrija prozora
 Name[ca]=Geometria de la finestra

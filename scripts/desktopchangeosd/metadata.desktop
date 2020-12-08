@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Desktop Change OSD
+Name[az]=İş Masasının dəyişdirilməsi bildirişi
 Name[bs]=Promjena podloge OSD
 Name[ca]=OSD al canvi d'escriptori
 Name[ca@valencia]=OSD de canvi d'escriptori
@@ -33,6 +34,7 @@ Name[pa]=ਡੈਸਕਟਾਪ ਬਦਲਣ OSD
 Name[pl]=OSD zmiany pulpitu
 Name[pt]=OSD de Mudança do Ecrã
 Name[pt_BR]=OSD de mudança de área de trabalho
+Name[ro]=OSD la schimbarea biroului
 Name[ru]=Экранные уведомления об изменении рабочего стола
 Name[sk]=OSD zmeny plochy
 Name[sl]=Prikaz na zaslonu spremembe namizja
@@ -47,8 +49,9 @@ Name[x-test]=xxDesktop Change OSDxx
 Name[zh_CN]=桌面更改屏幕显示
 Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
+Comment[az]=Ekranda iş masasının dəyişimi bildirişini göstərir
 Comment[bs]=Na zaslonu se ukazuju promjene radne površine
-Comment[ca]=En un missatge per pantalla indicant el canvi d'escriptori
+Comment[ca]=Un missatge a la pantalla indicant el canvi d'escriptori
 Comment[ca@valencia]=Un missatge en la pantalla que indica el canvi d'escriptori
 Comment[cs]=Displej označující změnu plochy
 Comment[da]=Et on-screen-display som indikerer skift af skrivebord
@@ -105,7 +108,6 @@ X-KDE-PluginInfo-Email=mgraesslin@kde.org
 X-KDE-PluginInfo-Name=desktopchangeosd
 X-KDE-PluginInfo-Version=1.0
 
-X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL
 X-KDE-ServiceTypes=KWin/Script
 Type=Service

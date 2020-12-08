@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2018 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2018 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "databridge.h"
 #include "clipboard.h"
 #include "dnd.h"
@@ -28,9 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/datadevicemanager.h>
 #include <KWayland/Client/seat.h>
 
+#include <KWaylandServer/clientconnection.h>
 #include <KWaylandServer/datadevicemanager_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/seat_interface.h>
@@ -43,11 +34,11 @@ namespace KWin
 namespace Xwl
 {
 
-static DataBridge *s_self = nullptr;
+KWIN_SINGLETON_FACTORY(DataBridge)
 
-DataBridge *DataBridge::self()
+void DataBridge::destroy()
 {
-    return s_self;
+    delete s_self;
 }
 
 DataBridge::DataBridge(QObject *parent)
@@ -58,7 +49,6 @@ DataBridge::DataBridge(QObject *parent)
     DataDeviceManager *dataDeviceManager = waylandServer()->internalDataDeviceManager();
     Seat *seat = waylandServer()->internalSeat();
     m_dataDevice = dataDeviceManager->getDataDevice(seat, this);
-    waylandServer()->dispatch();
 
     const DataDeviceManagerInterface *dataDeviceManagerInterface =
         waylandServer()->dataDeviceManager();
@@ -69,7 +59,7 @@ DataBridge::DataBridge(QObject *parent)
             if (m_dataDeviceInterface) {
                 return;
             }
-            if (dataDeviceInterface->client() != waylandServer()->internalConnection()) {
+            if (dataDeviceInterface->client() != *waylandServer()->internalConnection()) {
                 return;
             }
             QObject::disconnect(*dc);
@@ -78,6 +68,8 @@ DataBridge::DataBridge(QObject *parent)
             init();
         }
     );
+
+    waylandServer()->dispatch();
 }
 
 DataBridge::~DataBridge()
@@ -90,37 +82,16 @@ void DataBridge::init()
     m_clipboard = new Clipboard(atoms->clipboard, this);
     m_dnd = new Dnd(atoms->xdnd_selection, this);
     waylandServer()->dispatch();
+    kwinApp()->installNativeEventFilter(this);
 }
 
-bool DataBridge::filterEvent(xcb_generic_event_t *event)
+bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
 {
-    if (m_clipboard->filterEvent(event)) {
-        return true;
-    }
-    if (m_dnd->filterEvent(event)) {
-        return true;
-    }
-    if (event->response_type - Xwayland::self()->xfixes()->first_event == XCB_XFIXES_SELECTION_NOTIFY) {
-        return handleXfixesNotify((xcb_xfixes_selection_notify_event_t *)event);
+    if (eventType == "xcb_generic_event_t") {
+        xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);
+        return m_clipboard->filterEvent(event) || m_dnd->filterEvent(event);
     }
     return false;
-}
-
-bool DataBridge::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
-{
-    Selection *selection = nullptr;
-
-    if (event->selection == atoms->clipboard) {
-        selection = m_clipboard;
-    } else if (event->selection == atoms->xdnd_selection) {
-        selection = m_dnd;
-    }
-
-    if (!selection) {
-        return false;
-    }
-
-    return selection->handleXfixesNotify(event);
 }
 
 DragEventReply DataBridge::dragMoveFilter(Toplevel *target, const QPoint &pos)

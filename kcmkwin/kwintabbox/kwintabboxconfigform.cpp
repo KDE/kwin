@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2020 Cyril Rossi <cyril.rossi@enioka.com>
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Cyril Rossi <cyril.rossi@enioka.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwintabboxconfigform.h"
 #include "ui_main.h"
@@ -50,29 +39,29 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
 
     connect(ui->effectConfigButton, &QPushButton::clicked, this, &KWinTabBoxConfigForm::effectConfigButtonClicked);
 
-    connect(ui->kcfg_ShowTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
+    connect(ui->kcfg_ShowTabBox, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::tabBoxToggled);
 
-    connect(ui->filterScreens, SIGNAL(clicked(bool)), SLOT(onFilterScreen()));
-    connect(ui->currentScreen, SIGNAL(clicked(bool)), SLOT(onFilterScreen()));
-    connect(ui->otherScreens, SIGNAL(clicked(bool)), SLOT(onFilterScreen()));
+    connect(ui->filterScreens, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterScreen);
+    connect(ui->currentScreen, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterScreen);
+    connect(ui->otherScreens, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterScreen);
 
-    connect(ui->filterDesktops, SIGNAL(clicked(bool)), SLOT(onFilterDesktop()));
-    connect(ui->currentDesktop, SIGNAL(clicked(bool)), SLOT(onFilterDesktop()));
-    connect(ui->otherDesktops, SIGNAL(clicked(bool)), SLOT(onFilterDesktop()));
+    connect(ui->filterDesktops, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterDesktop);
+    connect(ui->currentDesktop, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterDesktop);
+    connect(ui->otherDesktops, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterDesktop);
 
-    connect(ui->filterActivities, SIGNAL(clicked(bool)), SLOT(onFilterActivites()));
-    connect(ui->currentActivity, SIGNAL(clicked(bool)), SLOT(onFilterActivites()));
-    connect(ui->otherActivities, SIGNAL(clicked(bool)), SLOT(onFilterActivites()));
+    connect(ui->filterActivities, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterActivites);
+    connect(ui->currentActivity, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterActivites);
+    connect(ui->otherActivities, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterActivites);
 
-    connect(ui->filterMinimization, SIGNAL(clicked(bool)), SLOT(onFilterMinimization()));
-    connect(ui->visibleWindows, SIGNAL(clicked(bool)), SLOT(onFilterMinimization()));
-    connect(ui->hiddenWindows, SIGNAL(clicked(bool)), SLOT(onFilterMinimization()));
+    connect(ui->filterMinimization, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterMinimization);
+    connect(ui->visibleWindows, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterMinimization);
+    connect(ui->hiddenWindows, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onFilterMinimization);
 
-    connect(ui->oneAppWindow, SIGNAL(clicked(bool)), SLOT(onApplicationMode()));
-    connect(ui->showDesktop, SIGNAL(clicked(bool)), SLOT(onShowDesktopMode()));
+    connect(ui->oneAppWindow, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onApplicationMode);
+    connect(ui->showDesktop, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onShowDesktopMode);
 
-    connect(ui->switchingModeCombo, SIGNAL(currentIndexChanged(int)), SLOT(onSwitchingMode()));
-    connect(ui->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(onEffectCombo()));
+    connect(ui->switchingModeCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onSwitchingMode);
+    connect(ui->effectCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onEffectCombo);
 
     auto addShortcut = [this](const char *name, KKeySequenceWidget *widget, const QKeySequence &sequence = QKeySequence()) {
         QAction *a = m_actionCollection->addAction(name);
@@ -80,7 +69,7 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
         widget->setProperty("shortcutAction", name);
         a->setText(i18n(name));
         KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << sequence);
-        connect(widget, SIGNAL(keySequenceChanged(QKeySequence)), this, SLOT(shortcutChanged(QKeySequence)));
+        connect(widget, &KKeySequenceWidget::keySequenceChanged, this, &KWinTabBoxConfigForm::shortcutChanged);
     };
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
@@ -335,6 +324,54 @@ void KWinTabBoxConfigForm::setLayoutNameEnabled(bool enabled)
     ui->effectCombo->setEnabled(enabled);
 }
 
+void KWinTabBoxConfigForm::setFilterScreenDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterScreens, visible);
+    setDefaultIndicatorVisible(ui->currentScreen, visible);
+    setDefaultIndicatorVisible(ui->otherScreens, visible);
+}
+
+void KWinTabBoxConfigForm::setFilterDesktopDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterDesktops, visible);
+    setDefaultIndicatorVisible(ui->currentDesktop, visible);
+    setDefaultIndicatorVisible(ui->otherDesktops, visible);
+}
+
+void KWinTabBoxConfigForm::setFilterActivitiesDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterActivities, visible);
+    setDefaultIndicatorVisible(ui->currentActivity, visible);
+    setDefaultIndicatorVisible(ui->otherActivities, visible);
+}
+
+void KWinTabBoxConfigForm::setFilterMinimizationDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->filterMinimization, visible);
+    setDefaultIndicatorVisible(ui->visibleWindows, visible);
+    setDefaultIndicatorVisible(ui->hiddenWindows, visible);
+}
+
+void KWinTabBoxConfigForm::setApplicationModeDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->oneAppWindow, visible);
+}
+
+void KWinTabBoxConfigForm::setShowDesktopModeDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->showDesktop, visible);
+}
+
+void KWinTabBoxConfigForm::setSwitchingModeDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->switchingModeCombo, visible);
+}
+
+void KWinTabBoxConfigForm::setLayoutNameDefaultIndicatorVisible(bool visible)
+{
+    setDefaultIndicatorVisible(ui->effectCombo, visible);
+}
+
 void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 {
     // Highlight Windows options is availabled if no TabBox effect is selected
@@ -402,6 +439,12 @@ void KWinTabBoxConfigForm::shortcutChanged(const QKeySequence &seq)
     QAction *a = m_actionCollection->action(action);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << seq, KGlobalAccel::NoAutoloading);
     m_actionCollection->writeSettings();
+}
+
+void KWinTabBoxConfigForm::setDefaultIndicatorVisible(QWidget *widget, bool visible)
+{
+    widget->setProperty("_kde_highlight_neutral", visible);
+    widget->update();
 }
 
 } // namespace

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- Copyright (C) 2008 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2008 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 // based on minimize animation by Rivo Laks <rivolaks@hot.ee>
 
@@ -151,13 +140,13 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
                 QRect panelScreen = effects->clientArea(ScreenArea, panel);
                 if (panel->width() >= panel->height()) {
                     // horizontal panel
-                    if (panel->y() == panelScreen.y())
+                    if (panel->y() <= panelScreen.height()/2)
                         position = Top;
                     else
                         position = Bottom;
                 } else {
                     // vertical panel
-                    if (panel->x() == panelScreen.x())
+                    if (panel->x() <= panelScreen.width()/2)
                         position = Left;
                     else
                         position = Right;

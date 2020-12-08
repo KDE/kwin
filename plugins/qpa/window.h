@@ -1,26 +1,20 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_QPA_WINDOW_H
 #define KWIN_QPA_WINDOW_H
 
+#include <epoxy/egl.h>
+#include "fixqopengl.h"
+#include <fixx11h.h>
+
+#include <QPointer>
 #include <qpa/qplatformwindow.h>
 
 class QOpenGLFramebufferObject;
@@ -39,6 +33,7 @@ public:
     explicit Window(QWindow *window);
     ~Window() override;
 
+    QSurfaceFormat format() const override;
     void setVisible(bool visible) override;
     void setGeometry(const QRect &rect) override;
     WId winId() const override;
@@ -49,14 +44,19 @@ public:
     QSharedPointer<QOpenGLFramebufferObject> swapFBO();
 
     InternalClient *client() const;
+    EGLSurface eglSurface() const;
 
 private:
     void createFBO();
+    void createPbuffer();
     void map();
     void unmap();
 
-    InternalClient *m_handle = nullptr;
+    QSurfaceFormat m_format;
+    QPointer<InternalClient> m_handle;
     QSharedPointer<QOpenGLFramebufferObject> m_contentFBO;
+    EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
+    EGLSurface m_eglSurface = EGL_NO_SURFACE;
     quint32 m_windowId;
     bool m_resized = false;
     int m_scale = 1;

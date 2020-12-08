@@ -1,21 +1,8 @@
 /*
- *
- * Copyright (c) 2001 Waldo Bastian <bastian@kde.org>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
+    SPDX-FileCopyrightText: 2001 Waldo Bastian <bastian@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "main.h"
 
@@ -34,6 +21,7 @@
 #include "mouse.h"
 #include "windows.h"
 #include "kwinoptions_settings.h"
+#include "kwinoptions_kdeglobals_settings.h"
 
 K_PLUGIN_FACTORY_DECLARATION(KWinOptionsFactory)
 
@@ -42,8 +30,10 @@ class KFocusConfigStandalone : public KFocusConfig
     Q_OBJECT
 public:
     KFocusConfigStandalone(QWidget* parent, const QVariantList &)
-        : KFocusConfig(true, new KWinOptionsSettings(this), parent)
-    {}
+        : KFocusConfig(true, nullptr, parent)
+    {
+        initialize(new KWinOptionsSettings(this));
+    }
 };
 
 class KMovingConfigStandalone : public KMovingConfig
@@ -51,8 +41,10 @@ class KMovingConfigStandalone : public KMovingConfig
     Q_OBJECT
 public:
     KMovingConfigStandalone(QWidget* parent, const QVariantList &)
-        : KMovingConfig(true, new KWinOptionsSettings(this), parent)
-    {}
+        : KMovingConfig(true, nullptr, parent)
+    {
+        initialize(new KWinOptionsSettings(this));
+    }
 };
 
 class KAdvancedConfigStandalone : public KAdvancedConfig
@@ -60,8 +52,10 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, new KWinOptionsSettings(this), parent)
-    {}
+        : KAdvancedConfig(true, nullptr, nullptr, parent)
+    {
+        initialize(new KWinOptionsSettings(this), new KWinOptionsKDEGlobalsSettings(this));
+    }
 };
 
 KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
@@ -79,6 +73,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab->addTab(mFocus, i18n("&Focus"));
     connect(mFocus, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mFocus, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mFocus, &KCModule::setDefaultsIndicatorsVisible);
 
     // Need to relay unmanagedWidgetDefaultState and unmanagedWidgetChangeState to wrapping KCModule
     connect(mFocus, &KFocusConfig::unmanagedWidgetDefaulted, this, &KWinOptions::unmanagedWidgetDefaultState);
@@ -89,25 +84,28 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab->addTab(mTitleBarActions, i18n("Titlebar A&ctions"));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mTitleBarActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mTitleBarActions, &KCModule::setDefaultsIndicatorsVisible);
 
     mWindowActions = new KWindowActionsConfig(false, mSettings, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("W&indow Actions"));
     connect(mWindowActions, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mWindowActions, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mWindowActions, &KCModule::setDefaultsIndicatorsVisible);
 
     mMoving = new KMovingConfig(false, mSettings, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("Mo&vement"));
     connect(mMoving, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mMoving, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mMoving, &KCModule::setDefaultsIndicatorsVisible);
 
-    mAdvanced = new KAdvancedConfig(false, mSettings, this);
+    mAdvanced = new KAdvancedConfig(false, mSettings, new KWinOptionsKDEGlobalsSettings(this), this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Adva&nced"));
     connect(mAdvanced, qOverload<bool>(&KCModule::changed), this, qOverload<bool>(&KCModule::changed));
     connect(mAdvanced, qOverload<bool>(&KCModule::defaulted), this, qOverload<bool>(&KCModule::defaulted));
-
+    connect(this, &KCModule::defaultsIndicatorsVisibleChanged, mAdvanced, &KCModule::setDefaultsIndicatorsVisible);
     KAboutData *about =
         new KAboutData(QStringLiteral("kcmkwinoptions"), i18n("Window Behavior Configuration Module"),
                        QString(), QString(), KAboutLicense::GPL,

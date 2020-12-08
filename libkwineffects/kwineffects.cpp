@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2009 Lucas Murray <lmurray@undefinedfire.com>
-Copyright (C) 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2009 Lucas Murray <lmurray@undefinedfire.com>
+    SPDX-FileCopyrightText: 2018 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwineffects.h"
 
@@ -28,14 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <QVariant>
-#include <QList>
 #include <QTimeLine>
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPixmap>
-#include <QVector2D>
-#include <QGraphicsRotation>
-#include <QGraphicsScale>
 #include <QtMath>
 
 #include <ksharedconfig.h>
@@ -69,9 +54,17 @@ void WindowPrePaintData::setTransformed()
 
 class PaintDataPrivate {
 public:
-    QGraphicsScale scale;
+    PaintDataPrivate()
+        :  scale(1., 1., 1.)
+        , rotationAxis(0, 0, 1.)
+        , rotationAngle(0.)
+    {}
+    QVector3D scale;
     QVector3D translation;
-    QGraphicsRotation rotation;
+
+    QVector3D rotationAxis;
+    QVector3D rotationOrigin;
+    qreal rotationAngle;
 };
 
 PaintData::PaintData()
@@ -86,48 +79,45 @@ PaintData::~PaintData()
 
 qreal PaintData::xScale() const
 {
-    return d->scale.xScale();
+    return d->scale.x();
 }
 
 qreal PaintData::yScale() const
 {
-    return d->scale.yScale();
+    return d->scale.y();
 }
 
 qreal PaintData::zScale() const
 {
-    return d->scale.zScale();
+    return d->scale.z();
 }
 
 void PaintData::setScale(const QVector2D &scale)
 {
-    d->scale.setXScale(scale.x());
-    d->scale.setYScale(scale.y());
+    d->scale.setX(scale.x());
+    d->scale.setY(scale.y());
 }
 
 void PaintData::setScale(const QVector3D &scale)
 {
-    d->scale.setXScale(scale.x());
-    d->scale.setYScale(scale.y());
-    d->scale.setZScale(scale.z());
+    d->scale = scale;
 }
-
 void PaintData::setXScale(qreal scale)
 {
-    d->scale.setXScale(scale);
+    d->scale.setX(scale);
 }
 
 void PaintData::setYScale(qreal scale)
 {
-    d->scale.setYScale(scale);
+    d->scale.setY(scale);
 }
 
 void PaintData::setZScale(qreal scale)
 {
-    d->scale.setZScale(scale);
+    d->scale.setZ(scale);
 }
 
-const QGraphicsScale &PaintData::scale() const
+const QVector3D &PaintData::scale() const
 {
     return d->scale;
 }
@@ -179,37 +169,47 @@ const QVector3D &PaintData::translation() const
 
 qreal PaintData::rotationAngle() const
 {
-    return d->rotation.angle();
+    return d->rotationAngle;
 }
 
 QVector3D PaintData::rotationAxis() const
 {
-    return d->rotation.axis();
+    return d->rotationAxis;
 }
 
 QVector3D PaintData::rotationOrigin() const
 {
-    return d->rotation.origin();
+    return d->rotationOrigin;
 }
 
 void PaintData::setRotationAngle(qreal angle)
 {
-    d->rotation.setAngle(angle);
+    d->rotationAngle = angle;
 }
 
 void PaintData::setRotationAxis(Qt::Axis axis)
 {
-    d->rotation.setAxis(axis);
+    switch (axis) {
+    case Qt::XAxis:
+        setRotationAxis(QVector3D(1, 0, 0));
+        break;
+    case Qt::YAxis:
+        setRotationAxis(QVector3D(0, 1, 0));
+        break;
+    case Qt::ZAxis:
+        setRotationAxis(QVector3D(0, 0, 1));
+        break;
+    }
 }
 
 void PaintData::setRotationAxis(const QVector3D &axis)
 {
-    d->rotation.setAxis(axis);
+    d->rotationAxis = axis;
 }
 
 void PaintData::setRotationOrigin(const QVector3D &origin)
 {
-    d->rotation.setOrigin(origin);
+    d->rotationOrigin = origin;
 }
 
 class WindowPaintDataPrivate {
@@ -877,45 +877,39 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     ret.verts[ 2 ].oy = y2;
     ret.verts[ 3 ].oy = y2;
 
-    const double my_u0 = verts[0].tx;
-    const double my_u1 = verts[2].tx;
-    const double my_v0 = verts[0].ty;
-    const double my_v1 = verts[2].ty;
+    const double xOrigin = left();
+    const double yOrigin = top();
 
-    const double width  = right() - left();
-    const double height = bottom() - top();
-
-    const double texWidth  = my_u1 - my_u0;
-    const double texHeight = my_v1 - my_v0;
+    const double widthReciprocal  = 1 / (right() - xOrigin);
+    const double heightReciprocal = 1 / (bottom() - yOrigin);
 
     if (!uvAxisSwapped()) {
-        const double u0 = (x1 - left()) / width  * texWidth  + my_u0;
-        const double u1 = (x2 - left()) / width  * texWidth  + my_u0;
-        const double v0 = (y1 - top())  / height * texHeight + my_v0;
-        const double v1 = (y2 - top())  / height * texHeight + my_v0;
+        for (int i = 0; i < 4; ++i) {
+            const double w1 = (ret.verts[i].px - xOrigin) * widthReciprocal;
+            const double w2 = (ret.verts[i].py - yOrigin) * heightReciprocal;
 
-        ret.verts[0].tx = u0;
-        ret.verts[3].tx = u0;
-        ret.verts[1].tx = u1;
-        ret.verts[2].tx = u1;
-        ret.verts[0].ty = v0;
-        ret.verts[1].ty = v0;
-        ret.verts[2].ty = v1;
-        ret.verts[3].ty = v1;
+            // Use bilinear interpolation to compute the texture coords.
+            ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
+                    w1 * (1 - w2) * verts[1].tx +
+                    w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[3].tx;
+            ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
+                    w1 * (1 - w2) * verts[1].ty +
+                    w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[3].ty;
+        }
     } else {
-        const double u0 = (y1 - top())  / height * texWidth  + my_u0;
-        const double u1 = (y2 - top())  / height * texWidth  + my_u0;
-        const double v0 = (x1 - left()) / width  * texHeight + my_v0;
-        const double v1 = (x2 - left()) / width  * texHeight + my_v0;
+        // Same as above, with just verts[1] and verts[3] being swapped.
+        for (int i = 0; i < 4; ++i) {
+            const double w1 = (ret.verts[i].py - yOrigin) * heightReciprocal;
+            const double w2 = (ret.verts[i].px - xOrigin) * widthReciprocal;
 
-        ret.verts[0].tx = u0;
-        ret.verts[1].tx = u0;
-        ret.verts[2].tx = u1;
-        ret.verts[3].tx = u1;
-        ret.verts[0].ty = v0;
-        ret.verts[3].ty = v0;
-        ret.verts[1].ty = v1;
-        ret.verts[2].ty = v1;
+            // Use bilinear interpolation to compute the texture coords.
+            ret.verts[i].tx = (1 - w1) * (1 - w2) * verts[0].tx +
+                    w1 * (1 - w2) * verts[3].tx +
+                    w1 * w2 * verts[2].tx + (1 - w1) * w2 * verts[1].tx;
+            ret.verts[i].ty = (1 - w1) * (1 - w2) * verts[0].ty +
+                    w1 * (1 - w2) * verts[3].ty +
+                    w1 * w2 * verts[2].ty + (1 - w1) * w2 * verts[1].ty;
+        }
     }
 
     ret.setUVAxisSwapped(uvAxisSwapped());
@@ -939,7 +933,8 @@ bool WindowQuad::smoothNeeded() const
 WindowQuadList WindowQuadList::splitAtX(double x) const
 {
     WindowQuadList ret;
-    foreach (const WindowQuad & quad, *this) {
+    ret.reserve(count());
+    for (const WindowQuad & quad : *this) {
 #if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
@@ -971,7 +966,8 @@ WindowQuadList WindowQuadList::splitAtX(double x) const
 WindowQuadList WindowQuadList::splitAtY(double y) const
 {
     WindowQuadList ret;
-    foreach (const WindowQuad & quad, *this) {
+    ret.reserve(count());
+    for (const WindowQuad & quad : *this) {
 #if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
@@ -1024,7 +1020,7 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
 
     WindowQuadList ret;
 
-    foreach (const WindowQuad &quad, *this) {
+    for (const WindowQuad &quad : *this) {
         const double quadLeft   = quad.left();
         const double quadRight  = quad.right();
         const double quadTop    = quad.top();
@@ -1068,7 +1064,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     double top    = first().top();
     double bottom = first().bottom();
 
-    foreach (const WindowQuad &quad, *this) {
+    for (const WindowQuad &quad : *this) {
 #if !defined(QT_NO_DEBUG)
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
@@ -1084,7 +1080,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
 
     WindowQuadList ret;
 
-    foreach (const WindowQuad &quad, *this) {
+    for (const WindowQuad &quad : *this) {
         const double quadLeft   = quad.left();
         const double quadRight  = quad.right();
         const double quadTop    = quad.top();
@@ -1141,8 +1137,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
     case GL_QUADS:
 #if defined(__SSE2__)
         if (!(intptr_t(vertex) & 0xf)) {
-            for (int i = 0; i < count(); i++) {
-                const WindowQuad &quad = at(i);
+            for (const WindowQuad &quad : *this) {
                 alignas(16) GLVertex2D v[4];
 
                 for (int j = 0; j < 4; j++) {
@@ -1165,9 +1160,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
         } else
 #endif // __SSE2__
         {
-            for (int i = 0; i < count(); i++) {
-                const WindowQuad &quad = at(i);
-
+            for (const WindowQuad &quad : *this) {
                 for (int j = 0; j < 4; j++) {
                     const WindowVertex &wv = quad[j];
 
@@ -1184,8 +1177,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
     case GL_TRIANGLES:
 #if defined(__SSE2__)
         if (!(intptr_t(vertex) & 0xf)) {
-            for (int i = 0; i < count(); i++) {
-                const WindowQuad &quad = at(i);
+            for (const WindowQuad &quad : *this) {
                 alignas(16) GLVertex2D v[4];
 
                 for (int j = 0; j < 4; j++) {
@@ -1219,8 +1211,7 @@ void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertic
         } else
 #endif // __SSE2__
         {
-            for (int i = 0; i < count(); i++) {
-                const WindowQuad &quad = at(i);
+            for (const WindowQuad &quad : *this) {
                 GLVertex2D v[4]; // Four unique vertices / quad
 
                 for (int j = 0; j < 4; j++) {
@@ -1259,9 +1250,7 @@ void WindowQuadList::makeArrays(float **vertices, float **texcoords, const QSize
      // Note: The positions in a WindowQuad are stored in clockwise order
     const int index[] = { 1, 0, 3, 3, 2, 1 };
 
-    for (int i = 0; i < count(); i++) {
-        const WindowQuad &quad = at(i);
-
+    for (const WindowQuad &quad : *this) {
         for (int j = 0; j < 6; j++) {
             const WindowVertex &wv = quad[index[j]];
 
@@ -1291,7 +1280,7 @@ WindowQuadList WindowQuadList::select(WindowQuadType type) const
 
 WindowQuadList WindowQuadList::filterOut(WindowQuadType type) const
 {
-    foreach (const WindowQuad & q, *this) {
+    for (const WindowQuad & q : *this) {
         if (q.type() == type) { // something to filter out, make a copy and filter
             WindowQuadList ret;
             foreach (const WindowQuad & q, *this) {
@@ -1306,18 +1295,12 @@ WindowQuadList WindowQuadList::filterOut(WindowQuadType type) const
 
 bool WindowQuadList::smoothNeeded() const
 {
-    foreach (const WindowQuad & q, *this)
-    if (q.smoothNeeded())
-        return true;
-    return false;
+    return std::any_of(constBegin(), constEnd(), [] (const WindowQuad & q) { return q.smoothNeeded(); });
 }
 
 bool WindowQuadList::isTransformed() const
 {
-    foreach (const WindowQuad & q, *this)
-    if (q.isTransformed())
-        return true;
-    return false;
+    return std::any_of(constBegin(), constEnd(), [] (const WindowQuad & q) { return q.isTransformed(); });
 }
 
 /***************************************************************
@@ -1368,9 +1351,10 @@ QRegion PaintClipper::paintArea()
 {
     Q_ASSERT(areas != nullptr);   // can be called only with clip() == true
     const QSize &s = effects->virtualScreenSize();
-    QRegion ret = QRegion(0, 0, s.width(), s.height());
-    foreach (const QRegion & r, *areas)
-    ret &= r;
+    QRegion ret(0, 0, s.width(), s.height());
+    for (const QRegion & r : qAsConst(*areas)) {
+        ret &= r;
+    }
     return ret;
 }
 

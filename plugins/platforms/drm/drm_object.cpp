@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "drm_object.h"
 #include "drm_pointer.h"
 
@@ -58,7 +47,7 @@ void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QBy
         }
 
         if (prop->name == m_propsNames[n]) {
-            qCDebug(KWIN_DRM).nospace() << m_id << ": " << prop->name << "' (id " << prop->prop_id
+            qCDebug(KWIN_DRM).nospace() << m_id << ": '" << prop->name << "' (id " << prop->prop_id
                               << "): " << properties->prop_values[i];
             m_props[n] = new Property(prop.data(), properties->prop_values[i], enumNames);
             return;
@@ -78,7 +67,7 @@ bool DrmObject::doAtomicPopulate(drmModeAtomicReq *req, int firstProperty) const
 
     for (int i = firstProperty; i < m_props.size(); i++) {
         auto property = m_props.at(i);
-        if (!property) {
+        if (!property || property->isImmutable()) {
             continue;
         }
         ret &= atomicAddProperty(req, property);
@@ -124,6 +113,7 @@ DrmObject::Property::Property(drmModePropertyRes *prop, uint64_t val, QVector<QB
     : m_propId(prop->prop_id)
     , m_propName(prop->name)
     , m_value(val)
+    , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
 {
     if (!enumNames.isEmpty()) {
         qCDebug(KWIN_DRM) << m_propName << " can have enums:" << enumNames;

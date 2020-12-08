@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2017 Martin Flöser <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2017 Martin Flöser <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "platform.h"
@@ -44,7 +33,6 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testInhibit_data();
     void testInhibit();
     void testDontInhibitWhenNotOnCurrentDesktop();
     void testDontInhibitWhenMinimized();
@@ -56,14 +44,14 @@ void TestIdleInhibition::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
 
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     waylandServer()->initWorkspace();
 }
 
@@ -81,13 +69,6 @@ void TestIdleInhibition::cleanup()
     QCOMPARE(VirtualDesktopManager::self()->count(), 1u);
 }
 
-void TestIdleInhibition::testInhibit_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase")  << Test::XdgShellSurfaceType::XdgShellStable;
-}
-
 void TestIdleInhibition::testInhibit()
 {
     auto idle = waylandServer()->display()->findChild<IdleInterface*>();
@@ -98,8 +79,7 @@ void TestIdleInhibition::testInhibit()
 
     // now create window
     QScopedPointer<Surface> surface(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellSurface(type, surface.data()));
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
 
     // now create inhibition on window
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
@@ -240,7 +220,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     // This test verifies that the idle inhibitor object is not honored by KWin
     // when the associated client is unmapped.
 
-     // Get reference to the idle interface.
+    // Get reference to the idle interface.
     auto idle = waylandServer()->display()->findChild<IdleInterface *>();
     QVERIFY(idle);
     QVERIFY(!idle->isInhibited());
@@ -252,36 +232,56 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QVERIFY(!surface.isNull());
     QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
     QVERIFY(!shellSurface.isNull());
+    QSignalSpy configureRequestedSpy(shellSurface.data(), &XdgShellSurface::configureRequested);
+    QVERIFY(configureRequestedSpy.isValid());
 
     // Create the inhibitor object.
     QScopedPointer<IdleInhibitor> inhibitor(Test::waylandIdleInhibitManager()->createInhibitor(surface.data()));
     QVERIFY(inhibitor->isValid());
 
-    // Render the client.
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
+    // Map the client.
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    Test::render(surface.data(), QSize(100, 50), Qt::blue);
+    QVERIFY(clientAddedSpy.isEmpty());
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 1);
+    AbstractClient *client = clientAddedSpy.last().first().value<AbstractClient *>();
+    QVERIFY(client);
+    QCOMPARE(client->readyForPainting(), true);
+
+    // The compositor will respond with a configure event when the surface becomes active.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 1);
 
     // This should inhibit our server object.
     QVERIFY(idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 1);
 
     // Unmap the client.
-    QSignalSpy hiddenSpy(c, &AbstractClient::windowHidden);
-    QVERIFY(hiddenSpy.isValid());
     surface->attachBuffer(Buffer::Ptr());
     surface->commit(Surface::CommitFlag::None);
-    QVERIFY(hiddenSpy.wait());
+    QVERIFY(Test::waitForWindowDestroyed(client));
 
-    // The surface is no longer visible, so the compositor don't have to honor the
+    // The surface is no longer visible, so the compositor doesn't have to honor the
     // idle inhibitor object.
     QVERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 2);
 
+    // Tell the compositor that we want to map the surface.
+    surface->commit(Surface::CommitFlag::None);
+
+    // The compositor will respond with a configure event.
+    QVERIFY(configureRequestedSpy.wait());
+    QCOMPARE(configureRequestedSpy.count(), 2);
+
     // Map the client.
-    QSignalSpy windowShownSpy(c, &AbstractClient::windowShown);
-    QVERIFY(windowShownSpy.isValid());
     Test::render(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(windowShownSpy.wait());
+    QVERIFY(clientAddedSpy.wait());
+    QCOMPARE(clientAddedSpy.count(), 2);
+    client = clientAddedSpy.last().first().value<AbstractClient *>();
+    QVERIFY(client);
+    QCOMPARE(client->readyForPainting(), true);
 
     // The test client became visible again, so the compositor has to honor the idle
     // inhibitor object back again.
@@ -290,7 +290,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
 
     // Destroy the test client.
     shellSurface.reset();
-    QVERIFY(Test::waitForWindowDestroyed(c));
+    QVERIFY(Test::waitForWindowDestroyed(client));
     QTRY_VERIFY(!idle->isInhibited());
     QCOMPARE(inhibitedSpy.count(), 4);
 }

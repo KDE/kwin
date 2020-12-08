@@ -1,31 +1,21 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "abstract_egl_backend.h"
 #include "egl_dmabuf.h"
-#include "texture.h"
+#include "kwineglext.h"
 #include "composite.h"
 #include "egl_context_attribute_builder.h"
 #include "options.h"
 #include "platform.h"
 #include "scene.h"
 #include "wayland_server.h"
+#include "abstract_wayland_output.h"
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/surface_interface.h>
@@ -49,21 +39,66 @@ eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
 eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
 eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 
-#ifndef EGL_WAYLAND_BUFFER_WL
-#define EGL_WAYLAND_BUFFER_WL                   0x31D5
-#endif
-#ifndef EGL_WAYLAND_PLANE_WL
-#define EGL_WAYLAND_PLANE_WL                    0x31D6
-#endif
-#ifndef EGL_WAYLAND_Y_INVERTED_WL
-#define EGL_WAYLAND_Y_INVERTED_WL               0x31DB
-#endif
+static EGLContext s_globalShareContext = EGL_NO_CONTEXT;
+
+static bool isOpenGLES_helper()
+{
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
+    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
+}
+
+static bool ensureGlobalShareContext()
+{
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    const EGLConfig eglConfig = kwinApp()->platform()->sceneEglConfig();
+
+    if (s_globalShareContext != EGL_NO_CONTEXT) {
+        return true;
+    }
+
+    std::vector<int> attribs;
+    if (isOpenGLES_helper()) {
+        EglOpenGLESContextAttributeBuilder builder;
+        builder.setVersion(2);
+        attribs = builder.build();
+    } else {
+        EglContextAttributeBuilder builder;
+        attribs = builder.build();
+    }
+
+    s_globalShareContext = eglCreateContext(eglDisplay, eglConfig, EGL_NO_CONTEXT, attribs.data());
+    if (s_globalShareContext == EGL_NO_CONTEXT) {
+        qCWarning(KWIN_OPENGL, "Failed to create global share context: 0x%x", eglGetError());
+    }
+
+    kwinApp()->platform()->setSceneEglGlobalShareContext(s_globalShareContext);
+
+    return s_globalShareContext != EGL_NO_CONTEXT;
+}
+
+static void destroyGlobalShareContext()
+{
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
+        return;
+    }
+    eglDestroyContext(eglDisplay, s_globalShareContext);
+    s_globalShareContext = EGL_NO_CONTEXT;
+    kwinApp()->platform()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
+}
+
+AbstractEglBackend *AbstractEglBackend::s_primaryBackend = nullptr;
 
 AbstractEglBackend::AbstractEglBackend()
     : QObject(nullptr)
     , OpenGLBackend()
 {
-    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::unbindWaylandDisplay);
+    if (s_primaryBackend == nullptr) {
+        setPrimaryBackend(this);
+    }
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this, &AbstractEglBackend::teardown);
 }
 
 AbstractEglBackend::~AbstractEglBackend()
@@ -71,11 +106,12 @@ AbstractEglBackend::~AbstractEglBackend()
     delete m_dmaBuf;
 }
 
-void AbstractEglBackend::unbindWaylandDisplay()
+void AbstractEglBackend::teardown()
 {
     if (eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
         eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
     }
+    destroyGlobalShareContext();
 }
 
 void AbstractEglBackend::cleanup()
@@ -86,7 +122,6 @@ void AbstractEglBackend::cleanup()
     cleanupSurfaces();
     eglReleaseThread();
     kwinApp()->platform()->setSceneEglContext(EGL_NO_CONTEXT);
-    kwinApp()->platform()->setSceneEglSurface(EGL_NO_SURFACE);
     kwinApp()->platform()->setSceneEglConfig(nullptr);
 }
 
@@ -122,6 +157,8 @@ bool AbstractEglBackend::initEglAPI()
     qCDebug(KWIN_OPENGL) << "EGL version: " << major << "." << minor;
     const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
     setExtensions(eglExtensions.split(' '));
+    setSupportsSurfacelessContext(hasExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context")));
+    setSupportsNativeFence(hasExtension(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")));
     return true;
 }
 
@@ -149,9 +186,18 @@ void AbstractEglBackend::initBufferAge()
     if (hasExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
-        if (useBufferAge != "0")
+        if (useBufferAge != "0") {
             setSupportsBufferAge(true);
+        }
     }
+
+    if (hasExtension(QByteArrayLiteral("EGL_KHR_partial_update"))) {
+        const QByteArray usePartialUpdate = qgetenv("KWIN_USE_PARTIAL_UPDATE");
+        if (usePartialUpdate != "0") {
+            setSupportsPartialUpdate(true);
+        }
+    }
+    setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
 }
 
 void AbstractEglBackend::initWayland()
@@ -214,14 +260,15 @@ void AbstractEglBackend::doneCurrent()
 
 bool AbstractEglBackend::isOpenGLES() const
 {
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
+    return isOpenGLES_helper();
 }
 
 bool AbstractEglBackend::createContext()
 {
+    if (!ensureGlobalShareContext()) {
+        return false;
+    }
+
     const bool haveRobustness = hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
     const bool haveCreateContext = hasExtension(QByteArrayLiteral("EGL_KHR_create_context"));
     const bool haveContextPriority = hasExtension(QByteArrayLiteral("EGL_IMG_context_priority"));
@@ -229,60 +276,60 @@ bool AbstractEglBackend::createContext()
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
     if (isOpenGLES()) {
         if (haveCreateContext && haveRobustness && haveContextPriority) {
-            auto glesRobustPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setVersion(2);
             glesRobustPriority->setRobust(true);
             glesRobustPriority->setHighPriority(true);
             candidates.push_back(std::move(glesRobustPriority));
         }
         if (haveCreateContext && haveRobustness) {
-            auto glesRobust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesRobust = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobust->setVersion(2);
             glesRobust->setRobust(true);
             candidates.push_back(std::move(glesRobust));
         }
         if (haveContextPriority) {
-            auto glesPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+            auto glesPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesPriority->setVersion(2);
             glesPriority->setHighPriority(true);
             candidates.push_back(std::move(glesPriority));
         }
-        auto gles = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglOpenGLESContextAttributeBuilder);
+        auto gles = std::make_unique<EglOpenGLESContextAttributeBuilder>();
         gles->setVersion(2);
         candidates.push_back(std::move(gles));
     } else {
         if (options->glCoreProfile() && haveCreateContext) {
             if (haveRobustness && haveContextPriority) {
-                auto robustCorePriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto robustCorePriority = std::make_unique<EglContextAttributeBuilder>();
                 robustCorePriority->setVersion(3, 1);
                 robustCorePriority->setRobust(true);
                 robustCorePriority->setHighPriority(true);
                 candidates.push_back(std::move(robustCorePriority));
             }
             if (haveRobustness) {
-                auto robustCore = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto robustCore = std::make_unique<EglContextAttributeBuilder>();
                 robustCore->setVersion(3, 1);
                 robustCore->setRobust(true);
                 candidates.push_back(std::move(robustCore));
             }
             if (haveContextPriority) {
-                auto corePriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+                auto corePriority = std::make_unique<EglContextAttributeBuilder>();
                 corePriority->setVersion(3, 1);
                 corePriority->setHighPriority(true);
                 candidates.push_back(std::move(corePriority));
             }
-            auto core = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto core = std::make_unique<EglContextAttributeBuilder>();
             core->setVersion(3, 1);
             candidates.push_back(std::move(core));
         }
         if (haveRobustness && haveCreateContext && haveContextPriority) {
-            auto robustPriority = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto robustPriority = std::make_unique<EglContextAttributeBuilder>();
             robustPriority->setRobust(true);
             robustPriority->setHighPriority(true);
             candidates.push_back(std::move(robustPriority));
         }
         if (haveRobustness && haveCreateContext) {
-            auto robust = std::unique_ptr<AbstractOpenGLContextAttributeBuilder>(new EglContextAttributeBuilder);
+            auto robust = std::make_unique<EglContextAttributeBuilder>();
             robust->setRobust(true);
             candidates.push_back(std::move(robust));
         }
@@ -292,7 +339,7 @@ bool AbstractEglBackend::createContext()
     EGLContext ctx = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display, config(), EGL_NO_CONTEXT, attribs.data());
+        ctx = eglCreateContext(m_display, config(), s_globalShareContext, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
             qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;
@@ -304,25 +351,41 @@ bool AbstractEglBackend::createContext()
         return false;
     }
     m_context = ctx;
-    kwinApp()->platform()->setSceneEglContext(m_context);
+    if (isPrimary()) {
+        kwinApp()->platform()->setSceneEglContext(m_context);
+    }
     return true;
 }
 
 void AbstractEglBackend::setEglDisplay(const EGLDisplay &display) {
     m_display = display;
-    kwinApp()->platform()->setSceneEglDisplay(display);
+    if (isPrimary()) {
+        kwinApp()->platform()->setSceneEglDisplay(display);
+    }
 }
 
 void AbstractEglBackend::setConfig(const EGLConfig &config)
 {
     m_config = config;
-    kwinApp()->platform()->setSceneEglConfig(config);
+    if (isPrimary()) {
+        kwinApp()->platform()->setSceneEglConfig(config);
+    }
 }
 
 void AbstractEglBackend::setSurface(const EGLSurface &surface)
 {
     m_surface = surface;
-    kwinApp()->platform()->setSceneEglSurface(surface);
+}
+
+QSharedPointer<GLTexture> AbstractEglBackend::textureForOutput(AbstractOutput *requestedOutput) const
+{
+    QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
+    GLRenderTarget renderTarget(*texture);
+
+    const QRect geo = requestedOutput->geometry();
+    QRect invGeo(geo.left(), geo.bottom(), geo.width(), -geo.height());
+    renderTarget.blitFromFramebuffer(invGeo);
+    return texture;
 }
 
 AbstractEglTexture::AbstractEglTexture(SceneOpenGLTexture *texture, AbstractEglBackend *backend)
@@ -350,8 +413,8 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
 {
     // FIXME: Refactor this method.
 
-    const auto &buffer = pixmap->buffer();
-    if (buffer.isNull()) {
+    const auto buffer = pixmap->buffer();
+    if (!buffer) {
         if (updateFromFBO(pixmap->fbo())) {
             return true;
         }
@@ -376,8 +439,8 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 {
     // FIXME: Refactor this method.
 
-    const auto &buffer = pixmap->buffer();
-    if (buffer.isNull()) {
+    const auto buffer = pixmap->buffer();
+    if (!buffer) {
         if (updateFromFBO(pixmap->fbo())) {
             return;
         }
@@ -397,11 +460,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         m_image = EGL_NO_IMAGE_KHR; // The wl_buffer has ownership of the image
         // The origin in a dmabuf-buffer is at the upper-left corner, so the meaning
         // of Y-inverted is the inverse of OpenGL.
-        const bool yInverted = !(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted);
-        if (m_size != dmabuf->size() || yInverted != q->isYInverted()) {
-            m_size = dmabuf->size();
-            q->setYInverted(yInverted);
-        }
+        q->setYInverted(!(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted));
         if (s) {
             s->resetTrackedDamage();
         }
@@ -428,11 +487,11 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         return;
     }
     Q_ASSERT(image.size() == m_size);
-    const QRegion damage = s->trackedDamage();
+    const QRegion damage = s->mapToBuffer(s->trackedDamage());
     s->resetTrackedDamage();
 
     // TODO: this should be shared with GLTexture::update
-    createTextureSubImage(s->scale(), image, damage);
+    createTextureSubImage(image, damage);
 }
 
 bool AbstractEglTexture::createTextureImage(const QImage &image)
@@ -480,31 +539,28 @@ bool AbstractEglTexture::createTextureImage(const QImage &image)
     return true;
 }
 
-void AbstractEglTexture::createTextureSubImage(int scale, const QImage &image, const QRegion &damage)
+void AbstractEglTexture::createTextureSubImage(const QImage &image, const QRegion &damage)
 {
     q->bind();
     if (GLPlatform::instance()->isGLES()) {
         if (s_supportsARGB32 && (image.format() == QImage::Format_ARGB32 || image.format() == QImage::Format_ARGB32_Premultiplied)) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             for (const QRect &rect : damage) {
-                auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
-                glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
-                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
+                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(rect).bits());
             }
         } else {
             const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
             for (const QRect &rect : damage) {
-                auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
-                glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
-                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
+                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
             }
         }
     } else {
         const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
         for (const QRect &rect : damage) {
-            auto scaledRect = QRect(rect.x() * scale, rect.y() * scale, rect.width() * scale, rect.height() * scale);
-            glTexSubImage2D(m_target, 0, scaledRect.x(), scaledRect.y(), scaledRect.width(), scaledRect.height(),
-                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(scaledRect).bits());
+            glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
         }
     }
     q->unbind();
@@ -560,6 +616,7 @@ bool AbstractEglTexture::loadDmabufTexture(const QPointer< KWaylandServer::Buffe
 
     m_size = dmabuf->size();
     q->setYInverted(!(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted));
+    updateMatrix();
 
     return true;
 }
@@ -611,6 +668,19 @@ bool AbstractEglTexture::updateFromFBO(const QSharedPointer<QOpenGLFramebufferOb
     return true;
 }
 
+static QRegion scale(const QRegion &region, qreal scaleFactor)
+{
+    if (scaleFactor == 1) {
+        return region;
+    }
+
+    QRegion scaled;
+    for (const QRect &rect : region) {
+        scaled += QRect(rect.topLeft() * scaleFactor, rect.size() * scaleFactor);
+    }
+    return scaled;
+}
+
 bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap)
 {
     const QImage image = pixmap->internalImage();
@@ -623,10 +693,9 @@ bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap)
         return loadInternalImageObject(pixmap);
     }
 
-    createTextureSubImage(image.devicePixelRatio(), image, pixmap->toplevel()->damage());
+    createTextureSubImage(image, scale(pixmap->toplevel()->damage(), image.devicePixelRatio()));
 
     return true;
 }
 
 }
-

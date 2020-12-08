@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "atoms.h"
 #include "x11client.h"
@@ -60,20 +49,22 @@ private Q_SLOTS:
     void testCaptionWmName();
     void testCaptionMultipleWindows();
     void testFullscreenWindowGroups();
+    void testActivateFocusedWindow();
+    void testReentrantSetFrameGeometry();
 };
 
 void X11ClientTest::initTestCase()
 {
     qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::AbstractClient*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(KWin::Compositor::self());
     waylandServer()->initWorkspace();
 }
@@ -735,7 +726,7 @@ void X11ClientTest::testX11WindowId()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QVERIFY(client->isActive());
     QCOMPARE(client->window(), w);
     QCOMPARE(client->internalId().isNull(), false);
@@ -810,7 +801,7 @@ void X11ClientTest::testCaptionChanges()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QCOMPARE(client->caption(), QStringLiteral("foo"));
 
     QSignalSpy captionChangedSpy(client, &X11Client::captionChanged);
@@ -839,7 +830,8 @@ void X11ClientTest::testCaptionWmName()
     QVERIFY(clientAddedSpy.isValid());
 
     QProcess glxgears;
-    glxgears.start(QStringLiteral("glxgears"));
+    glxgears.setProgram(QStringLiteral("glxgears"));
+    glxgears.start();
     QVERIFY(glxgears.waitForStarted());
 
     QVERIFY(clientAddedSpy.wait());
@@ -881,7 +873,7 @@ void X11ClientTest::testCaptionMultipleWindows()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QCOMPARE(client->caption(), QStringLiteral("foo"));
 
     // create second window with same caption
@@ -903,7 +895,7 @@ void X11ClientTest::testCaptionMultipleWindows()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client2 = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client2);
-    QCOMPARE(client2->windowId(), w2);
+    QCOMPARE(client2->window(), w2);
     QCOMPARE(client2->caption(), QStringLiteral("foo <2>\u200E"));
     NETWinInfo info3(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
     QCOMPARE(QByteArray(info3.visibleName()), QByteArrayLiteral("foo <2>\u200E"));
@@ -956,7 +948,7 @@ void X11ClientTest::testFullscreenWindowGroups()
     QVERIFY(windowCreatedSpy.wait());
     X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client);
-    QCOMPARE(client->windowId(), w);
+    QCOMPARE(client->window(), w);
     QCOMPARE(client->isActive(), true);
 
     QCOMPARE(client->isFullScreen(), false);
@@ -987,7 +979,7 @@ void X11ClientTest::testFullscreenWindowGroups()
     X11Client *client2 = windowCreatedSpy.first().first().value<X11Client *>();
     QVERIFY(client2);
     QVERIFY(client != client2);
-    QCOMPARE(client2->windowId(), w2);
+    QCOMPARE(client2->window(), w2);
     QCOMPARE(client2->isActive(), true);
     QCOMPARE(client2->group(), client->group());
     // first client should be moved back to normal layer
@@ -998,6 +990,121 @@ void X11ClientTest::testFullscreenWindowGroups()
     // activating the fullscreen window again, should move it to active layer
     workspace()->activateClient(client);
     QTRY_COMPARE(client->layer(), ActiveLayer);
+}
+
+void X11ClientTest::testActivateFocusedWindow()
+{
+    // The window manager may call XSetInputFocus() on a window that already has focus, in which
+    // case no FocusIn event will be generated and the window won't be marked as active. This test
+    // verifies that we handle that subtle case properly.
+
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(connection.data()));
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+
+    // Create the first test window.
+    const xcb_window_t window1 = xcb_generate_id(connection.data());
+    xcb_create_window(connection.data(), XCB_COPY_FROM_PARENT, window1, rootWindow(),
+                      windowGeometry.x(), windowGeometry.y(),
+                      windowGeometry.width(), windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_icccm_set_wm_normal_hints(connection.data(), window1, &hints);
+    xcb_change_property(connection.data(), XCB_PROP_MODE_REPLACE, window1,
+                        atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &window1);
+    xcb_map_window(connection.data(), window1);
+    xcb_flush(connection.data());
+    QVERIFY(windowCreatedSpy.wait());
+    X11Client *client1 = windowCreatedSpy.first().first().value<X11Client *>();
+    QVERIFY(client1);
+    QCOMPARE(client1->window(), window1);
+    QCOMPARE(client1->isActive(), true);
+
+    // Create the second test window.
+    const xcb_window_t window2 = xcb_generate_id(connection.data());
+    xcb_create_window(connection.data(), XCB_COPY_FROM_PARENT, window2, rootWindow(),
+                      windowGeometry.x(), windowGeometry.y(),
+                      windowGeometry.width(), windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_icccm_set_wm_normal_hints(connection.data(), window2, &hints);
+    xcb_change_property(connection.data(), XCB_PROP_MODE_REPLACE, window2,
+                        atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &window2);
+    xcb_map_window(connection.data(), window2);
+    xcb_flush(connection.data());
+    QVERIFY(windowCreatedSpy.wait());
+    X11Client *client2 = windowCreatedSpy.last().first().value<X11Client *>();
+    QVERIFY(client2);
+    QCOMPARE(client2->window(), window2);
+    QCOMPARE(client2->isActive(), true);
+
+    // When the second test window is destroyed, the window manager will attempt to activate the
+    // next client in the focus chain, which is the first window.
+    xcb_set_input_focus(connection.data(), XCB_INPUT_FOCUS_POINTER_ROOT, window1, XCB_CURRENT_TIME);
+    xcb_destroy_window(connection.data(), window2);
+    xcb_flush(connection.data());
+    QVERIFY(Test::waitForWindowDestroyed(client2));
+    QVERIFY(client1->isActive());
+
+    // Destroy the first test window.
+    xcb_destroy_window(connection.data(), window1);
+    xcb_flush(connection.data());
+    QVERIFY(Test::waitForWindowDestroyed(client1));
+}
+
+void X11ClientTest::testReentrantSetFrameGeometry()
+{
+    // This test verifies that calling setFrameGeometry() from a slot connected directly
+    // to the frameGeometryChanged() signal won't cause an infinite recursion.
+
+    // Create a test window.
+    QScopedPointer<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    QVERIFY(!xcb_connection_has_error(c.data()));
+    const QRect windowGeometry(0, 0, 100, 200);
+    xcb_window_t w = xcb_generate_id(c.data());
+    xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
+                      windowGeometry.x(),
+                      windowGeometry.y(),
+                      windowGeometry.width(),
+                      windowGeometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
+    xcb_icccm_set_wm_normal_hints(c.data(), w, &hints);
+    xcb_change_property(c.data(), XCB_PROP_MODE_REPLACE, w, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &w);
+    xcb_map_window(c.data(), w);
+    xcb_flush(c.data());
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::clientAdded);
+    QVERIFY(windowCreatedSpy.isValid());
+    QVERIFY(windowCreatedSpy.wait());
+    X11Client *client = windowCreatedSpy.first().first().value<X11Client *>();
+    QVERIFY(client);
+    QCOMPARE(client->pos(), QPoint(0, 0));
+
+    // Let's pretend that there is a script that really wants the client to be at (100, 100).
+    connect(client, &AbstractClient::frameGeometryChanged, this, [client]() {
+        client->setFrameGeometry(QRect(QPoint(100, 100), client->size()));
+    });
+
+    // Trigger the lambda above.
+    client->move(QPoint(40, 50));
+
+    // Eventually, the client will end up at (100, 100).
+    QCOMPARE(client->pos(), QPoint(100, 100));
+
+    // Destroy the test window.
+    xcb_destroy_window(c.data(), w);
+    xcb_flush(c.data());
+    QVERIFY(Test::waitForWindowDestroyed(client));
 }
 
 WAYLANDTEST_MAIN(X11ClientTest)

@@ -1,37 +1,28 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "main_wayland.h"
 #include "composite.h"
-#include "virtualkeyboard.h"
+#include "inputmethod.h"
 #include "workspace.h"
 #include <config-kwin.h>
 // kwin
 #include "platform.h"
 #include "effects.h"
 #include "tabletmodemanager.h"
+
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
 
 // KWayland
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/seat_interface.h>
+
 // KDE
 #include <KCrash>
 #include <KLocalizedString>
@@ -65,6 +56,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <iostream>
 #include <iomanip>
+
+Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
+Q_IMPORT_PLUGIN(KGlobalAccelImpl)
+Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
+Q_IMPORT_PLUGIN(KWinIdleTimePoller)
+#ifdef PipeWire_FOUND
+Q_IMPORT_PLUGIN(ScreencastManagerFactory)
+#endif
 
 namespace KWin
 {
@@ -129,19 +128,15 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
-    if (m_xwayland) {
-        // needs to be done before workspace gets destroyed
-        m_xwayland->prepareDestroy();
-    }
+    destroyPlugins();
+    delete m_xwayland;
+    m_xwayland = nullptr;
     destroyWorkspace();
     waylandServer()->dispatch();
 
     if (QStyle *s = style()) {
         s->unpolish(this);
     }
-    // kill Xwayland before terminating its connection
-    delete m_xwayland;
-    m_xwayland = nullptr;
     waylandServer()->terminateClientConnections();
     destroyCompositor();
 }
@@ -160,9 +155,10 @@ void ApplicationWayland::performStartup()
     // now libinput thread has been created, adjust scheduler to not leak into other processes
     gainRealTime(RealTimeFlags::ResetOnFork);
 
-    VirtualKeyboard::create(this);
+    InputMethod::create(this);
     createBackend();
     TabletModeManager::create(this);
+    createPlugins();
 }
 
 void ApplicationWayland::createBackend()
@@ -188,15 +184,23 @@ void ApplicationWayland::continueStartupWithScreens()
 void ApplicationWayland::finalizeStartup()
 {
     if (m_xwayland) {
-        disconnect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
+        disconnect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
+        disconnect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
     }
     startSession();
-    createWorkspace();
+    notifyStarted();
 }
 
 void ApplicationWayland::continueStartupWithScene()
 {
     disconnect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
+
+    // Note that we start accepting client connections after creating the Workspace.
+    createWorkspace();
+
+    if (!waylandServer()->start()) {
+        qFatal("Failed to initialze the Wayland server, exiting now");
+    }
 
     if (operationMode() == OperationModeWaylandOnly) {
         finalizeStartup();
@@ -204,14 +208,9 @@ void ApplicationWayland::continueStartupWithScene()
     }
 
     m_xwayland = new Xwl::Xwayland(this);
-    connect(m_xwayland, &Xwl::Xwayland::criticalError, this, [](int code) {
-        // we currently exit on Xwayland errors always directly
-        // TODO: restart Xwayland
-        std::cerr << "Xwayland had a critical error. Going to exit now." << std::endl;
-        exit(code);
-    });
-    connect(m_xwayland, &Xwl::Xwayland::initialized, this, &ApplicationWayland::finalizeStartup);
-    m_xwayland->init();
+    connect(m_xwayland, &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
+    connect(m_xwayland, &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    m_xwayland->start();
 }
 
 void ApplicationWayland::startSession()
@@ -241,7 +240,10 @@ void ApplicationWayland::startSession()
                 p->setProgram(program);
                 p->setArguments(arguments);
                 p->start();
-                p->waitForStarted(); //do we really need to wait?
+                connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, p, [p] {
+                    p->kill();
+                    p->waitForFinished();
+                });
             }
         } else {
             qWarning("Failed to launch the input method server: %s is an invalid command",
@@ -525,7 +527,7 @@ int main(int argc, char * argv[])
     }
 #endif
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
-                                      i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
+                                      i18n("Enable libinput support for input events processing. Note: never use in a nested session.	(deprecated)"));
     parser.addOption(libinputOption);
 #if HAVE_DRM
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
@@ -609,7 +611,7 @@ int main(int argc, char * argv[])
             return 1;
         }
         const qreal scale = parser.value(scaleOption).toDouble(&ok);
-        if (!ok || scale < 1) {
+        if (!ok || scale <= 0) {
             std::cerr << "FATAL ERROR incorrect value for scale" << std::endl;
             return 1;
         }

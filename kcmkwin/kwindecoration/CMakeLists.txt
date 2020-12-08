@@ -10,6 +10,14 @@ set(kcmkwindecoration_SRCS
     utils.cpp
 )
 
+kcmutils_generate_module_data(
+    kcmkwindecoration_SRCS
+    MODULE_DATA_HEADER kwindecorationdata.h
+    MODULE_DATA_CLASS_NAME KWinDecorationData
+    SETTINGS_HEADERS kwindecorationsettings.h
+    SETTINGS_CLASSES KWinDecorationSettings
+)
+
 kconfig_add_kcfg_files(kcmkwindecoration_SRCS kwindecorationsettings.kcfgc GENERATE_MOC)
 
 add_library(kcm_kwindecoration MODULE ${kcmkwindecoration_SRCS})
@@ -17,6 +25,7 @@ add_library(kcm_kwindecoration MODULE ${kcmkwindecoration_SRCS})
 target_link_libraries(kcm_kwindecoration
     KDecoration2::KDecoration
     KF5::I18n
+    KF5::KCMUtils
     KF5::NewStuff
     KF5::QuickAddons
     Qt5::Quick

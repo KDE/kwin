@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
- Copyright (C) 2008 Cédric Borgese <cedric.borgese@gmail.com>
- Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
+    SPDX-FileCopyrightText: 2008 Cédric Borgese <cedric.borgese@gmail.com>
+    SPDX-FileCopyrightText: 2008 Lucas Murray <lmurray@undefinedfire.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "wobblywindows_config.h"
 // KConfigSkeleton
@@ -81,7 +70,7 @@ ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 //-----------------------------------------------------------------------------
 
 WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("wobblywindows")), parent, args)
+    KCModule(parent, args)
 {
     WobblyWindowsConfig::instance(KWIN_CONFIG);
     m_ui.setupUi(this);

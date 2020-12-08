@@ -1,22 +1,11 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "composite.h"
 #include "effectloader.h"
@@ -52,10 +41,8 @@ private Q_SLOTS:
     void cleanup();
     void testStartFrame();
     void testCursorMoving();
-    void testWindow_data();
     void testWindow();
     void testWindowScaled();
-    void testCompositorRestart_data();
     void testCompositorRestart();
     void testX11Window();
 };
@@ -68,8 +55,8 @@ void SceneQPainterTest::cleanup()
 void SceneQPainterTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient*>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
 
@@ -95,7 +82,7 @@ void SceneQPainterTest::initTestCase()
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("Q"));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Compositor::self());
 }
 
@@ -118,7 +105,7 @@ void SceneQPainterTest::testStartFrame()
     const QImage cursorImage = cursor->image();
     QVERIFY(!cursorImage.isNull());
     p.drawImage(cursor->pos() - cursor->hotspot(), cursorImage);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
+    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(0));
 }
 
 void SceneQPainterTest::testCursorMoving()
@@ -149,14 +136,7 @@ void SceneQPainterTest::testCursorMoving()
     const QImage cursorImage = cursor->image();
     QVERIFY(!cursorImage.isNull());
     p.drawImage(QPoint(45, 45) - cursor->hotspot(), cursorImage);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
-}
-
-void SceneQPainterTest::testWindow_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
+    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(0));
 }
 
 void SceneQPainterTest::testWindow()
@@ -167,8 +147,7 @@ void SceneQPainterTest::testWindow()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
     QScopedPointer<Surface> s(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellSurface(type, s.data()));
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellStableSurface(s.data()));
     QScopedPointer<Pointer> p(Test::waylandSeat()->createPointer());
 
     auto scene = KWin::Compositor::self()->scene();
@@ -195,13 +174,13 @@ void SceneQPainterTest::testWindow()
     p->setCursor(cs.data(), QPoint(5, 5));
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(KWin::Cursors::self()->mouse()->pos().x() - 5, KWin::Cursors::self()->mouse()->pos().y() - 5, 10, 10, Qt::red);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
+    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(0));
     // let's move the cursor again
     KWin::Cursors::self()->mouse()->setPos(10, 10);
     QVERIFY(frameRenderedSpy.wait());
     painter.fillRect(0, 0, 200, 300, Qt::blue);
     painter.fillRect(5, 5, 10, 10, Qt::red);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
+    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(0));
 }
 
 void SceneQPainterTest::testWindowScaled()
@@ -251,14 +230,7 @@ void SceneQPainterTest::testWindowScaled()
     painter.fillRect(100, 150, 100, 100, Qt::red);
     painter.fillRect(5, 5, 10, 10, Qt::red); //cursor
 
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
-}
-
-void SceneQPainterTest::testCompositorRestart_data()
-{
-    QTest::addColumn<Test::XdgShellSurfaceType>("type");
-
-    QTest::newRow("xdgWmBase") << Test::XdgShellSurfaceType::XdgShellStable;
+    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(0));
 }
 
 void SceneQPainterTest::testCompositorRestart()
@@ -270,8 +242,7 @@ void SceneQPainterTest::testCompositorRestart()
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection());
     QScopedPointer<Surface> s(Test::createSurface());
-    QFETCH(Test::XdgShellSurfaceType, type);
-    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellSurface(type, s.data()));
+    QScopedPointer<XdgShellSurface> ss(Test::createXdgShellStableSurface(s.data()));
     QVERIFY(Test::renderAndWaitForShown(s.data(), QSize(200, 300), Qt::blue));
 
     // now let's try to reinitialize the compositing scene
@@ -303,7 +274,7 @@ void SceneQPainterTest::testCompositorRestart()
     const QImage cursorImage = cursor->image();
     QVERIFY(!cursorImage.isNull());
     painter.drawImage(QPoint(400, 400) - cursor->hotspot(), cursorImage);
-    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer());
+    QCOMPARE(referenceImage, *scene->qpainterRenderBuffer(0));
 }
 
 struct XcbConnectionDeleter
@@ -327,7 +298,7 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(!xcb_connection_has_error(c.data()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t w = xcb_generate_id(c.data());
-    uint32_t value = defaultScreen()->white_pixel;
+    uint32_t value = kwinApp()->x11DefaultScreen()->white_pixel;
     xcb_create_window(c.data(), XCB_COPY_FROM_PARENT, w, rootWindow(),
                       windowGeometry.x(),
                       windowGeometry.y(),
@@ -377,7 +348,7 @@ void SceneQPainterTest::testX11Window()
     QVERIFY(frameRenderedSpy.wait());
 
     const QPoint startPos = client->pos() + client->clientPos();
-    auto image = scene->qpainterRenderBuffer();
+    auto image = scene->qpainterRenderBuffer(0);
     QCOMPARE(image->copy(QRect(startPos, client->clientSize())), compareImage);
 
     // and destroy the window again

@@ -1,23 +1,12 @@
-/********************************************************************
-KWin - the KDE window manager
-This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2016 Martin Gräßlin <mgraesslin@kde.org>
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "kwin_wayland_test.h"
 #include "abstract_client.h"
 #include "platform.h"
@@ -54,8 +43,8 @@ void XwaylandSelectionsTest::initTestCase()
     QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
     qRegisterMetaType<KWin::AbstractClient*>();
     qRegisterMetaType<QProcess::ExitStatus>();
-    QSignalSpy workspaceCreatedSpy(kwinApp(), &Application::workspaceCreated);
-    QVERIFY(workspaceCreatedSpy.isValid());
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
 //    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
 //    QVERIFY(clipboardSyncDevicedCreated.isValid());
@@ -63,7 +52,7 @@ void XwaylandSelectionsTest::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
-    QVERIFY(workspaceCreatedSpy.wait());
+    QVERIFY(applicationStartedSpy.wait());
     QCOMPARE(screens()->count(), 2);
     QCOMPARE(screens()->geometry(0), QRect(0, 0, 1280, 1024));
     QCOMPARE(screens()->geometry(1), QRect(1280, 0, 1280, 1024));
@@ -112,8 +101,6 @@ void XwaylandSelectionsTest::testSync()
 
     QSignalSpy clientAddedSpy(workspace(), &Workspace::clientAdded);
     QVERIFY(clientAddedSpy.isValid());
-    QSignalSpy shellClientAddedSpy(waylandServer(), &WaylandServer::shellClientAdded);
-    QVERIFY(shellClientAddedSpy.isValid());
     QSignalSpy clipboardChangedSpy(Xwl::DataBridge::self()->dataDeviceIface(), &KWaylandServer::DataDeviceInterface::selectionChanged);
     QVERIFY(clipboardChangedSpy.isValid());
 
@@ -131,13 +118,8 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(m_copyProcess->waitForStarted());
 
     AbstractClient *copyClient = nullptr;
-    if (copyPlatform == QLatin1String("xcb")) {
-        QVERIFY(clientAddedSpy.wait());
-        copyClient = clientAddedSpy.first().first().value<AbstractClient*>();
-    } else {
-        QVERIFY(shellClientAddedSpy.wait());
-        copyClient = shellClientAddedSpy.first().first().value<AbstractClient*>();
-    }
+    QVERIFY(clientAddedSpy.wait());
+    copyClient = clientAddedSpy.first().first().value<AbstractClient *>();
     QVERIFY(copyClient);
     if (workspace()->activeClient() != copyClient) {
         workspace()->activateClient(copyClient);
@@ -166,15 +148,9 @@ void XwaylandSelectionsTest::testSync()
     QVERIFY(m_pasteProcess->waitForStarted());
 
     AbstractClient *pasteClient = nullptr;
-    if (pastePlatform == QLatin1String("xcb")) {
-        QVERIFY(clientAddedSpy.wait());
-        pasteClient = clientAddedSpy.last().first().value<AbstractClient*>();
-    } else {
-        QVERIFY(shellClientAddedSpy.wait());
-        pasteClient = shellClientAddedSpy.last().first().value<AbstractClient*>();
-    }
+    QVERIFY(clientAddedSpy.wait());
+    pasteClient = clientAddedSpy.last().first().value<AbstractClient *>();
     QCOMPARE(clientAddedSpy.count(), 1);
-    QCOMPARE(shellClientAddedSpy.count(), 1);
     QVERIFY(pasteClient);
 
     if (workspace()->activeClient() != pasteClient) {

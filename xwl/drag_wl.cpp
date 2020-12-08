@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "drag_wl.h"
 
 #include "databridge.h"
@@ -229,7 +218,7 @@ void Xvisit::sendPosition(const QPointF &globalPos)
     }
     m_pos.pending = true;
 
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[2] = (x << 16) | y;
     data.data32[3] = XCB_CURRENT_TIME;
@@ -284,7 +273,7 @@ void Xvisit::enter()
 
 void Xvisit::sendEnter()
 {
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[1] = m_version << 24;
 
@@ -294,7 +283,7 @@ void Xvisit::sendEnter()
     const int mimesCount = mimeTypesNames.size();
     size_t cnt = 0;
     size_t totalCnt = 0;
-    for (const auto mimeName : mimeTypesNames) {
+    for (const auto &mimeName : mimeTypesNames) {
         // 3 mimes and less can be sent directly in the XdndEnter message
         if (totalCnt == 3) {
             break;
@@ -319,7 +308,7 @@ void Xvisit::sendEnter()
         targets.resize(mimesCount);
 
         size_t cnt = 0;
-        for (const auto mimeName : mimeTypesNames) {
+        for (const auto &mimeName : mimeTypesNames) {
             const auto atom = Selection::mimeTypeToAtom(mimeName);
             if (atom != XCB_ATOM_NONE) {
                 targets[cnt] = atom;
@@ -339,7 +328,7 @@ void Xvisit::sendEnter()
 
 void Xvisit::sendDrop(uint32_t time)
 {
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[2] = time;
 
@@ -352,7 +341,7 @@ void Xvisit::sendDrop(uint32_t time)
 
 void Xvisit::sendLeave()
 {
-    xcb_client_message_data_t data = {0};
+    xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     Drag::sendClientMessage(m_target->window(), atoms->xdnd_leave, &data);
 }

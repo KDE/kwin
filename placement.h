@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 1997 to 2002 Cristian Tibirna <tibirna@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 1997-2002 Cristian Tibirna <tibirna@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #ifndef KWIN_PLACEMENT_H
 #define KWIN_PLACEMENT_H
@@ -62,16 +51,9 @@ public:
     };
 
     void place(AbstractClient *c, const QRect &area);
-
-    void placeAtRandom(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeCascaded(AbstractClient* c, const QRect& area, Policy next = Unknown);
     void placeSmart(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeMaximizing(AbstractClient* c, const QRect& area, Policy next = Unknown);
+
     void placeCentered(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeZeroCornered(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeDialog(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeUtility(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeOnScreenDisplay(AbstractClient* c, const QRect& area);
 
     void reinitCascading(int desktop);
 
@@ -84,7 +66,6 @@ public:
      */
     void unclutterDesktop();
 
-    static Policy policyFromString(const QString& policy, bool no_special);
     static const char* policyToString(Policy policy);
 
 private:
@@ -92,6 +73,14 @@ private:
     void placeUnderMouse(AbstractClient *c, const QRect &area, Policy next = Unknown);
     void placeOnMainWindow(AbstractClient *c, const QRect &area, Policy next = Unknown);
     void placeTransient(AbstractClient *c);
+
+    void placeAtRandom(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeCascaded(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeMaximizing(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeZeroCornered(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeDialog(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeUtility(AbstractClient* c, const QRect& area, Policy next = Unknown);
+    void placeOnScreenDisplay(AbstractClient* c, const QRect& area);
 
     //CT needed for cascading+
     struct DesktopCascadingInfo {

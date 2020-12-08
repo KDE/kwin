@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_DEBUG_CONSOLE_H
 #define KWIN_DEBUG_CONSOLE_H
 
@@ -44,6 +33,7 @@ class X11Client;
 class InternalClient;
 class Unmanaged;
 class DebugConsoleFilter;
+class WaylandClient;
 
 class KWIN_EXPORT DebugConsoleModel : public QAbstractItemModel
 {
@@ -59,6 +49,10 @@ public:
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
+private Q_SLOTS:
+    void handleClientAdded(AbstractClient *client);
+    void handleClientRemoved(AbstractClient *client);
+
 private:
     template <class T>
     QModelIndex indexForClient(int row, int column, const QVector<T*> &clients, int id) const;
@@ -73,13 +67,13 @@ private:
     void add(int parentRow, QVector<T*> &clients, T *client);
     template <class T>
     void remove(int parentRow, QVector<T*> &clients, T *client);
-    AbstractClient *waylandClient(const QModelIndex &index) const;
+    WaylandClient *waylandClient(const QModelIndex &index) const;
     InternalClient *internalClient(const QModelIndex &index) const;
     X11Client *x11Client(const QModelIndex &index) const;
     Unmanaged *unmanaged(const QModelIndex &index) const;
     int topLevelRowCount() const;
 
-    QVector<AbstractClient *> m_waylandClients;
+    QVector<WaylandClient *> m_waylandClients;
     QVector<InternalClient*> m_internalClients;
     QVector<X11Client *> m_x11Clients;
     QVector<Unmanaged*> m_unmanageds;

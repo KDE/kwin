@@ -1,0 +1,125 @@
+<!DOCTYPE node PUBLIC
+"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"https://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/" xmlns:doc="https://www.freedesktop.org/dbus/1.0/doc.dtd">
+  <interface name='org.freedesktop.ColorManager'>
+    <doc:doc>
+      <doc:description>
+        <doc:para>
+          The interface used for querying color parameters for the system.
+        </doc:para>
+      </doc:description>
+    </doc:doc>
+
+    <!--***********************************************************-->
+    <method name='CreateDevice'>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Creates a device.
+          </doc:para>
+          <doc:para>
+            If the device has profiles added to it in the past, and
+            that profiles exists already, then the new device will be
+            automatically have profiles added to the device.
+            To prevent this from happening, remove the assignment by
+            doing <doc:tt>RemoveProfile</doc:tt> on the relevant
+            device object.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type='s' name='device_id' direction='in'>
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              A device ID that is used to map to the device path.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type='s' name='scope' direction='in'>
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              Options for creating the device. This allows the session
+              color management component to have per-session virtual
+              devices cleaned up automatically or devices that are
+              re-created on each boot.
+            </doc:para>
+          </doc:summary>
+          <doc:list>
+            <doc:item>
+              <doc:term>normal</doc:term>
+              <doc:definition>
+                Normal device.
+              </doc:definition>
+            </doc:item>
+            <doc:item>
+              <doc:term>temp</doc:term>
+              <doc:definition>
+                Device that is removed if the user logs out.
+              </doc:definition>
+            </doc:item>
+            <doc:item>
+              <doc:term>disk</doc:term>
+              <doc:definition>
+                Device that is saved to disk, and restored if the
+                computer is restarted.
+              </doc:definition>
+            </doc:item>
+          </doc:list>
+        </doc:doc>
+      </arg>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="CdStringMap"/>
+      <arg type='a{ss}' name='properties' direction='in'>
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              Properties to be used when constructing the device.
+            </doc:para>
+            <doc:para>
+              This optional value allows the device to be created with
+              the latency of one bus round-trip, rather than doing
+              a few <doc:tt>SetProperty</doc:tt> methods indervidually.
+            </doc:para>
+            <doc:para>
+              Any properties not interstood by colord will be added as
+              dictionary values to the <doc:tt>Metadata</doc:tt>
+              property.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+      <arg type='o' name='object_path' direction='out'>
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              A device path.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
+
+    <!--***********************************************************-->
+    <method name='DeleteDevice'>
+      <doc:doc>
+        <doc:description>
+          <doc:para>
+            Deletes a device.
+          </doc:para>
+        </doc:description>
+      </doc:doc>
+      <arg type='o' name='object_path' direction='in'>
+        <doc:doc>
+          <doc:summary>
+            <doc:para>
+              A device path.
+            </doc:para>
+          </doc:summary>
+        </doc:doc>
+      </arg>
+    </method>
+
+  </interface>
+</node>

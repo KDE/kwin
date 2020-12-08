@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2007 Rivo Laks <rivolaks@hot.ee>
-Copyright (C) 2010 Sebastian Sauer <sebsauer@kdab.com>
+    SPDX-FileCopyrightText: 2007 Rivo Laks <rivolaks@hot.ee>
+    SPDX-FileCopyrightText: 2010 Sebastian Sauer <sebsauer@kdab.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "zoom_config.h"
 // KConfigSkeleton
@@ -48,7 +37,7 @@ ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
 }
 
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(KAboutData::pluginData(QStringLiteral("zoom")), parent, args)
+    KCModule(parent, args)
 {
     ZoomConfig::instance(KWIN_CONFIG);
     m_ui = new ZoomEffectConfigForm(this);
@@ -59,6 +48,11 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     addConfig(ZoomConfig::self(), m_ui);
 
     connect(m_ui->editor, &KShortcutsEditor::keyChange, this, &ZoomEffectConfig::markAsChanged);
+
+#if !HAVE_ACCESSIBILITY
+    m_ui->kcfg_EnableFocusTracking->setVisible(false);
+    m_ui->kcfg_EnableTextCaretTracking->setVisible(false);
+#endif
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
@@ -132,7 +126,7 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 ZoomEffectConfig::~ZoomEffectConfig()
 {
     // Undo (only) unsaved changes to global key shortcuts
-    m_ui->editor->undoChanges();
+    m_ui->editor->undo();
 }
 
 void ZoomEffectConfig::save()

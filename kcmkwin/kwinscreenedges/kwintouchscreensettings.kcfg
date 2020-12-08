@@ -47,7 +47,7 @@
     </group>
     <group name="TabBox">
         <entry name="TouchBorderActivateTabBox" key="TouchBorderActivate" type="IntList">
-            <default>ElectricLeft</default>
+            <default>ElectricNone</default>
         </entry>
         <entry key="TouchBorderAlternativeActivate" type="IntList">
             <default>ElectricNone</default>

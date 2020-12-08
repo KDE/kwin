@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2010, 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2010, 2012 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "eglonxbackend.h"
 // kwin
 #include "main.h"
@@ -395,8 +384,9 @@ SceneOpenGLTexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGLTextur
     return new EglTexture(texture, this);
 }
 
-QRegion EglOnXBackend::prepareRenderingFrame()
+QRegion EglOnXBackend::beginFrame(int screenId)
 {
+    Q_UNUSED(screenId)
     QRegion repaint;
 
     if (gs_tripleBufferNeedsDetection) {
@@ -413,14 +403,15 @@ QRegion EglOnXBackend::prepareRenderingFrame()
     if (supportsBufferAge())
         repaint = accumulatedDamageHistory(m_bufferAge);
 
-    startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
     return repaint;
 }
 
-void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglOnXBackend::endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    Q_UNUSED(screenId)
+
     if (damagedRegion.isEmpty()) {
         setLastDamage(QRegion());
 
@@ -492,7 +483,7 @@ bool EglTexture::loadTexture(WindowPixmap *pixmap)
         return true;
     }
     // did not succeed, try on X11
-    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
+    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->bufferGeometry().size());
 }
 
 bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)

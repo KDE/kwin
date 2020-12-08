@@ -11,6 +11,9 @@ set(DRM_SOURCES
     logging.cpp
     scene_qpainter_drm_backend.cpp
     screens_drm.cpp
+    drm_gpu.cpp
+    egl_multi_backend.cpp
+    abstract_egl_drm_backend.cpp
 )
 
 if (HAVE_GBM)
@@ -18,7 +21,7 @@ if (HAVE_GBM)
         egl_gbm_backend.cpp
         drm_buffer_gbm.cpp
         gbm_surface.cpp
-        remoteaccess_manager.cpp
+        gbm_dmabuf.cpp
     )
 endif()
 

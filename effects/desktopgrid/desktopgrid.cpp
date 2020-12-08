@@ -1,24 +1,13 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2007 Lubos Lunak <l.lunak@kde.org>
-Copyright (C) 2008 Lucas Murray <lmurray@undefinedfire.com>
-Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2007 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2008 Lucas Murray <lmurray@undefinedfire.com>
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "desktopgrid.h"
 // KConfigSkeleton
@@ -59,6 +48,7 @@ DesktopGridEffect::DesktopGridEffect()
     , isValidMove(false)
     , windowMove(nullptr)
     , windowMoveDiff()
+    , windowMoveElevateTimer(new QTimer(this))
     , gridSize()
     , orientation(Qt::Horizontal)
     , activeCell(1, 1)
@@ -90,10 +80,18 @@ DesktopGridEffect::DesktopGridEffect()
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, [this]() {
         setActive(false);
+        windowMoveElevateTimer->stop();
         if (keyboardGrab) {
             effects->ungrabKeyboard();
             keyboardGrab = false;
         }
+    });
+
+    windowMoveElevateTimer->setInterval(QApplication::startDragTime());
+    windowMoveElevateTimer->setSingleShot(true);
+    connect(windowMoveElevateTimer, &QTimer::timeout, this, [this]() {
+        effects->setElevatedWindow(windowMove, true);
+        wasWindowMove = true;
     });
 
     // Load all other configuration details
@@ -119,14 +117,14 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
 
     // TODO: rename zoomDuration to duration
     zoomDuration = animationTime(DesktopGridConfig::zoomDuration() != 0 ? DesktopGridConfig::zoomDuration() : 300);
-    timeline.setCurveShape(QTimeLine::EaseInOutCurve);
+    timeline.setEasingCurve(QEasingCurve::InOutSine);
     timeline.setDuration(zoomDuration);
 
     border = DesktopGridConfig::borderWidth();
     desktopNameAlignment = Qt::Alignment(DesktopGridConfig::desktopNameAlignment());
     layoutMode = DesktopGridConfig::layoutMode();
     customLayoutRows = DesktopGridConfig::customLayoutRows();
-    m_usePresentWindows = DesktopGridConfig::presentWindows();
+    clickBehavior = DesktopGridConfig::clickBehavior();
 
     // deactivate and activate all touch border
     const QVector<ElectricBorder> relevantBorders{ElectricLeft, ElectricTop, ElectricRight, ElectricBottom};
@@ -468,6 +466,10 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
         if (windowMove != nullptr &&
                 (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             // Handle window moving
+            if (windowMoveElevateTimer->isActive()) { // Window started moving, but is not elevated yet!
+                windowMoveElevateTimer->stop();
+                effects->setElevatedWindow(windowMove, true);
+            }
             if (!wasWindowMove) { // Activate on move
                 if (isUsingPresentWindows()) {
                     foreach (const int i, desktopList(windowMove)) {
@@ -585,9 +587,9 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
                 // Prepare it for moving
                 windowMoveDiff = w->pos() - unscalePos(me->pos(), nullptr);
                 windowMove = w;
-                effects->setElevatedWindow(windowMove, true);
+                windowMoveElevateTimer->start();
             }
-        } else if ((me->buttons() == Qt::MidButton || me->buttons() == Qt::RightButton) && windowMove == nullptr) {
+        } else if ((me->buttons() == Qt::MiddleButton || me->buttons() == Qt::RightButton) && windowMove == nullptr) {
             EffectWindow* w = windowAt(me->pos());
             if (w && w->isDesktop()) {
                 w = nullptr;
@@ -618,8 +620,16 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
     }
     if (e->type() == QEvent::MouseButtonRelease && me->button() == Qt::LeftButton) {
         isValidMove = false;
-        if (windowMove)
-            effects->activateWindow(windowMove);
+        if (windowMove) {
+            if (windowMoveElevateTimer->isActive()) {
+                // no need to elevate window, it was just a click
+                windowMoveElevateTimer->stop();
+            }
+            if (clickBehavior == SwitchDesktopAndActivateWindow || wasWindowMove) {
+                // activate window if relevant config is set or window was moved
+                effects->activateWindow(windowMove);
+            }
+        }
         if (wasWindowMove || wasDesktopMove) { // reset pointer
             effects->defineCursor(Qt::PointingHandCursor);
         } else { // click -> exit
@@ -1057,7 +1067,7 @@ void DesktopGridEffect::setup()
     hoverTimeline.clear();
     for (int i = 0; i < effects->numberOfDesktops(); i++) {
         QTimeLine *newTimeline = new QTimeLine(zoomDuration, this);
-        newTimeline->setCurveShape(QTimeLine::EaseInOutCurve);
+        newTimeline->setEasingCurve(QEasingCurve::InOutSine);
         hoverTimeline.append(newTimeline);
     }
     hoverTimeline[effects->currentDesktop() - 1]->setCurrentTime(hoverTimeline[effects->currentDesktop() - 1]->duration());
@@ -1079,7 +1089,7 @@ void DesktopGridEffect::setup()
     setCurrentDesktop(effects->currentDesktop());
 
     // setup the motion managers
-    if (m_usePresentWindows)
+    if (clickBehavior == SwitchDesktopAndActivateWindow)
         m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows)));
     if (isUsingPresentWindows()) {
         m_proxy->reCreateGrids(); // revalidation on multiscreen, bug #351724
@@ -1203,6 +1213,8 @@ void DesktopGridEffect::finish()
         desktopNames.clear();
     }
 
+    windowMoveElevateTimer->stop();
+
     if (keyboardGrab)
         effects->ungrabKeyboard();
     keyboardGrab = false;
@@ -1293,7 +1305,7 @@ void DesktopGridEffect::desktopsAdded(int old)
     for (int i = old; i <= effects->numberOfDesktops(); i++) {
         // add a timeline for the new desktop
         QTimeLine *newTimeline = new QTimeLine(zoomDuration, this);
-        newTimeline->setCurveShape(QTimeLine::EaseInOutCurve);
+        newTimeline->setEasingCurve(QEasingCurve::InOutSine);
         hoverTimeline.append(newTimeline);
     }
 

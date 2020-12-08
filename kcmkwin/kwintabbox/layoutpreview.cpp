@@ -1,28 +1,16 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2009, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2009, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 // own
 #include "layoutpreview.h"
 #include "thumbnailitem.h"
 #include <QApplication>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QScreen>
@@ -30,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>
-#include <KMimeTypeTrader>
+#include <KApplicationTrader>
 
 namespace KWin
 {
@@ -126,15 +114,15 @@ ExampleClientModel::~ExampleClientModel()
 
 void ExampleClientModel::init()
 {
-    if (const auto s = KMimeTypeTrader::self()->preferredService(QStringLiteral("inode/directory"))) {
+    if (const auto s = KApplicationTrader::preferredService(QStringLiteral("inode/directory"))) {
         m_services << s;
         m_fileManager = s;
     }
-    if (const auto s = KMimeTypeTrader::self()->preferredService(QStringLiteral("text/html"))) {
+    if (const auto s = KApplicationTrader::preferredService(QStringLiteral("text/html"))) {
         m_services << s;
         m_browser = s;
     }
-    if (const auto s = KMimeTypeTrader::self()->preferredService(QStringLiteral("message/rfc822"))) {
+    if (const auto s = KApplicationTrader::preferredService(QStringLiteral("message/rfc822"))) {
         m_services << s;
         m_email = s;
     }
@@ -178,7 +166,7 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
 QString ExampleClientModel::longestCaption() const
 {
     QString caption;
-    for (const auto item : m_services) {
+    for (const auto &item : m_services) {
         const QString name = item->name();
         if (name.size() > caption.size()) {
             caption = name;

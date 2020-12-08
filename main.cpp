@@ -1,26 +1,14 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "main.h"
-#include <config-kwin.h>
 // kwin
 #include "platform.h"
 #include "atoms.h"
@@ -29,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "logind.h"
 #include "options.h"
+#include "pluginmanager.h"
 #include "screens.h"
 #include "screenlockerwatcher.h"
 #include "sm.h"
@@ -41,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KAboutData>
 #include <KLocalizedString>
 #include <KPluginMetaData>
-#include <KSharedConfig>
 #include <KWaylandServer/surface_interface.h>
 // Qt
 #include <qplatformdefs.h>
@@ -106,7 +94,6 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_configLock(false)
     , m_config()
     , m_kxkbConfig()
-    , m_inputConfig()
     , m_operationMode(mode)
 {
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
@@ -150,9 +137,6 @@ void Application::start()
     if (!m_kxkbConfig) {
         m_kxkbConfig = KSharedConfig::openConfig(QStringLiteral("kxkbrc"), KConfig::NoGlobals);
     }
-    if (!m_inputConfig) {
-        m_inputConfig = KSharedConfig::openConfig(QStringLiteral("kcminputrc"), KConfig::NoGlobals);
-    }
 
     performStartup();
 }
@@ -162,6 +146,11 @@ Application::~Application()
     delete options;
     destroyAtoms();
     destroyPlatform();
+}
+
+void Application::notifyStarted()
+{
+    emit started();
 }
 
 void Application::destroyAtoms()
@@ -308,9 +297,19 @@ void Application::createOptions()
     options = new Options;
 }
 
-void Application::setupEventFilters()
+void Application::createPlugins()
+{
+    PluginManager::create(this);
+}
+
+void Application::installNativeX11EventFilter()
 {
     installNativeEventFilter(m_eventFilter.data());
+}
+
+void Application::removeNativeX11EventFilter()
+{
+    removeNativeEventFilter(m_eventFilter.data());
 }
 
 void Application::destroyWorkspace()
@@ -321,6 +320,11 @@ void Application::destroyWorkspace()
 void Application::destroyCompositor()
 {
     delete Compositor::self();
+}
+
+void Application::destroyPlugins()
+{
+    delete PluginManager::self();
 }
 
 void Application::updateX11Time(xcb_generic_event_t *event)

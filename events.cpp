@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 /*
 
@@ -176,18 +165,34 @@ QVector<QByteArray> s_xcbEerrors({
 
 void Workspace::registerEventFilter(X11EventFilter *filter)
 {
-    if (filter->isGenericEvent())
-        m_genericEventFilters.append(filter);
-    else
-        m_eventFilters.append(filter);
+    if (filter->isGenericEvent()) {
+        m_genericEventFilters.append(new X11EventFilterContainer(filter));
+    } else {
+        m_eventFilters.append(new X11EventFilterContainer(filter));
+    }
+}
+
+static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
+                                                QList<QPointer<X11EventFilterContainer>> &list)
+{
+    for (int i = 0; i < list.count(); ++i) {
+        X11EventFilterContainer *container = list.at(i);
+        if (container->filter() == eventFilter) {
+            return list.takeAt(i);
+        }
+    }
+    return nullptr;
 }
 
 void Workspace::unregisterEventFilter(X11EventFilter *filter)
 {
-    if (filter->isGenericEvent())
-        m_genericEventFilters.removeOne(filter);
-    else
-        m_eventFilters.removeOne(filter);
+    X11EventFilterContainer *container = nullptr;
+    if (filter->isGenericEvent()) {
+        container = takeEventFilter(filter, m_genericEventFilters);
+    } else {
+        container = takeEventFilter(filter, m_eventFilters);
+    }
+    delete container;
 }
 
 
@@ -230,13 +235,29 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     if (eventType == XCB_GE_GENERIC) {
         xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(e);
 
-        foreach (X11EventFilter *filter, m_genericEventFilters) {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_genericEventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
             if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(e)) {
                 return true;
             }
         }
     } else {
-        foreach (X11EventFilter *filter, m_eventFilters) {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_eventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
             if (filter->eventTypes().contains(eventType) && filter->event(e)) {
                 return true;
             }
@@ -329,7 +350,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (c == nullptr)
                 c = createUnmanaged(event->window);
             if (c) {
-                // if hasScheduledRelease is true, it means a unamp and map sequence has occurred. 
+                // if hasScheduledRelease is true, it means a unamp and map sequence has occurred.
                 // since release is scheduled after map notify, this old Unmanaged will get released
                 // before KWIN has chance to remanage it again. so release it right now.
                 if (c->hasScheduledRelease()) {
@@ -768,6 +789,9 @@ void X11Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 
 void X11Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
 {
+    if (waylandServer()) {
+        return;
+    }
     if (e->event != frameId())
         return; // care only about entering the whole frame
 
@@ -783,6 +807,9 @@ void X11Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
 
 void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
 {
+    if (waylandServer()) {
+        return;
+    }
     if (e->event != frameId())
         return; // care only about leaving the whole frame
     if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
@@ -820,11 +847,31 @@ void X11Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
     }
 }
 
+static uint16_t x11CommandAllModifier()
+{
+    switch (options->commandAllModifier()) {
+    case Qt::MetaModifier:
+        return KKeyServer::modXMeta();
+    case Qt::AltModifier:
+        return KKeyServer::modXAlt();
+    default:
+        return 0;
+    }
+}
+
 #define XCapL KKeyServer::modXLock()
 #define XNumL KKeyServer::modXNumLock()
 #define XScrL KKeyServer::modXScrollLock()
-void X11Client::grabButton(int modifier)
+void X11Client::establishCommandWindowGrab(uint8_t button)
 {
+    // Unfortunately there are a lot of possible modifier combinations that we need to take into
+    // account. We tackle that problem in a kind of smart way. First, we grab the button with all
+    // possible modifiers, then we ungrab the ones that are relevant only to commandAllx().
+
+    m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, XCB_MOD_MASK_ANY, button);
+
+    uint16_t x11Modifier = x11CommandAllModifier();
+
     unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
@@ -833,11 +880,13 @@ void X11Client::grabButton(int modifier)
     for (int i = 0;
             i < 8;
             ++i)
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, modifier | mods[ i ]);
+        m_wrapper.ungrabButton(x11Modifier | mods[ i ], button);
 }
 
-void X11Client::ungrabButton(int modifier)
+void X11Client::establishCommandAllGrab(uint8_t button)
 {
+    uint16_t x11Modifier = x11CommandAllModifier();
+
     unsigned int mods[ 8 ] = {
         0, XCapL, XNumL, XNumL | XCapL,
         XScrL, XScrL | XCapL,
@@ -846,47 +895,67 @@ void X11Client::ungrabButton(int modifier)
     for (int i = 0;
             i < 8;
             ++i)
-        m_wrapper.ungrabButton(modifier | mods[ i ]);
+        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, x11Modifier | mods[ i ], button);
 }
 #undef XCapL
 #undef XNumL
 #undef XScrL
 
-/**
- * Releases the passive grab for some modifier combinations when a
- * window becomes active. This helps broken X programs that
- * missinterpret LeaveNotify events in grab mode to work properly
- * (Motif, AWT, Tk, ...)
- */
 void X11Client::updateMouseGrab()
 {
-    if (workspace()->globalShortcutsDisabled()) {
-        m_wrapper.ungrabButton();
-        // keep grab for the simple click without modifiers if needed (see below)
-        bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
-        if (!(!options->isClickRaise() || not_obscured))
-            grabButton(XCB_NONE);
+    if (waylandServer()) {
         return;
     }
-    if (isActive() && !TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
-        // first grab all modifier combinations
+
+    xcb_ungrab_button(connection(), XCB_BUTTON_INDEX_ANY, m_wrapper, XCB_MOD_MASK_ANY);
+
+    if (TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
         m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
-        // remove the grab for no modifiers only if the window
-        // is unobscured or if the user doesn't want click raise
-        // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
-        // the most recently raised window)
-        bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
-        if (!options->isClickRaise() || not_obscured)
-            ungrabButton(XCB_NONE);
-        else
-            grabButton(XCB_NONE);
-        ungrabButton(XCB_MOD_MASK_SHIFT);
-        ungrabButton(XCB_MOD_MASK_CONTROL);
-        ungrabButton(XCB_MOD_MASK_CONTROL | XCB_MOD_MASK_SHIFT);
-    } else {
-        m_wrapper.ungrabButton();
-        // simply grab all modifier combinations
-        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
+        return;
+    }
+
+    // When a passive grab is activated or deactivated, the X server will generate crossing
+    // events as if the pointer were suddenly to warp from its current position to some position
+    // in the grab window. Some /broken/ X11 clients do get confused by such EnterNotify and
+    // LeaveNotify events so we release the passive grab for the active window.
+    //
+    // The passive grab below is established so the window can be raised or activated when it
+    // is clicked.
+    if ((options->focusPolicyIsReasonable() && !isActive()) ||
+            (options->isClickRaise() && !isMostRecentlyRaised())) {
+        if (options->commandWindow1() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_1);
+        }
+        if (options->commandWindow2() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_2);
+        }
+        if (options->commandWindow3() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_3);
+        }
+        if (options->commandWindowWheel() != Options::MouseNothing) {
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_4);
+            establishCommandWindowGrab(XCB_BUTTON_INDEX_5);
+        }
+    }
+
+    // We want to grab <command modifier> + buttons no matter what state the window is in. The
+    // client will receive funky EnterNotify and LeaveNotify events, but there is nothing that
+    // we can do about it, unfortunately.
+
+    if (!workspace()->globalShortcutsDisabled()) {
+        if (options->commandAll1() != Options::MouseNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_1);
+        }
+        if (options->commandAll2() != Options::MouseNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_2);
+        }
+        if (options->commandAll3() != Options::MouseNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_3);
+        }
+        if (options->commandAllWheel() != Options::MouseWheelNothing) {
+            establishCommandAllGrab(XCB_BUTTON_INDEX_4);
+            establishCommandAllGrab(XCB_BUTTON_INDEX_5);
+        }
     }
 }
 
@@ -900,6 +969,9 @@ static bool modKeyDown(int state) {
 // return value matters only when filtering events before decoration gets them
 bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time)
 {
+    if (waylandServer()) {
+        return true;
+    }
     if (isMoveResizePointerButtonDown()) {
         if (w == wrapperId())
             xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
@@ -1013,6 +1085,9 @@ bool X11Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
 // return value matters only when filtering events before decoration gets them
 bool X11Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
 {
+    if (waylandServer()) {
+        return true;
+    }
     if (w == frameId() && isDecorated()) {
         // wheel handled on buttonPress
         if (button < 4 || button > 7) {
@@ -1059,6 +1134,9 @@ bool X11Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
 // return value matters only when filtering events before decoration gets them
 bool X11Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
 {
+    if (waylandServer()) {
+        return true;
+    }
     if (w == frameId() && isDecorated() && !isMinimized()) {
         // TODO Mouse move event dependent on state
         QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
@@ -1108,11 +1186,15 @@ void X11Client::focusInEvent(xcb_focus_in_event_t *e)
     // check if this client is in should_get_focus list or if activation is allowed
     bool activate =  workspace()->allowClientActivation(this, -1U, true);
     workspace()->gotFocusIn(this);   // remove from should_get_focus list
-    if (activate)
+    if (activate) {
         setActive(true);
-    else {
-        workspace()->restoreFocus();
-        demandAttention();
+    } else {
+        if (workspace()->restoreFocus()) {
+            demandAttention();
+        } else {
+            qCWarning(KWIN_CORE, "Failed to restore focus. Activating 0x%x", window());
+            setActive(true);
+        }
     }
 }
 
@@ -1259,7 +1341,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         // It's of course still possible that we miss the destroy in which case non-fatal
         // X errors are reported to the event loop and logged by Qt.
         m_scheduledRelease = true;
-        QTimer::singleShot(1, this, SLOT(release()));
+        QTimer::singleShot(1, this, [this]() { release(); });
         break;
     }
     case XCB_CONFIGURE_NOTIFY:
@@ -1294,6 +1376,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
     if (newgeom != m_frameGeometry) {
         addWorkspaceRepaint(visibleRect());  // damage old area
         QRect old = m_frameGeometry;
+        m_clientGeometry = newgeom;
         m_frameGeometry = newgeom;
         emit frameGeometryChanged(this, old); // update shadow region
         addRepaintFull();

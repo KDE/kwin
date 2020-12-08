@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "drm_backend.h"
 #include "drm_output.h"
 #include "drm_object_connector.h"
@@ -34,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #include <gbm.h>
+#include "gbm_dmabuf.h"
 #endif
 #if HAVE_EGL_STREAMS
 #include "egl_stream_backend.h"
@@ -54,8 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 // drm
 #include <xf86drm.h>
-#include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
+
+#include "drm_gpu.h"
+#include "egl_multi_backend.h"
 
 #ifndef DRM_CAP_CURSOR_WIDTH
 #define DRM_CAP_CURSOR_WIDTH 0x8
@@ -76,32 +68,19 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_udevMonitor(m_udev->monitor())
     , m_dpmsFilter()
 {
-#if HAVE_EGL_STREAMS
-    if (qEnvironmentVariableIsSet("KWIN_DRM_USE_EGL_STREAMS")) {
-        m_useEglStreams = true;
-    }
-#endif
     setSupportsGammaControl(true);
+    setPerScreenRenderingEnabled(true);
     supportsOutputChanges();
 }
 
 DrmBackend::~DrmBackend()
 {
-#if HAVE_GBM
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
-#endif
-    if (m_fd >= 0) {
+    if (m_gpus.size() > 0) {
         // wait for pageflips
         while (m_pageFlipsPending != 0) {
             QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
         }
-
-        qDeleteAll(m_planes);
-        qDeleteAll(m_crtcs);
-        qDeleteAll(m_connectors);
-        close(m_fd);
+        qDeleteAll(m_gpus);
     }
 }
 
@@ -121,6 +100,11 @@ void DrmBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
+    connect(logind, &LogindIntegration::prepareForSleep, this, [this] (bool active) {
+        if (!active) {
+            turnOutputsOn();
+        }
+    });
 }
 
 void DrmBackend::prepareShutdown()
@@ -194,15 +178,13 @@ void DrmBackend::reactivate()
     }
     m_active = true;
     if (!usesSoftwareCursor()) {
-        Cursor* cursor = Cursors::self()->mouse();
-        const QPoint cp = cursor->pos() - cursor->hotspot();
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
             // only relevant in atomic mode
             o->m_modesetRequested = true;
             o->m_crtc->blank();
             o->showCursor();
-            o->moveCursor(cursor, cp);
+            o->moveCursor();
         }
     }
     // restart compositor
@@ -253,71 +235,62 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
 void DrmBackend::openDrm()
 {
     connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this, &DrmBackend::activate);
-    UdevDevice::Ptr device = m_udev->primaryGpu();
-    if (!device) {
+    std::vector<UdevDevice::Ptr> devices = m_udev->listGPUs();
+    if (devices.size() == 0) {
         qCWarning(KWIN_DRM) << "Did not find a GPU";
         return;
     }
-    m_devNode = qEnvironmentVariableIsSet("KWIN_DRM_DEVICE_NODE") ? qgetenv("KWIN_DRM_DEVICE_NODE") : QByteArray(device->devNode());
-    int fd = LogindIntegration::self()->takeDevice(m_devNode.constData());
-    if (fd < 0) {
-        qCWarning(KWIN_DRM) << "failed to open drm device at" << m_devNode;
-        return;
-    }
-    m_fd = fd;
-    m_active = true;
-    QSocketNotifier *notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
-    connect(notifier, &QSocketNotifier::activated, this,
-        [this] {
-            if (!LogindIntegration::self()->isActiveSession()) {
-                return;
-            }
-            drmEventContext e;
-            memset(&e, 0, sizeof e);
-            e.version = KWIN_DRM_EVENT_CONTEXT_VERSION;
-            e.page_flip_handler = pageFlipHandler;
-            drmHandleEvent(m_fd, &e);
+
+    for (unsigned int gpu_index = 0; gpu_index < devices.size(); gpu_index++) {
+        auto device = std::move(devices.at(gpu_index));
+        auto devNode = QByteArray(device->devNode());
+        int fd = LogindIntegration::self()->takeDevice(devNode.constData());
+        if (fd < 0) {
+            qCWarning(KWIN_DRM) << "failed to open drm device at" << devNode;
+            return;
         }
-    );
-    m_drmId = device->sysNum();
+
+        // try to make a simple drm get resource call, if it fails it is not useful for us
+        drmModeRes *resources = drmModeGetResources(fd);
+        if (!resources) {
+            qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << devNode;
+            LogindIntegration::self()->releaseDevice(fd);
+            continue;
+        }
+        drmModeFreeResources(resources);
+
+        m_active = true;
+        QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+        connect(notifier, &QSocketNotifier::activated, this,
+            [fd] {
+                if (!LogindIntegration::self()->isActiveSession()) {
+                    return;
+                }
+                drmEventContext e;
+                memset(&e, 0, sizeof e);
+                e.version = KWIN_DRM_EVENT_CONTEXT_VERSION;
+                e.page_flip_handler = pageFlipHandler;
+                drmHandleEvent(fd, &e);
+            }
+        );
+        DrmGpu *gpu = new DrmGpu(this, devNode, fd, device->sysNum());
+        connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
+        connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+        if (gpu->useEglStreams()) {
+            // TODO this needs to be removed once EglStreamBackend supports multi-gpu operation
+            if (gpu_index == 0) {
+                m_gpus.append(gpu);
+                break;
+            }
+        } else {
+            m_gpus.append(gpu);
+        }
+    }
 
     // trying to activate Atomic Mode Setting (this means also Universal Planes)
     if (!qEnvironmentVariableIsSet("KWIN_DRM_NO_AMS")) {
-        if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
-            qCDebug(KWIN_DRM) << "Using Atomic Mode Setting.";
-            m_atomicModeSetting = true;
-
-            DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
-            if (!planeResources) {
-                qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode";
-                m_atomicModeSetting = false;
-            }
-
-            if (m_atomicModeSetting) {
-                qCDebug(KWIN_DRM) << "Number of planes:" << planeResources->count_planes;
-
-                // create the plane objects
-                for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
-                    DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
-                    DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
-                    if (p->atomicInit()) {
-                        m_planes << p;
-                        if (p->type() == DrmPlane::TypeIndex::Overlay) {
-                            m_overlayPlanes << p;
-                        }
-                    } else {
-                        delete p;
-                    }
-                }
-
-                if (m_planes.isEmpty()) {
-                    qCWarning(KWIN_DRM) << "Failed to create any plane. Falling back to legacy mode";
-                    m_atomicModeSetting = false;
-                }
-            }
-        } else {
-            qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode.";
-        }
+        for (auto gpu : m_gpus)
+            gpu->tryAMS();
     }
 
     initCursor();
@@ -340,7 +313,14 @@ void DrmBackend::openDrm()
                     if (!device) {
                         return;
                     }
-                    if (device->sysNum() != m_drmId) {
+                    bool drm = false;
+                    for (auto gpu : m_gpus) {
+                        if (gpu->drmId() == device->sysNum()) {
+                            drm = true;
+                            break;
+                        }
+                    }
+                    if (!drm) {
                         return;
                     }
                     if (device->hasProperty("HOTPLUG", "1")) {
@@ -356,173 +336,80 @@ void DrmBackend::openDrm()
     setReady(true);
 }
 
+void DrmBackend::addOutput(DrmOutput *o)
+{
+    m_outputs.append(o);
+    m_enabledOutputs.append(o);
+    emit o->gpu()->outputEnabled(o);
+    emit outputAdded(o);
+}
+
+void DrmBackend::removeOutput(DrmOutput *o)
+{
+    emit o->gpu()->outputDisabled(o);
+    m_outputs.removeOne(o);
+    m_enabledOutputs.removeOne(o);
+    emit outputRemoved(o);
+}
+
 bool DrmBackend::updateOutputs()
 {
-    if (m_fd < 0) {
+    if (m_gpus.size() == 0) {
         return false;
     }
-
-    DrmScopedPointer<drmModeRes> resources(drmModeGetResources(m_fd));
-    if (!resources) {
-        qCWarning(KWIN_DRM) << "drmModeGetResources failed";
-        return false;
+    const auto oldOutputs = m_outputs;
+    for (auto gpu : m_gpus) {
+        gpu->updateOutputs();
     }
 
-    auto oldConnectors = m_connectors;
-    for (int i = 0; i < resources->count_connectors; ++i) {
-        const uint32_t currentConnector = resources->connectors[i];
-        auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
-        if (it == m_connectors.constEnd()) {
-            auto c = new DrmConnector(currentConnector, m_fd);
-            if (m_atomicModeSetting && !c->atomicInit()) {
-                delete c;
-                continue;
-            }
-            m_connectors << c;
-        } else {
-            oldConnectors.removeOne(*it);
-        }
+    std::sort(m_outputs.begin(), m_outputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
+    if (oldOutputs != m_outputs) {
+        readOutputsConfiguration();
     }
-
-    auto oldCrtcs = m_crtcs;
-    for (int i = 0; i < resources->count_crtcs; ++i) {
-        const uint32_t currentCrtc = resources->crtcs[i];
-        auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc] (DrmCrtc *c) { return c->id() == currentCrtc; });
-        if (it == m_crtcs.constEnd()) {
-            auto c = new DrmCrtc(currentCrtc, this, i);
-            if (m_atomicModeSetting && !c->atomicInit()) {
-                delete c;
-                continue;
-            }
-            m_crtcs << c;
-        } else {
-            oldCrtcs.removeOne(*it);
-        }
-    }
-
-    for (auto c : qAsConst(oldConnectors)) {
-        m_connectors.removeOne(c);
-    }
-    for (auto c : qAsConst(oldCrtcs)) {
-        m_crtcs.removeOne(c);
-    }
-
-    QVector<DrmOutput*> connectedOutputs;
-    QVector<DrmConnector*> pendingConnectors;
-
-    // split up connected connectors in already or not yet assigned ones
-    for (DrmConnector *con : qAsConst(m_connectors)) {
-        if (!con->isConnected()) {
-            continue;
-        }
-
-        if (DrmOutput *o = findOutput(con->id())) {
-            connectedOutputs << o;
-        } else {
-            pendingConnectors << con;
-        }
-    }
-
-    // check for outputs which got removed
-    QVector<DrmOutput*> removedOutputs;
-    auto it = m_outputs.begin();
-    while (it != m_outputs.end()) {
-        if (connectedOutputs.contains(*it)) {
-            it++;
-            continue;
-        }
-        DrmOutput *removed = *it;
-        it = m_outputs.erase(it);
-        m_enabledOutputs.removeOne(removed);
-        emit outputRemoved(removed);
-        removedOutputs.append(removed);
-    }
-
-    // now check new connections
-    for (DrmConnector *con : qAsConst(pendingConnectors)) {
-        DrmScopedPointer<drmModeConnector> connector(drmModeGetConnector(m_fd, con->id()));
-        if (!connector) {
-            continue;
-        }
-        if (connector->count_modes == 0) {
-            continue;
-        }
-        bool outputDone = false;
-
-        QVector<uint32_t> encoders = con->encoders();
-        for (auto encId : qAsConst(encoders)) {
-            DrmScopedPointer<drmModeEncoder> encoder(drmModeGetEncoder(m_fd, encId));
-            if (!encoder) {
-                continue;
-            }
-            for (DrmCrtc *crtc : qAsConst(m_crtcs)) {
-                if (!(encoder->possible_crtcs & (1 << crtc->resIndex()))) {
-                        continue;
-                }
-
-                // check if crtc isn't used yet -- currently we don't allow multiple outputs on one crtc (cloned mode)
-                auto it = std::find_if(connectedOutputs.constBegin(), connectedOutputs.constEnd(),
-                    [crtc] (DrmOutput *o) {
-                        return o->m_crtc == crtc;
-                    }
-                );
-                if (it != connectedOutputs.constEnd()) {
-                    continue;
-                }
-
-                // we found a suitable encoder+crtc
-                // TODO: we could avoid these lib drm calls if we store all struct data in DrmCrtc and DrmConnector in the beginning
-                DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(m_fd, crtc->id()));
-                if (!modeCrtc) {
-                    continue;
-                }
-
-                DrmOutput *output = new DrmOutput(this);
-                con->setOutput(output);
-                output->m_conn = con;
-                crtc->setOutput(output);
-                output->m_crtc = crtc;
-
-                if (modeCrtc->mode_valid) {
-                    output->m_mode = modeCrtc->mode;
-                } else {
-                    output->m_mode = connector->modes[0];
-                }
-                qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name;
-
-                if (!output->init(connector.data())) {
-                    qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
-                    delete output;
-                    continue;
-                }
-                if (!output->initCursor(m_cursorSize)) {
-                    setSoftWareCursor(true);
-                }
-                qCDebug(KWIN_DRM) << "Found new output with uuid" << output->uuid();
-
-                connectedOutputs << output;
-                emit outputAdded(output);
-                outputDone = true;
-                break;
-            }
-            if (outputDone) {
-                break;
-            }
-        }
-    }
-    std::sort(connectedOutputs.begin(), connectedOutputs.end(), [] (DrmOutput *a, DrmOutput *b) { return a->m_conn->id() < b->m_conn->id(); });
-    m_outputs = connectedOutputs;
-    m_enabledOutputs = connectedOutputs;
-    readOutputsConfiguration();
     updateOutputsEnabled();
     if (!m_outputs.isEmpty()) {
         emit screensQueried();
     }
-
-    qDeleteAll(removedOutputs);
-    qDeleteAll(oldConnectors);
-    qDeleteAll(oldCrtcs);
     return true;
+}
+
+static QString transformToString(DrmOutput::Transform transform)
+{
+    switch (transform) {
+    case DrmOutput::Transform::Normal:
+        return QStringLiteral("normal");
+    case DrmOutput::Transform::Rotated90:
+        return QStringLiteral("rotate-90");
+    case DrmOutput::Transform::Rotated180:
+        return QStringLiteral("rotate-180");
+    case DrmOutput::Transform::Rotated270:
+        return QStringLiteral("rotate-270");
+    case DrmOutput::Transform::Flipped:
+        return QStringLiteral("flip");
+    case DrmOutput::Transform::Flipped90:
+        return QStringLiteral("flip-90");
+    case DrmOutput::Transform::Flipped180:
+        return QStringLiteral("flip-180");
+    case DrmOutput::Transform::Flipped270:
+        return QStringLiteral("flip-270");
+    default:
+        return QStringLiteral("normal");
+    }
+}
+
+static DrmOutput::Transform stringToTransform(const QString &text)
+{
+    static const QHash<QString, DrmOutput::Transform> stringToTransform {
+        { QStringLiteral("normal"),     DrmOutput::Transform::Normal },
+        { QStringLiteral("rotate-90"),  DrmOutput::Transform::Rotated90 },
+        { QStringLiteral("rotate-180"), DrmOutput::Transform::Rotated180 },
+        { QStringLiteral("rotate-270"), DrmOutput::Transform::Rotated270 },
+        { QStringLiteral("flip"),       DrmOutput::Transform::Flipped },
+        { QStringLiteral("flip-90"),    DrmOutput::Transform::Flipped90 },
+        { QStringLiteral("flip-180"),   DrmOutput::Transform::Flipped180 },
+        { QStringLiteral("flip-270"),   DrmOutput::Transform::Flipped270 }
+    };
+    return stringToTransform.value(text, DrmOutput::Transform::Normal);
 }
 
 void DrmBackend::readOutputsConfiguration()
@@ -542,6 +429,7 @@ void DrmBackend::readOutputsConfiguration()
         // TODO: add mode
         if (outputConfig.hasKey("Scale"))
             (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
+        (*it)->setTransform(stringToTransform(outputConfig.readEntry("Transform", "normal")));
         pos.setX(pos.x() + (*it)->geometry().width());
     }
 }
@@ -558,6 +446,7 @@ void DrmBackend::writeOutputsConfiguration()
         qCDebug(KWIN_DRM) << "Writing output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
         auto outputConfig = configGroup.group((*it)->uuid());
         outputConfig.writeEntry("Scale", (*it)->scale());
+        outputConfig.writeEntry("Transform", transformToString((*it)->transform()));
     }
 }
 
@@ -580,12 +469,12 @@ void DrmBackend::enableOutput(DrmOutput *output, bool enable)
     if (enable) {
         Q_ASSERT(!m_enabledOutputs.contains(output));
         m_enabledOutputs << output;
-        emit outputAdded(output);
+        emit output->gpu()->outputEnabled(output);
     } else {
         Q_ASSERT(m_enabledOutputs.contains(output));
         m_enabledOutputs.removeOne(output);
         Q_ASSERT(!m_enabledOutputs.contains(output));
-        emit outputRemoved(output);
+        emit output->gpu()->outputDisabled(output);
     }
     updateOutputsEnabled();
     checkOutputsAreOn();
@@ -606,7 +495,7 @@ DrmOutput *DrmBackend::findOutput(quint32 connector)
 bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
 {
     if (!buffer || buffer->bufferId() == 0) {
-        if (m_deleteBufferAfterPageFlip) {
+        if (output->gpu()->deleteBufferAfterPageFlip()) {
             delete buffer;
         }
         return false;
@@ -618,7 +507,7 @@ bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
             Compositor::self()->aboutToSwapBuffers();
         }
         return true;
-    } else if (m_deleteBufferAfterPageFlip) {
+    } else if (output->gpu()->deleteBufferAfterPageFlip()) {
         delete buffer;
     }
     return false;
@@ -630,92 +519,78 @@ void DrmBackend::initCursor()
 #if HAVE_EGL_STREAMS
     // Hardware cursors aren't currently supported with EGLStream backend,
     // possibly an NVIDIA driver bug
-    if (m_useEglStreams) {
-        setSoftWareCursor(true);
+    bool needsSoftwareCursor = false;
+    for (auto gpu : qAsConst(m_gpus)) {
+        if (gpu->useEglStreams()) {
+            needsSoftwareCursor = true;
+            break;
+        }
     }
+    setSoftwareCursorForced(needsSoftwareCursor);
 #endif
 
-    m_cursorEnabled = waylandServer()->seat()->hasPointer();
+    if (waylandServer()->seat()->hasPointer()) {
+        // The cursor is visible by default, do nothing.
+    } else {
+        hideCursor();
+    }
+
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged, this,
         [this] {
-            m_cursorEnabled = waylandServer()->seat()->hasPointer();
-            if (usesSoftwareCursor()) {
-                return;
-            }
-            for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-                if (m_cursorEnabled) {
-                    if (!(*it)->showCursor()) {
-                        setSoftWareCursor(true);
-                    }
-                } else {
-                    (*it)->hideCursor();
-                }
+            if (waylandServer()->seat()->hasPointer()) {
+                showCursor();
+            } else {
+                hideCursor();
             }
         }
     );
-    uint64_t capability = 0;
-    QSize cursorSize;
-    if (drmGetCap(m_fd, DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
-        cursorSize.setWidth(capability);
-    } else {
-        cursorSize.setWidth(64);
-    }
-    if (drmGetCap(m_fd, DRM_CAP_CURSOR_HEIGHT, &capability) == 0) {
-        cursorSize.setHeight(capability);
-    } else {
-        cursorSize.setHeight(64);
-    }
-    m_cursorSize = cursorSize;
     // now we have screens and can set cursors, so start tracking
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmBackend::updateCursor);
     connect(Cursors::self(), &Cursors::positionChanged, this, &DrmBackend::moveCursor);
 }
 
-void DrmBackend::setCursor()
-{
-    if (m_cursorEnabled) {
-        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-            if (!(*it)->showCursor()) {
-                setSoftWareCursor(true);
-            }
-        }
-    }
-
-    Cursors::self()->currentCursor()->markAsRendered();
-}
-
 void DrmBackend::updateCursor()
 {
-    if (usesSoftwareCursor()) {
-        return;
-    }
-    if (isCursorHidden()) {
+    if (isSoftwareCursorForced() || isCursorHidden()) {
         return;
     }
 
     auto cursor = Cursors::self()->currentCursor();
-    const QImage &cursorImage = cursor->image();
-    if (cursorImage.isNull()) {
+    if (cursor->image().isNull()) {
         doHideCursor();
         return;
     }
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->updateCursor();
+
+    bool success = true;
+
+    for (DrmOutput *output : qAsConst(m_outputs)) {
+        success = output->updateCursor();
+        if (!success) {
+            qCDebug(KWIN_DRM) << "Failed to update cursor on output" << output->name();
+            break;
+        }
+        success = output->showCursor();
+        if (!success) {
+            qCDebug(KWIN_DRM) << "Failed to show cursor on output" << output->name();
+            break;
+        }
+        output->moveCursor();
     }
 
-    setCursor();
-
-    moveCursor(cursor, cursor->pos());
+    setSoftwareCursor(!success);
 }
 
 void DrmBackend::doShowCursor()
 {
+    if (usesSoftwareCursor()) {
+        return;
+    }
     updateCursor();
 }
 
 void DrmBackend::doHideCursor()
 {
-    if (!m_cursorEnabled || usesSoftwareCursor()) {
+    if (usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
@@ -723,13 +598,23 @@ void DrmBackend::doHideCursor()
     }
 }
 
-void DrmBackend::moveCursor(Cursor *cursor, const QPoint &pos)
+void DrmBackend::doSetSoftwareCursor()
 {
-    if (!m_cursorEnabled || isCursorHidden() || usesSoftwareCursor()) {
+    if (isCursorHidden() || !usesSoftwareCursor()) {
         return;
     }
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        (*it)->moveCursor(cursor, pos);
+        (*it)->hideCursor();
+    }
+}
+
+void DrmBackend::moveCursor()
+{
+    if (isCursorHidden() || usesSoftwareCursor()) {
+        return;
+    }
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->moveCursor();
     }
 }
 
@@ -740,40 +625,33 @@ Screens *DrmBackend::createScreens(QObject *parent)
 
 QPainterBackend *DrmBackend::createQPainterBackend()
 {
-    m_deleteBufferAfterPageFlip = false;
-    return new DrmQPainterBackend(this);
+    m_gpus.at(0)->setDeleteBufferAfterPageFlip(false);
+    return new DrmQPainterBackend(this, m_gpus.at(0));
 }
 
 OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
 #if HAVE_EGL_STREAMS
-    if (m_useEglStreams) {
-        m_deleteBufferAfterPageFlip = false;
-        return new EglStreamBackend(this);
+    if (m_gpus.at(0)->useEglStreams()) {
+        auto backend = new EglStreamBackend(this, m_gpus.at(0));
+        AbstractEglBackend::setPrimaryBackend(backend);
+        return backend;
     }
 #endif
 
 #if HAVE_GBM
-    m_deleteBufferAfterPageFlip = true;
-    return new EglGbmBackend(this);
+    auto backend0 = new EglGbmBackend(this, m_gpus.at(0));
+    AbstractEglBackend::setPrimaryBackend(backend0);
+    EglMultiBackend *backend = new EglMultiBackend(backend0);
+    for (int i = 1; i < m_gpus.count(); i++) {
+        auto backendi = new EglGbmBackend(this, m_gpus.at(i));
+        backend->addBackend(backendi);
+    }
+    return backend;
 #else
     return Platform::createOpenGLBackend();
 #endif
 }
-
-DrmDumbBuffer *DrmBackend::createBuffer(const QSize &size)
-{
-    DrmDumbBuffer *b = new DrmDumbBuffer(m_fd, size);
-    return b;
-}
-
-#if HAVE_GBM
-DrmSurfaceBuffer *DrmBackend::createBuffer(const std::shared_ptr<GbmSurface> &surface)
-{
-    DrmSurfaceBuffer *b = new DrmSurfaceBuffer(m_fd, surface);
-    return b;
-}
-#endif
 
 void DrmBackend::updateOutputsEnabled()
 {
@@ -792,7 +670,7 @@ QVector<CompositingType> DrmBackend::supportedCompositors() const
 #if HAVE_GBM
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
 #elif HAVE_EGL_STREAMS
-    return m_useEglStreams ?
+    return m_gpus.at(0)->useEglStreams() ?
         QVector<CompositingType>{OpenGLCompositing, QPainterCompositing} :
         QVector<CompositingType>{QPainterCompositing};
 #else
@@ -807,11 +685,25 @@ QString DrmBackend::supportInformation() const
     s.nospace();
     s << "Name: " << "DRM" << Qt::endl;
     s << "Active: " << m_active << Qt::endl;
-    s << "Atomic Mode Setting: " << m_atomicModeSetting << Qt::endl;
+    for (int g = 0; g < m_gpus.size(); g++) {
+        s << "Atomic Mode Setting on GPU " << g << ": " << m_gpus.at(g)->atomicModeSetting() << Qt::endl;
+    }
 #if HAVE_EGL_STREAMS
-    s << "Using EGL Streams: " << m_useEglStreams << Qt::endl;
+    s << "Using EGL Streams: " << m_gpus.at(0)->useEglStreams() << Qt::endl;
 #endif
     return supportInfo;
+}
+
+DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)
+{
+#if HAVE_GBM
+    // as the first GPU is assumed to always be the one used for scene rendering
+    // make sure we're on the right context:
+    m_gpus.at(0)->eglBackend()->makeCurrent();
+    return GbmDmaBuf::createBuffer(size, m_gpus.at(0)->gbmDevice());
+#else
+    return nullptr;
+#endif
 }
 
 }

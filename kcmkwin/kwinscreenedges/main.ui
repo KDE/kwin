@@ -84,7 +84,7 @@
         <string>&amp;Tile:</string>
        </property>
        <property name="buddy">
-        <cstring>quickTileBox</cstring>
+        <cstring>kcfg_ElectricBorderTiling</cstring>
        </property>
       </widget>
      </item>

@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "keyboard_layout.h"
 #include "keyboard_layout_switching.h"
 #include "keyboard_input.h"
@@ -76,8 +65,10 @@ void KeyboardLayout::init()
 void KeyboardLayout::initDBusInterface()
 {
     if (m_xkb->numberOfLayouts() <= 1) {
-        delete m_dbusInterface;
-        m_dbusInterface = nullptr;
+        if (m_dbusInterface) {
+            m_dbusInterface->deleteLater();
+            m_dbusInterface = nullptr;
+        }
         return;
     }
     if (m_dbusInterface) {
@@ -86,7 +77,7 @@ void KeyboardLayout::initDBusInterface()
     m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, this);
     connect(this, &KeyboardLayout::layoutChanged, m_dbusInterface,
         [this] {
-            emit m_dbusInterface->currentLayoutChanged(m_xkb->layoutName());
+            emit m_dbusInterface->layoutChanged(m_xkb->layoutName());
         }
     );
     // TODO: the signal might be emitted even if the list didn't change
@@ -118,11 +109,11 @@ void KeyboardLayout::initNotifierItem()
     m_notifierItem->setStatus(KStatusNotifierItem::Passive);
     m_notifierItem->setToolTipTitle(i18nc("tooltip title", "Keyboard Layout"));
     m_notifierItem->setTitle(i18nc("tooltip title", "Keyboard Layout"));
-    m_notifierItem->setToolTipIconByName(QStringLiteral("preferences-desktop-keyboard"));
+    m_notifierItem->setToolTipIconByName(QStringLiteral("input-keyboard"));
     m_notifierItem->setStandardActionsEnabled(false);
 
     // TODO: proper icon
-    m_notifierItem->setIconByName(QStringLiteral("preferences-desktop-keyboard"));
+    m_notifierItem->setIconByName(QStringLiteral("input-keyboard"));
 
     connect(m_notifierItem, &KStatusNotifierItem::activateRequested, this, &KeyboardLayout::switchToNextLayout);
     connect(m_notifierItem, &KStatusNotifierItem::scrollRequested, this,
@@ -141,33 +132,39 @@ void KeyboardLayout::initNotifierItem()
 
 void KeyboardLayout::switchToNextLayout()
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToNextLayout();
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::switchToPreviousLayout()
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToPreviousLayout();
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
 {
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(index);
-    checkLayoutChange();
+    checkLayoutChange(previousLayout);
 }
 
 void KeyboardLayout::reconfigure()
 {
     if (m_config) {
         m_config->reparseConfiguration();
-        const QString policyKey = m_config->group(QStringLiteral("Layout")).readEntry("SwitchMode", QStringLiteral("Global"));
+        const KConfigGroup layoutGroup = m_config->group("Layout");
+        const QString policyKey = layoutGroup.readEntry("SwitchMode", QStringLiteral("Global"));
+        m_xkb->reconfigure();
         if (!m_policy || m_policy->name() != policyKey) {
             delete m_policy;
-            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, policyKey);
+            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, layoutGroup, policyKey);
         }
+    } else {
+        m_xkb->reconfigure();
     }
-    m_xkb->reconfigure();
     resetLayout();
 }
 
@@ -178,9 +175,9 @@ void KeyboardLayout::resetLayout()
     updateNotifier();
     reinitNotifierMenu();
     loadShortcuts();
-    emit layoutsReconfigured();
 
     initDBusInterface();
+    emit layoutsReconfigured();
 }
 
 void KeyboardLayout::loadShortcuts()
@@ -206,23 +203,19 @@ void KeyboardLayout::loadShortcuts()
     }
 }
 
-void KeyboardLayout::keyEvent(KeyEvent *event)
+void KeyboardLayout::checkLayoutChange(quint32 previousLayout)
 {
-    if (!event->isAutoRepeat()) {
-        checkLayoutChange();
-    }
-}
-
-void KeyboardLayout::checkLayoutChange()
-{
+    // Get here on key event or DBus call.
+    // m_layout - layout saved last time OSD occurred
+    // previousLayout - actual layout just before potential layout change
+    // We need OSD if current layout deviates from any of these
     const auto layout = m_xkb->currentLayout();
-    if (m_layout == layout) {
-        return;
+    if (m_layout != layout || previousLayout != layout) {
+        m_layout = layout;
+        notifyLayoutChange();
+        updateNotifier();
+        emit layoutChanged();
     }
-    m_layout = layout;
-    notifyLayoutChange();
-    updateNotifier();
-    emit layoutChanged();
 }
 
 void KeyboardLayout::notifyLayoutChange()
@@ -298,6 +291,16 @@ KeyboardLayoutDBusInterface::~KeyboardLayoutDBusInterface()
     QDBusConnection::sessionBus().unregisterService(s_keyboardService);
 }
 
+void KeyboardLayoutDBusInterface::switchToNextLayout()
+{
+    m_keyboardLayout->switchToNextLayout();
+}
+
+void KeyboardLayoutDBusInterface::switchToPreviousLayout()
+{
+    m_keyboardLayout->switchToPreviousLayout();
+}
+
 bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
 {
     const auto layouts = m_xkb->layoutNames();
@@ -310,17 +313,28 @@ bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
     if (it == layouts.end()) {
         return false;
     }
+    const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(it.key());
-    m_keyboardLayout->checkLayoutChange();
+    m_keyboardLayout->checkLayoutChange(previousLayout);
     return true;
 }
 
-QString KeyboardLayoutDBusInterface::getCurrentLayout()
+QString KeyboardLayoutDBusInterface::getLayout() const
 {
     return m_xkb->layoutName();
 }
 
-QStringList KeyboardLayoutDBusInterface::getLayoutsList()
+QString KeyboardLayoutDBusInterface::getLayoutDisplayName() const
+{
+    return m_xkb->layoutShortName();
+}
+
+QString KeyboardLayoutDBusInterface::getLayoutLongName() const
+{
+    return translatedLayout(m_xkb->layoutName());
+}
+
+QStringList KeyboardLayoutDBusInterface::getLayoutsList() const
 {
     const auto layouts = m_xkb->layoutNames();
     QStringList ret;
@@ -328,11 +342,6 @@ QStringList KeyboardLayoutDBusInterface::getLayoutsList()
         ret << it.value();
     }
     return ret;
-}
-
-QString KeyboardLayoutDBusInterface::getLayoutDisplayName(const QString &layout)
-{
-    return translatedLayout(layout);
 }
 
 }

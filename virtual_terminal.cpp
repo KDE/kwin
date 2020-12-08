@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "virtual_terminal.h"
 // kwin
 #include "logind.h"
@@ -26,16 +15,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QSocketNotifier>
 // linux
+#ifdef Q_OS_LINUX
 #include <linux/major.h>
 #include <linux/kd.h>
 #include <linux/vt.h>
+#include <sys/sysmacros.h>
+#endif
+#ifdef Q_OS_FREEBSD
+#include <sys/consio.h>
+#endif
 // system
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/signalfd.h>
 #include <sys/stat.h>
-#include <sys/sysmacros.h>
 // c++
 #include <csignal>
 
@@ -81,9 +75,14 @@ static bool isTty(int fd)
     if (fstat(fd, &st) == -1) {
         return false;
     }
+#ifdef Q_OS_LINUX
+    // Not a TTY device or weird vt number, skip it
     if (major(st.st_rdev) != TTY_MAJOR || minor (st.st_rdev) <= 0 || minor(st.st_rdev) >= 64) {
         return false;
     }
+#endif
+    // FreeBSD doesn't have a notion of major device number, so nothing
+    //   to check. isatty() might not do the trick.
     return true;
 }
 
@@ -96,7 +95,7 @@ void VirtualTerminal::setup(int vtNr)
         // error condition
         return;
     }
-    QString ttyName = QStringLiteral("/dev/tty%1").arg(vtNr);
+    QString ttyName = QStringLiteral(KWIN_TTY_PREFIX "%1").arg(vtNr);
 
     m_vt = open(ttyName.toUtf8().constData(), O_RDWR|O_CLOEXEC|O_NONBLOCK);
     if (m_vt < 0) {

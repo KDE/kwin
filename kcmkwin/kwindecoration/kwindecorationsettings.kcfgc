@@ -1,7 +1,7 @@
-File=kwindecorationsettings.kcfgc
+File=kwindecorationsettings.kcfg
 ClassName=KWinDecorationSettings
 Mutators=true
 DefaultValueGetters=true
 GenerateProperties=true
 ParentInConstructor=true
-Notifiers=buttonsOnLeft,buttonsOnRight
+Notifiers=buttonsOnLeft,buttonsOnRight,theme

@@ -1,26 +1,11 @@
 /*
- * Copyright (c) 2004 Lubos Lunak <l.lunak@kde.org>
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2004 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 #include "rulesmodel.h"
-#include <rules.h>
 
 #include <QFileInfo>
 #include <QIcon>
@@ -71,6 +56,7 @@ QHash< int, QByteArray > RulesModel::roleNames() const
         {PolicyRole,         QByteArrayLiteral("policy")},
         {PolicyModelRole,    QByteArrayLiteral("policyModel")},
         {OptionsModelRole,   QByteArrayLiteral("options")},
+        {OptionsMaskRole,    QByteArrayLiteral("optionsMask")},
         {SuggestedValueRole, QByteArrayLiteral("suggested")},
     };
 }
@@ -107,7 +93,7 @@ QVariant RulesModel::data(const QModelIndex &index, int role) const
     case EnabledRole:
         return rule->isEnabled();
     case SelectableRole:
-        return !rule->hasFlag(RuleItem::AlwaysEnabled);
+        return !rule->hasFlag(RuleItem::AlwaysEnabled) && !rule->hasFlag(RuleItem::SuggestionOnly);
     case ValueRole:
         return rule->value();
     case TypeRole:
@@ -118,6 +104,8 @@ QVariant RulesModel::data(const QModelIndex &index, int role) const
         return rule->policyModel();
     case OptionsModelRole:
         return rule->options();
+    case OptionsMaskRole:
+        return rule->optionsMask();
     case SuggestedValueRole:
         return rule->suggestedValue();
     }
@@ -140,6 +128,9 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
         rule->setEnabled(value.toBool());
         break;
     case ValueRole:
+        if (rule->hasFlag(RuleItem::SuggestionOnly)) {
+            processSuggestion(rule->key(), value);
+        }
         if (value == rule->value()) {
             return true;
         }
@@ -173,6 +164,15 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
     return true;
 }
 
+QModelIndex RulesModel::indexOf(const QString& key) const
+{
+    const QModelIndexList indexes = match(index(0), RulesModel::KeyRole, key, 1, Qt::MatchFixedString);
+    if (indexes.isEmpty()) {
+        return QModelIndex();
+    }
+    return indexes.at(0);
+}
+
 RuleItem *RulesModel::addRule(RuleItem *rule)
 {
     m_ruleList << rule;
@@ -203,7 +203,7 @@ QString RulesModel::description() const
 
 void RulesModel::setDescription(const QString &description)
 {
-    setData(index(0, 0), description, RulesModel::ValueRole);
+    setData(indexOf("description"), description, RulesModel::ValueRole);
 }
 
 QString RulesModel::defaultDescription() const
@@ -221,6 +221,14 @@ QString RulesModel::defaultDescription() const
     return i18n("New window settings");
 }
 
+void RulesModel::processSuggestion(const QString &key, const QVariant &value)
+{
+    if (key == QLatin1String("wmclasshelper")) {
+        setData(indexOf("wmclass"), value, RulesModel::ValueRole);
+        setData(indexOf("wmclasscomplete"), true, RulesModel::ValueRole);
+    }
+}
+
 QString RulesModel::warningMessage() const
 {
     if (wmclassWarning()) {
@@ -232,7 +240,6 @@ QString RulesModel::warningMessage() const
 
     return QString();
 }
-
 
 bool RulesModel::wmclassWarning() const
 {
@@ -291,7 +298,9 @@ void RulesModel::writeToSettings(RuleSettings *settings) const
         KConfigSkeletonItem *configItem = settings->findItem(rule->key());
         KConfigSkeletonItem *configPolicyItem = settings->findItem(rule->policyKey());
 
-        Q_ASSERT (configItem);
+        if (!configItem) {
+            continue;
+        }
 
         if (rule->isEnabled()) {
             configItem->setProperty(rule->value());
@@ -373,8 +382,15 @@ void RulesModel::populateRuleList()
                                                 QIcon::fromTheme("window")));
     wmclasscomplete->setFlag(RuleItem::AlwaysEnabled);
 
+    // Helper item to store the detected whole window class when detecting properties
+    auto wmclasshelper = addRule(new RuleItem(QLatin1String("wmclasshelper"),
+                                              RulePolicy::NoPolicy, RuleItem::String,
+                                              i18n("Whole window class"), i18n("Window matching"),
+                                              QIcon::fromTheme("window")));
+    wmclasshelper->setFlag(RuleItem::SuggestionOnly);
+
     auto types = addRule(new RuleItem(QLatin1String("types"),
-                                      RulePolicy::NoPolicy, RuleItem::FlagsOption,
+                                      RulePolicy::NoPolicy, RuleItem::NetTypes,
                                       i18n("Window types"), i18n("Window matching"),
                                       QIcon::fromTheme("window-duplicate")));
     types->setOptionsData(windowTypesModelData());
@@ -382,7 +398,7 @@ void RulesModel::populateRuleList()
     types->setFlag(RuleItem::AffectsWarning);
 
     addRule(new RuleItem(QLatin1String("windowrole"),
-                         RulePolicy::NoPolicy, RuleItem::String,
+                         RulePolicy::StringMatch, RuleItem::String,
                          i18n("Window role"), i18n("Window matching"),
                          QIcon::fromTheme("dialog-object-properties")));
 
@@ -625,11 +641,6 @@ void RulesModel::populateRuleList()
 const QHash<QString, QString> RulesModel::x11PropertyHash()
 {
     static const auto propertyToRule = QHash<QString, QString> {
-        /* The original detection dialog allows to choose depending on "Match complete window class":
-         *     if Match Complete == false: wmclass = "resourceClass"
-         *     if Match Complete == true:  wmclass = "resourceName" + " " + "resourceClass"
-         */
-        { "resourceName",       "wmclass"       },
         { "caption",            "title"         },
         { "role",               "windowrole"    },
         { "clientMachine",      "clientmachine" },
@@ -651,22 +662,29 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
     return propertyToRule;
 };
 
-void RulesModel::setWindowProperties(const QVariantMap &info, bool forceValue)
+void RulesModel::setSuggestedProperties(const QVariantMap &info)
 {
     // Properties that cannot be directly applied via x11PropertyHash
     const QPoint position = QPoint(info.value("x").toInt(), info.value("y").toInt());
     const QSize size = QSize(info.value("width").toInt(), info.value("height").toInt());
 
-    m_rules["position"]->setSuggestedValue(position, forceValue);
-    m_rules["size"]->setSuggestedValue(size, forceValue);
-    m_rules["minsize"]->setSuggestedValue(size, forceValue);
-    m_rules["maxsize"]->setSuggestedValue(size, forceValue);
+    m_rules["position"]->setSuggestedValue(position);
+    m_rules["size"]->setSuggestedValue(size);
+    m_rules["minsize"]->setSuggestedValue(size);
+    m_rules["maxsize"]->setSuggestedValue(size);
 
     NET::WindowType window_type = static_cast<NET::WindowType>(info.value("type", 0).toInt());
     if (window_type == NET::Unknown) {
         window_type = NET::Normal;
     }
-    m_rules["types"]->setSuggestedValue(1 << window_type, forceValue);
+    m_rules["types"]->setSuggestedValue(1 << window_type);
+
+    const QString wmsimpleclass = info.value("resourceClass").toString();
+    const QString wmcompleteclass = QStringLiteral("%1 %2").arg(info.value("resourceName").toString(),
+                                                                info.value("resourceClass").toString());
+
+    m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
+    m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
 
     const auto ruleForProperty = x11PropertyHash();
     for (QString &property : info.keys()) {
@@ -676,13 +694,10 @@ void RulesModel::setWindowProperties(const QVariantMap &info, bool forceValue)
         const QString ruleKey = ruleForProperty.value(property, QString());
         Q_ASSERT(hasRule(ruleKey));
 
-        m_rules[ruleKey]->setSuggestedValue(info.value(property), forceValue);
+        m_rules[ruleKey]->setSuggestedValue(info.value(property));
     }
 
     emit dataChanged(index(0), index(rowCount()-1), {RulesModel::SuggestedValueRole});
-    if (!forceValue) {
-        emit suggestionsChanged();
-    }
 }
 
 
@@ -794,9 +809,9 @@ QList<OptionsModel::Data> RulesModel::colorSchemesModelData() const
     return modelData;
 }
 
-void RulesModel::detectWindowProperties(int secs)
+void RulesModel::detectWindowProperties(int miliseconds)
 {
-    QTimer::singleShot(secs*1000, this, &RulesModel::selectX11Window);
+    QTimer::singleShot(miliseconds, this, &RulesModel::selectX11Window);
 }
 
 void RulesModel::selectX11Window()
@@ -814,10 +829,14 @@ void RulesModel::selectX11Window()
                 QDBusPendingReply<QVariantMap> reply = *self;
                 self->deleteLater();
                 if (!reply.isValid()) {
+                    if (reply.error().name() == QLatin1String("org.kde.KWin.Error.InvalidWindow")) {
+                        emit showErrorMessage(i18n("Could not detect window properties. The window is not managed by KWin."));
+                    }
                     return;
                 }
                 const QVariantMap windowInfo = reply.value();
-                setWindowProperties(windowInfo);
+                setSuggestedProperties(windowInfo);
+                emit showSuggestions();
             }
     );
 }

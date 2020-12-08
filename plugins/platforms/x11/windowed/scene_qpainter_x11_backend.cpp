@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "scene_qpainter_x11_backend.h"
 #include "x11windowed_backend.h"
 #include "screens.h"
@@ -50,12 +39,6 @@ void X11WindowedQPainterBackend::createOutputs()
         output->buffer.fill(Qt::black);
         m_outputs << output;
     }
-    m_needsFullRepaint = true;
-}
-
-QImage *X11WindowedQPainterBackend::buffer()
-{
-    return bufferForScreen(0);
 }
 
 QImage *X11WindowedQPainterBackend::bufferForScreen(int screen)
@@ -63,16 +46,19 @@ QImage *X11WindowedQPainterBackend::bufferForScreen(int screen)
     return &m_outputs.at(screen)->buffer;
 }
 
-bool X11WindowedQPainterBackend::needsFullRepaint() const
+bool X11WindowedQPainterBackend::needsFullRepaint(int screenId) const
 {
-    return m_needsFullRepaint;
+    const Output *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
+    return rendererOutput->needsFullRepaint;
 }
 
-void X11WindowedQPainterBackend::prepareRenderingFrame()
+void X11WindowedQPainterBackend::beginFrame(int screenId)
 {
+    Q_UNUSED(screenId)
 }
 
-void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
+void X11WindowedQPainterBackend::endFrame(int screenId, int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
@@ -82,23 +68,17 @@ void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
         m_gc = xcb_generate_id(c);
         xcb_create_gc(c, m_gc, window, 0, nullptr);
     }
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        // TODO: only update changes?
-        const QImage &buffer = (*it)->buffer;
-        xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, (*it)->window, m_gc,
-                        buffer.width(), buffer.height(), 0, 0, 0, 24,
-                        buffer.sizeInBytes(), buffer.constBits());
-    }
-}
 
-bool X11WindowedQPainterBackend::usesOverlayWindow() const
-{
-    return false;
-}
+    Output *rendererOutput = m_outputs.value(screenId);
+    Q_ASSERT(rendererOutput);
 
-bool X11WindowedQPainterBackend::perScreenRendering() const
-{
-    return true;
+    // TODO: only update changes?
+    const QImage &buffer = rendererOutput->buffer;
+    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, rendererOutput->window,
+                  m_gc, buffer.width(), buffer.height(), 0, 0, 0, 24,
+                  buffer.sizeInBytes(), buffer.constBits());
+
+    rendererOutput->needsFullRepaint = false;
 }
 
 }

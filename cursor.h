@@ -1,22 +1,11 @@
-    /********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+    /*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_CURSOR_H
 #define KWIN_CURSOR_H
 // kwin
@@ -25,6 +14,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QObject>
 #include <QPoint>
+// KF
+#include <KSharedConfig>
 // xcb
 #include <xcb/xcb.h>
 
@@ -139,7 +130,15 @@ public:
     /**
      * @return list of alternative names for the cursor with @p name
      */
-    QVector<QByteArray> cursorAlternativeNames(const QByteArray &name) const;
+    static QVector<QByteArray> cursorAlternativeNames(const QByteArray &name);
+    /**
+     * Returns the default Xcursor theme name.
+     */
+    static QString defaultThemeName();
+    /**
+     * Returns the default Xcursor theme size.
+     */
+    static int defaultThemeSize();
 
     /**
      * Returns the current cursor position. This method does an update of the mouse position if
@@ -164,6 +163,7 @@ public:
     QImage image() const { return m_image; }
     QPoint hotspot() const { return m_hotspot; }
     QRect geometry() const;
+    QRect rect() const;
 
     void updateCursor(const QImage &image, const QPoint &hotspot);
     void markAsRendered() {
@@ -285,7 +285,7 @@ public:
     Cursor* currentCursor() const {
         return m_currentCursor;
     }
-    
+
     static Cursors* self();
 
 Q_SIGNALS:
@@ -301,6 +301,24 @@ private:
     Cursor* m_currentCursor = nullptr;
     Cursor* m_mouse = nullptr;
     QVector<Cursor*> m_cursors;
+};
+
+class InputConfig
+{
+public:
+    KSharedConfigPtr inputConfig() const {
+        return m_inputConfig;
+    }
+    void setInputConfig(KSharedConfigPtr config) {
+        m_inputConfig = std::move(config);
+    }
+
+    static InputConfig *self();
+private:
+    InputConfig();
+
+    KSharedConfigPtr m_inputConfig;
+    static InputConfig *s_self;
 };
 
 inline const QPoint &Cursor::currentPos() const

@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 /*
 
@@ -36,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "cursor.h"
 #include "x11client.h"
-#include "colorcorrection/manager.h"
 #include "composite.h"
 #include "input.h"
 #include "workspace.h"
@@ -57,7 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <QCheckBox>
 #include <QtConcurrentRun>
-#include <QPointer>
 #include <QPushButton>
 
 #include <KGlobalAccel>
@@ -80,6 +67,7 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     : QObject(parent)
     , m_menu(nullptr)
     , m_desktopMenu(nullptr)
+    , m_multipleDesktopsMenu(nullptr)
     , m_screenMenu(nullptr)
     , m_activityMenu(nullptr)
     , m_scriptsMenu(nullptr)
@@ -93,6 +81,7 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_noBorderOperation(nullptr)
     , m_minimizeOperation(nullptr)
     , m_closeOperation(nullptr)
+    , m_shortcutOperation(nullptr)
 {
 }
 
@@ -200,7 +189,7 @@ void UserActionsMenu::helperDialog(const QString& message, AbstractClient* clien
         args << QStringLiteral("--dontagain") << QLatin1String("kwin_dialogsrc:") + type;
     }
     if (client)
-        args << QStringLiteral("--embed") << QString::number(client->windowId());
+        args << QStringLiteral("--embed") << QString::number(client->window());
     QtConcurrent::run([args]() {
         KProcess::startDetached(QStringLiteral("kdialog"), args);
     });
@@ -977,7 +966,6 @@ void Workspace::initShortcuts()
     TabBox::TabBox::self()->initShortcuts();
 #endif
     VirtualDesktopManager::self()->initShortcuts();
-    kwinApp()->platform()->colorCorrectManager()->initShortcuts();
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
@@ -1071,15 +1059,19 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
     case Options::MaximizeOp:
         c->maximize(c->maximizeMode() == MaximizeFull
                     ? MaximizeRestore : MaximizeFull);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::HMaximizeOp:
         c->maximize(c->maximizeMode() ^ MaximizeHorizontal);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::VMaximizeOp:
         c->maximize(c->maximizeMode() ^ MaximizeVertical);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::RestoreOp:
         c->maximize(MaximizeRestore);
+        takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::MinimizeOp:
         c->minimize();

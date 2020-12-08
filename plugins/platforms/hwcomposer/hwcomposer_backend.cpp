@@ -1,28 +1,16 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-3.0-or-later
+*/
 #include "egl_hwcomposer_backend.h"
 #include "hwcomposer_backend.h"
 #include "logging.h"
 #include "screens_hwcomposer.h"
 #include "composite.h"
-#include "input.h"
 #include "main.h"
 #include "wayland_server.h"
 // KWayland
@@ -152,12 +140,16 @@ HwcomposerBackend::HwcomposerBackend(QObject *parent)
                                               SLOT(screenBrightnessChanged(int)))) {
         qCWarning(KWIN_HWCOMPOSER) << "Failed to connect to brightness control";
     }
+    setPerScreenRenderingEnabled(false);
 }
 
 HwcomposerBackend::~HwcomposerBackend()
 {
     if (!m_outputBlank) {
         toggleBlankOutput();
+    }
+    if (sceneEglDisplay() != EGL_NO_DISPLAY) {
+        eglTerminate(sceneEglDisplay());
     }
 }
 
@@ -224,6 +216,8 @@ void HwcomposerBackend::init()
     if (m_output->refreshRate() != 0) {
         m_vsyncInterval = 1000000/m_output->refreshRate();
     }
+
+    emit outputAdded(m_output.data());
 
     if (m_lights) {
         using namespace KWaylandServer;

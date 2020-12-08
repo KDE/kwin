@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006-2007 Rivo Laks <rivolaks@hot.ee>
-Copyright (C) 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2006-2007 Rivo Laks <rivolaks@hot.ee>
+    SPDX-FileCopyrightText: 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "kwinglutils.h"
 
@@ -482,13 +471,7 @@ bool GLShader::setUniform(int location, const QVector4D &value)
 bool GLShader::setUniform(int location, const QMatrix4x4 &value)
 {
     if (location >= 0) {
-        GLfloat m[16];
-        const auto *data = value.constData();
-        // i is column, j is row for m
-        for (int i = 0; i < 16; ++i) {
-            m[i] = data[i];
-        }
-        glUniformMatrix4fv(location, 1, GL_FALSE, m);
+        glUniformMatrix4fv(location, 1, GL_FALSE, value.constData());
     }
     return (location >= 0);
 }

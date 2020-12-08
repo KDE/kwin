@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include <kwineffects.h>
 #include <QTest>
 
@@ -109,12 +98,12 @@ void WindowQuadListTest::testMakeGrid()
                 const KWin::WindowVertex &expectedVertex = expectedQuad[index];
                 if (actualVertex.x() != expectedVertex.x()) return false;
                 if (actualVertex.y() != expectedVertex.y()) return false;
-                if (actualVertex.u() != expectedVertex.u()) return false;
-                if (actualVertex.v() != expectedVertex.v()) return false;
+                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) return false;
+                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) return false;
                 if (actualVertex.originalX() != expectedVertex.originalX()) return false;
                 if (actualVertex.originalY() != expectedVertex.originalY()) return false;
-                if (actualVertex.textureX() != expectedVertex.textureX()) return false;
-                if (actualVertex.textureY() != expectedVertex.textureY()) return false;
+                if (!qFuzzyIsNull(actualVertex.textureX() - expectedVertex.textureX())) return false;
+                if (!qFuzzyIsNull(actualVertex.textureY() - expectedVertex.textureY())) return false;
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);
@@ -196,12 +185,12 @@ void WindowQuadListTest::testMakeRegularGrid()
                 const KWin::WindowVertex &expectedVertex = expectedQuad[index];
                 if (actualVertex.x() != expectedVertex.x()) return false;
                 if (actualVertex.y() != expectedVertex.y()) return false;
-                if (actualVertex.u() != expectedVertex.u()) return false;
-                if (actualVertex.v() != expectedVertex.v()) return false;
+                if (!qFuzzyIsNull(actualVertex.u() - expectedVertex.u())) return false;
+                if (!qFuzzyIsNull(actualVertex.v() - expectedVertex.v())) return false;
                 if (actualVertex.originalX() != expectedVertex.originalX()) return false;
                 if (actualVertex.originalY() != expectedVertex.originalY()) return false;
-                if (actualVertex.textureX() != expectedVertex.textureX()) return false;
-                if (actualVertex.textureY() != expectedVertex.textureY()) return false;
+                if (!qFuzzyIsNull(actualVertex.textureX() - expectedVertex.textureX())) return false;
+                if (!qFuzzyIsNull(actualVertex.textureY() - expectedVertex.textureY())) return false;
                 return true;
             };
             found = vertexTest(0) && vertexTest(1) && vertexTest(2) && vertexTest(3);

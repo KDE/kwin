@@ -2,13 +2,13 @@
 Icon=preferences-system-windows
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Exec=kcmshell5 kwinfocus
 X-DocPath=kcontrol/windowbehaviour/index.html#action-focus
 
 X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinfocus
 
 Name=Window Focus Behavior
+Name[az]=Pəncərə fokuslama davranışları
 Name[ca]=Comportament del focus de les finestres
 Name[cs]=Chování při zaměření na okno
 Name[da]=Opførsel af vinduesfokus
@@ -29,6 +29,7 @@ Name[nn]=Fokus­åtferd for vindauge
 Name[pl]=Zachowanie uaktywnienia okien
 Name[pt]=Comportamento do Foco da Janela
 Name[pt_BR]=Comportamento do foco da janela
+Name[ro]=Comportament focalizare ferestre
 Name[ru]=Фокус окон
 Name[sk]=Správanie zamerania okien
 Name[sl]=Obnašanje oken pri osredotočanju
@@ -39,6 +40,7 @@ Name[zh_CN]=窗口焦点行为
 Name[zh_TW]=視窗焦點行為
 
 Comment=Configure window activation policy
+Comment[az]=Pəncərə aktivliyi qaydalarını tənzimləmək
 Comment[ca]=Configura la política d'activació de les finestres
 Comment[cs]=Nastavení pravidel aktivování oken
 Comment[da]=Indstil vinduers aktiveringspolitik
@@ -59,6 +61,7 @@ Comment[nn]=Set opp praksisen for vindaugsaktivering
 Comment[pl]=Ustawienia uaktywniania okien
 Comment[pt]=Configurar a política de activação da janela
 Comment[pt_BR]=Configure a política de ativação de janela
+Comment[ro]=Configurează politica de activare a ferestrelor
 Comment[ru]=Настройка активации окон
 Comment[sk]=Nastavenie spôsobu aktivácie okien
 Comment[sl]=Nastavi politiko aktiviranja okna
@@ -69,8 +72,10 @@ Comment[zh_CN]=配置窗口激活策略
 Comment[zh_TW]=設定視窗啟用策略
 
 X-KDE-Keywords=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
+X-KDE-Keywords[az]=fokus,qaldırmaq,avtomatik qaldırma,klaviatura,CDE,bütün iş masaları,fokususn siçanı izləməsi,fokusun əngəllənməsi,fokus oğurlanması,fokus qaydaları,pəncərənin fokuslanması davranışları,pəncərə ekran davranışları
 X-KDE-Keywords[ca]=focus,elevació automàtica,elevació,elevació en clic,teclat,CDE,alt-tab,tots els escriptoris,focus segueix el ratolí,prevenció del focus,robatori del focus,política del focus,comportament del focus de la finestra,comportament en pantalla de la finestra
 X-KDE-Keywords[da]=fokus,autohæv,hæv,klikhæv,tastatur,CDE,alt-tab,alle skriveborde,fokus følger mus,fokusforhindring,stjæler fokus,fokuspolitik,opførsel for vinduesfokus
+X-KDE-Keywords[de]=Fokus,Aktivierung,Automatisch nach vorne,Auf Klick nach vorne,Tastatur,CDE,Alt-Tab,Alle Arbeitsflächen,Aktivierung bei Mauskontakt,Vorbeugung gegen unerwünschte Aktivierung,Aktivierungsregel,Aktivierungsverhalten des Fensters,Fensterverhalten
 X-KDE-Keywords[en_GB]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behaviour,window screen behaviour
 X-KDE-Keywords[es]=foco,auto levantar,levantar,clic para levantar,teclado,CDE,alt-tab,todo el escritorio,el foco sigue al ratón,prevención de foco,robo del foco,política del foco,comportamiento del foco de las ventanas,comportamiento de la pantalla de ventanas
 X-KDE-Keywords[et]=fookus,asetus,automaatne esiletoomine,klõpsuga esiletoomine,klaviatuur,CDE,alt-tab,kõik töölauad,fookus järgib hiirt,fookuse vältimine,fookuse röövimine,fookuse reegel,akna fookuse käitumine
@@ -78,6 +83,7 @@ X-KDE-Keywords[eu]=fokua,automatikoki igo,igo,egin klik igotzeko,teklatu,CDE,alt
 X-KDE-Keywords[fi]=kohdistus,sijoitus,automaattinen nosto,automaattinen nostaminen,nosta,nosta napsauttamalla,näppäimistö,alt-sarkain,kaikki työpöydät,kohdistus seuraa hiirtä,kohdistuksen esto,kohdistuksen varastaminen,kohdistustapa,ikkunoiden kohdistuksen toiminta,ikkunoiden näyttötoiminta
 X-KDE-Keywords[fr]=focus, agrandissement automatique, agrandissement, clic d'agrandissement, clavier, CDE, alt-tab, tous les bureaux, focus suivi par la souris, prise de focus, politique de focus, comportement du focus des fenêtres, comportement des fenêtres
 X-KDE-Keywords[gl]=foco,erguer automaticamente,erguer,erguer ao premer,teclado,CDE,alt-tab,todo o escritorio,foco que segue o rato,prevención do foco,roubar o foco,política de foco,comportamento de foco de xanela,comportamento de pantalla de xanela
+X-KDE-Keywords[ia]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
 X-KDE-Keywords[id]=fokus,auto naik,naikkan,klik naikkan,keyboard,papan ketik,CDE,alt-tab,semua desktop,fokus mengikuti mouse,pencegahan fokus,pencurian fokus,kebijakan fokus,perilaku fokus window,perilaku layar window
 X-KDE-Keywords[it]=fuoco,avanzamento automatico,avanzamento,avanzamento con clic,tastiera,CDE,alt-tab,tutti i desktop,il fuoco segue il mouse,impedisci il fuoco,mantieni il fuoco,regole fuoco,comportamento fuoco finestra, comportamento schermo finestra
 X-KDE-Keywords[ko]=focus,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior,초점,키보드,모든 데스크톱,초점,초점 훔치기,초점 훔치기 방지,초점 정책,창 초점 행동,창 화면 행동

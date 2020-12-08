@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2006 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2006 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "deleted.h"
 
@@ -25,7 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "group.h"
 #include "netinfo.h"
 #include "shadow.h"
-#include "xdgshellclient.h"
+#include "waylandclient.h"
 #include "decorations/decoratedclient.h"
 #include "decorations/decorationrenderer.h"
 
@@ -149,7 +138,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         });
     }
 
-    m_wasWaylandClient = qobject_cast<XdgShellClient *>(c) != nullptr;
+    m_wasWaylandClient = qobject_cast<WaylandClient *>(c) != nullptr;
     m_wasX11Client = qobject_cast<X11Client *>(c) != nullptr;
     m_wasPopupWindow = c->isPopupWindow();
     m_wasOutline = c->isOutline();
@@ -204,16 +193,6 @@ QVector<VirtualDesktop *> Deleted::desktops() const
 QPoint Deleted::clientPos() const
 {
     return contentsRect.topLeft();
-}
-
-QSize Deleted::clientSize() const
-{
-    return contentsRect.size();
-}
-
-void Deleted::debug(QDebug& stream) const
-{
-    stream << "\'ID:" << window() << "\' (deleted)";
 }
 
 void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const

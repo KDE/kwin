@@ -1,23 +1,12 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
-Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
+    SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 // This file is #included from within:
 // Workspace::initShortcuts()
@@ -135,16 +124,16 @@ for (int i = 1; i < 21; ++i) {
 }
 DEF(I18N_NOOP("Window to Next Desktop"),           0, slotWindowToNextDesktop);
 DEF(I18N_NOOP("Window to Previous Desktop"),       0, slotWindowToPreviousDesktop);
-DEF(I18N_NOOP("Window One Desktop to the Right"),  0, slotWindowToDesktopRight);
-DEF(I18N_NOOP("Window One Desktop to the Left"),   0, slotWindowToDesktopLeft);
-DEF(I18N_NOOP("Window One Desktop Up"),            0, slotWindowToDesktopUp);
-DEF(I18N_NOOP("Window One Desktop Down"),          0, slotWindowToDesktopDown);
+DEF(I18N_NOOP("Window One Desktop to the Right"),  Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Right, slotWindowToDesktopRight);
+DEF(I18N_NOOP("Window One Desktop to the Left"),   Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Left, slotWindowToDesktopLeft);
+DEF(I18N_NOOP("Window One Desktop Up"),            Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Up, slotWindowToDesktopUp);
+DEF(I18N_NOOP("Window One Desktop Down"),          Qt::META + Qt::CTRL + Qt::SHIFT + Qt::Key_Down, slotWindowToDesktopDown);
 
 for (int i = 0; i < 8; ++i) {
     DEF3(I18N_NOOP("Window to Screen %1"),         0, slotWindowToScreen, i);
 }
-DEF(I18N_NOOP("Window to Next Screen"),            0, slotWindowToNextScreen);
-DEF(I18N_NOOP("Window to Previous Screen"),        0, slotWindowToPrevScreen);
+DEF(I18N_NOOP("Window to Next Screen"),            Qt::META + Qt::SHIFT + Qt::Key_Right, slotWindowToNextScreen);
+DEF(I18N_NOOP("Window to Previous Screen"),        Qt::META + Qt::SHIFT + Qt::Key_Left, slotWindowToPrevScreen);
 DEF(I18N_NOOP("Show Desktop"),                     Qt::META + Qt::Key_D, slotToggleShowDesktop);
 
 for (int i = 0; i < 8; ++i) {

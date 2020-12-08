@@ -1,22 +1,8 @@
 /*
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 import QtQuick 2.14
 import QtQuick.Layouts 1.14
@@ -43,7 +29,7 @@ Loader {
             case RuleItem.String: return stringEditor
             case RuleItem.Integer: return integerEditor
             case RuleItem.Option: return optionEditor
-            case RuleItem.FlagsOption: return flagsEditor
+            case RuleItem.NetTypes: return netTypesEditor
             case RuleItem.Percentage: return percentageEditor
             case RuleItem.Point: return coordinateEditor
             case RuleItem.Size: return coordinateEditor
@@ -113,12 +99,13 @@ Loader {
     }
 
     Component {
-        id: flagsEditor
+        id: netTypesEditor
         OptionsComboBox {
             flat: true
             model: ruleOptions
             multipleChoice: true
-            selectionMask: ruleValue
+            // Filter the provided value with the options mask
+            selectionMask: ruleValue & optionsMask
             onActivated: {
                 valueEditor.valueEdited(selectionMask);
             }
@@ -155,18 +142,19 @@ Loader {
             id: coordItem
             spacing: Kirigami.Units.smallSpacing
 
-            readonly property var coord: (controlType == RuleItem.Size) ? Qt.size(coordX.value, coordY.value)
-                                                                        : Qt.point(coordX.value, coordY.value)
-            onCoordChanged: valueEditor.valueEdited(coord)
+            readonly property bool isSize: controlType == RuleItem.Size
+            readonly property var coord: (isSize) ? Qt.size(coordX.value, coordY.value)
+                                                  : Qt.point(coordX.value, coordY.value)
 
             QQC2.SpinBox {
                 id: coordX
                 editable: true
                 Layout.preferredWidth: 50   // 50%
                 Layout.fillWidth: true
-                from: 0
-                to: 4098
-                value: (controlType == RuleItem.Size) ? ruleValue.width : ruleValue.x
+                from: (isSize) ? 0 : -32767
+                to: 32767
+                value: (isSize) ? ruleValue.width : ruleValue.x
+                onValueModified: valueEditor.valueEdited(coord)
             }
             QQC2.Label {
                 id: coordSeparator
@@ -177,11 +165,12 @@ Loader {
             QQC2.SpinBox {
                 id: coordY
                 editable: true
-                from: 0
-                to: 4098
+                from: coordX.from
+                to: coordX.to
                 Layout.preferredWidth: 50   // 50%
                 Layout.fillWidth: true
-                value: (controlType == RuleItem.Size) ? ruleValue.height : ruleValue.y
+                value: (isSize) ? ruleValue.height : ruleValue.y
+                onValueModified: valueEditor.valueEdited(coord)
             }
         }
     }

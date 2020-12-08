@@ -1,25 +1,15 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013, 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013, 2016, 2017 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #ifndef KWIN_XKB_H
 #define KWIN_XKB_H
 #include "input.h"
+#include <xkbcommon/xkbcommon.h>
 
 #include <kwin_export.h>
 
@@ -101,6 +91,7 @@ public:
         return m_currentLayout;
     }
     QString layoutName() const;
+    const QString &layoutShortName() const;
     QMap<xkb_layout_index_t, QString> layoutNames() const;
     quint32 numberOfLayouts() const;
 
@@ -115,6 +106,7 @@ Q_SIGNALS:
     void ledsChanged(const LEDs &leds);
 
 private:
+    void applyEnvironmentRules(xkb_rule_names &);
     xkb_keymap *loadKeymapFromConfig();
     xkb_keymap *loadDefaultKeymap();
     void updateKeymap(xkb_keymap *keymap);
@@ -124,6 +116,7 @@ private:
     QString layoutName(xkb_layout_index_t layout) const;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
+    QStringList m_layoutList;
     xkb_state *m_state;
     xkb_mod_index_t m_shiftModifier;
     xkb_mod_index_t m_capsModifier;

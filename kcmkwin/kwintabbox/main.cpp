@@ -1,30 +1,18 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2020 Cyril Rossi <cyril.rossi@enioka.com>
+    SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Cyril Rossi <cyril.rossi@enioka.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "main.h"
 #include <effect_builtins.h>
 #include <kwin_effects_interface.h>
 
 // Qt
 #include <QtDBus>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -50,26 +38,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "kwintabboxconfigform.h"
 #include "layoutpreview.h"
+#include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"
 #include "kwinswitcheffectsettings.h"
 #include "kwinpluginssettings.h"
 
-K_PLUGIN_FACTORY(KWinTabBoxConfigFactory, registerPlugin<KWin::KWinTabBoxConfig>();)
+K_PLUGIN_FACTORY(KWinTabBoxConfigFactory, registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
 
 namespace KWin
 {
 
 using namespace TabBox;
 
-
 KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     : KCModule(parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
-    , m_tabBoxConfig(new TabBoxSettings(QStringLiteral("TabBox"), this))
-    , m_tabBoxAlternativeConfig(new TabBoxSettings(QStringLiteral("TabBoxAlternative"), this))
-    , m_coverSwitchConfig(new SwitchEffectSettings(QStringLiteral("Effect-CoverSwitch"), this))
-    , m_flipSwitchConfig(new SwitchEffectSettings(QStringLiteral("Effect-FlipSwitch"), this))
-    , m_pluginsConfig(new PluginsSettings(this))
+    , m_data(new KWinTabboxData(this))
 {
     QTabWidget* tabWidget = new QTabWidget(this);
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main, tabWidget);
@@ -78,7 +62,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
     QPushButton* ghnsButton = new QPushButton(QIcon::fromTheme(QStringLiteral("get-hot-new-stuff")), i18n("Get New Task Switchers..."));
-    connect(ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNS()));
+    connect(ghnsButton, &QAbstractButton::clicked, this, &KWinTabBoxConfig::slotGHNS);
 
     QHBoxLayout* buttonBar = new QHBoxLayout();
     QSpacerItem* buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -89,15 +73,16 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     KTitleWidget* infoLabel = new KTitleWidget(tabWidget);
     infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."),
                        KTitleWidget::InfoMessage);
-    infoLabel->setPixmap(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
+    infoLabel->setIcon(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
     layout->addWidget(infoLabel,0);
     layout->addWidget(tabWidget,1);
     layout->addLayout(buttonBar);
     setLayout(layout);
 
-    addConfig(m_tabBoxConfig, m_primaryTabBoxUi);
-    addConfig(m_tabBoxAlternativeConfig, m_alternativeTabBoxUi);
+    addConfig(m_data->tabBoxConfig(), m_primaryTabBoxUi);
+    addConfig(m_data->tabBoxAlternativeConfig(), m_alternativeTabBoxUi);
 
+    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     createConnections(m_primaryTabBoxUi);
     createConnections(m_alternativeTabBoxUi);
 
@@ -113,8 +98,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
         infoLabel->hide();
     }
 
-    setEnabledUi(m_primaryTabBoxUi, m_tabBoxConfig);
-    setEnabledUi(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    setEnabledUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    setEnabledUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 }
 
 KWinTabBoxConfig::~KWinTabBoxConfig()
@@ -231,29 +216,29 @@ void KWinTabBoxConfig::setEnabledUi(KWinTabBoxConfigForm *form, const TabBoxSett
 
 void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
 {
-    connect(form, SIGNAL(effectConfigButtonClicked()), this, SLOT(configureEffectClicked()));
+    connect(form, &KWinTabBoxConfigForm::effectConfigButtonClicked, this, &KWinTabBoxConfig::configureEffectClicked);
 
-    connect(form, SIGNAL(filterScreenChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(filterDesktopChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(filterActivitiesChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(filterMinimizationChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(applicationModeChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(showDesktopModeChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(switchingModeChanged(int)), this, SLOT(updateUnmanagedState()));
-    connect(form, SIGNAL(layoutNameChanged(QString)), this, SLOT(updateUnmanagedState()));
+    connect(form, &KWinTabBoxConfigForm::filterScreenChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::filterDesktopChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::filterActivitiesChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::filterMinimizationChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::applicationModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::showDesktopModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::switchingModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::layoutNameChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
 }
 
 void KWinTabBoxConfig::updateUnmanagedState()
 {
     bool isNeedSave = false;
-    isNeedSave |= updateUnmanagedIsNeedSave(m_primaryTabBoxUi, m_tabBoxConfig);
-    isNeedSave |= updateUnmanagedIsNeedSave(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    isNeedSave |= updateUnmanagedIsNeedSave(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    isNeedSave |= updateUnmanagedIsNeedSave(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     unmanagedWidgetChangeState(isNeedSave);
 
     bool isDefault = true;
-    isDefault &= updateUnmanagedIsDefault(m_primaryTabBoxUi, m_tabBoxConfig);
-    isDefault &= updateUnmanagedIsDefault(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    isDefault &= updateUnmanagedIsDefault(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    isDefault &= updateUnmanagedIsDefault(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     unmanagedWidgetDefaultState(isDefault);
 }
@@ -273,8 +258,18 @@ bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *for
     return isNeedSave;
 }
 
-bool KWinTabBoxConfig::updateUnmanagedIsDefault(const KWinTabBoxConfigForm *form, const TabBoxSettings *config)
+bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
 {
+    const bool visible = defaultsIndicatorsVisible();
+    form->setFilterScreenDefaultIndicatorVisible(visible && form->filterScreen() != config->defaultMultiScreenModeValue());
+    form->setFilterDesktopDefaultIndicatorVisible(visible && form->filterDesktop() != config->defaultDesktopModeValue());
+    form->setFilterActivitiesDefaultIndicatorVisible(visible && form->filterActivities() != config->defaultActivitiesModeValue());
+    form->setFilterMinimizationDefaultIndicatorVisible(visible && form->filterMinimization() != config->defaultMinimizedModeValue());
+    form->setApplicationModeDefaultIndicatorVisible(visible && form->applicationMode() != config->defaultApplicationsModeValue());
+    form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
+    form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
+    form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
+
     bool isDefault = true;
     isDefault &= form->filterScreen() == config->defaultMultiScreenModeValue();
     isDefault &= form->filterDesktop() == config->defaultDesktopModeValue();
@@ -292,30 +287,30 @@ void KWinTabBoxConfig::load()
 {
     KCModule::load();
 
-    m_tabBoxConfig->load();
-    m_tabBoxAlternativeConfig->load();
+    m_data->tabBoxConfig()->load();
+    m_data->tabBoxAlternativeConfig()->load();
 
-    updateUiFromConfig(m_primaryTabBoxUi, m_tabBoxConfig);
-    updateUiFromConfig(m_alternativeTabBoxUi , m_tabBoxAlternativeConfig);
+    updateUiFromConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateUiFromConfig(m_alternativeTabBoxUi , m_data->tabBoxAlternativeConfig());
 
-    m_coverSwitchConfig->load();
-    m_flipSwitchConfig->load();
+    m_data->coverSwitchConfig()->load();
+    m_data->flipSwitchConfig()->load();
 
-    m_pluginsConfig->load();
+    m_data->pluginsConfig()->load();
 
-    if (m_pluginsConfig->coverswitchEnabled()) {
-        if (m_coverSwitchConfig->tabBox()) {
+    if (m_data->pluginsConfig()->coverswitchEnabled()) {
+        if (m_data->coverSwitchConfig()->tabBox()) {
             m_primaryTabBoxUi->setLayoutName(m_coverSwitch);
         }
-        if (m_coverSwitchConfig->tabBoxAlternative()) {
+        if (m_data->coverSwitchConfig()->tabBoxAlternative()) {
             m_alternativeTabBoxUi->setLayoutName(m_coverSwitch);
         }
     }
-    if (m_pluginsConfig->flipswitchEnabled()) {
-        if (m_flipSwitchConfig->tabBox()) {
+    if (m_data->pluginsConfig()->flipswitchEnabled()) {
+        if (m_data->flipSwitchConfig()->tabBox()) {
             m_primaryTabBoxUi->setLayoutName(m_flipSwitch);
         }
-        if (m_flipSwitchConfig->tabBoxAlternative()) {
+        if (m_data->flipSwitchConfig()->tabBoxAlternative()) {
             m_alternativeTabBoxUi->setLayoutName(m_flipSwitch);
         }
     }
@@ -341,29 +336,29 @@ void KWinTabBoxConfig::save()
 
     // activate effects if not active
     if (coverSwitch || coverSwitchAlternative) {
-        m_pluginsConfig->setCoverswitchEnabled(true);
+        m_data->pluginsConfig()->setCoverswitchEnabled(true);
     }
     if (flipSwitch || flipSwitchAlternative) {
-        m_pluginsConfig->setFlipswitchEnabled(true);
+        m_data->pluginsConfig()->setFlipswitchEnabled(true);
     }
     if (highlightWindows) {
-        m_pluginsConfig->setHighlightwindowEnabled(true);
+        m_data->pluginsConfig()->setHighlightwindowEnabled(true);
     }
-    m_pluginsConfig->save();
+    m_data->pluginsConfig()->save();
 
-    m_coverSwitchConfig->setTabBox(coverSwitch);
-    m_coverSwitchConfig->setTabBoxAlternative(coverSwitchAlternative);
-    m_coverSwitchConfig->save();
+    m_data->coverSwitchConfig()->setTabBox(coverSwitch);
+    m_data->coverSwitchConfig()->setTabBoxAlternative(coverSwitchAlternative);
+    m_data->coverSwitchConfig()->save();
 
-    m_flipSwitchConfig->setTabBox(flipSwitch);
-    m_flipSwitchConfig->setTabBoxAlternative(flipSwitchAlternative);
-    m_flipSwitchConfig->save();
+    m_data->flipSwitchConfig()->setTabBox(flipSwitch);
+    m_data->flipSwitchConfig()->setTabBoxAlternative(flipSwitchAlternative);
+    m_data->flipSwitchConfig()->save();
 
-    updateConfigFromUi(m_primaryTabBoxUi, m_tabBoxConfig);
-    updateConfigFromUi(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    updateConfigFromUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateConfigFromUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
-    m_tabBoxConfig->save();
-    m_tabBoxAlternativeConfig->save();
+    m_data->tabBoxConfig()->save();
+    m_data->tabBoxAlternativeConfig()->save();
 
     KCModule::save();
     updateUnmanagedState();
@@ -381,11 +376,11 @@ void KWinTabBoxConfig::save()
 
 void KWinTabBoxConfig::defaults()
 {
-    m_coverSwitchConfig->setDefaults();
-    m_flipSwitchConfig->setDefaults();
+    m_data->coverSwitchConfig()->setDefaults();
+    m_data->flipSwitchConfig()->setDefaults();
 
-    updateUiFromDefaultConfig(m_primaryTabBoxUi, m_tabBoxConfig);
-    updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_tabBoxAlternativeConfig);
+    updateUiFromDefaultConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
+    updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     m_primaryTabBoxUi->resetShortcuts();
     m_alternativeTabBoxUi->resetShortcuts();
@@ -444,8 +439,8 @@ void KWinTabBoxConfig::configureEffectClicked()
         configDialog->setLayout(new QVBoxLayout);
         configDialog->setWindowTitle(form->effectComboCurrentData(Qt::DisplayRole).toString());
         QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
-        connect(buttonBox, SIGNAL(accepted()), configDialog, SLOT(accept()));
-        connect(buttonBox, SIGNAL(rejected()), configDialog, SLOT(reject()));
+        connect(buttonBox, &QDialogButtonBox::accepted, configDialog.data(), &QDialog::accept);
+        connect(buttonBox, &QDialogButtonBox::rejected, configDialog.data(), &QDialog::reject);
 
         const QString name = form->effectComboCurrentData().toString();
         KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kwin/effects/configs/"), QString(),

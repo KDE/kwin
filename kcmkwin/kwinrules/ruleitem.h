@@ -1,22 +1,8 @@
 /*
- * Copyright (c) 2020 Ismael Asensio <isma.af@gmail.com>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License or (at your option) version 3 or any later version
- * accepted by the membership of KDE e.V. (or its successor approved
- * by the membership of KDE e.V.), which shall act as a proxy
- * defined in Section 14 of version 3 of the license.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+    SPDX-FileCopyrightText: 2020 Ismael Asensio <isma.af@gmail.com>
+
+    SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+*/
 
 #ifndef KWIN_RULEITEM_H
 #define KWIN_RULEITEM_H
@@ -41,7 +27,7 @@ public:
         String,
         Integer,
         Option,
-        FlagsOption,
+        NetTypes,
         Percentage,
         Point,
         Size,
@@ -55,7 +41,8 @@ public:
         StartEnabled       = 1u << 1,
         AffectsWarning     = 1u << 2,
         AffectsDescription = 1u << 3,
-        AllFlags           = 0b1111
+        SuggestionOnly     = 1u << 4,
+        AllFlags           = 0b11111
     };
 
 public:
@@ -87,10 +74,11 @@ public:
     QVariant value() const;
     void setValue(QVariant value);
     QVariant suggestedValue() const;
-    void setSuggestedValue(QVariant value, bool forceValue = false);
+    void setSuggestedValue(QVariant value);
 
     QVariant options() const;
     void setOptionsData(const QList<OptionsModel::Data> &data);
+    uint optionsMask() const;
 
     RulePolicy::Type policyType() const;
     int policy() const;          // int belongs to anonymous enum in Rules::
@@ -98,12 +86,10 @@ public:
     QVariant policyModel() const;
     QString policyKey() const;
 
-
-
     void reset();
 
 private:
-    static QVariant typedValue(const QVariant &value, const Type type);
+    QVariant typedValue(const QVariant &value) const;
 
 private:
     QString m_key;
@@ -121,6 +107,7 @@ private:
 
     RulePolicy *m_policy;
     OptionsModel *m_options;
+    uint m_optionsMask;
 };
 
 }   //namespace

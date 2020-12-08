@@ -1,26 +1,14 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2013 Martin Gräßlin <mgraesslin@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "cursor.h"
 // kwin
-#include <kwinglobals.h>
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
@@ -30,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
-#include <KSharedConfig>
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QDBusConnection>
@@ -98,8 +85,8 @@ Cursor::Cursor(QObject *parent)
     : QObject(parent)
     , m_mousePollingCounter(0)
     , m_cursorTrackingCounter(0)
-    , m_themeName("default")
-    , m_themeSize(24)
+    , m_themeName(defaultThemeName())
+    , m_themeSize(defaultThemeSize())
 {
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
@@ -127,9 +114,9 @@ void Cursor::loadThemeSettings()
 
 void Cursor::loadThemeFromKConfig()
 {
-    KConfigGroup mousecfg(kwinApp()->inputConfig(), "Mouse");
-    const QString themeName = mousecfg.readEntry("cursorTheme", "default");
-    const uint themeSize = mousecfg.readEntry("cursorSize", 24);
+    KConfigGroup mousecfg(InputConfig::self()->inputConfig(), "Mouse");
+    const QString themeName = mousecfg.readEntry("cursorTheme", defaultThemeName());
+    const uint themeSize = mousecfg.readEntry("cursorSize", defaultThemeSize());
     updateTheme(themeName, themeSize);
 }
 
@@ -144,9 +131,10 @@ void Cursor::updateTheme(const QString &name, int size)
 
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
+// #endif
     Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
-        kwinApp()->inputConfig()->reparseConfiguration();
+        InputConfig::self()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();
         // sync to environment
         qputenv("XCURSOR_THEME", m_themeName.toUtf8());
@@ -156,7 +144,12 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 
 QRect Cursor::geometry() const
 {
-    return QRect(m_pos - hotspot(), image().size());
+    return rect().translated(m_pos - hotspot());
+}
+
+QRect Cursor::rect() const
+{
+    return QRect(QPoint(0, 0), image().size() / image().devicePixelRatio());
 }
 
 QPoint Cursor::pos()
@@ -277,7 +270,7 @@ void Cursor::doStopCursorTracking()
 {
 }
 
-QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
+QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
 {
     static const QHash<QByteArray, QVector<QByteArray>> alternatives = {
         {QByteArrayLiteral("left_ptr"),       {QByteArrayLiteral("arrow"),
@@ -409,6 +402,16 @@ QVector<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name) const
     return QVector<QByteArray>();
 }
 
+QString Cursor::defaultThemeName()
+{
+    return QStringLiteral("default");
+}
+
+int Cursor::defaultThemeSize()
+{
+    return 24;
+}
+
 QByteArray CursorShape::name() const
 {
     switch (m_shape) {
@@ -473,6 +476,18 @@ QByteArray CursorShape::name() const
     default:
         return QByteArray();
     }
+}
+
+InputConfig *InputConfig::s_self = nullptr;
+InputConfig *InputConfig::self() {
+    if (!s_self)
+        s_self = new InputConfig;
+    return s_self;
+}
+
+InputConfig::InputConfig()
+    : m_inputConfig(KSharedConfig::openConfig(QStringLiteral("kcminputrc"), KConfig::NoGlobals))
+{
 }
 
 } // namespace

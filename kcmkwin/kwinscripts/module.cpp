@@ -1,21 +1,9 @@
 /*
- * Copyright (c) 2011 Tamas Krutki <ktamasw@gmail.com>
- * Copyright (c) 2012 Martin Gräßlin <mgraesslin@kde.org>
- *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- */
+    SPDX-FileCopyrightText: 2011 Tamas Krutki <ktamasw@gmail.com>
+    SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 
 #include "module.h"
 #include "ui_module.h"
@@ -35,6 +23,7 @@
 #include <KPluginInfo>
 #include <KPackage/PackageLoader>
 #include <KPackage/Package>
+#include <KPackage/PackageStructure>
 
 #include <KNewStuff3/KNS3/Button>
 
@@ -61,6 +50,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     ui->ghnsButton->setConfigFile(QStringLiteral("kwinscripts.knsrc"));
     connect(ui->ghnsButton, &KNS3::Button::dialogFinished, this, [this](const KNS3::Entry::List &changedEntries) {
         if (!changedEntries.isEmpty()) {
+            ui->scriptSelector->clearPlugins();
             updateListViewContents();
         }
     });
@@ -68,6 +58,32 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     connect(ui->scriptSelector, &KPluginSelector::changed, this, qOverload<bool>(&KCModule::changed));
     connect(ui->scriptSelector, &KPluginSelector::defaulted, this, qOverload<bool>(&KCModule::defaulted));
     connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
+
+    ui->scriptSelector->setAdditionalButtonHandler([this](const KPluginInfo &info) {
+        QPushButton *button = new QPushButton(ui->scriptSelector);
+        button->setIcon(QIcon::fromTheme(QStringLiteral("delete")));
+        button->setEnabled(QFileInfo(info.entryPath()).isWritable());
+        connect(button, &QPushButton::clicked, this, [this, info](){
+            using namespace KPackage;
+            PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
+            Package package(structure);
+            // We can get the package root from the entry path
+            QDir root = QFileInfo(info.entryPath()).dir();
+            root.cdUp();
+            KJob *uninstallJob = Package(structure).uninstall(info.pluginName(), root.absolutePath());
+            connect(uninstallJob, &KJob::result, this, [this, uninstallJob](){
+                ui->scriptSelector->clearPlugins();
+                updateListViewContents();
+                // If the uninstallation is successful the entry will be immediately removed
+                if (!uninstallJob->errorString().isEmpty()) {
+                    ui->messageWidget->setText(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
+                    ui->messageWidget->setMessageType(KMessageWidget::Error);
+                    ui->messageWidget->animatedShow();
+                }
+            });
+       });
+       return button;
+    });
 
     updateListViewContents();
 }
@@ -127,7 +143,7 @@ void Module::importScriptInstallFinished(KJob *job)
 void Module::updateListViewContents()
 {
     auto filter =  [](const KPluginMetaData &md) {
-        return !md.rawData().value("X-KWin-Exclude-Listing").toBool();
+        return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
     };
 
     const QString scriptFolder = QStringLiteral("kwin/scripts/");

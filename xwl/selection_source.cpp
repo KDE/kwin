@@ -1,22 +1,11 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright 2019 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2019 Roman Gilg <subdiff@gmail.com>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "selection_source.h"
 #include "selection.h"
 #include "transfer.h"
@@ -49,14 +38,12 @@ SelectionSource::SelectionSource(Selection *selection)
 {
 }
 
-WlSource::WlSource(Selection *selection, KWaylandServer::DataDeviceInterface *ddi)
+WlSource::WlSource(Selection *selection)
     : SelectionSource(selection)
-    , m_ddi(ddi)
 {
-    Q_ASSERT(ddi);
 }
 
-void WlSource::setDataSourceIface(KWaylandServer::DataSourceInterface *dsi)
+void WlSource::setDataSourceIface(KWaylandServer::AbstractDataSource *dsi)
 {
     if (m_dsi == dsi) {
         return;
@@ -105,7 +92,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
     targets[1] = atoms->targets;
 
     size_t cnt = 2;
-    for (const auto mime : m_offers) {
+    for (const auto &mime : m_offers) {
         targets[cnt] = Selection::mimeTypeToAtom(mime);
         cnt++;
     }
@@ -135,7 +122,7 @@ void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
 bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
 {
     // check interfaces available
-    if (!m_ddi || !m_dsi) {
+    if (!m_dsi) {
         return false;
     }
 
@@ -210,9 +197,11 @@ void X11Source::handleTargets()
                                                         );
     auto *reply = xcb_get_property_reply(xcbConn, cookie, nullptr);
     if (!reply) {
+        qCDebug(KWIN_XWL) << "Failed to get selection property";
         return;
     }
     if (reply->type != XCB_ATOM_ATOM) {
+        qCDebug(KWIN_XWL) << "Wrong reply type";
         free(reply);
         return;
     }
@@ -249,7 +238,7 @@ void X11Source::handleTargets()
         all << mimePair;
     }
     // all left in m_offers are not in the updated targets
-    for (const auto mimePair : m_offers) {
+    for (const auto &mimePair : m_offers) {
         removed << mimePair.first;
     }
     m_offers = all;

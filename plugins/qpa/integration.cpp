@@ -1,39 +1,26 @@
-/********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+/*
+    KWin - the KDE window manager
+    This file is part of the KDE project.
 
-Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
-Copyright (C) 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*********************************************************************/
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
 #include "integration.h"
 #include "backingstore.h"
+#include "eglplatformcontext.h"
+#include "logging.h"
 #include "offscreensurface.h"
 #include "screen.h"
-#include "sharingplatformcontext.h"
 #include "window.h"
 #include "../../main.h"
 #include "../../platform.h"
 #include "../../screens.h"
-#include "../../virtualkeyboard.h"
 
 #include <QCoreApplication>
 #include <QtConcurrentRun>
 
-#include <qpa/qplatforminputcontext.h>
-#include <qpa/qplatforminputcontextfactory_p.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qwindowsysteminterface.h>
 
@@ -51,11 +38,15 @@ Integration::Integration()
     : QObject()
     , QPlatformIntegration()
     , m_fontDb(new QGenericUnixFontDatabase())
-    , m_inputContext()
 {
 }
 
-Integration::~Integration() = default;
+Integration::~Integration()
+{
+    for (QPlatformScreen *platformScreen : m_screens) {
+        QWindowSystemInterface::handleScreenRemoved(platformScreen);
+    }
+}
 
 bool Integration::hasCapability(Capability cap) const
 {
@@ -88,39 +79,8 @@ void Integration::initialize()
     );
     QPlatformIntegration::initialize();
     auto dummyScreen = new Screen(-1);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 13, 0))
     QWindowSystemInterface::handleScreenAdded(dummyScreen);
-#else
-    screenAdded(dummyScreen);
-#endif
     m_screens << dummyScreen;
-    m_inputContext.reset(QPlatformInputContextFactory::create(QStringLiteral("qtvirtualkeyboard")));
-    qunsetenv("QT_IM_MODULE");
-    if (!m_inputContext.isNull()) {
-        connect(qApp, &QGuiApplication::focusObjectChanged, this,
-            [this] {
-                if (VirtualKeyboard::self() && qApp->focusObject() != VirtualKeyboard::self()) {
-                    m_inputContext->setFocusObject(VirtualKeyboard::self());
-                }
-            }
-        );
-        connect(kwinApp(), &Application::workspaceCreated, this,
-            [this] {
-                if (VirtualKeyboard::self()) {
-                    m_inputContext->setFocusObject(VirtualKeyboard::self());
-                }
-            }
-        );
-        connect(qApp->inputMethod(), &QInputMethod::visibleChanged, this,
-            [] {
-                if (qApp->inputMethod()->isVisible()) {
-                    if (QWindow *w = VirtualKeyboard::self()->inputPanel()) {
-                        QWindowSystemInterface::handleWindowActivated(w, Qt::ActiveWindowFocusReason);
-                    }
-                }
-            }
-        );
-    }
 }
 
 QAbstractEventDispatcher *Integration::createEventDispatcher() const
@@ -145,7 +105,7 @@ QPlatformOffscreenSurface *Integration::createPlatformOffscreenSurface(QOffscree
 
 QPlatformFontDatabase *Integration::fontDatabase() const
 {
-    return m_fontDb;
+    return m_fontDb.data();
 }
 
 QPlatformTheme *Integration::createPlatformTheme(const QString &name) const
@@ -163,15 +123,14 @@ QStringList Integration::themeNames() const
 
 QPlatformOpenGLContext *Integration::createPlatformOpenGLContext(QOpenGLContext *context) const
 {
-    if (kwinApp()->platform()->supportsQpaContext()) {
-        return new SharingPlatformContext(context);
+    if (kwinApp()->platform()->sceneEglGlobalShareContext() == EGL_NO_CONTEXT) {
+        qCWarning(KWIN_QPA) << "Attempting to create a QOpenGLContext before the scene is initialized";
+        return nullptr;
     }
-    if (kwinApp()->platform()->sceneEglDisplay() != EGL_NO_DISPLAY) {
-        auto s = kwinApp()->platform()->sceneEglSurface();
-        if (s != EGL_NO_SURFACE) {
-            // try a SharingPlatformContext with a created surface
-            return new SharingPlatformContext(context, s, kwinApp()->platform()->sceneEglConfig());
-        }
+    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    if (eglDisplay != EGL_NO_DISPLAY) {
+        EGLPlatformContext *platformContext = new EGLPlatformContext(context, eglDisplay);
+        return platformContext;
     }
     return nullptr;
 }
@@ -182,35 +141,18 @@ void Integration::initScreens()
     newScreens.reserve(qMax(screens()->count(), 1));
     for (int i = 0; i < screens()->count(); i++) {
         auto screen = new Screen(i);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 13, 0))
         QWindowSystemInterface::handleScreenAdded(screen);
-#else
-        screenAdded(screen);
-#endif
         newScreens << screen;
     }
     if (newScreens.isEmpty()) {
         auto dummyScreen = new Screen(-1);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 13, 0))
         QWindowSystemInterface::handleScreenAdded(dummyScreen);
-#else
-        screenAdded(dummyScreen);
-#endif
         newScreens << dummyScreen;
     }
     while (!m_screens.isEmpty()) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 13, 0))
         QWindowSystemInterface::handleScreenRemoved(m_screens.takeLast());
-#else
-        destroyScreen(m_screens.takeLast());
-#endif
     }
     m_screens = newScreens;
-}
-
-QPlatformInputContext *Integration::inputContext() const
-{
-    return m_inputContext.data();
 }
 
 }

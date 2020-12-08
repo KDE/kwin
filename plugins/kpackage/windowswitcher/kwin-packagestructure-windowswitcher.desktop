@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KWin Window Switcher
+Name[az]=KWin pəncərə dəyişdiricisi
 Name[ca]=Commutador de finestres del KWin
 Name[ca@valencia]=Commutador de finestres de KWin
 Name[cs]=Přepínač oken KWin
@@ -25,6 +26,7 @@ Name[pa]=KWin ਵਿੰਡੋ ਸਵਿੱਚਰ
 Name[pl]=Przełącznik okien KWin
 Name[pt]=Mudança de Janelas do KWin
 Name[pt_BR]=Layout do seletor de janelas do KWin
+Name[ro]=Comutator de ferestre KWin
 Name[ru]=Переключатель окон для KWin
 Name[sk]=Prepínač okien KWin
 Name[sl]=Preklopnik oken KWin
