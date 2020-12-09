@@ -128,12 +128,12 @@ void TestWaylandSeat::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
-    m_subCompositorInterface = m_display->createSubCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_subCompositorInterface = new SubCompositorInterface(m_display, m_display);
     QVERIFY(m_subCompositorInterface);
 
-    m_relativePointerManagerV1Interface = m_display->createRelativePointerManagerV1(m_display);
-    m_pointerGesturesV1Interface = m_display->createPointerGesturesV1(m_display);
+    m_relativePointerManagerV1Interface = new RelativePointerManagerV1Interface(m_display, m_display);
+    m_pointerGesturesV1Interface = new PointerGesturesV1Interface(m_display, m_display);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -160,7 +160,7 @@ void TestWaylandSeat::init()
     registry.setup();
     QVERIFY(compositorSpy.wait());
 
-    m_seatInterface = m_display->createSeat();
+    m_seatInterface = new SeatInterface(m_display);
     QVERIFY(m_seatInterface);
     m_seatInterface->setName(QStringLiteral("seat0"));
     m_seatInterface->create();
@@ -1746,7 +1746,7 @@ void TestWaylandSeat::testSelection()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
+    QScopedPointer<DataDeviceManagerInterface> ddmi(new DataDeviceManagerInterface(m_display));
     Registry registry;
     QSignalSpy dataDeviceManagerSpy(&registry, SIGNAL(dataDeviceManagerAnnounced(quint32,quint32)));
     QVERIFY(dataDeviceManagerSpy.isValid());
@@ -1857,7 +1857,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     // create the DataDeviceManager
-    QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
+    QScopedPointer<DataDeviceManagerInterface> ddmi(new DataDeviceManagerInterface(m_display));
     QSignalSpy ddiCreatedSpy(ddmi.data(), &DataDeviceManagerInterface::dataDeviceCreated);
     QVERIFY(ddiCreatedSpy.isValid());
     m_seatInterface->setHasKeyboard(true);

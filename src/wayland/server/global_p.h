@@ -8,6 +8,8 @@
 
 #include "global.h"
 
+#include <QPointer>
+
 #include <wayland-server-core.h>
 
 namespace KWaylandServer
@@ -25,7 +27,10 @@ public:
     virtual ~Private();
     void create();
 
-    Display *display = nullptr;
+    // We need to reset display from the destroy listener, but due to the private class
+    // being nested, this is not easy to do so. Either way, we are moving away from the
+    // old approach, so it's not worth wasting our time.
+    QPointer<Display> display;
     wl_global *global = nullptr;
     DisplayDestroyListener displayDestroyListener;
 

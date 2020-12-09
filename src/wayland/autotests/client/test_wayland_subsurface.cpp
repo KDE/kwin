@@ -118,8 +118,8 @@ void TestSubSurface::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
-    m_subcompositorInterface = m_display->createSubCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_subcompositorInterface = new SubCompositorInterface(m_display, m_display);
     QVERIFY(m_subcompositorInterface);
 
     QVERIFY(subCompositorSpy.wait());

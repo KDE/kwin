@@ -41,7 +41,9 @@ class IdleInterfacePrivate;
 class KWAYLANDSERVER_EXPORT IdleInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit IdleInterface(Display *display, QObject *parent = nullptr);
     ~IdleInterface() override;
 
     /**
@@ -100,8 +102,6 @@ Q_SIGNALS:
     void inhibitedChanged();
 
 private:
-    explicit IdleInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<IdleInterfacePrivate> d;
 };
 

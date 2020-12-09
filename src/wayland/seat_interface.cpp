@@ -5,6 +5,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "abstract_data_source.h"
+#include "display_p.h"
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "display.h"
@@ -81,11 +82,20 @@ SeatInterface::SeatInterface(Display *display, QObject *parent)
     connect(this, &SeatInterface::hasPointerChanged,  this, sendCapabilitiesAll);
     connect(this, &SeatInterface::hasKeyboardChanged, this, sendCapabilitiesAll);
     connect(this, &SeatInterface::hasTouchChanged,    this, sendCapabilitiesAll);
+
+    DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
+    displayPrivate->seats.append(this);
 }
 
 SeatInterface::~SeatInterface()
 {
     Q_D();
+
+    if (d->display) {
+        DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
+        displayPrivate->seats.removeOne(this);
+    }
+
     while (!d->resources.isEmpty()) {
         wl_resource_destroy(d->resources.takeLast());
     }

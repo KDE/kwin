@@ -131,12 +131,12 @@ void TestWindowManagement::init()
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
 
-    m_windowManagementInterface = m_display->createPlasmaWindowManagement(m_display);
+    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = m_registry->createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);

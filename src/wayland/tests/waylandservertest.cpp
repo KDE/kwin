@@ -75,10 +75,9 @@ int main(int argc, char **argv)
     Display display;
     display.start();
     display.createShm();
-    display.createCompositor(&display);
-    XdgShellInterface *shell = display.createXdgShell();
-    Q_UNUSED(shell)
-    OutputInterface *output = display.createOutput(&display);
+    new CompositorInterface(&display, &display);
+    new XdgShellInterface(&display, &display);
+    OutputInterface *output = new OutputInterface(&display, &display);
     output->setPhysicalSize(QSize(10, 10));
     output->addMode(QSize(1024, 768));
     output->create();
@@ -104,7 +103,7 @@ int main(int argc, char **argv)
 
     QGuiApplication app(argc, argv);
 
-    SeatInterface *seat = display.createSeat();
+    SeatInterface *seat = new SeatInterface(&display);
     seat->setName(QStringLiteral("testSeat0"));
     seat->create();
 

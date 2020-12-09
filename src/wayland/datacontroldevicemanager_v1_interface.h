@@ -29,6 +29,7 @@ class KWAYLANDSERVER_EXPORT DataControlDeviceManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
+    explicit DataControlDeviceManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~DataControlDeviceManagerV1Interface() override;
 
 Q_SIGNALS:
@@ -36,8 +37,6 @@ Q_SIGNALS:
     void dataDeviceCreated(KWaylandServer::DataControlDeviceV1Interface *dataDevice);
 
 private:
-    explicit DataControlDeviceManagerV1Interface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<DataControlDeviceManagerV1InterfacePrivate> d;
 };
 

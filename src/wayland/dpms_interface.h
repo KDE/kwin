@@ -52,12 +52,12 @@ class DpmsManagerInterfacePrivate;
 class KWAYLANDSERVER_EXPORT DpmsManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit DpmsManagerInterface(Display *display, QObject *parent = nullptr);
     ~DpmsManagerInterface() override;
 
 private:
-    explicit DpmsManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<DpmsManagerInterfacePrivate> d;
 };
 

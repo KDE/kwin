@@ -29,7 +29,9 @@ class ServerSideDecorationInterfacePrivate;
 class KWAYLANDSERVER_EXPORT ServerSideDecorationManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit ServerSideDecorationManagerInterface(Display *display, QObject *parent = nullptr);
     ~ServerSideDecorationManagerInterface() override;
 
     /**
@@ -69,8 +71,6 @@ Q_SIGNALS:
     void decorationCreated(KWaylandServer::ServerSideDecorationInterface*);
 
 private:
-    explicit ServerSideDecorationManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<ServerSideDecorationManagerInterfacePrivate> d;
 };
 

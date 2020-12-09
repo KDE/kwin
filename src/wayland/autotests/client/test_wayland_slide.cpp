@@ -96,11 +96,11 @@ void TestSlide::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_slideManagerInterface = m_display->createSlideManager(m_display);
+    m_slideManagerInterface = new SlideManagerInterface(m_display, m_display);
 
     QVERIFY(slideSpy.wait());
     m_slideManager = registry.createSlideManager(slideSpy.first().first().value<quint32>(), slideSpy.first().last().value<quint32>(), this);

@@ -67,11 +67,11 @@ void SelectionTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_compositorInterface = m_display->createCompositor(m_display);
-    m_seatInterface = m_display->createSeat(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->create();
-    m_ddmInterface = m_display->createDataDeviceManager(m_display);
+    m_ddmInterface = new DataDeviceManagerInterface(m_display, m_display);
 
     // setup connection
     setupConnection(&m_client1);

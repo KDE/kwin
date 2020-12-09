@@ -106,9 +106,9 @@ void TestLayerShellV1Interface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_serverLayerShell = m_display.createLayerShellV1(this);
-    m_serverXdgShell = m_display.createXdgShell(this);
-    m_serverCompositor = m_display.createCompositor(this);
+    m_serverLayerShell = new LayerShellV1Interface(&m_display, this);
+    m_serverXdgShell = new XdgShellInterface(&m_display, this);
+    m_serverCompositor = new CompositorInterface(&m_display, this);
 
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);

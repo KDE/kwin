@@ -75,12 +75,12 @@ void TextInputTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_seatInterface = m_display->createSeat();
+    m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasTouch(true);
     m_seatInterface->create();
-    m_compositorInterface = m_display->createCompositor();
-    m_textInputManagerV2Interface = m_display->createTextInputManagerV2();
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_textInputManagerV2Interface = new TextInputManagerV2Interface(m_display, m_display);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

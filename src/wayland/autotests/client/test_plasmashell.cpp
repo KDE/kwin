@@ -64,10 +64,10 @@ void TestPlasmaShell::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     m_display->createShm();
 
-    m_plasmaShellInterface = m_display->createPlasmaShell(m_display);
+    m_plasmaShellInterface = new PlasmaShellInterface(m_display, m_display);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

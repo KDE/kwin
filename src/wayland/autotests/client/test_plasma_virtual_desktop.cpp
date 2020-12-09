@@ -116,16 +116,16 @@ void TestVirtualDesktop::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_plasmaVirtualDesktopManagementInterface = m_display->createPlasmaVirtualDesktopManagement(m_display);
+    m_plasmaVirtualDesktopManagementInterface = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
 
     QVERIFY(plasmaVirtualDesktopManagementSpy.wait());
     m_plasmaVirtualDesktopManagement = registry.createPlasmaVirtualDesktopManagement(plasmaVirtualDesktopManagementSpy.first().first().value<quint32>(), plasmaVirtualDesktopManagementSpy.first().last().value<quint32>(), this);
 
-    m_windowManagementInterface = m_display->createPlasmaWindowManagement(m_display);
+    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
     m_windowManagementInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);
 
     QVERIFY(windowManagementSpy.wait());

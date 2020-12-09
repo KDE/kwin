@@ -77,13 +77,13 @@ void TestDragAndDrop::init()
     QVERIFY(connectedSpy.isValid());
     m_connection->setSocketName(s_socketName);
 
-    m_compositorInterface = m_display->createCompositor(m_display);
-    m_seatInterface = m_display->createSeat(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
     m_seatInterface->create();
     QVERIFY(m_seatInterface->isValid());
-    m_dataDeviceManagerInterface = m_display->createDataDeviceManager(m_display);
+    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
     m_display->createShm();
 
     m_thread = new QThread(this);

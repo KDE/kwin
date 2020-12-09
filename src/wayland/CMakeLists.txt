@@ -296,6 +296,12 @@ target_link_libraries(KWaylandServer
         Qt5::Concurrent
 )
 
+target_compile_definitions(KWaylandServer PRIVATE
+    MESA_EGL_NO_X11_HEADERS
+    EGL_NO_X11
+    EGL_NO_PLATFORM_SPECIFIC_TYPES
+)
+
 set_target_properties(KWaylandServer PROPERTIES VERSION   ${KWAYLANDSERVER_VERSION_STRING}
                                                 SOVERSION ${KWAYLANDSERVER_SOVERSION}
 )

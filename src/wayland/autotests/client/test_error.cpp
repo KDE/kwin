@@ -54,8 +54,8 @@ void ErrorTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_ci = m_display->createCompositor(m_display);
-    m_psi = m_display->createPlasmaShell(m_display);
+    m_ci = new CompositorInterface(m_display, m_display);
+    m_psi = new PlasmaShellInterface(m_display, m_display);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

@@ -34,50 +34,11 @@ namespace KWaylandServer
  * @see Display
  **/
 
-class CompositorInterface;
-class DataDeviceManagerInterface;
-class DpmsManagerInterface;
-class IdleInterface;
-class IdleInhibitManagerV1Interface;
-class FakeInputInterface;
+class ClientConnection;
+class DisplayPrivate;
 class OutputInterface;
 class OutputDeviceInterface;
-class OutputConfigurationInterface;
-class OutputManagementInterface;
-class PlasmaShellInterface;
-class PlasmaWindowManagementInterface;
-class QtSurfaceExtensionInterface;
 class SeatInterface;
-class ShadowManagerInterface;
-class BlurManagerInterface;
-class ContrastManagerInterface;
-class ServerSideDecorationManagerInterface;
-class SlideManagerInterface;
-class SubCompositorInterface;
-class TextInputManagerV2Interface;
-class TextInputManagerV3Interface;
-class XdgShellInterface;
-class RelativePointerManagerV1Interface;
-class PointerGesturesV1Interface;
-class PointerConstraintsV1Interface;
-class XdgForeignV2Interface;
-class AppMenuManagerInterface;
-class ServerSideDecorationPaletteManagerInterface;
-class PlasmaVirtualDesktopManagementInterface;
-class XdgOutputManagerV1Interface;
-class XdgDecorationManagerV1Interface;
-class EglStreamControllerInterface;
-class KeyStateInterface;
-class LinuxDmabufUnstableV1Interface;
-class TabletManagerV2Interface;
-class DataControlDeviceManagerV1Interface;
-class PrimarySelectionDeviceManagerV1Interface;
-class KeyboardShortcutsInhibitManagerV1Interface;
-class ViewporterInterface;
-class ScreencastV1Interface;
-class InputMethodV1Interface;
-class InputPanelV1Interface;
-class LayerShellV1Interface;
 
 /**
  * @brief Class holding the Wayland server display loop.
@@ -146,200 +107,14 @@ public:
     operator wl_display*() const;
     bool isRunning() const;
 
-    OutputInterface *createOutput(QObject *parent = nullptr);
-    void removeOutput(OutputInterface *output);
-    QList<OutputInterface*> outputs() const;
-
-    OutputDeviceInterface *createOutputDevice(QObject *parent = nullptr);
-    void removeOutputDevice(OutputDeviceInterface *output);
-    QList<OutputDeviceInterface*> outputDevices() const;
-
-    CompositorInterface *createCompositor(QObject *parent = nullptr);
     void createShm();
-    SeatInterface *createSeat(QObject *parent = nullptr);
     /**
      * @returns All SeatInterface currently managed on the Display.
      * @since 5.6
      **/
     QVector<SeatInterface*> seats() const;
-    SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
-    DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
-    OutputManagementInterface *createOutputManagement(QObject *parent = nullptr);
-    PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
-    PlasmaWindowManagementInterface *createPlasmaWindowManagement(QObject *parent = nullptr);
-    IdleInterface *createIdle(QObject *parent = nullptr);
-    FakeInputInterface *createFakeInput(QObject *parent = nullptr);
-    ShadowManagerInterface *createShadowManager(QObject *parent = nullptr);
-    BlurManagerInterface *createBlurManager(QObject *parent = nullptr);
-    ContrastManagerInterface *createContrastManager(QObject *parent = nullptr);
-    SlideManagerInterface *createSlideManager(QObject *parent = nullptr);
-    DpmsManagerInterface *createDpmsManager(QObject *parent = nullptr);
-
-    /** @since 5.60 */
-    KeyStateInterface *createKeyStateInterface(QObject *parent = nullptr);
-
-    /**
-     * @since 5.6
-     **/
-    ServerSideDecorationManagerInterface *createServerSideDecorationManager(QObject *parent = nullptr);
-    /**
-     * Create the text input manager in interface @p version.
-     * @returns The created manager object
-     * @since 5.23
-     **/
-    TextInputManagerV2Interface *createTextInputManagerV2(QObject *parent = nullptr);
-
-    /**
-     * Create a text input manager v3
-     * @returns The created manager object
-     * @since 5.21
-     */
-    TextInputManagerV3Interface *createTextInputManagerV3(QObject *parent = nullptr);
-
-    /**
-     * Creates the XdgShell in interface @p version.
-     *
-     * @since 5.25
-     **/
-    XdgShellInterface *createXdgShell(QObject *parent = nullptr);
-
-    /**
-     * Creates the RelativePointerManagerV1Interface
-     *
-     * @returns The created manager object
-     * @since 5.28
-     **/
-    RelativePointerManagerV1Interface *createRelativePointerManagerV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the PointerGesturesV1Interface
-     *
-     * @returns The created manager object
-     * @since 5.29
-     **/
-    PointerGesturesV1Interface *createPointerGesturesV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the PointerConstraintsV1Interface
-     *
-     * @returns The created manager object
-     * @since 5.29
-     **/
-    PointerConstraintsV1Interface *createPointerConstraintsV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the XdgForeignV2Interface in interface @p version
-     *
-     * @returns The created manager object
-     * @since 5.40
-     **/
-    XdgForeignV2Interface *createXdgForeignV2Interface(QObject *parent = nullptr);
-
-    /**
-     * Creates the IdleInhibitManagerInterface in interface @p version.
-     *
-     * @returns The created manager object
-     * @since 5.41
-     **/
-    IdleInhibitManagerV1Interface *createIdleInhibitManagerV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the AppMenuManagerInterface in interface @p version.
-     *
-     * @returns The created manager object
-     * @since 5.42
-     **/
-    AppMenuManagerInterface *createAppMenuManagerInterface(QObject *parent = nullptr);
-
-    /**
-     * Creates the ServerSideDecorationPaletteManagerInterface in interface @p version.
-     *
-     * @returns The created manager object
-     * @since 5.42
-     **/
-    ServerSideDecorationPaletteManagerInterface *createServerSideDecorationPaletteManager(QObject *parent = nullptr);
-
-    /**
-     * Creates the LinuxDmabufUnstableV1Interface in interface @p version.
-     *
-     * @returns A pointer to the created interface
-     **/
-    LinuxDmabufUnstableV1Interface *createLinuxDmabufInterface(QObject *parent = nullptr);
-
-    /**
-     * Creates the XdgOutputManagerInterface
-     *
-     * @return the created manager
-     * @since 5.47
-     */
-    XdgOutputManagerV1Interface *createXdgOutputManagerV1(QObject *parent = nullptr);
-
-
-    /**
-     * Creates the PlasmaVirtualDesktopManagementInterface in interface @p version.
-     *
-     * @returns The created manager object
-     * @since 5.52
-     **/
-    PlasmaVirtualDesktopManagementInterface *createPlasmaVirtualDesktopManagement(QObject *parent = nullptr);
-
-    /**
-     * Creates the XdgDecorationManagerInterface
-     * @arg shellInterface A created XdgShellInterface based on XDG_WM_BASE
-     *
-     * @return the created manager
-     * @since 5.54
-     */
-    XdgDecorationManagerV1Interface *createXdgDecorationManagerV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the EglStreamControllerInterface
-     *
-     * @return the created EGL Stream controller
-     * @since 5.58
-     */
-    EglStreamControllerInterface *createEglStreamControllerInterface(QObject *parent = nullptr);
-
-    InputMethodV1Interface *createInputMethodInterface(QObject *parent = nullptr);
-    InputPanelV1Interface *createInputPanelInterface(QObject *parent = nullptr);
-
-    /**
-     * Creates the DataControlDeviceManagerV1
-     *
-     */
-    DataControlDeviceManagerV1Interface *createDataControlDeviceManagerV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the entry point to support wacom-like tablets and pens.
-     *
-     * @since 5.67
-     */
-    TabletManagerV2Interface *createTabletManagerV2(QObject *parent = nullptr);
-
-    /**
-     * Creates the KeyboardShortcutsInhibitorV1Interface
-     */
-    KeyboardShortcutsInhibitManagerV1Interface *createKeyboardShortcutsInhibitManagerV1(QObject *parent = nullptr);
-
-    /**
-     * Creates the viewporter compositor extension.
-     */
-    ViewporterInterface *createViewporter(QObject *parent = nullptr);
-
-    /**
-     * Creates the PrimarySelectionDeviceManagerV1Interface
-     */
-    PrimarySelectionDeviceManagerV1Interface *createPrimarySelectionDeviceManagerV1(QObject *parent = nullptr);
-
-    /**
-     * Creates an interface to request video feeds of different compositor resources
-     */
-    ScreencastV1Interface *createScreencastV1Interface(QObject *parent = nullptr);
-
-    /**
-     * Creates the layer shell compositor extension.
-     */
-    LayerShellV1Interface *createLayerShellV1(QObject *parent = nullptr);
+    QList<OutputDeviceInterface *> outputDevices() const;
+    QList<OutputInterface *> outputs() const;
 
     /**
      * Gets the ClientConnection for the given @p client.
@@ -377,8 +152,8 @@ Q_SIGNALS:
     void clientDisconnected(KWaylandServer::ClientConnection*);
 
 private:
-    class Private;
-    QScopedPointer<Private> d;
+    friend class DisplayPrivate;
+    QScopedPointer<DisplayPrivate> d;
 };
 
 }

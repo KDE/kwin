@@ -27,7 +27,9 @@ class PlasmaVirtualDesktopManagementInterfacePrivate;
 class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopManagementInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit PlasmaVirtualDesktopManagementInterface(Display *display, QObject *parent = nullptr);
     ~PlasmaVirtualDesktopManagementInterface() override;
 
     /**
@@ -90,8 +92,6 @@ Q_SIGNALS:
     void desktopCreateRequested(const QString &name, quint32 position);
 
 private:
-    explicit PlasmaVirtualDesktopManagementInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<PlasmaVirtualDesktopManagementInterfacePrivate> d;
 };
 

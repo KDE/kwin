@@ -29,7 +29,9 @@ class EglStreamControllerInterfacePrivate;
 class KWAYLANDSERVER_EXPORT EglStreamControllerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit EglStreamControllerInterface(Display *display, QObject *parent = nullptr);
     ~EglStreamControllerInterface() override;
 
 Q_SIGNALS:
@@ -39,10 +41,7 @@ Q_SIGNALS:
     void streamConsumerAttached(SurfaceInterface *surface, void *eglStream, wl_array *attribs);
 
 private:
-    explicit EglStreamControllerInterface(Display *display, QObject *parent = nullptr);
-
     QScopedPointer<EglStreamControllerInterfacePrivate> d;
-    friend class Display;
 };
 
 }

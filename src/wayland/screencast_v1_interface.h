@@ -43,7 +43,9 @@ private:
 class KWAYLANDSERVER_EXPORT ScreencastV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit ScreencastV1Interface(Display *display, QObject *parent = nullptr);
     virtual ~ScreencastV1Interface();
 
     enum CursorMode {
@@ -58,8 +60,6 @@ Q_SIGNALS:
     void windowScreencastRequested(ScreencastStreamV1Interface *stream, const QString &winid, CursorMode mode);
 
 private:
-    explicit ScreencastV1Interface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<ScreencastV1InterfacePrivate> d;
 };
 

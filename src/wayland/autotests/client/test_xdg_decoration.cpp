@@ -97,16 +97,16 @@ void TestXdgDecoration::init()
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_xdgShellInterface = m_display->createXdgShell(m_display);
+    m_xdgShellInterface = new XdgShellInterface(m_display, m_display);
     QVERIFY(xdgShellSpy.wait());
     m_xdgShell = m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(),
                                             xdgShellSpy.first().last().value<quint32>(), this);
 
-    m_xdgDecorationManagerInterface = m_display->createXdgDecorationManagerV1(m_display);
+    m_xdgDecorationManagerInterface = new XdgDecorationManagerV1Interface(m_display, m_display);
 
     QVERIFY(xdgDecorationManagerSpy.wait());
     m_xdgDecorationManager = m_registry->createXdgDecorationManager(xdgDecorationManagerSpy.first().first().value<quint32>(),

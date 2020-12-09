@@ -99,10 +99,10 @@ void TestKeyboardShortcutsInhibitorInterface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = m_display.createSeat(this);
+    m_seat = new SeatInterface(&m_display, this);
     m_seat->create();
-    m_serverCompositor = m_display.createCompositor(this);
-    m_manager = m_display.createKeyboardShortcutsInhibitManagerV1(this);
+    m_serverCompositor = new CompositorInterface(&m_display, this);
+    m_manager = new KeyboardShortcutsInhibitManagerV1Interface(&m_display, this);
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;

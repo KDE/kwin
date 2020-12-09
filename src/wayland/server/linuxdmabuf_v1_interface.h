@@ -77,6 +77,8 @@ class KWAYLANDSERVER_EXPORT LinuxDmabufUnstableV1Interface : public Global
 {
     Q_OBJECT
 public:
+    explicit LinuxDmabufUnstableV1Interface(Display *display, QObject *parent = nullptr);
+
     enum Flag {
         YInverted           = (1 << 0),    /// Contents are y-inverted
         Interlaced          = (1 << 1),    /// Content is interlaced
@@ -144,16 +146,10 @@ public:
 
 private:
     /**
-     * @internal
-     */
-    explicit LinuxDmabufUnstableV1Interface(Display *display, QObject *parent = nullptr);
-
-    /**
      * Returns a pointer to the wl_buffer implementation for imported dmabufs.
      */
     static const struct wl_buffer_interface *bufferImplementation();
 
-    friend class Display;
     friend class BufferInterface;
 
     class Private;

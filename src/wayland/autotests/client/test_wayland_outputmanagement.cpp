@@ -95,8 +95,8 @@ void TestWaylandOutputManagement::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_display->createCompositor(this);
-    auto outputDeviceInterface = m_display->createOutputDevice(this);
+    new CompositorInterface(m_display, this);
+    auto outputDeviceInterface = new OutputDeviceInterface(m_display, this);
 
     OutputDeviceInterface::Mode m0;
     m0.id = 0;
@@ -129,7 +129,7 @@ void TestWaylandOutputManagement::init()
     outputDeviceInterface->create();
     m_serverOutputs << outputDeviceInterface;
 
-    m_outputManagementInterface = m_display->createOutputManagement(this);
+    m_outputManagementInterface = new OutputManagementInterface(m_display, this);
     m_outputManagementInterface->create();
     QVERIFY(m_outputManagementInterface->isValid());
 

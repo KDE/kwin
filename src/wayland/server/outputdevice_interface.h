@@ -83,6 +83,8 @@ public:
         bool operator==(const ColorCurves &cc) const;
         bool operator!=(const ColorCurves &cc) const;
     };
+
+    explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
     virtual ~OutputDeviceInterface();
 
     QSize physicalSize() const;
@@ -175,8 +177,6 @@ Q_SIGNALS:
     void uuidChanged();
 
 private:
-    friend class Display;
-    explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
     class Private;
     Private *d_func() const;
 };

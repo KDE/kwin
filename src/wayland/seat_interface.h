@@ -134,6 +134,7 @@ class KWAYLANDSERVER_EXPORT SeatInterface : public Global
      **/
     Q_PROPERTY(quint32 timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
 public:
+    explicit SeatInterface(Display *display, QObject *parent = nullptr);
     virtual ~SeatInterface();
 
     QString name() const;
@@ -713,13 +714,11 @@ Q_SIGNALS:
     void focusedTextInputSurfaceChanged();
 
 private:
-    friend class Display;
     friend class DataControlDeviceV1Interface;
     friend class DataDeviceInterface;
     friend class PrimarySelectionDeviceV1Interface;
     friend class TextInputManagerV2InterfacePrivate;
     friend class KeyboardInterface;
-    explicit SeatInterface(Display *display, QObject *parent);
 
     class Private;
     Private *d_func() const;

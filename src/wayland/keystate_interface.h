@@ -24,7 +24,9 @@ class KeyStateInterfacePrivate;
 class KWAYLANDSERVER_EXPORT KeyStateInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit KeyStateInterface(Display *display, QObject *parent = nullptr);
     virtual ~KeyStateInterface();
 
     enum class Key {
@@ -43,9 +45,6 @@ public:
     void setState(Key k, State s);
 
 private:
-    explicit KeyStateInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
-
     QScopedPointer<KeyStateInterfacePrivate> d;
 };
 

@@ -32,12 +32,12 @@ class ContrastInterfacePrivate;
 class KWAYLANDSERVER_EXPORT ContrastManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit ContrastManagerInterface(Display *display, QObject *parent = nullptr);
     ~ContrastManagerInterface() override;
 
 private:
-    explicit ContrastManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<ContrastManagerInterfacePrivate> d;
 };
 

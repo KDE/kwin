@@ -28,7 +28,9 @@ class PlasmaWindowInterfacePrivate;
 class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit PlasmaWindowManagementInterface(Display *display, QObject *parent = nullptr);
     ~PlasmaWindowManagementInterface() override;
     enum class ShowingDesktopState {
         Disabled,
@@ -81,8 +83,6 @@ Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
 
 private:
-    friend class Display;
-    explicit PlasmaWindowManagementInterface(Display *display, QObject *parent);
     QScopedPointer<PlasmaWindowManagementInterfacePrivate> d;
 };
 

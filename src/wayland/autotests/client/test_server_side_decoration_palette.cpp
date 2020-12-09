@@ -97,11 +97,11 @@ void TestServerSideDecorationPalette::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_paletteManagerInterface = m_display->createServerSideDecorationPaletteManager(m_display);
+    m_paletteManagerInterface = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
 
     QVERIFY(registrySpy.wait());
     m_paletteManager = registry.createServerSideDecorationPaletteManager(registrySpy.first().first().value<quint32>(), registrySpy.first().last().value<quint32>(), this);

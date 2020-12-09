@@ -58,12 +58,12 @@ void TestXdgOutput::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_serverOutput = m_display->createOutput(this);
+    m_serverOutput = new OutputInterface(m_display, this);
     m_serverOutput->addMode(QSize(1920, 1080), OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
     m_serverOutput->setCurrentMode(QSize(1920, 1080));
     m_serverOutput->create();
 
-    m_serverXdgOutputManager = m_display->createXdgOutputManagerV1(this);
+    m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
     m_serverXdgOutput =  m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
     m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); //a 1.5 scale factor
     m_serverXdgOutput->setLogicalPosition(QPoint(11,12)); //not a sensible value for one monitor, but works for this test

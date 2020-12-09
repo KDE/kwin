@@ -4,6 +4,7 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "outputdevice_interface.h"
+#include "display_p.h"
 #include "global_p.h"
 #include "display.h"
 #include "logging.h"
@@ -86,11 +87,19 @@ OutputDeviceInterface::Private::Private(OutputDeviceInterface *q, Display *d)
     : Global::Private(d, &org_kde_kwin_outputdevice_interface, s_version)
     , q(q)
 {
+    DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
+    displayPrivate->outputdevices.append(q);
+
     s_privates << this;
 }
 
 OutputDeviceInterface::Private::~Private()
 {
+    if (display) {
+        DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
+        displayPrivate->outputdevices.removeOne(q);
+    }
+
     s_privates.removeAll(this);
 }
 

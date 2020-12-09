@@ -34,7 +34,9 @@ class XdgOutputV1InterfacePrivate;
 class KWAYLANDSERVER_EXPORT XdgOutputManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit XdgOutputManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgOutputManagerV1Interface() override;
     /**
      * Creates an XdgOutputInterface object for an existing Output
@@ -45,8 +47,6 @@ public:
      */
     XdgOutputV1Interface* createXdgOutput(OutputInterface *output, QObject *parent);
 private:
-    explicit XdgOutputManagerV1Interface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<XdgOutputManagerV1InterfacePrivate> d;
 };
 

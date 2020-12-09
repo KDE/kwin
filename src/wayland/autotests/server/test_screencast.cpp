@@ -119,7 +119,7 @@ void TestScreencastV1Interface::initTestCase()
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     QVERIFY(screencastSpy.isValid());
-    m_screencastInterface = m_display->createScreencastV1Interface(this);
+    m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display, this);
     connect(m_screencastInterface, &KWaylandServer::ScreencastV1Interface::windowScreencastRequested, this, [this] (KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid) {
         Q_UNUSED(winid);
         stream->sendCreated(123);

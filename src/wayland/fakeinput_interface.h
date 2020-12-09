@@ -42,7 +42,9 @@ class FakeInputInterfacePrivate;
 class KWAYLANDSERVER_EXPORT FakeInputInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit FakeInputInterface(Display *display, QObject *parent = nullptr);
     ~FakeInputInterface() override;
 
 Q_SIGNALS:
@@ -53,8 +55,6 @@ Q_SIGNALS:
     void deviceCreated(KWaylandServer::FakeInputDevice *device);
 
 private:
-    explicit FakeInputInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<FakeInputInterfacePrivate> d;
 };
 

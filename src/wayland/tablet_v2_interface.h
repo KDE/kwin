@@ -39,13 +39,12 @@ class KWAYLANDSERVER_EXPORT TabletManagerV2Interface : public QObject
 {
     Q_OBJECT
 public:
+    explicit TabletManagerV2Interface(Display *d, QObject *parent);
     virtual ~TabletManagerV2Interface();
 
     TabletSeatV2Interface *seat(SeatInterface *seat) const;
 
 private:
-    friend class Display;
-    explicit TabletManagerV2Interface(Display *d, QObject *parent);
     QScopedPointer<TabletManagerV2InterfacePrivate> d;
 };
 

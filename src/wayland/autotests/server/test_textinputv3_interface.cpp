@@ -119,12 +119,12 @@ void TestTextInputV3Interface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = m_display.createSeat(this);
+    m_seat = new SeatInterface(&m_display, this);
     m_seat->setHasKeyboard(true);
     m_seat->create();
 
-    m_serverCompositor = m_display.createCompositor(this);
-    m_display.createTextInputManagerV3();
+    m_serverCompositor = new CompositorInterface(&m_display, this);
+    new TextInputManagerV3Interface(&m_display);
 
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);

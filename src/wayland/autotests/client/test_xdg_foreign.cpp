@@ -122,11 +122,11 @@ void TestForeign::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_foreignInterface = m_display->createXdgForeignV2Interface(m_display);
+    m_foreignInterface = new XdgForeignV2Interface(m_display, m_display);
 
     QVERIFY(exporterSpy.wait());
     //Both importer and exporter should have been triggered by now

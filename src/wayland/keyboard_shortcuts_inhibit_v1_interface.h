@@ -55,6 +55,7 @@ class KWAYLANDSERVER_EXPORT KeyboardShortcutsInhibitManagerV1Interface : public 
     Q_OBJECT
 
 public:
+    explicit KeyboardShortcutsInhibitManagerV1Interface(Display *d, QObject *parent = nullptr);
     ~KeyboardShortcutsInhibitManagerV1Interface() override;
 
     /**
@@ -69,9 +70,7 @@ Q_SIGNALS:
     void inhibitorCreated(KeyboardShortcutsInhibitorV1Interface *inhibitor);
 
 private:
-    friend class Display;
     friend class KeyboardShortcutsInhibitorV1InterfacePrivate;
-    explicit KeyboardShortcutsInhibitManagerV1Interface(Display *d, QObject *parent = nullptr);
     void removeInhibitor(SurfaceInterface *const surface, SeatInterface *const seat);
     QScopedPointer<KeyboardShortcutsInhibitManagerV1InterfacePrivate> d;
 };

@@ -32,11 +32,10 @@ class KWAYLANDSERVER_EXPORT BlurManagerInterface : public QObject
 {
     Q_OBJECT
 public:
+    explicit BlurManagerInterface(Display *display, QObject *parent = nullptr);
     ~BlurManagerInterface() override;
 
 private:
-    explicit BlurManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<BlurManagerInterfacePrivate> d;
 };
 

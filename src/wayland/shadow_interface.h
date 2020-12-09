@@ -24,14 +24,14 @@ class ShadowInterfacePrivate;
 class KWAYLANDSERVER_EXPORT ShadowManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit ShadowManagerInterface(Display *display, QObject *parent = nullptr);
     ~ShadowManagerInterface() override;
 
     Display *display() const;
 
 private:
-    explicit ShadowManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<ShadowManagerInterfacePrivate> d;
 };
 

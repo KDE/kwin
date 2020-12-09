@@ -22,12 +22,12 @@ class SlideInterfacePrivate;
 class KWAYLANDSERVER_EXPORT SlideManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit SlideManagerInterface(Display *display, QObject *parent = nullptr);
     ~SlideManagerInterface() override;
 
 private:
-    explicit SlideManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<SlideManagerInterfacePrivate> d;
 };
 

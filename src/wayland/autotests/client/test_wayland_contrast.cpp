@@ -99,11 +99,11 @@ void TestContrast::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_contrastManagerInterface = m_display->createContrastManager(m_display);
+    m_contrastManagerInterface = new ContrastManagerInterface(m_display, m_display);
 
     QVERIFY(contrastSpy.wait());
     m_contrastManager = registry.createContrastManager(contrastSpy.first().first().value<quint32>(), contrastSpy.first().last().value<quint32>(), this);

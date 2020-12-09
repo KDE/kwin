@@ -30,7 +30,9 @@ class ServerSideDecorationPaletteInterfacePrivate;
 class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit ServerSideDecorationPaletteManagerInterface(Display *display, QObject *parent = nullptr);
     ~ServerSideDecorationPaletteManagerInterface() override;
     /**
      * Returns any existing palette for a given surface
@@ -45,8 +47,6 @@ Q_SIGNALS:
     void paletteCreated(KWaylandServer::ServerSideDecorationPaletteInterface*);
 
 private:
-    explicit ServerSideDecorationPaletteManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<ServerSideDecorationPaletteManagerInterfacePrivate> d;
 };
 

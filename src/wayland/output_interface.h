@@ -72,6 +72,8 @@ public:
         Suspend,
         Off
     };
+
+    explicit OutputInterface(Display *display, QObject *parent = nullptr);
     virtual ~OutputInterface();
 
     QSize physicalSize() const;
@@ -147,8 +149,6 @@ Q_SIGNALS:
     void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
 
 private:
-    friend class Display;
-    explicit OutputInterface(Display *display, QObject *parent = nullptr);
     class Private;
     Private *d_func() const;
 };

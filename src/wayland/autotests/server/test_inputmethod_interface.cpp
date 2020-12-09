@@ -176,12 +176,12 @@ void TestInputMethodInterface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = m_display.createSeat(this);
+    m_seat = new SeatInterface(&m_display, this);
     m_seat->create();
-    m_serverCompositor = m_display.createCompositor(this);
-    m_inputMethodIface = m_display.createInputMethodInterface(this);
-    m_inputPanelIface = m_display.createInputPanelInterface(this);
-    auto outputIface = m_display.createOutput(this);
+    m_serverCompositor = new CompositorInterface(&m_display, this);
+    m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
+    m_inputPanelIface = new InputPanelV1Interface(&m_display, this);
+    auto outputIface = new OutputInterface(&m_display, this);
     outputIface->create();
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {

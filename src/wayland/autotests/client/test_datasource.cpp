@@ -80,7 +80,7 @@ void TestDataSource::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_dataDeviceManagerInterface = m_display->createDataDeviceManager(m_display);
+    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
 
     QVERIFY(dataDeviceManagerSpy.wait());
     m_dataDeviceManager = registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),

@@ -31,7 +31,9 @@ class OutputConfigurationInterface;
 class KWAYLANDSERVER_EXPORT OutputManagementInterface : public Global
 {
     Q_OBJECT
+
 public:
+    explicit OutputManagementInterface(Display *display, QObject *parent = nullptr);
     virtual ~OutputManagementInterface();
 
 Q_SIGNALS:
@@ -51,8 +53,6 @@ Q_SIGNALS:
     void configurationChangeRequested(KWaylandServer::OutputConfigurationInterface *configurationInterface);
 
 private:
-    explicit OutputManagementInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     class Private;
 };
 

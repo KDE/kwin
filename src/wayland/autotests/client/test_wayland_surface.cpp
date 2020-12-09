@@ -88,10 +88,10 @@ void TestWaylandSurface::init()
     QVERIFY(m_display->isRunning());
     m_display->createShm();
 
-    m_compositorInterface = m_display->createCompositor(m_display);
+    m_compositorInterface = new CompositorInterface(m_display, m_display);
     QVERIFY(m_compositorInterface);
 
-    m_idleInhibitInterface = m_display->createIdleInhibitManagerV1(m_display);
+    m_idleInhibitInterface = new IdleInhibitManagerV1Interface(m_display, m_display);
     QVERIFY(m_idleInhibitInterface);
 
     // setup connection
@@ -1114,7 +1114,7 @@ void TestWaylandSurface::testOutput()
     QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
     QVERIFY(outputAnnouncedSpy.isValid());
 
-    auto serverOutput = m_display->createOutput(m_display);
+    auto serverOutput = new OutputInterface(m_display, m_display);
     serverOutput->create();
     QVERIFY(outputAnnouncedSpy.wait());
     QScopedPointer<Output> clientOutput(registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));

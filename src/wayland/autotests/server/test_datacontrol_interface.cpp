@@ -149,10 +149,10 @@ void DataControlInterfaceTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_seat = m_display->createSeat(this);
+    m_seat = new SeatInterface(m_display, this);
     m_seat->create();
-    m_serverCompositor = m_display->createCompositor(this);
-    m_dataControlDeviceManagerInterface = m_display->createDataControlDeviceManagerV1(this);
+    m_serverCompositor = new CompositorInterface(m_display, this);
+    m_dataControlDeviceManagerInterface = new DataControlDeviceManagerV1Interface(m_display, this);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

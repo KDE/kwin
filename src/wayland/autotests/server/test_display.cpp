@@ -77,20 +77,11 @@ void TestWaylandServerDisplay::testAddRemoveOutput()
     display.addSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
     display.start();
 
-    OutputInterface *output = display.createOutput();
+    OutputInterface *output = new OutputInterface(&display);
     QCOMPARE(display.outputs().size(), 1);
     QCOMPARE(display.outputs().first(), output);
-    // create a second output
-    OutputInterface *output2 = display.createOutput();
-    QCOMPARE(display.outputs().size(), 2);
-    QCOMPARE(display.outputs().first(), output);
-    QCOMPARE(display.outputs().last(), output2);
-    // remove the first output
-    display.removeOutput(output);
-    QCOMPARE(display.outputs().size(), 1);
-    QCOMPARE(display.outputs().first(), output2);
-    // and delete the second
-    delete output2;
+
+    delete output;
     QVERIFY(display.outputs().isEmpty());
 }
 
@@ -192,7 +183,7 @@ void TestWaylandServerDisplay::testOutputManagement()
     Display display;
     display.addSocketName("kwayland-test-0");
     display.start();
-    auto kwin = display.createOutputManagement(this);
+    auto kwin = new OutputManagementInterface(&display, this);
     kwin->create();
     QVERIFY(kwin->isValid());
 }

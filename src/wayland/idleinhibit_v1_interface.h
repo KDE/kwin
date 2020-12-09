@@ -28,12 +28,10 @@ class IdleInhibitManagerV1InterfacePrivate;
 class KWAYLANDSERVER_EXPORT IdleInhibitManagerV1Interface : public QObject
 {
     Q_OBJECT
-public:
-    ~IdleInhibitManagerV1Interface() override;
 
-protected:
-    friend class Display;
+public:
     explicit IdleInhibitManagerV1Interface(Display *display, QObject *parent = nullptr);
+    ~IdleInhibitManagerV1Interface() override;
 
 private:
     QScopedPointer<IdleInhibitManagerV1InterfacePrivate> d;

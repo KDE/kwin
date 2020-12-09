@@ -70,7 +70,7 @@ void TestWaylandOutput::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_serverOutput = m_display->createOutput(this);
+    m_serverOutput = new OutputInterface(m_display, this);
     QCOMPARE(m_serverOutput->pixelSize(), QSize());
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
     m_serverOutput->addMode(QSize(800, 600), OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
@@ -477,7 +477,7 @@ void TestWaylandOutput::testDpms()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    m_display->createDpmsManager();
+    new DpmsManagerInterface(m_display);
 
     // set Dpms on the Output
     QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);
@@ -572,7 +572,7 @@ void TestWaylandOutput::testDpmsRequestMode()
     using namespace KWaylandServer;
 
     // setup code
-    m_display->createDpmsManager();
+    new DpmsManagerInterface(m_display);
 
     // set Dpms on the Output
     QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);

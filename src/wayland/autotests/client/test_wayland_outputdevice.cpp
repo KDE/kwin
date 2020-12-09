@@ -82,7 +82,7 @@ void TestWaylandOutputDevice::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_serverOutputDevice = m_display->createOutputDevice(this);
+    m_serverOutputDevice = new OutputDeviceInterface(m_display, this);
     m_serverOutputDevice->setUuid("1337");
 
 

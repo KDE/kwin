@@ -239,16 +239,16 @@ int main(int argc, char **argv)
 
     Display display;
     display.start();
-    DataDeviceManagerInterface *ddm = display.createDataDeviceManager();
-    display.createCompositor(&display);
-    XdgShellInterface *shell = display.createXdgShell();
+    new DataDeviceManagerInterface(&display);
+    new CompositorInterface(&display, &display);
+    XdgShellInterface *shell = new XdgShellInterface(&display);
     display.createShm();
-    OutputInterface *output = display.createOutput(&display);
+    OutputInterface *output = new OutputInterface(&display, &display);
     output->setPhysicalSize(QSize(269, 202));
     const QSize windowSize(1024, 768);
     output->addMode(windowSize);
     output->create();
-    SeatInterface *seat = display.createSeat();
+    SeatInterface *seat = new SeatInterface(&display);
     seat->setHasKeyboard(true);
     seat->setHasPointer(true);
     seat->setName(QStringLiteral("testSeat0"));

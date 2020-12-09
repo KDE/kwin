@@ -31,7 +31,9 @@ class AppMenuInterfacePrivate;
 class KWAYLANDSERVER_EXPORT AppMenuManagerInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit AppMenuManagerInterface(Display *display, QObject *parent = nullptr);
     ~AppMenuManagerInterface() override;
     /**
      * Returns any existing appMenu for a given surface
@@ -46,8 +48,6 @@ Q_SIGNALS:
     void appMenuCreated(KWaylandServer::AppMenuInterface*);
 
 private:
-    explicit AppMenuManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<AppMenuManagerInterfacePrivate> d;
 };
 

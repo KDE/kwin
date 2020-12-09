@@ -39,7 +39,9 @@ class PlasmaShellSurfaceInterfacePrivate;
 class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit PlasmaShellInterface(Display *display, QObject *parent);
     virtual ~PlasmaShellInterface();
 
 Q_SIGNALS:
@@ -49,8 +51,6 @@ Q_SIGNALS:
     void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface*);
 
 private:
-    friend class Display;
-    explicit PlasmaShellInterface(Display *display, QObject *parent);
     QScopedPointer<PlasmaShellInterfacePrivate> d;
 };
 

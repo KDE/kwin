@@ -25,7 +25,9 @@ class PrimarySelectionDeviceV1Interface;
 class KWAYLANDSERVER_EXPORT PrimarySelectionDeviceManagerV1Interface : public QObject
 {
     Q_OBJECT
+
 public:
+    explicit PrimarySelectionDeviceManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~PrimarySelectionDeviceManagerV1Interface();
 
 Q_SIGNALS:
@@ -33,8 +35,6 @@ Q_SIGNALS:
     void dataDeviceCreated(KWaylandServer::PrimarySelectionDeviceV1Interface *dataDevice);
 
 private:
-    explicit PrimarySelectionDeviceManagerV1Interface(Display *display, QObject *parent = nullptr);
-    friend class Display;
     QScopedPointer<PrimarySelectionDeviceManagerV1InterfacePrivate> d;
 };
 

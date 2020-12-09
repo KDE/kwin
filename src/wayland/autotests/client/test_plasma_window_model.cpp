@@ -100,8 +100,8 @@ void PlasmaWindowModelTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_pwInterface = m_display->createPlasmaWindowManagement();
-    m_plasmaVirtualDesktopManagementInterface = m_display->createPlasmaVirtualDesktopManagement(m_display);
+    m_pwInterface = new PlasmaWindowManagementInterface(m_display, m_display);
+    m_plasmaVirtualDesktopManagementInterface = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
     m_plasmaVirtualDesktopManagementInterface->createDesktop("desktop1");
     m_plasmaVirtualDesktopManagementInterface->createDesktop("desktop2");
     m_pwInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);

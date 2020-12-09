@@ -57,7 +57,6 @@ Q_SIGNALS:
     void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 private:
-    friend class Display;
     friend class XdgExporterV2InterfacePrivate;
     friend class XdgImporterV2InterfacePrivate;
     QScopedPointer<XdgForeignV2InterfacePrivate> d;
