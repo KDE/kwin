@@ -28,8 +28,8 @@ namespace KWin
 AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
     : AbstractOutput(parent)
 {
-    m_waylandOutput = waylandServer()->display()->createOutput(this);
-    m_waylandOutputDevice = waylandServer()->display()->createOutputDevice(this);
+    m_waylandOutput = new KWaylandServer::OutputInterface(waylandServer()->display(), this);
+    m_waylandOutputDevice = new KWaylandServer::OutputDeviceInterface(waylandServer()->display(), this);
     m_xdgOutputV1 = waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput, this);
 
     connect(m_waylandOutput, &KWaylandServer::OutputInterface::dpmsModeRequested, this,

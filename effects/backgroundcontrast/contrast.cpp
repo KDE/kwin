@@ -34,7 +34,7 @@ ContrastEffect::ContrastEffect()
         net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         KWaylandServer::Display *display = effects->waylandDisplay();
         if (display) {
-            m_contrastManager = display->createContrastManager(this);
+            m_contrastManager = new KWaylandServer::ContrastManagerInterface(display, this);
         }
     } else {
         net_wm_contrast_region = 0;

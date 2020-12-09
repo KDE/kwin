@@ -28,7 +28,7 @@ static const Qt::Edges AnchorVertical = Qt::TopEdge | Qt::BottomEdge;
 LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
-    LayerShellV1Interface *shell = waylandServer()->display()->createLayerShellV1(this);
+    LayerShellV1Interface *shell = new LayerShellV1Interface(waylandServer()->display(), this);
     connect(shell, &KWaylandServer::LayerShellV1Interface::surfaceCreated,
             this, &LayerShellV1Integration::createClient);
 

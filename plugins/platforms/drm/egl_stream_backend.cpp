@@ -22,6 +22,7 @@
 #include <QOpenGLContext>
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/eglstream_controller_interface.h>
 #include <KWaylandServer/resource.h>
 #include "drm_gpu.h"
 
@@ -252,7 +253,7 @@ void EglStreamBackend::init()
     initWayland();
 
     using namespace KWaylandServer;
-    m_eglStreamControllerInterface = waylandServer()->display()->createEglStreamControllerInterface();
+    m_eglStreamControllerInterface = new EglStreamControllerInterface(waylandServer()->display());
     connect(m_eglStreamControllerInterface, &EglStreamControllerInterface::streamConsumerAttached, this,
             &EglStreamBackend::attachStreamConsumer);
 }

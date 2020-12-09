@@ -31,7 +31,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     initConfig<SlidingPopupsConfig>();
     KWaylandServer::Display *display = effects->waylandDisplay();
     if (display) {
-        display->createSlideManager(this);
+        new KWaylandServer::SlideManagerInterface(display, this);
     }
 
     m_slideLength = QFontMetrics(qApp->font()).height() * 8;

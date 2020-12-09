@@ -32,7 +32,7 @@ namespace KWin
 XdgShellIntegration::XdgShellIntegration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
-    XdgShellInterface *shell = waylandServer()->display()->createXdgShell(this);
+    XdgShellInterface *shell = new XdgShellInterface(waylandServer()->display(), this);
 
     connect(shell, &XdgShellInterface::toplevelCreated,
             this, &XdgShellIntegration::registerXdgToplevel);

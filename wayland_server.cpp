@@ -61,6 +61,10 @@
 #include <KWaylandServer/filtered_display.h>
 #include <KWaylandServer/keyboard_shortcuts_inhibit_v1_interface.h>
 #include <KWaylandServer/inputmethod_v1_interface.h>
+#include <KWaylandServer/tablet_v2_interface.h>
+#include <KWaylandServer/viewporter_interface.h>
+#include <KWaylandServer/datacontroldevicemanager_v1_interface.h>
+#include <KWaylandServer/primaryselectiondevicemanager_v1_interface.h>
 
 // Qt
 #include <QCryptographicHash>
@@ -334,7 +338,7 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
     if (!m_display->addSocketName(socketName)) {
         return false;
     }
-    m_compositor = m_display->createCompositor(m_display);
+    m_compositor = new CompositorInterface(m_display, m_display);
     connect(m_compositor, &CompositorInterface::surfaceCreated, this,
         [this] (SurfaceInterface *surface) {
             // check whether we have a Toplevel with the Surface's id
@@ -368,8 +372,8 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
         }
     );
 
-    m_tabletManagerV2 = m_display->createTabletManagerV2(m_display);
-    m_keyboardShortcutsInhibitManager = m_display->createKeyboardShortcutsInhibitManagerV1(m_display);
+    m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);
+    m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
 
     auto inputPanelV1Integration = new InputPanelV1Integration(this);
     connect(inputPanelV1Integration, &InputPanelV1Integration::clientCreated,
@@ -383,7 +387,7 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
     connect(layerShellV1Integration, &LayerShellV1Integration::clientCreated,
             this, &WaylandServer::registerShellClient);
 
-    m_xdgDecorationManagerV1 = m_display->createXdgDecorationManagerV1(m_display);
+    m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display, m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this,
         [this](XdgToplevelDecorationV1Interface *decoration) {
             if (XdgToplevelClient *toplevel = findXdgToplevelClient(decoration->toplevel()->surface())) {
@@ -392,20 +396,20 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
         }
     );
 
-    m_display->createViewporter();
+    new ViewporterInterface(m_display, m_display);
     m_display->createShm();
-    m_seat = m_display->createSeat(m_display);
+    m_seat = new SeatInterface(m_display, m_display);
     m_seat->create();
-    m_display->createPointerGesturesV1(m_display);
-    m_display->createPointerConstraintsV1(m_display);
-    m_dataDeviceManager = m_display->createDataDeviceManager(m_display);
-    m_display->createDataControlDeviceManagerV1(m_display);
-    m_display->createPrimarySelectionDeviceManagerV1(m_display);
-    m_idle = m_display->createIdle(m_display);
+    new PointerGesturesV1Interface(m_display, m_display);
+    new PointerConstraintsV1Interface(m_display, m_display);
+    m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
+    new DataControlDeviceManagerV1Interface(m_display, m_display);
+    new PrimarySelectionDeviceManagerV1Interface(m_display, m_display);
+    m_idle = new IdleInterface(m_display, m_display);
     auto idleInhibition = new IdleInhibition(m_idle);
     connect(this, &WaylandServer::shellClientAdded, idleInhibition, &IdleInhibition::registerClient);
-    m_display->createIdleInhibitManagerV1(m_display);
-    m_plasmaShell = m_display->createPlasmaShell(m_display);
+    new IdleInhibitManagerV1Interface(m_display, m_display);
+    m_plasmaShell = new PlasmaShellInterface(m_display, m_display);
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
         [this] (PlasmaShellSurfaceInterface *surface) {
             if (XdgSurfaceClient *client = findXdgSurfaceClient(surface->surface())) {
@@ -419,7 +423,7 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
             });
         }
     );
-    m_appMenuManager = m_display->createAppMenuManagerInterface(m_display);
+    m_appMenuManager = new AppMenuManagerInterface(m_display, m_display);
     connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated,
         [this] (AppMenuInterface *appMenu) {
             if (XdgToplevelClient *client = findXdgToplevelClient(appMenu->surface())) {
@@ -427,7 +431,7 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
             }
         }
     );
-    m_paletteManager = m_display->createServerSideDecorationPaletteManager(m_display);
+    m_paletteManager = new ServerSideDecorationPaletteManagerInterface(m_display, m_display);
     connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated,
         [this] (ServerSideDecorationPaletteInterface *palette) {
             if (XdgToplevelClient *client = findXdgToplevelClient(palette->surface())) {
@@ -436,7 +440,7 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
         }
     );
 
-    m_windowManagement = m_display->createPlasmaWindowManagement(m_display);
+    m_windowManagement = new PlasmaWindowManagementInterface(m_display, m_display);
     m_windowManagement->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);
     connect(m_windowManagement, &PlasmaWindowManagementInterface::requestChangeShowingDesktop, this,
         [] (PlasmaWindowManagementInterface::ShowingDesktopState state) {
@@ -462,14 +466,13 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
         }
     );
 
-    m_virtualDesktopManagement = m_display->createPlasmaVirtualDesktopManagement(m_display);
+    m_virtualDesktopManagement = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
     m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
 
-    m_display->createShadowManager(m_display);
+    new ShadowManagerInterface(m_display, m_display);
+    new DpmsManagerInterface(m_display, m_display);
 
-    m_display->createDpmsManager(m_display);
-
-    m_decorationManager = m_display->createServerSideDecorationManager(m_display);
+    m_decorationManager = new ServerSideDecorationManagerInterface(m_display, m_display);
     connect(m_decorationManager, &ServerSideDecorationManagerInterface::decorationCreated, this,
         [this] (ServerSideDecorationInterface *decoration) {
             if (XdgToplevelClient *client = findXdgToplevelClient(decoration->surface())) {
@@ -484,22 +487,18 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
         }
     );
 
-    m_outputManagement = m_display->createOutputManagement(m_display);
+    m_outputManagement = new OutputManagementInterface(m_display, m_display);
     connect(m_outputManagement, &OutputManagementInterface::configurationChangeRequested,
             this, [](KWaylandServer::OutputConfigurationInterface *config) {
                 kwinApp()->platform()->requestOutputsChange(config);
     });
     m_outputManagement->create();
 
-    m_xdgOutputManagerV1 = m_display->createXdgOutputManagerV1(m_display);
-
-    m_display->createSubCompositor(m_display);
-
-    m_XdgForeign = m_display->createXdgForeignV2Interface(m_display);
-
-    m_keyState = m_display->createKeyStateInterface(m_display);
-
-    m_inputMethod = m_display->createInputMethodInterface(m_display);
+    m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);
+    new SubCompositorInterface(m_display, m_display);
+    m_XdgForeign = new XdgForeignV2Interface(m_display, m_display);
+    m_keyState = new KeyStateInterface(m_display, m_display);
+    m_inputMethod = new InputMethodV1Interface(m_display, m_display);
 
     return true;
 }
@@ -507,7 +506,7 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
 KWaylandServer::LinuxDmabufUnstableV1Interface *WaylandServer::linuxDmabuf()
 {
     if (!m_linuxDmabuf) {
-        m_linuxDmabuf = m_display->createLinuxDmabufInterface(m_display);
+        m_linuxDmabuf = new LinuxDmabufUnstableV1Interface(m_display, m_display);
         m_linuxDmabuf->create();
     }
     return m_linuxDmabuf;

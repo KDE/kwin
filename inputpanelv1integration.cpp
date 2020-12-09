@@ -19,7 +19,7 @@ namespace KWin
 InputPanelV1Integration::InputPanelV1Integration(QObject *parent)
     : WaylandShellIntegration(parent)
 {
-    InputPanelV1Interface *shell = waylandServer()->display()->createInputPanelInterface(this);
+    InputPanelV1Interface *shell = new InputPanelV1Interface(waylandServer()->display(), this);
 
     connect(shell, &InputPanelV1Interface::inputPanelSurfaceAdded,
             this, &InputPanelV1Integration::createClient);

@@ -87,8 +87,8 @@ void InputMethod::init()
     connect(input(), &InputRedirection::keyStateChanged, this, &InputMethod::hide);
 
     if (waylandServer()) {
-        waylandServer()->display()->createTextInputManagerV2();
-        waylandServer()->display()->createTextInputManagerV3();
+        new TextInputManagerV2Interface(waylandServer()->display());
+        new TextInputManagerV3Interface(waylandServer()->display());
 
         connect(workspace(), &Workspace::clientAdded, this, &InputMethod::clientAdded);
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);

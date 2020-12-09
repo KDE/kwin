@@ -1986,7 +1986,7 @@ void InputRedirection::setupWorkspace()
 {
     if (waylandServer()) {
         using namespace KWaylandServer;
-        FakeInputInterface *fakeInput = waylandServer()->display()->createFakeInput(this);
+        FakeInputInterface *fakeInput = new FakeInputInterface(waylandServer()->display(), this);
         connect(fakeInput, &FakeInputInterface::deviceCreated, this,
             [this] (FakeInputDevice *device) {
                 connect(device, &FakeInputDevice::authenticationRequested, this,
@@ -2179,7 +2179,8 @@ void InputRedirection::setupLibInput()
 
         if (waylandServer()) {
             // create relative pointer manager
-            waylandServer()->display()->createRelativePointerManagerV1(waylandServer()->display());
+            new KWaylandServer::RelativePointerManagerV1Interface(waylandServer()->display(),
+                                                                  waylandServer()->display());
         }
 
         conn->setInputConfig(InputConfig::self()->inputConfig());
