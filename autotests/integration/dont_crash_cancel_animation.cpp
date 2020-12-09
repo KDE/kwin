@@ -46,7 +46,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
     qRegisterMetaType<KWin::Deleted*>();
     qRegisterMetaType<KWin::AbstractClient*>();
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
-    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
     QVERIFY(Compositor::self());
     QSignalSpy compositorToggledSpy(Compositor::self(), &Compositor::compositingToggled);

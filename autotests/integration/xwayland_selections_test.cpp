@@ -48,7 +48,7 @@ void XwaylandSelectionsTest::initTestCase()
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
 //    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
 //    QVERIFY(clipboardSyncDevicedCreated.isValid());
-    QVERIFY(waylandServer()->init(s_socketName.toLocal8Bit()));
+    QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();

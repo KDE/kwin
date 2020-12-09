@@ -676,7 +676,7 @@ int main(int argc, char * argv[])
     if (parser.isSet(noGlobalShortcutsOption)) {
         flags |= KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts;
     }
-    if (!server->init(parser.value(waylandSocketOption).toUtf8(), flags)) {
+    if (!server->init(parser.value(waylandSocketOption), flags)) {
         std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
         return 1;
     }

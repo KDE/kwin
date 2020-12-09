@@ -327,11 +327,11 @@ bool WaylandServer::start()
     return m_display->start();
 }
 
-bool WaylandServer::init(const QByteArray &socketName, InitializationFlags flags)
+bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
 {
     m_initFlags = flags;
     m_display = new KWinDisplay(this);
-    if (!m_display->addSocketName(QString::fromUtf8(socketName))) {
+    if (!m_display->addSocketName(socketName)) {
         return false;
     }
     m_compositor = m_display->createCompositor(m_display);
