@@ -498,7 +498,14 @@ Q_SIGNALS:
     void screensQueried();
     void initFailed();
     void readyChanged(bool);
+    /**
+     * This signal is emitted when an output has been connected. The @a output is not ready
+     * for compositing yet.
+     */
     void outputAdded(AbstractOutput *output);
+    /**
+     * This signal is emitted when an output has been disconnected.
+     */
     void outputRemoved(AbstractOutput *output);
 
 protected:
