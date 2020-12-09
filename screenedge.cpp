@@ -519,9 +519,11 @@ void Edge::setGeometry(const QRect &geometry)
     m_approachGeometry = QRect(x, y, width, height);
     doGeometryUpdate();
 
+    auto scale = screens()->scale(screens()->number(m_geometry.center()));
+
     if (isScreenEdge()) {
         m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA));
+        m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA * scale, MINIMUM_DELTA * scale));
     }
 }
 
