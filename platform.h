@@ -498,10 +498,6 @@ Q_SIGNALS:
     void screensQueried();
     void initFailed();
     void readyChanged(bool);
-    /**
-     * Emitted by backends using a one screen (nested window) approach and when the size of that changes.
-     */
-    void screenSizeChanged();
     void outputAdded(AbstractOutput *output);
     void outputRemoved(AbstractOutput *output);
 
