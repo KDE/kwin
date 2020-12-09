@@ -507,6 +507,19 @@ Q_SIGNALS:
      * This signal is emitted when an output has been disconnected.
      */
     void outputRemoved(AbstractOutput *output);
+    /**
+     * This signal is emitted when the @a output has become activated and it is ready for
+     * compositing.
+     */
+    void outputEnabled(AbstractOutput *output);
+    /**
+     * This signal is emitted when the @a output has been deactivated and it is no longer
+     * being composited. The outputDisabled() signal is guaranteed to be emitted before the
+     * output is removed.
+     *
+     * @see outputEnabled, outputRemoved
+     */
+    void outputDisabled(AbstractOutput *output);
 
 protected:
     explicit Platform(QObject *parent = nullptr);

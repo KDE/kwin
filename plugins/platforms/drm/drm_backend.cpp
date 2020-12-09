@@ -342,13 +342,16 @@ void DrmBackend::addOutput(DrmOutput *o)
     m_enabledOutputs.append(o);
     emit o->gpu()->outputEnabled(o);
     emit outputAdded(o);
+    emit outputEnabled(o);
 }
 
 void DrmBackend::removeOutput(DrmOutput *o)
 {
     emit o->gpu()->outputDisabled(o);
+    if (m_enabledOutputs.removeOne(o)) {
+        emit outputDisabled(o);
+    }
     m_outputs.removeOne(o);
-    m_enabledOutputs.removeOne(o);
     emit outputRemoved(o);
 }
 
@@ -470,11 +473,13 @@ void DrmBackend::enableOutput(DrmOutput *output, bool enable)
         Q_ASSERT(!m_enabledOutputs.contains(output));
         m_enabledOutputs << output;
         emit output->gpu()->outputEnabled(output);
+        emit outputEnabled(output);
     } else {
         Q_ASSERT(m_enabledOutputs.contains(output));
         m_enabledOutputs.removeOne(output);
         Q_ASSERT(!m_enabledOutputs.contains(output));
         emit output->gpu()->outputDisabled(output);
+        emit outputDisabled(output);
     }
     updateOutputsEnabled();
     checkOutputsAreOn();

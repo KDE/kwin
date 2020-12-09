@@ -61,6 +61,7 @@ void VirtualBackend::init()
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
         emit outputAdded(dummyOutput);
+        emit outputEnabled(dummyOutput);
     }
 
     setSoftwareCursorForced(true);
@@ -114,6 +115,7 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
 
     while (!m_outputs.isEmpty()) {
         VirtualOutput *output = m_outputs.takeLast();
+        emit outputDisabled(output);
         emit outputRemoved(output);
         delete output;
     }
@@ -133,6 +135,7 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         }
         m_outputs.append(vo);
         emit outputAdded(vo);
+        emit outputEnabled(vo);
     }
 
     emit virtualOutputsSet(countChanged);

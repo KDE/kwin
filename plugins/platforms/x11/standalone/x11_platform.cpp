@@ -442,6 +442,7 @@ void X11StandalonePlatform::doUpdateOutputs()
         o->setName(QStringLiteral("Xinerama"));
         m_outputs << o;
         emit outputAdded(o);
+        emit outputEnabled(o);
     };
 
     // TODO: instead of resetting all outputs, check if new output is added/removed
@@ -449,6 +450,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     //       untouched (like in DRM backend)
     while (!m_outputs.isEmpty()) {
         X11Output *output = m_outputs.takeLast();
+        emit outputDisabled(output);
         emit outputRemoved(output);
         delete output;
     }
@@ -538,6 +540,7 @@ void X11StandalonePlatform::doUpdateOutputs()
 
             m_outputs << o;
             emit outputAdded(o);
+            emit outputEnabled(o);
         }
     }
 

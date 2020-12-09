@@ -218,6 +218,7 @@ void HwcomposerBackend::init()
     }
 
     emit outputAdded(m_output.data());
+    emit outputEnabled(m_output.data());
 
     if (m_lights) {
         using namespace KWaylandServer;
