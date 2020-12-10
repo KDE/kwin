@@ -2092,7 +2092,6 @@ void InputRedirection::setupWorkspace()
                 );
             }
         );
-        connect(workspace(), &Workspace::configChanged, this, &InputRedirection::reconfigure);
 
         m_keyboard->init();
         m_pointer->init();
@@ -2148,11 +2147,17 @@ void InputRedirection::setupInputFilters()
     }
 }
 
+void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
+{
+    if (group.name() == QLatin1String("Keyboard")) {
+        reconfigure();
+    }
+}
+
 void InputRedirection::reconfigure()
 {
     if (Application::usesLibinput()) {
-        auto inputConfig = InputConfig::self()->inputConfig();
-        inputConfig->reparseConfiguration();
+        auto inputConfig = m_inputConfigWatcher->config();
         const auto config = inputConfig->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
         const int rate = config.readEntry("RepeatRate", 25);
@@ -2293,10 +2298,14 @@ void InputRedirection::setupLibInput()
                 }
             }
         );
+
+        m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
+        connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
+                this, &InputRedirection::handleInputConfigChanged);
+        reconfigure();
     }
 
     setupTouchpadShortcuts();
-    reconfigure();
 }
 
 void InputRedirection::setupTouchpadShortcuts()

@@ -17,6 +17,7 @@
 #include <QPointer>
 #include <config-kwin.h>
 
+#include <KConfigWatcher>
 #include <KSharedConfig>
 #include <QSet>
 
@@ -296,6 +297,9 @@ Q_SIGNALS:
     void hasAlphaNumericKeyboardChanged(bool set);
     void hasTabletModeSwitchChanged(bool set);
 
+private Q_SLOTS:
+    void handleInputConfigChanged(const KConfigGroup &group);
+
 private:
     void setupLibInput();
     void setupTouchpadShortcuts();
@@ -318,6 +322,7 @@ private:
 
     QVector<InputEventFilter*> m_filters;
     QVector<InputEventSpy*> m_spies;
+    KConfigWatcher::Ptr m_inputConfigWatcher;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
