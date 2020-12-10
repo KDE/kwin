@@ -11,7 +11,6 @@
 #define KWIN_QPA_BACKINGSTORE_H
 
 #include <epoxy/egl.h>
-#include "fixqopengl.h"
 
 #include <qpa/qplatformbackingstore.h>
 

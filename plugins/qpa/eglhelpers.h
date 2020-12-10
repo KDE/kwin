@@ -10,7 +10,6 @@
 #pragma once
 
 #include <epoxy/egl.h>
-#include "fixqopengl.h"
 
 #include <QSurfaceFormat>
 
