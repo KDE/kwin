@@ -12,7 +12,6 @@
 
 #include <epoxy/egl.h>
 #include "fixqopengl.h"
-#include <fixx11h.h>
 
 #include <qpa/qplatformbackingstore.h>
 

@@ -13,7 +13,6 @@
 
 #include <QObject>
 #include <epoxy/egl.h>
-#include <fixx11h.h>
 
 class QOpenGLFramebufferObject;
 

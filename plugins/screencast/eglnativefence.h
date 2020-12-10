@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <QtGlobal>
+
 #include <epoxy/egl.h>
-#include <fixx11h.h>
 
 namespace KWin
 {

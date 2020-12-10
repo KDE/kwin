@@ -51,6 +51,11 @@ include(ECMConfiguredInstall)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -DQT_USE_QSTRINGBUILDER -DQT_NO_URL_CAST_FROM_STRING)
 
+# Prevent EGL headers from including platform headers, in particular Xlib.h.
+add_definitions(-DMESA_EGL_NO_X11_HEADERS)
+add_definitions(-DEGL_NO_X11)
+add_definitions(-DEGL_NO_PLATFORM_SPECIFIC_TYPES)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

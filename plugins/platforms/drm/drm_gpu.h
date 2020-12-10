@@ -14,7 +14,6 @@
 #include <QVector>
 
 #include <epoxy/egl.h>
-#include <fixx11h.h>
 
 #include "drm_buffer.h"
 
