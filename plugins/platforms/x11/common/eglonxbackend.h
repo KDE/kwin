@@ -13,6 +13,9 @@
 
 #include <xcb/xcb.h>
 
+#include <X11/Xlib-xcb.h>
+#include <fixx11h.h>
+
 namespace KWin
 {
 

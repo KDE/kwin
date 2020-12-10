@@ -75,7 +75,7 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
     }
 }
 
-static void deleteWindowProperty(Window win, long int atom)
+static void deleteWindowProperty(xcb_window_t win, long int atom)
 {
     if (win == XCB_WINDOW_NONE) {
         return;

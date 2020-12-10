@@ -368,7 +368,7 @@ void Workspace::initializeX11()
     }
 
     // TODO: better value
-    rootInfo->setActiveWindow(None);
+    rootInfo->setActiveWindow(XCB_WINDOW_NONE);
     focusToNull();
 
     if (!qApp->isSessionRestored())
