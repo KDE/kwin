@@ -1275,7 +1275,7 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
         watchSubsurfaces(c);
     }
     connect(workspace(), &Workspace::clientAdded, this,
-        [this, reset, watchSubsurfaces] (AbstractClient *c) {
+        [reset, watchSubsurfaces] (AbstractClient *c) {
             watchSubsurfaces(c);
             reset();
         }
