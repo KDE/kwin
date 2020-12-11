@@ -705,7 +705,7 @@ set(kwinLibs
 
 add_library(kwin SHARED ${kwin_SRCS})
 if (Libinput_VERSION_STRING VERSION_GREATER 1.14)
-    target_compile_definitions(kwin PRIVATE -DLIBINPUT_HAS_TOTEM)
+    set_source_files_properties(libinput/connection.cpp PROPERTIES COMPILE_DEFINITIONS LIBINPUT_HAS_TOTEM)
 endif ()
 
 set_target_properties(kwin PROPERTIES
