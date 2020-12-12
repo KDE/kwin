@@ -265,6 +265,21 @@ void OutputDeviceInterface::setCurrentMode(const int modeId)
     emit currentModeChanged();
 }
 
+bool OutputDeviceInterface::setCurrentMode(const QSize &size, int refreshRate)
+{
+    Q_D();
+    auto mode = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
+        [size, refreshRate](const Mode &mode) {
+            return mode.size == size && mode.refreshRate == refreshRate;
+        }
+    );
+    if (mode == d->modes.constEnd()) {
+        return false;
+    }
+    setCurrentMode((*mode).id);
+    return true;
+}
+
 int32_t OutputDeviceInterface::Private::toTransform() const
 {
     switch (transform) {

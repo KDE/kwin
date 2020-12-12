@@ -135,6 +135,11 @@ public:
      */
     void addMode(Mode &mode);
     void setCurrentMode(const int modeId);
+    /**
+     * Makes the mode with the specified @a size and @a refreshRate current.
+     * Returns @c false if no mode with the given attributes exists; otherwise returns @c true.
+     */
+    bool setCurrentMode(const QSize &size, int refreshRate);
 
     void setEdid(const QByteArray &edid);
     void setEnabled(OutputDeviceInterface::Enablement enabled);
