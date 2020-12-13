@@ -59,12 +59,6 @@ add_definitions(-DEGL_NO_PLATFORM_SPECIFIC_TYPES)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5Multimedia QUIET)
-set_package_properties(Qt5Multimedia PROPERTIES
-    PURPOSE "Runtime-only dependency for effect video playback"
-    TYPE RUNTIME
-)
-
 # required frameworks by Core
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Config
