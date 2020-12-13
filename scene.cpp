@@ -1095,7 +1095,10 @@ WindowQuadList Scene::Window::makeContentsQuads() const
 
         // Push the child window pixmaps onto the stack, remember we're visiting the pixmaps
         // in the depth-first search manner.
-        stack += windowPixmap->children();
+        const QVector<WindowPixmap *> children = windowPixmap->children();
+        for (auto it = children.rbegin(); it != children.rend(); ++it) {
+            stack.push(*it);
+        }
     }
 
     return quads;

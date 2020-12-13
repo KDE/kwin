@@ -1344,8 +1344,9 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
         contentRenderNode.leafType = ContentLeaf;
 
         const QVector<WindowPixmap *> children = windowPixmap->children();
-        for (WindowPixmap *child : children)
-            stack.push(child);
+        for (auto it = children.rbegin(); it != children.rend(); ++it) {
+            stack.push(*it);
+        }
     }
 
     // Note that cross-fading is currently working properly only on X11. In order to make it
