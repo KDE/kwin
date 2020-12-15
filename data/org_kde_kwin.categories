@@ -7,7 +7,6 @@ libkwinglutils KWin OpenGL utility Library DEFAULT_SEVERITY [CRITICAL] IDENTIFIE
 libkwinxrenderutils KWin XRender utility Library DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [LIBKWINXRENDERUTILS]
 kwin_wayland_drm KWin Wayland (DRM backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_DRM]
 kwin_wayland_framebuffer KWin Wayland (Framebuffer backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_FB]
-kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_HWCOMPOSER]
 kwin_wayland_backend KWin Wayland (Wayland backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_WAYLAND_BACKEND]
 kwin_wayland_x11windowed KWin Wayland (X11 backend) DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_X11WINDOWED]
 kwin_platform_x11_standalone KWin X11 Standalone Platform DEFAULT_SEVERITY [CRITICAL] IDENTIFIER [KWIN_X11STANDALONE]
