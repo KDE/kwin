@@ -251,6 +251,7 @@ QString AbstractWaylandOutput::description() const
 void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 {
     m_waylandOutput->setCurrentMode(size, refreshRate);
+    m_waylandOutputDevice->setCurrentMode(size, refreshRate);
     m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
     m_xdgOutputV1->done();
 }

@@ -244,13 +244,9 @@ bool DrmGpu::updateOutputs()
                 output->m_conn = con;
                 crtc->setOutput(output);
                 output->m_crtc = crtc;
+                output->m_mode = connector->modes[0];
 
-                if (modeCrtc->mode_valid) {
-                    output->m_mode = modeCrtc->mode;
-                } else {
-                    output->m_mode = connector->modes[0];
-                }
-                qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name;
+                qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name << output->m_mode.hdisplay << output->m_mode.vdisplay;
                 if (!output->init(connector.data())) {
                     qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
                     delete output;

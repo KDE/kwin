@@ -136,6 +136,7 @@ private:
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
     void updateDpms(KWaylandServer::OutputInterface::DpmsMode mode) override;
     void updateMode(int modeIndex) override;
+    void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
     void setWaylandMode();
 
     void updateTransform(Transform transform) override;

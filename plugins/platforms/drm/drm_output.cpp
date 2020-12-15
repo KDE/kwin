@@ -673,6 +673,24 @@ void DrmOutput::updateTransform(Transform transform)
     }
 }
 
+void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate)
+{
+    if (m_mode.hdisplay == width && m_mode.vdisplay == height && m_mode.vrefresh == refreshRate) {
+        return;
+    }
+    // try to find a fitting mode
+    DrmScopedPointer<drmModeConnector> connector(drmModeGetConnectorCurrent(m_gpu->fd(), m_conn->id()));
+    for (int i = 0; i < connector->count_modes; i++) {
+        auto mode = connector->modes[i];
+        if (mode.hdisplay == width && mode.vdisplay == height && mode.vrefresh == refreshRate) {
+            updateMode(i);
+            return;
+        }
+    }
+    qCWarning(KWIN_DRM, "Could not find a fitting mode with size=%dx%d and refresh rate %d for output %s",
+              width, height, refreshRate, uuid().constData());
+}
+
 void DrmOutput::updateMode(int modeIndex)
 {
     // get all modes on the connector
@@ -831,7 +849,6 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
                 updateCursor();
                 showCursor();
             }
-            // TODO: forward to OutputInterface and OutputDeviceInterface
             setWaylandMode();
             emit screens()->changed();
         }

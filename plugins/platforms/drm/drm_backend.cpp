@@ -429,11 +429,23 @@ void DrmBackend::readOutputsConfiguration()
         qCDebug(KWIN_DRM) << "Reading output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
         const auto outputConfig = configGroup.group((*it)->uuid());
         (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
-        // TODO: add mode
         if (outputConfig.hasKey("Scale"))
             (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
         (*it)->setTransform(stringToTransform(outputConfig.readEntry("Transform", "normal")));
         pos.setX(pos.x() + (*it)->geometry().width());
+        if (outputConfig.hasKey("Mode")) {
+            QString mode = outputConfig.readEntry("Mode");
+            QStringList list = mode.split("_");
+            if (list.size() > 1) {
+                QStringList size = list[0].split("x");
+                if (size.size() > 1) {
+                    int width = size[0].toInt();
+                    int height = size[1].toInt();
+                    int refreshRate = list[1].toInt();
+                    (*it)->updateMode(width, height, refreshRate);
+                }
+            }
+        }
     }
 }
 
@@ -450,6 +462,13 @@ void DrmBackend::writeOutputsConfiguration()
         auto outputConfig = configGroup.group((*it)->uuid());
         outputConfig.writeEntry("Scale", (*it)->scale());
         outputConfig.writeEntry("Transform", transformToString((*it)->transform()));
+        QString mode;
+        mode += QString::number((*it)->modeSize().width());
+        mode += "x";
+        mode += QString::number((*it)->modeSize().height());
+        mode += "_";
+        mode += QString::number((*it)->refreshRate());
+        outputConfig.writeEntry("Mode", mode);
     }
 }
 
