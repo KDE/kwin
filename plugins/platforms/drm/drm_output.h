@@ -83,8 +83,6 @@ public:
 
     bool initCursor(const QSize &cursorSize);
 
-    bool supportsTransformations() const;
-
     /**
      * Drm planes might be capable of realizing the current output transform without usage
      * of compositing. This is a getter to query the current state of that

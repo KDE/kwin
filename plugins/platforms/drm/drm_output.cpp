@@ -1049,17 +1049,6 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
     return ret;
 }
 
-bool DrmOutput::supportsTransformations() const
-{
-    if (!m_primaryPlane) {
-        return false;
-    }
-    const auto transformations = m_primaryPlane->supportedTransformations();
-    return transformations.testFlag(DrmPlane::Transformation::Rotate90)
-        || transformations.testFlag(DrmPlane::Transformation::Rotate180)
-        || transformations.testFlag(DrmPlane::Transformation::Rotate270);
-}
-
 int DrmOutput::gammaRampSize() const
 {
     return m_crtc->gammaRampSize();

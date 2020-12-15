@@ -127,12 +127,6 @@ public:
      */
     virtual bool isInternal(int screen) const;
 
-    /**
-     * @returns @c true if the @p screen can be rotated.
-     * Default implementation returns @c false
-     */
-    virtual bool supportsTransformations(int screen) const;
-
     virtual Qt::ScreenOrientation orientation(int screen) const;
 
     int physicalDpiX(int screen) const;

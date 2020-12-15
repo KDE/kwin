@@ -201,12 +201,6 @@ bool Screens::isInternal(int screen) const
     return false;
 }
 
-bool Screens::supportsTransformations(int screen) const
-{
-    Q_UNUSED(screen)
-    return false;
-}
-
 Qt::ScreenOrientation Screens::orientation(int screen) const
 {
     Q_UNUSED(screen)

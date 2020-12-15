@@ -20,10 +20,6 @@ class DrmScreens : public OutputScreens
 public:
     DrmScreens(DrmBackend *backend, QObject *parent = nullptr);
     ~DrmScreens() override;
-
-    bool supportsTransformations(int screen) const override;
-
-    DrmBackend *m_backend;
 };
 
 }
