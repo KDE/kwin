@@ -59,7 +59,7 @@ pid_t launch_kwin(struct wl_socket *socket, int argc, char **argv)
 
         args[pos++] = NULL;
 
-        execvpe("kwin_wayland", args, environ);
+        execvp("kwin_wayland", args);
         free(args);
         exit(127); /* if exec fails */
     } else {
