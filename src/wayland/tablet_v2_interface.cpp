@@ -181,8 +181,16 @@ public:
         delete m_cursors.take(resource->handle);
     }
 
+    void zwp_tablet_tool_v2_destroy(Resource *resource) override {
+        Q_UNUSED(resource);
+        if (m_removed && resourceMap().isEmpty()) {
+            delete q;
+        }
+    }
+
     Display *const m_display;
     bool m_cleanup = false;
+    bool m_removed = false;
     QPointer<SurfaceInterface> m_surface;
     QPointer<TabletV2Interface> m_lastTablet;
     const uint32_t m_type;
@@ -312,6 +320,8 @@ void TabletToolV2Interface::sendUp()
 
 void TabletToolV2Interface::sendRemoved()
 {
+    d->m_removed = true;
+
     for (QtWaylandServer::zwp_tablet_tool_v2::Resource *resource : d->resourceMap()) {
         d->send_removed(resource->handle);
     }
@@ -340,6 +350,9 @@ public:
 
     void sendToolAdded(Resource *resource, TabletToolV2Interface *tool)
     {
+        if (tool->d->m_removed)
+            return;
+
         wl_resource *toolResource = tool->d->add(resource->client(), resource->version())->handle;
         send_tool_added(resource->handle, toolResource);
 
@@ -355,6 +368,9 @@ public:
     }
     void sendTabletAdded(Resource *resource, TabletV2Interface *tablet)
     {
+        if (tablet->d->m_removed)
+            return;
+
         wl_resource *tabletResource = tablet->d->add(resource->client(), resource->version())->handle;
         send_tablet_added(resource->handle, tabletResource);
 
