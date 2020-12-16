@@ -18,6 +18,7 @@
 #include "KWayland/Client/event_queue.h"
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/seat.h"
+#include "KWayland/Client/surface.h"
 
 #include "qwayland-tablet-unstable-v2.h"
 
@@ -30,6 +31,42 @@ public:
         : QtWayland::zwp_tablet_v2(t)
     {
     }
+};
+
+class TabletPad : public QObject, public QtWayland::zwp_tablet_pad_v2
+{
+    Q_OBJECT
+public:
+    TabletPad(::zwp_tablet_pad_v2 *t)
+        : QtWayland::zwp_tablet_pad_v2(t)
+    {
+    }
+
+    void zwp_tablet_pad_v2_done() override {
+        Q_ASSERT(!doneCalled);
+        doneCalled = true;
+    }
+
+    void zwp_tablet_pad_v2_buttons(uint32_t buttons) override {
+        Q_ASSERT(buttons == 1);
+    }
+
+    void zwp_tablet_pad_v2_enter(uint32_t /*serial*/, struct ::zwp_tablet_v2 */*tablet*/, struct ::wl_surface *surface) override {
+        m_currentSurface = surface;
+    }
+
+    void zwp_tablet_pad_v2_button(uint32_t /*time*/, uint32_t button, uint32_t state) override {
+        buttonStates[m_currentSurface][button] = state;
+        Q_EMIT buttonReceived();
+    }
+
+    ::wl_surface *m_currentSurface = nullptr;
+
+    bool doneCalled = false;
+    QHash<::wl_surface *, QHash<uint32_t, uint32_t>> buttonStates;
+
+Q_SIGNALS:
+    void buttonReceived();
 };
 
 class Tool : public QObject, public QtWayland::zwp_tablet_tool_v2
@@ -76,10 +113,18 @@ public:
         Q_EMIT toolAdded();
     }
 
+    void zwp_tablet_seat_v2_pad_added(struct ::zwp_tablet_pad_v2 *id) override
+    {
+        m_pads << new TabletPad(id);
+        Q_EMIT padAdded();
+    }
+
     QVector<Tablet *> m_tablets;
+    QVector<TabletPad *> m_pads;
     QVector<Tool *> m_tools;
 
 Q_SIGNALS:
+    void padAdded();
     void toolAdded();
     void tabletAdded();
 };
@@ -96,6 +141,7 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void testAdd();
+    void testAddPad();
     void testInteractSimple();
     void testInteractSurfaceChange();
 
@@ -112,8 +158,10 @@ private:
 
     TabletSeat *m_tabletSeatClient = nullptr;
     TabletManagerV2Interface *m_tabletManager;
+    QVector<KWayland::Client::Surface *> m_surfacesClient;
 
     TabletV2Interface *m_tablet;
+    TabletPadV2Interface *m_tabletPad = nullptr;
     TabletToolV2Interface *m_tool;
 
     QVector<SurfaceInterface *> m_surfaces;
@@ -178,7 +226,7 @@ void TestTabletInterface::initTestCase()
 
     QSignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
-        m_clientCompositor->createSurface(this);
+        m_surfacesClient += m_clientCompositor->createSurface(this);
     }
     QVERIFY(surfaceSpy.count() < 3 && surfaceSpy.wait(200));
     QVERIFY(m_surfaces.count() == 3);
@@ -228,6 +276,32 @@ void TestTabletInterface::testAdd()
         m_tool->setCurrentSurface(surface);
     }
     m_tool->setCurrentSurface(nullptr);
+}
+
+void TestTabletInterface::testAddPad()
+{
+    TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat);
+    QVERIFY(seatInterface);
+
+    QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
+    m_tabletPad = seatInterface->addTabletPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0, m_tablet);
+    QVERIFY(m_tabletPad);
+    QVERIFY(tabletPadSpy.wait() || tabletPadSpy.count() == 1);
+    QCOMPARE(m_tabletSeatClient->m_pads.count(), 1);
+    QVERIFY(m_tabletSeatClient->m_pads[0]);
+
+    QVERIFY(m_tabletPad->ring(0));
+    QVERIFY(m_tabletPad->strip(0));
+
+    QCOMPARE(m_surfaces.count(), 3);
+    QVERIFY(m_tabletSeatClient->m_pads[0]->buttonStates.isEmpty());
+    QSignalSpy buttonSpy(m_tabletSeatClient->m_pads[0], &TabletPad::buttonReceived);
+    m_tabletPad->setCurrentSurface(m_surfaces[0], m_tablet);
+    m_tabletPad->sendButton(123, 0, QtWayland::zwp_tablet_pad_v2::button_state_pressed);
+    QVERIFY(buttonSpy.count() || buttonSpy.wait(100));
+    QCOMPARE(m_tabletSeatClient->m_pads[0]->doneCalled, true);
+    QCOMPARE(m_tabletSeatClient->m_pads[0]->buttonStates.count(), 1);
+    QCOMPARE(m_tabletSeatClient->m_pads[0]->buttonStates[*m_surfacesClient[0]][0], QtWayland::zwp_tablet_pad_v2::button_state_pressed);
 }
 
 static uint s_serial = 0;

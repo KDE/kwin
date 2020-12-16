@@ -46,6 +46,7 @@ public:
     }
 
     TabletV2Interface *const q;
+    TabletPadV2Interface *m_pad = nullptr;
     const uint32_t m_vendorId;
     const uint32_t m_productId;
     const QString m_name;
@@ -74,6 +75,11 @@ void TabletV2Interface::sendRemoved()
     for (QtWaylandServer::zwp_tablet_v2::Resource *resource : d->resourceMap()) {
         d->send_removed(resource->handle);
     }
+}
+
+TabletPadV2Interface *TabletV2Interface::pad() const
+{
+    return d->m_pad;
 }
 
 class TabletCursorV2Private
@@ -327,6 +333,280 @@ void TabletToolV2Interface::sendRemoved()
     }
 }
 
+class TabletPadRingV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_ring_v2
+{
+public:
+    TabletPadRingV2InterfacePrivate(TabletPadRingV2Interface *q)
+        : zwp_tablet_pad_ring_v2()
+        , q(q)
+    {
+    }
+
+    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    {
+        ClientConnection *client = surface->client();
+        Resource *r = resourceMap().value(*client);
+        return r ? r->handle : nullptr;
+    }
+
+    void zwp_tablet_pad_ring_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
+        if (m_pad->isRemoved() && resourceMap().isEmpty()) {
+            delete q;
+        }
+    }
+    TabletPadRingV2Interface *const q;
+    TabletPadV2Interface *m_pad;
+};
+
+TabletPadRingV2Interface::TabletPadRingV2Interface(QObject *parent)
+    : QObject(parent)
+    , d(new TabletPadRingV2InterfacePrivate(this))
+{
+}
+
+TabletPadRingV2Interface::~TabletPadRingV2Interface() = default;
+
+void TabletPadRingV2Interface::sendAngle(qreal angle)
+{
+    d->send_angle(d->resourceForSurface(d->m_pad->currentSurface()), wl_fixed_from_double(angle));
+}
+
+void TabletPadRingV2Interface::sendFrame(quint32 time)
+{
+    d->send_frame(d->resourceForSurface(d->m_pad->currentSurface()), time);
+}
+
+void TabletPadRingV2Interface::sendSource(Source source)
+{
+    d->send_source(d->resourceForSurface(d->m_pad->currentSurface()), source);
+}
+
+void TabletPadRingV2Interface::sendStop()
+{
+    d->send_stop(d->resourceForSurface(d->m_pad->currentSurface()));
+}
+
+class TabletPadStripV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_strip_v2
+{
+public:
+    TabletPadStripV2InterfacePrivate(TabletPadStripV2Interface *q)
+        : zwp_tablet_pad_strip_v2()
+        , q(q)
+    {
+    }
+
+    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    {
+        ClientConnection *client = surface->client();
+        Resource *r = resourceMap().value(*client);
+        return r ? r->handle : nullptr;
+    }
+
+    void zwp_tablet_pad_strip_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
+        if (m_pad->isRemoved() && resourceMap().isEmpty()) {
+            delete q;
+        }
+    }
+    TabletPadV2Interface *m_pad = nullptr;
+    TabletPadStripV2Interface *const q;
+};
+
+TabletPadStripV2Interface::TabletPadStripV2Interface(QObject *parent)
+    : QObject(parent)
+    , d(new TabletPadStripV2InterfacePrivate(this))
+{
+}
+
+TabletPadStripV2Interface::~TabletPadStripV2Interface() = default;
+
+void TabletPadStripV2Interface::sendFrame(quint32 time)
+{
+    d->send_frame(d->resourceForSurface(d->m_pad->currentSurface()), time);
+}
+
+void TabletPadStripV2Interface::sendPosition(quint32 position)
+{
+    d->send_position(d->resourceForSurface(d->m_pad->currentSurface()), position);
+}
+
+void TabletPadStripV2Interface::sendSource(Source source)
+{
+    d->send_source(d->resourceForSurface(d->m_pad->currentSurface()), source);
+}
+
+void TabletPadStripV2Interface::sendStop()
+{
+    d->send_stop(d->resourceForSurface(d->m_pad->currentSurface()));
+}
+
+class TabletPadGroupV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_group_v2
+{
+public:
+    TabletPadGroupV2InterfacePrivate(quint32 currentMode, TabletPadGroupV2Interface *q)
+        : zwp_tablet_pad_group_v2()
+        , q(q)
+        , m_currentMode(currentMode)
+    {
+    }
+
+    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    {
+        ClientConnection *client = surface->client();
+        Resource *r = resourceMap().value(*client);
+        return r ? r->handle : nullptr;
+    }
+
+    void zwp_tablet_pad_group_v2_destroy(Resource * resource) override {
+        wl_resource_destroy(resource->handle);
+        if (m_pad->isRemoved() && resourceMap().isEmpty()) {
+            delete q;
+        }
+    }
+
+    TabletPadGroupV2Interface *const q;
+    TabletPadV2Interface *m_pad = nullptr;
+    quint32 m_currentMode;
+};
+
+TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 currentMode, QObject *parent)
+    : QObject(parent)
+    , d(new TabletPadGroupV2InterfacePrivate(currentMode, this))
+{
+}
+
+TabletPadGroupV2Interface::~TabletPadGroupV2Interface() = default;
+
+void TabletPadGroupV2Interface::sendModeSwitch(quint32 time, quint32 serial, quint32 mode)
+{
+    d->m_currentMode = mode;
+    d->send_mode_switch(d->resourceForSurface(d->m_pad->currentSurface()), time, serial, mode);
+}
+
+class TabletPadV2InterfacePrivate : public QtWaylandServer::zwp_tablet_pad_v2
+{
+public:
+    TabletPadV2InterfacePrivate(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, TabletPadV2Interface *q)
+        : zwp_tablet_pad_v2()
+        , q(q)
+        , m_path(path)
+        , m_buttons(buttons)
+        , m_modes(modes)
+        , m_padGroup(new TabletPadGroupV2Interface(currentMode, q))
+        , m_display(display)
+    {
+        for (uint i = 0; i < buttons; ++i) {
+            m_buttons[i] = i;
+        }
+
+        m_padGroup->d->m_pad = q;
+        m_rings.reserve(rings);
+        for (quint32 i = 0; i < rings; ++i) {
+            m_rings += new TabletPadRingV2Interface(q);
+            m_rings.constLast()->d->m_pad = q;
+        }
+
+        m_strips.reserve(strips);
+        for (quint32 i = 0; i < strips; ++i) {
+            m_strips += new TabletPadStripV2Interface(q);
+            m_strips.constLast()->d->m_pad = q;
+        }
+    }
+
+    void zwp_tablet_pad_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
+        if (m_removed && resourceMap().isEmpty()) {
+            delete q;
+        }
+    }
+
+    void zwp_tablet_pad_v2_set_feedback(Resource *resource, quint32 button, const QString &description, quint32 serial) override {
+        Q_EMIT q->feedback(m_display->getConnection(resource->client()), button, description, serial);
+    }
+
+    wl_resource *resourceForSurface(SurfaceInterface *surface) const
+    {
+        ClientConnection *client = surface->client();
+        Resource *r = resourceMap().value(*client);
+        return r ? r->handle : nullptr;
+    }
+
+    TabletPadV2Interface *const q;
+
+    const QString m_path;
+    QVector<quint32> m_buttons;
+    const int m_modes;
+
+    QVector<TabletPadRingV2Interface *> m_rings;
+    QVector<TabletPadStripV2Interface *> m_strips;
+    TabletPadGroupV2Interface *const m_padGroup;
+    TabletSeatV2Interface *m_seat = nullptr;
+    SurfaceInterface *m_currentSurface = nullptr;
+    bool m_removed = false;
+    Display *const m_display;
+};
+
+TabletPadV2Interface::TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, QObject *parent)
+    : QObject(parent)
+    , d(new TabletPadV2InterfacePrivate(path, buttons, rings, strips, modes, currentMode, display, this))
+{
+}
+
+TabletPadV2Interface::~TabletPadV2Interface() = default;
+
+void TabletPadV2Interface::sendButton(quint32 time, quint32 button, bool pressed)
+{
+    d->send_button(d->resourceForSurface(currentSurface()), time, button, pressed);
+}
+
+void TabletPadV2Interface::sendRemoved()
+{
+    d->m_removed = true;
+    for (auto resource : d->resourceMap()) {
+        d->send_removed(resource->handle);
+    }
+}
+
+TabletPadRingV2Interface *TabletPadV2Interface::ring(uint at) const
+{
+    return d->m_rings[at];
+}
+
+TabletPadStripV2Interface *TabletPadV2Interface::strip(uint at) const
+{
+    return d->m_strips[at];
+}
+
+bool TabletPadV2Interface::isRemoved() const
+{
+    return d->m_removed;
+}
+
+void TabletPadV2Interface::setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet)
+{
+    if (surface == d->m_currentSurface) {
+        return;
+    }
+
+    if (d->m_currentSurface) {
+        d->send_leave(d->m_display->nextSerial(), surface->resource());
+    }
+
+    d->m_currentSurface = surface;
+    if (surface) {
+        wl_resource *tabletResource = tablet->d->resourceForSurface(surface);
+
+        d->send_enter(d->resourceForSurface(surface), d->m_display->nextSerial(), tabletResource, surface->resource());
+        d->m_padGroup->sendModeSwitch(0, d->m_display->nextSerial(), d->m_padGroup->d->m_currentMode);
+    }
+}
+
+SurfaceInterface *TabletPadV2Interface::currentSurface() const
+{
+    return d->m_currentSurface;
+}
+
 class TabletSeatV2InterfacePrivate : public QtWaylandServer::zwp_tablet_seat_v2
 {
 public:
@@ -339,8 +619,12 @@ public:
 
     void zwp_tablet_seat_v2_bind_resource(Resource *resource) override
     {
-        for (auto iface : qAsConst(m_tablets)) {
-            sendTabletAdded(resource, iface);
+        for (auto tablet : qAsConst(m_tablets)) {
+            sendTabletAdded(resource, tablet);
+        }
+
+        for (auto pad : qAsConst(m_pads)) {
+            sendPadAdded(resource, pad);
         }
 
         for (auto *tool : qAsConst(m_tools)) {
@@ -384,9 +668,40 @@ public:
         tablet->d->send_done(tabletResource);
     }
 
+    void sendPadAdded(Resource *resource, TabletPadV2Interface *pad)
+    {
+        if (pad->d->m_removed)
+            return;
+
+        wl_resource *tabletResource = pad->d->add(resource->client(), resource->version())->handle;
+        send_pad_added(resource->handle, tabletResource);
+
+        pad->d->send_buttons(tabletResource, pad->d->m_buttons.size());
+        pad->d->send_path(tabletResource, pad->d->m_path);
+
+        auto groupResource = pad->d->m_padGroup->d->add(resource->client(), resource->version());
+        pad->d->send_group(tabletResource, groupResource->handle);
+        pad->d->m_padGroup->d->send_modes(groupResource->handle, pad->d->m_modes);
+
+        pad->d->m_padGroup->d->send_buttons(groupResource->handle, QByteArray::fromRawData(reinterpret_cast<const char *>(pad->d->m_buttons.data()), pad->d->m_buttons.size() * sizeof(quint32)));
+
+        for (auto ring : pad->d->m_rings) {
+            auto ringResource = ring->d->add(resource->client(), resource->version());
+            pad->d->m_padGroup->d->send_ring(groupResource->handle, ringResource->handle);
+        }
+
+        for (auto strip : pad->d->m_strips) {
+            auto stripResource = strip->d->add(resource->client(), resource->version());
+            pad->d->m_padGroup->d->send_strip(groupResource->handle, stripResource->handle);
+        }
+        pad->d->m_padGroup->d->send_done(groupResource->handle);
+        pad->d->send_done(tabletResource);
+    }
+
     TabletSeatV2Interface *const q;
     QVector<TabletToolV2Interface *> m_tools;
     QHash<QString, TabletV2Interface *> m_tablets;
+    QHash<QString, TabletPadV2Interface *> m_pads;
     Display *const m_display;
 };
 
@@ -425,6 +740,8 @@ TabletV2Interface *TabletSeatV2Interface::addTablet(uint32_t vendorId, uint32_t 
                                                     const QString &name,
                                                     const QStringList &paths)
 {
+    Q_ASSERT(!d->m_tablets.contains(sysname));
+
     auto iface = new TabletV2Interface(vendorId, productId, name, paths, this);
 
     for (QtWaylandServer::zwp_tablet_seat_v2::Resource *r : d->resourceMap()) {
@@ -435,11 +752,31 @@ TabletV2Interface *TabletSeatV2Interface::addTablet(uint32_t vendorId, uint32_t 
     return iface;
 }
 
-void TabletSeatV2Interface::removeTablet(const QString &sysname)
+TabletPadV2Interface *TabletSeatV2Interface::addTabletPad(const QString &sysname, const QString &name, const QStringList &paths, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, TabletV2Interface *tablet)
+{
+    Q_UNUSED(name);
+    auto iface = new TabletPadV2Interface(paths.at(0), buttons, rings, strips, modes, currentMode, d->m_display, this);
+    iface->d->m_seat = this;
+    for (auto r : d->resourceMap()) {
+        d->sendPadAdded(r, iface);
+    }
+
+    tablet->d->m_pad = iface;
+
+    d->m_pads[sysname] = iface;
+    return iface;
+}
+
+void TabletSeatV2Interface::removeDevice(const QString &sysname)
 {
     auto tablet = d->m_tablets.take(sysname);
     if (tablet) {
         tablet->sendRemoved();
+    }
+
+    auto pad = d->m_pads.take(sysname);
+    if (pad) {
+        pad->sendRemoved();
     }
 }
 
@@ -461,9 +798,10 @@ TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardw
     return nullptr;
 }
 
-TabletV2Interface *TabletSeatV2Interface::tabletByName(const QString &name) const
+TabletPadV2Interface * TabletSeatV2Interface::padByName(const QString &name) const
 {
-    return d->m_tablets.value(name);
+    Q_ASSERT(d->m_pads.contains(name));
+    return d->m_pads.value(name);
 }
 
 class TabletManagerV2InterfacePrivate : public QtWaylandServer::zwp_tablet_manager_v2
@@ -506,6 +844,11 @@ TabletManagerV2Interface::TabletManagerV2Interface(Display *display, QObject *pa
 TabletSeatV2Interface *TabletManagerV2Interface::seat(SeatInterface *seat) const
 {
     return d->get(seat);
+}
+
+bool TabletSeatV2Interface::isClientSupported(ClientConnection *client) const
+{
+    return d->resourceMap().value(*client);
 }
 
 TabletManagerV2Interface::~TabletManagerV2Interface() = default;

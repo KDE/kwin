@@ -14,6 +14,7 @@
 
 namespace KWaylandServer
 {
+class ClientConnection;
 class Display;
 class SeatInterface;
 class SurfaceInterface;
@@ -25,6 +26,14 @@ class TabletSeatV2InterfacePrivate;
 class TabletToolV2InterfacePrivate;
 class TabletV2Interface;
 class TabletV2InterfacePrivate;
+class TabletPadV2Interface;
+class TabletPadV2InterfacePrivate;
+class TabletPadRingV2Interface;
+class TabletPadRingV2InterfacePrivate;
+class TabletPadStripV2Interface;
+class TabletPadStripV2InterfacePrivate;
+class TabletPadGroupV2Interface;
+class TabletPadGroupV2InterfacePrivate;
 
 /**
  * This is an implementation of wayland-protocols/unstable/tablet/tablet-unstable-v2.xml
@@ -130,6 +139,95 @@ private:
     friend class TabletToolV2InterfacePrivate;
 };
 
+class KWAYLANDSERVER_EXPORT TabletPadV2Interface : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~TabletPadV2Interface();
+
+    TabletPadRingV2Interface *ring(uint at) const;
+    TabletPadStripV2Interface *strip(uint at) const;
+    void sendButton(quint32 time, quint32 button, bool pressed);
+
+    void sendRemoved();
+    bool isRemoved() const;
+
+    void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet);
+    SurfaceInterface *currentSurface() const;
+
+Q_SIGNALS:
+    void feedback(KWaylandServer::ClientConnection *client, quint32 button, const QString &description, quint32 serial);
+
+private:
+    friend class TabletSeatV2Interface;
+    friend class TabletSeatV2InterfacePrivate;
+    explicit TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, QObject *parent);
+    QScopedPointer<TabletPadV2InterfacePrivate> d;
+};
+
+class KWAYLANDSERVER_EXPORT TabletPadRingV2Interface : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~TabletPadRingV2Interface();
+
+    enum Source {
+        SourceFinger = 1, // finger
+    };
+    Q_ENUM(Source)
+
+    void sendSource(Source source);
+    void sendAngle(qreal angle);
+    void sendStop();
+    void sendFrame(quint32 time);
+
+private:
+    friend class TabletPadGroupV2Interface;
+    friend class TabletPadV2InterfacePrivate;
+    friend class TabletSeatV2InterfacePrivate;
+    explicit TabletPadRingV2Interface(QObject *parent);
+    QScopedPointer<TabletPadRingV2InterfacePrivate> d;
+};
+
+class KWAYLANDSERVER_EXPORT TabletPadStripV2Interface : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~TabletPadStripV2Interface();
+
+    enum Source {
+        SourceFinger = 1, // finger
+    };
+
+    void sendSource(Source source);
+    void sendPosition(quint32 position);
+    void sendFrame(quint32 time);
+    void sendStop();
+
+private:
+    friend class TabletPadGroupV2Interface;
+    friend class TabletPadV2InterfacePrivate;
+    friend class TabletSeatV2InterfacePrivate;
+    explicit TabletPadStripV2Interface(QObject *parent);
+    QScopedPointer<TabletPadStripV2InterfacePrivate> d;
+};
+
+class KWAYLANDSERVER_EXPORT TabletPadGroupV2Interface : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~TabletPadGroupV2Interface();
+
+    void sendModeSwitch(quint32 time, quint32 serial, quint32 mode);
+
+private:
+    friend class TabletPadV2Interface;
+    friend class TabletPadV2InterfacePrivate;
+    friend class TabletSeatV2InterfacePrivate;
+    explicit TabletPadGroupV2Interface(quint32 currentMode, QObject *parent);
+    QScopedPointer<TabletPadGroupV2InterfacePrivate> d;
+};
+
 class KWAYLANDSERVER_EXPORT TabletV2Interface : public QObject
 {
     Q_OBJECT
@@ -141,11 +239,13 @@ public:
      */
     bool isSurfaceSupported(SurfaceInterface *surface) const;
 
+    TabletPadV2Interface *pad() const;
     void sendRemoved();
 
 private:
     friend class TabletSeatV2Interface;
     friend class TabletSeatV2InterfacePrivate;
+    friend class TabletPadV2Interface;
     friend class TabletToolV2Interface;
     explicit TabletV2Interface(quint32 vendorId, quint32 productId, const QString &name, const QStringList &paths, QObject *parent);
     QScopedPointer<TabletV2InterfacePrivate> d;
@@ -158,13 +258,16 @@ public:
     virtual ~TabletSeatV2Interface();
 
     TabletV2Interface *addTablet(quint32 vendorId, quint32 productId, const QString &sysname, const QString &name, const QStringList &paths);
+    TabletPadV2Interface *addTabletPad(const QString &sysname, const QString &name, const QStringList &paths, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, TabletV2Interface *tablet);
     TabletToolV2Interface *addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QVector<TabletToolV2Interface::Capability> &capabilities);
 
     TabletToolV2Interface *toolByHardwareId(quint64 hardwareId) const;
     TabletToolV2Interface *toolByHardwareSerial(quint64 hardwareSerial) const;
-    TabletV2Interface *tabletByName(const QString &sysname) const;
+    TabletPadV2Interface *padByName(const QString &sysname) const;
 
-    void removeTablet(const QString &sysname);
+    void removeDevice(const QString &sysname);
+
+    bool isClientSupported(ClientConnection *client) const;
 
 private:
     friend class TabletManagerV2InterfacePrivate;
