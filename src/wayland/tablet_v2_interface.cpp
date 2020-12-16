@@ -20,7 +20,7 @@ static int s_version = 1;
 class TabletV2InterfacePrivate : public QtWaylandServer::zwp_tablet_v2
 {
 public:
-    TabletV2InterfacePrivate(TabletV2Interface *q, uint32_t vendorId, uint32_t productId, const QString name, const QStringList &paths)
+    TabletV2InterfacePrivate(TabletV2Interface *q, uint32_t vendorId, uint32_t productId, const QString &name, const QStringList &paths)
         : zwp_tablet_v2()
         , q(q)
         , m_vendorId(vendorId)
@@ -33,14 +33,14 @@ public:
     wl_resource *resourceForSurface(SurfaceInterface *surface) const
     {
         ClientConnection *client = surface->client();
-        QtWaylandServer::zwp_tablet_v2::Resource *r = resourceMap().value(*client);
+        Resource *r = resourceMap().value(*client);
         return r ? r->handle : nullptr;
     }
 
     void zwp_tablet_v2_destroy_resource(QtWaylandServer::zwp_tablet_v2::Resource * resource) override
     {
         Q_UNUSED(resource);
-        if (removed && resourceMap().isEmpty()) {
+        if (m_removed && resourceMap().isEmpty()) {
             delete q;
         }
     }
@@ -50,7 +50,7 @@ public:
     const uint32_t m_productId;
     const QString m_name;
     const QStringList m_paths;
-    bool removed = false;
+    bool m_removed = false;
 };
 
 TabletV2Interface::TabletV2Interface(uint32_t vendorId, uint32_t productId,
@@ -70,7 +70,7 @@ bool TabletV2Interface::isSurfaceSupported(SurfaceInterface *surface) const
 
 void TabletV2Interface::sendRemoved()
 {
-    d->removed = true;
+    d->m_removed = true;
     for (QtWaylandServer::zwp_tablet_v2::Resource *resource : d->resourceMap()) {
         d->send_removed(resource->handle);
     }
@@ -83,12 +83,14 @@ public:
 
     void update(quint32 serial, SurfaceInterface *surface, const QPoint &hotspot)
     {
-        const bool diff = m_serial != serial && m_surface != surface && m_hotspot != hotspot;
-        m_serial = serial;
-        m_surface = surface;
-        m_hotspot = hotspot;
-        if (diff)
+        const bool diff = m_serial != serial || m_surface != surface || m_hotspot != hotspot;
+        if (diff) {
+            m_serial = serial;
+            m_surface = surface;
+            m_hotspot = hotspot;
+
             Q_EMIT q->changed();
+        }
     }
 
     TabletCursorV2 *const q;
