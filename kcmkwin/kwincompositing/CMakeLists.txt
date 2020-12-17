@@ -10,6 +10,7 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FR
 
 set(kwincompositing_SRC
     main.cpp
+    kwincompositingdata.cpp
 )
 
 kconfig_add_kcfg_files(kwincompositing_SRC kwincompositing_setting.kcfgc GENERATE_MOC)
