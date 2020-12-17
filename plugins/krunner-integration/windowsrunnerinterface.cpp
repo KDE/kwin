@@ -40,6 +40,7 @@ void WindowsRunner::initialize()
     qDBusRegisterMetaType<RemoteMatches>();
     qDBusRegisterMetaType<RemoteAction>();
     qDBusRegisterMetaType<RemoteActions>();
+    qDBusRegisterMetaType<RemoteImage>();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/WindowsRunner"), this);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin"));
 }
@@ -281,6 +282,21 @@ RemoteMatch WindowsRunner::windowsMatch(const AbstractClient *client, const Wind
     // Show on current desktop unless window is only attached to other desktop, in this case show on the first attached desktop
     if (!allDesktops && !client->isOnCurrentDesktop() && !desktops.isEmpty()) {
         targetDesktop = desktops.first();
+    }
+
+    // When there is no icon name, send a pixmap along instead
+    if (match.iconName.isEmpty()) {
+        QImage convertedImage = client->icon().pixmap(QSize(16,16)).toImage().convertToFormat(QImage::Format_RGBA8888);
+        RemoteImage remoteImage{
+            convertedImage.width(),
+            convertedImage.height(),
+            convertedImage.bytesPerLine(),
+            true, // hasAlpha
+            8, // bitsPerSample
+            4, // channels
+            QByteArray(reinterpret_cast<const char *>(convertedImage.constBits()), convertedImage.sizeInBytes())
+        };
+        properties.insert(QStringLiteral("icon-data"), QVariant::fromValue(remoteImage));
     }
 
     const QString desktopName = targetDesktop->name();

@@ -38,6 +38,18 @@ struct RemoteAction
 
 typedef QList<RemoteAction> RemoteActions;
 
+struct RemoteImage
+{
+    //iiibiiay (matching notification spec image-data attribute)
+    int width = 0;
+    int height = 0;
+    int rowStride = 0;
+    bool hasAlpha = false;
+    int bitsPerSample = 0;
+    int channels = 0;
+    QByteArray data;
+};
+
 inline QDBusArgument &operator<< (QDBusArgument &argument, const RemoteMatch &match) {
     argument.beginStructure();
     argument << match.id;
@@ -84,8 +96,34 @@ inline const QDBusArgument &operator>>(const QDBusArgument &argument, RemoteActi
     return argument;
 }
 
+inline QDBusArgument &operator<< (QDBusArgument &argument, const RemoteImage &image) {
+    argument.beginStructure();
+    argument << image.width;
+    argument << image.height;
+    argument << image.rowStride;
+    argument << image.hasAlpha;
+    argument << image.bitsPerSample;
+    argument << image.channels;
+    argument << image.data;
+    argument.endStructure();
+    return argument;
+}
+
+inline const QDBusArgument &operator>>(const QDBusArgument &argument, RemoteImage &image) {
+    argument.beginStructure();
+    argument >> image.width;
+    argument >> image.height;
+    argument >> image.rowStride;
+    argument >> image.hasAlpha;
+    argument >> image.bitsPerSample;
+    argument >> image.channels;
+    argument >> image.data;
+    argument.endStructure();
+    return argument;
+}
+
 Q_DECLARE_METATYPE(RemoteMatch)
 Q_DECLARE_METATYPE(RemoteMatches)
 Q_DECLARE_METATYPE(RemoteAction)
 Q_DECLARE_METATYPE(RemoteActions)
-
+Q_DECLARE_METATYPE(RemoteImage)
