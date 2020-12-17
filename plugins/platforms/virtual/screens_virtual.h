@@ -8,14 +8,14 @@
 */
 #ifndef KWIN_SCREENS_VIRTUAL_H
 #define KWIN_SCREENS_VIRTUAL_H
-#include "outputscreens.h"
+#include "screens.h"
 #include <QVector>
 
 namespace KWin
 {
 class VirtualBackend;
 
-class VirtualScreens : public OutputScreens
+class VirtualScreens : public Screens
 {
     Q_OBJECT
 public:

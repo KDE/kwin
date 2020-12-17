@@ -23,6 +23,7 @@
 namespace KWin
 {
 class AbstractClient;
+class AbstractOutput;
 class Platform;
 
 class KWIN_EXPORT Screens : public QObject
@@ -53,7 +54,7 @@ public:
     void setCurrent(const AbstractClient *c);
     bool isCurrentFollowsMouse() const;
     void setCurrentFollowsMouse(bool follows);
-    virtual QRect geometry(int screen) const = 0;
+    virtual QRect geometry(int screen) const;
     /**
      * The bounding geometry of all screens combined. Overlapping areas
      * are not counted multiple times.
@@ -74,7 +75,7 @@ public:
      * To get the size of all screens combined use size().
      * @see size()
      */
-    virtual QSize size(int screen) const = 0;
+    virtual QSize size(int screen) const;
 
     /**
      * The highest scale() of all connected screens
@@ -96,7 +97,7 @@ public:
      * @see sizeChanged()
      */
     QSize size() const;
-    virtual int number(const QPoint &pos) const = 0;
+    virtual int number(const QPoint &pos) const;
 
     inline bool isChanging() { return m_changedTimer->isActive(); }
 
@@ -163,7 +164,7 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void setCount(int count);
     void startChangedTimer();
-    virtual void updateCount() = 0;
+    virtual void updateCount();
 
 protected:
     /**
@@ -177,6 +178,8 @@ private Q_SLOTS:
     void updateSize();
 
 private:
+    AbstractOutput *findOutput(int screenId) const;
+
     int m_count;
     int m_current;
     bool m_currentFollowsMouse;

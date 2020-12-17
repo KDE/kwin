@@ -13,11 +13,10 @@ namespace KWin
 {
 
 HwcomposerScreens::HwcomposerScreens(HwcomposerBackend *backend, QObject *parent)
-    : OutputScreens(backend, parent)
-    , m_backend(backend)
+    : Screens(parent)
 {
-    connect(m_backend, &HwcomposerBackend::screensQueried, this, &OutputScreens::updateCount);
-    connect(m_backend, &HwcomposerBackend::screensQueried, this, &OutputScreens::changed);
+    connect(backend, &HwcomposerBackend::screensQueried, this, &HwcomposerScreens::updateCount);
+    connect(backend, &HwcomposerBackend::screensQueried, this, &HwcomposerScreens::changed);
 }
 
 }

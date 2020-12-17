@@ -25,6 +25,7 @@ public:
     QString name(int screen) const override;
     float refreshRate(int screen) const override;
     QSize size(int screen) const override;
+    QSizeF physicalSize(int screen) const override;
     void init() override;
 
     void setGeometries(const QList<QRect> &geometries);

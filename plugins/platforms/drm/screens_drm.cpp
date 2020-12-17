@@ -13,12 +13,10 @@ namespace KWin
 {
 
 DrmScreens::DrmScreens(DrmBackend *backend, QObject *parent)
-    : OutputScreens(backend, parent)
+    : Screens(parent)
 {
     connect(backend, &DrmBackend::screensQueried, this, &DrmScreens::updateCount);
     connect(backend, &DrmBackend::screensQueried, this, &DrmScreens::changed);
 }
-
-DrmScreens::~DrmScreens() = default;
 
 }

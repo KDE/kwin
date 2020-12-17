@@ -8,18 +8,17 @@
 */
 #ifndef KWIN_SCREENS_DRM_H
 #define KWIN_SCREENS_DRM_H
-#include "outputscreens.h"
+#include "screens.h"
 
 namespace KWin
 {
 class DrmBackend;
 
-class DrmScreens : public OutputScreens
+class DrmScreens : public Screens
 {
     Q_OBJECT
 public:
     DrmScreens(DrmBackend *backend, QObject *parent = nullptr);
-    ~DrmScreens() override;
 };
 
 }

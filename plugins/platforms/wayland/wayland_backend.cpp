@@ -25,7 +25,7 @@
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
-#include "outputscreens.h"
+#include "screens.h"
 #include "pointer_input.h"
 #include "screens.h"
 #include "wayland_server.h"
@@ -729,7 +729,7 @@ void WaylandBackend::createOutputs()
 
 Screens *WaylandBackend::createScreens(QObject *parent)
 {
-    return new OutputScreens(this, parent);
+    return Screens::create(parent);
 }
 
 OpenGLBackend *WaylandBackend::createOpenGLBackend()

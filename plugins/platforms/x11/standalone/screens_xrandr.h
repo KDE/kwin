@@ -9,14 +9,14 @@
 #ifndef KWIN_SCREENS_XRANDR_H
 #define KWIN_SCREENS_XRANDR_H
 // kwin
-#include "outputscreens.h"
+#include "screens.h"
 #include "x11eventfilter.h"
 
 namespace KWin
 {
 class X11StandalonePlatform;
 
-class XRandRScreens : public OutputScreens, public X11EventFilter
+class XRandRScreens : public Screens, public X11EventFilter
 {
     Q_OBJECT
 public:

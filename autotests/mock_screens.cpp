@@ -43,6 +43,11 @@ QSize MockScreens::size(int screen) const
     return geometry(screen).size();
 }
 
+QSizeF MockScreens::physicalSize(int screen) const
+{
+    return QSizeF(size(screen)) / 3.8;
+}
+
 int MockScreens::number(const QPoint &pos) const
 {
     int bestScreen = 0;

@@ -14,7 +14,7 @@ namespace KWin
 {
 
 VirtualScreens::VirtualScreens(VirtualBackend *backend, QObject *parent)
-    : OutputScreens(backend, parent)
+    : Screens(parent)
     , m_backend(backend)
 {
 }
@@ -23,7 +23,6 @@ VirtualScreens::~VirtualScreens() = default;
 
 void VirtualScreens::init()
 {
-    updateCount();
     KWin::Screens::init();
 
     connect(m_backend, &VirtualBackend::virtualOutputsSet, this,
@@ -35,8 +34,6 @@ void VirtualScreens::init()
             }
         }
     );
-
-    emit changed();
 }
 
 }

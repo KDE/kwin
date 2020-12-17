@@ -8,21 +8,17 @@
 */
 #ifndef KWIN_SCREENS_HWCOMPOSER_H
 #define KWIN_SCREENS_HWCOMPOSER_H
-#include "outputscreens.h"
+#include "screens.h"
 
 namespace KWin
 {
 class HwcomposerBackend;
 
-class HwcomposerScreens : public OutputScreens
+class HwcomposerScreens : public Screens
 {
     Q_OBJECT
 public:
     HwcomposerScreens(HwcomposerBackend *backend, QObject *parent = nullptr);
-    virtual ~HwcomposerScreens() = default;
-
-private:
-    HwcomposerBackend *m_backend;
 };
 
 }

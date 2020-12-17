@@ -13,7 +13,7 @@
 #include "wayland_server.h"
 #include "xcbutils.h"
 #include "egl_x11_backend.h"
-#include "outputscreens.h"
+#include "screens.h"
 #include <kwinxrenderutils.h>
 #include <cursor.h>
 #include <pointer_input.h>
@@ -501,7 +501,7 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 
 Screens *X11WindowedBackend::createScreens(QObject *parent)
 {
-    return new OutputScreens(this, parent);
+    return Screens::create(parent);
 }
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()

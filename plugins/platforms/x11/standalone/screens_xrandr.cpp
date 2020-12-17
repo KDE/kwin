@@ -21,7 +21,7 @@ namespace KWin
 {
 
 XRandRScreens::XRandRScreens(X11StandalonePlatform *backend, QObject *parent)
-    : OutputScreens(backend, parent)
+    : Screens(parent)
     , X11EventFilter(Xcb::Extensions::self()->randrNotifyEvent())
     , m_backend(backend)
 {
