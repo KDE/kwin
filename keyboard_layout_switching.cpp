@@ -37,7 +37,6 @@ void Policy::setLayout(quint32 layout)
     const quint32 previousLayout = m_xkb->currentLayout();
     m_xkb->switchToLayout(layout);
     if (previousLayout != m_xkb->currentLayout()) {
-        m_layout->updateNotifier();
         emit m_layout->layoutChanged();
     }
 }
