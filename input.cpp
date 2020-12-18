@@ -1694,12 +1694,12 @@ public:
             }
             auto cursorSurface = tcursor->surface();
             if (!cursorSurface) {
-                cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
+                cursor->updateCursor({}, {});
                 return;
             }
             auto buffer = cursorSurface->buffer();
             if (!buffer) {
-                cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
+                cursor->updateCursor({}, {});
                 return;
             }
 
