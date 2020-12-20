@@ -23,11 +23,11 @@
 #include "xinputintegration.h"
 #endif
 #include "abstract_client.h"
+#include "composite.h"
 #include "effects_x11.h"
 #include "eglonxbackend.h"
 #include "keyboard_input.h"
 #include "logging.h"
-#include "screens_xrandr.h"
 #include "screenedges_filter.h"
 #include "options.h"
 #include "overlaywindow_x11.h"
@@ -50,8 +50,50 @@
 namespace KWin
 {
 
+class XrandrEventFilter : public X11EventFilter
+{
+public:
+    explicit XrandrEventFilter(X11StandalonePlatform *backend);
+
+    bool event(xcb_generic_event_t *event) override;
+
+private:
+    X11StandalonePlatform *m_backend;
+};
+
+XrandrEventFilter::XrandrEventFilter(X11StandalonePlatform *backend)
+    : X11EventFilter(Xcb::Extensions::self()->randrNotifyEvent())
+    , m_backend(backend)
+{
+}
+
+bool XrandrEventFilter::event(xcb_generic_event_t *event)
+{
+    Q_ASSERT((event->response_type & ~0x80) == Xcb::Extensions::self()->randrNotifyEvent());
+    // let's try to gather a few XRandR events, unlikely that there is just one
+    m_backend->scheduleUpdateOutputs();
+
+    // update default screen
+    auto *xrrEvent = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(event);
+    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
+    if (xrrEvent->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
+        screen->width_in_pixels = xrrEvent->height;
+        screen->height_in_pixels = xrrEvent->width;
+        screen->width_in_millimeters = xrrEvent->mheight;
+        screen->height_in_millimeters = xrrEvent->mwidth;
+    } else {
+        screen->width_in_pixels = xrrEvent->width;
+        screen->height_in_pixels = xrrEvent->height;
+        screen->width_in_millimeters = xrrEvent->mwidth;
+        screen->height_in_millimeters = xrrEvent->mheight;
+    }
+
+    return false;
+}
+
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
+    , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
 {
 #if HAVE_X11_XINPUT
@@ -66,6 +108,9 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
         }
     }
 #endif
+
+    m_updateOutputsTimer->setSingleShot(true);
+    connect(m_updateOutputsTimer, &QTimer::timeout, this, &X11StandalonePlatform::updateOutputs);
 
     setSupportsGammaControl(true);
     setPerScreenRenderingEnabled(false);
@@ -95,11 +140,10 @@ void X11StandalonePlatform::init()
     XRenderUtils::init(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     setReady(true);
     initOutputs();
-}
 
-Screens *X11StandalonePlatform::createScreens(QObject *parent)
-{
-    return new XRandRScreens(this, parent);
+    if (Xcb::Extensions::self()->isRandrAvailable()) {
+        m_randrEventFilter.reset(new XrandrEventFilter(this));
+    }
 }
 
 OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()
@@ -426,11 +470,18 @@ QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
 void X11StandalonePlatform::initOutputs()
 {
     doUpdateOutputs<Xcb::RandR::ScreenResources>();
+    updateRefreshRate();
+}
+
+void X11StandalonePlatform::scheduleUpdateOutputs()
+{
+    m_updateOutputsTimer->start();
 }
 
 void X11StandalonePlatform::updateOutputs()
 {
     doUpdateOutputs<Xcb::RandR::CurrentResources>();
+    updateRefreshRate();
 }
 
 template <typename T>
@@ -559,6 +610,20 @@ Outputs X11StandalonePlatform::outputs() const
 Outputs X11StandalonePlatform::enabledOutputs() const
 {
     return m_outputs;
+}
+
+void X11StandalonePlatform::updateRefreshRate()
+{
+    if (!workspace() || !workspace()->compositing()) {
+        return;
+    }
+    if (Compositor::self()->refreshRate() == Options::currentRefreshRate()) {
+        return;
+    }
+    // desktopResized() should take care of when the size or
+    // shape of the desktop has changed, but we also want to
+    // catch refresh rate changes
+    Compositor::self()->reinitialize();
 }
 
 }

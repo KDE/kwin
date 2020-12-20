@@ -30,6 +30,7 @@ protected:
 
 private Q_SLOTS:
     void lostSelection();
+    void continueStartupWithScreens();
 
 private:
     void crashChecking();

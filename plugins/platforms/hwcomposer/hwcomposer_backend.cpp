@@ -9,7 +9,6 @@
 #include "egl_hwcomposer_backend.h"
 #include "hwcomposer_backend.h"
 #include "logging.h"
-#include "screens_hwcomposer.h"
 #include "composite.h"
 #include "main.h"
 #include "wayland_server.h"
@@ -344,11 +343,6 @@ void HwcomposerBackend::enableVSync(bool enable)
 HwcomposerWindow *HwcomposerBackend::createSurface()
 {
     return new HwcomposerWindow(this);
-}
-
-Screens *HwcomposerBackend::createScreens(QObject *parent)
-{
-    return new HwcomposerScreens(this, parent);
 }
 
 Outputs HwcomposerBackend::outputs() const

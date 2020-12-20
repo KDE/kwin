@@ -17,7 +17,6 @@
 #include "logind.h"
 #include "main.h"
 #include "scene_qpainter_drm_backend.h"
-#include "screens_drm.h"
 #include "udev.h"
 #include "wayland_server.h"
 #if HAVE_GBM
@@ -640,11 +639,6 @@ void DrmBackend::moveCursor()
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
         (*it)->moveCursor();
     }
-}
-
-Screens *DrmBackend::createScreens(QObject *parent)
-{
-    return new DrmScreens(this, parent);
 }
 
 QPainterBackend *DrmBackend::createQPainterBackend()

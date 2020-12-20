@@ -37,7 +37,6 @@ public:
     }
     QString screenshotDirPath() const;
 
-    Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend* createQPainterBackend() override;
     OpenGLBackend *createOpenGLBackend() override;
 

@@ -125,12 +125,12 @@ void TestScreens::testSize()
 
     QCOMPARE(screens()->size(), QSize(100, 100));
     QFETCH(QList<QRect>, geometries);
-    QVERIFY(!screens()->isChanging());
+    QVERIFY(!mockScreens->isChanging());
     mockScreens->setGeometries(geometries);
-    QVERIFY(screens()->isChanging());
+    QVERIFY(mockScreens->isChanging());
 
     QVERIFY(sizeChangedSpy.wait());
-    QVERIFY(!screens()->isChanging());
+    QVERIFY(!mockScreens->isChanging());
     QTEST(screens()->size(), "expectedSize");
 }
 

@@ -58,7 +58,6 @@ public:
         return m_hasXInput;
     }
 
-    Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend* createQPainterBackend() override;
     void warpPointer(const QPointF &globalPos) override;

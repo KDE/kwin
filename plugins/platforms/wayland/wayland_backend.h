@@ -171,7 +171,6 @@ public:
     KWayland::Client::SubCompositor *subCompositor();
     KWayland::Client::ShmPool *shmPool();
 
-    Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
     DmaBufTexture *createDmaBufTexture(const QSize &size) override;

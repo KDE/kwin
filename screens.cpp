@@ -31,7 +31,7 @@ Screens *Screens::create(QObject *parent)
 #ifdef KWIN_UNIT_TEST
     s_self = new MockScreens(parent);
 #else
-    s_self = kwinApp()->platform()->createScreens(parent);
+    s_self = new Screens(parent);
 #endif
     Q_ASSERT(s_self);
     s_self->init();
@@ -43,9 +43,14 @@ Screens::Screens(QObject *parent)
     , m_count(0)
     , m_current(0)
     , m_currentFollowsMouse(false)
-    , m_changedTimer(new QTimer(this))
     , m_maxScale(1.0)
 {
+    // TODO: Do something about testScreens and other tests that use MockScreens.
+    // They only make core code more convoluted with ifdefs.
+#ifndef KWIN_UNIT_TEST
+    connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::updateCount);
+    connect(kwinApp()->platform(), &Platform::screensQueried, this, &Screens::changed);
+#endif
 }
 
 Screens::~Screens()
@@ -56,10 +61,6 @@ Screens::~Screens()
 void Screens::init()
 {
     updateCount();
-    m_changedTimer->setSingleShot(true);
-    m_changedTimer->setInterval(100);
-    connect(m_changedTimer, &QTimer::timeout, this, &Screens::updateCount);
-    connect(m_changedTimer, &QTimer::timeout, this, &Screens::changed);
     connect(this, &Screens::countChanged, this, &Screens::changed, Qt::QueuedConnection);
     connect(this, &Screens::changed, this, &Screens::updateSize);
     connect(this, &Screens::sizeChanged, this, &Screens::geometryChanged);

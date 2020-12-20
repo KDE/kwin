@@ -37,7 +37,6 @@ class Outline;
 class OutlineVisual;
 class QPainterBackend;
 class Scene;
-class Screens;
 class ScreenEdges;
 class Toplevel;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -68,7 +67,6 @@ public:
     ~Platform() override;
 
     virtual void init() = 0;
-    virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

@@ -74,12 +74,6 @@ void Platform::doShowCursor()
 {
 }
 
-Screens *Platform::createScreens(QObject *parent)
-{
-    Q_UNUSED(parent)
-    return nullptr;
-}
-
 OpenGLBackend *Platform::createOpenGLBackend()
 {
     return nullptr;

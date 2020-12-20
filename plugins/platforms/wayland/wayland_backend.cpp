@@ -27,7 +27,6 @@
 #include "main.h"
 #include "screens.h"
 #include "pointer_input.h"
-#include "screens.h"
 #include "wayland_server.h"
 
 #include <KWayland/Client/buffer.h>
@@ -725,11 +724,6 @@ void WaylandBackend::createOutputs()
     }
     setReady(true);
     emit screensQueried();
-}
-
-Screens *WaylandBackend::createScreens(QObject *parent)
-{
-    return Screens::create(parent);
 }
 
 OpenGLBackend *WaylandBackend::createOpenGLBackend()

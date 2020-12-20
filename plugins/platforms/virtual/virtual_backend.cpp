@@ -9,7 +9,6 @@
 #include "virtual_backend.h"
 #include "virtual_output.h"
 #include "scene_qpainter_virtual_backend.h"
-#include "screens_virtual.h"
 #include "wayland_server.h"
 #include "egl_gbm_backend.h"
 // Qt
@@ -81,11 +80,6 @@ QString VirtualBackend::screenshotDirPath() const
     return m_screenshotDir->path();
 }
 
-Screens *VirtualBackend::createScreens(QObject *parent)
-{
-    return new VirtualScreens(this, parent);
-}
-
 QPainterBackend *VirtualBackend::createQPainterBackend()
 {
     return new VirtualQPainterBackend(this);
@@ -110,8 +104,6 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
 {
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
     Q_ASSERT(scales.size() == 0 || scales.size() == count);
-
-    bool countChanged = m_outputs.size() != count;
 
     while (!m_outputs.isEmpty()) {
         VirtualOutput *output = m_outputs.takeLast();
@@ -138,7 +130,7 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
         emit outputEnabled(vo);
     }
 
-    emit virtualOutputsSet(countChanged);
+    emit screensQueried();
 }
 
 }

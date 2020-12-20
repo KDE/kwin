@@ -1,7 +1,6 @@
 set(VIRTUAL_SOURCES
     egl_gbm_backend.cpp
     scene_qpainter_virtual_backend.cpp
-    screens_virtual.cpp
     virtual_backend.cpp
     virtual_output.cpp
 )

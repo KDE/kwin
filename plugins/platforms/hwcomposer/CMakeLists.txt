@@ -2,7 +2,6 @@ set(HWCOMPOSER_SOURCES
     egl_hwcomposer_backend.cpp
     hwcomposer_backend.cpp
     logging.cpp
-    screens_hwcomposer.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)

@@ -28,14 +28,17 @@ public:
     QSizeF physicalSize(int screen) const override;
     void init() override;
 
+    bool isChanging() const;
     void setGeometries(const QList<QRect> &geometries);
 
 protected Q_SLOTS:
     void updateCount() override;
+    void startChangedTimer();
 
 private:
     QList<QRect> m_scheduledGeometries;
     QList<QRect> m_geometries;
+    QTimer *m_changedTimer;
 };
 
 }

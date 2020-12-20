@@ -12,7 +12,6 @@
 #include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_fb_backend.h"
-#include "screens.h"
 #include "virtual_terminal.h"
 #include "udev.h"
 // system
@@ -54,11 +53,6 @@ FramebufferBackend::~FramebufferBackend()
     if (m_fd >= 0) {
         close(m_fd);
     }
-}
-
-Screens *FramebufferBackend::createScreens(QObject *parent)
-{
-    return Screens::create(parent);
 }
 
 QPainterBackend *FramebufferBackend::createQPainterBackend()

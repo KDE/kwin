@@ -62,7 +62,6 @@ public:
     virtual ~HwcomposerBackend();
 
     void init() override;
-    Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
 
     Outputs outputs() const override;

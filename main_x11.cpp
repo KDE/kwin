@@ -248,18 +248,7 @@ void ApplicationX11::performStartup()
 
         createInput();
 
-        connect(platform(), &Platform::screensQueried, this,
-            [this] {
-                createWorkspace();
-                createPlugins();
-
-                Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-                notifyKSplash();
-
-                notifyStarted();
-            }
-        );
+        connect(platform(), &Platform::screensQueried, this, &ApplicationX11::continueStartupWithScreens);
         connect(platform(), &Platform::initFailed, this,
             [] () {
                 std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
@@ -273,6 +262,19 @@ void ApplicationX11::performStartup()
     owner->claim(m_replace || wasCrash(), true);
 
     createAtoms();
+}
+
+void ApplicationX11::continueStartupWithScreens()
+{
+    disconnect(platform(), &Platform::screensQueried, this, &ApplicationX11::continueStartupWithScreens);
+
+    createWorkspace();
+    createPlugins();
+
+    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+
+    notifyKSplash();
+    notifyStarted();
 }
 
 bool ApplicationX11::notify(QObject* o, QEvent* e)

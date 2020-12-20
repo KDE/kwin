@@ -16,7 +16,7 @@
 #include "logind.h"
 #include "logging.h"
 #include "main.h"
-#include "screens_drm.h"
+#include "screens.h"
 #include "wayland_server.h"
 // KWayland
 #include <KWaylandServer/output_interface.h>
