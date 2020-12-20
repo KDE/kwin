@@ -95,8 +95,7 @@ private:
     Display *m_x11Display;
     QScopedPointer<WindowSelector> m_windowSelector;
     QScopedPointer<X11EventFilter> m_screenEdgesFilter;
-
-    QVector<X11Output*> m_outputs;
+    QVector<AbstractOutput *> m_outputs;
 };
 
 }

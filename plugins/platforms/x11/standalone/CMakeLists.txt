@@ -12,6 +12,7 @@ set(X11PLATFORM_SOURCES
     x11_output.cpp
     x11_platform.cpp
     x11cursor.cpp
+    x11placeholderoutput.cpp
     xfixes_cursor_event_filter.cpp
 )
 

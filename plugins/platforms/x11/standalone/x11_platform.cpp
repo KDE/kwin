@@ -8,6 +8,7 @@
 */
 #include "x11_platform.h"
 #include "x11cursor.h"
+#include "x11placeholderoutput.h"
 #include "edge.h"
 #include "windowselector.h"
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -436,20 +437,17 @@ template <typename T>
 void X11StandalonePlatform::doUpdateOutputs()
 {
     auto fallback = [this]() {
-        auto *o = new X11Output(this);
-        o->setGammaRampSize(0);
-        o->setRefreshRate(60000);
-        o->setName(QStringLiteral("Xinerama"));
-        m_outputs << o;
-        emit outputAdded(o);
-        emit outputEnabled(o);
+        X11PlaceholderOutput *dummyOutput = new X11PlaceholderOutput();
+        m_outputs << dummyOutput;
+        emit outputAdded(dummyOutput);
+        emit outputEnabled(dummyOutput);
     };
 
     // TODO: instead of resetting all outputs, check if new output is added/removed
     //       or still available and leave still available outputs in m_outputs
     //       untouched (like in DRM backend)
     while (!m_outputs.isEmpty()) {
-        X11Output *output = m_outputs.takeLast();
+        AbstractOutput *output = m_outputs.takeLast();
         emit outputDisabled(output);
         emit outputRemoved(output);
         delete output;
