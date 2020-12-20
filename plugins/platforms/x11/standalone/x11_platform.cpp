@@ -94,7 +94,7 @@ void X11StandalonePlatform::init()
     }
     XRenderUtils::init(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     setReady(true);
-    emit screensQueried();
+    initOutputs();
 }
 
 Screens *X11StandalonePlatform::createScreens(QObject *parent)
@@ -455,11 +455,13 @@ void X11StandalonePlatform::doUpdateOutputs()
 
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         fallback();
+        emit screensQueried();
         return;
     }
     T resources(rootWindow());
     if (resources.isNull()) {
         fallback();
+        emit screensQueried();
         return;
     }
     xcb_randr_crtc_t *crtcs = resources.crtcs();
@@ -545,6 +547,8 @@ void X11StandalonePlatform::doUpdateOutputs()
     if (m_outputs.isEmpty()) {
         fallback();
     }
+
+    emit screensQueried();
 }
 
 Outputs X11StandalonePlatform::outputs() const

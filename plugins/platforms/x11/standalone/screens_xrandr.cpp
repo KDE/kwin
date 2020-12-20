@@ -32,10 +32,6 @@ XRandRScreens::~XRandRScreens() = default;
 void XRandRScreens::init()
 {
     KWin::Screens::init();
-    // we need to call ScreenResources at least once to be able to use current
-    m_backend->initOutputs();
-    setCount(m_backend->outputs().count());
-    emit changed();
 
 #ifndef KWIN_UNIT_TEST
     connect(this, &XRandRScreens::changed, this, [] {
