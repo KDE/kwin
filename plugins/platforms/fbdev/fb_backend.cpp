@@ -58,7 +58,7 @@ FramebufferBackend::~FramebufferBackend()
 
 Screens *FramebufferBackend::createScreens(QObject *parent)
 {
-    return Screens::create(parent);
+    return new Screens(parent);
 }
 
 QPainterBackend *FramebufferBackend::createQPainterBackend()

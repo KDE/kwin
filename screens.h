@@ -34,6 +34,10 @@ class KWIN_EXPORT Screens : public QObject
     Q_PROPERTY(bool currentFollowsMouse READ isCurrentFollowsMouse WRITE setCurrentFollowsMouse)
 
 public:
+    static Screens *create(QObject *parent = nullptr);\
+    static Screens *self() { return s_self; }\
+
+    Screens(QObject *parent);
     ~Screens() override;
     /**
      * @internal
@@ -188,7 +192,7 @@ private:
     QSize m_boundingSize;
     qreal m_maxScale;
 
-    KWIN_SINGLETON(Screens)
+    static Screens *s_self;
 };
 
 inline

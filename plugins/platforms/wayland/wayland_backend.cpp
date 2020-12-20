@@ -729,7 +729,7 @@ void WaylandBackend::createOutputs()
 
 Screens *WaylandBackend::createScreens(QObject *parent)
 {
-    return Screens::create(parent);
+    return new Screens(parent);
 }
 
 OpenGLBackend *WaylandBackend::createOpenGLBackend()

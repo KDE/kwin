@@ -501,7 +501,7 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 
 Screens *X11WindowedBackend::createScreens(QObject *parent)
 {
-    return Screens::create(parent);
+    return new Screens(parent);
 }
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
