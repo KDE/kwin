@@ -70,7 +70,7 @@ void ColorManager::handleOutputDisabled(AbstractOutput *output)
     ColorDevice *device = *it;
     d->devices.erase(it);
     emit deviceRemoved(device);
-    delete *it;
+    delete device;
 }
 
 } // namespace KWin
