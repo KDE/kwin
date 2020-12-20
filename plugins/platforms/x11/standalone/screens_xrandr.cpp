@@ -79,13 +79,4 @@ bool XRandRScreens::event(xcb_generic_event_t *event)
     return false;
 }
 
-QSize XRandRScreens::displaySize() const
-{
-    xcb_screen_t *screen = kwinApp()->x11DefaultScreen();
-    if (!screen) {
-        return Screens::size();
-    }
-    return QSize(screen->width_in_pixels, screen->height_in_pixels);
-}
-
 } // namespace

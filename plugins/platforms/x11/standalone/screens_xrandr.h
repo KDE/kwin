@@ -24,8 +24,6 @@ public:
     ~XRandRScreens() override;
     void init() override;
 
-    QSize displaySize() const override;
-
     using QObject::event;
     bool event(xcb_generic_event_t *event) override;
 
