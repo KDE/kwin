@@ -207,6 +207,7 @@ protected:
 
     void notifyKSplash();
     void notifyStarted();
+    void createSession();
     void createInput();
     void createWorkspace();
     void createAtoms();

@@ -52,6 +52,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void handleOutputEnabled(AbstractOutput *output);
     void handleOutputDisabled(AbstractOutput *output);
+    void handleSessionActiveChanged(bool active);
 
 private:
     QScopedPointer<ColorManagerPrivate> d;

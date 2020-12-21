@@ -128,6 +128,7 @@ void WaylandTestApplication::performStartup()
 
     // first load options - done internally by a different thread
     createOptions();
+    createSession();
     createColorManager();
     waylandServer()->createInternalConnection();
 

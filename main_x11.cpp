@@ -231,6 +231,7 @@ void ApplicationX11::performStartup()
         installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
+        createSession();
         createColorManager();
 
         // Check  whether another windowmanager is running
