@@ -96,6 +96,7 @@ integrationTest(WAYLAND_ONLY NAME testBufferSizeChange SRCS buffer_size_change_t
 integrationTest(WAYLAND_ONLY NAME testPlacement SRCS placement_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testActivation SRCS activation_test.cpp)
 integrationTest(WAYLAND_ONLY NAME testInputMethod SRCS inputmethod_test.cpp)
+integrationTest(WAYLAND_ONLY NAME testScreens SRCS screens_test.cpp)
 
 if (KWIN_BUILD_CMS)
     integrationTest(WAYLAND_ONLY NAME testNightColor SRCS nightcolor_test.cpp LIBS KWinNightColorPlugin)
