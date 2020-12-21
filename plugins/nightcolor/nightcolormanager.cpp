@@ -17,7 +17,6 @@
 
 #include <main.h>
 #include <platform.h>
-#include <screens.h>
 #include <workspace.h>
 #include <logind.h>
 
@@ -110,7 +109,7 @@ void NightColorManager::init()
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
     input()->registerShortcut(QKeySequence(), toggleAction, this, &NightColorManager::toggle);
 
-    connect(Screens::self(), &Screens::countChanged, this, &NightColorManager::hardReset);
+    connect(ColorManager::self(), &ColorManager::deviceAdded, this, &NightColorManager::hardReset);
 
     connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this,
             [this](bool active) {
