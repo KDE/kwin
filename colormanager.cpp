@@ -27,9 +27,12 @@ ColorManager::ColorManager(QObject *parent)
     : QObject(parent)
     , d(new ColorManagerPrivate)
 {
-    connect(kwinApp()->platform(), &Platform::outputEnabled, this, &ColorManager::handleOutputEnabled);
-    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &ColorManager::handleOutputDisabled);
-    connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this, &ColorManager::handleSessionActiveChanged);
+    connect(kwinApp()->platform(), &Platform::outputEnabled,
+            this, &ColorManager::handleOutputEnabled);
+    connect(kwinApp()->platform(), &Platform::outputDisabled,
+            this, &ColorManager::handleOutputDisabled);
+    connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged,
+            this, &ColorManager::handleSessionActiveChanged);
 }
 
 ColorManager::~ColorManager()
