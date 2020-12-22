@@ -16,6 +16,8 @@
 #include "../abstract_wayland_output.h"
 #include "../main.h"
 #include "../platform.h"
+#include "../workspace.h"
+#include "../abstract_client.h"
 #include "../screens.h"
 #endif
 
@@ -271,7 +273,7 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const AbstractWayl
 }
 #endif
 
-KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, const QString &sysName)
+KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, void *userData)
 {
     auto serial = libinput_tablet_tool_get_serial(tool);
     auto toolId = libinput_tablet_tool_get_tool_id(tool);
@@ -324,7 +326,7 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, const QString &sys
     if (libinput_tablet_tool_has_wheel(tool)) {
         capabilities << InputRedirection::Wheel;
     }
-    return {toolType, capabilities, serial, toolId, sysName};
+    return {toolType, capabilities, serial, toolId, userData};
 }
 
 void Connection::processEvents()
@@ -574,8 +576,9 @@ void Connection::processEvents()
                 }
 
 #ifndef KWIN_BUILD_TESTING
+                auto client = workspace()->activeClient();
                 const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[tte->device()->screenId()]);
+                            kwinApp()->platform()->enabledOutputs()[client->screen()]);
                 const QPointF globalPos =
                         devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
                                                     output);
@@ -585,21 +588,21 @@ void Connection::processEvents()
                 emit tabletToolEvent(tabletEventType,
                                      globalPos, tte->pressure(),
                                      tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                     tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->sysName()), tte->time());
+                                     tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->groupUserData()), tte->time());
                 break;
             }
             case LIBINPUT_EVENT_TABLET_TOOL_BUTTON: {
                 auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.data());
                 emit tabletToolButtonEvent(tabletEvent->buttonId(),
                                            tabletEvent->isButtonPressed(),
-                                           createTabletId(tabletEvent->tool(), event->device()->sysName()));
+                                           createTabletId(tabletEvent->tool(), event->device()->groupUserData()));
                 break;
             }
             case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
                 auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.data());
                 emit tabletPadButtonEvent(tabletEvent->buttonId(),
                                           tabletEvent->isButtonPressed(),
-                                          event->device()->sysName());
+                                          { event->device()->groupUserData() });
                 break;
             }
             case LIBINPUT_EVENT_TABLET_PAD_RING: {
@@ -607,18 +610,16 @@ void Connection::processEvents()
                 tabletEvent->position();
                 emit tabletPadRingEvent(tabletEvent->number(),
                                         tabletEvent->position(),
-                                        tabletEvent->source() ==
-                                          LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
-                                           event->device()->sysName());
+                                        tabletEvent->source() == LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
+                                        { event->device()->groupUserData() });
                 break;
             }
             case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
                 auto *tabletEvent = static_cast<TabletPadStripEvent *>(event.data());
                 emit tabletPadStripEvent(tabletEvent->number(),
                                          tabletEvent->position(),
-                                         tabletEvent->source() ==
-                                             LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
-                                           event->device()->sysName());
+                                         tabletEvent->source() == LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
+                                         { event->device()->groupUserData() });
                 break;
             }
             default:

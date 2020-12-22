@@ -474,6 +474,8 @@ public:
     int stripsCount() const;
     int ringsCount() const;
 
+    void *groupUserData() const;
+
     /**
      * All created Devices
      */

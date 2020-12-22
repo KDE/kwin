@@ -46,9 +46,9 @@ public:
                          quint32 time);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId);
 
-    void tabletPadButtonEvent(uint button, bool isPressed, const QString &deviceSysName);
-    void tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName);
-    void tabletPadRingEvent(int number, int position, bool isFinger, const QString &deviceSysName);
+    void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId);
+    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
+    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
 
     bool positionValid() const override
     {

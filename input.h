@@ -44,6 +44,7 @@ class SwitchEvent;
 class TabletEvent;
 class TabletInputFilter;
 class TabletToolId;
+class TabletPadId;
 
 namespace Decoration
 {
@@ -402,9 +403,9 @@ public:
 
     virtual bool tabletToolEvent(TabletEvent *event);
     virtual bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId);
-    virtual bool tabletPadButtonEvent(uint button, bool pressed, const QString &deviceSysName);
-    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName);
-    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const QString &deviceSysName);
+    virtual bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId);
+    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
+    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
 
 protected:
     void passToWaylandServer(QKeyEvent *event);

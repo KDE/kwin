@@ -122,26 +122,26 @@ void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const Table
     Q_UNUSED(tabletToolId)
 }
 
-void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const QString &deviceSysName)
+void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
 {
     Q_UNUSED(button)
     Q_UNUSED(pressed)
-    Q_UNUSED(deviceSysName)
+    Q_UNUSED(tabletPadId)
 }
 
-void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName)
+void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
-    Q_UNUSED(deviceSysName)
+    Q_UNUSED(tabletPadId)
 }
 
-void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const QString &deviceSysName)
+void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
-    Q_UNUSED(deviceSysName)
+    Q_UNUSED(tabletPadId)
 }
 }

@@ -125,9 +125,9 @@ Q_SIGNALS:
                          bool tipNear, const TabletToolId &tabletToolId, quint32 time);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId);
 
-    void tabletPadButtonEvent(uint button, bool isPressed, const QString &sysName);
-    void tabletPadStripEvent(int number, int position, bool isFinger, const QString &sysName);
-    void tabletPadRingEvent(int number, int position, bool isFinger, const QString &sysName);
+    void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId);
+    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
+    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId);
 
     void eventsRead();
 

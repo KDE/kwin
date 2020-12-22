@@ -172,7 +172,13 @@ public:
     const QVector<InputRedirection::Capability> m_capabilities;
     const quint64 m_serialId;
     const quint64 m_uniqueId;
-    const QString m_tabletSysName;
+    void *const m_deviceGroupData;
+};
+
+class TabletPadId
+{
+public:
+    void *data;
 };
 
 class TabletEvent : public QTabletEvent

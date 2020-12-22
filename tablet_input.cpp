@@ -95,30 +95,30 @@ void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPre
 }
 
 void KWin::TabletInputRedirection::tabletPadButtonEvent(uint button, bool isPressed,
-                                                        const QString &deviceSysName)
+                                                        const TabletPadId &tabletPadId)
 {
     input()->processSpies(std::bind( &InputEventSpy::tabletPadButtonEvent,
-                                     std::placeholders::_1, button, isPressed, deviceSysName));
+                                     std::placeholders::_1, button, isPressed, tabletPadId));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadButtonEvent,
-                                       std::placeholders::_1, button, isPressed, deviceSysName));
+                                       std::placeholders::_1, button, isPressed, tabletPadId));
 }
 
 void KWin::TabletInputRedirection::tabletPadStripEvent(int number, int position, bool isFinger,
-                                                       const QString &deviceSysName)
+                                                       const TabletPadId &tabletPadId)
 {
     input()->processSpies(std::bind( &InputEventSpy::tabletPadStripEvent,
-                                     std::placeholders::_1, number, position, isFinger, deviceSysName));
+                                     std::placeholders::_1, number, position, isFinger, tabletPadId));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadStripEvent,
-                                       std::placeholders::_1, number, position, isFinger, deviceSysName));
+                                       std::placeholders::_1, number, position, isFinger, tabletPadId));
 }
 
 void KWin::TabletInputRedirection::tabletPadRingEvent(int number, int position, bool isFinger,
-                                                      const QString &deviceSysName)
+                                                      const TabletPadId &tabletPadId)
 {
     input()->processSpies(std::bind( &InputEventSpy::tabletPadRingEvent,
-                                     std::placeholders::_1, number, position, isFinger, deviceSysName));
+                                     std::placeholders::_1, number, position, isFinger, tabletPadId));
     input()->processFilters(std::bind( &InputEventFilter::tabletPadRingEvent,
-                                       std::placeholders::_1, number, position, isFinger, deviceSysName));
+                                       std::placeholders::_1, number, position, isFinger, tabletPadId));
 }
 
 void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old,

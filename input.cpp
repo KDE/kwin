@@ -183,29 +183,29 @@ bool InputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const Ta
     return false;
 }
 
-bool InputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const QString &deviceSysName)
+bool InputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId)
 {
     Q_UNUSED(button)
     Q_UNUSED(pressed)
-    Q_UNUSED(deviceSysName)
+    Q_UNUSED(tabletPadId)
     return false;
 }
 
-bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName)
+bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
-    Q_UNUSED(deviceSysName)
+    Q_UNUSED(tabletPadId)
     return false;
 }
 
-bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const QString &deviceSysName)
+bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId)
 {
     Q_UNUSED(number)
     Q_UNUSED(position)
     Q_UNUSED(isFinger)
-    Q_UNUSED(deviceSysName)
+    Q_UNUSED(tabletPadId)
     return false;
 }
 
@@ -1578,34 +1578,33 @@ public:
 
     void integrateDevice(LibInput::Device *device)
     {
-        if (device->isTabletTool()) {
-            KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
-            if (!tabletSeat) {
-                qCCritical(KWIN_CORE) << "Could not find tablet seat";
-                return;
-            }
-            struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
-            const char *devnode = udev_device_get_syspath(udev_device);
+        if (!device->isTabletTool() && !device->isTabletPad()) {
+            return;
+        }
 
-            tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+        KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
+        if (!tabletSeat) {
+            qCCritical(KWIN_CORE) << "Could not find tablet seat";
+            return;
+        }
+        struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
+        const char *devnode = udev_device_get_syspath(udev_device);
+
+        auto deviceGroup = libinput_device_get_device_group(device->device());
+        auto tablet = static_cast<KWaylandServer::TabletV2Interface *>(libinput_device_group_get_user_data(deviceGroup));
+        if (!tablet) {
+            tablet = tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+            libinput_device_group_set_user_data(deviceGroup, tablet);
         }
 
         if (device->isTabletPad()) {
-            KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
-            if (!tabletSeat) {
-                qCCritical(KWIN_CORE) << "Could not find tablet seat";
-                return;
-            }
-            struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
-            const char *devnode = udev_device_get_syspath(udev_device);
-
             const int buttonsCount = libinput_device_tablet_pad_get_num_buttons(device->device());
             const int ringsCount = libinput_device_tablet_pad_get_num_rings(device->device());
             const int stripsCount = libinput_device_tablet_pad_get_num_strips(device->device());
             const int modes = libinput_device_tablet_pad_get_num_mode_groups(device->device());
 
             auto firstGroup = libinput_device_tablet_pad_get_mode_group(device->device(), 0);
-            tabletSeat->addTabletPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup));
+            tabletSeat->addTabletPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup), tablet);
         }
     }
     void removeDevice(const QString &sysname)
@@ -1729,7 +1728,7 @@ public:
             tool = createTool(event->tabletId());
         }
 
-        KWaylandServer::TabletV2Interface *tablet = tabletSeat->tabletByName(event->tabletId().m_tabletSysName);
+        auto tablet = static_cast<KWaylandServer::TabletV2Interface *>(event->tabletId().m_deviceGroupData);
 
         Toplevel *toplevel = input()->findToplevel(event->globalPos());
         if (!toplevel || !toplevel->surface()) {
@@ -1816,7 +1815,7 @@ public:
         return true;
     }
 
-    KWaylandServer::TabletPadV2Interface *findPad(const QString &deviceSysName) const
+    KWaylandServer::TabletPadV2Interface *findAndAdoptPad(const TabletPadId &tabletPadId) const
     {
         Toplevel *toplevel = workspace()->activeClient();
         auto seat = findTabletSeat();
@@ -1824,15 +1823,19 @@ public:
             return nullptr;
         }
 
+        auto tablet = static_cast<KWaylandServer::TabletV2Interface *>(tabletPadId.data);
         KWaylandServer::SurfaceInterface *surface = toplevel->surface();
-        auto pad = seat->padByName(deviceSysName);
-        pad->setCurrentSurface(surface);
+        auto pad = tablet->pad();
+        if (!pad) {
+            return nullptr;
+        }
+        pad->setCurrentSurface(surface, tablet);
         return pad;
     }
 
-    bool tabletPadButtonEvent(uint button, bool pressed, const QString &deviceSysName) override
+    bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId) override
     {
-        auto pad = findPad(deviceSysName);
+        auto pad = findAndAdoptPad(tabletPadId);
         if (!pad) {
             return false;
         }
@@ -1840,9 +1843,9 @@ public:
         return true;
     }
 
-    bool tabletPadRingEvent(int number, int angle, bool isFinger, const QString &deviceSysName) override
+    bool tabletPadRingEvent(int number, int angle, bool isFinger, const TabletPadId &tabletPadId) override
     {
-        auto pad = findPad(deviceSysName);
+        auto pad = findAndAdoptPad(tabletPadId);
         if (!pad) {
             return false;
         }
@@ -1856,9 +1859,9 @@ public:
         return true;
     }
 
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const QString &deviceSysName) override
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId) override
     {
-        auto pad = findPad(deviceSysName);
+        auto pad = findAndAdoptPad(tabletPadId);
         if (!pad) {
             return false;
         }
