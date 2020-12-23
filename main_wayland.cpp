@@ -25,6 +25,7 @@
 
 // KDE
 #include <KCrash>
+#include <KDesktopFile>
 #include <KLocalizedString>
 #include <KPluginLoader>
 #include <KPluginMetaData>
@@ -112,6 +113,7 @@ void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
     : ApplicationWaylandAbstract(OperationModeWaylandOnly, argc, argv)
 {
+    connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &ApplicationWayland::stopInputMethod);
 }
 
 ApplicationWayland::~ApplicationWayland()
@@ -216,42 +218,75 @@ void ApplicationWayland::continueStartupWithScene()
     m_xwayland->start();
 }
 
+
+void ApplicationWayland::stopInputMethod()
+{
+    if (!m_inputMethodProcess) {
+        return;
+    }
+    m_inputMethodProcess->kill();
+    m_inputMethodProcess->waitForFinished();
+    if (waylandServer()) {
+        waylandServer()->destroyInputMethodConnection();
+    }
+    m_inputMethodProcess->deleteLater();
+    m_inputMethodProcess = nullptr;
+}
+
+void ApplicationWayland::startInputMethod(const QString &executable)
+{
+    stopInputMethod();
+    if (executable.isEmpty()) {
+        return;
+    }
+
+    QStringList arguments = KShell::splitArgs(executable);
+    if (arguments.isEmpty()) {
+        qWarning("Failed to launch the input method server: %s is an invalid command", qPrintable(m_inputMethodServerToStart));
+        return;
+    }
+
+    const QString program = arguments.takeFirst();
+    int socket = dup(waylandServer()->createInputMethodConnection());
+    if (socket >= 0) {
+        qWarning("Failed to create the input method connection");
+        return;
+    }
+
+    QProcessEnvironment environment = processStartupEnvironment();
+    environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
+    environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+    environment.remove("DISPLAY");
+    environment.remove("WAYLAND_DISPLAY");
+    m_inputMethodProcess = new Process(this);
+    m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+    m_inputMethodProcess->setProcessEnvironment(environment);
+    m_inputMethodProcess->setProgram(program);
+    m_inputMethodProcess->setArguments(arguments);
+    m_inputMethodProcess->start();
+}
+
+void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)
+{
+    if (group.name() != "Wayland" || !names.contains("InputMethod")) {
+        return;
+    }
+
+    startInputMethod(group.readEntry("InputMethod", QString()));
+}
+
 void ApplicationWayland::startSession()
 {
     if (!m_inputMethodServerToStart.isEmpty()) {
-        QStringList arguments = KShell::splitArgs(m_inputMethodServerToStart);
-        if (!arguments.isEmpty()) {
-            QString program = arguments.takeFirst();
-            int socket = dup(waylandServer()->createInputMethodConnection());
-            if (socket >= 0) {
-                QProcessEnvironment environment = processStartupEnvironment();
-                environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
-                environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-                environment.remove("DISPLAY");
-                environment.remove("WAYLAND_DISPLAY");
-                QProcess *p = new Process(this);
-                p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
-                connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
-                    [p] {
-                        if (waylandServer()) {
-                            waylandServer()->destroyInputMethodConnection();
-                        }
-                        p->deleteLater();
-                    }
-                );
-                p->setProcessEnvironment(environment);
-                p->setProgram(program);
-                p->setArguments(arguments);
-                p->start();
-                connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, p, [p] {
-                    p->kill();
-                    p->waitForFinished();
-                });
-            }
-        } else {
-            qWarning("Failed to launch the input method server: %s is an invalid command",
-                     qPrintable(m_inputMethodServerToStart));
-        }
+        startInputMethod(m_inputMethodServerToStart);
+    } else {
+        KSharedConfig::Ptr kwinSettings = kwinApp()->config();
+        m_settingsWatcher = KConfigWatcher::create(kwinSettings);
+        connect(m_settingsWatcher.data(), &KConfigWatcher::configChanged, this, &ApplicationWayland::refreshSettings);
+
+        KConfigGroup group = kwinSettings->group("Wayland");
+        KDesktopFile file(group.readEntry("InputMethod", QString()));
+        startInputMethod(file.desktopGroup().readEntry("Exec", QString()));
     }
 
     // start session

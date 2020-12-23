@@ -314,6 +314,9 @@
             <min>0</min>
         </entry>
     </group>
+    <group name="Wayland">
+        <entry name="InputMethod" type="Path" />
+    </group>
     <group name="Xwayland">
         <entry name="XwaylandCrashPolicy" type="Enum">
             <choices name="KWin::XwaylandCrashPolicy">
