@@ -1,0 +1,18 @@
+#SPDX-FileCopyrightText: 2020 Aleix Pol Gonzalzez <aleixpol@kde.org>
+#SPDX-License-Identifier: BSD-3-Clause
+
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+Icon=input-keyboard-virtual
+
+X-KDE-Library=kcm_virtualkeyboard
+X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=input-devices
+X-KDE-OnlyShowOnQtPlatforms=wayland;
+
+Name=Virtual Keyboard
+Comment=Select which virtual keyboard to use
+
+Categories=Qt;KDE;

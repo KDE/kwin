@@ -9,6 +9,7 @@ add_subdirectory(kwinscreenedges)
 add_subdirectory(kwinscripts)
 add_subdirectory(kwindesktop)
 add_subdirectory(kwineffects)
+add_subdirectory(kwinvirtualkeyboard)
 
 if (KWIN_BUILD_TABBOX)
     add_subdirectory(kwintabbox)

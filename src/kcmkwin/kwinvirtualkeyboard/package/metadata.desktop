@@ -1,0 +1,13 @@
+#SPDX-FileCopyrightText: 2020 Aleix Pol Gonzalzez <aleixpol@kde.org>
+#SPDX-License-Identifier: BSD-3-Clause
+
+[Desktop Entry]
+Name=Virtual Keyboard
+
+Icon=input-keyboard-virtual
+Type=Service
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=kcm_virtualkeyboard
+X-KDE-ServiceTypes=Plasma/Generic
+
+X-Plasma-MainScript=ui/main.qml
