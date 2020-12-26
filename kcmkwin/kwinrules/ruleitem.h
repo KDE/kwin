@@ -31,7 +31,8 @@ public:
         Percentage,
         Point,
         Size,
-        Shortcut
+        Shortcut,
+        OptionList,
     };
     Q_ENUM(Type)
 

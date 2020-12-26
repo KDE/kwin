@@ -448,8 +448,8 @@ void RulesModel::populateRuleList()
     m_activities = new KActivities::Consumer(this);
 
     auto activity = addRule(new RuleItem(QLatin1String("activity"),
-                                         RulePolicy::SetRule, RuleItem::Option,
-                                         i18n("Activity"), i18n("Size & Position"),
+                                         RulePolicy::SetRule, RuleItem::OptionList,
+                                         i18n("Activities"), i18n("Size & Position"),
                                          QIcon::fromTheme("activities")));
     activity->setOptionsData(activitiesModelData());
 

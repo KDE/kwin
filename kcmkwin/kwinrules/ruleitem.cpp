@@ -140,10 +140,10 @@ QVariant RuleItem::options() const
 
 void RuleItem::setOptionsData(const QList<OptionsModel::Data> &data)
 {
+    if (m_type != Option && m_type != OptionList && m_type != NetTypes) {
+        return;
+    }
     if (!m_options) {
-        if (m_type != Option && m_type != NetTypes) {
-            return;
-        }
         m_options = new OptionsModel();
     }
     m_options->updateModelData(data);
@@ -215,6 +215,8 @@ QVariant RuleItem::typedValue(const QVariant &value) const
             return value.toString().trimmed();
         case Shortcut:
             return value.toString();
+        case OptionList:
+            return value.toStringList();
     }
     return value;
 }

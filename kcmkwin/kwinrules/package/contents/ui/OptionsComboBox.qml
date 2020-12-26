@@ -18,6 +18,9 @@ QQC2.ComboBox {
     valueRole: "value"
 
     property bool multipleChoice: false
+    // If `useFlagsValue` is true, `selectionMask` will be composed using the item values.
+    // Otherwise, it will use the item indexes.
+    property bool useFlagsValue: false
     property int selectionMask: 0
 
     currentIndex: multipleChoice ? -1 : model.selectedIndex
@@ -31,8 +34,9 @@ QQC2.ComboBox {
             case 0:
                 return i18n("None selected");
             case 1:
-                var selectedValue = selectionMask.toString(2).length - 1;
-                return model.textOfValue(selectedValue);
+                let selectedBit = selectionMask.toString(2).length - 1;
+                let selectedIndex = (useFlagsValue) ? model.indexOf(selectedBit) : selectedBit
+                return model.data(model.index(selectedIndex, 0), Qt.DisplayRole);
             case count:
                 return i18n("All selected");
         }
@@ -47,9 +51,10 @@ QQC2.ComboBox {
             QQC2.CheckBox {
                 id: itemSelection
                 visible: multipleChoice
-                checked: (selectionMask & (1 << value))
+                readonly property int bit: (useFlagsValue) ? value : index
+                checked: (selectionMask & (1 << bit))
                 onToggled: {
-                    selectionMask = (selectionMask & ~(1 << value)) | (checked << value);
+                    selectionMask = (selectionMask & ~(1 << bit)) | (checked << bit);
                     activated(index);
                 }
             }

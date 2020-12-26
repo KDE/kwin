@@ -34,6 +34,7 @@ Loader {
             case RuleItem.Point: return coordinateEditor
             case RuleItem.Size: return coordinateEditor
             case RuleItem.Shortcut: return shortcutEditor
+            case RuleItem.OptionList: return optionListEditor
             default: return emptyEditor
         }
     }
@@ -104,10 +105,38 @@ Loader {
             flat: true
             model: ruleOptions
             multipleChoice: true
+            useFlagsValue: true
             // Filter the provided value with the options mask
             selectionMask: ruleValue & optionsMask
             onActivated: {
                 valueEditor.valueEdited(selectionMask);
+            }
+        }
+    }
+
+    Component {
+        id: optionListEditor
+        OptionsComboBox {
+            flat: true
+            model: ruleOptions
+            multipleChoice: true
+            selectionMask: {
+                let mask = 0
+                for (let i = 0; i < count; i++) {
+                    if (ruleValue.includes(model.data(model.index(i,0), Qt.UserRole))) {
+                        mask += 1 << i
+                    }
+                }
+                return mask
+            }
+            onActivated: {
+                let selectionList = []
+                for (let i = 0; i < count; i++) {
+                    if (selectionMask & (1 << i)) {
+                        selectionList.push(model.data(model.index(i,0), Qt.UserRole))
+                    }
+                }
+                valueEditor.valueEdited(selectionList);
             }
         }
     }
