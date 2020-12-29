@@ -11,7 +11,7 @@
 # ``lcms2_VERSION``
 #     The version of lcms2
 # ``lcms2_LIBRARIES``
-#     This should be passed to target_compile_options() if the target is not
+#     This should be passed to target_link_libraries() if the target is not
 #     used for linking
 # ``lcms2_INCLUDE_DIRS``
 #     This should be passed to target_include_directories() if the target is not
