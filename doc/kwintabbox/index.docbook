@@ -12,8 +12,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2015-07-24</date>
-<releaseinfo>&plasma; 5.4</releaseinfo>
+<date>2020-12-31</date>
+<releaseinfo>&plasma; 5.18</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -21,69 +21,72 @@
 <keyword>desktop</keyword>
 <keyword>window</keyword>
 <keyword>navigation</keyword>
+<keyword>switch</keyword>
+<keyword>alt-tab</keyword>
 </keywordset>
 </articleinfo>
 
 <sect1 id="windows-navigating">
 <title>Navigating through Windows</title>
 
-<para>This module offers the possibility to configure the behaviour for Navigating through windows often referred to as <keycombo>&Alt;&Tab;</keycombo>. There are two independent sets of effects which can have different settings. For each of this sets  there is an own tab (<guilabel>Main</guilabel> and <guilabel>Alternative</guilabel>) in this module. 
-</para>
+<para>The Task Switcher allows the user to easily switch between currently open windows using the keyboard.  It is highly configurable, and allows the user to control its behavior, visual appearance, keyboard shortcuts, and window filtering.</para>
 
-<note><para>
-The first set of effects on the <guilabel>Main</guilabel> tab has predefined shortcuts. If you want to use the second set of effects on the <guilabel>Alternative</guilabel> tab, you have to set a shortcut for these effects in the Shortcut Editor manually.</para></note>
+<para>The Task Switcher is often invoked using the key combination <keycombo>&Alt;&Tab;</keycombo>, but this can be changed. When invoked, it shows a list of all the currently open windows, optionally filtered and augmented according to the configuration settings. For example, the list may be filtered to show only windows that meet certain criteria, such as windows that are currently visible.  Once the window list is shown, the user can cycle forward and backward through all the listed windows by repeatedly hitting the Task Switcher key combination.  Releasing the Task Switcher key combination will activate the window that was selected in the list.</para>
 
-<note><para>
-For navigating through windows without <keycombo>&Alt;&Tab;</keycombo>, you can define screen edge actions in the &systemsettings; module <ulink url="help:/kcontrol/kwinscreenedges/index.html"><guilabel>Screen Edges</guilabel></ulink>.
-</para></note>
+<para>Because the Task Switcher offers so many configuration options, two distinct collections of configuration settings can be defined. These collections are called <guilabel>Main</guilabel> and <guilabel>Alternative</guilabel>, and each can have a unique set of key combinations assigned to them.</para>
 
-<para>The following documentation of options applies to the general settings and the alternative settings as well.</para>
+<para>The configuration options for each of the Main and Alternative collections are presented in four groupings, as follows:</para>
 
 <sect2 id="visualization">
 <title>Visualization</title>
-<para>
-There are several effects which can be used instead of the normal window list when compositing is enabled. By default the <guilabel>Breeze</guilabel> effect is used. This effect displays a small thumbnail of each window in a list at the left of the screen and the currently selected window is highlighted.
-There are several additional predefined layouts which provide an informative or compact view, small or large icons, a grid  and window title only.</para>
-<para>Selecting one of these layouts you will have a button to show a preview.</para> 
-<para>If you enable <guilabel>Show selected window</guilabel> the currently selected window will be highlighted by fading out all other 
-windows. This option requires desktop effects to be active.</para>
+<para>This group of configuration options controls how the list of windows is displayed on the screen. The default visualization is called <guilabel>Breeze</guilabel>.  It lists all open windows along the left-hand side of the screen.  Other visualizations include <guilabel>Cover Switch</guilabel> (a 3D carousel), <guilabel>Flip Switch</guilabel> (a 3D stack of cards), and <guilabel>Medium Rounded</guilabel> (a Microsoft Windows-style list of icons).  Many more visualizations can be downloaded and installed by clicking the <guibutton>Get New Task Switchers...</guibutton> button at the bottom right of the dialog box.</para>
 
-<para>
-<guilabel>Cover Switch</guilabel> and <guilabel>Flip Switch</guilabel> effect are more fancy effects which require OpenGL. <guilabel>Cover Switch</guilabel> displays the windows in a gallery with a large thumbnail of the currently selected window in the center of the screen while all other windows are rotated on the left and right. <guilabel>Flip Switch</guilabel> displays all windows on a 3D stack. The selected window is on top of the stack and navigating through the windows will move the stack so that the new selected window is on the top.
-</para>
-<para>
-If the effect provides additional settings the configure button will be activated. By clicking this button a configuration dialog will be shown.
-</para>
-<note><para>
-When compositing is not active or gets suspended the normal window list will be shown. There is no loss in functionality if an effect is selected and compositing is not active.</para></note>
+<para>Once a visualization has been selected from the drop-down list, the button to the right of the list can be clicked to see a preview or to configure visualization-specific options.</para>
+
+<para>The <guilabel>Show selected window</guilabel> checkbox determines how clearly the user will see which window will be activated.  If this box is checked, then all windows will be dimmed except for the one that is currently highlighted in the Task Switcher.</para>
+
+<note><para>There may be cases where the desired Task Switcher visualization cannot be shown.  One of these situations can be when a process called 'compositing' is turned off or disabled.  If this ever happens, the window list will still be shown, but in a very simple format.</para></note>
 </sect2>
 
 <sect2 id="shortcuts">
 <title>Shortcuts</title>
-<para>
-The shortcut editor provides the configuration interface for the keyboard shortcuts for navigating through windows. Each of the two possible sets of effects has two shortcuts: one for the forward direction and one for the reverse direction. Please note that the window list can only be shown if you select a shortcut with a keyboard modifier such as the &Alt; or &Ctrl; key. This modifier has to be hold while switching. Selecting a shortcut without a modifier key can break the behaviour of navigating through windows.
-</para>
+<para>This section allows you to define up to four Task Switcher keyboard shortcuts for the <guilabel>Main</guilabel> configuration and four more for the <guilabel>Alternative</guilabel> configuration.  The <guilabel>Main</guilabel> shortcuts are predefined, while the <guilabel>Alternative</guilabel> shortcuts need to be defined manually.</para>
+<para>In the <guilabel>All Windows</guilabel> section, the <guilabel>Forward</guilabel> and <guilabel>Reverse</guilabel> shortcuts will cycle forward and backward through the list of open windows.</para>
+<para>In the <guilabel>Current Application</guilabel> section, the <guilabel>Forward</guilabel> and <guilabel>Reverse</guilabel> shortcuts can be set to cycle through the windows of the currently active application.  For example, if you have three Dolphin file browser windows open, then you would be able to use these shortcuts to just cycle among the three Dolphin windows.</para>
+<para>To change a keyboard shortcut, click the 'Forward' or 'Reverse' button and type the desired shortcut combination.  Be sure to use a modifier key like Control or Alt as part of the shortcut, otherwise you might not be able to cycle through the window list properly.</para>
+
+<note><para>Any of the defined keyboard shortcuts can be used to invoke the Task Switcher.  To invoke the Task Switcher without using the keyboard, you can define screen edge actions in the &systemsettings; module <ulink url="help:/kcontrol/kwinscreenedges/index.html"><guilabel>Screen Edges</guilabel></ulink>.</para></note>
 </sect2>
 
-<sect2 id="content-and-sort-order">
+<sect2 id="content">
 <title>Content</title>
-<para>It is possible to influence the sort order, you can either use a sort order based on the last usage of the windows or the stacking order of the windows.
-</para>
-<para>If you check <guilabel>Include "Show Desktop" icon</guilabel> an entry for the desktop will be added to list with application windows. Then you can select this entry in the list to minimize all windows.</para>
-<para>If <guilabel>Only one window per application</guilabel> is selected then only the last used instance of an application is contained in the list. Switching to other instances is possible only via the panel then.</para>
+<para>The options in this section partially control which windows will appear in the Task Switcher list.</para>
+
+<para>The <guilabel>Sort Order</guilabel> drop-down list specifies whether the windows should be listed in 'Stacking Order' or 'Recently Used' order.  Stacking Order is the order in which the windows appear on the screen, while Recently Used order is the order in which the windows have been used.  Recently Used order makes it very easy to switch between the two most frequently used windows because they will always appear in the top 2 positions in the list.</para>
+
+<para>The <guilabel>Include "Show Desktop" icon</guilabel> option will add a Show Desktop option to the window list. This allows the user to easily select the Desktop as the 'window' to show.</para>
+
+<para>The <guilabel>Only one window per application</guilabel> option reduces clutter by only showing one window for each open application.  If an application has multiple windows open, then its most recently activated window will be shown in the list and the others will not be shown.</para>
 </sect2>
 
-<sect2 id="filter">
-<title>Filter windows</title>
-<para>
-You can configure which windows should be shown in the list initiated by pressing <keycombo>&Alt;&Tab;</keycombo> (predefined for the settings on the <guilabel>Main</guilabel> tab) or the user defined shortcut for the alternative settings. 
-</para>
-<para>So it is possible to only show windows on the current virtual desktop or windows from all other desktops. Additionally you can apply similar rules for windows in activities or on screens for a multimonitor setup.
-</para>
-<para>The last option allows you to filter on the minimization status of windows.
-</para>
-</sect2>
+<sect2 id="filter-windows-by">
+<title>Filter Windows By</title>
+<para>This section contains options for additionally filtering the Task Switcher's list of windows.</para>
 
+<para>The <guilabel>Virtual Desktops</guilabel> option filters the list of windows according to which virtual desktop is currently active.  If you consistently put specific windows on specific virtual desktops, then this filtering option can make it easy to switch to windows within or across those virtual desktops. Select <guilabel>Current desktop</guilabel> to only show windows on the current virtual desktop.  Select <guilabel>All other desktops</guilabel> to show only the windows on the virtual desktops that are not currently active.</para>
+
+<para>The <guilabel>Activities</guilabel> option filters the list of windows according to which Activity is currently active.  As with Virtual Desktop filtering, this option can make it easier to switch to applications within or across all Activities. Select <guilabel>Current activity</guilabel> to only show windows that are part of the current Activity.  Select <guilabel>All other activities</guilabel> to only show windows that are part of the Activities that are not currently active.</para>
+
+<para>The <guilabel>Screens</guilabel> option filters the list of windows according to which display screen is currently active.  Select <guilabel>Current screen</guilabel> to only show windows that are on the display that currently has the mouse pointer on it.  Select <guilabel> All other screens</guilabel> to show the windows that are on all other displays. This option can be useful to users who want to quickly switch between windows that are on the same monitor in a multi-monitor setup.</para>
+<note><para>The active screen is the one that the mouse pointer is currently on, not the screen that the currently active window is on.</para></note>
+
+<para>The <guilabel>Minimization</guilabel> option filters the list of windows according to whether they are hidden or not.  Select <guilabel>Visible windows</guilabel> to only show windows that have not been minimized.  Select <guilabel>Hidden windows</guilabel> to only show the minimized windows.</para>
+
+<para> If you uncheck an option in this section, then no filtering will be applied for that option. For example, if you check the Screens option and clear the other three options, then the Task Switcher window list will only be filtered according to which windows are on the current display.</para>
+<para>All of the options described in the above sections work together to provide very fine-grained control of the Task Switcher's behavior and appearance.  For example, you could define the <guilabel>Main</guilabel> settings collection to be invoked with the Alt+Tab key combination, to show the open windows in a carousel, to only show one window per application, and to only list windows that are on the current desktop and on the currently active screen.  This can provide very fast context-sensitive window switching if you have both 'work' and 'home' virtual desktops, and then keep all of your spreadsheets for work and home on the same monitor.</para>
+
+<para>The availability of the <guilabel>Alternative</guilabel> Task Switcher configuration gives you a second way way to easily filter and browse through the window lists. With eight key combinations available across the two Task Switcher configurations, it should be possible to easily and quickly navigate through large numbers of windows.</para>
+</sect2>
 </sect1>
 </article>
 
@@ -99,4 +102,3 @@ End:
 vim:tabstop=2:shiftwidth=2:expandtab
 kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
 -->
-
