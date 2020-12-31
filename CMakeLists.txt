@@ -364,7 +364,6 @@ endif()
 
 include_directories(${XKB_INCLUDE_DIR})
 
-include_directories(${epoxy_INCLUDE_DIR})
 set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
 # for things that are also used by kwin libraries
@@ -707,7 +706,7 @@ set_target_properties(kwin PROPERTIES
    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-target_link_libraries(kwin ${kwinLibs} kwinglutils ${epoxy_LIBRARY})
+target_link_libraries(kwin ${kwinLibs} kwinglutils epoxy::epoxy)
 
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE
