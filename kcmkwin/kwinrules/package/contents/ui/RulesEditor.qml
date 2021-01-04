@@ -253,6 +253,8 @@ ScrollViewKCM {
             case RuleItem.NetTypes:
                 var selectedValue = value.toString(2).length - 1;
                 return options.textOfValue(selectedValue);
+            case RuleItem.OptionList:
+                return Array.from(value, item => options.textOfValue(item) ).join(", ");
         }
         return value;
     }

@@ -208,7 +208,10 @@ QVariantMap clientToVariantMap(const AbstractClient *c)
         {QStringLiteral("skipPager"), c->skipPager()},
         {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
         {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
-        {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical}
+        {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
+#ifdef KWIN_BUILD_ACTIVITIES
+        {QStringLiteral("activities"), c->activities()},
+#endif
     };
 }
 }

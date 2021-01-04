@@ -117,18 +117,11 @@ Loader {
     Component {
         id: optionListEditor
         OptionsComboBox {
+            id: optionListCombo
             flat: true
             model: ruleOptions
             multipleChoice: true
-            selectionMask: {
-                let mask = 0
-                for (let i = 0; i < count; i++) {
-                    if (ruleValue.includes(model.data(model.index(i,0), Qt.UserRole))) {
-                        mask += 1 << i
-                    }
-                }
-                return mask
-            }
+
             onActivated: {
                 let selectionList = []
                 for (let i = 0; i < count; i++) {
@@ -137,6 +130,24 @@ Loader {
                     }
                 }
                 valueEditor.valueEdited(selectionList);
+            }
+
+            function updateSelectionMask() {
+                selectionMask = 0
+                for (let i = 0; i < count; i++) {
+                    if (ruleValue.includes(model.data(model.index(i,0), Qt.UserRole))) {
+                        selectionMask += 1 << i
+                    }
+                }
+            }
+
+            onModelChanged: updateSelectionMask()
+            Component.onCompleted: updateSelectionMask()
+            Connections {
+                target: valueEditor
+                function onRuleValueChanged() {
+                    optionListCombo.updateSelectionMask()
+                }
             }
         }
     }

@@ -7,6 +7,10 @@
 
 #include "rulesmodel.h"
 
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
+
 #include <QFileInfo>
 #include <QIcon>
 #include <QQmlEngine>
@@ -686,6 +690,12 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
     m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
     m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
 
+#ifdef KWIN_BUILD_ACTIVITIES
+    const QStringList activities = info.value("activities").toStringList();
+    m_rules["activity"]->setSuggestedValue(activities.isEmpty() ? QStringList{ Activities::nullUuid() }
+                                                                : activities);
+#endif
+
     const auto ruleForProperty = x11PropertyHash();
     for (QString &property : info.keys()) {
         if (!ruleForProperty.contains(property)) {
@@ -739,9 +749,8 @@ QList<OptionsModel::Data> RulesModel::activitiesModelData() const
 #ifdef KWIN_BUILD_ACTIVITIES
     QList<OptionsModel::Data> modelData;
 
-    // NULL_ID from kactivities/src/lib/core/consumer.cpp
     modelData << OptionsModel::Data{
-        QString::fromLatin1("00000000-0000-0000-0000-000000000000"),
+        Activities::nullUuid(),
         i18n("All Activities"),
         QIcon::fromTheme("activities")
     };
