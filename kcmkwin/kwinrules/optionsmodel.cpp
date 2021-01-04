@@ -140,25 +140,25 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
     };
 
     static const auto setRuleOptions = QList<RulePolicy::Data> {
-        {Rules::DontAffect,
-            i18n("Do Not Affect"),
-            i18n("The window property will not be affected and therefore the default handling for it will be used."
-                 "\nSpecifying this will block more generic window settings from taking effect.")},
         {Rules::Apply,
             i18n("Apply Initially"),
             i18n("The window property will be only set to the given value after the window is created."
                  "\nNo further changes will be affected.")},
-        {Rules::Remember,
-            i18n("Remember"),
-            i18n("The value of the window property will be remembered and, every time the window"
-                 " is created, the last remembered value will be applied.")},
-        {Rules::Force,
-            i18n("Force"),
-            i18n("The window property will be always forced to the given value.")},
         {Rules::ApplyNow,
             i18n("Apply Now"),
             i18n("The window property will be set to the given value immediately and will not be affected later"
                  "\n(this action will be deleted afterwards).")},
+        {Rules::Remember,
+            i18n("Remember"),
+            i18n("The value of the window property will be remembered and, every time the window"
+                 " is created, the last remembered value will be applied.")},
+        {Rules::DontAffect,
+            i18n("Do Not Affect"),
+            i18n("The window property will not be affected and therefore the default handling for it will be used."
+                 "\nSpecifying this will block more generic window settings from taking effect.")},
+        {Rules::Force,
+            i18n("Force"),
+            i18n("The window property will be always forced to the given value.")},
         {Rules::ForceTemporarily,
             i18n("Force Temporarily"),
             i18n("The window property will be forced to the given value until it is hidden"
@@ -166,9 +166,9 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
     };
 
     static auto forceRuleOptions = QList<RulePolicy::Data> {
-        setRuleOptions.at(0),  // Rules::DontAffect
-        setRuleOptions.at(3),  // Rules::Force
+        setRuleOptions.at(4),  // Rules::Force
         setRuleOptions.at(5),  // Rules::ForceTemporarily
+        setRuleOptions.at(3),  // Rules::DontAffect
     };
 
     switch (type) {
