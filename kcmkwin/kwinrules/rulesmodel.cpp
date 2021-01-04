@@ -162,7 +162,7 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
         emit descriptionChanged();
     }
     if (rule->hasFlag(RuleItem::AffectsWarning)) {
-        emit warningMessageChanged();
+        emit warningMessagesChanged();
     }
 
     return true;
@@ -233,16 +233,25 @@ void RulesModel::processSuggestion(const QString &key, const QVariant &value)
     }
 }
 
-QString RulesModel::warningMessage() const
+QStringList RulesModel::warningMessages() const
 {
+    QStringList messages;
+
     if (wmclassWarning()) {
-        return i18n("You have specified the window class as unimportant.\n"
-                    "This means the settings will possibly apply to windows from all applications."
-                    " If you really want to create a generic setting, it is recommended"
-                    " you at least limit the window types to avoid special window types.");
+        messages << i18n("You have specified the window class as unimportant.\n"
+                         "This means the settings will possibly apply to windows from all applications."
+                         " If you really want to create a generic setting, it is recommended"
+                         " you at least limit the window types to avoid special window types.");
     }
 
-    return QString();
+    if (geometryWarning()) {
+        messages << i18n("Some applications set their own geometry after starting,"
+                         " overriding your initial settings for size and position. "
+                         "To enforce these settings, also force the property \"%1\" to \"Yes\".",
+                         m_rules["ignoregeometry"]->name());
+    }
+
+    return messages;
 }
 
 bool RulesModel::wmclassWarning() const
@@ -257,6 +266,25 @@ bool RulesModel::wmclassWarning() const
     return (no_wmclass && alltypes);
 }
 
+bool RulesModel::geometryWarning() const
+{
+    const bool ignoregeometry = m_rules["ignoregeometry"]->isEnabled()
+                                    && m_rules["ignoregeometry"]->policy() == Rules::Force
+                                    && m_rules["ignoregeometry"]->value() == true;
+
+    const bool initialPos = m_rules["position"]->isEnabled()
+                                && (m_rules["position"]->policy() == Rules::Apply
+                                    || m_rules["position"]->policy() == Rules::Remember);
+
+    const bool initialSize = m_rules["size"]->isEnabled()
+                                && (m_rules["size"]->policy() == Rules::Apply
+                                    || m_rules["size"]->policy() == Rules::Remember);
+
+    const bool initialPlacement = m_rules["placement"]->isEnabled()
+                                    && m_rules["placement"]->policy() == Rules::Force;
+
+    return (!ignoregeometry && (initialPos || initialSize || initialPlacement));
+}
 
 void RulesModel::readFromSettings(RuleSettings *settings)
 {
@@ -288,7 +316,7 @@ void RulesModel::readFromSettings(RuleSettings *settings)
     endResetModel();
 
     emit descriptionChanged();
-    emit warningMessageChanged();
+    emit warningMessagesChanged();
 }
 
 void RulesModel::writeToSettings(RuleSettings *settings) const
@@ -418,15 +446,17 @@ void RulesModel::populateRuleList()
                          QIcon::fromTheme("computer")));
 
     // Size & Position
-    addRule(new RuleItem(QLatin1String("position"),
-                         RulePolicy::SetRule, RuleItem::Point,
-                         i18n("Position"), i18n("Size & Position"),
-                         QIcon::fromTheme("transform-move")));
+    auto position = addRule(new RuleItem(QLatin1String("position"),
+                                RulePolicy::SetRule, RuleItem::Point,
+                                i18n("Position"), i18n("Size & Position"),
+                                QIcon::fromTheme("transform-move")));
+    position->setFlag(RuleItem::AffectsWarning);
 
-    addRule(new RuleItem(QLatin1String("size"),
-                         RulePolicy::SetRule, RuleItem::Size,
-                         i18n("Size"), i18n("Size & Position"),
-                         QIcon::fromTheme("image-resize-symbolic")));
+    auto size = addRule(new RuleItem(QLatin1String("size"),
+                                     RulePolicy::SetRule, RuleItem::Size,
+                                     i18n("Size"), i18n("Size & Position"),
+                                     QIcon::fromTheme("image-resize-symbolic")));
+    size->setFlag(RuleItem::AffectsWarning);
 
     addRule(new RuleItem(QLatin1String("maximizehoriz"),
                          RulePolicy::SetRule, RuleItem::Boolean,
@@ -490,15 +520,17 @@ void RulesModel::populateRuleList()
                                           i18n("Initial placement"), i18n("Size & Position"),
                                           QIcon::fromTheme("region")));
     placement->setOptionsData(placementModelData());
+    placement->setFlag(RuleItem::AffectsWarning);
 
-    addRule(new RuleItem(QLatin1String("ignoregeometry"),
-                         RulePolicy::SetRule, RuleItem::Boolean,
-                         i18n("Ignore requested geometry"), i18n("Size & Position"),
-                         QIcon::fromTheme("view-time-schedule-baselined-remove"),
-                         i18n("Windows can ask to appear in a certain position.\n"
-                              "By default this overrides the placement strategy\n"
-                              "what might be nasty if the client abuses the feature\n"
-                              "to unconditionally popup in the middle of your screen.")));
+    auto ignoregeometry = addRule(new RuleItem(QLatin1String("ignoregeometry"),
+                                               RulePolicy::SetRule, RuleItem::Boolean,
+                                               i18n("Ignore requested geometry"), i18n("Size & Position"),
+                                               QIcon::fromTheme("view-time-schedule-baselined-remove"),
+                                               i18n("Windows can ask to appear in a certain position.\n"
+                                                    "By default this overrides the placement strategy\n"
+                                                    "what might be nasty if the client abuses the feature\n"
+                                                    "to unconditionally popup in the middle of your screen.")));
+    ignoregeometry->setFlag(RuleItem::AffectsWarning);
 
     addRule(new RuleItem(QLatin1String("minsize"),
                          RulePolicy::ForceRule, RuleItem::Size,

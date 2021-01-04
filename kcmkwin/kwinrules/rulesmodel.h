@@ -29,7 +29,7 @@ class RulesModel : public QAbstractListModel
     Q_OBJECT
 
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QString warningMessage READ warningMessage NOTIFY warningMessageChanged)
+    Q_PROPERTY(QStringList warningMessages READ warningMessages NOTIFY warningMessagesChanged)
 
 public:
     enum RulesRole {
@@ -74,13 +74,13 @@ public:
 
     QString description() const;
     void setDescription(const QString &description);
-    QString warningMessage() const;
+    QStringList warningMessages() const;
 
     Q_INVOKABLE void detectWindowProperties(int miliseconds);
 
 signals:
     void descriptionChanged();
-    void warningMessageChanged();
+    void warningMessagesChanged();
 
     void showSuggestions();
     void showErrorMessage(const QString &message);
@@ -89,10 +89,13 @@ signals:
 
 private:
     void populateRuleList();
-    bool wmclassWarning() const;
     RuleItem *addRule(RuleItem *rule);
+
     QString defaultDescription() const;
     void processSuggestion(const QString &key, const QVariant &value);
+
+    bool wmclassWarning() const;
+    bool geometryWarning() const;
 
     static const QHash<QString, QString> x11PropertyHash();
     void updateVirtualDesktops();

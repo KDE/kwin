@@ -69,11 +69,18 @@ ScrollViewKCM {
         }
     }
 
-    header: Kirigami.InlineMessage {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        text: rulesModel.warningMessage
-        visible: text != ""
+    header: ColumnLayout {
+        visible: warningList.count > 0
+        Repeater {
+            id: warningList
+            model: rulesModel.warningMessages
+
+            delegate: Kirigami.InlineMessage {
+                text: modelData
+                visible: true
+                Layout.fillWidth: true
+            }
+        }
     }
 
     footer:  RowLayout {
