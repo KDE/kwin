@@ -59,7 +59,7 @@ int OptionsModel::selectedIndex() const
     return m_index;
 }
 
-int OptionsModel::indexOf(QVariant value) const
+int OptionsModel::indexOf(const QVariant &value) const
 {
     for (int index = 0; index < m_data.count(); index++) {
         if (m_data.at(index).value == value) {
@@ -67,6 +67,15 @@ int OptionsModel::indexOf(QVariant value) const
         }
     }
     return -1;
+}
+
+QString OptionsModel::textOfValue(const QVariant &value) const
+{
+    int index = indexOf(value);
+    if (index < 0 || index >= m_data.count()) {
+        return QString();
+    }
+    return m_data.at(index).text;
 }
 
 QVariant OptionsModel::value() const

@@ -55,8 +55,8 @@ public:
 
     void updateModelData(const QList<Data> &data);
 
-    Q_INVOKABLE int indexOf(QVariant value) const;
-
+    Q_INVOKABLE int indexOf(const QVariant &value) const;
+    Q_INVOKABLE QString textOfValue(const QVariant &value) const;
     int selectedIndex() const;
 
 signals:
