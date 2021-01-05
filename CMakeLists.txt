@@ -630,12 +630,6 @@ set(kwin_KDE_LIBS
     PW::KScreenLocker
 )
 
-set(kwin_XLIB_LIBS
-    ${X11_ICE_LIB}
-    ${X11_SM_LIB}
-    ${X11_X11_LIB}
-)
-
 set(kwin_XCB_LIBS
     XCB::COMPOSITE
     XCB::DAMAGE
@@ -662,7 +656,6 @@ set(kwinLibs
     ${kwin_OWN_LIBS}
     ${kwin_QT_LIBS}
     ${kwin_KDE_LIBS}
-    ${kwin_XLIB_LIBS}
     ${kwin_XCB_LIBS}
     ${kwin_WAYLAND_LIBS}
     UDev::UDev
