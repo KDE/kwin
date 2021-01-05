@@ -5,8 +5,8 @@
 */
 
 #include "gbm_dmabuf.h"
+#include "drm_fourcc.h"
 #include "kwineglimagetexture.h"
-#include "platformsupport/scenes/opengl/drm_fourcc.h"
 #include "main.h"
 #include "platform.h"
 #include <unistd.h>

@@ -11,13 +11,14 @@
 #ifndef KWIN_SCENE_OPENGL_H
 #define KWIN_SCENE_OPENGL_H
 
+#include "openglbackend.h"
+
 #include "scene.h"
 #include "shadow.h"
 
 #include "kwinglutils.h"
 
 #include "decorations/decorationrenderer.h"
-#include "platformsupport/scenes/opengl/openglbackend.h"
 
 namespace KWin
 {

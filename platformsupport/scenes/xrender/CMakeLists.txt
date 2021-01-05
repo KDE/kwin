@@ -9,3 +9,4 @@ ecm_qt_declare_logging_category(xrenderbackend_SOURCES
 
 add_library(SceneXRenderBackend STATIC ${xrenderbackend_SOURCES})
 target_link_libraries(SceneXRenderBackend kwin Qt5::Core Qt5::Gui)
+target_include_directories(SceneXRenderBackend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

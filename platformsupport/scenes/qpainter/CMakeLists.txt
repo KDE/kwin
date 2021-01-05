@@ -14,3 +14,4 @@ ecm_qt_declare_logging_category(SCENE_QPAINTER_BACKEND_SRCS
 
 add_library(SceneQPainterBackend STATIC ${SCENE_QPAINTER_BACKEND_SRCS})
 target_link_libraries(SceneQPainterBackend Qt5::Core)
+target_include_directories(SceneQPainterBackend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

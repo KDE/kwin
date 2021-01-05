@@ -26,9 +26,6 @@ if (HAVE_EPOXY_GLX)
     set(X11PLATFORM_SOURCES ${X11PLATFORM_SOURCES} glxbackend.cpp glx_context_attribute_builder.cpp)
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/opengl)
-include_directories(${CMAKE_SOURCE_DIR}/platformsupport/scenes/xrender)
-
 add_library(KWinX11Platform MODULE ${X11PLATFORM_SOURCES})
 set_target_properties(KWinX11Platform PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kwin.platforms/")
 target_link_libraries(KWinX11Platform eglx11common kwin kwinxrenderutils SceneOpenGLBackend VsyncSupport Qt5::X11Extras XCB::CURSOR KF5::Crash )

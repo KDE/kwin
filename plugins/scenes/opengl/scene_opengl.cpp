@@ -17,10 +17,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_opengl.h"
+#include "texture.h"
 
 #include "platform.h"
 #include "wayland_server.h"
-#include "platformsupport/scenes/opengl/texture.h"
 
 #include <kwinglplatform.h>
 #include <kwineffectquickview.h>

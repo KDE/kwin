@@ -10,7 +10,7 @@
 #ifndef KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 #define KWIN_SCENE_QPAINTER_WAYLAND_BACKEND_H
 
-#include <platformsupport/scenes/qpainter/qpainterbackend.h>
+#include "qpainterbackend.h"
 
 #include <QObject>
 #include <QImage>
