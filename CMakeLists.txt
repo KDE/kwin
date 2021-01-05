@@ -661,7 +661,7 @@ set(kwinLibs
     ${kwin_XLIB_LIBS}
     ${kwin_XCB_LIBS}
     ${kwin_WAYLAND_LIBS}
-    ${UDEV_LIBS}
+    UDev::UDev
     Libinput::Libinput
 )
 

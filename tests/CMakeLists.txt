@@ -21,7 +21,7 @@ set(libinputtest_SRCS
 )
 add_executable(libinputtest ${libinputtest_SRCS})
 add_definitions(-DKWIN_BUILD_TESTING)
-target_link_libraries(libinputtest Qt5::Core Qt5::DBus Libinput::Libinput ${UDEV_LIBS} KF5::ConfigCore KF5::GlobalAccel KF5::WindowSystem)
+target_link_libraries(libinputtest Qt5::Core Qt5::DBus Libinput::Libinput UDev::UDev KF5::ConfigCore KF5::GlobalAccel KF5::WindowSystem)
 
 add_executable(x11shadowreader x11shadowreader.cpp)
 target_link_libraries(x11shadowreader XCB::XCB Qt5::Widgets Qt5::X11Extras KF5::ConfigCore KF5::WindowSystem)
