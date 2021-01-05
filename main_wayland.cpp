@@ -113,6 +113,12 @@ void gainRealTime(RealTimeFlags flags = RealTimeFlags::DontReset)
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
     : ApplicationWaylandAbstract(OperationModeWaylandOnly, argc, argv)
 {
+    // Stop restarting the input method if it starts crashing very frequently
+    m_inputMethodCrashTimer.setInterval(20000);
+    m_inputMethodCrashTimer.setSingleShot(true);
+    connect(&m_inputMethodCrashTimer, &QTimer::timeout, this, [this] {
+        m_inputMethodCrashes = 0;
+    });
     connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &ApplicationWayland::stopInputMethod);
 }
 
@@ -258,12 +264,26 @@ void ApplicationWayland::startInputMethod(const QString &executable)
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
     environment.remove("DISPLAY");
     environment.remove("WAYLAND_DISPLAY");
+
     m_inputMethodProcess = new Process(this);
     m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_inputMethodProcess->setProcessEnvironment(environment);
     m_inputMethodProcess->setProgram(program);
     m_inputMethodProcess->setArguments(arguments);
     m_inputMethodProcess->start();
+    connect(m_inputMethodProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, executable] (int exitCode, QProcess::ExitStatus exitStatus) {
+        if (exitStatus == QProcess::CrashExit) {
+            m_inputMethodCrashes++;
+            m_inputMethodCrashTimer.start();
+            qWarning() << "Input Method crashed" << executable << exitCode << exitStatus;
+            if (m_inputMethodCrashes < 5) {
+                startInputMethod(executable);
+            } else {
+                qWarning() << "Input Method keeps crashing, please fix" << executable;
+                stopInputMethod();
+            }
+        }
+    });
 }
 
 void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)

@@ -11,6 +11,7 @@
 #include "main.h"
 #include <KConfigWatcher>
 #include <QProcessEnvironment>
+#include <QTimer>
 
 namespace KWin
 {
@@ -64,7 +65,10 @@ private:
     QString m_inputMethodServerToStart;
     QProcessEnvironment m_environment;
     QString m_sessionArgument;
+
     QProcess *m_inputMethodProcess = nullptr;
+    QTimer m_inputMethodCrashTimer;
+    uint m_inputMethodCrashes = 0;
 
     Xwl::Xwayland *m_xwayland = nullptr;
     KConfigWatcher::Ptr m_settingsWatcher;
