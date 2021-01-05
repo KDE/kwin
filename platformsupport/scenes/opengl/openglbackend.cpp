@@ -7,7 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "backend.h"
+#include "openglbackend.h"
 #include <kwineffects.h>
 #include <logging.h>
 

@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
-#include "backend.h"
+#include "openglbackend.h"
 #include "texture.h"
 #include "x11eventfilter.h"
 

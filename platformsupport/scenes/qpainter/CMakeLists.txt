@@ -1,4 +1,4 @@
-set(SCENE_QPAINTER_BACKEND_SRCS backend.cpp)
+set(SCENE_QPAINTER_BACKEND_SRCS qpainterbackend.cpp)
 
 include(ECMQtDeclareLoggingCategory)
 ecm_qt_declare_logging_category(SCENE_QPAINTER_BACKEND_SRCS

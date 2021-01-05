@@ -9,7 +9,7 @@
 #ifndef KWIN_SCENE_QPAINTER_VIRTUAL_BACKEND_H
 #define KWIN_SCENE_QPAINTER_VIRTUAL_BACKEND_H
 
-#include <platformsupport/scenes/qpainter/backend.h>
+#include <platformsupport/scenes/qpainter/qpainterbackend.h>
 
 #include <QObject>
 #include <QVector>

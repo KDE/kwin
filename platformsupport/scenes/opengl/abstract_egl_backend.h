@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_ABSTRACT_EGL_BACKEND_H
 #define KWIN_ABSTRACT_EGL_BACKEND_H
-#include "backend.h"
+#include "openglbackend.h"
 #include "texture.h"
 
 #include <QObject>

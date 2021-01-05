@@ -10,7 +10,7 @@
 #define KWIN_SCENE_QPAINTER_H
 
 #include "scene.h"
-#include <platformsupport/scenes/qpainter/backend.h>
+#include <platformsupport/scenes/qpainter/qpainterbackend.h>
 #include "shadow.h"
 
 #include "decorations/decorationrenderer.h"

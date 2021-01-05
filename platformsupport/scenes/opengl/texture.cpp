@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "texture.h"
-#include "backend.h"
+#include "openglbackend.h"
 #include "scene.h"
 
 namespace KWin

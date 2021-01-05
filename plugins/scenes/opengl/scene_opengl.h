@@ -17,7 +17,7 @@
 #include "kwinglutils.h"
 
 #include "decorations/decorationrenderer.h"
-#include "platformsupport/scenes/opengl/backend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 
 namespace KWin
 {
