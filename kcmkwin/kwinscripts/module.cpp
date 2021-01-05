@@ -28,11 +28,13 @@
 #include <KNewStuff3/KNS3/Button>
 
 #include "version.h"
+#include "kwinscriptsdata.h"
 
 Module::Module(QWidget *parent, const QVariantList &args) :
     KCModule(parent, args),
     ui(new Ui::Module),
-    m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    m_kwinConfig(KSharedConfig::openConfig("kwinrc")),
+    m_kwinScriptsData(new KWinScriptsData(this))
 {
     KAboutData *about = new KAboutData("kwin-scripts",
                                        i18n("KWin Scripts"),
@@ -57,6 +59,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
 
     connect(ui->scriptSelector, &KPluginSelector::changed, this, qOverload<bool>(&KCModule::changed));
     connect(ui->scriptSelector, &KPluginSelector::defaulted, this, qOverload<bool>(&KCModule::defaulted));
+    connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginSelector::setDefaultsIndicatorsVisible);
     connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
 
     ui->scriptSelector->setAdditionalButtonHandler([this](const KPluginInfo &info) {
@@ -142,16 +145,7 @@ void Module::importScriptInstallFinished(KJob *job)
 
 void Module::updateListViewContents()
 {
-    auto filter =  [](const KPluginMetaData &md) {
-        return md.isValid() && !md.rawData().value("X-KWin-Exclude-Listing").toBool();
-    };
-
-    const QString scriptFolder = QStringLiteral("kwin/scripts/");
-    const auto scripts = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Script"), scriptFolder, filter);
-
-    QList<KPluginInfo> scriptinfos = KPluginInfo::fromMetaData(scripts.toVector());
-
-    ui->scriptSelector->addPlugins(scriptinfos, KPluginSelector::ReadConfigFile, QString(), QString(), m_kwinConfig);
+    ui->scriptSelector->addPlugins(m_kwinScriptsData->pluginInfoList(), KPluginSelector::ReadConfigFile, QString(), QString(), m_kwinConfig);
 }
 
 void Module::defaults()
@@ -176,3 +170,5 @@ void Module::save()
 
     emit changed(false);
 }
+
+#include "module.moc"

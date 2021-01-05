@@ -16,6 +16,7 @@ class Module;
 }
 
 class KJob;
+class KWinScriptsData;
 
 class Module : public KCModule
 {
@@ -56,6 +57,7 @@ private:
      */
     void updateListViewContents();
     KSharedConfigPtr m_kwinConfig;
+    KWinScriptsData *m_kwinScriptsData;
 };
 
 #endif // MODULE_H

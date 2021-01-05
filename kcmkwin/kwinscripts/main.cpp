@@ -7,8 +7,11 @@
 #include <KPluginFactory>
 
 #include "module.h"
+#include "kwinscriptsdata.h"
 
 K_PLUGIN_FACTORY(KcmKWinScriptsFactory,
-                 registerPlugin<Module>("kwin-scripts");)
+                 registerPlugin<Module>();
+                 registerPlugin<KWinScriptsData>();
+                )
 
 #include "main.moc"

@@ -1,0 +1,32 @@
+/*
+    SPDX-FileCopyrightText: 2020 Cyril Rossi <cyril.rossi@enioka.com>
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+*/
+
+#ifndef KWINSCRIPTSDATA_H
+#define KWINSCRIPTSDATA_H
+
+#include <QObject>
+#include <QList>
+
+#include <KCModuleData>
+#include <KPluginInfo>
+#include <KSharedConfig>
+
+class KWinScriptsData : public KCModuleData
+{
+    Q_OBJECT
+
+public:
+    KWinScriptsData(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+
+    bool isDefaults() const override;
+
+    QList<KPluginInfo> pluginInfoList() const;
+
+private:
+    KSharedConfigPtr m_kwinConfig;
+};
+
+#endif // KWINSCRIPTSDATA_H

@@ -7,6 +7,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(kcm_SRCS
     main.cpp
     module.cpp
+    kwinscriptsdata.cpp
 )
 
 ki18n_wrap_ui(kcm_SRCS module.ui)
