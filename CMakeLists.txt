@@ -228,7 +228,7 @@ set_package_properties(X11 PROPERTIES
     URL "https://www.x.org"
     TYPE REQUIRED
 )
-add_feature_info("XInput" X11_Xinput_FOUND "Required for poll-free mouse cursor updates")
+add_feature_info("XInput" X11_Xi_FOUND "Required for poll-free mouse cursor updates")
 set(HAVE_X11_XINPUT ${X11_Xinput_FOUND})
 
 find_package(lcms2)
