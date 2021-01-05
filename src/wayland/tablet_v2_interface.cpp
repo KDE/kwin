@@ -185,13 +185,13 @@ public:
 
     void zwp_tablet_tool_v2_destroy_resource(Resource * resource) override {
         delete m_cursors.take(resource->handle);
-    }
-
-    void zwp_tablet_tool_v2_destroy(Resource *resource) override {
-        Q_UNUSED(resource);
         if (m_removed && resourceMap().isEmpty()) {
             delete q;
         }
+    }
+
+    void zwp_tablet_tool_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
     }
 
     Display *const m_display;
@@ -349,11 +349,15 @@ public:
         return r ? r->handle : nullptr;
     }
 
-    void zwp_tablet_pad_ring_v2_destroy(Resource *resource) override {
-        wl_resource_destroy(resource->handle);
+    void zwp_tablet_pad_ring_v2_destroy_resource(Resource *resource) override {
+        Q_UNUSED(resource)
         if (m_pad->isRemoved() && resourceMap().isEmpty()) {
             delete q;
         }
+    }
+
+    void zwp_tablet_pad_ring_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
     }
     TabletPadRingV2Interface *const q;
     TabletPadV2Interface *m_pad;
@@ -403,11 +407,15 @@ public:
         return r ? r->handle : nullptr;
     }
 
-    void zwp_tablet_pad_strip_v2_destroy(Resource *resource) override {
-        wl_resource_destroy(resource->handle);
+    void zwp_tablet_pad_strip_v2_destroy_resource(Resource *resource) override {
+        Q_UNUSED(resource)
         if (m_pad->isRemoved() && resourceMap().isEmpty()) {
             delete q;
         }
+    }
+
+    void zwp_tablet_pad_strip_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
     }
     TabletPadV2Interface *m_pad = nullptr;
     TabletPadStripV2Interface *const q;
@@ -458,11 +466,15 @@ public:
         return r ? r->handle : nullptr;
     }
 
-    void zwp_tablet_pad_group_v2_destroy(Resource * resource) override {
-        wl_resource_destroy(resource->handle);
+    void zwp_tablet_pad_group_v2_destroy_resource(Resource *resource) override {
+        Q_UNUSED(resource)
         if (m_pad->isRemoved() && resourceMap().isEmpty()) {
             delete q;
         }
+    }
+
+    void zwp_tablet_pad_group_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
     }
 
     TabletPadGroupV2Interface *const q;
@@ -514,11 +526,15 @@ public:
         }
     }
 
-    void zwp_tablet_pad_v2_destroy(Resource *resource) override {
-        wl_resource_destroy(resource->handle);
+    void zwp_tablet_pad_v2_destroy_resource(Resource *resource) override {
+        Q_UNUSED(resource)
         if (m_removed && resourceMap().isEmpty()) {
             delete q;
         }
+    }
+
+    void zwp_tablet_pad_v2_destroy(Resource *resource) override {
+        wl_resource_destroy(resource->handle);
     }
 
     void zwp_tablet_pad_v2_set_feedback(Resource *resource, quint32 button, const QString &description, quint32 serial) override {
