@@ -13,7 +13,7 @@
 
 #include <kwin_export.h>
 
-#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_XKB)
@@ -42,12 +42,8 @@ class KWIN_EXPORT Xkb : public QObject
 public:
     Xkb(QObject *parent = nullptr);
     ~Xkb() override;
-    void setConfig(KSharedConfigPtr config) {
-        m_config = std::move(config);
-    }
-    void setNumLockConfig(KSharedConfigPtr config) {
-        m_numLockConfig = std::move(config);
-    }
+    void setConfig(const KSharedConfigPtr &config);
+    void setNumLockConfig(const KSharedConfigPtr &config);
     void reconfigure();
 
     void installKeymap(int fd, uint32_t size);
@@ -91,7 +87,7 @@ public:
         return m_currentLayout;
     }
     QString layoutName() const;
-    const QString &layoutShortName() const;
+    const QStringList &layoutShortNames() const;
     QMap<xkb_layout_index_t, QString> layoutNames() const;
     quint32 numberOfLayouts() const;
 
@@ -137,7 +133,7 @@ private:
         xkb_compose_state *state = nullptr;
     } m_compose;
     LEDs m_leds;
-    KSharedConfigPtr m_config;
+    KConfigGroup m_configGroup;
     KSharedConfigPtr m_numLockConfig;
 
     struct {

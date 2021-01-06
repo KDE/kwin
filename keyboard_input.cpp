@@ -106,8 +106,7 @@ void KeyboardInputRedirection::init()
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
     m_input->installInputEventSpy(m_modifiersChangedSpy);
-    m_keyboardLayout = new KeyboardLayout(m_xkb.data());
-    m_keyboardLayout->setConfig(config);
+    m_keyboardLayout = new KeyboardLayout(m_xkb.data(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
 

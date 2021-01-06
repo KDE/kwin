@@ -13,20 +13,21 @@
 #include "main.h"
 #include "platform.h"
 
-#include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>
+#include <QDBusMetaType>
 
 namespace KWin
 {
 
-KeyboardLayout::KeyboardLayout(Xkb *xkb)
+KeyboardLayout::KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config)
     : QObject()
     , m_xkb(xkb)
+    , m_configGroup(config->group("Layout"))
 {
 }
 
@@ -70,7 +71,7 @@ void KeyboardLayout::initDBusInterface()
     if (m_dbusInterface) {
         return;
     }
-    m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, this);
+    m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, m_configGroup, this);
     connect(this, &KeyboardLayout::layoutChanged, m_dbusInterface,
         [this] {
             emit m_dbusInterface->layoutChanged(m_xkb->layoutName());
@@ -103,14 +104,13 @@ void KeyboardLayout::switchToLayout(xkb_layout_index_t index)
 
 void KeyboardLayout::reconfigure()
 {
-    if (m_config) {
-        m_config->reparseConfiguration();
-        const KConfigGroup layoutGroup = m_config->group("Layout");
-        const QString policyKey = layoutGroup.readEntry("SwitchMode", QStringLiteral("Global"));
+    if (m_configGroup.isValid()) {
+        m_configGroup.config()->reparseConfiguration();
+        const QString policyKey = m_configGroup.readEntry("SwitchMode", QStringLiteral("Global"));
         m_xkb->reconfigure();
         if (!m_policy || m_policy->name() != policyKey) {
             delete m_policy;
-            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, layoutGroup, policyKey);
+            m_policy = KeyboardLayoutSwitching::Policy::create(m_xkb, this, m_configGroup, policyKey);
         }
     } else {
         m_xkb->reconfigure();
@@ -181,11 +181,16 @@ void KeyboardLayout::notifyLayoutChange()
 static const QString s_keyboardService = QStringLiteral("org.kde.keyboard");
 static const QString s_keyboardObject = QStringLiteral("/Layouts");
 
-KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, KeyboardLayout *parent)
+KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent)
     : QObject(parent)
     , m_xkb(xkb)
+    , m_configGroup(configGroup)
     , m_keyboardLayout(parent)
 {
+    qRegisterMetaType<QVector<LayoutNames>>("QVector<LayoutNames>");
+    qDBusRegisterMetaType<LayoutNames>();
+    qDBusRegisterMetaType<QVector<LayoutNames>>();
+
     QDBusConnection::sessionBus().registerService(s_keyboardService);
     QDBusConnection::sessionBus().registerObject(s_keyboardObject, this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
 }
@@ -228,24 +233,43 @@ QString KeyboardLayoutDBusInterface::getLayout() const
     return m_xkb->layoutName();
 }
 
-QString KeyboardLayoutDBusInterface::getLayoutDisplayName() const
-{
-    return m_xkb->layoutShortName();
-}
-
 QString KeyboardLayoutDBusInterface::getLayoutLongName() const
 {
     return translatedLayout(m_xkb->layoutName());
 }
 
-QStringList KeyboardLayoutDBusInterface::getLayoutsList() const
+QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::getLayoutsList() const
 {
     const auto layouts = m_xkb->layoutNames();
-    QStringList ret;
-    for (auto it = layouts.begin(); it != layouts.end(); it++) {
-        ret << it.value();
+    const QStringList &shortNames = m_xkb->layoutShortNames();
+
+    // TODO: - should be handled by layout applet itself, it has nothing to do with KWin
+    const QStringList displayNames = m_configGroup.readEntry("DisplayNames", QStringList());
+
+    QVector<LayoutNames> ret;
+    const int layoutsSize = layouts.size();
+    const int displayNamesSize = displayNames.size();
+    for (int i = 0; i < layoutsSize; ++i) {
+        const QString &id = layouts[i];
+        ret.append( {id, shortNames.at(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(id)} );
     }
     return ret;
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const KeyboardLayoutDBusInterface::LayoutNames &layoutNames)
+{
+    argument.beginStructure();
+    argument << layoutNames.id << layoutNames.shortName << layoutNames.displayName << layoutNames.longName;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, KeyboardLayoutDBusInterface::LayoutNames &layoutNames)
+{
+    argument.beginStructure();
+    argument >> layoutNames.id >> layoutNames.shortName >> layoutNames.displayName >> layoutNames.longName;
+    argument.endStructure();
+    return argument;
 }
 
 }

@@ -14,9 +14,11 @@
 #include <QVector>
 
 #include <KSharedConfig>
+#include <KConfigGroup>
 typedef uint32_t xkb_layout_index_t;
 
 class QAction;
+class QDBusArgument;
 
 namespace KWin
 {
@@ -32,12 +34,9 @@ class KeyboardLayout : public QObject, public InputEventSpy
 {
     Q_OBJECT
 public:
-    explicit KeyboardLayout(Xkb *xkb);
-    ~KeyboardLayout() override;
+    explicit KeyboardLayout(Xkb *xkb, const KSharedConfigPtr &config);
 
-    void setConfig(KSharedConfigPtr config) {
-        m_config = config;
-    }
+    ~KeyboardLayout() override;
 
     void init();
 
@@ -60,7 +59,7 @@ private:
     void loadShortcuts();
     Xkb *m_xkb;
     xkb_layout_index_t m_layout = 0;
-    KSharedConfigPtr m_config;
+    KConfigGroup m_configGroup;
     QVector<QAction*> m_layoutShortcuts;
     KeyboardLayoutDBusInterface *m_dbusInterface = nullptr;
     KeyboardLayoutSwitching::Policy *m_policy = nullptr;
@@ -72,17 +71,24 @@ class KeyboardLayoutDBusInterface : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.kde.KeyboardLayouts")
 
 public:
-    explicit KeyboardLayoutDBusInterface(Xkb *xkb, KeyboardLayout *parent);
+    explicit KeyboardLayoutDBusInterface(Xkb *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent);
     ~KeyboardLayoutDBusInterface() override;
+
+	struct LayoutNames
+	{
+		QString id;
+		QString shortName;
+		QString displayName;
+		QString longName;
+	};
 
 public Q_SLOTS:
     void switchToNextLayout();
     void switchToPreviousLayout();
     bool setLayout(const QString &layout);
     QString getLayout() const;
-    QString getLayoutDisplayName() const;
     QString getLayoutLongName() const;
-    QStringList getLayoutsList() const;
+    QVector<LayoutNames> getLayoutsList() const;
 
 Q_SIGNALS:
     void layoutChanged(QString layout);
@@ -90,9 +96,14 @@ Q_SIGNALS:
 
 private:
     Xkb *m_xkb;
+    const KConfigGroup &m_configGroup;
     KeyboardLayout *m_keyboardLayout;
 };
 
+QDBusArgument &operator<<(QDBusArgument &argument, const KeyboardLayoutDBusInterface::LayoutNames &layoutNames);
+const QDBusArgument &operator>>(const QDBusArgument &argument, KeyboardLayoutDBusInterface::LayoutNames &layoutNames);
+
 }
+Q_DECLARE_METATYPE(KWin::KeyboardLayoutDBusInterface::LayoutNames)
 
 #endif

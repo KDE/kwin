@@ -113,6 +113,14 @@ Xkb::~Xkb()
     xkb_context_unref(m_context);
 }
 
+void Xkb::setConfig(const KSharedConfigPtr &config) {
+    m_configGroup = config->group("Layout");
+}
+
+void Xkb::setNumLockConfig(const KSharedConfigPtr &config) {
+    m_numLockConfig = config;
+}
+
 void Xkb::reconfigure()
 {
     if (!m_context) {
@@ -169,14 +177,13 @@ void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
 xkb_keymap *Xkb::loadKeymapFromConfig()
 {
     // load config
-    if (!m_config) {
+    if (!m_configGroup.isValid()) {
         return nullptr;
     }
-    const KConfigGroup config = m_config->group("Layout");
-    const QByteArray model = config.readEntry("Model", "pc104").toLocal8Bit();
-    const QByteArray layout = config.readEntry("LayoutList", "").toLocal8Bit();
-    const QByteArray variant = config.readEntry("VariantList").toLatin1();
-    const QByteArray options = config.readEntry("Options", "").toLocal8Bit();
+    const QByteArray model = m_configGroup.readEntry("Model", "pc104").toLatin1();
+    const QByteArray layout = m_configGroup.readEntry("LayoutList").toLatin1();
+    const QByteArray variant = m_configGroup.readEntry("VariantList").toLatin1();
+    const QByteArray options = m_configGroup.readEntry("Options").toLatin1();
 
     xkb_rule_names ruleNames = {
         .rules = nullptr,
@@ -186,15 +193,6 @@ xkb_keymap *Xkb::loadKeymapFromConfig()
         .options = options.constData()
     };
     applyEnvironmentRules(ruleNames);
-
-    const QStringList displayNames = config.readEntry("DisplayNames", QStringList());
-    const int range = qMin(m_layoutList.size(), displayNames.size());
-    for (int i = 0; i < range; ++i) {
-        const QString &displayName = displayNames.at(i);
-        if ( !displayName.isEmpty() ) {
-            m_layoutList.replace(i, displayName);
-        }
-    }
 
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
@@ -397,9 +395,9 @@ QString Xkb::layoutName() const
     return layoutName(m_currentLayout);
 }
 
-const QString &Xkb::layoutShortName() const
+const QStringList &Xkb::layoutShortNames() const
 {
-    return m_layoutList.at(m_currentLayout);
+    return m_layoutList;
 }
 
 QString Xkb::layoutName(xkb_layout_index_t layout) const
