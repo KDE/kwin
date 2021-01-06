@@ -249,7 +249,10 @@ protected:
 
 private:
     void handleGrabRequested(KWaylandServer::SeatInterface *seat, quint32 serial);
+    void handlePositionerBindings();
+    void handleRepositionRequested(quint32 token);
     void initialize();
+    void relayout();
 
     KWaylandServer::XdgPopupInterface *m_shellSurface;
     bool m_haveExplicitGrab = false;

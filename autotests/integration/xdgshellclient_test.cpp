@@ -99,10 +99,71 @@ private Q_SLOTS:
     void testXdgWindowGeometryInteractiveResize();
     void testXdgWindowGeometryFullScreen();
     void testXdgWindowGeometryMaximize();
+    void testXdgWindowReactive();
+    void testXdgWindowRepositioning();
     void testPointerInputTransform();
     void testReentrantSetFrameGeometry();
     void testDoubleMaximize();
 };
+
+void TestXdgShellClient::testXdgWindowReactive()
+{
+    QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+    positioner->set_reactive();
+
+    QScopedPointer<Surface> rootSurface(Test::createSurface());
+    QScopedPointer<Surface> childSurface(Test::createSurface());
+
+    QScopedPointer<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.data()));
+    QScopedPointer<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.data(), root->xdgSurface(), positioner.data()));
+
+    auto rootClient = Test::renderAndWaitForShown(rootSurface.data(), QSize(100, 100), Qt::cyan);
+    auto childClient = Test::renderAndWaitForShown(childSurface.data(), QSize(10, 10), Qt::cyan);
+
+    QVERIFY(rootClient);
+    QVERIFY(childClient);
+
+    QSignalSpy frameGeometryChangedSpy(childClient, &AbstractClient::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+
+    rootClient->move(rootClient->x()+20, rootClient->y()+20);
+
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
+}
+
+void TestXdgShellClient::testXdgWindowRepositioning()
+{
+    QScopedPointer<Test::XdgPositioner> positioner(Test::createXdgPositioner());
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+
+    QScopedPointer<Test::XdgPositioner> otherPositioner(Test::createXdgPositioner());
+    otherPositioner->set_size(50, 50);
+    otherPositioner->set_anchor_rect(10, 10, 10, 10);
+
+    QScopedPointer<Surface> rootSurface(Test::createSurface());
+    QScopedPointer<Surface> childSurface(Test::createSurface());
+
+    QScopedPointer<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.data()));
+    QScopedPointer<Test::XdgPopup> popup(Test::createXdgPopupSurface(childSurface.data(), root->xdgSurface(), positioner.data()));
+
+    auto rootClient = Test::renderAndWaitForShown(rootSurface.data(), QSize(100, 100), Qt::cyan);
+    auto childClient = Test::renderAndWaitForShown(childSurface.data(), QSize(10, 10), Qt::cyan);
+
+    QVERIFY(rootClient);
+    QVERIFY(childClient);
+
+    QSignalSpy reconfigureSpy(popup.data(), &Test::XdgPopup::configureRequested);
+    QVERIFY(reconfigureSpy.isValid());
+
+    popup->reposition(otherPositioner->object(), 500000);
+
+    QVERIFY(reconfigureSpy.wait());
+    QCOMPARE(reconfigureSpy.count(), 1);
+}
 
 void TestXdgShellClient::initTestCase()
 {

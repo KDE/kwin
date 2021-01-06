@@ -1705,8 +1705,35 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
             this, &XdgPopupClient::handleGrabRequested);
     connect(shellSurface, &XdgPopupInterface::initializeRequested,
             this, &XdgPopupClient::initialize);
+    connect(shellSurface, &XdgPopupInterface::repositionRequested,
+            this, &XdgPopupClient::handleRepositionRequested);
     connect(shellSurface, &XdgPopupInterface::destroyed,
             this, &XdgPopupClient::destroyClient);
+}
+
+void XdgPopupClient::handlePositionerBindings()
+{
+    if (m_shellSurface->positioner().isReactive()) {
+        connect(transientFor(), &AbstractClient::frameGeometryChanged,
+                this, &XdgPopupClient::relayout, Qt::UniqueConnection);
+    } else {
+        disconnect(transientFor(), &AbstractClient::frameGeometryChanged,
+                   this, &XdgPopupClient::relayout);
+    }
+}
+
+void XdgPopupClient::handleRepositionRequested(quint32 token)
+{
+    handlePositionerBindings();
+    m_shellSurface->sendRepositioned(token);
+    relayout();
+}
+
+void XdgPopupClient::relayout()
+{
+    GeometryUpdatesBlocker blocker(this);
+    Placement::self()->place(this, QRect());
+    scheduleConfigure(ConfigureRequired);
 }
 
 XdgPopupClient::~XdgPopupClient()
