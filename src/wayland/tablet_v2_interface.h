@@ -161,7 +161,7 @@ Q_SIGNALS:
 private:
     friend class TabletSeatV2Interface;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, QObject *parent);
+    explicit TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, TabletSeatV2Interface *parent);
     QScopedPointer<TabletPadV2InterfacePrivate> d;
 };
 
@@ -185,7 +185,7 @@ private:
     friend class TabletPadGroupV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadRingV2Interface(QObject *parent);
+    explicit TabletPadRingV2Interface(TabletPadV2Interface *parent);
     QScopedPointer<TabletPadRingV2InterfacePrivate> d;
 };
 
@@ -208,7 +208,7 @@ private:
     friend class TabletPadGroupV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadStripV2Interface(QObject *parent);
+    explicit TabletPadStripV2Interface(TabletPadV2Interface *parent);
     QScopedPointer<TabletPadStripV2InterfacePrivate> d;
 };
 
@@ -224,7 +224,7 @@ private:
     friend class TabletPadV2Interface;
     friend class TabletPadV2InterfacePrivate;
     friend class TabletSeatV2InterfacePrivate;
-    explicit TabletPadGroupV2Interface(quint32 currentMode, QObject *parent);
+    explicit TabletPadGroupV2Interface(quint32 currentMode, TabletPadV2Interface *parent);
     QScopedPointer<TabletPadGroupV2InterfacePrivate> d;
 };
 

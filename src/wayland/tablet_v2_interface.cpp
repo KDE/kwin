@@ -363,10 +363,11 @@ public:
     TabletPadV2Interface *m_pad;
 };
 
-TabletPadRingV2Interface::TabletPadRingV2Interface(QObject *parent)
+TabletPadRingV2Interface::TabletPadRingV2Interface(TabletPadV2Interface *parent)
     : QObject(parent)
     , d(new TabletPadRingV2InterfacePrivate(this))
 {
+    d->m_pad = parent;
 }
 
 TabletPadRingV2Interface::~TabletPadRingV2Interface() = default;
@@ -421,10 +422,11 @@ public:
     TabletPadStripV2Interface *const q;
 };
 
-TabletPadStripV2Interface::TabletPadStripV2Interface(QObject *parent)
+TabletPadStripV2Interface::TabletPadStripV2Interface(TabletPadV2Interface *parent)
     : QObject(parent)
     , d(new TabletPadStripV2InterfacePrivate(this))
 {
+    d->m_pad = parent;
 }
 
 TabletPadStripV2Interface::~TabletPadStripV2Interface() = default;
@@ -482,10 +484,11 @@ public:
     quint32 m_currentMode;
 };
 
-TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 currentMode, QObject *parent)
+TabletPadGroupV2Interface::TabletPadGroupV2Interface(quint32 currentMode, TabletPadV2Interface *parent)
     : QObject(parent)
     , d(new TabletPadGroupV2InterfacePrivate(currentMode, this))
 {
+    d->m_pad = parent;
 }
 
 TabletPadGroupV2Interface::~TabletPadGroupV2Interface() = default;
@@ -512,17 +515,14 @@ public:
             m_buttons[i] = i;
         }
 
-        m_padGroup->d->m_pad = q;
         m_rings.reserve(rings);
         for (quint32 i = 0; i < rings; ++i) {
             m_rings += new TabletPadRingV2Interface(q);
-            m_rings.constLast()->d->m_pad = q;
         }
 
         m_strips.reserve(strips);
         for (quint32 i = 0; i < strips; ++i) {
             m_strips += new TabletPadStripV2Interface(q);
-            m_strips.constLast()->d->m_pad = q;
         }
     }
 
@@ -563,10 +563,11 @@ public:
     Display *const m_display;
 };
 
-TabletPadV2Interface::TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, QObject *parent)
+TabletPadV2Interface::TabletPadV2Interface(const QString &path, quint32 buttons, quint32 rings, quint32 strips, quint32 modes, quint32 currentMode, Display *display, TabletSeatV2Interface *parent)
     : QObject(parent)
     , d(new TabletPadV2InterfacePrivate(path, buttons, rings, strips, modes, currentMode, display, this))
 {
+    d->m_seat = parent;
 }
 
 TabletPadV2Interface::~TabletPadV2Interface() = default;
@@ -650,8 +651,9 @@ public:
 
     void sendToolAdded(Resource *resource, TabletToolV2Interface *tool)
     {
-        if (tool->d->m_removed)
+        if (tool->d->m_removed) {
             return;
+        }
 
         wl_resource *toolResource = tool->d->add(resource->client(), resource->version())->handle;
         send_tool_added(resource->handle, toolResource);
@@ -668,8 +670,9 @@ public:
     }
     void sendTabletAdded(Resource *resource, TabletV2Interface *tablet)
     {
-        if (tablet->d->m_removed)
+        if (tablet->d->m_removed) {
             return;
+        }
 
         wl_resource *tabletResource = tablet->d->add(resource->client(), resource->version())->handle;
         send_tablet_added(resource->handle, tabletResource);
@@ -686,8 +689,9 @@ public:
 
     void sendPadAdded(Resource *resource, TabletPadV2Interface *pad)
     {
-        if (pad->d->m_removed)
+        if (pad->d->m_removed) {
             return;
+        }
 
         wl_resource *tabletResource = pad->d->add(resource->client(), resource->version())->handle;
         send_pad_added(resource->handle, tabletResource);
@@ -701,12 +705,12 @@ public:
 
         pad->d->m_padGroup->d->send_buttons(groupResource->handle, QByteArray::fromRawData(reinterpret_cast<const char *>(pad->d->m_buttons.data()), pad->d->m_buttons.size() * sizeof(quint32)));
 
-        for (auto ring : pad->d->m_rings) {
+        for (auto ring : qAsConst(pad->d->m_rings)) {
             auto ringResource = ring->d->add(resource->client(), resource->version());
             pad->d->m_padGroup->d->send_ring(groupResource->handle, ringResource->handle);
         }
 
-        for (auto strip : pad->d->m_strips) {
+        for (auto strip : qAsConst(pad->d->m_strips)) {
             auto stripResource = strip->d->add(resource->client(), resource->version());
             pad->d->m_padGroup->d->send_strip(groupResource->handle, stripResource->handle);
         }
@@ -798,16 +802,17 @@ void TabletSeatV2Interface::removeDevice(const QString &sysname)
 
 TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareId(quint64 hardwareId) const
 {
-    for (TabletToolV2Interface *tool : d->m_tools) {
-        if (tool->d->hardwareId() == hardwareId)
+    for (TabletToolV2Interface *tool : qAsConst(d->m_tools)) {
+        if (tool->d->hardwareId() == hardwareId) {
             return tool;
+        }
     }
     return nullptr;
 }
 
 TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardwareSerial) const
 {
-    for (TabletToolV2Interface *tool : d->m_tools) {
+    for (TabletToolV2Interface *tool : qAsConst(d->m_tools)) {
         if (tool->d->hardwareSerial() == hardwareSerial)
             return tool;
     }
