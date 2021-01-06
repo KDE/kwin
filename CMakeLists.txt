@@ -801,7 +801,7 @@ install(FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DI
 add_subdirectory(qml)
 
 if (BUILD_TESTING)
-    find_package(WaylandProtocols REQUIRED)
+    find_package(WaylandProtocols 1.19 REQUIRED)
     find_package(QtWaylandScanner ${QT_MIN_VERSION} REQUIRED)
     find_package(Wayland REQUIRED COMPONENTS Client)
 
