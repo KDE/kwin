@@ -358,6 +358,8 @@ if (KWIN_BUILD_XRENDER_COMPOSITING)
     set(KWIN_HAVE_XRENDER_COMPOSITING 1)
 endif()
 
+include_directories(${XKB_INCLUDE_DIR})
+
 set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
 # for things that are also used by kwin libraries
