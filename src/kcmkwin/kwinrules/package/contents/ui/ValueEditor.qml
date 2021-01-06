@@ -68,14 +68,19 @@ Loader {
     Component {
         id: stringEditor
         QQC2.TextField {
+            id: stringTextField
             property bool isTextEdited: false
-            text: ruleValue
             horizontalAlignment: Text.AlignLeft
-            onTextEdited: { isTextEdited = true; }
-            onEditingFinished: {
-                if (isTextEdited) { valueEditor.valueEdited(text); }
-                isTextEdited = false;
+            onTextEdited: { valueEditor.valueEdited(text); }
+            Connections {
+                target: valueEditor
+                function onRuleValueChanged() {
+                    if (!stringTextField.activeFocus) {  // Protects from self-updating when editing
+                        stringTextField.text = valueEditor.ruleValue
+                    }
+                }
             }
+            Component.onCompleted: { this.text = valueEditor.ruleValue }
         }
     }
 
