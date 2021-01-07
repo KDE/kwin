@@ -37,7 +37,8 @@ var maximizeEffect = {
                 from: {
                     value1: oldGeometry.width,
                     value2: oldGeometry.height
-                }
+                },
+                curve: QEasingCurve.OutCubic
             }, {
                 type: Effect.Translation,
                 to: {
@@ -47,7 +48,8 @@ var maximizeEffect = {
                 from: {
                     value1: oldGeometry.x - newGeometry.x - (newGeometry.width / 2 - oldGeometry.width / 2),
                     value2: oldGeometry.y - newGeometry.y - (newGeometry.height / 2 - oldGeometry.height / 2)
-                }
+                },
+                curve: QEasingCurve.OutCubic
             }]
         });
         if (!window.resize) {
@@ -57,7 +59,8 @@ var maximizeEffect = {
                 animations: [{
                     type: Effect.CrossFadePrevious,
                     to: 1.0,
-                    from: 0.0
+                    from: 0.0,
+                    curve: QEasingCurve.OutCubic
                 }]
             });
         }
