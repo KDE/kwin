@@ -48,4 +48,4 @@ Script=kwin-5.21-desktop-grid-click-behavior.py,python3
 Id=no-swap-encourage
 File=kwinrc
 Group=Compositing
-File=kwin-5.21-no-swap-encourage.py,python3
+Script=kwin-5.21-no-swap-encourage.py,python3
