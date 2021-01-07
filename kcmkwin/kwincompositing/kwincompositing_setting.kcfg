@@ -45,7 +45,6 @@
        <entry name="glPreferBufferSwap" key="GLPreferBufferSwap" type="Enum">
            <default>AutoSwapStrategy</default>
            <choices>
-               <choice name="NoSwapEncourage" value="n" />
                <choice name="AutoSwapStrategy" value="a" />
                <choice name="ExtendDamage" value="e" />
                <choice name="PaintFullScreen" value="p" />

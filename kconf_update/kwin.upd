@@ -43,3 +43,9 @@ Id=desktop-grid-click-behavior
 File=kwinrc
 Group=Effect-DesktopGrid
 Script=kwin-5.21-desktop-grid-click-behavior.py,python3
+
+# Remove GLPreferBufferSwap if it has a value of "n"
+Id=no-swap-encourage
+File=kwinrc
+Group=Compositing
+File=kwin-5.21-no-swap-encourage.py,python3

@@ -224,17 +224,12 @@ void GlxBackend::init()
         m_haveINTELSwapEvent = false;
     }
 
-    const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
-    if (wantSync && glXIsDirect(display(), ctx)) {
-        if (haveSwapInterval) { // glXSwapInterval is preferred being more reliable
-            setSwapInterval(1);
-        } else {
-            qCWarning(KWIN_X11STANDALONE) << "glSwapInterval is unsupported";
-        }
+    if (haveSwapInterval) {
+        setSwapInterval(1);
     } else {
-        // disable v-sync (if possible)
-        setSwapInterval(0);
+        qCWarning(KWIN_X11STANDALONE) << "glSwapInterval is unsupported";
     }
+
     if (glPlatform->isVirtualBox()) {
         // VirtualBox does not support glxQueryDrawable
         // this should actually be in kwinglutils_funcs, but QueryDrawable seems not to be provided by an extension

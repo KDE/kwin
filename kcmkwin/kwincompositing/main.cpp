@@ -130,15 +130,15 @@ void KWinCompositingKCM::init()
     // tearing prevention
     connect(m_form.kcfg_glPreferBufferSwap, currentIndexChangedSignal, this,
         [this](int index) {
-            if (index == 2) {
+            if (index == 1) {
                 // only when cheap - tearing
                 m_form.tearingWarning->setText(i18n("\"Only when cheap\" only prevents tearing for full screen changes like a video."));
                 m_form.tearingWarning->animatedShow();
-            } else if (index == 3) {
+            } else if (index == 2) {
                 // full screen repaints
                 m_form.tearingWarning->setText(i18n("\"Full screen repaints\" can cause performance problems."));
                 m_form.tearingWarning->animatedShow();
-            } else if (index == 4) {
+            } else if (index == 3) {
                 // re-use screen content
                 m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes severe performance problems on MESA drivers."));
                 m_form.tearingWarning->animatedShow();

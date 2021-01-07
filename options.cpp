@@ -896,7 +896,7 @@ void Options::reloadCompositingSettings(bool force)
     if (!s.isEmpty())
         c = s.at(0).toLatin1();
     if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
-        c = 0;
+        c = Options::defaultGlPreferBufferSwap();
     setGlPreferBufferSwap(c);
 
     m_xrenderSmoothScale = config.readEntry("XRenderSmoothScale", false);
