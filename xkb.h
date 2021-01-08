@@ -86,9 +86,9 @@ public:
     quint32 currentLayout() const {
         return m_currentLayout;
     }
+    QString layoutName(xkb_layout_index_t index) const;
     QString layoutName() const;
-    const QStringList &layoutShortNames() const;
-    QMap<xkb_layout_index_t, QString> layoutNames() const;
+    const QString &layoutShortName(int index) const;
     quint32 numberOfLayouts() const;
 
     /**
@@ -109,7 +109,6 @@ private:
     void createKeymapFile();
     void updateModifiers();
     void updateConsumedModifiers(uint32_t key);
-    QString layoutName(xkb_layout_index_t layout) const;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     QStringList m_layoutList;

@@ -390,32 +390,22 @@ void Xkb::forwardModifiers()
                                         m_currentLayout);
 }
 
+QString Xkb::layoutName(xkb_layout_index_t index) const
+{
+    if (!m_keymap) {
+        return QString{};
+    }
+    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, index));
+}
+
 QString Xkb::layoutName() const
 {
     return layoutName(m_currentLayout);
 }
 
-const QStringList &Xkb::layoutShortNames() const
+const QString &Xkb::layoutShortName(int index) const
 {
-    return m_layoutList;
-}
-
-QString Xkb::layoutName(xkb_layout_index_t layout) const
-{
-    if (!m_keymap) {
-        return QString{};
-    }
-    return QString::fromLocal8Bit(xkb_keymap_layout_get_name(m_keymap, layout));
-}
-
-QMap<xkb_layout_index_t, QString> Xkb::layoutNames() const
-{
-    QMap<xkb_layout_index_t, QString> layouts;
-    const auto size = m_keymap ? xkb_keymap_num_layouts(m_keymap) : 0u;
-    for (xkb_layout_index_t i = 0; i < size; i++) {
-        layouts.insert(i, layoutName(i));
-    }
-    return layouts;
+    return m_layoutList.at(index);
 }
 
 void Xkb::updateConsumedModifiers(uint32_t key)

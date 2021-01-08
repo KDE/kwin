@@ -74,7 +74,7 @@ void KeyboardLayout::initDBusInterface()
     m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, m_configGroup, this);
     connect(this, &KeyboardLayout::layoutChanged, m_dbusInterface,
         [this] {
-            emit m_dbusInterface->layoutChanged(m_xkb->layoutName());
+            emit m_dbusInterface->layoutChanged(m_xkb->currentLayout());
         }
     );
     // TODO: the signal might be emitted even if the list didn't change
@@ -131,11 +131,11 @@ void KeyboardLayout::loadShortcuts()
 {
     qDeleteAll(m_layoutShortcuts);
     m_layoutShortcuts.clear();
-    const auto layouts = m_xkb->layoutNames();
     const QString componentName = QStringLiteral("KDE Keyboard Layout Switcher");
-    for (auto it = layouts.begin(); it != layouts.end(); it++) {
+    const quint32 count = m_xkb->numberOfLayouts();
+    for (uint i = 0; i < count ; ++i) {
         // layout name is translated in the action name in keyboard kcm!
-        const QString action = QStringLiteral("Switch keyboard layout to %1").arg(translatedLayout(it.value()));
+        const QString action = QStringLiteral("Switch keyboard layout to %1").arg( translatedLayout(m_xkb->layoutName(i)) );
         const auto shortcuts = KGlobalAccel::self()->globalShortcut(componentName, action);
         if (shortcuts.isEmpty()) {
             continue;
@@ -144,7 +144,7 @@ void KeyboardLayout::loadShortcuts()
         a->setObjectName(action);
         a->setProperty("componentName", componentName);
         connect(a, &QAction::triggered, this,
-                std::bind(&KeyboardLayout::switchToLayout, this, it.key()));
+                std::bind(&KeyboardLayout::switchToLayout, this, i));
         KGlobalAccel::self()->setShortcut(a, shortcuts, KGlobalAccel::Autoloading);
         m_layoutShortcuts << a;
     }
@@ -210,27 +210,17 @@ void KeyboardLayoutDBusInterface::switchToPreviousLayout()
     m_keyboardLayout->switchToPreviousLayout();
 }
 
-bool KeyboardLayoutDBusInterface::setLayout(const QString &layout)
+bool KeyboardLayoutDBusInterface::setLayout(uint index)
 {
-    const auto layouts = m_xkb->layoutNames();
-    auto it = layouts.begin();
-    for (; it !=layouts.end(); it++) {
-        if (it.value() == layout) {
-            break;
-        }
-    }
-    if (it == layouts.end()) {
-        return false;
-    }
     const quint32 previousLayout = m_xkb->currentLayout();
-    m_xkb->switchToLayout(it.key());
+    m_xkb->switchToLayout(index);
     m_keyboardLayout->checkLayoutChange(previousLayout);
     return true;
 }
 
-QString KeyboardLayoutDBusInterface::getLayout() const
+uint KeyboardLayoutDBusInterface::getLayout() const
 {
-    return m_xkb->layoutName();
+    return m_xkb->currentLayout();
 }
 
 QString KeyboardLayoutDBusInterface::getLayoutLongName() const
@@ -240,18 +230,14 @@ QString KeyboardLayoutDBusInterface::getLayoutLongName() const
 
 QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::getLayoutsList() const
 {
-    const auto layouts = m_xkb->layoutNames();
-    const QStringList &shortNames = m_xkb->layoutShortNames();
-
     // TODO: - should be handled by layout applet itself, it has nothing to do with KWin
     const QStringList displayNames = m_configGroup.readEntry("DisplayNames", QStringList());
 
     QVector<LayoutNames> ret;
-    const int layoutsSize = layouts.size();
+    const int layoutsSize = m_xkb->numberOfLayouts();
     const int displayNamesSize = displayNames.size();
     for (int i = 0; i < layoutsSize; ++i) {
-        const QString &id = layouts[i];
-        ret.append( {id, shortNames.at(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(id)} );
+        ret.append( {m_xkb->layoutShortName(i), i < displayNamesSize ? displayNames.at(i) : QString(), translatedLayout(m_xkb->layoutName(i))} );
     }
     return ret;
 }
@@ -259,7 +245,7 @@ QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::g
 QDBusArgument &operator<<(QDBusArgument &argument, const KeyboardLayoutDBusInterface::LayoutNames &layoutNames)
 {
     argument.beginStructure();
-    argument << layoutNames.id << layoutNames.shortName << layoutNames.displayName << layoutNames.longName;
+    argument << layoutNames.shortName << layoutNames.displayName << layoutNames.longName;
     argument.endStructure();
     return argument;
 }
@@ -267,7 +253,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const KeyboardLayoutDBusInter
 const QDBusArgument &operator>>(const QDBusArgument &argument, KeyboardLayoutDBusInterface::LayoutNames &layoutNames)
 {
     argument.beginStructure();
-    argument >> layoutNames.id >> layoutNames.shortName >> layoutNames.displayName >> layoutNames.longName;
+    argument >> layoutNames.shortName >> layoutNames.displayName >> layoutNames.longName;
     argument.endStructure();
     return argument;
 }
