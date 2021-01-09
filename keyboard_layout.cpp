@@ -210,7 +210,9 @@ void KeyboardLayoutDBusInterface::switchToPreviousLayout()
 bool KeyboardLayoutDBusInterface::setLayout(uint index)
 {
     const quint32 previousLayout = m_xkb->currentLayout();
-    m_xkb->switchToLayout(index);
+    if ( !m_xkb->switchToLayout(index) ) {
+        return false;
+    }
     m_keyboardLayout->checkLayoutChange(previousLayout);
     return true;
 }

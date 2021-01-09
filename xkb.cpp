@@ -527,13 +527,10 @@ void Xkb::switchToPreviousLayout()
     switchToLayout(previousLayout);
 }
 
-void Xkb::switchToLayout(xkb_layout_index_t layout)
+bool Xkb::switchToLayout(xkb_layout_index_t layout)
 {
-    if (!m_keymap || !m_state) {
-        return;
-    }
-    if (layout >= numberOfLayouts()) {
-        return;
+    if (!m_keymap || !m_state || layout >= numberOfLayouts()) {
+        return false;
     }
     const xkb_mod_mask_t depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
     const xkb_mod_mask_t latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
@@ -541,6 +538,7 @@ void Xkb::switchToLayout(xkb_layout_index_t layout)
     xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
     updateModifiers();
     forwardModifiers();
+    return true;
 }
 
 quint32 Xkb::numberOfLayouts() const
