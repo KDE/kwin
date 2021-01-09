@@ -37,19 +37,18 @@ public:
 protected:
     explicit Policy(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config = KConfigGroup());
     virtual void clearCache() = 0;
-    virtual void layoutChanged() = 0;
+    virtual void layoutChanged(uint index) = 0;
 
-    void setLayout(quint32 layout);
-    quint32 layout() const;
+    void setLayout(uint index);
 
     KConfigGroup m_config;
     virtual const QString defaultLayoutEntryKey() const;
     void clearLayouts();
 
     static const char defaultLayoutEntryKeyPrefix[];
+    Xkb *m_xkb;
 
 private:
-    Xkb *m_xkb;
     KeyboardLayout *m_layout;
 };
 
@@ -66,7 +65,7 @@ public:
 
 protected:
     void clearCache() override {}
-    void layoutChanged() override {}
+    void layoutChanged(uint index) override {Q_UNUSED(index)}
 
 private:
     const QString defaultLayoutEntryKey() const override;
@@ -85,7 +84,7 @@ public:
 
 protected:
     void clearCache() override;
-    void layoutChanged() override;
+    void layoutChanged(uint index) override;
 
 private:
     void desktopChanged();
@@ -105,7 +104,7 @@ public:
 
 protected:
     void clearCache() override;
-    void layoutChanged() override;
+    void layoutChanged(uint index) override;
 
 private:
     QHash<AbstractClient*, quint32> m_layouts;
@@ -124,7 +123,7 @@ public:
 
 protected:
     void clearCache() override;
-    void layoutChanged() override;
+    void layoutChanged(uint index) override;
 
 private:
     void clientActivated(AbstractClient *c);

@@ -40,13 +40,13 @@ public:
 
     void init();
 
-    void checkLayoutChange(quint32 previousLayout);
+    void checkLayoutChange(uint previousLayout);
     void switchToNextLayout();
     void switchToPreviousLayout();
     void resetLayout();
 
 Q_SIGNALS:
-    void layoutChanged();
+    void layoutChanged(uint index);
     void layoutsReconfigured();
 
 private Q_SLOTS:

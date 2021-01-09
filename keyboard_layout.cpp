@@ -72,11 +72,8 @@ void KeyboardLayout::initDBusInterface()
         return;
     }
     m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, m_configGroup, this);
-    connect(this, &KeyboardLayout::layoutChanged, m_dbusInterface,
-        [this] {
-            emit m_dbusInterface->layoutChanged(m_xkb->currentLayout());
-        }
-    );
+    connect(this, &KeyboardLayout::layoutChanged,
+            m_dbusInterface, &KeyboardLayoutDBusInterface::layoutChanged);
     // TODO: the signal might be emitted even if the list didn't change
     connect(this, &KeyboardLayout::layoutsReconfigured, m_dbusInterface, &KeyboardLayoutDBusInterface::layoutListChanged);
 }
@@ -150,17 +147,17 @@ void KeyboardLayout::loadShortcuts()
     }
 }
 
-void KeyboardLayout::checkLayoutChange(quint32 previousLayout)
+void KeyboardLayout::checkLayoutChange(uint previousLayout)
 {
     // Get here on key event or DBus call.
     // m_layout - layout saved last time OSD occurred
     // previousLayout - actual layout just before potential layout change
     // We need OSD if current layout deviates from any of these
-    const auto layout = m_xkb->currentLayout();
-    if (m_layout != layout || previousLayout != layout) {
-        m_layout = layout;
+    const uint currentLayout = m_xkb->currentLayout();
+    if (m_layout != currentLayout || previousLayout != currentLayout) {
+        m_layout = currentLayout;
         notifyLayoutChange();
-        emit layoutChanged();
+        emit layoutChanged(currentLayout);
     }
 }
 
