@@ -276,7 +276,9 @@ PlasmaCore.Dialog {
 
         Connections {
             target: workspace
-            onCurrentDesktopChanged: dialogItem.show()
+            function onCurrentDesktopChanged() {
+                dialogItem.show()
+            }
             function onNumberDesktopsChanged() {
                 repeater.model = workspace.desktops;
             }
