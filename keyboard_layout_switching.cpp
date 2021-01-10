@@ -126,7 +126,8 @@ VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, con
         [this, xkb] (const QString &name) {
             Q_UNUSED(name)
             if (xkb->numberOfLayouts() > 1) {
-                for (KWin::VirtualDesktop* const desktop : VirtualDesktopManager::self()->desktops()) {
+                const auto &desktops = VirtualDesktopManager::self()->desktops();
+                for (KWin::VirtualDesktop* const desktop : desktops) {
                     const uint layout = m_config.readEntry(
                                 defaultLayoutEntryKey() %
                                     QLatin1String( QByteArray::number(desktop->x11DesktopNumber()) ),
