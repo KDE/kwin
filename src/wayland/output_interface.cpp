@@ -337,6 +337,8 @@ void OutputInterface::Private::bind(wl_client *client, uint32_t version, uint32_
 
     sendDone(r);
     c->flush();
+
+    emit q->bound(display->getConnection(client), r.resource);
 }
 
 void OutputInterface::Private::unbind(wl_resource *resource)

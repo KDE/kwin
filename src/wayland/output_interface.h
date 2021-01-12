@@ -148,6 +148,12 @@ Q_SIGNALS:
      **/
     void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
 
+    /**
+     * Emitted when a client binds to a given output
+     * @internal
+     */
+    void bound(ClientConnection *client,  wl_resource *boundResource);
+
 private:
     class Private;
     Private *d_func() const;

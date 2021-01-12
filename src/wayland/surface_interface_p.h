@@ -117,6 +117,8 @@ public:
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
     QHash<OutputInterface*, QMetaObject::Connection> outputDestroyedConnections;
+    QHash<OutputInterface*, QMetaObject::Connection> outputBoundConnections;
+
     QVector<IdleInhibitorV1Interface*> idleInhibitors;
     ViewportInterface *viewportExtension = nullptr;
     SurfaceInterface *dataProxy = nullptr;

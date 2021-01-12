@@ -832,6 +832,7 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
             d->send_leave(outputResource);
         }
         disconnect(d->outputDestroyedConnections.take(*it));
+        disconnect(d->outputBoundConnections.take(*it));
     }
     QVector<OutputInterface *> addedOutputsOutputs = outputs;
     for (auto it = d->outputs.constBegin(), end = d->outputs.constEnd(); it != end; ++it) {
@@ -849,8 +850,15 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
             if (outputs.removeOne(o)) {
                 setOutputs(outputs);
             }});
+
+        Q_ASSERT(!d->outputBoundConnections.contains(o));
+        d->outputBoundConnections[o] = connect(o, &OutputInterface::bound, this, [this](ClientConnection *c, wl_resource *outputResource) {
+            if (c != client()) {
+                return;
+            }
+            d->send_enter(outputResource);
+        });
     }
-    // TODO: send enter when the client binds the OutputInterface another time
 
     d->outputs = outputs;
     for (auto child : d->current.children) {
