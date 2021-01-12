@@ -635,7 +635,7 @@ double libinput_event_touch_get_y_transformed(struct libinput_event_touch *event
     return event->absolutePos.y() / deviceHeight * height;
 }
 
-int32_t libinput_event_touch_get_slot(struct libinput_event_touch *event)
+int32_t libinput_event_touch_get_seat_slot(struct libinput_event_touch *event)
 {
     return event->slot;
 }
