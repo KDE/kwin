@@ -46,6 +46,7 @@ public:
     void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
     void processUp(qint32 id, quint32 time, LibInput::Device *device = nullptr);
     void processMotion(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
+    void processCancel();
     void cancel();
     void frame();
 

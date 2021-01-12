@@ -201,6 +201,12 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
     m_windowUpdatedInCycle = false;
 }
 
+void TouchInputRedirection::processCancel()
+{
+    m_touches--;
+    cancel();
+}
+
 void TouchInputRedirection::cancel()
 {
     if (!inited()) {

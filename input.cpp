@@ -2326,7 +2326,7 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::touchDown, m_touch, &TouchInputRedirection::processDown);
         connect(conn, &LibInput::Connection::touchUp, m_touch, &TouchInputRedirection::processUp);
         connect(conn, &LibInput::Connection::touchMotion, m_touch, &TouchInputRedirection::processMotion);
-        connect(conn, &LibInput::Connection::touchCanceled, m_touch, &TouchInputRedirection::cancel);
+        connect(conn, &LibInput::Connection::touchCanceled, m_touch, &TouchInputRedirection::processCancel);
         connect(conn, &LibInput::Connection::touchFrame, m_touch, &TouchInputRedirection::frame);
         auto handleSwitchEvent = [this] (SwitchEvent::State state, quint32 time, quint64 timeMicroseconds, LibInput::Device *device) {
             SwitchEvent event(state, time, timeMicroseconds, device);
