@@ -186,9 +186,6 @@ X11Client::~X11Client()
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
     Q_ASSERT(m_frame == XCB_WINDOW_NONE);
     Q_ASSERT(!check_active_modal);
-    for (auto it = m_connections.constBegin(); it != m_connections.constEnd(); ++it) {
-        disconnect(*it);
-    }
 }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly

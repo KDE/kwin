@@ -514,8 +514,6 @@ private:
 
     QTimer *m_focusOutTimer;
 
-    QList<QMetaObject::Connection> m_connections;
-
     QMetaObject::Connection m_edgeRemoveConnection;
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
