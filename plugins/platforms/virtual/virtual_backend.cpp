@@ -145,12 +145,10 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
     if (enable) {
         Q_ASSERT(!m_outputsEnabled.contains(output));
         m_outputsEnabled << output;
-
         emit outputEnabled(output);
     } else {
         Q_ASSERT(m_outputsEnabled.contains(output));
         m_outputsEnabled.removeOne(output);
-
         emit outputDisabled(output);
     }
 
@@ -159,8 +157,7 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
 
 void VirtualBackend::removeOutput(AbstractOutput *output)
 {
-
-    VirtualOutput* virtualOutput = static_cast<VirtualOutput *>(output);
+    VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
     if (m_outputsEnabled.removeOne(virtualOutput)) {
         emit outputDisabled(virtualOutput);
     }
