@@ -39,7 +39,7 @@ Name[sv]=Fönsterbyteslayouter
 Name[tr]=Pencere Yöneticisi Geçiş Düzenleri
 Name[uk]=Компонування засобу перемикання вікон
 Name[x-test]=xxWindow Manager Switching Layoutsxx
-Name[zh_CN]=窗口切换器布局
+Name[zh_CN]=窗口管理器切换布局
 Name[zh_TW]=視窗切換器佈局
 
 ProvidersUrl=https://download.kde.org/ocs/providers.xml

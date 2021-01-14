@@ -26,7 +26,7 @@ Name[sl]=Oko na zaslonu
 Name[sv]=Ögat på skärmen
 Name[uk]=Око на екрані
 Name[x-test]=xxEye on Screenxx
-Name[zh_CN]=关注屏幕
+Name[zh_CN]=窗口内收
 Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into the desktop
@@ -55,7 +55,7 @@ Comment[sl]=Prisesa okna na namizje
 Comment[sv]=Sug in fönster i skrivbordet
 Comment[uk]=Засмоктування вікон до стільниці
 Comment[x-test]=xxSuck windows into the desktopxx
-Comment[zh_CN]=将窗口吸收到桌面
+Comment[zh_CN]=按下显示桌面时所有窗口被内收到桌面中心消失
 Comment[zh_TW]=將視窗吸進桌面
 
 Type=Service

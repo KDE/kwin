@@ -64,7 +64,7 @@ Name[uk]=Затемнення стільниці
 Name[vi]=Làm mờ màn hình
 Name[wa]=Fondou do scribanne
 Name[x-test]=xxFade Desktopxx
-Name[zh_CN]=淡出桌面
+Name[zh_CN]=渐入渐出
 Name[zh_TW]=淡出淡入桌面
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
@@ -129,7 +129,7 @@ Comment[uk]=Затемнення перед час перемикання між
 Comment[vi]=Hiệu ứng mờ khi chuyển đổi giữa các màn hình làm việc ảo
 Comment[wa]=Fwait on fondou etur sicribannes cwand on passe d' onk a èn ôte
 Comment[x-test]=xxFade between virtual desktops when switching between themxx
-Comment[zh_CN]=在虚拟桌面间切换时呈现淡出效果
+Comment[zh_CN]=在虚拟桌面间切换时呈现渐入渐出动效
 Comment[zh_TW]=在虛擬桌面間切換時使用淡出/淡入效果
 
 Type=Service

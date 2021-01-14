@@ -46,7 +46,7 @@ Name[sv]=Skärmvisning av skrivbordsändring
 Name[tr]=Masaüstü Değiştirme Ekran Bildirimi
 Name[uk]=Панель зміни стільниць
 Name[x-test]=xxDesktop Change OSDxx
-Name[zh_CN]=桌面更改屏幕显示
+Name[zh_CN]=桌面变化突出显示
 Name[zh_TW]=螢幕顯示桌面變更
 Comment=An on screen display indicating the desktop change
 Comment[az]=Ekranda iş masasının dəyişimi bildirişini göstərir
@@ -95,7 +95,7 @@ Comment[tr]=Bir, ekranda beliren bilgi masaüstünün değiştirildiğini göste
 Comment[uk]=Екранна панель спостереження за зміною стільниць
 Comment[vi]=Một khung hiển thị để chỉ báo sự thay đổi của hệ thống
 Comment[x-test]=xxAn on screen display indicating the desktop changexx
-Comment[zh_CN]=一个展示桌面更改的屏幕提示
+Comment[zh_CN]=能够突出显示桌面内容变化的辅助显示功能
 Comment[zh_TW]=以螢幕顯示（OSD）指示桌面的變更
 Icon=preferences-system-windows-script-test
 
