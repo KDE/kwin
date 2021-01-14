@@ -263,10 +263,10 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
 {
     m_waylandOutputDevice->setUuid(uuid);
 
-    if (!manufacturer.isEmpty()) {
-        m_waylandOutputDevice->setManufacturer(manufacturer);
-    } else {
+    if (manufacturer.isEmpty()) {
         m_waylandOutputDevice->setManufacturer(i18n("unknown"));
+    } else {
+        m_waylandOutputDevice->setManufacturer(manufacturer);
     }
     m_waylandOutputDevice->setEdid(edid);
 

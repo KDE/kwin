@@ -25,7 +25,7 @@ class VirtualOutput : public AbstractWaylandOutput
     Q_OBJECT
 
 public:
-    VirtualOutput(QObject *parent = nullptr);
+    VirtualOutput(VirtualBackend *parent = nullptr);
     ~VirtualOutput() override;
 
     RenderLoop *renderLoop() const override;
@@ -43,16 +43,20 @@ public:
         return m_gammaResult;
     }
 
+    void updateEnablement(bool enable) override;
+
 private:
     void vblank(std::chrono::nanoseconds timestamp);
 
     Q_DISABLE_COPY(VirtualOutput);
     friend class VirtualBackend;
 
+    VirtualBackend *m_backend;
     RenderLoop *m_renderLoop;
     SoftwareVsyncMonitor *m_vsyncMonitor;
     int m_gammaSize = 200;
     bool m_gammaResult = true;
+    int m_identifier;
 };
 
 }

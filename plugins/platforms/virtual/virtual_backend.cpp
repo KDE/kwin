@@ -35,6 +35,8 @@ VirtualBackend::VirtualBackend(QObject *parent)
             qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
         }
     }
+
+    supportsOutputChanges();
     setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
     setPerScreenRenderingEnabled(true);
@@ -97,7 +99,7 @@ Outputs VirtualBackend::outputs() const
 
 Outputs VirtualBackend::enabledOutputs() const
 {
-    return m_outputs;
+    return m_outputsEnabled;
 }
 
 void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVector<int> scales)
@@ -105,9 +107,15 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
     Q_ASSERT(scales.size() == 0 || scales.size() == count);
 
+    bool countChanged = m_outputs.size() != count;
+
+    while (!m_outputsEnabled.isEmpty()) {
+        VirtualOutput *output = m_outputsEnabled.takeLast();
+        emit outputDisabled(output);
+    }
+
     while (!m_outputs.isEmpty()) {
         VirtualOutput *output = m_outputs.takeLast();
-        emit outputDisabled(output);
         emit outputRemoved(output);
         delete output;
     }
@@ -126,9 +134,43 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
             vo->setScale(scales.at(i));
         }
         m_outputs.append(vo);
+        m_outputsEnabled.append(vo);
         emit outputAdded(vo);
         emit outputEnabled(vo);
     }
+
+    emit screensQueried();
+}
+
+void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
+{
+    if (enable) {
+        Q_ASSERT(!m_outputsEnabled.contains(output));
+        m_outputsEnabled << output;
+
+        emit outputEnabled(output);
+    } else {
+        Q_ASSERT(m_outputsEnabled.contains(output));
+        m_outputsEnabled.removeOne(output);
+
+        emit outputDisabled(output);
+    }
+
+    emit screensQueried();
+}
+
+void VirtualBackend::removeOutput(AbstractOutput *output)
+{
+
+    VirtualOutput* virtualOutput = static_cast<VirtualOutput *>(output);
+    if (m_outputsEnabled.removeOne(virtualOutput)) {
+        emit outputDisabled(virtualOutput);
+    }
+
+    emit outputRemoved(virtualOutput);
+    m_outputsEnabled.removeOne(virtualOutput);
+
+    delete virtualOutput;
 
     emit screensQueried();
 }

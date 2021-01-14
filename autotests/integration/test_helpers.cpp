@@ -27,6 +27,7 @@
 #include <KWayland/Client/shadow.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/output.h>
+#include <KWayland/Client/outputdevice.h>
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
@@ -200,6 +201,7 @@ static struct {
     OutputManagement* outputManagement = nullptr;
     QThread *thread = nullptr;
     QVector<Output*> outputs;
+    QVector<OutputDevice*> outputDevices;
     IdleInhibitManager *idleInhibit = nullptr;
     AppMenuManager *appMenu = nullptr;
     XdgDecorationManager *xdgDecoration = nullptr;
@@ -299,7 +301,7 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
     registry->setEventQueue(s_waylandConnection.queue);
 
     QObject::connect(registry, &Registry::outputAnnounced, [=](quint32 name, quint32 version) {
-        auto output = registry->createOutput(name, version, s_waylandConnection.registry);
+        Output* output = registry->createOutput(name, version, s_waylandConnection.registry);
         s_waylandConnection.outputs << output;
         QObject::connect(output, &Output::removed, [=]() {
             output->deleteLater();
@@ -309,6 +311,22 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             s_waylandConnection.outputs.removeOne(output);
         });
     });
+
+    if (flags.testFlag(AdditionalWaylandInterface::OutputDevice)) {
+        QObject::connect(registry, &KWayland::Client::Registry::outputDeviceAnnounced,
+                [=](quint32 name, quint32 version) {
+
+            OutputDevice *device = registry->createOutputDevice(name, version);
+            s_waylandConnection.outputDevices << device;
+
+            QObject::connect(device, &OutputDevice::removed, [=]() {
+                s_waylandConnection.outputDevices.removeOne(device);
+            });
+            QObject::connect(device, &OutputDevice::destroyed, [=]() {
+                s_waylandConnection.outputDevices.removeOne(device);
+            });
+        });
+    }
 
     QObject::connect(registry, &Registry::interfaceAnnounced, [=](const QByteArray &interface, quint32 name, quint32 version) {
         if (flags & AdditionalWaylandInterface::InputMethodV1) {
@@ -497,6 +515,8 @@ void destroyWaylandConnection()
         s_waylandConnection.thread = nullptr;
         s_waylandConnection.connection = nullptr;
     }
+    s_waylandConnection.outputs.clear();
+    s_waylandConnection.outputDevices.clear();
 }
 
 ConnectionThread *waylandConnection()
@@ -582,6 +602,11 @@ TextInputManagerV3 *waylandTextInputManagerV3()
 QVector<KWayland::Client::Output *> waylandOutputs()
 {
     return s_waylandConnection.outputs;
+}
+
+QVector<OutputDevice *> waylandOutputDevices()
+{
+    return s_waylandConnection.outputDevices;
 }
 
 bool waitForWaylandPointer()

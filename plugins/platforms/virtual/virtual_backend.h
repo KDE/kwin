@@ -52,11 +52,16 @@ public:
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 
+    void enableOutput(VirtualOutput *output, bool enable);
+
+    void removeOutput(AbstractOutput *output);
+
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 
 private:
     QVector<VirtualOutput*> m_outputs;
+    QVector<VirtualOutput*> m_outputsEnabled;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
 };
 

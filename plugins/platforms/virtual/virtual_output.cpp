@@ -7,23 +7,24 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_output.h"
+#include "virtual_backend.h"
+
 #include "renderloop_p.h"
 #include "softwarevsyncmonitor.h"
 
 namespace KWin
 {
 
-VirtualOutput::VirtualOutput(QObject *parent)
-    : AbstractWaylandOutput()
+VirtualOutput::VirtualOutput(VirtualBackend *parent)
+    : AbstractWaylandOutput(parent)
+    , m_backend(parent)
     , m_renderLoop(new RenderLoop(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create(this))
 {
-    Q_UNUSED(parent);
-
     connect(m_vsyncMonitor, &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
 
     static int identifier = -1;
-    identifier++;
+    m_identifier = ++identifier;
     setName("Virtual-" + QString::number(identifier));
 }
 
@@ -52,7 +53,10 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode }, {});
+    initInterfaces(QByteArray("model_").append(QString::number(m_identifier)),
+                   QByteArray("manufacturer_").append(QString::number(m_identifier)),
+                   QByteArray("UUID_").append(QString::number(m_identifier)),
+                   pixelSize, { mode }, QByteArray("EDID_").append(QString::number(m_identifier)));
     setGeometry(QRect(logicalPosition, pixelSize));
 }
 
@@ -66,6 +70,11 @@ void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
     renderLoopPrivate->notifyFrameCompleted(timestamp);
+}
+
+void VirtualOutput::updateEnablement(bool enable)
+{
+    m_backend->enableOutput(this, enable);
 }
 
 }

@@ -42,6 +42,7 @@ class Surface;
 class XdgDecorationManager;
 class OutputManagement;
 class TextInputManager;
+class OutputDevice;
 }
 }
 
@@ -236,7 +237,8 @@ enum class AdditionalWaylandInterface {
     TextInputManagerV2 = 1 << 10,
     InputMethodV1 = 1 << 11,
     LayerShellV1 = 1 << 12,
-    TextInputManagerV3 = 1 << 13
+    TextInputManagerV3 = 1 << 13,
+    OutputDevice = 1 << 14
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 /**
@@ -271,6 +273,7 @@ KWayland::Client::XdgDecorationManager *xdgDecorationManager();
 KWayland::Client::OutputManagement *waylandOutputManagement();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
+QVector<KWayland::Client::OutputDevice *> waylandOutputDevices();
 
 bool waitForWaylandPointer();
 bool waitForWaylandTouch();
