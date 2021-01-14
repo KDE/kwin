@@ -33,7 +33,7 @@ Name[sl]=Odjava
 Name[sv]=Logga ut
 Name[uk]=Вихід
 Name[x-test]=xxLogoutxx
-Name[zh_CN]=注销
+Name[zh_CN]=注销过渡动画
 Name[zh_TW]=登出
 Icon=preferences-system-windows-effect-logout
 Comment=Smoothly fade to the logout screen
@@ -69,7 +69,7 @@ Comment[sl]=Postopoma okno zbledi v zaslon za odjavo
 Comment[sv]=Tona mjukt till utloggningsskärmen
 Comment[uk]=Плавний перехід до вікна виходу з системи
 Comment[x-test]=xxSmoothly fade to the logout screenxx
-Comment[zh_CN]=平滑地淡出到注销屏幕
+Comment[zh_CN]=注销时平滑地过渡到注销屏幕
 Comment[zh_TW]=平順地淡入登出畫面
 
 Type=Service

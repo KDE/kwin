@@ -31,7 +31,7 @@ Name[sl]=Prehajajoča pojavna okna
 Name[sv]=Borttonande meddelanderutor
 Name[uk]=Інтерактивні контекстні панелі
 Name[x-test]=xxFading Popupsxx
-Name[zh_CN]=气泡通知渐隐渐现
+Name[zh_CN]=气泡显隐渐变动画
 Name[zh_TW]=淡化彈出視窗
 Icon=preferences-system-windows-effect-fadingpopups
 Comment=Make popups smoothly fade in and out when they are shown or hidden
@@ -66,7 +66,7 @@ Comment[sl]=Okna se pojavijo in izginejo postopoma, kadar se pokažejo ali skrij
 Comment[sv]=Gör att meddelanderutor mjukt tonas in eller ut när de visas eller döljs
 Comment[uk]=Поступова поява або зникнення контекстних вікон вікон при відкритті чи закритті
 Comment[x-test]=xxMake popups smoothly fade in and out when they are shown or hiddenxx
-Comment[zh_CN]=当弹窗被显示或者隐藏时，使窗口平滑地淡入淡出
+Comment[zh_CN]=气泡信息显示/隐藏时呈现渐入渐出过渡动画
 Comment[zh_TW]=當彈出視窗出現或消失時，讓彈出視窗滑順的淡入和淡出
 
 Type=Service

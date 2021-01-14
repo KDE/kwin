@@ -118,7 +118,7 @@ Comment[sv]=Individuellt fönsterbeteende
 Comment[tr]=Bireysel Pencere Davranışı
 Comment[uk]=Поведінка окремих вікон
 Comment[x-test]=xxIndividual Window Behaviorxx
-Comment[zh_CN]=个别窗口行为
+Comment[zh_CN]=特定窗口行为
 Comment[zh_TW]=個別視窗行為
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
@@ -164,5 +164,5 @@ X-KDE-Keywords[sv]=storlek,position,tillstånd,fönsterbeteende,fönster,specifi
 X-KDE-Keywords[tr]=boyut,konum,durum,pencere davranışı,pencere,özel,etrafından dolanmalar,anımsa,kurallar
 X-KDE-Keywords[uk]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила
 X-KDE-Keywords[x-test]=xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx
-X-KDE-Keywords[zh_CN]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,大小,位置,窗口行为,特定,记住,规则
+X-KDE-Keywords[zh_CN]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,大小,位置,窗口行为,特定,个别记住,记忆,规则
 X-KDE-Keywords[zh_TW]=size,position,state,window behavior,windows,specific,workarounds,remember,rules
