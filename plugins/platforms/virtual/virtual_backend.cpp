@@ -107,8 +107,6 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
     Q_ASSERT(scales.size() == 0 || scales.size() == count);
 
-    bool countChanged = m_outputs.size() != count;
-
     while (!m_outputsEnabled.isEmpty()) {
         VirtualOutput *output = m_outputsEnabled.takeLast();
         emit outputDisabled(output);
