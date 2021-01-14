@@ -9,13 +9,13 @@
 
 #pragma once
 
+#include <kwinglobals.h>
+
 #include <QFile>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QObject>
 #include <QTextStream>
-
-#include <kwinglobals.h>
 
 namespace KWin
 {

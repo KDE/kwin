@@ -10,14 +10,13 @@
 
 #include "ftrace.h"
 
+#include <QDBusConnection>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QScopeGuard>
 #include <QTextStream>
-
-#include <QDBusConnection>
 
 namespace KWin
 {
