@@ -40,8 +40,11 @@ void RenderLoopPrivate::scheduleRepaint()
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
 
     // Estimate when the next presentation will occur. Note that this is a prediction.
-    nextPresentationTimestamp = lastPresentationTimestamp
-            + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
+    nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
+    if (nextPresentationTimestamp < currentTime) {
+        nextPresentationTimestamp = lastPresentationTimestamp
+                + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
+    }
 
     // Estimate when it's a good time to perform the next compositing cycle.
     const std::chrono::nanoseconds safetyMargin = std::chrono::milliseconds(3);
