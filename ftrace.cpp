@@ -33,7 +33,7 @@ FTraceLogger::FTraceLogger(QObject *parent)
     }
 }
 
-bool FTraceLogger::isEnabled()
+bool FTraceLogger::isEnabled() const
 {
     return m_file.isOpen();
 }

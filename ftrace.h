@@ -37,7 +37,7 @@ public:
     /**
      * Enabled through DBus and logging has started
      */
-    bool isEnabled();
+    bool isEnabled() const;
 
     /**
      * Main log function
