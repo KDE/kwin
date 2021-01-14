@@ -767,7 +767,7 @@ public:
         return 3;
     }
     static LatencyPolicy defaultLatencyPolicy() {
-        return LatencyMedium;
+        return LatencyExtremelyHigh;
     }
     static RenderTimeEstimator defaultRenderTimeEstimator() {
         return RenderTimeEstimatorMaximum;
