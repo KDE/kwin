@@ -599,20 +599,27 @@ ki18n_wrap_ui(kwin_SRCS
 
 ########### target link libraries ###############
 
-set(kwin_OWN_LIBS
-    kwineffects
-    kwin4_effect_builtins
+add_library(kwin SHARED ${kwin_SRCS})
+if (Libinput_VERSION_STRING VERSION_GREATER 1.14)
+    set_source_files_properties(libinput/connection.cpp PROPERTIES COMPILE_DEFINITIONS LIBINPUT_HAS_TOTEM)
+endif ()
+
+set_target_properties(kwin PROPERTIES
+   VERSION ${PROJECT_VERSION}
+   SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-set(kwin_QT_LIBS
+target_link_libraries(kwin
+    kwin4_effect_builtins
+    kwineffects
+    kwinglutils
+
     Qt5::Concurrent
     Qt5::DBus
     Qt5::Quick
     Qt5::Script
     Qt5::Sensors
-)
 
-set(kwin_KDE_LIBS
     KF5::ConfigCore
     KF5::ConfigWidgets
     KF5::CoreAddons
@@ -623,15 +630,15 @@ set(kwin_KDE_LIBS
     KF5::Package
     KF5::Plasma
     KF5::QuickAddons
+    KF5::WaylandClient
     KF5::WindowSystem
 
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
 
     PW::KScreenLocker
-)
+    Plasma::KWaylandServer
 
-set(kwin_XCB_LIBS
     XCB::COMPOSITE
     XCB::DAMAGE
     XCB::GLX
@@ -644,36 +651,14 @@ set(kwin_XCB_LIBS
     XCB::SYNC
     XCB::XCB
     XCB::XFIXES
-)
 
-set(kwin_WAYLAND_LIBS
-    KF5::WaylandClient
-    Plasma::KWaylandServer
+    Libinput::Libinput
+    UDev::UDev
     XKB::XKB
+    epoxy::epoxy
+
     ${CMAKE_THREAD_LIBS_INIT}
 )
-
-set(kwinLibs
-    ${kwin_OWN_LIBS}
-    ${kwin_QT_LIBS}
-    ${kwin_KDE_LIBS}
-    ${kwin_XCB_LIBS}
-    ${kwin_WAYLAND_LIBS}
-    UDev::UDev
-    Libinput::Libinput
-)
-
-add_library(kwin SHARED ${kwin_SRCS})
-if (Libinput_VERSION_STRING VERSION_GREATER 1.14)
-    set_source_files_properties(libinput/connection.cpp PROPERTIES COMPILE_DEFINITIONS LIBINPUT_HAS_TOTEM)
-endif ()
-
-set_target_properties(kwin PROPERTIES
-   VERSION ${PROJECT_VERSION}
-   SOVERSION ${PROJECT_VERSION_MAJOR}
-)
-
-target_link_libraries(kwin ${kwinLibs} kwinglutils epoxy::epoxy)
 
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE
@@ -708,7 +693,7 @@ generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 if(CMAKE_SYSTEM MATCHES "FreeBSD")
     # epoll is required, includes live under ${LOCALBASE}, separate library
     target_include_directories(kwin PUBLIC ${epoll_INCLUDE_DIRS})
-    target_link_libraries(kwin ${kwinLibs} ${epoll_LIBRARIES}) 
+    target_link_libraries(kwin ${epoll_LIBRARIES}) 
 endif()
 
 add_executable(kwin_x11 main_x11.cpp)
