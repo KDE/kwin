@@ -159,12 +159,10 @@ void VirtualBackend::enableOutput(VirtualOutput *output, bool enable)
 void VirtualBackend::removeOutput(AbstractOutput *output)
 {
     VirtualOutput *virtualOutput = static_cast<VirtualOutput *>(output);
-    if (m_outputsEnabled.removeOne(virtualOutput)) {
-        emit outputDisabled(virtualOutput);
-    }
+    virtualOutput->setEnabled(false);
 
+    m_outputs.removeOne(virtualOutput);
     emit outputRemoved(virtualOutput);
-    m_outputsEnabled.removeOne(virtualOutput);
 
     delete virtualOutput;
 
