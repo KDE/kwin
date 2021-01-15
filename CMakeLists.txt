@@ -24,7 +24,6 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Quick
     QuickWidgets
     Script
-    Sensors
     UiTools
     Widgets
     X11Extras
