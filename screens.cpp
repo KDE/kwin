@@ -261,6 +261,7 @@ int Screens::number(const QPoint &pos) const
     // TODO: Do something about testScreens and other tests that use MockScreens.
     // They only make core code more convoluted with ifdefs.
 #ifdef KWIN_UNIT_TEST
+    Q_UNUSED(pos)
     return -1;
 #else
     int bestScreen = 0;
@@ -289,6 +290,7 @@ AbstractOutput *Screens::findOutput(int screen) const
     // TODO: Do something about testScreens and other tests that use MockScreens.
     // They only make core code more convoluted with ifdefs.
 #ifdef KWIN_UNIT_TEST
+    Q_UNUSED(screen)
     return nullptr;
 #else
     return kwinApp()->platform()->findOutput(screen);
