@@ -618,7 +618,6 @@ target_link_libraries(kwin
     Qt5::DBus
     Qt5::Quick
     Qt5::Script
-    Qt5::Sensors
 
     KF5::ConfigCore
     KF5::ConfigWidgets

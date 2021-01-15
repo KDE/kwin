@@ -185,7 +185,6 @@ target_link_libraries(testScriptedEffectLoader
     Qt5::Concurrent
     Qt5::Qml
     Qt5::Script
-    Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
 
@@ -266,7 +265,6 @@ set_target_properties(testScreenEdges PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WI
 target_include_directories(testScreenEdges BEFORE PRIVATE ./)
 target_link_libraries(testScreenEdges
     Qt5::DBus
-    Qt5::Sensors
     Qt5::Test
     Qt5::X11Extras
 
