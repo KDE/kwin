@@ -54,7 +54,7 @@ public:
 
     void enableOutput(VirtualOutput *output, bool enable);
 
-    void removeOutput(AbstractOutput *output);
+    Q_INVOKABLE void removeOutput(AbstractOutput *output);
 
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
