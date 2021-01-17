@@ -2517,6 +2517,11 @@ void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32
     m_touch->processMotion(id, pos, time);
 }
 
+void InputRedirection::cancelTouchSequence()
+{
+    m_touch->processCancel();
+}
+
 void InputRedirection::cancelTouch()
 {
     m_touch->cancel();
@@ -2525,6 +2530,11 @@ void InputRedirection::cancelTouch()
 void InputRedirection::touchFrame()
 {
     m_touch->frame();
+}
+
+int InputRedirection::touchPointCount()
+{
+    return m_touch->touchPointCount();
 }
 
 Qt::MouseButtons InputRedirection::qtButtonStates() const

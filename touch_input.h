@@ -71,6 +71,10 @@ public:
         return m_lastPosition;
     }
 
+    int touchPointCount() const {
+        return m_touches;
+    }
+
 private:
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;

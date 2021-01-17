@@ -483,8 +483,10 @@ public Q_SLOTS:
     void touchDown(qint32 id, const QPointF &pos, quint32 time);
     void touchUp(qint32 id, quint32 time);
     void touchMotion(qint32 id, const QPointF &pos, quint32 time);
+    void cancelTouchSequence();
     void touchCancel();
     void touchFrame();
+    int touchPointCount();
 
     void processSwipeGestureBegin(int fingerCount, quint32 time);
     void processSwipeGestureUpdate(const QSizeF &delta, quint32 time);

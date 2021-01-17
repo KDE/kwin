@@ -38,6 +38,7 @@ private Q_SLOTS:
     void testMultipleTouchPoints();
     void testCancel();
     void testTouchMouseAction();
+    void testTouchPointCount();
 
 private:
     AbstractClient *showWindow(bool decorated = false);
@@ -263,7 +264,25 @@ void TouchInputTest::testTouchMouseAction()
     QCOMPARE(sequenceStartedSpy.count(), 1);
 
     // cleanup
-    kwinApp()->platform()->touchCancel();
+    kwinApp()->platform()->cancelTouchSequence();
+}
+
+void TouchInputTest::testTouchPointCount()
+{
+    QCOMPARE(kwinApp()->platform()->touchPointCount(), 0);
+    quint32 timestamp = 1;
+    kwinApp()->platform()->touchDown(0, QPointF(125, 125), timestamp++);
+    kwinApp()->platform()->touchDown(1, QPointF(125, 125), timestamp++);
+    kwinApp()->platform()->touchDown(2, QPointF(125, 125), timestamp++);
+    QCOMPARE(kwinApp()->platform()->touchPointCount(), 3);
+
+    kwinApp()->platform()->touchUp(1, timestamp++);
+    QCOMPARE(kwinApp()->platform()->touchPointCount(), 2);
+
+    kwinApp()->platform()->cancelTouchSequence();
+    QCOMPARE(kwinApp()->platform()->touchPointCount(), 1);
+    kwinApp()->platform()->cancelTouchSequence();
+    QCOMPARE(kwinApp()->platform()->touchPointCount(), 0);
 }
 
 }

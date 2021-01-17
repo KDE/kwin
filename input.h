@@ -168,8 +168,14 @@ public:
     void processTouchDown(qint32 id, const QPointF &pos, quint32 time);
     void processTouchUp(qint32 id, quint32 time);
     void processTouchMotion(qint32 id, const QPointF &pos, quint32 time);
+    /**
+     * triggers the same code path as LIBINPUT_TOUCH_CANCEL_EVENT.
+     * Only intended for autotests
+     */
+    void cancelTouchSequence();
     void cancelTouch();
     void touchFrame();
+    int touchPointCount();
 
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
