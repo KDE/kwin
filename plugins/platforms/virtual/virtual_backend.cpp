@@ -57,10 +57,11 @@ void VirtualBackend::init()
      *
      * TODO: rewrite all tests to explicitly set the outputs.
      */
-    if (!m_outputs.size()) {
+    if (m_outputs.isEmpty()) {
         VirtualOutput *dummyOutput = new VirtualOutput(this);
         dummyOutput->init(QPoint(0, 0), initialWindowSize());
         m_outputs << dummyOutput ;
+        m_outputsEnabled << dummyOutput;
         emit outputAdded(dummyOutput);
         emit outputEnabled(dummyOutput);
     }
