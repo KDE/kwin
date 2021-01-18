@@ -58,6 +58,7 @@ MagnifierEffect::MagnifierEffect()
     effects->registerGlobalShortcut(Qt::META + Qt::Key_0, a);
 
     connect(effects, &EffectsHandler::mouseChanged, this, &MagnifierEffect::slotMouseChanged);
+    connect(effects, &EffectsHandler::windowDamaged, this, &MagnifierEffect::slotWindowDamaged);
 
     reconfigure(ReconfigureAll);
 }
@@ -330,6 +331,13 @@ void MagnifierEffect::slotMouseChanged(const QPoint& pos, const QPoint& old,
         // need full repaint as we might lose some change events on fast mouse movements
         // see Bug 187658
         effects->addRepaintFull();
+}
+
+void MagnifierEffect::slotWindowDamaged()
+{
+    if (isActive()) {
+        effects->addRepaint(magnifierArea());
+    }
 }
 
 bool MagnifierEffect::isActive() const
