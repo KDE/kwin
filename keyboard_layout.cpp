@@ -222,11 +222,6 @@ uint KeyboardLayoutDBusInterface::getLayout() const
     return m_xkb->currentLayout();
 }
 
-QString KeyboardLayoutDBusInterface::getLayoutLongName() const
-{
-    return translatedLayout(m_xkb->layoutName());
-}
-
 QVector<KeyboardLayoutDBusInterface::LayoutNames> KeyboardLayoutDBusInterface::getLayoutsList() const
 {
     // TODO: - should be handled by layout applet itself, it has nothing to do with KWin
