@@ -89,7 +89,8 @@ Scene::Scene(QObject *parent)
     : QObject(parent)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        connect(screens(), &Screens::countChanged, this, &Scene::reallocRepaints);
+        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Scene::reallocRepaints);
+        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Scene::reallocRepaints);
     }
     reallocRepaints();
 }
@@ -102,11 +103,12 @@ Scene::~Scene()
 void Scene::addRepaint(const QRegion &region)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        if (m_repaints.count() != screens()->count()) {
+        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+        if (m_repaints.count() != outputs.count()) {
             return; // Repaints haven't been reallocated yet, do nothing.
         }
         for (int screenId = 0; screenId < m_repaints.count(); ++screenId) {
-            AbstractOutput *output = kwinApp()->platform()->findOutput(screenId);
+            AbstractOutput *output = outputs[screenId];
             const QRegion dirtyRegion = region & output->geometry();
             if (!dirtyRegion.isEmpty()) {
                 m_repaints[screenId] += dirtyRegion;
@@ -134,7 +136,7 @@ void Scene::resetRepaints(int screenId)
 void Scene::reallocRepaints()
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        m_repaints.resize(screens()->count());
+        m_repaints.resize(kwinApp()->platform()->enabledOutputs().count());
     } else {
         m_repaints.resize(1);
     }
@@ -732,7 +734,8 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     , cached_quad_list(nullptr)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        connect(screens(), &Screens::countChanged, this, &Window::reallocRepaints);
+        connect(kwinApp()->platform(), &Platform::outputEnabled, this, &Window::reallocRepaints);
+        connect(kwinApp()->platform(), &Platform::outputDisabled, this, &Window::reallocRepaints);
     }
     reallocRepaints();
 
@@ -1167,11 +1170,12 @@ void Scene::Window::preprocess()
 void Scene::Window::addLayerRepaint(const QRegion &region)
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        if (m_repaints.count() != screens()->count()) {
+        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+        if (m_repaints.count() != outputs.count()) {
             return; // Repaints haven't been reallocated yet, do nothing.
         }
         for (int screenId = 0; screenId < m_repaints.count(); ++screenId) {
-            AbstractOutput *output = kwinApp()->platform()->findOutput(screenId);
+            AbstractOutput *output = outputs[screenId];
             const QRegion dirtyRegion = region & output->geometry();
             if (!dirtyRegion.isEmpty()) {
                 m_repaints[screenId] += dirtyRegion;
@@ -1204,7 +1208,7 @@ void Scene::Window::resetRepaints(int screen)
 void Scene::Window::reallocRepaints()
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
-        m_repaints.resize(screens()->count());
+        m_repaints.resize(kwinApp()->platform()->enabledOutputs().count());
     } else {
         m_repaints.resize(1);
     }
