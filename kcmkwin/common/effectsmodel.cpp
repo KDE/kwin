@@ -97,6 +97,7 @@ QHash<int, QByteArray> EffectsModel::roleNames() const
     roleNames[ConfigurableRole] = "ConfigurableRole";
     roleNames[ScriptedRole] = QByteArrayLiteral("ScriptedRole");
     roleNames[EnabledByDefaultRole] = "EnabledByDefaultRole";
+    roleNames[EnabledByDefaultFunctionRole] = "EnabledByDefaultFunctionRole";
     roleNames[ConfigModuleRole] = "ConfigModuleRole";
     return roleNames;
 }
@@ -175,6 +176,8 @@ QVariant EffectsModel::data(const QModelIndex &index, int role) const
         return effect.kind == Kind::Scripted;
     case EnabledByDefaultRole:
         return effect.enabledByDefault;
+    case EnabledByDefaultFunctionRole:
+        return effect.enabledByDefaultFunction;
     case ConfigModuleRole:
         return effect.configModule;
     default:

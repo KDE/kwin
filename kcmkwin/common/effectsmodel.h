@@ -108,7 +108,11 @@ public:
         /**
          * Id of the effect's config module, empty if the effect has no config.
          */
-        ConfigModuleRole
+        ConfigModuleRole,
+        /**
+         * Whether the effect has a function to determine if the effect is enabled by default.
+         */
+        EnabledByDefaultFunctionRole,
     };
 
     /**

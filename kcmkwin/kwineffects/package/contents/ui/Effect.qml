@@ -11,6 +11,7 @@ import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Layouts 1.1
 
 import org.kde.kirigami 2.5 as Kirigami
+import org.kde.kcm 1.5 as KCM
 
 Kirigami.SwipeListItem {
     id: listItem
@@ -39,6 +40,10 @@ Kirigami.SwipeListItem {
                 }
                 _toggled = false;
             }
+
+            KCM.SettingHighlighter {
+                highlight: model.EnabledByDefaultFunctionRole ? parent.checkState !== Qt.PartiallyChecked : parent.checked !== model.EnabledByDefaultRole
+            }
         }
 
         QQC2.CheckBox {
@@ -46,6 +51,10 @@ Kirigami.SwipeListItem {
             visible: model.ExclusiveRole == ""
 
             onToggled: model.StatusRole = checkState
+
+            KCM.SettingHighlighter {
+                highlight: model.EnabledByDefaultFunctionRole ? parent.checkState !== Qt.PartiallyChecked : parent.checked !== model.EnabledByDefaultRole
+            }
         }
 
         ColumnLayout {
