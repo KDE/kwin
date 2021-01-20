@@ -208,7 +208,6 @@ private:
     KWaylandServer::XdgToplevelInterface::States m_acknowledgedStates;
     KWaylandServer::XdgToplevelInterface::States m_initialStates;
     QMap<quint32, PingReason> m_pings;
-    QRect m_fullScreenGeometryRestore;
     NET::WindowType m_windowType = NET::Normal;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;

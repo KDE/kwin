@@ -1000,14 +1000,15 @@ void AbstractClient::finishMoveResize(bool cancel)
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (screen() != moveResizeStartScreen()) {
         workspace()->sendClientToScreen(this, screen()); // checks rule validity
-        if (maximizeMode() != MaximizeRestore)
+        if (maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
+        }
     }
 
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricBorderMode());
         setElectricBorderMaximizing(false);
-    } else if (!cancel) {
+    } else if (!cancel && !isFullScreen()) {
         QRect geom_restore = geometryRestore();
         if (!(maximizeMode() & MaximizeHorizontal)) {
             geom_restore.setX(frameGeometry().x());
@@ -3065,7 +3066,7 @@ void AbstractClient::sendToScreen(int newScreen)
             }
         }
     }
-    if (screen() == newScreen)   // Don't use isOnScreen(), that's true even when only partially
+    if (screen() == newScreen && !isFullScreen())   // Don't use isOnScreen(), that's true even when only partially
         return;
 
     GeometryUpdatesBlocker blocker(this);
@@ -3107,14 +3108,34 @@ void AbstractClient::sendToScreen(int newScreen)
         keepInArea(screenArea);
     }
 
-    // align geom_restore - checkWorkspacePosition operates on it
-    setGeometryRestore(frameGeometry());
+    if (isFullScreen()) {
+        QRect newFullScreenGeometryRestore = screenArea;
+        if (!(maximizeMode() & MaximizeVertical)) {
+            newFullScreenGeometryRestore.setHeight(geometryRestore().height());
+        }
+        if (!(maximizeMode() & MaximizeHorizontal)) {
+            newFullScreenGeometryRestore.setWidth(geometryRestore().width());
+        }
+        newFullScreenGeometryRestore.setSize(newFullScreenGeometryRestore.size().boundedTo(screenArea.size()));
+        QSize move = (screenArea.size() - newFullScreenGeometryRestore.size()) / 2;
+        newFullScreenGeometryRestore.translate(move.width(), move.height());
 
-    checkWorkspacePosition(oldGeom);
+        QRect newGeometryRestore = QRect(screenArea.topLeft(), geometryRestore().size().boundedTo(screenArea.size()));
+        move = (screenArea.size() - newGeometryRestore.size()) / 2;
+        newGeometryRestore.translate(move.width(), move.height());
 
-    // re-align geom_restore to constrained geometry
-    setGeometryRestore(frameGeometry());
+        setFullscreenGeometryRestore(newFullScreenGeometryRestore);
+        setGeometryRestore(newGeometryRestore);
+        checkWorkspacePosition(oldGeom);
+    } else {
+        // align geom_restore - checkWorkspacePosition operates on it
+        setGeometryRestore(frameGeometry());
 
+        checkWorkspacePosition(oldGeom);
+
+        // re-align geom_restore to constrained geometry
+        setGeometryRestore(frameGeometry());
+    }
     // finally reset special states
     // NOTICE that MaximizeRestore/QuickTileFlag::None checks are required.
     // eg. setting QuickTileFlag::None would break maximization
@@ -3142,7 +3163,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     if (isFullScreen()) {
-        QRect area = workspace()->clientArea(FullScreenArea, geometryRestore().center(), desktop());
+        QRect area = workspace()->clientArea(FullScreenArea, fullscreenGeometryRestore().center(), desktop());
         if (frameGeometry() != area)
             setFrameGeometry(area);
         return;
@@ -3558,6 +3579,15 @@ void AbstractClient::showOnScreenEdge()
 bool AbstractClient::isPlaceable() const
 {
     return true;
+}
+
+QRect AbstractClient::fullscreenGeometryRestore() const
+{
+    return m_fullscreenGeometryRestore;
+}
+void AbstractClient::setFullscreenGeometryRestore(const QRect &geom)
+{
+    m_fullscreenGeometryRestore = geom;
 }
 
 }

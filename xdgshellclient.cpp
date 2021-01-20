@@ -1545,7 +1545,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
     if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
     } else {
-        m_fullScreenGeometryRestore = frameGeometry();
+        setFullscreenGeometryRestore(frameGeometry());
     }
     m_isFullScreen = set;
 
@@ -1566,10 +1566,10 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
         setFrameGeometry(workspace()->clientArea(FullScreenArea, screen, desktop()));
     } else {
         m_fullScreenRequestedOutput.clear();
-        if (m_fullScreenGeometryRestore.isValid()) {
+        if (fullscreenGeometryRestore().isValid()) {
             int currentScreen = screen();
-            setFrameGeometry(QRect(m_fullScreenGeometryRestore.topLeft(),
-                                   constrainFrameSize(m_fullScreenGeometryRestore.size())));
+            setFrameGeometry(QRect(fullscreenGeometryRestore().topLeft(),
+                                   constrainFrameSize(fullscreenGeometryRestore().size())));
             if( currentScreen != screen())
                 workspace()->sendClientToScreen( this, currentScreen );
         } else {

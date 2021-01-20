@@ -144,9 +144,6 @@ public:
     void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;
     bool userCanSetFullScreen() const override;
-    QRect geometryFSRestore() const {
-        return geom_fs_restore;     // only for session saving
-    }
     int fullScreenMode() const {
         return m_fullscreenMode;    // only for session saving
     }
@@ -484,7 +481,6 @@ private:
 
     MaximizeMode max_mode;
     QRect m_bufferGeometry = QRect(0, 0, 100, 100);
-    QRect geom_fs_restore;
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix;
     Group* in_group;

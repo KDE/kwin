@@ -868,6 +868,8 @@ public:
         return m_windowManagementInterface;
     }
 
+    QRect fullscreenGeometryRestore() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1222,6 +1224,8 @@ protected:
     void setKeyboardGeometryRestore(const QRect &geom);
 
     QRect m_virtualKeyboardGeometry;
+
+    void setFullscreenGeometryRestore(const QRect &geom);
 private Q_SLOTS:
     void shadeHover();
     void shadeUnhover();
@@ -1278,6 +1282,7 @@ private:
     QRect m_clientGeometryBeforeUpdateBlocking;
     QRect m_keyboardGeometryRestore;
     QRect m_maximizeGeometryRestore;
+    QRect m_fullscreenGeometryRestore;
 
     struct {
         bool enabled = false;

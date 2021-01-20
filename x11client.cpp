@@ -743,12 +743,14 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
         }
         if (session->fullscreen != FullScreenNone) {
             setFullScreen(true, false);
-            geom_fs_restore = session->fsrestore;
+            setFullscreenGeometryRestore(session->fsrestore);
         }
         QRect checkedGeometryRestore = geometryRestore();
         checkOffscreenPosition(&checkedGeometryRestore, area);
-        checkOffscreenPosition(&geom_fs_restore, area);
         setGeometryRestore(checkedGeometryRestore);
+        QRect checkedFullscreenGeometryRestore = fullscreenGeometryRestore();
+        checkOffscreenPosition(&checkedFullscreenGeometryRestore, area);
+        setFullscreenGeometryRestore(checkedFullscreenGeometryRestore);
     } else {
         // Window may want to be maximized
         // done after checking that the window isn't larger than the workarea, so that
@@ -4597,7 +4599,7 @@ void X11Client::setFullScreen(bool set, bool user)
     if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
     } else {
-        geom_fs_restore = frameGeometry();
+        setFullscreenGeometryRestore(frameGeometry());
     }
 
     if (set) {
@@ -4623,9 +4625,9 @@ void X11Client::setFullScreen(bool set, bool user)
             setFrameGeometry(workspace()->clientArea(FullScreenArea, this));
         }
     } else {
-        Q_ASSERT(!geom_fs_restore.isNull());
+        Q_ASSERT(!fullscreenGeometryRestore().isNull());
         const int currentScreen = screen();
-        setFrameGeometry(QRect(geom_fs_restore.topLeft(), constrainFrameSize(geom_fs_restore.size())));
+        setFrameGeometry(QRect(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
         if(currentScreen != screen()) {
             workspace()->sendClientToScreen(this, currentScreen);
         }
