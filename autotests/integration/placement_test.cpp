@@ -52,6 +52,7 @@ private Q_SLOTS:
     void testPlaceUnderMouse();
     void testPlaceCascaded();
     void testPlaceRandom();
+    void testFullscreen();
 
 private:
     void setPlacementPolicy(Placement::Policy policy);
@@ -343,6 +344,36 @@ void TestPlacement::testPlaceRandom()
     QVERIFY(Test::waitForWindowDestroyed(client2));
     shellSurface1.reset();
     QVERIFY(Test::waitForWindowDestroyed(client1));
+}
+
+void TestPlacement::testFullscreen()
+{
+    setPlacementPolicy(Placement::Smart);
+    QScopedPointer<Surface> surface(Test::createSurface());
+    QScopedPointer<XdgShellSurface> shellSurface(Test::createXdgShellStableSurface(surface.data()));
+    AbstractClient *client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::red);
+
+    // auto-ack. XdgShell isn't being tested here, only the actual placement
+    connect(shellSurface.data(), &XdgShellSurface::configureRequested, [&](const QSize &size, KWayland::Client::XdgShellSurface::States, quint32 serial) {
+        if (!size.isEmpty()) {
+            shellSurface->ackConfigure(serial);
+            Test::render(surface.data(), size, Qt::red);
+        }
+    });
+
+    QVERIFY(client);
+    client->sendToScreen(0);
+
+    QSignalSpy geometryChangedSpy(client, &Toplevel::frameGeometryChanged);
+    client->setFullScreen(true);
+
+    QVERIFY(geometryChangedSpy.wait());
+    QCOMPARE(client->frameGeometry(), screens()->geometry(0));
+
+    // this doesn't require a round trip, so should be immediate
+    client->sendToScreen(1);
+    QCOMPARE(client->frameGeometry(), screens()->geometry(1));
+    QCOMPARE(geometryChangedSpy.count(), 2);
 }
 
 WAYLANDTEST_MAIN(TestPlacement)
