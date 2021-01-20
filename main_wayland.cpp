@@ -254,7 +254,7 @@ void ApplicationWayland::startInputMethod(const QString &executable)
 
     const QString program = arguments.takeFirst();
     int socket = dup(waylandServer()->createInputMethodConnection());
-    if (socket >= 0) {
+    if (socket < 0) {
         qWarning("Failed to create the input method connection");
         return;
     }
