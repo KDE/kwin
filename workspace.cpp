@@ -2462,7 +2462,8 @@ QPoint Workspace::adjustClientPosition(AbstractClient* c, QPoint pos, bool unres
                     continue; // wrong virtual desktop
                 if (!(*l)->isOnCurrentActivity())
                     continue; // wrong activity
-                if ((*l)->isDesktop() || (*l)->isSplash())
+                if ((*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() ||
+                        (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay())
                     continue;
 
                 lx = (*l)->x();
