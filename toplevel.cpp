@@ -467,7 +467,7 @@ void Toplevel::addLayerRepaint(const QRegion &region)
 
 void Toplevel::addRepaintFull()
 {
-    addRepaint(visibleRect().translated(-pos()));
+    addLayerRepaint(visibleRect());
 }
 
 void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
