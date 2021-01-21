@@ -42,7 +42,7 @@ pid_t launch_kwin(struct wl_socket *socket, int argc, char **argv)
         snprintf(fdString, sizeof(fdString) - 1, "%d", wl_socket_get_fd(socket));
 
         char **args = calloc(argc + 6, sizeof(char *));
-        uint pos = 0;
+        unsigned int pos = 0;
         args[pos++] = (char *)"kwin_wayland"; //process name is the first argument by convention
         args[pos++] = (char *)"--wayland_fd";
         args[pos++] = fdString;
