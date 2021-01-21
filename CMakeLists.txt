@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
-set(PROJECT_VERSION "5.20.80") # Handled by release scripts
+set(PROJECT_VERSION "5.20.90") # Handled by release scripts
 project(KWin VERSION ${PROJECT_VERSION})
 
 set(QT_MIN_VERSION "5.15.0")
