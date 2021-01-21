@@ -247,7 +247,8 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
     }
 
     if (width < 1 || height < 1) {
-        wl_resource_post_error(resource->handle, -1, "invalid window geometry size");
+        wl_resource_post_error(resource->handle, -1, "invalid window geometry size (%dx%d)",
+                               width, height);
         return;
     }
 
