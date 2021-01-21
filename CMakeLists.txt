@@ -4,7 +4,7 @@ set(PROJECT_VERSION "5.20.90") # Handled by release scripts
 project(KWin VERSION ${PROJECT_VERSION})
 
 set(QT_MIN_VERSION "5.15.0")
-set(KF5_MIN_VERSION "5.74")
+set(KF5_MIN_VERSION "5.78")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
