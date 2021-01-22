@@ -200,7 +200,7 @@ void LayerShellV1Integration::rearrange()
 {
     m_rearrangeTimer->stop();
 
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->outputs();
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
     for (AbstractOutput *output : outputs) {
         rearrangeOutput(output);
     }
