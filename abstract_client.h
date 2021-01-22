@@ -453,6 +453,7 @@ public:
      */
     bool isSpecialWindow() const;
     void sendToScreen(int screen);
+    void updateGeometryRestoresForFullscreen();
     const QKeySequence &shortcut() const {
         return _shortcut;
     }

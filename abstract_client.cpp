@@ -999,6 +999,9 @@ void AbstractClient::finishMoveResize(bool cancel)
     }
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (screen() != moveResizeStartScreen()) {
+        if (isFullScreen()) {
+            updateGeometryRestoresForFullscreen();
+        }
         workspace()->sendClientToScreen(this, screen()); // checks rule validity
         if (maximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
@@ -3109,23 +3112,7 @@ void AbstractClient::sendToScreen(int newScreen)
     }
 
     if (isFullScreen()) {
-        QRect newFullScreenGeometryRestore = screenArea;
-        if (!(maximizeMode() & MaximizeVertical)) {
-            newFullScreenGeometryRestore.setHeight(geometryRestore().height());
-        }
-        if (!(maximizeMode() & MaximizeHorizontal)) {
-            newFullScreenGeometryRestore.setWidth(geometryRestore().width());
-        }
-        newFullScreenGeometryRestore.setSize(newFullScreenGeometryRestore.size().boundedTo(screenArea.size()));
-        QSize move = (screenArea.size() - newFullScreenGeometryRestore.size()) / 2;
-        newFullScreenGeometryRestore.translate(move.width(), move.height());
-
-        QRect newGeometryRestore = QRect(screenArea.topLeft(), geometryRestore().size().boundedTo(screenArea.size()));
-        move = (screenArea.size() - newGeometryRestore.size()) / 2;
-        newGeometryRestore.translate(move.width(), move.height());
-
-        setFullscreenGeometryRestore(newFullScreenGeometryRestore);
-        setGeometryRestore(newGeometryRestore);
+        updateGeometryRestoresForFullscreen();
         checkWorkspacePosition(oldGeom);
     } else {
         // align geom_restore - checkWorkspacePosition operates on it
@@ -3147,6 +3134,28 @@ void AbstractClient::sendToScreen(int newScreen)
     auto tso = workspace()->ensureStackingOrder(transients());
     for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
         (*it)->sendToScreen(newScreen);
+}
+
+void AbstractClient::updateGeometryRestoresForFullscreen()
+{
+    QRect screenArea = workspace()->clientArea(MaximizeArea, screen(), desktop());
+    QRect newFullScreenGeometryRestore = screenArea;
+    if (!(maximizeMode() & MaximizeVertical)) {
+        newFullScreenGeometryRestore.setHeight(geometryRestore().height());
+    }
+    if (!(maximizeMode() & MaximizeHorizontal)) {
+        newFullScreenGeometryRestore.setWidth(geometryRestore().width());
+    }
+    newFullScreenGeometryRestore.setSize(newFullScreenGeometryRestore.size().boundedTo(screenArea.size()));
+    QSize move = (screenArea.size() - newFullScreenGeometryRestore.size()) / 2;
+    newFullScreenGeometryRestore.translate(move.width(), move.height());
+
+    QRect newGeometryRestore = QRect(screenArea.topLeft(), geometryRestore().size().boundedTo(screenArea.size()));
+    move = (screenArea.size() - newGeometryRestore.size()) / 2;
+    newGeometryRestore.translate(move.width(), move.height());
+
+    setFullscreenGeometryRestore(newFullScreenGeometryRestore);
+    setGeometryRestore(newGeometryRestore);
 }
 
 void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect oldClientGeometry)
