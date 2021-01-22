@@ -105,7 +105,7 @@ public:
         return m_waylandOutput;
     }
 
-    bool isEnabled() const;
+    bool isEnabled() const override;
     /**
      * Enable or disable the output.
      *

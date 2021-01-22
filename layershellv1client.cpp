@@ -58,6 +58,8 @@ LayerShellV1Client::LayerShellV1Client(LayerSurfaceV1Interface *shellSurface,
 
     connect(output, &AbstractOutput::geometryChanged,
             this, &LayerShellV1Client::scheduleRearrange);
+    connect(output, &AbstractOutput::enabledChanged,
+            this, &LayerShellV1Client::handleOutputEnabledChanged);
     connect(output, &AbstractOutput::destroyed,
             this, &LayerShellV1Client::handleOutputDestroyed);
 
@@ -253,6 +255,14 @@ void LayerShellV1Client::handleAcceptsFocusChanged()
     case LayerSurfaceV1Interface::BackgroundLayer:
     case LayerSurfaceV1Interface::BottomLayer:
         break;
+    }
+}
+
+void LayerShellV1Client::handleOutputEnabledChanged()
+{
+    if (!m_output->isEnabled()) {
+        closeWindow();
+        destroyClient();
     }
 }
 

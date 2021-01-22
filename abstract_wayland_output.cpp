@@ -240,6 +240,8 @@ void AbstractWaylandOutput::setEnabled(bool enable)
         // xdg-output is destroyed in KWayland on wl_output going away.
         updateEnablement(false);
     }
+
+    emit enabledChanged();
 }
 
 QString AbstractWaylandOutput::description() const

@@ -104,6 +104,11 @@ public:
     virtual QByteArray uuid() const;
 
     /**
+     * Returns @c true if the output is enabled; otherwise returns @c false.
+     */
+    virtual bool isEnabled() const;
+
+    /**
      * Enable or disable the output.
      *
      * Default implementation does nothing
@@ -190,6 +195,10 @@ Q_SIGNALS:
      * This signal is emitted when the geometry of this output has changed.
      */
     void geometryChanged();
+    /**
+     * This signal is emitted when the output has been enabled or disabled.
+     */
+    void enabledChanged();
 
 private:
     Q_DISABLE_COPY(AbstractOutput)

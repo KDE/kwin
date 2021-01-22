@@ -54,6 +54,7 @@ private:
     void handleUnmapped();
     void handleCommitted();
     void handleAcceptsFocusChanged();
+    void handleOutputEnabledChanged();
     void handleOutputDestroyed();
     void scheduleRearrange();
 
