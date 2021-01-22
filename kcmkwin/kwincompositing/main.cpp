@@ -281,8 +281,10 @@ void KWinCompositingKCM::save()
     m_settings->setBackend(backend);
     m_settings->setGlCore(glCore);
 
-    const auto animationDuration = s_animationMultipliers[m_form.animationDurationFactor->value()];
-    m_settings->setAnimationDurationFactor(animationDuration);
+    if (!isRunningPlasma()) {
+        const auto animationDuration = s_animationMultipliers[m_form.animationDurationFactor->value()];
+        m_settings->setAnimationDurationFactor(animationDuration);
+    }
     m_settings->save();
 
     KCModule::save();
