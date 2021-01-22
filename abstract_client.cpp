@@ -999,7 +999,7 @@ void AbstractClient::finishMoveResize(bool cancel)
     }
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (screen() != moveResizeStartScreen()) {
-        if (isFullScreen()) {
+        if (isFullScreen() || isElectricBorderMaximizing()) {
             updateGeometryRestoresForFullscreen();
         }
         workspace()->sendClientToScreen(this, screen()); // checks rule validity
