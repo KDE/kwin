@@ -755,6 +755,7 @@ void XdgToplevelClient::handleRoleCommit()
     if (configureEvent) {
         handleStatesAcknowledged(configureEvent->states);
     }
+    updateDecoration(false, false);
 }
 
 void XdgToplevelClient::doMinimize()
@@ -1303,11 +1304,6 @@ void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *d
 {
     m_xdgDecoration = decoration;
 
-    connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed, this, [this] {
-        if (!isZombie() && m_isInitialized) {
-            updateDecoration(/* check_workspace_pos */ true);
-        }
-    });
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
         if (m_isInitialized) {
             // force is true as we must send a new configure response.
