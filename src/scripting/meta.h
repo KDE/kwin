@@ -15,18 +15,7 @@
 // forward declarations
 class QPoint;
 class QRect;
-class QScriptContext;
 class QSize;
-
-namespace KWin {
-class AbstractClient;
-class Toplevel;
-class X11Client;
-}
-
-typedef KWin::AbstractClient *KAbstractClientRef;
-typedef KWin::X11Client *KClientRef;
-typedef KWin::Toplevel* KToplevelRef;
 
 namespace KWin
 {
@@ -66,59 +55,12 @@ QScriptValue toScriptValue(QScriptEngine*, const QRect&);
 void fromScriptValue(const QScriptValue&, QRect&);
 }
 
-namespace AbstractClient
-{
-QScriptValue toScriptValue(QScriptEngine *engine, const KAbstractClientRef &client);
-void fromScriptValue(const QScriptValue &value, KAbstractClientRef &client);
-}
-
-namespace X11Client
-{
-QScriptValue toScriptValue(QScriptEngine *eng, const KClientRef &client);
-void fromScriptValue(const QScriptValue &value, KClientRef& client);
-}
-
-namespace Toplevel
-{
-QScriptValue toScriptValue(QScriptEngine *eng, const KToplevelRef &client);
-void fromScriptValue(const QScriptValue &value, KToplevelRef& client);
-}
-
-/**
- * Merges the second QScriptValue in the first one.
- */
-void valueMerge(QScriptValue&, QScriptValue);
-
 /**
  * Registers all the meta conversion to the provided QScriptEngine
  */
 void registration(QScriptEngine* eng);
 
-/**
- * Functions for the JS function objects, config.exists and config.get.
- * Read scripting/IMPLIST for details on how they work
- */
-QScriptValue configExists(QScriptContext*, QScriptEngine*);
-QScriptValue getConfigValue(QScriptContext*, QScriptEngine*);
-
-/**
- * Provide a config object to the given QScriptEngine depending
- * on the keys provided in the QVariant. The provided QVariant
- * MUST returns (true) on isHash()
- */
-void supplyConfig(QScriptEngine*, const QVariant&);
-
-/**
- * For engines whose scripts have no associated configuration.
- */
-void supplyConfig(QScriptEngine*);
-
 }
 }
-
-/**
- * Code linked from plasma for QTimer.
- */
-QScriptValue constructTimerClass(QScriptEngine *eng);
 
 #endif

@@ -106,7 +106,6 @@ set(kwin_SRCS
     scripting/scripting_logging.cpp
     scripting/scripting_model.cpp
     scripting/scriptingutils.cpp
-    scripting/timer.cpp
     scripting/workspace_wrapper.cpp
     shadow.cpp
     sm.cpp

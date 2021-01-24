@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2010 Rohan Prabhu <rohan@rohanprabhu.com>
     SPDX-FileCopyrightText: 2011 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -13,10 +14,9 @@
 
 #include <kwinglobals.h>
 
-#include <QFile>
 #include <QHash>
 #include <QStringList>
-#include <QtScript/QScriptEngineAgent>
+#include <QJSEngine>
 #include <QJSValue>
 
 #include <QDBusContext>
@@ -26,12 +26,8 @@ class QQmlComponent;
 class QQmlContext;
 class QQmlEngine;
 class QAction;
-class QDBusPendingCallWatcher;
-class QGraphicsScene;
 class QMenu;
 class QMutex;
-class QScriptEngine;
-class QScriptValue;
 class QQuickWindow;
 class KConfigGroup;
 
@@ -41,9 +37,7 @@ typedef QList< QPair<bool, QPair<QString, QString > > > LoadScriptList;
 namespace KWin
 {
 class AbstractClient;
-class ScriptUnloaderAgent;
 class QtScriptWorkspaceWrapper;
-class X11Client;
 
 class KWIN_EXPORT AbstractScript : public QObject
 {
@@ -51,15 +45,76 @@ class KWIN_EXPORT AbstractScript : public QObject
 public:
     AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     ~AbstractScript() override;
+    int scriptId() const {
+        return m_scriptId;
+    }
     QString fileName() const {
         return m_fileName;
     }
     const QString &pluginName() {
         return m_pluginName;
     }
+    bool running() const {
+        return m_running;
+    }
 
-    void printMessage(const QString &message);
-    void registerShortcut(QAction *a, QScriptValue callback);
+    KConfigGroup config() const;
+
+public Q_SLOTS:
+    void stop();
+    virtual void run() = 0;
+
+Q_SIGNALS:
+    void runningChanged(bool);
+
+protected:
+    void setRunning(bool running) {
+        if (m_running == running) {
+            return;
+        }
+        m_running = running;
+        emit runningChanged(m_running);
+    }
+
+private:
+    int m_scriptId;
+    QString m_fileName;
+    QString m_pluginName;
+    bool m_running;
+};
+
+class Script : public AbstractScript, QDBusContext
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
+
+public:
+    Script(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
+    virtual ~Script();
+
+    Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
+
+    Q_INVOKABLE void callDBus(const QString &service, const QString &path,
+                              const QString &interface, const QString &method,
+                              const QJSValue &arg1 = QJSValue(),
+                              const QJSValue &arg2 = QJSValue(),
+                              const QJSValue &arg3 = QJSValue(),
+                              const QJSValue &arg4 = QJSValue(),
+                              const QJSValue &arg5 = QJSValue(),
+                              const QJSValue &arg6 = QJSValue(),
+                              const QJSValue &arg7 = QJSValue(),
+                              const QJSValue &arg8 = QJSValue(),
+                              const QJSValue &arg9 = QJSValue());
+
+    Q_INVOKABLE bool registerShortcut(const QString &objectName, const QString &text,
+                                      const QString &keySequence, const QJSValue &callback);
+
+    Q_INVOKABLE bool registerScreenEdge(int edge, const QJSValue &callback);
+    Q_INVOKABLE bool unregisterScreenEdge(int edge);
+
+    Q_INVOKABLE bool registerTouchScreenEdge(int edge, const QJSValue &callback);
+    Q_INVOKABLE bool unregisterTouchScreenEdge(int edge);
+
     /**
      * @brief Registers the given @p callback to be invoked whenever the UserActionsMenu is about
      * to be showed. In the callback the script can create a further sub menu or menu entry to be
@@ -69,7 +124,8 @@ public:
      * @return void
      * @see actionsForUserActionMenu
      */
-    void registerUseractionsMenuCallback(QScriptValue callback);
+    Q_INVOKABLE void registerUserActionsMenu(const QJSValue &callback);
+
     /**
      * @brief Creates actions for the UserActionsMenu by invoking the registered callbacks.
      *
@@ -112,54 +168,29 @@ public:
      * @return QList< QAction* > List of QActions obtained from asking the registered callbacks
      * @see registerUseractionsMenuCallback
      */
-    QList<QAction*> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
-
-    KConfigGroup config() const;
-    const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
-        return m_shortcutCallbacks;
-    }
-    QHash<int, QList<QScriptValue > > &screenEdgeCallbacks() {
-        return m_screenEdgeCallbacks;
-    }
-
-    int registerCallback(QScriptValue value);
+    QList<QAction *> actionsForUserActionMenu(AbstractClient *client, QMenu *parent);
 
 public Q_SLOTS:
-    Q_SCRIPTABLE void stop();
-    Q_SCRIPTABLE virtual void run() = 0;
-    void slotPendingDBusCall(QDBusPendingCallWatcher *watcher);
+    void run() override;
 
 private Q_SLOTS:
-    void globalShortcutTriggered();
-    bool borderActivated(ElectricBorder edge);
     /**
-     * @brief Slot invoked when a menu action is destroyed. Used to remove the action and callback
-     * from the map of actions.
-     *
-     * @param object The destroyed action
+     * Callback for when loadScriptFromFile has finished.
      */
-    void actionDestroyed(QObject *object);
+    void slotScriptLoadedFromFile();
 
-Q_SIGNALS:
-    Q_SCRIPTABLE void print(const QString &text);
-    void runningChanged(bool);
-
-protected:
-    bool running() const {
-        return m_running;
-    }
-    void setRunning(bool running) {
-        if (m_running == running) {
-            return;
-        }
-        m_running = running;
-        emit runningChanged(m_running);
-    }
-    int scriptId() const {
-        return m_scriptId;
-    }
+    /**
+     * Called when any reserve screen edge is triggered.
+     */
+    bool slotBorderActivated(ElectricBorder border);
 
 private:
+    /**
+     * Read the script from file into a byte array.
+     * If file cannot be read an empty byte array is returned.
+     */
+    QByteArray loadScriptFromFile(const QString &fileName);
+
     /**
      * @brief Parses the @p value to either a QMenu or QAction.
      *
@@ -167,7 +198,8 @@ private:
      * @param parent The parent to use for the created menu or action
      * @return QAction* The parsed action or menu action, if parsing fails returns @c null.
      */
-    QAction *scriptValueToAction(QScriptValue &value, QMenu *parent);
+    QAction *scriptValueToAction(const QJSValue &value, QMenu *parent);
+
     /**
      * @brief Creates a new QAction from the provided data and registers it for invoking the
      * @p callback when the action is triggered.
@@ -182,7 +214,8 @@ private:
      * @param parent The parent to be used for the new created action
      * @return QAction* The created action
      */
-    QAction *createAction(const QString &title, bool checkable, bool checked, QScriptValue &callback, QMenu *parent);
+    QAction *createAction(const QString &title, const QJSValue &item, QMenu *parent);
+
     /**
      * @brief Parses the @p items and creates a QMenu from it.
      *
@@ -191,75 +224,14 @@ private:
      * @param parent The parent to use for the new created menu
      * @return QAction* The menu action for the new Menu
      */
-    QAction *createMenu(const QString &title, QScriptValue &items, QMenu *parent);
-    int m_scriptId;
-    QString m_fileName;
-    QString m_pluginName;
-    bool m_running;
-    QHash<QAction*, QScriptValue> m_shortcutCallbacks;
-    QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
-    QHash<int, QScriptValue> m_callbacks;
-    /**
-     * @brief List of registered functions to call when the UserActionsMenu is about to show
-     * to add further entries.
-     */
-    QList<QScriptValue> m_userActionsMenuCallbacks;
-};
+    QAction *createMenu(const QString &title, const QJSValue &items, QMenu *parent);
 
-class Script : public AbstractScript, QDBusContext
-{
-    Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
-public:
-
-    Script(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
-    ~Script() override;
-    QScriptEngine *engine() {
-        return m_engine;
-    }
-
-    bool registerTouchScreenCallback(int edge, QScriptValue callback);
-    bool unregisterTouchScreenCallback(int edge);
-
-public Q_SLOTS:
-    Q_SCRIPTABLE void run() override;
-
-Q_SIGNALS:
-    Q_SCRIPTABLE void printError(const QString &text);
-
-private Q_SLOTS:
-    /**
-     * A nice clean way to handle exceptions in scripting.
-     * TODO: Log to file, show from notifier..
-     */
-    void sigException(const QScriptValue &exception);
-    /**
-     * Callback for when loadScriptFromFile has finished.
-     */
-    void slotScriptLoadedFromFile();
-
-private:
-    void installScriptFunctions(QScriptEngine *engine);
-    /**
-     * Read the script from file into a byte array.
-     * If file cannot be read an empty byte array is returned.
-     */
-    QByteArray loadScriptFromFile(const QString &fileName);
-    QScriptEngine *m_engine;
+    QJSEngine *m_engine;
     QDBusMessage m_invocationContext;
     bool m_starting;
-    QScopedPointer<ScriptUnloaderAgent> m_agent;
-    QHash<int, QAction*> m_touchScreenEdgeCallbacks;
-};
-
-class ScriptUnloaderAgent : public QScriptEngineAgent
-{
-public:
-    explicit ScriptUnloaderAgent(Script *script);
-    void scriptUnload(qint64 id) override;
-
-private:
-    Script *m_script;
+    QHash<int, QJSValueList> m_screenEdgeCallbacks;
+    QHash<int, QAction *> m_touchScreenEdgeCallbacks;
+    QJSValueList m_userActionsMenuCallbacks;
 };
 
 class DeclarativeScript : public AbstractScript

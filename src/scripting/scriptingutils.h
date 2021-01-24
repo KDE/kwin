@@ -160,31 +160,6 @@ QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
 }
 
 template<class T>
-QScriptValue unregisterScreenEdge(QScriptContext *context, QScriptEngine *engine)
-{
-    T script = qobject_cast<T>(context->callee().data().toQObject());
-    if (!script) {
-        return engine->undefinedValue();
-    }
-    if (!validateParameters(context, 1, 1)) {
-        return engine->undefinedValue();
-    }
-    if (!validateArgumentType<int>(context)) {
-        return engine->undefinedValue();
-    }
-
-    const int edge = context->argument(0).toVariant().toInt();
-    QHash<int, QList<QScriptValue> >::iterator it = script->screenEdgeCallbacks().find(edge);
-    if (it == script->screenEdgeCallbacks().end()) {
-        //not previously registered
-        return engine->newVariant(false);
-    }
-    ScreenEdges::self()->unreserve(static_cast<KWin::ElectricBorder>(edge), script);
-    script->screenEdgeCallbacks().erase(it);
-    return engine->newVariant(true);
-}
-
-template<class T>
 QScriptValue registerTouchScreenEdge(QScriptContext *context, QScriptEngine *engine)
 {
     auto script = qobject_cast<T>(context->callee().data().toQObject());
@@ -225,25 +200,6 @@ QScriptValue unregisterTouchScreenEdge(QScriptContext *context, QScriptEngine *e
 }
 
 template<class T>
-QScriptValue registerUserActionsMenu(QScriptContext *context, QScriptEngine *engine)
-{
-    T script = qobject_cast<T>(context->callee().data().toQObject());
-    if (!script) {
-        return engine->undefinedValue();
-    }
-    if (!validateParameters(context, 1, 1)) {
-        return engine->undefinedValue();
-    }
-    if (!context->argument(0).isFunction()) {
-        context->throwError(QScriptContext::SyntaxError, i18nc("KWin Scripting error thrown due to incorrect argument",
-                                                               "Argument for registerUserActionsMenu needs to be a callback"));
-        return engine->undefinedValue();
-    }
-    script->registerUseractionsMenuCallback(context->argument(0));
-    return engine->newVariant(true);
-}
-
-template<class T>
 void screenEdgeActivated(T *script, int edge)
 {
     QHash<int, QList<QScriptValue> >::iterator it = script->screenEdgeCallbacks().find(edge);
@@ -253,62 +209,6 @@ void screenEdgeActivated(T *script, int edge)
             callback.call();
         }
     }
-}
-
-template<class T>
-QScriptValue scriptingAssert(QScriptContext *context, QScriptEngine *engine, int min, int max, T defaultVal = T())
-{
-    if (!validateParameters(context, min, max)) {
-        return engine->undefinedValue();
-    }
-    switch (context->argumentCount()) {
-    case 1:
-        if (!validateArgumentType<T>(context)) {
-            return engine->undefinedValue();
-        }
-        break;
-    case 2:
-        if (max == 2) {
-            if (!validateArgumentType<T, QString>(context)) {
-                return engine->undefinedValue();
-            }
-        } else {
-            if (!validateArgumentType<T, T>(context)) {
-                return engine->undefinedValue();
-            }
-        }
-        break;
-    case 3:
-        if (!validateArgumentType<T, T, QString>(context)) {
-            return engine->undefinedValue();
-        }
-        break;
-    }
-    if (max == 2) {
-        if (context->argument(0).toVariant().value<T>() != defaultVal) {
-            if (context->argumentCount() == max) {
-                context->throwError(QScriptContext::UnknownError, context->argument(max - 1).toString());
-            } else {
-                context->throwError(QScriptContext::UnknownError,
-                                    i18nc("Assertion failed in KWin script with given value",
-                                          "Assertion failed: %1", context->argument(0).toString()));
-            }
-            return engine->undefinedValue();
-        }
-    } else {
-        if (context->argument(0).toVariant().value<T>() != context->argument(1).toVariant().value<T>()) {
-            if (context->argumentCount() == max) {
-                context->throwError(QScriptContext::UnknownError, context->argument(max - 1).toString());
-            } else {
-                context->throwError(QScriptContext::UnknownError,
-                                    i18nc("Assertion failed in KWin script with expected value and actual value",
-                                          "Assertion failed: Expected %1, got %2",
-                                          context->argument(0).toString(), context->argument(1).toString()));
-            }
-            return engine->undefinedValue();
-        }
-    }
-    return engine->newVariant(true);
 }
 
 inline void registerGlobalShortcutFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
@@ -325,13 +225,6 @@ inline void registerScreenEdgeFunction(QObject *parent, QScriptEngine *engine, Q
     engine->globalObject().setProperty(QStringLiteral("registerScreenEdge"), shortcutFunc);
 }
 
-inline void unregisterScreenEdgeFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
-{
-    QScriptValue shortcutFunc = engine->newFunction(function);
-    shortcutFunc.setData(engine->newQObject(parent));
-    engine->globalObject().setProperty(QStringLiteral("unregisterScreenEdge"), shortcutFunc);
-}
-
 inline void registerTouchScreenEdgeFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
 {
     QScriptValue touchScreenFunc = engine->newFunction(function);
@@ -346,12 +239,7 @@ inline void unregisterTouchScreenEdgeFunction(QObject *parent, QScriptEngine *en
     engine->globalObject().setProperty(QStringLiteral("unregisterTouchScreenEdge"), touchScreenFunc);
 }
 
-inline void registerUserActionsMenuFunction(QObject *parent, QScriptEngine *engine, QScriptEngine::FunctionSignature function)
-{
-    QScriptValue shortcutFunc = engine->newFunction(function);
-    shortcutFunc.setData(engine->newQObject(parent));
-    engine->globalObject().setProperty(QStringLiteral("registerUserActionsMenu"), shortcutFunc);
-}
+QVariant dbusToVariant(const QVariant &variant);
 
 } // namespace KWin
 

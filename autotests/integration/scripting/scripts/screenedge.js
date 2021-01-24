@@ -1,1 +1,1 @@
-registerScreenEdge(readConfig("Edge", 1), function() { workspace.slotToggleShowDesktop(); });
+registerScreenEdge(readConfig("Edge", 1), () => workspace.slotToggleShowDesktop());
