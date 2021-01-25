@@ -7,4 +7,4 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "tabbox_logging.h"
-Q_LOGGING_CATEGORY(KWIN_TABBOX, "kwin_tabbox", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_TABBOX, "kwin_tabbox", QtWarningMsg)
