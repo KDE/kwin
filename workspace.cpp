@@ -712,7 +712,6 @@ void Workspace::removeDeleted(Deleted* c)
 void Workspace::addShellClient(AbstractClient *client)
 {
     setupClientConnections(client);
-    client->updateDecoration(false);
     updateClientLayer(client);
 
     if (client->isPlaceable()) {
