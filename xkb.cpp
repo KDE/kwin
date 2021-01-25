@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <bitset>
 
-Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtWarningMsg)
 
 namespace KWin
 {

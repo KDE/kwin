@@ -17,7 +17,7 @@
 #include <QLoggingCategory>
 #include <QDebug>
 
-Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 
 namespace KWin
 {

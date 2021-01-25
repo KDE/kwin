@@ -7,6 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "logging_p.h"
-Q_LOGGING_CATEGORY(LIBKWINEFFECTS, "libkwineffects", QtCriticalMsg)
-Q_LOGGING_CATEGORY(LIBKWINGLUTILS, "libkwinglutils", QtCriticalMsg)
-Q_LOGGING_CATEGORY(LIBKWINXRENDERUTILS, "libkwinxrenderutils", QtCriticalMsg)
+Q_LOGGING_CATEGORY(LIBKWINEFFECTS, "libkwineffects", QtWarningMsg)
+Q_LOGGING_CATEGORY(LIBKWINGLUTILS, "libkwinglutils", QtWarningMsg)
+Q_LOGGING_CATEGORY(LIBKWINXRENDERUTILS, "libkwinxrenderutils", QtWarningMsg)

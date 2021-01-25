@@ -16,7 +16,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-Q_LOGGING_CATEGORY(AURORAE, "aurorae", QtCriticalMsg)
+Q_LOGGING_CATEGORY(AURORAE, "aurorae", QtWarningMsg)
 
 namespace Aurorae {
 

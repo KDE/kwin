@@ -7,4 +7,4 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "logging.h"
-Q_LOGGING_CATEGORY(KWIN_X11STANDALONE, "kwin_platform_x11_standalone", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_X11STANDALONE, "kwin_platform_x11_standalone", QtWarningMsg)

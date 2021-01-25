@@ -32,8 +32,8 @@
 
 #endif
 
-Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtCriticalMsg)
-Q_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD, "kwin_virtualkeyboard", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
+Q_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD, "kwin_virtualkeyboard", QtWarningMsg)
 namespace KWin
 {
 

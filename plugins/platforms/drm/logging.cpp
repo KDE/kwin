@@ -7,4 +7,4 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "logging.h"
-Q_LOGGING_CATEGORY(KWIN_DRM, "kwin_wayland_drm", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_DRM, "kwin_wayland_drm", QtWarningMsg)

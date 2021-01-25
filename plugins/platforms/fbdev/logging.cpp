@@ -7,4 +7,4 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "logging.h"
-Q_LOGGING_CATEGORY(KWIN_FB, "kwin_wayland_framebuffer", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWIN_FB, "kwin_wayland_framebuffer", QtWarningMsg)

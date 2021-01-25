@@ -7,4 +7,4 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include <kwineffects.h>
-Q_LOGGING_CATEGORY(KWINEFFECTS, "kwineffects", QtCriticalMsg)
+Q_LOGGING_CATEGORY(KWINEFFECTS, "kwineffects", QtWarningMsg)
