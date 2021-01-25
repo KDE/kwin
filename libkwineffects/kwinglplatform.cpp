@@ -853,7 +853,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
 
         // RadeonSI
-        else if (m_vendor == "X.Org" &&
+        else if ((m_vendor == "X.Org" || m_vendor == "AMD") &&
                 (m_renderer.contains("TAHITI")    ||
                  m_renderer.contains("PITCAIRN")  ||
                  m_renderer.contains("VERDE")     ||
