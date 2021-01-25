@@ -1045,6 +1045,10 @@ void X11Client::createDecoration(const QRect& oldgeom)
     if (decoration) {
         QMetaObject::invokeMethod(decoration, "update", Qt::QueuedConnection);
         connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration, &KDecoration2::Decoration::bordersChanged,
+                this, &X11Client::updateDecorationInputShape);
+        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
+                this, &X11Client::updateDecorationInputShape);
         connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &X11Client::updateInputWindow);
         connect(decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
@@ -1063,11 +1067,14 @@ void X11Client::createDecoration(const QRect& oldgeom)
         );
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::widthChanged, this, &X11Client::updateInputWindow);
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::heightChanged, this, &X11Client::updateInputWindow);
+        connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
+                this, &X11Client::updateDecorationInputShape);
     }
     setDecoration(decoration);
 
     move(calculateGravitation(false));
     plainResize(adjustedSize(), ForceGeometrySet);
+    updateDecorationInputShape();
     if (Compositor::compositing()) {
         discardWindowPixmap();
     }
