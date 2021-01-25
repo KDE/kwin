@@ -119,7 +119,6 @@ ApplicationWayland::ApplicationWayland(int &argc, char **argv)
     connect(&m_inputMethodCrashTimer, &QTimer::timeout, this, [this] {
         m_inputMethodCrashes = 0;
     });
-    connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &ApplicationWayland::stopInputMethod);
 }
 
 ApplicationWayland::~ApplicationWayland()
@@ -230,8 +229,13 @@ void ApplicationWayland::stopInputMethod()
     if (!m_inputMethodProcess) {
         return;
     }
-    m_inputMethodProcess->kill();
-    m_inputMethodProcess->waitForFinished();
+    disconnect(m_inputMethodProcess, nullptr, this, nullptr);
+
+    m_inputMethodProcess->terminate();
+    if (!m_inputMethodProcess->waitForFinished()) {
+        m_inputMethodProcess->kill();
+        m_inputMethodProcess->waitForFinished();
+    }
     if (waylandServer()) {
         waylandServer()->destroyInputMethodConnection();
     }
@@ -242,9 +246,11 @@ void ApplicationWayland::stopInputMethod()
 void ApplicationWayland::startInputMethod(const QString &executable)
 {
     stopInputMethod();
-    if (executable.isEmpty()) {
+    if (executable.isEmpty() || isTerminating()) {
         return;
     }
+
+    connect(waylandServer(), &WaylandServer::terminatingInternalClientConnection, this, &ApplicationWayland::stopInputMethod, Qt::UniqueConnection);
 
     QStringList arguments = KShell::splitArgs(executable);
     if (arguments.isEmpty()) {
