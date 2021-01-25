@@ -75,7 +75,7 @@ ecm_qt_declare_logging_category(SERVER_LIB_SRCS
     EXPORT KWAYLAND
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${Wayland_DATADIR}/wayland.xml
     BASENAME wayland
 )
@@ -90,17 +90,17 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME org_kde_kwin_outputdevice
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-shell.xml
     BASENAME plasma-shell
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-virtual-desktop.xml
     BASENAME org-kde-plasma-virtual-desktop
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/plasma-window-management.xml
     BASENAME plasma-window-management
 )
@@ -110,116 +110,116 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME qt-surface-extension
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/idle.xml
     BASENAME idle
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
     BASENAME fake-input
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/shadow.xml
     BASENAME shadow
 )
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/dpms.xml
     BASENAME dpms
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/blur.xml
     BASENAME blur
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/contrast.xml
     BASENAME contrast
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/relative-pointer/relative-pointer-unstable-v1.xml
     BASENAME relative-pointer-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/slide.xml
     BASENAME slide
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration.xml
     BASENAME server-decoration
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
     BASENAME text-input-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/text-input-unstable-v2.xml
     BASENAME text-input-unstable-v2
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
     BASENAME text-input-unstable-v3
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
     BASENAME pointer-gestures-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-constraints/pointer-constraints-unstable-v1.xml
     BASENAME pointer-constraints-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-foreign/xdg-foreign-unstable-v2.xml
     BASENAME xdg-foreign-unstable-v2
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/idle-inhibit/idle-inhibit-unstable-v1.xml
     BASENAME idle-inhibit-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/appmenu.xml
     BASENAME appmenu
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml
     BASENAME server-decoration-palette
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-output/xdg-output-unstable-v1.xml
     BASENAME xdg-output-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
     BASENAME xdg-shell
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
     BASENAME xdg-decoration-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/wayland-eglstream-controller.xml
     BASENAME wl-eglstream-controller
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/keystate.xml
     BASENAME keystate
 )
@@ -229,42 +229,42 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME linux-dmabuf-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/tablet/tablet-unstable-v2.xml
     BASENAME tablet-unstable-v2
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/protocols/wlr-data-control-unstable-v1.xml
     BASENAME wlr-data-control-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/protocols/wlr-layer-shell-unstable-v1.xml
     BASENAME wlr-layer-shell-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/keyboard-shortcuts-inhibit/keyboard-shortcuts-inhibit-unstable-v1.xml
     BASENAME keyboard-shortcuts-inhibit-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
     BASENAME viewporter
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/primary-selection/primary-selection-unstable-v1.xml
     BASENAME wp-primary-selection-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
     BASENAME zkde-screencast-unstable-v1
 )
 
-ecm_add_qtwayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
     BASENAME input-method-unstable-v1
 )
