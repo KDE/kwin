@@ -1020,7 +1020,7 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
     if (options->isNextFocusPrefersMouse()) {
         auto it = stackingOrder().constEnd();
         while (it != stackingOrder().constBegin()) {
-            X11Client *client = qobject_cast<X11Client *>(*(--it));
+            AbstractClient *client = qobject_cast<AbstractClient *>(*(--it));
             if (!client) {
                 continue;
             }
