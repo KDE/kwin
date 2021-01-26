@@ -1521,8 +1521,8 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
     } else {
         auto effectWindow = window()->effectWindow();
-        const QRect geo = window()->clientGeometry();
-        QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, geo.size()));
+        const QRect geo = window()->bufferGeometry();
+        QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, geo.size() * window()->bufferScale()));
 
         QScopedPointer<GLRenderTarget> framebuffer(new KWin::GLRenderTarget(*texture));
         GLRenderTarget::pushRenderTarget(framebuffer.data());
