@@ -659,15 +659,10 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
         kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
     }
 
-    const std::chrono::milliseconds presentTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
-
     const QRegion repaints = m_scene->repaints(screenId);
     m_scene->resetRepaints(screenId);
 
-    renderLoop->beginFrame();
-    m_scene->paint(screenId, repaints, windows, presentTime);
-    renderLoop->endFrame();
+    m_scene->paint(screenId, repaints, windows, renderLoop);
 
     if (m_framesToTestForSafety > 0) {
         if (m_scene->compositingType() & OpenGLCompositing) {

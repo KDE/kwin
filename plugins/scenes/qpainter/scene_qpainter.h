@@ -26,7 +26,7 @@ public:
     ~SceneQPainter() override;
     OverlayWindow* overlayWindow() const override;
     void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
-               std::chrono::milliseconds presentTime) override;
+               RenderLoop *renderLoop) override;
     void paintGenericScreen(int mask, const ScreenPaintData &data) override;
     CompositingType compositingType() const override;
     bool initFailed() const override;

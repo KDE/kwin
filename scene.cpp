@@ -146,14 +146,16 @@ void Scene::reallocRepaints()
 
 // returns mask and possibly modified region
 void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint,
-                        QRegion *updateRegion, QRegion *validRegion,
-                        std::chrono::milliseconds presentTime,
+                        QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
                         const QMatrix4x4 &projection, const QRect &outputGeometry,
                         qreal screenScale)
 {
     const QSize &screenSize = screens()->size();
     const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
     *mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
+
+    const std::chrono::milliseconds presentTime =
+            std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
     if (Q_UNLIKELY(presentTime < m_expectedPresentTimestamp)) {
         qCDebug(KWIN_CORE, "Provided presentation timestamp is invalid: %ld (current: %ld)",

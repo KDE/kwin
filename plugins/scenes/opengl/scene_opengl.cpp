@@ -33,6 +33,7 @@
 #include "lanczosfilter.h"
 #include "main.h"
 #include "overlaywindow.h"
+#include "renderloop.h"
 #include "screens.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
@@ -602,7 +603,7 @@ void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
 }
 
 void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
-                        std::chrono::milliseconds presentTime)
+                        RenderLoop *renderLoop)
 {
     if (m_resetOccurred) {
         return; // A graphics reset has occurred, do nothing.
@@ -639,9 +640,10 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
     } else {
         int mask = 0;
         updateProjectionMatrix();
+        renderLoop->beginFrame();
 
         paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid,
-                    presentTime, projectionMatrix(), geo, scaling);   // call generic implementation
+                    renderLoop, projectionMatrix(), geo, scaling);   // call generic implementation
         paintCursor(valid);
 
         if (!GLPlatform::instance()->isGLES() && screenId == -1) {
@@ -658,6 +660,8 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                 valid = displayRegion;
             }
         }
+
+        renderLoop->endFrame();
 
         GLVertexBuffer::streamingBuffer()->endOfFrame();
         m_backend->endFrame(screenId, valid, update);
