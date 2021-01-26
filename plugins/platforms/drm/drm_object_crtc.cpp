@@ -33,9 +33,9 @@ DrmCrtc::~DrmCrtc()
 {
 }
 
-bool DrmCrtc::atomicInit()
+bool DrmCrtc::init()
 {
-    qCDebug(KWIN_DRM) << "Atomic init for CRTC:" << resIndex() << "id:" << m_id;
+    qCDebug(KWIN_DRM) << "Init for CRTC:" << resIndex() << "id:" << m_id;
 
     if (!initProps()) {
         return false;

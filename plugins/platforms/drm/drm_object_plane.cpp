@@ -25,7 +25,7 @@ DrmPlane::~DrmPlane()
     delete m_next;
 }
 
-bool DrmPlane::atomicInit()
+bool DrmPlane::init()
 {
     qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
     DrmScopedPointer<drmModePlane> p(drmModeGetPlane(fd(), m_id));

@@ -36,7 +36,7 @@ public:
      * Must be called to query necessary data directly after creation.
      * @return true when initializing was successful
      */
-    virtual bool atomicInit() = 0;
+    virtual bool init() = 0;
 
     uint32_t id() const {
         return m_id;

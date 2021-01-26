@@ -21,7 +21,7 @@ public:
 
     ~DrmConnector() override;
 
-    bool atomicInit() override;
+    bool init() override;
 
     enum class PropertyIndex {
         CrtcId = 0,
