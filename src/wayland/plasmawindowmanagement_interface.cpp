@@ -5,6 +5,7 @@
 */
 #include "plasmawindowmanagement_interface.h"
 #include "display.h"
+#include "logging.h"
 #include "surface_interface.h"
 #include "plasmavirtualdesktop_interface.h"
 
@@ -212,7 +213,7 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
         }
     );
     if (it == windows.constEnd()) {
-        qWarning() << "Could not find window with uuid" << internal_window_uuid;
+        qCWarning(KWAYLAND_SERVER) << "Could not find window with uuid" << internal_window_uuid;
         // create a temp window just for the resource and directly send an unmapped
         PlasmaWindowInterface *window = new PlasmaWindowInterface(q, q);
         window->d->unmapped = true;
