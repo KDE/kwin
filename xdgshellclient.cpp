@@ -414,6 +414,15 @@ XdgToplevelClient::XdgToplevelClient(XdgToplevelInterface *shellSurface)
 
     connect(waylandServer(), &WaylandServer::foreignTransientChanged,
             this, &XdgToplevelClient::handleForeignTransientForChanged);
+
+
+    connect(this, &AbstractClient::unresponsiveChanged, this, [this] (bool isUnresponsive) {
+        if (isUnresponsive) {
+            connect(this, &Toplevel::damaged, this, &XdgToplevelClient::sendPingConcerned);
+        } else {
+            disconnect(this, &Toplevel::damaged, this, &XdgToplevelClient::sendPingConcerned);
+        }
+    });
 }
 
 XdgToplevelClient::~XdgToplevelClient()
@@ -1151,6 +1160,11 @@ void XdgToplevelClient::handlePongReceived(quint32 serial)
         setUnresponsive(false);
         m_pings.erase(it);
     }
+}
+
+void XdgToplevelClient::sendPingConcerned()
+{
+    sendPing(PingReason::JustConcerned);
 }
 
 void XdgToplevelClient::sendPing(PingReason reason)

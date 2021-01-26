@@ -109,7 +109,7 @@ class XdgToplevelClient final : public XdgSurfaceClient
 {
     Q_OBJECT
 
-    enum class PingReason { CloseWindow, FocusWindow };
+    enum class PingReason { CloseWindow, FocusWindow, JustConcerned };
 
 public:
     explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
@@ -198,6 +198,7 @@ private:
     void sendPing(PingReason reason);
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
+    void sendPingConcerned();
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
