@@ -214,11 +214,6 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
     eglSwapBuffers(eglDisplay(), surface());
 }
 
-bool EglGbmBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
 /************************************************
  * EglTexture
  ************************************************/

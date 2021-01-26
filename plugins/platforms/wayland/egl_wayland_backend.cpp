@@ -388,11 +388,6 @@ void EglWaylandBackend::endFrame(int screenId, const QRegion &renderedRegion, co
     }
 }
 
-bool EglWaylandBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
 /************************************************
  * EglTexture
  ************************************************/

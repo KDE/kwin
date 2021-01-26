@@ -806,11 +806,6 @@ OverlayWindow* GlxBackend::overlayWindow() const
     return m_overlayWindow;
 }
 
-bool GlxBackend::usesOverlayWindow() const
-{
-    return true;
-}
-
 /********************************************************
  * GlxTexture
  *******************************************************/

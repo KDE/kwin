@@ -24,7 +24,6 @@ class AbstractEglDrmBackend : public AbstractEglBackend
 public:
     ~AbstractEglDrmBackend();
 
-    bool usesOverlayWindow() const override;
     void screenGeometryChanged(const QSize &size) override;
 
     virtual int screenCount() const = 0;

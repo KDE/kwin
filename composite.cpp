@@ -825,7 +825,7 @@ void X11Compositor::start()
 }
 void X11Compositor::handleFrameRequested(RenderLoop *renderLoop)
 {
-    if (scene()->usesOverlayWindow() && !isOverlayWindowVisible()) {
+    if (scene()->overlayWindow() && !isOverlayWindowVisible()) {
         // Return since nothing is visible.
         return;
     }

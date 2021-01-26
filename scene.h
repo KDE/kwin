@@ -151,11 +151,6 @@ public:
 
     virtual QMatrix4x4 screenProjectionMatrix() const;
 
-    /**
-     * Whether the Scene uses an X11 overlay window to perform compositing.
-     */
-    virtual bool usesOverlayWindow() const = 0;
-
     virtual void triggerFence();
 
     virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;

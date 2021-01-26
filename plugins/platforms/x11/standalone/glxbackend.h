@@ -69,7 +69,6 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
     OverlayWindow* overlayWindow() const override;
-    bool usesOverlayWindow() const override;
     void init() override;
 
 private:

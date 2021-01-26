@@ -26,7 +26,6 @@ EglOnXBackend::EglOnXBackend(Display *display)
     : AbstractEglBackend()
     , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
     , surfaceHasSubPost(0)
-    , m_usesOverlayWindow(true)
     , m_connection(connection())
     , m_x11Display(display)
     , m_rootWindow(rootWindow())
@@ -40,7 +39,6 @@ EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb
     : AbstractEglBackend()
     , m_overlayWindow(nullptr)
     , surfaceHasSubPost(0)
-    , m_usesOverlayWindow(false)
     , m_connection(connection)
     , m_x11Display(display)
     , m_rootWindow(rootWindow)
@@ -162,7 +160,7 @@ bool EglOnXBackend::initRenderingContext()
 
     initBufferConfigs();
 
-    if (m_usesOverlayWindow) {
+    if (overlayWindow()) {
         if (!overlayWindow()->create()) {
             qCCritical(KWIN_CORE) << "Could not get overlay window";
             return false;
@@ -273,11 +271,6 @@ bool EglOnXBackend::initBufferConfigs()
         }
     }
     return true;
-}
-
-bool EglOnXBackend::usesOverlayWindow() const
-{
-    return m_usesOverlayWindow;
 }
 
 OverlayWindow* EglOnXBackend::overlayWindow() const

@@ -26,7 +26,6 @@ public:
 
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     void init() override;
-    bool usesOverlayWindow() const override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void screenGeometryChanged(const QSize &size) override;

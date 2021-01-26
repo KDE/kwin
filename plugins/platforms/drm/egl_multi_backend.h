@@ -32,8 +32,6 @@ public:
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 
-    bool usesOverlayWindow() const override;
-
     void screenGeometryChanged(const QSize &size) override;
 
     void addBackend(AbstractEglDrmBackend *backend);

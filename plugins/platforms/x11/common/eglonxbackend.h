@@ -28,7 +28,6 @@ public:
     explicit EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow);
     ~EglOnXBackend() override;
     OverlayWindow* overlayWindow() const override;
-    bool usesOverlayWindow() const override;
     void init() override;
 
 protected:
@@ -53,7 +52,6 @@ private:
      */
     OverlayWindow *m_overlayWindow;
     int surfaceHasSubPost;
-    bool m_usesOverlayWindow;
     xcb_connection_t *m_connection;
     Display *m_x11Display;
     xcb_window_t m_rootWindow;

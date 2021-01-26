@@ -42,7 +42,6 @@ public:
      * @return :OverlayWindow*
      */
     virtual OverlayWindow *overlayWindow();
-    virtual bool usesOverlayWindow() const = 0;
     /**
      * @brief Shows the Overlay Window
      *

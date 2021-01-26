@@ -39,7 +39,6 @@ public:
     void screenGeometryChanged(const QSize &size) override;
     xcb_render_picture_t xrenderBufferPicture() const override;
     OverlayWindow *overlayWindow() const override;
-    bool usesOverlayWindow() const override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
 
     bool animationsSupported() const override {

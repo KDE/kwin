@@ -99,11 +99,6 @@ QSharedPointer<GLTexture> EglMultiBackend::textureForOutput(AbstractOutput *requ
     return {};
 }
 
-bool EglMultiBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
 void EglMultiBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)

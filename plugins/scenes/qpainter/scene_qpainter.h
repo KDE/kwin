@@ -24,7 +24,6 @@ class KWIN_EXPORT SceneQPainter : public Scene
 
 public:
     ~SceneQPainter() override;
-    bool usesOverlayWindow() const override;
     OverlayWindow* overlayWindow() const override;
     void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
                std::chrono::milliseconds presentTime) override;
@@ -167,12 +166,6 @@ public:
 
     Scene *create(QObject *parent = nullptr) const override;
 };
-
-inline
-bool SceneQPainter::usesOverlayWindow() const
-{
-    return false;
-}
 
 inline
 OverlayWindow* SceneQPainter::overlayWindow() const

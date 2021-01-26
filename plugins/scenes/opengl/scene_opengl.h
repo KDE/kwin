@@ -41,7 +41,6 @@ public:
     Shadow *createShadow(Toplevel *toplevel) override;
     void screenGeometryChanged(const QSize &size) override;
     OverlayWindow *overlayWindow() const override;
-    bool usesOverlayWindow() const override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
     bool supportsSurfacelessContext() const override;
@@ -304,11 +303,6 @@ private:
     void resizeTexture();
     QScopedPointer<GLTexture> m_texture;
 };
-
-inline bool SceneOpenGL::usesOverlayWindow() const
-{
-    return m_backend->usesOverlayWindow();
-}
 
 inline SceneOpenGLTexture* OpenGLWindowPixmap::texture() const
 {

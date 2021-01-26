@@ -623,11 +623,6 @@ OverlayWindow *SceneXrender::overlayWindow() const
     return m_backend->overlayWindow();
 }
 
-bool SceneXrender::usesOverlayWindow() const
-{
-    return m_backend->usesOverlayWindow();
-}
-
 //****************************************
 // XRenderWindowPixmap
 //****************************************

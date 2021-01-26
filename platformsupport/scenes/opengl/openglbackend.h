@@ -58,7 +58,6 @@ public:
     virtual void aboutToStartPainting(int screenId, const QRegion &damage);
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
-    virtual bool usesOverlayWindow() const = 0;
     virtual QRegion beginFrame(int screenId) = 0;
     virtual void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) = 0;
 

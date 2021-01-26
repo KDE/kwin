@@ -33,8 +33,3 @@ void AbstractEglDrmBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)
 }
-
-bool AbstractEglDrmBackend::usesOverlayWindow() const
-{
-    return false;
-}

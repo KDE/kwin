@@ -59,11 +59,6 @@ bool EglX11Backend::createSurfaces()
     return true;
 }
 
-bool EglX11Backend::usesOverlayWindow() const
-{
-    return false;
-}
-
 QRegion EglX11Backend::beginFrame(int screenId)
 {
     makeContextCurrent(m_surfaces.at(screenId));
