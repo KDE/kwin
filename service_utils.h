@@ -29,7 +29,7 @@ const static QString s_dbusRestrictedInterfaceName = QStringLiteral("X-KDE-DBUS-
 static QStringList fetchProcessServiceField(const QString &executablePath, const QString &fieldName)
 {
     // needed to be able to use the logging category in a header static function
-    static QLoggingCategory KWIN_UTILS ("KWIN_UTILS");
+    static QLoggingCategory KWIN_UTILS ("KWIN_UTILS", QtWarningMsg);
     const auto servicesFound = KApplicationTrader::query([&executablePath] (const KService::Ptr &service) {
 
         if (service->exec().isEmpty() || service->exec() != executablePath)
