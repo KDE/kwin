@@ -114,11 +114,6 @@ void SubSurfaceInterfacePrivate::subsurface_destroy(Resource *resource)
 
 void SubSurfaceInterfacePrivate::subsurface_set_position(Resource *resource, int32_t x, int32_t y)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    if (!surface) {
-        return;
-    }
-#endif
     Q_UNUSED(resource)
     if (pendingPosition == QPoint(x, y)) {
         return;
@@ -129,11 +124,6 @@ void SubSurfaceInterfacePrivate::subsurface_set_position(Resource *resource, int
 
 void SubSurfaceInterfacePrivate::subsurface_place_above(Resource *resource, struct ::wl_resource *sibling_resource)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    if (!surface) {
-        return;
-    }
-#endif
     SurfaceInterface *sibling = SurfaceInterface::get(sibling_resource);
     if (!sibling) {
         wl_resource_post_error(resource->handle, error_bad_surface, "no sibling");
@@ -152,11 +142,6 @@ void SubSurfaceInterfacePrivate::subsurface_place_above(Resource *resource, stru
 
 void SubSurfaceInterfacePrivate::subsurface_place_below(Resource *resource, struct ::wl_resource *sibling_resource)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    if (!surface) {
-        return;
-    }
-#endif
     SurfaceInterface *sibling = SurfaceInterface::get(sibling_resource);
     if (!sibling) {
         wl_resource_post_error(resource->handle, error_bad_surface, "no sibling");
@@ -175,11 +160,6 @@ void SubSurfaceInterfacePrivate::subsurface_place_below(Resource *resource, stru
 
 void SubSurfaceInterfacePrivate::subsurface_set_sync(Resource *)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    if (!surface) {
-        return;
-    }
-#endif
     if (mode == SubSurfaceInterface::Mode::Synchronized) {
         return;
     }
@@ -189,11 +169,6 @@ void SubSurfaceInterfacePrivate::subsurface_set_sync(Resource *)
 
 void SubSurfaceInterfacePrivate::subsurface_set_desync(Resource *)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    if (!surface) {
-        return;
-    }
-#endif
     if (mode == SubSurfaceInterface::Mode::Desynchronized) {
         return;
     }
@@ -287,16 +262,7 @@ SubSurfaceInterface::SubSurfaceInterface(SurfaceInterface *surface, SurfaceInter
     surfacePrivate->cached.shadowIsSet = false;
     surfacePrivate->cached.slideIsSet = false;
 
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 2)
-    connect(surface, &SurfaceInterface::destroyed, this, [this]() {
-        if (d->parent) {
-            SurfaceInterfacePrivate *parentPrivate = SurfaceInterfacePrivate::get(d->parent);
-            parentPrivate->removeChild(this);
-        }
-    });
-#else
     connect(surface, &SurfaceInterface::destroyed, this, [this]() { delete this; });
-#endif
 }
 
 SubSurfaceInterface::~SubSurfaceInterface()
