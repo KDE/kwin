@@ -110,8 +110,8 @@ void XdgShellInterfacePrivate::xdg_wm_base_pong(Resource *resource, uint32_t ser
     Q_UNUSED(resource)
     if (QTimer *timer = pings.take(serial)) {
         delete timer;
-        emit q->pongReceived(serial);
     }
+    emit q->pongReceived(serial);
 }
 
 XdgShellInterface::XdgShellInterface(Display *display, QObject *parent)
