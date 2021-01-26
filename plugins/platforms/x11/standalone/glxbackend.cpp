@@ -200,13 +200,14 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
+    const bool swapEventSwitch = qEnvironmentVariableIntValue("KWIN_USE_INTEL_SWAP_EVENT");
+
     // Check whether certain features are supported
     m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
     m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
     m_haveSGISwapControl    = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
-    m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
-                                && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") != QByteArrayLiteral("0");
+    m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event")) && swapEventSwitch;
 
     bool haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
@@ -223,6 +224,16 @@ void GlxBackend::init()
     // be called. Therefore, there is no point for creating the swap event filter.
     if (!supportsBufferAge()) {
         m_haveINTELSwapEvent = false;
+    }
+
+    // Don't use swap events on Intel. The issue with Intel GPUs is that they are not as
+    // powerful as discrete GPUs. Therefore, it's better to push frames as often as vblank
+    // notifications are received. This, however, may increase latency. If the swap events
+    // are enabled explicitly by setting the environment variable, honor that choice.
+    if (glPlatform->isIntel()) {
+        if (!swapEventSwitch) {
+            m_haveINTELSwapEvent = false;
+        }
     }
 
     if (haveSwapInterval) {
