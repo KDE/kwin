@@ -27,7 +27,7 @@ public:
 
     ~DrmCrtc() override;
 
-    bool atomicInit() override;
+    bool init() override;
 
     enum class PropertyIndex {
         ModeId = 0,

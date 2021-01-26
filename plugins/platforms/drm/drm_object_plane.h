@@ -62,7 +62,7 @@ public:
     Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
-    bool atomicInit() override;
+    bool init() override;
     bool initProps() override;
     TypeIndex type();
 

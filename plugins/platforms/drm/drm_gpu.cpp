@@ -101,7 +101,7 @@ void DrmGpu::tryAMS()
             for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
                 DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
                 DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
-                if (p->atomicInit()) {
+                if (p->init()) {
                     planes << p;
                     if (p->type() == DrmPlane::TypeIndex::Overlay) {
                         overlayPlanes << p;
@@ -146,15 +146,13 @@ bool DrmGpu::updateOutputs()
         auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
         if (it == m_connectors.constEnd()) {
             auto c = new DrmConnector(currentConnector, m_fd);
-            if (m_atomicModeSetting) {
-                if (!c->atomicInit()) {
-                    delete c;
-                    continue;
-                }
-                if (c->isNonDesktop()) {
-                    delete c;
-                    continue;
-                }
+            if (!c->init()) {
+                delete c;
+                continue;
+            }
+            if (c->isNonDesktop()) {
+                delete c;
+                continue;
             }
             m_connectors << c;
         } else {
@@ -167,7 +165,7 @@ bool DrmGpu::updateOutputs()
         auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc] (DrmCrtc *c) { return c->id() == currentCrtc; });
         if (it == m_crtcs.constEnd()) {
             auto c = new DrmCrtc(currentCrtc, m_backend, this, i);
-            if (m_atomicModeSetting && !c->atomicInit()) {
+            if (!c->init()) {
                 delete c;
                 continue;
             }

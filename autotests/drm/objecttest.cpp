@@ -18,7 +18,7 @@ public:
     {
     }
     ~MockDrmObject() override {}
-    bool atomicInit() override;
+    bool init() override;
     bool initProps() override;
 
     void setProperties(uint32_t count, uint32_t *props, uint64_t *values) {
@@ -49,7 +49,7 @@ private:
     uint64_t *m_values = nullptr;
 };
 
-bool MockDrmObject::atomicInit()
+bool MockDrmObject::init()
 {
     return initProps();
 }
@@ -186,7 +186,7 @@ void ObjectTest::testInitProperties()
         }
     });
 
-    object.atomicInit();
+    object.init();
 
     // verify the names
     QCOMPARE(object.name(0), QByteArrayLiteral("foo"));
