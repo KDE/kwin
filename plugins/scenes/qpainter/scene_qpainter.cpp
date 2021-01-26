@@ -14,6 +14,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "main.h"
+#include "renderloop.h"
 #include "screens.h"
 #include "toplevel.h"
 #include "platform.h"
@@ -81,7 +82,7 @@ void SceneQPainter::paintGenericScreen(int mask, const ScreenPaintData &data)
 }
 
 void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Toplevel *> &toplevels,
-                          std::chrono::milliseconds presentTime)
+                          RenderLoop *renderLoop)
 {
     Q_ASSERT(kwinApp()->platform()->isPerScreenRenderingEnabled());
     painted_screen = screenId;
@@ -100,15 +101,17 @@ void SceneQPainter::paint(int screenId, const QRegion &_damage, const QList<Topl
     const QRect geometry = screens()->geometry(screenId);
     QImage *buffer = m_backend->bufferForScreen(screenId);
     if (buffer && !buffer->isNull()) {
+        renderLoop->beginFrame();
         m_painter->begin(buffer);
         m_painter->setWindow(geometry);
 
         QRegion updateRegion, validRegion;
         paintScreen(&mask, damage.intersected(geometry), QRegion(), &updateRegion, &validRegion,
-                    presentTime);
+                    renderLoop);
         paintCursor(updateRegion);
 
         m_painter->end();
+        renderLoop->endFrame();
         m_backend->endFrame(screenId, mask, updateRegion);
     }
 

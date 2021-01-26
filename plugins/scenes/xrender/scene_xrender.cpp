@@ -23,6 +23,7 @@
 #include "main.h"
 #include "overlaywindow.h"
 #include "platform.h"
+#include "renderloop.h"
 #include "screens.h"
 #include "xcbutils.h"
 #include "decorations/decoratedclient.h"
@@ -76,7 +77,7 @@ bool SceneXrender::initFailed() const
 
 // the entry point for painting
 void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
-                         std::chrono::milliseconds presentTime)
+                         RenderLoop *renderLoop)
 {
     painted_screen = screenId;
 
@@ -84,7 +85,9 @@ void SceneXrender::paint(int screenId, const QRegion &damage, const QList<Toplev
 
     int mask = 0;
     QRegion updateRegion, validRegion;
-    paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion, presentTime);
+    renderLoop->beginFrame();
+    paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion, renderLoop);
+    renderLoop->endFrame();
 
     m_backend->showOverlay();
 

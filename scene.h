@@ -39,6 +39,7 @@ class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
 class OverlayWindow;
+class RenderLoop;
 class Shadow;
 class WindowPixmap;
 class GLTexture;
@@ -75,7 +76,7 @@ public:
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
     virtual void paint(int screenId, const QRegion &damage, const QList<Toplevel *> &windows,
-                       std::chrono::milliseconds presentTime) = 0;
+                       RenderLoop *renderLoop) = 0;
 
     /**
      * Adds the Toplevel to the Scene.
@@ -213,8 +214,7 @@ protected:
     void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
-                     QRegion *updateRegion, QRegion *validRegion,
-                     std::chrono::milliseconds presentTime,
+                     QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
                      const QMatrix4x4 &projection = QMatrix4x4(),
                      const QRect &outputGeometry = QRect(), qreal screenScale = 1.0);
     // Render cursor texture in case hardware cursor is disabled/non-applicable
