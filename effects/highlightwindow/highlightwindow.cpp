@@ -13,8 +13,8 @@ namespace KWin
 {
 
 HighlightWindowEffect::HighlightWindowEffect()
-    : m_finishing(false)
-    , m_fadeDuration(float(animationTime(150)))
+    : m_easingCurve(QEasingCurve::Linear)
+    , m_fadeDuration(animationTime(150))
     , m_monitorWindow(nullptr)
 {
     m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
@@ -33,100 +33,35 @@ HighlightWindowEffect::HighlightWindowEffect()
     );
 }
 
-HighlightWindowEffect::~HighlightWindowEffect()
-{
-}
-
 static bool isInitiallyHidden(EffectWindow* w)
 {
     // Is the window initially hidden until it is highlighted?
     return w->isMinimized() || !w->isOnCurrentDesktop();
 }
 
-void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
+static bool isHighlightWindow(EffectWindow *window)
 {
-    // Calculate window opacities
-    QHash<EffectWindow*, HightlightWindowData>::iterator it = m_animations.find(w);
-    if (!m_highlightedWindows.isEmpty()) {
-        // Initial fade out and changing highlight animation
-        if (it == m_animations.end())
-            it = m_animations.insert(w, HightlightWindowData());
-
-        int time = 1;
-        if (it->lastPresentTime.count()) {
-            time = std::max(1, int((presentTime - it->lastPresentTime).count()));
-        }
-        it->lastPresentTime = presentTime;
-
-        float oldOpacity = it->opacity;
-        if (m_highlightedWindows.contains(w))
-            it->opacity = qMin(1.0f, oldOpacity + time / m_fadeDuration);
-        else if (w->isNormalWindow() || w->isDialog())   // Only fade out windows
-            it->opacity = qMax(isInitiallyHidden(w) ? 0.0f : 0.15f, oldOpacity - time / m_fadeDuration);
-
-        if (it->opacity < 0.98f)
-            data.setTranslucent();
-        if (oldOpacity != it->opacity)
-            effects->addRepaint(w->expandedGeometry());
-    } else if (m_finishing && m_animations.contains(w)) {
-        // Final fading back in animation
-        if (it == m_animations.end())
-            it = m_animations.insert(w, HightlightWindowData());
-
-        int time = 1;
-        if (it->lastPresentTime.count()) {
-            time = std::max(1, int((presentTime - it->lastPresentTime).count()));
-        }
-        it->lastPresentTime = presentTime;
-
-        float oldOpacity = it->opacity;
-        if (isInitiallyHidden(w))
-            it->opacity = qMax(0.0f, oldOpacity - time / m_fadeDuration);
-        else
-            it->opacity = qMin(1.0f, oldOpacity + time / m_fadeDuration);
-
-        if (it->opacity < 0.98f)
-            data.setTranslucent();
-        if (oldOpacity != it->opacity)
-            effects->addRepaint(w->expandedGeometry());
-
-        if (it->opacity > 0.98f || it->opacity < 0.02f) {
-            m_animations.remove(w);   // We default to 1.0
-            it = m_animations.end();
-        }
-    }
-
-    // Show tabbed windows and windows on other desktops if highlighted
-    if (it != m_animations.end() && it->opacity > 0.01) {
-        if (w->isMinimized())
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
-        if (!w->isOnCurrentDesktop())
-            w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DESKTOP);
-    }
-
-    effects->prePaintWindow(w, data, presentTime);
-}
-
-void HighlightWindowEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
-{
-    auto it = m_animations.constFind(w);
-    if (it != m_animations.constEnd()) {
-        data.multiplyOpacity(it->opacity);
-    }
-    effects->paintWindow(w, mask, region, data);
+    return window->isNormalWindow() || window->isDialog();
 }
 
 void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!m_highlightedWindows.isEmpty()) {
-        // The effect is activated thus we need to add it to the opacity hash
-        foreach (const WId id, m_highlightedIds) {
+        // On X11, the tabbox may ask us to highlight itself before the windowAdded signal
+        // is emitted because override-redirect windows are shown after synthetic 50ms delay.
+        if (m_highlightedWindows.contains(w)) {
+            return;
+        }
+        // This window was demanded to be highlighted before it appeared on the screen.
+        for (const WId &id : qAsConst(m_highlightedIds)) {
             if (w == effects->findWindow(id)) {
-                m_animations[w].opacity = 1.0; // this window was demanded to be highlighted before it appeared
+                startHighlightAnimation(w, 0);
                 return;
             }
         }
-        m_animations[w].opacity = 0.15; // this window is not currently highlighted
+        if (isHighlightWindow(w)) {
+            startGhostAnimation(w, 0); // this window is not currently highlighted
+        }
     }
     slotPropertyNotify(w, m_atom, w);   // Check initial value
 }
@@ -188,87 +123,42 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWi
         return;
     }
     prepareHighlighting();
-    if (w)
-        m_animations[w].opacity = 1.0; // Because it's not in stackingOrder() yet
-
-    /* TODO: Finish thumbnails of offscreen windows, not sure if it's worth it though
-    if ( !m_highlightedWindow->isOnCurrentDesktop() )
-        { // Window is offscreen, determine thumbnail position
-        QRect screenArea = effects->clientArea( MaximizeArea ); // Workable area of the active screen
-        QRect outerArea = outerArea.adjusted( outerArea.width() / 10, outerArea.height() / 10,
-            -outerArea.width() / 10, -outerArea.height() / 10 ); // Add 10% margin around the edge
-        QRect innerArea = outerArea.adjusted( outerArea.width() / 40, outerArea.height() / 40,
-            -outerArea.width() / 40, -outerArea.height() / 40 ); // Outer edge of the thumbnail border (2.5%)
-        QRect thumbArea = outerArea.adjusted( 20, 20, -20, -20 ); // Outer edge of the thumbnail (20px)
-
-        // Determine the maximum size that we can make the thumbnail within the innerArea
-        double areaAspect = double( thumbArea.width() ) / double( thumbArea.height() );
-        double windowAspect = aspectRatio( m_highlightedWindow );
-        QRect thumbRect; // Position doesn't matter right now, but it will later
-        if ( windowAspect > areaAspect )
-            // Top/bottom will touch first
-            thumbRect = QRect( 0, 0, widthForHeight( thumbArea.height() ), thumbArea.height() );
-        else // Left/right will touch first
-            thumbRect = QRect( 0, 0, thumbArea.width(), heightForWidth( thumbArea.width() ));
-        if ( thumbRect.width() >= m_highlightedWindow->width() )
-            // Area is larger than the window, just use the window's size
-            thumbRect = m_highlightedWindow->geometry();
-
-        // Determine position of desktop relative to the current one
-        QPoint direction = effects->desktopGridCoords( m_highlightedWindow->desktop() ) -
-            effects->desktopGridCoords( effects->currentDesktop() );
-
-        // Draw a line from the center of the current desktop to the center of the target desktop.
-        QPointF desktopLine( 0, 0, direction.x() * screenArea.width(), direction.y() * screenArea.height() );
-        desktopLeft.translate( screenArea.width() / 2, screenArea.height() / 2 ); // Move to the screen center
-
-        // Take the point where the line crosses the outerArea, this will be the tip of our arrow
-        QPointF arrowTip;
-        QLineF testLine( // Top
-            outerArea.x(), outerArea.y(),
-            outerArea.x() + outerArea.width(), outerArea.y() );
-        if ( desktopLine.intersect( testLine, &arrowTip ) != QLineF::BoundedIntersection )
-            {
-            testLine = QLineF( // Right
-                outerArea.x() + outerArea.width(), outerArea.y(),
-                outerArea.x() + outerArea.width(), outerArea.y() + outerArea.height() );
-            if ( desktopLine.intersect( testLine, &arrowTip ) != QLineF::BoundedIntersection )
-                {
-                testLine = QLineF( // Bottom
-                    outerArea.x() + outerArea.width(), outerArea.y() + outerArea.height(),
-                    outerArea.x(), outerArea.y() + outerArea.height() );
-                if ( desktopLine.intersect( testLine, &arrowTip ) != QLineF::BoundedIntersection )
-                    {
-                    testLine = QLineF( // Left
-                        outerArea.x(), outerArea.y() + outerArea.height(),
-                        outerArea.x(), outerArea.y() );
-                    desktopLine.intersect( testLine, &arrowTip ); // Should never fail
-                    }
-                }
-            }
-        m_arrowTip = arrowTip.toPoint();
-        } */
 }
 
 void HighlightWindowEffect::prepareHighlighting()
 {
-    // Create window data for every window. Just calling [w] creates it.
-    m_finishing = false;
-    foreach (EffectWindow * w, effects->stackingOrder()) {
-        if (!m_animations.contains(w))    // Just in case we are still finishing from last time
-            m_animations[w].opacity = isInitiallyHidden(w) ? 0.0 : 1.0;
-        if (!m_highlightedWindows.isEmpty())
-            m_highlightedWindows.at(0)->addRepaintFull();
+    const EffectWindowList windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        if (!isHighlightWindow(window)) {
+            continue;
+        }
+        if (isHighlighted(window)) {
+            startHighlightAnimation(window);
+        } else {
+            startGhostAnimation(window);
+        }
     }
 }
 
 void HighlightWindowEffect::finishHighlighting()
 {
-    m_finishing = true;
+    const EffectWindowList windows = effects->stackingOrder();
+    for (EffectWindow *window : windows) {
+        if (isHighlightWindow(window)) {
+            startRevertAnimation(window);
+        }
+    }
+
+    // Sanity check, ideally, this should never happen.
+    if (!m_animations.isEmpty()) {
+        for (quint64 &animationId : m_animations) {
+            cancel(animationId);
+        }
+        m_animations.clear();
+    }
+
     m_monitorWindow = nullptr;
     m_highlightedWindows.clear();
-    if (!m_animations.isEmpty())
-        m_animations.constBegin().key()->addRepaintFull();
 }
 
 void HighlightWindowEffect::highlightWindows(const QVector<KWin::EffectWindow *> &windows)
@@ -287,9 +177,51 @@ void HighlightWindowEffect::highlightWindows(const QVector<KWin::EffectWindow *>
     prepareHighlighting();
 }
 
-bool HighlightWindowEffect::isActive() const
+void HighlightWindowEffect::startGhostAnimation(EffectWindow *window, int duration)
 {
-    return !(m_animations.isEmpty() || effects->isScreenLocked());
+    if (duration == -1) {
+        duration = m_fadeDuration;
+    }
+    quint64 &animationId = m_animations[window];
+    if (animationId) {
+        retarget(animationId, FPx2(m_ghostOpacity, m_ghostOpacity), m_fadeDuration);
+    } else {
+        const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
+        animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(m_ghostOpacity, m_ghostOpacity),
+                          m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
+    }
+}
+
+void HighlightWindowEffect::startHighlightAnimation(EffectWindow *window, int duration)
+{
+    if (duration == -1) {
+        duration = m_fadeDuration;
+    }
+    quint64 &animationId = m_animations[window];
+    if (animationId) {
+        retarget(animationId, FPx2(1.0, 1.0), m_fadeDuration);
+    } else {
+        const qreal startOpacity = isInitiallyHidden(window) ? 0 : 1;
+        animationId = set(window, Opacity, 0, m_fadeDuration, FPx2(1.0, 1.0),
+                          m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
+    }
+}
+
+void HighlightWindowEffect::startRevertAnimation(EffectWindow *window)
+{
+    const quint64 animationId = m_animations.take(window);
+    if (animationId) {
+        const qreal startOpacity = isHighlighted(window) ? 1 : m_ghostOpacity;
+        const qreal endOpacity = isInitiallyHidden(window) ? 0 : 1;
+        animate(window, Opacity, 0, m_fadeDuration, FPx2(endOpacity, endOpacity),
+                m_easingCurve, 0, FPx2(startOpacity, startOpacity), false, false);
+        cancel(animationId);
+    }
+}
+
+bool HighlightWindowEffect::isHighlighted(EffectWindow *window) const
+{
+    return m_highlightedWindows.contains(window);
 }
 
 bool HighlightWindowEffect::provides(Feature feature)

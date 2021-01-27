@@ -10,28 +10,17 @@
 #ifndef KWIN_HIGHLIGHTWINDOW_H
 #define KWIN_HIGHLIGHTWINDOW_H
 
-#include <kwineffects.h>
+#include <kwinanimationeffect.h>
 
 namespace KWin
 {
 
-struct HightlightWindowData
-{
-    std::chrono::milliseconds lastPresentTime = std::chrono::milliseconds::zero();
-    float opacity = 0;
-};
-
-class HighlightWindowEffect
-    : public Effect
+class HighlightWindowEffect : public AnimationEffect
 {
     Q_OBJECT
+
 public:
     HighlightWindowEffect();
-    ~HighlightWindowEffect() override;
-
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
-    bool isActive() const override;
 
     int requestedEffectChainPosition() const override {
         return 70;
@@ -47,34 +36,24 @@ public Q_SLOTS:
     void slotPropertyNotify(KWin::EffectWindow* w, long atom, EffectWindow *addedWindow = nullptr);
 
 private:
+    void startGhostAnimation(EffectWindow *window, int duration = -1);
+    void startHighlightAnimation(EffectWindow *window, int duration = -1);
+    void startRevertAnimation(EffectWindow *window);
+
+    bool isHighlighted(EffectWindow *window) const;
+
     void prepareHighlighting();
     void finishHighlighting();
-
     void highlightWindows(const QVector<KWin::EffectWindow *> &windows);
 
-    bool m_finishing;
-
-    float m_fadeDuration;
-    QHash<EffectWindow *, HightlightWindowData> m_animations;
-
     long m_atom;
-    QList<EffectWindow*> m_highlightedWindows;
-    EffectWindow* m_monitorWindow;
+    QList<EffectWindow *> m_highlightedWindows;
+    QHash<EffectWindow *, quint64> m_animations;
+    QEasingCurve m_easingCurve;
+    int m_fadeDuration;
+    EffectWindow *m_monitorWindow;
     QList<WId> m_highlightedIds;
-
-    // Offscreen position cache
-    /*QRect m_thumbArea; // Thumbnail area
-    QPoint m_arrowTip; // Position of the arrow's tip
-    QPoint m_arrowA; // Arrow vertex position at the base (First)
-    QPoint m_arrowB; // Arrow vertex position at the base (Second)
-
-    // Helper functions
-    inline double aspectRatio( EffectWindow *w )
-        { return w->width() / double( w->height() ); }
-    inline int widthForHeight( EffectWindow *w, int height )
-        { return int(( height / double( w->height() )) * w->width() ); }
-    inline int heightForWidth( EffectWindow *w, int width )
-        { return int(( width / double( w->width() )) * w->height() ); }*/
+    float m_ghostOpacity = 0.15;
 };
 
 } // namespace
