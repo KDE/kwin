@@ -25,7 +25,7 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
     for (auto output: outputs) {
         initOutput(output);
     }
-    connect(m_gpu, &DrmGpu::outputAdded, this, &DrmQPainterBackend::initOutput);
+    connect(m_gpu, &DrmGpu::outputEnabled, this, &DrmQPainterBackend::initOutput);
     connect(m_gpu, &DrmGpu::outputDisabled, this,
         [this] (DrmOutput *o) {
             auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
