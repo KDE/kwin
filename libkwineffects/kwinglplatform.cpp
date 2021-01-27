@@ -415,18 +415,54 @@ static ChipClass detectIntelClass(const QByteArray &chipset)
         return I965;
 
     // GL 3.1, CL 1.1, DX 10.1
-    if (chipset.contains("Sandybridge")) {
+    if (chipset.contains("Sandybridge") || chipset.contains("SNB GT")) {
         return SandyBridge;
     }
 
     // GL4.0, CL1.1, DX11, SM 5.0
-    if (chipset.contains("Ivybridge")) {
+    if (chipset.contains("Ivybridge") || chipset.contains("IVB GT")) {
         return IvyBridge;
     }
 
     // GL4.0, CL1.2, DX11.1, SM 5.0
-    if (chipset.contains("Haswell")) {
+    if (chipset.contains("Haswell") || chipset.contains("HSW GT")) {
         return Haswell;
+    }
+    if (chipset.contains("BYT")) {
+        return BayTrail;
+    }
+    if (chipset.contains("CHV") || chipset.contains("BSW")) {
+        return Cherryview;
+    }
+    if (chipset.contains("BDW GT")) {
+        return Broadwell;
+    }
+    if (chipset.contains("SKL GT")) {
+        return Skylake;
+    }
+    if (chipset.contains("APL")) {
+        return ApolloLake;
+    }
+    if (chipset.contains("KBL GT")) {
+        return KabyLake;
+    }
+    if (chipset.contains("WHL GT")) {
+        return WhiskeyLake;
+    }
+    if (chipset.contains("CML GT")) {
+        return CometLake;
+    }
+    if (chipset.contains("CNL GT")) {
+        return CannonLake;
+    }
+    if (chipset.contains("CFL GT")) {
+        return CoffeeLake;
+    }
+    if (chipset.contains("ICL GT")) {
+        return IceLake;
+    }
+    if (chipset.contains("TGL GT")) {
+        return TigerLake;
     }
 
     return UnknownIntel;
@@ -592,6 +628,32 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
         return QByteArrayLiteral("IvyBridge");
     case Haswell:
         return QByteArrayLiteral("Haswell");
+    case BayTrail:
+        return QByteArrayLiteral("Bay Trail");
+    case Cherryview:
+        return QByteArrayLiteral("Cherryview");
+    case Broadwell:
+        return QByteArrayLiteral("Broadwell");
+    case ApolloLake:
+        return QByteArrayLiteral("Apollo Lake");
+    case Skylake:
+        return QByteArrayLiteral("Skylake");
+    case GeminiLake:
+        return QByteArrayLiteral("Gemini Lake");
+    case KabyLake:
+        return QByteArrayLiteral("Kaby Lake");
+    case CoffeeLake:
+        return QByteArrayLiteral("Coffee Lake");
+    case WhiskeyLake:
+        return QByteArrayLiteral("Whiskey Lake");
+    case CometLake:
+        return QByteArrayLiteral("Comet Lake");
+    case CannonLake:
+        return QByteArrayLiteral("Cannon Lake");
+    case IceLake:
+        return QByteArrayLiteral("Ice Lake");
+    case TigerLake:
+        return QByteArrayLiteral("Tiger Lake");
 
     case Adreno1XX:
         return QByteArrayLiteral("Adreno 1xx series");
