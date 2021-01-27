@@ -108,6 +108,12 @@ class XdgToplevelClient final : public XdgSurfaceClient
         FocusWindow,
     };
 
+    enum class DecorationMode {
+        None,
+        Client,
+        Server,
+    };
+
 public:
     explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);
     ~XdgToplevelClient() override;
@@ -197,6 +203,11 @@ private:
     void sendPing(PingReason reason);
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
+    DecorationMode decorationMode() const;
+    DecorationMode preferredDecorationMode() const;
+    void configureDecoration();
+    void configureXdgDecoration();
+    void configureServerDecoration();
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
