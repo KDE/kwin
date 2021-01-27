@@ -1197,7 +1197,7 @@ protected:
         s_haveResizeEffect = false;
     }
 
-    void setDecoration(KDecoration2::Decoration *decoration);
+    void setDecoration(QSharedPointer<KDecoration2::Decoration> decoration);
     virtual void createDecoration(const QRect &oldGeometry);
     virtual void destroyDecoration();
     void startDecorationDoubleClickTimer();
@@ -1313,7 +1313,7 @@ private:
     } m_interactiveMoveResize;
 
     struct {
-        QScopedPointer<KDecoration2::Decoration> decoration;
+        QSharedPointer<KDecoration2::Decoration> decoration;
         QPointer<Decoration::DecoratedClientImpl> client;
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;

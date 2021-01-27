@@ -67,6 +67,7 @@ protected:
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();
+    virtual void handleRolePrecommit();
 
     XdgSurfaceConfigure *lastAcknowledgedConfigure() const;
     void scheduleConfigure();
@@ -102,6 +103,7 @@ private:
 class XdgToplevelConfigure final : public XdgSurfaceConfigure
 {
 public:
+    QSharedPointer<KDecoration2::Decoration> decoration;
     KWaylandServer::XdgToplevelInterface::States states;
 };
 
@@ -112,6 +114,12 @@ class XdgToplevelClient final : public XdgSurfaceClient
     enum class PingReason {
         CloseWindow,
         FocusWindow,
+    };
+
+    enum class DecorationMode {
+        None,
+        Client,
+        Server,
     };
 
 public:
@@ -159,6 +167,7 @@ public:
 protected:
     XdgSurfaceConfigure *sendRoleConfigure() const override;
     void handleRoleCommit() override;
+    void handleRolePrecommit() override;
     void doMinimize() override;
     void doInteractiveResizeSync() override;
     void doSetActive() override;
@@ -197,7 +206,11 @@ private:
     void sendPing(PingReason reason);
     MaximizeMode initialMaximizeMode() const;
     bool initialFullScreenMode() const;
-    void updateDecoration(bool check_workspace_pos, bool force = false);
+    DecorationMode preferredDecorationMode() const;
+    void configureDecoration();
+    void configureXdgDecoration(DecorationMode decorationMode);
+    void configureServerDecoration(DecorationMode decorationMode);
+    void clearDecoration();
 
     QPointer<KWaylandServer::AppMenuInterface> m_appMenuInterface;
     QPointer<KWaylandServer::ServerSideDecorationPaletteInterface> m_paletteInterface;
@@ -216,6 +229,7 @@ private:
     bool m_userNoBorder = false;
     bool m_isTransient = false;
     QPointer<AbstractOutput> m_fullScreenRequestedOutput;
+    QSharedPointer<KDecoration2::Decoration> m_nextDecoration;
 };
 
 class XdgPopupClient final : public XdgSurfaceClient

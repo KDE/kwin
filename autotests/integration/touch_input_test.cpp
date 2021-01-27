@@ -19,7 +19,6 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
@@ -70,7 +69,6 @@ void TouchInputTest::init()
 {
     using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
-                                         Test::AdditionalWaylandInterface::Decoration |
                                          Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandTouch());
     m_touch = Test::waylandSeat()->createTouch(Test::waylandSeat());
@@ -100,18 +98,17 @@ AbstractClient *TouchInputTest::showWindow(bool decorated)
 
     KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
     VERIFY(shellSurface);
     if (decorated) {
-        auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
-        QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);
-        VERIFY(decoSpy.isValid());
-        VERIFY(decoSpy.wait());
-        deco->requestMode(ServerSideDecoration::Mode::Server);
-        VERIFY(decoSpy.wait());
-        COMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+        auto decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
+        decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
     }
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    VERIFY(surfaceConfigureRequestedSpy.wait());
     // let's render
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     auto c = Test::renderAndWaitForShown(surface, QSize(100, 50), Qt::blue);
 
     VERIFY(c);

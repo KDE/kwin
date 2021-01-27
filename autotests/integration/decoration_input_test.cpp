@@ -28,7 +28,6 @@
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -97,16 +96,21 @@ AbstractClient *DecorationInputTest::showWindow()
 
     KWayland::Client::Surface *surface = Test::createSurface(Test::waylandCompositor());
     VERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, surface);
+    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface, Test::CreationSetup::CreateOnly, surface);
     VERIFY(shellSurface);
-    auto deco = Test::waylandServerSideDecoration()->create(surface, surface);
-    QSignalSpy decoSpy(deco, &ServerSideDecoration::modeChanged);
-    VERIFY(decoSpy.isValid());
-    VERIFY(decoSpy.wait());
-    deco->requestMode(ServerSideDecoration::Mode::Server);
-    VERIFY(decoSpy.wait());
-    COMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
+    VERIFY(decoration);
+
+    QSignalSpy decorationConfigureRequestedSpy(decoration, &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    VERIFY(surfaceConfigureRequestedSpy.wait());
+    COMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
+
     // let's render
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     auto c = Test::renderAndWaitForShown(surface, QSize(500, 50), Qt::blue);
     VERIFY(c);
     COMPARE(workspace()->activeClient(), c);
@@ -149,7 +153,7 @@ void DecorationInputTest::initTestCase()
 void DecorationInputTest::init()
 {
     using namespace KWayland::Client;
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::Decoration));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));

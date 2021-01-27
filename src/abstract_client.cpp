@@ -2310,7 +2310,7 @@ void AbstractClient::endInteractiveMoveResize()
 
 void AbstractClient::createDecoration(const QRect &oldGeometry)
 {
-    setDecoration(Decoration::DecorationBridge::self()->createDecoration(this));
+    setDecoration(QSharedPointer<KDecoration2::Decoration>(Decoration::DecorationBridge::self()->createDecoration(this)));
     moveResize(oldGeometry);
 
     Q_EMIT geometryShapeChanged(this, oldGeometry);
@@ -2323,19 +2323,19 @@ void AbstractClient::destroyDecoration()
     resize(clientSize);
 }
 
-void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
+void AbstractClient::setDecoration(QSharedPointer<KDecoration2::Decoration> decoration)
 {
     if (m_decoration.decoration.data() == decoration) {
         return;
     }
     if (decoration) {
-        QMetaObject::invokeMethod(decoration, QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
-        connect(decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged,
+        QMetaObject::invokeMethod(decoration.data(), QOverload<>::of(&KDecoration2::Decoration::update), Qt::QueuedConnection);
+        connect(decoration.data(), &KDecoration2::Decoration::shadowChanged, this, &Toplevel::updateShadow);
+        connect(decoration.data(), &KDecoration2::Decoration::bordersChanged,
                 this, &AbstractClient::updateDecorationInputShape);
-        connect(decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged,
+        connect(decoration.data(), &KDecoration2::Decoration::resizeOnlyBordersChanged,
                 this, &AbstractClient::updateDecorationInputShape);
-        connect(decoration, &KDecoration2::Decoration::bordersChanged, this, [this]() {
+        connect(decoration.data(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
             GeometryUpdatesBlocker blocker(this);
             const QRect oldGeometry = frameGeometry();
             resize(implicitSize());
@@ -2347,7 +2347,7 @@ void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
                 this, &AbstractClient::updateDecorationInputShape);
     }
-    m_decoration.decoration.reset(decoration);
+    m_decoration.decoration = decoration;
     updateDecorationInputShape();
     Q_EMIT decorationChanged();
 }

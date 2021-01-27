@@ -159,6 +159,7 @@ void XdgSurfaceClient::handleCommit()
         return;
     }
 
+    handleRolePrecommit();
     if (haveNextWindowGeometry()) {
         handleNextWindowGeometry();
         resetHaveNextWindowGeometry();
@@ -169,6 +170,10 @@ void XdgSurfaceClient::handleCommit()
 
     setReadyForPainting();
     updateDepth();
+}
+
+void XdgSurfaceClient::handleRolePrecommit()
+{
 }
 
 void XdgSurfaceClient::handleRoleCommit()
@@ -738,6 +743,7 @@ bool XdgToplevelClient::userCanSetNoBorder() const
         case XdgToplevelDecorationV1Interface::Mode::Server:
         case XdgToplevelDecorationV1Interface::Mode::Undefined:
             return Decoration::DecorationBridge::hasPlugin() && !isFullScreen() && !isShade();
+        case XdgToplevelDecorationV1Interface::Mode::None:
         case XdgToplevelDecorationV1Interface::Mode::Client:
             return false;
         }
@@ -747,25 +753,7 @@ bool XdgToplevelClient::userCanSetNoBorder() const
 
 bool XdgToplevelClient::noBorder() const
 {
-    if (m_serverDecoration) {
-        switch (m_serverDecoration->preferredMode()) {
-        case ServerSideDecorationManagerInterface::Mode::Server:
-            return m_userNoBorder || isRequestedFullScreen();
-        case ServerSideDecorationManagerInterface::Mode::Client:
-        case ServerSideDecorationManagerInterface::Mode::None:
-            return true;
-        }
-    }
-    if (m_xdgDecoration) {
-        switch (m_xdgDecoration->preferredMode()) {
-        case XdgToplevelDecorationV1Interface::Mode::Server:
-        case XdgToplevelDecorationV1Interface::Mode::Undefined:
-            return !Decoration::DecorationBridge::hasPlugin() || m_userNoBorder || isRequestedFullScreen();
-        case XdgToplevelDecorationV1Interface::Mode::Client:
-            return true;
-        }
-    }
-    return true;
+    return m_userNoBorder || preferredDecorationMode() != DecorationMode::Server;
 }
 
 void XdgToplevelClient::setNoBorder(bool set)
@@ -778,45 +766,14 @@ void XdgToplevelClient::setNoBorder(bool set)
         return;
     }
     m_userNoBorder = set;
-    updateDecoration(true, false);
+    configureDecoration();
     updateWindowRules(Rules::NoBorder);
-}
-
-void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
-{
-    if (!force && ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder()))) {
-        return;
-    }
-    const QRect oldFrameGeometry = frameGeometry();
-    const QRect oldClientGeometry = clientGeometry();
-    if (force) {
-        destroyDecoration();
-    }
-    if (!noBorder()) {
-        createDecoration(oldFrameGeometry);
-    } else {
-        destroyDecoration();
-    }
-    if (m_serverDecoration && isDecorated()) {
-        m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Server);
-    }
-    if (m_xdgDecoration) {
-        if (isDecorated() || m_userNoBorder) {
-            m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
-        } else {
-            m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Client);
-        }
-        scheduleConfigure();
-    }
-    updateShadow();
-    if (check_workspace_pos) {
-        checkWorkspacePosition(oldFrameGeometry, oldClientGeometry);
-    }
 }
 
 void XdgToplevelClient::invalidateDecoration()
 {
-    updateDecoration(true, true);
+    clearDecoration();
+    configureDecoration();
 }
 
 bool XdgToplevelClient::supportsWindowRules() const
@@ -902,15 +859,32 @@ void XdgToplevelClient::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelClient::sendRoleConfigure() const
 {
-    const QSize requestedClientSize = frameSizeToClientSize(moveResizeGeometry().size());
-    const quint32 serial = m_shellSurface->sendConfigure(requestedClientSize, m_requestedStates);
+    QSize nextClientSize = moveResizeGeometry().size();
+    if (!nextClientSize.isEmpty()) {
+        if (m_nextDecoration) {
+            nextClientSize.rwidth() -= m_nextDecoration->borderLeft() + m_nextDecoration->borderRight();
+            nextClientSize.rheight() -= m_nextDecoration->borderTop() + m_nextDecoration->borderBottom();
+        }
+    }
+
+    const quint32 serial = m_shellSurface->sendConfigure(nextClientSize, m_requestedStates);
 
     XdgToplevelConfigure *configureEvent = new XdgToplevelConfigure();
     configureEvent->position = moveResizeGeometry().topLeft();
     configureEvent->states = m_requestedStates;
+    configureEvent->decoration = m_nextDecoration;
     configureEvent->serial = serial;
 
     return configureEvent;
+}
+
+void XdgToplevelClient::handleRolePrecommit()
+{
+    auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
+    if (configureEvent && decoration() != configureEvent->decoration) {
+        setDecoration(configureEvent->decoration);
+        updateShadow();
+    }
 }
 
 void XdgToplevelClient::handleRoleCommit()
@@ -919,7 +893,6 @@ void XdgToplevelClient::handleRoleCommit()
     if (configureEvent) {
         handleStatesAcknowledged(configureEvent->states);
     }
-    updateDecoration(true, false);
 }
 
 void XdgToplevelClient::doMinimize()
@@ -1365,11 +1338,6 @@ bool XdgToplevelClient::initialFullScreenMode() const
 void XdgToplevelClient::initialize()
 {
     bool needsPlacement = isPlaceable();
-
-    // Decoration update is forced so an xdg_toplevel_decoration.configure event
-    // is sent if the client has called the set_mode() request with csd mode.
-    updateDecoration(false, true);
-
     setupWindowRules(false);
 
     // Move or resize the window only if enforced by a window rule.
@@ -1420,6 +1388,7 @@ void XdgToplevelClient::initialize()
         Placement::self()->place(this, area);
     }
 
+    configureDecoration();
     scheduleConfigure();
     updateColorScheme();
     setupWindowManagementInterface();
@@ -1470,36 +1439,126 @@ void XdgToplevelClient::installAppMenu(AppMenuInterface *appMenu)
     updateMenu(appMenu->address());
 }
 
-void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *decoration)
+XdgToplevelClient::DecorationMode XdgToplevelClient::preferredDecorationMode() const
 {
-    m_serverDecoration = decoration;
-
-    connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed, this, [this] {
-        if (!isZombie() && readyForPainting()) {
-            updateDecoration(/* check_workspace_pos */ true);
-        }
-    });
-    connect(m_serverDecoration, &ServerSideDecorationInterface::preferredModeChanged, this,
-        [this] () {
-            const bool changed = m_serverDecoration->preferredMode() != m_serverDecoration->mode();
-            if (changed && readyForPainting()) {
-                updateDecoration(/* check_workspace_pos */ true);
-            }
-        }
-    );
-    if (readyForPainting()) {
-        updateDecoration(/* check_workspace_pos */ true);
+    if (!Decoration::DecorationBridge::hasPlugin()) {
+        return DecorationMode::Client;
+    } else if (m_userNoBorder || isRequestedFullScreen()) {
+        return DecorationMode::None;
     }
+
+    if (m_xdgDecoration) {
+        switch (m_xdgDecoration->preferredMode()) {
+        case XdgToplevelDecorationV1Interface::Mode::Undefined:
+            return DecorationMode::Server;
+        case XdgToplevelDecorationV1Interface::Mode::None:
+            return DecorationMode::None;
+        case XdgToplevelDecorationV1Interface::Mode::Client:
+            return DecorationMode::Client;
+        case XdgToplevelDecorationV1Interface::Mode::Server:
+            return DecorationMode::Server;
+        }
+    }
+
+    if (m_serverDecoration) {
+        switch (m_serverDecoration->preferredMode()) {
+        case ServerSideDecorationManagerInterface::Mode::None:
+            return DecorationMode::None;
+        case ServerSideDecorationManagerInterface::Mode::Client:
+            return DecorationMode::Client;
+        case ServerSideDecorationManagerInterface::Mode::Server:
+            return DecorationMode::Server;
+        }
+    }
+
+    return DecorationMode::Client;
+}
+
+void XdgToplevelClient::clearDecoration()
+{
+    m_nextDecoration = nullptr;
+}
+
+void XdgToplevelClient::configureDecoration()
+{
+    const DecorationMode decorationMode = preferredDecorationMode();
+    switch (decorationMode) {
+    case DecorationMode::None:
+    case DecorationMode::Client:
+        clearDecoration();
+        break;
+    case DecorationMode::Server:
+        if (!m_nextDecoration) {
+            m_nextDecoration.reset(Decoration::DecorationBridge::self()->createDecoration(this));
+        }
+        break;
+    }
+
+    // All decoration updates are synchronized to toplevel configure events.
+    if (m_xdgDecoration) {
+        configureXdgDecoration(decorationMode);
+    } else if (m_serverDecoration) {
+        configureServerDecoration(decorationMode);
+    }
+}
+
+void XdgToplevelClient::configureXdgDecoration(DecorationMode decorationMode)
+{
+    switch (decorationMode) {
+    case DecorationMode::None: // Faked as server side mode under the hood.
+        m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::None);
+        break;
+    case DecorationMode::Client:
+        m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Client);
+        break;
+    case DecorationMode::Server:
+        m_xdgDecoration->sendConfigure(XdgToplevelDecorationV1Interface::Mode::Server);
+        break;
+    }
+    scheduleConfigure();
+}
+
+void XdgToplevelClient::configureServerDecoration(DecorationMode decorationMode)
+{
+    switch (decorationMode) {
+    case DecorationMode::None:
+        m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::None);
+        break;
+    case DecorationMode::Client:
+        m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Client);
+        break;
+    case DecorationMode::Server:
+        m_serverDecoration->setMode(ServerSideDecorationManagerInterface::Mode::Server);
+        break;
+    }
+    scheduleConfigure();
 }
 
 void XdgToplevelClient::installXdgDecoration(XdgToplevelDecorationV1Interface *decoration)
 {
     m_xdgDecoration = decoration;
 
+    connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::destroyed,
+            this, &XdgToplevelClient::clearDecoration);
     connect(m_xdgDecoration, &XdgToplevelDecorationV1Interface::preferredModeChanged, this, [this] {
         if (m_isInitialized) {
-            // force is true as we must send a new configure response.
-            updateDecoration(/* check_workspace_pos */ false, /* force */ true);
+            configureDecoration();
+        }
+    });
+}
+
+void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *decoration)
+{
+    m_serverDecoration = decoration;
+    if (m_isInitialized) {
+        configureDecoration();
+    }
+
+    connect(m_serverDecoration, &ServerSideDecorationInterface::destroyed,
+            this, &XdgToplevelClient::clearDecoration);
+    connect(m_serverDecoration, &ServerSideDecorationInterface::preferredModeChanged, this, [this]() {
+        if (m_isInitialized) {
+            configureDecoration();
         }
     });
 }
@@ -1542,7 +1601,7 @@ void XdgToplevelClient::setFullScreen(bool set, bool user)
         dontInteractiveMoveResize();
     }
 
-    updateDecoration(false, false);
+    configureDecoration();
 
     if (set) {
         const AbstractOutput *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : kwinApp()->platform()->outputAt(moveResizeGeometry().center());

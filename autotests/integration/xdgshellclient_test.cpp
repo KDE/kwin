@@ -83,7 +83,6 @@ private Q_SLOTS:
     void testUnresponsiveWindow_data();
     void testUnresponsiveWindow();
     void testAppMenu();
-    void testNoDecorationModeRequested();
     void testSendClientWithTransientToDesktop();
     void testMinimizeWindowWithTransients();
     void testXdgDecoration_data();
@@ -187,8 +186,7 @@ void TestXdgShellClient::initTestCase()
 
 void TestXdgShellClient::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration |
-                                         Test::AdditionalWaylandInterface::Seat |
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat |
                                          Test::AdditionalWaylandInterface::XdgDecorationV1 |
                                          Test::AdditionalWaylandInterface::AppMenu));
     QVERIFY(Test::waitForWaylandPointer());
@@ -369,10 +367,10 @@ void TestXdgShellClient::testMinimizeActiveWindow()
 
 void TestXdgShellClient::testFullscreen_data()
 {
-    QTest::addColumn<ServerSideDecoration::Mode>("decoMode");
+    QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("decoMode");
 
-    QTest::newRow("client-side deco") << ServerSideDecoration::Mode::Client;
-    QTest::newRow("server-side deco") << ServerSideDecoration::Mode::Server;
+    QTest::newRow("client-side deco") << Test::XdgToplevelDecorationV1::mode_client_side;
+    QTest::newRow("server-side deco") << Test::XdgToplevelDecorationV1::mode_server_side;
 }
 
 void TestXdgShellClient::testFullscreen()
@@ -382,49 +380,43 @@ void TestXdgShellClient::testFullscreen()
     Test::XdgToplevel::States states;
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(shellSurface);
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
-    // create deco
-    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
-    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
-    QVERIFY(decoSpy.isValid());
-    QVERIFY(decoSpy.wait());
-    QFETCH(ServerSideDecoration::Mode, decoMode);
-    deco->requestMode(decoMode);
-    QVERIFY(decoSpy.wait());
-    QCOMPARE(deco->mode(), decoMode);
+    // Initialize the xdg-toplevel surface.
+    QFETCH(Test::XdgToplevelDecorationV1::mode, decoMode);
+    decoration->set_mode(decoMode);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QCOMPARE(client->layer(), NormalLayer);
     QVERIFY(!client->isFullScreen());
     QCOMPARE(client->clientSize(), QSize(100, 50));
-    QCOMPARE(client->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+    QCOMPARE(client->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
     QCOMPARE(client->clientSizeToFrameSize(client->clientSize()), client->size());
 
     QSignalSpy fullScreenChangedSpy(client, &AbstractClient::fullScreenChanged);
     QVERIFY(fullScreenChangedSpy.isValid());
     QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
-    QVERIFY(toplevelConfigureRequestedSpy.isValid());
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     // Wait for the compositor to send a configure event with the Activated state.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
-    QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Activated);
 
     // Ask the compositor to show the window in full screen mode.
     shellSurface->set_fullscreen(nullptr);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Fullscreen);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), client->output()->geometry().size());
@@ -442,8 +434,7 @@ void TestXdgShellClient::testFullscreen()
     // Ask the compositor to show the window in normal mode.
     shellSurface->unset_fullscreen();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!(states & Test::XdgToplevel::State::Fullscreen));
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(100, 50));
@@ -455,7 +446,7 @@ void TestXdgShellClient::testFullscreen()
     QCOMPARE(fullScreenChangedSpy.count(), 2);
     QCOMPARE(client->clientSize(), QSize(100, 50));
     QVERIFY(!client->isFullScreen());
-    QCOMPARE(client->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+    QCOMPARE(client->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
     QCOMPARE(client->layer(), NormalLayer);
 
     // Destroy the client.
@@ -476,10 +467,10 @@ void TestXdgShellClient::testUserCanSetFullscreen()
 
 void TestXdgShellClient::testMaximizedToFullscreen_data()
 {
-    QTest::addColumn<ServerSideDecoration::Mode>("decoMode");
+    QTest::addColumn<Test::XdgToplevelDecorationV1::mode>("decoMode");
 
-    QTest::newRow("client-side deco") << ServerSideDecoration::Mode::Client;
-    QTest::newRow("server-side deco") << ServerSideDecoration::Mode::Server;
+    QTest::newRow("client-side deco") << Test::XdgToplevelDecorationV1::mode_client_side;
+    QTest::newRow("server-side deco") << Test::XdgToplevelDecorationV1::mode_server_side;
 }
 
 void TestXdgShellClient::testMaximizedToFullscreen()
@@ -489,45 +480,41 @@ void TestXdgShellClient::testMaximizedToFullscreen()
     Test::XdgToplevel::States states;
 
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QVERIFY(shellSurface);
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
-    // create deco
-    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
-    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
-    QVERIFY(decoSpy.isValid());
-    QVERIFY(decoSpy.wait());
-    QFETCH(ServerSideDecoration::Mode, decoMode);
-    deco->requestMode(decoMode);
-    QVERIFY(decoSpy.wait());
-    QCOMPARE(deco->mode(), decoMode);
+    // Initialize the xdg-toplevel surface.
+    QFETCH(Test::XdgToplevelDecorationV1::mode, decoMode);
+    decoration->set_mode(decoMode);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     auto client = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
     QVERIFY(client);
     QVERIFY(client->isActive());
     QVERIFY(!client->isFullScreen());
     QCOMPARE(client->clientSize(), QSize(100, 50));
-    QCOMPARE(client->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+    QCOMPARE(client->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
 
     QSignalSpy fullscreenChangedSpy(client, &AbstractClient::fullScreenChanged);
     QVERIFY(fullscreenChangedSpy.isValid());
     QSignalSpy frameGeometryChangedSpy(client, &AbstractClient::frameGeometryChanged);
     QVERIFY(frameGeometryChangedSpy.isValid());
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
-    QVERIFY(toplevelConfigureRequestedSpy.isValid());
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
-    QVERIFY(surfaceConfigureRequestedSpy.isValid());
 
     // Wait for the compositor to send a configure event with the Activated state.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Activated);
 
     // Ask the compositor to maximize the window.
     shellSurface->set_maximized();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Maximized);
 
@@ -539,7 +526,7 @@ void TestXdgShellClient::testMaximizedToFullscreen()
     // Ask the compositor to show the window in full screen mode.
     shellSurface->set_fullscreen(nullptr);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), client->output()->geometry().size());
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(states & Test::XdgToplevel::State::Maximized);
@@ -558,7 +545,7 @@ void TestXdgShellClient::testMaximizedToFullscreen()
     shellSurface->unset_fullscreen();
     shellSurface->unset_maximized();
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 5);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(100, 50));
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
     QVERIFY(!(states & Test::XdgToplevel::State::Maximized));
@@ -569,7 +556,7 @@ void TestXdgShellClient::testMaximizedToFullscreen()
 
     QVERIFY(frameGeometryChangedSpy.wait());
     QVERIFY(!client->isFullScreen());
-    QCOMPARE(client->isDecorated(), decoMode == ServerSideDecoration::Mode::Server);
+    QCOMPARE(client->isDecorated(), decoMode == Test::XdgToplevelDecorationV1::mode_server_side);
     QCOMPARE(client->maximizeMode(), MaximizeRestore);
 
     // Destroy the client.
@@ -634,18 +621,22 @@ void TestXdgShellClient::testWindowOpensLargerThanScreen()
 {
     // this test creates a window which is as large as the screen, but is decorated
     // the window should get resized to fit into the screen, BUG: 366632
+
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
+    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data(), Test::CreationSetup::CreateOnly));
+    QScopedPointer<Test::XdgToplevelDecorationV1> decoration(Test::createXdgToplevelDecorationV1(shellSurface.data()));
+    QSignalSpy decorationConfigureRequestedSpy(decoration.data(), &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.data(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
-    // create deco
-    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
-    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
-    QVERIFY(decoSpy.isValid());
-    QVERIFY(decoSpy.wait());
-    deco->requestMode(ServerSideDecoration::Mode::Server);
-    QVERIFY(decoSpy.wait());
-    QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
+    // Initialize the xdg-toplevel surface.
+    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
+
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     AbstractOutput *output = workspace()->activeOutput();
     auto c = Test::renderAndWaitForShown(surface.data(), output->geometry().size(), Qt::blue);
     QVERIFY(c);
@@ -884,25 +875,6 @@ void TestXdgShellClient::testAppMenu()
     QCOMPARE(c->applicationMenuObjectPath(), QString("object/path"));
 
     QVERIFY (QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
-}
-
-void TestXdgShellClient::testNoDecorationModeRequested()
-{
-    // this test verifies that the decoration follows the default mode if no mode is explicitly requested
-    QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
-    QScopedPointer<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.data()));
-    QScopedPointer<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.data()));
-    QSignalSpy decoSpy(deco.data(), &ServerSideDecoration::modeChanged);
-    QVERIFY(decoSpy.isValid());
-    if (deco->mode() != ServerSideDecoration::Mode::Server) {
-        QVERIFY(decoSpy.wait());
-    }
-    QCOMPARE(deco->mode(), ServerSideDecoration::Mode::Server);
-
-    auto c = Test::renderAndWaitForShown(surface.data(), QSize(100, 50), Qt::blue);
-    QVERIFY(c);
-    QCOMPARE(c->noBorder(), false);
-    QCOMPARE(c->isDecorated(), true);
 }
 
 void TestXdgShellClient::testSendClientWithTransientToDesktop()
