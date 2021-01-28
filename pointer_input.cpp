@@ -170,7 +170,7 @@ void PointerInputRedirection::updateToReset()
         disconnect(m_internalWindowConnection);
         m_internalWindowConnection = QMetaObject::Connection();
         QEvent event(QEvent::Leave);
-        QCoreApplication::sendEvent(internalWindow().data(), &event);
+        QCoreApplication::sendEvent(internalWindow(), &event);
         setInternalWindow(nullptr);
     }
     if (decoration()) {
@@ -456,7 +456,7 @@ void PointerInputRedirection::cleanupInternalWindow(QWindow *old, QWindow *now)
     }
 
     if (now) {
-        m_internalWindowConnection = connect(internalWindow().data(), &QWindow::visibleChanged, this,
+        m_internalWindowConnection = connect(internalWindow(), &QWindow::visibleChanged, this,
             [this] (bool visible) {
                 if (!visible) {
                     update();
@@ -528,7 +528,7 @@ void PointerInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow
         // enter internal window
         const auto pos = at()->pos();
         QEnterEvent enterEvent(pos, pos, m_pos);
-        QCoreApplication::sendEvent(internalWindow().data(), &enterEvent);
+        QCoreApplication::sendEvent(internalWindow(), &enterEvent);
     }
 
     auto seat = waylandServer()->seat();
@@ -1025,7 +1025,7 @@ void CursorImage::updateDecoration()
 {
     disconnect(m_decorationConnection);
     auto deco = m_pointer->decoration();
-    AbstractClient *c = deco.isNull() ? nullptr : deco->client();
+    AbstractClient *c = deco ? deco->client() : nullptr;
     if (c) {
         m_decorationConnection = connect(c, &AbstractClient::moveResizeCursorChanged, this, &CursorImage::updateDecorationCursor);
     } else {
@@ -1038,7 +1038,7 @@ void CursorImage::updateDecorationCursor()
 {
     m_decorationCursor = {};
     auto deco = m_pointer->decoration();
-    if (AbstractClient *c = deco.isNull() ? nullptr : deco->client()) {
+    if (AbstractClient *c = deco ? deco->client() : nullptr) {
         loadThemeCursor(c->cursor(), &m_decorationCursor);
         if (m_currentSource == CursorSource::Decoration) {
             emit changed();
@@ -1341,7 +1341,7 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::MoveResize);
         return;
     }
-    if (!m_pointer->decoration().isNull()) {
+    if (m_pointer->decoration()) {
         setSource(CursorSource::Decoration);
         return;
     }

@@ -181,7 +181,7 @@ void DecorationInputTest::testAxis()
 
     quint32 timestamp = 1;
     MOTION(QPoint(c->frameGeometry().center().x(), c->clientPos().y() / 2));
-    QVERIFY(!input()->pointer()->decoration().isNull());
+    QVERIFY(input()->pointer()->decoration());
     QCOMPARE(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), Qt::TitleBarArea);
 
     // TODO: mouse wheel direction looks wrong to me
@@ -200,7 +200,7 @@ void DecorationInputTest::testAxis()
     c->move(0, 0);
     QFETCH(QPoint, decoPoint);
     MOTION(decoPoint);
-    QVERIFY(!input()->pointer()->decoration().isNull());
+    QVERIFY(input()->pointer()->decoration());
     QCOMPARE(input()->pointer()->decoration()->client(), c);
     QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
     kwinApp()->platform()->pointerAxisVertical(5.0, timestamp++);
@@ -246,7 +246,7 @@ void KWin::DecorationInputTest::testDoubleClick()
     c->move(0, 0);
     QFETCH(QPoint, decoPoint);
     MOTION(decoPoint);
-    QVERIFY(!input()->pointer()->decoration().isNull());
+    QVERIFY(input()->pointer()->decoration());
     QCOMPARE(input()->pointer()->decoration()->client(), c);
     QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
     // double click
@@ -300,7 +300,7 @@ void KWin::DecorationInputTest::testDoubleTap()
     QFETCH(QPoint, decoPoint);
     // double click
     kwinApp()->platform()->touchDown(0, decoPoint, timestamp++);
-    QVERIFY(!input()->touch()->decoration().isNull());
+    QVERIFY(input()->touch()->decoration());
     QCOMPARE(input()->touch()->decoration()->client(), c);
     QTEST(input()->touch()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
     kwinApp()->platform()->touchUp(0, timestamp++);
