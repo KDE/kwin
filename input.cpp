@@ -2788,7 +2788,7 @@ void InputDeviceHandler::update()
     Toplevel *toplevel = nullptr;
     QWindow *internalWindow = nullptr;
 
-    if (!positionValid()) {
+    if (positionValid()) {
         const auto pos = position().toPoint();
         internalWindow = findInternalWindow(pos);
         if (internalWindow) {
