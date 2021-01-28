@@ -597,11 +597,11 @@ bool ShaderManager::selfTest()
         return true;
     }
     if (GLPlatform::instance()->isNvidia() && GLPlatform::instance()->glRendererString().contains("Quadro")) {
-        qCWarning(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Quadro hardware";
+        qCDebug(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Quadro hardware";
         return true;
     }
     if (GLPlatform::instance()->isMesaDriver() && GLPlatform::instance()->mesaVersion() >= kVersionNumber(17, 0)) {
-        qCWarning(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Mesa drivers";
+        qCDebug(LIBKWINGLUTILS) << "Skipping self test as it is reported to return false positive results on Mesa drivers";
         return true;
     }
 
