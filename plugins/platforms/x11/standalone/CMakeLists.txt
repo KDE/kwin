@@ -5,10 +5,8 @@ set(X11PLATFORM_SOURCES
     eglbackend.cpp
     logging.cpp
     non_composited_outline.cpp
-    omlsynccontrolvsyncmonitor.cpp
     overlaywindow_x11.cpp
     screenedges_filter.cpp
-    sgivideosyncvsyncmonitor.cpp
     windowselector.cpp
     x11_decoration_renderer.cpp
     x11_output.cpp
@@ -31,6 +29,8 @@ if (HAVE_EPOXY_GLX)
         glx_context_attribute_builder.cpp
         glxbackend.cpp
         glxconvenience.cpp
+        omlsynccontrolvsyncmonitor.cpp
+        sgivideosyncvsyncmonitor.cpp
     )
 endif()
 
