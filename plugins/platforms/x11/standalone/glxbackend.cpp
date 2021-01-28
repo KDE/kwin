@@ -13,6 +13,7 @@
 
 // own
 #include "glxbackend.h"
+#include "glxconvenience.h"
 #include "logging.h"
 #include "glx_context_attribute_builder.h"
 #include "omlsynccontrolvsyncmonitor.h"
@@ -440,71 +441,32 @@ bool GlxBackend::initFbConfig()
         }
     }
 
-    // Try to find a double buffered sRGB capable configuration
-    int count = 0;
-    GLXFBConfig *configs = nullptr;
-
     // Don't request an sRGB configuration with LLVMpipe when the default depth is 16. See bug #408594.
     if (!llvmpipe || Xcb::defaultDepth() > 16) {
-        configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs_srgb, &count);
+        fbconfig = chooseGlxFbConfig(display(), attribs_srgb);
     }
-
-    if (count == 0) {
-        // Try to find a double buffered non-sRGB capable configuration
-        configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
-    }
-
-    struct FBConfig {
-        GLXFBConfig config;
-        int depth;
-        int stencil;
-    };
-
-    std::deque<FBConfig> candidates;
-
-    for (int i = 0; i < count; i++) {
-        int depth, stencil;
-        glXGetFBConfigAttrib(display(), configs[i], GLX_DEPTH_SIZE,   &depth);
-        glXGetFBConfigAttrib(display(), configs[i], GLX_STENCIL_SIZE, &stencil);
-
-        candidates.emplace_back(FBConfig{configs[i], depth, stencil});
-    }
-
-    if (count > 0)
-        XFree(configs);
-
-    std::stable_sort(candidates.begin(), candidates.end(), [](const FBConfig &left, const FBConfig &right) {
-        if (left.depth < right.depth)
-            return true;
-
-        if (left.stencil < right.stencil)
-            return true;
-
-        return false;
-    });
-
-    if (candidates.size() > 0) {
-        fbconfig = candidates.front().config;
-
-        int fbconfig_id, visual_id, red, green, blue, alpha, depth, stencil, srgb;
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_FBCONFIG_ID,  &fbconfig_id);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID,    &visual_id);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_RED_SIZE,     &red);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_GREEN_SIZE,   &green);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_BLUE_SIZE,    &blue);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_ALPHA_SIZE,   &alpha);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE,   &depth);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_STENCIL_SIZE, &stencil);
-        glXGetFBConfigAttrib(display(), fbconfig, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &srgb);
-
-        qCDebug(KWIN_X11STANDALONE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d sRGB: %d",
-                fbconfig_id, visual_id, visualDepth(visual_id), red, green, blue, alpha, depth, stencil, srgb);
+    if (!fbconfig) {
+        fbconfig = chooseGlxFbConfig(display(), attribs);
     }
 
     if (fbconfig == nullptr) {
         qCCritical(KWIN_X11STANDALONE) << "Failed to find a usable framebuffer configuration";
         return false;
     }
+
+    int fbconfig_id, visual_id, red, green, blue, alpha, depth, stencil, srgb;
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_FBCONFIG_ID,  &fbconfig_id);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID,    &visual_id);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_RED_SIZE,     &red);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_GREEN_SIZE,   &green);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_BLUE_SIZE,    &blue);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_ALPHA_SIZE,   &alpha);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE,   &depth);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_STENCIL_SIZE, &stencil);
+    glXGetFBConfigAttrib(display(), fbconfig, GLX_FRAMEBUFFER_SRGB_CAPABLE_ARB, &srgb);
+
+    qCDebug(KWIN_X11STANDALONE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d sRGB: %d",
+            fbconfig_id, visual_id, visualDepth(visual_id), red, green, blue, alpha, depth, stencil, srgb);
 
     return true;
 }
