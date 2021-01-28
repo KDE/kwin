@@ -46,7 +46,6 @@ public:
     void addOutput(DrmOutput *output) override;
     void removeOutput(DrmOutput *output) override;
     int getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32_t *format, uint32_t *stride) override;
-    void cleanupDmabufForSecondaryGpuOutput(AbstractOutput *output) override;
     QRegion beginFrameForSecondaryGpu(AbstractOutput *output) override;
 
 protected:

@@ -271,6 +271,14 @@ int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32
     if (it == m_secondaryGpuOutputs.end()) {
         return -1;
     }
+    if (it->dmabufFd) {
+        close(it->dmabufFd);
+        it->dmabufFd = 0;
+    }
+    if (it->secondaryGbmBo) {
+        it->gbmSurface.get()->releaseBuffer(it->secondaryGbmBo);
+        it->secondaryGbmBo = nullptr;
+    }
     renderFramebufferToSurface(*it);
     auto error = eglSwapBuffers(eglDisplay(), it->eglSurface);
     if (error != EGL_TRUE) {
@@ -287,27 +295,6 @@ int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32
     *format = gbm_bo_get_format(it->secondaryGbmBo);
     *stride = gbm_bo_get_stride(it->secondaryGbmBo);
     return it->dmabufFd;
-}
-
-void EglGbmBackend::cleanupDmabufForSecondaryGpuOutput(AbstractOutput *output)
-{
-    DrmOutput *drmOutput = static_cast<DrmOutput*>(output);
-    auto it = std::find_if(m_secondaryGpuOutputs.begin(), m_secondaryGpuOutputs.end(),
-        [drmOutput] (const Output &output) {
-            return output.output == drmOutput;
-        }
-    );
-    if (it == m_secondaryGpuOutputs.end()) {
-        return;
-    }
-    if (it->dmabufFd) {
-        close(it->dmabufFd);
-        it->dmabufFd = 0;
-    }
-    if (it->secondaryGbmBo) {
-        it->gbmSurface.get()->releaseBuffer(it->secondaryGbmBo);
-        it->secondaryGbmBo = nullptr;
-    }
 }
 
 QRegion EglGbmBackend::beginFrameForSecondaryGpu(AbstractOutput *output)
@@ -471,7 +458,6 @@ void EglGbmBackend::renderFramebufferToSurface(Output &output)
                 output.importedGbmBo = importedBuffer;
             }
         }
-        renderingBackend()->cleanupDmabufForSecondaryGpuOutput(output.output);
     }
 }
 

@@ -35,9 +35,6 @@ public:
         Q_UNUSED(stride)
         return 0;
     }
-    virtual void cleanupDmabufForSecondaryGpuOutput(AbstractOutput *output) {
-        Q_UNUSED(output)
-    }
     virtual QRegion beginFrameForSecondaryGpu(AbstractOutput *output) {
         Q_UNUSED(output)
         return QRegion();
