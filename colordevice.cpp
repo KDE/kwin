@@ -272,6 +272,7 @@ ColorDevice::ColorDevice(AbstractOutput *output, QObject *parent)
     connect(d->updateTimer, &QTimer::timeout, this, &ColorDevice::update);
 
     d->output = output;
+    scheduleUpdate();
 }
 
 ColorDevice::~ColorDevice()
