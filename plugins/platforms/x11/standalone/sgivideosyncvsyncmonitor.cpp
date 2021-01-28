@@ -5,6 +5,7 @@
 */
 
 #include "sgivideosyncvsyncmonitor.h"
+#include "glxconvenience.h"
 #include "logging.h"
 
 #include <QX11Info>
@@ -38,36 +39,64 @@ SGIVideoSyncVsyncMonitorHelper::SGIVideoSyncVsyncMonitorHelper(QObject *parent)
         return;
     }
 
+    Window rootWindow = DefaultRootWindow(m_display);
+
     const int attribs[] = {
         GLX_RENDER_TYPE, GLX_RGBA_BIT,
         GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
         0
     };
 
-    int count;
-    GLXFBConfig *configs = glXChooseFBConfig(m_display, DefaultScreen(m_display),
-                                             attribs, &count);
-    if (!count) {
+    GLXFBConfig config = chooseGlxFbConfig(m_display, attribs);
+    if (!config) {
         qCDebug(KWIN_X11STANDALONE) << "Couldn't find any suitable FBConfig for vsync monitor";
         return;
     }
 
-    GLXFBConfig config = configs[0];
-    XFree(configs);
+    XVisualInfo *visualInfo = glXGetVisualFromFBConfig(m_display, config);
+    if (!visualInfo) {
+        return;
+    }
+
+    Visual *visual = visualInfo->visual;
+    const int depth = visualInfo->depth;
+    XFree(visualInfo);
+
+    Colormap colormap = XCreateColormap(m_display, rootWindow, visual, AllocNone);
+    XSetWindowAttributes attributes;
+    attributes.colormap = colormap;
+
+    m_dummyWindow = XCreateWindow(m_display, rootWindow, 0, 0, 1, 1, 0, depth,
+                                  InputOutput, visual, CWColormap, &attributes);
+    XFreeColormap(m_display, colormap);
+    if (!m_dummyWindow) {
+        qCDebug(KWIN_X11STANDALONE) << "Failed to create a dummy window for vsync monitor";
+        return;
+    }
+
+    m_drawable = glXCreateWindow(m_display, config, m_dummyWindow, nullptr);
+    if (!m_drawable) {
+        qCDebug(KWIN_X11STANDALONE) << "Failed to create GLXWindow for dummy window";
+        return;
+    }
 
     m_localContext = glXCreateNewContext(m_display, config, GLX_RGBA_TYPE, 0, true);
     if (!m_localContext) {
         qCDebug(KWIN_X11STANDALONE) << "Failed to create opengl context for vsync monitor";
         return;
     }
-
-    m_drawable = DefaultRootWindow(m_display);
 }
 
 SGIVideoSyncVsyncMonitorHelper::~SGIVideoSyncVsyncMonitorHelper()
 {
     if (m_localContext) {
         glXDestroyContext(m_display, m_localContext);
+    }
+    if (m_drawable) {
+        glXDestroyWindow(m_display, m_drawable);
+    }
+    if (m_dummyWindow) {
+        XDestroyWindow(m_display, m_dummyWindow);
     }
     if (m_display) {
         XCloseDisplay(m_display);
