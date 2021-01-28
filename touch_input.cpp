@@ -77,7 +77,7 @@ bool TouchInputRedirection::positionValid() const
 {
     Q_ASSERT(m_touches >= 0);
     // we can only determine a position with at least one touch point
-    return m_touches == 0;
+    return m_touches;
 }
 
 void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
