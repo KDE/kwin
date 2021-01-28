@@ -27,7 +27,11 @@ if (X11_Xi_FOUND)
 endif()
 
 if (HAVE_EPOXY_GLX)
-    target_sources(KWinX11Platform PRIVATE glxbackend glx_context_attribute_builder.cpp)
+    target_sources(KWinX11Platform PRIVATE
+        glx_context_attribute_builder.cpp
+        glxbackend.cpp
+        glxconvenience.cpp
+    )
 endif()
 
 if (KWIN_BUILD_XRENDER_COMPOSITING)
