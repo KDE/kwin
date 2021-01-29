@@ -128,6 +128,9 @@ void Xwayland::start()
     QProcessEnvironment env = m_app->processStartupEnvironment();
     env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
     env.insert("EGL_PLATFORM", QByteArrayLiteral("DRM"));
+    if (qEnvironmentVariableIsSet("KWIN_XWAYLAND_DEBUG")) {
+        env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
+    }
     m_xwaylandProcess->setProcessEnvironment(env);
     m_xwaylandProcess->setArguments({QStringLiteral("-displayfd"),
                            QString::number(pipeFds[1]),
