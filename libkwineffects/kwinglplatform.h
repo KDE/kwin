@@ -125,25 +125,25 @@ enum ChipClass {
     UnknownNVidia = 1999,
 
     // Intel
-    I8XX          = 2000,   // GL1.3         DX7                   2001
-    I915,                   // GL1.4/1.5     DX9/DX9c  SM 2.0      2004
-    I965,                   // GL2.0/2.1     DX9/DX10  SM 3.0/4.0  2006
-    SandyBridge,            // GL3.1  CL1.1  DX10.1    SM 4.0      2010
-    IvyBridge,              // GL4.0  CL1.1  DX11      SM 5.0      2012
-    Haswell,                // GL4.0  CL1.2  DX11.1    SM 5.0      2013
-    BayTrail,               // GL4.0  CL1.2  DX11.1    SM 5.0      2013
-    Cherryview,             // GL4.0  CL1.2  DX11.2    SM 5.0      2013
-    Broadwell,              // GL4.4  CL2.0  DX11.2    SM 5.0      2014
-    ApolloLake,             // GL4.6  CL3.0  DX12      SM 6.0      2016
-    Skylake,                // GL4.6  CL3.0  DX12      SM 6.0      2015
-    GeminiLake,             // GL4.6  CL3.0  DX12      SM 6.0      2017
-    KabyLake,               // GL4.6  CL3.0  DX12      SM 6.0      2017
-    CoffeeLake,             // GL4.6  CL3.0  DX12      SM 6.0      2018
-    WhiskeyLake,            // GL4.6  GL3.0  DX12      SM 6.0      2018
-    CometLake,              // GL4.6  GL3.0  DX12      SM 6.0      2019
-    CannonLake,             // GL4.6  GL3.0  DX12      SM 6.0      2018
-    IceLake,                // GL4.6  CL3.0  DX12.1    SM 6.0      2019
-    TigerLake,              // GL4.6  CL3.0  DX12.1    SM 6.0      2020
+    I8XX          = 2000,   //       GL1.3         DX7                   2001
+    I915,                   //       GL1.4/1.5     DX9/DX9c  SM 2.0      2004
+    I965,                   //       GL2.0/2.1     DX9/DX10  SM 3.0/4.0  2006
+    SandyBridge,            // Gen6  GL3.1  CL1.1  DX10.1    SM 4.0      2010
+    IvyBridge,              // Gen7  GL4.0  CL1.1  DX11      SM 5.0      2012
+    Haswell,                // Gen7  GL4.0  CL1.2  DX11.1    SM 5.0      2013
+    BayTrail,               // Gen7  GL4.0  CL1.2  DX11.1    SM 5.0      2013
+    Cherryview,             // Gen8  GL4.0  CL1.2  DX11.2    SM 5.0      2013
+    Broadwell,              // Gen8  GL4.4  CL2.0  DX11.2    SM 5.0      2014
+    ApolloLake,             // Gen9  GL4.6  CL3.0  DX12      SM 6.0      2016
+    Skylake,                // Gen9  GL4.6  CL3.0  DX12      SM 6.0      2015
+    GeminiLake,             // Gen9  GL4.6  CL3.0  DX12      SM 6.0      2017
+    KabyLake,               // Gen9  GL4.6  CL3.0  DX12      SM 6.0      2017
+    CoffeeLake,             // Gen9  GL4.6  CL3.0  DX12      SM 6.0      2018
+    WhiskeyLake,            // Gen9  GL4.6  GL3.0  DX12      SM 6.0      2018
+    CometLake,              // Gen9  GL4.6  GL3.0  DX12      SM 6.0      2019
+    CannonLake,             // Gen10 GL4.6  GL3.0  DX12      SM 6.0      2018
+    IceLake,                // Gen11 GL4.6  CL3.0  DX12.1    SM 6.0      2019
+    TigerLake,              // Gen12 GL4.6  CL3.0  DX12.1    SM 6.0      2020
     UnknownIntel  = 2999,
 
     // Qualcomm Adreno
