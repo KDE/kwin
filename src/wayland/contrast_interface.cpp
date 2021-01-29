@@ -67,7 +67,10 @@ ContrastManagerInterface::ContrastManagerInterface(Display *display, QObject *pa
 {
 }
 
-ContrastManagerInterface::~ContrastManagerInterface() = default;
+ContrastManagerInterface::~ContrastManagerInterface()
+{
+    d->globalRemove();
+}
 
 class ContrastInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast
 {

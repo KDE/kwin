@@ -71,7 +71,10 @@ SlideManagerInterface::SlideManagerInterface(Display *display, QObject *parent)
 {
 }
 
-SlideManagerInterface::~SlideManagerInterface() = default;
+SlideManagerInterface::~SlideManagerInterface()
+{
+    d->globalRemove();
+}
 
 class SlideInterfacePrivate : public QtWaylandServer::org_kde_kwin_slide
 {

@@ -569,6 +569,8 @@ bool Scanner::process()
             printf("        QMultiMap<struct ::wl_client*, Resource*> resourceMap() { return m_resource_map; }\n");
             printf("        const QMultiMap<struct ::wl_client*, Resource*> resourceMap() const { return m_resource_map; }\n");
             printf("\n");
+            printf("        void globalRemove();\n");
+            printf("\n");
             printf("        bool isGlobal() const { return m_global != nullptr; }\n");
             printf("        bool isResource() const { return m_resource != nullptr; }\n");
             printf("\n");
@@ -637,6 +639,7 @@ bool Scanner::process()
             printf("        QMultiMap<struct ::wl_client*, Resource*> m_resource_map;\n");
             printf("        Resource *m_resource;\n");
             printf("        struct ::wl_global *m_global;\n");
+            printf("        struct ::wl_display *m_display;\n");
             printf("        uint32_t m_globalVersion;\n");
             printf("        struct DisplayDestroyedListener : ::wl_listener {\n");
             printf("            %s *parent;\n", interfaceName);
@@ -666,6 +669,22 @@ bool Scanner::process()
         printf("namespace QtWaylandServer {\n");
 
         bool needsNewLine = false;
+
+        printf("\n");
+        printf("    struct deferred_destroy_global_data {\n");
+        printf("        struct wl_global *global;\n");
+        printf("        struct wl_event_source *event_source;\n");
+        printf("    };\n");
+        printf("\n");
+        printf("    static int deferred_destroy_global_func(void *_data) {\n");
+        printf("        deferred_destroy_global_data *data = static_cast<deferred_destroy_global_data *>(_data);\n");
+        printf("        wl_global_destroy(data->global);\n");
+        printf("        wl_event_source_remove(data->event_source);\n");
+        printf("        delete data;\n");
+        printf("        return 0;\n");
+        printf("    }\n");
+        printf("\n");
+
         for (const WaylandInterface &interface : interfaces) {
 
             if (ignoreInterface(interface.name))
@@ -685,6 +704,7 @@ bool Scanner::process()
             printf("        : m_resource_map()\n");
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
+            printf("        , m_display(nullptr)\n");
             printf("    {\n");
             printf("        init(client, id, version);\n");
             printf("    }\n");
@@ -694,6 +714,7 @@ bool Scanner::process()
             printf("        : m_resource_map()\n");
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
+            printf("        , m_display(nullptr)\n");
             printf("    {\n");
             printf("        init(display, version);\n");
             printf("    }\n");
@@ -703,6 +724,7 @@ bool Scanner::process()
             printf("        : m_resource_map()\n");
             printf("        , m_resource(nullptr)\n");
             printf("        , m_global(nullptr)\n");
+            printf("        , m_display(nullptr)\n");
             printf("    {\n");
             printf("        init(resource);\n");
             printf("    }\n");
@@ -761,6 +783,7 @@ bool Scanner::process()
 
             printf("    void %s::init(struct ::wl_display *display, int version)\n", interfaceName);
             printf("    {\n");
+            printf("        m_display = display;\n");
             printf("        m_global = wl_global_create(display, &::%s_interface, version, this, bind_func);\n", interfaceName);
             printf("        m_globalVersion = version;\n");
             printf("        m_displayDestroyedListener.notify = %s::display_destroy_func;\n", interfaceName);
@@ -820,6 +843,27 @@ bool Scanner::process()
             printf("                that->m_resource = nullptr;\n");
             printf("        }\n");
             printf("        delete resource;\n");
+            printf("    }\n");
+            printf("\n");
+
+            // Removing a global is racey. Announce removal, and then only perform internal cleanup after a delay
+            // See https://gitlab.freedesktop.org/wayland/wayland/issues/10
+            printf("\n");
+            printf("    void %s::globalRemove()\n", interfaceName);
+            printf("    {\n");
+            printf("        if (!m_global)\n");
+            printf("            return;\n");
+            printf("\n");
+            printf("        wl_global_remove(m_global);\n");
+            printf("        wl_global_set_user_data(m_global, nullptr);\n");
+            printf("\n");
+            printf("        struct wl_event_loop *event_loop = wl_display_get_event_loop(m_display);\n");
+            printf("        struct deferred_destroy_global_data *data = new deferred_destroy_global_data;\n");
+            printf("        data->global = m_global;\n");
+            printf("        data->event_source = wl_event_loop_add_timer(event_loop, deferred_destroy_global_func, data);\n");
+            printf("        wl_event_source_timer_update(data->event_source, 5000);\n");
+            printf("        m_global = nullptr;\n");
+            printf("        wl_list_remove(&m_displayDestroyedListener.link);\n");
             printf("    }\n");
             printf("\n");
 

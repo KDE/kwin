@@ -72,7 +72,10 @@ BlurManagerInterface::BlurManagerInterface(Display *display, QObject *parent)
 {
 }
 
-BlurManagerInterface::~BlurManagerInterface() = default;
+BlurManagerInterface::~BlurManagerInterface()
+{
+    d->globalRemove();
+}
 
 class BlurInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur
 {
