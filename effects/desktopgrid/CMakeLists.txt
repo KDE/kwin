@@ -27,5 +27,5 @@ install(
     TARGETS
         kwin_desktopgrid_config
     DESTINATION
-        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
 )

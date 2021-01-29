@@ -19,5 +19,5 @@ install(
     TARGETS
         kwin_slide_config
     DESTINATION
-        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
 )

@@ -19,5 +19,5 @@ install(
     TARGETS
         kwin_blur_config
     DESTINATION
-        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
 )

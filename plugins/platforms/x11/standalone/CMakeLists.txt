@@ -43,5 +43,5 @@ install(
     TARGETS
         KWinX11Platform
     DESTINATION
-        ${PLUGIN_INSTALL_DIR}/org.kde.kwin.platforms/
+        ${KDE_INSTALL_PLUGINDIR}/org.kde.kwin.platforms/
 )

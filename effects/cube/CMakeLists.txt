@@ -28,5 +28,5 @@ install(
     TARGETS
         kwin_cube_config
     DESTINATION
-        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+        ${KDE_INSTALL_PLUGINDIR}/kwin/effects/configs
 )

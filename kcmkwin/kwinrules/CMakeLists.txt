@@ -52,6 +52,6 @@ add_library(kcm_kwinrules MODULE kcmrules.cpp rulebookmodel.cpp)
 target_link_libraries(kcm_kwinrules KWinRulesObjects)
 kcoreaddons_desktop_to_json(kcm_kwinrules "kcm_kwinrules.desktop" SERVICE_TYPES kcmodule.desktop)
 
-install(TARGETS kcm_kwinrules DESTINATION ${PLUGIN_INSTALL_DIR}/kcms)
+install(TARGETS kcm_kwinrules DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
 install(FILES kcm_kwinrules.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 kpackage_install_package(package kcm_kwinrules kcms)

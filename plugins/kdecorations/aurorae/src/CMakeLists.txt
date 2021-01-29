@@ -26,7 +26,7 @@ target_link_libraries(kwin5_aurorae
     Qt5::UiTools
 )
 
-install(TARGETS kwin5_aurorae DESTINATION ${PLUGIN_INSTALL_DIR}/org.kde.kdecoration2)
+install(TARGETS kwin5_aurorae DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.kdecoration2)
 
 set(decoration_plugin_SRCS
     colorhelper.cpp

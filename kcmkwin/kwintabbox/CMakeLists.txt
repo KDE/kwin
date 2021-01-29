@@ -36,7 +36,7 @@ target_link_libraries(kcm_kwintabbox
     kwin4_effect_builtins
 )
 
-install(TARGETS kcm_kwintabbox DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS kcm_kwintabbox DESTINATION ${KDE_INSTALL_PLUGINDIR} )
 
 ########### install files ###############
 install(FILES kwintabbox.desktop DESTINATION ${SERVICES_INSTALL_DIR})

@@ -20,5 +20,5 @@ install(
     TARGETS
         KWinSceneXRender
     DESTINATION
-        ${PLUGIN_INSTALL_DIR}/org.kde.kwin.scenes/
+        ${KDE_INSTALL_PLUGINDIR}/org.kde.kwin.scenes/
 )

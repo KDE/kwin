@@ -32,7 +32,7 @@ set_target_properties(kwinxrenderutils PROPERTIES
 )
 set_target_properties(kwinxrenderutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}xrenderutils)
 
-install(TARGETS kwinxrenderutils EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwinxrenderutils EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
@@ -66,7 +66,7 @@ set_target_properties(kwineffects PROPERTIES
 )
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
 
-install(TARGETS kwineffects EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
@@ -87,7 +87,7 @@ set_target_properties(kwinglutils PROPERTIES
     OUTPUT_NAME ${KWIN_NAME}glutils
 )
 
-install(TARGETS kwinglutils EXPORT KWinEffectsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kwinglutils EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h

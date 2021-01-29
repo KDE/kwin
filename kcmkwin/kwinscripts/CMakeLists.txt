@@ -24,6 +24,6 @@ target_link_libraries(kcm_kwin_scripts
     KF5::Package
 )
 
-install(TARGETS kcm_kwin_scripts DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kcm_kwin_scripts DESTINATION ${KDE_INSTALL_PLUGINDIR})
 install(FILES kwinscripts.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 install(FILES kwinscripts.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
