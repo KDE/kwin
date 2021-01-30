@@ -63,6 +63,8 @@ public:
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;
     void destroyClient() override;
+    bool hasPopupGrab() const override;
+    void popupDone() override;
 
     void present(const QSharedPointer<QOpenGLFramebufferObject> fbo);
     void present(const QImage &image, const QRegion &damage);

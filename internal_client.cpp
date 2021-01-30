@@ -14,6 +14,7 @@
 
 #include <KDecoration2/Decoration>
 
+#include <QMouseEvent>
 #include <QOpenGLFramebufferObject>
 #include <QWindow>
 
@@ -388,6 +389,18 @@ void InternalClient::destroyClient()
     delete this;
 }
 
+bool InternalClient::hasPopupGrab() const
+{
+    return !m_internalWindow->flags().testFlag(Qt::WindowTransparentForInput) &&
+            m_internalWindow->flags().testFlag(Qt::Popup) &&
+            !m_internalWindow->flags().testFlag(Qt::ToolTip);
+}
+
+void InternalClient::popupDone()
+{
+    m_internalWindow->hide();
+}
+
 void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
 {
     Q_ASSERT(m_internalImage.isNull());
@@ -438,8 +451,15 @@ bool InternalClient::acceptsFocus() const
 bool InternalClient::belongsToSameApplication(const AbstractClient *other, SameApplicationChecks checks) const
 {
     Q_UNUSED(checks)
-
-    return qobject_cast<const InternalClient *>(other) != nullptr;
+    const InternalClient *otherInternal = qobject_cast<const InternalClient *>(other);
+    if (!otherInternal) {
+        return false;
+    }
+    if (otherInternal == this) {
+        return true;
+    }
+    return otherInternal->internalWindow()->isAncestorOf(internalWindow()) ||
+            internalWindow()->isAncestorOf(otherInternal->internalWindow());
 }
 
 void InternalClient::doMove(int x, int y)

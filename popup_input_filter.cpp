@@ -7,6 +7,7 @@
 #include "popup_input_filter.h"
 #include "abstract_client.h"
 #include "deleted.h"
+#include "internal_client.h"
 #include "workspace.h"
 
 #include <QMouseEvent>
@@ -18,6 +19,7 @@ PopupInputFilter::PopupInputFilter()
     : QObject()
 {
     connect(workspace(), &Workspace::clientAdded, this, &PopupInputFilter::handleClientAdded);
+    connect(workspace(), &Workspace::internalClientAdded, this, &PopupInputFilter::handleClientAdded);
 }
 
 void PopupInputFilter::handleClientAdded(Toplevel *client)

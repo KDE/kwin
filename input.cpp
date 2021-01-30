@@ -2560,8 +2560,42 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
                 return u;
             }
         }
+        if (Toplevel *window = findInternal(pos)) {
+            return window;
+        }
     }
     return findManagedToplevel(pos);
+}
+
+Toplevel *InputRedirection::findInternal(const QPoint &pos) const
+{
+    const QList<InternalClient *> &internalClients = workspace()->internalClients();
+    if (internalClients.isEmpty()) {
+        return nullptr;
+    }
+
+    auto it = internalClients.end();
+    do {
+        --it;
+        QWindow *w = (*it)->internalWindow();
+        if (!w || !w->isVisible()) {
+            continue;
+        }
+        if (!(*it)->frameGeometry().contains(pos)) {
+            continue;
+        }
+        // check input mask
+        const QRegion mask = w->mask().translated(w->geometry().topLeft());
+        if (!mask.isEmpty() && !mask.contains(pos)) {
+            continue;
+        }
+        if (w->property("outputOnly").toBool()) {
+            continue;
+        }
+        return *it;
+    } while (it != internalClients.begin());
+
+    return nullptr;
 }
 
 Toplevel *InputRedirection::findManagedToplevel(const QPoint &pos)
@@ -2785,16 +2819,8 @@ void InputDeviceHandler::update()
     }
 
     Toplevel *toplevel = nullptr;
-    QWindow *internalWindow = nullptr;
-
     if (positionValid()) {
-        const auto pos = position().toPoint();
-        internalWindow = findInternalWindow(pos);
-        if (internalWindow) {
-            toplevel = workspace()->findInternal(internalWindow);
-        } else {
-            toplevel = input()->findToplevel(pos);
-        }
+        toplevel = input()->findToplevel(position().toPoint());
     }
     // Always set the toplevel at the position of the input device.
     setAt(toplevel);
@@ -2803,11 +2829,12 @@ void InputDeviceHandler::update()
         return;
     }
 
-    if (internalWindow) {
-        if (m_focus.internalWindow != internalWindow) {
+    if (auto client = qobject_cast<InternalClient *>(toplevel)) {
+        QWindow *handle = client->internalWindow();
+        if (m_focus.internalWindow != handle) {
             // changed internal window
             updateDecoration();
-            updateInternalWindow(internalWindow);
+            updateInternalWindow(handle);
             updateFocus();
         } else if (updateDecoration()) {
             // went onto or off from decoration, update focus
@@ -2848,41 +2875,6 @@ Decoration::DecoratedClientImpl *InputDeviceHandler::decoration() const
 QWindow *InputDeviceHandler::internalWindow() const
 {
     return m_focus.internalWindow;
-}
-
-QWindow* InputDeviceHandler::findInternalWindow(const QPoint &pos) const
-{
-    if (waylandServer()->isScreenLocked()) {
-        return nullptr;
-    }
-
-    const QList<InternalClient *> &internalClients = workspace()->internalClients();
-    if (internalClients.isEmpty()) {
-        return nullptr;
-    }
-
-    auto it = internalClients.end();
-    do {
-        --it;
-        QWindow *w = (*it)->internalWindow();
-        if (!w || !w->isVisible()) {
-            continue;
-        }
-        if (!(*it)->frameGeometry().contains(pos)) {
-            continue;
-        }
-        // check input mask
-        const QRegion mask = w->mask().translated(w->geometry().topLeft());
-        if (!mask.isEmpty() && !mask.contains(pos)) {
-            continue;
-        }
-        if (w->property("outputOnly").toBool()) {
-            continue;
-        }
-        return w;
-    } while (it != internalClients.begin());
-
-    return nullptr;
 }
 
 } // namespace
