@@ -11,11 +11,12 @@
 
 #include "composite.h"
 #include "logging.h"
-#include "logind.h"
+#include "main.h"
+#include "platform.h"
 #include "renderloop_p.h"
 #include "scene_qpainter_fb_backend.h"
+#include "session.h"
 #include "softwarevsyncmonitor.h"
-#include "virtual_terminal.h"
 #include "udev.h"
 // system
 #include <fcntl.h>
@@ -80,6 +81,7 @@ void FramebufferOutput::vblank(std::chrono::nanoseconds timestamp)
 
 FramebufferBackend::FramebufferBackend(QObject *parent)
     : Platform(parent)
+    , m_session(Session::create(this))
 {
     setPerScreenRenderingEnabled(true);
 }
@@ -97,62 +99,42 @@ QPainterBackend *FramebufferBackend::createQPainterBackend()
     return new FramebufferQPainterBackend(this);
 }
 
-void FramebufferBackend::init()
+Session *FramebufferBackend::session() const
+{
+    return m_session;
+}
+
+bool FramebufferBackend::initialize()
 {
     setSoftwareCursorForced(true);
-    LogindIntegration *logind = LogindIntegration::self();
-    auto takeControl = [logind, this]() {
-        if (logind->hasSessionControl()) {
-            openFrameBuffer();
-        } else {
-            logind->takeControl();
-            connect(logind, &LogindIntegration::hasSessionControlChanged, this, &FramebufferBackend::openFrameBuffer);
-        }
-    };
-    if (logind->isConnected()) {
-        takeControl();
-    } else {
-        connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
+
+    QString framebufferDevice = deviceIdentifier().constData();
+    if (framebufferDevice.isEmpty()) {
+        framebufferDevice = QString(Udev().listFramebuffers().at(0)->devNode());
     }
-    VirtualTerminal::create(this);
+    int fd = open(framebufferDevice.toUtf8().constData(), O_RDWR | O_CLOEXEC);
+    qCDebug(KWIN_FB) << "Using frame buffer device:" << framebufferDevice;
+    if (fd < 0) {
+        qCWarning(KWIN_FB) << "failed to open frame buffer device:" << framebufferDevice;
+        return false;
+    }
+    m_fd = fd;
+    if (!handleScreenInfo()) {
+        qCWarning(KWIN_FB) << "failed to handle framebuffer information";
+        return false;
+    }
+    initImageFormat();
+    if (m_imageFormat == QImage::Format_Invalid) {
+        return false;
+    }
+    setReady(true);
+    emit screensQueried();
+    return true;
 }
 
 int FramebufferBackend::fileDescriptor() const
 {
     return m_fd;
-}
-
-void FramebufferBackend::openFrameBuffer()
-{
-    VirtualTerminal::self()->init();
-    QString framebufferDevice = deviceIdentifier().constData();
-    if (framebufferDevice.isEmpty()) {
-        framebufferDevice = QString(Udev().listFramebuffers().at(0)->devNode());
-    }
-    int fd = LogindIntegration::self()->takeDevice(framebufferDevice.toUtf8().constData());
-    qCDebug(KWIN_FB) << "Using frame buffer device:" << framebufferDevice;
-    if (fd < 0) {
-        qCWarning(KWIN_FB) << "Failed to open frame buffer device:" << framebufferDevice << "through logind, trying without";
-    }
-    fd = open(framebufferDevice.toUtf8().constData(), O_RDWR | O_CLOEXEC);
-    if (fd < 0) {
-        qCWarning(KWIN_FB) << "failed to open frame buffer device:" << framebufferDevice;
-        emit initFailed();
-        return;
-    }
-    m_fd = fd;
-    if (!handleScreenInfo()) {
-        qCWarning(KWIN_FB) << "failed to handle framebuffer information";
-        emit initFailed();
-        return;
-    }
-    initImageFormat();
-    if (m_imageFormat == QImage::Format_Invalid) {
-        emit initFailed();
-        return;
-    }
-    setReady(true);
-    emit screensQueried();
 }
 
 bool FramebufferBackend::handleScreenInfo()

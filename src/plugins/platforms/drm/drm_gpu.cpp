@@ -15,7 +15,7 @@
 #include "drm_object_crtc.h"
 #include "abstract_egl_backend.h"
 #include "logging.h"
-#include "logind.h"
+#include "session.h"
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -81,7 +81,7 @@ DrmGpu::~DrmGpu()
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
     delete m_socketNotifier;
-    LogindIntegration::self()->releaseDevice(m_fd);
+    m_backend->session()->closeRestricted(m_fd);
 }
 
 clockid_t DrmGpu::presentationClock() const
@@ -319,7 +319,7 @@ DrmPlane *DrmGpu::getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crt
 
 void DrmGpu::dispatchEvents()
 {
-    if (!LogindIntegration::self()->isActiveSession()) {
+    if (!m_backend->session()->isActive()) {
         return;
     }
     drmEventContext context = {};

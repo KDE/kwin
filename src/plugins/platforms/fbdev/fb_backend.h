@@ -53,8 +53,8 @@ public:
     QPainterBackend *createQPainterBackend() override;
 
     QSize screenSize() const override;
-
-    void init() override;
+    bool initialize() override;
+    Session *session() const override;
 
     int fileDescriptor() const;
     bool isValid() const {
@@ -91,12 +91,11 @@ public:
     }
 
 private:
-    void openFrameBuffer();
     bool handleScreenInfo();
     void initImageFormat();
 
     QVector<FramebufferOutput*> m_outputs;
-
+    Session *m_session;
     QByteArray m_id;
     struct Color {
         quint32 offset;

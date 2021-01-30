@@ -51,7 +51,6 @@ protected:
     void performStartup() override;
 
 private:
-    void createBackend();
     void continueStartupWithScreens();
     void continueStartupWithScene();
     void finalizeStartup();

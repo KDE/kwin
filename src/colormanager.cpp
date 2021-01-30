@@ -7,9 +7,9 @@
 #include "colormanager.h"
 #include "abstract_output.h"
 #include "colordevice.h"
-#include "logind.h"
 #include "main.h"
 #include "platform.h"
+#include "session.h"
 #include "utils.h"
 
 namespace KWin
@@ -27,17 +27,17 @@ ColorManager::ColorManager(QObject *parent)
     : QObject(parent)
     , d(new ColorManagerPrivate)
 {
-    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    Platform *platform = kwinApp()->platform();
+    Session *session = platform->session();
+
+    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
     for (AbstractOutput *output : outputs) {
         handleOutputEnabled(output);
     }
 
-    connect(kwinApp()->platform(), &Platform::outputEnabled,
-            this, &ColorManager::handleOutputEnabled);
-    connect(kwinApp()->platform(), &Platform::outputDisabled,
-            this, &ColorManager::handleOutputDisabled);
-    connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged,
-            this, &ColorManager::handleSessionActiveChanged);
+    connect(platform, &Platform::outputEnabled, this, &ColorManager::handleOutputEnabled);
+    connect(platform, &Platform::outputDisabled, this, &ColorManager::handleOutputDisabled);
+    connect(session, &Session::activeChanged, this, &ColorManager::handleSessionActiveChanged);
 }
 
 ColorManager::~ColorManager()

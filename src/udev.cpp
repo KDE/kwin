@@ -7,7 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "udev.h"
-#include "logind.h"
+#include "main.h"
+#include "platform.h"
+#include "session.h"
 // Qt
 #include <QByteArray>
 #include <QScopedPointer>
@@ -111,7 +113,7 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
         if (deviceSeat.isEmpty()) {
             deviceSeat = defaultSeat;
         }
-        if (deviceSeat != LogindIntegration::self()->seat()) {
+        if (deviceSeat != kwinApp()->platform()->session()->seat()) {
             continue;
         }
         vect.push_back(std::move(device));

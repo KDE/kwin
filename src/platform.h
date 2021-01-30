@@ -39,6 +39,7 @@ class QPainterBackend;
 class RenderLoop;
 class Scene;
 class ScreenEdges;
+class Session;
 class Toplevel;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 class XRenderBackend;
@@ -67,7 +68,8 @@ class KWIN_EXPORT Platform : public QObject
 public:
     ~Platform() override;
 
-    virtual void init() = 0;
+    virtual Session *session() const = 0;
+    virtual bool initialize() = 0;
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -501,7 +503,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void screensQueried();
-    void initFailed();
     void readyChanged(bool);
     /**
      * This signal is emitted when an output has been connected. The @a output is not ready

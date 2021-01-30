@@ -18,7 +18,6 @@
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
-#include "logind.h"
 #include "options.h"
 #include "pluginmanager.h"
 #include "screens.h"
@@ -280,11 +279,6 @@ void Application::createWorkspace()
     // create workspace.
     (void) new Workspace();
     emit workspaceCreated();
-}
-
-void Application::createSession()
-{
-    LogindIntegration::create(this);
 }
 
 void Application::createInput()

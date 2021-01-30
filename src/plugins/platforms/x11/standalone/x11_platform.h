@@ -34,7 +34,8 @@ class KWIN_EXPORT X11StandalonePlatform : public Platform
 public:
     X11StandalonePlatform(QObject *parent = nullptr);
     ~X11StandalonePlatform() override;
-    void init() override;
+    bool initialize() override;
+    Session *session() const override;
 
     OpenGLBackend *createOpenGLBackend() override;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -91,6 +92,7 @@ private:
     void doUpdateOutputs();
     void updateRefreshRate();
 
+    Session *m_session;
     XInputIntegration *m_xinputIntegration = nullptr;
     QThread *m_openGLFreezeProtectionThread = nullptr;
     QTimer *m_openGLFreezeProtection = nullptr;

@@ -9,10 +9,11 @@
 #include "scene_qpainter_fb_backend.h"
 #include "fb_backend.h"
 #include "composite.h"
-#include "logind.h"
 #include "cursor.h"
+#include "main.h"
+#include "platform.h"
 #include "renderloop.h"
-#include "virtual_terminal.h"
+#include "session.h"
 #include "vsyncmonitor.h"
 // Qt
 #include <QPainter>
@@ -35,7 +36,7 @@ FramebufferQPainterBackend::FramebufferQPainterBackend(FramebufferBackend *backe
                           m_backend->bytesPerLine(), m_backend->imageFormat());
     m_backBuffer.fill(Qt::black);
 
-    connect(VirtualTerminal::self(), &VirtualTerminal::activeChanged, this, [this](bool active) {
+    connect(kwinApp()->platform()->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
             reactivate();
         } else {
@@ -87,7 +88,7 @@ void FramebufferQPainterBackend::endFrame(int screenId, int mask, const QRegion 
     Q_UNUSED(mask)
     Q_UNUSED(damage)
 
-    if (!LogindIntegration::self()->isActiveSession()) {
+    if (!kwinApp()->platform()->session()->isActive()) {
         return;
     }
     m_needsFullRepaint = false;

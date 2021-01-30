@@ -73,7 +73,6 @@ set(kwin_SRCS
     libinput/events.cpp
     libinput/libinput_logging.cpp
     linux_dmabuf.cpp
-    logind.cpp
     main.cpp
     modifier_only_shortcuts.cpp
     moving_client_x11_filter.cpp
@@ -106,6 +105,11 @@ set(kwin_SRCS
     scripting/scripting_model.cpp
     scripting/scriptingutils.cpp
     scripting/workspace_wrapper.cpp
+    session.cpp
+    session_consolekit.cpp
+    session_direct.h
+    session_logind.cpp
+    session_noop.cpp
     shadow.cpp
     sm.cpp
     subsurfacemonitor.cpp
@@ -140,24 +144,6 @@ set(kwin_SRCS
 )
 
 qt5_add_dbus_adaptor(kwin_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
-
-if (HAVE_LINUX_VT_H)
-    set(kwin_SRCS ${kwin_SRCS}
-        virtual_terminal.cpp
-    )
-    set(KWIN_TTY_PREFIX "/dev/tty")
-endif()
-
-if(CMAKE_SYSTEM MATCHES "FreeBSD")
-    # We know it has epoll, so supports VT as well
-    set(kwin_SRCS ${kwin_SRCS}
-        virtual_terminal.cpp
-    )
-    set(KWIN_TTY_PREFIX "/dev/ttyv")
-endif()
-if(KWIN_TTY_PREFIX)
-    set_source_files_properties(virtual_terminal.cpp PROPERTIES COMPILE_DEFINITIONS KWIN_TTY_PREFIX="${KWIN_TTY_PREFIX}")
-endif()
 
 kconfig_add_kcfg_files(kwin_SRCS settings.kcfgc)
 kconfig_add_kcfg_files(kwin_SRCS rulesettings.kcfgc)
@@ -238,6 +224,12 @@ target_link_libraries(kwin
     Threads::Threads
 )
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_sources(kwin PRIVATE session_direct_linux.cpp)
+elseif (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+    target_sources(kwin PRIVATE session_direct_freebsd.cpp)
+endif()
+
 if (KWIN_BUILD_CMS)
     target_sources(kwin PRIVATE
         colordevice.cpp
@@ -269,12 +261,6 @@ endif()
 qt5_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
-
-if(CMAKE_SYSTEM MATCHES "FreeBSD")
-    # epoll is required, includes live under ${LOCALBASE}, separate library
-    target_include_directories(kwin PUBLIC ${epoll_INCLUDE_DIRS})
-    target_link_libraries(kwin ${epoll_LIBRARIES})
-endif()
 
 add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11 kwin KF5::Crash Qt::X11Extras)

@@ -230,7 +230,11 @@ void ApplicationX11::performStartup()
         installNativeX11EventFilter();
         // first load options - done internally by a different thread
         createOptions();
-        createSession();
+
+        if (!platform()->initialize()) {
+            std::exit(1);
+        }
+
         createColorManager();
 
         // Check  whether another windowmanager is running
@@ -247,34 +251,19 @@ void ApplicationX11::performStartup()
         }
 
         createInput();
+        createWorkspace();
+        createPlugins();
 
-        connect(platform(), &Platform::screensQueried, this, &ApplicationX11::continueStartupWithScreens);
-        connect(platform(), &Platform::initFailed, this,
-            [] () {
-                std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
-                ::exit(1);
-            }
-        );
-        platform()->init();
+        Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+
+        notifyKSplash();
+        notifyStarted();
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
     owner->claim(m_replace || wasCrash(), true);
 
     createAtoms();
-}
-
-void ApplicationX11::continueStartupWithScreens()
-{
-    disconnect(platform(), &Platform::screensQueried, this, &ApplicationX11::continueStartupWithScreens);
-
-    createWorkspace();
-    createPlugins();
-
-    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-    notifyKSplash();
-    notifyStarted();
 }
 
 bool ApplicationX11::notify(QObject* o, QEvent* e)

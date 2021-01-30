@@ -22,7 +22,7 @@
 #endif
 
 #include "input_event.h"
-#include "logind.h"
+#include "session.h"
 #include "udev.h"
 #include "libinput_logging.h"
 
@@ -133,8 +133,9 @@ Connection *Connection::create(QObject *parent)
             s_context = nullptr;
             return nullptr;
         }
-        if (!s_context->assignSeat(LogindIntegration::self()->seat().toUtf8().constData())) {
-            qCWarning(KWIN_LIBINPUT) << "Failed to assign seat" << LogindIntegration::self()->seat();
+        const QString seat = kwinApp()->platform()->session()->seat();
+        if (!s_context->assignSeat(seat.toUtf8().constData())) {
+            qCWarning(KWIN_LIBINPUT) << "Failed to assign seat" << seat;
             delete s_context;
             s_context = nullptr;
             return nullptr;
@@ -194,20 +195,17 @@ void Connection::doSetup()
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
 
-    LogindIntegration *logind = LogindIntegration::self();
-    connect(logind, &LogindIntegration::sessionActiveChanged, this,
-        [this](bool active) {
-            if (active) {
-                if (!m_input->isSuspended()) {
-                    return;
-                }
-                m_input->resume();
-                wasSuspended = true;
-            } else {
-                deactivate();
+    connect(kwinApp()->platform()->session(), &Session::activeChanged, this, [this](bool active) {
+        if (active) {
+            if (!m_input->isSuspended()) {
+                return;
             }
+            m_input->resume();
+            wasSuspended = true;
+        } else {
+            deactivate();
         }
-    );
+    });
     handleEvent();
 }
 

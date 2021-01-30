@@ -14,10 +14,10 @@
 #include "composite.h"
 #include "cursor.h"
 #include "logging.h"
-#include "logind.h"
 #include "main.h"
 #include "renderloop_p.h"
 #include "scene_qpainter_drm_backend.h"
+#include "session.h"
 #include "udev.h"
 #include "wayland_server.h"
 #if HAVE_GBM
@@ -64,6 +64,7 @@ DrmBackend::DrmBackend(QObject *parent)
     : Platform(parent)
     , m_udev(new Udev)
     , m_udevMonitor(m_udev->monitor())
+    , m_session(Session::create(this))
     , m_dpmsFilter()
 {
     setSupportsGammaControl(true);
@@ -76,27 +77,9 @@ DrmBackend::~DrmBackend()
     qDeleteAll(m_gpus);
 }
 
-void DrmBackend::init()
+Session *DrmBackend::session() const
 {
-    LogindIntegration *logind = LogindIntegration::self();
-    auto takeControl = [logind, this]() {
-        if (logind->hasSessionControl()) {
-            openDrm();
-        } else {
-            logind->takeControl();
-            connect(logind, &LogindIntegration::hasSessionControlChanged, this, &DrmBackend::openDrm);
-        }
-    };
-    if (logind->isConnected()) {
-        takeControl();
-    } else {
-        connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
-    }
-    connect(logind, &LogindIntegration::prepareForSleep, this, [this] (bool active) {
-        if (!active) {
-            turnOutputsOn();
-        }
-    });
+    return m_session;
 }
 
 void DrmBackend::prepareShutdown()
@@ -246,29 +229,30 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-void DrmBackend::openDrm()
+bool DrmBackend::initialize()
 {
-    connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this, &DrmBackend::activate);
+    connect(session(), &Session::activeChanged, this, &DrmBackend::activate);
+    connect(session(), &Session::awoke, this, &DrmBackend::turnOutputsOn);
     std::vector<UdevDevice::Ptr> devices = m_udev->listGPUs();
     if (devices.size() == 0) {
         qCWarning(KWIN_DRM) << "Did not find a GPU";
-        return;
+        return false;
     }
 
     for (unsigned int gpu_index = 0; gpu_index < devices.size(); gpu_index++) {
         auto device = std::move(devices.at(gpu_index));
         auto devNode = QByteArray(device->devNode());
-        int fd = LogindIntegration::self()->takeDevice(devNode.constData());
+        int fd = session()->openRestricted(devNode.constData());
         if (fd < 0) {
             qCWarning(KWIN_DRM) << "failed to open drm device at" << devNode;
-            return;
+            return false;
         }
 
         // try to make a simple drm get resource call, if it fails it is not useful for us
         drmModeRes *resources = drmModeGetResources(fd);
         if (!resources) {
             qCDebug(KWIN_DRM) << "Skipping KMS incapable drm device node at" << devNode;
-            LogindIntegration::self()->releaseDevice(fd);
+            session()->closeRestricted(fd);
             continue;
         }
         drmModeFreeResources(resources);
@@ -295,7 +279,7 @@ void DrmBackend::openDrm()
 
     initCursor();
     if (!updateOutputs())
-        return;
+        return false;
 
     if (m_outputs.isEmpty()) {
         qCDebug(KWIN_DRM) << "No connected outputs found on startup.";
@@ -334,6 +318,7 @@ void DrmBackend::openDrm()
         }
     }
     setReady(true);
+    return true;
 }
 
 void DrmBackend::addOutput(DrmOutput *o)

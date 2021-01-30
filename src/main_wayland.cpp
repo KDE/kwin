@@ -155,7 +155,11 @@ void ApplicationWayland::performStartup()
     }
     // first load options - done internally by a different thread
     createOptions();
-    createSession();
+
+    if (!platform()->initialize()) {
+        std::exit(1);
+    }
+
     createColorManager();
     waylandServer()->createInternalConnection();
 
@@ -165,21 +169,14 @@ void ApplicationWayland::performStartup()
     gainRealTime(RealTimeFlags::ResetOnFork);
 
     InputMethod::create(this);
-    createBackend();
     TabletModeManager::create(this);
     createPlugins();
-}
 
-void ApplicationWayland::createBackend()
-{
-    connect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-    connect(platform(), &Platform::initFailed, this,
-        [] () {
-            std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
-            QCoreApplication::exit(1);
-        }
-    );
-    platform()->init();
+    if (!platform()->enabledOutputs().isEmpty()) {
+        continueStartupWithScreens();
+    } else {
+        connect(platform(), &Platform::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+    }
 }
 
 void ApplicationWayland::continueStartupWithScreens()

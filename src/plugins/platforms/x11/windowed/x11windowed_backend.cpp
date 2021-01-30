@@ -14,6 +14,7 @@
 #include "xcbutils.h"
 #include "egl_x11_backend.h"
 #include "screens.h"
+#include "session.h"
 #include <kwinxrenderutils.h>
 #include <cursor.h>
 #include <pointer_input.h>
@@ -43,6 +44,7 @@ namespace KWin
 
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : Platform(parent)
+    , m_session(Session::create(Session::Type::Noop, this))
 {
     setSupportsPointerWarping(true);
     setPerScreenRenderingEnabled(true);
@@ -64,7 +66,7 @@ X11WindowedBackend::~X11WindowedBackend()
     }
 }
 
-void X11WindowedBackend::init()
+bool X11WindowedBackend::initialize()
 {
     int screen = 0;
     xcb_connection_t *c = nullptr;
@@ -102,9 +104,15 @@ void X11WindowedBackend::init()
             waylandServer()->seat()->setHasTouch(true);
         }
         emit screensQueried();
+        return true;
     } else {
-        emit initFailed();
+        return false;
     }
+}
+
+Session *X11WindowedBackend::session() const
+{
+    return m_session;
 }
 
 void X11WindowedBackend::initXInput()

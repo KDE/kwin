@@ -10,6 +10,7 @@
 #include "x11cursor.h"
 #include "x11placeholderoutput.h"
 #include "edge.h"
+#include "session.h"
 #include "windowselector.h"
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include "x11xrenderbackend.h"
@@ -93,6 +94,7 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
 
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     : Platform(parent)
+    , m_session(Session::create(Session::Type::Noop, this))
     , m_updateOutputsTimer(new QTimer(this))
     , m_x11Display(QX11Info::display())
     , m_renderLoop(new RenderLoop(this))
@@ -132,11 +134,10 @@ X11StandalonePlatform::~X11StandalonePlatform()
     }
 }
 
-void X11StandalonePlatform::init()
+bool X11StandalonePlatform::initialize()
 {
     if (!QX11Info::isPlatformX11()) {
-        emit initFailed();
-        return;
+        return false;
     }
     XRenderUtils::init(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     setReady(true);
@@ -145,6 +146,12 @@ void X11StandalonePlatform::init()
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         m_randrEventFilter.reset(new XrandrEventFilter(this));
     }
+    return true;
+}
+
+Session *X11StandalonePlatform::session() const
+{
+    return m_session;
 }
 
 OpenGLBackend *X11StandalonePlatform::createOpenGLBackend()

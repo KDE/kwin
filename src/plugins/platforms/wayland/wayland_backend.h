@@ -165,7 +165,8 @@ class KWIN_EXPORT WaylandBackend : public Platform
 public:
     explicit WaylandBackend(QObject *parent = nullptr);
     ~WaylandBackend() override;
-    void init() override;
+    bool initialize() override;
+    Session *session() const override;
     wl_display *display();
     KWayland::Client::Compositor *compositor();
     KWayland::Client::SubCompositor *subCompositor();
@@ -214,6 +215,7 @@ private:
     void updateScreenSize(WaylandOutput *output);
     void relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp);
 
+    Session *m_session;
     wl_display *m_display;
     KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;

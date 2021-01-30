@@ -30,7 +30,9 @@ class KWIN_EXPORT VirtualBackend : public Platform
 public:
     VirtualBackend(QObject *parent = nullptr);
     ~VirtualBackend() override;
-    void init() override;
+
+    Session *session() const override;
+    bool initialize() override;
 
     bool saveFrames() const {
         return !m_screenshotDir.isNull();
@@ -63,6 +65,7 @@ private:
     QVector<VirtualOutput*> m_outputs;
     QVector<VirtualOutput*> m_outputsEnabled;
     QScopedPointer<QTemporaryDir> m_screenshotDir;
+    Session *m_session;
 };
 
 }

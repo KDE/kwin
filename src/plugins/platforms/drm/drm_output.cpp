@@ -13,11 +13,11 @@
 
 #include "composite.h"
 #include "cursor.h"
-#include "logind.h"
 #include "logging.h"
 #include "main.h"
-#include "screens.h"
 #include "renderloop.h"
+#include "screens.h"
+#include "session.h"
 #include "wayland_server.h"
 // KWayland
 #include <KWaylandServer/output_interface.h>
@@ -744,8 +744,8 @@ bool DrmOutput::dpmsAtomicOff()
 
 bool DrmOutput::presentAtomically(DrmBuffer *buffer)
 {
-    if (!LogindIntegration::self()->isActiveSession()) {
-        qCWarning(KWIN_DRM) << "Logind session not active.";
+    if (!m_backend->session()->isActive()) {
+        qCWarning(KWIN_DRM) << "Refusing to present output because session is inactive";
         return false;
     }
 
@@ -815,7 +815,7 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
     if (m_crtc->next()) {
         return false;
     }
-    if (!LogindIntegration::self()->isActiveSession()) {
+    if (!m_backend->session()->isActive()) {
         m_crtc->setNext(buffer);
         return false;
     }

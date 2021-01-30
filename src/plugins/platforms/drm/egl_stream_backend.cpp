@@ -13,7 +13,6 @@
 #include "drm_object_crtc.h"
 #include "drm_object_plane.h"
 #include "logging.h"
-#include "logind.h"
 #include "options.h"
 #include "renderloop_p.h"
 #include "scene.h"

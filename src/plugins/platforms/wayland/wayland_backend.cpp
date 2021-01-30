@@ -20,6 +20,7 @@
 #include "logging.h"
 #include "renderloop_p.h"
 #include "scene_qpainter_wayland_backend.h"
+#include "session.h"
 #include "wayland_output.h"
 
 #include "composite.h"
@@ -438,6 +439,7 @@ void WaylandSeat::setupPointerGestures()
 
 WaylandBackend::WaylandBackend(QObject *parent)
     : Platform(parent)
+    , m_session(Session::create(Session::Type::Noop, this))
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
     , m_registry(new Registry(this))
@@ -449,7 +451,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
 {
     setPerScreenRenderingEnabled(true);
     supportsOutputChanges();
-    connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
+    connect(this, &WaylandBackend::connectionFailed, qApp, &QCoreApplication::quit);
 
 
 #if HAVE_GBM && HAVE_WAYLAND_EGL
@@ -497,7 +499,7 @@ WaylandBackend::~WaylandBackend()
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
-void WaylandBackend::init()
+bool WaylandBackend::initialize()
 {
     connect(m_registry, &Registry::compositorAnnounced, this, [this](quint32 name, quint32 version) {
         if (version < 4) {
@@ -594,6 +596,12 @@ void WaylandBackend::init()
         m_waylandCursor->init();
     });
     initConnection();
+    return true;
+}
+
+Session *WaylandBackend::session() const
+{
+    return m_session;
 }
 
 void WaylandBackend::relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp)

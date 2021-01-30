@@ -9,6 +9,7 @@
 #include "virtual_backend.h"
 #include "virtual_output.h"
 #include "scene_qpainter_virtual_backend.h"
+#include "session.h"
 #include "wayland_server.h"
 #include "egl_gbm_backend.h"
 // Qt
@@ -25,6 +26,7 @@ namespace KWin
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : Platform(parent)
+    , m_session(Session::create(Session::Type::Noop, this))
 {
     if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
         m_screenshotDir.reset(new QTemporaryDir);
@@ -49,7 +51,12 @@ VirtualBackend::~VirtualBackend()
     }
 }
 
-void VirtualBackend::init()
+Session *VirtualBackend::session() const
+{
+    return m_session;
+}
+
+bool VirtualBackend::initialize()
 {
     /*
      * Some tests currently expect one output present at start,
@@ -73,6 +80,7 @@ void VirtualBackend::init()
     waylandServer()->seat()->setHasTouch(true);
 
     emit screensQueried();
+    return true;
 }
 
 QString VirtualBackend::screenshotDirPath() const

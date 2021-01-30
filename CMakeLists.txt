@@ -317,14 +317,6 @@ set_package_properties(QAccessibilityClient PROPERTIES
 )
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient_FOUND})
 
-if(CMAKE_SYSTEM MATCHES "FreeBSD")
-    find_package(epoll)
-    set_package_properties(epoll PROPERTIES DESCRIPTION "I/O event notification facility"
-        TYPE REQUIRED
-        PURPOSE "Needed for running kwin_wayland"
-    )
-endif()
-
 include(ECMQMLModules)
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 1.2)

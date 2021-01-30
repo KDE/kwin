@@ -15,9 +15,9 @@
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "keyboard_input.h"
-#include "logind.h"
 #include "main.h"
 #include "pointer_input.h"
+#include "session.h"
 #include "tablet_input.h"
 #include "touch_hide_cursor_spy.h"
 #include "touch_input.h"
@@ -252,7 +252,7 @@ public:
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             const xkb_keysym_t keysym = event->nativeVirtualKey();
             if (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12) {
-                LogindIntegration::self()->switchVirtualTerminal(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
+                kwinApp()->platform()->session()->switchTo(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
                 return true;
             }
         }
@@ -2012,23 +2012,7 @@ InputRedirection::InputRedirection(QObject *parent)
     qRegisterMetaType<KWin::InputRedirection::PointerButtonState>();
     qRegisterMetaType<KWin::InputRedirection::PointerAxis>();
     if (Application::usesLibinput()) {
-        if (LogindIntegration::self()->hasSessionControl()) {
-            setupLibInput();
-        } else {
-            LibInput::Connection::createThread();
-            if (LogindIntegration::self()->isConnected()) {
-                LogindIntegration::self()->takeControl();
-            } else {
-                connect(LogindIntegration::self(), &LogindIntegration::connectedChanged, LogindIntegration::self(), &LogindIntegration::takeControl);
-            }
-            connect(LogindIntegration::self(), &LogindIntegration::hasSessionControlChanged, this,
-                [this] (bool sessionControl) {
-                    if (sessionControl) {
-                        setupLibInput();
-                    }
-                }
-            );
-        }
+        setupLibInput();
     }
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
 }
@@ -2188,13 +2172,15 @@ void InputRedirection::setupWorkspace()
         m_touch->init();
         m_tablet->init();
     }
+    setupTouchpadShortcuts();
     setupInputFilters();
 }
 
 void InputRedirection::setupInputFilters()
 {
     const bool hasGlobalShortcutSupport = !waylandServer() || waylandServer()->hasGlobalShortcutSupport();
-    if (LogindIntegration::self()->hasSessionControl() && hasGlobalShortcutSupport) {
+    if ((kwinApp()->platform()->session()->capabilities() & Session::Capability::SwitchTerminal)
+            && hasGlobalShortcutSupport) {
         installInputEventFilter(new VirtualTerminalFilter);
     }
     if (waylandServer()) {
@@ -2381,21 +2367,17 @@ void InputRedirection::setupLibInput()
                 }
             );
         }
-        connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, m_libInput,
-            [this] (bool active) {
-                if (!active) {
-                    m_libInput->deactivate();
-                }
+        connect(kwinApp()->platform()->session(), &Session::activeChanged, m_libInput, [this](bool active) {
+            if (!active) {
+                m_libInput->deactivate();
             }
-        );
+        });
 
         m_inputConfigWatcher = KConfigWatcher::create(InputConfig::self()->inputConfig());
         connect(m_inputConfigWatcher.data(), &KConfigWatcher::configChanged,
                 this, &InputRedirection::handleInputConfigChanged);
         reconfigure();
     }
-
-    setupTouchpadShortcuts();
 }
 
 void InputRedirection::setupTouchpadShortcuts()
