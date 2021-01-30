@@ -289,11 +289,11 @@ target_include_directories(KWaylandServer INTERFACE "$<INSTALL_INTERFACE:${KDE_I
 
 target_link_libraries(KWaylandServer
     PUBLIC
-        Qt5::Gui
+        Qt::Gui
         Wayland::Server
     PRIVATE
         EGL::EGL
-        Qt5::Concurrent
+        Qt::Concurrent
 )
 
 target_compile_definitions(KWaylandServer PRIVATE

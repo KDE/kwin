@@ -1,6 +1,6 @@
 remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 add_executable(qtwaylandscanner_kde qtwaylandscanner.cpp)
-target_link_libraries(qtwaylandscanner_kde Qt5::Core)
+target_link_libraries(qtwaylandscanner_kde Qt::Core)
 
 function(ecm_add_qtwayland_server_protocol_kde out_var)
     # Parse arguments

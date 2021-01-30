@@ -15,7 +15,7 @@ if (Qt5Widgets_FOUND)
         renderingservertest.cpp
         )
     add_executable(testRenderingServer ${testRenderingServer_SRCS})
-    target_link_libraries(testRenderingServer Plasma::KWaylandServer Qt5::Concurrent Qt5::Widgets)
+    target_link_libraries(testRenderingServer Plasma::KWaylandServer Qt::Concurrent Qt::Widgets)
     ecm_mark_as_test(testRenderingServer)
 endif()
 
@@ -24,7 +24,7 @@ target_link_libraries(copyClient KF5::WaylandClient)
 ecm_mark_as_test(copyClient)
 
 add_executable(pasteClient pasteclient.cpp)
-target_link_libraries(pasteClient Qt5::Concurrent KF5::WaylandClient)
+target_link_libraries(pasteClient Qt::Concurrent KF5::WaylandClient)
 ecm_mark_as_test(pasteClient)
 
 if (HAVE_LINUX_INPUT_H)
@@ -37,7 +37,7 @@ if (HAVE_LINUX_INPUT_H)
     ecm_mark_as_test(panelTest)
 
     add_executable(subsurface-test subsurfacetest.cpp)
-    target_link_libraries(subsurface-test Qt5::Core Qt5::Gui KF5::WaylandClient)
+    target_link_libraries(subsurface-test Qt::Core Qt::Gui KF5::WaylandClient)
     ecm_mark_as_test(subsurface-test)
 endif()
 
@@ -48,19 +48,19 @@ ecm_mark_as_test(shadowTest)
 
 if (Qt5Widgets_FOUND)
     add_executable(dpmsTest dpmstest.cpp)
-    target_link_libraries(dpmsTest KF5::WaylandClient Qt5::Widgets)
+    target_link_libraries(dpmsTest KF5::WaylandClient Qt::Widgets)
     ecm_mark_as_test(dpmsTest)
 endif()
 
 add_executable(plasmasurface-test plasmasurfacetest.cpp)
-target_link_libraries(plasmasurface-test Qt5::Gui KF5::WaylandClient)
+target_link_libraries(plasmasurface-test Qt::Gui KF5::WaylandClient)
 ecm_mark_as_test(plasmasurface-test)
 
 add_executable(xdgforeign-test xdgforeigntest.cpp)
-target_link_libraries(xdgforeign-test Qt5::Gui KF5::WaylandClient)
+target_link_libraries(xdgforeign-test Qt::Gui KF5::WaylandClient)
 ecm_mark_as_test(xdgforeign-test)
 
 add_executable(xdg-test xdgtest.cpp)
-target_link_libraries(xdg-test Qt5::Gui KF5::WaylandClient)
+target_link_libraries(xdg-test Qt::Gui KF5::WaylandClient)
 ecm_mark_as_test(xdg-test)
 
