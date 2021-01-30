@@ -27,6 +27,11 @@ ColorManager::ColorManager(QObject *parent)
     : QObject(parent)
     , d(new ColorManagerPrivate)
 {
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+    for (AbstractOutput *output : outputs) {
+        handleOutputEnabled(output);
+    }
+
     connect(kwinApp()->platform(), &Platform::outputEnabled,
             this, &ColorManager::handleOutputEnabled);
     connect(kwinApp()->platform(), &Platform::outputDisabled,
