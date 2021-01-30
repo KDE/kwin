@@ -9,6 +9,7 @@
 #include "kwin_wayland_test.h"
 #include "platform.h"
 #include "cursor.h"
+#include "deleted.h"
 #include "effects.h"
 #include "internal_client.h"
 #include "screens.h"
@@ -65,6 +66,7 @@ private Q_SLOTS:
     void testChangeWindowType();
     void testEffectWindow();
     void testReentrantSetFrameGeometry();
+    void testDismissPopup();
 };
 
 class HelperWindow : public QRasterWindow
@@ -173,6 +175,7 @@ void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 void InternalWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::AbstractClient *>();
+    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalClient *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(applicationStartedSpy.isValid());
@@ -807,6 +810,41 @@ void InternalWindowTest::testReentrantSetFrameGeometry()
 
     // Eventually, the client will end up at (100, 100).
     QCOMPARE(client->pos(), QPoint(100, 100));
+}
+
+void InternalWindowTest::testDismissPopup()
+{
+    // This test verifies that a popup window created by the compositor will be dismissed
+    // when user clicks another window.
+
+    // Create a toplevel window.
+    QSignalSpy clientAddedSpy(workspace(), &Workspace::internalClientAdded);
+    QVERIFY(clientAddedSpy.isValid());
+    HelperWindow clientToplevel;
+    clientToplevel.setGeometry(0, 0, 100, 100);
+    clientToplevel.show();
+    QTRY_COMPARE(clientAddedSpy.count(), 1);
+    auto serverToplevel = clientAddedSpy.last().first().value<InternalClient *>();
+    QVERIFY(serverToplevel);
+
+    // Create a popup window.
+    QRasterWindow clientPopup;
+    clientPopup.setFlag(Qt::Popup);
+    clientPopup.setTransientParent(&clientToplevel);
+    clientPopup.setGeometry(0, 0, 50, 50);
+    clientPopup.show();
+    QTRY_COMPARE(clientAddedSpy.count(), 2);
+    auto serverPopup = clientAddedSpy.last().first().value<InternalClient *>();
+    QVERIFY(serverPopup);
+
+    // Click somewhere outside the popup window.
+    QSignalSpy popupClosedSpy(serverPopup, &InternalClient::windowClosed);
+    quint32 timestamp = 0;
+    kwinApp()->platform()->pointerMotion(QPointF(serverPopup->x() + serverPopup->width() + 1,
+                                                 serverPopup->y() + serverPopup->height() + 1),
+                                         timestamp++);
+    kwinApp()->platform()->pointerButtonPressed(BTN_LEFT, timestamp++);
+    QTRY_COMPARE(popupClosedSpy.count(), 1);
 }
 
 }

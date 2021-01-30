@@ -316,6 +316,7 @@ private:
     void reconfigure();
     void setupInputFilters();
     void installInputEventFilter(InputEventFilter *filter);
+    Toplevel *findInternal(const QPoint &pos) const;
     KeyboardInputRedirection *m_keyboard;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
@@ -496,8 +497,6 @@ private:
     void updateFocus();
     bool updateDecoration();
     void updateInternalWindow(QWindow *window);
-
-    QWindow* findInternalWindow(const QPoint &pos) const;
 
     struct {
         QPointer<Toplevel> at;
