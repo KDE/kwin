@@ -40,6 +40,7 @@
 #include <QStyle>
 #include <QDebug>
 #include <QWindow>
+#include <QDBusInterface>
 
 // system
 #if HAVE_SYS_PRCTL_H
@@ -562,11 +563,15 @@ int main(int argc, char * argv[])
                                     i18n("Wayland socket to use for incoming connections."),
                                     QStringLiteral("wayland_fd"));
 
+    QCommandLineOption replaceOption(QStringLiteral("replace"),
+                                    i18n("Exits this instance so it can be restarted by kwin_wayland_wrapper."));
+
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
     parser.addOption(waylandSocketFdOption);
+    parser.addOption(replaceOption);
 
     if (hasX11Option) {
         parser.addOption(x11DisplayOption);
@@ -636,6 +641,12 @@ int main(int argc, char * argv[])
     a.setUseKActivities(false);
 #endif
 
+    if (parser.isSet(replaceOption)) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"),
+                                         QStringLiteral("org.kde.KWin"), QStringLiteral("replace"));
+        QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);
+        return 0;
+    }
     if (parser.isSet(listBackendsOption)) {
         for (const auto &plugin: availablePlugins) {
             std::cout << std::setw(40) << std::left << qPrintable(plugin.name()) << qPrintable(plugin.description()) << std::endl;

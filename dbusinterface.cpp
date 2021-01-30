@@ -181,6 +181,11 @@ void DBusInterface::showDebugConsole()
     console->show();
 }
 
+void DBusInterface::replace()
+{
+    QCoreApplication::exit(133);
+}
+
 namespace {
 QVariantMap clientToVariantMap(const AbstractClient *c)
 {

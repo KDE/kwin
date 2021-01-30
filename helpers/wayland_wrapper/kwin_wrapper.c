@@ -101,16 +101,21 @@ int main(int argc, char **argv)
 
         waitpid(pid, &status, 0); /* wait for child */
 
+        crashCount++;
         if (WIFEXITED(status)) {
             int exit_status = WEXITSTATUS(status);
-            fprintf(stderr, "Kwin exited with code %d\n", exit_status);
-            break;
+            if (exit_status == 133) {
+                crashCount = 0;
+                fprintf(stderr, "Compositor restarted, respawning\n");
+            } else {
+                fprintf(stderr, "KWin exited with code %d\n", exit_status);
+                break;
+            }
         } else if (WIFSIGNALED(status)) {
             // we crashed! Let's go again!
             pid = 0;
             fprintf(stderr, "Compositor crashed, respawning\n");
         }
-        crashCount++;
     }
 
     wl_socket_destroy(socket);
