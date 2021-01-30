@@ -21,7 +21,7 @@ kconfig_add_kcfg_files(kcm_kwintabbox_PART_SRCS kwintabboxsettings.kcfgc kwinswi
 add_library(kcm_kwintabbox MODULE ${kcm_kwintabbox_PART_SRCS})
 
 target_link_libraries(kcm_kwintabbox
-    Qt5::Quick
+    Qt::Quick
 
     KF5::Completion
     KF5::GlobalAccel

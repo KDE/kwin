@@ -14,8 +14,8 @@ qt5_add_dbus_interface(kcmkwincommon_SRC
 add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
 
 target_link_libraries(kcmkwincommon
-    Qt5::Core
-    Qt5::DBus
+    Qt::Core
+    Qt::DBus
     KF5::CoreAddons
     KF5::ConfigCore
     KF5::I18n

@@ -410,7 +410,7 @@ configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h)
 set(kwin_effects_dbus_xml ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.kwin.Effects.xml)
 qt5_add_dbus_interface(effects_interface_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 add_library(KWinEffectsInterface STATIC ${effects_interface_SRCS})
-target_link_libraries(KWinEffectsInterface Qt5::DBus)
+target_link_libraries(KWinEffectsInterface Qt::DBus)
 
 include_directories(BEFORE
     ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects
@@ -613,10 +613,10 @@ target_link_libraries(kwin
     kwineffects
     kwinglutils
 
-    Qt5::Concurrent
-    Qt5::DBus
-    Qt5::Quick
-    Qt5::Script
+    Qt::Concurrent
+    Qt::DBus
+    Qt::Quick
+    Qt::Script
 
     KF5::ConfigCore
     KF5::ConfigWidgets
@@ -695,7 +695,7 @@ if(CMAKE_SYSTEM MATCHES "FreeBSD")
 endif()
 
 add_executable(kwin_x11 main_x11.cpp)
-target_link_libraries(kwin_x11 kwin KF5::Crash Qt5::X11Extras)
+target_link_libraries(kwin_x11 kwin KF5::Crash Qt::X11Extras)
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

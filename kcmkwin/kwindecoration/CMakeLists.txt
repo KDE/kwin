@@ -28,7 +28,7 @@ target_link_libraries(kcm_kwindecoration
     KF5::KCMUtils
     KF5::NewStuff
     KF5::QuickAddons
-    Qt5::Quick
+    Qt::Quick
 )
 
 kcoreaddons_desktop_to_json(kcm_kwindecoration "kwindecoration.desktop" SERVICE_TYPES kcmodule.desktop)

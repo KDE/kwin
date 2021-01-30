@@ -9,7 +9,7 @@ add_library(kwin_wobblywindows_config MODULE ${kwin_wobblywindows_config_SRCS})
 target_link_libraries(kwin_wobblywindows_config
     KF5::ConfigWidgets
     KF5::I18n
-    Qt5::DBus
+    Qt::DBus
     KWinEffectsInterface
 )
 

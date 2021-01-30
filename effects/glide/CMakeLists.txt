@@ -9,7 +9,7 @@ add_library(kwin_glide_config MODULE ${kwin_glide_config_SRCS})
 target_link_libraries(kwin_glide_config
     KF5::ConfigWidgets
     KF5::I18n
-    Qt5::DBus
+    Qt::DBus
     KWinEffectsInterface
 )
 

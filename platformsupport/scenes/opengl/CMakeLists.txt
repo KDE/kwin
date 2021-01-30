@@ -20,5 +20,5 @@ ecm_qt_declare_logging_category(SCENE_OPENGL_BACKEND_SRCS
 )
 
 add_library(SceneOpenGLBackend STATIC ${SCENE_OPENGL_BACKEND_SRCS})
-target_link_libraries(SceneOpenGLBackend Qt5::Core Qt5::Widgets KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem Plasma::KWaylandServer)
+target_link_libraries(SceneOpenGLBackend Qt::Core Qt::Widgets KF5::CoreAddons KF5::ConfigCore KF5::WindowSystem Plasma::KWaylandServer)
 target_include_directories(SceneOpenGLBackend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

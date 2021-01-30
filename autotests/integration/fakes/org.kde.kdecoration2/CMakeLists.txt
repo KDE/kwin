@@ -7,8 +7,8 @@ set_target_properties(fakedecoshadows PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/fakes/org.kde.kdecoration2")
 target_link_libraries(fakedecoshadows
     PUBLIC
-        Qt5::Core
-        Qt5::Gui
+        Qt::Core
+        Qt::Gui
     PRIVATE
         KDecoration2::KDecoration
         KF5::CoreAddons)

@@ -24,8 +24,8 @@ ki18n_wrap_ui(kwincompositing_SRC compositing.ui)
 add_library(kwincompositing MODULE ${kwincompositing_SRC})
 
 target_link_libraries(kwincompositing
-    Qt5::DBus
-    Qt5::Widgets
+    Qt::DBus
+    Qt::Widgets
 
     KF5::ConfigCore
     KF5::CoreAddons

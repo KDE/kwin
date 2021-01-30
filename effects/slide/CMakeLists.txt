@@ -9,7 +9,7 @@ add_library(kwin_slide_config MODULE ${kwin_slide_config_SRCS})
 target_link_libraries(kwin_slide_config
     KF5::ConfigWidgets
     KF5::I18n
-    Qt5::DBus
+    Qt::DBus
     KWinEffectsInterface
 )
 

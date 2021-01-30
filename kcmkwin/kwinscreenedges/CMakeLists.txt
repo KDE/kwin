@@ -26,7 +26,7 @@ ki18n_wrap_ui(kcm_kwinscreenedges_PART_SRCS main.ui)
 kconfig_add_kcfg_files(kcm_kwinscreenedges_PART_SRCS kwinscreenedgesettings.kcfgc kwinscreenedgescriptsettings.kcfgc)
 add_library(kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS})
 set(kcm_screenedges_LIBS
-    Qt5::DBus
+    Qt::DBus
 
     KF5::Completion
     KF5::ConfigCore

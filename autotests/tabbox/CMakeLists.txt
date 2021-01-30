@@ -17,13 +17,13 @@ set(testTabBoxClientModel_SRCS
 add_executable(testTabBoxClientModel ${testTabBoxClientModel_SRCS})
 set_target_properties(testTabBoxClientModel PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_link_libraries(testTabBoxClientModel
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Quick
-    Qt5::Script
-    Qt5::Test
-    Qt5::Widgets
-    Qt5::X11Extras
+    Qt::Core
+    Qt::DBus
+    Qt::Quick
+    Qt::Script
+    Qt::Test
+    Qt::Widgets
+    Qt::X11Extras
 
     KF5::ConfigCore
     KF5::I18n
@@ -53,13 +53,13 @@ set(testTabBoxHandler_SRCS
 add_executable(testTabBoxHandler ${testTabBoxHandler_SRCS})
 set_target_properties(testTabBoxHandler PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 target_link_libraries(testTabBoxHandler
-    Qt5::Core
-    Qt5::DBus
-    Qt5::Quick
-    Qt5::Script
-    Qt5::Test
-    Qt5::Widgets
-    Qt5::X11Extras
+    Qt::Core
+    Qt::DBus
+    Qt::Quick
+    Qt::Script
+    Qt::Test
+    Qt::Widgets
+    Qt::X11Extras
 
     KF5::ConfigCore
     KF5::I18n
@@ -82,7 +82,7 @@ set(testTabBoxConfig_SRCS
 )
 
 add_executable(testTabBoxConfig ${testTabBoxConfig_SRCS})
-target_link_libraries(testTabBoxConfig Qt5::Core Qt5::Test)
+target_link_libraries(testTabBoxConfig Qt::Core Qt::Test)
 add_test(NAME kwin-testTabBoxConfig COMMAND testTabBoxConfig)
 ecm_mark_as_test(testTabBoxConfig)
 
@@ -97,6 +97,6 @@ set(testDesktopChain_SRCS
 )
 
 add_executable(testDesktopChain ${testDesktopChain_SRCS})
-target_link_libraries(testDesktopChain Qt5::Core Qt5::Test)
+target_link_libraries(testDesktopChain Qt::Core Qt::Test)
 add_test(NAME kwin-testDesktopChain COMMAND testDesktopChain)
 ecm_mark_as_test(testDesktopChain)

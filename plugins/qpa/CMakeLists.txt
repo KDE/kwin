@@ -22,9 +22,9 @@ target_include_directories(KWinQpaPlugin PRIVATE
 )
 
 target_link_libraries(KWinQpaPlugin PRIVATE
-    Qt5::FontDatabaseSupportPrivate
-    Qt5::ThemeSupportPrivate
-    Qt5::EventDispatcherSupportPrivate
+    Qt::FontDatabaseSupportPrivate
+    Qt::ThemeSupportPrivate
+    Qt::EventDispatcherSupportPrivate
     Freetype::Freetype # Must be after Qt5 platform support libs
     Fontconfig::Fontconfig
     kwin

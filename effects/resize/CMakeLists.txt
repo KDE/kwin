@@ -9,7 +9,7 @@ add_library(kwin_resize_config MODULE ${kwin_resize_config_SRCS})
 target_link_libraries(kwin_resize_config
     KF5::ConfigWidgets
     KF5::I18n
-    Qt5::DBus
+    Qt::DBus
     KWinEffectsInterface
 )
 

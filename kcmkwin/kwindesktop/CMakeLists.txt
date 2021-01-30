@@ -18,7 +18,7 @@ kconfig_add_kcfg_files(kcm_kwin_virtualdesktops_PART_SRCS virtualdesktopssetting
 add_library(kcm_kwin_virtualdesktops MODULE ${kcm_kwin_virtualdesktops_PART_SRCS})
 
 target_link_libraries(kcm_kwin_virtualdesktops
-    Qt5::DBus
+    Qt::DBus
 
     KF5::I18n
     KF5::KCMUtils

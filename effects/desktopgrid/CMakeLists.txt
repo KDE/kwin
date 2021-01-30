@@ -16,7 +16,7 @@ target_link_libraries(kwin_desktopgrid_config
     KF5::GlobalAccel
     KF5::I18n
     KF5::XmlGui
-    Qt5::Quick
+    Qt::Quick
     kwineffects
     KWinEffectsInterface
 )

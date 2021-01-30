@@ -31,10 +31,10 @@ if (HAVE_ACCESSIBILITY)
 endif()
 
 set(kwin_effect_QT_LIBS
-    Qt5::Concurrent
-    Qt5::DBus
-    Qt5::Quick
-    Qt5::X11Extras
+    Qt::Concurrent
+    Qt::DBus
+    Qt::Quick
+    Qt::X11Extras
 )
 
 set(kwin_effect_XLIB_LIBS

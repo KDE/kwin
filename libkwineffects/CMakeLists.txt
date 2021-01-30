@@ -18,8 +18,8 @@ add_library(kwinxrenderutils SHARED ${kwin_XRENDERUTILS_SRCS})
 generate_export_header(kwinxrenderutils EXPORT_FILE_NAME kwinxrenderutils_export.h)
 target_link_libraries(kwinxrenderutils
     PUBLIC
-        Qt5::Core
-        Qt5::Gui
+        Qt::Core
+        Qt::Gui
 
         XCB::RENDER
         XCB::XCB
@@ -53,7 +53,7 @@ target_link_libraries(kwineffects
         XCB::XCB
         Plasma::KWaylandServer
     PRIVATE
-        Qt5::Quick
+        Qt::Quick
         KF5::Declarative
         kwinglutils
 )

@@ -27,7 +27,7 @@ ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
 )
 add_library(KWinIntegrationTestFramework STATIC ${KWinIntegrationTestFramework_SOURCES})
 target_link_libraries(KWinIntegrationTestFramework
-    Qt5::Test
+    Qt::Test
     kwin
     Wayland::Client
 
@@ -44,12 +44,12 @@ function(integrationTest)
     set(multiValueArgs SRCS LIBS)
     cmake_parse_arguments(ARGS "${optionArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
-    target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework kwin Qt5::Test ${ARGS_LIBS})
+    target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework kwin Qt::Test ${ARGS_LIBS})
     add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME})
     if (${ARGS_WAYLAND_ONLY})
         add_executable(${ARGS_NAME}_waylandonly ${ARGS_SRCS} )
         set_target_properties(${ARGS_NAME}_waylandonly PROPERTIES COMPILE_DEFINITIONS "NO_XWAYLAND")
-        target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework kwin Qt5::Test ${ARGS_LIBS})
+        target_link_libraries(${ARGS_NAME}_waylandonly KWinIntegrationTestFramework kwin Qt::Test ${ARGS_LIBS})
         add_test(NAME kwin-${ARGS_NAME}-waylandonly COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME}_waylandonly)
     endif()
 endfunction()

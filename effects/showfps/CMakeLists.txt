@@ -10,7 +10,7 @@ target_link_libraries(kwin_showfps_config
     KF5::Completion
     KF5::ConfigWidgets
     KF5::I18n
-    Qt5::DBus
+    Qt::DBus
     KWinEffectsInterface
 )
 

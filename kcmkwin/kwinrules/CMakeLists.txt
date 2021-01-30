@@ -30,8 +30,8 @@ set(kwin_kcm_rules_XCB_LIBS
 )
 
 set(kcm_libs
-    Qt5::Quick
-    Qt5::QuickWidgets
+    Qt::Quick
+    Qt::QuickWidgets
 
     KF5::I18n
     KF5::QuickAddons

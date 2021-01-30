@@ -10,7 +10,7 @@ set(mockDRM_SRCS
 )
 
 add_library(mockDrm STATIC ${mockDRM_SRCS})
-target_link_libraries(mockDrm Qt5::Gui)
+target_link_libraries(mockDrm Qt::Gui)
 ecm_mark_as_test(mockDrm)
 
 function(drmTest)
@@ -18,7 +18,7 @@ function(drmTest)
     set(multiValueArgs SRCS )
     cmake_parse_arguments(ARGS "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
-    target_link_libraries(${ARGS_NAME} mockDrm Qt5::Test)
+    target_link_libraries(${ARGS_NAME} mockDrm Qt::Test)
     add_test(NAME kwin-drm-${ARGS_NAME} COMMAND ${ARGS_NAME})
     ecm_mark_as_test(${ARGS_NAME})
 endfunction()
