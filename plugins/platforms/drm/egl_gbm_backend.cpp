@@ -155,23 +155,6 @@ bool EglGbmBackend::initRenderingContext()
     return true;
 }
 
-std::shared_ptr<GbmSurface> EglGbmBackend::createGbmSurface(const QSize &size, const bool linear) const
-{
-    auto flags = GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING;
-    if (linear) {
-        flags |= GBM_BO_USE_LINEAR;
-    }
-    auto gbmSurface = std::make_shared<GbmSurface>(m_gpu->gbmDevice(),
-                                                   size.width(), size.height(),
-                                                   GBM_FORMAT_XRGB8888,
-                                                   flags);
-    if (!gbmSurface) {
-        qCCritical(KWIN_DRM) << "Creating GBM surface failed";
-        return nullptr;
-    }
-    return gbmSurface;
-}
-
 EGLSurface EglGbmBackend::createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const
 {
     auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(),
@@ -188,9 +171,18 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     output.output = drmOutput;
     const QSize size = drmOutput->hardwareTransforms() ? drmOutput->pixelSize() :
                                                          drmOutput->modeSize();
-
-    auto gbmSurface = createGbmSurface(size, output.onSecondaryGPU);
+    int flags = GBM_BO_USE_RENDERING;
+    if (drmOutput->gpu() == m_gpu) {
+        flags |= GBM_BO_USE_SCANOUT;
+    } else {
+        flags |= GBM_BO_USE_LINEAR;
+    }
+    auto gbmSurface = std::make_shared<GbmSurface>(m_gpu->gbmDevice(),
+                                                   size.width(), size.height(),
+                                                   GBM_FORMAT_XRGB8888,
+                                                   flags);
     if (!gbmSurface) {
+        qCCritical(KWIN_DRM) << "Creating GBM surface failed";
         return false;
     }
     auto eglSurface = createEglSurface(gbmSurface);
@@ -335,7 +327,7 @@ bool EglGbmBackend::resetFramebuffer(Output &output)
 {
     cleanupFramebuffer(output);
 
-    if (output.output->hardwareTransforms() && !output.onSecondaryGPU) {
+    if (output.output->hardwareTransforms()) {
         // No need for an extra render target.
         return true;
     }

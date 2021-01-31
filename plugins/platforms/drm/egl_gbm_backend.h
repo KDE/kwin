@@ -74,14 +74,12 @@ private:
             std::shared_ptr<GLVertexBuffer> vbo;
         } render;
 
-        bool onSecondaryGPU = false;
         int dmabufFd = 0;
         gbm_bo *secondaryGbmBo = nullptr;
         gbm_bo *importedGbmBo = nullptr;
     };
 
     bool resetOutput(Output &output, DrmOutput *drmOutput);
-    std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size, const bool linear) const;
     EGLSurface createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const;
 
     bool makeContextCurrent(const Output &output) const;
