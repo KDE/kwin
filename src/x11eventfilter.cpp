@@ -8,7 +8,7 @@
 */
 
 #include "x11eventfilter.h"
-#include <workspace.h>
+#include "main.h"
 
 namespace KWin
 {
@@ -17,7 +17,7 @@ X11EventFilter::X11EventFilter(const QVector<int> &eventTypes)
     : m_eventTypes(eventTypes)
     , m_extension(0)
 {
-    Workspace::self()->registerEventFilter(this);
+    kwinApp()->registerEventFilter(this);
 }
 
 
@@ -29,13 +29,13 @@ X11EventFilter::X11EventFilter(int eventType, int opcode, int genericEventType)
 X11EventFilter::X11EventFilter(int eventType, int opcode, const QVector< int > &genericEventTypes)
     : m_eventTypes(QVector<int>{eventType}), m_extension(opcode), m_genericEventTypes(genericEventTypes)
 {
-    Workspace::self()->registerEventFilter(this);
+    kwinApp()->registerEventFilter(this);
 }
 
 X11EventFilter::~X11EventFilter()
 {
-    if (auto w = Workspace::self()) {
-        w->unregisterEventFilter(this);
+    if (kwinApp()) {
+        kwinApp()->unregisterEventFilter(this);
     }
 }
 

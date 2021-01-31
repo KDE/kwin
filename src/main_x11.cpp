@@ -194,6 +194,7 @@ void ApplicationX11::lostSelection()
     destroyWorkspace();
     // Remove windowmanager privileges
     Xcb::selectInput(rootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
+    removeNativeX11EventFilter();
     quit();
 }
 

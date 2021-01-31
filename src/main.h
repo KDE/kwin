@@ -27,11 +27,25 @@ namespace KWin
 {
 
 class Platform;
+class X11EventFilter;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
 public:
     bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
+};
+
+class X11EventFilterContainer : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit X11EventFilterContainer(X11EventFilter *filter);
+
+    X11EventFilter *filter() const;
+
+private:
+    X11EventFilter *m_filter;
 };
 
 class KWIN_EXPORT Application : public  QApplication
@@ -95,6 +109,10 @@ public:
     void setupTranslator();
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
+
+    void registerEventFilter(X11EventFilter *filter);
+    void unregisterEventFilter(X11EventFilter *filter);
+    bool dispatchEvent(xcb_generic_event_t *event);
 
     xcb_timestamp_t x11Time() const {
         return m_x11Time;
@@ -255,6 +273,8 @@ protected:
     static int crashes;
 
 private:
+    QList<QPointer<X11EventFilterContainer>> m_eventFilters;
+    QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_configLock;
     KSharedConfigPtr m_config;

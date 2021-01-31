@@ -56,19 +56,6 @@ class X11Client;
 class X11EventFilter;
 enum class Predicate;
 
-class X11EventFilterContainer : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit X11EventFilterContainer(X11EventFilter *filter);
-
-    X11EventFilter *filter() const;
-
-private:
-    X11EventFilter *m_filter;
-};
-
 class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
@@ -384,10 +371,6 @@ public:
      * @returns Whether we have a Compositor and it is active (Scene created)
      */
     bool compositing() const;
-
-    void registerEventFilter(X11EventFilter *filter);
-    void unregisterEventFilter(X11EventFilter *filter);
-
     void markXStackingOrderAsDirty();
 
     void quickTileWindow(QuickTileMode mode);
@@ -669,9 +652,6 @@ private:
     friend class StackingUpdatesBlocker;
 
     QScopedPointer<KillWindow> m_windowKiller;
-
-    QList<QPointer<X11EventFilterContainer>> m_eventFilters;
-    QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     QScopedPointer<X11EventFilter> m_movingClientFilter;
     QScopedPointer<X11EventFilter> m_syncAlarmFilter;
 

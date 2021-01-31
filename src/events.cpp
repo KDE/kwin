@@ -141,129 +141,12 @@ static xcb_window_t findEventWindow(xcb_generic_event_t *event)
     }
 }
 
-QVector<QByteArray> s_xcbEerrors({
-    QByteArrayLiteral("Success"),
-    QByteArrayLiteral("BadRequest"),
-    QByteArrayLiteral("BadValue"),
-    QByteArrayLiteral("BadWindow"),
-    QByteArrayLiteral("BadPixmap"),
-    QByteArrayLiteral("BadAtom"),
-    QByteArrayLiteral("BadCursor"),
-    QByteArrayLiteral("BadFont"),
-    QByteArrayLiteral("BadMatch"),
-    QByteArrayLiteral("BadDrawable"),
-    QByteArrayLiteral("BadAccess"),
-    QByteArrayLiteral("BadAlloc"),
-    QByteArrayLiteral("BadColor"),
-    QByteArrayLiteral("BadGC"),
-    QByteArrayLiteral("BadIDChoice"),
-    QByteArrayLiteral("BadName"),
-    QByteArrayLiteral("BadLength"),
-    QByteArrayLiteral("BadImplementation"),
-    QByteArrayLiteral("Unknown")});
-
-
-void Workspace::registerEventFilter(X11EventFilter *filter)
-{
-    if (filter->isGenericEvent()) {
-        m_genericEventFilters.append(new X11EventFilterContainer(filter));
-    } else {
-        m_eventFilters.append(new X11EventFilterContainer(filter));
-    }
-}
-
-static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
-                                                QList<QPointer<X11EventFilterContainer>> &list)
-{
-    for (int i = 0; i < list.count(); ++i) {
-        X11EventFilterContainer *container = list.at(i);
-        if (container->filter() == eventFilter) {
-            return list.takeAt(i);
-        }
-    }
-    return nullptr;
-}
-
-void Workspace::unregisterEventFilter(X11EventFilter *filter)
-{
-    X11EventFilterContainer *container = nullptr;
-    if (filter->isGenericEvent()) {
-        container = takeEventFilter(filter, m_genericEventFilters);
-    } else {
-        container = takeEventFilter(filter, m_eventFilters);
-    }
-    delete container;
-}
-
-
 /**
  * Handles workspace specific XCB event
  */
 bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
     const uint8_t eventType = e->response_type & ~0x80;
-    if (!eventType) {
-        // let's check whether it's an error from one of the extensions KWin uses
-        xcb_generic_error_t *error = reinterpret_cast<xcb_generic_error_t*>(e);
-        const QVector<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
-        for (const auto &extension : extensions) {
-            if (error->major_code == extension.majorOpcode) {
-                QByteArray errorName;
-                if (error->error_code < s_xcbEerrors.size()) {
-                    errorName = s_xcbEerrors.at(error->error_code);
-                } else if (error->error_code >= extension.errorBase) {
-                    const int index = error->error_code - extension.errorBase;
-                    if (index >= 0 && index < extension.errorCodes.size()) {
-                        errorName = extension.errorCodes.at(index);
-                    }
-                }
-                if (errorName.isEmpty()) {
-                    errorName = QByteArrayLiteral("Unknown");
-                }
-                qCWarning(KWIN_CORE, "XCB error: %d (%s), sequence: %d, resource id: %d, major code: %d (%s), minor code: %d (%s)",
-                         int(error->error_code), errorName.constData(),
-                         int(error->sequence), int(error->resource_id),
-                         int(error->major_code), extension.name.constData(),
-                         int(error->minor_code),
-                         extension.opCodes.size() > error->minor_code ? extension.opCodes.at(error->minor_code).constData() : "Unknown");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    if (eventType == XCB_GE_GENERIC) {
-        xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(e);
-
-        // We need to make a shadow copy of the event filter list because an activated event
-        // filter may mutate it by removing or installing another event filter.
-        const auto eventFilters = m_genericEventFilters;
-
-        for (X11EventFilterContainer *container : eventFilters) {
-            if (!container) {
-                continue;
-            }
-            X11EventFilter *filter = container->filter();
-            if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(e)) {
-                return true;
-            }
-        }
-    } else {
-        // We need to make a shadow copy of the event filter list because an activated event
-        // filter may mutate it by removing or installing another event filter.
-        const auto eventFilters = m_eventFilters;
-
-        for (X11EventFilterContainer *container : eventFilters) {
-            if (!container) {
-                continue;
-            }
-            X11EventFilter *filter = container->filter();
-            if (filter->eventTypes().contains(eventType) && filter->event(e)) {
-                return true;
-            }
-        }
-    }
-
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
             && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()

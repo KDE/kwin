@@ -25,6 +25,7 @@
 #include "screenlockerwatcher.h"
 #include "sm.h"
 #include "workspace.h"
+#include "x11eventfilter.h"
 #include "xcbutils.h"
 
 #include <kwineffects.h>
@@ -357,6 +358,134 @@ void Application::destroyColorManager()
 #endif
 }
 
+void Application::registerEventFilter(X11EventFilter *filter)
+{
+    if (filter->isGenericEvent()) {
+        m_genericEventFilters.append(new X11EventFilterContainer(filter));
+    } else {
+        m_eventFilters.append(new X11EventFilterContainer(filter));
+    }
+}
+
+static X11EventFilterContainer *takeEventFilter(X11EventFilter *eventFilter,
+                                                QList<QPointer<X11EventFilterContainer>> &list)
+{
+    for (int i = 0; i < list.count(); ++i) {
+        X11EventFilterContainer *container = list.at(i);
+        if (container->filter() == eventFilter) {
+            return list.takeAt(i);
+        }
+    }
+    return nullptr;
+}
+
+void Application::unregisterEventFilter(X11EventFilter *filter)
+{
+    X11EventFilterContainer *container = nullptr;
+    if (filter->isGenericEvent()) {
+        container = takeEventFilter(filter, m_genericEventFilters);
+    } else {
+        container = takeEventFilter(filter, m_eventFilters);
+    }
+    delete container;
+}
+
+bool Application::dispatchEvent(xcb_generic_event_t *event)
+{
+    static const QVector<QByteArray> s_xcbEerrors({
+        QByteArrayLiteral("Success"),
+        QByteArrayLiteral("BadRequest"),
+        QByteArrayLiteral("BadValue"),
+        QByteArrayLiteral("BadWindow"),
+        QByteArrayLiteral("BadPixmap"),
+        QByteArrayLiteral("BadAtom"),
+        QByteArrayLiteral("BadCursor"),
+        QByteArrayLiteral("BadFont"),
+        QByteArrayLiteral("BadMatch"),
+        QByteArrayLiteral("BadDrawable"),
+        QByteArrayLiteral("BadAccess"),
+        QByteArrayLiteral("BadAlloc"),
+        QByteArrayLiteral("BadColor"),
+        QByteArrayLiteral("BadGC"),
+        QByteArrayLiteral("BadIDChoice"),
+        QByteArrayLiteral("BadName"),
+        QByteArrayLiteral("BadLength"),
+        QByteArrayLiteral("BadImplementation"),
+        QByteArrayLiteral("Unknown")
+    });
+
+    kwinApp()->updateX11Time(event);
+
+    const uint8_t x11EventType = event->response_type & ~0x80;
+    if (!x11EventType) {
+        // let's check whether it's an error from one of the extensions KWin uses
+        xcb_generic_error_t *error = reinterpret_cast<xcb_generic_error_t*>(event);
+        const QVector<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
+        for (const auto &extension : extensions) {
+            if (error->major_code == extension.majorOpcode) {
+                QByteArray errorName;
+                if (error->error_code < s_xcbEerrors.size()) {
+                    errorName = s_xcbEerrors.at(error->error_code);
+                } else if (error->error_code >= extension.errorBase) {
+                    const int index = error->error_code - extension.errorBase;
+                    if (index >= 0 && index < extension.errorCodes.size()) {
+                        errorName = extension.errorCodes.at(index);
+                    }
+                }
+                if (errorName.isEmpty()) {
+                    errorName = QByteArrayLiteral("Unknown");
+                }
+                qCWarning(KWIN_CORE, "XCB error: %d (%s), sequence: %d, resource id: %d, major code: %d (%s), minor code: %d (%s)",
+                         int(error->error_code), errorName.constData(),
+                         int(error->sequence), int(error->resource_id),
+                         int(error->major_code), extension.name.constData(),
+                         int(error->minor_code),
+                         extension.opCodes.size() > error->minor_code ? extension.opCodes.at(error->minor_code).constData() : "Unknown");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    if (x11EventType == XCB_GE_GENERIC) {
+        xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(event);
+
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_genericEventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
+            if (filter->extension() == ge->extension && filter->genericEventTypes().contains(ge->event_type) && filter->event(event)) {
+                return true;
+            }
+        }
+    } else {
+        // We need to make a shadow copy of the event filter list because an activated event
+        // filter may mutate it by removing or installing another event filter.
+        const auto eventFilters = m_eventFilters;
+
+        for (X11EventFilterContainer *container : eventFilters) {
+            if (!container) {
+                continue;
+            }
+            X11EventFilter *filter = container->filter();
+            if (filter->eventTypes().contains(x11EventType) && filter->event(event)) {
+                return true;
+            }
+        }
+    }
+
+    if (workspace()) {
+        return workspace()->workspaceEvent(event);
+    }
+
+    return false;
+}
+
 void Application::updateX11Time(xcb_generic_event_t *event)
 {
     xcb_timestamp_t time = XCB_TIME_CURRENT_TIME;
@@ -434,16 +563,10 @@ void Application::updateX11Time(xcb_generic_event_t *event)
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
 {
     Q_UNUSED(result)
-    if (eventType != "xcb_generic_event_t") {
-        return false;
+    if (eventType == "xcb_generic_event_t") {
+        return kwinApp()->dispatchEvent(static_cast<xcb_generic_event_t *>(message));
     }
-    auto event = static_cast<xcb_generic_event_t *>(message);
-    kwinApp()->updateX11Time(event);
-    if (!Workspace::self()) {
-        // Workspace not yet created
-        return false;
-    }
-    return Workspace::self()->workspaceEvent(event);
+    return false;
 }
 
 static bool s_useLibinput = false;
