@@ -20,7 +20,6 @@ target_link_libraries(testTabBoxClientModel
     Qt::Core
     Qt::DBus
     Qt::Quick
-    Qt::Script
     Qt::Test
     Qt::Widgets
     Qt::X11Extras
@@ -56,7 +55,6 @@ target_link_libraries(testTabBoxHandler
     Qt::Core
     Qt::DBus
     Qt::Quick
-    Qt::Script
     Qt::Test
     Qt::Widgets
     Qt::X11Extras

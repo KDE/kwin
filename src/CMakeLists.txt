@@ -195,7 +195,6 @@ target_link_libraries(kwin
     Qt::Concurrent
     Qt::DBus
     Qt::Quick
-    Qt::Script
 
     KF5::ConfigCore
     KF5::ConfigWidgets

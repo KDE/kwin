@@ -23,7 +23,6 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     DBus
     Quick
     QuickWidgets
-    Script
     UiTools
     Widgets
     X11Extras
