@@ -120,7 +120,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QVERIFY(!reply.isError());
     auto windowData = reply.value();
     QVERIFY(!windowData.isEmpty());
-    QCOMPARE(windowData.size(), 24);
+    QCOMPARE(windowData.size(), 25);
     QCOMPARE(windowData.value(QStringLiteral("type")).toInt(), NET::Normal);
     QCOMPARE(windowData.value(QStringLiteral("x")).toInt(), client->x());
     QCOMPARE(windowData.value(QStringLiteral("y")).toInt(), client->y());
@@ -145,6 +145,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QCOMPARE(windowData.value(QStringLiteral("resourceClass")).toString(), QStringLiteral("org.kde.foo"));
     QCOMPARE(windowData.value(QStringLiteral("desktopFile")).toString(), QStringLiteral("org.kde.foo"));
     QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QStringLiteral("Test window"));
+    QCOMPARE(windowData.value(QStringLiteral("activities")), QStringList());
 
     auto verifyProperty = [client] (const QString &name) {
         QDBusPendingReply<QVariantMap> reply{getWindowInfo(client->internalId())};
@@ -262,7 +263,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     QVERIFY(!reply.isError());
     auto windowData = reply.value();
     QVERIFY(!windowData.isEmpty());
-    QCOMPARE(windowData.size(), 24);
+    QCOMPARE(windowData.size(), 25);
     QCOMPARE(windowData.value(QStringLiteral("type")).toInt(), NET::Normal);
     QCOMPARE(windowData.value(QStringLiteral("x")).toInt(), client->x());
     QCOMPARE(windowData.value(QStringLiteral("y")).toInt(), client->y());
@@ -285,6 +286,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     QCOMPARE(windowData.value(QStringLiteral("resourceClass")).toString(), QStringLiteral("bar"));
     QCOMPARE(windowData.value(QStringLiteral("desktopFile")).toString(), QStringLiteral("org.kde.foo"));
     QCOMPARE(windowData.value(QStringLiteral("caption")).toString(), QStringLiteral("Some caption"));
+    QCOMPARE(windowData.value(QStringLiteral("activities")), QStringList());
     // not testing clientmachine as that is system dependent
     // due to that also not testing localhost
 
