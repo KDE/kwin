@@ -99,7 +99,6 @@ set(kwin_SRCS
     screenlockerwatcher.cpp
     screens.cpp
     scripting/dbuscall.cpp
-    scripting/meta.cpp
     scripting/screenedgeitem.cpp
     scripting/scriptedeffect.cpp
     scripting/scripting.cpp

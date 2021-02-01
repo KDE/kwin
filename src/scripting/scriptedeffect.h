@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2012 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2018 David Edmundson <davidedmundson@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -12,10 +13,11 @@
 
 #include <kwinanimationeffect.h>
 
+#include <QJSEngine>
+#include <QJSValue>
+
 class KConfigLoader;
 class KPluginMetaData;
-class QScriptEngine;
-class QScriptValue;
 
 namespace KWin
 {
@@ -103,30 +105,55 @@ public:
      * @param defaultValue The value to return if the key is not found
      * @returns The config value if present
      */
-    Q_SCRIPTABLE QVariant readConfig(const QString &key, const QVariant defaultValue = QVariant());
-    void registerShortcut(QAction *a, QScriptValue callback);
-    const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
-        return m_shortcutCallbacks;
-    }
-    QHash<int, QList<QScriptValue > > &screenEdgeCallbacks() {
+    Q_SCRIPTABLE QJSValue readConfig(const QString &key, const QJSValue &defaultValue = QJSValue());
+
+    Q_SCRIPTABLE int displayWidth() const;
+    Q_SCRIPTABLE int displayHeight() const;
+    Q_SCRIPTABLE int animationTime(int defaultTime) const;
+
+    Q_SCRIPTABLE void registerShortcut(const QString &objectName, const QString &text,
+                                       const QString &keySequence, const QJSValue &callback);
+    Q_SCRIPTABLE bool registerScreenEdge(int edge, const QJSValue &callback);
+    Q_SCRIPTABLE bool unregisterScreenEdge(int edge);
+    Q_SCRIPTABLE bool registerTouchScreenEdge(int edge, const QJSValue &callback);
+    Q_SCRIPTABLE bool unregisterTouchScreenEdge(int edge);
+
+    Q_SCRIPTABLE quint64 animate(KWin::EffectWindow *window, Attribute attribute, int ms,
+                                 const QJSValue &to, const QJSValue &from = QJSValue(),
+                                 uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0,
+                                 bool fullScreen = false, bool keepAlive = true);
+    Q_SCRIPTABLE QJSValue animate(const QJSValue &object);
+
+    Q_SCRIPTABLE quint64 set(KWin::EffectWindow *window, Attribute attribute, int ms,
+                             const QJSValue &to, const QJSValue &from = QJSValue(),
+                             uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0,
+                             bool fullScreen = false, bool keepAlive = true);
+    Q_SCRIPTABLE QJSValue set(const QJSValue &object);
+
+    Q_SCRIPTABLE bool retarget(quint64 animationId, const QJSValue &newTarget,
+                               int newRemainingTime = -1);
+    Q_SCRIPTABLE bool retarget(const QList<quint64> &animationIds, const QJSValue &newTarget,
+                               int newRemainingTime = -1);
+
+    Q_SCRIPTABLE bool redirect(quint64 animationId, Direction direction,
+                               TerminationFlags terminationFlags = TerminateAtSource);
+    Q_SCRIPTABLE bool redirect(const QList<quint64> &animationIds, Direction direction,
+                               TerminationFlags terminationFlags = TerminateAtSource);
+
+    Q_SCRIPTABLE bool complete(quint64 animationId);
+    Q_SCRIPTABLE bool complete(const QList<quint64> &animationIds);
+
+    Q_SCRIPTABLE bool cancel(quint64 animationId);
+    Q_SCRIPTABLE bool cancel(const QList<quint64> &animationIds);
+
+    QHash<int, QJSValueList> &screenEdgeCallbacks() {
         return m_screenEdgeCallbacks;
     }
 
     QString pluginId() const;
-
     bool isActiveFullScreenEffect() const;
 
-    bool registerTouchScreenCallback(int edge, QScriptValue callback);
-    bool unregisterTouchScreenCallback(int edge);
-
 public Q_SLOTS:
-    //curve should be of type QEasingCurve::type or ScriptedEffect::EasingCurve
-    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false, bool keepAlive = true);
-    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, int curve = QEasingCurve::Linear, int delay = 0, bool fullScreen = false, bool keepAlive = true);
-    bool retarget(quint64 animationId, KWin::FPx2 newTarget, int newRemainingTime = -1);
-    bool redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags = TerminateAtSource);
-    bool complete(quint64 animationId);
-    bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
     bool borderActivated(ElectricBorder border) override;
 
 Q_SIGNALS:
@@ -139,19 +166,22 @@ Q_SIGNALS:
 
 protected:
     ScriptedEffect();
-    QScriptEngine *engine() const;
+    QJSEngine *engine() const;
     bool init(const QString &effectName, const QString &pathToScript);
     void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta) override;
 
-private Q_SLOTS:
-    void signalHandlerException(const QScriptValue &value);
-    void globalShortcutTriggered();
 private:
-    QScriptEngine *m_engine;
+    enum class AnimationType {
+        Animate,
+        Set
+    };
+
+    QJSValue animate_helper(const QJSValue &object, AnimationType animationType);
+
+    QJSEngine *m_engine;
     QString m_effectName;
     QString m_scriptFile;
-    QHash<QAction*, QScriptValue> m_shortcutCallbacks;
-    QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
+    QHash<int, QJSValueList> m_screenEdgeCallbacks;
     KConfigLoader *m_config;
     int m_chainPosition;
     QHash<int, QAction*> m_touchScreenEdgeCallbacks;

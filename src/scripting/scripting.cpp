@@ -19,11 +19,13 @@
 #include "scripting_logging.h"
 
 #include "options.h"
+#include "screenedge.h"
 #include "thumbnailitem.h"
 #include "workspace.h"
 #include "x11client.h"
 // KDE
 #include <KConfigGroup>
+#include <KGlobalAccel>
 #include <KPackage/PackageLoader>
 // Qt
 #include <QDBusConnection>

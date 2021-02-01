@@ -148,8 +148,8 @@ public:
          */
         TerminateAtTarget = 0x02
     };
-    Q_FLAGS(TerminationFlag)
     Q_DECLARE_FLAGS(TerminationFlags, TerminationFlag)
+    Q_FLAG(TerminationFlags)
 
     /**
      * Constructs AnimationEffect.
