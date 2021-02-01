@@ -125,13 +125,13 @@ void TestXdgShellClient::testXdgWindowReactive()
     QVERIFY(rootClient);
     QVERIFY(childClient);
 
-    QSignalSpy frameGeometryChangedSpy(childClient, &AbstractClient::frameGeometryChanged);
-    QVERIFY(frameGeometryChangedSpy.isValid());
+    QSignalSpy popupConfigureRequested(popup.data(), &Test::XdgPopup::configureRequested);
+    QVERIFY(popupConfigureRequested.isValid());
 
     rootClient->move(rootClient->x()+20, rootClient->y()+20);
 
-    QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(frameGeometryChangedSpy.count(), 1);
+    QVERIFY(popupConfigureRequested.wait());
+    QCOMPARE(popupConfigureRequested.count(), 1);
 }
 
 void TestXdgShellClient::testXdgWindowRepositioning()

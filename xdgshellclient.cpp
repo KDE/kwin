@@ -1707,7 +1707,7 @@ XdgPopupClient::XdgPopupClient(XdgPopupInterface *shellSurface)
             this, &XdgPopupClient::destroyClient);
 }
 
-void XdgPopupClient::handlePositionerBindings()
+void XdgPopupClient::updateReactive()
 {
     if (m_shellSurface->positioner().isReactive()) {
         connect(transientFor(), &AbstractClient::frameGeometryChanged,
@@ -1720,7 +1720,7 @@ void XdgPopupClient::handlePositionerBindings()
 
 void XdgPopupClient::handleRepositionRequested(quint32 token)
 {
-    handlePositionerBindings();
+    updateReactive();
     m_shellSurface->sendRepositioned(token);
     relayout();
 }
@@ -2011,6 +2011,8 @@ void XdgPopupClient::initialize()
     AbstractClient *parentClient = waylandServer()->findClient(m_shellSurface->parentSurface());
     parentClient->addTransient(this);
     setTransientFor(parentClient);
+
+    updateReactive();
 
     blockGeometryUpdates(true);
     const QRect area = workspace()->clientArea(PlacementArea, Screens::self()->current(), desktop());
