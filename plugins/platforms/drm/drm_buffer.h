@@ -15,8 +15,9 @@
 namespace KWin
 {
 
-class DrmBuffer
+class DrmBuffer : public QObject
 {
+    Q_OBJECT
 public:
     DrmBuffer(int fd);
     virtual ~DrmBuffer() = default;

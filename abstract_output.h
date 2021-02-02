@@ -190,6 +190,11 @@ public:
      */
     virtual RenderLoop *renderLoop() const;
 
+    void inhibitDirectScanout();
+    void uninhibitDirectScanout();
+
+    bool directScanoutInhibited() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.
@@ -202,6 +207,7 @@ Q_SIGNALS:
 
 private:
     Q_DISABLE_COPY(AbstractOutput)
+    int m_directScanoutCount = 0;
 };
 
 } // namespace KWin

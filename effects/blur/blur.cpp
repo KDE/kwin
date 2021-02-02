@@ -814,5 +814,10 @@ bool BlurEffect::isActive() const
     return !effects->isScreenLocked();
 }
 
+bool BlurEffect::blocksDirectScanout() const
+{
+    return false;
+}
+
 } // namespace KWin
 

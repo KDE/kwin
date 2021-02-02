@@ -374,4 +374,19 @@ QMatrix4x4 AbstractWaylandOutput::logicalToNativeMatrix(const QRect &rect, qreal
     return matrix;
 }
 
+void AbstractWaylandOutput::recordingStarted()
+{
+    m_recorders++;
+}
+
+void AbstractWaylandOutput::recordingStopped()
+{
+    m_recorders--;
+}
+
+bool AbstractWaylandOutput::isBeingRecorded()
+{
+    return m_recorders;
+}
+
 }

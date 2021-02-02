@@ -204,6 +204,11 @@ public:
     QStringList activeEffects() const;
 
     /**
+     * @returns whether or not any effect is currently active where KWin should not use direct scanout
+     */
+    bool blocksDirectScanout() const;
+
+    /**
      * @returns Whether we are currently in a desktop rendering process triggered by paintDesktop hook
      */
     bool isDesktopRendering() const {

@@ -128,4 +128,18 @@ RenderLoop *AbstractOutput::renderLoop() const
     return nullptr;
 }
 
+void AbstractOutput::inhibitDirectScanout()
+{
+    m_directScanoutCount++;
+}
+void AbstractOutput::uninhibitDirectScanout()
+{
+    m_directScanoutCount--;
+}
+
+bool AbstractOutput::directScanoutInhibited() const
+{
+    return m_directScanoutCount;
+}
+
 } // namespace KWin

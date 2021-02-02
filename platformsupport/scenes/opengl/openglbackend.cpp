@@ -64,6 +64,13 @@ OverlayWindow* OpenGLBackend::overlayWindow() const
     return nullptr;
 }
 
+bool OpenGLBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surface)
+{
+    Q_UNUSED(screenId)
+    Q_UNUSED(surface)
+    return false;
+}
+
 void OpenGLBackend::copyPixels(const QRegion &region)
 {
     const int height = screens()->size().height();
@@ -87,6 +94,13 @@ void OpenGLBackend::aboutToStartPainting(int screenId, const QRegion &damage)
 {
     Q_UNUSED(screenId)
     Q_UNUSED(damage)
+}
+
+
+bool OpenGLBackend::directScanoutAllowed(int screen) const
+{
+    Q_UNUSED(screen);
+    return false;
 }
 
 }

@@ -1389,6 +1389,15 @@ KWaylandServer::SurfaceInterface *WindowPixmap::surface() const
     }
 }
 
+WindowPixmap *WindowPixmap::topMostSurface()
+{
+    if (m_children.count() == 0) {
+        return this;
+    } else {
+        return m_children.last()->topMostSurface();
+    }
+}
+
 QPoint WindowPixmap::position() const
 {
     if (subSurface())

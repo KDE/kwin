@@ -516,5 +516,10 @@ bool ContrastEffect::isActive() const
     return !effects->isScreenLocked();
 }
 
+bool ContrastEffect::blocksDirectScanout() const
+{
+    return false;
+}
+
 } // namespace KWin
 

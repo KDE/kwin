@@ -664,6 +664,11 @@ public:
     static void setPositionTransformations(WindowPaintData& data, QRect& region, EffectWindow* w,
                                            const QRect& r, Qt::AspectRatioMode aspect);
 
+    /**
+     * overwrite this method to return false if your effect does not need to be drawn over opaque fullscreen windows
+     */
+    virtual bool blocksDirectScanout() const;
+
 public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);
 

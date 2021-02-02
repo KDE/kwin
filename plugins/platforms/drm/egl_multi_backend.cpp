@@ -72,6 +72,14 @@ void EglMultiBackend::endFrame(int screenId, const QRegion &damage, const QRegio
     backend->endFrame(internalScreenId, damage, damagedRegion);
 }
 
+bool EglMultiBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surface)
+{
+    int internalScreenId;
+    AbstractEglBackend *backend = findBackend(screenId, internalScreenId);
+    Q_ASSERT(backend != nullptr);
+    return backend->scanout(internalScreenId, surface);
+}
+
 bool EglMultiBackend::makeCurrent()
 {
     return m_backends[0]->makeCurrent();
@@ -104,7 +112,7 @@ void EglMultiBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-AbstractEglDrmBackend *EglMultiBackend::findBackend(int screenId, int& internalScreenId)
+AbstractEglDrmBackend *EglMultiBackend::findBackend(int screenId, int& internalScreenId) const
 {
     int screens = 0;
     for (int i = 0; i < m_backends.count(); i++) {
@@ -121,6 +129,14 @@ AbstractEglDrmBackend *EglMultiBackend::findBackend(int screenId, int& internalS
 void EglMultiBackend::addBackend(AbstractEglDrmBackend *backend)
 {
     m_backends.append(backend);
+}
+
+bool EglMultiBackend::directScanoutAllowed(int screenId) const
+{
+    int internalScreenId;
+    AbstractEglBackend *backend = findBackend(screenId, internalScreenId);
+    Q_ASSERT(backend != nullptr);
+    return backend->directScanoutAllowed(internalScreenId);
 }
 
 }

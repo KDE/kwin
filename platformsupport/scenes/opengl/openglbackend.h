@@ -14,6 +14,11 @@
 
 #include <kwin_export.h>
 
+namespace KWaylandServer
+{
+class SurfaceInterface;
+}
+
 namespace KWin
 {
 class AbstractOutput;
@@ -60,6 +65,11 @@ public:
     virtual void doneCurrent() = 0;
     virtual QRegion beginFrame(int screenId) = 0;
     virtual void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) = 0;
+    /**
+     * Tries to directly scan out a surface to the screen)
+     * @return if the scanout fails (or is not supported on the specified screen)
+     */
+    virtual bool scanout(int screenId, KWaylandServer::SurfaceInterface *surface);
 
     /**
      * @brief Returns the OverlayWindow used by the backend.
@@ -115,6 +125,7 @@ public:
     {
         return m_haveNativeFence;
     }
+    virtual bool directScanoutAllowed(int screen) const;
 
     /**
      * Returns the damage that has accumulated since a buffer of the given age was presented.

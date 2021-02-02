@@ -121,6 +121,11 @@ public:
      */
     static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
 
+    void recordingStarted();
+    void recordingStopped();
+
+    bool isBeingRecorded();
+
 Q_SIGNALS:
     void modeChanged();
     void outputChange(const QRegion &damagedRegion);
@@ -174,6 +179,7 @@ private:
 
     QString m_name;
     bool m_internal = false;
+    int m_recorders = 0;
 };
 
 }

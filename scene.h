@@ -264,14 +264,15 @@ protected:
     QRegion damaged_region;
     // The screen that is being currently painted
     int painted_screen = -1;
+
+    // windows in their stacking order
+    QVector< Window* > stacking_order;
 private:
     void paintWindowThumbnails(Scene::Window *w, const QRegion &region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     void reallocRepaints();
     QHash< Toplevel*, Window* > m_windows;
-    // windows in their stacking order
-    QVector< Window* > stacking_order;
     QVector<QRegion> m_repaints;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
@@ -570,6 +571,8 @@ public:
      * @returns the surface this WindowPixmap references, might be @c null.
      */
     KWaylandServer::SurfaceInterface *surface() const;
+
+    WindowPixmap *topMostSurface();
 
 protected:
     explicit WindowPixmap(Scene::Window *window);

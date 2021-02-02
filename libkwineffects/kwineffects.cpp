@@ -705,6 +705,11 @@ bool Effect::perform(Feature feature, const QVariantList &arguments)
     return false;
 }
 
+bool Effect::blocksDirectScanout() const
+{
+    return true;
+}
+
 //****************************************
 // EffectFactory
 //****************************************

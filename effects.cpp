@@ -1507,6 +1507,17 @@ QStringList EffectsHandlerImpl::activeEffects() const
     return ret;
 }
 
+bool EffectsHandlerImpl::blocksDirectScanout() const
+{
+    for(QVector< KWin::EffectPair >::const_iterator it = loaded_effects.constBegin(),
+                                                    end = loaded_effects.constEnd(); it != end; ++it) {
+        if (it->second->isActive() && it->second->blocksDirectScanout()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 KWaylandServer::Display *EffectsHandlerImpl::waylandDisplay() const
 {
     if (waylandServer()) {

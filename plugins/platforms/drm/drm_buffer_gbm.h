@@ -16,6 +16,11 @@
 
 struct gbm_bo;
 
+namespace KWaylandServer
+{
+class BufferInterface;
+}
+
 namespace KWin
 {
 
@@ -25,7 +30,7 @@ class DrmSurfaceBuffer : public DrmBuffer
 {
 public:
     DrmSurfaceBuffer(int fd, const std::shared_ptr<GbmSurface> &surface);
-    DrmSurfaceBuffer(int fd, gbm_bo *buffer);
+    DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
     ~DrmSurfaceBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override {
@@ -49,6 +54,9 @@ public:
 private:
     std::shared_ptr<GbmSurface> m_surface;
     gbm_bo *m_bo = nullptr;
+    KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
+
+    void clearBufferInterface();
 };
 
 }

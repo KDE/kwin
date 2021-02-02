@@ -25,6 +25,7 @@ public:
 
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
+    bool scanout(int screenId, KWaylandServer::SurfaceInterface *surface) override;
 
     bool makeCurrent() override;
     void doneCurrent() override;
@@ -36,10 +37,12 @@ public:
 
     void addBackend(AbstractEglDrmBackend *backend);
 
+    bool directScanoutAllowed(int screen) const override;
+
 private:
     QVector<AbstractEglDrmBackend*> m_backends;
 
-    AbstractEglDrmBackend *findBackend(int screenId, int& internalScreenId);
+    AbstractEglDrmBackend *findBackend(int screenId, int& internalScreenId) const;
 
 };
 
