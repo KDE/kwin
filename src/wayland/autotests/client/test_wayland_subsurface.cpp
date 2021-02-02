@@ -301,10 +301,6 @@ void TestSubSurface::testPosition()
     SubSurfaceInterface *serverSubSurface = subSurfaceCreatedSpy.first().first().value<KWaylandServer::SubSurfaceInterface*>();
     QVERIFY(serverSubSurface);
 
-    // create a signalspy
-    QSignalSpy subsurfaceTreeChanged(serverSubSurface->parentSurface(), &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(subsurfaceTreeChanged.isValid());
-
     // put the subsurface in the desired commit mode
     QFETCH(KWayland::Client::SubSurface::Mode, commitMode);
     subSurface->setMode(commitMode);
@@ -332,13 +328,13 @@ void TestSubSurface::testPosition()
     QCOMPARE(serverSubSurface->position(), QPoint());
 
     // committing the parent surface should update the position
+    QSignalSpy parentCommittedSpy(serverSubSurface->parentSurface(), &SurfaceInterface::committed);
+    QVERIFY(parentCommittedSpy.isValid());
     parent->commit(Surface::CommitFlag::None);
-    QCOMPARE(subsurfaceTreeChanged.count(), 0);
-    QVERIFY(positionChangedSpy.wait());
+    QVERIFY(parentCommittedSpy.wait());
     QCOMPARE(positionChangedSpy.count(), 1);
     QCOMPARE(positionChangedSpy.first().first().toPoint(), QPoint(20, 30));
     QCOMPARE(serverSubSurface->position(), QPoint(20, 30));
-    QCOMPARE(subsurfaceTreeChanged.count(), 1);
 }
 
 void TestSubSurface::testPlaceAbove()
@@ -606,12 +602,8 @@ void TestSubSurface::testSyncMode()
     QVERIFY(surfaceCreatedSpy.wait());
     auto parentSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
     QVERIFY(parentSurface);
-    QSignalSpy subSurfaceTreeChangedSpy(parentSurface, &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(subSurfaceTreeChangedSpy.isValid());
     // create subSurface for surface of parent
     QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
-    QVERIFY(subSurfaceTreeChangedSpy.wait());
-    QCOMPARE(subSurfaceTreeChangedSpy.count(), 1);
 
     // let's damage the child surface
     QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
@@ -637,7 +629,6 @@ void TestSubSurface::testSyncMode()
     parent->commit();
     QVERIFY(childDamagedSpy.wait());
     QCOMPARE(childDamagedSpy.count(), 1);
-    QCOMPARE(subSurfaceTreeChangedSpy.count(), 2);
     QCOMPARE(childSurface->buffer()->data(), image);
     QCOMPARE(parentSurface->buffer()->data(), image2);
     QVERIFY(childSurface->isMapped());
@@ -668,12 +659,8 @@ void TestSubSurface::testDeSyncMode()
     QVERIFY(surfaceCreatedSpy.wait());
     auto parentSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
     QVERIFY(parentSurface);
-    QSignalSpy subSurfaceTreeChangedSpy(parentSurface, &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(subSurfaceTreeChangedSpy.isValid());
     // create subSurface for surface of parent
     QScopedPointer<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.data()), QPointer<Surface>(parent.data())));
-    QVERIFY(subSurfaceTreeChangedSpy.wait());
-    QCOMPARE(subSurfaceTreeChangedSpy.count(), 1);
 
     // let's damage the child surface
     QSignalSpy childDamagedSpy(childSurface, &SurfaceInterface::damaged);
@@ -693,7 +680,6 @@ void TestSubSurface::testDeSyncMode()
     // setting to desync should apply the state directly
     subSurface->setMode(SubSurface::Mode::Desynchronized);
     QVERIFY(childDamagedSpy.wait());
-    QCOMPARE(subSurfaceTreeChangedSpy.count(), 2);
     QCOMPARE(childSurface->buffer()->data(), image);
     QVERIFY(!childSurface->isMapped());
     QVERIFY(!parentSurface->isMapped());
@@ -704,7 +690,6 @@ void TestSubSurface::testDeSyncMode()
     surface->damage(QRect(0, 0, 200, 200));
     surface->commit(Surface::CommitFlag::None);
     QVERIFY(childDamagedSpy.wait());
-    QCOMPARE(subSurfaceTreeChangedSpy.count(), 3);
     QCOMPARE(childSurface->buffer()->data(), image);
 }
 
@@ -734,15 +719,14 @@ void TestSubSurface::testMainSurfaceFromTree()
     auto childLevel3ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
     QVERIFY(childLevel3ServerSurface);
 
-    QSignalSpy subSurfaceTreeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(subSurfaceTreeChangedSpy.isValid());
-
     m_subCompositor->createSubSurface(childLevel1Surface.data(), parentSurface.data());
     m_subCompositor->createSubSurface(childLevel2Surface.data(), childLevel1Surface.data());
     m_subCompositor->createSubSurface(childLevel3Surface.data(), childLevel2Surface.data());
 
+    QSignalSpy parentCommittedSpy(parentServerSurface, &SurfaceInterface::committed);
+    QVERIFY(parentCommittedSpy.isValid());
     parentSurface->commit(Surface::CommitFlag::None);
-    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QVERIFY(parentCommittedSpy.wait());
 
     QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
     auto child = parentServerSurface->childSubSurfaces().first();
@@ -777,18 +761,18 @@ void TestSubSurface::testRemoveSurface()
     auto childServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
     QVERIFY(childServerSurface);
 
-    QSignalSpy subSurfaceTreeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(subSurfaceTreeChangedSpy.isValid());
+    QSignalSpy childrenChangedSpy(parentServerSurface, &SurfaceInterface::childSubSurfacesChanged);
+    QVERIFY(childrenChangedSpy.isValid());
 
     m_subCompositor->createSubSurface(childSurface.data(), parentSurface.data());
     parentSurface->commit(Surface::CommitFlag::None);
-    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QVERIFY(childrenChangedSpy.wait());
 
     QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
 
     // destroy surface, takes place immediately
     childSurface.reset();
-    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QVERIFY(childrenChangedSpy.wait());
     QCOMPARE(parentServerSurface->childSubSurfaces().count(), 0);
 }
 
@@ -817,15 +801,14 @@ void TestSubSurface::testMappingOfSurfaceTree()
     auto childLevel3ServerSurface = surfaceCreatedSpy.last().first().value<SurfaceInterface*>();
     QVERIFY(childLevel3ServerSurface);
 
-    QSignalSpy subSurfaceTreeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(subSurfaceTreeChangedSpy.isValid());
-
     auto subSurfaceLevel1 = m_subCompositor->createSubSurface(childLevel1Surface.data(), parentSurface.data());
     auto subSurfaceLevel2 = m_subCompositor->createSubSurface(childLevel2Surface.data(), childLevel1Surface.data());
     auto subSurfaceLevel3 = m_subCompositor->createSubSurface(childLevel3Surface.data(), childLevel2Surface.data());
 
+    QSignalSpy parentCommittedSpy(parentServerSurface, &SurfaceInterface::committed);
+    QVERIFY(parentCommittedSpy.isValid());
     parentSurface->commit(Surface::CommitFlag::None);
-    QVERIFY(subSurfaceTreeChangedSpy.wait());
+    QVERIFY(parentCommittedSpy.wait());
 
     QCOMPARE(parentServerSurface->childSubSurfaces().count(), 1);
     auto child = parentServerSurface->childSubSurfaces().first();
@@ -982,6 +965,8 @@ void TestSubSurface::testSurfaceAt()
     childFor1->commit(Surface::CommitFlag::None);
     partImage.fill(Qt::blue);
 
+    QSignalSpy childFor2CommittedSpy(childFor2ServerSurface, &SurfaceInterface::committed);
+    QVERIFY(childFor2CommittedSpy.isValid());
     childFor2->attachBuffer(m_shm->createBuffer(partImage));
     // child for 2's input region is subdivided into quadrants, with input mask on the top left and bottom right
     QRegion region;
@@ -990,10 +975,7 @@ void TestSubSurface::testSurfaceAt()
     childFor2->setInputRegion(m_compositor->createRegion(region).get());
     childFor2->damage(QRect(0, 0, 50, 50));
     childFor2->commit(Surface::CommitFlag::None);
-
-    QSignalSpy treeChangedSpy(parentServerSurface, &SurfaceInterface::subSurfaceTreeChanged);
-    QVERIFY(treeChangedSpy.isValid());
-    QVERIFY(treeChangedSpy.wait());
+    QVERIFY(childFor2CommittedSpy.wait());
 
     QCOMPARE(directChild1ServerSurface->subSurface()->parentSurface(), parentServerSurface);
     QCOMPARE(directChild2ServerSurface->subSurface()->parentSurface(), parentServerSurface);

@@ -83,15 +83,9 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     pending.children.append(child);
     cached.children.append(child);
     current.children.append(child);
-
     child->surface()->setOutputs(outputs);
-
     emit q->childSubSurfaceAdded(child);
-    emit q->subSurfaceTreeChanged();
-    QObject::connect(child, &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    QObject::connect(child->surface(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    QObject::connect(child->surface(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
-    QObject::connect(child->surface(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
+    emit q->childSubSurfacesChanged();
 }
 
 void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
@@ -101,13 +95,7 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
     cached.children.removeAll(child);
     current.children.removeAll(child);
     emit q->childSubSurfaceRemoved(child);
-    emit q->subSurfaceTreeChanged();
-    QObject::disconnect(child, &SubSurfaceInterface::positionChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    if (child->surface()) {
-        QObject::disconnect(child->surface(), &SurfaceInterface::damaged, q, &SurfaceInterface::subSurfaceTreeChanged);
-        QObject::disconnect(child->surface(), &SurfaceInterface::unmapped, q, &SurfaceInterface::subSurfaceTreeChanged);
-        QObject::disconnect(child->surface(), &SurfaceInterface::subSurfaceTreeChanged, q, &SurfaceInterface::subSurfaceTreeChanged);
-    }
+    emit q->childSubSurfacesChanged();
 }
 
 bool SurfaceInterfacePrivate::raiseChild(SubSurfaceInterface *subsurface, SurfaceInterface *sibling)
@@ -681,7 +669,7 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
         emit q->slideOnShowHideChanged();
     }
     if (childrenChanged) {
-        emit q->subSurfaceTreeChanged();
+        emit q->childSubSurfacesChanged();
     }
 }
 

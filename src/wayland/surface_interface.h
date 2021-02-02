@@ -408,10 +408,6 @@ Q_SIGNALS:
     void slideOnShowHideChanged();
     void contrastChanged();
     /**
-     * Emitted whenever the tree of sub-surfaces changes in a way which requires a repaint.
-     */
-    void subSurfaceTreeChanged();
-    /**
      * Emitted whenever a new child sub-surface @p subSurface is added.
      */
     void childSubSurfaceAdded(SubSurfaceInterface *subSurface);
@@ -419,6 +415,10 @@ Q_SIGNALS:
      * Emitted whenver the child sub-surface @p subSurface is removed.
      */
     void childSubSurfaceRemoved(SubSurfaceInterface *subSurface);
+    /**
+     * This signal is emitted when the list of child subsurfaces changes.
+     */
+    void childSubSurfacesChanged();
 
     /**
      * Emitted whenever a pointer constraint get (un)installed on this SurfaceInterface.
