@@ -626,52 +626,54 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
         scaling = 1;
     }
 
-    bool directScanout = false;
-    if (m_backend->directScanoutAllowed(screenId)) {
-        EffectsHandlerImpl *implEffects = static_cast<EffectsHandlerImpl*>(effects);
-        if (!implEffects->blocksDirectScanout()) {
-            for (int i = stacking_order.count() - 1; i >= 0; i--) {
-                Window *window = stacking_order[i];
-                AbstractClient *c = dynamic_cast<AbstractClient*>(window->window());
-                if (!c) {
-                    break;
-                }
-                if (c->isOnScreen(screenId)) {
-                    if (window->isOpaque() && c->isFullScreen()) {
-                        auto pixmap = window->windowPixmap<WindowPixmap>();
-                        if (!pixmap) {
-                            break;
-                        }
-                        pixmap->update();
-                        pixmap = pixmap->topMostSurface();
-                        // the subsurface has to be able to cover the whole window
-                        if (pixmap->position() != QPoint(0, 0)) {
-                            break;
-                        }
-                        directScanout = m_backend->scanout(screenId, pixmap->surface());
+    const GLenum status = glGetGraphicsResetStatus();
+    if (status != GL_NO_ERROR) {
+        handleGraphicsReset(status);
+    } else {
+        renderLoop->beginFrame();
+
+        bool directScanout = false;
+        if (m_backend->directScanoutAllowed(screenId)) {
+            EffectsHandlerImpl *implEffects = static_cast<EffectsHandlerImpl*>(effects);
+            if (!implEffects->blocksDirectScanout()) {
+                for (int i = stacking_order.count() - 1; i >= 0; i--) {
+                    Window *window = stacking_order[i];
+                    AbstractClient *c = dynamic_cast<AbstractClient*>(window->window());
+                    if (!c) {
+                        break;
                     }
-                    break;
+                    if (c->isOnScreen(screenId)) {
+                        if (window->isOpaque() && c->isFullScreen()) {
+                            auto pixmap = window->windowPixmap<WindowPixmap>();
+                            if (!pixmap) {
+                                break;
+                            }
+                            pixmap->update();
+                            pixmap = pixmap->topMostSurface();
+                            // the subsurface has to be able to cover the whole window
+                            if (pixmap->position() != QPoint(0, 0)) {
+                                break;
+                            }
+                            directScanout = m_backend->scanout(screenId, pixmap->surface());
+                        }
+                        break;
+                    }
                 }
             }
         }
-    }
-    if (!directScanout) {
-
-        // prepare rendering makes context current on the output
-        repaint = m_backend->beginFrame(screenId);
-
-        GLVertexBuffer::setVirtualScreenGeometry(geo);
-        GLRenderTarget::setVirtualScreenGeometry(geo);
-        GLVertexBuffer::setVirtualScreenScale(scaling);
-        GLRenderTarget::setVirtualScreenScale(scaling);
-
-        const GLenum status = glGetGraphicsResetStatus();
-        if (status != GL_NO_ERROR) {
-            handleGraphicsReset(status);
+        if (directScanout) {
+            renderLoop->endFrame();
         } else {
+            // prepare rendering makescontext current on the output
+            repaint = m_backend->beginFrame(screenId);
+
+            GLVertexBuffer::setVirtualScreenGeometry(geo);
+            GLRenderTarget::setVirtualScreenGeometry(geo);
+            GLVertexBuffer::setVirtualScreenScale(scaling);
+            GLRenderTarget::setVirtualScreenScale(scaling);
+
             int mask = 0;
             updateProjectionMatrix();
-            renderLoop->beginFrame();
 
             paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid,
                         renderLoop, projectionMatrix(), geo, scaling);   // call generic implementation

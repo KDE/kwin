@@ -629,10 +629,17 @@ void EglGbmBackend::setViewport(const Output &output) const
 
 QRegion EglGbmBackend::beginFrame(int screenId)
 {
+    auto output = m_outputs[screenId];
+    if (output.directScanoutBuffer) {
+        gbm_bo_destroy(output.directScanoutBuffer);
+        output.directScanoutBuffer = nullptr;
+        output.surfaceInterface = nullptr;
+        output.bufferInterface = nullptr;
+    }
     if (isPrimary()) {
-        return prepareRenderingForOutput(m_outputs[screenId]);
+        return prepareRenderingForOutput(output);
     } else {
-        return renderingBackend()->beginFrameForSecondaryGpu(m_outputs.at(screenId).output);
+        return renderingBackend()->beginFrameForSecondaryGpu(output.output);
     }
 }
 
@@ -641,13 +648,6 @@ QRegion EglGbmBackend::prepareRenderingForOutput(Output &output) const
     makeContextCurrent(output);
     prepareRenderFramebuffer(output);
     setViewport(output);
-
-    if (output.directScanoutBuffer) {
-        gbm_bo_destroy(output.directScanoutBuffer);
-        output.directScanoutBuffer = nullptr;
-        output.surfaceInterface = nullptr;
-        output.bufferInterface = nullptr;
-    }
 
     if (supportsBufferAge()) {
         QRegion region;
@@ -749,6 +749,9 @@ bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surf
         }
     } else {
         damage = output.output->geometry();
+    }
+    if (output.directScanoutBuffer) {
+        gbm_bo_destroy(output.directScanoutBuffer);
     }
     output.directScanoutBuffer = importedBuffer;
     output.surfaceInterface = surface;
