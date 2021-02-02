@@ -56,7 +56,7 @@ public:
     QPoint offset;
     QSize size;
     QRect anchorRect;
-    bool isReactive;
+    bool isReactive = false;
     QSize parentSize;
     quint32 parentConfigure;
 };
