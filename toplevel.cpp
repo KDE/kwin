@@ -9,6 +9,7 @@
 #include "toplevel.h"
 
 #include "abstract_client.h"
+#include "abstract_output.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -561,6 +562,11 @@ bool Toplevel::isOnScreen(int screen) const
 bool Toplevel::isOnActiveScreen() const
 {
     return isOnScreen(screens()->current());
+}
+
+bool Toplevel::isOnOutput(AbstractOutput *output) const
+{
+    return output->geometry().intersects(frameGeometry());
 }
 
 void Toplevel::updateShadow()

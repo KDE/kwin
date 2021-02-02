@@ -404,6 +404,8 @@ protected:
     ImageFilterType filter;
     Shadow *m_shadow;
 private:
+    void scheduleRepaint();
+    void handleSurfaceCommitted(KWaylandServer::SurfaceInterface *surface);
     void reallocRepaints();
 
     QScopedPointer<WindowPixmap> m_currentPixmap;

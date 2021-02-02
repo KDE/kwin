@@ -39,6 +39,8 @@ void SubSurfaceMonitor::registerSubSurface(SubSurfaceInterface *subSurface)
             this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
     connect(surface, &SurfaceInterface::bufferSizeChanged,
             this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
+    connect(surface, &SurfaceInterface::committed,
+            this, [this, subSurface]() { emit subSurfaceCommitted(subSurface); });
 
     registerSurface(surface);
 }
@@ -49,18 +51,7 @@ void SubSurfaceMonitor::unregisterSubSurface(SubSurfaceInterface *subSurface)
     if (!surface)
         return;
 
-    disconnect(subSurface, &SubSurfaceInterface::positionChanged,
-               this, &SubSurfaceMonitor::subSurfaceMoved);
-    disconnect(surface, &SurfaceInterface::sizeChanged,
-               this, &SubSurfaceMonitor::subSurfaceResized);
-    disconnect(surface, &SurfaceInterface::mapped,
-               this, &SubSurfaceMonitor::subSurfaceMapped);
-    disconnect(surface, &SurfaceInterface::unmapped,
-               this, &SubSurfaceMonitor::subSurfaceUnmapped);
-    disconnect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
-               this, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged);
-    disconnect(surface, &SurfaceInterface::bufferSizeChanged,
-               this, &SubSurfaceMonitor::subSurfaceBufferSizeChanged);
+    disconnect(subSurface, nullptr, this, nullptr);
 
     unregisterSurface(surface);
 }
@@ -79,14 +70,7 @@ void SubSurfaceMonitor::registerSurface(SurfaceInterface *surface)
 
 void SubSurfaceMonitor::unregisterSurface(SurfaceInterface *surface)
 {
-    disconnect(surface, &SurfaceInterface::childSubSurfaceAdded,
-               this, &SubSurfaceMonitor::subSurfaceAdded);
-    disconnect(surface, &SurfaceInterface::childSubSurfaceRemoved,
-               this, &SubSurfaceMonitor::subSurfaceRemoved);
-    disconnect(surface, &SurfaceInterface::childSubSurfaceAdded,
-               this, &SubSurfaceMonitor::registerSubSurface);
-    disconnect(surface, &SurfaceInterface::childSubSurfaceRemoved,
-               this, &SubSurfaceMonitor::unregisterSubSurface);
+    disconnect(surface, nullptr, this, nullptr);
 }
 
 } // namespace KWin

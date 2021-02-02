@@ -778,6 +778,13 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
                 this, &Window::discardPixmap);
         connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
                 this, &Window::discardQuads);
+
+        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceCommitted, this, [this](KWaylandServer::SubSurfaceInterface *subsurface) {
+            handleSurfaceCommitted(subsurface->surface());
+        });
+        connect(surface, &KWaylandServer::SurfaceInterface::committed, this, [this, surface]() {
+            handleSurfaceCommitted(surface);
+        });
     }
 
     connect(toplevel, &Toplevel::screenScaleChanged, this, &Window::discardQuads);
@@ -1216,6 +1223,27 @@ void Scene::Window::reallocRepaints()
     }
 
     m_repaints.fill(infiniteRegion());
+}
+
+void Scene::Window::scheduleRepaint()
+{
+    if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
+        const QVector<AbstractOutput *> outputs = kwinApp()->platform()->enabledOutputs();
+        for (AbstractOutput *output : outputs) {
+            if (window()->isOnOutput(output)) {
+                output->renderLoop()->scheduleRepaint();
+            }
+        }
+    } else {
+        kwinApp()->platform()->renderLoop()->scheduleRepaint();
+    }
+}
+
+void Scene::Window::handleSurfaceCommitted(KWaylandServer::SurfaceInterface *surface)
+{
+    if (surface->hasFrameCallbacks()) {
+        scheduleRepaint();
+    }
 }
 
 //****************************************
