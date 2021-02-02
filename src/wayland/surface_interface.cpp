@@ -422,6 +422,11 @@ void SurfaceInterface::frameRendered(quint32 msec)
     }
 }
 
+bool SurfaceInterface::hasFrameCallbacks() const
+{
+    return !d->current.frameCallbacks.isEmpty();
+}
+
 QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const State *state)
 {
     // The order of transforms is reversed, i.e. the viewport transform is the first one.

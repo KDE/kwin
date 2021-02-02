@@ -159,6 +159,7 @@ public:
     QMatrix4x4 surfaceToBufferMatrix() const;
 
     void frameRendered(quint32 msec);
+    bool hasFrameCallbacks() const;
 
     QRegion damage() const;
     QRegion opaque() const;
