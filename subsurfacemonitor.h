@@ -68,6 +68,7 @@ Q_SIGNALS:
      * This signal is emitted when the buffer size of a subsurface has changed.
      */
     void subSurfaceBufferSizeChanged();
+    void subSurfaceCommitted(KWaylandServer::SubSurfaceInterface *subSurface);
 
 private:
     void registerSubSurface(KWaylandServer::SubSurfaceInterface *subSurface);
