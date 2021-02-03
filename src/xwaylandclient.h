@@ -22,7 +22,13 @@ class XwaylandClient : public X11Client
     Q_OBJECT
 
 public:
+    explicit XwaylandClient();
+
     bool wantsSyncCounter() const override;
+
+private:
+    void associate();
+    void initialize();
 };
 
 } // namespace KWin

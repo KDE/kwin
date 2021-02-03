@@ -21,6 +21,10 @@
 
 #include <xcb/shape.h>
 
+#include <KWaylandServer/surface_interface.h>
+
+using namespace KWaylandServer;
+
 namespace KWin
 {
 
@@ -34,11 +38,34 @@ const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask |
 Unmanaged::Unmanaged()
     : Toplevel()
 {
-    QTimer::singleShot(50, this, &Unmanaged::setReadyForPainting);
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeXwayland:
+        if (surface()) {
+            associate();
+        } else {
+            connect(this, &Toplevel::surfaceChanged, this, &Unmanaged::associate);
+        }
+        break;
+    case Application::OperationModeX11:
+        // It's probably not ready for painting yet, show it after synthetic 50ms delay.
+        QTimer::singleShot(50, this, &Unmanaged::setReadyForPainting);
+        break;
+    case Application::OperationModeWaylandOnly:
+        Q_UNREACHABLE();
+    }
 }
 
 Unmanaged::~Unmanaged()
 {
+}
+
+void Unmanaged::associate()
+{
+    if (surface()->isMapped()) {
+        setReadyForPainting();
+    } else {
+        connect(surface(), &SurfaceInterface::mapped, this, &Unmanaged::setReadyForPainting);
+    }
 }
 
 bool Unmanaged::track(xcb_window_t w)

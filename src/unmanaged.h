@@ -48,6 +48,7 @@ private:
     // handlers for X11 events
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
     QWindow *findInternalWindow() const;
+    void associate();
     bool m_outline = false;
     bool m_scheduledRelease = false;
 };

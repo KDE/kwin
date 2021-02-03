@@ -9,8 +9,36 @@
 
 #include "xwaylandclient.h"
 
+#include <KWaylandServer/surface_interface.h>
+
+using namespace KWaylandServer;
+
 namespace KWin
 {
+
+XwaylandClient::XwaylandClient()
+{
+    if (surface()) {
+        associate();
+    } else {
+        connect(this, &Toplevel::surfaceChanged, this, &XwaylandClient::associate);
+    }
+}
+
+void XwaylandClient::associate()
+{
+    if (surface()->isMapped()) {
+        initialize();
+    } else {
+        connect(surface(), &SurfaceInterface::mapped, this, &XwaylandClient::initialize);
+    }
+}
+
+void XwaylandClient::initialize()
+{
+    setReadyForPainting();
+    setupWindowManagementInterface();
+}
 
 bool XwaylandClient::wantsSyncCounter() const
 {
