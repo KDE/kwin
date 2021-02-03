@@ -1059,12 +1059,6 @@ protected:
     QRect frameGeometryBeforeUpdateBlocking() const;
     QRect clientGeometryBeforeUpdateBlocking() const;
     void updateGeometryBeforeUpdateBlocking();
-    /**
-     * Schedules a repaint for the visibleRect before and after a
-     * geometry update. The current visibleRect is stored for the
-     * next time this method is called as the before geometry.
-     */
-    void addRepaintDuringGeometryUpdates();
 
     /**
      * @returns whether the Client is currently in move resize mode
@@ -1299,7 +1293,6 @@ private:
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
     PendingGeometry_t m_pendingGeometryUpdate = PendingGeometryNone;
     friend class GeometryUpdatesBlocker;
-    QRect m_visibleRectBeforeGeometryUpdate;
     QRect m_bufferGeometryBeforeUpdateBlocking;
     QRect m_frameGeometryBeforeUpdateBlocking;
     QRect m_clientGeometryBeforeUpdateBlocking;

@@ -419,7 +419,6 @@ void WaylandClient::move(int x, int y, ForceGeometry_t force)
     emit bufferGeometryChanged(this, oldBufferGeometry);
     emit clientGeometryChanged(this, oldClientGeometry);
     emit frameGeometryChanged(this, oldFrameGeometry);
-    addRepaintDuringGeometryUpdates();
 }
 
 void WaylandClient::requestGeometry(const QRect &rect)
@@ -467,8 +466,6 @@ void WaylandClient::updateGeometry(const QRect &rect)
         emit frameGeometryChanged(this, oldFrameGeometry);
     }
     emit geometryShapeChanged(this, oldFrameGeometry);
-
-    addRepaintDuringGeometryUpdates();
 }
 
 void WaylandClient::setPositionSyncMode(SyncMode syncMode)
