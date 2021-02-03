@@ -82,7 +82,7 @@ class EglStreamTexture : public AbstractEglTexture
 public:
     ~EglStreamTexture() override;
     bool loadTexture(WindowPixmap *pixmap) override;
-    void updateTexture(WindowPixmap *pixmap) override;
+    void updateTexture(WindowPixmap *pixmap, const QRegion &region) override;
 
 private:
     EglStreamTexture(SceneOpenGLTexture *texture, EglStreamBackend *backend);

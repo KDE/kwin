@@ -33,7 +33,7 @@ private:
     SceneOpenGLTexture(SceneOpenGLTexturePrivate& dd);
 
     bool load(WindowPixmap *pixmap);
-    void updateFromPixmap(WindowPixmap *pixmap);
+    void updateFromPixmap(WindowPixmap *pixmap, const QRegion &region);
 
     Q_DECLARE_PRIVATE(SceneOpenGLTexture)
 
@@ -46,7 +46,7 @@ public:
     ~SceneOpenGLTexturePrivate() override;
 
     virtual bool loadTexture(WindowPixmap *pixmap) = 0;
-    virtual void updateTexture(WindowPixmap *pixmap);
+    virtual void updateTexture(WindowPixmap *pixmap, const QRegion &region);
     virtual OpenGLBackend *backend() = 0;
 
 protected:

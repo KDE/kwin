@@ -47,10 +47,10 @@ bool SceneOpenGLTexture::load(WindowPixmap *pixmap)
     return d->loadTexture(pixmap);
 }
 
-void SceneOpenGLTexture::updateFromPixmap(WindowPixmap *pixmap)
+void SceneOpenGLTexture::updateFromPixmap(WindowPixmap *pixmap, const QRegion &region)
 {
     Q_D(SceneOpenGLTexture);
-    d->updateTexture(pixmap);
+    d->updateTexture(pixmap, region);
 }
 
 SceneOpenGLTexturePrivate::SceneOpenGLTexturePrivate()
@@ -61,9 +61,10 @@ SceneOpenGLTexturePrivate::~SceneOpenGLTexturePrivate()
 {
 }
 
-void SceneOpenGLTexturePrivate::updateTexture(WindowPixmap *pixmap)
+void SceneOpenGLTexturePrivate::updateTexture(WindowPixmap *pixmap, const QRegion &region)
 {
     Q_UNUSED(pixmap)
+    Q_UNUSED(region)
 }
 
 }

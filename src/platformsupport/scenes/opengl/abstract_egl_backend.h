@@ -96,7 +96,7 @@ class KWIN_EXPORT AbstractEglTexture : public SceneOpenGLTexturePrivate
 public:
     ~AbstractEglTexture() override;
     bool loadTexture(WindowPixmap *pixmap) override;
-    void updateTexture(WindowPixmap *pixmap) override;
+    void updateTexture(WindowPixmap *pixmap, const QRegion &region) override;
     OpenGLBackend *backend() override;
 
 protected:
@@ -120,7 +120,7 @@ private:
     bool loadInternalImageObject(WindowPixmap *pixmap);
     EGLImageKHR attach(const QPointer<KWaylandServer::BufferInterface> &buffer);
     bool updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
-    bool updateFromInternalImageObject(WindowPixmap *pixmap);
+    bool updateFromInternalImageObject(WindowPixmap *pixmap, const QRegion &region);
     SceneOpenGLTexture *q;
     AbstractEglBackend *m_backend;
     EGLImageKHR m_image;

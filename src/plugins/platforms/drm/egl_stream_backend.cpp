@@ -614,7 +614,7 @@ bool EglStreamTexture::loadTexture(WindowPixmap *pixmap)
     }
 }
 
-void EglStreamTexture::updateTexture(WindowPixmap *pixmap)
+void EglStreamTexture::updateTexture(WindowPixmap *pixmap, const QRegion &region)
 {
     using namespace KWaylandServer;
     SurfaceInterface *surface = pixmap->surface();
@@ -634,7 +634,7 @@ void EglStreamTexture::updateTexture(WindowPixmap *pixmap)
         }
     } else {
         // Not an EGLStream surface
-        AbstractEglTexture::updateTexture(pixmap);
+        AbstractEglTexture::updateTexture(pixmap, region);
     }
 }
 

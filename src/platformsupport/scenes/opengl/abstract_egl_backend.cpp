@@ -435,7 +435,7 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
     return loadEglTexture(buffer);
 }
 
-void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
+void AbstractEglTexture::updateTexture(WindowPixmap *pixmap, const QRegion &region)
 {
     // FIXME: Refactor this method.
 
@@ -444,7 +444,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         if (updateFromFBO(pixmap->fbo())) {
             return;
         }
-        if (updateFromInternalImageObject(pixmap)) {
+        if (updateFromInternalImageObject(pixmap, region)) {
             return;
         }
         return;
@@ -681,7 +681,7 @@ static QRegion scale(const QRegion &region, qreal scaleFactor)
     return scaled;
 }
 
-bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap)
+bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap, const QRegion &region)
 {
     const QImage image = pixmap->internalImage();
     if (image.isNull()) {
@@ -693,7 +693,7 @@ bool AbstractEglTexture::updateFromInternalImageObject(WindowPixmap *pixmap)
         return loadInternalImageObject(pixmap);
     }
 
-    createTextureSubImage(image, scale(pixmap->toplevel()->damage(), image.devicePixelRatio()));
+    createTextureSubImage(image, scale(region, image.devicePixelRatio()));
 
     return true;
 }
