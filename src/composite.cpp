@@ -590,52 +590,25 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 {
     // If outputs are disabled, we return to the event loop and
     // continue processing events until the outputs are enabled again
-    if (!kwinApp()->platform()->areOutputsEnabled()) {
-        return;
+    if (kwinApp()->platform()->areOutputsEnabled()) {
+        composite(renderLoop);
     }
+}
 
+void Compositor::composite(RenderLoop *renderLoop)
+{
     const int screenId = screenForRenderLoop(renderLoop);
 
     fTraceDuration("Paint (", screens()->name(screenId), ")");
 
     // Create a list of all windows in the stacking order
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
-    QList<Toplevel *> damaged;
-
-    // Reset the damage state of each window and fetch the damage region
-    // without waiting for a reply
-    for (Toplevel *win : qAsConst(windows)) {
-        if (win->resetAndFetchDamage()) {
-            damaged << win;
-        }
-    }
-
-    if (damaged.count() > 0) {
-        m_scene->triggerFence();
-        if (auto c = kwinApp()->x11Connection()) {
-            xcb_flush(c);
-        }
-    }
 
     // Move elevated windows to the top of the stacking order
     for (EffectWindow *c : static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {
         Toplevel *t = static_cast<EffectWindowImpl *>(c)->window();
         windows.removeAll(t);
         windows.append(t);
-    }
-
-    // Get the replies
-    for (Toplevel *win : qAsConst(damaged)) {
-        // Discard the cached lanczos texture
-        if (win->effectWindow()) {
-            const QVariant texture = win->effectWindow()->data(LanczosCacheRole);
-            if (texture.isValid()) {
-                delete static_cast<GLTexture *>(texture.value<void*>());
-                win->effectWindow()->setData(LanczosCacheRole, QVariant());
-            }
-        }
-
-        win->getDamageRegionReply();
     }
 
     // Skip windows that are not yet ready for being painted and if screen is locked skip windows
@@ -818,13 +791,38 @@ void X11Compositor::start()
     }
     startupWithWorkspace();
 }
-void X11Compositor::handleFrameRequested(RenderLoop *renderLoop)
+
+void X11Compositor::composite(RenderLoop *renderLoop)
 {
     if (scene()->overlayWindow() && !isOverlayWindowVisible()) {
         // Return since nothing is visible.
         return;
     }
-    Compositor::handleFrameRequested(renderLoop);
+
+    QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
+    QList<Toplevel *> damaged;
+
+    // Reset the damage state of each window and fetch the damage region
+    // without waiting for a reply
+    for (Toplevel *win : qAsConst(windows)) {
+        if (win->resetAndFetchDamage()) {
+            damaged << win;
+        }
+    }
+
+    if (damaged.count() > 0) {
+        scene()->triggerFence();
+        if (auto c = kwinApp()->x11Connection()) {
+            xcb_flush(c);
+        }
+    }
+
+    // Get the replies
+    for (Toplevel *window : qAsConst(damaged)) {
+        window->getDamageRegionReply();
+    }
+
+    Compositor::composite(renderLoop);
 }
 
 bool X11Compositor::checkForOverlayWindow(WId w) const

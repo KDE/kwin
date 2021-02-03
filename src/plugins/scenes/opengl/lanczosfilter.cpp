@@ -367,6 +367,10 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             cache->unbind();
             w->setData(LanczosCacheRole, QVariant::fromValue(static_cast<void*>(cache)));
 
+            connect(effects, &EffectsHandler::windowDamaged,
+                    this, &LanczosFilter::safeDiscardCacheTexture,
+                    Qt::UniqueConnection);
+
             // Delete the offscreen surface after 5 seconds
             m_timer.start(5000, this);
             return;
@@ -379,6 +383,9 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == m_timer.timerId()) {
         m_timer.stop();
+
+        disconnect(effects, &EffectsHandler::windowDamaged,
+                   this, &LanczosFilter::safeDiscardCacheTexture);
 
         m_scene->makeOpenGLContextCurrent();
 
@@ -399,6 +406,16 @@ void LanczosFilter::discardCacheTexture(EffectWindow *w)
 {
     QVariant cachedTextureVariant = w->data(LanczosCacheRole);
     if (cachedTextureVariant.isValid()) {
+        delete static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
+        w->setData(LanczosCacheRole, QVariant());
+    }
+}
+
+void LanczosFilter::safeDiscardCacheTexture(EffectWindow *w)
+{
+    QVariant cachedTextureVariant = w->data(LanczosCacheRole);
+    if (cachedTextureVariant.isValid()) {
+        m_scene->makeOpenGLContextCurrent();
         delete static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
         w->setData(LanczosCacheRole, QVariant());
     }

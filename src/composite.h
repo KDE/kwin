@@ -115,9 +115,10 @@ protected:
     static Compositor *s_compositor;
 
 protected Q_SLOTS:
-    virtual void handleFrameRequested(RenderLoop *renderLoop);
+    virtual void composite(RenderLoop *renderLoop);
 
 private Q_SLOTS:
+    void handleFrameRequested(RenderLoop *renderLoop);
     void handleOutputEnabled(AbstractOutput *output);
     void handleOutputDisabled(AbstractOutput *output);
 
@@ -227,7 +228,7 @@ public:
 
 protected:
     void start() override;
-    void handleFrameRequested(RenderLoop *renderLoop) override;
+    void composite(RenderLoop *renderLoop) override;
 
 private:
     explicit X11Compositor(QObject *parent);

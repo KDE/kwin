@@ -45,6 +45,7 @@ private:
     void updateOffscreenSurfaces();
     void setUniforms();
     void discardCacheTexture(EffectWindow *w);
+    void safeDiscardCacheTexture(EffectWindow *w);
 
     void createKernel(float delta, int *kernelSize);
     void createOffsets(int count, float width, Qt::Orientation direction);
