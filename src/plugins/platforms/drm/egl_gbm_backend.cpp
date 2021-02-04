@@ -16,6 +16,7 @@
 #include "options.h"
 #include "renderloop_p.h"
 #include "screens.h"
+#include "surfaceitem_wayland.h"
 #include "drm_gpu.h"
 #include "linux_dmabuf.h"
 // kwin libs
@@ -691,8 +692,14 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
     }
 }
 
-bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surface)
+bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
 {
+    SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
+    if (!item) {
+        return false;
+    }
+
+    KWaylandServer::SurfaceInterface *surface = item->surface();
     if (!surface || !surface->buffer() || !surface->buffer()->linuxDmabufBuffer()) {
         return false;
     }
@@ -740,8 +747,8 @@ bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surf
     // damage tracking for screen casting
     QRegion damage;
     if (output.surfaceInterface == surface && buffer->size() == output.output->modeSize()) {
-        QRegion trackedDamage = surface->trackedDamage();
-        surface->resetTrackedDamage();
+        QRegion trackedDamage = surfaceItem->damage();
+        surfaceItem->resetDamage();
         for (const auto &rect : trackedDamage) {
             auto damageRect = QRect(rect);
             damageRect.translate(output.output->geometry().topLeft());

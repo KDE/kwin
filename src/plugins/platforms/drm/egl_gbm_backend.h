@@ -18,6 +18,7 @@ struct gbm_bo;
 namespace KWaylandServer
 {
 class BufferInterface;
+class SurfaceInterface;
 }
 
 namespace KWin
@@ -41,7 +42,7 @@ public:
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
-    bool scanout(int screenId, KWaylandServer::SurfaceInterface *surface) override;
+    bool scanout(int screenId, SurfaceItem *surfaceItem) override;
 
     QSharedPointer<GLTexture> textureForOutput(AbstractOutput *requestedOutput) const override;
 

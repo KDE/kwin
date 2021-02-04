@@ -72,12 +72,12 @@ void EglMultiBackend::endFrame(int screenId, const QRegion &damage, const QRegio
     backend->endFrame(internalScreenId, damage, damagedRegion);
 }
 
-bool EglMultiBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surface)
+bool EglMultiBackend::scanout(int screenId, SurfaceItem *surfaceItem)
 {
     int internalScreenId;
     AbstractEglBackend *backend = findBackend(screenId, internalScreenId);
     Q_ASSERT(backend != nullptr);
-    return backend->scanout(internalScreenId, surface);
+    return backend->scanout(internalScreenId, surfaceItem);
 }
 
 bool EglMultiBackend::makeCurrent()

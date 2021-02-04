@@ -64,10 +64,10 @@ OverlayWindow* OpenGLBackend::overlayWindow() const
     return nullptr;
 }
 
-bool OpenGLBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surface)
+bool OpenGLBackend::scanout(int screenId, SurfaceItem *surfaceItem)
 {
     Q_UNUSED(screenId)
-    Q_UNUSED(surface)
+    Q_UNUSED(surfaceItem)
     return false;
 }
 

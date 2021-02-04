@@ -14,11 +14,6 @@
 
 #include <kwin_export.h>
 
-namespace KWaylandServer
-{
-class SurfaceInterface;
-}
-
 namespace KWin
 {
 class AbstractOutput;
@@ -27,6 +22,7 @@ class OverlayWindow;
 class SceneOpenGL;
 class SceneOpenGLTexture;
 class SceneOpenGLTexturePrivate;
+class SurfaceItem;
 class WindowPixmap;
 class GLTexture;
 
@@ -69,7 +65,7 @@ public:
      * Tries to directly scan out a surface to the screen)
      * @return if the scanout fails (or is not supported on the specified screen)
      */
-    virtual bool scanout(int screenId, KWaylandServer::SurfaceInterface *surface);
+    virtual bool scanout(int screenId, SurfaceItem *surfaceItem);
 
     /**
      * @brief Returns the OverlayWindow used by the backend.

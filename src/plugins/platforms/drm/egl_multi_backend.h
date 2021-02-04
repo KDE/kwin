@@ -25,7 +25,7 @@ public:
 
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
-    bool scanout(int screenId, KWaylandServer::SurfaceInterface *surface) override;
+    bool scanout(int screenId, SurfaceItem *surfaceItem) override;
 
     bool makeCurrent() override;
     void doneCurrent() override;

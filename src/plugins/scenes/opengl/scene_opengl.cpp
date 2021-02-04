@@ -670,10 +670,10 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                             break;
                         }
                         // and it has to be completely opaque
-                        if (!window->isOpaque() && !pixmap->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                        if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
                             break;
                         }
-                        directScanout = m_backend->scanout(screenId, pixmap->surface());
+                        directScanout = m_backend->scanout(screenId, topMost);
                         break;
                     }
                 }
