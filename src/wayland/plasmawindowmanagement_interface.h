@@ -41,23 +41,6 @@ public:
     QList<PlasmaWindowInterface*> windows() const;
 
     /**
-     * Unmaps the @p window previously created with {@link createWindow}.
-     * The window will be unmapped and removed from the list of {@link windows}.
-     *
-     * Unmapping a @p window indicates to the client that it should destroy the
-     * resource created for the window. Once all resources for the @p window are
-     * destroyed, the @p window will get deleted automatically. There is no need
-     * to manually delete the @p window. A manual delete will trigger the unmap
-     * and resource destroy at the same time and can result in protocol errors on
-     * client side if it still accesses the resource before receiving the unmap event.
-     *
-     * @see createWindow
-     * @see windows
-     * @since 5.23
-     **/
-    void unmapWindow(PlasmaWindowInterface *window);
-
-    /**
      * Associate a PlasmaVirtualDesktopManagementInterface to this window management.
      * It's necessary to associate one in orderto use the plasma virtual desktop features
      * of PlasmaWindowInterface, as a window must know what are the deasktops available
@@ -149,10 +132,9 @@ public:
 
     /**
      * This method removes the Window and the Client is supposed to release the resource
-     * bound for this Window. Once all resources are released the Window gets deleted.
+     * bound for this Window.
      *
-     * Prefer using {@link PlasmaWindowManagementInterface::unmapWindow}.
-     * @see PlasmaWindowManagementInterface::unmapWindow
+     * No more events should be sent afterwards.
      **/
     void unmap();
 

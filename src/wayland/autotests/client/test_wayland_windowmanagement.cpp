@@ -241,15 +241,12 @@ void TestWindowManagement::testUseAfterUnmap()
     QVERIFY(unmappedSpy.isValid());
     QSignalSpy destroyedSpy(m_window, &QObject::destroyed);
     QVERIFY(destroyedSpy.isValid());
-    m_windowInterface->unmap();
+    m_windowInterface->deleteLater();
+    m_windowInterface = nullptr;
     m_window->requestClose();
     QVERIFY(unmappedSpy.wait());
     QVERIFY(destroyedSpy.wait());
     m_window = nullptr;
-    QSignalSpy serverDestroyedSpy(m_windowInterface, &QObject::destroyed);
-    QVERIFY(serverDestroyedSpy.isValid());
-    QVERIFY(serverDestroyedSpy.wait());
-    m_windowInterface = nullptr;
 }
 
 void TestWindowManagement::testServerDelete()
@@ -283,14 +280,11 @@ void TestWindowManagement::testActiveWindowOnUnmapped()
     QVERIFY(destroyedSpy.isValid());
     QSignalSpy serverDestroyedSpy(m_windowInterface, &QObject::destroyed);
     QVERIFY(serverDestroyedSpy.isValid());
-    m_windowManagementInterface->unmapWindow(m_windowInterface);
+    delete m_windowInterface;
+    m_windowInterface = nullptr;
     QVERIFY(activeWindowChangedSpy.wait());
     QVERIFY(!m_windowManagement->activeWindow());
-    QVERIFY(destroyedSpy.wait());
-    QCOMPARE(destroyedSpy.count(), 1);
-    m_window = nullptr;
-    QVERIFY(serverDestroyedSpy.wait());
-    m_windowInterface = nullptr;
+
 }
 
 void TestWindowManagement::testDeleteActiveWindow()
@@ -318,14 +312,16 @@ void TestWindowManagement::testCreateAfterUnmap()
 {
     // this test verifies that we don't get a protocol error on client side when creating an already unmapped window.
     QCOMPARE(m_windowManagement->children().count(), 1);
+
+    QSignalSpy windowAddedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
+
     // create and unmap in one go
     // client will first handle the create, the unmap will be sent once the server side is bound
-    auto serverWindow = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
-    serverWindow->unmap();
+    auto serverWindow = m_windowManagementInterface->createWindow(m_windowManagementInterface, QUuid::createUuid());
+    delete serverWindow;
     QCOMPARE(m_windowManagementInterface->children().count(), 0);
-    QCoreApplication::instance()->processEvents();
-    QCoreApplication::instance()->processEvents(QEventLoop::WaitForMoreEvents);
-    QTRY_COMPARE(m_windowManagement->children().count(), 2);
+
+    windowAddedSpy.wait();
     auto window = dynamic_cast<KWayland::Client::PlasmaWindow*>(m_windowManagement->children().last());
     QVERIFY(window);
     // now this is not yet on the server, on the server it will be after next roundtrip
@@ -334,15 +330,8 @@ void TestWindowManagement::testCreateAfterUnmap()
     QSignalSpy clientDestroyedSpy(window, &QObject::destroyed);
     QVERIFY(clientDestroyedSpy.isValid());
     QVERIFY(clientDestroyedSpy.wait());
+    // Verify that any wrappers created for our temporary window are now gone
     QCOMPARE(m_windowManagement->children().count(), 1);
-    // the server side created a helper PlasmaWindowInterface with PlasmaWindowManagementInterface as parent
-    // it emitted unmapped so we can be sure it will be destroyed directly
-    QCOMPARE(m_windowManagementInterface->children().count(), 1);
-    auto helperWindow = qobject_cast<KWaylandServer::PlasmaWindowInterface*>(m_windowManagementInterface->children().first());
-    QVERIFY(helperWindow);
-    QSignalSpy helperDestroyedSpy(helperWindow, &QObject::destroyed);
-    QVERIFY(helperDestroyedSpy.isValid());
-    QVERIFY(helperDestroyedSpy.wait());
 }
 
 void TestWindowManagement::testRequests_data()
@@ -515,7 +504,7 @@ void TestWindowManagement::testParentWindow()
     // now let's create a second window
     QSignalSpy windowAddedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowAddedSpy.isValid());
-    auto serverTransient = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
+    QScopedPointer<KWaylandServer::PlasmaWindowInterface> serverTransient(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     serverTransient->setParentWindow(m_windowInterface);
     QVERIFY(windowAddedSpy.wait());
     auto transient = windowAddedSpy.first().first().value<PlasmaWindow*>();
@@ -534,7 +523,7 @@ void TestWindowManagement::testParentWindow()
     QCOMPARE(transient->parentWindow().data(), parentWindow);
 
     // now let's try to unmap the parent
-    m_windowInterface->unmap();
+    m_windowInterface->deleteLater();
     m_window = nullptr;
     m_windowInterface = nullptr;
     QVERIFY(parentWindowChangedSpy.wait());
@@ -628,8 +617,6 @@ void TestWindowManagement::testPid()
     QScopedPointer<PlasmaWindow> newWindow( windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());
     QVERIFY(newWindow);
     QVERIFY(newWindow->pid() == 0);
-
-
 }
 
 void TestWindowManagement::testApplicationMenu()

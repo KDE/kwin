@@ -286,7 +286,7 @@ void PlasmaWindowModelTest::testAddRemoveRows()
     // now let's remove that again
     QSignalSpy rowRemovedSpy(model, &PlasmaWindowModel::rowsRemoved);
     QVERIFY(rowRemovedSpy.isValid());
-    w->unmap();
+    w->deleteLater();
     QVERIFY(rowRemovedSpy.wait());
     QCOMPARE(rowRemovedSpy.count(), 1);
     QVERIFY(!rowRemovedSpy.first().at(0).toModelIndex().isValid());
@@ -296,10 +296,6 @@ void PlasmaWindowModelTest::testAddRemoveRows()
     // now the model is empty again
     QCOMPARE(model->rowCount(), 0);
     QVERIFY(!model->index(0).isValid());
-
-    QSignalSpy wDestroyedSpy(w, &QObject::destroyed);
-    QVERIFY(wDestroyedSpy.isValid());
-    QVERIFY(wDestroyedSpy.wait());
 }
 
 void PlasmaWindowModelTest::testDefaultData_data()
@@ -826,8 +822,7 @@ void PlasmaWindowModelTest::testCreateWithUnmappedWindow()
     QVERIFY(unmappedSpy.isValid());
     QSignalSpy destroyedSpy(window, &PlasmaWindow::destroyed);
     QVERIFY(destroyedSpy.isValid());
-    // unmap should be triggered, but not yet the destroyed
-    w->unmap();
+    w->deleteLater();
     QVERIFY(unmappedSpy.wait());
     QVERIFY(destroyedSpy.isEmpty());
 

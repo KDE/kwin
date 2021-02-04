@@ -73,7 +73,6 @@ public:
     PlasmaWindowManagementInterface *wm;
 
     bool unmapped = false;
-    bool destroyed = false;
     PlasmaWindowInterface *parentWindow = nullptr;
     QMetaObject::Connection parentWindowDestroyConnection;
     QStringList plasmaVirtualDesktops;
@@ -92,7 +91,6 @@ public:
 
 protected:
     void org_kde_plasma_window_bind_resource(Resource *resource) override;
-    void org_kde_plasma_window_destroy_resource(Resource *resource) override;
     void org_kde_plasma_window_set_state(Resource *resource, uint32_t flags, uint32_t state) override;
     void org_kde_plasma_window_set_virtual_desktop(Resource *resource, uint32_t number) override;
     void org_kde_plasma_window_set_minimized_geometry(Resource *resource, wl_resource *panel, uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
@@ -199,10 +197,9 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
             return;
         }
     }
-    // create a temp window just for the resource and directly send an unmapped
-    PlasmaWindowInterface *window = new PlasmaWindowInterface(q, q);
-    window->d->unmapped = true;
-    window->d->add(resource->client(), id, resource->version());
+    // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
+    PlasmaWindowInterface window(q, q);
+    window.d->add(resource->client(), id, resource->version());
 }
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_get_window_by_uuid(Resource *resource, uint32_t id, const QString &internal_window_uuid)
@@ -214,10 +211,9 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
     );
     if (it == windows.constEnd()) {
         qCWarning(KWAYLAND_SERVER) << "Could not find window with uuid" << internal_window_uuid;
-        // create a temp window just for the resource and directly send an unmapped
-        PlasmaWindowInterface *window = new PlasmaWindowInterface(q, q);
-        window->d->unmapped = true;
-        window->d->add(resource->client(), id, resource->version());
+        // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
+        PlasmaWindowInterface window(q, q);
+        window.d->add(resource->client(), id, resource->version());
         return;
     }
     (*it)->d->add(resource->client(), id, resource->version());
@@ -269,16 +265,6 @@ QList<PlasmaWindowInterface*> PlasmaWindowManagementInterface::windows() const
     return d->windows;
 }
 
-void PlasmaWindowManagementInterface::unmapWindow(PlasmaWindowInterface *window)
-{
-    if (!window) {
-        return;
-    }
-    d->windows.removeOne(window);
-    Q_ASSERT(!d->windows.contains(window));
-    window->d->unmap();
-}
-
 void PlasmaWindowManagementInterface::setStackingOrder(const QVector<quint32>& stackingOrder)
 {
     if (d->stackingOrder == stackingOrder) {
@@ -311,28 +297,12 @@ PlasmaWindowInterfacePrivate::PlasmaWindowInterfacePrivate(PlasmaWindowManagemen
 
 PlasmaWindowInterfacePrivate::~PlasmaWindowInterfacePrivate()
 {
-    destroyed = true;
-    const auto clientResources = resourceMap();
-    for (auto resource : clientResources) {
-        if(!unmapped) {
-            send_unmapped(resource->handle);
-        }
-        wl_resource_destroy(resource->handle);
-    }
+    unmap();
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
-}
-
-void PlasmaWindowInterfacePrivate::org_kde_plasma_window_destroy_resource(Resource *resource)
-{
-    Q_UNUSED(resource)
-    // Auto destruct when all resources gone
-    if (unmapped && resourceMap().isEmpty() && !destroyed) { 
-        delete q;
-    }
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource *resource)
@@ -365,10 +335,6 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource 
     }
 
     send_parent_window(resource->handle, resourceForParent(parentWindow, resource));
-
-    if (unmapped) {
-        send_unmapped(resource->handle);
-    }
 
     if (geometry.isValid() && resource->version() >= ORG_KDE_PLASMA_WINDOW_GEOMETRY_SINCE_VERSION) {
         send_geometry(resource->handle, geometry.x(), geometry.y(), geometry.width(), geometry.height());
@@ -493,15 +459,14 @@ void PlasmaWindowInterfacePrivate::setVirtualDesktop(quint32 desktop)
 
 void PlasmaWindowInterfacePrivate::unmap()
 {
+    if (unmapped) {
+        return;
+    }
     unmapped = true;
     const auto clientResources = resourceMap();
 
     for (auto resource : clientResources) {
         send_unmapped(resource->handle);
-    }
-
-    if (clientResources.isEmpty()) {
-        delete q;
     }
 }
 
@@ -751,7 +716,7 @@ void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 
 void PlasmaWindowInterface::unmap()
 {
-    d->wm->unmapWindow(this);
+    d->unmap();
 }
 
 QHash<SurfaceInterface*, QRect>  PlasmaWindowInterface::minimizedGeometries() const
