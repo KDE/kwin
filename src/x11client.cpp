@@ -1367,11 +1367,6 @@ bool X11Client::setupCompositing()
 
 void X11Client::finishCompositing(ReleaseReason releaseReason)
 {
-    SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem());
-    if (item) {
-        item->destroyDamage();
-    }
-
     Toplevel::finishCompositing(releaseReason);
     updateVisibility();
     // for safety in case KWin is just resizing the window
