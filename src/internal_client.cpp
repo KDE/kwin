@@ -10,6 +10,7 @@
 #include "internal_client.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
+#include "surfaceitem.h"
 #include "workspace.h"
 
 #include <KDecoration2/Decoration>
@@ -378,7 +379,7 @@ void InternalClient::present(const QSharedPointer<QOpenGLFramebufferObject> fbo)
     }
 
     setDepth(32);
-    addDamageFull();
+    surfaceItem()->addDamage(surfaceItem()->rect());
 }
 
 void InternalClient::present(const QImage &image, const QRegion &damage)
@@ -397,7 +398,7 @@ void InternalClient::present(const QImage &image, const QRegion &damage)
     m_internalImage = image;
 
     setDepth(32);
-    addDamage(damage);
+    surfaceItem()->addDamage(damage);
 }
 
 QWindow *InternalClient::internalWindow() const

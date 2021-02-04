@@ -21,6 +21,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "shadow.h"
+#include "surfaceitem_x11.h"
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils.h"
@@ -800,26 +801,25 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     QList<Toplevel *> windows = Workspace::self()->xStackingOrder();
-    QList<Toplevel *> damaged;
+    QList<SurfaceItemX11 *> dirtyItems;
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (Toplevel *win : qAsConst(windows)) {
-        if (win->resetAndFetchDamage()) {
-            damaged << win;
+    for (Toplevel *window : qAsConst(windows)) {
+        SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
+        if (surfaceItem->fetchDamage()) {
+            dirtyItems.append(surfaceItem);
         }
     }
 
-    if (damaged.count() > 0) {
+    if (dirtyItems.count() > 0) {
         scene()->triggerFence();
-        if (auto c = kwinApp()->x11Connection()) {
-            xcb_flush(c);
-        }
+        xcb_flush(kwinApp()->x11Connection());
     }
 
     // Get the replies
-    for (Toplevel *window : qAsConst(damaged)) {
-        window->getDamageRegionReply();
+    for (SurfaceItemX11 *item : qAsConst(dirtyItems)) {
+        item->waitForDamage();
     }
 
     Compositor::composite(renderLoop);

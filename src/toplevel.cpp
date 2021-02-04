@@ -19,6 +19,7 @@
 #include "effects.h"
 #include "screens.h"
 #include "shadow.h"
+#include "windowitem.h"
 #include "workspace.h"
 
 #include <KWaylandServer/surface_interface.h>
@@ -33,15 +34,12 @@ Toplevel::Toplevel()
     , bit_depth(24)
     , info(nullptr)
     , ready_for_painting(false)
-    , m_isDamaged(false)
     , m_internalId(QUuid::createUuid())
     , m_client()
-    , damage_handle(XCB_NONE)
     , is_shape(false)
     , effect_window(nullptr)
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
-    , m_damageReplyPending(false)
     , m_screen(0)
     , m_skipCloseAnimation(false)
 {
@@ -50,17 +48,13 @@ Toplevel::Toplevel()
     setupCheckScreenConnection();
     connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
-    connect(this, &Toplevel::paddingChanged, this, &Toplevel::visibleGeometryChanged);
-    connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::visibleGeometryChanged);
-    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::visibleGeometryChanged);
-
     // Only for compatibility reasons, drop in the next major release.
     connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::geometryChanged);
+    connect(this, &Toplevel::geometryShapeChanged, this, &Toplevel::discardShapeRegion);
 }
 
 Toplevel::~Toplevel()
 {
-    Q_ASSERT(damage_handle == XCB_NONE);
     delete info;
 }
 
@@ -117,8 +111,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     info = c->info;
     m_client.reset(c->m_client, false);
     ready_for_painting = c->ready_for_painting;
-    damage_handle = XCB_NONE;
-    damage_region = c->damage_region;
     is_shape = c->is_shape;
     effect_window = c->effect_window;
     if (effect_window != nullptr)
@@ -145,14 +137,10 @@ void Toplevel::disownDataPassedToDeleted()
 
 QRect Toplevel::visibleGeometry() const
 {
-    // There's no strict order between frame geometry and buffer geometry.
-    QRect rect = frameGeometry() | bufferGeometry();
-
-    if (shadow() && !shadow()->shadowRegion().isEmpty()) {
-        rect |= shadow()->shadowRegion().boundingRect().translated(pos());
+    if (const WindowItem *item = windowItem()) {
+        return item->mapToGlobal(item->boundingRect());
     }
-
-    return rect;
+    return QRect();
 }
 
 Xcb::Property Toplevel::fetchWmClientLeader() const
@@ -276,59 +264,27 @@ bool Toplevel::setupCompositing()
     if (!compositing())
         return false;
 
-    if (damage_handle != XCB_NONE)
-        return false;
-
-    if (kwinApp()->operationMode() == Application::OperationModeX11 && !surface()) {
-        damage_handle = xcb_generate_id(connection());
-        xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
-    }
-
-    damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
-
     Compositor::self()->scene()->addToplevel(this);
+
+    connect(windowItem(), &WindowItem::xChanged, this, &Toplevel::visibleGeometryChanged);
+    connect(windowItem(), &WindowItem::yChanged, this, &Toplevel::visibleGeometryChanged);
+    connect(windowItem(), &WindowItem::boundingRectChanged, this, &Toplevel::visibleGeometryChanged);
 
     return true;
 }
 
-void Toplevel::finishCompositing(ReleaseReason releaseReason)
+void Toplevel::finishCompositing(ReleaseReason)
 {
-    if (kwinApp()->operationMode() == Application::OperationModeX11 && damage_handle == XCB_NONE)
-        return;
-    if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
-        discardWindowPixmap();
-        delete effect_window;
+    if (effect_window && effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
+        deleteEffectWindow();
     }
-
-    if (damage_handle != XCB_NONE &&
-            releaseReason != ReleaseReason::Destroyed) {
-        xcb_damage_destroy(connection(), damage_handle);
-    }
-
-    damage_handle = XCB_NONE;
-    damage_region = QRegion();
-    effect_window = nullptr;
 }
 
 void Toplevel::discardWindowPixmap()
 {
-    addDamageFull();
     if (effectWindow() != nullptr && effectWindow()->sceneWindow() != nullptr)
         effectWindow()->sceneWindow()->discardPixmap();
-}
-
-void Toplevel::damageNotifyEvent()
-{
-    m_isDamaged = true;
-
-    // The damaged region will be fetched at the next compositing cycle.
-    Compositor::self()->scheduleRepaint();
-
-    // Note: The damage is supposed to specify the damage extents,
-    //       but we don't know it at this point. No one who connects
-    //       to this signal uses the rect however.
-    emit damaged(this, {});
 }
 
 bool Toplevel::compositing() const
@@ -337,84 +293,6 @@ bool Toplevel::compositing() const
         return false;
     }
     return Workspace::self()->compositing();
-}
-
-bool Toplevel::resetAndFetchDamage()
-{
-    if (!m_isDamaged)
-        return false;
-
-    if (damage_handle == XCB_NONE) {
-        m_isDamaged = false;
-        return true;
-    }
-
-    xcb_connection_t *conn = connection();
-
-    // Create a new region and copy the damage region to it,
-    // resetting the damaged state.
-    xcb_xfixes_region_t region = xcb_generate_id(conn);
-    xcb_xfixes_create_region(conn, region, 0, nullptr);
-    xcb_damage_subtract(conn, damage_handle, 0, region);
-
-    // Send a fetch-region request and destroy the region
-    m_regionCookie = xcb_xfixes_fetch_region_unchecked(conn, region);
-    xcb_xfixes_destroy_region(conn, region);
-
-    m_isDamaged = false;
-    m_damageReplyPending = true;
-
-    return m_damageReplyPending;
-}
-
-void Toplevel::getDamageRegionReply()
-{
-    if (!m_damageReplyPending)
-        return;
-
-    m_damageReplyPending = false;
-
-    // Get the fetch-region reply
-    xcb_xfixes_fetch_region_reply_t *reply =
-            xcb_xfixes_fetch_region_reply(connection(), m_regionCookie, nullptr);
-
-    if (!reply)
-        return;
-
-    // Convert the reply to a QRegion
-    int count = xcb_xfixes_fetch_region_rectangles_length(reply);
-    QRegion region;
-
-    if (count > 1 && count < 16) {
-        xcb_rectangle_t *rects = xcb_xfixes_fetch_region_rectangles(reply);
-
-        QVector<QRect> qrects;
-        qrects.reserve(count);
-
-        for (int i = 0; i < count; i++)
-            qrects << QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
-
-        region.setRects(qrects.constData(), count);
-    } else
-        region += QRect(reply->extents.x, reply->extents.y,
-                        reply->extents.width, reply->extents.height);
-    free(reply);
-
-    addDamage_helper(region);
-}
-
-void Toplevel::addDamageFull()
-{
-    if (!compositing())
-        return;
-
-    const QRect bufferRect = bufferGeometry();
-    addDamage_helper(QRect(0, 0, bufferRect.width(), bufferRect.height()));
-}
-
-void Toplevel::resetDamage()
-{
-    damage_region = QRegion();
 }
 
 void Toplevel::addRepaint(const QRect &rect)
@@ -558,11 +436,8 @@ bool Toplevel::isOnOutput(AbstractOutput *output) const
 
 void Toplevel::updateShadow()
 {
-    QRect dirtyRect;  // old & new shadow region
     const QRect oldVisibleRect = visibleGeometry();
-    addWorkspaceRepaint(oldVisibleRect);
     if (shadow()) {
-        dirtyRect = shadow()->shadowRegion().boundingRect();
         if (!effectWindow()->sceneWindow()->shadow()->updateShadow()) {
             effectWindow()->sceneWindow()->updateShadow(nullptr);
         }
@@ -570,14 +445,8 @@ void Toplevel::updateShadow()
     } else {
         Shadow::createShadow(this);
     }
-    if (shadow())
-        dirtyRect |= shadow()->shadowRegion().boundingRect();
     if (oldVisibleRect != visibleGeometry())
         emit paddingChanged(this, oldVisibleRect);
-    if (dirtyRect.isValid()) {
-        dirtyRect.translate(pos());
-        addLayerRepaint(dirtyRect);
-    }
 }
 
 Shadow *Toplevel::shadow()
@@ -598,6 +467,22 @@ const Shadow *Toplevel::shadow() const
     }
 }
 
+SurfaceItem *Toplevel::surfaceItem() const
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->surfaceItem();
+    }
+    return nullptr;
+}
+
+WindowItem *Toplevel::windowItem() const
+{
+    if (effectWindow() && effectWindow()->sceneWindow()) {
+        return effectWindow()->sceneWindow()->windowItem();
+    }
+    return nullptr;
+}
+
 bool Toplevel::wantsShadowToBeRendered() const
 {
     return true;
@@ -616,6 +501,43 @@ void Toplevel::getWmOpaqueRegion()
     }
 
     opaque_region = new_opaque_region;
+}
+
+QRegion Toplevel::shapeRegion() const
+{
+    if (m_shapeRegionIsValid) {
+        return m_shapeRegion;
+    }
+
+    const QRect bufferGeometry = this->bufferGeometry();
+
+    if (shape()) {
+        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
+        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
+        if (!reply.isNull()) {
+            m_shapeRegion = QRegion();
+            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());
+            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.data());
+            for (int i = 0; i < rectCount; ++i) {
+                m_shapeRegion += QRegion(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+            }
+            // make sure the shape is sane (X is async, maybe even XShape is broken)
+            m_shapeRegion &= QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
+        } else {
+            m_shapeRegion = QRegion();
+        }
+    } else {
+        m_shapeRegion = QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
+    }
+
+    m_shapeRegionIsValid = true;
+    return m_shapeRegion;
+}
+
+void Toplevel::discardShapeRegion()
+{
+    m_shapeRegionIsValid = false;
+    m_shapeRegion = QRegion();
 }
 
 bool Toplevel::isClient() const
@@ -697,48 +619,13 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
     if (m_surface == surface) {
         return;
     }
-    using namespace KWaylandServer;
-    if (m_surface) {
-        disconnect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
-        disconnect(m_surface, &SurfaceInterface::sizeChanged, this, &Toplevel::discardWindowPixmap);
-    }
     m_surface = surface;
-    connect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
-    connect(m_surface, &SurfaceInterface::sizeChanged, this, &Toplevel::discardWindowPixmap);
-    connect(m_surface, &SurfaceInterface::subSurfaceTreeChanged, this,
-        [this] {
-            // TODO improve to only update actual visual area
-            if (ready_for_painting) {
-                addDamageFull();
-                m_isDamaged = true;
-            }
-        }
-    );
-    connect(m_surface, &SurfaceInterface::destroyed, this,
-        [this] {
-            m_surface = nullptr;
-            m_surfaceId = 0;
-        }
-    );
+    connect(m_surface, &KWaylandServer::SurfaceInterface::destroyed, this, [this]() {
+        m_surface = nullptr;
+        m_surfaceId = 0;
+    });
     m_surfaceId = surface->id();
     emit surfaceChanged();
-}
-
-void Toplevel::addDamage(const QRegion &damage)
-{
-    m_isDamaged = true;
-    addDamage_helper(damage);
-}
-
-void Toplevel::addDamage_helper(const QRegion &damage)
-{
-    const QRect bufferRect = bufferGeometry();
-    const QRect frameRect = frameGeometry();
-
-    damage_region += damage;
-    addRepaint(damage.translated(bufferRect.topLeft() - frameRect.topLeft()));
-
-    emit damaged(this, damage);
 }
 
 QByteArray Toplevel::windowRole() const

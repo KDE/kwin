@@ -196,7 +196,6 @@ private:
     void initializeRenderContext(RenderContext &context, const WindowPaintData &data);
     bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
     void endRenderWindow();
-    bool bindTexture();
 
     SceneOpenGL *m_scene;
     bool m_hardwareClipping = false;
@@ -209,12 +208,9 @@ public:
     explicit OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL *scene);
     ~OpenGLWindowPixmap() override;
     SceneOpenGLTexture *texture() const;
-    bool bind();
+    bool bind(const QRegion &region);
     bool isValid() const override;
-protected:
-    WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface) override;
 private:
-    explicit OpenGLWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent, SceneOpenGL *scene);
     QScopedPointer<SceneOpenGLTexture> m_texture;
     SceneOpenGL *m_scene;
 };

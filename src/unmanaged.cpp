@@ -12,6 +12,7 @@
 #include "workspace.h"
 #include "effects.h"
 #include "deleted.h"
+#include "surfaceitem_x11.h"
 #include "utils.h"
 #include "xcbutils.h"
 
@@ -40,15 +41,13 @@ Unmanaged::Unmanaged()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeXwayland:
-        if (surface()) {
-            associate();
-        } else {
-            connect(this, &Toplevel::surfaceChanged, this, &Unmanaged::associate);
-        }
+        // The wayland surface is associated with the override-redirect window asynchronously.
+        connect(this, &Toplevel::surfaceChanged, this, &Unmanaged::associate);
         break;
     case Application::OperationModeX11:
-        // It's probably not ready for painting yet, show it after synthetic 50ms delay.
-        QTimer::singleShot(50, this, &Unmanaged::setReadyForPainting);
+        // We have no way knowing whether the override-redirect window can be painted. Mark it
+        // as ready for painting after synthetic 50ms delay.
+        QTimer::singleShot(50, this, &Unmanaged::initialize);
         break;
     case Application::OperationModeWaylandOnly:
         Q_UNREACHABLE();
@@ -62,10 +61,23 @@ Unmanaged::~Unmanaged()
 void Unmanaged::associate()
 {
     if (surface()->isMapped()) {
-        setReadyForPainting();
+        initialize();
     } else {
-        connect(surface(), &SurfaceInterface::mapped, this, &Unmanaged::setReadyForPainting);
+        // Queued connection because we want to mark the window ready for painting after
+        // the associated surface item has processed the new surface state.
+        connect(surface(), &SurfaceInterface::mapped, this, &Unmanaged::initialize, Qt::QueuedConnection);
     }
+}
+
+void Unmanaged::initialize()
+{
+    setReadyForPainting();
+
+    // With unmanaged windows there is a race condition between the client painting the window
+    // and us setting up damage tracking.  If the client wins we won't get a damage event even
+    // though the window has been painted.  To avoid this we mark the whole window as damaged
+    // and schedule a repaint immediately after creating the damage object.
+    surfaceItem()->addDamage(surfaceItem()->rect());
 }
 
 bool Unmanaged::track(xcb_window_t w)
@@ -202,19 +214,22 @@ QWindow *Unmanaged::findInternalWindow() const
     return nullptr;
 }
 
-bool Unmanaged::setupCompositing()
+void Unmanaged::finishCompositing(ReleaseReason releaseReason)
 {
-    if (!Toplevel::setupCompositing()) {
-        return false;
+    SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem());
+    if (item) {
+        item->destroyDamage();
     }
+    Toplevel::finishCompositing(releaseReason);
+}
 
-    // With unmanaged windows there is a race condition between the client painting the window
-    // and us setting up damage tracking.  If the client wins we won't get a damage event even
-    // though the window has been painted.  To avoid this we mark the whole window as damaged
-    // and schedule a repaint immediately after creating the damage object.
-    addDamageFull();
-
-    return true;
+void Unmanaged::damageNotifyEvent()
+{
+    Q_ASSERT(kwinApp()->operationMode() == Application::OperationModeX11);
+    SurfaceItemX11 *item = static_cast<SurfaceItemX11 *>(surfaceItem());
+    if (item) {
+        item->processDamage();
+    }
 }
 
 } // namespace

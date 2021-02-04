@@ -37,6 +37,8 @@
 #include "screens.h"
 #include "cursor.h"
 #include "decorations/decoratedclient.h"
+#include "shadowitem.h"
+#include "surfaceitem.h"
 #include <logging.h>
 
 #include <KWaylandServer/buffer_interface.h>
@@ -602,6 +604,16 @@ void SceneOpenGL::aboutToStartPainting(int screenId, const QRegion &damage)
     m_backend->aboutToStartPainting(screenId, damage);
 }
 
+static SurfaceItem *findTopMostSurface(SurfaceItem *item)
+{
+    const QList<Item *> children = item->childItems();
+    if (children.isEmpty()) {
+        return item;
+    } else {
+        return findTopMostSurface(static_cast<SurfaceItem *>(children.constLast()));
+    }
+}
+
 void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Toplevel *> &toplevels,
                         RenderLoop *renderLoop)
 {
@@ -644,14 +656,17 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                         if (!c || !c->isFullScreen()) {
                             break;
                         }
-                        auto pixmap = window->windowPixmap<WindowPixmap>();
+                        if (!window->surfaceItem()) {
+                            continue;
+                        }
+                        SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
+                        auto pixmap = topMost->windowPixmap();
                         if (!pixmap) {
                             break;
                         }
                         pixmap->update();
-                        pixmap = pixmap->topMostSurface();
                         // the subsurface has to be able to cover the whole window
-                        if (pixmap->position() != QPoint(0, 0)) {
+                        if (topMost->position() != QPoint(0, 0)) {
                             break;
                         }
                         // and it has to be completely opaque
@@ -1099,23 +1114,6 @@ OpenGLWindow::~OpenGLWindow()
 {
 }
 
-// Bind the window pixmap to an OpenGL texture.
-bool OpenGLWindow::bindTexture()
-{
-    OpenGLWindowPixmap *pixmap = windowPixmap<OpenGLWindowPixmap>();
-    if (!pixmap) {
-        return false;
-    }
-    if (pixmap->isDiscarded()) {
-        return !pixmap->texture()->isNull();
-    }
-
-    if (!window()->damage().isEmpty())
-        m_scene->insertWait();
-
-    return pixmap->bind();
-}
-
 QMatrix4x4 OpenGLWindow::transformation(int mask, const WindowPaintData &data) const
 {
     QMatrix4x4 matrix;
@@ -1175,8 +1173,8 @@ bool OpenGLWindow::beginRenderWindow(int mask, const QRegion &region, WindowPain
     if (data.quads.isEmpty())
         return false;
 
-    if (!bindTexture()) {
-        return false;
+    if (surfaceItem() && !surfaceItem()->damage().isEmpty()) { // only relevant on X11
+        m_scene->insertWait();
     }
 
     if (m_hardwareClipping) {
@@ -1250,27 +1248,42 @@ void OpenGLWindow::setBlendEnabled(bool enabled)
 /**
  * \internal
  *
- * Counts the total number of pixmaps in the tree with the given root \a windowPixmap.
+ * Counts the total number of items in the tree with the given \a root.
  */
-static int windowPixmapCount(WindowPixmap *windowPixmap)
+static int countChildren(Item *root)
 {
-    int count = 1; // 1 for the window pixmap itself.
+    int count = 1; // 1 for the root itself.
 
-    const QVector<WindowPixmap *> children = windowPixmap->children();
-    for (WindowPixmap *child : children)
-        count += windowPixmapCount(child);
+    const QList<Item *> children = root->childItems();
+    for (Item *child : children) {
+        count += countChildren(child);
+    }
 
     return count;
 }
 
+static bool bindSurfaceTexture(SurfaceItem *surfaceItem)
+{
+    auto pixmap = static_cast<OpenGLWindowPixmap *>(surfaceItem->windowPixmap());
+    if (!pixmap) {
+        return false;
+    }
+    if (pixmap->isDiscarded()) {
+        return !pixmap->texture()->isNull();
+    }
+    if (!pixmap->bind(surfaceItem->damage())) {
+        return false;
+    }
+    surfaceItem->resetDamage();
+    return true;
+}
+
 void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowPaintData &data)
 {
-    WindowPixmap *currentPixmap = windowPixmap<OpenGLWindowPixmap>();
-
     context.shadowOffset = 0;
     context.decorationOffset = 1;
     context.contentOffset = 2;
-    context.previousContentOffset = windowPixmapCount(currentPixmap) + 2;
+    context.previousContentOffset = (surfaceItem() ? countChildren(surfaceItem()) : 0) + 2;
     context.quadCount = data.quads.count();
 
     const int nodeCount = context.previousContentOffset + 1;
@@ -1300,7 +1313,7 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
 
     RenderNode &shadowRenderNode = renderNodes[context.shadowOffset];
     if (!shadowRenderNode.quads.isEmpty()) {
-        SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(m_shadow);
+        SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(shadowItem()->shadow());
         shadowRenderNode.texture = shadow->shadowTexture();
         shadowRenderNode.opacity = data.opacity();
         shadowRenderNode.hasAlpha = true;
@@ -1317,81 +1330,85 @@ void OpenGLWindow::initializeRenderContext(RenderContext &context, const WindowP
         decorationRenderNode.leafType = DecorationLeaf;
     }
 
-    // FIXME: Cross-fading must be implemented in a shader.
-    float contentOpacity = data.opacity();
-    if (data.crossFadeProgress() != 1.0 && (data.opacity() < 0.95 || toplevel->hasAlpha())) {
-        const float opacity = 1.0 - data.crossFadeProgress();
-        contentOpacity *= 1 - pow(opacity, 1.0f + 2.0f * data.opacity());
-    }
-
-    // The main surface and all of its sub-surfaces form a tree. In order to initialize
-    // the render nodes for the window pixmaps we need to traverse the tree in the
-    // depth-first search manner. The id of content window quads corresponds to the time
-    // when we visited the corresponding window pixmap. The DFS traversal probably doesn't
-    // have a significant impact on performance. However, if that's the case, we could
-    // keep a cache of window pixmaps in the order in which they'll be rendered.
-    QStack<WindowPixmap *> stack;
-    stack.push(currentPixmap);
-
-    int i = 0;
-
-    while (!stack.isEmpty()) {
-        OpenGLWindowPixmap *windowPixmap = static_cast<OpenGLWindowPixmap *>(stack.pop());
-
-        // If it's an unmapped sub-surface, don't render it and all of its children.
-        if (!windowPixmap->isValid())
-            continue;
-
-        RenderNode &contentRenderNode = renderNodes[context.contentOffset + i++];
-        contentRenderNode.texture = windowPixmap->texture();
-        contentRenderNode.hasAlpha = windowPixmap->hasAlphaChannel();
-        contentRenderNode.opacity = contentOpacity;
-        contentRenderNode.coordinateType = UnnormalizedCoordinates;
-        contentRenderNode.leafType = ContentLeaf;
-
-        const QVector<WindowPixmap *> children = windowPixmap->children();
-        for (auto it = children.rbegin(); it != children.rend(); ++it) {
-            stack.push(*it);
+    if (surfaceItem()) {
+        // FIXME: Cross-fading must be implemented in a shader.
+        float contentOpacity = data.opacity();
+        if (data.crossFadeProgress() != 1.0 && (data.opacity() < 0.95 || toplevel->hasAlpha())) {
+            const float opacity = 1.0 - data.crossFadeProgress();
+            contentOpacity *= 1 - pow(opacity, 1.0f + 2.0f * data.opacity());
         }
-    }
 
-    // Note that cross-fading is currently working properly only on X11. In order to make it
-    // work on Wayland, we have to render the current and the previous window pixmap trees in
-    // offscreen render targets, then use a cross-fading shader to blend those two layers.
-    if (data.crossFadeProgress() != 1.0) {
-        OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
-        if (previous) { // TODO(vlad): Should cross-fading be disabled on Wayland?
-            const QRect &oldGeometry = previous->contentsRect();
-            RenderNode &previousContentRenderNode = renderNodes[context.previousContentOffset];
-            for (const WindowQuad &quad : qAsConst(renderNodes[context.contentOffset].quads)) {
-                // We need to create new window quads with normalized texture coordinates.
-                // Normal quads divide the x/y position by width/height. This would not work
-                // as the texture is larger than the visible content in case of a decorated
-                // Client resulting in garbage being shown. So we calculate the normalized
-                // texture coordinate in the Client's new content space and map it to the
-                // previous Client's content space.
-                WindowQuad newQuad(WindowQuadContents);
-                for (int i = 0; i < 4; ++i) {
-                    const qreal xFactor = (quad[i].textureX() - toplevel->clientPos().x())
-                            / qreal(toplevel->clientSize().width());
-                    const qreal yFactor = (quad[i].textureY() - toplevel->clientPos().y())
-                            / qreal(toplevel->clientSize().height());
-                    const qreal u = (xFactor * oldGeometry.width() + oldGeometry.x())
-                            / qreal(previous->size().width());
-                    const qreal v = (yFactor * oldGeometry.height() + oldGeometry.y())
-                            / qreal(previous->size().height());
-                    newQuad[i] = WindowVertex(quad[i].x(), quad[i].y(), u, v);
-                }
-                previousContentRenderNode.quads.append(newQuad);
+        // The main surface and all of its sub-surfaces form a tree. In order to initialize
+        // the render nodes for the window pixmaps we need to traverse the tree in the
+        // depth-first search manner. The id of content window quads corresponds to the time
+        // when we visited the corresponding window pixmap. The DFS traversal probably doesn't
+        // have a significant impact on performance. However, if that's the case, we could
+        // keep a cache of window pixmaps in the order in which they'll be rendered.
+        QStack<SurfaceItem *> stack;
+        stack.push(surfaceItem());
+
+        int i = 0;
+
+        while (!stack.isEmpty()) {
+            SurfaceItem *item = stack.pop();
+            if (!bindSurfaceTexture(item)) {
+                break;
             }
 
-            previousContentRenderNode.texture = previous->texture();
-            previousContentRenderNode.hasAlpha = previous->hasAlphaChannel();
-            previousContentRenderNode.opacity = data.opacity() * (1.0 - data.crossFadeProgress());
-            previousContentRenderNode.coordinateType = NormalizedCoordinates;
-            previousContentRenderNode.leafType = PreviousContentLeaf;
+            auto windowPixmap = static_cast<OpenGLWindowPixmap *>(item->windowPixmap());
 
-            context.quadCount += previousContentRenderNode.quads.count();
+            RenderNode &contentRenderNode = renderNodes[context.contentOffset + i++];
+            contentRenderNode.texture = windowPixmap->texture();
+            contentRenderNode.hasAlpha = windowPixmap->hasAlphaChannel();
+            contentRenderNode.opacity = contentOpacity;
+            contentRenderNode.coordinateType = UnnormalizedCoordinates;
+            contentRenderNode.leafType = ContentLeaf;
+
+            const QList<Item *> children = item->childItems();
+            for (auto it = children.rbegin(); it != children.rend(); ++it) {
+                stack.push(static_cast<SurfaceItem *>(*it));
+            }
+        }
+
+        // Note that cross-fading is currently working properly only on X11. In order to make it
+        // work on Wayland, we have to render the current and the previous window pixmap trees in
+        // offscreen render targets, then use a cross-fading shader to blend those two layers.
+        if (data.crossFadeProgress() != 1.0) {
+            OpenGLWindowPixmap *previous =
+                    static_cast<OpenGLWindowPixmap *>(surfaceItem()->previousWindowPixmap());
+            if (previous) { // TODO(vlad): Should cross-fading be disabled on Wayland?
+                const QRect &oldGeometry = previous->contentsRect();
+                RenderNode &previousContentRenderNode = renderNodes[context.previousContentOffset];
+                for (const WindowQuad &quad : qAsConst(renderNodes[context.contentOffset].quads)) {
+                    // We need to create new window quads with normalized texture coordinates.
+                    // Normal quads divide the x/y position by width/height. This would not work
+                    // as the texture is larger than the visible content in case of a decorated
+                    // Client resulting in garbage being shown. So we calculate the normalized
+                    // texture coordinate in the Client's new content space and map it to the
+                    // previous Client's content space.
+                    WindowQuad newQuad(WindowQuadContents);
+                    for (int i = 0; i < 4; ++i) {
+                        const qreal xFactor = (quad[i].textureX() - toplevel->clientPos().x())
+                                / qreal(toplevel->clientSize().width());
+                        const qreal yFactor = (quad[i].textureY() - toplevel->clientPos().y())
+                                / qreal(toplevel->clientSize().height());
+                        const qreal u = (xFactor * oldGeometry.width() + oldGeometry.x())
+                                / qreal(previous->size().width());
+                        const qreal v = (yFactor * oldGeometry.height() + oldGeometry.y())
+                                / qreal(previous->size().height());
+                        newQuad[i] = WindowVertex(quad[i].x(), quad[i].y(), u, v);
+                    }
+                    previousContentRenderNode.quads.append(newQuad);
+                }
+
+                previousContentRenderNode.texture = previous->texture();
+                previousContentRenderNode.hasAlpha = previous->hasAlphaChannel();
+                previousContentRenderNode.opacity = data.opacity() * (1.0 - data.crossFadeProgress());
+                previousContentRenderNode.coordinateType = NormalizedCoordinates;
+                previousContentRenderNode.leafType = PreviousContentLeaf;
+
+                context.quadCount += previousContentRenderNode.quads.count();
+            }
         }
     }
 }
@@ -1523,7 +1540,7 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
             // This code passes the texture geometry to the fragment shader
             // any samples near the edge of the texture will be constrained to be
             // at least half a pixel in bounds, meaning we don't bleed the transparent border
-            QRectF bufferContentRect = clientShape().boundingRect();
+            QRectF bufferContentRect = surfaceItem()->shape().boundingRect();
             bufferContentRect.adjust(0.5, 0.5, -0.5, -0.5);
             const QRect bufferGeometry = toplevel->bufferGeometry();
 
@@ -1552,7 +1569,10 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
 {
-    auto frame = windowPixmap<OpenGLWindowPixmap>();
+    OpenGLWindowPixmap *frame = nullptr;
+    if (surfaceItem()) {
+        frame = static_cast<OpenGLWindowPixmap *>(surfaceItem()->windowPixmap());
+    }
 
     if (frame && frame->children().isEmpty()) {
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
@@ -1593,76 +1613,30 @@ OpenGLWindowPixmap::OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL* scene
 {
 }
 
-OpenGLWindowPixmap::OpenGLWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent, SceneOpenGL *scene)
-    : WindowPixmap(subSurface, parent)
-    , m_texture(scene->createTexture())
-    , m_scene(scene)
-{
-}
-
 OpenGLWindowPixmap::~OpenGLWindowPixmap()
 {
 }
 
-static bool needsPixmapUpdate(const OpenGLWindowPixmap *pixmap)
-{
-    // That's a regular Wayland client.
-    if (pixmap->surface()) {
-        return !pixmap->surface()->trackedDamage().isEmpty();
-    }
-
-    // That's an internal client with a raster buffer attached.
-    if (!pixmap->internalImage().isNull()) {
-        return !pixmap->toplevel()->damage().isEmpty();
-    }
-
-    // That's an internal client with an opengl framebuffer object attached.
-    if (!pixmap->fbo().isNull()) {
-        return !pixmap->toplevel()->damage().isEmpty();
-    }
-
-    // That's an X11 client.
-    return false;
-}
-
-bool OpenGLWindowPixmap::bind()
+bool OpenGLWindowPixmap::bind(const QRegion &region)
 {
     if (!m_texture->isNull()) {
-        if (needsPixmapUpdate(this)) {
-            m_texture->updateFromPixmap(this, toplevel->damage());
+        if (!region.isEmpty()) {
+            m_texture->updateFromPixmap(this, region);
             // mipmaps need to be updated
             m_texture->setDirty();
         }
-        if (!subSurface()) {
-            toplevel()->resetDamage();
-        }
-        // also bind all children
-        for (auto it = children().constBegin(); it != children().constEnd(); ++it) {
-            static_cast<OpenGLWindowPixmap*>(*it)->bind();
-        }
         return true;
-    }
-    for (auto it = children().constBegin(); it != children().constEnd(); ++it) {
-        static_cast<OpenGLWindowPixmap*>(*it)->bind();
     }
     if (!isValid()) {
         return false;
     }
 
-    bool success = m_texture->load(this);
-
-    if (success) {
-        if (!subSurface()) {
-            toplevel()->resetDamage();
-        }
-    } else
+    if (!m_texture->load(this)) {
         qCDebug(KWIN_OPENGL) << "Failed to bind window";
-    return success;
-}
+        return false;
+    }
 
-WindowPixmap *OpenGLWindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *subSurface)
-{
-    return new OpenGLWindowPixmap(subSurface, this, m_scene);
+    return true;
 }
 
 bool OpenGLWindowPixmap::isValid() const

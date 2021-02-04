@@ -72,10 +72,7 @@ public:
 
     const QImage &image();
 
-protected:
-    WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface) override;
 private:
-    explicit QPainterWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent);
     QImage m_image;
 };
 
@@ -90,7 +87,7 @@ public:
 protected:
     WindowPixmap *createWindowPixmap() override;
 private:
-    void renderWindowPixmap(QPainter *painter, QPainterWindowPixmap *windowPixmap);
+    void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem);
     void renderShadow(QPainter *painter);
     void renderWindowDecorations(QPainter *painter);
     SceneQPainter *m_scene;

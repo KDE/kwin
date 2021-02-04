@@ -57,7 +57,15 @@
 
 #include "scene.h"
 #include "abstract_output.h"
+#include "decorationitem.h"
+#include "internal_client.h"
 #include "platform.h"
+#include "shadowitem.h"
+#include "surfaceitem.h"
+#include "unmanaged.h"
+#include "waylandclient.h"
+#include "windowitem.h"
+#include "x11client.h"
 
 #include <QQuickWindow>
 #include <QVector2D>
@@ -69,7 +77,6 @@
 #include "renderloop.h"
 #include "screens.h"
 #include "shadow.h"
-#include "subsurfacemonitor.h"
 #include "wayland_server.h"
 #include "thumbnailitem.h"
 #include "composite.h"
@@ -234,7 +241,7 @@ void Scene::paintGenericScreen(int orig_mask, const ScreenPaintData &)
     phase2.reserve(stacking_order.size());
     foreach (Window * w, stacking_order) { // bottom to top
         // Let the scene window update the window pixmap tree.
-        w->preprocess();
+        w->preprocess(w->windowItem());
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
@@ -301,7 +308,7 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
         data.paint |= window->repaints(painted_screen);
 
         // Let the scene window update the window pixmap tree.
-        window->preprocess();
+        window->preprocess(window->windowItem());
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
@@ -316,16 +323,16 @@ void Scene::paintSimpleScreen(int orig_mask, const QRegion &region)
                 opaqueFullscreen = client->isFullScreen();
             }
 
-            const WindowPixmap *windowPixmap = window->windowPixmap<WindowPixmap>();
-            if (windowPixmap) {
-                data.clip |= windowPixmap->mapToGlobal(windowPixmap->shape());
+            const SurfaceItem *surfaceItem = window->surfaceItem();
+            if (surfaceItem) {
+                data.clip |= surfaceItem->mapToGlobal(surfaceItem->shape());
             }
         } else if (toplevel->hasAlpha() && toplevel->opacity() == 1.0) {
-            const WindowPixmap *windowPixmap = window->windowPixmap<WindowPixmap>();
-            if (windowPixmap) {
-                const QRegion shape = windowPixmap->shape();
-                const QRegion opaque = windowPixmap->opaque();
-                data.clip = windowPixmap->mapToGlobal(shape & opaque);
+            const SurfaceItem *surfaceItem = window->surfaceItem();
+            if (surfaceItem) {
+                const QRegion shape = surfaceItem->shape();
+                const QRegion opaque = surfaceItem->opaque();
+                data.clip = surfaceItem->mapToGlobal(shape & opaque);
 
                 if (opaque == shape) {
                     data.mask = orig_mask | PAINT_WINDOW_OPAQUE;
@@ -727,10 +734,6 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     : QObject(parent)
     , toplevel(client)
     , filter(ImageFilterFast)
-    , m_shadow(nullptr)
-    , m_currentPixmap()
-    , m_previousPixmap()
-    , m_referencePixmapCounter(0)
     , disable_painting(0)
     , cached_quad_list(nullptr)
 {
@@ -740,55 +743,18 @@ Scene::Window::Window(Toplevel *client, QObject *parent)
     }
     reallocRepaints();
 
-    KWaylandServer::SurfaceInterface *surface = toplevel->surface();
-    if (surface) {
-        // We generate window quads for sub-surfaces so it's quite important to discard
-        // the pixmap tree and cached window quads when the sub-surface tree is changed.
-        m_subsurfaceMonitor = new SubSurfaceMonitor(surface, this);
-
-        // TODO(vlad): Is there a more efficient way to manage window pixmap trees?
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceAdded,
-                this, &Window::discardPixmap);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceRemoved,
-                this, &Window::discardPixmap);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceMapped,
-                this, &Window::discardPixmap);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceUnmapped,
-                this, &Window::discardPixmap);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceBufferSizeChanged,
-                this, &Window::discardPixmap);
-
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceAdded,
-                this, &Window::discardQuads);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceRemoved,
-                this, &Window::discardQuads);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceMoved,
-                this, &Window::discardQuads);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceResized,
-                this, &Window::discardQuads);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceMapped,
-                this, &Window::discardQuads);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceUnmapped,
-                this, &Window::discardQuads);
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceSurfaceToBufferMatrixChanged,
-                this, &Window::discardQuads);
-
-        connect(surface, &KWaylandServer::SurfaceInterface::bufferSizeChanged,
-                this, &Window::discardPixmap);
-        connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
-                this, &Window::discardQuads);
-
-        connect(m_subsurfaceMonitor, &SubSurfaceMonitor::subSurfaceCommitted, this, [this](KWaylandServer::SubSurfaceInterface *subsurface) {
-            handleSurfaceCommitted(subsurface->surface());
-        });
-        connect(surface, &KWaylandServer::SurfaceInterface::committed, this, [this, surface]() {
-            handleSurfaceCommitted(surface);
-        });
+    if (qobject_cast<WaylandClient *>(client)) {
+        m_windowItem.reset(new WindowItemWayland(this));
+    } else if (qobject_cast<X11Client *>(client) || qobject_cast<Unmanaged *>(client)) {
+        m_windowItem.reset(new WindowItemX11(this));
+    } else if (qobject_cast<InternalClient *>(client)) {
+        m_windowItem.reset(new WindowItemInternal(this));
+    } else {
+        Q_UNREACHABLE();
     }
 
-    connect(toplevel, &Toplevel::screenScaleChanged, this, &Window::discardQuads);
-    connect(toplevel, &Toplevel::shadowChanged, this, &Window::discardQuads);
-    connect(toplevel, &Toplevel::geometryShapeChanged, this, &Window::discardShape);
+    connect(toplevel, &Toplevel::frameGeometryChanged, this, &Window::updateWindowPosition);
+    updateWindowPosition();
 }
 
 Scene::Window::~Window()
@@ -799,126 +765,84 @@ Scene::Window::~Window()
             Compositor::self()->addRepaint(dirty);
         }
     }
-
-    delete m_shadow;
 }
 
 void Scene::Window::updateToplevel(Deleted *deleted)
 {
-    delete m_subsurfaceMonitor;
-    m_subsurfaceMonitor = nullptr;
-
-    KWaylandServer::SurfaceInterface *surface = toplevel->surface();
-    if (surface) {
-        disconnect(surface, nullptr, this, nullptr);
-    }
-
     toplevel = deleted;
 }
 
 void Scene::Window::referencePreviousPixmap()
 {
-    if (!m_previousPixmap.isNull() && m_previousPixmap->isDiscarded()) {
-        m_referencePixmapCounter++;
+    if (surfaceItem()) {
+        referencePreviousPixmap_helper(surfaceItem());
+    }
+}
+
+void Scene::Window::referencePreviousPixmap_helper(SurfaceItem *item)
+{
+    item->referencePreviousPixmap();
+
+    const QList<Item *> children = item->childItems();
+    for (Item *child : children) {
+        referencePreviousPixmap_helper(static_cast<SurfaceItem *>(child));
     }
 }
 
 void Scene::Window::unreferencePreviousPixmap()
 {
-    if (m_previousPixmap.isNull() || !m_previousPixmap->isDiscarded()) {
-        return;
+    if (surfaceItem()) {
+        unreferencePreviousPixmap_helper(surfaceItem());
     }
-    m_referencePixmapCounter--;
-    if (m_referencePixmapCounter == 0) {
-        m_previousPixmap.reset();
+}
+
+void Scene::Window::unreferencePreviousPixmap_helper(SurfaceItem *item)
+{
+    item->unreferencePreviousPixmap();
+
+    const QList<Item *> children = item->childItems();
+    for (Item *child : children) {
+        unreferencePreviousPixmap_helper(static_cast<SurfaceItem *>(child));
     }
 }
 
 void Scene::Window::discardPixmap()
 {
-    if (!m_currentPixmap.isNull()) {
-        if (m_currentPixmap->isValid()) {
-            m_previousPixmap.reset(m_currentPixmap.take());
-            m_previousPixmap->markAsDiscarded();
-        } else {
-            m_currentPixmap.reset();
-        }
+    if (surfaceItem()) {
+        discardPixmap_helper(surfaceItem());
+    }
+}
+
+void Scene::Window::discardPixmap_helper(SurfaceItem *item)
+{
+    item->discardPixmap();
+
+    const QList<Item *> children = item->childItems();
+    for (Item *child : children) {
+        discardPixmap_helper(static_cast<SurfaceItem *>(child));
     }
 }
 
 void Scene::Window::updatePixmap()
 {
-    if (m_currentPixmap.isNull()) {
-        m_currentPixmap.reset(createWindowPixmap());
-    }
-    if (m_currentPixmap->isValid()) {
-        m_currentPixmap->update();
-    } else {
-        m_currentPixmap->create();
+    if (surfaceItem()) {
+        updatePixmap_helper(surfaceItem());
     }
 }
 
-void Scene::Window::discardShape()
+void Scene::Window::updatePixmap_helper(SurfaceItem *item)
 {
-    // it is created on-demand and cached, simply
-    // reset the flag
-    m_bufferShapeIsValid = false;
-    discardQuads();
-}
+    item->updatePixmap();
 
-QRegion Scene::Window::bufferShape() const
-{
-    if (m_bufferShapeIsValid) {
-        return m_bufferShape;
+    const QList<Item *> children = item->childItems();
+    for (Item *child : children) {
+        updatePixmap_helper(static_cast<SurfaceItem *>(child));
     }
-
-    const QRect bufferGeometry = toplevel->bufferGeometry();
-
-    if (toplevel->shape()) {
-        auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->frameId(), XCB_SHAPE_SK_BOUNDING);
-        ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
-        if (!reply.isNull()) {
-            m_bufferShape = QRegion();
-            const xcb_rectangle_t *rects = xcb_shape_get_rectangles_rectangles(reply.data());
-            const int rectCount = xcb_shape_get_rectangles_rectangles_length(reply.data());
-            for (int i = 0; i < rectCount; ++i) {
-                m_bufferShape += QRegion(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
-            }
-            // make sure the shape is sane (X is async, maybe even XShape is broken)
-            m_bufferShape &= QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
-        } else {
-            m_bufferShape = QRegion();
-        }
-    } else {
-        m_bufferShape = QRegion(0, 0, bufferGeometry.width(), bufferGeometry.height());
-    }
-
-    m_bufferShapeIsValid = true;
-
-    return m_bufferShape;
-}
-
-QRegion Scene::Window::clientShape() const
-{
-    if (isShaded())
-        return QRegion();
-
-    const QRect clipRect = toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
-    const QRegion shape = bufferShape();
-
-    return shape & clipRect;
 }
 
 QRegion Scene::Window::decorationShape() const
 {
     return QRegion(toplevel->rect()) - toplevel->transparentRect();
-}
-
-QPoint Scene::Window::bufferOffset() const
-{
-    const QRect bufferGeometry = toplevel->bufferGeometry();
-    const QRect frameGeometry = toplevel->frameGeometry();
-    return bufferGeometry.topLeft() - frameGeometry.topLeft();
 }
 
 bool Scene::Window::isVisible() const
@@ -1007,8 +931,8 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
 
         *ret += makeDecorationQuads(rects, decorationShape());
     }
-    if (m_shadow && toplevel->wantsShadowToBeRendered()) {
-        *ret << m_shadow->shadowQuads();
+    if (shadowItem() && toplevel->wantsShadowToBeRendered()) {
+        *ret << shadowItem()->shadow()->shadowQuads();
     }
     effects->buildQuads(toplevel->effectWindow(), *ret);
     cached_quad_list.reset(ret);
@@ -1087,8 +1011,8 @@ WindowQuadList Scene::Window::makeContentsQuads() const
     // window? Presumably, the current window will be invalid so no window quads will be
     // generated. Is it okay?
 
-    WindowPixmap *currentPixmap = windowPixmap<WindowPixmap>();
-    if (!currentPixmap)
+    SurfaceItem *currentItem = surfaceItem();
+    if (!currentItem)
         return WindowQuadList();
 
     WindowQuadList quads;
@@ -1099,17 +1023,13 @@ WindowQuadList Scene::Window::makeContentsQuads() const
     // pixmap tree in the depth-first search manner and assign an id to each window quad.
     // The id is the time when we visited the window pixmap.
 
-    QStack<WindowPixmap *> stack;
-    stack.push(currentPixmap);
+    QStack<SurfaceItem *> stack;
+    stack.push(currentItem);
 
     while (!stack.isEmpty()) {
-        WindowPixmap *windowPixmap = stack.pop();
+        SurfaceItem *item = stack.pop();
 
-        // If it's an unmapped sub-surface, don't generate window quads for it.
-        if (!windowPixmap->isValid())
-            continue;
-
-        const QRegion region = windowPixmap->shape();
+        const QRegion region = item->shape();
         const int quadId = id++;
 
         for (const QRectF rect : region) {
@@ -1118,15 +1038,15 @@ WindowQuadList Scene::Window::makeContentsQuads() const
             // had been subdivided.
             WindowQuad quad(WindowQuadContents, quadId);
 
-            const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
-            const QPointF windowTopRight = windowPixmap->mapToWindow(rect.topRight());
-            const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
-            const QPointF windowBottomLeft = windowPixmap->mapToWindow(rect.bottomLeft());
+            const QPointF windowTopLeft = item->mapToWindow(rect.topLeft());
+            const QPointF windowTopRight = item->mapToWindow(rect.topRight());
+            const QPointF windowBottomRight = item->mapToWindow(rect.bottomRight());
+            const QPointF windowBottomLeft = item->mapToWindow(rect.bottomLeft());
 
-            const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
-            const QPointF bufferTopRight = windowPixmap->mapToBuffer(rect.topRight());
-            const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
-            const QPointF bufferBottomLeft = windowPixmap->mapToBuffer(rect.bottomLeft());
+            const QPointF bufferTopLeft = item->mapToBuffer(rect.topLeft());
+            const QPointF bufferTopRight = item->mapToBuffer(rect.topRight());
+            const QPointF bufferBottomRight = item->mapToBuffer(rect.bottomRight());
+            const QPointF bufferBottomLeft = item->mapToBuffer(rect.bottomLeft());
 
             quad[0] = WindowVertex(windowTopLeft, bufferTopLeft);
             quad[1] = WindowVertex(windowTopRight, bufferTopRight);
@@ -1138,9 +1058,9 @@ WindowQuadList Scene::Window::makeContentsQuads() const
 
         // Push the child window pixmaps onto the stack, remember we're visiting the pixmaps
         // in the depth-first search manner.
-        const QVector<WindowPixmap *> children = windowPixmap->children();
+        const QList<Item *> children = item->childItems();
         for (auto it = children.rbegin(); it != children.rend(); ++it) {
-            stack.push(*it);
+            stack.push(static_cast<SurfaceItem *>(*it));
         }
     }
 
@@ -1152,22 +1072,34 @@ void Scene::Window::discardQuads()
     cached_quad_list.reset();
 }
 
-void Scene::Window::updateShadow(Shadow* shadow)
+const Shadow *Scene::Window::shadow() const
 {
-    if (m_shadow == shadow) {
-        return;
+    if (shadowItem()) {
+        return shadowItem()->shadow();
     }
-    delete m_shadow;
-    m_shadow = shadow;
+    return nullptr;
 }
 
-void Scene::Window::preprocess()
+Shadow *Scene::Window::shadow()
 {
-    // The tracked damage will be reset after the scene is done with copying buffer's data.
-    // Note that we have to be prepared for the case where no damage has occurred since kwin
-    // core may discard the current window pixmap at any moment.
-    if (!m_currentPixmap || !window()->damage().isEmpty()) {
-        updatePixmap();
+    if (shadowItem()) {
+        return shadowItem()->shadow();
+    }
+    return nullptr;
+}
+
+void Scene::Window::updateShadow(Shadow* shadow)
+{
+    m_windowItem->setShadow(shadow);
+}
+
+void Scene::Window::preprocess(Item *item)
+{
+    item->preprocess();
+
+    const QList<Item *> children = item->childItems();
+    for (Item *child : children) {
+        preprocess(child);
     }
 }
 
@@ -1220,6 +1152,21 @@ void Scene::Window::reallocRepaints()
     m_repaints.fill(infiniteRegion());
 }
 
+WindowItem *Scene::Window::windowItem() const
+{
+    return m_windowItem.data();
+}
+
+SurfaceItem *Scene::Window::surfaceItem() const
+{
+    return m_windowItem->surfaceItem();
+}
+
+ShadowItem *Scene::Window::shadowItem() const
+{
+    return m_windowItem->shadowItem();
+}
+
 void Scene::Window::scheduleRepaint()
 {
     if (kwinApp()->platform()->isPerScreenRenderingEnabled()) {
@@ -1234,11 +1181,9 @@ void Scene::Window::scheduleRepaint()
     }
 }
 
-void Scene::Window::handleSurfaceCommitted(KWaylandServer::SurfaceInterface *surface)
+void Scene::Window::updateWindowPosition()
 {
-    if (surface->hasFrameCallbacks()) {
-        scheduleRepaint();
-    }
+    m_windowItem->setPosition(pos());
 }
 
 //****************************************
@@ -1251,19 +1196,8 @@ WindowPixmap::WindowPixmap(Scene::Window *window)
 {
 }
 
-WindowPixmap::WindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent)
-    : m_window(parent->m_window)
-    , m_pixmap(XCB_PIXMAP_NONE)
-    , m_discarded(false)
-    , m_parent(parent)
-    , m_subSurface(subSurface)
-{
-}
-
 WindowPixmap::~WindowPixmap()
 {
-    qDeleteAll(m_children);
-
     if (m_pixmap != XCB_WINDOW_NONE) {
         xcb_free_pixmap(connection(), m_pixmap);
     }
@@ -1279,10 +1213,6 @@ void WindowPixmap::create()
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         // use Buffer
         update();
-        if (isRoot() && isValid()) {
-            m_window->unreferencePreviousPixmap();
-            m_window->discardQuads();
-        }
         return;
     }
     XServerGrabber grabber;
@@ -1314,8 +1244,6 @@ void WindowPixmap::create()
     m_pixmap = pix;
     m_pixmapSize = bufferGeometry.size();
     m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
-    m_window->unreferencePreviousPixmap();
-    m_window->discardQuads();
 }
 
 void WindowPixmap::clear()
@@ -1341,35 +1269,8 @@ void WindowPixmap::setBuffer(KWaylandServer::BufferInterface *buffer)
 
 void WindowPixmap::update()
 {
-    using namespace KWaylandServer;
-    if (SurfaceInterface *s = surface()) {
-        QVector<WindowPixmap*> oldTree = m_children;
-        QVector<WindowPixmap*> children;
-        const auto subSurfaces = s->childSubSurfaces();
-        for (const auto &subSurface : subSurfaces) {
-            if (!subSurface) {
-                continue;
-            }
-            auto it = std::find_if(oldTree.begin(), oldTree.end(), [subSurface] (WindowPixmap *p) { return p->m_subSurface == subSurface; });
-            if (it != oldTree.end()) {
-                children << *it;
-                (*it)->update();
-                oldTree.erase(it);
-            } else {
-                WindowPixmap *p = createChild(subSurface);
-                if (p) {
-                    p->create();
-                    children << p;
-                }
-            }
-        }
-        setChildren(children);
-        qDeleteAll(oldTree);
-        if (auto b = s->buffer()) {
-            setBuffer(b);
-        } else if (m_subSurface) {
-            clear();
-        }
+    if (KWaylandServer::SurfaceInterface *s = surface()) {
+        setBuffer(s->buffer());
     } else if (toplevel()->internalFramebufferObject()) {
         m_fbo = toplevel()->internalFramebufferObject();
     } else if (!toplevel()->internalImageObject().isNull()) {
@@ -1377,12 +1278,6 @@ void WindowPixmap::update()
     } else {
         clear();
     }
-}
-
-WindowPixmap *WindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *subSurface)
-{
-    Q_UNUSED(subSurface)
-    return nullptr;
 }
 
 bool WindowPixmap::isValid() const
@@ -1393,67 +1288,14 @@ bool WindowPixmap::isValid() const
     return m_pixmap != XCB_PIXMAP_NONE;
 }
 
-bool WindowPixmap::isRoot() const
-{
-    return !m_parent;
-}
-
-KWaylandServer::SubSurfaceInterface *WindowPixmap::subSurface() const
-{
-    return m_subSurface;
-}
-
 KWaylandServer::SurfaceInterface *WindowPixmap::surface() const
 {
-    if (!m_subSurface.isNull()) {
-        return m_subSurface->surface();
-    } else {
-        return toplevel()->surface();
-    }
+    return m_surface;
 }
 
-WindowPixmap *WindowPixmap::topMostSurface()
+void WindowPixmap::setSurface(KWaylandServer::SurfaceInterface *surface)
 {
-    if (m_children.count() == 0) {
-        return this;
-    } else {
-        return m_children.last()->topMostSurface();
-    }
-}
-
-QPoint WindowPixmap::position() const
-{
-    if (subSurface())
-        return subSurface()->position();
-    return m_window->bufferOffset();
-}
-
-QPoint WindowPixmap::framePosition() const
-{
-    return position() + (m_parent ? m_parent->framePosition() : QPoint());
-}
-
-qreal WindowPixmap::scale() const
-{
-    if (surface())
-        return surface()->bufferScale();
-    return toplevel()->bufferScale();
-}
-
-QRegion WindowPixmap::shape() const
-{
-    if (subSurface())
-        return surface() ? QRect(QPoint(), surface()->size()) : QRegion();
-    return m_window->clientShape();
-}
-
-QRegion WindowPixmap::opaque() const
-{
-    if (surface()) {
-        return surface()->opaque();
-    }
-
-    return toplevel()->opaqueRegion().translated(toplevel()->clientPos());
+    m_surface = surface;
 }
 
 bool WindowPixmap::hasAlphaChannel() const
@@ -1461,23 +1303,6 @@ bool WindowPixmap::hasAlphaChannel() const
     if (buffer())
         return buffer()->hasAlphaChannel();
     return toplevel()->hasAlpha();
-}
-
-QPointF WindowPixmap::mapToWindow(const QPointF &point) const
-{
-    return point + framePosition();
-}
-
-QPointF WindowPixmap::mapToBuffer(const QPointF &point) const
-{
-    if (surface())
-        return surface()->mapToBuffer(point);
-    return point * scale();
-}
-
-QRegion WindowPixmap::mapToGlobal(const QRegion &region) const
-{
-    return region.translated(m_window->pos() + framePosition());
 }
 
 //****************************************

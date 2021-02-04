@@ -25,6 +25,8 @@
 #include "platform.h"
 #include "renderloop.h"
 #include "screens.h"
+#include "shadowitem.h"
+#include "surfaceitem.h"
 #include "xcbutils.h"
 #include "decorations/decoratedclient.h"
 
@@ -216,12 +218,12 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
 
 QRect SceneXrender::Window::bufferToWindowRect(const QRect &rect) const
 {
-    return rect.translated(bufferOffset());
+    return rect.translated(surfaceItem()->position());
 }
 
 QRegion SceneXrender::Window::bufferToWindowRegion(const QRegion &region) const
 {
-    return region.translated(bufferOffset());
+    return region.translated(surfaceItem()->position());
 }
 
 void SceneXrender::Window::prepareTempPixmap()
@@ -265,14 +267,14 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
 
     if (region.isEmpty())
         return;
-    XRenderWindowPixmap *pixmap = windowPixmap<XRenderWindowPixmap>();
+    XRenderWindowPixmap *pixmap = static_cast<XRenderWindowPixmap *>(surfaceItem()->windowPixmap());
     if (!pixmap || !pixmap->isValid()) {
         return;
     }
     xcb_render_picture_t pic = pixmap->picture();
     if (pic == XCB_RENDER_PICTURE_NONE)   // The render format can be null for GL and/or Xv visuals
         return;
-    toplevel->resetDamage();
+    surfaceItem()->resetDamage();
     // set picture filter
     if (options->isXrenderSmoothScale()) { // only when forced, it's slow
         if (mask & PAINT_WINDOW_TRANSFORMED)
@@ -299,13 +301,13 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
         if (toplevel->shape()) {
             // "xeyes" + decoration
             transformed_shape -= bufferToWindowRect(cr);
-            transformed_shape += bufferToWindowRegion(bufferShape());
+            transformed_shape += bufferToWindowRegion(surfaceItem()->shape());
         }
     } else {
-        transformed_shape = bufferToWindowRegion(bufferShape());
+        transformed_shape = bufferToWindowRegion(surfaceItem()->shape());
     }
-    if (toplevel->shadow()) {
-        transformed_shape |= toplevel->shadow()->shadowRegion();
+    if (shadowItem()) {
+        transformed_shape |= shadowItem()->shadow()->shadowRegion();
     }
 
     xcb_render_transform_t xform = {
@@ -351,7 +353,7 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     PaintClipper pcreg(region);   // clip by the region to paint
     PaintClipper pc(transformed_shape);   // clip by window's shape
 
-    const bool wantShadow = m_shadow && !m_shadow->shadowRegion().isEmpty();
+    const bool wantShadow = shadowItem() && !shadowItem()->shadow()->shadowRegion().isEmpty();
 
     // In order to obtain a pixel perfect rescaling
     // we need to blit the window content togheter with
@@ -436,9 +438,9 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
 
     //BEGIN shadow preparations
     QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
-    SceneXRenderShadow* m_xrenderShadow = static_cast<SceneXRenderShadow*>(m_shadow);
 
     if (wantShadow) {
+        SceneXRenderShadow *m_xrenderShadow = static_cast<SceneXRenderShadow *>(shadowItem()->shadow());
         m_xrenderShadow->layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
         MAP_RECT_TO_TARGET(stlr);
         MAP_RECT_TO_TARGET(str);
@@ -476,6 +478,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
 
         //shadow
         if (wantShadow) {
+            SceneXRenderShadow *m_xrenderShadow = static_cast<SceneXRenderShadow *>(shadowItem()->shadow());
             xcb_render_picture_t shadowAlpha = XCB_RENDER_PICTURE_NONE;
             if (!opaque) {
                 shadowAlpha = xRenderBlendPicture(data.opacity());
@@ -500,7 +503,8 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
             xcb_render_composite(connection(), clientRenderOp, pic, clientAlpha, renderTarget,
                                  cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
             if (data.crossFadeProgress() < 1.0 && data.crossFadeProgress() > 0.0) {
-                XRenderWindowPixmap *previous = previousWindowPixmap<XRenderWindowPixmap>();
+                XRenderWindowPixmap *previous =
+                        static_cast<XRenderWindowPixmap *>(surfaceItem()->previousWindowPixmap());
                 if (previous && previous != pixmap) {
                     static xcb_render_color_t cFadeColor = {0, 0, 0, 0};
                     cFadeColor.alpha = uint16_t((1.0 - data.crossFadeProgress()) * 0xffff);

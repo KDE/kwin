@@ -42,6 +42,8 @@ class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
 class Shadow;
+class SurfaceItem;
+class WindowItem;
 
 /**
  * Enum to describe the reason why a Toplevel has to be released.
@@ -455,10 +457,10 @@ public:
     void addWorkspaceRepaint(const QRect& r);
     void addWorkspaceRepaint(int x, int y, int w, int h);
     void addWorkspaceRepaint(const QRegion &region);
-    QRegion damage() const;
-    void resetDamage();
     EffectWindowImpl* effectWindow();
     const EffectWindowImpl* effectWindow() const;
+    SurfaceItem *surfaceItem() const;
+    WindowItem *windowItem() const;
     /**
      * Window will be temporarily painted as if being at the top of the stack.
      * Only available if Compositor is active, if not active, this method is a no-op.
@@ -490,24 +492,9 @@ public:
      * @see hasAlpha
      */
     const QRegion& opaqueRegion() const;
+    QRegion shapeRegion() const;
 
     virtual Layer layer() const = 0;
-
-    /**
-     * Resets the damage state and sends a request for the damage region.
-     * A call to this function must be followed by a call to getDamageRegionReply(),
-     * or the reply will be leaked.
-     *
-     * Returns true if the window was damaged, and false otherwise.
-     */
-    bool resetAndFetchDamage();
-
-    /**
-     * Gets the reply from a previous call to resetAndFetchDamage().
-     * Calling this function is a no-op if there is no pending reply.
-     * Call damage() to return the fetched region.
-     */
-    void getDamageRegionReply();
 
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
@@ -685,12 +672,8 @@ protected:
     void setWindowHandles(xcb_window_t client);
     void detectShape(xcb_window_t id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
-    virtual void damageNotifyEvent();
     virtual void clientMessageEvent(xcb_client_message_event_t *e);
     void discardWindowPixmap();
-    void addDamageFull();
-    virtual void addDamage(const QRegion &damage);
-    void addDamage_helper(const QRegion &damage);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
@@ -705,6 +688,7 @@ protected:
      * Will only be called on corresponding property changes and for initialization.
      */
     void getWmOpaqueRegion();
+    void discardShapeRegion();
 
     void getResourceClass();
     void setResourceClass(const QByteArray &name, const QByteArray &className = QByteArray());
@@ -727,24 +711,19 @@ protected:
     QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
     QImage m_internalImage;
 
-protected:
-    bool m_isDamaged;
-
 private:
     // when adding new data members, check also copyToDeleted()
     QUuid m_internalId;
     Xcb::Window m_client;
-    xcb_damage_damage_t damage_handle;
-    QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
     bool is_shape;
     EffectWindowImpl* effect_window;
     QByteArray resource_name;
     QByteArray resource_class;
     ClientMachine *m_clientMachine;
     xcb_window_t m_wmClientLeader;
-    bool m_damageReplyPending;
     QRegion opaque_region;
-    xcb_xfixes_fetch_region_cookie_t m_regionCookie;
+    mutable QRegion m_shapeRegion;
+    mutable bool m_shapeRegionIsValid = false;
     int m_screen;
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
@@ -918,11 +897,6 @@ inline bool Toplevel::isInputMethod() const
 inline bool Toplevel::isOutline() const
 {
     return false;
-}
-
-inline QRegion Toplevel::damage() const
-{
-    return damage_region;
 }
 
 inline bool Toplevel::shape() const

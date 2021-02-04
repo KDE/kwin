@@ -2370,8 +2370,14 @@ void AbstractClient::createDecoration(const QRect &oldGeometry)
 void AbstractClient::destroyDecoration()
 {
     delete m_decoration.decoration;
-    m_decoration.decoration = nullptr;
+    setDecoration(nullptr);
     m_decoration.inputRegion = QRegion();
+}
+
+void AbstractClient::setDecoration(KDecoration2::Decoration *decoration)
+{
+    m_decoration.decoration = decoration;
+    emit decorationChanged();
 }
 
 void AbstractClient::updateDecorationInputShape()

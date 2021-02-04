@@ -38,7 +38,7 @@ public:
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
 
-    bool setupCompositing() override;
+    void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
@@ -47,8 +47,10 @@ private:
     ~Unmanaged() override; // use release()
     // handlers for X11 events
     void configureNotifyEvent(xcb_configure_notify_event_t *e);
+    void damageNotifyEvent();
     QWindow *findInternalWindow() const;
     void associate();
+    void initialize();
     bool m_outline = false;
     bool m_scheduledRelease = false;
 };

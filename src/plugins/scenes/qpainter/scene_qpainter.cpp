@@ -16,6 +16,7 @@
 #include "main.h"
 #include "renderloop.h"
 #include "screens.h"
+#include "surfaceitem.h"
 #include "toplevel.h"
 #include "platform.h"
 #include "wayland_server.h"
@@ -202,11 +203,9 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 
     if (region.isEmpty())
         return;
-    QPainterWindowPixmap *pixmap = windowPixmap<QPainterWindowPixmap>();
-    if (!pixmap || !pixmap->isValid()) {
+    if (!surfaceItem()) {
         return;
     }
-    toplevel->resetDamage();
 
     QPainter *scenePainter = m_scene->scenePainter();
     QPainter *painter = scenePainter;
@@ -234,7 +233,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     }
     renderShadow(painter);
     renderWindowDecorations(painter);
-    renderWindowPixmap(painter, pixmap);
+    renderSurfaceItem(painter, surfaceItem());
 
     if (!opaque) {
         tempPainter.restore();
@@ -250,27 +249,32 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     painter->restore();
 }
 
-void SceneQPainter::Window::renderWindowPixmap(QPainter *painter, QPainterWindowPixmap *windowPixmap)
+void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem)
 {
-    const QRegion shape = windowPixmap->shape();
-    for (const QRectF rect : shape) {
-        const QPointF windowTopLeft = windowPixmap->mapToWindow(rect.topLeft());
-        const QPointF windowBottomRight = windowPixmap->mapToWindow(rect.bottomRight());
+    QPainterWindowPixmap *windowPixmap =
+            static_cast<QPainterWindowPixmap *>(surfaceItem->windowPixmap());
+    if (!windowPixmap || !windowPixmap->isValid()) {
+        return;
+    }
 
-        const QPointF bufferTopLeft = windowPixmap->mapToBuffer(rect.topLeft());
-        const QPointF bufferBottomRight = windowPixmap->mapToBuffer(rect.bottomRight());
+    surfaceItem->resetDamage();
+
+    const QRegion shape = surfaceItem->shape();
+    for (const QRectF rect : shape) {
+        const QPointF windowTopLeft = surfaceItem->mapToWindow(rect.topLeft());
+        const QPointF windowBottomRight = surfaceItem->mapToWindow(rect.bottomRight());
+
+        const QPointF bufferTopLeft = surfaceItem->mapToBuffer(rect.topLeft());
+        const QPointF bufferBottomRight = surfaceItem->mapToBuffer(rect.bottomRight());
 
         painter->drawImage(QRectF(windowTopLeft, windowBottomRight),
                            windowPixmap->image(),
                            QRectF(bufferTopLeft, bufferBottomRight));
     }
 
-    const QVector<WindowPixmap *> children = windowPixmap->children();
-    for (WindowPixmap *child : children) {
-        QPainterWindowPixmap *scenePixmap = static_cast<QPainterWindowPixmap *>(child);
-        if (scenePixmap->isValid()) {
-            renderWindowPixmap(painter, scenePixmap);
-        }
+    const QList<Item *> children = surfaceItem->childItems();
+    for (Item *child : children) {
+        renderSurfaceItem(painter, static_cast<SurfaceItem *>(child));
     }
 }
 
@@ -346,11 +350,6 @@ QPainterWindowPixmap::QPainterWindowPixmap(Scene::Window *window)
 {
 }
 
-QPainterWindowPixmap::QPainterWindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent)
-    : WindowPixmap(subSurface, parent)
-{
-}
-
 QPainterWindowPixmap::~QPainterWindowPixmap()
 {
 }
@@ -374,11 +373,6 @@ void QPainterWindowPixmap::create()
     if (auto s = surface()) {
         s->resetTrackedDamage();
     }
-}
-
-WindowPixmap *QPainterWindowPixmap::createChild(KWaylandServer::SubSurfaceInterface *subSurface)
-{
-    return new QPainterWindowPixmap(subSurface, this);
 }
 
 void QPainterWindowPixmap::update()

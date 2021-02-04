@@ -34,17 +34,21 @@ class DecoratedClientImpl;
 class Renderer;
 }
 
+class AbstractOutput;
 class AbstractThumbnailItem;
+class DecorationItem;
 class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
+class GLTexture;
+class Item;
 class OverlayWindow;
 class RenderLoop;
 class Shadow;
+class ShadowItem;
+class SurfaceItem;
+class WindowItem;
 class WindowPixmap;
-class GLTexture;
-class AbstractOutput;
-class SubSurfaceMonitor;
 
 // The base class for compositing backends.
 class KWIN_EXPORT Scene : public QObject
@@ -346,12 +350,7 @@ public:
     bool isOpaque() const;
     // is the window shaded
     bool isShaded() const;
-    // shape of the window
-    QRegion bufferShape() const;
-    QRegion clientShape() const;
     QRegion decorationShape() const;
-    QPoint bufferOffset() const;
-    void discardShape();
     void updateToplevel(Deleted *deleted);
     // creates initial quad list for the window
     virtual WindowQuadList buildQuads(bool force = false) const;
@@ -361,36 +360,19 @@ public:
     void referencePreviousPixmap();
     void unreferencePreviousPixmap();
     void discardQuads();
-    void preprocess();
+    void preprocess(Item *item);
     void addLayerRepaint(const QRegion &region);
     QRegion repaints(int screen) const;
     void resetRepaints(int screen);
+    WindowItem *windowItem() const;
+    SurfaceItem *surfaceItem() const;
+    ShadowItem *shadowItem() const;
+    void scheduleRepaint();
 
     virtual QSharedPointer<GLTexture> windowTexture() {
         return {};
     }
 
-    /**
-     * @brief Returns the WindowPixmap for this Window.
-     *
-     * If the WindowPixmap does not yet exist, this method will invoke createWindowPixmap.
-     * If the WindowPixmap is not valid it tries to create it, in case this succeeds the WindowPixmap is
-     * returned. In case it fails, the previous (and still valid) WindowPixmap is returned.
-     *
-     * @note This method can return @c NULL as there might neither be a valid previous nor current WindowPixmap
-     * around.
-     *
-     * The WindowPixmap gets casted to the type passed in as a template parameter. That way this class does not
-     * need to know the actual WindowPixmap subclass used by the concrete Scene implementations.
-     *
-     * @return The WindowPixmap casted to T* or @c NULL if there is no valid window pixmap.
-     */
-    template<typename T> T *windowPixmap() const;
-    template<typename T> T *previousWindowPixmap() const;
-
-protected:
-    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
-    WindowQuadList makeContentsQuads() const;
     /**
      * @brief Factory method to create a WindowPixmap.
      *
@@ -398,23 +380,26 @@ protected:
      * @note Do not use WindowPixmap::create on the created instance. The Scene will take care of that.
      */
     virtual WindowPixmap *createWindowPixmap() = 0;
+
+protected:
+    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
+    WindowQuadList makeContentsQuads() const;
     Toplevel* toplevel;
     ImageFilterType filter;
-    Shadow *m_shadow;
 private:
-    void scheduleRepaint();
-    void handleSurfaceCommitted(KWaylandServer::SurfaceInterface *surface);
+    void discardPixmap_helper(SurfaceItem *item);
+    void updatePixmap_helper(SurfaceItem *item);
+
+    void referencePreviousPixmap_helper(SurfaceItem *item);
+    void unreferencePreviousPixmap_helper(SurfaceItem *item);
+
+    void updateWindowPosition();
     void reallocRepaints();
 
-    QScopedPointer<WindowPixmap> m_currentPixmap;
-    QScopedPointer<WindowPixmap> m_previousPixmap;
     QVector<QRegion> m_repaints;
-    SubSurfaceMonitor *m_subsurfaceMonitor = nullptr;
-    int m_referencePixmapCounter;
     int disable_painting;
-    mutable QRegion m_bufferShape;
-    mutable bool m_bufferShapeIsValid = false;
     mutable QScopedPointer<WindowQuadList> cached_quad_list;
+    QScopedPointer<WindowItem> m_windowItem;
     Q_DISABLE_COPY(Window)
 };
 
@@ -458,10 +443,6 @@ public:
      */
     virtual bool isValid() const;
     /**
-     * Returns @c true if this is the root window pixmap; otherwise returns @c false.
-     */
-    bool isRoot() const;
-    /**
      * @return The native X11 pixmap handle
      */
     xcb_pixmap_t pixmap() const;
@@ -487,43 +468,9 @@ public:
      */
     void markAsDiscarded();
     /**
-     * Returns the position of the WindowPixmap relative to the upper left corner of the parent.
-     *
-     * This method returns the position of the WindowPixmap relative to the upper left corner
-     * of the window pixmap if parent() is @c null.
-     *
-     * The upper left corner of the parent window pixmap corresponds to (0, 0).
-     */
-    QPoint position() const;
-    /**
-     * Returns the position of the WindowPixmap relative to the upper left corner of the window
-     * frame. Note that position() returns the position relative to the parent WindowPixmap.
-     *
-     * The upper left corner of the window frame corresponds to (0, 0).
-     */
-    QPoint framePosition() const;
-    /**
      * The size of the pixmap.
      */
     const QSize &size() const;
-    /**
-     * Returns the device pixel ratio for the attached buffer. This is the ratio between device
-     * pixels and logical pixels.
-     */
-    qreal scale() const;
-    /**
-     * Returns the region that specifies the area inside the attached buffer with the actual
-     * client's contents.
-     *
-     * The upper left corner of the attached buffer corresponds to (0, 0).
-     */
-    QRegion shape() const;
-    /**
-     * Returns the region that specifies the opaque area inside the attached buffer.
-     *
-     * The upper left corner of the attached buffer corresponds to (0, 0).
-     */
-    QRegion opaque() const;
     /**
      * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
      * pixmap also contains the decoration which is not rendered into this pixmap, though. This
@@ -540,59 +487,17 @@ public:
      */
     bool hasAlphaChannel() const;
     /**
-     * Maps the specified @a point from the window pixmap coordinates to the window local coordinates.
-     */
-    QPointF mapToWindow(const QPointF &point) const;
-    /**
-     * Maps the specified @a point from the window pixmap coordinates to the buffer pixel coordinates.
-     */
-    QPointF mapToBuffer(const QPointF &point) const;
-    /**
-     * Maps the specified @a region from the window pixmap coordinates to the global screen coordinates.
-     */
-    QRegion mapToGlobal(const QRegion &region) const;
-
-    /**
-     * @returns the parent WindowPixmap in the sub-surface tree
-     */
-    WindowPixmap *parent() const {
-        return m_parent;
-    }
-
-    /**
-     * @returns the current sub-surface tree
-     */
-    QVector<WindowPixmap*> children() const {
-        return m_children;
-    }
-
-    /**
-     * @returns the subsurface this WindowPixmap is for if it is not for a root window
-     */
-    KWaylandServer::SubSurfaceInterface *subSurface() const;
-
-    /**
      * @returns the surface this WindowPixmap references, might be @c null.
      */
     KWaylandServer::SurfaceInterface *surface() const;
-
-    WindowPixmap *topMostSurface();
+    void setSurface(KWaylandServer::SurfaceInterface *surface);
 
 protected:
     explicit WindowPixmap(Scene::Window *window);
-    explicit WindowPixmap(KWaylandServer::SubSurfaceInterface *subSurface, WindowPixmap *parent);
-    virtual WindowPixmap *createChild(KWaylandServer::SubSurfaceInterface *subSurface);
     /**
      * @return The Window this WindowPixmap belongs to
      */
     Scene::Window *window();
-
-    /**
-     * Sets the sub-surface tree to @p children.
-     */
-    void setChildren(const QVector<WindowPixmap*> &children) {
-        m_children = children;
-    }
 
 private:
     void setBuffer(KWaylandServer::BufferInterface *buffer);
@@ -606,9 +511,7 @@ private:
     KWaylandServer::BufferInterface *m_buffer = nullptr;
     QSharedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_internalImage;
-    WindowPixmap *m_parent = nullptr;
-    QVector<WindowPixmap*> m_children;
-    QPointer<KWaylandServer::SubSurfaceInterface> m_subSurface;
+    QPointer<KWaylandServer::SurfaceInterface> m_surface;
 };
 
 class Scene::EffectFrame
@@ -683,18 +586,6 @@ Toplevel* Scene::Window::window() const
 }
 
 inline
-const Shadow* Scene::Window::shadow() const
-{
-    return m_shadow;
-}
-
-inline
-Shadow* Scene::Window::shadow()
-{
-    return m_shadow;
-}
-
-inline
 KWaylandServer::BufferInterface *WindowPixmap::buffer() const
 {
     return m_buffer;
@@ -710,26 +601,6 @@ inline
 QImage WindowPixmap::internalImage() const
 {
     return m_internalImage;
-}
-
-template <typename T>
-inline
-T *Scene::Window::windowPixmap() const
-{
-    if (m_currentPixmap && m_currentPixmap->isValid()) {
-        return static_cast<T*>(m_currentPixmap.data());
-    }
-    if (m_previousPixmap && m_previousPixmap->isValid()) {
-        return static_cast<T*>(m_previousPixmap.data());
-    }
-    return nullptr;
-}
-
-template <typename T>
-inline
-T *Scene::Window::previousWindowPixmap() const
-{
-    return static_cast<T*>(m_previousPixmap.data());
 }
 
 inline
