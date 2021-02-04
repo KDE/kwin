@@ -695,6 +695,7 @@ protected:
     void discardWindowPixmap();
     void addDamageFull();
     virtual void addDamage(const QRegion &damage);
+    void addDamage_helper(const QRegion &damage);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();

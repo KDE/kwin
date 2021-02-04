@@ -403,7 +403,7 @@ void Toplevel::getDamageRegionReply()
                         reply->extents.width, reply->extents.height);
     free(reply);
 
-    addDamage(region);
+    addDamage_helper(region);
 }
 
 void Toplevel::addDamageFull()
@@ -412,17 +412,7 @@ void Toplevel::addDamageFull()
         return;
 
     const QRect bufferRect = bufferGeometry();
-    const QRect frameRect = frameGeometry();
-
-    const int offsetX = bufferRect.x() - frameRect.x();
-    const int offsetY = bufferRect.y() - frameRect.y();
-
-    const QRect damagedRect(0, 0, bufferRect.width(), bufferRect.height());
-
-    damage_region = damagedRect;
-    addRepaint(damagedRect.translated(offsetX, offsetY));
-
-    emit damaged(this, damage_region);
+    addDamage_helper(QRect(0, 0, bufferRect.width(), bufferRect.height()));
 }
 
 void Toplevel::resetDamage()
@@ -739,10 +729,15 @@ void Toplevel::setSurface(KWaylandServer::SurfaceInterface *surface)
 
 void Toplevel::addDamage(const QRegion &damage)
 {
+    m_isDamaged = true;
+    addDamage_helper(damage);
+}
+
+void Toplevel::addDamage_helper(const QRegion &damage)
+{
     const QRect bufferRect = bufferGeometry();
     const QRect frameRect = frameGeometry();
 
-    m_isDamaged = true;
     damage_region += damage;
     addRepaint(damage.translated(bufferRect.topLeft() - frameRect.topLeft()));
 
