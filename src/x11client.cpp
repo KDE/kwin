@@ -2619,11 +2619,6 @@ QRect X11Client::bufferGeometry() const
     return m_bufferGeometry;
 }
 
-QMargins X11Client::bufferMargins() const
-{
-    return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
-}
-
 QPoint X11Client::framePosToClientPos(const QPoint &point) const
 {
     int x = point.x();

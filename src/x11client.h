@@ -82,7 +82,6 @@ public:
 
     QRect inputGeometry() const override;
     QRect bufferGeometry() const override;
-    QMargins bufferMargins() const override;
 
     QPoint framePosToClientPos(const QPoint &point) const override;
     QPoint clientPosToFramePos(const QPoint &point) const override;

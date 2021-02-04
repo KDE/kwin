@@ -904,14 +904,10 @@ QRegion Scene::Window::clientShape() const
     if (isShaded())
         return QRegion();
 
+    const QRect clipRect = toplevel->clientGeometry().translated(-toplevel->bufferGeometry().topLeft());
     const QRegion shape = bufferShape();
-    const QMargins bufferMargins = toplevel->bufferMargins();
-    if (bufferMargins.isNull()) {
-        return shape;
-    }
 
-    const QRect clippingRect = QRect(QPoint(0, 0), toplevel->bufferGeometry().size()) - toplevel->bufferMargins();
-    return shape & clippingRect;
+    return shape & clipRect;
 }
 
 QRegion Scene::Window::decorationShape() const
