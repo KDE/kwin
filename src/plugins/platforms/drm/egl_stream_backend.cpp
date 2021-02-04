@@ -599,7 +599,6 @@ bool EglStreamTexture::loadTexture(WindowPixmap *pixmap)
 
         attachBuffer(surface->buffer());
         createFbo();
-        surface->resetTrackedDamage();
 
         if (acquireStreamFrame(st->stream)) {
             copyExternalTexture(st->texture);
@@ -624,7 +623,6 @@ void EglStreamTexture::updateTexture(WindowPixmap *pixmap, const QRegion &region
         if (attachBuffer(surface->buffer())) {
             createFbo();
         }
-        surface->resetTrackedDamage();
 
         if (acquireStreamFrame(st->stream)) {
             copyExternalTexture(st->texture);

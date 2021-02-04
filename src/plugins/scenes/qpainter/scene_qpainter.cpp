@@ -370,9 +370,6 @@ void QPainterWindowPixmap::create()
     }
     // performing deep copy, this could probably be improved
     m_image = buffer()->data().copy();
-    if (auto s = surface()) {
-        s->resetTrackedDamage();
-    }
 }
 
 void QPainterWindowPixmap::update()
@@ -394,9 +391,6 @@ void QPainterWindowPixmap::update()
     }
     // perform deep copy
     m_image = b->data().copy();
-    if (auto s = surface()) {
-        s->resetTrackedDamage();
-    }
 }
 
 bool QPainterWindowPixmap::isValid() const

@@ -424,9 +424,6 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
         return false;
     }
     // try Wayland loading
-    if (auto s = pixmap->surface()) {
-        s->resetTrackedDamage();
-    }
     if (buffer->linuxDmabufBuffer()) {
         return loadDmabufTexture(buffer);
     } else if (buffer->shmBuffer()) {
@@ -461,9 +458,6 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap, const QRegion &regi
         // The origin in a dmabuf-buffer is at the upper-left corner, so the meaning
         // of Y-inverted is the inverse of OpenGL.
         q->setYInverted(!(dmabuf->flags() & KWaylandServer::LinuxDmabufUnstableV1Interface::YInverted));
-        if (s) {
-            s->resetTrackedDamage();
-        }
         return;
     }
     if (!buffer->shmBuffer()) {
@@ -476,9 +470,6 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap, const QRegion &regi
             }
             m_image = image;
         }
-        if (s) {
-            s->resetTrackedDamage();
-        }
         return;
     }
     // shm fallback
@@ -487,8 +478,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap, const QRegion &regi
         return;
     }
     Q_ASSERT(image.size() == m_size);
-    const QRegion damage = s->mapToBuffer(s->trackedDamage());
-    s->resetTrackedDamage();
+    const QRegion damage = s->mapToBuffer(region);
 
     // TODO: this should be shared with GLTexture::update
     createTextureSubImage(image, damage);
