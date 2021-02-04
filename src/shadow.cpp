@@ -195,6 +195,7 @@ bool Shadow::init(const QVector< uint32_t > &data)
         return false;
     }
     buildQuads();
+    emit textureChanged();
     return true;
 }
 
@@ -225,6 +226,7 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
         return false;
     }
     buildQuads();
+    emit textureChanged();
     return true;
 }
 
@@ -253,6 +255,7 @@ bool Shadow::init(const QPointer< KWaylandServer::ShadowInterface > &shadow)
         return false;
     }
     buildQuads();
+    emit textureChanged();
     return true;
 }
 
@@ -295,6 +298,7 @@ bool Shadow::init(const QWindow *window)
     }
 
     buildQuads();
+    emit textureChanged();
 
     return true;
 }
@@ -306,6 +310,7 @@ void Shadow::updateShadowRegion()
     const QRect bottom(0, m_topLevel->height(), m_topLevel->width(), m_bottomOffset);
     const QRect left(- m_leftOffset, - m_topOffset, m_leftOffset, m_topLevel->height() + m_topOffset + m_bottomOffset);
     m_shadowRegion = QRegion(top).united(right).united(bottom).united(left);
+    emit regionChanged();
 }
 
 void Shadow::buildQuads()

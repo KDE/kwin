@@ -105,6 +105,10 @@ public:
         return m_decorationShadow.toWeakRef();
     }
 
+Q_SIGNALS:
+    void regionChanged();
+    void textureChanged();
+
 public Q_SLOTS:
     void geometryChanged();
 
