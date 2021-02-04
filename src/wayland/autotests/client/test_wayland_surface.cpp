@@ -46,7 +46,6 @@ private Q_SLOTS:
     void testScale();
     void testDestroy();
     void testUnmapOfNotMappedSurface();
-    void testDamageTracking();
     void testSurfaceAt();
     void testDestroyAttachedBuffer();
     void testDestroyWithPendingCallback();
@@ -866,69 +865,6 @@ void TestWaylandSurface::testUnmapOfNotMappedSurface()
 
     QVERIFY(bufferScaleChanged.wait());
     QVERIFY(unmappedSpy.isEmpty());
-}
-
-void TestWaylandSurface::testDamageTracking()
-{
-    // this tests the damage tracking feature
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-    // create surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QVERIFY(serverSurfaceCreated.isValid());
-    QScopedPointer<Surface> s(m_compositor->createSurface());
-    QVERIFY(serverSurfaceCreated.wait());
-    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface*>();
-
-    // before first commit, the tracked damage should be empty
-    QVERIFY(serverSurface->trackedDamage().isEmpty());
-
-    // Now let's damage the surface
-    QSignalSpy damagedSpy(serverSurface, &SurfaceInterface::damaged);
-    QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
-    image.fill(Qt::red);
-    s->attachBuffer(m_shm->createBuffer(image));
-    s->damage(QRect(0, 0, 100, 100));
-    s->commit(Surface::CommitFlag::None);
-    QVERIFY(damagedSpy.wait());
-    QCOMPARE(serverSurface->trackedDamage(), QRegion(0, 0, 100, 100));
-    QCOMPARE(serverSurface->damage(), QRegion(0, 0, 100, 100));
-
-    // resetting the tracked damage should empty it
-    serverSurface->resetTrackedDamage();
-    QVERIFY(serverSurface->trackedDamage().isEmpty());
-    // but not affect the actual damage
-    QCOMPARE(serverSurface->damage(), QRegion(0, 0, 100, 100));
-
-    // let's damage some parts of the surface
-    QPainter p;
-    p.begin(&image);
-    p.fillRect(QRect(0, 0, 10, 10), Qt::blue);
-    p.end();
-    s->attachBuffer(m_shm->createBuffer(image));
-    s->damage(QRect(0, 0, 10, 10));
-    s->commit(Surface::CommitFlag::None);
-    QVERIFY(damagedSpy.wait());
-    QCOMPARE(serverSurface->trackedDamage(), QRegion(0, 0, 10, 10));
-    QCOMPARE(serverSurface->damage(), QRegion(0, 0, 10, 10));
-
-    // and damage some part completely not bounding to the current damage region
-    p.begin(&image);
-    p.fillRect(QRect(50, 40, 20, 30), Qt::blue);
-    p.end();
-    s->attachBuffer(m_shm->createBuffer(image));
-    s->damage(QRect(50, 40, 20, 30));
-    s->commit(Surface::CommitFlag::None);
-    QVERIFY(damagedSpy.wait());
-    QCOMPARE(serverSurface->trackedDamage(), QRegion(0, 0, 10, 10).united(QRegion(50, 40, 20, 30)));
-    QCOMPARE(serverSurface->trackedDamage().rectCount(), 2);
-    QCOMPARE(serverSurface->damage(), QRegion(50, 40, 20, 30));
-
-    // now let's reset the tracked damage again
-    serverSurface->resetTrackedDamage();
-    QVERIFY(serverSurface->trackedDamage().isEmpty());
-    // but not affect the actual damage
-    QCOMPARE(serverSurface->damage(), QRegion(50, 40, 20, 30));
 }
 
 void TestWaylandSurface::testSurfaceAt()

@@ -99,7 +99,6 @@ public:
     State pending;
     State cached;
     SubSurfaceInterface *subSurface = nullptr;
-    QRegion trackedDamage;
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;
     QSize bufferSize;

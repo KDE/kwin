@@ -240,32 +240,6 @@ public:
     bool isMapped() const;
 
     /**
-     * Returns the tracked damage since the last call to  {@link resetTrackedDamage}.
-     * In contrast to {@link damage} this method does not reset the damage when
-     * a new BufferInterface gets committed. This allows a compositor to properly
-     * track the damage over multiple commits even if it didn't render each new
-     * BufferInterface.
-     *
-     * The damage gets reset whenever {@link resetTrackedDamage} is called.
-     * This allows a compositor to properly track the change in its rendering scene
-     * for this SurfaceInterface. After it updates its internal state (e.g. by creating
-     * an OpenGL texture from the BufferInterface) it can invoke {@link resetTrackedDamage}
-     * and the damage tracker will start to track further damage changes.
-     *
-     * @returns Combined damage since last call to resetTrackedDamage
-     * @see damage
-     * @see resetTrackedDamage
-     */
-    QRegion trackedDamage() const;
-
-    /**
-     * Reset the damage tracking. The compositor should invoke this method once it updated
-     * it's internal state and processed the current damage.
-     * @see trackedDamage
-     */
-    void resetTrackedDamage();
-
-    /**
      * Finds the SurfaceInterface at the given @p position in surface-local coordinates.
      * This can be either a descendant SurfaceInterface honoring the stacking order or
      * the SurfaceInterface itself if its geometry contains the given @p position.

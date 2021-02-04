@@ -635,7 +635,6 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
             const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
             const QRegion bufferDamage = q->mapFromBuffer(target->bufferDamage);
             target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
-            trackedDamage |= target->damage;
             emit q->damaged(target->damage);
             // workaround for https://bugreports.qt.io/browse/QTBUG-52092
             // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
@@ -803,16 +802,6 @@ bool SurfaceInterface::isMapped() const
         return d->subSurfaceIsMapped && d->subSurface->parentSurface() && d->subSurface->parentSurface()->isMapped();
     }
     return d->current.buffer != nullptr;
-}
-
-QRegion SurfaceInterface::trackedDamage() const
-{
-    return d->trackedDamage;
-}
-
-void SurfaceInterface::resetTrackedDamage()
-{
-    d->trackedDamage = QRegion();
 }
 
 QVector<OutputInterface *> SurfaceInterface::outputs() const
