@@ -325,7 +325,7 @@ void WaylandClient::internalHide()
         leaveMoveResize();
     }
     m_isHidden = true;
-    addWorkspaceRepaint(visibleRect());
+    addWorkspaceRepaint(visibleGeometry());
     workspace()->clientHidden(this);
     emit windowHidden(this);
 }

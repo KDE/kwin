@@ -139,7 +139,7 @@ void Toplevel::disownDataPassedToDeleted()
     info = nullptr;
 }
 
-QRect Toplevel::visibleRect() const
+QRect Toplevel::visibleGeometry() const
 {
     // There's no strict order between frame geometry and buffer geometry.
     QRect rect = frameGeometry() | bufferGeometry();
@@ -451,7 +451,7 @@ void Toplevel::addLayerRepaint(const QRegion &region)
 
 void Toplevel::addRepaintFull()
 {
-    addLayerRepaint(visibleRect());
+    addLayerRepaint(visibleGeometry());
 }
 
 void Toplevel::addWorkspaceRepaint(int x, int y, int w, int h)
@@ -555,7 +555,7 @@ bool Toplevel::isOnOutput(AbstractOutput *output) const
 void Toplevel::updateShadow()
 {
     QRect dirtyRect;  // old & new shadow region
-    const QRect oldVisibleRect = visibleRect();
+    const QRect oldVisibleRect = visibleGeometry();
     addWorkspaceRepaint(oldVisibleRect);
     if (shadow()) {
         dirtyRect = shadow()->shadowRegion().boundingRect();
@@ -568,7 +568,7 @@ void Toplevel::updateShadow()
     }
     if (shadow())
         dirtyRect |= shadow()->shadowRegion().boundingRect();
-    if (oldVisibleRect != visibleRect())
+    if (oldVisibleRect != visibleGeometry())
         emit paddingChanged(this, oldVisibleRect);
     if (dirtyRect.isValid()) {
         dirtyRect.translate(pos());
@@ -642,7 +642,7 @@ void Toplevel::elevate(bool elevate)
         return;
     }
     effectWindow()->elevate(elevate);
-    addWorkspaceRepaint(visibleRect());
+    addWorkspaceRepaint(visibleGeometry());
 }
 
 pid_t Toplevel::pid() const

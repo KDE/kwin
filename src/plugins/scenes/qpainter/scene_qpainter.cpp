@@ -198,7 +198,7 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 {
     QRegion region = _region;
     if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
-        region &= toplevel->visibleRect();
+        region &= toplevel->visibleGeometry();
 
     if (region.isEmpty())
         return;
@@ -225,11 +225,11 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
     QPainter tempPainter;
     if (!opaque) {
         // need a temp render target which we later on blit to the screen
-        tempImage = QImage(toplevel->visibleRect().size(), QImage::Format_ARGB32_Premultiplied);
+        tempImage = QImage(toplevel->visibleGeometry().size(), QImage::Format_ARGB32_Premultiplied);
         tempImage.fill(Qt::transparent);
         tempPainter.begin(&tempImage);
         tempPainter.save();
-        tempPainter.translate(toplevel->frameGeometry().topLeft() - toplevel->visibleRect().topLeft());
+        tempPainter.translate(toplevel->frameGeometry().topLeft() - toplevel->visibleGeometry().topLeft());
         painter = &tempPainter;
     }
     renderShadow(painter);
@@ -241,10 +241,10 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
         tempPainter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
         QColor translucent(Qt::transparent);
         translucent.setAlphaF(data.opacity());
-        tempPainter.fillRect(QRect(QPoint(0, 0), toplevel->visibleRect().size()), translucent);
+        tempPainter.fillRect(QRect(QPoint(0, 0), toplevel->visibleGeometry().size()), translucent);
         tempPainter.end();
         painter = scenePainter;
-        painter->drawImage(toplevel->visibleRect().topLeft() - toplevel->frameGeometry().topLeft(), tempImage);
+        painter->drawImage(toplevel->visibleGeometry().topLeft() - toplevel->frameGeometry().topLeft(), tempImage);
     }
 
     painter->restore();

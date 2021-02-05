@@ -227,7 +227,7 @@ QRegion SceneXrender::Window::bufferToWindowRegion(const QRegion &region) const
 void SceneXrender::Window::prepareTempPixmap()
 {
     const QSize oldSize = temp_visibleRect.size();
-    temp_visibleRect = toplevel->visibleRect().translated(-toplevel->pos());
+    temp_visibleRect = toplevel->visibleGeometry().translated(-toplevel->pos());
     if (s_tempPicture && (oldSize.width() < temp_visibleRect.width() || oldSize.height() < temp_visibleRect.height())) {
         delete s_tempPicture;
         s_tempPicture = nullptr;
@@ -261,7 +261,7 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
         }*/
     // Intersect the clip region with the rectangle the window occupies on the screen
     if (!(mask & (PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_TRANSFORMED)))
-        region &= toplevel->visibleRect();
+        region &= toplevel->visibleGeometry();
 
     if (region.isEmpty())
         return;
@@ -367,7 +367,7 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
     xcb_render_picture_t renderTarget = m_scene->xrenderBufferPicture();
     if (blitInTempPixmap) {
         if (scene_xRenderOffscreenTarget()) {
-            temp_visibleRect = toplevel->visibleRect().translated(-toplevel->pos());
+            temp_visibleRect = toplevel->visibleGeometry().translated(-toplevel->pos());
             renderTarget = *scene_xRenderOffscreenTarget();
         } else {
             prepareTempPixmap();

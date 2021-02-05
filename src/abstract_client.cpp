@@ -88,7 +88,7 @@ AbstractClient::AbstractClient()
     );
 
     connect(this, &AbstractClient::paddingChanged, this, [this]() {
-        m_visibleRectBeforeGeometryUpdate = visibleRect();
+        m_visibleRectBeforeGeometryUpdate = visibleGeometry();
     });
 
     connect(ApplicationMenu::self(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
@@ -236,7 +236,7 @@ void AbstractClient::markAsZombie()
 {
     Q_ASSERT(!m_zombie);
     m_zombie = true;
-    addWorkspaceRepaint(visibleRect());
+    addWorkspaceRepaint(visibleGeometry());
 }
 
 Layer AbstractClient::layer() const
@@ -709,7 +709,7 @@ void AbstractClient::minimize(bool avoid_animation)
     }
 
     // TODO: merge signal with s_minimized
-    addWorkspaceRepaint(visibleRect());
+    addWorkspaceRepaint(visibleGeometry());
     emit clientMinimized(this, !avoid_animation);
     emit minimizedChanged();
 }
@@ -2026,7 +2026,7 @@ BORDER(Top)
 
 void AbstractClient::addRepaintDuringGeometryUpdates()
 {
-    const QRect deco_rect = visibleRect();
+    const QRect deco_rect = visibleGeometry();
     addLayerRepaint(m_visibleRectBeforeGeometryUpdate);
     addLayerRepaint(deco_rect);   // trigger repaint of window's new location
     m_visibleRectBeforeGeometryUpdate = deco_rect;

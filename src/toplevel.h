@@ -110,7 +110,7 @@ class KWIN_EXPORT Toplevel : public QObject
      */
     Q_PROPERTY(int height READ height)
 
-    Q_PROPERTY(QRect visibleRect READ visibleRect)
+    Q_PROPERTY(QRect visibleRect READ visibleGeometry)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
     Q_PROPERTY(qulonglong windowId READ window CONSTANT)
@@ -374,7 +374,7 @@ public:
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
-    virtual QRect visibleRect() const;
+    virtual QRect visibleGeometry() const;
     virtual QRect transparentRect() const = 0;
     virtual bool isClient() const;
     virtual bool isDeleted() const;

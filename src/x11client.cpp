@@ -222,7 +222,7 @@ void X11Client::releaseWindow(bool on_shutdown)
     finishWindowRules();
     blockGeometryUpdates();
     if (isOnCurrentDesktop() && isShown(true))
-        addWorkspaceRepaint(visibleRect());
+        addWorkspaceRepaint(visibleGeometry());
     // Grab X during the release to make removing of properties, setting to withdrawn state
     // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
     grabXServer();
@@ -292,7 +292,7 @@ void X11Client::destroyClient()
     finishWindowRules();
     blockGeometryUpdates();
     if (isOnCurrentDesktop() && isShown(true))
-        addWorkspaceRepaint(visibleRect());
+        addWorkspaceRepaint(visibleGeometry());
     setModal(false);
     hidden = true; // So that it's not considered visible anymore
     workspace()->clientHidden(this);
@@ -1320,7 +1320,7 @@ void X11Client::updateShape()
     updateInputShape();
     if (compositing()) {
         addRepaintFull();
-        addWorkspaceRepaint(visibleRect());   // In case shape change removes part of this window
+        addWorkspaceRepaint(visibleGeometry());   // In case shape change removes part of this window
     }
     emit geometryShapeChanged(this, frameGeometry());
 }
@@ -1466,7 +1466,7 @@ void X11Client::doSetShade(ShadeMode previousShadeMode)
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if (isShade()) {
         // shade_mode == ShadeNormal
-        addWorkspaceRepaint(visibleRect());
+        addWorkspaceRepaint(visibleGeometry());
         // Shade
         shade_geometry_change = true;
         QSize s(adjustedSize());
@@ -1610,7 +1610,7 @@ void X11Client::internalHide()
         unmap();
     if (old == Kept)
         updateHiddenPreview();
-    addWorkspaceRepaint(visibleRect());
+    addWorkspaceRepaint(visibleGeometry());
     workspace()->clientHidden(this);
     emit windowHidden(this);
 }
@@ -1628,7 +1628,7 @@ void X11Client::internalKeep()
     if (isActive())
         workspace()->focusToNull(); // get rid of input focus, bug #317484
     updateHiddenPreview();
-    addWorkspaceRepaint(visibleRect());
+    addWorkspaceRepaint(visibleGeometry());
     workspace()->clientHidden(this);
 }
 
@@ -1652,7 +1652,7 @@ void X11Client::map()
         exportMappingState(XCB_ICCCM_WM_STATE_NORMAL);
     } else
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
-    addLayerRepaint(visibleRect());
+    addLayerRepaint(visibleGeometry());
 }
 
 /**
@@ -2212,7 +2212,7 @@ void X11Client::setClientShown(bool shown)
         unmap();
         // Don't move tabs to the end of the list when another tab get's activated
         FocusChain::self()->update(this, FocusChain::MakeLast);
-        addWorkspaceRepaint(visibleRect());
+        addWorkspaceRepaint(visibleGeometry());
     }
 }
 
