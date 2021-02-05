@@ -22,6 +22,12 @@
 
 struct gbm_device;
 
+namespace KWaylandServer
+{
+class DrmLeaseDeviceV1Interface;
+class DrmLeaseV1Interface;
+}
+
 namespace KWin
 {
 
@@ -33,6 +39,7 @@ class AbstractEglDrmBackend;
 class DrmPipeline;
 class DrmAbstractOutput;
 class DrmVirtualOutput;
+class DrmLeaseOutput;
 
 class DrmGpu : public QObject
 {
@@ -116,11 +123,16 @@ protected:
 private:
     void dispatchEvents();
     DrmOutput *findOutput(quint32 connector);
+    DrmLeaseOutput *findLeaseOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
+    void removeLeaseOutput(DrmLeaseOutput *output);
     void initDrmResources();
 
     QVector<DrmPipeline *> findWorkingCombination(const QVector<DrmPipeline *> &pipelines, QVector<DrmConnector *> connectors, QVector<DrmCrtc *> crtcs, const QVector<DrmPlane *> &planes);
     bool commitCombination(const QVector<DrmPipeline *> &pipelines);
+
+    void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);
+    void handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease);
 
     DrmBackend* const m_backend;
     QPointer<AbstractEglDrmBackend> m_eglBackend;
@@ -145,6 +157,10 @@ private:
     QVector<DrmOutput*> m_drmOutputs;
     // includes virtual outputs
     QVector<DrmAbstractOutput*> m_outputs;
+
+    // for DRM leasing:
+    QVector<DrmLeaseOutput*> m_leaseOutputs;
+    KWaylandServer::DrmLeaseDeviceV1Interface *m_leaseDevice = nullptr;
 };
 
 }

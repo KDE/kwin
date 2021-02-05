@@ -17,6 +17,7 @@ set(DRM_SOURCES
     drm_pipeline.cpp
     drm_abstract_output.cpp
     drm_virtual_output.cpp
+    drm_lease_output.cpp
 )
 
 if (HAVE_GBM)
