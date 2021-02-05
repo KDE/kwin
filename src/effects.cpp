@@ -322,7 +322,6 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
     connect(c, &AbstractClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
     connect(c, &AbstractClient::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
     connect(c, &AbstractClient::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
-    connect(c, &AbstractClient::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
     connect(c, &AbstractClient::unresponsiveChanged, this,
         [this, c](bool unresponsive) {
             emit windowUnresponsiveChanged(c->effectWindow(), unresponsive);
@@ -366,7 +365,6 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, &Unmanaged::opacityChanged,       this, &EffectsHandlerImpl::slotOpacityChanged);
     connect(u, &Unmanaged::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
     connect(u, &Unmanaged::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
-    connect(u, &Unmanaged::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
     connect(u, &Unmanaged::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
         emit windowExpandedGeometryChanged(u->effectWindow());
@@ -625,15 +623,6 @@ void EffectsHandlerImpl::slotFrameGeometryChanged(Toplevel *toplevel, const QRec
     if (toplevel->effectWindow()) {
         emit windowFrameGeometryChanged(toplevel->effectWindow(), oldGeometry);
     }
-}
-
-void EffectsHandlerImpl::slotPaddingChanged(Toplevel* t, const QRect& old)
-{
-    // during late cleanup effectWindow() may be already NULL
-    // in some functions that may still call this
-    if (t == nullptr || t->effectWindow() == nullptr)
-        return;
-    emit windowPaddingChanged(t->effectWindow(), old);
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect* e)

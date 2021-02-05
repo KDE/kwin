@@ -297,7 +297,6 @@ protected Q_SLOTS:
     void slotClientModalityChanged();
     void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);
     void slotFrameGeometryChanged(Toplevel *toplevel, const QRect &oldGeometry);
-    void slotPaddingChanged(KWin::Toplevel *t, const QRect &old);
     void slotWindowDamaged(KWin::Toplevel *t, const QRegion& r);
     void slotOutputEnabled(AbstractOutput *output);
     void slotOutputDisabled(AbstractOutput *output);

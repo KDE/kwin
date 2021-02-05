@@ -1548,13 +1548,6 @@ Q_SIGNALS:
      */
     void windowFrameGeometryChanged(KWin::EffectWindow *window, const QRect &oldGeometry);
     /**
-     * Signal emitted when the padding of a window changed. (eg. shadow size)
-     * @param w The window whose geometry changed
-     * @param old The previous expandedGeometry()
-     * @since 4.9
-     */
-    void windowPaddingChanged(KWin::EffectWindow *w, const QRect &old);
-    /**
      * Signal emitted when the windows opacity is changed.
      * @param w The window whose opacity level is changed.
      * @param oldOpacity The previous opacity level
