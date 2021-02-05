@@ -374,7 +374,7 @@ public:
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
      */
-    virtual QRect visibleGeometry() const;
+    QRect visibleGeometry() const;
     virtual QRect transparentRect() const = 0;
     virtual bool isClient() const;
     virtual bool isDeleted() const;
