@@ -154,6 +154,10 @@ bool DrmGpu::updateOutputs()
                 delete c;
                 continue;
             }
+            if (!c->isConnected()) {
+                delete c;
+                continue;
+            }
             m_connectors << c;
         } else {
             oldConnectors.removeOne(*it);
@@ -284,6 +288,8 @@ bool DrmGpu::updateOutputs()
         emit outputRemoved(removedOutput);
         removedOutput->teardown();
         removedOutput->m_crtc = nullptr;
+        m_connectors.removeOne(removedOutput->m_conn);
+        delete removedOutput->m_conn;
         removedOutput->m_conn = nullptr;
     }
 
