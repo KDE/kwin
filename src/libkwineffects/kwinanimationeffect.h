@@ -389,7 +389,7 @@ private Q_SLOTS:
     void triggerRepaint();
     void _windowClosed( KWin::EffectWindow* w );
     void _windowDeleted( KWin::EffectWindow* w );
-    void _expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old);
+    void _windowExpandedGeometryChanged(KWin::EffectWindow *w);
 
 private:
     static QElapsedTimer s_clock;

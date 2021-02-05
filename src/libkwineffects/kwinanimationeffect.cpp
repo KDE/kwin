@@ -213,12 +213,8 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     if (!d->m_isInitialized)
         init(); // needs to ensure the window gets removed if deleted in the same event cycle
     if (d->m_animations.isEmpty()) {
-        connect(effects, &EffectsHandler::windowGeometryShapeChanged,
-            this, &AnimationEffect::_expandedGeometryChanged);
-        connect(effects, &EffectsHandler::windowStepUserMovedResized,
-            this, &AnimationEffect::_expandedGeometryChanged);
-        connect(effects, &EffectsHandler::windowPaddingChanged,
-            this, &AnimationEffect::_expandedGeometryChanged);
+        connect(effects, &EffectsHandler::windowExpandedGeometryChanged,
+                this, &AnimationEffect::_windowExpandedGeometryChanged);
     }
     AniMap::iterator it = d->m_animations.find(w);
     if (it == d->m_animations.end())
@@ -555,12 +551,8 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
 
 void AnimationEffect::disconnectGeometryChanges()
 {
-    disconnect(effects, &EffectsHandler::windowGeometryShapeChanged,
-        this, &AnimationEffect::_expandedGeometryChanged);
-    disconnect(effects, &EffectsHandler::windowStepUserMovedResized,
-        this, &AnimationEffect::_expandedGeometryChanged);
-    disconnect(effects, &EffectsHandler::windowPaddingChanged,
-        this, &AnimationEffect::_expandedGeometryChanged);
+    disconnect(effects, &EffectsHandler::windowExpandedGeometryChanged,
+               this, &AnimationEffect::_windowExpandedGeometryChanged);
 }
 
 
@@ -970,9 +962,8 @@ region_creation:
     d->m_damageDirty = false;
 }
 
-void AnimationEffect::_expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old)
+void AnimationEffect::_windowExpandedGeometryChanged(KWin::EffectWindow *w)
 {
-    Q_UNUSED(old)
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
     if (entry != d->m_animations.constEnd()) {

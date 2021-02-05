@@ -354,6 +354,9 @@ void EffectsHandlerImpl::setupClientConnections(AbstractClient* c)
             emit windowFullScreenChanged(c->effectWindow());
         }
     );
+    connect(c, &AbstractClient::visibleGeometryChanged, this, [this, c]() {
+        emit windowExpandedGeometryChanged(c->effectWindow());
+    });
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
@@ -364,6 +367,9 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
     connect(u, &Unmanaged::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
     connect(u, &Unmanaged::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
     connect(u, &Unmanaged::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
+    connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
+        emit windowExpandedGeometryChanged(u->effectWindow());
+    });
 }
 
 void EffectsHandlerImpl::reconfigure()

@@ -50,6 +50,10 @@ Toplevel::Toplevel()
     setupCheckScreenConnection();
     connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::inputTransformationChanged);
 
+    connect(this, &Toplevel::paddingChanged, this, &Toplevel::visibleGeometryChanged);
+    connect(this, &Toplevel::bufferGeometryChanged, this, &Toplevel::visibleGeometryChanged);
+    connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::visibleGeometryChanged);
+
     // Only for compatibility reasons, drop in the next major release.
     connect(this, &Toplevel::frameGeometryChanged, this, &Toplevel::geometryChanged);
 }

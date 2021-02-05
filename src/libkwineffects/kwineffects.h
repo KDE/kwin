@@ -1845,6 +1845,11 @@ Q_SIGNALS:
      */
     void sessionStateChanged();
 
+    /**
+     * This signal is emitted when the visible geometry of a window changed.
+     */
+    void windowExpandedGeometryChanged(KWin::EffectWindow *window);
+
 protected:
     QVector< EffectPair > loaded_effects;
     //QHash< QString, EffectFactory* > effect_factories;

@@ -665,6 +665,11 @@ Q_SIGNALS:
      */
     void clientGeometryChanged(KWin::Toplevel *toplevel, const QRect &oldGeometry);
 
+    /**
+     * This signal is emitted when the visible geometry has changed.
+     */
+    void visibleGeometryChanged();
+
 protected Q_SLOTS:
     /**
      * Checks whether the screen number for this Toplevel changed and updates if needed.
