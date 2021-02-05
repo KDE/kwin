@@ -19,6 +19,7 @@ set(SERVER_LIB_SRCS
     display.cpp
     dpms_interface.cpp
     drmclientbuffer.cpp
+    drmleasedevice_v1_interface.cpp
     eglstream_controller_interface.cpp
     fakeinput_interface.cpp
     filtered_display.cpp
@@ -278,6 +279,11 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     BASENAME xdg-activation-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
+    BASENAME drm-lease-v1
+)
+
 add_library(KWaylandServer ${SERVER_LIB_SRCS})
 add_library(Plasma::KWaylandServer ALIAS KWaylandServer)
 ecm_generate_export_header(KWaylandServer
@@ -339,6 +345,7 @@ set(SERVER_LIB_HEADERS
   display.h
   dpms_interface.h
   drmclientbuffer.h
+  drmleasedevice_v1_interface.h
   eglstream_controller_interface.h
   fakeinput_interface.h
   filtered_display.h
