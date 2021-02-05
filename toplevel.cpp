@@ -247,7 +247,7 @@ bool Toplevel::resourceMatch(const Toplevel *c1, const Toplevel *c2)
     return c1->resourceClass() == c2->resourceClass();
 }
 
-double Toplevel::opacity() const
+qreal Toplevel::opacity() const
 {
     if (!info) {
         return 1.0;
@@ -257,13 +257,13 @@ double Toplevel::opacity() const
     return info->opacity() * 1.0 / 0xffffffff;
 }
 
-void Toplevel::setOpacity(double new_opacity)
+void Toplevel::setOpacity(qreal new_opacity)
 {
     if (!info) {
         return;
     }
 
-    double old_opacity = opacity();
+    qreal old_opacity = opacity();
     new_opacity = qBound(0.0, new_opacity, 1.0);
     if (old_opacity == new_opacity)
         return;

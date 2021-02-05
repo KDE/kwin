@@ -448,8 +448,8 @@ public:
     xcb_visualid_t visual() const;
     bool shape() const;
     QRegion inputShape() const;
-    virtual void setOpacity(double opacity);
-    virtual double opacity() const;
+    virtual void setOpacity(qreal opacity);
+    virtual qreal opacity() const;
     int depth() const;
     bool hasAlpha() const;
     virtual bool setupCompositing();

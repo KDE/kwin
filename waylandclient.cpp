@@ -107,12 +107,12 @@ bool WaylandClient::isLocalhost() const
     return true;
 }
 
-double WaylandClient::opacity() const
+qreal WaylandClient::opacity() const
 {
     return m_opacity;
 }
 
-void WaylandClient::setOpacity(double opacity)
+void WaylandClient::setOpacity(qreal opacity)
 {
     const qreal newOpacity = qBound(0.0, opacity, 1.0);
     if (newOpacity == m_opacity) {

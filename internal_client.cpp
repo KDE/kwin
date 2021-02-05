@@ -149,12 +149,12 @@ NET::WindowType InternalClient::windowType(bool direct, int supported_types) con
     return m_windowType;
 }
 
-double InternalClient::opacity() const
+qreal InternalClient::opacity() const
 {
     return m_opacity;
 }
 
-void InternalClient::setOpacity(double opacity)
+void InternalClient::setOpacity(qreal opacity)
 {
     if (m_opacity == opacity) {
         return;
