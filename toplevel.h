@@ -448,8 +448,8 @@ public:
     xcb_visualid_t visual() const;
     bool shape() const;
     QRegion inputShape() const;
-    virtual void setOpacity(qreal opacity);
-    virtual qreal opacity() const;
+    void setOpacity(qreal opacity);
+    qreal opacity() const;
     int depth() const;
     bool hasAlpha() const;
     virtual bool setupCompositing();
@@ -756,6 +756,7 @@ private:
     KWaylandServer::SurfaceInterface *m_surface = nullptr;
     // when adding new data members, check also copyToDeleted()
     qreal m_screenScale = 1.0;
+    qreal m_opacity = 1.0;
 };
 
 inline xcb_window_t Toplevel::window() const

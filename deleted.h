@@ -64,7 +64,6 @@ public:
     bool wasClient() const {
         return m_wasClient;
     }
-    double opacity() const override;
     QByteArray windowRole() const override;
 
     const Decoration::Renderer *decorationRenderer() const {
@@ -206,7 +205,6 @@ private:
     QList<AbstractClient*> m_mainClients;
     bool m_wasClient;
     Decoration::Renderer *m_decorationRenderer;
-    double m_opacity;
     NET::WindowType m_type = NET::Unknown;
     QByteArray m_windowRole;
     bool m_fullscreen;

@@ -129,6 +129,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_skipCloseAnimation = c->m_skipCloseAnimation;
     m_internalFBO = c->m_internalFBO;
     m_internalImage = c->m_internalImage;
+    m_opacity = c->m_opacity;
 }
 
 // before being deleted, remove references to everything that's now
@@ -249,28 +250,20 @@ bool Toplevel::resourceMatch(const Toplevel *c1, const Toplevel *c2)
 
 qreal Toplevel::opacity() const
 {
-    if (!info) {
-        return 1.0;
-    }
-    if (info->opacity() == 0xffffffff)
-        return 1.0;
-    return info->opacity() * 1.0 / 0xffffffff;
+    return m_opacity;
 }
 
-void Toplevel::setOpacity(qreal new_opacity)
+void Toplevel::setOpacity(qreal opacity)
 {
-    if (!info) {
+    opacity = qBound(0.0, opacity, 1.0);
+    if (m_opacity == opacity) {
         return;
     }
-
-    qreal old_opacity = opacity();
-    new_opacity = qBound(0.0, new_opacity, 1.0);
-    if (old_opacity == new_opacity)
-        return;
-    info->setOpacity(static_cast< unsigned long >(new_opacity * 0xffffffff));
+    const qreal oldOpacity = m_opacity;
+    m_opacity = opacity;
     if (compositing()) {
         addRepaintFull();
-        emit opacityChanged(this, old_opacity);
+        emit opacityChanged(this, oldOpacity);
     }
 }
 

@@ -38,8 +38,6 @@ InternalClient::InternalClient(QWindow *window)
     connect(m_internalWindow, &QWindow::opacityChanged, this, &InternalClient::setOpacity);
     connect(m_internalWindow, &QWindow::destroyed, this, &InternalClient::destroyClient);
 
-    connect(this, &InternalClient::opacityChanged, this, &InternalClient::addRepaintFull);
-
     const QVariant windowType = m_internalWindow->property("kwin_windowType");
     if (!windowType.isNull()) {
         m_windowType = windowType.value<NET::WindowType>();
@@ -147,23 +145,6 @@ NET::WindowType InternalClient::windowType(bool direct, int supported_types) con
     Q_UNUSED(direct)
     Q_UNUSED(supported_types)
     return m_windowType;
-}
-
-qreal InternalClient::opacity() const
-{
-    return m_opacity;
-}
-
-void InternalClient::setOpacity(qreal opacity)
-{
-    if (m_opacity == opacity) {
-        return;
-    }
-
-    const double oldOpacity = m_opacity;
-    m_opacity = opacity;
-
-    emit opacityChanged(this, oldOpacity);
 }
 
 void InternalClient::killWindow()

@@ -35,8 +35,6 @@ public:
     QSize maxSize() const override;
     QRect transparentRect() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
-    qreal opacity() const override;
-    void setOpacity(qreal opacity) override;
     void killWindow() override;
     bool isPopupWindow() const override;
     QByteArray windowRole() const override;
@@ -88,7 +86,6 @@ private:
     QWindow *m_internalWindow = nullptr;
     QString m_captionNormal;
     QString m_captionSuffix;
-    qreal m_opacity = 1.0;
     NET::WindowType m_windowType = NET::Normal;
     Qt::WindowFlags m_internalWindowFlags = Qt::WindowFlags();
     bool m_userNoBorder = false;

@@ -446,7 +446,6 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
     if (findEventWindow(e) == window()) { // avoid doing stuff on frame or wrapper
         NET::Properties dirtyProperties;
         NET::Properties2 dirtyProperties2;
-        double old_opacity = opacity();
         info->event(e, &dirtyProperties, &dirtyProperties2);   // pass through the NET stuff
 
         if ((dirtyProperties & NET::WMName) != 0)
@@ -470,8 +469,7 @@ bool X11Client::windowEvent(xcb_generic_event_t *e)
             startupIdChanged();
         if (dirtyProperties2 & NET::WM2Opacity) {
             if (compositing()) {
-                addRepaintFull();
-                emit opacityChanged(this, old_opacity);
+                setOpacity(info->opacityF());
             } else {
                 // forward to the frame if there's possibly another compositing manager running
                 NETWinInfo i(connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
@@ -1298,14 +1296,12 @@ void X11Client::keyPressEvent(uint key_code, xcb_timestamp_t time)
 
 bool Unmanaged::windowEvent(xcb_generic_event_t *e)
 {
-    double old_opacity = opacity();
     NET::Properties dirtyProperties;
     NET::Properties2 dirtyProperties2;
     info->event(e, &dirtyProperties, &dirtyProperties2);   // pass through the NET stuff
     if (dirtyProperties2 & NET::WM2Opacity) {
         if (compositing()) {
-            addRepaintFull();
-            emit opacityChanged(this, old_opacity);
+            setOpacity(info->opacityF());
         }
     }
     if (dirtyProperties2 & NET::WM2OpaqueRegion) {

@@ -777,6 +777,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
             demandAttention();
         if (info->state() & NET::Modal)
             setModal(true);
+        setOpacity(info->opacityF());
 
         setFullScreen(rules()->checkFullScreen(info->state() & NET::FullScreen, !isMapped), false);
     }
@@ -876,7 +877,7 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
                 return;
             }
             NETWinInfo info(connection(), frameId(), rootWindow(), NET::Properties(), NET::Properties2());
-            info.setOpacity(static_cast<unsigned long>(opacity() * 0xffffffff));
+            info.setOpacityF(opacity());
         }
     );
 

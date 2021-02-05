@@ -34,8 +34,6 @@ public:
     pid_t pid() const override;
     bool isLockScreen() const override;
     bool isLocalhost() const override;
-    qreal opacity() const override;
-    void setOpacity(qreal opacity) override;
     AbstractClient *findModal(bool allow_itself = false) override;
     void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
@@ -81,7 +79,6 @@ private:
 
     QString m_captionNormal;
     QString m_captionSuffix;
-    qreal m_opacity = 1.0;
     QRect m_requestedFrameGeometry;
     QRect m_bufferGeometry;
     QRect m_requestedClientGeometry;

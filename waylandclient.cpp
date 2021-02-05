@@ -107,23 +107,6 @@ bool WaylandClient::isLocalhost() const
     return true;
 }
 
-qreal WaylandClient::opacity() const
-{
-    return m_opacity;
-}
-
-void WaylandClient::setOpacity(qreal opacity)
-{
-    const qreal newOpacity = qBound(0.0, opacity, 1.0);
-    if (newOpacity == m_opacity) {
-        return;
-    }
-    const qreal oldOpacity = m_opacity;
-    m_opacity = newOpacity;
-    addRepaintFull();
-    emit opacityChanged(this, oldOpacity);
-}
-
 AbstractClient *WaylandClient::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)

@@ -95,7 +95,6 @@ void Deleted::copyToDeleted(Toplevel* c)
     transparent_rect = c->transparentRect();
     m_layer = c->layer();
     m_frame = c->frameId();
-    m_opacity = c->opacity();
     m_type = c->windowType();
     m_windowRole = c->windowRole();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
@@ -250,11 +249,6 @@ void Deleted::transientForClosed(Toplevel *toplevel, Deleted *deleted)
 xcb_window_t Deleted::frameId() const
 {
     return m_frame;
-}
-
-double Deleted::opacity() const
-{
-    return m_opacity;
 }
 
 QByteArray Deleted::windowRole() const
