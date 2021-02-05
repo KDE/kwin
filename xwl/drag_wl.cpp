@@ -87,6 +87,7 @@ bool WlToXDrag::end()
         // we direclty allow to delete previous visits
         Q_EMIT finish(this);
     });
+    m_visit->leave();
     return false;
 }
 
