@@ -20,8 +20,8 @@
 #include <KWayland/Client/datadevice.h>
 #include <KWayland/Client/datasource.h>
 
-#include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/datasource_interface.h>
+#include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>
 
@@ -89,6 +89,11 @@ bool WlToXDrag::end()
     });
     m_visit->leave();
     return false;
+}
+
+KWaylandServer::DataSourceInterface *WlToXDrag::dataSourceIface() const
+{
+    return m_dsi.data();
 }
 
 Xvisit::Xvisit(WlToXDrag *drag, AbstractClient *target)
@@ -274,13 +279,18 @@ void Xvisit::enter()
 
 void Xvisit::sendEnter()
 {
+    auto drag = m_drag->dataSourceIface();
+    if (!drag) {
+        return;
+    }
+
     xcb_client_message_data_t data = {};
     data.data32[0] = DataBridge::self()->dnd()->window();
     data.data32[1] = m_version << 24;
 
     // TODO: replace this with the mime type getter from m_dataOffer,
     // then we can get rid of m_drag.
-    const auto mimeTypesNames = m_drag->dataSourceIface()->mimeTypes();
+    const auto mimeTypesNames = drag->mimeTypes();
     const int mimesCount = mimeTypesNames.size();
     size_t cnt = 0;
     size_t totalCnt = 0;

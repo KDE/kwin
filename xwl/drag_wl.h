@@ -56,12 +56,10 @@ public:
 
     bool end() override;
 
-    KWaylandServer::DataSourceInterface *dataSourceIface() const {
-        return m_dsi;
-    }
+    KWaylandServer::DataSourceInterface *dataSourceIface() const;
 
 private:
-    KWaylandServer::DataSourceInterface *m_dsi;
+    QPointer<KWaylandServer::DataSourceInterface> m_dsi;
     Xvisit *m_visit = nullptr;
 
     Q_DISABLE_COPY(WlToXDrag)
