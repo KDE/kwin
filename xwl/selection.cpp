@@ -281,7 +281,7 @@ void Selection::startTransferToWayland(xcb_atom_t target, qint32 fd)
 
     connect(transfer, &TransferXtoWl::finished, this, [this, transfer]() {
         Q_EMIT transferFinished(transfer->timestamp());
-        delete transfer;
+        transfer->deleteLater();
         m_xToWlTransfers.removeOne(transfer);
         endTimeoutTransfersTimer();
     });
@@ -299,7 +299,7 @@ void Selection::startTransferToX(xcb_selection_request_event_t *event, qint32 fd
 
         // TODO: serialize? see comment below.
 //        const bool wasActive = (transfer == m_wlToXTransfers[0]);
-        delete transfer;
+        transfer->deleteLater();
         m_wlToXTransfers.removeOne(transfer);
         endTimeoutTransfersTimer();
 //        if (wasActive && !m_wlToXTransfers.isEmpty()) {
