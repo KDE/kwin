@@ -26,6 +26,6 @@ endif()
 
 target_link_libraries(KWinNightColorPlugin kwin)
 
-install(FILES nightcolorsettings.kcfg DESTINATION ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}_colorcorrect.kcfg)
+install(FILES nightcolorsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR} RENAME ${KWIN_NAME}_colorcorrect.kcfg)
 install(FILES org.kde.kwin.ColorCorrect.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
 install(TARGETS KWinNightColorPlugin DESTINATION ${KDE_INSTALL_PLUGINDIR}/kwin/plugins/)

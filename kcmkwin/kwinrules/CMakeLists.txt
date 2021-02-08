@@ -46,12 +46,12 @@ target_link_libraries(KWinRulesObjects ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
 add_executable(kwin_rules_dialog main.cpp rulesdialog.cpp)
 target_link_libraries(kwin_rules_dialog KWinRulesObjects)
-install(TARGETS kwin_rules_dialog DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS kwin_rules_dialog DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
 add_library(kcm_kwinrules MODULE kcmrules.cpp rulebookmodel.cpp)
 target_link_libraries(kcm_kwinrules KWinRulesObjects)
 kcoreaddons_desktop_to_json(kcm_kwinrules "kcm_kwinrules.desktop" SERVICE_TYPES kcmodule.desktop)
 
 install(TARGETS kcm_kwinrules DESTINATION ${KDE_INSTALL_PLUGINDIR}/kcms)
-install(FILES kcm_kwinrules.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(FILES kcm_kwinrules.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 kpackage_install_package(package kcm_kwinrules kcms)

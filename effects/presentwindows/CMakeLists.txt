@@ -1,6 +1,6 @@
 #######################################
 # Effect
-install(FILES main.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/presentwindows/)
+install(FILES main.qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/presentwindows/)
 
 #######################################
 # Config

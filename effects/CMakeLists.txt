@@ -74,7 +74,7 @@ macro(KWIN4_ADD_EFFECT name)
 endmacro()
 
 # Install the KWin/Effect service type
-install(FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(FILES kwineffect.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})
 
 # Create initial variables
 set(kwin4_effect_include_directories)

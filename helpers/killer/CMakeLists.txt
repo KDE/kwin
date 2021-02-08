@@ -12,4 +12,4 @@ target_link_libraries(kwin_killer_helper
     Qt::X11Extras
 )
 
-install(TARGETS kwin_killer_helper DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS kwin_killer_helper DESTINATION ${KDE_INSTALL_LIBEXECDIR})

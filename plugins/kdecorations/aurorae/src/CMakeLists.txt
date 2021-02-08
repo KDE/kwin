@@ -41,7 +41,7 @@ target_link_libraries(decorationplugin
     KF5::ConfigWidgets
     Qt::Quick
 )
-install(TARGETS decorationplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
+install(TARGETS decorationplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/decoration)
 
 ########### install files ###############
 
@@ -57,7 +57,7 @@ install(
         qml/MenuButton.qml
         qml/aurorae.qml
     DESTINATION
-        ${DATA_INSTALL_DIR}/kwin/aurorae)
+        ${KDE_INSTALL_DATADIR}/kwin/aurorae)
 set(QMLFILES
     qml/AppMenuButton.qml
     qml/ButtonGroup.qml
@@ -66,6 +66,6 @@ set(QMLFILES
     qml/MenuButton.qml
     qml/qmldir
 )
-install(FILES ${QMLFILES} DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
+install(FILES ${QMLFILES} DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/decoration)
 file(COPY ${QMLFILES} DESTINATION ${CMAKE_BINARY_DIR}/bin/org/kde/kwin/decoration/)
-install(FILES kwindecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(FILES kwindecoration.desktop DESTINATION ${KDE_INSTALL_KSERVICETYPES5DIR})

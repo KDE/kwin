@@ -5,7 +5,7 @@ ecm_install_icons(
         48-apps-kwin.png
         sc-apps-kwin.svgz
     DESTINATION
-        ${ICON_INSTALL_DIR}
+        ${KDE_INSTALL_ICONDIR}
     THEME
         hicolor
 )

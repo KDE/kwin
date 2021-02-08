@@ -35,5 +35,5 @@ install(
         kwinmoving.desktop
         kwinoptions.desktop
     DESTINATION
-        ${SERVICES_INSTALL_DIR}
+        ${KDE_INSTALL_KSERVICES5DIR}
 )

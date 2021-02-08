@@ -1,6 +1,6 @@
 #######################################
 # Effect
-install(FILES main.qml DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/desktopgrid/)
+install(FILES main.qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/desktopgrid/)
 
 #######################################
 # Config

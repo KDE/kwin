@@ -7,7 +7,7 @@ target_link_libraries(kwin5_update_default_rules
     Qt::Core
     Qt::DBus
 )
-install(TARGETS kwin5_update_default_rules DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/)
+install(TARGETS kwin5_update_default_rules DESTINATION ${KDE_INSTALL_LIBDIR}/kconf_update_bin/)
 
 ########### install files ###############
 
