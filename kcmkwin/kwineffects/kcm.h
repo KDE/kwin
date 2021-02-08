@@ -32,7 +32,7 @@ public Q_SLOTS:
     void save() override;
     void defaults() override;
 
-    void openGHNS(QQuickItem *context);
+    void onGHNSEntriesChanged();
     void configure(const QString &pluginId, QQuickItem *context);
 
 private Q_SLOTS:
