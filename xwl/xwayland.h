@@ -16,6 +16,8 @@
 #include <QProcess>
 #include <QSocketNotifier>
 
+class KSelectionOwner;
+
 namespace KWin
 {
 class ApplicationWaylandAbstract;
@@ -105,6 +107,7 @@ private:
     QByteArray m_displayName;
     QFutureWatcher<QByteArray> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;
+    QScopedPointer<KSelectionOwner> m_selectionOwner;
     int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)

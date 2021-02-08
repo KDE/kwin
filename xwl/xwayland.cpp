@@ -158,6 +158,7 @@ void Xwayland::stop()
     uninstallSocketNotifier();
 
     DataBridge::destroy();
+    m_selectionOwner.reset();
 
     destroyX11Connection();
 
@@ -318,8 +319,8 @@ void Xwayland::handleXwaylandReady()
     qputenv("DISPLAY", m_displayName);
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
-    KSelectionOwner owner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    owner.claim(true);
+    m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
+    m_selectionOwner->claim(true);
 
     DataBridge::create(this);
 
