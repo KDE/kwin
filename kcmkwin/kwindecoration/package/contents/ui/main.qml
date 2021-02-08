@@ -11,6 +11,7 @@ import QtQuick.Controls 2.4 as QQC2
 import org.kde.kcm 1.5 as KCM
 import org.kde.kconfig 1.0 // for KAuthorized
 import org.kde.kirigami 2.4 as Kirigami
+import org.kde.newstuff 1.62 as NewStuff
 
 Kirigami.Page {
     id: root
@@ -99,11 +100,13 @@ Kirigami.Page {
                             Item {
                                 Layout.fillWidth: true
                             }
-                            QQC2.Button {
+                            NewStuff.Button {
+                                id: newstuffButton
                                 text: i18nc("button text", "Get New Window Decorations...")
                                 icon.name: "get-hot-new-stuff"
-                                onClicked: kcm.getNewStuff(this)
                                 visible: KAuthorized.authorize("ghns")
+                                configFile: "window-decorations.knsrc"
+                                onChangedEntriesChanged: kcm.reloadKWinSettings()
                             }
                         }
                     }

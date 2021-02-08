@@ -23,8 +23,6 @@
 #include <QQuickWindow>
 #include <QSortFilterProxyModel>
 
-#include <KNewStuff3/KNS3/DownloadDialog>
-
 #include "kwindecorationdata.h"
 #include "kwindecorationsettings.h"
 
@@ -106,25 +104,6 @@ KWinDecorationSettings *KCMKWinDecoration::settings() const
 void KCMKWinDecoration::reloadKWinSettings()
 {
     QMetaObject::invokeMethod(m_themesModel, "init", Qt::QueuedConnection);
-}
-
-void KCMKWinDecoration::getNewStuff(QQuickItem *context)
-{
-    if (!m_newStuffDialog) {
-        m_newStuffDialog = new KNS3::DownloadDialog(QStringLiteral("window-decorations.knsrc"));
-        m_newStuffDialog->setWindowTitle(i18n("Download New Window Decorations"));
-        m_newStuffDialog->setWindowModality(Qt::WindowModal);
-        connect(m_newStuffDialog, &KNS3::DownloadDialog::accepted, this, &KCMKWinDecoration::load);
-    }
-
-    if (context && context->window()) {
-        m_newStuffDialog->winId(); // so it creates the windowHandle()
-        m_newStuffDialog->windowHandle()->setTransientParent(context->window());
-    }
-
-    connect(m_newStuffDialog, &QDialog::finished, this, &KCMKWinDecoration::reloadKWinSettings);
-
-    m_newStuffDialog->show();
 }
 
 void KCMKWinDecoration::load()

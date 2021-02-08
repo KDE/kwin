@@ -16,11 +16,6 @@ class QAbstractItemModel;
 class QSortFilterProxyModel;
 class QQuickItem;
 
-namespace KNS3
-{
-class DownloadDialog;
-}
-
 namespace KDecoration2
 {
 enum class BorderSize;
@@ -71,8 +66,6 @@ public:
     void setBorderSize(KDecoration2::BorderSize size);
     void setTheme(int index);
 
-    Q_INVOKABLE void getNewStuff(QQuickItem *context);
-
 Q_SIGNALS:
     void themeChanged();
     void buttonsChanged();
@@ -83,11 +76,11 @@ public Q_SLOTS:
     void load() override;
     void save() override;
     void defaults() override;
+    void reloadKWinSettings();
 
 private Q_SLOTS:
     void onLeftButtonsChanged();
     void onRightButtonsChanged();
-    void reloadKWinSettings();
 
 private:
     bool isSaveNeeded() const override;
@@ -101,8 +94,6 @@ private:
     KDecoration2::Preview::ButtonsModel *m_leftButtonsModel;
     KDecoration2::Preview::ButtonsModel *m_rightButtonsModel;
     KDecoration2::Preview::ButtonsModel *m_availableButtonsModel;
-
-    QPointer<KNS3::DownloadDialog> m_newStuffDialog;
 
     int m_borderSizeIndex = -1;
     KWinDecorationData *m_data;
