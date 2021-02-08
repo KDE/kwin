@@ -104,6 +104,7 @@ void WaylandTestApplication::performStartup()
                 environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
                 environment.remove("DISPLAY");
                 environment.remove("WAYLAND_DISPLAY");
+                environment.remove("XAUTHORITY");
                 QProcess *p = new Process(this);
                 p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
                 connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this,
