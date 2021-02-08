@@ -15,6 +15,7 @@
 #include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
+#include <QTemporaryFile>
 
 class KSelectionOwner;
 
@@ -97,6 +98,9 @@ private:
     bool createX11Connection();
     void destroyX11Connection();
 
+    bool createXauthorityFile();
+    void updateXauthorityFile();
+
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
     int m_displayFileDescriptor = -1;
@@ -104,10 +108,11 @@ private:
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
     QTimer *m_resetCrashCountTimer = nullptr;
-    QByteArray m_displayName;
-    QFutureWatcher<QByteArray> *m_watcher = nullptr;
+    int m_display = -1;
+    QFutureWatcher<int> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;
     QScopedPointer<KSelectionOwner> m_selectionOwner;
+    QScopedPointer<QTemporaryFile> m_authorityFile;
     int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)

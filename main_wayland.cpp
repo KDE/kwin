@@ -270,6 +270,7 @@ void ApplicationWayland::startInputMethod(const QString &executable)
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
     environment.remove("DISPLAY");
     environment.remove("WAYLAND_DISPLAY");
+    environment.remove("XAUTHORITY");
 
     m_inputMethodProcess = new Process(this);
     m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
