@@ -12,7 +12,6 @@
 
 #include "xwayland_interface.h"
 
-#include <QFutureWatcher>
 #include <QProcess>
 #include <QSocketNotifier>
 #include <QTemporaryFile>
@@ -22,6 +21,7 @@ class KSelectionOwner;
 namespace KWin
 {
 class ApplicationWaylandAbstract;
+class XwaylandSocket;
 
 namespace Xwl
 {
@@ -85,7 +85,6 @@ private Q_SLOTS:
     void dispatchEvents();
     void resetCrashCount();
 
-    void handleXwaylandStarted();
     void handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void handleXwaylandCrashed();
     void handleXwaylandError(QProcess::ProcessError error);
@@ -94,6 +93,7 @@ private Q_SLOTS:
 private:
     void installSocketNotifier();
     void uninstallSocketNotifier();
+    void maybeDestroyReadyNotifier();
 
     bool createX11Connection();
     void destroyX11Connection();
@@ -103,16 +103,15 @@ private:
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
-    int m_displayFileDescriptor = -1;
     int m_xcbConnectionFd = -1;
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_socketNotifier = nullptr;
+    QSocketNotifier *m_readyNotifier = nullptr;
     QTimer *m_resetCrashCountTimer = nullptr;
-    int m_display = -1;
-    QFutureWatcher<int> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;
     QScopedPointer<KSelectionOwner> m_selectionOwner;
     QTemporaryFile m_authorityFile;
+    QScopedPointer<XwaylandSocket> m_socket;
     int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)

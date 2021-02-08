@@ -302,6 +302,7 @@ add_library(KWinXwaylandServerModule OBJECT
     xwl/selection_source.cpp
     xwl/transfer.cpp
     xwl/xwayland.cpp
+    xwl/xwaylandsocket.cpp
 
     ${xwaylandlogging_SOURCES}
 )

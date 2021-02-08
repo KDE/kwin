@@ -10,6 +10,7 @@
 */
 #include "xwayland.h"
 #include "databridge.h"
+#include "xwaylandsocket.h"
 
 #include "main_wayland.h"
 #include "options.h"
@@ -27,6 +28,7 @@
 #include <QFile>
 #include <QHostInfo>
 #include <QRandomGenerator>
+#include <QScopeGuard>
 #include <QTimer>
 #include <QtConcurrentRun>
 
@@ -41,22 +43,6 @@
 #include <sys/socket.h>
 #include <cerrno>
 #include <cstring>
-
-static int readDisplay(int pipe)
-{
-    int display = -1;
-    QFile readPipe;
-
-    if (!readPipe.open(pipe, QIODevice::ReadOnly)) {
-        qCWarning(KWIN_XWL) << "Failed to open X11 display name pipe:" << readPipe.errorString();
-    } else {
-        display = readPipe.readLine().trimmed().toInt();
-    }
-
-    // close our pipe
-    close(pipe);
-    return display;
-}
 
 namespace KWin
 {
@@ -87,6 +73,35 @@ void Xwayland::start()
     if (m_xwaylandProcess) {
         return;
     }
+
+    QScopedPointer<XwaylandSocket> socket(new XwaylandSocket());
+    if (!socket->isValid()) {
+        qCWarning(KWIN_XWL) << "Failed to create Xwayland connection sockets";
+        emit errorOccurred();
+        return;
+    }
+
+    // The abstract socket file descriptor will be passed to Xwayland and closed by us.
+    const int abstractSocket = dup(socket->abstractFileDescriptor());
+    if (abstractSocket == -1) {
+        qCWarning(KWIN_XWL, "Failed to duplicate file descriptor: %s", strerror(errno));
+        emit errorOccurred();
+        return;
+    }
+    auto abstractSocketCleanup = qScopeGuard([&abstractSocket]() {
+        close(abstractSocket);
+    });
+
+    // The unix socket file descriptor will be passed to Xwayland and closed by us.
+    const int unixSocket = dup(socket->unixFileDescriptor());
+    if (unixSocket == -1) {
+        qCWarning(KWIN_XWL, "Failed to duplicate file descriptor: %s", strerror(errno));
+        emit errorOccurred();
+        return;
+    }
+    auto unixSocketCleanup = qScopeGuard([&unixSocket]() {
+        close(unixSocket);
+    });
 
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
@@ -127,7 +142,7 @@ void Xwayland::start()
     }
 
     m_xcbConnectionFd = sx[0];
-    m_displayFileDescriptor = pipeFds[0];
+    m_socket.reset(socket.take());
 
     m_xwaylandProcess = new Process(this);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
@@ -139,15 +154,22 @@ void Xwayland::start()
         env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
     }
     m_xwaylandProcess->setProcessEnvironment(env);
-    m_xwaylandProcess->setArguments({QStringLiteral("-displayfd"),
-                           QString::number(pipeFds[1]),
+    m_xwaylandProcess->setArguments({m_socket->name(),
+                           QStringLiteral("-displayfd"), QString::number(pipeFds[1]),
                            QStringLiteral("-rootless"),
                            QStringLiteral("-wm"), QString::number(fd),
-                           QStringLiteral("-auth"), m_authorityFile.fileName()});
+                           QStringLiteral("-auth"), m_authorityFile.fileName(),
+                           QStringLiteral("-listen"), QString::number(abstractSocket),
+                           QStringLiteral("-listen"), QString::number(unixSocket)});
     connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &Xwayland::handleXwaylandError);
-    connect(m_xwaylandProcess, &QProcess::started, this, &Xwayland::handleXwaylandStarted);
     connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &Xwayland::handleXwaylandFinished);
+
+    // When Xwayland starts writing the display name to displayfd, it is ready. Alternatively,
+    // the Xwayland can send us the SIGUSR1 signal, but it's already reserved for VT hand-off.
+    m_readyNotifier = new QSocketNotifier(pipeFds[0], QSocketNotifier::Read, this);
+    connect(m_readyNotifier, &QSocketNotifier::activated, this, &Xwayland::handleXwaylandReady);
+
     m_xwaylandProcess->start();
     close(pipeFds[1]);
 }
@@ -163,6 +185,7 @@ void Xwayland::stop()
     // If Xwayland has crashed, we must deactivate the socket notifier and ensure that no X11
     // events will be dispatched before blocking; otherwise we will simply hang...
     uninstallSocketNotifier();
+    maybeDestroyReadyNotifier();
 
     DataBridge::destroy();
     m_selectionOwner.reset();
@@ -180,6 +203,7 @@ void Xwayland::stop()
     delete m_xwaylandProcess;
     m_xwaylandProcess = nullptr;
 
+    m_socket.reset();
     waylandServer()->destroyXWaylandConnection(); // This one must be destroyed last!
 
     m_app->setClosingX11Connection(false);
@@ -236,13 +260,6 @@ void Xwayland::uninstallSocketNotifier()
 
     delete m_socketNotifier;
     m_socketNotifier = nullptr;
-}
-
-void Xwayland::handleXwaylandStarted()
-{
-    m_watcher = new QFutureWatcher<int>(this);
-    connect(m_watcher, &QFutureWatcher<int>::finished, this, &Xwayland::handleXwaylandReady);
-    m_watcher->setFuture(QtConcurrent::run(readDisplay, m_displayFileDescriptor));
 }
 
 void Xwayland::handleXwaylandFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -312,17 +329,16 @@ void Xwayland::handleXwaylandError(QProcess::ProcessError error)
 
 void Xwayland::handleXwaylandReady()
 {
-    m_display = m_watcher->result();
-
-    m_watcher->deleteLater();
-    m_watcher = nullptr;
+    // We don't care what Xwayland writes to the displayfd, we just want to know when it's ready.
+    maybeDestroyReadyNotifier();
 
     if (!createX11Connection() || !writeXauthorityEntries()) {
         emit errorOccurred();
         return;
     }
 
-    const QByteArray displayName = ':' + QByteArray::number(m_display);
+    const QByteArray displayName = ':' + QByteArray::number(m_socket->display());
+
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << displayName;
     qputenv("DISPLAY", displayName);
     qputenv("XAUTHORITY", m_authorityFile.fileName().toUtf8());
@@ -341,6 +357,16 @@ void Xwayland::handleXwaylandReady()
     emit started();
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+}
+
+void Xwayland::maybeDestroyReadyNotifier()
+{
+    if (m_readyNotifier) {
+        close(m_readyNotifier->socket());
+
+        delete m_readyNotifier;
+        m_readyNotifier = nullptr;
+    }
 }
 
 bool Xwayland::createX11Connection()
@@ -436,7 +462,7 @@ static QByteArray generateXauthorityCookie()
 bool Xwayland::writeXauthorityEntries()
 {
     const QByteArray hostname = QHostInfo::localHostName().toUtf8();
-    const QByteArray display = QByteArray::number(m_display);
+    const QByteArray display = QByteArray::number(m_socket->display());
     const QByteArray name = QByteArrayLiteral("MIT-MAGIC-COOKIE-1");
     const QByteArray cookie = generateXauthorityCookie();
 
