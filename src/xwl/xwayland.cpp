@@ -345,6 +345,12 @@ void Xwayland::handleXwaylandReady()
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
+    connect(m_selectionOwner.data(), &KSelectionOwner::lostOwnership,
+            this, &Xwayland::handleSelectionLostOwnership);
+    connect(m_selectionOwner.data(), &KSelectionOwner::claimedOwnership,
+            this, &Xwayland::handleSelectionClaimedOwnership);
+    connect(m_selectionOwner.data(), &KSelectionOwner::failedToClaimOwnership,
+            this, &Xwayland::handleSelectionFailedToClaimOwnership);
     m_selectionOwner->claim(true);
 
     DataBridge::create(this);
@@ -354,9 +360,24 @@ void Xwayland::handleXwaylandReady()
     env.insert(QStringLiteral("XAUTHORITY"), m_authorityFile.fileName());
     m_app->setProcessStartupEnvironment(env);
 
-    emit started();
-
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+}
+
+void Xwayland::handleSelectionLostOwnership()
+{
+    qCWarning(KWIN_XWL) << "Somebody else claimed ownership of WM_S0. This should never happen!";
+    stop();
+}
+
+void Xwayland::handleSelectionFailedToClaimOwnership()
+{
+    qCWarning(KWIN_XWL) << "Failed to claim ownership of WM_S0. This should never happen!";
+    stop();
+}
+
+void Xwayland::handleSelectionClaimedOwnership()
+{
+    emit started();
 }
 
 void Xwayland::maybeDestroyReadyNotifier()

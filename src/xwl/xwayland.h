@@ -90,6 +90,10 @@ private Q_SLOTS:
     void handleXwaylandError(QProcess::ProcessError error);
     void handleXwaylandReady();
 
+    void handleSelectionLostOwnership();
+    void handleSelectionFailedToClaimOwnership();
+    void handleSelectionClaimedOwnership();
+
 private:
     void installSocketNotifier();
     void uninstallSocketNotifier();
