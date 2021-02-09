@@ -10,7 +10,6 @@ import QtQuick.Layouts 1.1
 
 import org.kde.kcm 1.2
 import org.kde.kirigami 2.10 as Kirigami
-import org.kde.plasma.core 2.1 as PlasmaCore
 
 ScrollViewKCM {
     id: root
