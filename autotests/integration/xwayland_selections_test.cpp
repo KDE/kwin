@@ -13,7 +13,7 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "../../xwl/databridge.h"
+#include "xwl/databridge.h"
 
 #include <KWaylandServer/datadevice_interface.h>
 

@@ -9,7 +9,7 @@
 #ifndef KWIN_LIBINPUT_EVENTS_H
 #define KWIN_LIBINPUT_EVENTS_H
 
-#include "../input.h"
+#include "input.h"
 
 #include <libinput.h>
 

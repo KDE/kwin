@@ -9,7 +9,7 @@
 #ifndef KWIN_WAYLAND_TEST_H
 #define KWIN_WAYLAND_TEST_H
 
-#include "../../main.h"
+#include "main.h"
 
 // Qt
 #include <QtTest>

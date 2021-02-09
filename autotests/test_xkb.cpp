@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../xkb.h"
+#include "xkb.h"
 
 #include <QtTest>
 #include <xkbcommon/xkbcommon-keysyms.h>

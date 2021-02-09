@@ -8,7 +8,7 @@
 */
 
 // KWin
-#include "../../tabbox/desktopchain.h"
+#include "tabbox/desktopchain.h"
 
 #include <QTest>
 

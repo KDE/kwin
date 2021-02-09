@@ -9,7 +9,7 @@
 #ifndef KWIN_MOCK_TABBOX_CLIENT_H
 #define KWIN_MOCK_TABBOX_CLIENT_H
 
-#include "../../tabbox/tabboxhandler.h"
+#include "tabbox/tabboxhandler.h"
 
 #include <QIcon>
 #include <QUuid>

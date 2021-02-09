@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../../tabbox/tabboxconfig.h"
+#include "tabbox/tabboxconfig.h"
 #include <QtTest>
 using namespace KWin;
 using namespace KWin::TabBox;

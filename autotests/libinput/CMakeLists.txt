@@ -2,6 +2,7 @@ include_directories(${Libinput_INCLUDE_DIRS})
 
 add_library(LibInputTestObjects STATIC ../../libinput/device.cpp ../../libinput/events.cpp mock_libinput.cpp)
 target_link_libraries(LibInputTestObjects Qt::Test Qt::Widgets Qt::DBus Qt::Gui KF5::ConfigCore)
+target_include_directories(LibInputTestObjects PUBLIC ${CMAKE_SOURCE_DIR})
 
 ########################################################
 # Test Devices

@@ -9,7 +9,7 @@
 #ifndef KWIN_MOCK_SCREENS_H
 #define KWIN_MOCK_SCREENS_H
 
-#include "../screens.h"
+#include "screens.h"
 
 namespace KWin
 {

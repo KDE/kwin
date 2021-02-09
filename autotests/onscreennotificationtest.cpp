@@ -6,8 +6,9 @@
 */
 
 #include "onscreennotificationtest.h"
-#include "../onscreennotification.h"
-#include "../input.h"
+
+#include "onscreennotification.h"
+#include "input.h"
 
 #include <KSharedConfig>
 #include <KConfigGroup>

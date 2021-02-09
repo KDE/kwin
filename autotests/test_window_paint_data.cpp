@@ -8,7 +8,8 @@
 */
 
 #include <kwineffects.h>
-#include "../virtualdesktops.h"
+
+#include "virtualdesktops.h"
 
 #include <QVector2D>
 #include <QGraphicsRotation>

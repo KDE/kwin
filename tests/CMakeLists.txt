@@ -8,6 +8,7 @@ endif()
 set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)
 add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
 target_link_libraries(screenedgeshowtest Qt::Widgets Qt::X11Extras KF5::ConfigCore KF5::WindowSystem KF5::WaylandClient ${XCB_XCB_LIBRARY})
+target_include_directories(screenedgeshowtest PRIVATE ${CMAKE_SOURCE_DIR})
 
 set(libinputtest_SRCS
     ${KWin_SOURCE_DIR}/libinput/connection.cpp
@@ -22,9 +23,11 @@ set(libinputtest_SRCS
 add_executable(libinputtest ${libinputtest_SRCS})
 add_definitions(-DKWIN_BUILD_TESTING)
 target_link_libraries(libinputtest Qt::Core Qt::DBus Libinput::Libinput UDev::UDev KF5::ConfigCore KF5::GlobalAccel KF5::WindowSystem)
+target_include_directories(libinputtest PRIVATE ${CMAKE_SOURCE_DIR})
 
 add_executable(x11shadowreader x11shadowreader.cpp)
 target_link_libraries(x11shadowreader XCB::XCB Qt::Widgets Qt::X11Extras KF5::ConfigCore KF5::WindowSystem)
+target_include_directories(x11shadowreader PRIVATE ${CMAKE_SOURCE_DIR})
 
 add_executable(pointerconstraints pointerconstraintstest.cpp)
 add_definitions(-DDIR="${CMAKE_CURRENT_SOURCE_DIR}")

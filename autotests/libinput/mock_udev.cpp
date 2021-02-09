@@ -6,7 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../../udev.h"
+#include "udev.h"
+
 #include "mock_udev.h"
 
 udev *udev::s_mockUdev = nullptr;

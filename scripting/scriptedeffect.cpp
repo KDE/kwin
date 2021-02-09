@@ -11,9 +11,10 @@
 #include "meta.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
-#include "../screens.h"
-#include "../screenedge.h"
 #include "scripting_logging.h"
+
+#include "screens.h"
+#include "screenedge.h"
 // KDE
 #include <KConfigGroup>
 #include <kconfigloader.h>

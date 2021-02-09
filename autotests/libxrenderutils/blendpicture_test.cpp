@@ -11,7 +11,8 @@
 #include <QX11Info>
 
 #include "../testutils.h"
-#include "../../libkwineffects/kwinxrenderutils.h"
+
+#include "kwinxrenderutils.h"
 
 class BlendPictureTest : public QObject
 {
