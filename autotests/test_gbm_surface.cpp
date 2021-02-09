@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../plugins/platforms/drm/gbm_surface.h"
+#include "../src/plugins/platforms/drm/gbm_surface.h"
 #include <QtTest>
 
 #include <gbm.h>

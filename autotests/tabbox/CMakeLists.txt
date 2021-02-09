@@ -1,14 +1,14 @@
-include_directories(${KWin_SOURCE_DIR})
+include_directories(${KWin_SOURCE_DIR}/src)
 add_definitions(-DKWIN_UNIT_TEST)
 ########################################################
 # Test TabBox::ClientModel
 ########################################################
 set(testTabBoxClientModel_SRCS
-    ../../tabbox/clientmodel.cpp
-    ../../tabbox/desktopmodel.cpp
-    ../../tabbox/tabbox_logging.cpp
-    ../../tabbox/tabboxconfig.cpp
-    ../../tabbox/tabboxhandler.cpp
+    ../../src/tabbox/clientmodel.cpp
+    ../../src/tabbox/desktopmodel.cpp
+    ../../src/tabbox/tabbox_logging.cpp
+    ../../src/tabbox/tabboxconfig.cpp
+    ../../src/tabbox/tabboxhandler.cpp
     mock_tabboxclient.cpp
     mock_tabboxhandler.cpp
     test_tabbox_clientmodel.cpp
@@ -40,11 +40,11 @@ ecm_mark_as_test(testTabBoxClientModel)
 # Test TabBox::TabBoxHandler
 ########################################################
 set(testTabBoxHandler_SRCS
-    ../../tabbox/clientmodel.cpp
-    ../../tabbox/desktopmodel.cpp
-    ../../tabbox/tabbox_logging.cpp
-    ../../tabbox/tabboxconfig.cpp
-    ../../tabbox/tabboxhandler.cpp
+    ../../src/tabbox/clientmodel.cpp
+    ../../src/tabbox/desktopmodel.cpp
+    ../../src/tabbox/tabbox_logging.cpp
+    ../../src/tabbox/tabboxconfig.cpp
+    ../../src/tabbox/tabboxhandler.cpp
     mock_tabboxclient.cpp
     mock_tabboxhandler.cpp
     test_tabbox_handler.cpp
@@ -76,8 +76,8 @@ ecm_mark_as_test(testTabBoxHandler)
 # Test TabBox::TabBoxConfig
 ########################################################
 set(testTabBoxConfig_SRCS
-    ../../tabbox/tabbox_logging.cpp
-    ../../tabbox/tabboxconfig.cpp
+    ../../src/tabbox/tabbox_logging.cpp
+    ../../src/tabbox/tabboxconfig.cpp
     test_tabbox_config.cpp
 )
 
@@ -91,8 +91,8 @@ ecm_mark_as_test(testTabBoxConfig)
 # Test TabBox::DesktopChainManager
 ########################################################
 set(testDesktopChain_SRCS
-    ../../tabbox/desktopchain.cpp
-    ../../tabbox/tabbox_logging.cpp
+    ../../src/tabbox/desktopchain.cpp
+    ../../src/tabbox/tabbox_logging.cpp
     test_desktopchain.cpp
 )
 

@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "mock_drm.h"
-#include "../../plugins/platforms/drm/drm_object.h"
+#include "../../src/plugins/platforms/drm/drm_object.h"
 #include <QtTest>
 
 class MockDrmObject : public KWin::DrmObject

@@ -1,13 +1,11 @@
 add_subdirectory(helper)
 
 set(KWinIntegrationTestFramework_SOURCES
-    ../../cursor.cpp
+    ../../src/cursor.cpp
 
     generic_scene_opengl_test.cpp
     kwin_wayland_test.cpp
     test_helpers.cpp
-
-    ${kwin_XWAYLAND_SRCS}
 )
 ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework_SOURCES
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
@@ -30,6 +28,9 @@ target_link_libraries(KWinIntegrationTestFramework
     Qt::Test
     kwin
     Wayland::Client
+
+    # Own libraries
+    KWinXwaylandServerModule
 
     # Static plugins
     KWinQpaPlugin

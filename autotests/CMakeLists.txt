@@ -31,7 +31,7 @@ ecm_mark_as_test(testWindowPaintData)
 # Test VirtualDesktopManager
 ########################################################
 set(testVirtualDesktops_SRCS
-    ../virtualdesktops.cpp
+    ../src/virtualdesktops.cpp
     test_virtual_desktops.cpp
 )
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
@@ -53,7 +53,7 @@ ecm_mark_as_test(testVirtualDesktops)
 # Test ClientMachine
 ########################################################
 set(testClientMachine_SRCS
-    ../client_machine.cpp
+    ../src/client_machine.cpp
     test_client_machine.cpp
 )
 add_executable(testClientMachine ${testClientMachine_SRCS})
@@ -140,7 +140,7 @@ ecm_mark_as_test(testXcbWindow)
 # Test BuiltInEffectLoader
 ########################################################
 set(testBuiltInEffectLoader_SRCS
-    ../effectloader.cpp
+    ../src/effectloader.cpp
     mock_effectshandler.cpp
     test_builtin_effectloader.cpp
 )
@@ -164,21 +164,21 @@ ecm_mark_as_test(testBuiltInEffectLoader)
 ########################################################
 # Test ScriptedEffectLoader
 ########################################################
-include_directories(${KWin_SOURCE_DIR})
+include_directories(${KWin_SOURCE_DIR}/src)
 set(testScriptedEffectLoader_SRCS
-    ../effectloader.cpp
-    ../cursor.cpp
-    ../screens.cpp
-    ../scripting/scriptedeffect.cpp
-    ../scripting/scripting_logging.cpp
-    ../scripting/scriptingutils.cpp
+    ../src/effectloader.cpp
+    ../src/cursor.cpp
+    ../src/screens.cpp
+    ../src/scripting/scriptedeffect.cpp
+    ../src/scripting/scripting_logging.cpp
+    ../src/scripting/scriptingutils.cpp
     mock_abstract_client.cpp
     mock_effectshandler.cpp
     mock_screens.cpp
     mock_workspace.cpp
     test_scripted_effectloader.cpp
 )
-kconfig_add_kcfg_files(testScriptedEffectLoader_SRCS ../settings.kcfgc)
+kconfig_add_kcfg_files(testScriptedEffectLoader_SRCS ../src/settings.kcfgc)
 add_executable(testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
 
 target_link_libraries(testScriptedEffectLoader
@@ -205,7 +205,7 @@ ecm_mark_as_test(testScriptedEffectLoader)
 # Test PluginEffectLoader
 ########################################################
 set(testPluginEffectLoader_SRCS
-    ../effectloader.cpp
+    ../src/effectloader.cpp
     mock_effectshandler.cpp
     test_plugin_effectloader.cpp
 )
@@ -243,21 +243,21 @@ target_link_libraries(effectversionplugin kwineffects)
 # Test ScreenEdges
 ########################################################
 set(testScreenEdges_SRCS
-    ../atoms.cpp
-    ../gestures.cpp
-    ../plugins/platforms/x11/standalone/edge.cpp
-    ../screenedge.cpp
-    ../screens.cpp
-    ../virtualdesktops.cpp
-    ../cursor.cpp
-    ../xcbutils.cpp # init of extensions
+    ../src/atoms.cpp
+    ../src/gestures.cpp
+    ../src/plugins/platforms/x11/standalone/edge.cpp
+    ../src/screenedge.cpp
+    ../src/screens.cpp
+    ../src/virtualdesktops.cpp
+    ../src/cursor.cpp
+    ../src/xcbutils.cpp # init of extensions
     mock_abstract_client.cpp
     mock_screens.cpp
     mock_workspace.cpp
     mock_x11client.cpp
     test_screen_edges.cpp
 )
-kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
+kconfig_add_kcfg_files(testScreenEdges_SRCS ../src/settings.kcfgc)
 qt5_add_dbus_interface(testScreenEdges_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface )
 
 add_executable(testScreenEdges ${testScreenEdges_SRCS})
@@ -293,8 +293,8 @@ ecm_mark_as_test(testScreenEdges)
 # Test OnScreenNotification
 ########################################################
 set(testOnScreenNotification_SRCS
-    ../input_event_spy.cpp
-    ../onscreennotification.cpp
+    ../src/input_event_spy.cpp
+    ../src/onscreennotification.cpp
     onscreennotificationtest.cpp
 )
 add_executable(testOnScreenNotification ${testOnScreenNotification_SRCS})
@@ -315,7 +315,7 @@ ecm_mark_as_test(testOnScreenNotification)
 # Test Gestures
 ########################################################
 set(testGestures_SRCS
-    ../gestures.cpp
+    ../src/gestures.cpp
     test_gestures.cpp
 )
 add_executable(testGestures ${testGestures_SRCS})
@@ -340,13 +340,13 @@ add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
 ecm_mark_as_test(testX11TimestampUpdate)
 
 set(testOpenGLContextAttributeBuilder_SRCS
-    ../abstract_opengl_context_attribute_builder.cpp
-    ../egl_context_attribute_builder.cpp
+    ../src/abstract_opengl_context_attribute_builder.cpp
+    ../src/egl_context_attribute_builder.cpp
     opengl_context_attribute_builder_test.cpp
 )
 
 if (HAVE_EPOXY_GLX)
-    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../plugins/platforms/x11/standalone/glx_context_attribute_builder.cpp)
+    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/plugins/platforms/x11/standalone/glx_context_attribute_builder.cpp)
 endif()
 add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
 target_link_libraries(testOpenGLContextAttributeBuilder Qt::Test)
@@ -354,7 +354,7 @@ add_test(NAME kwin-testOpenGLContextAttributeBuilder COMMAND testOpenGLContextAt
 ecm_mark_as_test(testOpenGLContextAttributeBuilder)
 
 set(testXkb_SRCS
-    ../xkb.cpp
+    ../src/xkb.cpp
     test_xkb.cpp
 )
 add_executable(testXkb ${testXkb_SRCS})
@@ -373,13 +373,13 @@ add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)
 
 if (HAVE_GBM)
-    add_executable(testGbmSurface test_gbm_surface.cpp ../plugins/platforms/drm/gbm_surface.cpp)
+    add_executable(testGbmSurface test_gbm_surface.cpp ../src/plugins/platforms/drm/gbm_surface.cpp)
     target_link_libraries(testGbmSurface Qt::Test)
     add_test(NAME kwin-testGbmSurface COMMAND testGbmSurface)
     ecm_mark_as_test(testGbmSurface)
 endif()
 
-add_executable(testVirtualKeyboardDBus test_virtualkeyboard_dbus.cpp ../virtualkeyboard_dbus.cpp)
+add_executable(testVirtualKeyboardDBus test_virtualkeyboard_dbus.cpp ../src/virtualkeyboard_dbus.cpp)
 target_link_libraries(testVirtualKeyboardDBus
     Qt::DBus
     Qt::Test

@@ -2,11 +2,11 @@ include_directories(${Libdrm_INCLUDE_DIRS})
 
 set(mockDRM_SRCS
     mock_drm.cpp
-    ../../plugins/platforms/drm/drm_buffer.cpp
-    ../../plugins/platforms/drm/drm_object.cpp
-    ../../plugins/platforms/drm/drm_object_connector.cpp
-    ../../plugins/platforms/drm/drm_object_plane.cpp
-    ../../plugins/platforms/drm/logging.cpp
+    ../../src/plugins/platforms/drm/drm_buffer.cpp
+    ../../src/plugins/platforms/drm/drm_object.cpp
+    ../../src/plugins/platforms/drm/drm_object_connector.cpp
+    ../../src/plugins/platforms/drm/drm_object_plane.cpp
+    ../../src/plugins/platforms/drm/logging.cpp
 )
 
 add_library(mockDrm STATIC ${mockDRM_SRCS})

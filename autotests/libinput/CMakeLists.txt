@@ -1,8 +1,8 @@
 include_directories(${Libinput_INCLUDE_DIRS})
 
-add_library(LibInputTestObjects STATIC ../../libinput/device.cpp ../../libinput/events.cpp mock_libinput.cpp)
+add_library(LibInputTestObjects STATIC ../../src/libinput/device.cpp ../../src/libinput/events.cpp mock_libinput.cpp)
 target_link_libraries(LibInputTestObjects Qt::Test Qt::Widgets Qt::DBus Qt::Gui KF5::ConfigCore)
-target_include_directories(LibInputTestObjects PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(LibInputTestObjects PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 ########################################################
 # Test Devices
@@ -56,9 +56,9 @@ ecm_mark_as_test(testLibinputSwitchEvent)
 # Test Context
 ########################################################
 set(testLibinputContext_SRCS
-        ../../libinput/context.cpp
-        ../../libinput/libinput_logging.cpp
-        ../../logind.cpp
+        ../../src/libinput/context.cpp
+        ../../src/libinput/libinput_logging.cpp
+        ../../src/logind.cpp
         context_test.cpp
         mock_udev.cpp
 )
@@ -79,7 +79,7 @@ ecm_mark_as_test(testLibinputContext)
 ########################################################
 # Test Input Events
 ########################################################
-add_executable(testInputEvents input_event_test.cpp ../../input_event.cpp)
+add_executable(testInputEvents input_event_test.cpp ../../src/input_event.cpp)
 target_link_libraries(testInputEvents Qt::Test Qt::DBus Qt::Gui Qt::Widgets KF5::ConfigCore LibInputTestObjects)
 add_test(NAME kwin-testInputEvents COMMAND testInputEvents)
 ecm_mark_as_test(testInputEvents)
