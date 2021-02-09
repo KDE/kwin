@@ -683,7 +683,7 @@ if (KWIN_BUILD_TABBOX)
         tabbox/tabboxhandler.cpp
         tabbox/x11_filter.cpp
     )
-    target_include_directories(kwin PRIVATE ${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+    target_link_libraries(kwin Qt::GuiPrivate)
 endif()
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
