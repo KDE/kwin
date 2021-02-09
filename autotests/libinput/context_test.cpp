@@ -8,8 +8,10 @@
 */
 #include "mock_libinput.h"
 #include "mock_udev.h"
-#include "../../libinput/context.h"
-#include "../../udev.h"
+
+#include "libinput/context.h"
+#include "udev.h"
+
 #include <QtTest>
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
 

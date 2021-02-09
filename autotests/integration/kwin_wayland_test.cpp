@@ -7,15 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kwin_wayland_test.h"
-#include "../../platform.h"
-#include "../../pluginmanager.h"
-#include "../../composite.h"
-#include "../../effects.h"
-#include "../../wayland_server.h"
-#include "../../workspace.h"
-#include "../../xcbutils.h"
-#include "../../xwl/xwayland.h"
-#include "../../inputmethod.h"
+
+#include "composite.h"
+#include "effects.h"
+#include "inputmethod.h"
+#include "platform.h"
+#include "pluginmanager.h"
+#include "wayland_server.h"
+#include "workspace.h"
+#include "xcbutils.h"
+#include "xwl/xwayland.h"
 
 #include <KPluginMetaData>
 

@@ -6,13 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../effectloader.h"
+#include "effectloader.h"
 #include "mock_effectshandler.h"
-#include "../scripting/scriptedeffect.h"
+#include "scripting/scriptedeffect.h"
 // for mocking
-#include "../cursor.h"
-#include "../input.h"
-#include "../screenedge.h"
+#include "cursor.h"
+#include "input.h"
+#include "screenedge.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>

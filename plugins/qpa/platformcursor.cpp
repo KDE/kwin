@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "platformcursor.h"
-#include "../../cursor.h"
+#include "cursor.h"
 
 namespace KWin
 {

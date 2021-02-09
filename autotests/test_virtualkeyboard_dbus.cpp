@@ -12,7 +12,7 @@
 #include <QDBusPendingReply>
 #include <QSignalSpy>
 
-#include "../virtualkeyboard_dbus.h"
+#include "virtualkeyboard_dbus.h"
 
 using KWin::VirtualKeyboardDBus;
 

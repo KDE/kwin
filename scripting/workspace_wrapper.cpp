@@ -9,13 +9,13 @@
 */
 
 #include "workspace_wrapper.h"
-#include "../x11client.h"
-#include "../outline.h"
-#include "../screens.h"
-#include "../virtualdesktops.h"
-#include "../workspace.h"
+#include "x11client.h"
+#include "outline.h"
+#include "screens.h"
+#include "virtualdesktops.h"
+#include "workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
-#include "../activities.h"
+#include "activities.h"
 #endif
 
 #include <QDesktopWidget>

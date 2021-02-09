@@ -9,9 +9,10 @@
 #ifndef KWIN_LIBINPUT_CONNECTION_H
 #define KWIN_LIBINPUT_CONNECTION_H
 
-#include "../input.h"
-#include "../keyboard_input.h"
 #include <kwinglobals.h>
+
+#include "input.h"
+#include "keyboard_input.h"
 
 #include <QObject>
 #include <QPointer>

@@ -7,8 +7,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "mock_libinput.h"
-#include "../../libinput/device.h"
-#include "../input_event.h"
+
+#include "libinput/device.h"
+#include "input_event.h"
 
 #include <QtTest>
 

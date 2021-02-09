@@ -6,9 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../effectloader.h"
+#include "effectloader.h"
 #include "mock_effectshandler.h"
-#include "../scripting/scriptedeffect.h" // for mocking ScriptedEffect::create
+#include "scripting/scriptedeffect.h" // for mocking ScriptedEffect::create
 // KDE
 #include <KConfig>
 #include <KConfigGroup>

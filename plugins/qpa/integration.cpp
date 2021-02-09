@@ -8,16 +8,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "integration.h"
-#include "abstract_output.h"
 #include "backingstore.h"
 #include "eglplatformcontext.h"
 #include "logging.h"
 #include "offscreensurface.h"
 #include "screen.h"
 #include "window.h"
-#include "../../main.h"
-#include "../../platform.h"
-#include "../../screens.h"
+
+#include "abstract_output.h"
+#include "main.h"
+#include "platform.h"
+#include "screens.h"
 
 #include <QCoreApplication>
 #include <QtConcurrentRun>

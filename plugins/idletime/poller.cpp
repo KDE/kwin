@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "poller.h"
-#include "../../wayland_server.h"
+#include "wayland_server.h"
 
 #include <KWayland/Client/idle.h>
 #include <KWayland/Client/registry.h>

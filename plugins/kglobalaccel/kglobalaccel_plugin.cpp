@@ -7,7 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "kglobalaccel_plugin.h"
-#include "../../input.h"
+
+#include "input.h"
 
 #include <QDebug>
 

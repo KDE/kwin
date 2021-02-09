@@ -9,8 +9,9 @@
 #include "context.h"
 #include "events.h"
 #include "libinput_logging.h"
-#include "../logind.h"
-#include "../udev.h"
+
+#include "logind.h"
+#include "udev.h"
 
 #include <fcntl.h>
 #include <unistd.h>

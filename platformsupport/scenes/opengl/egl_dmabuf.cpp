@@ -8,10 +8,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egl_dmabuf.h"
-
 #include "drm_fourcc.h"
 #include "kwineglext.h"
-#include "../../../wayland_server.h"
+
+#include "wayland_server.h"
 
 #include <unistd.h>
 

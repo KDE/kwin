@@ -17,10 +17,11 @@
 #include "screenedgeitem.h"
 #include "scripting_model.h"
 #include "scripting_logging.h"
-#include "../x11client.h"
-#include "../thumbnailitem.h"
-#include "../options.h"
-#include "../workspace.h"
+
+#include "options.h"
+#include "thumbnailitem.h"
+#include "workspace.h"
+#include "x11client.h"
 // KDE
 #include <KConfigGroup>
 #include <KPackage/PackageLoader>

@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../gestures.h"
+#include "gestures.h"
 
 #include <QTest>
 #include <QSignalSpy>

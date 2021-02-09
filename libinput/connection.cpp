@@ -13,17 +13,17 @@
 
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
-#include "../abstract_wayland_output.h"
-#include "../main.h"
-#include "../platform.h"
-#include "../workspace.h"
-#include "../abstract_client.h"
-#include "../screens.h"
+#include "abstract_wayland_output.h"
+#include "main.h"
+#include "platform.h"
+#include "workspace.h"
+#include "abstract_client.h"
+#include "screens.h"
 #endif
 
-#include "../input_event.h"
-#include "../logind.h"
-#include "../udev.h"
+#include "input_event.h"
+#include "logind.h"
+#include "udev.h"
 #include "libinput_logging.h"
 
 #include <QDBusMessage>

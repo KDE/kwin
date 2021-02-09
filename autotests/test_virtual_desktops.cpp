@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "../virtualdesktops.h"
-#include "../input.h"
+#include "input.h"
+#include "virtualdesktops.h"
 // KDE
 #include <KConfigGroup>
 
