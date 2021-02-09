@@ -158,13 +158,11 @@ void PipeWireStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 void PipeWireStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
 {
     PipeWireStream *stream = static_cast<PipeWireStream *>(data);
+    stream->m_dmabufDataForPwBuffer.remove(buffer);
 
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
-
-    if (spa_data->type == SPA_DATA_DmaBuf) {
-        stream->m_dmabufDataForPwBuffer.remove(buffer);
-    } else if (spa_data->type == SPA_DATA_MemFd) {
+    if (spa_data && spa_data->type == SPA_DATA_MemFd) {
         munmap (spa_data->data, spa_data->maxsize);
         close (spa_data->fd);
     }
