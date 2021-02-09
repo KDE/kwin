@@ -655,7 +655,7 @@ target_link_libraries(kwin
     XKB::XKB
     epoxy::epoxy
 
-    ${CMAKE_THREAD_LIBS_INIT}
+    Threads::Threads
 )
 
 if (KWIN_BUILD_CMS)
