@@ -317,14 +317,12 @@ void Xwayland::handleXwaylandReady()
     m_watcher->deleteLater();
     m_watcher = nullptr;
 
-    if (!createX11Connection()) {
+    if (!createX11Connection() || !writeXauthorityEntries()) {
         emit errorOccurred();
         return;
     }
 
     const QByteArray displayName = ':' + QByteArray::number(m_display);
-    updateXauthorityFile();
-
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << displayName;
     qputenv("DISPLAY", displayName);
     qputenv("XAUTHORITY", m_authorityFile.fileName().toUtf8());
@@ -435,7 +433,7 @@ static QByteArray generateXauthorityCookie()
     return cookie;
 }
 
-void Xwayland::updateXauthorityFile()
+bool Xwayland::writeXauthorityEntries()
 {
     const quint16 family = 256; // FamilyLocal
 
@@ -449,7 +447,7 @@ void Xwayland::updateXauthorityFile()
 
     writeXauthorityEntry(stream, family, address, display, name, cookie);
 
-    m_authorityFile->flush();
+    return stream.status() == QDataStream::Ok && m_authorityFile.flush();
 }
 
 DragEventReply Xwayland::dragMoveFilter(Toplevel *target, const QPoint &pos)
