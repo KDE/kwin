@@ -209,6 +209,7 @@ Q_SIGNALS:
 private:
     void initConnection();
     void createOutputs();
+    void destroyOutputs();
 
     void updateScreenSize(WaylandOutput *output);
     void relativeMotionHandler(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp);

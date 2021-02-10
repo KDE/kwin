@@ -474,7 +474,7 @@ WaylandBackend::~WaylandBackend()
     delete m_waylandCursor;
 
     m_eventQueue->release();
-    qDeleteAll(m_outputs);
+    destroyOutputs();
 
     if (m_xdgShell) {
         m_xdgShell->release();
@@ -625,8 +625,7 @@ void WaylandBackend::initConnection()
             delete m_seat;
             m_shm->destroy();
 
-            qDeleteAll(m_outputs);
-            m_outputs.clear();
+            destroyOutputs();
 
             if (m_xdgShell) {
                 m_xdgShell->destroy();
@@ -730,9 +729,21 @@ void WaylandBackend::createOutputs()
 
         logicalWidthSum += logicalWidth;
         m_outputs << waylandOutput;
+        emit outputAdded(waylandOutput);
+        emit outputEnabled(waylandOutput);
     }
     setReady(true);
     emit screensQueried();
+}
+
+void WaylandBackend::destroyOutputs()
+{
+    while (!m_outputs.isEmpty()) {
+        WaylandOutput *output = m_outputs.takeLast();
+        emit outputDisabled(output);
+        emit outputRemoved(output);
+        delete output;
+    }
 }
 
 OpenGLBackend *WaylandBackend::createOpenGLBackend()
