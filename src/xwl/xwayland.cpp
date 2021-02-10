@@ -435,9 +435,7 @@ static QByteArray generateXauthorityCookie()
 
 bool Xwayland::writeXauthorityEntries()
 {
-    const quint16 family = 256; // FamilyLocal
-
-    const QByteArray address = QHostInfo::localHostName().toUtf8();
+    const QByteArray hostname = QHostInfo::localHostName().toUtf8();
     const QByteArray display = QByteArray::number(m_display);
     const QByteArray name = QByteArrayLiteral("MIT-MAGIC-COOKIE-1");
     const QByteArray cookie = generateXauthorityCookie();
@@ -445,7 +443,11 @@ bool Xwayland::writeXauthorityEntries()
     QDataStream stream(&m_authorityFile);
     stream.setByteOrder(QDataStream::BigEndian);
 
-    writeXauthorityEntry(stream, family, address, display, name, cookie);
+    // Write entry with FamilyLocal and the host name as address
+    writeXauthorityEntry(stream, 256 /* FamilyLocal */, hostname, display, name, cookie);
+
+    // Write entry with FamilyWild, no address
+    writeXauthorityEntry(stream, 65535 /* FamilyWild */, QByteArray{}, display, name, cookie);
 
     return stream.status() == QDataStream::Ok && m_authorityFile.flush();
 }
