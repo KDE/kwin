@@ -143,7 +143,7 @@ void Xwayland::start()
                            QString::number(pipeFds[1]),
                            QStringLiteral("-rootless"),
                            QStringLiteral("-wm"), QString::number(fd),
-                           QStringLiteral("-auth"), m_authorityFile->fileName()});
+                           QStringLiteral("-auth"), m_authorityFile.fileName()});
     connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &Xwayland::handleXwaylandError);
     connect(m_xwaylandProcess, &QProcess::started, this, &Xwayland::handleXwaylandStarted);
     connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
@@ -180,7 +180,6 @@ void Xwayland::stop()
     delete m_xwaylandProcess;
     m_xwaylandProcess = nullptr;
 
-    m_authorityFile.reset();
     waylandServer()->destroyXWaylandConnection(); // This one must be destroyed last!
 
     m_app->setClosingX11Connection(false);
@@ -328,7 +327,7 @@ void Xwayland::handleXwaylandReady()
 
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << displayName;
     qputenv("DISPLAY", displayName);
-    qputenv("XAUTHORITY", m_authorityFile->fileName().toUtf8());
+    qputenv("XAUTHORITY", m_authorityFile.fileName().toUtf8());
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
@@ -338,7 +337,7 @@ void Xwayland::handleXwaylandReady()
 
     auto env = m_app->processStartupEnvironment();
     env.insert(QStringLiteral("DISPLAY"), displayName);
-    env.insert(QStringLiteral("XAUTHORITY"), m_authorityFile->fileName());
+    env.insert(QStringLiteral("XAUTHORITY"), m_authorityFile.fileName());
     m_app->setProcessStartupEnvironment(env);
 
     emit started();
@@ -402,15 +401,9 @@ void Xwayland::destroyX11Connection()
 bool Xwayland::createXauthorityFile()
 {
     const QString runtimeDirectory = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
-    const QString fileNameTemplate = QStringLiteral(".Xauthority-kwin_wayland.XXXXXX");
 
-    QScopedPointer<QTemporaryFile> authorityFile(new QTemporaryFile(runtimeDirectory + '/' + fileNameTemplate));
-    if (!authorityFile->open()) {
-        return false;
-    }
-
-    m_authorityFile.reset(authorityFile.take());
-    return true;
+    m_authorityFile.setFileTemplate(runtimeDirectory + QStringLiteral("/xauth_XXXXXX"));
+    return m_authorityFile.open();
 }
 
 static void writeXauthorityEntry(QDataStream *stream, quint16 family,
@@ -453,7 +446,7 @@ void Xwayland::updateXauthorityFile()
     const QByteArray name = QByteArrayLiteral("MIT-MAGIC-COOKIE-1");
     const QByteArray cookie = generateXauthorityCookie();
 
-    QDataStream stream(m_authorityFile.data());
+    QDataStream stream(&m_authorityFile);
     stream.setByteOrder(QDataStream::BigEndian);
 
     writeXauthorityEntry(&stream, family, address, display, name, cookie);

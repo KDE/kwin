@@ -112,7 +112,7 @@ private:
     QFutureWatcher<int> *m_watcher = nullptr;
     ApplicationWaylandAbstract *m_app;
     QScopedPointer<KSelectionOwner> m_selectionOwner;
-    QScopedPointer<QTemporaryFile> m_authorityFile;
+    QTemporaryFile m_authorityFile;
     int m_crashCount = 0;
 
     Q_DISABLE_COPY(Xwayland)
