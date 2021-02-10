@@ -99,7 +99,7 @@ private:
     void destroyX11Connection();
 
     bool createXauthorityFile();
-    void updateXauthorityFile();
+    bool writeXauthorityEntries();
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
