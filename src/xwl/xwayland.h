@@ -65,10 +65,6 @@ public Q_SLOTS:
      * @see start()
      */
     void stop();
-    /**
-     * Restarts the Xwayland server. This method is equivalent to calling stop() and start().
-     */
-    void restart();
 
 Q_SIGNALS:
     /**
@@ -99,11 +95,12 @@ private:
     void uninstallSocketNotifier();
     void maybeDestroyReadyNotifier();
 
+    bool startInternal();
+    void stopInternal();
+    void restartInternal();
+
     bool createX11Connection();
     void destroyX11Connection();
-
-    bool createXauthorityFile();
-    bool writeXauthorityEntries();
 
     DragEventReply dragMoveFilter(Toplevel *target, const QPoint &pos) override;
 
