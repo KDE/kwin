@@ -406,23 +406,21 @@ bool Xwayland::createXauthorityFile()
     return m_authorityFile.open();
 }
 
-static void writeXauthorityEntry(QDataStream *stream, quint16 family,
+static void writeXauthorityEntry(QDataStream &stream, quint16 family,
                                  const QByteArray &address, const QByteArray &display,
                                  const QByteArray &name, const QByteArray &cookie)
 {
-    *stream << quint16(family);
+    stream << quint16(family);
 
-    *stream << quint16(address.size());
-    stream->writeRawData(address.constData(), address.size());
+    auto writeArray = [&stream](const QByteArray &str) {
+        stream << quint16(str.size());
+        stream.writeRawData(str.constData(), str.size());
+    };
 
-    *stream << quint16(display.size());
-    stream->writeRawData(display.constData(), display.size());
-
-    *stream << quint16(name.size());
-    stream->writeRawData(name.constData(), name.size());
-
-    *stream << quint16(cookie.size());
-    stream->writeRawData(cookie.constData(), cookie.size());
+    writeArray(address);
+    writeArray(display);
+    writeArray(name);
+    writeArray(cookie);
 }
 
 static QByteArray generateXauthorityCookie()
@@ -449,7 +447,7 @@ void Xwayland::updateXauthorityFile()
     QDataStream stream(&m_authorityFile);
     stream.setByteOrder(QDataStream::BigEndian);
 
-    writeXauthorityEntry(&stream, family, address, display, name, cookie);
+    writeXauthorityEntry(stream, family, address, display, name, cookie);
 
     m_authorityFile->flush();
 }
