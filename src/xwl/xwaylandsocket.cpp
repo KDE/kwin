@@ -41,7 +41,7 @@ UnixSocketAddress::UnixSocketAddress(const QString &socketPath, Type type)
 {
     const QByteArray encodedSocketPath = QFile::encodeName(socketPath);
 
-    int byteCount = offsetof(sockaddr_un, sun_path) + encodedSocketPath.size();
+    int byteCount = offsetof(sockaddr_un, sun_path) + encodedSocketPath.size() + 1;
     if (type == Type::Abstract) {
         byteCount++; // For the first '\0'.
     }
