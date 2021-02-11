@@ -774,7 +774,7 @@ void SceneQPainterDecorationRenderer::render()
         }
         QPainter painter(&m_images[index]);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * m_images[index].devicePixelRatio()));
+        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * qPainterEffectiveDevicePixelRatio(&painter)));
         painter.setClipRect(rect);
         painter.save();
         // clear existing part

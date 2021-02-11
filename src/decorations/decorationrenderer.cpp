@@ -80,7 +80,7 @@ QImage Renderer::renderToImage(const QRect &geo)
     image.fill(Qt::transparent);
     QPainter p(&image);
     p.setRenderHint(QPainter::Antialiasing);
-    p.setWindow(QRect(geo.topLeft(), geo.size() * dpr));
+    p.setWindow(QRect(geo.topLeft(), geo.size() * qPainterEffectiveDevicePixelRatio(&p)));
     p.setClipRect(geo);
     renderToPainter(&p, geo);
     return image;

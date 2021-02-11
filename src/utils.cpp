@@ -16,6 +16,7 @@
 
 #include "utils.h"
 
+#include <QPainter>
 #include <QWidget>
 #include <kkeyserver.h>
 
@@ -193,6 +194,11 @@ Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
     if (state & KKeyServer::modXMeta())
         ret |= Qt::MetaModifier;
     return ret;
+}
+
+qreal qPainterEffectiveDevicePixelRatio(const QPainter *painter)
+{
+    return std::max(qreal(1), painter->device()->devicePixelRatioF());
 }
 
 } // namespace

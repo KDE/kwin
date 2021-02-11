@@ -120,6 +120,15 @@ bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = XCB_WINDOW_NONE);
 void KWIN_EXPORT ungrabXKeyboard();
 
 /**
+ * QPainter::setWindow() doesn't work as expected when the device pixel ratio of the paint
+ * device is less than 1.
+ *
+ * QPainter simply doesn't allow the effective scale factor to be less than 1. Use this function
+ * to determine the effective device pixel ratio by which the window rect has to be scaled.
+ */
+qreal KWIN_EXPORT qPainterEffectiveDevicePixelRatio(const QPainter *painter);
+
+/**
  * Small helper class which performs grabXServer in the ctor and
  * ungrabXServer in the dtor. Use this class to ensure that grab and
  * ungrab are matched.

@@ -2644,7 +2644,7 @@ void SceneOpenGLDecorationRenderer::render()
         QPainter painter(&image);
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setViewport(QRect(viewport.topLeft(), viewport.size() * devicePixelRatio));
-        painter.setWindow(QRect(geo.topLeft(), geo.size() * devicePixelRatio));
+        painter.setWindow(QRect(geo.topLeft(), geo.size() * qPainterEffectiveDevicePixelRatio(&painter)));
         painter.setClipRect(geo);
         renderToPainter(&painter, geo);
         painter.end();
