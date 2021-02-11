@@ -58,6 +58,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include <cmath>
+
 namespace KWin
 {
 namespace Wayland

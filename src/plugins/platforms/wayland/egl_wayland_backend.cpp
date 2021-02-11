@@ -36,6 +36,8 @@
 #include <QFile>
 #include <QOpenGLContext>
 
+#include <cmath>
+
 namespace KWin
 {
 namespace Wayland
