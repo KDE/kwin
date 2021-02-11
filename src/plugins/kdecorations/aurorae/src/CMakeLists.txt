@@ -43,9 +43,11 @@ target_link_libraries(decorationplugin
 )
 install(TARGETS decorationplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/decoration)
 
+configure_file(aurorae.knsrc.cmake ${CMAKE_CURRENT_BINARY_DIR}/aurorae.knsrc)
+
 ########### install files ###############
 
-install(FILES aurorae.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/aurorae.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
 install(
     FILES
         qml/AppMenuButton.qml
