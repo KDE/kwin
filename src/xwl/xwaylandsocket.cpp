@@ -13,7 +13,9 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <string.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/un.h>
 #include <unistd.h>
 
@@ -130,9 +132,9 @@ static int listen_helper(const QString &filePath, UnixSocketAddress::Type type)
 
 XwaylandSocket::XwaylandSocket()
 {
-    QDir socketDirectory(QStringLiteral("/tmp/.X11-unix"));
-    if (!socketDirectory.exists()) {
-        socketDirectory.mkpath(QStringLiteral("."));
+    if (mkdir("/tmp/.X11-unix", 01777) != 0 && errno != EEXIST) {
+        qCWarning(KWIN_XWL, "Failed to create sockets directory: %s", strerror(errno));
+        return;
     }
 
     for (int display = 0; display < 100; ++display) {
