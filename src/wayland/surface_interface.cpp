@@ -349,14 +349,22 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 
 void SurfaceInterfacePrivate::surface_set_buffer_transform(Resource *resource, int32_t transform)
 {
-    Q_UNUSED(resource)
+    if (transform < 0 || transform > WL_OUTPUT_TRANSFORM_FLIPPED_270) {
+        wl_resource_post_error(resource->handle, error_invalid_transform,
+                               "buffer transform must be a valid transform (%d specified)", transform);
+        return;
+    }
     pending.bufferTransform = OutputInterface::Transform(transform);
     pending.bufferTransformIsSet = true;
 }
 
 void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32_t scale)
 {
-    Q_UNUSED(resource)
+    if (scale < 1) {
+        wl_resource_post_error(resource->handle, error_invalid_scale,
+                               "buffer scale must be at least one (%d specified)", scale);
+        return;
+    }
     pending.bufferScale = scale;
     pending.bufferScaleIsSet = true;
 }
