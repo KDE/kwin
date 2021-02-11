@@ -8,12 +8,12 @@
 #include "xwayland_logging.h"
 
 #include <QCoreApplication>
-#include <QDir>
 #include <QFile>
 
 #include <errno.h>
 #include <signal.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/un.h>
 #include <unistd.h>
 
@@ -128,11 +128,41 @@ static int listen_helper(const QString &filePath, UnixSocketAddress::Type type)
     return fileDescriptor;
 }
 
+static bool checkSocketsDirectory()
+{
+    struct stat info;
+    const char *path = "/tmp/.X11-unix";
+
+    if (lstat(path, &info) != 0) {
+        if (errno == ENOENT) {
+            qCWarning(KWIN_XWL) << path << "does not exist. Please check your installation";
+            return false;
+        }
+
+        qCWarning(KWIN_XWL, "Failed to stat %s: %s", path, strerror(errno));
+        return false;
+    }
+
+    if (!S_ISDIR(info.st_mode)) {
+        qCWarning(KWIN_XWL) << path << "is not a directory. Broken system?";
+        return false;
+    }
+    if (info.st_uid != 0) {
+        qCWarning(KWIN_XWL) << path << "is not owned by root. Your system might be compromised!";
+        return false;
+    }
+    if (!(info.st_mode & S_ISVTX)) {
+        qCWarning(KWIN_XWL) << path << "has no sticky bit on. Your system might be compromised!";
+        return false;
+    }
+
+    return true;
+}
+
 XwaylandSocket::XwaylandSocket()
 {
-    QDir socketDirectory(QStringLiteral("/tmp/.X11-unix"));
-    if (!socketDirectory.exists()) {
-        socketDirectory.mkpath(QStringLiteral("."));
+    if (!checkSocketsDirectory()) {
+        return;
     }
 
     for (int display = 0; display < 100; ++display) {
