@@ -11,6 +11,7 @@
 #include <QDir>
 #include <QFile>
 
+#include <errno.h>
 #include <signal.h>
 #include <sys/socket.h>
 #include <sys/un.h>
