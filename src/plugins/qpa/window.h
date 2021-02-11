@@ -57,7 +57,7 @@ private:
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     quint32 m_windowId;
     bool m_resized = false;
-    int m_scale = 1;
+    qreal m_scale = 1;
 };
 
 }

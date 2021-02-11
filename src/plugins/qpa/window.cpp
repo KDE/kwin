@@ -29,7 +29,7 @@ Window::Window(QWindow *window)
     : QPlatformWindow(window)
     , m_eglDisplay(kwinApp()->platform()->sceneEglDisplay())
     , m_windowId(++s_windowId)
-    , m_scale(screens()->maxScale())
+    , m_scale(std::max(qreal(1), screens()->maxScale()))
 {
     if (window->surfaceType() == QSurface::OpenGLSurface) {
         // The window will use OpenGL for drawing.
