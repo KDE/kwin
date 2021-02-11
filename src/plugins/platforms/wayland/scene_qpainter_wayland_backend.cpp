@@ -18,6 +18,8 @@
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
+#include <cmath>
+
 namespace KWin
 {
 namespace Wayland
@@ -86,7 +88,7 @@ void WaylandQPainterOutput::present(const QRegion &damage)
     auto s = m_waylandOutput->surface();
     s->attachBuffer(m_buffer);
     s->damage(damage);
-    s->setScale(m_waylandOutput->scale());
+    s->setScale(std::ceil(m_waylandOutput->scale()));
     s->commit();
 }
 

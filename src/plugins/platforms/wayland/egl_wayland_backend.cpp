@@ -313,7 +313,7 @@ void EglWaylandBackend::presentOnSurface(EglWaylandOutput *output, const QRegion
     WaylandOutput *waylandOutput = output->m_waylandOutput;
 
     waylandOutput->surface()->setupFrameCallback();
-    waylandOutput->surface()->setScale(waylandOutput->scale());
+    waylandOutput->surface()->setScale(std::ceil(waylandOutput->scale()));
     Q_EMIT waylandOutput->outputChange(damage);
 
     if (supportsSwapBuffersWithDamage() && !output->m_damageHistory.isEmpty()) {

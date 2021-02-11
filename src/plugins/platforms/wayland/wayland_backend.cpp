@@ -114,7 +114,7 @@ void WaylandCursor::doInstallImage(wl_buffer *image, const QSize &size, qreal sc
 void WaylandCursor::drawSurface(wl_buffer *image, const QSize &size, qreal scale)
 {
     m_surface->attachBuffer(image);
-    m_surface->setScale(scale);
+    m_surface->setScale(std::ceil(scale));
     m_surface->damageBuffer(QRect(QPoint(0, 0), size));
     m_surface->commit(Surface::CommitFlag::None);
     m_backend->flush();
