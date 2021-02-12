@@ -9,11 +9,10 @@
 
 #include "qwayland-server-relative-pointer-unstable-v1.h"
 
-#include <QPointer>
-
 namespace KWaylandServer
 {
 
+class ClientConnection;
 class Display;
 class PointerInterface;
 
@@ -31,14 +30,16 @@ protected:
 class RelativePointerV1Interface : public QtWaylandServer::zwp_relative_pointer_v1
 {
 public:
-    RelativePointerV1Interface(PointerInterface *pointer, ::wl_resource *resource);
-    ~RelativePointerV1Interface() override;
+    explicit RelativePointerV1Interface(PointerInterface *pointer);
 
-    QPointer<PointerInterface> pointer;
+    static RelativePointerV1Interface *get(PointerInterface *pointer);
+    void sendRelativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
 
 protected:
-    void zwp_relative_pointer_v1_destroy_resource(Resource *resource) override;
     void zwp_relative_pointer_v1_destroy(Resource *resource) override;
+
+private:
+    PointerInterface *pointer;
 };
 
 } // namespace KWaylandServer

@@ -102,8 +102,7 @@ void TestWaylandServerSeat::testPointerButton()
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
-    PointerInterface *pointer = seat->focusedPointer();
-    QVERIFY(!pointer);
+    seat->setHasPointer(true);
 
     // no button pressed yet, should be released and no serial
     QVERIFY(!seat->isPointerButtonPressed(0));
@@ -113,6 +112,7 @@ void TestWaylandServerSeat::testPointerButton()
 
     // mark the button as pressed
     seat->pointerButtonPressed(0);
+    seat->pointerFrame();
     QVERIFY(seat->isPointerButtonPressed(0));
     QCOMPARE(seat->pointerButtonSerial(0), display.serial());
 
@@ -122,6 +122,7 @@ void TestWaylandServerSeat::testPointerButton()
 
     // release it again
     seat->pointerButtonReleased(0);
+    seat->pointerFrame();
     QVERIFY(!seat->isPointerButtonPressed(0));
     QCOMPARE(seat->pointerButtonSerial(0), display.serial());
 }
@@ -132,22 +133,24 @@ void TestWaylandServerSeat::testPointerPos()
     display.addSocketName(s_socketName);
     display.start();
     SeatInterface *seat = new SeatInterface(&display);
+    seat->setHasPointer(true);
     QSignalSpy seatPosSpy(seat, SIGNAL(pointerPosChanged(QPointF)));
     QVERIFY(seatPosSpy.isValid());
-    PointerInterface *pointer = seat->focusedPointer();
-    QVERIFY(!pointer);
 
     QCOMPARE(seat->pointerPos(), QPointF());
 
     seat->setPointerPos(QPointF(10, 15));
+    seat->pointerFrame();
     QCOMPARE(seat->pointerPos(), QPointF(10, 15));
     QCOMPARE(seatPosSpy.count(), 1);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
 
     seat->setPointerPos(QPointF(10, 15));
+    seat->pointerFrame();
     QCOMPARE(seatPosSpy.count(), 1);
 
     seat->setPointerPos(QPointF(5, 7));
+    seat->pointerFrame();
     QCOMPARE(seat->pointerPos(), QPointF(5, 7));
     QCOMPARE(seatPosSpy.count(), 2);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));

@@ -191,6 +191,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
     }
     m_seat->setTimestamp(event->timestamp());
     m_seat->setPointerPos(event->localPos().toPoint());
+    m_seat->pointerFrame();
 }
 
 void CompositorWindow::mousePressEvent(QMouseEvent *event)
@@ -203,6 +204,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
     }
     m_seat->setTimestamp(event->timestamp());
     m_seat->pointerButtonPressed(event->button());
+    m_seat->pointerFrame();
 }
 
 void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
@@ -210,6 +212,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
     QWidget::mouseReleaseEvent(event);
     m_seat->setTimestamp(event->timestamp());
     m_seat->pointerButtonReleased(event->button());
+    m_seat->pointerFrame();
 }
 
 void CompositorWindow::wheelEvent(QWheelEvent *event)
@@ -218,11 +221,12 @@ void CompositorWindow::wheelEvent(QWheelEvent *event)
     m_seat->setTimestamp(event->timestamp());
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
-        m_seat->pointerAxis(Qt::Horizontal, angle.x());
+        m_seat->pointerAxis(Qt::Horizontal, angle.x(), 1, KWaylandServer::PointerAxisSource::Wheel);
     }
     if (angle.y() != 0) {
-        m_seat->pointerAxis(Qt::Vertical, angle.y());
+        m_seat->pointerAxis(Qt::Vertical, angle.y(), 1, KWaylandServer::PointerAxisSource::Wheel);
     }
+    m_seat->pointerFrame();
 }
 
 int main(int argc, char **argv)

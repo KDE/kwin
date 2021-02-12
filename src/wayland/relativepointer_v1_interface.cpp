@@ -6,9 +6,12 @@
 */
 
 #include "relativepointer_v1_interface.h"
+#include "clientconnection.h"
 #include "display.h"
 #include "pointer_interface_p.h"
 #include "relativepointer_v1_interface_p.h"
+#include "seat_interface.h"
+#include "surface_interface.h"
 
 namespace KWaylandServer
 {
@@ -34,15 +37,8 @@ void RelativePointerManagerV1InterfacePrivate::zwp_relative_pointer_manager_v1_g
         return;
     }
 
-    wl_resource *relativePointerResource = wl_resource_create(resource->client(),
-                                                              &zwp_relative_pointer_v1_interface,
-                                                              resource->version(), id);
-    if (!relativePointerResource) {
-        wl_resource_post_no_memory(resource->handle);
-        return;
-    }
-
-    new RelativePointerV1Interface(pointer, relativePointerResource);
+    RelativePointerV1Interface *relativePointer = RelativePointerV1Interface::get(pointer);
+    relativePointer->add(resource->client(), id, resource->version());
 }
 
 RelativePointerManagerV1Interface::RelativePointerManagerV1Interface(Display *display, QObject *parent)
@@ -55,29 +51,43 @@ RelativePointerManagerV1Interface::~RelativePointerManagerV1Interface()
 {
 }
 
-RelativePointerV1Interface::RelativePointerV1Interface(PointerInterface *pointer, ::wl_resource *resource)
-    : QtWaylandServer::zwp_relative_pointer_v1(resource)
-    , pointer(pointer)
+RelativePointerV1Interface::RelativePointerV1Interface(PointerInterface *pointer)
+    : pointer(pointer)
 {
-    pointer->d_func()->registerRelativePointerV1(this);
 }
 
-RelativePointerV1Interface::~RelativePointerV1Interface()
+RelativePointerV1Interface *RelativePointerV1Interface::get(PointerInterface *pointer)
 {
     if (pointer) {
-        pointer->d_func()->unregisterRelativePointerV1(this);
+        PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer);
+        return pointerPrivate->relativePointersV1.data();
     }
-}
-
-void RelativePointerV1Interface::zwp_relative_pointer_v1_destroy_resource(Resource *resource)
-{
-    Q_UNUSED(resource)
-    delete this;
+    return nullptr;
 }
 
 void RelativePointerV1Interface::zwp_relative_pointer_v1_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
+}
+
+void RelativePointerV1Interface::sendRelativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
+{
+    if (!pointer->focusedSurface()) {
+        return;
+    }
+
+    ClientConnection *focusedClient = pointer->focusedSurface()->client();
+    const QList<Resource *> pointerResources = resourceMap().values(focusedClient->client());
+    for (Resource *pointerResource : pointerResources) {
+        if (pointerResource->client() == focusedClient->client()) {
+            send_relative_motion(pointerResource->handle, microseconds >> 32, microseconds & 0xffffffff,
+                                 wl_fixed_from_double(delta.width()),
+                                 wl_fixed_from_double(delta.height()),
+                                 wl_fixed_from_double(deltaNonAccelerated.width()),
+                                 wl_fixed_from_double(deltaNonAccelerated.height()));
+
+        }
+    }
 }
 
 } // namespace KWaylandServer

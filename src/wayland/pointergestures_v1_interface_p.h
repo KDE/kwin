@@ -14,8 +14,10 @@
 namespace KWaylandServer
 {
 
+class ClientConnection;
 class Display;
 class PointerInterface;
+class SurfaceInterface;
 
 class PointerGesturesV1InterfacePrivate : public QtWaylandServer::zwp_pointer_gestures_v1
 {
@@ -33,27 +35,41 @@ protected:
 class PointerSwipeGestureV1Interface : public QtWaylandServer::zwp_pointer_gesture_swipe_v1
 {
 public:
-    PointerSwipeGestureV1Interface(PointerInterface *pointer, ::wl_resource *resource);
-    ~PointerSwipeGestureV1Interface() override;
+    explicit PointerSwipeGestureV1Interface(PointerInterface *pointer);
 
-    QPointer<PointerInterface> pointer;
+    static PointerSwipeGestureV1Interface *get(PointerInterface *pointer);
+
+    void sendBegin(quint32 serial, quint32 fingerCount);
+    void sendUpdate(const QSizeF &delta);
+    void sendEnd(quint32 serial);
+    void sendCancel(quint32 serial);
 
 protected:
-    void zwp_pointer_gesture_swipe_v1_destroy_resource(Resource *resource) override;
     void zwp_pointer_gesture_swipe_v1_destroy(Resource *resource) override;
+
+private:
+    PointerInterface *pointer;
+    QPointer<ClientConnection> focusedClient;
 };
 
 class PointerPinchGestureV1Interface : public QtWaylandServer::zwp_pointer_gesture_pinch_v1
 {
 public:
-    PointerPinchGestureV1Interface(PointerInterface *pointer, ::wl_resource *resource);
-    ~PointerPinchGestureV1Interface() override;
+    explicit PointerPinchGestureV1Interface(PointerInterface *pointer);
 
-    QPointer<PointerInterface> pointer;
+    static PointerPinchGestureV1Interface *get(PointerInterface *pointer);
+
+    void sendBegin(quint32 serial, quint32 fingerCount);
+    void sendUpdate(const QSizeF &delta, qreal scale, qreal rotation);
+    void sendEnd(quint32 serial);
+    void sendCancel(quint32 serial);
 
 protected:
-    void zwp_pointer_gesture_pinch_v1_destroy_resource(Resource *resource) override;
     void zwp_pointer_gesture_pinch_v1_destroy(Resource *resource) override;
+
+private:
+    PointerInterface *pointer;
+    QPointer<ClientConnection> focusedClient;
 };
 
 } // namespace KWaylandServer

@@ -254,12 +254,14 @@ void TestDataDevice::testDrag()
     if (!hasGrab) {
         // in case we don't have grab, still generate a pointer serial to make it more interesting
         m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+        m_seatInterface->pointerFrame();
     }
     if (hasPointerFocus) {
         m_seatInterface->setFocusedPointerSurface(surfaceInterface);
     }
     if (hasGrab) {
         m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+        m_seatInterface->pointerFrame();
     }
 
     // TODO: This test would be better, if it could also test that a client trying to guess
@@ -333,12 +335,14 @@ void TestDataDevice::testDragInternally()
     if (!hasGrab) {
         // in case we don't have grab, still generate a pointer serial to make it more interesting
         m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+        m_seatInterface->pointerFrame();
     }
     if (hasPointerFocus) {
         m_seatInterface->setFocusedPointerSurface(surfaceInterface);
     }
     if (hasGrab) {
         m_seatInterface->pointerButtonPressed(Qt::LeftButton);
+        m_seatInterface->pointerFrame();
     }
 
     // TODO: This test would be better, if it could also test that a client trying to guess

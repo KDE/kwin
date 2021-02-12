@@ -90,10 +90,13 @@ enum class PointerAxisSource {
  * seat->setFocusedPointerSurface(surface, QPointF(100, 200)); // surface at it's global position
  * seat->setTimestamp(100);
  * seat->setPointerPos(QPointF(350, 210)); // global pos, local pos in surface: 250,10
+ * seat->pointerFrame();
  * seat->setTimestamp(110);
  * seat->pointerButtonPressed(Qt::LeftButton);
+ * seat->pointerFrame();
  * seat->setTimestamp(120);
  * seat->pointerButtonReleased(Qt::LeftButton);
+ * seat->pointerFrame();
  * @endcode
  *
  * @see KeyboardInterface
@@ -191,12 +194,6 @@ public:
      **/
     SurfaceInterface *dragSurface() const;
     /**
-     * @returns The PointerInterface which triggered the drag operation
-     * @since 5.6
-     * @see isDragPointer
-     **/
-    PointerInterface *dragPointer() const;
-    /**
      * @returns The DataDeviceInterface which started the drag and drop operation.
      * @see isDrag
      * @since 5.6
@@ -291,11 +288,7 @@ public:
      * @see setFocusedPointerSurface
      **/
     SurfaceInterface *focusedPointerSurface() const;
-    /**
-     * @returns The PointerInterface belonging to the focused pointer surface, if any.
-     * @see setFocusedPointerSurface
-     **/
-    PointerInterface *focusedPointer() const;
+    PointerInterface *pointer() const;
     /**
      * Updates the global position of the currently focused pointer surface.
      *
@@ -348,6 +341,7 @@ public:
      * @overload
      **/
     void pointerButtonPressed(Qt::MouseButton button);
+    void pointerFrame();
     /**
      * Marks the @p button as released.
      *
@@ -384,13 +378,8 @@ public:
      * @param discreteDelta The number of discrete steps, e.g. mouse wheel clicks.
      * @param source Describes how the axis event was physically generated.
      * @since 5.59
-     * @todo Drop V5 suffix with KF6.
      **/
-    void pointerAxisV5(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
-    /**
-     * @see pointerAxisV5
-     **/
-    void pointerAxis(Qt::Orientation orientation, quint32 delta);
+    void pointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     /**
      * @returns true if there is a pressed button with the given @p serial
      * @since 5.6
@@ -664,15 +653,8 @@ Q_SIGNALS:
     void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
     void timestampChanged(quint32);
 
-    void pointerCreated(KWaylandServer::PointerInterface*);
     void keyboardCreated(KWaylandServer::KeyboardInterface*);
     void touchCreated(KWaylandServer::TouchInterface*);
-
-    /**
-     * Emitted whenever the focused pointer changes
-     * @since 5.6
-     **/
-    void focusedPointerChanged(KWaylandServer::PointerInterface*);
 
     /**
      * Emitted whenever the selection changes
