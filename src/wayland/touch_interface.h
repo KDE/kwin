@@ -1,44 +1,50 @@
 /*
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Adrien Faveraux <ad1rie3@hotmail.fr>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef WAYLAND_SERVER_TOUCH_INTERFACE_H
-#define WAYLAND_SERVER_TOUCH_INTERFACE_H
+
+#pragma once
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "resource.h"
+#include <QObject>
 
 namespace KWaylandServer
 {
 
 class SeatInterface;
+class SurfaceInterface;
+class TouchInterfacePrivate;
 
 /**
- * @brief Resource for the wl_touch interface.
- *
- **/
-class KWAYLANDSERVER_EXPORT TouchInterface : public Resource
+ * The TouchInterface class repserents a touchscreen associated with a wl_seat. It
+ * corresponds to the Wayland interface @c wl_touch.
+ */
+class KWAYLANDSERVER_EXPORT TouchInterface : public QObject
 {
     Q_OBJECT
+
 public:
-    virtual ~TouchInterface();
+    ~TouchInterface() override;
+
+    SurfaceInterface *focusedSurface() const;
+    void setFocusedSurface(SurfaceInterface *surface);
+
+    void sendDown(qint32 id, quint32 serial, const QPointF &localPos);
+    void sendUp(qint32 id, quint32 serial);
+    void sendFrame();
+    void sendCancel();
+    void sendMotion(qint32 id, const QPointF &localPos);
 
 private:
-    void down(qint32 id, quint32 serial, const QPointF &localPos);
-    void up(qint32 id, quint32 serial);
-    void frame();
-    void cancel();
-    void move(qint32 id, const QPointF &localPos);
+    explicit TouchInterface(SeatInterface *seat);
+    QScopedPointer<TouchInterfacePrivate> d;
+
     friend class SeatInterface;
-    explicit TouchInterface(SeatInterface *parent, wl_resource *parentResource);
-    class Private;
-    Private *d_func() const;
+    friend class TouchInterfacePrivate;
 };
 
-}
-
-Q_DECLARE_METATYPE(KWaylandServer::TouchInterface*)
-
-#endif
+} // namespace KWaylandServer

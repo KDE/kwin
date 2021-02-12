@@ -27,6 +27,7 @@
 #include "surface_interface.h"
 #include "textinput_v2_interface_p.h"
 #include "textinput_v3_interface_p.h"
+#include "touch_interface_p.h"
 // Qt
 #include <QFile>
 // Wayland
@@ -183,64 +184,6 @@ SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
     return r ? reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r)) : nullptr;
 }
 
-namespace {
-template <typename T>
-static
-T *interfaceForSurface(SurfaceInterface *surface, const QVector<T*> &interfaces)
-{
-    if (!surface) {
-        return nullptr;
-    }
-
-    for (auto it = interfaces.constBegin(); it != interfaces.constEnd(); ++it) {
-        if ((*it)->client() == surface->client()) {
-            return (*it);
-        }
-    }
-    return nullptr;
-}
-
-template <typename T>
-static
-QVector<T *> interfacesForSurface(SurfaceInterface *surface, const QVector<T*> &interfaces)
-{
-    QVector<T *> ret;
-    if (!surface) {
-        return ret;
-    }
-
-    for (auto it = interfaces.constBegin(); it != interfaces.constEnd(); ++it) {
-        if ((*it)->client() == surface->client() && (*it)->resource()) {
-            ret << *it;
-        }
-    }
-    return ret;
-}
-
-template <typename T>
-static
-bool forEachInterface(SurfaceInterface *surface, const QVector<T*> &interfaces, std::function<void (T*)> method)
-{
-    if (!surface) {
-        return false;
-    }
-    bool calledAtLeastOne = false;
-    for (auto it = interfaces.constBegin(); it != interfaces.constEnd(); ++it) {
-        if ((*it)->client() == surface->client() && (*it)->resource()) {
-            method(*it);
-            calledAtLeastOne = true;
-        }
-    }
-    return calledAtLeastOne;
-}
-
-}
-
-QVector<TouchInterface *> SeatInterface::Private::touchsForSurface(SurfaceInterface *surface) const
-{
-    return interfacesForSurface(surface, touchs);
-}
-
 QVector<DataDeviceInterface *> SeatInterface::Private::dataDevicesForSurface(SurfaceInterface *surface) const
 {
     if (!surface) {
@@ -283,7 +226,6 @@ void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
                 drag.transformation = globalPointer.focus.transformation;
             } else if (q->hasImplicitTouchGrab(dragSerial)) {
                 drag.mode = Drag::Mode::Touch;
-                drag.sourceTouch = interfaceForSurface(dragSurface, touchs);
                 // TODO: touch transformation
             } else {
                 // no implicit grab, abort drag
@@ -490,10 +432,15 @@ void SeatInterface::setHasPointer(bool has)
 void SeatInterface::setHasTouch(bool has)
 {
     Q_D();
-    if (d->touch == has) {
+    if (d->touch.isNull() != has) {
         return;
     }
-    d->touch = has;
+    if (has) {
+        d->touch.reset(new TouchInterface(this));
+    } else {
+        d->touch.reset();
+    }
+
     emit hasTouchChanged(d->touch);
 }
 
@@ -542,30 +489,10 @@ void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *re
 
 void SeatInterface::Private::getTouch(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    // TODO: only create if seat has touch?
-    TouchInterface *touch = new TouchInterface(q, resource);
-    auto clientConnection = display->getConnection(client);
-    touch->create(clientConnection, qMin(wl_resource_get_version(resource), s_touchVersion), id);
-    if (!touch->resource()) {
-        wl_resource_post_no_memory(resource);
-        delete touch;
-        return;
+    if (touch) {
+        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.data());
+        touchPrivate->add(client, id, wl_resource_get_version(resource));
     }
-    touchs << touch;
-    if (globalTouch.focus.surface && globalTouch.focus.surface->client() == clientConnection) {
-        // this is a touch for the currently focused touch surface
-        globalTouch.focus.touchs << touch;
-        if (!globalTouch.ids.isEmpty()) {
-            // TODO: send out all the points
-        }
-    }
-    QObject::connect(touch, &QObject::destroyed, q,
-        [touch,this] {
-            touchs.removeAt(touchs.indexOf(touch));
-            globalTouch.focus.touchs.removeOne(touch);
-        }
-    );
-    emit q->touchCreated(touch);
 }
 
 QString SeatInterface::name() const
@@ -1117,23 +1044,14 @@ KeyboardInterface *SeatInterface::keyboard() const
 void SeatInterface::cancelTouchSequence()
 {
     Q_D();
-    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
-        (*it)->cancel();
-    }
+    Q_ASSERT(d->touch);
+    d->touch->sendCancel();
+
     if (d->drag.mode == Private::Drag::Mode::Touch) {
         // cancel the drag, don't drop. serial does not matter
         d->cancelDrag(0);
     }
     d->globalTouch.ids.clear();
-}
-
-TouchInterface *SeatInterface::focusedTouch() const
-{
-    Q_D();
-    if (d->globalTouch.focus.touchs.isEmpty()) {
-        return nullptr;
-    }
-    return d->globalTouch.focus.touchs.first();
 }
 
 SurfaceInterface *SeatInterface::focusedTouchSurface() const
@@ -1154,13 +1072,21 @@ bool SeatInterface::isTouchSequence() const
     return !d->globalTouch.ids.isEmpty();
 }
 
+TouchInterface *SeatInterface::touch() const
+{
+    Q_D();
+    return d->touch.data();
+}
+
 void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
 {
     if (isTouchSequence()) {
         // changing surface not allowed during a touch sequence
         return;
     }
-    Q_ASSERT(!isDragTouch());
+    if (isDragTouch()) {
+        return;
+    }
     Q_D();
     if (d->globalTouch.focus.surface) {
         disconnect(d->globalTouch.focus.destroyConnection);
@@ -1168,21 +1094,17 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
     d->globalTouch.focus = Private::Touch::Focus();
     d->globalTouch.focus.surface = surface;
     d->globalTouch.focus.offset = surfacePosition;
-    d->globalTouch.focus.touchs = d->touchsForSurface(surface);
     if (d->globalTouch.focus.surface) {
-        d->globalTouch.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
-            [this] {
-                Q_D();
-                if (isTouchSequence()) {
-                    // Surface destroyed during touch sequence - send a cancel
-                    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
-                        (*it)->cancel();
-                    }
-                }
-                d->globalTouch.focus = Private::Touch::Focus();
+        d->globalTouch.focus.destroyConnection = connect(surface, &QObject::destroyed, this, [this]() {
+            Q_D();
+            if (isTouchSequence()) {
+                // Surface destroyed during touch sequence - send a cancel
+                d->touch->sendCancel();
             }
-        );
+            d->globalTouch.focus = Private::Touch::Focus();
+        });
     }
+    d->touch->setFocusedSurface(surface);
 }
 
 void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePosition)
@@ -1194,23 +1116,25 @@ void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePositio
 void SeatInterface::touchDown(qint32 id, const QPointF &globalPosition)
 {
     Q_D();
+    Q_ASSERT(d->touch);
     const qint32 serial = display()->nextSerial();
     const auto pos = globalPosition - d->globalTouch.focus.offset;
-    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
-        (*it)->down(id, serial, pos);
-    }
+    d->touch->sendDown(id, serial, pos);
 
     if (id == 0) {
         d->globalTouch.focus.firstTouchPos = globalPosition;
     }
 
 #if HAVE_LINUX_INPUT_H
-    if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
-        // If the client did not bind the touch interface fall back
-        // to at least emulating touch through pointer events.
-        d->pointer->setFocusedSurface(focusedTouchSurface(), pos, serial);
-        d->pointer->sendMotion(pos);
-        d->pointer->sendFrame();
+    if (id == 0 && hasPointer() && focusedTouchSurface()) {
+        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
+        if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
+            // If the client did not bind the touch interface fall back
+            // to at least emulating touch through pointer events.
+            d->pointer->setFocusedSurface(focusedTouchSurface(), pos, serial);
+            d->pointer->sendMotion(pos);
+            d->pointer->sendFrame();
+        }
     }
 #endif
 
@@ -1220,20 +1144,27 @@ void SeatInterface::touchDown(qint32 id, const QPointF &globalPosition)
 void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
 {
     Q_D();
+    Q_ASSERT(d->touch);
     Q_ASSERT(d->globalTouch.ids.contains(id));
+
     const auto pos = globalPosition - d->globalTouch.focus.offset;
-    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
-        (*it)->move(id, pos);
+    if (isDragTouch()) {
+        // handled by DataDevice
+    } else {
+        d->touch->sendMotion(id, pos);
     }
 
     if (id == 0) {
         d->globalTouch.focus.firstTouchPos = globalPosition;
-    }
 
-    if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
-        // Client did not bind touch, fall back to emulating with pointer events.
-        d->pointer->sendMotion(pos);
-        d->pointer->sendFrame();
+        if (hasPointer() && focusedTouchSurface()) {
+            TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
+            if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
+                // Client did not bind touch, fall back to emulating with pointer events.
+                d->pointer->sendMotion(pos);
+                d->pointer->sendFrame();
+            }
+        }
     }
     emit touchMoved(id, d->globalTouch.ids[id], globalPosition);
 }
@@ -1241,6 +1172,7 @@ void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
 void SeatInterface::touchUp(qint32 id)
 {
     Q_D();
+    Q_ASSERT(d->touch);
     Q_ASSERT(d->globalTouch.ids.contains(id));
     const qint32 serial = display()->nextSerial();
     if (d->drag.mode == Private::Drag::Mode::Touch &&
@@ -1248,16 +1180,17 @@ void SeatInterface::touchUp(qint32 id)
         // the implicitly grabbing touch point has been upped
         d->endDrag(serial);
     }
-    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
-        (*it)->up(id, serial);
-    }
+    d->touch->sendUp(id, serial);
 
 #if HAVE_LINUX_INPUT_H
-    if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
-        // Client did not bind touch, fall back to emulating with pointer events.
-        const quint32 serial = display()->nextSerial();
-        d->pointer->sendRelease(BTN_LEFT, serial);
-        d->pointer->sendFrame();
+    if (id == 0 && hasPointer() && focusedTouchSurface()) {
+        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.data());
+        if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
+            // Client did not bind touch, fall back to emulating with pointer events.
+            const quint32 serial = display()->nextSerial();
+            d->pointer->sendRelease(BTN_LEFT, serial);
+            d->pointer->sendFrame();
+        }
     }
 #endif
 
@@ -1267,9 +1200,8 @@ void SeatInterface::touchUp(qint32 id)
 void SeatInterface::touchFrame()
 {
     Q_D();
-    for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
-        (*it)->frame();
-    }
+    Q_ASSERT(d->touch);
+    d->touch->sendFrame();
 }
 
 bool SeatInterface::hasImplicitTouchGrab(quint32 serial) const

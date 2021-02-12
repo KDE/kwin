@@ -34,7 +34,6 @@ public:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
-    QVector<TouchInterface *> touchsForSurface(SurfaceInterface *surface) const;
     QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
@@ -44,12 +43,11 @@ public:
     quint32 nextSerial() const;
 
     QString name;
-    bool touch = false;
     QList<wl_resource*> resources;
     quint32 timestamp = 0;
     QScopedPointer<KeyboardInterface> keyboard;
     QScopedPointer<PointerInterface> pointer;
-    QVector<TouchInterface*> touchs;
+    QScopedPointer<TouchInterface> touch;
     QVector<DataDeviceInterface*> dataDevices;
     QVector<PrimarySelectionDeviceV1Interface*> primarySelectionDevices;
     QVector<DataControlDeviceV1Interface*> dataControlDevices;
@@ -104,7 +102,6 @@ public:
     struct Touch {
         struct Focus {
             SurfaceInterface *surface = nullptr;
-            QVector<TouchInterface*> touchs;
             QMetaObject::Connection destroyConnection;
             QPointF offset = QPointF();
             QPointF firstTouchPos;
@@ -124,7 +121,6 @@ public:
         DataDeviceInterface *source = nullptr;
         QPointer<DataDeviceInterface> target;
         SurfaceInterface *surface = nullptr;
-        TouchInterface *sourceTouch = nullptr;
         QMatrix4x4 transformation;
         QMetaObject::Connection destroyConnection;
         QMetaObject::Connection dragSourceDestroyConnection;

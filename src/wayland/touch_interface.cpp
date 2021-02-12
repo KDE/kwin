@@ -1,112 +1,120 @@
 /*
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2020 Adrien Faveraux <ad1rie3@hotmail.fr>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "touch_interface.h"
-#include "resource_p.h"
-#include "seat_interface.h"
+#include "clientconnection.h"
 #include "display.h"
+#include "seat_interface.h"
 #include "surface_interface.h"
-// Wayland
-#include <wayland-server.h>
+#include "touch_interface_p.h"
 
 namespace KWaylandServer
 {
 
-class TouchInterface::Private : public Resource::Private
+TouchInterfacePrivate *TouchInterfacePrivate::get(TouchInterface *touch)
 {
-public:
-    Private(SeatInterface *parent, wl_resource *parentResource, TouchInterface *q);
+    return touch->d.data();
+}
 
-    SeatInterface *seat;
-    QMetaObject::Connection destroyConnection;
-
-private:
-    TouchInterface *q_func() {
-        return reinterpret_cast<TouchInterface *>(q);
-    }
-
-    static const struct wl_touch_interface s_interface;
-};
-
-#ifndef K_DOXYGEN
-const struct wl_touch_interface TouchInterface::Private::s_interface = {
-    resourceDestroyedCallback
-};
-#endif
-
-TouchInterface::Private::Private(SeatInterface *parent, wl_resource *parentResource, TouchInterface *q)
-    : Resource::Private(q, parent, parentResource, &wl_touch_interface, &s_interface)
-    , seat(parent)
+TouchInterfacePrivate::TouchInterfacePrivate(TouchInterface *q, SeatInterface *seat)
+    : q(q)
+    , seat(seat)
 {
 }
 
-TouchInterface::TouchInterface(SeatInterface *parent, wl_resource *parentResource)
-    : Resource(new Private(parent, parentResource, this))
+void TouchInterfacePrivate::touch_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+QList<TouchInterfacePrivate::Resource *> TouchInterfacePrivate::touchesForClient(ClientConnection *client) const
+{
+    return resourceMap().values(client->client());
+}
+
+TouchInterface::TouchInterface(SeatInterface *seat)
+    : d(new TouchInterfacePrivate(this, seat))
 {
 }
 
-TouchInterface::~TouchInterface() = default;
-
-void TouchInterface::cancel()
+TouchInterface::~TouchInterface()
 {
-    Q_D();
-    if (!d->resource) {
+}
+
+SurfaceInterface *TouchInterface::focusedSurface() const
+{
+    return d->focusedSurface;
+}
+
+void TouchInterface::setFocusedSurface(SurfaceInterface *surface)
+{
+    d->focusedSurface = surface;
+}
+
+void TouchInterface::sendCancel()
+{
+    if (!d->focusedSurface) {
         return;
     }
-    wl_touch_send_cancel(d->resource);
-    d->client->flush();
+
+    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_cancel(resource->handle);
+    }
 }
 
-void TouchInterface::frame()
+void TouchInterface::sendFrame()
 {
-    Q_D();
-    if (!d->resource) {
+    if (!d->focusedSurface) {
         return;
     }
-    wl_touch_send_frame(d->resource);
-    d->client->flush();
+
+    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_frame(resource->handle);
+    }
 }
 
-void TouchInterface::move(qint32 id, const QPointF &localPos)
+void TouchInterface::sendMotion(qint32 id, const QPointF &localPos)
 {
-    Q_D();
-    if (!d->resource) {
+    if (!d->focusedSurface) {
         return;
     }
-    if (d->seat->isDragTouch()) {
-        // handled by DataDevice
+
+    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_motion(resource->handle, d->seat->timestamp(), id,
+                       wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
+    }
+}
+
+void TouchInterface::sendUp(qint32 id, quint32 serial)
+{
+    if (!d->focusedSurface) {
         return;
     }
-    wl_touch_send_motion(d->resource, d->seat->timestamp(), id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
-    d->client->flush();
+
+    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_up(resource->handle, serial, d->seat->timestamp(), id);
+    }
 }
 
-void TouchInterface::up(qint32 id, quint32 serial)
+void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos)
 {
-    Q_D();
-    if (!d->resource) {
+    if (!d->focusedSurface) {
         return;
     }
-    wl_touch_send_up(d->resource, serial, d->seat->timestamp(), id);
-    d->client->flush();
-}
 
-void TouchInterface::down(qint32 id, quint32 serial, const QPointF &localPos)
-{
-    Q_D();
-    if (!d->resource) {
-        return;
+    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_down(resource->handle, serial, d->seat->timestamp(), d->focusedSurface->resource(),
+                     id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     }
-    wl_touch_send_down(d->resource, serial, d->seat->timestamp(), d->seat->focusedTouchSurface()->resource(),
-                       id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
-    d->client->flush();
 }
 
-TouchInterface::Private *TouchInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
-}
-
-}
+} // namespace KWaylandServer

@@ -75,7 +75,6 @@ private Q_SLOTS:
     void testSelection();
     void testDataDeviceForKeyboardSurface();
     void testTouch();
-    void testDisconnect();
     void testKeymap();
 
 private:
@@ -1963,16 +1962,13 @@ void TestWaylandSeat::testTouch()
     m_seatInterface->setFocusedTouchSurface(serverSurface);
     // no keyboard yet
     QCOMPARE(m_seatInterface->focusedTouchSurface(), serverSurface);
-    QVERIFY(!m_seatInterface->focusedTouch());
 
-    QSignalSpy touchCreatedSpy(m_seatInterface, &KWaylandServer::SeatInterface::touchCreated);
-    QVERIFY(touchCreatedSpy.isValid());
     Touch *touch = m_seat->createTouch(m_seat);
     QVERIFY(touch->isValid());
-    QVERIFY(touchCreatedSpy.wait());
-    auto serverTouch = m_seatInterface->focusedTouch();
-    QVERIFY(serverTouch);
-    QCOMPARE(touchCreatedSpy.first().first().value<KWaylandServer::TouchInterface*>(), m_seatInterface->focusedTouch());
+
+    // Process wl_touch bind request.
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
 
     QSignalSpy sequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
     QVERIFY(sequenceStartedSpy.isValid());
@@ -2130,82 +2126,6 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 3);
     QCOMPARE(touch->sequence().first()->position(), QPointF(0, 0));
-
-    // destroy touch on client side
-    QSignalSpy unboundSpy(serverTouch, &TouchInterface::unbound);
-    QVERIFY(unboundSpy.isValid());
-    QSignalSpy destroyedSpy(serverTouch, &TouchInterface::destroyed);
-    QVERIFY(destroyedSpy.isValid());
-    delete touch;
-    QVERIFY(unboundSpy.wait());
-    QCOMPARE(unboundSpy.count(), 1);
-    QCOMPARE(destroyedSpy.count(), 0);
-    QVERIFY(!serverTouch->resource());
-    // try to call into all the methods of the touch interface, should not crash
-    QCOMPARE(m_seatInterface->focusedTouch(), serverTouch);
-    m_seatInterface->setTimestamp(8);
-    m_seatInterface->touchDown(0, QPointF(15, 26));
-    m_seatInterface->touchFrame();
-    m_seatInterface->touchMove(0, QPointF(0, 0));
-    m_seatInterface->touchDown(1, QPointF(15, 26));
-    m_seatInterface->cancelTouchSequence();
-    QVERIFY(destroyedSpy.wait());
-    QCOMPARE(destroyedSpy.count(), 1);
-    // should have unset the focused touch
-    QVERIFY(!m_seatInterface->focusedTouch());
-    // but not the focused touch surface
-    QCOMPARE(m_seatInterface->focusedTouchSurface(), serverSurface);
-}
-
-void TestWaylandSeat::testDisconnect()
-{
-    // this test verifies that disconnecting the client cleans up correctly
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
-    QSignalSpy keyboardCreatedSpy(m_seatInterface, &SeatInterface::keyboardCreated);
-    QVERIFY(keyboardCreatedSpy.isValid());
-    QSignalSpy touchCreatedSpy(m_seatInterface, &SeatInterface::touchCreated);
-    QVERIFY(touchCreatedSpy.isValid());
-
-    // create the things we need
-    m_seatInterface->setHasKeyboard(true);
-    m_seatInterface->setHasTouch(true);
-    QSignalSpy touchSpy(m_seat, &Seat::hasTouchChanged);
-    QVERIFY(touchSpy.isValid());
-    QVERIFY(touchSpy.wait());
-
-    QScopedPointer<Keyboard> keyboard(m_seat->createKeyboard());
-    QVERIFY(!keyboard.isNull());
-    QVERIFY(keyboardCreatedSpy.wait());
-    auto serverKeyboard = keyboardCreatedSpy.first().first().value<KeyboardInterface*>();
-    QVERIFY(serverKeyboard);
-
-    QScopedPointer<Touch> touch(m_seat->createTouch());
-    QVERIFY(!touch.isNull());
-    QVERIFY(touchCreatedSpy.wait());
-    auto serverTouch = touchCreatedSpy.first().first().value<TouchInterface*>();
-    QVERIFY(serverTouch);
-
-    // setup destroys
-    QSignalSpy keyboardDestroyedSpy(serverKeyboard, &QObject::destroyed);
-    QVERIFY(keyboardDestroyedSpy.isValid());
-    QSignalSpy touchDestroyedSpy(serverTouch, &QObject::destroyed);
-    QVERIFY(touchDestroyedSpy.isValid());
-
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
-
-    keyboard->destroy();
-    touch->destroy();
-    m_relativePointerManager->destroy();
-    m_pointerGestures->destroy();
-    m_compositor->destroy();
-    m_seat->destroy();
-    m_shm->destroy();
-    m_subCompositor->destroy();
-    m_queue->destroy();
 }
 
 void TestWaylandSeat::testKeymap()

@@ -553,7 +553,7 @@ public:
     ///@{
     void setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition = QPointF());
     SurfaceInterface *focusedTouchSurface() const;
-    TouchInterface *focusedTouch() const;
+    TouchInterface *touch() const;
     void setFocusedTouchSurfacePosition(const QPointF &surfacePosition);
     QPointF focusedTouchSurfacePosition() const;
     void touchDown(qint32 id, const QPointF &globalPosition);
@@ -654,7 +654,6 @@ Q_SIGNALS:
     void timestampChanged(quint32);
 
     void keyboardCreated(KWaylandServer::KeyboardInterface*);
-    void touchCreated(KWaylandServer::TouchInterface*);
 
     /**
      * Emitted whenever the selection changes
