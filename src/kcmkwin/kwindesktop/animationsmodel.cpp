@@ -19,13 +19,14 @@ AnimationsModel::AnimationsModel(QObject *parent)
 {
     connect(this, &EffectsModel::loaded, this,
         [this] {
-            setEnabled(modelCurrentEnabled());
-            setCurrentIndex(modelCurrentIndex());
+            setAnimationEnabled(modelAnimationEnabled());
+            setAnimationIndex(modelAnimationIndex());
+            loadDefaults();
         }
     );
-    connect(this, &AnimationsModel::currentIndexChanged, this,
+    connect(this, &AnimationsModel::animationIndexChanged, this,
         [this] {
-            const QModelIndex index_ = index(m_currentIndex, 0);
+            const QModelIndex index_ = index(m_animationIndex, 0);
             if (!index_.isValid()) {
                 return;
             }
@@ -38,35 +39,45 @@ AnimationsModel::AnimationsModel(QObject *parent)
     );
 }
 
-bool AnimationsModel::enabled() const
+bool AnimationsModel::animationEnabled() const
 {
-    return m_enabled;
+    return m_animationEnabled;
 }
 
-void AnimationsModel::setEnabled(bool enabled)
+void AnimationsModel::setAnimationEnabled(bool enabled)
 {
-    if (m_enabled != enabled) {
-        m_enabled = enabled;
-        emit enabledChanged();
+    if (m_animationEnabled != enabled) {
+        m_animationEnabled = enabled;
+        emit animationEnabledChanged();
     }
 }
 
-int AnimationsModel::currentIndex() const
+int AnimationsModel::animationIndex() const
 {
-    return m_currentIndex;
+    return m_animationIndex;
 }
 
-void AnimationsModel::setCurrentIndex(int index)
+void AnimationsModel::setAnimationIndex(int index)
 {
-    if (m_currentIndex != index) {
-        m_currentIndex = index;
-        emit currentIndexChanged();
+    if (m_animationIndex != index) {
+        m_animationIndex = index;
+        emit animationIndexChanged();
     }
 }
 
 bool AnimationsModel::currentConfigurable() const
 {
     return m_currentConfigurable;
+}
+
+bool AnimationsModel::defaultAnimationEnabled() const
+{
+    return m_defaultAnimationEnabled;
+}
+
+int AnimationsModel::defaultAnimationIndex() const
+{
+    return m_defaultAnimationIndex;
 }
 
 bool AnimationsModel::shouldStore(const EffectData &data) const
@@ -80,7 +91,21 @@ EffectsModel::Status AnimationsModel::status(int row) const
     return Status(data(index(row, 0), static_cast<int>(StatusRole)).toInt());
 }
 
-bool AnimationsModel::modelCurrentEnabled() const
+void AnimationsModel::loadDefaults()
+{
+    for (int i = 0; i < rowCount(); ++i) {
+        const QModelIndex rowIndex = index(i, 0);
+        if (rowIndex.data(EnabledByDefaultRole).toBool()) {
+            m_defaultAnimationEnabled = true;
+            m_defaultAnimationIndex = i;
+            emit defaultAnimationEnabledChanged();
+            emit defaultAnimationIndexChanged();
+            break;
+        }
+    }
+}
+
+bool AnimationsModel::modelAnimationEnabled() const
 {
     for (int i = 0; i < rowCount(); ++i) {
         if (status(i) != Status::Disabled) {
@@ -91,7 +116,7 @@ bool AnimationsModel::modelCurrentEnabled() const
     return false;
 }
 
-int AnimationsModel::modelCurrentIndex() const
+int AnimationsModel::modelAnimationIndex() const
 {
     for (int i = 0; i < rowCount(); ++i) {
         if (status(i) != Status::Disabled) {
@@ -110,7 +135,7 @@ void AnimationsModel::load()
 void AnimationsModel::save()
 {
     for (int i = 0; i < rowCount(); ++i) {
-        const auto status = (m_enabled && i == m_currentIndex)
+        const auto status = (m_animationEnabled && i == m_animationIndex)
             ? EffectsModel::Status::Enabled
             : EffectsModel::Status::Disabled;
         updateEffectStatus(index(i, 0), status);
@@ -122,14 +147,14 @@ void AnimationsModel::save()
 void AnimationsModel::defaults()
 {
     EffectsModel::defaults();
-    setEnabled(modelCurrentEnabled());
-    setCurrentIndex(modelCurrentIndex());
+    setAnimationEnabled(modelAnimationEnabled());
+    setAnimationIndex(modelAnimationIndex());
 }
 
 bool AnimationsModel::isDefaults() const
 {
-    // effect at m_currentIndex index may not be the current saved selected effect
-    const bool enabledByDefault = index(m_currentIndex, 0).data(EnabledByDefaultRole).toBool();
+    // effect at m_animationIndex index may not be the current saved selected effect
+    const bool enabledByDefault = index(m_animationIndex, 0).data(EnabledByDefaultRole).toBool();
     return enabledByDefault;
 }
 
@@ -143,7 +168,7 @@ bool AnimationsModel::needsSave() const
             index_.data(ServiceNameRole).toString() + QLatin1String("Enabled"),
             index_.data(EnabledByDefaultRole).toBool()
         );
-        const bool enabled = (m_enabled && i == m_currentIndex);
+        const bool enabled = (m_animationEnabled && i == m_animationIndex);
 
         if (enabled != enabledConfig) {
             return true;

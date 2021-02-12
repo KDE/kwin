@@ -8,13 +8,13 @@ import QtQuick 2.5
 import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Layouts 1.1
 
-import org.kde.kcm 1.2
+import org.kde.kcm 1.5 as KCM
 import org.kde.kirigami 2.10 as Kirigami
 
-ScrollViewKCM {
+KCM.ScrollViewKCM {
     id: root
 
-    ConfigModule.quickHelp: i18n("This module lets you configure the navigation, number and layout of virtual desktops.")
+    KCM.ConfigModule.quickHelp: i18n("This module lets you configure the navigation, number and layout of virtual desktops.")
 
     Connections {
         target: kcm.desktopsModel
@@ -49,7 +49,7 @@ ScrollViewKCM {
 
                     Layout.alignment: Qt.AlignVCenter
 
-                    text: model.display
+                    text: model ? model.display : ""
 
                     readOnly: true
 
@@ -58,11 +58,21 @@ ScrollViewKCM {
                         Qt.callLater(kcm.desktopsModel.setDesktopName, model.Id, text);
                     }
                 }
+
+                Rectangle {
+                    id: defaultIndicator
+                    radius: width * 0.5
+                    implicitWidth: Kirigami.Units.largeSpacing
+                    implicitHeight: Kirigami.Units.largeSpacing
+                    visible: kcm.defaultsIndicatorsVisible
+                    opacity: model ? !model.IsDefault : 0.0
+                    color: Kirigami.Theme.neutralTextColor
+                }
             }
 
         actions: [
             Kirigami.Action {
-                enabled: !model.IsMissing
+                enabled: model && !model.IsMissing
                 iconName: "edit-rename"
                 tooltip: i18nc("@info:tooltip", "Rename")
                 onTriggered: {
@@ -72,7 +82,7 @@ ScrollViewKCM {
                 }
             },
             Kirigami.Action {
-                enabled: !model.IsMissing
+                enabled: model && !model.IsMissing
                 iconName: "edit-delete-remove"
                 tooltip: i18nc("@info:tooltip", "Remove")
                 onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
@@ -92,7 +102,7 @@ ScrollViewKCM {
 
             text: kcm.desktopsModel.error
 
-            visible: kcm.desktopsModel.error != ""
+            visible: kcm.desktopsModel.error !== ""
         }
 
         Kirigami.InlineMessage {
@@ -143,11 +153,16 @@ ScrollViewKCM {
                 from: 1
                 to: 20
                 editable: true
+                value: kcm.desktopsModel.rows
 
                 textFromValue: function(value, locale) { return i18np("1 Row", "%1 Rows", value)}
                 valueFromText: function(text, locale) { return parseInt(text, 10); }
 
                 onValueModified: kcm.desktopsModel.rows = value
+
+                KCM.SettingHighlighter {
+                    highlight: kcm.desktopsModel.rows !== 2
+                }
             }
         }
 
@@ -162,6 +177,11 @@ ScrollViewKCM {
                 enabled: !kcm.virtualDesktopsSettings.isImmutable("rollOverDesktops")
                 checked: kcm.virtualDesktopsSettings.rollOverDesktops
                 onToggled: kcm.virtualDesktopsSettings.rollOverDesktops = checked
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.virtualDesktopsSettings
+                    settingName: "rollOverDesktops"
+                }
             }
 
             RowLayout {
@@ -175,9 +195,13 @@ ScrollViewKCM {
 
                     text: i18n("Show animation when switching:")
 
-                    checked: kcm.animationsModel.enabled
+                    checked: kcm.animationsModel.animationEnabled
 
-                    onToggled: kcm.animationsModel.enabled = checked
+                    onToggled: kcm.animationsModel.animationEnabled = checked
+
+                    KCM.SettingHighlighter {
+                        highlight: kcm.animationsModel.animationEnabled !== kcm.animationsModel.defaultAnimationEnabled
+                    }
                 }
 
                 QQC2.ComboBox {
@@ -185,8 +209,12 @@ ScrollViewKCM {
 
                     model: kcm.animationsModel
                     textRole: "NameRole"
-                    currentIndex: kcm.animationsModel.currentIndex
-                    onActivated: kcm.animationsModel.currentIndex = currentIndex
+                    currentIndex: kcm.animationsModel.animationIndex
+                    onActivated: kcm.animationsModel.animationIndex = currentIndex
+
+                    KCM.SettingHighlighter {
+                        highlight: kcm.animationsModel.animationIndex !== kcm.animationsModel.defaultAnimationIndex
+                    }
                 }
 
                 QQC2.Button {
@@ -218,17 +246,18 @@ ScrollViewKCM {
 
                     text: i18n("Show on-screen display when switching:")
 
-                    enabled: !kcm.virtualDesktopsSettings.isImmutable("desktopChangeOsdEnabled")
-
                     checked: kcm.virtualDesktopsSettings.desktopChangeOsdEnabled
 
                     onToggled: kcm.virtualDesktopsSettings.desktopChangeOsdEnabled = checked
+
+                    KCM.SettingStateBinding {
+                        configObject: kcm.virtualDesktopsSettings
+                        settingName: "desktopChangeOsdEnabled"
+                    }
                 }
 
                 QQC2.SpinBox {
                     id: osdDuration
-
-                    enabled: osdEnabled.checked && !kcm.virtualDesktopsSettings.isImmutable("popupHideDelay")
 
                     from: 0
                     to: 10000
@@ -239,6 +268,12 @@ ScrollViewKCM {
                     value: kcm.virtualDesktopsSettings.popupHideDelay
 
                     onValueModified: kcm.virtualDesktopsSettings.popupHideDelay = value
+
+                    KCM.SettingStateBinding {
+                        configObject: kcm.virtualDesktopsSettings
+                        settingName: "popupHideDelay"
+                        extraEnabledConditions: osdEnabled.checked
+                    }
                 }
             }
 
@@ -251,10 +286,15 @@ ScrollViewKCM {
 
                 QQC2.CheckBox {
                     id: osdTextOnly
-                    enabled: osdEnabled.checked && !kcm.virtualDesktopsSettings.isImmutable("textOnly")
                     text: i18n("Show desktop layout indicators")
                     checked: !kcm.virtualDesktopsSettings.textOnly
                     onToggled: kcm.virtualDesktopsSettings.textOnly = !checked
+
+                    KCM.SettingStateBinding {
+                        configObject: kcm.virtualDesktopsSettings
+                        settingName: "textOnly"
+                        extraEnabledConditions: osdEnabled.checked
+                    }
                 }
             }
         }

@@ -38,9 +38,9 @@ VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
 
     QObject::connect(m_desktopsModel, &KWin::DesktopsModel::userModifiedChanged,
         this, &VirtualDesktops::settingsChanged);
-    connect(m_animationsModel, &AnimationsModel::enabledChanged,
+    connect(m_animationsModel, &AnimationsModel::animationEnabledChanged,
         this, &VirtualDesktops::settingsChanged);
-    connect(m_animationsModel, &AnimationsModel::currentIndexChanged,
+    connect(m_animationsModel, &AnimationsModel::animationIndexChanged,
         this, &VirtualDesktops::settingsChanged);
 }
 
@@ -98,7 +98,7 @@ bool VirtualDesktops::isDefaults() const
 
 void VirtualDesktops::configureAnimation()
 {
-    const QModelIndex index = m_animationsModel->index(m_animationsModel->currentIndex(), 0);
+    const QModelIndex index = m_animationsModel->index(m_animationsModel->animationIndex(), 0);
     if (!index.isValid()) {
         return;
     }
@@ -108,7 +108,7 @@ void VirtualDesktops::configureAnimation()
 
 void VirtualDesktops::showAboutAnimation()
 {
-    const QModelIndex index = m_animationsModel->index(m_animationsModel->currentIndex(), 0);
+    const QModelIndex index = m_animationsModel->index(m_animationsModel->animationIndex(), 0);
     if (!index.isValid()) {
         return;
     }

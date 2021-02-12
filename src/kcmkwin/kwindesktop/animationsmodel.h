@@ -17,20 +17,25 @@ namespace KWin
 class AnimationsModel : public EffectsModel
 {
     Q_OBJECT
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(bool animationEnabled READ animationEnabled WRITE setAnimationEnabled NOTIFY animationEnabledChanged)
+    Q_PROPERTY(int animationIndex READ animationIndex WRITE setAnimationIndex NOTIFY animationIndexChanged)
     Q_PROPERTY(bool currentConfigurable READ currentConfigurable NOTIFY currentConfigurableChanged)
+    Q_PROPERTY(bool defaultAnimationEnabled READ defaultAnimationEnabled NOTIFY defaultAnimationEnabledChanged)
+    Q_PROPERTY(int defaultAnimationIndex READ defaultAnimationIndex NOTIFY defaultAnimationIndexChanged)
 
 public:
     explicit AnimationsModel(QObject *parent = nullptr);
 
-    bool enabled() const;
-    void setEnabled(bool enabled);
+    bool animationEnabled() const;
+    void setAnimationEnabled(bool enabled);
 
-    int currentIndex() const;
-    void setCurrentIndex(int index);
+    int animationIndex() const;
+    void setAnimationIndex(int index);
 
     bool currentConfigurable() const;
+
+    bool defaultAnimationEnabled() const;
+    int defaultAnimationIndex() const;
 
     void load();
     void save();
@@ -39,20 +44,25 @@ public:
     bool needsSave() const;
 
 Q_SIGNALS:
-    void enabledChanged();
-    void currentIndexChanged();
+    void animationEnabledChanged();
+    void animationIndexChanged();
     void currentConfigurableChanged();
+    void defaultAnimationEnabledChanged();
+    void defaultAnimationIndexChanged();
 
 protected:
     bool shouldStore(const EffectData &data) const override;
 
 private:
     Status status(int row) const;
-    bool modelCurrentEnabled() const;
-    int modelCurrentIndex() const;
+    void loadDefaults();
+    bool modelAnimationEnabled() const;
+    int modelAnimationIndex() const;
 
-    bool m_enabled = false;
-    int m_currentIndex = -1;
+    bool m_animationEnabled = false;
+    bool m_defaultAnimationEnabled = false;
+    int m_animationIndex = -1;
+    int m_defaultAnimationIndex = -1;
     bool m_currentConfigurable = false;
 
     Q_DISABLE_COPY(AnimationsModel)

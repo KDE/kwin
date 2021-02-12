@@ -121,6 +121,9 @@ QVariant DesktopsModel::data(const QModelIndex &index, int role) const
 
         return (index.row() / perRow) + 1;
 
+    } else if (role == IsDefault) {
+        // According to defaults(), first desktop is default
+        return index.row() == 0;
     }
 
     return QVariant();
@@ -176,6 +179,11 @@ void DesktopsModel::setRows(int rows)
     }
 }
 
+int DesktopsModel::desktopCount() const
+{
+    return rowCount();
+}
+
 void DesktopsModel::createDesktop(const QString &name)
 {
     if (!ready()) {
@@ -190,6 +198,7 @@ void DesktopsModel::createDesktop(const QString &name)
     m_names[dummyId] = name;
 
     endInsertRows();
+    emit desktopCountChanged();
 
     updateModifiedState();
 }
@@ -208,6 +217,7 @@ void DesktopsModel::removeDesktop(const QString &id)
     m_names.remove(id);
 
     endRemoveRows();
+    emit desktopCountChanged();
 
     updateModifiedState();
 }
@@ -384,7 +394,7 @@ void DesktopsModel::defaults()
         const auto desktop = m_desktops.takeLast();
         m_names.remove(desktop);
     }
-    m_rows = 2;
+    setRows(2);
 
     endResetModel();
 
@@ -397,7 +407,7 @@ void DesktopsModel::load()
     beginResetModel();
     m_desktops = m_serverSideDesktops;
     m_names = m_serverSideNames;
-    m_rows = m_serverSideRows;
+    setRows(m_serverSideRows);
     endResetModel();
 
     m_userModified = true;

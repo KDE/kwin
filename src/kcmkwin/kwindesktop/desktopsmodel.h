@@ -51,11 +51,13 @@ class DesktopsModel : public QAbstractListModel
     Q_PROPERTY(bool userModified READ userModified NOTIFY userModifiedChanged)
     Q_PROPERTY(bool serverModified READ serverModified NOTIFY serverModifiedChanged)
     Q_PROPERTY(int rows READ rows WRITE setRows NOTIFY rowsChanged)
+    Q_PROPERTY(int desktopCount READ desktopCount NOTIFY desktopCountChanged)
 
 public:
     enum AdditionalRoles {
         Id = Qt::UserRole + 1,
-        DesktopRow
+        DesktopRow,
+        IsDefault,
     };
     Q_ENUM(AdditionalRoles)
 
@@ -76,6 +78,8 @@ public:
     int rows() const;
     void setRows(int rows);
 
+    int desktopCount() const;
+
     Q_INVOKABLE void createDesktop(const QString &name);
     Q_INVOKABLE void removeDesktop(const QString &id);
     Q_INVOKABLE void setDesktopName(const QString &id, const QString &name);
@@ -93,6 +97,7 @@ Q_SIGNALS:
     void userModifiedChanged() const;
     void serverModifiedChanged() const;
     void rowsChanged() const;
+    void desktopCountChanged();
 
 protected Q_SLOTS:
     void reset();
