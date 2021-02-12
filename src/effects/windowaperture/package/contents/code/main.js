@@ -158,7 +158,7 @@ var badBadWindowsEffect = {
                         to: { value1: tx, value2: ty }
                     },{
                         type: Effect.Opacity,
-                        to: 0.2
+                        to: 0.0
                     }]
                 });
             } else {
@@ -176,7 +176,7 @@ var badBadWindowsEffect = {
                             from: { value1: tx, value2: ty }
                         },{
                             type: Effect.Opacity,
-                            from: 0.2
+                            from: 0.0
                         }]
                     });
                 }
