@@ -35,7 +35,6 @@ public:
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
     QVector<PointerInterface *> pointersForSurface(SurfaceInterface *surface) const;
-    QVector<KeyboardInterface *> keyboardsForSurface(SurfaceInterface *surface) const;
     QVector<TouchInterface *> touchsForSurface(SurfaceInterface *surface) const;
     QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
