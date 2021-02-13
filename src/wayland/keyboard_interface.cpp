@@ -26,11 +26,24 @@ KeyboardInterfacePrivate::KeyboardInterfacePrivate(SeatInterface *s)
 
 void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
 {
+    const ClientConnection *focusedClient = focusedSurface ? focusedSurface->client() : nullptr;
+
     if (resource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
         send_repeat_info(resource->handle, keyRepeat.charactersPerSecond, keyRepeat.delay);
     }
     if (!keymap.isNull()) {
         send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymap->handle(), keymap->size());
+    }
+
+    if (focusedClient && focusedClient->client() == resource->client()) {
+        const QVector<quint32> keys = pressedKeys();
+        const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(keys.data()),
+                                                            sizeof(quint32) * keys.count());
+        const quint32 serial = seat->display()->nextSerial();
+
+        send_enter(resource->handle, serial, focusedSurface->resource(), keysData);
+        send_modifiers(resource->handle, serial, modifiers.depressed, modifiers.latched,
+                       modifiers.locked, modifiers.group);
     }
 }
 
