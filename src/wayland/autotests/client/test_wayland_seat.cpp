@@ -1500,10 +1500,6 @@ void TestWaylandSeat::testKeyboard()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
-    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
-    // no keyboard yet
-    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
-
     QSignalSpy keyboardCreatedSpy(m_seatInterface,  &SeatInterface::keyboardCreated);
     QVERIFY(keyboardSpy.isValid());
 

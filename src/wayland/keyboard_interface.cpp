@@ -165,6 +165,10 @@ void KeyboardInterfacePrivate::sendModifiers()
 
 void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
+    if (d->focusedSurface == surface) {
+        return;
+    }
+
     d->sendLeave(d->focusedChildSurface, serial);
     disconnect(d->destroyConnection);
     d->focusedChildSurface.clear();
