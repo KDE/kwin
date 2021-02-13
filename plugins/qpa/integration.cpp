@@ -153,6 +153,7 @@ void Integration::handleOutputEnabled(AbstractOutput *output)
 {
     Screen *platformScreen = new Screen(output);
     QWindowSystemInterface::handleScreenAdded(platformScreen);
+    m_screens.insert(output, platformScreen);
 
     if (m_dummyScreen) {
         QWindowSystemInterface::handleScreenRemoved(m_dummyScreen);
