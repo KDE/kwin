@@ -191,6 +191,7 @@ Q_SIGNALS:
 private:
     friend class TextInputManagerV3InterfacePrivate;
     friend class SeatInterface;
+    friend class SeatInterfacePrivate;
     friend class TextInputV3InterfacePrivate;
     explicit TextInputV3Interface(SeatInterface *seat);
 

@@ -177,7 +177,6 @@ void TestInputMethodInterface::initTestCase()
     QVERIFY(m_display.isRunning());
 
     m_seat = new SeatInterface(&m_display, this);
-    m_seat->create();
     m_serverCompositor = new CompositorInterface(&m_display, this);
     m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
     m_inputPanelIface = new InputPanelV1Interface(&m_display, this);

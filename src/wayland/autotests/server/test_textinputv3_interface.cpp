@@ -121,7 +121,6 @@ void TestTextInputV3Interface::initTestCase()
 
     m_seat = new SeatInterface(&m_display, this);
     m_seat->setHasKeyboard(true);
-    m_seat->create();
 
     m_serverCompositor = new CompositorInterface(&m_display, this);
     new TextInputManagerV3Interface(&m_display);

@@ -7,6 +7,7 @@
 #include <QtTest>
 // WaylandServer
 #include "../../src/server/display.h"
+#include "../../src/server/keyboard_interface.h"
 #include "../../src/server/pointer_interface.h"
 #include "../../src/server/seat_interface.h"
 

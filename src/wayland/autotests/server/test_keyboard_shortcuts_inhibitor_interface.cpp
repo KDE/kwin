@@ -100,7 +100,6 @@ void TestKeyboardShortcutsInhibitorInterface::initTestCase()
     QVERIFY(m_display.isRunning());
 
     m_seat = new SeatInterface(&m_display, this);
-    m_seat->create();
     m_serverCompositor = new CompositorInterface(&m_display, this);
     m_manager = new KeyboardShortcutsInhibitManagerV1Interface(&m_display, this);
 

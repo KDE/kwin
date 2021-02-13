@@ -102,7 +102,8 @@ PrimarySelectionDeviceV1Interface::PrimarySelectionDeviceV1Interface(SeatInterfa
     : QObject()
     , d(new PrimarySelectionDeviceV1InterfacePrivate(this, seat, resource))
 {
-    seat->d_func()->registerPrimarySelectionDevice(this);
+    SeatInterfacePrivate *seatPrivate = SeatInterfacePrivate::get(seat);
+    seatPrivate->registerPrimarySelectionDevice(this);
 }
 
 PrimarySelectionDeviceV1Interface::~PrimarySelectionDeviceV1Interface() = default;

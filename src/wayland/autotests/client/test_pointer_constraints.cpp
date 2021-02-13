@@ -69,7 +69,6 @@ void TestPointerConstraints::init()
     m_display->createShm();
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasPointer(true);
-    m_seatInterface->create();
     m_compositorInterface = new CompositorInterface(m_display, m_display);
     m_pointerConstraintsInterface = new PointerConstraintsV1Interface(m_display, m_display);
 

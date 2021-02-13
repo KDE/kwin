@@ -1,19 +1,16 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #pragma once
 
+#include <KWaylandServer/kwaylandserver_export.h>
+
 #include <QObject>
 #include <QPoint>
 #include <QMatrix4x4>
-
-#include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
-#include "keyboard_interface.h"
-#include "pointer_interface.h"
-#include "touch_interface.h"
 
 struct wl_client;
 struct wl_resource;
@@ -21,12 +18,16 @@ struct wl_resource;
 namespace KWaylandServer
 {
 
-class DataDeviceInterface;
 class AbstractDataSource;
+class DataDeviceInterface;
 class Display;
+class KeyboardInterface;
+class PointerInterface;
+class SeatInterfacePrivate;
 class SurfaceInterface;
 class TextInputV2Interface;
 class TextInputV3Interface;
+class TouchInterface;
 
 /**
  * Describes the source types for axis events. This indicates to the
@@ -103,7 +104,7 @@ enum class PointerAxisSource {
  * @see TouchInterface
  * @see SurfaceInterface
  **/
-class KWAYLANDSERVER_EXPORT SeatInterface : public Global
+class KWAYLANDSERVER_EXPORT SeatInterface : public QObject
 {
     Q_OBJECT
     /**
@@ -139,6 +140,7 @@ public:
     explicit SeatInterface(Display *display, QObject *parent = nullptr);
     virtual ~SeatInterface();
 
+    Display *display() const;
     QString name() const;
     bool hasPointer() const;
     bool hasKeyboard() const;
@@ -692,14 +694,8 @@ Q_SIGNALS:
     void focusedTextInputSurfaceChanged();
 
 private:
-    friend class DataControlDeviceV1Interface;
-    friend class DataDeviceInterface;
-    friend class PrimarySelectionDeviceV1Interface;
-    friend class TextInputManagerV2InterfacePrivate;
-    friend class KeyboardInterface;
-
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<SeatInterfacePrivate> d;
+    friend class SeatInterfacePrivate;
 };
 
 }

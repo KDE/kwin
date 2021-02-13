@@ -96,7 +96,8 @@ DataControlDeviceV1Interface::DataControlDeviceV1Interface(SeatInterface *seat, 
     : QObject()
     , d(new DataControlDeviceV1InterfacePrivate(this, seat, resource))
 {
-    seat->d_func()->registerDataControlDevice(this);
+    SeatInterfacePrivate *seatPrivate = SeatInterfacePrivate::get(seat);
+    seatPrivate->registerDataControlDevice(this);
 }
 
 DataControlDeviceV1Interface::~DataControlDeviceV1Interface() = default;

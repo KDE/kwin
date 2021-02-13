@@ -70,7 +70,6 @@ void SelectionTest::init()
     m_compositorInterface = new CompositorInterface(m_display, m_display);
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
-    m_seatInterface->create();
     m_ddmInterface = new DataDeviceManagerInterface(m_display, m_display);
 
     // setup connection

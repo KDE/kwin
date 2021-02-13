@@ -162,8 +162,6 @@ void TestWaylandSeat::init()
     m_seatInterface = new SeatInterface(m_display);
     QVERIFY(m_seatInterface);
     m_seatInterface->setName(QStringLiteral("seat0"));
-    m_seatInterface->create();
-    QVERIFY(m_seatInterface->isValid());
     QVERIFY(seatSpy.wait());
 
     m_compositor = new KWayland::Client::Compositor(this);

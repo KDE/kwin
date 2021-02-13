@@ -262,6 +262,7 @@ Q_SIGNALS:
 private:
     friend class TextInputManagerV2InterfacePrivate;
     friend class SeatInterface;
+    friend class SeatInterfacePrivate;
     friend class TextInputV2InterfacePrivate;
     explicit TextInputV2Interface(SeatInterface *seat);
 

@@ -105,7 +105,6 @@ int main(int argc, char **argv)
 
     SeatInterface *seat = new SeatInterface(&display);
     seat->setName(QStringLiteral("testSeat0"));
-    seat->create();
 
     return app.exec();
 }

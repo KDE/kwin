@@ -78,7 +78,6 @@ void TextInputTest::init()
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasTouch(true);
-    m_seatInterface->create();
     m_compositorInterface = new CompositorInterface(m_display, m_display);
     m_textInputManagerV2Interface = new TextInputManagerV2Interface(m_display, m_display);
 

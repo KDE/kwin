@@ -81,8 +81,6 @@ void TestDragAndDrop::init()
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
-    m_seatInterface->create();
-    QVERIFY(m_seatInterface->isValid());
     m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
     m_display->createShm();
 

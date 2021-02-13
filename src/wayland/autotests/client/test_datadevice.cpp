@@ -110,8 +110,6 @@ void TestDataDevice::init()
 
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasPointer(true);
-    m_seatInterface->create();
-    QVERIFY(m_seatInterface->isValid());
 
     QVERIFY(seatSpy.wait());
     m_seat = registry.createSeat(seatSpy.first().first().value<quint32>(),

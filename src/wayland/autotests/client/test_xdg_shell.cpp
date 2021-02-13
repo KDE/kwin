@@ -103,7 +103,6 @@ void XdgShellTest::init()
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
-    m_seatInterface->create();
     m_compositorInterface = new CompositorInterface(m_display, m_display);
     m_xdgShellInterface = new XdgShellInterface(m_display, m_display);
 

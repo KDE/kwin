@@ -183,7 +183,8 @@ DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, wl_resource *resou
     : QObject(nullptr)
     , d(new DataDeviceInterfacePrivate(seat, this, resource))
 {
-    seat->d_func()->registerDataDevice(this);
+    SeatInterfacePrivate *seatPrivate = SeatInterfacePrivate::get(seat);
+    seatPrivate->registerDataDevice(this);
 }
 
 DataDeviceInterface::~DataDeviceInterface() = default;

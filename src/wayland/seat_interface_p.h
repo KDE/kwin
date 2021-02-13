@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -7,14 +8,13 @@
 
 // KWayland
 #include "seat_interface.h"
-#include "global_p.h"
 // Qt
 #include <QHash>
 #include <QMap>
 #include <QPointer>
 #include <QVector>
-// Wayland
-#include <wayland-server.h>
+
+#include "qwayland-server-wayland.h"
 
 namespace KWaylandServer
 {
@@ -27,24 +27,25 @@ class TextInputV2Interface;
 class TextInputV3Interface;
 class PrimarySelectionDeviceV1Interface;
 
-class SeatInterface::Private : public Global::Private
+class SeatInterfacePrivate : public QtWaylandServer::wl_seat
 {
 public:
-    Private(SeatInterface *q, Display *d);
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
-    void sendCapabilities(wl_resource *r);
-    void sendName(wl_resource *r);
+    static SeatInterfacePrivate *get(SeatInterface *seat);
+    SeatInterfacePrivate(SeatInterface *q, Display *display);
+
+    void sendCapabilities();
     QVector<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;
     void registerPrimarySelectionDevice(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
     void registerDataDevice(DataDeviceInterface *dataDevice);
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     void endDrag(quint32 serial);
     void cancelDrag(quint32 serial);
-    quint32 nextSerial() const;
 
+    SeatInterface *q;
+    QPointer<Display> display;
     QString name;
-    QList<wl_resource*> resources;
     quint32 timestamp = 0;
+    quint32 capabilities = 0;
     QScopedPointer<KeyboardInterface> keyboard;
     QScopedPointer<PointerInterface> pointer;
     QScopedPointer<TouchInterface> touch;
@@ -127,32 +128,16 @@ public:
     };
     Drag drag;
 
-    static SeatInterface *get(wl_resource *native) {
-        auto s = cast(native);
-        return s ? s->q : nullptr;
-    }
+protected:
+    void seat_bind_resource(Resource *resource) override;
+    void seat_get_pointer(Resource *resource, uint32_t id) override;
+    void seat_get_keyboard(Resource *resource, uint32_t id) override;
+    void seat_get_touch(Resource *resource, uint32_t id) override;
+    void seat_release(Resource *resource) override;
 
 private:
-    void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
-    void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
-    void getTouch(wl_client *client, wl_resource *resource, uint32_t id);
     void updateSelection(DataDeviceInterface *dataDevice);
     void updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
-    static Private *cast(wl_resource *r);
-    static void unbind(wl_resource *r);
-
-    // interface
-    static void getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void releaseCallback(wl_client *client, wl_resource *resource);
-    static const struct wl_seat_interface s_interface;
-    static const quint32 s_version;
-    static const qint32 s_pointerVersion;
-    static const qint32 s_touchVersion;
-    static const qint32 s_keyboardVersion;
-
-    SeatInterface *q;
 };
 
-}
+} // namespace KWaylandServer
