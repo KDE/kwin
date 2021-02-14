@@ -111,6 +111,7 @@ void TransferWltoX::startTransferFromSource()
 
 int TransferWltoX::flushSourceData()
 {
+    Q_ASSERT(!m_chunks.isEmpty());
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     xcb_change_property(xcbConn,
@@ -258,7 +259,7 @@ void TransferWltoX::handlePropertyDelete()
             xcb_flush(xcbConn);
             m_flushPropertyOnDelete = false;
             endTransfer();
-        } else {
+        } else if (!m_chunks.isEmpty()) {
             flushSourceData();
         }
     }
