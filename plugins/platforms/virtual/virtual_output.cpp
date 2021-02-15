@@ -53,10 +53,10 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.size = pixelSize;
     mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initInterfaces(QByteArray("model_").append(QString::number(m_identifier)),
-                   QByteArray("manufacturer_").append(QString::number(m_identifier)),
-                   QByteArray("UUID_").append(QString::number(m_identifier)),
-                   pixelSize, { mode }, QByteArray("EDID_").append(QString::number(m_identifier)));
+    initInterfaces(QByteArray("model_").append(QByteArray::number(m_identifier)),
+                   QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
+                   QByteArray("UUID_").append(QByteArray::number(m_identifier)),
+                   pixelSize, { mode }, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
     setGeometry(QRect(logicalPosition, pixelSize));
 }
 
