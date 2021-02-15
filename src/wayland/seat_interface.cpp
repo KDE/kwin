@@ -1250,10 +1250,9 @@ void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePositio
     d->globalTouch.focus.offset = surfacePosition;
 }
 
-qint32 SeatInterface::touchDown(const QPointF &globalPosition)
+void SeatInterface::touchDown(qint32 id, const QPointF &globalPosition)
 {
     Q_D();
-    const qint32 id = d->globalTouch.ids.isEmpty() ? 0 : d->globalTouch.ids.lastKey() + 1;
     const qint32 serial = display()->nextSerial();
     const auto pos = globalPosition - d->globalTouch.focus.offset;
     for (auto it = d->globalTouch.focus.touchs.constBegin(), end = d->globalTouch.focus.touchs.constEnd(); it != end; ++it) {
@@ -1284,7 +1283,6 @@ qint32 SeatInterface::touchDown(const QPointF &globalPosition)
 #endif
 
     d->globalTouch.ids[id] = serial;
-    return id;
 }
 
 void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)

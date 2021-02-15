@@ -305,7 +305,8 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QVERIFY(pointAddedSpy.isValid());
     m_seatInterface->setFocusedTouchSurface(serverSurface);
     m_seatInterface->setTimestamp(2);
-    const qint32 touchId = m_seatInterface->touchDown(QPointF(50,50));
+    const qint32 touchId = 0;
+    m_seatInterface->touchDown(touchId, QPointF(50,50));
     QVERIFY(sequenceStartedSpy.wait());
 
     QScopedPointer<TouchPoint> tp(sequenceStartedSpy.first().at(0).value<TouchPoint*>());

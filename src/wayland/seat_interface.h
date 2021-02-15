@@ -567,7 +567,7 @@ public:
     TouchInterface *focusedTouch() const;
     void setFocusedTouchSurfacePosition(const QPointF &surfacePosition);
     QPointF focusedTouchSurfacePosition() const;
-    qint32 touchDown(const QPointF &globalPosition);
+    void touchDown(qint32 id, const QPointF &globalPosition);
     void touchUp(qint32 id);
     void touchMove(qint32 id, const QPointF &globalPosition);
     void touchFrame();

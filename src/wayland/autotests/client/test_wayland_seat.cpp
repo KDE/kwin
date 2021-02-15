@@ -2000,7 +2000,7 @@ void TestWaylandSeat::testTouch()
     m_seatInterface->setFocusedTouchSurfacePosition(QPointF(10, 20));
     QCOMPARE(m_seatInterface->focusedTouchSurfacePosition(), QPointF(10, 20));
     m_seatInterface->setTimestamp(1);
-    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
+    m_seatInterface->touchDown(0, QPointF(15, 26));
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(sequenceEndedSpy.count(), 0);
@@ -2053,7 +2053,7 @@ void TestWaylandSeat::testTouch()
 
     // add onther point
     m_seatInterface->setTimestamp(3);
-    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 1);
+    m_seatInterface->touchDown(1, QPointF(15, 26));
     m_seatInterface->touchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -2101,7 +2101,7 @@ void TestWaylandSeat::testTouch()
 
     // send another down and up
     m_seatInterface->setTimestamp(5);
-    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 1);
+    m_seatInterface->touchDown(1, QPointF(15, 26));
     m_seatInterface->touchFrame();
     m_seatInterface->setTimestamp(6);
     m_seatInterface->touchUp(1);
@@ -2125,7 +2125,7 @@ void TestWaylandSeat::testTouch()
     // try cancel
     m_seatInterface->setFocusedTouchSurface(serverSurface, QPointF(15, 26));
     m_seatInterface->setTimestamp(7);
-    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
+    m_seatInterface->touchDown(0, QPointF(15, 26));
     m_seatInterface->touchFrame();
     m_seatInterface->cancelTouchSequence();
     QVERIFY(sequenceCanceledSpy.wait());
@@ -2151,10 +2151,10 @@ void TestWaylandSeat::testTouch()
     // try to call into all the methods of the touch interface, should not crash
     QCOMPARE(m_seatInterface->focusedTouch(), serverTouch);
     m_seatInterface->setTimestamp(8);
-    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
+    m_seatInterface->touchDown(0, QPointF(15, 26));
     m_seatInterface->touchFrame();
     m_seatInterface->touchMove(0, QPointF(0, 0));
-    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 1);
+    m_seatInterface->touchDown(1, QPointF(15, 26));
     m_seatInterface->cancelTouchSequence();
     QVERIFY(destroyedSpy.wait());
     QCOMPARE(destroyedSpy.count(), 1);
