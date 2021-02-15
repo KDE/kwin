@@ -136,25 +136,6 @@ void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *o
     // nothing to do
 }
 
-void TouchInputRedirection::insertId(qint32 internalId, qint32 kwaylandId)
-{
-    m_idMapper.insert(internalId, kwaylandId);
-}
-
-qint32 TouchInputRedirection::mappedId(qint32 internalId)
-{
-    auto it = m_idMapper.constFind(internalId);
-    if (it != m_idMapper.constEnd()) {
-        return it.value();
-    }
-    return -1;
-}
-
-void TouchInputRedirection::removeId(qint32 internalId)
-{
-    m_idMapper.remove(internalId);
-}
-
 void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device)
 {
     Q_UNUSED(device)
@@ -213,7 +194,6 @@ void TouchInputRedirection::cancel()
         return;
     }
     waylandServer()->seat()->cancelTouchSequence();
-    m_idMapper.clear();
 }
 
 void TouchInputRedirection::frame()

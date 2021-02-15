@@ -334,7 +334,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            input()->touch()->insertId(id, seat->touchDown(pos));
+            seat->touchDown(id, pos);
         }
         return true;
     }
@@ -345,10 +345,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            const qint32 kwaylandId = input()->touch()->mappedId(id);
-            if (kwaylandId != -1) {
-                seat->touchMove(kwaylandId, pos);
-            }
+            seat->touchMove(id, pos);
         }
         return true;
     }
@@ -359,11 +356,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            const qint32 kwaylandId = input()->touch()->mappedId(id);
-            if (kwaylandId != -1) {
-                seat->touchUp(kwaylandId);
-                input()->touch()->removeId(id);
-            }
+            seat->touchUp(id);
         }
         return true;
     }
@@ -1444,7 +1437,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        input()->touch()->insertId(id, seat->touchDown(pos));
+        seat->touchDown(id, pos);
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
@@ -1453,10 +1446,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        const qint32 kwaylandId = input()->touch()->mappedId(id);
-        if (kwaylandId != -1) {
-            seat->touchMove(kwaylandId, pos);
-        }
+        seat->touchMove(id, pos);
         return true;
     }
     bool touchUp(qint32 id, quint32 time) override {
@@ -1465,11 +1455,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        const qint32 kwaylandId = input()->touch()->mappedId(id);
-        if (kwaylandId != -1) {
-            seat->touchUp(kwaylandId);
-            input()->touch()->removeId(id);
-        }
+        seat->touchUp(id);
         return true;
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override {
@@ -1946,7 +1932,7 @@ public:
             return true;
         }
         seat->setTimestamp(time);
-        input()->touch()->insertId(id, seat->touchDown(pos));
+        seat->touchDown(id, pos);
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
@@ -1967,12 +1953,7 @@ public:
             return true;
         }
         seat->setTimestamp(time);
-        const qint32 kwaylandId = input()->touch()->mappedId(id);
-        if (kwaylandId == -1) {
-            return true;
-        }
-
-        seat->touchMove(kwaylandId, pos);
+        seat->touchMove(id, pos);
 
         if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
@@ -1994,11 +1975,7 @@ public:
             return false;
         }
         seat->setTimestamp(time);
-        const qint32 kwaylandId = input()->touch()->mappedId(id);
-        if (kwaylandId != -1) {
-            seat->touchUp(kwaylandId);
-            input()->touch()->removeId(id);
-        }
+        seat->touchUp(id);
         if (m_touchId == id) {
             m_touchId = -1;
         }

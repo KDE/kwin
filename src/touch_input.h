@@ -50,10 +50,6 @@ public:
     void cancel();
     void frame();
 
-    void insertId(qint32 internalId, qint32 kwaylandId);
-    void removeId(qint32 internalId);
-    qint32 mappedId(qint32 internalId);
-
     void setDecorationPressId(qint32 id) {
         m_decorationId = id;
     }
@@ -84,10 +80,6 @@ private:
     bool m_inited = false;
     qint32 m_decorationId = -1;
     qint32 m_internalId = -1;
-    /**
-     * external/kwayland
-     */
-    QHash<qint32, qint32> m_idMapper;
     QMetaObject::Connection m_focusGeometryConnection;
     bool m_windowUpdatedInCycle = false;
     QPointF m_lastPosition;
