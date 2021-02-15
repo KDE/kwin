@@ -121,8 +121,6 @@ private:
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
     void initUuid();
-    bool initPrimaryPlane();
-    bool initCursorPlane();
 
     void atomicEnable();
     void atomicDisable();

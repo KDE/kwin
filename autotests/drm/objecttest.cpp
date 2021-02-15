@@ -72,7 +72,6 @@ private Q_SLOTS:
     void testId();
     void testFd_data();
     void testFd();
-    void testOutput();
     void testInitProperties();
 };
 
@@ -118,18 +117,6 @@ class DrmOutput {
 public:
     int foo;
 };
-}
-
-void ObjectTest::testOutput()
-{
-    MockDrmObject object{0, 1};
-
-    QVERIFY(!object.output());
-
-    KWin::DrmOutput output{2};
-    object.setOutput(&output);
-    QCOMPARE(object.output(), &output);
-    QCOMPARE(object.output()->foo, 2);
 }
 
 void ObjectTest::testInitProperties()

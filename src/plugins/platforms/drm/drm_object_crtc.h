@@ -52,7 +52,7 @@ public:
     }
 
     void flipBuffer();
-    bool blank();
+    bool blank(DrmOutput *output);
 
     int gammaRampSize() const {
         return m_gammaRampSize;

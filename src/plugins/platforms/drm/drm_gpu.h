@@ -16,6 +16,7 @@
 #include <epoxy/egl.h>
 
 #include "drm_buffer.h"
+#include "drm_object_plane.h"
 
 struct gbm_device;
 
@@ -23,7 +24,6 @@ namespace KWin
 {
 
 class DrmOutput;
-class DrmPlane;
 class DrmCrtc;
 class DrmConnector;
 class DrmBackend;
@@ -73,10 +73,6 @@ public:
         return m_eglDisplay;
     }
 
-    QVector<DrmPlane*> planes() const {
-        return m_planes;
-    }
-
     AbstractEglBackend *eglBackend() {
         return m_eglBackend;
     }
@@ -120,6 +116,7 @@ protected:
     bool updateOutputs();
 
 private:
+    DrmPlane *getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc);
     DrmOutput *findOutput(quint32 connector);
 
     DrmBackend* const m_backend;
@@ -136,9 +133,9 @@ private:
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;
 
-// all available planes: primarys, cursors and overlays
+    // all planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
-    QVector<DrmPlane*> m_overlayPlanes;
+    QVector<DrmPlane*> m_unusedPlanes;
     // crtcs
     QVector<DrmCrtc*> m_crtcs;
     // connectors

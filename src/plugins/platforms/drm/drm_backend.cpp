@@ -182,7 +182,7 @@ void DrmBackend::reactivate()
             DrmOutput *o = *it;
             // only relevant in atomic mode
             o->m_modesetRequested = true;
-            o->m_crtc->blank();
+            o->m_crtc->blank(o);
             o->showCursor();
             o->moveCursor();
         }

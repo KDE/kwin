@@ -42,13 +42,6 @@ public:
         return m_id;
     }
 
-    DrmOutput *output() const {
-        return m_output;
-    }
-    void setOutput(DrmOutput* output) {
-        m_output = output;
-    }
-
     int fd() const {
         return m_fd;
     }
@@ -83,7 +76,6 @@ protected:
 
     int m_fd;
     const uint32_t m_id;
-    DrmOutput *m_output = nullptr;
 
     // for comparison with received name of DRM object
     QVector<Property *> m_props;

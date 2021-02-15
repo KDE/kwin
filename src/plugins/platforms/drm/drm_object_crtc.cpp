@@ -77,18 +77,14 @@ void DrmCrtc::flipBuffer()
     m_blackBuffer = nullptr;
 }
 
-bool DrmCrtc::blank()
+bool DrmCrtc::blank(DrmOutput *output)
 {
-    if (!m_output) {
-        return false;
-    }
-
     if (m_gpu->atomicModeSetting()) {
         return false;
     }
 
     if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = m_gpu->createBuffer(m_output->pixelSize());
+        DrmDumbBuffer *blackBuffer = m_gpu->createBuffer(output->pixelSize());
         if (!blackBuffer->map()) {
             delete blackBuffer;
             return false;
@@ -97,7 +93,7 @@ bool DrmCrtc::blank()
         m_blackBuffer = blackBuffer;
     }
 
-    if (m_output->setModeLegacy(m_blackBuffer)) {
+    if (output->setModeLegacy(m_blackBuffer)) {
         if (m_currentBuffer && m_gpu->deleteBufferAfterPageFlip()) {
             delete m_currentBuffer;
             delete m_nextBuffer;

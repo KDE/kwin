@@ -66,23 +66,15 @@ void DrmOutput::teardown()
     }
     m_deleted = true;
     hideCursor();
-    m_crtc->blank();
+    m_crtc->blank(this);
 
     if (m_primaryPlane) {
         // TODO: when having multiple planes, also clean up these
-        m_primaryPlane->setOutput(nullptr);
-
         if (m_gpu->deleteBufferAfterPageFlip()) {
             delete m_primaryPlane->current();
         }
         m_primaryPlane->setCurrent(nullptr);
     }
-    if (m_cursorPlane) {
-        m_cursorPlane->setOutput(nullptr);
-    }
-
-    m_crtc->setOutput(nullptr);
-    m_conn->setOutput(nullptr);
 
     m_cursor[0].reset(nullptr);
     m_cursor[1].reset(nullptr);
@@ -233,10 +225,8 @@ bool DrmOutput::init(drmModeConnector *connector)
     initEdid(connector);
     initDpms(connector);
     initUuid();
-    if (m_gpu->atomicModeSetting()) {
-        if (!initPrimaryPlane()) {
-            return false;
-        }
+    if (m_gpu->atomicModeSetting() && !m_primaryPlane) {
+        return false;
     }
 
     setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP
@@ -244,7 +234,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     setDpmsSupported(true);
     initOutputDevice(connector);
 
-    if (!m_gpu->atomicModeSetting() && !m_crtc->blank()) {
+    if (!m_gpu->atomicModeSetting() && !m_crtc->blank(this)) {
         // We use legacy mode and the initial output blank failed.
         return false;
     }
@@ -367,61 +357,6 @@ void DrmOutput::initEdid(drmModeConnector *connector)
     if (!m_edid.isValid()) {
         qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", m_conn->id());
     }
-}
-
-bool DrmOutput::initPrimaryPlane()
-{
-    for (int i = 0; i < m_gpu->planes().size(); ++i) {
-        DrmPlane *p = m_gpu->planes()[i];
-        if (!p) {
-            continue;
-        }
-        if (p->type() != DrmPlane::TypeIndex::Primary) {
-            continue;
-        }
-        if (p->output()) {     // Plane already has an output
-            continue;
-        }
-        if (m_primaryPlane) {     // Output already has a primary plane
-            continue;
-        }
-        if (!p->isCrtcSupported(m_crtc->resIndex())) {
-            continue;
-        }
-        p->setOutput(this);
-        m_primaryPlane = p;
-        qCDebug(KWIN_DRM) << "Initialized primary plane" << p->id() << "on CRTC" << m_crtc->id();
-        return true;
-    }
-    qCCritical(KWIN_DRM) << "Failed to initialize primary plane.";
-    return false;
-}
-
-bool DrmOutput::initCursorPlane()       // TODO: Add call in init (but needs layer support in general first)
-{
-    for (int i = 0; i < m_gpu->planes().size(); ++i) {
-        DrmPlane *p = m_gpu->planes()[i];
-        if (!p) {
-            continue;
-        }
-        if (p->type() != DrmPlane::TypeIndex::Cursor) {
-            continue;
-        }
-        if (p->output()) {     // Plane already has an output
-            continue;
-        }
-        if (m_cursorPlane) {     // Output already has a cursor plane
-            continue;
-        }
-        if (!p->isCrtcSupported(m_crtc->resIndex())) {
-            continue;
-        }
-        p->setOutput(this);
-        m_cursorPlane = p;
-        qCDebug(KWIN_DRM) << "Initialized cursor plane" << p->id() << "on CRTC" << m_crtc->id();
-        return true;
-    }
-    return false;
 }
 
 bool DrmOutput::initCursor(const QSize &cursorSize)
@@ -579,9 +514,7 @@ void DrmOutput::dpmsFinishOn()
     waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::On));
 
     m_backend->checkOutputsAreOn();
-    if (!m_gpu->atomicModeSetting()) {
-        m_crtc->blank();
-    }
+    m_crtc->blank(this);
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
     }

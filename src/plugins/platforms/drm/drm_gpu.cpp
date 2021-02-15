@@ -85,47 +85,29 @@ void DrmGpu::tryAMS()
 {
     m_atomicModeSetting = false;
     if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
-        bool ams = true;
-        QVector<DrmPlane*> planes, overlayPlanes;
-
         DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (!planeResources) {
             qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << m_devNode;
-            ams = false;
+            m_atomicModeSetting = false;
+            return;
         }
-        if (ams) {
-            qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
-            qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
-
-            // create the plane objects
-            for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
-                DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
-                DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
-                if (p->init()) {
-                    planes << p;
-                    if (p->type() == DrmPlane::TypeIndex::Overlay) {
-                        overlayPlanes << p;
-                    }
-                } else {
-                    delete p;
-                }
-            }
-
-            if (planes.isEmpty()) {
-                qCWarning(KWIN_DRM) << "Failed to create any plane. Falling back to legacy mode on GPU " << m_devNode;
-                ams = false;
-            }
-        }
-        if (!ams) {
-            for (auto p : planes) {
+        qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
+        qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
+        // create the plane objects
+        for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
+            DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
+            DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
+            if (p->init()) {
+                m_planes << p;
+            } else {
                 delete p;
             }
-            planes.clear();
-            overlayPlanes.clear();
         }
-        m_atomicModeSetting = ams;
-        m_planes = planes;
-        m_overlayPlanes = overlayPlanes;
+        if (m_planes.isEmpty()) {
+            qCWarning(KWIN_DRM) << "Failed to create any plane. Falling back to legacy mode on GPU " << m_devNode;
+            m_atomicModeSetting = false;
+        }
+        m_unusedPlanes = m_planes;
     } else {
         qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
     }
@@ -254,11 +236,11 @@ bool DrmGpu::updateOutputs()
                 }
 
                 DrmOutput *output = new DrmOutput(this->m_backend, this);
-                con->setOutput(output);
                 output->m_conn = con;
-                crtc->setOutput(output);
                 output->m_crtc = crtc;
                 output->m_mode = connector->modes[0];
+                output->m_primaryPlane = getCompatiblePlane(DrmPlane::TypeIndex::Primary, crtc);
+                output->m_cursorPlane = getCompatiblePlane(DrmPlane::TypeIndex::Cursor, crtc);
 
                 qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name << output->m_mode.hdisplay << output->m_mode.vdisplay;
                 if (!output->init(connector.data())) {
@@ -291,6 +273,9 @@ bool DrmGpu::updateOutputs()
         m_connectors.removeOne(removedOutput->m_conn);
         delete removedOutput->m_conn;
         removedOutput->m_conn = nullptr;
+        if (removedOutput->m_primaryPlane) {
+            m_unusedPlanes << removedOutput->m_primaryPlane;
+        }
     }
 
     qDeleteAll(oldConnectors);
@@ -305,6 +290,20 @@ DrmOutput *DrmGpu::findOutput(quint32 connector)
     });
     if (it != m_outputs.constEnd()) {
         return *it;
+    }
+    return nullptr;
+}
+
+DrmPlane *DrmGpu::getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc)
+{
+    for (auto plane : m_unusedPlanes) {
+        if (plane->type() != typeIndex) {
+            continue;
+        }
+        if (plane->isCrtcSupported(crtc->resIndex())) {
+            m_unusedPlanes.removeOne(plane);
+            return plane;
+        }
     }
     return nullptr;
 }
