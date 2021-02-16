@@ -75,6 +75,9 @@ void DataOfferInterfacePrivate::data_offer_destroy(QtWaylandServer::wl_data_offe
 void DataOfferInterfacePrivate::data_offer_finish(Resource *resource)
 {
     Q_UNUSED(resource)
+    if (!source) {
+        return;
+    }
     source->dndFinished();
     // TODO: It is a client error to perform other requests than wl_data_offer.destroy after this one
 }
