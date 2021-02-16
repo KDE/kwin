@@ -765,7 +765,6 @@ void TestXdgShellClient::testWindowOpensLargerThanScreen()
     QVERIFY(c);
     QVERIFY(c->isActive());
     QVERIFY(c->isDecorated());
-    QEXPECT_FAIL("", "BUG 366632", Continue);
     QCOMPARE(c->frameGeometry(), QRect(QPoint(0, 0), screens()->size(0)));
 }
 
