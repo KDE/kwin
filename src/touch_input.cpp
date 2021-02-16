@@ -66,7 +66,7 @@ bool TouchInputRedirection::focusUpdatesBlocked()
     if (waylandServer()->seat()->isDragTouch()) {
         return true;
     }
-    if (m_touches > 1) {
+    if (m_activeTouchPoints.count() > 1) {
         // first touch defines focus
         return true;
     }
@@ -75,9 +75,8 @@ bool TouchInputRedirection::focusUpdatesBlocked()
 
 bool TouchInputRedirection::positionValid() const
 {
-    Q_ASSERT(m_touches >= 0);
     // we can only determine a position with at least one touch point
-    return m_touches;
+    return !m_activeTouchPoints.isEmpty();
 }
 
 void TouchInputRedirection::focusUpdate(Toplevel *focusOld, Toplevel *focusNow)
@@ -144,8 +143,8 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
     }
     m_lastPosition = pos;
     m_windowUpdatedInCycle = false;
-    m_touches++;
-    if (m_touches == 1) {
+    m_activeTouchPoints.insert(id);
+    if (m_activeTouchPoints.count() == 1) {
         update();
     }
     input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
@@ -159,12 +158,14 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device 
     if (!inited()) {
         return;
     }
+    if (!m_activeTouchPoints.remove(id)) {
+        return;
+    }
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchUp, std::placeholders::_1, id, time));
     input()->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time));
     m_windowUpdatedInCycle = false;
-    m_touches--;
-    if (m_touches == 0) {
+    if (m_activeTouchPoints.count() == 0) {
         update();
     }
 }
@@ -175,6 +176,9 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
     if (!inited()) {
         return;
     }
+    if (!m_activeTouchPoints.contains(id)) {
+        return;
+    }
     m_lastPosition = pos;
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, pos, time));
@@ -182,17 +186,16 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
     m_windowUpdatedInCycle = false;
 }
 
-void TouchInputRedirection::processCancel()
-{
-    m_touches--;
-    cancel();
-}
-
 void TouchInputRedirection::cancel()
 {
     if (!inited()) {
         return;
     }
+    // If the touch sequence is artificially cancelled by the compositor, touch motion and touch
+    // up events will be silently ignored and won't be passed down through the event filter chain.
+    // If the touch sequence is cancelled because we received a TOUCH_CANCEL event from libinput,
+    // the compositor will not receive any TOUCH_MOTION or TOUCH_UP events for that slot.
+    m_activeTouchPoints.clear();
     waylandServer()->seat()->cancelTouchSequence();
 }
 

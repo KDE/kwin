@@ -46,7 +46,6 @@ public:
     void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
     void processUp(qint32 id, quint32 time, LibInput::Device *device = nullptr);
     void processMotion(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
-    void processCancel();
     void cancel();
     void frame();
 
@@ -68,7 +67,7 @@ public:
     }
 
     int touchPointCount() const {
-        return m_touches;
+        return m_activeTouchPoints.count();
     }
 
 private:
@@ -77,14 +76,13 @@ private:
 
     void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
 
+    QSet<qint32> m_activeTouchPoints;
     bool m_inited = false;
     qint32 m_decorationId = -1;
     qint32 m_internalId = -1;
     QMetaObject::Connection m_focusGeometryConnection;
     bool m_windowUpdatedInCycle = false;
     QPointF m_lastPosition;
-
-    int m_touches = 0;
 };
 
 }

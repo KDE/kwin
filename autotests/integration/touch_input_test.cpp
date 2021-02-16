@@ -276,8 +276,6 @@ void TouchInputTest::testTouchPointCount()
     QCOMPARE(kwinApp()->platform()->touchPointCount(), 2);
 
     kwinApp()->platform()->cancelTouchSequence();
-    QCOMPARE(kwinApp()->platform()->touchPointCount(), 1);
-    kwinApp()->platform()->cancelTouchSequence();
     QCOMPARE(kwinApp()->platform()->touchPointCount(), 0);
 }
 
