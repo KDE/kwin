@@ -638,7 +638,10 @@ void XdgToplevelClient::updateDecoration(bool check_workspace_pos, bool force)
     }
     updateShadow();
     if (check_workspace_pos) {
+        const QRect oldGeometryRestore = geometryRestore();
+        setGeometryRestore(frameGeometry());
         checkWorkspacePosition(oldFrameGeometry, -2, oldClientGeometry);
+        setGeometryRestore(oldGeometryRestore);
     }
     blockGeometryUpdates(false);
 }
@@ -755,7 +758,7 @@ void XdgToplevelClient::handleRoleCommit()
     if (configureEvent) {
         handleStatesAcknowledged(configureEvent->states);
     }
-    updateDecoration(false, false);
+    updateDecoration(true, false);
 }
 
 void XdgToplevelClient::doMinimize()
@@ -1288,7 +1291,7 @@ void XdgToplevelClient::installServerDecoration(ServerSideDecorationInterface *d
         [this] (ServerSideDecorationManagerInterface::Mode mode) {
             const bool changed = mode != m_serverDecoration->mode();
             if (changed && readyForPainting()) {
-                updateDecoration(/* check_workspace_pos */ false);
+                updateDecoration(/* check_workspace_pos */ true);
             }
         }
     );
