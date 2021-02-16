@@ -233,10 +233,6 @@ void TouchInputTest::testCancel()
     kwinApp()->platform()->touchCancel();
     QVERIFY(cancelSpy.wait());
     QCOMPARE(cancelSpy.count(), 1);
-
-    kwinApp()->platform()->touchUp(1, timestamp++);
-    QVERIFY(!pointRemovedSpy.wait(100));
-    QCOMPARE(pointRemovedSpy.count(), 0);
 }
 
 void TouchInputTest::testTouchMouseAction()
