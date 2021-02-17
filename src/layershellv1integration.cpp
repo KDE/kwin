@@ -205,7 +205,9 @@ void LayerShellV1Integration::rearrange()
         rearrangeOutput(output);
     }
 
-    workspace()->updateClientArea();
+    if (workspace()) {
+        workspace()->updateClientArea();
+    }
 }
 
 void LayerShellV1Integration::scheduleRearrange()
