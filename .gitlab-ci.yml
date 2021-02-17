@@ -1,0 +1,10 @@
+image: "clangbuiltlinux/ubuntu:latest"
+
+stages:
+  - Style Compliance
+
+clang-format:
+  stage: Style Compliance
+  allow_failure: true
+  script:
+    - ./.ci-clang-format.sh
