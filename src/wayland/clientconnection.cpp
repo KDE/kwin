@@ -114,7 +114,7 @@ wl_resource *ClientConnection::getResource(quint32 id)
     return wl_client_get_object(d->client, id);
 }
 
-wl_client *ClientConnection::client()
+wl_client *ClientConnection::client() const
 {
     return d->client;
 }
@@ -129,7 +129,7 @@ ClientConnection::operator wl_client*() const
     return d->client;
 }
 
-Display *ClientConnection::display()
+Display *ClientConnection::display() const
 {
     return d->display;
 }

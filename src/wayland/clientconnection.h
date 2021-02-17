@@ -60,11 +60,11 @@ public:
     /**
      * @returns the native wl_client this ClientConnection represents.
      **/
-    wl_client *client();
+    wl_client *client() const;
     /**
      * @returns The Display this ClientConnection is connected to
      **/
-    Display *display();
+    Display *display() const;
 
     /**
      * The pid of the ClientConnection endpoint.
