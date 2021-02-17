@@ -6,6 +6,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_effects\")
 set(kcm_kwin_effects_PART_SRCS
     kcm.cpp
     effectsfilterproxymodel.cpp
+    desktopeffectsdata.cpp
 )
 
 add_library(kcm_kwin_effects MODULE ${kcm_kwin_effects_PART_SRCS})
@@ -13,6 +14,7 @@ add_library(kcm_kwin_effects MODULE ${kcm_kwin_effects_PART_SRCS})
 target_link_libraries(kcm_kwin_effects
     Qt::DBus
 
+    KF5::KCMUtils
     KF5::I18n
     KF5::KCMUtils
     KF5::NewStuff

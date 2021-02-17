@@ -7,6 +7,7 @@
 #include "kcm.h"
 #include "effectsfilterproxymodel.h"
 #include "effectsmodel.h"
+#include "desktopeffectsdata.h"
 
 #include <KAboutData>
 #include <KLocalizedString>
@@ -17,7 +18,8 @@
 
 K_PLUGIN_FACTORY_WITH_JSON(DesktopEffectsKCMFactory,
                            "kcm_kwin_effects.json",
-                           registerPlugin<KWin::DesktopEffectsKCM>();)
+                           registerPlugin<KWin::DesktopEffectsKCM>();
+                           registerPlugin<KWin::DesktopEffectsData>();)
 
 namespace KWin
 {
