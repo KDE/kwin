@@ -272,6 +272,8 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         WindowWobblyInfos& wwi = windows[w];
         int tx = w->geometry().x();
         int ty = w->geometry().y();
+        int width = w->geometry().width();
+        int height = w->geometry().height();
         double left = 0.0;
         double top = 0.0;
         double right = w->width();
@@ -279,8 +281,8 @@ void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         for (int i = 0; i < data.quads.count(); ++i) {
             for (int j = 0; j < 4; ++j) {
                 WindowVertex& v = data.quads[i][j];
-                Pair oldPos = {tx + v.x(), ty + v.y()};
-                Pair newPos = computeBezierPoint(wwi, oldPos);
+                Pair uv = {v.x() / width, v.y() / height};
+                Pair newPos = computeBezierPoint(wwi, uv);
                 v.move(newPos.x - tx, newPos.y - ty);
             }
             left   = qMin(left,   data.quads[i].left());
@@ -514,12 +516,8 @@ void WobblyWindowsEffect::freeWobblyInfo(WindowWobblyInfos& wwi) const
 
 WobblyWindowsEffect::Pair WobblyWindowsEffect::computeBezierPoint(const WindowWobblyInfos& wwi, Pair point) const
 {
-    // compute the input value
-    Pair topleft = wwi.origin[0];
-    Pair bottomright = wwi.origin[wwi.count-1];
-
-    qreal tx = (point.x - topleft.x) / (bottomright.x - topleft.x);
-    qreal ty = (point.y - topleft.y) / (bottomright.y - topleft.y);
+    const qreal tx = point.x;
+    const qreal ty = point.y;
 
     // compute polynomial coeff
 
