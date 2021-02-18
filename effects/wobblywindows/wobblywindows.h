@@ -152,7 +152,7 @@ private:
         bool can_wobble_top, can_wobble_left, can_wobble_right, can_wobble_bottom;
         QRect resize_original_rect;
 
-        std::chrono::milliseconds lastPresentTime;
+        std::chrono::milliseconds clock;
     };
 
     QHash< const EffectWindow*,  WindowWobblyInfos > windows;

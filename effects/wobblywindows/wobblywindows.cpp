@@ -239,34 +239,27 @@ void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::
 
     effects->prePaintScreen(data, presentTime);
 }
-const qreal maxTime = 10.0;
+
+static const std::chrono::milliseconds integrationStep(10);
+
 void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     auto infoIt = windows.find(w);
     if (infoIt != windows.end()) {
         data.setTransformed();
         data.quads = data.quads.makeRegularGrid(m_xTesselation, m_yTesselation);
-        bool stop = false;
-
-        qreal updateTime = 0;
-        if (infoIt->lastPresentTime.count()) {
-            updateTime = (presentTime - infoIt->lastPresentTime).count();
-        }
-        infoIt->lastPresentTime = presentTime;
 
         // We have to reset the clip region in order to render clients below
         // opaque wobbly windows.
         data.clip = QRegion();
 
-        while (!stop && (updateTime > maxTime)) {
-#if defined VERBOSE_MODE
-            qCDebug(KWINEFFECTS) << "loop time " << updateTime << " / " << time;
-#endif
-            stop = !updateWindowWobblyDatas(w, maxTime);
-            updateTime -= maxTime;
-        }
-        if (!stop && updateTime > 0) {
-            updateWindowWobblyDatas(w, updateTime);
+        while ((presentTime - infoIt->clock).count() > 0) {
+            const auto delta = std::min(presentTime - infoIt->clock, integrationStep);
+            infoIt->clock += delta;
+
+            if (!updateWindowWobblyDatas(w, delta.count())) {
+                break;
+            }
         }
     }
 
@@ -470,7 +463,8 @@ void WobblyWindowsEffect::initWobblyInfo(WindowWobblyInfos& wwi, QRect geometry)
     wwi.bezierSurface = new Pair[wwi.bezierCount];
 
     wwi.status = Moving;
-    wwi.lastPresentTime = std::chrono::milliseconds::zero();
+    wwi.clock = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch());
 
     qreal x = geometry.x(), y = geometry.y();
     qreal width = geometry.width(), height = geometry.height();
