@@ -255,7 +255,8 @@ void GlxBackend::init()
         glXQueryDrawable = nullptr;
     }
 
-    if (supportsSwapEvent) {
+    static bool forceSoftwareVsync = qEnvironmentVariableIntValue("KWIN_X11_FORCE_SOFTWARE_VSYNC");
+    if (supportsSwapEvent && !forceSoftwareVsync) {
         // Nice, the GLX_INTEL_swap_event extension is available. We are going to receive
         // the presentation timestamp (UST) after glXSwapBuffers() via the X command stream.
         m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
@@ -266,11 +267,13 @@ void GlxBackend::init()
         // the vblank may occur right in between querying video sync counter and the act
         // of swapping buffers, but on the other hand, there is no any better alternative
         // option. NVIDIA doesn't provide any extension such as GLX_INTEL_swap_event.
-        if (!m_vsyncMonitor) {
-            m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create(this);
-        }
-        if (!m_vsyncMonitor) {
-            m_vsyncMonitor = OMLSyncControlVsyncMonitor::create(this);
+        if (!forceSoftwareVsync) {
+            if (!m_vsyncMonitor) {
+                m_vsyncMonitor = SGIVideoSyncVsyncMonitor::create(this);
+            }
+            if (!m_vsyncMonitor) {
+                m_vsyncMonitor = OMLSyncControlVsyncMonitor::create(this);
+            }
         }
         if (!m_vsyncMonitor) {
             SoftwareVsyncMonitor *monitor = SoftwareVsyncMonitor::create(this);
