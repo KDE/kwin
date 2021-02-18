@@ -111,13 +111,21 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
+    if (m_shown) {
+        waylandServer()->inputMethod()->sendDeactivate();
+    }
     waylandServer()->inputMethod()->sendActivate();
+    if (m_shown) {
+        adoptInputMethodContext();
+    }
+    m_shown = true;
 }
 
 void InputMethod::hide()
 {
     waylandServer()->inputMethod()->sendDeactivate();
     updateInputPanelState();
+    m_shown = false;
 }
 
 void InputMethod::clientAdded(AbstractClient* client)
@@ -433,12 +441,12 @@ void InputMethod::adoptInputMethodContext()
         inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
     }
 
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, waylandServer(), &keysymReceived);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, waylandServer(), &commitString);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, waylandServer(), &deleteSurroundingText);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, waylandServer(), &setCursorPosition);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, waylandServer(), &keysymReceived, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, waylandServer(), &commitString, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, waylandServer(), &deleteSurroundingText, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, waylandServer(), &setCursorPosition, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
 }
 
 void InputMethod::updateSni()
