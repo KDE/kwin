@@ -61,6 +61,9 @@ public:
         , m_parent(parent)
     {
         auto c = LibInput::Connection::self();
+        if (!c) {
+            return;
+        }
         connect(c, &LibInput::Connection::deviceAdded, this, &TabletModeTouchpadRemovedSpy::refresh);
         connect(c, &LibInput::Connection::deviceRemoved, this, &TabletModeTouchpadRemovedSpy::refresh);
 
