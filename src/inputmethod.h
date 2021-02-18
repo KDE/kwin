@@ -68,6 +68,7 @@ private:
     } preedit;
 
     bool m_enabled = false;
+    bool m_shown = false;
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;
