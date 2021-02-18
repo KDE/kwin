@@ -237,10 +237,15 @@ void GlxBackend::init()
         supportsSwapEvent = false;
     }
 
-    if (haveSwapInterval) {
-        setSwapInterval(1);
+    static bool syncToVblankDisabled = qEnvironmentVariableIsSet("KWIN_X11_NO_SYNC_TO_VBLANK");
+    if (!syncToVblankDisabled) {
+        if (haveSwapInterval) {
+            setSwapInterval(1);
+        } else {
+            qCWarning(KWIN_X11STANDALONE) << "glSwapInterval is unsupported";
+        }
     } else {
-        qCWarning(KWIN_X11STANDALONE) << "glSwapInterval is unsupported";
+        setSwapInterval(0); // disable vsync if possible
     }
 
     if (glPlatform->isVirtualBox()) {
