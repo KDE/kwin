@@ -200,14 +200,25 @@ void GlxBackend::init()
     glPlatform->printResults();
     initGL(&getProcAddress);
 
-    const bool swapEventSwitch = qEnvironmentVariableIntValue("KWIN_USE_INTEL_SWAP_EVENT");
+    bool supportsSwapEvent = false;
+
+    if (hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))) {
+        if (qEnvironmentVariableIsSet("KWIN_USE_INTEL_SWAP_EVENT")) {
+            supportsSwapEvent = qEnvironmentVariable("KWIN_USE_INTEL_SWAP_EVENT") != QLatin1String("0");
+        } else {
+            // Don't use swap events on Intel. The issue with Intel GPUs is that they are not as
+            // powerful as discrete GPUs. Therefore, it's better to push frames as often as vblank
+            // notifications are received. This, however, may increase latency. If the swap events
+            // are enabled explicitly by setting the environment variable, honor that choice.
+            supportsSwapEvent = !glPlatform->isIntel();
+        }
+    }
 
     // Check whether certain features are supported
     m_haveMESACopySubBuffer = hasExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
     m_haveMESASwapControl   = hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
     m_haveSGISwapControl    = hasExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
-    m_haveINTELSwapEvent    = hasExtension(QByteArrayLiteral("GLX_INTEL_swap_event")) && swapEventSwitch;
 
     bool haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
@@ -223,17 +234,7 @@ void GlxBackend::init()
     // If the buffer age extension is unsupported, glXSwapBuffers() is not guaranteed to
     // be called. Therefore, there is no point for creating the swap event filter.
     if (!supportsBufferAge()) {
-        m_haveINTELSwapEvent = false;
-    }
-
-    // Don't use swap events on Intel. The issue with Intel GPUs is that they are not as
-    // powerful as discrete GPUs. Therefore, it's better to push frames as often as vblank
-    // notifications are received. This, however, may increase latency. If the swap events
-    // are enabled explicitly by setting the environment variable, honor that choice.
-    if (glPlatform->isIntel()) {
-        if (!swapEventSwitch) {
-            m_haveINTELSwapEvent = false;
-        }
+        supportsSwapEvent = false;
     }
 
     if (haveSwapInterval) {
@@ -249,7 +250,7 @@ void GlxBackend::init()
         glXQueryDrawable = nullptr;
     }
 
-    if (m_haveINTELSwapEvent) {
+    if (supportsSwapEvent) {
         // Nice, the GLX_INTEL_swap_event extension is available. We are going to receive
         // the presentation timestamp (UST) after glXSwapBuffers() via the X command stream.
         m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
