@@ -85,6 +85,7 @@ void DrmGpu::tryAMS()
 {
     m_atomicModeSetting = false;
     if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
+        m_atomicModeSetting = true;
         DrmScopedPointer<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (!planeResources) {
             qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << m_devNode;
