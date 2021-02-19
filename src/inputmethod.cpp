@@ -98,14 +98,17 @@ void InputMethod::init()
         connect(textInputV2, &TextInputV2Interface::requestHideInputPanel, this, &InputMethod::hide);
         connect(textInputV2, &TextInputV2Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
         connect(textInputV2, &TextInputV2Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
-        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
         connect(textInputV2, &TextInputV2Interface::stateUpdated, this, &InputMethod::textInputInterfaceV2StateUpdated);
 
         TextInputV3Interface *textInputV3 = waylandServer()->seat()->textInputV3();
-        connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
         connect(textInputV3, &TextInputV3Interface::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
         connect(textInputV3, &TextInputV3Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
         connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &InputMethod::stateCommitted);
+
+        if (m_enabled) {
+            connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
+            connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
+        }
     }
 }
 
@@ -114,6 +117,10 @@ void InputMethod::show()
     if (m_shown) {
         waylandServer()->inputMethod()->sendDeactivate();
     }
+    if (!m_enabled) {
+        return;
+    }
+
     waylandServer()->inputMethod()->sendActivate();
     if (m_shown) {
         adoptInputMethodContext();
@@ -291,6 +298,18 @@ void InputMethod::setEnabled(bool enabled)
     );
     msg.setArguments({enabled});
     QDBusConnection::sessionBus().asyncCall(msg);
+
+    auto textInputV2 = waylandServer()->seat()->textInputV2();
+    auto textInputV3 = waylandServer()->seat()->textInputV3();
+    if (m_enabled) {
+        connect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged, Qt::UniqueConnection);
+        connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged, Qt::UniqueConnection);
+    } else {
+        hide();
+
+        disconnect(textInputV2, &TextInputV2Interface::enabledChanged, this, &InputMethod::textInputInterfaceV2EnabledChanged);
+        disconnect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
+    }
 }
 
 static quint32 keysymToKeycode(quint32 sym)
