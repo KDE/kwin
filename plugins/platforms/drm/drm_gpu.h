@@ -12,6 +12,7 @@
 
 #include <qobject.h>
 #include <QVector>
+#include <QSocketNotifier>
 
 #include <epoxy/egl.h>
 
@@ -135,6 +136,7 @@ private:
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;
+    QSocketNotifier *m_socketNotifier = nullptr;
 
 // all available planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;
