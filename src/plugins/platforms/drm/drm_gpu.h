@@ -117,6 +117,7 @@ protected:
     bool updateOutputs();
 
 private:
+    void dispatchEvents();
     DrmPlane *getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crtc);
     DrmOutput *findOutput(quint32 connector);
 

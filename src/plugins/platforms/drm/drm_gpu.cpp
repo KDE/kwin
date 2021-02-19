@@ -30,8 +30,6 @@
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
 
-#define KWIN_DRM_EVENT_CONTEXT_VERSION 2
-
 namespace KWin
 {
 
@@ -65,18 +63,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
     m_deleteBufferAfterPageFlip = !m_useEglStreams;
 
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-    connect(m_socketNotifier, &QSocketNotifier::activated, this,
-        [fd] {
-            if (!LogindIntegration::self()->isActiveSession()) {
-                return;
-            }
-            drmEventContext e;
-            memset(&e, 0, sizeof e);
-            e.version = KWIN_DRM_EVENT_CONTEXT_VERSION;
-            e.page_flip_handler = DrmBackend::pageFlipHandler;
-            drmHandleEvent(fd, &e);
-        }
-    );
+    connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 }
 
 DrmGpu::~DrmGpu()
@@ -325,6 +312,17 @@ DrmPlane *DrmGpu::getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crt
         }
     }
     return nullptr;
+}
+
+void DrmGpu::dispatchEvents()
+{
+    if (!LogindIntegration::self()->isActiveSession()) {
+        return;
+    }
+    drmEventContext context = {};
+    context.version = 2;
+    context.page_flip_handler = DrmBackend::pageFlipHandler;
+    drmHandleEvent(m_fd, &context);
 }
 
 }
