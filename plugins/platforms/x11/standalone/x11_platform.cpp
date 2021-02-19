@@ -625,7 +625,7 @@ static bool refreshRate_compare(const AbstractOutput *first, const AbstractOutpu
 
 static int currentRefreshRate()
 {
-    const int refreshRate = qEnvironmentVariableIntValue("KWIN_X11_REFRESH_RATE");
+    static const int refreshRate = qEnvironmentVariableIntValue("KWIN_X11_REFRESH_RATE");
     if (refreshRate) {
         return refreshRate;
     }
@@ -635,7 +635,7 @@ static int currentRefreshRate()
         return 60000;
     }
 
-    const QString syncDisplayDevice = qEnvironmentVariable("__GL_SYNC_DISPLAY_DEVICE");
+    static const QString syncDisplayDevice = qEnvironmentVariable("__GL_SYNC_DISPLAY_DEVICE");
     if (!syncDisplayDevice.isEmpty()) {
         for (const AbstractOutput *output : outputs) {
             if (output->name() == syncDisplayDevice) {
