@@ -15,6 +15,7 @@
 #include "drm_object_crtc.h"
 #include "abstract_egl_backend.h"
 #include "logging.h"
+#include "logind.h"
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -28,6 +29,8 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
+
+#define KWIN_DRM_EVENT_CONTEXT_VERSION 2
 
 namespace KWin
 {
@@ -60,6 +63,20 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
     m_useEglStreams = strstr(version->name, "nvidia-drm");
 
     m_deleteBufferAfterPageFlip = !m_useEglStreams;
+
+    m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+    connect(m_socketNotifier, &QSocketNotifier::activated, this,
+        [fd] {
+            if (!LogindIntegration::self()->isActiveSession()) {
+                return;
+            }
+            drmEventContext e;
+            memset(&e, 0, sizeof e);
+            e.version = KWIN_DRM_EVENT_CONTEXT_VERSION;
+            e.page_flip_handler = DrmBackend::pageFlipHandler;
+            drmHandleEvent(fd, &e);
+        }
+    );
 }
 
 DrmGpu::~DrmGpu()
@@ -73,7 +90,8 @@ DrmGpu::~DrmGpu()
     qDeleteAll(m_crtcs);
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
-    close(m_fd);
+    delete m_socketNotifier;
+    LogindIntegration::self()->releaseDevice(m_fd);
 }
 
 clockid_t DrmGpu::presentationClock() const

@@ -57,8 +57,6 @@
 #define DRM_CAP_CURSOR_HEIGHT 0x9
 #endif
 
-#define KWIN_DRM_EVENT_CONTEXT_VERSION 2
-
 namespace KWin
 {
 
@@ -287,31 +285,17 @@ void DrmBackend::openDrm()
         }
         drmModeFreeResources(resources);
 
-        m_active = true;
-        QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-        connect(notifier, &QSocketNotifier::activated, this,
-            [fd] {
-                if (!LogindIntegration::self()->isActiveSession()) {
-                    return;
-                }
-                drmEventContext e;
-                memset(&e, 0, sizeof e);
-                e.version = KWIN_DRM_EVENT_CONTEXT_VERSION;
-                e.page_flip_handler = pageFlipHandler;
-                drmHandleEvent(fd, &e);
-            }
-        );
         DrmGpu *gpu = new DrmGpu(this, devNode, fd, device->sysNum());
-        connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
-        connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-        if (gpu->useEglStreams()) {
-            // TODO this needs to be removed once EglStreamBackend supports multi-gpu operation
-            if (gpu_index == 0) {
-                m_gpus.append(gpu);
+        if (!gpu->useEglStreams() || gpu_index == 0) {
+            m_gpus.append(gpu);
+            m_active = true;
+            connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
+            connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+            if (gpu->useEglStreams()) {
                 break;
             }
         } else {
-            m_gpus.append(gpu);
+            delete gpu;
         }
     }
 
