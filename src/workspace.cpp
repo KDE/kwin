@@ -2299,6 +2299,10 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
     abort();
 }
 
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, int desktop) const
+{
+    return clientArea(opt, kwinApp()->platform()->enabledOutputs().indexOf(output), desktop);
+}
 
 QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
 {

@@ -69,9 +69,9 @@ void KWin::InputPanelV1Client::reposition()
                     return;
                 }
 
-                const auto outputGeometry = m_output->geometry();
-                QRect geo(outputGeometry.topLeft(), panelSize);
-                geo.translate((outputGeometry.width() - panelSize.width())/2, outputGeometry.height() - panelSize.height());
+                const QRect availableArea = workspace()->clientArea(MaximizeArea, m_output, desktop());
+                QRect geo(availableArea.topLeft(), panelSize);
+                geo.translate((availableArea.width() - panelSize.width())/2, availableArea.height() - panelSize.height());
                 updateGeometry(geo);
             }
         }   break;

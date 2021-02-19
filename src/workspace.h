@@ -41,6 +41,7 @@ class Window;
 }
 
 class AbstractClient;
+class AbstractOutput;
 class ColorMapper;
 class Compositor;
 class Deleted;
@@ -154,6 +155,7 @@ public:
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const AbstractClient* c) const;
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
+    QRect clientArea(clientAreaOption, const AbstractOutput *output, int desktop) const;
 
     QRegion restrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
 
