@@ -1871,9 +1871,17 @@ public:
     QHash<KWaylandServer::TabletToolV2Interface*, Cursor*> m_cursorByTool;
 };
 
-class DragAndDropInputFilter : public InputEventFilter
+class DragAndDropInputFilter : public QObject, public InputEventFilter
 {
+    Q_OBJECT
 public:
+    DragAndDropInputFilter()
+    {
+        m_raiseTimer.setSingleShot(true);
+        m_raiseTimer.setInterval(250);
+        connect(&m_raiseTimer, &QTimer::timeout, this, &DragAndDropInputFilter::raiseDragTarget);
+    }
+
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override {
         auto seat = waylandServer()->seat();
         if (!seat->isDragPointer()) {
@@ -1904,14 +1912,21 @@ public:
             if (t) {
                 // TODO: consider decorations
                 if (t->surface() != seat->dragSurface()) {
-                    if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
-                        workspace()->activateClient(c);
+                    if ((m_dragTarget = qobject_cast<AbstractClient*>(t))) {
+                        workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                        m_raiseTimer.start();
                     }
                     seat->setDragTarget(t->surface(), t->inputTransformation());
+                }
+                if ((pos - m_lastPos).manhattanLength() > 10) {
+                    m_lastPos = pos;
+                    // reset timer to delay raising the window
+                    m_raiseTimer.start();
                 }
             } else {
                 // no window at that place, if we have a surface we need to reset
                 seat->setDragTarget(nullptr);
+                m_dragTarget = nullptr;
             }
             break;
         }
@@ -1920,6 +1935,7 @@ public:
             seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
+            raiseDragTarget();
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Released);
             seat->notifyPointerFrame();
             break;
@@ -1943,6 +1959,7 @@ public:
         }
         seat->setTimestamp(time);
         seat->notifyTouchDown(id, pos);
+        m_lastPos = pos;
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
@@ -1968,14 +1985,21 @@ public:
         if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
             if (t->surface() != seat->dragSurface()) {
-                if (AbstractClient *c = qobject_cast<AbstractClient*>(t)) {
-                    workspace()->activateClient(c);
+                if ((m_dragTarget = qobject_cast<AbstractClient*>(t))) {
+                    workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityFocus);
+                    m_raiseTimer.start();
                 }
                 seat->setDragTarget(t->surface(), pos, t->inputTransformation());
+            }
+            if ((pos - m_lastPos).manhattanLength() > 10) {
+                m_lastPos = pos;
+                // reset timer to delay raising the window
+                m_raiseTimer.start();
             }
         } else {
             // no window at that place, if we have a surface we need to reset
             seat->setDragTarget(nullptr);
+            m_dragTarget = nullptr;
         }
         return true;
     }
@@ -1988,11 +2012,22 @@ public:
         seat->notifyTouchUp(id);
         if (m_touchId == id) {
             m_touchId = -1;
+            raiseDragTarget();
         }
         return true;
     }
 private:
+    void raiseDragTarget()
+    {
+        m_raiseTimer.stop();
+        if (m_dragTarget) {
+            workspace()->takeActivity(m_dragTarget, Workspace::ActivityFlag::ActivityRaise);
+        }
+    }
     qint32 m_touchId = -1;
+    QPointF m_lastPos = QPointF(-1, -1);
+    QPointer<AbstractClient> m_dragTarget;
+    QTimer m_raiseTimer;
 };
 
 KWIN_SINGLETON_FACTORY(InputRedirection)
@@ -2847,3 +2882,5 @@ QWindow *InputDeviceHandler::internalWindow() const
 }
 
 } // namespace
+
+#include "input.moc"
