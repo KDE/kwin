@@ -94,7 +94,6 @@ public:
     void setCurrentSurface(SurfaceInterface *surface);
     bool isClientSupported() const;
 
-    void sendRemoved();
     void sendProximityIn(TabletV2Interface *tablet);
     void sendProximityOut();
     void sendUp();
@@ -146,9 +145,6 @@ public:
     TabletPadRingV2Interface *ring(uint at) const;
     TabletPadStripV2Interface *strip(uint at) const;
     void sendButton(quint32 time, quint32 button, bool pressed);
-
-    void sendRemoved();
-    bool isRemoved() const;
 
     void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet);
     SurfaceInterface *currentSurface() const;
@@ -238,7 +234,6 @@ public:
     bool isSurfaceSupported(SurfaceInterface *surface) const;
 
     TabletPadV2Interface *pad() const;
-    void sendRemoved();
 
 private:
     friend class TabletSeatV2Interface;
