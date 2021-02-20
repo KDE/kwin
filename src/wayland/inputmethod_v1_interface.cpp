@@ -126,14 +126,6 @@ public:
         return ret;
     }
 
-    void zwp_input_method_context_v1_destroy_resource(Resource *resource) override
-    {
-        Q_UNUSED(resource)
-        if (resourceMap().isEmpty()) {
-            delete q;
-        }
-    }
-
     void zwp_input_method_context_v1_destroy(Resource *resource) override
     {
         wl_resource_destroy(resource->handle);
@@ -374,17 +366,12 @@ public:
         }
 
         auto addedResource = m_context->d->add(resource->client(), resource->version());
-
-        if (m_enabled) {
-            send_activate(resource->handle, addedResource->handle);
-        }
+        send_activate(resource->handle, addedResource->handle);
     }
 
-    QPointer<InputMethodContextV1Interface> m_context;
+    InputMethodContextV1Interface *m_context = nullptr;
     InputMethodV1Interface *const q;
     Display *const m_display;
-
-    bool m_enabled = false;
 };
 
 InputMethodV1Interface::InputMethodV1Interface(Display *d, QObject *parent)
@@ -397,14 +384,12 @@ InputMethodV1Interface::~InputMethodV1Interface() = default;
 
 void InputMethodV1Interface::sendActivate()
 {
-    if (d->m_enabled) {
+    if (d->m_context) {
         return;
     }
 
-    Q_ASSERT(!d->m_context);
     d->m_context = new InputMethodContextV1Interface(this);
 
-    d->m_enabled = true;
     for (auto resource : d->resourceMap()) {
         auto connection = d->m_context->d->add(resource->client(), resource->version());
         d->send_activate(resource->handle, connection->handle);
@@ -413,18 +398,18 @@ void InputMethodV1Interface::sendActivate()
 
 void InputMethodV1Interface::sendDeactivate()
 {
-    if (!d->m_enabled) {
+    if (!d->m_context) {
         return;
     }
 
-    d->m_enabled = false;
-    if (d->m_context) {
-        for (auto resource : d->resourceMap()) {
-            auto connection = d->m_context->d->resourceMap().value(resource->client());
+    for (auto resource : d->resourceMap()) {
+        auto connection = d->m_context->d->resourceMap().value(resource->client());
+        if (connection) {
             d->send_deactivate(resource->handle, connection->handle);
         }
-        d->m_context = nullptr;
     }
+    delete d->m_context;
+    d->m_context = nullptr;
 }
 
 InputMethodContextV1Interface *InputMethodV1Interface::context() const
