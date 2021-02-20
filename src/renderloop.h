@@ -14,6 +14,7 @@ namespace KWin
 {
 
 class RenderLoopPrivate;
+class SurfaceItem;
 
 /**
  * The RenderLoop class represents the compositing scheduler on a particular output.
@@ -84,6 +85,29 @@ public:
      * from the monotonic clock.
      */
     std::chrono::nanoseconds nextPresentationTimestamp() const;
+
+    /**
+     * Sets the surface that currently gets scanned out,
+     * so that this RenderLoop can adjust its timing behavior to that surface
+     */
+    void setFullscreenSurface(SurfaceItem *surface);
+
+    enum class VrrPolicy : uint32_t {
+        Never = 0,
+        Always = 1,
+        Automatic = 2,
+    };
+    Q_ENUM(VrrPolicy);
+
+    /**
+     * the current policy regarding the use of variable refresh rate
+     */
+    VrrPolicy vrrPolicy() const;
+
+    /**
+     * Set the policy regarding the use of variable refresh rate with RenderLoop
+     */
+    void setVrrPolicy(VrrPolicy vrrPolicy);
 
 Q_SIGNALS:
     /**

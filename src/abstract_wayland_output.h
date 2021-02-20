@@ -11,6 +11,7 @@
 
 #include "abstract_output.h"
 #include "utils.h"
+#include "renderloop.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -66,6 +67,7 @@ public:
     enum class Capability : uint {
         Dpms = 0x1,
         Overscan = 0x2,
+        Vrr = 0x4,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -142,6 +144,9 @@ public:
 
     bool isBeingRecorded();
 
+    void setVrrPolicy(RenderLoop::VrrPolicy policy);
+    RenderLoop::VrrPolicy vrrPolicy() const;
+
 Q_SIGNALS:
     void modeChanged();
     void outputChange(const QRegion &damagedRegion);
@@ -150,6 +155,7 @@ Q_SIGNALS:
     void dpmsModeChanged();
     void capabilitiesChanged();
     void overscanChanged();
+    void vrrPolicyChanged();
 
 protected:
     void initialize(const QString &model, const QString &manufacturer,

@@ -33,6 +33,7 @@ bool DrmCrtc::init()
     return initProps({
         PropertyDefinition(QByteArrayLiteral("MODE_ID")),
         PropertyDefinition(QByteArrayLiteral("ACTIVE")),
+        PropertyDefinition(QByteArrayLiteral("VRR_ENABLED")),
     }, DRM_MODE_OBJECT_CRTC);
 }
 
@@ -79,6 +80,32 @@ bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
         gamma.size(), red, green, blue);
 
     return !isError;
+}
+
+bool DrmCrtc::setVrr(bool enable)
+{
+    if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrEnabled)]) {
+        if (prop->value() == enable) {
+            return false;
+        }
+        prop->setValue(enable);
+        if (!gpu()->atomicModeSetting() || gpu()->useEglStreams()) {
+            if (drmModeObjectSetProperty(gpu()->fd(), id(), DRM_MODE_OBJECT_CRTC, prop->propId(), enable) != 0) {
+                qCWarning(KWIN_DRM) << "drmModeObjectSetProperty(VRR_ENABLED) failed";
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+bool DrmCrtc::isVrrEnabled() const
+{
+    if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrEnabled)]) {
+        return prop->value();
+    }
+    return false;
 }
 
 }

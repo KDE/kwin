@@ -31,6 +31,7 @@ public:
         Dpms = 2,
         Edid = 3,
         Overscan = 4,
+        VrrCapable = 5,
         Count
     };
 
@@ -65,6 +66,8 @@ public:
     bool hasOverscan() const;
     uint32_t overscan() const;
     void setOverscan(uint32_t overscan);
+
+    bool vrrCapable() const;
 
 private:
     DrmScopedPointer<drmModeConnector> m_conn;

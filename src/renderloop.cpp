@@ -8,6 +8,7 @@
 #include "options.h"
 #include "renderloop_p.h"
 #include "utils.h"
+#include "surfaceitem.h"
 
 namespace KWin
 {
@@ -32,12 +33,30 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
 
 void RenderLoopPrivate::scheduleRepaint()
 {
-    if (compositeTimer.isActive() || kwinApp()->isTerminating()) {
+    if (kwinApp()->isTerminating()) {
+        return;
+    }
+    if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && hasFullscreenSurface)) {
+        presentMode = SyncMode::Adaptive;
+    } else {
+        presentMode = SyncMode::Fixed;
+    }
+    const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
+
+    if (presentMode == SyncMode::Adaptive) {
+        std::chrono::nanoseconds timeSincePresent = std::chrono::steady_clock::now().time_since_epoch() - lastPresentationTimestamp;
+        if (timeSincePresent > vblankInterval) {
+            // client renders slower than refresh rate -> immediately present
+            compositeTimer.start(0);
+            return;
+        }
+        // client renders faster than refresh rate -> normal frame scheduling
+    }
+    if (compositeTimer.isActive()) {
         return;
     }
 
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
-    const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
 
     // Estimate when the next presentation will occur. Note that this is a prediction.
     nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
@@ -229,6 +248,21 @@ std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
 std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 {
     return d->nextPresentationTimestamp;
+}
+
+void RenderLoop::setFullscreenSurface(SurfaceItem *surfaceItem)
+{
+    d->hasFullscreenSurface = surfaceItem != nullptr;
+}
+
+RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const
+{
+    return d->vrrPolicy;
+}
+
+void RenderLoop::setVrrPolicy(VrrPolicy policy)
+{
+    d->vrrPolicy = policy;
 }
 
 } // namespace KWin

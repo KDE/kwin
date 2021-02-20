@@ -17,6 +17,7 @@
 #include <config-kwin.h>
 #include "platform.h"
 #include "wayland_server.h"
+#include "abstract_wayland_output.h"
 #ifdef KWIN_UNIT_TEST
 #include <mock_screens.h>
 #endif
@@ -254,6 +255,34 @@ int Screens::physicalDpiX(int screen) const
 int Screens::physicalDpiY(int screen) const
 {
     return size(screen).height() / physicalSize(screen).height() * qreal(25.4);
+}
+
+bool Screens::isVrrCapable(int screen) const
+{
+#ifdef KWIN_UNIT_TEST
+    Q_UNUSED(screen);
+    return false;
+#else
+    if (auto output = findOutput(screen)) {
+        if (auto waylandoutput = dynamic_cast<AbstractWaylandOutput*>(output)) {
+            return waylandoutput->capabilities() & AbstractWaylandOutput::Capability::Vrr;
+        }
+    }
+#endif
+    return true;
+}
+
+RenderLoop::VrrPolicy Screens::vrrPolicy(int screen) const
+{
+#ifdef KWIN_UNIT_TEST
+    Q_UNUSED(screen);
+    return RenderLoop::VrrPolicy::Never;
+#else
+    if (auto output = findOutput(screen)) {
+        return output->renderLoop()->vrrPolicy();
+    }
+    return RenderLoop::VrrPolicy::Never;
+#endif
 }
 
 int Screens::number(const QPoint &pos) const

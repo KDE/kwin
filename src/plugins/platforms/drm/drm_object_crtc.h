@@ -32,6 +32,7 @@ public:
     enum class PropertyIndex : uint32_t {
         ModeId = 0,
         Active,
+        VrrEnabled,
         Count
     };
 
@@ -59,6 +60,9 @@ public:
         return m_crtc->gamma_size;
     }
     bool setGammaRamp(const GammaRamp &gamma);
+
+    bool setVrr(bool enable);
+    bool isVrrEnabled() const;
 
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;

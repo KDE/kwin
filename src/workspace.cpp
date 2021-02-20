@@ -1537,7 +1537,22 @@ QString Workspace::supportInformation() const
                               .arg(geo.width())
                               .arg(geo.height()));
         support.append(QStringLiteral("Scale: %1\n").arg(screens()->scale(i)));
-        support.append(QStringLiteral("Refresh Rate: %1\n\n").arg(screens()->refreshRate(i)));
+        support.append(QStringLiteral("Refresh Rate: %1\n").arg(screens()->refreshRate(i)));
+        QString vrr = QStringLiteral("incapable");
+        if (screens()->isVrrCapable(i)) {
+            switch(screens()->vrrPolicy(i)) {
+            case RenderLoop::VrrPolicy::Never:
+                vrr = QStringLiteral("never");
+                break;
+            case RenderLoop::VrrPolicy::Always:
+                vrr = QStringLiteral("always");
+                break;
+            case RenderLoop::VrrPolicy::Automatic:
+                vrr = QStringLiteral("automatic");
+                break;
+            }
+        }
+        support.append(QStringLiteral("Adaptive Sync: %1\n").arg(vrr));
     }
     support.append(QStringLiteral("\nCompositing\n"));
     support.append(QStringLiteral(  "===========\n"));

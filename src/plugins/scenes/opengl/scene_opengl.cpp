@@ -644,40 +644,41 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
     } else {
         renderLoop->beginFrame();
 
-        bool directScanout = false;
-        if (m_backend->directScanoutAllowed(screenId)) {
-            EffectsHandlerImpl *implEffects = static_cast<EffectsHandlerImpl*>(effects);
-            if (!implEffects->blocksDirectScanout()) {
-                for (int i = stacking_order.count() - 1; i >= 0; i--) {
-                    Window *window = stacking_order[i];
-                    Toplevel *toplevel = window->window();
-                    if (toplevel->isOnScreen(screenId) && window->isVisible() && toplevel->opacity() > 0) {
-                        AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
-                        if (!c || !c->isFullScreen()) {
-                            break;
-                        }
-                        if (!window->surfaceItem()) {
-                            continue;
-                        }
-                        SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
-                        auto pixmap = topMost->windowPixmap();
-                        if (!pixmap) {
-                            break;
-                        }
-                        pixmap->update();
-                        // the subsurface has to be able to cover the whole window
-                        if (topMost->position() != QPoint(0, 0)) {
-                            break;
-                        }
-                        // and it has to be completely opaque
-                        if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
-                            break;
-                        }
-                        directScanout = m_backend->scanout(screenId, topMost);
-                        break;
-                    }
+        SurfaceItem *fullscreenSurface = nullptr;
+        for (int i = stacking_order.count() - 1; i >=0; i--) {
+            Window *window = stacking_order[i];
+            Toplevel *toplevel = window->window();
+            if (toplevel->isOnScreen(screenId) && window->isVisible() && toplevel->opacity() > 0) {
+                AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
+                if (!c || !c->isFullScreen()) {
+                    break;
                 }
+                if (!window->surfaceItem()) {
+                    break;
+                }
+                SurfaceItem *topMost = findTopMostSurface(window->surfaceItem());
+                auto pixmap = topMost->windowPixmap();
+                if (!pixmap) {
+                    break;
+                }
+                pixmap->update();
+                // the subsurface has to be able to cover the whole window
+                if (topMost->position() != QPoint(0, 0)) {
+                    break;
+                }
+                // and it has to be completely opaque
+                if (!window->isOpaque() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                    break;
+                }
+                fullscreenSurface = topMost;
+                break;
             }
+        }
+        renderLoop->setFullscreenSurface(fullscreenSurface);
+
+        bool directScanout = false;
+        if (m_backend->directScanoutAllowed(screenId) && !static_cast<EffectsHandlerImpl*>(effects)->blocksDirectScanout()) {
+            directScanout = m_backend->scanout(screenId, fullscreenSurface);
         }
         if (directScanout) {
             renderLoop->endFrame();

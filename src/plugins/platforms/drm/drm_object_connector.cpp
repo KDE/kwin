@@ -39,6 +39,7 @@ bool DrmConnector::init()
             PropertyDefinition(QByteArrayLiteral("DPMS")),
             PropertyDefinition(QByteArrayLiteral("EDID")),
             PropertyDefinition(QByteArrayLiteral("overscan")),
+            PropertyDefinition(QByteArrayLiteral("vrr_capable")),
         }, DRM_MODE_OBJECT_CONNECTOR)) {
         return false;
     }
@@ -156,6 +157,14 @@ uint32_t DrmConnector::overscan() const
 void DrmConnector::setOverscan(uint32_t overscan)
 {
     setValue(PropertyIndex::Overscan, overscan);
+}
+
+bool DrmConnector::vrrCapable() const
+{
+    if (const auto &prop = m_props[static_cast<int>(PropertyIndex::VrrCapable)]) {
+        return prop->value();
+    }
+    return false;
 }
 
 }

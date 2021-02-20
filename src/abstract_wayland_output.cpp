@@ -179,6 +179,10 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
         qCDebug(KWIN_CORE) << "Setting overscan:" << changeSet->overscan();
         setOverscan(changeSet->overscan());
     }
+    if (changeSet->vrrPolicyChanged()) {
+        qCDebug(KWIN_CORE) << "Setting VRR Policy:" << changeSet->vrrPolicy();
+        setVrrPolicy(static_cast<RenderLoop::VrrPolicy>(changeSet->vrrPolicy()));
+    }
 
     overallSizeCheckNeeded |= emitModeChanged;
     if (overallSizeCheckNeeded) {
@@ -366,6 +370,19 @@ uint32_t AbstractWaylandOutput::overscan() const
 void AbstractWaylandOutput::setOverscan(uint32_t overscan)
 {
     Q_UNUSED(overscan);
+}
+
+void AbstractWaylandOutput::setVrrPolicy(RenderLoop::VrrPolicy policy)
+{
+    if (renderLoop()->vrrPolicy() != policy) {
+        renderLoop()->setVrrPolicy(policy);
+        emit vrrPolicyChanged();
+    }
+}
+
+RenderLoop::VrrPolicy AbstractWaylandOutput::vrrPolicy() const
+{
+    return renderLoop()->vrrPolicy();
 }
 
 }

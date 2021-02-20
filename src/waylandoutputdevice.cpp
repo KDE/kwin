@@ -26,7 +26,15 @@ static KWaylandServer::OutputDeviceInterface::Capabilities kwinCapabilitiesToOut
     if (caps & AbstractWaylandOutput::Capability::Overscan) {
         ret |= KWaylandServer::OutputDeviceInterface::Capability::Overscan;
     }
+    if (caps & AbstractWaylandOutput::Capability::Vrr) {
+        ret |= KWaylandServer::OutputDeviceInterface::Capability::Vrr;
+    }
     return ret;
+}
+
+static KWaylandServer::OutputDeviceInterface::VrrPolicy kwinVrrPolicyToOutputDeviceVrrPolicy(RenderLoop::VrrPolicy policy)
+{
+    return static_cast<KWaylandServer::OutputDeviceInterface::VrrPolicy>(policy);
 }
 
 WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject *parent)
@@ -47,6 +55,7 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDevice->setSubPixel(kwinSubPixelToOutputDeviceSubPixel(output->subPixel()));
     m_outputDevice->setOverscan(output->overscan());
     m_outputDevice->setCapabilities(kwinCapabilitiesToOutputDeviceCapabilities(output->capabilities()));
+    m_outputDevice->setVrrPolicy(kwinVrrPolicyToOutputDeviceVrrPolicy(output->vrrPolicy()));
 
     const auto modes = output->modes();
     for (const AbstractWaylandOutput::Mode &mode : modes) {
@@ -79,6 +88,8 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
             this, &WaylandOutputDevice::handleCapabilitiesChanged);
     connect(output, &AbstractWaylandOutput::overscanChanged,
             this, &WaylandOutputDevice::handleOverscanChanged);
+    connect(output, &AbstractWaylandOutput::vrrPolicyChanged,
+            this, &WaylandOutputDevice::handleVrrPolicyChanged);
 }
 
 void WaylandOutputDevice::handleGeometryChanged()
@@ -118,6 +129,11 @@ void WaylandOutputDevice::handleCapabilitiesChanged()
 void WaylandOutputDevice::handleOverscanChanged()
 {
     m_outputDevice->setOverscan(m_platformOutput->overscan());
+}
+
+void WaylandOutputDevice::handleVrrPolicyChanged()
+{
+    m_outputDevice->setVrrPolicy(kwinVrrPolicyToOutputDeviceVrrPolicy(m_platformOutput->vrrPolicy()));
 }
 
 } // namespace KWin

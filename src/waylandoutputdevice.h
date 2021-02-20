@@ -28,6 +28,7 @@ private Q_SLOTS:
     void handleModeChanged();
     void handleCapabilitiesChanged();
     void handleOverscanChanged();
+    void handleVrrPolicyChanged();
 
 private:
     AbstractWaylandOutput *m_platformOutput;

@@ -16,6 +16,7 @@
 #include "logging.h"
 #include "main.h"
 #include "renderloop.h"
+#include "renderloop_p.h"
 #include "screens.h"
 #include "session.h"
 // Qt
@@ -76,13 +77,25 @@ void DrmOutput::teardown()
 
 bool DrmOutput::hideCursor()
 {
+    if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
+        && isCursorVisible()) {
+        m_renderLoop->scheduleRepaint();
+    }
     return drmModeSetCursor(m_gpu->fd(), m_crtc->id(), 0, 0, 0) == 0;
 }
 
 bool DrmOutput::showCursor(DrmDumbBuffer *c)
 {
     const QSize &s = c->size();
-    return drmModeSetCursor(m_gpu->fd(), m_crtc->id(), c->handle(), s.width(), s.height()) == 0;
+    if (drmModeSetCursor(m_gpu->fd(), m_crtc->id(), c->handle(), s.width(), s.height()) == 0) {
+        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
+            && isCursorVisible()) {
+            m_renderLoop->scheduleRepaint();
+        }
+        return true;
+    } else {
+        return false;
+    }
 }
 
 bool DrmOutput::showCursor()
@@ -97,9 +110,15 @@ bool DrmOutput::showCursor()
         return ret;
     }
 
+    bool visibleBefore = isCursorVisible();
     if (m_hasNewCursor) {
         m_cursorIndex = (m_cursorIndex + 1) % 2;
         m_hasNewCursor = false;
+    }
+    if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
+        && !visibleBefore
+        && isCursorVisible()) {
+        m_renderLoop->scheduleRepaint();
     }
 
     return ret;
@@ -142,7 +161,10 @@ bool DrmOutput::updateCursor()
     p.setWorldTransform(logicalToNativeMatrix(cursor->rect(), 1, transform()).toTransform());
     p.drawImage(QPoint(0, 0), cursorImage);
     p.end();
-
+    if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
+        && isCursorVisible()) {
+        m_renderLoop->scheduleRepaint();
+    }
     return true;
 }
 
@@ -155,7 +177,15 @@ void DrmOutput::moveCursor()
     QPoint pos = monitorMatrix.map(cursor->pos());
     pos -= hotspotMatrix.map(cursor->hotspot());
 
-    drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y());
+    if (pos != m_cursorPos) {
+        bool visible = isCursorVisible();
+        drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y());
+        m_cursorPos = pos;
+        if (RenderLoopPrivate::get(m_renderLoop)->presentMode == RenderLoopPrivate::SyncMode::Adaptive
+            && (visible || visible != isCursorVisible())) {
+            m_renderLoop->scheduleRepaint();
+        }
+    }
 }
 
 namespace {
@@ -209,6 +239,10 @@ bool DrmOutput::init(drmModeConnector *connector)
     if (m_conn->hasOverscan()) {
         setCapabilityInternal(Capability::Overscan);
         setOverscanInternal(m_conn->overscan());
+    }
+    if (m_conn->vrrCapable()) {
+        setCapabilityInternal(Capability::Vrr);
+        setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
     }
     initOutputDevice(connector);
 
@@ -564,6 +598,8 @@ bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer)
     if (m_dpmsModePending != DpmsMode::On) {
         return false;
     }
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop);
+    setVrr(renderLoopPrivate->presentMode == RenderLoopPrivate::SyncMode::Adaptive);
     return m_gpu->atomicModeSetting() ? presentAtomically(buffer) : presentLegacy(buffer);
 }
 
@@ -747,6 +783,12 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
         flags |= DRM_MODE_ATOMIC_ALLOW_MODESET;
     }
 
+    if (!m_crtc->atomicPopulate(req)) {
+        qCWarning(KWIN_DRM) << "Failed to populate crtc. Abort atomic commit!";
+        errorHandler();
+        return false;
+    }
+
     if (mode == AtomicCommitMode::Real) {
         if (m_dpmsModePending == DpmsMode::On) {
             if (!(flags & DRM_MODE_ATOMIC_ALLOW_MODESET)) {
@@ -834,11 +876,7 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
     m_crtc->setValue(DrmCrtc::PropertyIndex::ModeId, enable ? m_blobId : 0);
     m_crtc->setValue(DrmCrtc::PropertyIndex::Active, enable);
 
-    bool ret = true;
-    ret &= m_conn->atomicPopulate(req);
-    ret &= m_crtc->atomicPopulate(req);
-
-    return ret;
+    return m_conn->atomicPopulate(req);
 }
 
 int DrmOutput::gammaRampSize() const
@@ -857,6 +895,23 @@ void DrmOutput::setOverscan(uint32_t overscan)
         m_conn->setOverscan(overscan);
         setOverscanInternal(overscan);
     }
+}
+
+void DrmOutput::setVrr(bool enable)
+{
+    if (!m_conn->vrrCapable() || m_crtc->isVrrEnabled() == enable) {
+        return;
+    }
+    if (!m_crtc->setVrr(enable) || (m_gpu->atomicModeSetting() && !doAtomicCommit(AtomicCommitMode::Test))) {
+        qCWarning(KWIN_DRM) << "Failed to set vrr on" << this;
+        setVrrPolicy(RenderLoop::VrrPolicy::Never);
+        m_crtc->setVrr(false);
+    }
+}
+
+bool DrmOutput::isCursorVisible()
+{
+    return m_cursor[m_cursorIndex] && QRect(m_cursorPos, m_cursor[m_cursorIndex]->size()).intersects(QRect(0, 0, m_mode.vdisplay, m_mode.hdisplay));
 }
 
 }

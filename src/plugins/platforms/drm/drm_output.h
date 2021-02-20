@@ -129,6 +129,9 @@ private:
     bool setGammaRamp(const GammaRamp &gamma) override;
     void setOverscan(uint32_t overscan) override;
 
+    void setVrr(bool enable);
+    bool isCursorVisible();
+
     DrmBackend *m_backend;
     DrmGpu *m_gpu;
     DrmConnector *m_conn = nullptr;
@@ -141,6 +144,8 @@ private:
     uint32_t m_blobId = 0;
     DrmPlane *m_primaryPlane = nullptr;
     QVector<DrmPlane*> m_nextPlanesFlipList;
+
+    QPoint m_cursorPos;
     bool m_pageFlipPending = false;
     bool m_atomicOffPending = false;
     bool m_modesetRequested = true;
