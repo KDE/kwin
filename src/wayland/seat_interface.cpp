@@ -885,7 +885,7 @@ void SeatInterface::pointerButtonPressed(quint32 button)
         // ignore
         return;
     }
-    d->pointer->sendPressed(button, serial);
+    d->pointer->sendPress(button, serial);
 
     if (focusedPointerSurface() == focusedKeyboardSurface()) {
         if (d->keyboard) {
@@ -919,7 +919,7 @@ void SeatInterface::pointerButtonReleased(quint32 button)
         d->endDrag(serial);
         return;
     }
-    d->pointer->sendReleased(button, serial);
+    d->pointer->sendRelease(button, serial);
 }
 
 void SeatInterface::pointerFrame()
@@ -1256,7 +1256,7 @@ void SeatInterface::touchUp(qint32 id)
     if (id == 0 && d->globalTouch.focus.touchs.isEmpty()) {
         // Client did not bind touch, fall back to emulating with pointer events.
         const quint32 serial = display()->nextSerial();
-        d->pointer->sendReleased(BTN_LEFT, serial);
+        d->pointer->sendRelease(BTN_LEFT, serial);
         d->pointer->sendFrame();
     }
 #endif

@@ -190,7 +190,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
     emit focusedSurfaceChanged();
 }
 
-void PointerInterface::sendPressed(quint32 button, quint32 serial)
+void PointerInterface::sendPress(quint32 button, quint32 serial)
 {
     if (!d->focusedSurface) {
         return;
@@ -203,7 +203,7 @@ void PointerInterface::sendPressed(quint32 button, quint32 serial)
     }
 }
 
-void PointerInterface::sendReleased(quint32 button, quint32 serial)
+void PointerInterface::sendRelease(quint32 button, quint32 serial)
 {
     if (!d->focusedSurface) {
         return;

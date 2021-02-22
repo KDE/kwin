@@ -60,8 +60,8 @@ public:
      */
     static PointerInterface *get(wl_resource *native);
 
-    void sendPressed(quint32 button, quint32 serial);
-    void sendReleased(quint32 button, quint32 serial);
+    void sendPress(quint32 button, quint32 serial);
+    void sendRelease(quint32 button, quint32 serial);
     void sendAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     void sendMotion(const QPointF &position);
     void sendFrame();
