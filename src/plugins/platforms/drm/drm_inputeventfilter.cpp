@@ -42,9 +42,11 @@ bool DpmsInputEventFilter::wheelEvent(QWheelEvent *event)
 
 bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event)
-    notify();
-    return true;
+    if (event->type() == QKeyEvent::KeyPress) {
+        notify();
+        return true;
+    }
+    return false;
 }
 
 bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
