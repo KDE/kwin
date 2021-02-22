@@ -23,8 +23,8 @@ var maximizeEffect = {
         newGeometry = window.geometry;
         if (oldGeometry.width == newGeometry.width && oldGeometry.height == newGeometry.height)
             oldGeometry = window.olderGeometry;
-        window.olderGeometry = window.oldGeometry;
-        window.oldGeometry = newGeometry;
+        window.olderGeometry = Object.assign({}, window.oldGeometry);
+        window.oldGeometry = Object.assign({}, newGeometry);
         window.maximizeAnimation1 = animate({
             window: window,
             duration: maximizeEffect.duration,
@@ -80,8 +80,8 @@ var maximizeEffect = {
                 }
             }
         }
-        window.oldGeometry = window.geometry;
-        window.olderGeometry = oldGeometry;
+        window.oldGeometry = Object.assign({}, window.geometry);
+        window.olderGeometry = Object.assign({}, oldGeometry);
     },
     init: function () {
         effect.configChanged.connect(maximizeEffect.loadConfig);
