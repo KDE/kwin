@@ -57,6 +57,8 @@ private Q_SLOTS:
 
 void InputMethodTest::initTestCase()
 {
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.testvirtualkeyboard"));
+
     qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::AbstractClient *>();
     qRegisterMetaType<KWayland::Client::Output *>();
