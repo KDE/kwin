@@ -82,7 +82,7 @@ static void load_callback(XcursorImages *images, void *data)
         const QPoint hotspot(nativeCursorImage->xhot, nativeCursorImage->yhot);
         const std::chrono::milliseconds delay(nativeCursorImage->delay);
 
-        QImage data(nativeCursorImage->width, nativeCursorImage->height, QImage::Format_ARGB32);
+        QImage data(nativeCursorImage->width, nativeCursorImage->height, QImage::Format_ARGB32_Premultiplied);
         memcpy(data.bits(), nativeCursorImage->pixels, data.sizeInBytes());
 
         sprites.append(KXcursorSprite(data, hotspot / themePrivate->devicePixelRatio, delay));
