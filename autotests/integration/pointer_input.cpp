@@ -1496,6 +1496,19 @@ void PointerInputTest::testResizeCursor()
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedResize);
 
+    // load the fallback cursor (arrow cursor)
+    const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
+    QVERIFY(!arrowCursor.isNull());
+    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+
+    // we need a pointer to get the enter event
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+
     // create a test client
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
@@ -1527,10 +1540,17 @@ void PointerInputTest::testResizeCursor()
 
     Cursors::self()->mouse()->setPos(cursorPos);
 
-    const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
-    QVERIFY(!arrowCursor.isNull());
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    // wait for the enter event and set the cursor
+    QVERIFY(enteredSpy.wait());
+    QScopedPointer<Surface> cursorSurface(Test::createSurface(m_compositor));
+    QVERIFY(cursorSurface);
+    QSignalSpy cursorRenderedSpy(cursorSurface.data(), &Surface::frameRendered);
+    QVERIFY(cursorRenderedSpy.isValid());
+    cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(arrowCursor.image()));
+    cursorSurface->damage(arrowCursor.image().rect());
+    cursorSurface->commit();
+    pointer->setCursor(cursorSurface.data(), arrowCursor.hotSpot());
+    QVERIFY(cursorRenderedSpy.wait());
 
     // start resizing the client
     int timestamp = 1;
@@ -1566,6 +1586,19 @@ void PointerInputTest::testMoveCursor()
     QCOMPARE(options->commandAllModifier(), Qt::MetaModifier);
     QCOMPARE(options->commandAll1(), Options::MouseUnrestrictedMove);
 
+    // load the fallback cursor (arrow cursor)
+    const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
+    QVERIFY(!arrowCursor.isNull());
+    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+
+    // we need a pointer to get the enter event
+    auto pointer = m_seat->createPointer(m_seat);
+    QVERIFY(pointer);
+    QVERIFY(pointer->isValid());
+    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QVERIFY(enteredSpy.isValid());
+
     // create a test client
     using namespace KWayland::Client;
     QScopedPointer<Surface> surface(Test::createSurface());
@@ -1578,10 +1611,17 @@ void PointerInputTest::testMoveCursor()
     // move cursor to the test position
     Cursors::self()->mouse()->setPos(c->frameGeometry().center());
 
-    const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
-    QVERIFY(!arrowCursor.isNull());
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    // wait for the enter event and set the cursor
+    QVERIFY(enteredSpy.wait());
+    QScopedPointer<Surface> cursorSurface(Test::createSurface(m_compositor));
+    QVERIFY(cursorSurface);
+    QSignalSpy cursorRenderedSpy(cursorSurface.data(), &Surface::frameRendered);
+    QVERIFY(cursorRenderedSpy.isValid());
+    cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(arrowCursor.image()));
+    cursorSurface->damage(arrowCursor.image().rect());
+    cursorSurface->commit();
+    pointer->setCursor(cursorSurface.data(), arrowCursor.hotSpot());
+    QVERIFY(cursorRenderedSpy.wait());
 
     // start moving the client
     int timestamp = 1;
