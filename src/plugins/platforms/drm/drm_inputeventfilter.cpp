@@ -11,6 +11,7 @@
 #include "wayland_server.h"
 
 #include <QApplication>
+#include <QKeyEvent>
 
 #include <KWaylandServer/seat_interface.h>
 
