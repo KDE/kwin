@@ -115,7 +115,6 @@ private:
     // active and enabled pipelines (above + wl_output)
     QVector<DrmOutput*> m_enabledOutputs;
 
-    int m_pageFlipsPending = 0;
     bool m_active = false;
     QVector<DrmGpu*> m_gpus;
     QScopedPointer<DpmsInputEventFilter> m_dpmsFilter;

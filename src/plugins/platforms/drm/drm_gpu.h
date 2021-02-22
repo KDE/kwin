@@ -104,6 +104,8 @@ public:
      */
     clockid_t presentationClock() const;
 
+    void waitIdle();
+
 Q_SIGNALS:
     void outputAdded(DrmOutput *output);
     void outputRemoved(DrmOutput *output);

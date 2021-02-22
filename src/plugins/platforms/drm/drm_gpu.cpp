@@ -68,6 +68,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
 
 DrmGpu::~DrmGpu()
 {
+    waitIdle();
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
     }
@@ -323,6 +324,36 @@ void DrmGpu::dispatchEvents()
     context.version = 2;
     context.page_flip_handler = DrmBackend::pageFlipHandler;
     drmHandleEvent(m_fd, &context);
+}
+
+void DrmGpu::waitIdle()
+{
+    m_socketNotifier->setEnabled(false);
+    while (true) {
+        const bool idle = std::all_of(m_outputs.constBegin(), m_outputs.constEnd(), [](DrmOutput *output){
+            return !output->m_pageFlipPending;
+        });
+        if (idle) {
+            break;
+        }
+        fd_set set;
+        FD_ZERO(&set);
+        FD_SET(m_fd, &set);
+        timeval timeout;
+        timeout.tv_sec = 30;
+        timeout.tv_usec = 0;
+        const int descriptorCount = select(m_fd + 1, &set, nullptr, nullptr, &timeout);
+        if (descriptorCount < 0) {
+            qCWarning(KWIN_DRM) << "select() in DrmGpu::waitIdle failed:" << strerror(errno);
+            break;
+        } else if (FD_ISSET(m_fd, &set)) {
+            dispatchEvents();
+        } else {
+            qCWarning(KWIN_DRM) << "No drm events for gpu" << m_devNode << "within last 30 seconds";
+            break;
+        }
+    };
+    m_socketNotifier->setEnabled(true);
 }
 
 }

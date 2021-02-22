@@ -73,13 +73,7 @@ DrmBackend::DrmBackend(QObject *parent)
 
 DrmBackend::~DrmBackend()
 {
-    if (m_gpus.size() > 0) {
-        // wait for pageflips
-        while (m_pageFlipsPending != 0) {
-            QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
-        }
-        qDeleteAll(m_gpus);
-    }
+    qDeleteAll(m_gpus);
 }
 
 void DrmBackend::init()
@@ -185,8 +179,6 @@ void DrmBackend::reactivate()
             o->moveCursor();
         }
     }
-    // restart compositor
-    m_pageFlipsPending = 0;
 
     for (DrmOutput *output : qAsConst(m_outputs)) {
         output->renderLoop()->uninhibit();
@@ -238,9 +230,7 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     Q_UNUSED(frame)
 
     auto output = static_cast<DrmOutput *>(data);
-
     DrmGpu *gpu = output->gpu();
-    DrmBackend *backend = output->m_backend;
 
     std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(),
                                                           CLOCK_MONOTONIC,
@@ -252,8 +242,6 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     }
 
     output->pageFlipped();
-    backend->m_pageFlipsPending--;
-
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
@@ -538,7 +526,6 @@ bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
     }
 
     if (output->present(buffer)) {
-        m_pageFlipsPending++;
         return true;
     } else if (output->gpu()->deleteBufferAfterPageFlip()) {
         delete buffer;

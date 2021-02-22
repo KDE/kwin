@@ -834,6 +834,7 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
     const bool ok = drmModePageFlip(m_gpu->fd(), m_crtc->id(), buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
     if (ok) {
         m_crtc->setNext(buffer);
+        m_pageFlipPending = true;
     } else {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
     }
