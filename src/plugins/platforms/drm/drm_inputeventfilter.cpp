@@ -45,9 +45,8 @@ bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
 {
     if (event->type() == QKeyEvent::KeyPress) {
         notify();
-        return true;
     }
-    return false;
+    return true;
 }
 
 bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
