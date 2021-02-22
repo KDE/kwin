@@ -58,6 +58,23 @@
 namespace KWin
 {
 
+static KWaylandServer::PointerAxisSource kwinAxisSourceToKWaylandAxisSource(InputRedirection::PointerAxisSource source)
+{
+    switch (source) {
+    case KWin::InputRedirection::PointerAxisSourceWheel:
+        return KWaylandServer::PointerAxisSource::Wheel;
+    case KWin::InputRedirection::PointerAxisSourceFinger:
+        return KWaylandServer::PointerAxisSource::Finger;
+    case KWin::InputRedirection::PointerAxisSourceContinuous:
+        return KWaylandServer::PointerAxisSource::Continuous;
+    case KWin::InputRedirection::PointerAxisSourceWheelTilt:
+        return KWaylandServer::PointerAxisSource::WheelTilt;
+    case KWin::InputRedirection::PointerAxisSourceUnknown:
+    default:
+        return KWaylandServer::PointerAxisSource::Unknown;
+    }
+}
+
 InputEventFilter::InputEventFilter() = default;
 
 InputEventFilter::~InputEventFilter()
@@ -268,12 +285,18 @@ public:
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
                 seat->setPointerPos(event->screenPos().toPoint());
+                seat->pointerFrame();
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
             if (pointerSurfaceAllowed()) {
                 // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
                 //       disallowed one or vice versa?
-                event->type() == QEvent::MouseButtonPress ? seat->pointerButtonPressed(nativeButton) : seat->pointerButtonReleased(nativeButton);
+                if (event->type() == QEvent::MouseButtonPress) {
+                    seat->pointerButtonPressed(nativeButton);
+                } else {
+                    seat->pointerButtonReleased(nativeButton);
+                }
+                seat->pointerFrame();
             }
         }
         return true;
@@ -284,9 +307,11 @@ public:
         }
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
-            seat->setTimestamp(event->timestamp());
-            const Qt::Orientation orientation = event->angleDelta().x() == 0 ? Qt::Vertical : Qt::Horizontal;
-            seat->pointerAxis(orientation, orientation == Qt::Horizontal ? event->angleDelta().x() : event->angleDelta().y());
+            const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
+            seat->setTimestamp(wheelEvent->timestamp());
+            seat->pointerAxis(wheelEvent->orientation(), wheelEvent->delta(), wheelEvent->discreteDelta(),
+                              kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
+            seat->pointerFrame();
         }
         return true;
     }
@@ -1378,13 +1403,16 @@ public:
             if (e->delta() != QSizeF()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestampMicroseconds());
             }
+            seat->pointerFrame();
             break;
         }
         case QEvent::MouseButtonPress:
             seat->pointerButtonPressed(nativeButton);
+            seat->pointerFrame();
             break;
         case QEvent::MouseButtonRelease:
             seat->pointerButtonReleased(nativeButton);
+            seat->pointerFrame();
             break;
         default:
             break;
@@ -1395,26 +1423,9 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
-        KWaylandServer::PointerAxisSource source;
-        switch (_event->axisSource()) {
-        case KWin::InputRedirection::PointerAxisSourceWheel:
-            source = KWaylandServer::PointerAxisSource::Wheel;
-            break;
-        case KWin::InputRedirection::PointerAxisSourceFinger:
-            source = KWaylandServer::PointerAxisSource::Finger;
-            break;
-        case KWin::InputRedirection::PointerAxisSourceContinuous:
-            source = KWaylandServer::PointerAxisSource::Continuous;
-            break;
-        case KWin::InputRedirection::PointerAxisSourceWheelTilt:
-            source = KWaylandServer::PointerAxisSource::WheelTilt;
-            break;
-        case KWin::InputRedirection::PointerAxisSourceUnknown:
-        default:
-            source = KWaylandServer::PointerAxisSource::Unknown;
-            break;
-        }
-        seat->pointerAxisV5(_event->orientation(), _event->delta(), _event->discreteDelta(), source);
+        seat->pointerAxis(_event->orientation(), _event->delta(), _event->discreteDelta(),
+                          kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
+        seat->pointerFrame();
         return true;
     }
     bool keyEvent(QKeyEvent *event) override {
@@ -1880,6 +1891,7 @@ public:
         case QEvent::MouseMove: {
             const auto pos = input()->globalPointer();
             seat->setPointerPos(pos);
+            seat->pointerFrame();
 
             const auto eventPos = event->globalPos();
             // TODO: use InputDeviceHandler::at() here and check isClient()?
@@ -1909,9 +1921,11 @@ public:
         }
         case QEvent::MouseButtonPress:
             seat->pointerButtonPressed(nativeButton);
+            seat->pointerFrame();
             break;
         case QEvent::MouseButtonRelease:
             seat->pointerButtonReleased(nativeButton);
+            seat->pointerFrame();
             break;
         default:
             break;

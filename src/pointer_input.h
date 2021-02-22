@@ -212,13 +212,15 @@ Q_SIGNALS:
 
 private:
     void reevaluteSource();
-    void update();
     void updateServerCursor();
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();
     void updateDrag();
     void updateDragCursor();
+
+    void handlePointerChanged();
+    void handleFocusedSurfaceChanged();
 
     void loadThemeCursor(CursorShape shape, WaylandCursorImage::Image *image);
     void loadThemeCursor(const QByteArray &shape, WaylandCursorImage::Image *image);

@@ -929,7 +929,8 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     : QObject(parent)
     , m_pointer(parent)
 {
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::focusedPointerChanged, this, &CursorImage::update);
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged,
+            this, &CursorImage::handlePointerChanged);
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &CursorImage::updateDrag);
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this,
         [this] {
@@ -959,6 +960,8 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         updateMoveResize();
         // TODO: update effects
     });
+
+    handlePointerChanged();
 }
 
 CursorImage::~CursorImage() = default;
@@ -972,25 +975,13 @@ void CursorImage::markAsRendered()
                 icon->surface()->frameRendered(m_surfaceRenderedTimer.elapsed());
             }
         }
-        auto p = waylandServer()->seat()->dragPointer();
-        if (!p) {
-            return;
-        }
-        auto c = p->cursor();
-        if (!c) {
-            return;
-        }
-        auto cursorSurface = c->surface();
-        if (cursorSurface.isNull()) {
-            return;
-        }
-        cursorSurface->frameRendered(m_surfaceRenderedTimer.elapsed());
+    }
+    if (m_currentSource != CursorSource::LockScreen
+            && m_currentSource != CursorSource::PointerSurface
+            && m_currentSource != CursorSource::DragAndDrop) {
         return;
     }
-    if (m_currentSource != CursorSource::LockScreen && m_currentSource != CursorSource::PointerSurface) {
-        return;
-    }
-    auto p = waylandServer()->seat()->focusedPointer();
+    auto p = waylandServer()->seat()->pointer();
     if (!p) {
         return;
     }
@@ -999,22 +990,34 @@ void CursorImage::markAsRendered()
         return;
     }
     auto cursorSurface = c->surface();
-    if (cursorSurface.isNull()) {
+    if (!cursorSurface) {
         return;
     }
     cursorSurface->frameRendered(m_surfaceRenderedTimer.elapsed());
 }
 
-void CursorImage::update()
+void CursorImage::handlePointerChanged()
+{
+    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+
+    if (pointer) {
+        connect(pointer, &KWaylandServer::PointerInterface::focusedSurfaceChanged,
+                this, &CursorImage::handleFocusedSurfaceChanged);
+    }
+}
+
+void CursorImage::handleFocusedSurfaceChanged()
 {
     if (s_cursorUpdateBlocking) {
         return;
     }
-    using namespace KWaylandServer;
+
+    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
     disconnect(m_serverCursor.connection);
-    auto p = waylandServer()->seat()->focusedPointer();
-    if (p) {
-        m_serverCursor.connection = connect(p, &PointerInterface::cursorChanged, this, &CursorImage::updateServerCursor);
+
+    if (pointer->focusedSurface()) {
+        m_serverCursor.connection = connect(pointer, &KWaylandServer::PointerInterface::cursorChanged,
+                                            this, &CursorImage::updateServerCursor);
     } else {
         m_serverCursor.connection = QMetaObject::Connection();
         reevaluteSource();
@@ -1064,7 +1067,7 @@ void CursorImage::updateServerCursor()
     m_serverCursor.cursor = {};
     reevaluteSource();
     const bool needsEmit = m_currentSource == CursorSource::LockScreen || m_currentSource == CursorSource::PointerSurface;
-    auto p = waylandServer()->seat()->focusedPointer();
+    auto p = waylandServer()->seat()->pointer();
     if (!p) {
         if (needsEmit) {
             emit changed();
@@ -1079,13 +1082,13 @@ void CursorImage::updateServerCursor()
         return;
     }
     auto cursorSurface = c->surface();
-    if (cursorSurface.isNull()) {
+    if (!cursorSurface) {
         if (needsEmit) {
             emit changed();
         }
         return;
     }
-    auto buffer = cursorSurface.data()->buffer();
+    auto buffer = cursorSurface->buffer();
     if (!buffer) {
         if (needsEmit) {
             emit changed();
@@ -1138,8 +1141,9 @@ void CursorImage::updateDrag()
     disconnect(m_drag.connection);
     m_drag.cursor = {};
     reevaluteSource();
-    if (auto p = waylandServer()->seat()->dragPointer()) {
-        m_drag.connection = connect(p, &PointerInterface::cursorChanged, this, &CursorImage::updateDragCursor);
+    if (waylandServer()->seat()->isDragPointer()) {
+        KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+        m_drag.connection = connect(pointer, &PointerInterface::cursorChanged, this, &CursorImage::updateDragCursor);
     } else {
         m_drag.connection = QMetaObject::Connection();
     }
@@ -1160,7 +1164,7 @@ void CursorImage::updateDragCursor()
             }
         }
     }
-    auto p = waylandServer()->seat()->dragPointer();
+    auto p = waylandServer()->seat()->pointer();
     if (!p) {
         if (needsEmit) {
             emit changed();
@@ -1175,13 +1179,13 @@ void CursorImage::updateDragCursor()
         return;
     }
     auto cursorSurface = c->surface();
-    if (cursorSurface.isNull()) {
+    if (!cursorSurface) {
         if (needsEmit) {
             emit changed();
         }
         return;
     }
-    auto buffer = cursorSurface.data()->buffer();
+    auto buffer = cursorSurface->buffer();
     if (!buffer) {
         if (needsEmit) {
             emit changed();
@@ -1345,7 +1349,8 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::Decoration);
         return;
     }
-    if (m_pointer->focus() && waylandServer()->seat()->focusedPointer()) {
+    const KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+    if (pointer && pointer->focusedSurface()) {
         setSource(CursorSource::PointerSurface);
         return;
     }

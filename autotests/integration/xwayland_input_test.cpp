@@ -181,7 +181,6 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QVERIFY(enteredSpy.isEmpty());
     Cursors::self()->mouse()->setPos(client->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
-    QVERIFY(waylandServer()->seat()->focusedPointer());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.last().first(), client->frameGeometry().center() - client->clientPos());
 
@@ -277,7 +276,6 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QVERIFY(enteredSpy.isEmpty());
     Cursors::self()->mouse()->setPos(client->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), client->surface());
-    QVERIFY(waylandServer()->seat()->focusedPointer());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.last().first(), QPoint(59, 104));
 

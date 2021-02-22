@@ -341,7 +341,8 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     AbstractClient *window = workspace()->activeClient();
     QVERIFY(window);
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
-    QTRY_COMPARE(enteredSpy.count(), 1);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 1);
 
     // move the cursor to the second screen
     Cursors::self()->mouse()->setPos(1500, 300);
@@ -363,7 +364,8 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
 
     // and we should get an enter event
-    QTRY_COMPARE(enteredSpy.count(), 2);
+    QVERIFY(enteredSpy.wait());
+    QCOMPARE(enteredSpy.count(), 2);
 }
 
 void PointerInputTest::testModifierClickUnrestrictedMove_data()
