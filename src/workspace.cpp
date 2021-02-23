@@ -13,6 +13,7 @@
 // kwin libs
 #include <kwinglplatform.h>
 // kwin
+#include "abstract_output.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -2301,7 +2302,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 
 QRect Workspace::clientArea(clientAreaOption opt, const AbstractOutput *output, int desktop) const
 {
-    return clientArea(opt, kwinApp()->platform()->enabledOutputs().indexOf(output), desktop);
+    return clientArea(opt, output->geometry().center(), desktop);
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
