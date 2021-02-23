@@ -11,6 +11,7 @@
 
 #include <kwin_export.h>
 
+#include <QDebug>
 #include <QObject>
 #include <QRect>
 #include <QSize>
@@ -209,6 +210,8 @@ private:
     Q_DISABLE_COPY(AbstractOutput)
     int m_directScanoutCount = 0;
 };
+
+KWIN_EXPORT QDebug operator<<(QDebug debug, const AbstractOutput *output);
 
 } // namespace KWin
 

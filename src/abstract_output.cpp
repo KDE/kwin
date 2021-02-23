@@ -53,6 +53,27 @@ const uint16_t *GammaRamp::blue() const
     return m_table.data() + 2 * m_size;
 }
 
+QDebug operator<<(QDebug debug, const AbstractOutput *output)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace();
+    if (output) {
+        debug << output->metaObject()->className() << '(' << static_cast<const void *>(output);
+        debug << ", name=" << output->name();
+        debug << ", geometry=" << output->geometry();
+        debug << ", scale=" << output->scale();
+        if (debug.verbosity() > 2) {
+            debug << ", manufacturer=" << output->manufacturer();
+            debug << ", model=" << output->model();
+            debug << ", serialNumber=" << output->serialNumber();
+        }
+        debug << ')';
+    } else {
+        debug << "AbstractOutput(0x0)";
+    }
+    return debug;
+}
+
 AbstractOutput::AbstractOutput(QObject *parent)
     : QObject(parent)
 {
