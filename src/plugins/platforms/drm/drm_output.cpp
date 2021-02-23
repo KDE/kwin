@@ -955,14 +955,23 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
 {
     if (enable) {
         const QSize mSize = modeSize();
-        const QSize sourceSize = hardwareTransforms() ? pixelSize() : mSize;
+        const QSize bufferSize = m_primaryPlane->next() ? m_primaryPlane->next()->size() : pixelSize();
+        const QSize sourceSize = hardwareTransforms() ? bufferSize : mSize;
+        QRect targetRect = QRect(QPoint(0, 0), mSize);
+        if (mSize != sourceSize) {
+            targetRect.setSize(sourceSize.scaled(mSize, Qt::AspectRatioMode::KeepAspectRatio));
+            targetRect.setX((mSize.width() - targetRect.width()) / 2);
+            targetRect.setY((mSize.height() - targetRect.height()) / 2);
+        }
 
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcX), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcY), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcW), sourceSize.width() << 16);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcH), sourceSize.height() << 16);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), mSize.width());
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), mSize.height());
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcX), targetRect.x());
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcY), targetRect.y());
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), targetRect.width());
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), targetRect.height());
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), m_crtc->id());
     } else {
         if (m_gpu->deleteBufferAfterPageFlip()) {
@@ -976,6 +985,8 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcY), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcW), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcH), 0);
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcX), 0);
+        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcY), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), 0);
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), 0);

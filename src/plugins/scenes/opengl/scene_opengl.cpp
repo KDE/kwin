@@ -638,24 +638,23 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             if (!implEffects->blocksDirectScanout()) {
                 for (int i = stacking_order.count() - 1; i >= 0; i--) {
                     Window *window = stacking_order[i];
-                    AbstractClient *c = dynamic_cast<AbstractClient*>(window->window());
-                    if (!c) {
-                        break;
-                    }
-                    if (c->isOnScreen(screenId)) {
-                        if (window->isOpaque() && c->isFullScreen()) {
-                            auto pixmap = window->windowPixmap<WindowPixmap>();
-                            if (!pixmap) {
-                                break;
-                            }
-                            pixmap->update();
-                            pixmap = pixmap->topMostSurface();
-                            // the subsurface has to be able to cover the whole window
-                            if (pixmap->position() != QPoint(0, 0)) {
-                                break;
-                            }
-                            directScanout = m_backend->scanout(screenId, pixmap->surface());
+                    Toplevel *toplevel = window->window();
+                    if (toplevel->isOnScreen(screenId)) {
+                        AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
+                        if (!c || !c->isFullScreen() || !window->isOpaque()) {
+                            break;
                         }
+                        auto pixmap = window->windowPixmap<WindowPixmap>();
+                        if (!pixmap) {
+                            break;
+                        }
+                        pixmap->update();
+                        pixmap = pixmap->topMostSurface();
+                        // the subsurface has to be able to cover the whole window
+                        if (pixmap->position() != QPoint(0, 0)) {
+                            break;
+                        }
+                        directScanout = m_backend->scanout(screenId, pixmap->surface());
                         break;
                     }
                 }

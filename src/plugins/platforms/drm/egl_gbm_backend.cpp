@@ -698,7 +698,8 @@ bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surf
     }
     auto buffer = surface->buffer();
     Output output = m_outputs[screenId];
-    if (buffer->linuxDmabufBuffer()->size() != output.output->modeSize()) {
+    if (buffer->linuxDmabufBuffer()->size() != output.output->modeSize()
+        && output.output->isBeingRecorded()) {
         return false;
     }
     EglDmabufBuffer *dmabuf = static_cast<EglDmabufBuffer*>(buffer->linuxDmabufBuffer());
@@ -739,7 +740,7 @@ bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surf
     }
     // damage tracking for screen casting
     QRegion damage;
-    if (output.surfaceInterface == surface) {
+    if (output.surfaceInterface == surface && buffer->size() == output.output->modeSize()) {
         QRegion trackedDamage = surface->trackedDamage();
         surface->resetTrackedDamage();
         for (const auto &rect : trackedDamage) {
