@@ -80,7 +80,6 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->unloadAllEffects();
     }
-    destroyPlugins();
     delete m_xwayland;
     m_xwayland = nullptr;
     destroyWorkspace();
@@ -90,7 +89,6 @@ WaylandTestApplication::~WaylandTestApplication()
     }
     waylandServer()->terminateClientConnections();
     destroyCompositor();
-    destroyColorManager();
 }
 
 void WaylandTestApplication::performStartup()

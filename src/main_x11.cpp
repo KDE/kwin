@@ -190,8 +190,6 @@ void ApplicationX11::setReplace(bool replace)
 void ApplicationX11::lostSelection()
 {
     sendPostedEvents();
-    destroyPlugins();
-    destroyColorManager();
     destroyCompositor();
     destroyWorkspace();
     // Remove windowmanager privileges
