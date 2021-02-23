@@ -24,6 +24,7 @@
 #endif
 // system
 #include <algorithm>
+#include <errno.h>
 #include <unistd.h>
 // drm
 #include <xf86drm.h>
