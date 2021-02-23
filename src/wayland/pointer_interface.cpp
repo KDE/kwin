@@ -368,4 +368,4 @@ SurfaceInterface *Cursor::surface() const
     return d->surface;
 }
 
-}
+} // namespace KWaylandServer
