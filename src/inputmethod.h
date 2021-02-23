@@ -37,6 +37,7 @@ public:
     void show();
 
 Q_SIGNALS:
+    void visibleChanged(bool shown);
     void enabledChanged(bool enabled);
 
 private Q_SLOTS:
@@ -56,6 +57,7 @@ private Q_SLOTS:
     void setPreeditCursor(qint32 index);
 
 private:
+    void setVisible(bool shown);
     void setEnabled(bool enable);
     void updateSni();
     void updateInputPanelState();
@@ -68,7 +70,7 @@ private:
     } preedit;
 
     bool m_enabled = false;
-    bool m_shown = false;
+    bool m_visible = false;
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;

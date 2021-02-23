@@ -264,6 +264,8 @@ if (KWIN_BUILD_TABBOX)
     target_link_libraries(kwin Qt::GuiPrivate)
 endif()
 
+qt5_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -P -s -M)
+
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(CMAKE_SYSTEM MATCHES "FreeBSD")
@@ -339,6 +341,12 @@ target_link_libraries(kwin_wayland
     KF5IdleTimeKWinPlugin
 )
 
+add_custom_target(
+    KWinDBusInterfaces
+    ALL
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml
+)
+
 if (PipeWire_FOUND)
     target_link_libraries(kwin_wayland KWinScreencastPlugin)
 endif()
@@ -352,6 +360,7 @@ install(
         org.kde.kwin.Compositing.xml
         org.kde.kwin.Effects.xml
         org.kde.KWin.Plugins.xml
+        ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.VirtualKeyboard.xml
     DESTINATION
         ${KDE_INSTALL_DBUSINTERFACEDIR}
 )

@@ -380,7 +380,9 @@ if (HAVE_GBM)
     ecm_mark_as_test(testGbmSurface)
 endif()
 
-add_executable(testVirtualKeyboardDBus test_virtualkeyboard_dbus.cpp ../src/virtualkeyboard_dbus.cpp)
+qt5_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
+add_executable(testVirtualKeyboardDBus test_virtualkeyboard_dbus.cpp ../src/virtualkeyboard_dbus.cpp ${DBUS_SRCS})
+
 target_link_libraries(testVirtualKeyboardDBus
     Qt::DBus
     Qt::Test

@@ -82,7 +82,9 @@ void InputMethod::init()
     auto dbus = new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
     dbus->setEnabled(m_enabled);
-    connect(dbus, &VirtualKeyboardDBus::activateRequested, this, &InputMethod::setEnabled);
+    connect(dbus, &VirtualKeyboardDBus::enableRequested, this, &InputMethod::setEnabled);
+    connect(dbus, &VirtualKeyboardDBus::hideRequested, this, &InputMethod::hide);
+    connect(this, &InputMethod::visibleChanged, dbus, &VirtualKeyboardDBus::setActive);
     connect(this, &InputMethod::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
     connect(input(), &InputRedirection::keyStateChanged, this, &InputMethod::hide);
 
@@ -114,25 +116,37 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
-    if (m_shown) {
-        waylandServer()->inputMethod()->sendDeactivate();
-    }
-    if (!m_enabled) {
-        return;
-    }
-
-    waylandServer()->inputMethod()->sendActivate();
-    if (m_shown) {
-        adoptInputMethodContext();
-    }
-    m_shown = true;
+    setVisible(true);
 }
 
 void InputMethod::hide()
 {
-    waylandServer()->inputMethod()->sendDeactivate();
-    updateInputPanelState();
-    m_shown = false;
+    setVisible(false);
+}
+
+void InputMethod::setVisible(bool visible)
+{
+    if (m_visible) {
+        waylandServer()->inputMethod()->sendDeactivate();
+    }
+
+    if (visible) {
+        if (!m_enabled) {
+            return;
+        }
+
+        waylandServer()->inputMethod()->sendActivate();
+        if (m_visible) {
+            adoptInputMethodContext();
+        }
+    } else {
+        updateInputPanelState();
+    }
+
+    if (m_visible != visible) {
+        m_visible = visible;
+        Q_EMIT visibleChanged(visible);
+    }
 }
 
 void InputMethod::clientAdded(AbstractClient* client)
@@ -172,10 +186,10 @@ void InputMethod::handleFocusedSurfaceChanged()
             }
             m_trackedClient = focusedClient;
         }
+        updateInputPanelState();
     } else {
-        waylandServer()->inputMethod()->sendDeactivate();
+        setVisible(false);
     }
-    updateInputPanelState();
 }
 
 void InputMethod::surroundingTextChanged()
@@ -248,7 +262,6 @@ void InputMethod::textInputInterfaceV2EnabledChanged()
         waylandServer()->inputMethod()->sendActivate();
         adoptInputMethodContext();
     } else {
-        waylandServer()->inputMethod()->sendDeactivate();
         hide();
     }
 }
