@@ -222,7 +222,7 @@ void LogindIntegration::logindServiceRegistered()
     );
 
     m_bus.connect(m_sessionControllerService,
-                  m_sessionPath,
+                  m_sessionControllerPath,
                   m_sessionControllerManagerInterface,
                   QStringLiteral("PrepareForSleep"),
                   this,
