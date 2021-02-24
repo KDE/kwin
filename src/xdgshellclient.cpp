@@ -10,6 +10,7 @@
 */
 #include "xdgshellclient.h"
 #include "abstract_wayland_output.h"
+#include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "platform.h"
 #include "screenedge.h"
@@ -564,7 +565,7 @@ bool XdgToplevelClient::userCanSetNoBorder() const
         switch (m_xdgDecoration->preferredMode()) {
         case XdgToplevelDecorationV1Interface::Mode::Server:
         case XdgToplevelDecorationV1Interface::Mode::Undefined:
-            return !isFullScreen() && !isShade();
+            return Decoration::DecorationBridge::hasPlugin() && !isFullScreen() && !isShade();
         case XdgToplevelDecorationV1Interface::Mode::Client:
             return false;
         }
@@ -587,7 +588,7 @@ bool XdgToplevelClient::noBorder() const
         switch (m_xdgDecoration->preferredMode()) {
         case XdgToplevelDecorationV1Interface::Mode::Server:
         case XdgToplevelDecorationV1Interface::Mode::Undefined:
-            return m_userNoBorder || isFullScreen();
+            return !Decoration::DecorationBridge::hasPlugin() || m_userNoBorder || isFullScreen();
         case XdgToplevelDecorationV1Interface::Mode::Client:
             return true;
         }
