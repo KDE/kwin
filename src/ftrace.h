@@ -73,7 +73,7 @@ class KWIN_EXPORT FTraceDuration
 public:
     template<typename... Args> FTraceDuration(Args... args)
     {
-        static QAtomicInteger<qulonglong> s_context = 0;
+        static QAtomicInteger<quint32> s_context = 0;
         QTextStream stream(&m_message);
         (stream << ... << args);
         stream.flush();
@@ -85,7 +85,7 @@ public:
 
 private:
     QByteArray m_message;
-    qulonglong m_context;
+    quint32 m_context;
 };
 
 } // namespace KWin
