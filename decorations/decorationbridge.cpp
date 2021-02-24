@@ -98,6 +98,15 @@ void DecorationBridge::readDecorationOptions()
     m_showToolTips = kwinApp()->config()->group(s_pluginName).readEntry("ShowToolTips", true);
 }
 
+bool DecorationBridge::hasPlugin()
+{
+    const DecorationBridge *bridge = DecorationBridge::self();
+    if (!bridge) {
+        return false;
+    }
+    return !bridge->m_noPlugin && bridge->m_factory;
+}
+
 void DecorationBridge::init()
 {
     using namespace KWaylandServer;
