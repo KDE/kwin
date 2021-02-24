@@ -23,6 +23,7 @@
  * SOFTWARE.
  */
 
+#define _DEFAULT_SOURCE
 #include "xcursor.h"
 #include <stdio.h>
 #include <stdlib.h>
