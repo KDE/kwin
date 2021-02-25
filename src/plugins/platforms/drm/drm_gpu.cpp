@@ -74,7 +74,9 @@ DrmGpu::~DrmGpu()
         eglTerminate(m_eglDisplay);
     }
 #if HAVE_GBM
-    gbm_device_destroy(m_gbmDevice);
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
 #endif
     qDeleteAll(m_crtcs);
     qDeleteAll(m_connectors);
