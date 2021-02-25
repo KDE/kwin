@@ -65,7 +65,7 @@ void TestRegion::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -81,7 +81,7 @@ void TestRegion::init()
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
     QVERIFY(compositorSpy.isValid());
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -122,7 +122,7 @@ void TestRegion::testCreate()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy regionCreatedSpy(m_compositorInterface, SIGNAL(regionCreated(KWaylandServer::RegionInterface*)));
+    QSignalSpy regionCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::regionCreated);
     QVERIFY(regionCreatedSpy.isValid());
 
     QScopedPointer<Region> region(m_compositor->createRegion());
@@ -139,7 +139,7 @@ void TestRegion::testCreateWithRegion()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy regionCreatedSpy(m_compositorInterface, SIGNAL(regionCreated(KWaylandServer::RegionInterface*)));
+    QSignalSpy regionCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::regionCreated);
     QVERIFY(regionCreatedSpy.isValid());
 
     QScopedPointer<Region> region(m_compositor->createRegion(QRegion(0, 0, 10, 20), nullptr));
@@ -156,7 +156,7 @@ void TestRegion::testCreateUniquePtr()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy regionCreatedSpy(m_compositorInterface, SIGNAL(regionCreated(KWaylandServer::RegionInterface*)));
+    QSignalSpy regionCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::regionCreated);
     QVERIFY(regionCreatedSpy.isValid());
 
     std::unique_ptr<Region> region(m_compositor->createRegion(QRegion(0, 0, 10, 20)));
@@ -173,14 +173,14 @@ void TestRegion::testAdd()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy regionCreatedSpy(m_compositorInterface, SIGNAL(regionCreated(KWaylandServer::RegionInterface*)));
+    QSignalSpy regionCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::regionCreated);
     QVERIFY(regionCreatedSpy.isValid());
 
     QScopedPointer<Region> region(m_compositor->createRegion());
     QVERIFY(regionCreatedSpy.wait());
     auto serverRegion = regionCreatedSpy.first().first().value<KWaylandServer::RegionInterface*>();
 
-    QSignalSpy regionChangedSpy(serverRegion, SIGNAL(regionChanged(QRegion)));
+    QSignalSpy regionChangedSpy(serverRegion, &KWaylandServer::RegionInterface::regionChanged);
     QVERIFY(regionChangedSpy.isValid());
 
     // adding a QRect
@@ -208,14 +208,14 @@ void TestRegion::testRemove()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy regionCreatedSpy(m_compositorInterface, SIGNAL(regionCreated(KWaylandServer::RegionInterface*)));
+    QSignalSpy regionCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::regionCreated);
     QVERIFY(regionCreatedSpy.isValid());
 
     std::unique_ptr<Region> region(m_compositor->createRegion(QRegion(0, 0, 100, 200)));
     QVERIFY(regionCreatedSpy.wait());
     auto serverRegion = regionCreatedSpy.first().first().value<KWaylandServer::RegionInterface*>();
 
-    QSignalSpy regionChangedSpy(serverRegion, SIGNAL(regionChanged(QRegion)));
+    QSignalSpy regionChangedSpy(serverRegion, &KWaylandServer::RegionInterface::regionChanged);
     QVERIFY(regionChangedSpy.isValid());
 
     // subtract a QRect
@@ -250,7 +250,7 @@ void TestRegion::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     QVERIFY(region->isValid());
 
-    QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
+    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
     QVERIFY(connectionDiedSpy.isValid());
     delete m_display;
     m_display = nullptr;

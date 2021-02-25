@@ -106,7 +106,7 @@ void TestVirtualDesktop::init()
     QSignalSpy plasmaVirtualDesktopManagementSpy(&registry, &Registry::plasmaVirtualDesktopManagementAnnounced);
     QVERIFY(plasmaVirtualDesktopManagementSpy.isValid());
 
-    QSignalSpy windowManagementSpy(&registry, SIGNAL(plasmaWindowManagementAnnounced(quint32,quint32)));
+    QSignalSpy windowManagementSpy(&registry, &Registry::plasmaWindowManagementAnnounced);
     QVERIFY(windowManagementSpy.isValid());
 
     QVERIFY(!registry.eventQueue());
@@ -131,13 +131,13 @@ void TestVirtualDesktop::init()
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
-    QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow*)));
+    QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.isValid());
     m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
-    m_window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
+    m_window = windowSpy.first().first().value<PlasmaWindow *>();
 }
 
 void TestVirtualDesktop::cleanup()

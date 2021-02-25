@@ -101,7 +101,7 @@ void TestWindowManagement::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -117,10 +117,10 @@ void TestWindowManagement::init()
     QVERIFY(m_queue->isValid());
 
     m_registry = new KWayland::Client::Registry(this);
-    QSignalSpy compositorSpy(m_registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    QSignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
     QVERIFY(compositorSpy.isValid());
 
-    QSignalSpy windowManagementSpy(m_registry, SIGNAL(plasmaWindowManagementAnnounced(quint32,quint32)));
+    QSignalSpy windowManagementSpy(m_registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced);
     QVERIFY(windowManagementSpy.isValid());
 
 
@@ -141,7 +141,7 @@ void TestWindowManagement::init()
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = m_registry->createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
-    QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow*)));
+    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.isValid());
     m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
@@ -149,7 +149,7 @@ void TestWindowManagement::init()
     QVERIFY(windowSpy.wait());
     m_window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
 
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
     m_surface = m_compositor->createSurface(this);
@@ -164,7 +164,7 @@ void TestWindowManagement::testWindowTitle()
 {
     m_windowInterface->setTitle(QStringLiteral("Test Title"));
 
-    QSignalSpy titleSpy(m_window, SIGNAL(titleChanged()));
+    QSignalSpy titleSpy(m_window, &KWayland::Client::PlasmaWindow::titleChanged);
     QVERIFY(titleSpy.isValid());
 
     QVERIFY(titleSpy.wait());
@@ -176,7 +176,7 @@ void TestWindowManagement::testMinimizedGeometry()
 {
     m_window->setMinimizedGeometry(m_surface, QRect(5, 10, 100, 200));
 
-    QSignalSpy geometrySpy(m_windowInterface, SIGNAL(minimizedGeometriesChanged()));
+    QSignalSpy geometrySpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::minimizedGeometriesChanged);
     QVERIFY(geometrySpy.isValid());
 
     QVERIFY(geometrySpy.wait());
@@ -623,7 +623,7 @@ void TestWindowManagement::testPid()
 
     //test server not setting a PID for whatever reason
     QScopedPointer<KWaylandServer::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
-    QSignalSpy windowSpy(m_windowManagement, SIGNAL(windowCreated(KWayland::Client::PlasmaWindow*)));
+    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.wait());
     QScopedPointer<PlasmaWindow> newWindow( windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());
     QVERIFY(newWindow);

@@ -66,7 +66,7 @@ void TestShmPool::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -77,7 +77,7 @@ void TestShmPool::init()
     QVERIFY(connectedSpy.wait());
 
     KWayland::Client::Registry registry;
-    QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
+    QSignalSpy shmSpy(&registry, &KWayland::Client::Registry::shmAnnounced);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -215,7 +215,7 @@ void TestShmPool::testDestroy()
     // let's create one Buffer
     m_shmPool->getBuffer(QSize(10, 10), 8);
 
-    QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
+    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
     QVERIFY(connectionDiedSpy.isValid());
     delete m_display;
     m_display = nullptr;

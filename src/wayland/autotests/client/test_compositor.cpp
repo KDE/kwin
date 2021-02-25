@@ -59,7 +59,7 @@ void TestCompositor::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -70,7 +70,7 @@ void TestCompositor::init()
     QVERIFY(connectedSpy.wait());
 
     KWayland::Client::Registry registry;
-    QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -106,7 +106,7 @@ void TestCompositor::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
     QVERIFY(m_compositor->isValid());
 
-    QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
+    QSignalSpy connectionDiedSpy(m_connection, &KWayland::Client::ConnectionThread::connectionDied);
     QVERIFY(connectionDiedSpy.isValid());
     delete m_display;
     m_display = nullptr;
@@ -123,7 +123,7 @@ void TestCompositor::testCast()
 {
     using namespace KWayland::Client;
     Registry registry;
-    QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();

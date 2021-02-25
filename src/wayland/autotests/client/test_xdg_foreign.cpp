@@ -169,7 +169,7 @@ void TestForeign::cleanup()
 
 void TestForeign::doExport()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
     m_exportedSurface = m_compositor->createSurface();
@@ -191,7 +191,7 @@ void TestForeign::doExport()
     m_imported = m_importer->importTopLevel(m_exported->handle());
     QVERIFY(m_imported->isValid());
 
-    QSignalSpy childSurfaceInterfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
+    QSignalSpy childSurfaceInterfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
     m_childSurface = m_compositor->createSurface();
     QVERIFY(childSurfaceInterfaceCreated.wait());
@@ -305,7 +305,7 @@ void TestForeign::testExportTwoTimes()
     QVERIFY(imported2->isValid());
 
     //create a second child surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
     KWayland::Client::Surface *childSurface2 = m_compositor->createSurface();
@@ -338,7 +338,7 @@ void TestForeign::testImportTwoTimes()
     QVERIFY(imported2->isValid());
 
     //create a second child surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWaylandServer::SurfaceInterface*)));
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
     QVERIFY(serverSurfaceCreated.isValid());
 
     KWayland::Client::Surface *childSurface2 = m_compositor->createSurface();
