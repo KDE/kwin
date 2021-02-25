@@ -37,6 +37,9 @@ public:
     void defaults() override;
     QString quickHelp() const override;
 
+protected Q_SLOTS:
+    void updateUnmanagedState();
+
 private:
 
     QTabWidget   *tab;

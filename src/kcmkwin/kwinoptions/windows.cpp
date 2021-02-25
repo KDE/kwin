@@ -71,8 +71,6 @@ void KFocusConfig::initialize(KWinOptionsSettings *settings)
     connect(qApp, &QGuiApplication::screenAdded, this, &KFocusConfig::updateMultiScreen);
     connect(qApp, &QGuiApplication::screenRemoved, this, &KFocusConfig::updateMultiScreen);
     updateMultiScreen();
-
-    load();
 }
 
 void KFocusConfig::updateMultiScreen()
@@ -125,13 +123,11 @@ void KFocusConfig::focusPolicyChanged()
         break;
     }
 
-    const bool changed = m_settings->focusPolicy() != selectedFocusPolicy || loadedNextFocusPrefersMouseItem != selectedNextFocusPrefersMouseItem;
-    unmanagedWidgetChangeState(changed);
-    emit unmanagedWidgetStateChanged(changed);
+    m_unmanagedChangeState = m_settings->focusPolicy() != selectedFocusPolicy || loadedNextFocusPrefersMouseItem != selectedNextFocusPrefersMouseItem;
+    unmanagedWidgetChangeState(m_unmanagedChangeState);
 
-    const bool isDefault = focusPolicy == defaultFocusPolicyIndex;
-    unmanagedWidgetDefaultState(isDefault);
-    emit unmanagedWidgetDefaulted(isDefault);
+    m_unmanagedDefaultState = focusPolicy == defaultFocusPolicyIndex;
+    unmanagedWidgetDefaultState(m_unmanagedDefaultState);
 
     // the auto raise related widgets are: autoRaise
     m_ui->kcfg_AutoRaise->setEnabled(focusPolicy != CLICK_TO_FOCUS && focusPolicy != CLICK_TO_FOCUS_MOUSE_PRECEDENT);
@@ -214,13 +210,22 @@ void KFocusConfig::save(void)
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
-    emit KCModule::changed(false);
 }
 
 void KFocusConfig::defaults()
 {
     KCModule::defaults();
     m_ui->windowFocusPolicy->setCurrentIndex(defaultFocusPolicyIndex);
+}
+
+bool KFocusConfig::isDefaults() const
+{
+    return managedWidgetDefaultState() && m_unmanagedDefaultState;
+}
+
+bool KFocusConfig::isSaveNeeded() const
+{
+    return managedWidgetChangeState() || m_unmanagedChangeState;
 }
 
 KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget* parent)
@@ -258,8 +263,6 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
     // This option lives in the kdeglobals file because it is consumed by
     // kxmlgui.
     m_ui->kcfg_AllowKDEAppsToRememberWindowPositions->setVisible(KWindowSystem::isPlatformX11());
-
-    load();
 }
 
 void KAdvancedConfig::showEvent(QShowEvent *ev)
@@ -284,6 +287,16 @@ void KAdvancedConfig::save(void)
     }
 }
 
+bool KAdvancedConfig::isDefaults() const
+{
+    return managedWidgetDefaultState();
+}
+
+bool KAdvancedConfig::isSaveNeeded() const
+{
+    return managedWidgetChangeState();
+}
+
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget* parent)
     : QWidget(parent)
 {
@@ -303,7 +316,6 @@ void KMovingConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, this);
-    load();
 }
 
 void KMovingConfig::showEvent(QShowEvent *ev)
@@ -334,4 +346,14 @@ void KMovingConfig::save(void)
     } else {
         interface.unloadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
     }
+}
+
+bool KMovingConfig::isDefaults() const
+{
+    return managedWidgetDefaultState();
+}
+
+bool KMovingConfig::isSaveNeeded() const
+{
+    return managedWidgetChangeState();
 }

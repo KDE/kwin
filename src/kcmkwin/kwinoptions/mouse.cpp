@@ -6,10 +6,11 @@
 
 #include "mouse.h"
 
-#include <QDebug>
 #include <QtDBus>
 
 #include <cstdlib>
+
+#include <KConfigDialogManager>
 
 #include "kwinoptions_settings.h"
 
@@ -38,7 +39,6 @@ void KTitleBarActionsConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, this);
-    load();
 }
 
 void KTitleBarActionsConfig::showEvent(QShowEvent *ev)
@@ -68,6 +68,16 @@ void KTitleBarActionsConfig::save()
     }
 }
 
+bool KTitleBarActionsConfig::isDefaults() const
+{
+    return managedWidgetDefaultState();
+}
+
+bool KTitleBarActionsConfig::isSaveNeeded() const
+{
+    return managedWidgetChangeState();
+}
+
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent), standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(this))
@@ -81,7 +91,6 @@ void KWindowActionsConfig::initialize(KWinOptionsSettings *settings)
 {
     m_settings = settings;
     addConfig(m_settings, this);
-    load();
 }
 
 void KWindowActionsConfig::showEvent(QShowEvent *ev)
@@ -103,4 +112,14 @@ void KWindowActionsConfig::save()
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
+}
+
+bool KWindowActionsConfig::isDefaults() const
+{
+    return managedWidgetDefaultState();
+}
+
+bool KWindowActionsConfig::isSaveNeeded() const
+{
+    return managedWidgetChangeState();
 }

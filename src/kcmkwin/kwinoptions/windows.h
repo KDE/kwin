@@ -66,9 +66,8 @@ public:
     void save() override;
     void defaults() override;
 
-Q_SIGNALS:
-    void unmanagedWidgetDefaulted(bool defaulted);
-    void unmanagedWidgetStateChanged(bool changed);
+    bool isDefaults() const;
+    bool isSaveNeeded() const;
 
 protected:
     void initialize(KWinOptionsSettings *settings);
@@ -80,8 +79,9 @@ private Q_SLOTS:
     void updateDefaultIndicator();
 
 private:
-
     bool     standAlone;
+    bool m_unmanagedChangeState = false;
+    bool m_unmanagedDefaultState = true;
 
     KWinFocusConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
@@ -94,6 +94,9 @@ public:
     KMovingConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent);
 
     void save() override;
+
+    bool isDefaults() const;
+    bool isSaveNeeded() const;
 
 protected:
     void initialize(KWinOptionsSettings *settings);
@@ -112,6 +115,9 @@ public:
     KAdvancedConfig(bool _standAlone, KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings, QWidget *parent);
 
     void save() override;
+
+    bool isDefaults() const;
+    bool isSaveNeeded() const;
 
 protected:
     void initialize(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings);
