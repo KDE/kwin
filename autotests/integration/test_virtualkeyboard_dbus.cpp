@@ -14,8 +14,14 @@
 
 #include <virtualkeyboardinterface.h>
 #include "virtualkeyboard_dbus.h"
+#include "wayland_server.h"
+#include "kwin_wayland_test.h"
 
 using KWin::VirtualKeyboardDBus;
+using namespace KWin;
+using namespace KWin::Test;
+
+static const QString s_socketName = QStringLiteral("wayland_test_kwin_virtualkeyboarddbus-0");
 
 class VirtualKeyboardDBusTest : public QObject
 {
@@ -25,16 +31,35 @@ private Q_SLOTS:
     void testEnabled();
     void testRequestEnabled_data();
     void testRequestEnabled();
+    void cleanup();
 };
 
 void VirtualKeyboardDBusTest::initTestCase()
 {
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.testvirtualkeyboard"));
+    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
+    QVERIFY(applicationStartedSpy.isValid());
+    QVERIFY(waylandServer()->init(s_socketName));
+
+    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
+    kwinApp()->start();
+    QVERIFY(applicationStartedSpy.wait());
+    waylandServer()->initWorkspace();
+
+    QVERIFY(setupWaylandConnection(AdditionalWaylandInterface::Seat |
+                                   AdditionalWaylandInterface::InputMethodV1 |
+                                   AdditionalWaylandInterface::TextInputManagerV2 |
+                                   AdditionalWaylandInterface::TextInputManagerV3));
+}
+
+void VirtualKeyboardDBusTest::cleanup()
+{
+    Test::destroyWaylandConnection();
 }
 
 void VirtualKeyboardDBusTest::testEnabled()
 {
-    VirtualKeyboardDBus dbus;
+    VirtualKeyboardDBus dbus(KWin::InputMethod::self());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
     QSignalSpy helperChangedSpy(&iface, &OrgKdeKwinVirtualKeyboardInterface::enabledChanged);
     QVERIFY(helperChangedSpy.isValid());
@@ -74,8 +99,8 @@ void VirtualKeyboardDBusTest::testRequestEnabled_data()
     QTest::addColumn<QString>("method");
     QTest::addColumn<bool>("expectedResult");
 
-    QTest::newRow("enable") << QStringLiteral("requestEnabled") << true;
-    QTest::newRow("disable") << QStringLiteral("requestEnabled") << false;
+    QTest::newRow("enable") << QStringLiteral("setEnabled") << true;
+    QTest::newRow("disable") << QStringLiteral("setEnabled") << false;
 }
 
 void VirtualKeyboardDBusTest::testRequestEnabled()
@@ -83,20 +108,15 @@ void VirtualKeyboardDBusTest::testRequestEnabled()
     QFETCH(QString, method);
     QFETCH(bool, expectedResult);
 
-    VirtualKeyboardDBus dbus;
-    dbus.setEnabled(!expectedResult);
-    connect(&dbus, &VirtualKeyboardDBus::enableRequested, &dbus, &VirtualKeyboardDBus::setEnabled);
+    VirtualKeyboardDBus dbus(KWin::InputMethod::self());
     QSignalSpy activateRequestedSpy(&dbus, &VirtualKeyboardDBus::enabledChanged);
     QVERIFY(activateRequestedSpy.isValid());
     OrgKdeKwinVirtualKeyboardInterface iface(QStringLiteral("org.kde.kwin.testvirtualkeyboard"), QStringLiteral("/VirtualKeyboard"), QDBusConnection::sessionBus());
     
-    auto pending = iface.requestEnabled(expectedResult);
-    QVERIFY(!pending.isError());
-//     activateRequestedSpy.wait();
+    iface.setEnabled(expectedResult);
     QCOMPARE(activateRequestedSpy.count(), 1);
-    QCOMPARE(dbus.isEnabled(), expectedResult);
     QCOMPARE(iface.enabled(), expectedResult);
 }
 
-QTEST_GUILESS_MAIN(VirtualKeyboardDBusTest)
+WAYLANDTEST_MAIN(VirtualKeyboardDBusTest)
 #include "test_virtualkeyboard_dbus.moc"

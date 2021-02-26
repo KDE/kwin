@@ -14,13 +14,15 @@
 #include <kwinglobals.h>
 #include <kwin_export.h>
 
-#include <abstract_client.h>
+#include <QPointer>
 #include <KWaylandServer/textinput_v2_interface.h>
 
 class KStatusNotifierItem;
 
 namespace KWin
 {
+
+class AbstractClient;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -33,11 +35,19 @@ public:
     ~InputMethod() override;
 
     void init();
+    void setEnabled(bool enable);
+    bool isEnabled() const {
+        return m_enabled;
+    }
+    bool isActive() const {
+        return m_active;
+    }
+    void setActive(bool active);
     void hide();
     void show();
 
 Q_SIGNALS:
-    void visibleChanged(bool shown);
+    void activeChanged(bool active);
     void enabledChanged(bool enabled);
 
 private Q_SLOTS:
@@ -57,8 +67,6 @@ private Q_SLOTS:
     void setPreeditCursor(qint32 index);
 
 private:
-    void setVisible(bool shown);
-    void setEnabled(bool enable);
     void updateSni();
     void updateInputPanelState();
     void adoptInputMethodContext();
@@ -70,7 +78,7 @@ private:
     } preedit;
 
     bool m_enabled = false;
-    bool m_visible = false;
+    bool m_active = false;
     KStatusNotifierItem *m_sni = nullptr;
     QPointer<AbstractClient> m_inputClient;
     QPointer<AbstractClient> m_trackedClient;

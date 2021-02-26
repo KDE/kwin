@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "inputmethod.h"
+#include "abstract_client.h"
 #include "virtualkeyboard_dbus.h"
 #include "input.h"
 #include "keyboard_input.h"
@@ -79,13 +80,8 @@ void InputMethod::init()
     );
     connect(this, &InputMethod::enabledChanged, this, &InputMethod::updateSni);
 
-    auto dbus = new VirtualKeyboardDBus(this);
+    new VirtualKeyboardDBus(this);
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
-    dbus->setEnabled(m_enabled);
-    connect(dbus, &VirtualKeyboardDBus::enableRequested, this, &InputMethod::setEnabled);
-    connect(dbus, &VirtualKeyboardDBus::hideRequested, this, &InputMethod::hide);
-    connect(this, &InputMethod::visibleChanged, dbus, &VirtualKeyboardDBus::setActive);
-    connect(this, &InputMethod::enabledChanged, dbus, &VirtualKeyboardDBus::setEnabled);
     connect(input(), &InputRedirection::keyStateChanged, this, &InputMethod::hide);
 
     if (waylandServer()) {
@@ -116,36 +112,36 @@ void InputMethod::init()
 
 void InputMethod::show()
 {
-    setVisible(true);
+    setActive(true);
 }
 
 void InputMethod::hide()
 {
-    setVisible(false);
+    setActive(false);
 }
 
-void InputMethod::setVisible(bool visible)
+void InputMethod::setActive(bool active)
 {
-    if (m_visible) {
+    if (m_active) {
         waylandServer()->inputMethod()->sendDeactivate();
     }
 
-    if (visible) {
+    if (active) {
         if (!m_enabled) {
             return;
         }
 
         waylandServer()->inputMethod()->sendActivate();
-        if (m_visible) {
+        if (m_active) {
             adoptInputMethodContext();
         }
     } else {
         updateInputPanelState();
     }
 
-    if (m_visible != visible) {
-        m_visible = visible;
-        Q_EMIT visibleChanged(visible);
+    if (m_active != active) {
+        m_active = active;
+        Q_EMIT activeChanged(active);
     }
 }
 
@@ -188,7 +184,7 @@ void InputMethod::handleFocusedSurfaceChanged()
         }
         updateInputPanelState();
     } else {
-        setVisible(false);
+        setActive(false);
     }
 }
 

@@ -9,38 +9,32 @@
 #pragma once
 
 #include <QObject>
+#include "inputmethod.h"
 
 namespace KWin
 {
 
-class VirtualKeyboardDBus : public QObject
+class KWIN_EXPORT VirtualKeyboardDBus : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.VirtualKeyboard")
-    Q_PROPERTY(bool enabled READ isEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool active READ isActive WRITE setActive NOTIFY activeChanged)
 public:
-    explicit VirtualKeyboardDBus(QObject *parent = nullptr);
+    explicit VirtualKeyboardDBus(InputMethod *inputMethod);
     ~VirtualKeyboardDBus() override;
     bool isEnabled() const;
-    void setEnabled(bool enabled);
 
-    void setActive(bool active);
     bool isActive() const;
-
-public Q_SLOTS:
-    void requestEnabled(bool enabled);
-    void hide();
+    void setEnabled(bool enabled);
+    void setActive(bool active);
 
 Q_SIGNALS:
     Q_SCRIPTABLE void enabledChanged();
     Q_SCRIPTABLE void activeChanged();
-    void hideRequested();
-    void enableRequested(bool requested);
 
 private:
-    bool m_enabled = false;
-    bool m_active = false;
+    InputMethod *const m_inputMethod;
 };
 
 }
