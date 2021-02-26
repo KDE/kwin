@@ -999,4 +999,26 @@ void SurfaceInterface::handleBufferRemoved(BufferInterface *buffer)
     }
 }
 
+QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &point) const
+{
+    QPointF local = point;
+    SurfaceInterface *surface = child;
+
+    while (true) {
+        if (surface == this) {
+            return local;
+        }
+
+        SubSurfaceInterface *subsurface = surface->subSurface();
+        if (Q_UNLIKELY(!subsurface)) {
+            return QPointF();
+        }
+
+        local -= subsurface->position();
+        surface = subsurface->parentSurface();
+    }
+
+    return QPointF();
+}
+
 } // namespace KWaylandServer

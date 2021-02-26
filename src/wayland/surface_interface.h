@@ -158,6 +158,14 @@ public:
      */
     QMatrix4x4 surfaceToBufferMatrix() const;
 
+    /**
+     * Maps the specified @a point in this surface's coordinate system to the equivalent point
+     * within the @a child's coordinate system, and returns the mapped point.
+     *
+     * If this surface is not an ancestor of the @a child, a null point is returned.
+     */
+    QPointF mapToChild(SurfaceInterface *child, const QPointF &point) const;
+
     void frameRendered(quint32 msec);
     bool hasFrameCallbacks() const;
 
