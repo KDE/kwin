@@ -215,6 +215,22 @@ bool Xwayland::startInternal()
 
     m_xcbConnectionFd = sx[0];
 
+    QStringList arguments {
+        m_socket->name(),
+        QStringLiteral("-displayfd"), QString::number(pipeFds[1]),
+        QStringLiteral("-rootless"),
+        QStringLiteral("-wm"), QString::number(fd),
+        QStringLiteral("-auth"), m_authorityFile.fileName(),
+    };
+
+#if defined(HAVE_XWAYLAND_LISTENFD)
+    arguments << QStringLiteral("-listenfd") << QString::number(abstractSocket)
+              << QStringLiteral("-listenfd") << QString::number(unixSocket);
+#else
+    arguments << QStringLiteral("-listen") << QString::number(abstractSocket)
+              << QStringLiteral("-listen") << QString::number(unixSocket);
+#endif
+
     m_xwaylandProcess = new Process(this);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
@@ -225,13 +241,7 @@ bool Xwayland::startInternal()
         env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
     }
     m_xwaylandProcess->setProcessEnvironment(env);
-    m_xwaylandProcess->setArguments({m_socket->name(),
-                           QStringLiteral("-displayfd"), QString::number(pipeFds[1]),
-                           QStringLiteral("-rootless"),
-                           QStringLiteral("-wm"), QString::number(fd),
-                           QStringLiteral("-auth"), m_authorityFile.fileName(),
-                           QStringLiteral("-listen"), QString::number(abstractSocket),
-                           QStringLiteral("-listen"), QString::number(unixSocket)});
+    m_xwaylandProcess->setArguments(arguments);
     connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &Xwayland::handleXwaylandError);
     connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &Xwayland::handleXwaylandFinished);

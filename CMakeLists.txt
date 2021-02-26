@@ -294,6 +294,7 @@ set_package_properties(Xwayland PROPERTIES
     TYPE RUNTIME
     PURPOSE "Needed for running kwin_wayland"
 )
+set(HAVE_XWAYLAND_LISTENFD ${Xwayland_HAVE_LISTENFD})
 
 find_package(Libcap)
 set_package_properties(Libcap PROPERTIES

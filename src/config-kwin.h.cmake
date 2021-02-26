@@ -48,3 +48,5 @@
 #endif
 
 #cmakedefine PipeWire_FOUND 1
+
+#cmakedefine HAVE_XWAYLAND_LISTENFD
