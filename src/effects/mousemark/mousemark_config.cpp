@@ -42,7 +42,7 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 {
     m_ui = new MouseMarkEffectConfigForm(this);
 
-    m_ui->kcfg_LineWidth->setSuffix(ki18np(" pixel", " pixels"));
+    m_ui->kcfg_LineWidth->setSuffix(ki18ncp("Suffix", " pixel", " pixels"));
 
     QVBoxLayout* layout = new QVBoxLayout(this);
 
