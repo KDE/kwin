@@ -499,8 +499,9 @@ QList<Toplevel *> Workspace::constrainedStackingOrder()
 
         const int screen = (*it)->screen();
         X11Client *c = qobject_cast<X11Client *>(*it);
-        QMap< Group*, Layer >::iterator mLayer = minimum_layer[screen].find(c ? c->group() : nullptr);
-        if (mLayer != minimum_layer[screen].end()) {
+        QMultiMap<Group*, Layer> &current = minimum_layer[screen];
+        QMultiMap<Group*, Layer>::iterator mLayer = current.find(c ? c->group() : nullptr);
+        if (mLayer != current.end()) {
             // If a window is raised above some other window in the same window group
             // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
             // above that window (see #95731).
@@ -508,7 +509,7 @@ QList<Toplevel *> Workspace::constrainedStackingOrder()
                 l = ActiveLayer;
             *mLayer = l;
         } else if (c) {
-            minimum_layer[screen].insert(c->group(), l);
+            current.insert(c->group(), l);
         }
         layer[ l ].append(*it);
     }
