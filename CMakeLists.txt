@@ -185,7 +185,7 @@ if (Wayland_Egl_FOUND)
     set(HAVE_WAYLAND_EGL TRUE)
 endif()
 
-find_package(XKB 0.7.0)
+pkg_check_modules(XKB IMPORTED_TARGET xkbcommon)
 set_package_properties(XKB PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
@@ -356,8 +356,6 @@ set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
 if (KWIN_BUILD_XRENDER_COMPOSITING)
     set(KWIN_HAVE_XRENDER_COMPOSITING 1)
 endif()
-
-include_directories(${XKB_INCLUDE_DIR})
 
 set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
