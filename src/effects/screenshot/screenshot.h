@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCREENSHOT_H
-#define KWIN_SCREENSHOT_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -37,7 +36,12 @@ struct ScreenShotAreaData;
 struct ScreenShotScreenData;
 
 /**
- * The screenshot effet allows to takes screenshot, by window, area, screen, etc...
+ * The ScreenShotEffect provides a convenient way to capture the contents of a given window,
+ * screen or an area in the global coordinates.
+ *
+ * Use the QFutureWatcher class to get notified when the requested screenshot is ready. Note
+ * that the screenshot QFuture object can get cancelled if the captured window or the screen is
+ * removed.
  */
 class ScreenShotEffect : public Effect
 {
@@ -88,8 +92,8 @@ private:
     void cancelAreaScreenShots();
     void cancelScreenScreenShots();
 
-    void grabPointerImage(QImage& snapshot, int offsetx, int offsety);
-    QImage blitScreenshot(const QRect &geometry, const qreal scale = 1.0);
+    void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
+    QImage blitScreenshot(const QRect &geometry, qreal devicePixelRatio = 1.0) const;
 
     QVector<ScreenShotWindowData> m_windowScreenShots;
     QVector<ScreenShotAreaData> m_areaScreenShots;
@@ -99,8 +103,6 @@ private:
     EffectScreen *m_paintedScreen = nullptr;
 };
 
-} // namespace
+} // namespace KWin
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScreenShotFlags)
-
-#endif // KWIN_SCREENSHOT_H

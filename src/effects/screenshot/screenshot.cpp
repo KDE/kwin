@@ -13,11 +13,13 @@
 
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
-#include <kwinxrenderutils.h>
 
 #include <QPainter>
 
+#if defined(KWIN_HAVE_XRENDER_COMPOSITING)
+#include <kwinxrenderutils.h>
 #include <xcb/xcb_image.h>
+#endif
 
 namespace KWin
 {
@@ -76,7 +78,7 @@ static void convertFromGLImage(QImage &img, int w, int h)
     img = img.mirrored();
 }
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#if defined(KWIN_HAVE_XRENDER_COMPOSITING)
 static void xImageCleanup(void *data)
 {
     xcb_image_destroy(static_cast<xcb_image_t *>(data));
@@ -103,8 +105,8 @@ static QImage xPictureToImage(xcb_render_picture_t srcPic, const QRect &geometry
 
 bool ScreenShotEffect::supported()
 {
-    return  effects->compositingType() == XRenderCompositing ||
-            (effects->isOpenGLCompositing() && GLRenderTarget::supported());
+    return effects->compositingType() == XRenderCompositing ||
+           (effects->isOpenGLCompositing() && GLRenderTarget::supported());
 }
 
 ScreenShotEffect::ScreenShotEffect()
@@ -241,9 +243,9 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     if (window->hasDecoration() && (screenshot->flags & ScreenShotIncludeDecoration)) {
         for (const WindowQuad &quad : qAsConst(d.quads)) {
             // we need this loop to include the decoration padding
-            left   = qMin(left, quad.left());
-            top    = qMin(top, quad.top());
-            right  = qMax(right, quad.right());
+            left = qMin(left, quad.left());
+            top = qMin(top, quad.top());
+            right = qMax(right, quad.right());
             bottom = qMax(bottom, quad.bottom());
         }
     } else if (window->hasDecoration()) {
@@ -255,9 +257,9 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         for (const WindowQuad &quad : qAsConst(d.quads)) {
             if (quad.type() == WindowQuadContents) {
                 newQuads << quad;
-                left   = qMin(left, quad.left());
-                top    = qMin(top, quad.top());
-                right  = qMax(right, quad.right());
+                left = qMin(left, quad.left());
+                top = qMin(top, quad.top());
+                right = qMax(right, quad.right());
                 bottom = qMax(bottom, quad.bottom());
             }
         }
@@ -296,11 +298,12 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 
             // copy content from framebuffer into image
             img = QImage(QSize(width, height), QImage::Format_ARGB32);
-            glReadnPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), (GLvoid*)img.bits());
+            glReadnPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
+                          static_cast<GLvoid *>(img.bits()));
             GLRenderTarget::popRenderTarget();
             convertFromGLImage(img, width, height);
         }
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#if defined(KWIN_HAVE_XRENDER_COMPOSITING)
         if (effects->compositingType() == XRenderCompositing) {
             setXRenderOffscreen(true);
             effects->drawWindow(window, mask, QRegion(0, 0, width, height), d);
@@ -409,48 +412,50 @@ void ScreenShotEffect::postPaintScreen()
     }
 }
 
-QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, const qreal scale)
+QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixelRatio) const
 {
-    QImage img;
-    if (effects->isOpenGLCompositing())
-    {
-        const QSize nativeSize = geometry.size() * scale;
+    QImage image;
+
+    if (effects->isOpenGLCompositing()) {
+        const QSize nativeSize = geometry.size() * devicePixelRatio;
 
         if (GLRenderTarget::blitSupported() && !GLPlatform::instance()->isGLES()) {
-
-            img = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
-            GLTexture tex(GL_RGBA8, nativeSize.width(), nativeSize.height());
-            GLRenderTarget target(tex);
+            image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
+            GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
+            GLRenderTarget target(texture);
             target.blitFromFramebuffer(geometry);
             // copy content from framebuffer into image
-            tex.bind();
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, static_cast<GLvoid*>(img.bits()));
-            tex.unbind();
+            texture.bind();
+            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                          static_cast<GLvoid *>(image.bits()));
+            texture.unbind();
         } else {
-            img = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
-            glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+            image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
+            glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
+                         GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
         }
-        convertFromGLImage(img, nativeSize.width(), nativeSize.height());
+        convertFromGLImage(image, nativeSize.width(), nativeSize.height());
     }
 
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#if defined(KWIN_HAVE_XRENDER_COMPOSITING)
     if (effects->compositingType() == XRenderCompositing) {
-        img = xPictureToImage(effects->xrenderBufferPicture(), geometry);
+        image = xPictureToImage(effects->xrenderBufferPicture(), geometry);
     }
 #endif
 
-    img.setDevicePixelRatio(scale);
-    return img;
+    image.setDevicePixelRatio(devicePixelRatio);
+    return image;
 }
 
-void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offsety)
+void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const
 {
-    const auto cursor = effects->cursorImage();
-    if (cursor.image().isNull())
+    const PlatformCursorImage cursor = effects->cursorImage();
+    if (cursor.image().isNull()) {
         return;
+    }
 
     QPainter painter(&snapshot);
-    painter.drawImage(effects->cursorPos() - cursor.hotSpot() - QPoint(offsetx, offsety), cursor.image());
+    painter.drawImage(effects->cursorPos() - cursor.hotSpot() - QPoint(xOffset, yOffset), cursor.image());
 }
 
 bool ScreenShotEffect::isActive() const
@@ -491,4 +496,4 @@ void ScreenShotEffect::handleWindowClosed(EffectWindow *window)
     }
 }
 
-} // namespace
+} // namespace KWin
