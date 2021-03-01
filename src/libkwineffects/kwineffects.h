@@ -69,6 +69,7 @@ class EffectWindowGroup;
 class EffectFrame;
 class EffectFramePrivate;
 class EffectQuickView;
+class EffectScreen;
 class Effect;
 class WindowQuad;
 class GLShader;
@@ -174,7 +175,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 232
+#define KWIN_EFFECT_API_VERSION_MINOR 233
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -1378,7 +1379,24 @@ public:
      * @since 5.18
      */
     virtual SessionState sessionState() const = 0;
+
+    /**
+     * Returns the list of all the screens connected to the system.
+     */
+    virtual QList<EffectScreen *> screens() const = 0;
+    virtual EffectScreen *screenAt(const QPoint &point) const = 0;
+    virtual EffectScreen *findScreen(const QString &name) const = 0;
+    virtual EffectScreen *findScreen(int screenId) const = 0;
+
 Q_SIGNALS:
+    /**
+     * This signal is emitted whenever a new @a screen is added to the system.
+     */
+    void screenAdded(KWin::EffectScreen *screen);
+    /**
+     * This signal is emitted whenever a @a screen is removed from the system.
+     */
+    void screenRemoved(KWin::EffectScreen *screen);
     /**
      * Signal emitted when the current desktop changed.
      * @param oldDesktop The previously current desktop
@@ -1833,6 +1851,31 @@ protected:
     CompositingType compositing_type;
 };
 
+/**
+ * The EffectScreen class represents a screen used by/for Effect classes.
+ */
+class KWINEFFECTS_EXPORT EffectScreen : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit EffectScreen(QObject *parent = nullptr);
+
+    /**
+     * Returns the name of the screen, e.g. "DP-1".
+     */
+    virtual QString name() const = 0;
+
+    /**
+     * Returns the screen's ratio between physical pixels and device-independent pixels.
+     */
+    virtual qreal devicePixelRatio() const = 0;
+
+    /**
+     * Returns the screen's geometry in the device-independent pixels.
+     */
+    virtual QRect geometry() const = 0;
+};
 
 /**
  * @short Representation of a window used by/for Effect classes.
@@ -3000,7 +3043,7 @@ class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
-    ScreenPaintData(const QMatrix4x4 &projectionMatrix, const QRect &outputGeometry = QRect(), const qreal screenScale = 1.0);
+    ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScreen *screen = nullptr);
     ScreenPaintData(const ScreenPaintData &other);
     ~ScreenPaintData() override;
     /**
@@ -3054,21 +3097,10 @@ public:
     QMatrix4x4 projectionMatrix() const;
 
     /**
-     * The geometry of the currently rendered output.
-     * Only set for per-output rendering (e.g. Wayland).
-     *
-     * This geometry can be used as a hint about the native window the OpenGL context
-     * is bound. OpenGL calls need to be translated to this geometry.
-     * @since 5.9
+     * Returns the currently rendered screen. Only set for per-screen rendering, e.g. Wayland.
      */
-    QRect outputGeometry() const;
+    EffectScreen *screen() const;
 
-    /**
-     * The scale factor for the output
-     *
-     * @since 5.19
-     */
-    qreal screenScale() const;
 private:
     class Private;
     QScopedPointer<Private> d;

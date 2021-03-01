@@ -210,8 +210,7 @@ protected:
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
                      QRegion *updateRegion, QRegion *validRegion, RenderLoop *renderLoop,
-                     const QMatrix4x4 &projection = QMatrix4x4(),
-                     const QRect &outputGeometry = QRect(), qreal screenScale = 1.0);
+                     const QMatrix4x4 &projection = QMatrix4x4());
     // Render cursor texture in case hardware cursor is disabled/non-applicable
     virtual void paintCursor(const QRegion &region) = 0;
     friend class EffectsHandlerImpl;

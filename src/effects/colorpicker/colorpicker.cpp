@@ -52,7 +52,7 @@ ColorPickerEffect::~ColorPickerEffect() = default;
 
 void ColorPickerEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    m_cachedOutputGeometry = data.outputGeometry();
+    m_paintedScreen = data.screen();
     effects->paintScreen(mask, region, data);
 }
 
@@ -60,7 +60,7 @@ void ColorPickerEffect::postPaintScreen()
 {
     effects->postPaintScreen();
 
-    if (m_scheduledPosition != QPoint(-1, -1) && (m_cachedOutputGeometry.isEmpty() || m_cachedOutputGeometry.contains(m_scheduledPosition))) {
+    if (m_scheduledPosition != QPoint(-1, -1) && (!m_paintedScreen || m_paintedScreen->geometry().contains(m_scheduledPosition))) {
         uint8_t data[3];
         const QRect geo = GLRenderTarget::virtualScreenGeometry();
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());

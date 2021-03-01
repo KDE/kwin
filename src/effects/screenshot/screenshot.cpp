@@ -179,10 +179,7 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
 
 void ScreenShotEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    m_cachedOutputGeometry = data.outputGeometry();
-    // When taking a non-nativeSize fullscreenshot, pretend we have a uniform 1.0 ratio
-    // so the screenshot size will match the virtualGeometry
-    m_cachedScale = m_nativeSize ? data.screenScale() : 1.0;
+    m_paintedScreen = data.screen();
     effects->paintScreen(mask, region, data);
 }
 
@@ -340,22 +337,23 @@ void ScreenShotEffect::postPaintScreen()
     }
 
     if (!m_scheduledGeometry.isNull()) {
-        if (!m_cachedOutputGeometry.isNull()) {
+        if (m_paintedScreen) {
             // special handling for per-output geometry rendering
-            const QRect intersection = m_scheduledGeometry.intersected(m_cachedOutputGeometry);
+            const QRect intersection = m_scheduledGeometry.intersected(m_paintedScreen->geometry());
             if (intersection.isEmpty()) {
                 // doesn't intersect, not going onto this screenshot
                 return;
             }
-            QImage img = blitScreenshot(intersection, m_cachedScale);
-            if (img.size() == (m_scheduledGeometry.size() * m_cachedScale)) {
+            const qreal devicePixelRatio = m_nativeSize ? m_paintedScreen->devicePixelRatio() : 1.0;
+            QImage img = blitScreenshot(intersection, devicePixelRatio);
+            if (img.size() == (m_scheduledGeometry.size() * devicePixelRatio)) {
                 // we are done
                 sendReplyImage(img);
                 return;
             }
-            img.setDevicePixelRatio(m_cachedScale);
+            img.setDevicePixelRatio(devicePixelRatio);
 
-            m_cacheOutputsImages.insert(ComparableQPoint(m_cachedOutputGeometry.topLeft()), img);
+            m_cacheOutputsImages.insert(ComparableQPoint(m_paintedScreen->geometry().topLeft()), img);
 
             m_multipleOutputsRendered = m_multipleOutputsRendered.united(intersection);
             if (m_multipleOutputsRendered.boundingRect() == m_scheduledGeometry) {
@@ -460,7 +458,6 @@ void ScreenShotEffect::clearState()
     m_captureCursor = false;
     m_windowMode = WindowMode::NoCapture;
     m_cacheOutputsImages.clear();
-    m_cachedOutputGeometry = QRect();
     m_nativeSize = false;
     m_orderImg.clear();
 }

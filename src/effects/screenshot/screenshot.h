@@ -164,7 +164,6 @@ private:
     ScreenShotType m_type;
     QRect m_scheduledGeometry;
     QDBusMessage m_replyMessage;
-    QRect m_cachedOutputGeometry;
     QRegion m_multipleOutputsRendered;
     QMap<ComparableQPoint, QImage> m_cacheOutputsImages;
     QList<QPoint> m_orderImg;
@@ -178,7 +177,7 @@ private:
     };
     WindowMode m_windowMode = WindowMode::NoCapture;
     int m_fd = -1;
-    qreal m_cachedScale;
+    EffectScreen *m_paintedScreen = nullptr;
 };
 
 } // namespace

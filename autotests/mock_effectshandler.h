@@ -273,6 +273,21 @@ public:
     KWin::SessionState sessionState() const override {
         return KWin::SessionState::Normal;
     }
+    QList<KWin::EffectScreen *> screens() const override {
+        return {};
+    }
+    KWin::EffectScreen *screenAt(const QPoint &point) const override {
+        Q_UNUSED(point)
+        return nullptr;
+    }
+    KWin::EffectScreen *findScreen(const QString &name) const override {
+        Q_UNUSED(name)
+        return nullptr;
+    }
+    KWin::EffectScreen *findScreen(int screenId) const override {
+        Q_UNUSED(screenId)
+        return nullptr;
+    }
 
 private:
     bool m_animationsSuported = true;

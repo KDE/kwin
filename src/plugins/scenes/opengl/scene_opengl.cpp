@@ -675,7 +675,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
             updateProjectionMatrix();
 
             paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid,
-                        renderLoop, projectionMatrix(), geo, scaling);   // call generic implementation
+                        renderLoop, projectionMatrix());   // call generic implementation
             paintCursor(valid);
 
             if (!GLPlatform::instance()->isGLES() && screenId == -1) {
