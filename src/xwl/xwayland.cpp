@@ -141,10 +141,12 @@ void Xwayland::start()
         return;
     }
 
-    if (!generateXauthorityFile(socket->display(), &m_authorityFile)) {
-        qCWarning(KWIN_XWL) << "Failed to create an Xauthority file";
-        emit errorOccurred();
-        return;
+    if (!qEnvironmentVariableIsSet("KWIN_WAYLAND_NO_XAUTHORITY")) {
+        if (!generateXauthorityFile(socket->display(), &m_authorityFile)) {
+            qCWarning(KWIN_XWL) << "Failed to create an Xauthority file";
+            emit errorOccurred();
+            return;
+        }
     }
 
     m_socket.reset(socket.take());
@@ -220,8 +222,11 @@ bool Xwayland::startInternal()
         QStringLiteral("-displayfd"), QString::number(pipeFds[1]),
         QStringLiteral("-rootless"),
         QStringLiteral("-wm"), QString::number(fd),
-        QStringLiteral("-auth"), m_authorityFile.fileName(),
     };
+
+    if (m_authorityFile.isOpen()) {
+        arguments << QStringLiteral("-auth") << m_authorityFile.fileName();
+    }
 
 #if defined(HAVE_XWAYLAND_LISTENFD)
     arguments << QStringLiteral("-listenfd") << QString::number(abstractSocket)
@@ -434,7 +439,9 @@ void Xwayland::handleXwaylandReady()
 
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << displayName;
     qputenv("DISPLAY", displayName);
-    qputenv("XAUTHORITY", m_authorityFile.fileName().toUtf8());
+    if (m_authorityFile.isOpen()) {
+        qputenv("XAUTHORITY", m_authorityFile.fileName().toUtf8());
+    }
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     m_selectionOwner.reset(new KSelectionOwner("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow()));
@@ -450,7 +457,9 @@ void Xwayland::handleXwaylandReady()
 
     auto env = m_app->processStartupEnvironment();
     env.insert(QStringLiteral("DISPLAY"), displayName);
-    env.insert(QStringLiteral("XAUTHORITY"), m_authorityFile.fileName());
+    if (m_authorityFile.isOpen()) {
+        env.insert(QStringLiteral("XAUTHORITY"), m_authorityFile.fileName());
+    }
     m_app->setProcessStartupEnvironment(env);
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
