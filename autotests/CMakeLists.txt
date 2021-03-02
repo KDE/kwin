@@ -368,7 +368,7 @@ target_link_libraries(testXkb
     Plasma::KWaylandServer
     KF5::WindowSystem
 
-    PkgConfig::XKB
+    XKB::XKB
 )
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)

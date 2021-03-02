@@ -230,7 +230,7 @@ target_link_libraries(kwin
 
     Libinput::Libinput
     UDev::UDev
-    PkgConfig::XKB
+    XKB::XKB
     epoxy::epoxy
 
     ${CMAKE_THREAD_LIBS_INIT}
