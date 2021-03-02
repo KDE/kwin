@@ -10,6 +10,7 @@
 */
 #include "screenshot.h"
 #include "screenshotdbusinterface1.h"
+#include "screenshotdbusinterface2.h"
 
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
@@ -111,6 +112,7 @@ bool ScreenShotEffect::supported()
 
 ScreenShotEffect::ScreenShotEffect()
     : m_dbusInterface1(new ScreenShotDBusInterface1(this))
+    , m_dbusInterface2(new ScreenShotDBusInterface2(this))
 {
     connect(effects, &EffectsHandler::screenAdded, this, &ScreenShotEffect::handleScreenAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &ScreenShotEffect::handleScreenRemoved);

@@ -31,6 +31,7 @@ enum ScreenShotFlag {
 Q_DECLARE_FLAGS(ScreenShotFlags, ScreenShotFlag)
 
 class ScreenShotDBusInterface1;
+class ScreenShotDBusInterface2;
 struct ScreenShotWindowData;
 struct ScreenShotAreaData;
 struct ScreenShotScreenData;
@@ -100,6 +101,7 @@ private:
     QVector<ScreenShotScreenData> m_screenScreenShots;
 
     QScopedPointer<ScreenShotDBusInterface1> m_dbusInterface1;
+    QScopedPointer<ScreenShotDBusInterface2> m_dbusInterface2;
     EffectScreen *m_paintedScreen = nullptr;
 };
 

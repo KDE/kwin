@@ -25,6 +25,8 @@ class ScreenShotSource1;
  *
  * An application that requests a screenshot must have "org.kde.kwin.Screenshot" listed in its
  * X-KDE-DBUS-Restricted-Interfaces desktop file field.
+ *
+ * @deprecated Use org.kde.KWin.ScreenShot2 interface instead.
  */
 class ScreenShotDBusInterface1 : public QObject, protected QDBusContext
 {

@@ -1,0 +1,184 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<node name="/org/kde/KWin/ScreenShot2">
+    <!--
+        org.kde.KWin.ScreenShot2:
+        @short_description: Screen shot interface
+
+        This interface provides a way to request a screenshot of a rectangular area,
+        a screen, or a window.
+    -->
+    <interface name="org.kde.KWin.ScreenShot2">
+        <!--
+            CaptureWindow:
+            @handle: The unique handle that identified the window
+            @options: Optional vardict with screenshot options
+            @pipe: The pipe file descriptor where the screenshot will be written
+
+            Take a screenshot of the specified window. The application that
+            requests the screenshot must have the org.kde.KWin.ScreenShot2
+            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop
+            file entry.
+
+            Available @options include:
+
+            * "include-cursor" (b): Whether the cursor should be included.
+                                    Defaults to false
+            * "include-decoration" (b): Whether the decoration should be included.
+                                        Defaults to false
+            * "native-resolution" (b): Whether the screenshot should be in
+                                       native size. Defaults to false
+
+            The following results get returned via the @results vardict:
+
+            * "type" (s): The type of the image written to the pipe. Currently,
+                          the only supported type is "raw"
+            * "width" (u): The width of the image. Available only if the image
+                           type is "raw"
+            * "height" (u): The height of the image. Available only if the image
+                            type is "raw"
+            * "stride" (u): The number of bytes per row. Available only if the
+                            image type is "raw"
+            * "format" (u): The image format, as defined in QImage::Format.
+                            Available only if the image type is "raw"
+        -->
+        <method name="CaptureWindow">
+            <arg name="handle" type="s" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap" />
+            <arg name="options" type="a{sv}" direction="in" />
+            <arg name="pipe" type="h" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
+            <arg name="results" type="a{sv}" direction="out" />
+        </method>
+
+        <!--
+            CaptureArea:
+            @x: The x coordinate of the upper left corner of the area
+            @y: The y coordinate of the upper left corner of the area
+            @width: The width of the screenshot area
+            @height: The height of the screenshot area
+            @options: Optional vardict with screenshot options
+            @pipe: The pipe file descriptor where the screenshot will be written
+
+            Take a screenshot of the specified rectangular area. The application
+            that requests the screenshot must have the org.kde.KWin.ScreenShot2
+            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
+            entry.
+
+            Available @options include:
+
+            * "include-cursor" (b): Whether the cursor should be included.
+                                    Defaults to false
+            * "native-resolution" (b): Whether the screenshot should be in
+                                       native size. Defaults to false
+
+            The following results get returned via the @results vardict:
+
+            * "type" (s): The type of the image written to the pipe. Currently,
+                          the only supported type is "raw"
+            * "width" (u): The width of the image. Available only if the image
+                           type is "raw"
+            * "height" (u): The height of the image. Available only if the image
+                            type is "raw"
+            * "stride" (u): The number of bytes per row. Available only if the
+                            image type is "raw"
+            * "format" (u): The image format, as defined in QImage::Format.
+                            Available only if the image type is "raw"
+        -->
+        <method name="CaptureArea">
+            <arg name="x" type="i" direction="in" />
+            <arg name="y" type="i" direction="in" />
+            <arg name="width" type="u" direction="in" />
+            <arg name="height" type="u" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In4" value="QVariantMap" />
+            <arg name="options" type="a{sv}" direction="in" />
+            <arg name="pipe" type="h" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
+            <arg name="results" type="a{sv}" direction="out" />
+        </method>
+
+        <!--
+            CaptureScreen:
+            @name: The name of the screen assigned by the compositor
+            @options: Optional vardict with screenshot options
+            @pipe: The pipe file descriptor where the screenshot will be written
+
+            Take a screenshot of the specified monitor. The application that
+            requests the screenshot must have the org.kde.KWin.ScreenShot2
+            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
+            entry.
+
+            Available @options include:
+
+            * "include-cursor" (b): Whether the cursor should be included.
+                                    Defaults to false
+            * "native-resolution" (b): Whether the screenshot should be in
+                                       native size. Defaults to false
+
+            The following results get returned via the @results vardict:
+
+            * "type" (s): The type of the image written to the pipe. Currently,
+                          the only supported type is "raw"
+            * "width" (u): The width of the image. Available only if the image
+                           type is "raw"
+            * "height" (u): The height of the image. Available only if the image
+                            type is "raw"
+            * "stride" (u): The number of bytes per row. Available only if the
+                            image type is "raw"
+            * "format" (u): The image format, as defined in QImage::Format.
+                            Available only if the image type is "raw"
+        -->
+        <method name="CaptureScreen">
+            <arg name="name" type="s" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap" />
+            <arg name="options" type="a{sv}" direction="in" />
+            <arg name="pipe" type="h" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
+            <arg name="results" type="a{sv}" direction="out" />
+        </method>
+
+        <!--
+            CaptureInteractive:
+            @kind: 0 - window, 1 - screen
+            @options: Optional vardict with screenshot options
+            @pipe: The pipe file descriptor where the screenshot will be written
+
+            Take a screenshot of a screen or a window as selected by the user.
+
+            Available @options include:
+
+            * "include-cursor" (b): Whether the cursor should be included.
+                                    Defaults to false
+            * "include-decoration" (b): Whether the decoration should be included.
+                                        Defaults to false
+            * "native-resolution" (b): Whether the screenshot should be in
+                                       native size. Defaults to false
+
+            The following results get returned via the @results vardict:
+
+            * "type" (s): The type of the image written to the pipe. Currently,
+                          the only supported type is "raw"
+            * "width" (u): The width of the image. Available only if the image
+                           type is "raw"
+            * "height" (u): The height of the image. Available only if the image
+                            type is "raw"
+            * "stride" (u): The number of bytes per row. Available only if the
+                            image type is "raw"
+            * "format" (u): The image format, as defined in QImage::Format.
+                            Available only if the image type is "raw"
+        -->
+        <method name="CaptureInteractive">
+            <arg name="kind" type="u" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap" />
+            <arg name="options" type="a{sv}" direction="in" />
+            <arg name="pipe" type="h" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
+            <arg name="results" type="a{sv}" direction="out" />
+        </method>
+    </interface>
+</node>
