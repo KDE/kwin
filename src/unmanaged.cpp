@@ -68,6 +68,7 @@ bool Unmanaged::track(xcb_window_t w)
                           NET::WM2WindowRole |
                           NET::WM2WindowClass |
                           NET::WM2OpaqueRegion);
+    setOpacity(info->opacityF());
     getResourceClass();
     getWmClientLeader();
     getWmClientMachine();
