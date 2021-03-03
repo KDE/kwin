@@ -15,7 +15,7 @@ namespace KWin
 {
 class EffectsModel;
 
-class DesktopEffectsData : public KCModuleDataSignaling
+class DesktopEffectsData : public KCModuleData
 {
     Q_OBJECT
 

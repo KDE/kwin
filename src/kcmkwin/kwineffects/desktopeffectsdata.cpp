@@ -11,11 +11,12 @@ namespace KWin
 {
 
 DesktopEffectsData::DesktopEffectsData(QObject *parent, const QVariantList &args)
-    : KCModuleDataSignaling(parent, args)
+    : KCModuleData(parent, args)
     , m_model(new EffectsModel(this))
 
 {
-    connect(m_model, &EffectsModel::loaded, this, &KCModuleDataSignaling::loaded);
+    disconnect(this, &KCModuleData::aboutToLoad, nullptr, nullptr);
+    connect(m_model, &EffectsModel::loaded, this, &KCModuleData::loaded);
 
     m_model->load();
 }
