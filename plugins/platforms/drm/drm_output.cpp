@@ -582,6 +582,7 @@ void DrmOutput::dpmsFinishOn()
     if (!m_gpu->atomicModeSetting()) {
         m_crtc->blank();
     }
+    m_renderLoop->uninhibit();
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
     }
@@ -597,6 +598,7 @@ void DrmOutput::dpmsFinishOff()
     } else {
         waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::Off));
     }
+    m_renderLoop->inhibit();
 }
 
 bool DrmOutput::dpmsLegacyApply()
