@@ -515,6 +515,7 @@ void DrmOutput::dpmsFinishOn()
 
     m_backend->checkOutputsAreOn();
     m_crtc->blank(this);
+    m_renderLoop->uninhibit();
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
     }
@@ -530,6 +531,7 @@ void DrmOutput::dpmsFinishOff()
     } else {
         waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::Off));
     }
+    m_renderLoop->inhibit();
 }
 
 bool DrmOutput::dpmsLegacyApply()
