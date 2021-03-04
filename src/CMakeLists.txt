@@ -139,6 +139,8 @@ set(kwin_SRCS
     xwl/xwayland_interface.cpp
 )
 
+qt5_add_dbus_adaptor(kwin_SRCS scripting/org.kde.kwin.Script.xml scripting/scripting.h KWin::AbstractScript)
+
 if (HAVE_LINUX_VT_H)
     set(kwin_SRCS ${kwin_SRCS}
         virtual_terminal.cpp
