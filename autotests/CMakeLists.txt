@@ -149,7 +149,7 @@ set_target_properties(testBuiltInEffectLoader PROPERTIES COMPILE_DEFINITIONS "NO
 
 target_link_libraries(testBuiltInEffectLoader
     Qt::Concurrent
-    Qt5::Qml
+    Qt::Qml
     Qt::Test
     Qt::X11Extras
 
@@ -213,7 +213,7 @@ add_executable(testPluginEffectLoader ${testPluginEffectLoader_SRCS})
 
 target_link_libraries(testPluginEffectLoader
     Qt::Concurrent
-    Qt5::Qml
+    Qt::Qml
     Qt::Test
     Qt::X11Extras
 
