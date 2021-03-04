@@ -10,6 +10,7 @@
 #include "cursor.h"
 #include "dmabuftexture.h"
 #include "eglnativefence.h"
+#include "kwinglplatform.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
 #include "kwinscreencast_logging.h"
@@ -355,7 +356,11 @@ void PipeWireStream::recordFrame(GLTexture *frameTexture, const QRegion &damaged
         spa_data->chunk->stride = stride;
 
         frameTexture->bind();
-        glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
+        if (GLPlatform::instance()->isGLES()) {
+            glReadPixels(0, 0, size.width(), size.height(), m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid*)data);
+        } else {
+            glGetTextureImage(frameTexture->texture(), 0, m_hasAlpha ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, bufferSize, data);
+        }
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             QImage dest(data, size.width(), size.height(), QImage::Format_RGBA8888_Premultiplied);
