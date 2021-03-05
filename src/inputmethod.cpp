@@ -16,6 +16,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "screenlockerwatcher.h"
+#include "deleted.h"
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/seat_interface.h>
@@ -167,6 +168,8 @@ void InputMethod::clientAdded(AbstractClient* client)
         }
     });
     connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
+    connect(m_inputClient, &AbstractClient::windowHidden, this, &InputMethod::hide);
+    connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::hide);
 }
 
 void InputMethod::handleFocusedSurfaceChanged()
