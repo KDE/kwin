@@ -2789,7 +2789,7 @@ void AbstractClient::evaluateWindowRules()
     applyWindowRules();
 }
 
-void AbstractClient::setOnActivities(QStringList newActivitiesList)
+void AbstractClient::setOnActivities(const QStringList &newActivitiesList)
 {
     Q_UNUSED(newActivitiesList)
 }

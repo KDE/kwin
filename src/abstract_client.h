@@ -537,7 +537,7 @@ public:
     virtual bool userCanSetFullScreen() const;
     virtual bool userCanSetNoBorder() const;
     virtual void checkNoBorder();
-    virtual void setOnActivities(QStringList newActivitiesList);
+    virtual void setOnActivities(const QStringList &newActivitiesList);
     virtual void setOnAllActivities(bool set) = 0;
     const WindowRules* rules() const {
         return &m_rules;

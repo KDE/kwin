@@ -1911,37 +1911,37 @@ void X11Client::setOnActivity(const QString &activity, bool enable)
 /**
  * set exactly which activities this client is on
  */
-void X11Client::setOnActivities(QStringList newActivitiesList)
+void X11Client::setOnActivities(const QStringList &newActivitiesList)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
     if (!Activities::self()) {
         return;
     }
-    newActivitiesList = rules()->checkActivity(newActivitiesList);
+    auto activitiesList = rules()->checkActivity(newActivitiesList);
 
     QStringList allActivities = Activities::self()->all();
 
-    auto it = newActivitiesList.begin();
-    while (it != newActivitiesList.end()) {
+    auto it = activitiesList.begin();
+    while (it != activitiesList.end()) {
         if (! allActivities.contains(*it)) {
-            it = newActivitiesList.erase(it);
+            it = activitiesList.erase(it);
         } else {
             it++;
         }
     }
 
     if (// If we got the request to be on all activities explicitly
-        newActivitiesList.isEmpty() || newActivitiesList.contains(Activities::nullUuid()) ||
+        activitiesList.isEmpty() || activitiesList.contains(Activities::nullUuid()) ||
         // If we got a list of activities that covers all activities
-        (newActivitiesList.count() > 1 && newActivitiesList.count() == allActivities.count())) {
+        (activitiesList.count() > 1 && activitiesList.count() == allActivities.count())) {
 
         activityList.clear();
         const QByteArray nullUuid = Activities::nullUuid().toUtf8();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
 
     } else {
-        QByteArray joined = newActivitiesList.join(QStringLiteral(",")).toLatin1();
-        activityList = newActivitiesList;
+        QByteArray joined = activitiesList.join(QStringLiteral(",")).toLatin1();
+        activityList = activitiesList;
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }
 
