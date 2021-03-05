@@ -8,7 +8,7 @@
 */
 #include "activities.h"
 // KWin
-#include "x11client.h"
+#include "abstract_client.h"
 #include "workspace.h"
 // KDE
 #include <KConfigGroup>
@@ -60,7 +60,8 @@ void Activities::slotCurrentChanged(const QString &newActivity)
 
 void Activities::slotRemoved(const QString &activity)
 {
-    foreach (X11Client *client, Workspace::self()->clientList()) {
+    const auto clients = Workspace::self()->allClientList();
+    for (auto * const client : clients) {
         if (client->isDesktop())
             continue;
         client->setOnActivity(activity, false);
@@ -70,7 +71,7 @@ void Activities::slotRemoved(const QString &activity)
     cg.deleteGroup();
 }
 
-void Activities::toggleClientOnActivity(X11Client *c, const QString &activity, bool dont_activate)
+void Activities::toggleClientOnActivity(AbstractClient *c, const QString &activity, bool dont_activate)
 {
     //int old_desktop = c->desktop();
     bool was_on_activity = c->isOnActivity(activity);
@@ -95,11 +96,8 @@ void Activities::toggleClientOnActivity(X11Client *c, const QString &activity, b
 
     //notifyWindowDesktopChanged( c, old_desktop );
 
-    auto transients_stacking_order = ws->ensureStackingOrder(c->transients());
-    for (auto it = transients_stacking_order.constBegin();
-            it != transients_stacking_order.constEnd();
-            ++it) {
-        X11Client *c = dynamic_cast<X11Client *>(*it);
+    const auto transients_stacking_order = ws->ensureStackingOrder(c->transients());
+    for (auto * const c : transients_stacking_order) {
         if (!c) {
             continue;
         }
@@ -154,9 +152,8 @@ void Activities::reallyStop(const QString &id)
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
-    const QList<X11Client *> &clients = ws->clientList();
-    for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
-        const X11Client *c = (*it);
+    const auto clients = ws->allClientList();
+    for (auto * const c : clients) {
         if (c->isDesktop())
             continue;
         const QByteArray sessionId = c->sessionId();
