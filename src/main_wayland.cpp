@@ -624,6 +624,12 @@ int main(int argc, char * argv[])
                                                i18n("Starts the session without global shortcuts support."));
     parser.addOption(noGlobalShortcutsOption);
 
+#ifdef KWIN_BUILD_ACTIVITIES
+    QCommandLineOption noActivitiesOption(QStringLiteral("no-kactivities"),
+                                          i18n("Disable KActivities integration."));
+    parser.addOption(noActivitiesOption);
+#endif
+
     QCommandLineOption exitWithSessionOption(QStringLiteral("exit-with-session"),
                                              i18n("Exit after the session application, which is started by KWin, closed."),
                                              QStringLiteral("/path/to/session"));
@@ -637,7 +643,9 @@ int main(int argc, char * argv[])
     a.processCommandLine(&parser);
 
 #ifdef KWIN_BUILD_ACTIVITIES
-    a.setUseKActivities(false);
+    if (parser.isSet(noActivitiesOption)) {
+        a.setUseKActivities(false);
+    }
 #endif
 
     if (parser.isSet(replaceOption)) {
