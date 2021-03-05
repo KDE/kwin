@@ -789,12 +789,7 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
         return;
     }
 
-    X11Client *c = dynamic_cast<X11Client *>(m_client.data());
-    if (!c) {
-        return;
-    }
-
-    Activities::self()->toggleClientOnActivity(c, activity, false);
+    Activities::self()->toggleClientOnActivity(m_client, activity, false);
     if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
         const bool isOnAll = m_client->isOnAllActivities();
         m_activityMenu->actions().at(0)->setChecked(isOnAll);
