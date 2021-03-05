@@ -1879,36 +1879,6 @@ void X11Client::doSetDemandsAttention()
 }
 
 /**
- * Sets whether the client is on @p activity.
- * If you remove it from its last activity, then it's on all activities.
- *
- * Note: If it was on all activities and you try to remove it from one, nothing will happen;
- * I don't think that's an important enough use case to handle here.
- */
-void X11Client::setOnActivity(const QString &activity, bool enable)
-{
-#ifdef KWIN_BUILD_ACTIVITIES
-    if (! Activities::self()) {
-        return;
-    }
-    QStringList newActivitiesList = activities();
-    if (newActivitiesList.contains(activity) == enable)   //nothing to do
-        return;
-    if (enable) {
-        QStringList allActivities = Activities::self()->all();
-        if (!allActivities.contains(activity))   //bogus ID
-            return;
-        newActivitiesList.append(activity);
-    } else
-        newActivitiesList.removeOne(activity);
-    setOnActivities(newActivitiesList);
-#else
-    Q_UNUSED(activity)
-    Q_UNUSED(enable)
-#endif
-}
-
-/**
  * set exactly which activities this client is on
  */
 void X11Client::setOnActivities(const QStringList &newActivitiesList)

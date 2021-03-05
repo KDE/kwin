@@ -122,7 +122,6 @@ public:
     void destroyClient() override;
 
     QStringList activities() const override;
-    void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set) override;
     void setOnActivities(const QStringList &newActivitiesList) override;
     void updateActivities(bool includeTransients);

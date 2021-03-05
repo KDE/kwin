@@ -539,6 +539,7 @@ public:
     virtual void checkNoBorder();
     virtual void setOnActivities(const QStringList &newActivitiesList);
     virtual void setOnAllActivities(bool set) = 0;
+    void setOnActivity(const QString &activity, bool enable);
     const WindowRules* rules() const {
         return &m_rules;
     }
