@@ -15,6 +15,7 @@
 #include "wayland_server.h"
 #include "workspace.h"
 #include "screenlockerwatcher.h"
+#include "deleted.h"
 
 #include <KWaylandServer/display.h>
 #include <KWaylandServer/seat_interface.h>
@@ -157,6 +158,12 @@ void InputMethod::clientAdded(AbstractClient* client)
         }
     });
     connect(m_inputClient, &AbstractClient::frameGeometryChanged, this, refreshFrame);
+    // Current code have a assumption that InputMethod started by the kwin is virtual keyboard,
+    // InputMethod::hide sends out a deactivate signal to input-method client, this is not desired
+    // when we support input methods like ibus which can show and hide surfaces/windows as they please
+    // and are not exactly Virtual keyboards.
+    connect(m_inputClient, &AbstractClient::windowHidden, this, &InputMethod::hide);
+    connect(m_inputClient, &AbstractClient::windowClosed, this, &InputMethod::hide);
 }
 
 void InputMethod::handleFocusedSurfaceChanged()
