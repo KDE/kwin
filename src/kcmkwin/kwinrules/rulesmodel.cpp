@@ -11,10 +11,8 @@
 #include "activities.h"
 #endif
 
-#include <QFileInfo>
 #include <QIcon>
 #include <QQmlEngine>
-#include <QTemporaryFile>
 #include <QtDBus>
 
 #include <KColorSchemeManager>
@@ -156,8 +154,9 @@ bool RulesModel::setData(const QModelIndex &index, const QVariant &value, int ro
         return false;
     }
 
-    emit dataChanged(index, index, QVector<int>{role});
+    writeToSettings(rule);
 
+    emit dataChanged(index, index, QVector<int>{role});
     if (rule->hasFlag(RuleItem::AffectsDescription)) {
         emit descriptionChanged();
     }
@@ -286,13 +285,24 @@ bool RulesModel::geometryWarning() const
     return (!ignoregeometry && (initialPos || initialSize || initialPlacement));
 }
 
-void RulesModel::readFromSettings(RuleSettings *settings)
+RuleSettings *RulesModel::settings() const
 {
+    return m_settings;
+}
+
+void RulesModel::setSettings(RuleSettings *settings)
+{
+    if (m_settings == settings) {
+        return;
+    }
+
     beginResetModel();
 
+    m_settings = settings;
+
     for (RuleItem *rule : qAsConst(m_ruleList)) {
-        const KConfigSkeletonItem *configItem = settings->findItem(rule->key());
-        const KConfigSkeletonItem *configPolicyItem = settings->findItem(rule->policyKey());
+        const KConfigSkeletonItem *configItem = m_settings->findItem(rule->key());
+        const KConfigSkeletonItem *configPolicyItem = m_settings->findItem(rule->policyKey());
 
         rule->reset();
 
@@ -319,72 +329,27 @@ void RulesModel::readFromSettings(RuleSettings *settings)
     emit warningMessagesChanged();
 }
 
-void RulesModel::writeToSettings(RuleSettings *settings) const
+void RulesModel::writeToSettings(RuleItem *rule)
 {
-    const QString description = m_rules["description"]->value().toString();
-    if (description.isEmpty()) {
-        m_rules["description"]->setValue(defaultDescription());
-    }
+    KConfigSkeletonItem *configItem = m_settings->findItem(rule->key());
+    KConfigSkeletonItem *configPolicyItem = m_settings->findItem(rule->policyKey());
 
-    for (const RuleItem *rule : qAsConst(m_ruleList)) {
-        KConfigSkeletonItem *configItem = settings->findItem(rule->key());
-        KConfigSkeletonItem *configPolicyItem = settings->findItem(rule->policyKey());
-
-        if (!configItem) {
-            continue;
-        }
-
-        if (rule->isEnabled()) {
-            configItem->setProperty(rule->value());
-            if (configPolicyItem) {
-                configPolicyItem->setProperty(rule->policy());
-            }
-        } else {
-            if (configPolicyItem) {
-                configPolicyItem->setProperty(Rules::Unused);
-            } else {
-                // Rules without policy gets deactivated by an empty string
-                configItem->setProperty(QString());
-            }
-        }
-    }
-}
-
-void RulesModel::importFromRules(Rules* rules)
-{
-    QTemporaryFile tempFile;
-    if (!tempFile.open()) {
+    if (!configItem) {
         return;
     }
-    const auto cfg = KSharedConfig::openConfig(tempFile.fileName(), KConfig::SimpleConfig);
-    RuleSettings *settings = new RuleSettings(cfg, QStringLiteral("tempSettings"));
 
-    settings->setDefaults();
-    if (rules) {
-        rules->write(settings);
+    if (rule->isEnabled()) {
+        configItem->setProperty(rule->value());
+        if (configPolicyItem) {
+            configPolicyItem->setProperty(rule->policy());
+        }
+    } else {
+        configItem->setDefault();
+        if (configPolicyItem) {
+            configPolicyItem->setDefault();
+        }
     }
-    readFromSettings(settings);
-
-    delete(settings);
 }
-
-Rules *RulesModel::exportToRules() const
-{
-    QTemporaryFile tempFile;
-    if (!tempFile.open()) {
-        return nullptr;
-    }
-    const auto cfg = KSharedConfig::openConfig(tempFile.fileName(), KConfig::SimpleConfig);
-
-    RuleSettings *settings = new RuleSettings(cfg, QStringLiteral("tempSettings"));
-
-    writeToSettings(settings);
-    Rules *rules = new Rules(settings);
-
-    delete(settings);
-    return rules;
-}
-
 
 void RulesModel::populateRuleList()
 {

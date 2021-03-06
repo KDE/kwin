@@ -6,8 +6,6 @@
 
 #include "rulebookmodel.h"
 
-#include <KLocalizedString>
-
 namespace KWin
 {
 
@@ -19,13 +17,20 @@ RuleBookModel::RuleBookModel(QObject *parent)
 
 RuleBookModel::~RuleBookModel()
 {
-    qDeleteAll(m_rules);
+}
+
+QHash<int, QByteArray> RuleBookModel::roleNames() const
+{
+    static auto roles = QHash<int, QByteArray> {
+        { DescriptionRole, QByteArray("display") },
+    }.unite(QAbstractListModel::roleNames());
+    return roles;
 }
 
 int RuleBookModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return m_rules.count();
+    return m_ruleBook->ruleCount();
 }
 
 QVariant RuleBookModel::data(const QModelIndex &index, int role) const
@@ -34,12 +39,18 @@ QVariant RuleBookModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    switch (role) {
-    case Qt::DisplayRole:
-        return descriptionAt(index.row());
-    default:
+    if (index.row() < 0 || index.row() >= rowCount()) {
         return QVariant();
     }
+
+    const RuleSettings *settings = m_ruleBook->ruleSettingsAt(index.row());
+
+    switch (role) {
+    case RuleBookModel::DescriptionRole:
+        return settings->description();
+    }
+
+    return QVariant();
 }
 
 bool RuleBookModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -48,13 +59,22 @@ bool RuleBookModel::setData(const QModelIndex &index, const QVariant &value, int
         return false;
     }
 
+    RuleSettings *settings = m_ruleBook->ruleSettingsAt(index.row());
+
     switch (role) {
-    case Qt::DisplayRole:
-        setDescriptionAt(index.row(), value.toString());
-        return true;
+    case RuleBookModel::DescriptionRole:
+        if (settings->description() == value.toString()) {
+            return true;
+        }
+        settings->setDescription(value.toString());
+        break;
     default:
         return false;
     }
+
+    Q_EMIT dataChanged(index, index, {role});
+
+    return true;
 }
 
 bool RuleBookModel::insertRows(int row, int count, const QModelIndex &parent)
@@ -62,18 +82,14 @@ bool RuleBookModel::insertRows(int row, int count, const QModelIndex &parent)
     if (row < 0 || row > rowCount() || parent.isValid()) {
         return false;
     }
+
     beginInsertRows(parent, row, row + count - 1);
-
     for (int i = 0; i < count; i++) {
-        Rules *newRule = new Rules();
-        // HACK: Improve integration with RuleSettings and use directly its defaults
-        newRule->wmclassmatch = Rules::ExactMatch;
-        m_rules.insert(row + i, newRule);
+        RuleSettings *settings = m_ruleBook->insertRuleSettingsAt(row + i);
+        settings->setWmclassmatch(Rules::ExactMatch); // We want ExactMatch as default for new rules in the UI
     }
-
-    m_ruleBook->setCount(m_rules.count());
-
     endInsertRows();
+
     return true;
 }
 
@@ -82,15 +98,13 @@ bool RuleBookModel::removeRows(int row, int count, const QModelIndex &parent)
     if (row < 0 || row > rowCount() || parent.isValid()) {
         return false;
     }
+
     beginRemoveRows(parent, row, row + count - 1);
-
     for (int i = 0; i < count; i++) {
-        delete m_rules.at(row + i);
+        m_ruleBook->removeRuleSettingsAt(row + i);
     }
-    m_rules.remove(row, count);
-    m_ruleBook->setCount(m_rules.count());
-
     endRemoveRows();
+
     return true;
 }
 
@@ -110,8 +124,7 @@ bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
     }
 
     for (int i = 0; i < count; i++) {
-        m_rules.insert(destinationChild + i,
-                       m_rules.takeAt(isMoveDown ? sourceRow : sourceRow + i));
+        m_ruleBook->moveRuleSettings(isMoveDown ? sourceRow : sourceRow + i, destinationChild);
     }
 
     endMoveRows();
@@ -121,54 +134,62 @@ bool RuleBookModel::moveRows(const QModelIndex &sourceParent, int sourceRow, int
 
 QString RuleBookModel::descriptionAt(int row) const
 {
-    Q_ASSERT (row >= 0 && row < m_rules.count());
-    return m_rules.at(row)->description;
+    Q_ASSERT(row >= 0 && row < rowCount());
+    return m_ruleBook->ruleSettingsAt(row)->description();
 }
 
-Rules *RuleBookModel::ruleAt(int row) const
+RuleSettings *RuleBookModel::ruleSettingsAt(int row) const
 {
-    Q_ASSERT (row >= 0 && row < m_rules.count());
-    return m_rules.at(row);
+    Q_ASSERT(row >= 0 && row < rowCount());
+    return m_ruleBook->ruleSettingsAt(row);
 }
 
 void RuleBookModel::setDescriptionAt(int row, const QString &description)
 {
-    Q_ASSERT (row >= 0 && row < m_rules.count());
-    if (description == m_rules.at(row)->description) {
+    Q_ASSERT(row >= 0 && row < rowCount());
+    if (description == m_ruleBook->ruleSettingsAt(row)->description()) {
         return;
     }
 
-    m_rules.at(row)->description = description;
+    m_ruleBook->ruleSettingsAt(row)->setDescription(description);
 
-    emit dataChanged(index(row), index(row), QVector<int>{Qt::DisplayRole});
+    emit dataChanged(index(row), index(row), {});
 }
 
-void RuleBookModel::setRuleAt(int row, Rules *rule)
+void RuleBookModel::setRuleSettingsAt(int row, const RuleSettings &settings)
 {
-    Q_ASSERT (row >= 0 && row < m_rules.count());
+    Q_ASSERT(row >= 0 && row < rowCount());
 
-    delete m_rules.at(row);
-    m_rules[row] = rule;
+    copySettingsTo(ruleSettingsAt(row), settings);
 
-    emit dataChanged(index(row), index(row), QVector<int>{Qt::DisplayRole});
+    emit dataChanged(index(row), index(row), {});
 }
-
 
 void RuleBookModel::load()
 {
     beginResetModel();
 
     m_ruleBook->load();
-    qDeleteAll(m_rules);
-    m_rules = m_ruleBook->rules();
 
     endResetModel();
 }
 
 void RuleBookModel::save()
 {
-    m_ruleBook->setRules(m_rules);
     m_ruleBook->save();
+}
+
+bool RuleBookModel::isSaveNeeded()
+{
+    return m_ruleBook->usrIsSaveNeeded();
+}
+
+void RuleBookModel::copySettingsTo(RuleSettings *dest, const RuleSettings &source)
+{
+    dest->setDefaults();
+    for (const KConfigSkeletonItem *item : source.items()) {
+        dest->findItem(item->name())->setProperty(item->property());
+    }
 }
 
 } // namespace

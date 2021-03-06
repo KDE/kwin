@@ -7,7 +7,7 @@
 #pragma once
 
 #include "rulebooksettings.h"
-#include <rules.h>
+#include "rulesettings.h"
 
 #include <QAbstractListModel>
 
@@ -20,11 +20,15 @@ class RuleBookModel : public QAbstractListModel
     Q_OBJECT
 
 public:
+    enum {
+        DescriptionRole = Qt::DisplayRole,
+    };
+
     explicit RuleBookModel(QObject *parent = nullptr);
     ~RuleBookModel();
 
+    QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
@@ -36,15 +40,18 @@ public:
     QString descriptionAt(int row) const;
     void setDescriptionAt(int row, const QString &description);
 
-    Rules *ruleAt(int row) const;
-    void setRuleAt(int row, Rules *rule);
+    RuleSettings *ruleSettingsAt(int row) const;
+    void setRuleSettingsAt(int row, const RuleSettings &settings);
 
     void load();
     void save();
+    bool isSaveNeeded();
+
+    // Helper function to copy RuleSettings properties
+    static void copySettingsTo(RuleSettings *dest, const RuleSettings &source);
 
 private:
     RuleBookSettings *m_ruleBook;
-    QVector<Rules *> m_rules;
 };
 
 } // namespace
