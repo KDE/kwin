@@ -57,6 +57,7 @@ private:
     KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
 
     void clearBufferInterface();
+    void initialize();
 };
 
 }

@@ -22,6 +22,7 @@
 #include <gbm.h>
 // KWaylandServer
 #include "KWaylandServer/buffer_interface.h"
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -36,11 +37,7 @@ DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, const std::shared_ptr<GbmSurface> &su
         qCWarning(KWIN_DRM) << "Locking front buffer failed";
         return;
     }
-    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
-    if (drmModeAddFB(fd, m_size.width(), m_size.height(), 24, 32, gbm_bo_get_stride(m_bo), gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
-        qCWarning(KWIN_DRM) << "drmModeAddFB failed";
-    }
-    gbm_bo_set_user_data(m_bo, this, nullptr);
+    initialize();
 }
 
 DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
@@ -52,11 +49,7 @@ DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::Buffe
         m_bufferInterface->ref();
         connect(m_bufferInterface, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &DrmSurfaceBuffer::clearBufferInterface);
     }
-    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
-    if (drmModeAddFB(fd, m_size.width(), m_size.height(), 24, 32, gbm_bo_get_stride(m_bo), gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
-        qCWarning(KWIN_DRM) << "drmModeAddFB failed";
-    }
-    gbm_bo_set_user_data(m_bo, this, nullptr);
+    initialize();
 }
 
 DrmSurfaceBuffer::~DrmSurfaceBuffer()
@@ -83,6 +76,43 @@ void DrmSurfaceBuffer::clearBufferInterface()
     disconnect(m_bufferInterface, &KWaylandServer::BufferInterface::aboutToBeDestroyed, this, &DrmSurfaceBuffer::clearBufferInterface);
     m_bufferInterface->unref();
     m_bufferInterface = nullptr;
+}
+
+void DrmSurfaceBuffer::initialize()
+{
+    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
+    uint32_t handles[4] = { };
+    uint32_t strides[4] = { };
+    uint32_t offsets[4] = { };
+    uint64_t modifiers[4] = { };
+
+    if (gbm_bo_get_handle_for_plane(m_bo, 0).s32 != -1) {
+        for (int i = 0; i < gbm_bo_get_plane_count(m_bo); i++) {
+            handles[i] = gbm_bo_get_handle_for_plane(m_bo, i).u32;
+            strides[i] = gbm_bo_get_stride_for_plane(m_bo, i);
+            offsets[i] = gbm_bo_get_offset(m_bo, i);
+            modifiers[i] = gbm_bo_get_modifier(m_bo);
+        }
+    } else {
+        handles[0] = gbm_bo_get_format(m_bo);
+        strides[0] = gbm_bo_get_stride(m_bo);
+        modifiers[0] = DRM_FORMAT_MOD_INVALID;
+    }
+
+    if (modifiers[0] != DRM_FORMAT_MOD_INVALID) {
+        if (drmModeAddFB2WithModifiers(m_fd, m_size.width(), m_size.height(), gbm_bo_get_format(m_bo), handles, strides, offsets, modifiers, &m_bufferId, DRM_MODE_FB_MODIFIERS)) {
+            qCWarning(KWIN_DRM) << "drmModeAddFB2WithModifiers failed!" << strerror(errno);
+        }
+    } else {
+        if (drmModeAddFB2(m_fd, m_size.width(), m_size.height(), gbm_bo_get_format(m_bo), handles, strides, offsets, &m_bufferId, 0)) {
+            // fallback
+            if (drmModeAddFB(m_fd, m_size.width(), m_size.height(), 24, 32, strides[0], handles[0], &m_bufferId) != 0) {
+                qCWarning(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed!" << strerror(errno);
+            }
+        }
+    }
+
+    gbm_bo_set_user_data(m_bo, this, nullptr);
 }
 
 }
