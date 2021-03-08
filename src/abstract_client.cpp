@@ -1498,7 +1498,7 @@ void AbstractClient::setupWindowManagementInterface()
         return;
     }
     using namespace KWaylandServer;
-    auto w = waylandServer()->windowManagement()->createWindow(waylandServer()->windowManagement(), internalId());
+    auto w = waylandServer()->windowManagement()->createWindow(this, internalId());
     w->setTitle(caption());
     w->setVirtualDesktop(isOnAllDesktops() ? 0 : desktop() - 1);
     w->setActive(isActive());
@@ -1683,14 +1683,6 @@ void AbstractClient::setupWindowManagementInterface()
     );
 
     m_windowManagementInterface = w;
-}
-
-void AbstractClient::destroyWindowManagementInterface()
-{
-    if (m_windowManagementInterface) {
-        m_windowManagementInterface->unmap();
-        m_windowManagementInterface = nullptr;
-    }
 }
 
 Options::MouseCommand AbstractClient::getMouseCommand(Qt::MouseButton button, bool *handled) const

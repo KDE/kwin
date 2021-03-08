@@ -328,7 +328,6 @@ void XdgSurfaceClient::destroyClient()
     emit windowClosed(this, deleted);
     StackingUpdatesBlocker blocker(workspace());
     RuleBook::self()->discardUsed(this, true);
-    destroyWindowManagementInterface();
     destroyDecoration();
     cleanGrouping();
     waylandServer()->removeClient(this);

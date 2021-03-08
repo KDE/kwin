@@ -206,7 +206,6 @@ void X11Client::releaseWindow(bool on_shutdown)
         tabBox->nextPrev(true);
     }
 #endif
-    destroyWindowManagementInterface();
     Deleted* del = nullptr;
     if (!on_shutdown) {
         del = Deleted::create(this);
@@ -279,7 +278,6 @@ void X11Client::destroyClient()
         tabBox->nextPrev(true);
     }
 #endif
-    destroyWindowManagementInterface();
     Deleted* del = Deleted::create(this);
     if (isMoveResize())
         emit clientFinishUserMovedResized(this);

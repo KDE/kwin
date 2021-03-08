@@ -999,7 +999,6 @@ protected:
     virtual void doSetQuickTileMode();
 
     void setupWindowManagementInterface();
-    void destroyWindowManagementInterface();
     void updateColorScheme();
     void setTransientFor(AbstractClient *transientFor);
     /**
