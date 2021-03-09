@@ -25,6 +25,7 @@
 // system
 #include <algorithm>
 #include <errno.h>
+#include <poll.h>
 #include <unistd.h>
 // drm
 #include <xf86drm.h>
@@ -339,21 +340,21 @@ void DrmGpu::waitIdle()
         if (idle) {
             break;
         }
-        fd_set set;
-        FD_ZERO(&set);
-        FD_SET(m_fd, &set);
-        timeval timeout;
-        timeout.tv_sec = 30;
-        timeout.tv_usec = 0;
-        const int descriptorCount = select(m_fd + 1, &set, nullptr, nullptr, &timeout);
-        if (descriptorCount < 0) {
-            qCWarning(KWIN_DRM) << "select() in DrmGpu::waitIdle failed:" << strerror(errno);
-            break;
-        } else if (FD_ISSET(m_fd, &set)) {
-            dispatchEvents();
-        } else {
+        pollfd pfds[1];
+        pfds[0].fd = m_fd;
+        pfds[0].events = POLLIN;
+
+        const int ready = poll(pfds, 1, 30000);
+        if (ready < 0) {
+            if (errno != EINTR) {
+                qCWarning(KWIN_DRM) << Q_FUNC_INFO << "poll() failed:" << strerror(errno);
+                break;
+            }
+        } else if (ready == 0) {
             qCWarning(KWIN_DRM) << "No drm events for gpu" << m_devNode << "within last 30 seconds";
             break;
+        } else {
+            dispatchEvents();
         }
     };
     m_socketNotifier->setEnabled(true);
