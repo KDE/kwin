@@ -1878,75 +1878,27 @@ void X11Client::doSetDemandsAttention()
     info->setState(isDemandingAttention() ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
 }
 
-/**
- * set exactly which activities this client is on
- */
-void X11Client::setOnActivities(const QStringList &newActivitiesList)
+void X11Client::doSetOnActivities(const QStringList &activityList)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
-    if (!Activities::self()) {
-        return;
-    }
-    auto activitiesList = rules()->checkActivity(newActivitiesList);
-
-    QStringList allActivities = Activities::self()->all();
-
-    auto it = activitiesList.begin();
-    while (it != activitiesList.end()) {
-        if (! allActivities.contains(*it)) {
-            it = activitiesList.erase(it);
-        } else {
-            it++;
-        }
-    }
-
-    if (// If we got the request to be on all activities explicitly
-        activitiesList.isEmpty() || activitiesList.contains(Activities::nullUuid()) ||
-        // If we got a list of activities that covers all activities
-        (activitiesList.count() > 1 && activitiesList.count() == allActivities.count())) {
-
-        activityList.clear();
+    if (activityList.isEmpty()) {
         const QByteArray nullUuid = Activities::nullUuid().toUtf8();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
-
     } else {
-        QByteArray joined = activitiesList.join(QStringLiteral(",")).toLatin1();
-        activityList = activitiesList;
+        QByteArray joined = activityList.join(QStringLiteral(",")).toLatin1();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }
-
-    updateActivities(false);
 #else
     Q_UNUSED(newActivitiesList)
 #endif
 }
 
-void X11Client::blockActivityUpdates(bool b)
-{
-    if (b) {
-        ++m_activityUpdatesBlocked;
-    } else {
-        Q_ASSERT(m_activityUpdatesBlocked);
-        --m_activityUpdatesBlocked;
-        if (!m_activityUpdatesBlocked)
-            updateActivities(m_blockedActivityUpdatesRequireTransients);
-    }
-}
-
-/**
- * update after activities changed
- */
 void X11Client::updateActivities(bool includeTransients)
 {
-    if (m_activityUpdatesBlocked) {
-        m_blockedActivityUpdatesRequireTransients |= includeTransients;
-        return;
+    AbstractClient::updateActivities(includeTransients);
+    if (!m_activityUpdatesBlocked) {
+        updateVisibility();
     }
-    emit activitiesChanged(this);
-    m_blockedActivityUpdatesRequireTransients = false; // reset
-    FocusChain::self()->update(this, FocusChain::MakeFirst);
-    updateVisibility();
-    updateWindowRules(Rules::Activity);
 }
 
 /**
@@ -1959,27 +1911,7 @@ QStringList X11Client::activities() const
     if (sessionActivityOverride) {
         return QStringList();
     }
-    return activityList;
-}
-
-/**
- * if @p on is true, sets on all activities.
- * if it's false, sets it to only be on the current activity
- */
-void X11Client::setOnAllActivities(bool on)
-{
-#ifdef KWIN_BUILD_ACTIVITIES
-    if (on == isOnAllActivities())
-        return;
-    if (on) {
-        setOnActivities(QStringList());
-
-    } else {
-        setOnActivity(Activities::self()->current(), true);
-    }
-#else
-    Q_UNUSED(on)
-#endif
+    return AbstractClient::activities();
 }
 
 /**

@@ -67,21 +67,6 @@ QString WaylandClient::captionSuffix() const
     return m_captionSuffix;
 }
 
-QStringList WaylandClient::activities() const
-{
-    return QStringList();
-}
-
-void WaylandClient::setOnAllActivities(bool set)
-{
-    Q_UNUSED(set)
-}
-
-void WaylandClient::blockActivityUpdates(bool b)
-{
-    Q_UNUSED(b)
-}
-
 QPoint WaylandClient::clientContentPos() const
 {
     return -clientPos();

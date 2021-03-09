@@ -501,7 +501,6 @@ public:
     Q_INVOKABLE void setMaximize(bool vertically, bool horizontally);
     virtual bool noBorder() const;
     virtual void setNoBorder(bool set);
-    virtual void blockActivityUpdates(bool b = true) = 0;
     QPalette palette() const;
     const Decoration::DecorationPalette *decorationPalette() const;
     /**
@@ -537,9 +536,14 @@ public:
     virtual bool userCanSetFullScreen() const;
     virtual bool userCanSetNoBorder() const;
     virtual void checkNoBorder();
-    virtual void setOnActivities(const QStringList &newActivitiesList);
-    virtual void setOnAllActivities(bool set) = 0;
+
+    QStringList activities() const override;
     void setOnActivity(const QString &activity, bool enable);
+    void setOnActivities(const QStringList &newActivitiesList);
+    void setOnAllActivities(bool all);
+    virtual void updateActivities(bool includeTransients);
+    void blockActivityUpdates(bool b = true);
+
     const WindowRules* rules() const {
         return &m_rules;
     }
@@ -971,6 +975,15 @@ protected:
      */
     virtual void doSetDesktop();
     /**
+     * Called from @ref setOnActivities just after the activity list member has been updated, but before
+     * @ref updateActivities is called.
+     *
+     * @param activityList the new list of activities set on that client
+     *
+     * Default implementation does nothing
+     */
+    virtual void doSetOnActivities(const QStringList &activityList);
+    /**
      * Called from @ref minimize and @ref unminimize once the minimized value got updated, but before the
      * changed signal is emitted.
      *
@@ -1254,6 +1267,10 @@ private:
     QTimer *m_shadeHoverTimer = nullptr;
     ShadeMode m_shadeMode = ShadeNone;
     QVector <VirtualDesktop *> m_desktops;
+
+    QStringList m_activityList;
+    int m_activityUpdatesBlocked = 0;
+    bool m_blockedActivityUpdatesRequireTransients = false;
 
     QString m_colorScheme;
     std::shared_ptr<Decoration::DecorationPalette> m_palette;

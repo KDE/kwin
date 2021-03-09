@@ -25,8 +25,6 @@ public:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
     QRect bufferGeometry() const override;
-    QStringList activities() const override;
-    void blockActivityUpdates(bool b = true) override;
     qreal bufferScale() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
@@ -56,7 +54,6 @@ public:
     void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
     void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
     AbstractClient *findModal(bool allow_itself = false) override;
-    void setOnAllActivities(bool set) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void updateDecoration(bool check_workspace_pos, bool force = false) override;

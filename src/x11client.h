@@ -122,10 +122,8 @@ public:
     void destroyClient() override;
 
     QStringList activities() const override;
-    void setOnAllActivities(bool set) override;
-    void setOnActivities(const QStringList &newActivitiesList) override;
-    void updateActivities(bool includeTransients);
-    void blockActivityUpdates(bool b = true) override;
+    void doSetOnActivities(const QStringList &newActivitiesList) override;
+    void updateActivities(bool includeTransients) override;
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
     bool isShown(bool shaded_is_shown) const override;

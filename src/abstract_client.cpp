@@ -511,6 +511,11 @@ void AbstractClient::doSetDesktop()
 {
 }
 
+void AbstractClient::doSetOnActivities(const QStringList &activityList)
+{
+    Q_UNUSED(activityList);
+}
+
 void AbstractClient::enterDesktop(VirtualDesktop *virtualDesktop)
 {
     if (m_desktops.contains(virtualDesktop)) {
@@ -2792,9 +2797,14 @@ void AbstractClient::evaluateWindowRules()
     applyWindowRules();
 }
 
-void AbstractClient::setOnActivities(const QStringList &newActivitiesList)
+/**
+ * Returns the list of activities the client window is on.
+ * if it's on all activities, the list will be empty.
+ * Don't use this, use isOnActivity() and friends (from class Toplevel)
+ */
+QStringList AbstractClient::activities() const
 {
-    Q_UNUSED(newActivitiesList)
+    return m_activityList;
 }
 
 /**
@@ -2830,6 +2840,95 @@ void AbstractClient::setOnActivity(const QString &activity, bool enable)
     Q_UNUSED(activity)
     Q_UNUSED(enable)
 #endif
+}
+
+/**
+ * set exactly which activities this client is on
+ */
+void AbstractClient::setOnActivities(const QStringList &newActivitiesList)
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return;
+    }
+    const auto allActivities = Activities::self()->all();
+    const auto activityList = [&] {
+        auto result = rules()->checkActivity(newActivitiesList);
+
+        const auto it = std::remove_if(result.begin(), result.end(), [=](const QString &activity) {
+            return !allActivities.contains(activity);
+        });
+        result.erase(it, result.end());
+        return result;
+    }();
+
+    const auto allActivityExplicitlyRequested = activityList.isEmpty() || activityList.contains(Activities::nullUuid());
+    const auto allActivitiesCovered = activityList.size() > 1 && activityList.size() == allActivities.size();
+
+    if (allActivityExplicitlyRequested || allActivitiesCovered) {
+        if (!m_activityList.isEmpty()) {
+            m_activityList.clear();
+            doSetOnActivities(m_activityList);
+        }
+    } else {
+        if (m_activityList != activityList) {
+            m_activityList = activityList;
+            doSetOnActivities(m_activityList);
+        }
+    }
+
+    updateActivities(false);
+#else
+    Q_UNUSED(newActivitiesList)
+#endif
+}
+
+/**
+ * if @p all is true, sets on all activities.
+ * if it's false, sets it to only be on the current activity
+ */
+void AbstractClient::setOnAllActivities(bool all)
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    if (all == isOnAllActivities()) {
+        return;
+    }
+    if (all) {
+        setOnActivities(QStringList());
+    } else {
+        setOnActivity(Activities::self()->current(), true);
+    }
+#else
+    Q_UNUSED(on)
+#endif
+}
+
+/**
+ * update after activities changed
+ */
+void AbstractClient::updateActivities(bool includeTransients)
+{
+    if (m_activityUpdatesBlocked) {
+        m_blockedActivityUpdatesRequireTransients |= includeTransients;
+        return;
+    }
+    emit activitiesChanged(this);
+    m_blockedActivityUpdatesRequireTransients = false; // reset
+    FocusChain::self()->update(this, FocusChain::MakeFirst);
+    updateWindowRules(Rules::Activity);
+}
+
+void AbstractClient::blockActivityUpdates(bool b)
+{
+    if (b) {
+        ++m_activityUpdatesBlocked;
+    } else {
+        Q_ASSERT(m_activityUpdatesBlocked);
+        --m_activityUpdatesBlocked;
+        if (!m_activityUpdatesBlocked) {
+            updateActivities(m_blockedActivityUpdatesRequireTransients);
+        }
+    }
 }
 
 void AbstractClient::checkNoBorder()

@@ -90,18 +90,6 @@ QRect InternalClient::bufferGeometry() const
     return m_clientGeometry;
 }
 
-QStringList InternalClient::activities() const
-{
-    return QStringList();
-}
-
-void InternalClient::blockActivityUpdates(bool b)
-{
-    Q_UNUSED(b)
-
-    // Internal clients do not support activities.
-}
-
 qreal InternalClient::bufferScale() const
 {
     if (m_internalWindow) {
@@ -296,13 +284,6 @@ AbstractClient *InternalClient::findModal(bool allow_itself)
 {
     Q_UNUSED(allow_itself)
     return nullptr;
-}
-
-void InternalClient::setOnAllActivities(bool set)
-{
-    Q_UNUSED(set)
-
-    // Internal clients do not support activities.
 }
 
 bool InternalClient::takeFocus()

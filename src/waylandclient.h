@@ -26,9 +26,6 @@ public:
     QRect bufferGeometry() const override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
-    QStringList activities() const override;
-    void setOnAllActivities(bool set) override;
-    void blockActivityUpdates(bool b = true) override;
     QPoint clientContentPos() const override;
     QRect transparentRect() const override;
     pid_t pid() const override;
