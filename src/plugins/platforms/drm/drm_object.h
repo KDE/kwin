@@ -14,6 +14,7 @@
 // drm
 #include <xf86drmMode.h>
 
+#include "drm_pointer.h"
 
 namespace KWin
 {
@@ -51,25 +52,47 @@ public:
      * @param req the atomic request
      * @return true when the request was successfully populated
      */
-    virtual bool atomicPopulate(drmModeAtomicReq *req) const;
+    bool atomicPopulate(drmModeAtomicReq *req) const;
 
-    void setValue(int prop, uint64_t new_value);
-    bool propHasEnum(int prop, uint64_t value) const;
+    template <typename T>
+    void setValue(T prop, uint64_t new_value)
+    {
+        if (auto &property = m_props.at(static_cast<uint32_t>(prop))) {
+            property->setValue(new_value);
+        }
+    }
+
+    template <typename T>
+    bool propHasEnum(T prop, uint64_t value) const
+    {
+        const auto &property = m_props.at(static_cast<uint32_t>(prop));
+        return property ? property->hasEnum(value) : false;
+    }
 
 protected:
+    struct PropertyDefinition
+    {
+        PropertyDefinition(const QByteArray &name, const QVector<QByteArray> &&enumNames = {})
+            : name(name), enumNames(enumNames)
+        {
+        }
+        QByteArray name;
+        QVector<QByteArray> enumNames;
+    };
     /**
      * Initialize properties of object. Only derived classes know names and quantities of
      * properties.
      *
      * @return true when properties have been initialized successfully
      */
-    virtual bool initProps() = 0;
+    bool initProps(const QVector<PropertyDefinition> &&vector, uint32_t objectType);
 
-    void setPropertyNames(QVector<QByteArray> &&vector);
-    void initProp(int n, drmModeObjectProperties *properties,
-                  QVector<QByteArray> enumNames = QVector<QByteArray>(0));
-
-    bool doAtomicPopulate(drmModeAtomicReq *req, int firstProperty) const;
+    template <typename T>
+    void deleteProp(T prop)
+    {
+        delete m_props[static_cast<uint32_t>(prop)];
+        m_props[static_cast<uint32_t>(prop)] = nullptr;
+    }
 
     class Property;
     bool atomicAddProperty(drmModeAtomicReq *req, Property *property) const;
@@ -83,7 +106,7 @@ protected:
     class Property
     {
     public:
-        Property(drmModePropertyRes *prop, uint64_t val, QVector<QByteArray> enumNames);
+        Property(drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob);
         virtual ~Property();
 
         void initEnumMap(drmModePropertyRes *prop);
@@ -117,6 +140,9 @@ protected:
         bool isImmutable() const {
             return m_immutable;
         }
+        drmModePropertyBlobRes *blob() const {
+            return m_blob.data();
+        }
 
     private:
         uint32_t m_propId = 0;
@@ -126,6 +152,7 @@ protected:
         QVector<uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
         bool m_immutable = false;
+        DrmScopedPointer<drmModePropertyBlobRes> m_blob;
     };
 
 private:

@@ -31,46 +31,49 @@ DrmObject::~DrmObject()
     }
 }
 
-void DrmObject::setPropertyNames(QVector<QByteArray> &&vector)
+bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t objectType)
 {
-    m_propsNames = std::move(vector);
-    m_props.fill(nullptr, m_propsNames.size());
-}
-
-void DrmObject::initProp(int n, drmModeObjectProperties *properties, QVector<QByteArray> enumNames)
-{
-    for (unsigned int i = 0; i < properties->count_props; ++i) {
-        DrmScopedPointer<drmModePropertyRes> prop( drmModeGetProperty(fd(), properties->props[i]) );
+    DrmScopedPointer<drmModeObjectProperties> properties(drmModeObjectGetProperties(fd(), m_id, objectType));
+    if (!properties) {
+        qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
+        return false;
+    }
+    m_props.resize(vector.count());
+    for (uint32_t i = 0; i < properties->count_props; i++) {
+        DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(fd(), properties->props[i]));
         if (!prop) {
-            qCWarning(KWIN_DRM) << "Getting property" << i << "failed";
+            qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", i, m_id);
             continue;
         }
-
-        if (prop->name == m_propsNames[n]) {
-            qCDebug(KWIN_DRM).nospace() << m_id << ": '" << prop->name << "' (id " << prop->prop_id
-                              << "): " << properties->prop_values[i];
-            m_props[n] = new Property(prop.data(), properties->prop_values[i], enumNames);
-            return;
+        for (int j = 0; j < vector.count(); j++) {
+            const PropertyDefinition &def = vector[j];
+            if (def.name == prop->name) {
+                drmModePropertyBlobRes *blob = nullptr;
+                if (prop->flags & DRM_MODE_PROP_BLOB) {
+                    blob = drmModeGetPropertyBlob(fd(), properties->prop_values[i]);
+                }
+                qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[i]);
+                m_props[j] = new Property(prop.data(), properties->prop_values[i], def.enumNames, blob);
+                break;
+            }
         }
     }
-    qCWarning(KWIN_DRM) << "Initializing property" << m_propsNames[n] << "failed";
+    for (int i = 0; i < vector.count(); i++) {
+        if (!m_props[i]) {
+            qCWarning(KWIN_DRM) << "Could not find property" << vector[i].name;
+        }
+    }
+    return true;
 }
 
 bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
 {
-    return doAtomicPopulate(req, 0);
-}
-
-bool DrmObject::doAtomicPopulate(drmModeAtomicReq *req, int firstProperty) const
-{
     bool ret = true;
 
-    for (int i = firstProperty; i < m_props.size(); i++) {
-        auto property = m_props.at(i);
-        if (!property || property->isImmutable()) {
-            continue;
+    for (const auto &property : qAsConst(m_props)) {
+        if (property && !property->isImmutable()) {
+            ret &= atomicAddProperty(req, property);
         }
-        ret &= atomicAddProperty(req, property);
     }
 
     if (!ret) {
@@ -78,21 +81,6 @@ bool DrmObject::doAtomicPopulate(drmModeAtomicReq *req, int firstProperty) const
         return false;
     }
     return true;
-}
-
-void DrmObject::setValue(int prop, uint64_t new_value)
-{
-    Q_ASSERT(prop < m_props.size());
-    auto property = m_props.at(prop);
-    if (property) {
-        property->setValue(new_value);
-    }
-}
-
-bool DrmObject::propHasEnum(int prop, uint64_t value) const
-{
-    auto property = m_props.at(prop);
-    return property ? property->hasEnum(value) : false;
 }
 
 bool DrmObject::atomicAddProperty(drmModeAtomicReq *req, Property *property) const
@@ -109,11 +97,12 @@ bool DrmObject::atomicAddProperty(drmModeAtomicReq *req, Property *property) con
  * Definitions for struct Prop
  */
 
-DrmObject::Property::Property(drmModePropertyRes *prop, uint64_t val, QVector<QByteArray> enumNames)
+DrmObject::Property::Property(drmModePropertyRes *prop, uint64_t val, const QVector<QByteArray> &enumNames, drmModePropertyBlobRes *blob)
     : m_propId(prop->prop_id)
     , m_propName(prop->name)
     , m_value(val)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
+    , m_blob(blob)
 {
     if (!enumNames.isEmpty()) {
         qCDebug(KWIN_DRM) << m_propName << " can have enums:" << enumNames;
@@ -175,7 +164,7 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
 
 }
 
-QDebug& operator<<(QDebug& s, const KWin::DrmObject* obj)
+QDebug& operator<<(QDebug& s, const KWin::DrmObject *obj)
 {
     return s.nospace() << "DrmObject(" << obj->id() << ", fd: "<< obj->fd() << ')';
 }

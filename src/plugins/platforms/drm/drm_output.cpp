@@ -943,32 +943,32 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
             targetRect.setY((mSize.height() - targetRect.height()) / 2);
         }
 
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcX), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcY), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcW), sourceSize.width() << 16);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcH), sourceSize.height() << 16);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcX), targetRect.x());
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcY), targetRect.y());
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), targetRect.width());
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), targetRect.height());
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), m_crtc->id());
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcX, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcY, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcW, sourceSize.width() << 16);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcH, sourceSize.height() << 16);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcX, targetRect.x());
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcY, targetRect.y());
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcW, targetRect.width());
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcH, targetRect.height());
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcId, m_crtc->id());
     } else {
         m_primaryPlane->setCurrent(nullptr);
         m_primaryPlane->setNext(nullptr);
 
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcX), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcY), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcW), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::SrcH), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcX), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcY), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcW), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), 0);
-        m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcX, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcY, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcW, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::SrcH, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcX, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcY, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcW, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcH, 0);
+        m_primaryPlane->setValue(DrmPlane::PropertyIndex::CrtcId, 0);
     }
-    m_conn->setValue(int(DrmConnector::PropertyIndex::CrtcId), enable ? m_crtc->id() : 0);
-    m_crtc->setValue(int(DrmCrtc::PropertyIndex::ModeId), enable ? m_blobId : 0);
-    m_crtc->setValue(int(DrmCrtc::PropertyIndex::Active), enable);
+    m_conn->setValue(DrmConnector::PropertyIndex::CrtcId, enable ? m_crtc->id() : 0);
+    m_crtc->setValue(DrmCrtc::PropertyIndex::ModeId, enable ? m_blobId : 0);
+    m_crtc->setValue(DrmCrtc::PropertyIndex::Active, enable);
 
     bool ret = true;
     ret &= m_conn->atomicPopulate(req);

@@ -37,121 +37,76 @@ bool DrmPlane::init()
         m_formats[i] = p->formats[i];
     }
 
-    if (!initProps()) {
-        return false;
+    bool success = initProps({
+        PropertyDefinition(QByteArrayLiteral("type"), {
+            QByteArrayLiteral("Overlay"),
+            QByteArrayLiteral("Primary"),
+            QByteArrayLiteral("Cursor")}),
+        PropertyDefinition(QByteArrayLiteral("SRC_X")),
+        PropertyDefinition(QByteArrayLiteral("SRC_Y")),
+        PropertyDefinition(QByteArrayLiteral("SRC_W")),
+        PropertyDefinition(QByteArrayLiteral("SRC_H")),
+        PropertyDefinition(QByteArrayLiteral("CRTC_X")),
+        PropertyDefinition(QByteArrayLiteral("CRTC_Y")),
+        PropertyDefinition(QByteArrayLiteral("CRTC_W")),
+        PropertyDefinition(QByteArrayLiteral("CRTC_H")),
+        PropertyDefinition(QByteArrayLiteral("FB_ID")),
+        PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
+        PropertyDefinition(QByteArrayLiteral("rotation"), {
+            QByteArrayLiteral("rotate-0"),
+            QByteArrayLiteral("rotate-90"),
+            QByteArrayLiteral("rotate-180"),
+            QByteArrayLiteral("rotate-270"),
+            QByteArrayLiteral("reflect-x"),
+            QByteArrayLiteral("reflect-y")}),
+        }, DRM_MODE_OBJECT_PLANE
+    );
+    if (success) {
+        m_supportedTransformations = Transformations();
+        auto checkSupport = [this] (uint64_t value, Transformation t) {
+            if (propHasEnum(PropertyIndex::Rotation, value)) {
+                m_supportedTransformations |= t;
+            }
+        };
+        checkSupport(0, Transformation::Rotate0);
+        checkSupport(1, Transformation::Rotate90);
+        checkSupport(2, Transformation::Rotate180);
+        checkSupport(3, Transformation::Rotate270);
+        checkSupport(4, Transformation::ReflectX);
+        checkSupport(5, Transformation::ReflectY);
     }
-    return true;
-}
-
-bool DrmPlane::atomicPopulate(drmModeAtomicReq *req) const
-{
-    return doAtomicPopulate(req, 1);
-}
-
-bool DrmPlane::initProps()
-{
-    setPropertyNames( {
-        QByteArrayLiteral("type"),
-        QByteArrayLiteral("SRC_X"),
-        QByteArrayLiteral("SRC_Y"),
-        QByteArrayLiteral("SRC_W"),
-        QByteArrayLiteral("SRC_H"),
-        QByteArrayLiteral("CRTC_X"),
-        QByteArrayLiteral("CRTC_Y"),
-        QByteArrayLiteral("CRTC_W"),
-        QByteArrayLiteral("CRTC_H"),
-        QByteArrayLiteral("FB_ID"),
-        QByteArrayLiteral("CRTC_ID"),
-        QByteArrayLiteral("rotation")
-    });
-
-    QVector<QByteArray> typeNames = {
-        QByteArrayLiteral("Overlay"),
-        QByteArrayLiteral("Primary"),
-        QByteArrayLiteral("Cursor")
-    };
-
-    const QVector<QByteArray> rotationNames{
-        QByteArrayLiteral("rotate-0"),
-        QByteArrayLiteral("rotate-90"),
-        QByteArrayLiteral("rotate-180"),
-        QByteArrayLiteral("rotate-270"),
-        QByteArrayLiteral("reflect-x"),
-        QByteArrayLiteral("reflect-y")
-    };
-
-    DrmScopedPointer<drmModeObjectProperties> properties(
-        drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_PLANE));
-    if (!properties){
-        qCWarning(KWIN_DRM) << "Failed to get properties for plane " << m_id ;
-        return false;
-    }
-
-    int propCount = int(PropertyIndex::Count);
-    for (int j = 0; j < propCount; ++j) {
-        if (j == int(PropertyIndex::Type)) {
-            initProp(j, properties.data(), typeNames);
-        } else if (j == int(PropertyIndex::Rotation)) {
-            initProp(j, properties.data(), rotationNames);
-            m_supportedTransformations = Transformations();
-
-            auto checkSupport = [j, this] (uint64_t value, Transformation t) {
-                if (propHasEnum(j, value)) {
-                    m_supportedTransformations |= t;
-                }
-            };
-            checkSupport(0, Transformation::Rotate0);
-            checkSupport(1, Transformation::Rotate90);
-            checkSupport(2, Transformation::Rotate180);
-            checkSupport(3, Transformation::Rotate270);
-            checkSupport(4, Transformation::ReflectX);
-            checkSupport(5, Transformation::ReflectY);
-
-            qCDebug(KWIN_DRM) << "Supported Transformations on plane" << m_id << "are" << m_supportedTransformations;
-        } else {
-            initProp(j, properties.data());
-        }
-    }
-
-    return true;
+    return success;
 }
 
 DrmPlane::TypeIndex DrmPlane::type()
 {
-    auto property = m_props.at(int(PropertyIndex::Type));
+    auto property = m_props.at(static_cast<uint32_t>(PropertyIndex::Type));
     if (!property) {
         return TypeIndex::Overlay;
     }
-    int typeCount = int(TypeIndex::Count);
-    for (int i = 0; i < typeCount; i++) {
-            if (property->enumMap(i) == property->value()) {
-                    return TypeIndex(i);
-            }
+    for (uint32_t i = 0; i < static_cast<uint32_t>(TypeIndex::Count); i++) {
+        if (property->enumMap(i) == property->value()) {
+            return TypeIndex(i);
+        }
     }
     return TypeIndex::Overlay;
 }
 
 void DrmPlane::setNext(const QSharedPointer<DrmBuffer> &b)
 {
-    if (auto property = m_props.at(int(PropertyIndex::FbId))) {
-        property->setValue(b ? b->bufferId() : 0);
-    }
+    setValue(PropertyIndex::FbId, b ? b->bufferId() : 0);
     m_next = b;
 }
 
 void DrmPlane::setTransformation(Transformations t)
 {
-    // TODO: When being pedantic, this should go through the enum mapping. Just remember
-    //       that these are the shift distance, not the shifted value.
-    if (auto property = m_props.at(int(PropertyIndex::Rotation))) {
-        property->setValue(int(t));
-    }
+    setValue(PropertyIndex::Rotation, t);
 }
 
 DrmPlane::Transformations DrmPlane::transformation()
 {
-    if (auto property = m_props.at(int(PropertyIndex::Rotation))) {
-        return Transformations(int(property->value()));
+    if (auto property = m_props.at(static_cast<uint32_t>(PropertyIndex::Rotation))) {
+        return Transformations(static_cast<uint32_t>(property->value()));
     }
     return Transformations(Transformation::Rotate0);
 }

@@ -31,32 +31,10 @@ bool DrmConnector::init()
 {
     qCDebug(KWIN_DRM) << "Creating connector" << m_id;
 
-    if (!initProps()) {
-        return false;
-    }
-    return true;
-}
-
-bool DrmConnector::initProps()
-{
-    setPropertyNames( {
-        QByteArrayLiteral("CRTC_ID"),
-        QByteArrayLiteral("non-desktop")
-    });
-
-    DrmScopedPointer<drmModeObjectProperties> properties(
-        drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CONNECTOR));
-    if (!properties) {
-        qCWarning(KWIN_DRM) << "Failed to get properties for connector " << m_id ;
-        return false;
-    }
-
-    int propCount = int(PropertyIndex::Count);
-    for (int j = 0; j < propCount; ++j) {
-        initProp(j, properties.data());
-    }
-
-    return true;
+    return initProps({
+        PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
+        PropertyDefinition(QByteArrayLiteral("non-desktop")),
+    }, DRM_MODE_OBJECT_CONNECTOR);
 }
 
 bool DrmConnector::isConnected()

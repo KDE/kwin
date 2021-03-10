@@ -23,7 +23,7 @@ public:
 
     bool init() override;
 
-    enum class PropertyIndex {
+    enum class PropertyIndex : uint32_t {
         CrtcId = 0,
         NonDesktop = 1,
         Count
@@ -33,17 +33,17 @@ public:
         return m_encoders;
     }
 
-    bool initProps() override;
     bool isConnected();
 
     bool isNonDesktop() const {
-        auto prop = m_props.at(static_cast<int>(PropertyIndex::NonDesktop));
+        auto prop = m_props.at(static_cast<uint32_t>(PropertyIndex::NonDesktop));
         if (!prop) {
             return false;
         }
         return prop->value();
     }
 private:
+    DrmScopedPointer<drmModeConnector> m_conn;
     QVector<uint32_t> m_encoders;
 };
 

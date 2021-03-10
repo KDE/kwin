@@ -19,50 +19,23 @@ namespace KWin
 
 DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, DrmGpu *gpu, int resIndex)
     : DrmObject(crtc_id, gpu->fd()),
+      m_crtc(drmModeGetCrtc(gpu->fd(), crtc_id)),
       m_resIndex(resIndex),
       m_backend(backend),
       m_gpu(gpu)
-{
-    DrmScopedPointer<drmModeCrtc> modeCrtc(drmModeGetCrtc(gpu->fd(), crtc_id));
-    if (modeCrtc) {
-        m_gammaRampSize = modeCrtc->gamma_size;
-    }
-}
-
-DrmCrtc::~DrmCrtc()
 {
 }
 
 bool DrmCrtc::init()
 {
+    if (!m_crtc) {
+        return false;
+    }
     qCDebug(KWIN_DRM) << "Init for CRTC:" << resIndex() << "id:" << m_id;
-
-    if (!initProps()) {
-        return false;
-    }
-    return true;
-}
-
-bool DrmCrtc::initProps()
-{
-    setPropertyNames({
-        QByteArrayLiteral("MODE_ID"),
-        QByteArrayLiteral("ACTIVE"),
-    });
-
-    DrmScopedPointer<drmModeObjectProperties> properties(
-        drmModeObjectGetProperties(fd(), m_id, DRM_MODE_OBJECT_CRTC));
-    if (!properties) {
-        qCWarning(KWIN_DRM) << "Failed to get properties for crtc " << m_id ;
-        return false;
-    }
-
-    int propCount = int(PropertyIndex::Count);
-    for (int j = 0; j < propCount; ++j) {
-        initProp(j, properties.data());
-    }
-
-    return true;
+    return initProps({
+        PropertyDefinition(QByteArrayLiteral("MODE_ID")),
+        PropertyDefinition(QByteArrayLiteral("ACTIVE")),
+    }, DRM_MODE_OBJECT_CRTC);
 }
 
 void DrmCrtc::flipBuffer()

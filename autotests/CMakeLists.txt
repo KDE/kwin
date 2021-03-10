@@ -4,9 +4,6 @@ add_subdirectory(libkwineffects)
 add_subdirectory(libxrenderutils)
 add_subdirectory(integration)
 add_subdirectory(libinput)
-if (HAVE_DRM)
-    add_subdirectory(drm)
-endif()
 add_subdirectory(tabbox)
 
 ########################################################

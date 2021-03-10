@@ -25,7 +25,7 @@ class DrmPlane : public DrmObject
 public:
     DrmPlane(uint32_t plane_id, int fd);
 
-    enum class PropertyIndex {
+    enum class PropertyIndex : uint32_t {
         Type = 0,
         SrcX,
         SrcY,
@@ -42,7 +42,7 @@ public:
     };
     Q_ENUM(PropertyIndex)
 
-    enum class TypeIndex {
+    enum class TypeIndex : uint32_t {
         Overlay = 0,
         Primary,
         Cursor,
@@ -50,7 +50,7 @@ public:
     };
     Q_ENUM(TypeIndex)
 
-    enum class Transformation {
+    enum class Transformation : uint32_t {
         Rotate0     = 1 << 0,
         Rotate90    = 1 << 1,
         Rotate180   = 1 << 2,
@@ -62,7 +62,6 @@ public:
     Q_DECLARE_FLAGS(Transformations, Transformation);
 
     bool init() override;
-    bool initProps() override;
     TypeIndex type();
 
     bool isCrtcSupported(int resIndex) const {
@@ -90,8 +89,6 @@ public:
     Transformations supportedTransformations() const {
         return m_supportedTransformations;
     }
-
-    bool atomicPopulate(drmModeAtomicReq *req) const override;
 
 private:
     QSharedPointer<DrmBuffer> m_current;

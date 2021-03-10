@@ -27,17 +27,13 @@ class DrmCrtc : public DrmObject
 public:
     DrmCrtc(uint32_t crtc_id, DrmBackend *backend, DrmGpu *gpu, int resIndex);
 
-    ~DrmCrtc() override;
-
     bool init() override;
 
-    enum class PropertyIndex {
+    enum class PropertyIndex : uint32_t {
         ModeId = 0,
         Active,
         Count
     };
-
-    bool initProps() override;
 
     int resIndex() const {
         return m_resIndex;
@@ -57,7 +53,7 @@ public:
     bool blank(DrmOutput *output);
 
     int gammaRampSize() const {
-        return m_gammaRampSize;
+        return m_crtc->gamma_size;
     }
     bool setGammaRamp(const GammaRamp &gamma);
 
@@ -66,8 +62,8 @@ public:
     }
 
 private:
+    DrmScopedPointer<drmModeCrtc> m_crtc;
     int m_resIndex;
-    uint32_t m_gammaRampSize = 0;
 
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QSharedPointer<DrmBuffer> m_nextBuffer;
