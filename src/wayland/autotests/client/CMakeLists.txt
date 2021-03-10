@@ -101,17 +101,6 @@ add_test(NAME kwayland-testSubSurface COMMAND testSubSurface)
 ecm_mark_as_test(testSubSurface)
 
 ########################################################
-# Test Region
-########################################################
-set( testRegion_SRCS
-        test_wayland_region.cpp
-    )
-add_executable(testRegion ${testRegion_SRCS})
-target_link_libraries( testRegion Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
-add_test(NAME kwayland-testRegion COMMAND testRegion)
-ecm_mark_as_test(testRegion)
-
-########################################################
 # Test Blur
 ########################################################
 set( testBlur_SRCS

@@ -15,7 +15,6 @@
 #include "KWayland/Client/plasmavirtualdesktop.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/region_interface.h"
 #include "../../src/server/plasmavirtualdesktop_interface.h"
 #include "../../src/server/plasmawindowmanagement_interface.h"
 #include "KWayland/Client/plasmawindowmanagement.h"

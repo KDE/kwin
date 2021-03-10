@@ -6,7 +6,6 @@
 */
 #pragma once
 
-#include "region_interface.h"
 #include "surface_interface.h"
 
 #include <QObject>
@@ -42,10 +41,6 @@ Q_SIGNALS:
      * This signal is emitted when a new SurfaceInterface @a surface has been created.
      */
     void surfaceCreated(KWaylandServer::SurfaceInterface *surface);
-    /**
-     * This signal is emitted when a new RegionInterface @a region has been created.
-     */
-    void regionCreated(KWaylandServer::RegionInterface *region);
 
 private:
     QScopedPointer<CompositorInterfacePrivate> d;

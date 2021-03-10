@@ -16,7 +16,6 @@
 #include "KWayland/Client/appmenu.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/region_interface.h"
 #include "../../src/server/appmenu_interface.h"
 
 using namespace KWayland::Client;

@@ -6,6 +6,7 @@
 */
 #include "compositor_interface.h"
 #include "display.h"
+#include "region_interface_p.h"
 #include "surface_interface.h"
 
 #include "qwayland-server-wayland.h"
@@ -54,7 +55,7 @@ void CompositorInterfacePrivate::compositor_create_region(Resource *resource, ui
         wl_resource_post_no_memory(resource->handle);
         return;
     }
-    emit q->regionCreated(new RegionInterface(q, regionResource));
+    new RegionInterface(regionResource);
 }
 
 CompositorInterface::CompositorInterface(Display *display, QObject *parent)

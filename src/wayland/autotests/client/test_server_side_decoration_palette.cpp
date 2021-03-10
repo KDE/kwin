@@ -16,7 +16,6 @@
 #include "KWayland/Client/server_decoration_palette.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/region_interface.h"
 #include "../../src/server/server_decoration_palette_interface.h"
 
 using namespace KWayland::Client;

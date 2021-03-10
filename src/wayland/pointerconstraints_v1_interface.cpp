@@ -9,7 +9,7 @@
 #include "display.h"
 #include "pointer_interface.h"
 #include "pointerconstraints_v1_interface_p.h"
-#include "region_interface.h"
+#include "region_interface_p.h"
 #include "surface_interface_p.h"
 
 namespace KWaylandServer

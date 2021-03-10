@@ -12,7 +12,7 @@
 #include "display.h"
 #include "idleinhibit_v1_interface_p.h"
 #include "pointerconstraints_v1_interface_p.h"
-#include "region_interface.h"
+#include "region_interface_p.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
 #include "surfacerole_p.h"

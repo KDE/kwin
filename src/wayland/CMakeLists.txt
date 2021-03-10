@@ -351,7 +351,6 @@ set(SERVER_LIB_HEADERS
   pointerconstraints_v1_interface.h
   pointergestures_v1_interface.h
   primaryselectiondevicemanager_v1_interface.h
-  region_interface.h
   relativepointer_v1_interface.h
   resource.h
   screencast_v1_interface.h

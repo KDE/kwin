@@ -15,7 +15,6 @@
 #include "KWayland/Client/plasmawindowmanagement.h"
 #include "../../src/server/display.h"
 #include "../../src/server/compositor_interface.h"
-#include "../../src/server/region_interface.h"
 #include "../../src/server/plasmawindowmanagement_interface.h"
 #include "../../src/server/surface_interface.h"
 #include <wayland-plasma-window-management-client-protocol.h>
