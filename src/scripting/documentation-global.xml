@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no'?>
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.7.6.1">
     <!--  Documentation for global KWin scripting methods. In doxygen XML format as this can be converted to MediaWiki    -->
-    <!--  Use script and XSLT from kde:scratch/graesslin/kwin-scripting-api-generator to generate the documentation    -->
+    <!--  Use script and XSLT from https://invent.kde.org/graesslin/kwin-scripting-api-generator to generate the documentation    -->
     <!--  This xml is not meant to be doxygen complient    -->
     <compounddef>
         <compoundname>Global</compoundname>
