@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef KWAYLAND_SERVER_SHADOW_INTERFACE_H
-#define KWAYLAND_SERVER_SHADOW_INTERFACE_H
+#pragma once
 
 #include <QObject>
 #include <QMarginsF>
@@ -60,5 +59,3 @@ private:
 };
 
 }
-
-#endif

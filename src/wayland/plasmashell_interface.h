@@ -4,8 +4,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef WAYLAND_SERVER_PLASMA_SHELL_INTERFACE_H
-#define WAYLAND_SERVER_PLASMA_SHELL_INTERFACE_H
+#pragma once
 
 #include <QObject>
 
@@ -232,5 +231,3 @@ private:
 
 Q_DECLARE_METATYPE(KWaylandServer::PlasmaShellSurfaceInterface::Role)
 Q_DECLARE_METATYPE(KWaylandServer::PlasmaShellSurfaceInterface::PanelBehavior)
-
-#endif

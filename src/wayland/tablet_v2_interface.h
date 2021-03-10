@@ -3,9 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-
-#ifndef WAYLAND_SERVER_TABLET_INTERFACE_H
-#define WAYLAND_SERVER_TABLET_INTERFACE_H
+#pragma once
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -278,5 +276,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWaylandServer::TabletSeatV2Interface *)
-
-#endif

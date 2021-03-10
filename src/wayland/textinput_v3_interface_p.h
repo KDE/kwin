@@ -3,9 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-
-#ifndef KWAYLAND_SERVER_TEXTINPUT_V3_INTERFACE_P_H
-#define KWAYLAND_SERVER_TEXTINPUT_V3_INTERFACE_P_H
+#pragma once
 
 #include "textinput_v3_interface.h"
 #include "clientconnection.h"
@@ -93,5 +91,3 @@ protected:
 };
 
 }
-
-#endif

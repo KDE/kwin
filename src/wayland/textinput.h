@@ -3,9 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-
-#ifndef TEXTINPUT_H_INCLUDED
-#define TEXTINPUT_H_INCLUDED
+#pragma once
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
@@ -153,5 +151,3 @@ Q_DECLARE_METATYPE(KWaylandServer::TextInputContentHints)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::TextInputContentHints)
 Q_DECLARE_METATYPE(KWaylandServer::TextInputContentPurpose)
 Q_DECLARE_METATYPE(KWaylandServer::TextInputChangeCause)
-
-#endif // TEXTINPUT_H_INCLUDED

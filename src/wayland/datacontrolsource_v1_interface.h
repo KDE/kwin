@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef WAYLAND_SERVER_DATA_CONTROL_SOURCE_INTERFACE_H
-#define WAYLAND_SERVER_DATA_CONTROL_SOURCE_INTERFACE_H
+#pragma once
 
 #include "abstract_data_source.h"
 
@@ -47,5 +46,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWaylandServer::DataControlSourceV1Interface*)
-
-#endif

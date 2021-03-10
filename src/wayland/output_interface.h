@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
-#ifndef WAYLAND_SERVER_OUTPUT_INTERFACE_H
-#define WAYLAND_SERVER_OUTPUT_INTERFACE_H
+#pragma once
 
 #include <QObject>
 #include <QPoint>
@@ -165,5 +164,3 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::OutputInterface::ModeFlags)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::SubPixel)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::Transform)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::DpmsMode)
-
-#endif
