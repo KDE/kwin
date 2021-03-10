@@ -653,8 +653,6 @@ Q_SIGNALS:
     void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
     void timestampChanged(quint32);
 
-    void keyboardCreated(KWaylandServer::KeyboardInterface*);
-
     /**
      * Emitted whenever the selection changes
      * @since 5.56

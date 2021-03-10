@@ -1496,9 +1496,6 @@ void TestWaylandSeat::testKeyboard()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
-    QSignalSpy keyboardCreatedSpy(m_seatInterface,  &SeatInterface::keyboardCreated);
-    QVERIFY(keyboardSpy.isValid());
-
     Keyboard *keyboard = m_seat->createKeyboard(m_seat);
     QSignalSpy repeatInfoSpy(keyboard, &Keyboard::keyRepeatChanged);
     QVERIFY(repeatInfoSpy.isValid());
@@ -1507,7 +1504,6 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyboard->isKeyRepeatEnabled(), false);
     QCOMPARE(keyboard->keyRepeatDelay(), 0);
     QCOMPARE(keyboard->keyRepeatRate(), 0);
-    QVERIFY(keyboardCreatedSpy.wait());
     QVERIFY(repeatInfoSpy.wait());
     wl_display_flush(m_connection->display());
     QTest::qWait(100);

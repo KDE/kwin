@@ -479,7 +479,6 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
     }
 
     keyboard->d->add(client, id, wl_resource_get_version(resource));
-    emit q->keyboardCreated(keyboard.data());
 }
 
 void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id)
