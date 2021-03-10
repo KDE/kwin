@@ -46,6 +46,7 @@
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/tablet_v2_interface.h>
+#include <KWaylandServer/keyboard_interface.h>
 #include <decorations/decoratedclient.h>
 
 //screenlocker

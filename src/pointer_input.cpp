@@ -25,6 +25,7 @@
 #include <KWaylandServer/buffer_interface.h>
 #include <KWaylandServer/datadevice_interface.h>
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/pointer_interface.h>
 #include <KWaylandServer/pointerconstraints_v1_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/surface_interface.h>

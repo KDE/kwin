@@ -18,6 +18,7 @@
 #include "workspace.h"
 
 #include <KWayland/Client/surface.h>
+#include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 
 #include <KGlobalAccel>

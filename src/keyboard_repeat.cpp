@@ -11,6 +11,7 @@
 #include "input_event.h"
 #include "wayland_server.h"
 
+#include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 
 #include <QTimer>

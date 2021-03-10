@@ -19,6 +19,7 @@
 #include "deleted.h"
 
 #include <KWaylandServer/display.h>
+#include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <KWaylandServer/textinput_v3_interface.h>
 #include <KWaylandServer/surface_interface.h>

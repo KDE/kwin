@@ -402,7 +402,6 @@ bool WaylandServer::init(InitializationFlags flags)
     new ViewporterInterface(m_display, m_display);
     m_display->createShm();
     m_seat = new SeatInterface(m_display, m_display);
-    m_seat->create();
     new PointerGesturesV1Interface(m_display, m_display);
     new PointerConstraintsV1Interface(m_display, m_display);
     m_dataDeviceManager = new DataDeviceManagerInterface(m_display, m_display);
