@@ -68,6 +68,10 @@ void SeatInterfacePrivate::seat_bind_resource(Resource *resource)
 
 void SeatInterfacePrivate::seat_get_pointer(Resource *resource, uint32_t id)
 {
+    if (!(accumulatedCapabilities & capability_pointer)) {
+        wl_resource_post_error(resource->handle, 0, "wl_pointer capability is missing");
+        return;
+    }
     if (pointer) {
         PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.data());
         pointerPrivate->add(resource->client(), id, resource->version());
@@ -76,6 +80,10 @@ void SeatInterfacePrivate::seat_get_pointer(Resource *resource, uint32_t id)
 
 void SeatInterfacePrivate::seat_get_keyboard(Resource *resource, uint32_t id)
 {
+    if (!(accumulatedCapabilities & capability_keyboard)) {
+        wl_resource_post_error(resource->handle, 0, "wl_keyboard capability is missing");
+        return;
+    }
     if (keyboard) {
         KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.data());
         keyboardPrivate->add(resource->client(), id, resource->version());
@@ -84,6 +92,10 @@ void SeatInterfacePrivate::seat_get_keyboard(Resource *resource, uint32_t id)
 
 void SeatInterfacePrivate::seat_get_touch(Resource *resource, uint32_t id)
 {
+    if (!(accumulatedCapabilities & capability_touch)) {
+        wl_resource_post_error(resource->handle, 0, "wl_touch capability is missing");
+        return;
+    }
     if (touch) {
         TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.data());
         touchPrivate->add(resource->client(), id, resource->version());
@@ -366,6 +378,7 @@ void SeatInterface::setHasKeyboard(bool has)
         d->capabilities &= ~SeatInterfacePrivate::capability_keyboard;
         d->keyboard.reset();
     }
+    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
     emit hasKeyboardChanged(d->keyboard);
@@ -383,6 +396,7 @@ void SeatInterface::setHasPointer(bool has)
         d->capabilities &= ~SeatInterfacePrivate::capability_pointer;
         d->pointer.reset();
     }
+    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
     emit hasPointerChanged(d->pointer);
@@ -400,6 +414,7 @@ void SeatInterface::setHasTouch(bool has)
         d->capabilities &= ~SeatInterfacePrivate::capability_touch;
         d->touch.reset();
     }
+    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
     emit hasTouchChanged(d->touch);

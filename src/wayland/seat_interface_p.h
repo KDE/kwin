@@ -45,6 +45,7 @@ public:
     QPointer<Display> display;
     QString name;
     quint32 timestamp = 0;
+    quint32 accumulatedCapabilities = 0;
     quint32 capabilities = 0;
     QScopedPointer<KeyboardInterface> keyboard;
     QScopedPointer<PointerInterface> pointer;
