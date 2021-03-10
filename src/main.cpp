@@ -128,6 +128,12 @@ bool Application::shouldUseWaylandForCompositing() const
 
 void Application::start()
 {
+    // Prevent KWin from synchronously autostarting kactivitymanagerd
+    // Indeed, kactivitymanagerd being a QApplication it will depend
+    // on KWin startup... this is unsatisfactory dependency wise,
+    // and it turns out that it leads to a deadlock in the Wayland case
+    setProperty("org.kde.KActivities.core.disableAutostart", true);
+
     setQuitOnLastWindowClosed(false);
 
     if (!m_config) {
