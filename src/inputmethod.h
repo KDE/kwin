@@ -70,6 +70,12 @@ private:
     void updateSni();
     void updateInputPanelState();
     void adoptInputMethodContext();
+    void commitString(qint32 serial, const QString &text);
+    void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers);
+    void deleteSurroundingText(int32_t index, uint32_t length);
+    void setCursorPosition(qint32 index, qint32 anchor);
+    void setLanguage(uint32_t serial, const QString &language);
+    void setTextDirection(uint32_t serial, Qt::LayoutDirection direction);
 
     struct {
         QString text = QString();

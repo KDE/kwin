@@ -348,7 +348,7 @@ static quint32 keysymToKeycode(quint32 sym)
     }
 }
 
-static void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers)
+void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, Qt::KeyboardModifiers modifiers)
 {
     Q_UNUSED(serial)
     Q_UNUSED(time)
@@ -372,7 +372,7 @@ static void keysymReceived(quint32 serial, quint32 time, quint32 sym, bool press
     }
 }
 
-static void commitString(qint32 serial, const QString &text)
+void InputMethod::commitString(qint32 serial, const QString &text)
 {
     Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
@@ -389,7 +389,7 @@ static void commitString(qint32 serial, const QString &text)
     }
 }
 
-static void deleteSurroundingText(int32_t index, uint32_t length)
+void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
@@ -401,7 +401,7 @@ static void deleteSurroundingText(int32_t index, uint32_t length)
     }
 }
 
-static void setCursorPosition(qint32 index, qint32 anchor)
+void InputMethod::setCursorPosition(qint32 index, qint32 anchor)
 {
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
@@ -409,7 +409,7 @@ static void setCursorPosition(qint32 index, qint32 anchor)
     }
 }
 
-static void setLanguage(uint32_t serial, const QString &language)
+void InputMethod::setLanguage(uint32_t serial, const QString &language)
 {
     Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
@@ -418,7 +418,7 @@ static void setLanguage(uint32_t serial, const QString &language)
     }
 }
 
-static void setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
+void InputMethod::setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
 {
     Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
@@ -467,8 +467,8 @@ void InputMethod::adoptInputMethodContext()
         inputContext->sendSurroundingText(t2->surroundingText(), t2->surroundingTextCursorPosition(), t2->surroundingTextSelectionAnchor());
         inputContext->sendPreferredLanguage(t2->preferredLanguage());
         inputContext->sendContentType(t2->contentHints(), t2->contentPurpose());
-        connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::language, waylandServer(), &setLanguage);
-        connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::textDirection, waylandServer(), &setTextDirection);
+        connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::language, this, &InputMethod::setLanguage);
+        connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::textDirection, this, &InputMethod::setTextDirection);
     }
 
     if (t3 && t3->isEnabled()) {
@@ -476,10 +476,10 @@ void InputMethod::adoptInputMethodContext()
         inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
     }
 
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, waylandServer(), &keysymReceived, Qt::UniqueConnection);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, waylandServer(), &commitString, Qt::UniqueConnection);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, waylandServer(), &deleteSurroundingText, Qt::UniqueConnection);
-    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, waylandServer(), &setCursorPosition, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::keysym, this, &InputMethod::keysymReceived, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::commitString, this, &InputMethod::commitString, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::deleteSurroundingText, this, &InputMethod::deleteSurroundingText, Qt::UniqueConnection);
+    connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::cursorPosition, this, &InputMethod::setCursorPosition, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditString, this, &InputMethod::setPreeditString, Qt::UniqueConnection);
     connect(inputContext, &KWaylandServer::InputMethodContextV1Interface::preeditCursor, this, &InputMethod::setPreeditCursor, Qt::UniqueConnection);
 }
