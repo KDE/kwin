@@ -102,7 +102,7 @@ public:
      *
      * Default implementation returns an empty byte array.
      */
-    virtual QByteArray uuid() const;
+    virtual QString uuid() const;
 
     /**
      * Returns @c true if the output is enabled; otherwise returns @c false.

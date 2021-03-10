@@ -169,7 +169,7 @@ AbstractOutput *Platform::findOutput(int screenId)
     return enabledOutputs().value(screenId);
 }
 
-AbstractOutput *Platform::findOutput(const QByteArray &uuid)
+AbstractOutput *Platform::findOutput(const QString &uuid)
 {
     const auto outs = outputs();
     auto it = std::find_if(outs.constBegin(), outs.constEnd(),

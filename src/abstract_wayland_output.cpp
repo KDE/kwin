@@ -51,7 +51,7 @@ QString AbstractWaylandOutput::name() const
     return m_name;
 }
 
-QByteArray AbstractWaylandOutput::uuid() const
+QString AbstractWaylandOutput::uuid() const
 {
     return m_waylandOutputDevice->uuid();
 }
@@ -259,7 +259,7 @@ void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 }
 
 void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &manufacturer,
-                                           const QByteArray &uuid, const QSize &physicalSize,
+                                           const QString &uuid, const QSize &physicalSize,
                                            const QVector<DeviceInterface::Mode> &modes,
                                            const QByteArray &edid)
 {
@@ -293,8 +293,6 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
         }
         m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }
-
-    m_waylandOutputDevice->create();
 
     // start off enabled
 

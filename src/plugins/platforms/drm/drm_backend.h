@@ -104,7 +104,7 @@ private:
     void initCursor();
     void readOutputsConfiguration();
     void writeOutputsConfiguration();
-    QByteArray generateOutputConfigurationUuid() const;
+    QString generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
     void updateOutputsEnabled();
     QScopedPointer<Udev> m_udev;

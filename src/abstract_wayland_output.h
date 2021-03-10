@@ -57,7 +57,7 @@ public:
     ~AbstractWaylandOutput() override;
 
     QString name() const override;
-    QByteArray uuid() const override;
+    QString uuid() const override;
 
     QSize modeSize() const;
 
@@ -132,7 +132,7 @@ Q_SIGNALS:
 
 protected:
     void initInterfaces(const QString &model, const QString &manufacturer,
-                        const QByteArray &uuid, const QSize &physicalSize,
+                        const QString &uuid, const QSize &physicalSize,
                         const QVector<KWaylandServer::OutputDeviceInterface::Mode> &modes,
                         const QByteArray &edid);
 

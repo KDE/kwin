@@ -83,9 +83,9 @@ AbstractOutput::~AbstractOutput()
 {
 }
 
-QByteArray AbstractOutput::uuid() const
+QString AbstractOutput::uuid() const
 {
-    return QByteArray();
+    return QString();
 }
 
 bool AbstractOutput::isEnabled() const

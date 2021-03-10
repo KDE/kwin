@@ -420,7 +420,7 @@ void DrmBackend::readOutputsConfiguration()
     if (m_outputs.isEmpty()) {
         return;
     }
-    const QByteArray uuid = generateOutputConfigurationUuid();
+    const QString uuid = generateOutputConfigurationUuid();
     const auto outputGroup = kwinApp()->config()->group("DrmOutputs");
     const auto configGroup = outputGroup.group(uuid);
     // default position goes from left to right
@@ -454,7 +454,7 @@ void DrmBackend::writeOutputsConfiguration()
     if (m_outputs.isEmpty()) {
         return;
     }
-    const QByteArray uuid = generateOutputConfigurationUuid();
+    const QString uuid = generateOutputConfigurationUuid();
     auto configGroup = KSharedConfig::openConfig()->group("DrmOutputs").group(uuid);
     // default position goes from left to right
     for (auto it = m_outputs.cbegin(); it != m_outputs.cend(); ++it) {
@@ -472,7 +472,7 @@ void DrmBackend::writeOutputsConfiguration()
     }
 }
 
-QByteArray DrmBackend::generateOutputConfigurationUuid() const
+QString DrmBackend::generateOutputConfigurationUuid() const
 {
     auto it = m_outputs.constBegin();
     if (m_outputs.size() == 1) {
@@ -480,10 +480,10 @@ QByteArray DrmBackend::generateOutputConfigurationUuid() const
         return (*it)->uuid();
     }
     QCryptographicHash hash(QCryptographicHash::Md5);
-    for (; it != m_outputs.constEnd(); ++it) {
-        hash.addData((*it)->uuid());
+    for (const DrmOutput *output: qAsConst(m_outputs)) {
+        hash.addData(output->uuid().toLocal8Bit());
     }
-    return hash.result().toHex().left(10);
+    return QString::fromLocal8Bit(hash.result().toHex().left(10));
 }
 
 void DrmBackend::enableOutput(DrmOutput *output, bool enable)
