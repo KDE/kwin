@@ -698,8 +698,7 @@ bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surf
     }
     auto buffer = surface->buffer();
     Output output = m_outputs[screenId];
-    if (buffer->linuxDmabufBuffer()->size() != output.output->modeSize()
-        && output.output->isBeingRecorded()) {
+    if (buffer->linuxDmabufBuffer()->size() != output.output->modeSize()) {
         return false;
     }
     EglDmabufBuffer *dmabuf = static_cast<EglDmabufBuffer*>(buffer->linuxDmabufBuffer());
