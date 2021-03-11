@@ -82,6 +82,7 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
 
     m_waylandOutput->setGlobalPosition(pos);
     m_xdgOutputV1->setLogicalPosition(pos);
+    m_waylandOutput->done();
     m_xdgOutputV1->done();
 }
 
@@ -127,6 +128,7 @@ void AbstractWaylandOutput::setScale(qreal scale)
     // don't treat this like it's chosen deliberately
     m_waylandOutput->setScale(std::ceil(scale));
     m_xdgOutputV1->setLogicalSize(pixelSize() / scale);
+    m_waylandOutput->done();
     m_xdgOutputV1->done();
 }
 
@@ -163,6 +165,7 @@ void AbstractWaylandOutput::setTransform(DeviceInterface::Transform transform)
 
     m_waylandOutput->setTransform(toOutputTransform(transform));
     m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_waylandOutput->done();
     m_xdgOutputV1->done();
 }
 
@@ -255,6 +258,7 @@ void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
     m_waylandOutput->setCurrentMode(size, refreshRate);
     m_waylandOutputDevice->setCurrentMode(size, refreshRate);
     m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_waylandOutput->done();
     m_xdgOutputV1->done();
 }
 
@@ -296,10 +300,11 @@ void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &
 
     // start off enabled
 
-    m_waylandOutput->create();
     m_xdgOutputV1->setName(name());
     m_xdgOutputV1->setDescription(description());
     m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
+    m_waylandOutput->create();
+    m_waylandOutput->done();
     m_xdgOutputV1->done();
 }
 
