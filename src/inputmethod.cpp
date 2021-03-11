@@ -460,6 +460,9 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
 void InputMethod::adoptInputMethodContext()
 {
     auto inputContext = waylandServer()->inputMethod()->context();
+    if (!inputContext) {
+        return;
+    }
 
     TextInputV2Interface *t2 = waylandServer()->seat()->textInputV2();
     TextInputV3Interface *t3 = waylandServer()->seat()->textInputV3();
