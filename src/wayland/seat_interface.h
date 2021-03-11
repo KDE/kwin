@@ -89,14 +89,14 @@ enum class PointerAxisSource {
  * // example for pointer
  * seat->setFocusedPointerSurface(surface, QPointF(100, 200)); // surface at it's global position
  * seat->setTimestamp(100);
- * seat->setPointerPos(QPointF(350, 210)); // global pos, local pos in surface: 250,10
- * seat->pointerFrame();
+ * seat->notifyPointerMotion(QPointF(350, 210)); // global pos, local pos in surface: 250,10
+ * seat->notifyPointerFrame();
  * seat->setTimestamp(110);
- * seat->pointerButtonPressed(Qt::LeftButton);
- * seat->pointerFrame();
+ * seat->notifyPointerPress(Qt::LeftButton);
+ * seat->notifyPointerFrame();
  * seat->setTimestamp(120);
- * seat->pointerButtonReleased(Qt::LeftButton);
- * seat->pointerFrame();
+ * seat->notifyPointerRelease(Qt::LeftButton);
+ * seat->notifyPointerFrame();
  * @endcode
  *
  * @see KeyboardInterface
@@ -131,7 +131,7 @@ class KWAYLANDSERVER_EXPORT SeatInterface : public QObject
     /**
      * The global pointer position.
      **/
-    Q_PROPERTY(QPointF pointerPos READ pointerPos WRITE setPointerPos NOTIFY pointerPosChanged)
+    Q_PROPERTY(QPointF pointerPos READ pointerPos WRITE notifyPointerMotion NOTIFY pointerPosChanged)
     /**
      * The current timestamp passed to the input events.
      **/
@@ -227,7 +227,7 @@ public:
      *
      * Sends a pointer motion event to the focused pointer surface.
      **/
-    void setPointerPos(const QPointF &pos);
+    void notifyPointerMotion(const QPointF &pos);
     /**
      * @returns the global pointer position
      **/
@@ -337,12 +337,12 @@ public:
      *
      * @param button The Linux button code
      **/
-    void pointerButtonPressed(quint32 button);
+    void notifyPointerPress(quint32 button);
     /**
      * @overload
      **/
-    void pointerButtonPressed(Qt::MouseButton button);
-    void pointerFrame();
+    void notifyPointerPress(Qt::MouseButton button);
+    void notifyPointerFrame();
     /**
      * Marks the @p button as released.
      *
@@ -350,11 +350,11 @@ public:
      *
      * @param button The Linux button code
      **/
-    void pointerButtonReleased(quint32 button);
+    void notifyPointerRelease(quint32 button);
     /**
      * @overload
      **/
-    void pointerButtonReleased(Qt::MouseButton button);
+    void notifyPointerRelease(Qt::MouseButton button);
     /**
      * @returns whether the @p button is pressed
      **/
@@ -380,7 +380,7 @@ public:
      * @param source Describes how the axis event was physically generated.
      * @since 5.59
      **/
-    void pointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
+    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     /**
      * @returns true if there is a pressed button with the given @p serial
      * @since 5.6
@@ -557,11 +557,11 @@ public:
     TouchInterface *touch() const;
     void setFocusedTouchSurfacePosition(const QPointF &surfacePosition);
     QPointF focusedTouchSurfacePosition() const;
-    void touchDown(qint32 id, const QPointF &globalPosition);
-    void touchUp(qint32 id);
-    void touchMove(qint32 id, const QPointF &globalPosition);
-    void touchFrame();
-    void cancelTouchSequence();
+    void notifyTouchDown(qint32 id, const QPointF &globalPosition);
+    void notifyTouchUp(qint32 id);
+    void notifyTouchMotion(qint32 id, const QPointF &globalPosition);
+    void notifyTouchFrame();
+    void notifyTouchCancel();
     bool isTouchSequence() const;
     /**
      * @returns true if there is a touch sequence going on associated with a touch

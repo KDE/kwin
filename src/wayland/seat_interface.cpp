@@ -475,7 +475,7 @@ QPointF SeatInterface::pointerPos() const
     return d->globalPointer.pos;
 }
 
-void SeatInterface::setPointerPos(const QPointF &pos)
+void SeatInterface::notifyPointerMotion(const QPointF &pos)
 {
     if (d->globalPointer.pos == pos) {
         return;
@@ -550,11 +550,11 @@ void SeatInterface::setDragTarget(SurfaceInterface *surface, const QPointF &glob
     }
 
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        setPointerPos(globalPosition);
-        pointerFrame();
+        notifyPointerMotion(globalPosition);
+        notifyPointerFrame();
     } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch &&
                d->globalTouch.focus.firstTouchPos != globalPosition) {
-        touchMove(d->globalTouch.ids.first(), globalPosition);
+        notifyTouchMotion(d->globalTouch.ids.first(), globalPosition);
     }
     if (d->drag.target) {
         d->drag.surface = surface;
@@ -706,7 +706,7 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
     return it.value() == SeatInterfacePrivate::Pointer::State::Pressed;
 }
 
-void SeatInterface::pointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source)
+void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source)
 {
     Q_ASSERT(d->pointer);
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
@@ -716,16 +716,16 @@ void SeatInterface::pointerAxis(Qt::Orientation orientation, qreal delta, qint32
     d->pointer->sendAxis(orientation, delta, discreteDelta, source);
 }
 
-void SeatInterface::pointerButtonPressed(Qt::MouseButton button)
+void SeatInterface::notifyPointerPress(Qt::MouseButton button)
 {
     const quint32 nativeButton = qtToWaylandButton(button);
     if (nativeButton == 0) {
         return;
     }
-    pointerButtonPressed(nativeButton);
+    notifyPointerPress(nativeButton);
 }
 
-void SeatInterface::pointerButtonPressed(quint32 button)
+void SeatInterface::notifyPointerPress(quint32 button)
 {
     Q_ASSERT(d->pointer);
     const quint32 serial = d->display->nextSerial();
@@ -744,16 +744,16 @@ void SeatInterface::pointerButtonPressed(quint32 button)
     }
 }
 
-void SeatInterface::pointerButtonReleased(Qt::MouseButton button)
+void SeatInterface::notifyPointerRelease(Qt::MouseButton button)
 {
     const quint32 nativeButton = qtToWaylandButton(button);
     if (nativeButton == 0) {
         return;
     }
-    pointerButtonReleased(nativeButton);
+    notifyPointerRelease(nativeButton);
 }
 
-void SeatInterface::pointerButtonReleased(quint32 button)
+void SeatInterface::notifyPointerRelease(quint32 button)
 {
     Q_ASSERT(d->pointer);
     const quint32 serial = d->display->nextSerial();
@@ -771,7 +771,7 @@ void SeatInterface::pointerButtonReleased(quint32 button)
     d->pointer->sendRelease(button, serial);
 }
 
-void SeatInterface::pointerFrame()
+void SeatInterface::notifyPointerFrame()
 {
     Q_ASSERT(d->pointer);
     d->pointer->sendFrame();
@@ -946,7 +946,7 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.data();
 }
 
-void SeatInterface::cancelTouchSequence()
+void SeatInterface::notifyTouchCancel()
 {
     Q_ASSERT(d->touch);
     d->touch->sendCancel();
@@ -1010,7 +1010,7 @@ void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePositio
     d->globalTouch.focus.offset = surfacePosition;
 }
 
-void SeatInterface::touchDown(qint32 id, const QPointF &globalPosition)
+void SeatInterface::notifyTouchDown(qint32 id, const QPointF &globalPosition)
 {
     Q_ASSERT(d->touch);
     const qint32 serial = display()->nextSerial();
@@ -1037,7 +1037,7 @@ void SeatInterface::touchDown(qint32 id, const QPointF &globalPosition)
     d->globalTouch.ids[id] = serial;
 }
 
-void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
+void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
 {
     Q_ASSERT(d->touch);
     Q_ASSERT(d->globalTouch.ids.contains(id));
@@ -1064,7 +1064,7 @@ void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
     emit touchMoved(id, d->globalTouch.ids[id], globalPosition);
 }
 
-void SeatInterface::touchUp(qint32 id)
+void SeatInterface::notifyTouchUp(qint32 id)
 {
     Q_ASSERT(d->touch);
     Q_ASSERT(d->globalTouch.ids.contains(id));
@@ -1091,7 +1091,7 @@ void SeatInterface::touchUp(qint32 id)
     d->globalTouch.ids.remove(id);
 }
 
-void SeatInterface::touchFrame()
+void SeatInterface::notifyTouchFrame()
 {
     Q_ASSERT(d->touch);
     d->touch->sendFrame();

@@ -112,8 +112,8 @@ void TestWaylandServerSeat::testPointerButton()
     QCOMPARE(seat->pointerButtonSerial(1), quint32(0));
 
     // mark the button as pressed
-    seat->pointerButtonPressed(0);
-    seat->pointerFrame();
+    seat->notifyPointerPress(0);
+    seat->notifyPointerFrame();
     QVERIFY(seat->isPointerButtonPressed(0));
     QCOMPARE(seat->pointerButtonSerial(0), display.serial());
 
@@ -122,8 +122,8 @@ void TestWaylandServerSeat::testPointerButton()
     QCOMPARE(seat->pointerButtonSerial(1), quint32(0));
 
     // release it again
-    seat->pointerButtonReleased(0);
-    seat->pointerFrame();
+    seat->notifyPointerRelease(0);
+    seat->notifyPointerFrame();
     QVERIFY(!seat->isPointerButtonPressed(0));
     QCOMPARE(seat->pointerButtonSerial(0), display.serial());
 }
@@ -140,18 +140,18 @@ void TestWaylandServerSeat::testPointerPos()
 
     QCOMPARE(seat->pointerPos(), QPointF());
 
-    seat->setPointerPos(QPointF(10, 15));
-    seat->pointerFrame();
+    seat->notifyPointerMotion(QPointF(10, 15));
+    seat->notifyPointerFrame();
     QCOMPARE(seat->pointerPos(), QPointF(10, 15));
     QCOMPARE(seatPosSpy.count(), 1);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
 
-    seat->setPointerPos(QPointF(10, 15));
-    seat->pointerFrame();
+    seat->notifyPointerMotion(QPointF(10, 15));
+    seat->notifyPointerFrame();
     QCOMPARE(seatPosSpy.count(), 1);
 
-    seat->setPointerPos(QPointF(5, 7));
-    seat->pointerFrame();
+    seat->notifyPointerMotion(QPointF(5, 7));
+    seat->notifyPointerFrame();
     QCOMPARE(seat->pointerPos(), QPointF(5, 7));
     QCOMPARE(seatPosSpy.count(), 2);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
