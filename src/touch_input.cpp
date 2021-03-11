@@ -195,13 +195,15 @@ void TouchInputRedirection::cancel()
     // up events will be silently ignored and won't be passed down through the event filter chain.
     // If the touch sequence is cancelled because we received a TOUCH_CANCEL event from libinput,
     // the compositor will not receive any TOUCH_MOTION or TOUCH_UP events for that slot.
-    m_activeTouchPoints.clear();
-    waylandServer()->seat()->cancelTouchSequence();
+    if (!m_activeTouchPoints.isEmpty()) {
+        m_activeTouchPoints.clear();
+        waylandServer()->seat()->cancelTouchSequence();
+    }
 }
 
 void TouchInputRedirection::frame()
 {
-    if (!inited()) {
+    if (!inited() || !waylandServer()->seat()->hasTouch()) {
         return;
     }
     waylandServer()->seat()->touchFrame();
