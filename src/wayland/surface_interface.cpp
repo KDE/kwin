@@ -1021,4 +1021,10 @@ QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &poi
     return QPointF();
 }
 
+
+QSize SurfaceInterface::bufferSize() const
+{
+    return d->bufferSize;
+}
+
 } // namespace KWaylandServer
