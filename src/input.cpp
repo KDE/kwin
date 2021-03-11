@@ -285,19 +285,19 @@ public:
         if (event->type() == QEvent::MouseMove) {
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
-                seat->setPointerPos(event->screenPos().toPoint());
-                seat->pointerFrame();
+                seat->notifyPointerMotion(event->screenPos().toPoint());
+                seat->notifyPointerFrame();
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
             if (pointerSurfaceAllowed()) {
                 // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
                 //       disallowed one or vice versa?
                 if (event->type() == QEvent::MouseButtonPress) {
-                    seat->pointerButtonPressed(nativeButton);
+                    seat->notifyPointerPress(nativeButton);
                 } else {
-                    seat->pointerButtonReleased(nativeButton);
+                    seat->notifyPointerRelease(nativeButton);
                 }
-                seat->pointerFrame();
+                seat->notifyPointerFrame();
             }
         }
         return true;
@@ -310,9 +310,10 @@ public:
         if (pointerSurfaceAllowed()) {
             const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
             seat->setTimestamp(wheelEvent->timestamp());
-            seat->pointerAxis(wheelEvent->orientation(), wheelEvent->delta(), wheelEvent->discreteDelta(),
-                              kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
-            seat->pointerFrame();
+            seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
+                                    wheelEvent->discreteDelta(),
+                                    kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
+            seat->notifyPointerFrame();
         }
         return true;
     }
@@ -360,7 +361,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            seat->touchDown(id, pos);
+            seat->notifyTouchDown(id, pos);
         }
         return true;
     }
@@ -371,7 +372,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            seat->touchMove(id, pos);
+            seat->notifyTouchMotion(id, pos);
         }
         return true;
     }
@@ -382,7 +383,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         if (touchSurfaceAllowed()) {
-            seat->touchUp(id);
+            seat->notifyTouchUp(id);
         }
         return true;
     }
@@ -1399,21 +1400,21 @@ public:
         seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
-            seat->setPointerPos(event->globalPos());
+            seat->notifyPointerMotion(event->globalPos());
             MouseEvent *e = static_cast<MouseEvent*>(event);
             if (e->delta() != QSizeF()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestampMicroseconds());
             }
-            seat->pointerFrame();
+            seat->notifyPointerFrame();
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->pointerButtonPressed(nativeButton);
-            seat->pointerFrame();
+            seat->notifyPointerPress(nativeButton);
+            seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
-            seat->pointerButtonReleased(nativeButton);
-            seat->pointerFrame();
+            seat->notifyPointerRelease(nativeButton);
+            seat->notifyPointerFrame();
             break;
         default:
             break;
@@ -1424,9 +1425,9 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
-        seat->pointerAxis(_event->orientation(), _event->delta(), _event->discreteDelta(),
-                          kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
-        seat->pointerFrame();
+        seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->discreteDelta(),
+                                kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
+        seat->notifyPointerFrame();
         return true;
     }
     bool keyEvent(QKeyEvent *event) override {
@@ -1449,7 +1450,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        seat->touchDown(id, pos);
+        seat->notifyTouchDown(id, pos);
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
@@ -1458,7 +1459,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        seat->touchMove(id, pos);
+        seat->notifyTouchMotion(id, pos);
         return true;
     }
     bool touchUp(qint32 id, quint32 time) override {
@@ -1467,7 +1468,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        seat->touchUp(id);
+        seat->notifyTouchUp(id);
         return true;
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override {
@@ -1891,8 +1892,8 @@ public:
         switch (event->type()) {
         case QEvent::MouseMove: {
             const auto pos = input()->globalPointer();
-            seat->setPointerPos(pos);
-            seat->pointerFrame();
+            seat->notifyPointerMotion(pos);
+            seat->notifyPointerFrame();
 
             const auto eventPos = event->globalPos();
             // TODO: use InputDeviceHandler::at() here and check isClient()?
@@ -1921,12 +1922,12 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->pointerButtonPressed(nativeButton);
-            seat->pointerFrame();
+            seat->notifyPointerPress(nativeButton);
+            seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
-            seat->pointerButtonReleased(nativeButton);
-            seat->pointerFrame();
+            seat->notifyPointerRelease(nativeButton);
+            seat->notifyPointerFrame();
             break;
         default:
             break;
@@ -1947,7 +1948,7 @@ public:
             return true;
         }
         seat->setTimestamp(time);
-        seat->touchDown(id, pos);
+        seat->notifyTouchDown(id, pos);
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override {
@@ -1968,7 +1969,7 @@ public:
             return true;
         }
         seat->setTimestamp(time);
-        seat->touchMove(id, pos);
+        seat->notifyTouchMotion(id, pos);
 
         if (Toplevel *t = input()->findToplevel(pos.toPoint())) {
             // TODO: consider decorations
@@ -1990,7 +1991,7 @@ public:
             return false;
         }
         seat->setTimestamp(time);
-        seat->touchUp(id);
+        seat->notifyTouchUp(id);
         if (m_touchId == id) {
             m_touchId = -1;
         }

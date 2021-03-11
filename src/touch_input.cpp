@@ -197,7 +197,7 @@ void TouchInputRedirection::cancel()
     // the compositor will not receive any TOUCH_MOTION or TOUCH_UP events for that slot.
     if (!m_activeTouchPoints.isEmpty()) {
         m_activeTouchPoints.clear();
-        waylandServer()->seat()->cancelTouchSequence();
+        waylandServer()->seat()->notifyTouchCancel();
     }
 }
 
@@ -206,7 +206,7 @@ void TouchInputRedirection::frame()
     if (!inited() || !waylandServer()->seat()->hasTouch()) {
         return;
     }
-    waylandServer()->seat()->touchFrame();
+    waylandServer()->seat()->notifyTouchFrame();
 }
 
 }
