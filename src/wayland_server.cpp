@@ -494,7 +494,6 @@ bool WaylandServer::init(InitializationFlags flags)
             this, [](KWaylandServer::OutputConfigurationInterface *config) {
                 kwinApp()->platform()->requestOutputsChange(config);
     });
-    m_outputManagement->create();
 
     m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);
     new SubCompositorInterface(m_display, m_display);
