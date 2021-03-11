@@ -126,7 +126,6 @@ void TestWaylandOutputManagement::init()
 
     outputDeviceInterface->setCurrentMode(1);
     outputDeviceInterface->setGlobalPosition(QPoint(0, 1920));
-    outputDeviceInterface->create();
     m_serverOutputs << outputDeviceInterface;
 
     m_outputManagementInterface = new OutputManagementInterface(m_display, this);
@@ -249,9 +248,6 @@ void TestWaylandOutputManagement::createOutputDevices()
     QCOMPARE(output->physicalSize(), QSize());
     QCOMPARE(output->pixelSize(), QSize());
     QCOMPARE(output->refreshRate(), 0);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    QCOMPARE(output->scale(), 1);
-#endif
     QCOMPARE(output->scaleF(), 1.0);
     QCOMPARE(output->colorCurves().red, QVector<quint16>());
     QCOMPARE(output->colorCurves().green, QVector<quint16>());
@@ -260,7 +256,7 @@ void TestWaylandOutputManagement::createOutputDevices()
     QCOMPARE(output->transform(), KWayland::Client::OutputDevice::Transform::Normal);
     QCOMPARE(output->enabled(), OutputDevice::Enablement::Enabled);
     QCOMPARE(output->edid(), QByteArray());
-    QCOMPARE(output->uuid(), QByteArray());
+    QCOMPARE(output->uuid(), QString());
 
     QSignalSpy outputChanged(output, &KWayland::Client::OutputDevice::changed);
     QVERIFY(outputChanged.isValid());
@@ -407,7 +403,7 @@ void TestWaylandOutputManagement::testMultipleSettings()
     QVERIFY(configAppliedSpy.isValid());
     QVERIFY(configAppliedSpy.wait(200));
     QCOMPARE(configAppliedSpy.count(), 1);
-    QCOMPARE(outputChangedSpy.count(), 6);
+    QCOMPARE(outputChangedSpy.count(), 5);
 
     config->setMode(output, m_modes.at(1).id);
     config->setTransform(output, OutputDevice::Transform::Normal);
@@ -425,7 +421,7 @@ void TestWaylandOutputManagement::testMultipleSettings()
 
     QVERIFY(configAppliedSpy.wait(200));
     QCOMPARE(configAppliedSpy.count(), 2);
-    QCOMPARE(outputChangedSpy.count(), 12);
+    QCOMPARE(outputChangedSpy.count(), 10);
 
 }
 
@@ -433,11 +429,9 @@ void TestWaylandOutputManagement::testConfigFailed()
 {
     createConfig();
     auto config = m_outputConfiguration;
-    auto s_o = m_serverOutputs.first();
     KWayland::Client::OutputDevice *output = m_clientOutputs.first();
 
     QVERIFY(config->isValid());
-    QVERIFY(s_o->isValid());
     QVERIFY(output->isValid());
 
     QSignalSpy serverApplySpy(m_outputManagementInterface, &OutputManagementInterface::configurationChangeRequested);
@@ -507,23 +501,7 @@ void TestWaylandOutputManagement::testScale()
     QVERIFY(configAppliedSpy.isValid());
     QVERIFY(configAppliedSpy.wait(200));
 
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    QCOMPARE(output->scale(), 2); //test backwards compatibility
-#endif
     QCOMPARE(wl_fixed_from_double(output->scaleF()), wl_fixed_from_double(2.3));
-
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    config->setScale(output, 3);
-    config->apply();
-
-    QVERIFY(configAppliedSpy.isValid());
-    QVERIFY(configAppliedSpy.wait(200));
-
-    //will be setApplied using the connect above
-
-    QCOMPARE(output->scale(), 3);
-    QCOMPARE(output->scaleF(), 3.0); //test forward compatibility
-#endif
 }
 
 

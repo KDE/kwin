@@ -13,7 +13,7 @@
 
 #include <wayland-server.h>
 #include "wayland-output-management-server-protocol.h"
-#include "wayland-org_kde_kwin_outputdevice-server-protocol.h"
+#include "wayland-org-kde-kwin-outputdevice-server-protocol.h"
 
 #include <QDebug>
 #include <QSize>

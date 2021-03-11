@@ -30,9 +30,6 @@ private Q_SLOTS:
 
     void testRegistry();
     void testModeChanges();
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    void testScaleChange_legacy();
-#endif
     void testScaleChange();
     void testColorCurvesChange();
 
@@ -76,6 +73,7 @@ TestWaylandOutputDevice::TestWaylandOutputDevice(QObject *parent)
 void TestWaylandOutputDevice::init()
 {
     using namespace KWaylandServer;
+    qRegisterMetaType<OutputDevice::Enablement>();
     delete m_display;
     m_display = new Display(this);
     m_display->addSocketName(s_socketName);
@@ -127,8 +125,6 @@ void TestWaylandOutputDevice::init()
         m_initColorCurves.blue << (double)i / 319 * UINT16_MAX;
     }
     m_serverOutputDevice->setColorCurves(m_initColorCurves);
-
-    m_serverOutputDevice->create();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -187,7 +183,7 @@ void TestWaylandOutputDevice::testRegistry()
 
     KWayland::Client::OutputDevice output;
     QVERIFY(!output.isValid());
-    QCOMPARE(output.uuid(), QByteArray());
+    QCOMPARE(output.uuid(), QString());
     QCOMPARE(output.geometry(), QRect());
     QCOMPARE(output.globalPosition(), QPoint());
     QCOMPARE(output.manufacturer(), QString());
@@ -195,9 +191,6 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.physicalSize(), QSize());
     QCOMPARE(output.pixelSize(), QSize());
     QCOMPARE(output.refreshRate(), 0);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    QCOMPARE(output.scale(), 1);
-#endif
     QCOMPARE(output.scaleF(), 1.0);
     QCOMPARE(output.colorCurves().red, QVector<quint16>());
     QCOMPARE(output.colorCurves().green, QVector<quint16>());
@@ -224,9 +217,6 @@ void TestWaylandOutputDevice::testRegistry()
     QCOMPARE(output.physicalSize(), QSize(200, 100));
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
     QCOMPARE(output.refreshRate(), 60000);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    QCOMPARE(output.scale(), 1);
-#endif
     QCOMPARE(output.scaleF(), 1.0);
     QCOMPARE(output.colorCurves().red, m_initColorCurves.red);
     QCOMPARE(output.colorCurves().green, m_initColorCurves.green);
@@ -238,7 +228,7 @@ void TestWaylandOutputDevice::testRegistry()
 
     QCOMPARE(output.edid(), m_edid);
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
-    QCOMPARE(output.uuid(), QByteArray("1337"));
+    QCOMPARE(output.uuid(), QStringLiteral("1337"));
     QCOMPARE(output.serialNumber(), m_serialNumber);
     QCOMPARE(output.eisaId(), m_eidaId);
 }
@@ -340,46 +330,6 @@ void TestWaylandOutputDevice::testModeChanges()
     QCOMPARE(output.pixelSize(), QSize(1280, 1024));
 }
 
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-void TestWaylandOutputDevice::testScaleChange_legacy()
-{
-    KWayland::Client::Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    QVERIFY(interfacesAnnouncedSpy.isValid());
-    QSignalSpy announced(&registry, &KWayland::Client::Registry::outputDeviceAnnounced);
-    registry.setEventQueue(m_queue);
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    wl_display_flush(m_connection->display());
-    QVERIFY(interfacesAnnouncedSpy.wait());
-
-    KWayland::Client::OutputDevice output;
-    QSignalSpy outputChanged(&output, &KWayland::Client::OutputDevice::done);
-    QVERIFY(outputChanged.isValid());
-    output.setup(registry.bindOutputDevice(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
-    wl_display_flush(m_connection->display());
-    QVERIFY(outputChanged.wait());
-    QCOMPARE(output.scale(), 1);
-    QCOMPARE(output.scaleF(), 1.0);
-
-    // change the scale
-    outputChanged.clear();
-    m_serverOutputDevice->setScale(2);
-    QVERIFY(outputChanged.wait());
-    QCOMPARE(output.scale(), 2);
-    QCOMPARE(output.scaleF(), 2.0); //check we're forward compatible
-
-
-    // change once more
-    outputChanged.clear();
-    m_serverOutputDevice->setScale(4);
-    QVERIFY(outputChanged.wait());
-    QCOMPARE(output.scale(), 4);
-    QCOMPARE(output.scaleF(), 4.0);
-}
-#endif
-
 void TestWaylandOutputDevice::testScaleChange()
 {
     KWayland::Client::Registry registry;
@@ -405,18 +355,12 @@ void TestWaylandOutputDevice::testScaleChange()
     outputChanged.clear();
     m_serverOutputDevice->setScaleF(2.2);
     QVERIFY(outputChanged.wait());
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    QCOMPARE(output.scale(), 2); //check backwards compatibility works
-#endif
     QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(2.2));
 
     // change once more
     outputChanged.clear();
     m_serverOutputDevice->setScaleF(4.9);
     QVERIFY(outputChanged.wait());
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    QCOMPARE(output.scale(), 5);
-#endif
     QCOMPARE(wl_fixed_from_double(output.scaleF()), wl_fixed_from_double(4.9));
 }
 
@@ -652,7 +596,7 @@ void TestWaylandOutputDevice::testId()
     wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
 
-    QCOMPARE(output.uuid(), QByteArray("1337"));
+    QCOMPARE(output.uuid(), QStringLiteral("1337"));
 
     QSignalSpy idChanged(&output, &KWayland::Client::OutputDevice::uuidChanged);
     QVERIFY(idChanged.isValid());
@@ -661,13 +605,13 @@ void TestWaylandOutputDevice::testId()
     QVERIFY(idChanged.wait());
     QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("42"));
     idChanged.clear();
-    QCOMPARE(output.uuid(), QByteArray("42"));
+    QCOMPARE(output.uuid(), QStringLiteral("42"));
 
     m_serverOutputDevice->setUuid("4711");
     QVERIFY(idChanged.wait());
     QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("4711"));
     idChanged.clear();
-    QCOMPARE(output.uuid(), QByteArray("4711"));
+    QCOMPARE(output.uuid(), QStringLiteral("4711"));
 }
 
 void TestWaylandOutputDevice::testDone()

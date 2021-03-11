@@ -85,9 +85,9 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     BASENAME output-management
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/outputdevice.xml
-    BASENAME org_kde_kwin_outputdevice
+    BASENAME org-kde-kwin-outputdevice
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS

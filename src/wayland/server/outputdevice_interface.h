@@ -19,6 +19,7 @@ namespace KWaylandServer
 {
 
 class Display;
+class OutputDeviceInterfacePrivate;
 
 /** @class OutputDeviceInterface
  *
@@ -28,7 +29,7 @@ class Display;
  * @see OutputManagementInterface
  * @since 5.5
  */
-class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public Global
+class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)
@@ -42,7 +43,7 @@ class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public Global
     Q_PROPERTY(qreal scale READ scaleF WRITE setScaleF NOTIFY scaleFChanged)
     Q_PROPERTY(QByteArray edid READ edid WRITE setEdid NOTIFY edidChanged)
     Q_PROPERTY(OutputDeviceInterface::Enablement enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QByteArray uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
+    Q_PROPERTY(QString uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
 public:
     enum class SubPixel {
         Unknown,
@@ -84,7 +85,7 @@ public:
     };
 
     explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
-    virtual ~OutputDeviceInterface();
+    ~OutputDeviceInterface() override;
 
     QSize physicalSize() const;
     QPoint globalPosition() const;
@@ -94,11 +95,7 @@ public:
     QString eisaId() const;
     QSize pixelSize() const;
     int refreshRate() const;
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    /// @deprecated Since 5.50, use scaleF()
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputDeviceInterface::scaleF()")
-    int scale() const;
-#endif
+
     /// @since 5.50
     qreal scaleF() const;
     SubPixel subPixel() const;
@@ -109,7 +106,7 @@ public:
 
     QByteArray edid() const;
     OutputDeviceInterface::Enablement enabled() const;
-    QByteArray uuid() const;
+    QString uuid() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -117,11 +114,7 @@ public:
     void setModel(const QString &model);
     void setSerialNumber(const QString &serialNumber);
     void setEisaId(const QString &eisaId);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    /// @deprecated Since 5.50, use setScale(qreal)
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputDeviceInterface::setScale(qreal)")
-    void setScale(int scale);
-#endif
+
     /// @since 5.50
     void setScaleF(qreal scale);
     void setSubPixel(SubPixel subPixel);
@@ -144,7 +137,7 @@ public:
 
     void setEdid(const QByteArray &edid);
     void setEnabled(OutputDeviceInterface::Enablement enabled);
-    void setUuid(const QByteArray &uuid);
+    void setUuid(const QString &uuid);
 
     static OutputDeviceInterface *get(wl_resource *native);
     static QList<OutputDeviceInterface *>list();
@@ -158,11 +151,7 @@ Q_SIGNALS:
     void eisaIdChanged(const QString &);
     void pixelSizeChanged(const QSize&);
     void refreshRateChanged(int);
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    /// @deprecated Since 5.50, use scaleFChanged(qreal)
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputDeviceInterface::scaleFChanged(qreal)")
-    void scaleChanged(int);
-#endif
+
     /// @since 5.50
     void scaleFChanged(qreal);
     void subPixelChanged(SubPixel);
@@ -176,8 +165,7 @@ Q_SIGNALS:
     void uuidChanged();
 
 private:
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<OutputDeviceInterfacePrivate> d;
 };
 
 }

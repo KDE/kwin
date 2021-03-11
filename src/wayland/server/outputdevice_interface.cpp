@@ -5,27 +5,25 @@
 */
 #include "outputdevice_interface.h"
 #include "display_p.h"
-#include "global_p.h"
 #include "display.h"
 #include "logging.h"
+#include "utils.h"
 
-#include <wayland-server.h>
-#include "wayland-org_kde_kwin_outputdevice-server-protocol.h"
+#include "qwayland-server-org-kde-kwin-outputdevice.h"
 #include <QDebug>
+#include <QString>
+#include <QPointer>
 
 namespace KWaylandServer
 {
 
-class OutputDeviceInterface::Private : public Global::Private
+static const quint32 s_version = 2;
+
+class OutputDeviceInterfacePrivate : public QtWaylandServer::org_kde_kwin_outputdevice
 {
 public:
-    struct ResourceData {
-        wl_resource *resource;
-        uint32_t version;
-    };
-    Private(OutputDeviceInterface *q, Display *d);
-    ~Private();
-
+    OutputDeviceInterfacePrivate(OutputDeviceInterface *q, Display *display);
+    ~OutputDeviceInterfacePrivate() override;
 
     void updateGeometry();
     void updateUuid();
@@ -36,16 +34,18 @@ public:
     void updateEisaId();
     void updateSerialNumber();
 
-    void sendGeometry(wl_resource *resource);
-    void sendMode(wl_resource *resource, const Mode &mode);
-    void sendDone(const ResourceData &data);
-    void sendUuid(const ResourceData &data);
-    void sendEdid(const ResourceData &data);
-    void sendEnabled(const ResourceData &data);
-    void sendScale(const ResourceData &data);
-    void sendColorCurves(const ResourceData &data);
-    void sendEisaId(const ResourceData &data);
-    void sendSerialNumber(const ResourceData &data);
+    void sendGeometry(Resource *resource);
+    void sendMode(Resource *resource, const OutputDeviceInterface::Mode &mode);
+    void sendDone(Resource *resource);
+    void sendUuid(Resource *resource);
+    void sendEdid(Resource *resource);
+    void sendEnabled(Resource *resource);
+    void sendScale(Resource *resource);
+    void sendColorCurves(Resource *resource);
+    void sendEisaId(Resource *resource);
+    void sendSerialNumber(Resource *resource);
+
+    static OutputDeviceInterface *get(wl_resource *native);
 
     QSize physicalSize;
     QPoint globalPosition;
@@ -54,119 +54,78 @@ public:
     qreal scale = 1.0;
     QString serialNumber;
     QString eisaId;
-    SubPixel subPixel = SubPixel::Unknown;
-    Transform transform = Transform::Normal;
-    ColorCurves colorCurves;
-    QList<Mode> modes;
-    Mode currentMode;
-    QList<ResourceData> resources;
+    OutputDeviceInterface::SubPixel subPixel = OutputDeviceInterface::SubPixel::Unknown;
+    OutputDeviceInterface::Transform transform = OutputDeviceInterface::Transform::Normal;
+    OutputDeviceInterface::ColorCurves colorCurves;
+    QList<OutputDeviceInterface::Mode> modes;
+    OutputDeviceInterface::Mode currentMode;
 
     QByteArray edid;
-    Enablement enabled = Enablement::Enabled;
-    QByteArray uuid;
-
-    static OutputDeviceInterface *get(wl_resource *native);
+    OutputDeviceInterface::Enablement enabled = OutputDeviceInterface::Enablement::Enabled;
+    QString uuid;
+    QPointer<Display> display;
+    OutputDeviceInterface *q;
 
 private:
-    static Private *cast(wl_resource *native);
-    static void unbind(wl_resource *resource);
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     int32_t toTransform() const;
     int32_t toSubPixel() const;
 
-    static const quint32 s_version;
-    OutputDeviceInterface *q;
-    static QVector<Private*> s_privates;
+protected:
+    void org_kde_kwin_outputdevice_bind_resource(Resource *resource) override;
 };
 
-const quint32 OutputDeviceInterface::Private::s_version = 2;
-
-QVector<OutputDeviceInterface::Private*> OutputDeviceInterface::Private::s_privates;
-
-OutputDeviceInterface::Private::Private(OutputDeviceInterface *q, Display *d)
-    : Global::Private(d, &org_kde_kwin_outputdevice_interface, s_version)
+OutputDeviceInterfacePrivate::OutputDeviceInterfacePrivate(OutputDeviceInterface *q, Display *display)
+    : QtWaylandServer::org_kde_kwin_outputdevice(*display, s_version)
+    , display(display)
     , q(q)
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputdevices.append(q);
-
-    s_privates << this;
 }
 
-OutputDeviceInterface::Private::~Private()
+OutputDeviceInterfacePrivate::~OutputDeviceInterfacePrivate()
 {
     if (display) {
         DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
         displayPrivate->outputdevices.removeOne(q);
     }
-
-    s_privates.removeAll(this);
-}
-
-OutputDeviceInterface *OutputDeviceInterface::Private::get(wl_resource *native)
-{
-    if (Private *p = cast(native)) {
-        return p->q;
-    }
-    return nullptr;
-}
-
-OutputDeviceInterface::Private *OutputDeviceInterface::Private::cast(wl_resource *native)
-{
-    for (auto it = s_privates.constBegin(); it != s_privates.constEnd(); ++it) {
-        const auto &resources = (*it)->resources;
-        auto rit = std::find_if(resources.begin(), resources.end(), [native] (const ResourceData &data) { return data.resource == native; });
-        if (rit != resources.end()) {
-            return (*it);
-        }
-    }
-    return nullptr;
 }
 
 OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
-    : Global(new Private(this, display), parent)
+    : QObject(parent)
+    , d(new OutputDeviceInterfacePrivate(this, display))
 {
-    Q_D();
     connect(this, &OutputDeviceInterface::currentModeChanged, this,
-        [d] {
+        [this] {
             Q_ASSERT(d->currentMode.id >= 0);
-            for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
-                d->sendMode((*it).resource, d->currentMode);
-                d->sendDone(*it);
+            const auto clientResources = d->resourceMap();
+            for (auto resource : clientResources) {
+                d->sendMode(resource, d->currentMode);
+                d->sendDone(resource);
             }
-            wl_display_flush_clients(*(d->display));
         }
     );
-    connect(this, &OutputDeviceInterface::subPixelChanged,       this, [d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::transformChanged,      this, [d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::globalPositionChanged, this, [d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::modelChanged,          this, [d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [d] { d->updateGeometry(); });
-    connect(this, &OutputDeviceInterface::scaleFChanged,         this, [d] { d->updateScale(); });
-    connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [d] { d->updateColorCurves(); });
+    connect(this, &OutputDeviceInterface::subPixelChanged,       this, [this] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::transformChanged,      this, [this] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::globalPositionChanged, this, [this] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::modelChanged,          this, [this] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::manufacturerChanged,   this, [this] { d->updateGeometry(); });
+    connect(this, &OutputDeviceInterface::scaleFChanged,         this, [this] { d->updateScale(); });
+    connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [this] { d->updateColorCurves(); });
 }
 
 OutputDeviceInterface::~OutputDeviceInterface() = default;
 
 QSize OutputDeviceInterface::pixelSize() const
 {
-    Q_D();
-
     if (d->currentMode.id == -1) {
         return QSize();
     }
     return d->currentMode.size;
 }
 
-OutputDeviceInterface *OutputDeviceInterface::get(wl_resource* native)
-{
-    return Private::get(native);
-}
-
 int OutputDeviceInterface::refreshRate() const
 {
-    Q_D();
-
     if (d->currentMode.id == -1) {
         return 60000;
     }
@@ -175,10 +134,8 @@ int OutputDeviceInterface::refreshRate() const
 
 void OutputDeviceInterface::addMode(Mode &mode)
 {
-    Q_ASSERT(!isValid());
     Q_ASSERT(mode.id >= 0);
     Q_ASSERT(mode.size.isValid());
-    Q_D();
 
     auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {
@@ -213,7 +170,7 @@ void OutputDeviceInterface::addMode(Mode &mode)
                    mode.id == mode_it.id;
         }
     );
-    auto emitChanges = [this, d, mode] {
+    auto emitChanges = [this, mode] {
         emit modesChanged();
         if (mode.flags.testFlag(ModeFlag::Current)) {
             d->currentMode = mode;
@@ -248,7 +205,6 @@ void OutputDeviceInterface::addMode(Mode &mode)
 
 void OutputDeviceInterface::setCurrentMode(const int modeId)
 {
-    Q_D();
     auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {
             return mode.flags.testFlag(ModeFlag::Current);
@@ -276,7 +232,6 @@ void OutputDeviceInterface::setCurrentMode(const int modeId)
 
 bool OutputDeviceInterface::setCurrentMode(const QSize &size, int refreshRate)
 {
-    Q_D();
     auto mode = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
         [size, refreshRate](const Mode &mode) {
             return mode.size == size && mode.refreshRate == refreshRate;
@@ -289,73 +244,60 @@ bool OutputDeviceInterface::setCurrentMode(const QSize &size, int refreshRate)
     return true;
 }
 
-int32_t OutputDeviceInterface::Private::toTransform() const
+int32_t OutputDeviceInterfacePrivate::toTransform() const
 {
     switch (transform) {
-    case Transform::Normal:
+    case OutputDeviceInterface::Transform::Normal:
         return WL_OUTPUT_TRANSFORM_NORMAL;
-    case Transform::Rotated90:
+    case OutputDeviceInterface::Transform::Rotated90:
         return WL_OUTPUT_TRANSFORM_90;
-    case Transform::Rotated180:
+    case OutputDeviceInterface::Transform::Rotated180:
         return WL_OUTPUT_TRANSFORM_180;
-    case Transform::Rotated270:
+    case OutputDeviceInterface::Transform::Rotated270:
         return WL_OUTPUT_TRANSFORM_270;
-    case Transform::Flipped:
+    case OutputDeviceInterface::Transform::Flipped:
         return WL_OUTPUT_TRANSFORM_FLIPPED;
-    case Transform::Flipped90:
+    case OutputDeviceInterface::Transform::Flipped90:
         return WL_OUTPUT_TRANSFORM_FLIPPED_90;
-    case Transform::Flipped180:
+    case OutputDeviceInterface::Transform::Flipped180:
         return WL_OUTPUT_TRANSFORM_FLIPPED_180;
-    case Transform::Flipped270:
+    case OutputDeviceInterface::Transform::Flipped270:
         return WL_OUTPUT_TRANSFORM_FLIPPED_270;
     }
     abort();
 }
 
-int32_t OutputDeviceInterface::Private::toSubPixel() const
+int32_t OutputDeviceInterfacePrivate::toSubPixel() const
 {
     switch (subPixel) {
-    case SubPixel::Unknown:
+    case OutputDeviceInterface::SubPixel::Unknown:
         return WL_OUTPUT_SUBPIXEL_UNKNOWN;
-    case SubPixel::None:
+    case OutputDeviceInterface::SubPixel::None:
         return WL_OUTPUT_SUBPIXEL_NONE;
-    case SubPixel::HorizontalRGB:
+    case OutputDeviceInterface::SubPixel::HorizontalRGB:
         return WL_OUTPUT_SUBPIXEL_HORIZONTAL_RGB;
-    case SubPixel::HorizontalBGR:
+    case OutputDeviceInterface::SubPixel::HorizontalBGR:
         return WL_OUTPUT_SUBPIXEL_HORIZONTAL_BGR;
-    case SubPixel::VerticalRGB:
+    case OutputDeviceInterface::SubPixel::VerticalRGB:
         return WL_OUTPUT_SUBPIXEL_VERTICAL_RGB;
-    case SubPixel::VerticalBGR:
+    case OutputDeviceInterface::SubPixel::VerticalBGR:
         return WL_OUTPUT_SUBPIXEL_VERTICAL_BGR;
     }
     abort();
 }
 
-void OutputDeviceInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
+void OutputDeviceInterfacePrivate::org_kde_kwin_outputdevice_bind_resource(Resource *resource)
 {
-    auto c = display->getConnection(client);
-    wl_resource *resource = c->createResource(&org_kde_kwin_outputdevice_interface, qMin(version, s_version), id);
-    if (!resource) {
-        wl_client_post_no_memory(client);
-        return;
-    }
-    wl_resource_set_user_data(resource, this);
-    wl_resource_set_destructor(resource, unbind);
-    ResourceData r;
-    r.resource = resource;
-    r.version = version;
-    resources << r;
-
     sendGeometry(resource);
-    sendScale(r);
-    sendColorCurves(r);
-    sendEisaId(r);
-    sendSerialNumber(r);
+    sendScale(resource);
+    sendColorCurves(resource);
+    sendEisaId(resource);
+    sendSerialNumber(resource);
 
     auto currentModeIt = modes.constEnd();
     for (auto it = modes.constBegin(); it != modes.constEnd(); ++it) {
-        const Mode &mode = *it;
-        if (mode.flags.testFlag(ModeFlag::Current)) {
+        const OutputDeviceInterface::Mode &mode = *it;
+        if (mode.flags.testFlag(OutputDeviceInterface::ModeFlag::Current)) {
             // needs to be sent as last mode
             currentModeIt = it;
             continue;
@@ -367,134 +309,120 @@ void OutputDeviceInterface::Private::bind(wl_client *client, uint32_t version, u
         sendMode(resource, *currentModeIt);
     }
 
-    sendUuid(r);
-    sendEdid(r);
-    sendEnabled(r);
-
-    sendDone(r);
-    c->flush();
+    sendUuid(resource);
+    sendEdid(resource);
+    sendEnabled(resource);
+    sendDone(resource);
 }
 
-void OutputDeviceInterface::Private::unbind(wl_resource *resource)
-{
-    Private *o = cast(resource);
-    if (!o) {
-        return;
-    }
-    auto it = std::find_if(o->resources.begin(), o->resources.end(), [resource](const ResourceData &r) { return r.resource == resource; });
-    if (it != o->resources.end()) {
-        o->resources.erase(it);
-    }
-}
-
-void OutputDeviceInterface::Private::sendMode(wl_resource *resource, const Mode &mode)
+void OutputDeviceInterfacePrivate::sendMode(Resource *resource, const OutputDeviceInterface::Mode &mode)
 {
     int32_t flags = 0;
-    if (mode.flags.testFlag(ModeFlag::Current)) {
+    if (mode.flags.testFlag(OutputDeviceInterface::ModeFlag::Current)) {
         flags |= WL_OUTPUT_MODE_CURRENT;
     }
-    if (mode.flags.testFlag(ModeFlag::Preferred)) {
+    if (mode.flags.testFlag(OutputDeviceInterface::ModeFlag::Preferred)) {
         flags |= WL_OUTPUT_MODE_PREFERRED;
     }
-    org_kde_kwin_outputdevice_send_mode(resource,
-                        flags,
-                        mode.size.width(),
-                        mode.size.height(),
-                        mode.refreshRate,
-                        mode.id);
+    send_mode(resource->handle,
+                flags,
+                mode.size.width(),
+                mode.size.height(),
+                mode.refreshRate,
+                mode.id);
 
 }
 
-void OutputDeviceInterface::Private::sendGeometry(wl_resource *resource)
+void OutputDeviceInterfacePrivate::sendGeometry(Resource *resource)
 {
-    org_kde_kwin_outputdevice_send_geometry(resource,
-                            globalPosition.x(),
-                            globalPosition.y(),
-                            physicalSize.width(),
-                            physicalSize.height(),
-                            toSubPixel(),
-                            qPrintable(manufacturer),
-                            qPrintable(model),
-                            toTransform());
+    send_geometry(resource->handle,
+                    globalPosition.x(),
+                    globalPosition.y(),
+                    physicalSize.width(),
+                    physicalSize.height(),
+                    toSubPixel(),
+                    manufacturer,
+                    model,
+                    toTransform());
 }
 
-void OutputDeviceInterface::Private::sendScale(const ResourceData &data)
+void OutputDeviceInterfacePrivate::sendScale(Resource *resource)
 {
-    if (wl_resource_get_version(data.resource) < ORG_KDE_KWIN_OUTPUTDEVICE_SCALEF_SINCE_VERSION) {
-        org_kde_kwin_outputdevice_send_scale(data.resource, qRound(scale));
+    if (resource->version() < ORG_KDE_KWIN_OUTPUTDEVICE_SCALEF_SINCE_VERSION) {
+        send_scale(resource->handle, qRound(scale));
     } else {
-        org_kde_kwin_outputdevice_send_scalef(data.resource, wl_fixed_from_double(scale));
+        send_scalef(resource->handle, wl_fixed_from_double(scale));
     }
 }
 
-void OutputDeviceInterface::Private::sendColorCurves(const ResourceData &data)
+void OutputDeviceInterfacePrivate::sendColorCurves(Resource *resource)
 {
-    if (data.version < ORG_KDE_KWIN_OUTPUTDEVICE_COLORCURVES_SINCE_VERSION) {
+    if (resource->version() < ORG_KDE_KWIN_OUTPUTDEVICE_COLORCURVES_SINCE_VERSION) {
         return;
     }
 
-    wl_array wlRed, wlGreen, wlBlue;
+    QByteArray red = QByteArray::fromRawData(
+        reinterpret_cast<const char *>(colorCurves.red.constData()),
+        sizeof(quint16) * colorCurves.red.size()
+    );
 
-    auto fillArray = [](const QVector<quint16> &origin, wl_array *dest) {
-        wl_array_init(dest);
-        const size_t memLength = sizeof(uint16_t) * origin.size();
-        void *s = wl_array_add(dest, memLength);
-        memcpy(s, origin.data(), memLength);
-    };
-    fillArray(colorCurves.red, &wlRed);
-    fillArray(colorCurves.green, &wlGreen);
-    fillArray(colorCurves.blue, &wlBlue);
+    QByteArray green = QByteArray::fromRawData(
+        reinterpret_cast<const char *>(colorCurves.green.constData()),
+        sizeof(quint16) * colorCurves.green.size()
+    );
 
-    org_kde_kwin_outputdevice_send_colorcurves(data.resource, &wlRed, &wlGreen, &wlBlue);
+    QByteArray blue = QByteArray::fromRawData(
+        reinterpret_cast<const char *>(colorCurves.blue.constData()),
+        sizeof(quint16) * colorCurves.blue.size()
+    );
 
-    wl_array_release(&wlRed);
-    wl_array_release(&wlGreen);
-    wl_array_release(&wlBlue);
+    send_colorcurves(resource->handle, red, green, blue);
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::sendSerialNumber(const ResourceData &data)
+void KWaylandServer::OutputDeviceInterfacePrivate::sendSerialNumber(Resource *resource)
 {
-    if (wl_resource_get_version(data.resource) >= ORG_KDE_KWIN_OUTPUTDEVICE_SERIAL_NUMBER_SINCE_VERSION) {
-        org_kde_kwin_outputdevice_send_serial_number(data.resource,
-                                            qPrintable(serialNumber));
+    if (resource->version() >= ORG_KDE_KWIN_OUTPUTDEVICE_SERIAL_NUMBER_SINCE_VERSION) {
+        send_serial_number(resource->handle, serialNumber);
     }
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::sendEisaId(const ResourceData &data)
+void KWaylandServer::OutputDeviceInterfacePrivate::sendEisaId(Resource *resource)
 {
-    if (wl_resource_get_version(data.resource) >= ORG_KDE_KWIN_OUTPUTDEVICE_EISA_ID_SINCE_VERSION) {
-        org_kde_kwin_outputdevice_send_eisa_id(data.resource,
-                                            qPrintable(eisaId));
+    if (resource->version() >= ORG_KDE_KWIN_OUTPUTDEVICE_EISA_ID_SINCE_VERSION) {
+        send_eisa_id(resource->handle, eisaId);
     }
 }
 
 
-void OutputDeviceInterface::Private::sendDone(const ResourceData &data)
+void OutputDeviceInterfacePrivate::sendDone(Resource *resource)
 {
-    org_kde_kwin_outputdevice_send_done(data.resource);
+    send_done(resource->handle);
 }
 
-void OutputDeviceInterface::Private::updateGeometry()
+void OutputDeviceInterfacePrivate::updateGeometry()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendGeometry((*it).resource);
-        sendDone(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendGeometry(resource);
+        sendDone(resource);
     }
 }
 
-void OutputDeviceInterface::Private::updateScale()
+void OutputDeviceInterfacePrivate::updateScale()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendScale(*it);
-        sendDone(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendScale(resource);
+        sendDone(resource);
     }
 }
 
-void OutputDeviceInterface::Private::updateColorCurves()
+void OutputDeviceInterfacePrivate::updateColorCurves()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendColorCurves(*it);
-        sendDone(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendColorCurves(resource);
+        sendDone(resource);
     }
 }
 
@@ -509,7 +437,6 @@ bool OutputDeviceInterface::ColorCurves::operator!=(const ColorCurves &cc) const
 #define SETTER(setterName, type, argumentName) \
     void OutputDeviceInterface::setterName(type arg) \
     { \
-        Q_D(); \
         if (d->argumentName == arg) { \
             return; \
         } \
@@ -528,104 +455,73 @@ SETTER(setTransform, Transform, transform)
 
 #undef SETTER
 
-void OutputDeviceInterface::setScale(int scale)
-{
-    Q_D();
-    if (d->scale == scale) {
-        return;
-    }
-    d->scale = scale;
-    emit scaleChanged(d->scale);
-    emit scaleFChanged(d->scale);
-}
-
 void OutputDeviceInterface::setScaleF(qreal scale)
 {
-    Q_D();
     if (qFuzzyCompare(d->scale, scale)) {
         return;
     }
     d->scale = scale;
-    emit scaleChanged(qRound(d->scale));
     emit scaleFChanged(d->scale);
 }
 
 QSize OutputDeviceInterface::physicalSize() const
 {
-    Q_D();
     return d->physicalSize;
 }
 
 QPoint OutputDeviceInterface::globalPosition() const
 {
-    Q_D();
     return d->globalPosition;
 }
 
 QString OutputDeviceInterface::manufacturer() const
 {
-    Q_D();
     return d->manufacturer;
 }
 
 QString OutputDeviceInterface::model() const
 {
-    Q_D();
     return d->model;
 }
 
 QString OutputDeviceInterface::serialNumber() const
 {
-    Q_D();
     return d->serialNumber;
 }
 
 QString OutputDeviceInterface::eisaId() const
 {
-    Q_D();
     return d->eisaId;
-}
-
-int OutputDeviceInterface::scale() const
-{
-    Q_D();
-    return qRound(d->scale);
 }
 
 qreal OutputDeviceInterface::scaleF() const
 {
-    Q_D();
     return d->scale;
 }
 
 
 OutputDeviceInterface::SubPixel OutputDeviceInterface::subPixel() const
 {
-    Q_D();
     return d->subPixel;
 }
 
 OutputDeviceInterface::Transform OutputDeviceInterface::transform() const
 {
-    Q_D();
     return d->transform;
 }
 
 OutputDeviceInterface::ColorCurves OutputDeviceInterface::colorCurves() const
 {
-    Q_D();
     return d->colorCurves;
 }
 
 QList< OutputDeviceInterface::Mode > OutputDeviceInterface::modes() const
 {
-    Q_D();
     return d->modes;
 }
 
 int OutputDeviceInterface::currentModeId() const
 {
-    Q_D();
     for (const Mode &m: d->modes) {
         if (m.flags.testFlag(OutputDeviceInterface::ModeFlag::Current)) {
             return m.id;
@@ -634,15 +530,8 @@ int OutputDeviceInterface::currentModeId() const
     return -1;
 }
 
-OutputDeviceInterface::Private *OutputDeviceInterface::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
-}
-
 void OutputDeviceInterface::setColorCurves(const ColorCurves &colorCurves)
 {
-    Q_D();
-
     if (d->colorCurves == colorCurves) {
         return;
     }
@@ -652,7 +541,6 @@ void OutputDeviceInterface::setColorCurves(const ColorCurves &colorCurves)
 
 void OutputDeviceInterface::setEdid(const QByteArray &edid)
 {
-    Q_D();
     d->edid = edid;
     d->updateEdid();
     emit edidChanged();
@@ -660,13 +548,11 @@ void OutputDeviceInterface::setEdid(const QByteArray &edid)
 
 QByteArray OutputDeviceInterface::edid() const
 {
-    Q_D();
     return d->edid;
 }
 
 void OutputDeviceInterface::setEnabled(OutputDeviceInterface::Enablement enabled)
 {
-    Q_D();
     if (d->enabled != enabled) {
         d->enabled = enabled;
         d->updateEnabled();
@@ -676,13 +562,11 @@ void OutputDeviceInterface::setEnabled(OutputDeviceInterface::Enablement enabled
 
 OutputDeviceInterface::Enablement OutputDeviceInterface::enabled() const
 {
-    Q_D();
     return d->enabled;
 }
 
-void OutputDeviceInterface::setUuid(const QByteArray &uuid)
+void OutputDeviceInterface::setUuid(const QString &uuid)
 {
-    Q_D();
     if (d->uuid != uuid) {
         d->uuid = uuid;
         d->updateUuid();
@@ -690,59 +574,73 @@ void OutputDeviceInterface::setUuid(const QByteArray &uuid)
     }
 }
 
-QByteArray OutputDeviceInterface::uuid() const
+QString OutputDeviceInterface::uuid() const
 {
-    Q_D();
     return d->uuid;
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::sendEdid(const ResourceData &data)
+void OutputDeviceInterfacePrivate::sendEdid(Resource *resource)
 {
-    org_kde_kwin_outputdevice_send_edid(data.resource,
-                                        edid.toBase64().constData());
+    send_edid(resource->handle, QString::fromStdString(edid.toBase64().toStdString()));
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::sendEnabled(const ResourceData &data)
+void OutputDeviceInterfacePrivate::sendEnabled(Resource *resource)
 {
-    int _enabled = 0;
+    int32_t _enabled = 0;
     if (enabled == OutputDeviceInterface::Enablement::Enabled) {
         _enabled = 1;
     }
-    org_kde_kwin_outputdevice_send_enabled(data.resource, _enabled);
+    send_enabled(resource->handle, _enabled);
 }
 
-void OutputDeviceInterface::Private::sendUuid(const ResourceData &data)
+void OutputDeviceInterfacePrivate::sendUuid(Resource *resource)
 {
-    org_kde_kwin_outputdevice_send_uuid(data.resource, uuid.constData());
+    send_uuid(resource->handle, uuid);
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::updateEnabled()
+void OutputDeviceInterfacePrivate::updateEnabled()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendEnabled(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendEnabled(resource);
     }
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::updateEdid()
+void OutputDeviceInterfacePrivate::updateEdid()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendEdid(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendEdid(resource);
     }
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::updateUuid()
+void OutputDeviceInterfacePrivate::updateUuid()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendUuid(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendUuid(resource);
     }
 }
 
-void KWaylandServer::OutputDeviceInterface::Private::updateEisaId()
+void OutputDeviceInterfacePrivate::updateEisaId()
 {
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        sendEisaId(*it);
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendEisaId(resource);
     }
 }
 
+OutputDeviceInterface *OutputDeviceInterfacePrivate::get(wl_resource *native)
+{
+    if (auto devicePrivate = resource_cast<OutputDeviceInterfacePrivate *>(native)) {
+        return devicePrivate->q;
+    }
+    return nullptr;
+}
+
+OutputDeviceInterface *OutputDeviceInterface::get(wl_resource *native)
+{
+    return OutputDeviceInterfacePrivate::get(native);
+}
 
 }
