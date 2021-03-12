@@ -254,8 +254,12 @@ void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
 {
     m_waylandOutput->setCurrentMode(size, refreshRate);
     m_waylandOutputDevice->setCurrentMode(size, refreshRate);
-    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
-    m_xdgOutputV1->done();
+
+    const QSize newLogicalSize = pixelSize() / scale();
+    if (newLogicalSize != m_xdgOutputV1->logicalSize()) {
+        m_xdgOutputV1->setLogicalSize(newLogicalSize);
+        m_xdgOutputV1->done();
+    }
 }
 
 void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &manufacturer,
