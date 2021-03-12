@@ -80,9 +80,9 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     BASENAME wayland
 )
 
-ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/output-management.xml
-    BASENAME output-management
+    BASENAME outputmanagement
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS

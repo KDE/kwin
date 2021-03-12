@@ -5,7 +5,6 @@
 */
 #pragma once
 
-#include "resource.h"
 #include "outputmanagement_interface.h"
 #include "outputdevice_interface.h"
 #include "outputchangeset.h"
@@ -14,6 +13,9 @@
 
 namespace KWaylandServer
 {
+
+class OutputConfigurationInterfacePrivate;
+
 /** @class OutputConfigurationInterface
  *
  * Holds a new configuration for the outputs.
@@ -39,11 +41,11 @@ namespace KWaylandServer
  * @see OutputConfiguration
  * @since 5.5
  */
-class KWAYLANDSERVER_EXPORT OutputConfigurationInterface : public Resource
+class KWAYLANDSERVER_EXPORT OutputConfigurationInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~OutputConfigurationInterface();
+    ~OutputConfigurationInterface() override;
 
     /**
      * Accessor for the changes made to OutputDevices. The data returned from this call
@@ -77,11 +79,10 @@ public Q_SLOTS:
     void setFailed();
 
 private:
-    explicit OutputConfigurationInterface(OutputManagementInterface *parent, wl_resource *parentResource);
-    friend class OutputManagementInterface;
+    explicit OutputConfigurationInterface(OutputManagementInterface *parent, wl_resource *resource);
+    friend class OutputManagementInterfacePrivate;
 
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<OutputConfigurationInterfacePrivate> d;
 };
 
 

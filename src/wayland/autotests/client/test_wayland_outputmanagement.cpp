@@ -129,8 +129,6 @@ void TestWaylandOutputManagement::init()
     m_serverOutputs << outputDeviceInterface;
 
     m_outputManagementInterface = new OutputManagementInterface(m_display, this);
-    m_outputManagementInterface->create();
-    QVERIFY(m_outputManagementInterface->isValid());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

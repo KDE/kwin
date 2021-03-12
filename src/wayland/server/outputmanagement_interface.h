@@ -5,13 +5,14 @@
 */
 #pragma once
 
-#include "global.h"
+#include <QObject>
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
 namespace KWaylandServer
 {
 
+class OutputManagementInterfacePrivate;
 class OutputConfigurationInterface;
 /**
  * @class OutputManagementInterface
@@ -27,13 +28,13 @@ class OutputConfigurationInterface;
  * @see OutputConfigurationInterface
  * @since 5.5
  */
-class KWAYLANDSERVER_EXPORT OutputManagementInterface : public Global
+class KWAYLANDSERVER_EXPORT OutputManagementInterface : public QObject
 {
     Q_OBJECT
 
 public:
     explicit OutputManagementInterface(Display *display, QObject *parent = nullptr);
-    virtual ~OutputManagementInterface();
+    ~OutputManagementInterface() override;
 
 Q_SIGNALS:
     /**
@@ -52,7 +53,7 @@ Q_SIGNALS:
     void configurationChangeRequested(KWaylandServer::OutputConfigurationInterface *configurationInterface);
 
 private:
-    class Private;
+    QScopedPointer<OutputManagementInterfacePrivate> d;
 };
 
 }

@@ -14,6 +14,8 @@
 namespace KWaylandServer
 {
 
+class OutputChangeSetPrivate;
+
 /**
  * @brief Holds a set of changes to an OutputInterface or OutputDeviceInterface.
  *
@@ -28,30 +30,34 @@ class KWAYLANDSERVER_EXPORT OutputChangeSet : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~OutputChangeSet();
-
+    ~OutputChangeSet() override;
     /** Whether the enabled() property of the outputdevice changed.
      * @returns @c true if the enabled property of the outputdevice has changed.
      */
     bool enabledChanged() const;
+
     /** Whether the currentModeId() property of the outputdevice changed.
      * @returns @c true if the enabled property of the outputdevice has changed.
      *    bool modeChanged() const;
      */
      /** Whether the transform() property of the outputdevice changed. */
     bool transformChanged() const;
+
     /** Whether the currentModeId() property of the outputdevice changed.
      * @returns @c true if the currentModeId() property of the outputdevice has changed.
      */
     bool modeChanged() const;
+
     /** Whether the globalPosition() property of the outputdevice changed.
      * @returns @c true if the globalPosition() property of the outputdevice has changed.
      */
     bool positionChanged() const;
+
     /** Whether the scale() property of the outputdevice changed.
      * @returns @c true if the scale() property of the outputdevice has changed.
      */
     bool scaleChanged() const;
+
     /** Whether the colorCurves() property of the outputdevice changed.
      * @returns @c true if the colorCurves() property of the outputdevice has changed.
      */
@@ -59,36 +65,31 @@ public:
 
     /** The new value for enabled. */
     OutputDeviceInterface::Enablement enabled() const;
+
     /** The new mode id.*/
     int mode() const;
+
     /** The new value for transform. */
     OutputDeviceInterface::Transform transform() const;
+
     /** The new value for globalPosition. */
     QPoint position() const;
-#if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 50)
-    /** The new value for scale.
-     @deprecated Since 5.50, use scaleF
-     */
-    KWAYLANDSERVER_DEPRECATED_VERSION(5, 50, "Use OutputChangeSet::scaleF()")
-    int scale() const;
-#endif
+
     /** The new value for scale.
      * @since 5.50
      */
     qreal scaleF() const;
+    
     /** The new value for colorCurves.
      * @since 5.XX
      */
     OutputDeviceInterface::ColorCurves colorCurves() const;
 
 private:
-    friend class OutputConfigurationInterface;
+    friend class OutputConfigurationInterfacePrivate;
     explicit OutputChangeSet(OutputDeviceInterface *outputdevice, QObject *parent = nullptr);
 
-
-    class Private;
-    QScopedPointer<Private> d;
-    Private *d_func() const;
+    QScopedPointer<OutputChangeSetPrivate> d;
 };
 
 }

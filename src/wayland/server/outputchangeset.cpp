@@ -10,107 +10,82 @@
 namespace KWaylandServer
 {
 
-OutputChangeSet::Private::Private(OutputDeviceInterface *outputdevice, OutputChangeSet *parent)
+OutputChangeSetPrivate::OutputChangeSetPrivate(OutputDeviceInterface *outputdevice, OutputChangeSet *parent)
     : q(parent)
-    , o(outputdevice)
-    , enabled(o->enabled())
-    , modeId(o->currentModeId())
-    , transform(o->transform())
-    , position(o->globalPosition())
-    , scale(o->scaleF())
-    , colorCurves(o->colorCurves())
+    , outputDevice(outputdevice)
+    , enabled(outputDevice->enabled())
+    , modeId(outputDevice->currentModeId())
+    , transform(outputDevice->transform())
+    , position(outputDevice->globalPosition())
+    , scale(outputDevice->scaleF())
+    , colorCurves(outputDevice->colorCurves())
 {
 }
 
-OutputChangeSet::Private::~Private() = default;
-
 OutputChangeSet::OutputChangeSet(OutputDeviceInterface *outputdevice, QObject *parent)
     : QObject(parent)
-    , d(new Private(outputdevice, this))
+    , d(new OutputChangeSetPrivate(outputdevice, this))
 {
 }
 
 OutputChangeSet::~OutputChangeSet() = default;
 
-OutputChangeSet::Private *OutputChangeSet::d_func() const
-{
-    return reinterpret_cast<Private*>(d.data());
-}
-
 bool OutputChangeSet::enabledChanged() const
 {
-    Q_D();
-    return d->enabled != d->o->enabled();
+    return d->enabled != d->outputDevice->enabled();
 }
 
 OutputDeviceInterface::Enablement OutputChangeSet::enabled() const
 {
-    Q_D();
     return d->enabled;
 }
 
 bool OutputChangeSet::modeChanged() const
 {
-    Q_D();
-    return d->modeId != d->o->currentModeId();
+    return d->modeId != d->outputDevice->currentModeId();
 }
 
 int OutputChangeSet::mode() const
 {
-    Q_D();
     return d->modeId;
 }
 
 bool OutputChangeSet::transformChanged() const
 {
-    Q_D();
-    return d->transform != d->o->transform();
+    return d->transform != d->outputDevice->transform();
 }
 
 OutputDeviceInterface::Transform OutputChangeSet::transform() const
 {
-    Q_D();
     return d->transform;
 }
 bool OutputChangeSet::positionChanged() const
 {
-    Q_D();
-    return d->position != d->o->globalPosition();
+    return d->position != d->outputDevice->globalPosition();
 }
 
 QPoint OutputChangeSet::position() const
 {
-    Q_D();
     return d->position;
 }
 
 bool OutputChangeSet::scaleChanged() const
 {
-    Q_D();
-    return !qFuzzyCompare(d->scale, d->o->scaleF());
-}
-
-int OutputChangeSet::scale() const
-{
-    Q_D();
-    return qRound(d->scale);
+    return !qFuzzyCompare(d->scale, d->outputDevice->scaleF());
 }
 
 qreal OutputChangeSet::scaleF() const
 {
-    Q_D();
     return d->scale;
 }
 
 bool OutputChangeSet::colorCurvesChanged() const
 {
-    Q_D();
-    return d->colorCurves != d->o->colorCurves();
+    return d->colorCurves != d->outputDevice->colorCurves();
 }
 
 OutputDeviceInterface::ColorCurves OutputChangeSet::colorCurves() const
 {
-    Q_D();
     return d->colorCurves;
 }
 

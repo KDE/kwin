@@ -183,9 +183,7 @@ void TestWaylandServerDisplay::testOutputManagement()
     Display display;
     display.addSocketName("kwayland-test-0");
     display.start();
-    auto kwin = new OutputManagementInterface(&display, this);
-    kwin->create();
-    QVERIFY(kwin->isValid());
+    new OutputManagementInterface(&display, this);
 }
 
 void TestWaylandServerDisplay::testAutoSocketName()

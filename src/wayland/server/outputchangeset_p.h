@@ -10,14 +10,13 @@
 namespace KWaylandServer
 {
 
-class OutputChangeSet::Private
+class OutputChangeSetPrivate
 {
 public:
-    Private(OutputDeviceInterface *outputdevice, OutputChangeSet *parent);
-    ~Private();
+    OutputChangeSetPrivate(OutputDeviceInterface *outputdevice, OutputChangeSet *parent);
 
     OutputChangeSet *q;
-    OutputDeviceInterface *o;
+    OutputDeviceInterface *outputDevice;
 
     OutputDeviceInterface::Enablement enabled;
     int modeId;
