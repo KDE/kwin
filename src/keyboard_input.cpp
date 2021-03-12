@@ -115,8 +115,9 @@ void KeyboardInputRedirection::init()
     }
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
-    connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
-        std::bind(&KeyboardInputRedirection::processKey, this, std::placeholders::_1, InputRedirection::KeyboardKeyAutoRepeat, std::placeholders::_2, nullptr));
+    connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this, [this](quint32 button, quint32 time) {
+        processKey(button, InputRedirection::KeyboardKeyAutoRepeat, time, nullptr);
+    });
     m_input->installInputEventSpy(keyRepeatSpy);
 
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
