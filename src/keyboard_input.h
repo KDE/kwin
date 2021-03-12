@@ -52,7 +52,8 @@ public:
     explicit KeyboardInputRedirection(InputRedirection *parent);
     ~KeyboardInputRedirection() override;
 
-    void init();
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
 
     void update();
 
@@ -82,16 +83,23 @@ public:
 Q_SIGNALS:
     void ledsChanged(KWin::Xkb::LEDs);
 
+protected:
+    void enable();
+    void disable();
+
 private:
+    void resetEnabled();
+
     InputRedirection *m_input;
-    bool m_inited = false;
     QScopedPointer<Xkb> m_xkb;
     QMetaObject::Connection m_activeClientSurfaceChangedConnection;
+    QMetaObject::Connection m_clientActivatedConnection;
     QScopedPointer<ModifiersChangedSpy> m_modifiersChangedSpy;
     QScopedPointer<ModifierOnlyShortcuts> m_modifierOnlyShortcutsSpy;
     QScopedPointer<KeyStateChangedSpy> m_keyStateChangedSpy;
     QScopedPointer<KeyboardLayout> m_keyboardLayout;
     QScopedPointer<KeyboardRepeat> m_keyboardRepeat;
+    bool m_isEnabled = false;
 };
 
 }

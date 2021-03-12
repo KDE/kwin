@@ -53,8 +53,8 @@ public:
     explicit PointerInputRedirection(InputRedirection *parent);
     ~PointerInputRedirection() override;
 
-    void init() override;
-
+    void updateAfterLockStateChanged();
+    void updateAfterDrag();
     void updateAfterScreenChange();
     bool supportsWarping() const;
     void warp(const QPointF &pos);
@@ -130,6 +130,10 @@ public:
      * @internal
      */
     void processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device = nullptr);
+
+protected:
+    void enable() override;
+    void disable() override;
 
 private:
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;

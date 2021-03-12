@@ -2188,10 +2188,20 @@ void InputRedirection::setupWorkspace()
             }
         );
 
-        m_keyboard->init();
-        m_pointer->init();
-        m_touch->init();
-        m_tablet->init();
+        connect(waylandServer()->seat(), &SeatInterface::hasPointerChanged, this, [this]() {
+            m_pointer->setEnabled(waylandServer()->seat()->hasPointer());
+        });
+        connect(waylandServer()->seat(), &SeatInterface::hasTouchChanged, this, [this]() {
+            m_touch->setEnabled(waylandServer()->seat()->hasTouch());
+        });
+        connect(waylandServer()->seat(), &SeatInterface::hasKeyboardChanged, this, [this]() {
+            m_keyboard->setEnabled(waylandServer()->seat()->hasKeyboard());
+        });
+
+        m_keyboard->setEnabled(waylandServer()->seat()->hasKeyboard());
+        m_pointer->setEnabled(waylandServer()->seat()->hasPointer());
+        m_touch->setEnabled(waylandServer()->seat()->hasTouch());
+        m_tablet->setEnabled(true);
     }
     setupInputFilters();
 }
@@ -2712,19 +2722,47 @@ InputDeviceHandler::InputDeviceHandler(InputRedirection *input)
 
 InputDeviceHandler::~InputDeviceHandler() = default;
 
-void InputDeviceHandler::init()
+bool InputDeviceHandler::isEnabled() const
+{
+    return m_isEnabled;
+}
+
+void InputDeviceHandler::setEnabled(bool enabled)
+{
+    if (m_isEnabled == enabled) {
+        return;
+    }
+    m_isEnabled = enabled;
+    if (enabled) {
+        enable();
+    } else {
+        disable();
+    }
+}
+
+void InputDeviceHandler::enable()
 {
     connect(workspace(), &Workspace::stackingOrderChanged, this, &InputDeviceHandler::update);
     connect(workspace(), &Workspace::clientMinimizedChanged, this, &InputDeviceHandler::update);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &InputDeviceHandler::update);
 
-    connect(workspace(), &QObject::destroyed, this, &InputDeviceHandler::resetInited);
-    connect(waylandServer(), &QObject::destroyed, this, &InputDeviceHandler::resetInited);
+    connect(workspace(), &QObject::destroyed, this, &InputDeviceHandler::resetEnabled);
+    connect(waylandServer(), &QObject::destroyed, this, &InputDeviceHandler::resetEnabled);
 }
 
-void InputDeviceHandler::resetInited()
+void InputDeviceHandler::disable()
 {
-    m_inited = false;
+    disconnect(workspace(), &Workspace::stackingOrderChanged, this, &InputDeviceHandler::update);
+    disconnect(workspace(), &Workspace::clientMinimizedChanged, this, &InputDeviceHandler::update);
+    disconnect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &InputDeviceHandler::update);
+
+    disconnect(workspace(), &QObject::destroyed, this, &InputDeviceHandler::resetEnabled);
+    disconnect(waylandServer(), &QObject::destroyed, this, &InputDeviceHandler::resetEnabled);
+}
+
+void InputDeviceHandler::resetEnabled()
+{
+    m_isEnabled = false;
 }
 
 bool InputDeviceHandler::setAt(Toplevel *toplevel)
@@ -2815,7 +2853,7 @@ void InputDeviceHandler::updateInternalWindow(QWindow *window)
 
 void InputDeviceHandler::update()
 {
-    if (!m_inited) {
+    if (!isEnabled()) {
         return;
     }
 

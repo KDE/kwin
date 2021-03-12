@@ -423,7 +423,9 @@ class KWIN_EXPORT InputDeviceHandler : public QObject
     Q_OBJECT
 public:
     ~InputDeviceHandler() override;
-    virtual void init();
+
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
 
     void update();
 
@@ -468,6 +470,9 @@ Q_SIGNALS:
 protected:
     explicit InputDeviceHandler(InputRedirection *parent);
 
+    virtual void enable();
+    virtual void disable();
+
     virtual void cleanupInternalWindow(QWindow *old, QWindow *now) = 0;
     virtual void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) = 0;
 
@@ -485,19 +490,12 @@ protected:
         return false;
     }
 
-    inline bool inited() const {
-        return m_inited;
-    }
-    inline void setInited(bool set) {
-        m_inited = set;
-    }
-
 private:
     bool setAt(Toplevel *toplevel);
     void updateFocus();
     bool updateDecoration();
     void updateInternalWindow(QWindow *window);
-    void resetInited();
+    void resetEnabled();
 
     struct {
         QPointer<Toplevel> at;
@@ -510,7 +508,7 @@ private:
         QPointer<QWindow> internalWindow;
     } m_focus;
 
-    bool m_inited = false;
+    bool m_isEnabled = false;
 };
 
 inline

@@ -108,13 +108,11 @@ PointerInputRedirection::PointerInputRedirection(InputRedirection* parent)
 
 PointerInputRedirection::~PointerInputRedirection() = default;
 
-void PointerInputRedirection::init()
+void PointerInputRedirection::enable()
 {
-    Q_ASSERT(!inited());
-    m_cursor = new CursorImage(this);
-    setInited(true);
-    InputDeviceHandler::init();
+    InputDeviceHandler::enable();
 
+    m_cursor = new CursorImage(this);
     connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
         auto cursor = Cursors::self()->mouse();
         cursor->updateCursor(m_cursor->image(), m_cursor->hotSpot());
@@ -123,35 +121,62 @@ void PointerInputRedirection::init()
 
     connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
 
-    connect(screens(), &Screens::changed, this, &PointerInputRedirection::updateAfterScreenChange);
     if (waylandServer()->hasScreenLockerIntegration()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
-            [this] {
-                if (waylandServer()->seat()->hasPointer()) {
-                    waylandServer()->seat()->cancelPointerPinchGesture();
-                    waylandServer()->seat()->cancelPointerSwipeGesture();
-                }
-                update();
-            }
-        );
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged,
+                this, &PointerInputRedirection::updateAfterLockStateChanged);
     }
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this,
-        [this] {
-            // need to force a focused pointer change
-            waylandServer()->seat()->setFocusedPointerSurface(nullptr);
-            setFocus(nullptr);
-            update();
-        }
-    );
+
+    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded,
+            this, &PointerInputRedirection::updateAfterDrag);
 
     connect(workspace(), &Workspace::clientStartUserMovedResized,
             this, &PointerInputRedirection::updateOnStartMoveResize);
     connect(workspace(), &Workspace::clientFinishUserMovedResized,
             this, &PointerInputRedirection::update);
+    connect(screens(), &Screens::changed,
+            this, &PointerInputRedirection::updateAfterScreenChange);
 
     // warp the cursor to center of screen
     warp(screens()->geometry().center());
     updateAfterScreenChange();
+}
+
+void PointerInputRedirection::disable()
+{
+    InputDeviceHandler::disable();
+
+    delete m_cursor;
+    m_cursor = nullptr;
+
+    disconnect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded,
+               this, &PointerInputRedirection::updateAfterDrag);
+
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged,
+                this, &PointerInputRedirection::updateAfterLockStateChanged);
+    }
+
+    disconnect(workspace(), &Workspace::clientStartUserMovedResized,
+              this, &PointerInputRedirection::updateOnStartMoveResize);
+    disconnect(workspace(), &Workspace::clientFinishUserMovedResized,
+               this, &PointerInputRedirection::update);
+    disconnect(screens(), &Screens::changed,
+               this, &PointerInputRedirection::updateAfterScreenChange);
+}
+
+void PointerInputRedirection::updateAfterLockStateChanged()
+{
+    waylandServer()->seat()->cancelPointerPinchGesture();
+    waylandServer()->seat()->cancelPointerSwipeGesture();
+    update();
+}
+
+void PointerInputRedirection::updateAfterDrag()
+{
+    // need to force a focused pointer change
+    waylandServer()->seat()->setFocusedPointerSurface(nullptr);
+    setFocus(nullptr);
+    update();
 }
 
 void PointerInputRedirection::updateOnStartMoveResize()
@@ -239,7 +264,7 @@ QVector<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_sched
 
 void PointerInputRedirection::processMotion(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, LibInput::Device *device)
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     if (PositionUpdateBlocker::isPositionBlocked()) {
@@ -284,7 +309,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
 
     input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
 
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
 
@@ -309,7 +334,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 
     input()->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &wheelEvent));
 
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
@@ -318,7 +343,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
 
@@ -329,7 +354,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 
 void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -341,7 +366,7 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QSizeF &delta, qui
 void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -353,7 +378,7 @@ void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::LibInpu
 void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -365,7 +390,7 @@ void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::L
 void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -377,7 +402,7 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 
 void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -389,7 +414,7 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
 void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -401,7 +426,7 @@ void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::LibInpu
 void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();
@@ -422,7 +447,7 @@ bool PointerInputRedirection::areButtonsPressed() const
 
 bool PointerInputRedirection::focusUpdatesBlocked()
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return true;
     }
     if (waylandServer()->seat()->isDragPointer()) {
@@ -852,7 +877,7 @@ void PointerInputRedirection::warp(const QPointF &pos)
 
 bool PointerInputRedirection::supportsWarping() const
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return false;
     }
     if (m_supportsWarping) {
@@ -866,7 +891,7 @@ bool PointerInputRedirection::supportsWarping() const
 
 void PointerInputRedirection::updateAfterScreenChange()
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     if (screenContainsPos(m_pos)) {
@@ -886,7 +911,7 @@ QPointF PointerInputRedirection::position() const
 
 void PointerInputRedirection::setEffectsOverrideCursor(Qt::CursorShape shape)
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     // current pointer focus window should get a leave event
@@ -896,7 +921,7 @@ void PointerInputRedirection::setEffectsOverrideCursor(Qt::CursorShape shape)
 
 void PointerInputRedirection::removeEffectsOverrideCursor()
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     // cursor position might have changed while there was an effect in place
@@ -906,7 +931,7 @@ void PointerInputRedirection::removeEffectsOverrideCursor()
 
 void PointerInputRedirection::setWindowSelectionCursor(const QByteArray &shape)
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     // send leave to current pointer focus window
@@ -916,7 +941,7 @@ void PointerInputRedirection::setWindowSelectionCursor(const QByteArray &shape)
 
 void PointerInputRedirection::removeWindowSelectionCursor()
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     update();

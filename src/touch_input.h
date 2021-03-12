@@ -41,7 +41,6 @@ public:
 
     bool positionValid() const override;
     bool focusUpdatesBlocked() override;
-    void init() override;
 
     void processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device = nullptr);
     void processUp(qint32 id, quint32 time, LibInput::Device *device = nullptr);
@@ -70,11 +69,16 @@ public:
         return m_activeTouchPoints.count();
     }
 
+protected:
+    void enable() override;
+    void disable() override;
+
 private:
     void cleanupInternalWindow(QWindow *old, QWindow *now) override;
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
-
     void focusUpdate(Toplevel *focusOld, Toplevel *focusNow) override;
+
+    void handleScreenLockLockStateChanged();
 
     QSet<qint32> m_activeTouchPoints;
     bool m_inited = false;

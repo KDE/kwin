@@ -35,26 +35,36 @@ TouchInputRedirection::TouchInputRedirection(InputRedirection *parent)
 
 TouchInputRedirection::~TouchInputRedirection() = default;
 
-void TouchInputRedirection::init()
+void TouchInputRedirection::enable()
 {
-    Q_ASSERT(!inited());
-    setInited(true);
-    InputDeviceHandler::init();
+    InputDeviceHandler::enable();
 
     if (waylandServer()->hasScreenLockerIntegration()) {
-        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this,
-            [this] {
-                cancel();
-                // position doesn't matter
-                update();
-            }
-        );
+        connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged,
+                this, &TouchInputRedirection::handleScreenLockLockStateChanged);
     }
+}
+
+void TouchInputRedirection::disable()
+{
+    InputDeviceHandler::disable();
+
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        disconnect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged,
+                   this, &TouchInputRedirection::handleScreenLockLockStateChanged);
+    }
+}
+
+void TouchInputRedirection::handleScreenLockLockStateChanged()
+{
+    cancel();
+    // position doesn't matter
+    update();
 }
 
 bool TouchInputRedirection::focusUpdatesBlocked()
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return true;
     }
     if (m_windowUpdatedInCycle) {
@@ -136,7 +146,7 @@ void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *o
 void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     m_lastPosition = pos;
@@ -153,7 +163,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
 void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     if (!m_activeTouchPoints.remove(id)) {
@@ -171,7 +181,7 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, LibInput::Device 
 void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time, LibInput::Device *device)
 {
     Q_UNUSED(device)
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     if (!m_activeTouchPoints.contains(id)) {
@@ -186,7 +196,7 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32
 
 void TouchInputRedirection::cancel()
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     // If the touch sequence is artificially cancelled by the compositor, touch motion and touch
@@ -201,7 +211,7 @@ void TouchInputRedirection::cancel()
 
 void TouchInputRedirection::frame()
 {
-    if (!inited() || !waylandServer()->seat()->hasTouch()) {
+    if (!isEnabled()) {
         return;
     }
     waylandServer()->seat()->notifyTouchFrame();

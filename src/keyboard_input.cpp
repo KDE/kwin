@@ -95,10 +95,31 @@ private:
     Qt::KeyboardModifiers m_modifiers;
 };
 
-void KeyboardInputRedirection::init()
+bool KeyboardInputRedirection::isEnabled() const
 {
-    Q_ASSERT(!m_inited);
-    m_inited = true;
+    return m_isEnabled;
+}
+
+void KeyboardInputRedirection::setEnabled(bool enabled)
+{
+    if (m_isEnabled == enabled) {
+        return;
+    }
+    m_isEnabled = enabled;
+    if (enabled) {
+        enable();
+    } else {
+        disable();
+    }
+}
+
+void KeyboardInputRedirection::resetEnabled()
+{
+    m_isEnabled = false;
+}
+
+void KeyboardInputRedirection::enable()
+{
     const auto config = kwinApp()->kxkbConfig();
     m_xkb->setNumLockConfig(InputConfig::self()->inputConfig());
     m_xkb->setConfig(config);
@@ -122,9 +143,9 @@ void KeyboardInputRedirection::init()
     });
     m_input->installInputEventSpy(m_keyboardRepeat.data());
 
-    connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
-    connect(workspace(), &Workspace::clientActivated, this,
+    connect(workspace(), &QObject::destroyed, this, &KeyboardInputRedirection::resetEnabled);
+    connect(waylandServer(), &QObject::destroyed, this, &KeyboardInputRedirection::resetEnabled);
+    m_clientActivatedConnection = connect(workspace(), &Workspace::clientActivated, this,
         [this] {
             disconnect(m_activeClientSurfaceChangedConnection);
             if (auto c = workspace()->activeClient()) {
@@ -140,9 +161,32 @@ void KeyboardInputRedirection::init()
     }
 }
 
+void KeyboardInputRedirection::disable()
+{
+    disconnect(m_activeClientSurfaceChangedConnection);
+    m_activeClientSurfaceChangedConnection = QMetaObject::Connection();
+
+    disconnect(m_clientActivatedConnection);
+    m_clientActivatedConnection = QMetaObject::Connection();
+
+    m_keyStateChangedSpy.reset();
+    m_modifiersChangedSpy.reset();
+    m_modifierOnlyShortcutsSpy.reset();
+    m_keyboardLayout.reset();
+    m_keyboardRepeat.reset();
+
+    disconnect(workspace(), &QObject::destroyed, this, &KeyboardInputRedirection::resetEnabled);
+    disconnect(waylandServer(), &QObject::destroyed, this, &KeyboardInputRedirection::resetEnabled);
+
+    if (waylandServer()->hasScreenLockerIntegration()) {
+        disconnect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged,
+                   this, &KeyboardInputRedirection::update);
+    }
+}
+
 void KeyboardInputRedirection::update()
 {
-    if (!m_inited) {
+    if (!isEnabled()) {
         return;
     }
     auto seat = waylandServer()->seat();
@@ -217,7 +261,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     event.setModifiersRelevantForGlobalShortcuts(m_xkb->modifiersRelevantForGlobalShortcuts());
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
-    if (!m_inited) {
+    if (!isEnabled()) {
         return;
     }
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
@@ -231,7 +275,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
 
 void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
 {
-    if (!m_inited) {
+    if (!isEnabled()) {
         return;
     }
     const quint32 previousLayout = m_xkb->currentLayout();
@@ -243,7 +287,7 @@ void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t
 
 void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)
 {
-    if (!m_inited) {
+    if (!isEnabled()) {
         return;
     }
     // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update

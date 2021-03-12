@@ -54,7 +54,6 @@ public:
     {
         return !m_lastPosition.isNull();
     }
-    void init() override;
 
     QPointF position() const override
     {

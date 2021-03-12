@@ -35,19 +35,12 @@ TabletInputRedirection::TabletInputRedirection(InputRedirection *parent)
 
 TabletInputRedirection::~TabletInputRedirection() = default;
 
-void TabletInputRedirection::init()
-{
-    Q_ASSERT(!inited());
-    setInited(true);
-    InputDeviceHandler::init();
-}
-
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
                                              bool tipNear, const TabletToolId &tabletToolId,
                                              quint32 time)
 {
-    if (!inited()) {
+    if (!isEnabled()) {
         return;
     }
     m_lastPosition = pos;
