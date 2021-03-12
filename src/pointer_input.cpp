@@ -143,14 +143,11 @@ void PointerInputRedirection::init()
             update();
         }
     );
-    // connect the move resize of all window
-    auto setupMoveResizeConnection = [this] (AbstractClient *c) {
-        connect(c, &AbstractClient::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
-        connect(c, &AbstractClient::clientFinishUserMovedResized, this, &PointerInputRedirection::update);
-    };
-    const auto clients = workspace()->allClientList();
-    std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
-    connect(workspace(), &Workspace::clientAdded, this, setupMoveResizeConnection);
+
+    connect(workspace(), &Workspace::clientStartUserMovedResized,
+            this, &PointerInputRedirection::updateOnStartMoveResize);
+    connect(workspace(), &Workspace::clientFinishUserMovedResized,
+            this, &PointerInputRedirection::update);
 
     // warp the cursor to center of screen
     warp(screens()->geometry().center());
