@@ -1776,7 +1776,7 @@ public:
 
     bool emulateTabletEvent(TabletEvent *event)
     {
-        if (!workspace() || !waylandServer()->seat()->hasPointer()) {
+        if (!workspace()) {
             return false;
         }
 
