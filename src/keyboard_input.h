@@ -33,7 +33,10 @@ namespace KWin
 {
 
 class InputRedirection;
+class KeyStateChangedSpy;
 class KeyboardLayout;
+class KeyboardRepeat;
+class ModifierOnlyShortcuts;
 class ModifiersChangedSpy;
 class Toplevel;
 
@@ -84,8 +87,11 @@ private:
     bool m_inited = false;
     QScopedPointer<Xkb> m_xkb;
     QMetaObject::Connection m_activeClientSurfaceChangedConnection;
-    ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
-    KeyboardLayout *m_keyboardLayout = nullptr;
+    QScopedPointer<ModifiersChangedSpy> m_modifiersChangedSpy;
+    QScopedPointer<ModifierOnlyShortcuts> m_modifierOnlyShortcutsSpy;
+    QScopedPointer<KeyStateChangedSpy> m_keyStateChangedSpy;
+    QScopedPointer<KeyboardLayout> m_keyboardLayout;
+    QScopedPointer<KeyboardRepeat> m_keyboardRepeat;
 };
 
 }

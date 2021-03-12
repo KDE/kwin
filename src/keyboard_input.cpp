@@ -103,22 +103,24 @@ void KeyboardInputRedirection::init()
     m_xkb->setNumLockConfig(InputConfig::self()->inputConfig());
     m_xkb->setConfig(config);
 
-    m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
-    m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);
-    m_input->installInputEventSpy(m_modifiersChangedSpy);
-    m_keyboardLayout = new KeyboardLayout(m_xkb.data(), config);
+    m_keyStateChangedSpy.reset(new KeyStateChangedSpy(m_input));
+    m_input->installInputEventSpy(m_keyStateChangedSpy.data());
+    m_modifiersChangedSpy.reset(new ModifiersChangedSpy(m_input));
+    m_input->installInputEventSpy(m_modifiersChangedSpy.data());
+    m_keyboardLayout.reset(new KeyboardLayout(m_xkb.data(), config));
     m_keyboardLayout->init();
-    m_input->installInputEventSpy(m_keyboardLayout);
+    m_input->installInputEventSpy(m_keyboardLayout.data());
 
     if (waylandServer()->hasGlobalShortcutSupport()) {
-        m_input->installInputEventSpy(new ModifierOnlyShortcuts);
+        m_modifierOnlyShortcutsSpy.reset(new ModifierOnlyShortcuts());
+        m_input->installInputEventSpy(m_modifierOnlyShortcutsSpy.data());
     }
 
-    KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.data());
-    connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this, [this](quint32 button, quint32 time) {
+    m_keyboardRepeat.reset(new KeyboardRepeat(m_xkb.data()));
+    connect(m_keyboardRepeat.data(), &KeyboardRepeat::keyRepeat, this, [this](quint32 button, quint32 time) {
         processKey(button, InputRedirection::KeyboardKeyAutoRepeat, time, nullptr);
     });
-    m_input->installInputEventSpy(keyRepeatSpy);
+    m_input->installInputEventSpy(m_keyboardRepeat.data());
 
     connect(workspace(), &QObject::destroyed, this, [this] { m_inited = false; });
     connect(waylandServer(), &QObject::destroyed, this, [this] { m_inited = false; });
