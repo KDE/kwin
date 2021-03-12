@@ -50,8 +50,6 @@ void TouchInputRedirection::init()
             }
         );
     }
-    connect(workspace(), &QObject::destroyed, this, [this] { setInited(false); });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
 }
 
 bool TouchInputRedirection::focusUpdatesBlocked()
