@@ -40,9 +40,6 @@ void TabletInputRedirection::init()
     Q_ASSERT(!inited());
     setInited(true);
     InputDeviceHandler::init();
-
-    connect(workspace(), &QObject::destroyed, this, [this] { setInited(false); });
-    connect(waylandServer(), &QObject::destroyed, this, [this] { setInited(false); });
 }
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,

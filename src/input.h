@@ -497,6 +497,7 @@ private:
     void updateFocus();
     bool updateDecoration();
     void updateInternalWindow(QWindow *window);
+    void resetInited();
 
     struct {
         QPointer<Toplevel> at;

@@ -2717,6 +2717,14 @@ void InputDeviceHandler::init()
     connect(workspace(), &Workspace::stackingOrderChanged, this, &InputDeviceHandler::update);
     connect(workspace(), &Workspace::clientMinimizedChanged, this, &InputDeviceHandler::update);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, &InputDeviceHandler::update);
+
+    connect(workspace(), &QObject::destroyed, this, &InputDeviceHandler::resetInited);
+    connect(waylandServer(), &QObject::destroyed, this, &InputDeviceHandler::resetInited);
+}
+
+void InputDeviceHandler::resetInited()
+{
+    m_inited = false;
 }
 
 bool InputDeviceHandler::setAt(Toplevel *toplevel)
