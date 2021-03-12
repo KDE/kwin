@@ -2041,8 +2041,6 @@ InputRedirection::InputRedirection(QObject *parent)
 InputRedirection::~InputRedirection()
 {
     s_self = nullptr;
-    qDeleteAll(m_filters);
-    qDeleteAll(m_spies);
 }
 
 void InputRedirection::installInputEventFilter(InputEventFilter *filter)
