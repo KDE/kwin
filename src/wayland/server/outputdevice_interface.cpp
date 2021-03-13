@@ -17,7 +17,7 @@
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 3;
+static const quint32 s_version = 4;
 
 class OutputDeviceInterfacePrivate : public QtWaylandServer::org_kde_kwin_outputdevice
 {
@@ -35,6 +35,7 @@ public:
     void updateSerialNumber();
     void updateCapabilities();
     void updateOverscan();
+    void updateVrrPolicy();
 
     void sendGeometry(Resource *resource);
     void sendMode(Resource *resource, const OutputDeviceInterface::Mode &mode);
@@ -48,6 +49,7 @@ public:
     void sendSerialNumber(Resource *resource);
     void sendCapabilities(Resource *resource);
     void sendOverscan(Resource *resource);
+    void sendVrrPolicy(Resource *resource);
 
     static OutputDeviceInterface *get(wl_resource *native);
 
@@ -69,6 +71,8 @@ public:
     QUuid uuid;
     OutputDeviceInterface::Capabilities capabilities;
     uint32_t overscan = 0;
+    OutputDeviceInterface::VrrPolicy vrrPolicy = OutputDeviceInterface::VrrPolicy::Automatic;
+
     QPointer<Display> display;
     OutputDeviceInterface *q;
 
@@ -323,6 +327,7 @@ void OutputDeviceInterfacePrivate::org_kde_kwin_outputdevice_bind_resource(Resou
     sendEnabled(resource);
     sendCapabilities(resource);
     sendOverscan(resource);
+    sendVrrPolicy(resource);
     sendDone(resource);
 }
 
@@ -698,6 +703,36 @@ void OutputDeviceInterfacePrivate::updateOverscan()
     const auto clientResources = resourceMap();
     for (const auto &resource : clientResources) {
         sendOverscan(resource);
+    }
+}
+
+void OutputDeviceInterfacePrivate::sendVrrPolicy(Resource *resource)
+{
+    if (resource->version() < ORG_KDE_KWIN_OUTPUTDEVICE_VRR_POLICY_SINCE_VERSION) {
+        return;
+    }
+    send_vrr_policy(resource->handle, static_cast<uint32_t>(vrrPolicy));
+}
+
+OutputDeviceInterface::VrrPolicy OutputDeviceInterface::vrrPolicy() const
+{
+    return d->vrrPolicy;
+}
+
+void OutputDeviceInterface::setVrrPolicy(VrrPolicy policy)
+{
+    if (d->vrrPolicy != policy) {
+        d->vrrPolicy = policy;
+        d->updateVrrPolicy();
+        emit vrrPolicyChanged();
+    }
+}
+
+void OutputDeviceInterfacePrivate::updateVrrPolicy()
+{
+    const auto clientResources = resourceMap();
+    for (const auto &resource : clientResources) {
+        sendVrrPolicy(resource);
     }
 }
 

@@ -67,6 +67,12 @@ public:
      */
     bool overscanChanged() const;
 
+    /**
+     *  Whether the vrrPolicy() property of the outputdevice changed.
+     * @returns @c true if the vrrPolicy() property of the outputdevice has changed.
+     */
+    bool vrrPolicyChanged() const;
+
     /** The new value for enabled. */
     OutputDeviceInterface::Enablement enabled() const;
 
@@ -83,12 +89,14 @@ public:
      */
     qreal scaleF() const;
     
-    /** The new value for colorCurves.
-     */
+    /** The new value for colorCurves. */
     OutputDeviceInterface::ColorCurves colorCurves() const;
 
     /** the overscan value in % */
     uint32_t overscan() const;
+
+    /** The new value for vrrPolicy */
+    OutputDeviceInterface::VrrPolicy vrrPolicy() const;
 
 private:
     friend class OutputConfigurationInterfacePrivate;

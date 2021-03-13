@@ -25,6 +25,7 @@ public:
     qreal scale;
     OutputDeviceInterface::ColorCurves colorCurves;
     uint32_t overscan;
+    OutputDeviceInterface::VrrPolicy vrrPolicy = OutputDeviceInterface::VrrPolicy::Automatic;
 };
 
 }

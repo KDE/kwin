@@ -100,4 +100,14 @@ uint32_t OutputChangeSet::overscan() const
     return d->overscan;
 }
 
+bool OutputChangeSet::vrrPolicyChanged() const
+{
+    return d->vrrPolicy != d->outputDevice->vrrPolicy();
+}
+
+OutputDeviceInterface::VrrPolicy OutputChangeSet::vrrPolicy() const
+{
+    return d->vrrPolicy;
+}
+
 }

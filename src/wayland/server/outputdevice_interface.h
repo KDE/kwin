@@ -45,6 +45,7 @@ class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public QObject
     Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
     Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities NOTIFY capabilitiesChanged)
     Q_PROPERTY(uint32_t overscan READ overscan WRITE setOverscan NOTIFY overscanChanged)
+    Q_PROPERTY(VrrPolicy vrrPolicy READ vrrPolicy WRITE setVrrPolicy NOTIFY vrrPolicyChanged)
 public:
     enum class SubPixel {
         Unknown,
@@ -90,9 +91,16 @@ public:
     };
     enum class Capability {
         Overscan = 0x1,
+        Vrr = 0x2,
     };
     Q_ENUM(Capability)
     Q_DECLARE_FLAGS(Capabilities, Capability)
+    enum class VrrPolicy {
+        Never = 0,
+        Always = 1,
+        Automatic = 2
+    };
+    Q_ENUM(VrrPolicy)
 
     explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
     ~OutputDeviceInterface() override;
@@ -119,6 +127,7 @@ public:
 
     Capabilities capabilities() const;
     uint32_t overscan() const;
+    VrrPolicy vrrPolicy() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -152,6 +161,7 @@ public:
 
     void setCapabilities(Capabilities cap);
     void setOverscan(uint32_t overscan);
+    void setVrrPolicy(VrrPolicy policy);
 
     static OutputDeviceInterface *get(wl_resource *native);
     static QList<OutputDeviceInterface *>list();
@@ -179,6 +189,7 @@ Q_SIGNALS:
 
     void capabilitiesChanged();
     void overscanChanged();
+    void vrrPolicyChanged();
 
 private:
     QScopedPointer<OutputDeviceInterfacePrivate> d;

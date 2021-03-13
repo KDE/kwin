@@ -45,6 +45,7 @@ protected:
     void org_kde_kwin_outputconfiguration_apply(Resource *resource) override;
     void org_kde_kwin_outputconfiguration_scalef(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale) override;
     void org_kde_kwin_outputconfiguration_colorcurves(Resource *resource, wl_resource *outputdevice, wl_array *red, wl_array *green, wl_array *blue) override;
+    void org_kde_kwin_outputconfiguration_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy) override;
     void org_kde_kwin_outputconfiguration_destroy(Resource *resource) override;
     void org_kde_kwin_outputconfiguration_destroy_resource(Resource *resource) override;
     void org_kde_kwin_outputconfiguration_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan) override;
@@ -192,6 +193,17 @@ void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_overs
     }
     OutputDeviceInterface *output = OutputDeviceInterface::get(outputdevice);
     pendingChanges(output)->d->overscan = overscan;
+}
+
+void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy)
+{
+    Q_UNUSED(resource)
+    if (policy > static_cast<uint32_t>(OutputDeviceInterface::VrrPolicy::Automatic)) {
+        qCWarning(KWAYLAND_SERVER) << "Invalid Vrr Policy requested:" << policy;
+        return;
+    }
+    OutputDeviceInterface *output = OutputDeviceInterface::get(outputdevice);
+    pendingChanges(output)->d->vrrPolicy = static_cast<OutputDeviceInterface::VrrPolicy>(policy);
 }
 
 void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_destroy(Resource *resource)

@@ -16,7 +16,7 @@
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 2;
+static const quint32 s_version = 4;
 
 class OutputManagementInterfacePrivate : public QtWaylandServer::org_kde_kwin_outputmanagement
 {
