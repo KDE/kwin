@@ -810,10 +810,10 @@ TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareId(quint64 hardwareI
     return nullptr;
 }
 
-TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardwareSerial) const
+TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const
 {
     for (TabletToolV2Interface *tool : qAsConst(d->m_tools)) {
-        if (tool->d->hardwareSerial() == hardwareSerial)
+        if (tool->d->hardwareSerial() == hardwareSerial && tool->d->m_type == type)
             return tool;
     }
     return nullptr;
