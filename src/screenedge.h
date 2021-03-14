@@ -359,7 +359,11 @@ Q_SIGNALS:
     void checkBlocking();
 
 private:
-    enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
+    enum {
+        ElectricDisabled = 0,
+        ElectricMoveOnly = 1,
+        ElectricAlways = 2,
+    };
     void setDesktopSwitching(bool enable);
     void setDesktopSwitchingMovingClients(bool enable);
     void setCursorPushBackDistance(const QSize &distance);

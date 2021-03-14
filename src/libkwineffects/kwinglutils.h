@@ -562,7 +562,7 @@ private:
 enum VertexAttributeType {
     VA_Position = 0,
     VA_TexCoord = 1,
-    VertexAttributeCount = 2
+    VertexAttributeCount = 2,
 };
 
 /**

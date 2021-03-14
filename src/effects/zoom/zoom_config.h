@@ -38,7 +38,11 @@ public Q_SLOTS:
 
 private:
     ZoomEffectConfigForm* m_ui;
-    enum MouseTracking { MouseCentred = 0, MouseProportional = 1, MouseDisabled = 2 };
+    enum MouseTracking {
+        MouseCentred = 0,
+        MouseProportional = 1,
+        MouseDisabled = 2,
+    };
 };
 
 } // namespace

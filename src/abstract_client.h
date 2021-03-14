@@ -619,7 +619,10 @@ public:
 
     void placeIn(const QRect &area);
 
-    enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
+    enum ForceGeometry_t {
+        NormalGeometrySet,
+        ForceGeometrySet,
+    };
     virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
     void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
     virtual void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet) = 0;

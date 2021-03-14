@@ -99,9 +99,18 @@ private:
     double source_zoom;
     bool polling; // Mouse polling
     double zoomFactor;
-    enum MouseTrackingType { MouseTrackingProportional = 0, MouseTrackingCentred = 1, MouseTrackingPush = 2, MouseTrackingDisabled = 3 };
+    enum MouseTrackingType {
+        MouseTrackingProportional = 0,
+        MouseTrackingCentred = 1,
+        MouseTrackingPush = 2,
+        MouseTrackingDisabled = 3,
+    };
     MouseTrackingType mouseTracking;
-    enum MousePointerType { MousePointerScale = 0, MousePointerKeep = 1, MousePointerHide = 2 };
+    enum MousePointerType {
+        MousePointerScale = 0,
+        MousePointerKeep = 1,
+        MousePointerHide = 2,
+    };
     MousePointerType mousePointer;
     int focusDelay;
     QPoint cursorPoint;

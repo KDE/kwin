@@ -43,7 +43,7 @@ enum class Predicate {
     WindowMatch,
     WrapperIdMatch,
     FrameIdMatch,
-    InputIdMatch
+    InputIdMatch,
 };
 
 class KWIN_EXPORT X11Client : public AbstractClient

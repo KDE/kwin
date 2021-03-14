@@ -141,7 +141,12 @@ class OpenGLWindow final : public Scene::Window
     Q_OBJECT
 
 public:
-    enum Leaf { ShadowLeaf, DecorationLeaf, ContentLeaf, PreviousContentLeaf };
+    enum Leaf {
+        ShadowLeaf,
+        DecorationLeaf,
+        ContentLeaf,
+        PreviousContentLeaf,
+    };
 
     struct RenderNode
     {

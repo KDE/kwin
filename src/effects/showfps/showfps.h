@@ -38,7 +38,14 @@ public:
     void paintScreen(int mask, const QRegion &region, ScreenPaintData& data) override;
     void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) override;
     void postPaintScreen() override;
-    enum { INSIDE_GRAPH, NOWHERE, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }; // fps text position
+    enum {
+        INSIDE_GRAPH,
+        NOWHERE,
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+    }; // fps text position
 
     // for properties
     qreal configuredAlpha() const {
@@ -73,11 +80,15 @@ private:
     void paintGraph(int x, int y, QList<int> values, QList<int> lines, bool colorize);
     QImage fpsTextImage(int fps);
     QElapsedTimer t;
-    enum { NUM_PAINTS = 100 }; // remember time needed to paint this many paints
+    enum {
+        NUM_PAINTS = 100,
+    }; // remember time needed to paint this many paints
     int paints[ NUM_PAINTS ]; // time needed to paint
     int paint_size[ NUM_PAINTS ]; // number of pixels painted
     int paints_pos;  // position in the queue
-    enum { MAX_FPS = 200 };
+    enum {
+        MAX_FPS = 200,
+    };
     qint64 frames[ MAX_FPS ]; // the time when the frame was done
     int frames_pos; // position in the queue
     double alpha;

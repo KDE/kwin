@@ -39,13 +39,13 @@ enum CompositingType {
     OpenGLCompositing = 1,
     XRenderCompositing = 1<<1,
     QPainterCompositing = 1<< 2,
-    OpenGL2Compositing = 1<<3 | OpenGLCompositing
+    OpenGL2Compositing = 1<<3 | OpenGLCompositing,
 };
 
 enum OpenGLPlatformInterface {
     NoOpenGLPlatformInterface = 0,
     GlxPlatformInterface,
-    EglPlatformInterface
+    EglPlatformInterface,
 };
 
 enum clientAreaOption {
@@ -57,7 +57,7 @@ enum clientAreaOption {
     // these below don't depend on xinerama settings
     WorkArea,              // whole workarea (all screens together)
     FullArea,              // whole area (all screens together), ignore struts
-    ScreenArea             // one whole screen, ignore struts
+    ScreenArea,            // one whole screen, ignore struts
 };
 
 enum ElectricBorder {
@@ -70,7 +70,7 @@ enum ElectricBorder {
     ElectricLeft,
     ElectricTopLeft,
     ELECTRIC_COUNT,
-    ElectricNone
+    ElectricNone,
 };
 
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.
@@ -84,7 +84,7 @@ enum ElectricBorderAction {
     ElectricActionKRunner,       // Open KRunner
     ElectricActionActivityManager, // Activity Manager
     ElectricActionApplicationLauncher, // Application Launcher
-    ELECTRIC_ACTION_COUNT
+    ELECTRIC_ACTION_COUNT,
 };
 
 // DesktopMode and WindowsMode are based on the order in which the desktop
@@ -96,13 +96,13 @@ enum TabBoxMode {
     TabBoxWindowsMode,                      // Primary window switching mode
     TabBoxWindowsAlternativeMode,           // Secondary window switching mode
     TabBoxCurrentAppWindowsMode,            // Same as primary window switching mode but only for windows of current application
-    TabBoxCurrentAppWindowsAlternativeMode  // Same as secondary switching mode but only for windows of current application
+    TabBoxCurrentAppWindowsAlternativeMode,  // Same as secondary switching mode but only for windows of current application
 };
 
 enum KWinOption {
     CloseButtonCorner,
     SwitchDesktopOnScreenEdge,
-    SwitchDesktopOnScreenEdgeMovingWindows
+    SwitchDesktopOnScreenEdgeMovingWindows,
 };
 
 /**
@@ -112,7 +112,7 @@ enum PointerAxisDirection {
     PointerAxisUp,
     PointerAxisDown,
     PointerAxisLeft,
-    PointerAxisRight
+    PointerAxisRight,
 };
 
 /**
@@ -124,7 +124,7 @@ enum class SwipeDirection {
     Down,
     Left,
     Up,
-    Right
+    Right,
 };
 
 /**
@@ -134,7 +134,7 @@ enum class SwipeDirection {
 enum class SessionState {
     Normal,
     Saving,
-    Quitting
+    Quitting,
 };
 Q_ENUM_NS(SessionState)
 

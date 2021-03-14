@@ -45,7 +45,7 @@ enum Layer {
     CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
     OnScreenDisplayLayer, // layer for On Screen Display windows such as volume feedback
     UnmanagedLayer, // layer for override redirect windows.
-    NumLayers // number of layers, must be last
+    NumLayers, // number of layers, must be last
 };
 
 enum StrutArea {
@@ -54,7 +54,7 @@ enum StrutArea {
     StrutAreaRight   = 1 << 1,
     StrutAreaBottom  = 1 << 2,
     StrutAreaLeft    = 1 << 3,
-    StrutAreaAll     = StrutAreaTop | StrutAreaRight | StrutAreaBottom | StrutAreaLeft
+    StrutAreaAll     = StrutAreaTop | StrutAreaRight | StrutAreaBottom | StrutAreaLeft,
 };
 Q_DECLARE_FLAGS(StrutAreas, StrutArea)
 
@@ -73,7 +73,6 @@ private:
 };
 typedef QVector<StrutRect> StrutRects;
 
-
 enum ShadeMode {
     ShadeNone, // not shaded
     ShadeNormal, // normally shaded - isShade() is true only here
@@ -91,7 +90,7 @@ enum MaximizeMode {
     MaximizeVertical   = 1, ///< The window is maximized vertically.
     MaximizeHorizontal = 2, ///< The window is maximized horizontally.
     /// Equal to @p MaximizeVertical | @p MaximizeHorizontal
-    MaximizeFull = MaximizeVertical | MaximizeHorizontal
+    MaximizeFull = MaximizeVertical | MaximizeHorizontal,
 };
 
 inline

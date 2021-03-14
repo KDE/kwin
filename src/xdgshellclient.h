@@ -109,7 +109,10 @@ class XdgToplevelClient final : public XdgSurfaceClient
 {
     Q_OBJECT
 
-    enum class PingReason { CloseWindow, FocusWindow };
+    enum class PingReason {
+        CloseWindow,
+        FocusWindow,
+    };
 
 public:
     explicit XdgToplevelClient(KWaylandServer::XdgToplevelInterface *shellSurface);

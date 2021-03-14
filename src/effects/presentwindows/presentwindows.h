@@ -109,7 +109,11 @@ public:
         return 70;
     }
 
-    enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
+    enum {
+        LayoutNatural,
+        LayoutRegularGrid,
+        LayoutFlexibleGrid,
+    }; // Layout modes
     enum PresentWindowsMode {
         ModeAllDesktops, // Shows windows of all desktops
         ModeCurrentDesktop, // Shows windows on current desktop

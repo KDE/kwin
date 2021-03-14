@@ -53,8 +53,15 @@ public:
         return 50;
     }
 
-    enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
-    enum { SwitchDesktopAndActivateWindow, SwitchDesktopOnly }; // Click behavior
+    enum {
+        LayoutPager,
+        LayoutAutomatic,
+        LayoutCustom,
+    }; // Layout modes
+    enum {
+        SwitchDesktopAndActivateWindow,
+        SwitchDesktopOnly,
+    }; // Click behavior
 
     // for properties
     int configuredZoomDuration() const {

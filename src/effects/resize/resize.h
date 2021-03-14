@@ -50,7 +50,10 @@ public Q_SLOTS:
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);
 
 private:
-    enum Feature { TextureScale = 1 << 0, Outline = 1 << 1 };
+    enum Feature {
+        TextureScale = 1 << 0,
+        Outline = 1 << 1,
+    };
     bool m_active;
     int m_features;
     EffectWindow* m_resizeWindow;

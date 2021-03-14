@@ -35,7 +35,7 @@ class GLTexturePrivate;
 
 enum TextureCoordinateType {
     NormalizedCoordinates = 0,
-    UnnormalizedCoordinates
+    UnnormalizedCoordinates,
 };
 
 class KWINGLUTILS_EXPORT GLTexture

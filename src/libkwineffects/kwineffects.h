@@ -184,7 +184,7 @@ enum WindowQuadType {
     WindowQuadContents,
     WindowQuadDecoration,
     // Shadow Quad types
-    WindowQuadShadow,             // OpenGL only. The other shadow types are only used by Xrender
+    WindowQuadShadow, // OpenGL only. The other shadow types are only used by Xrender
     WindowQuadShadowTop,
     WindowQuadShadowTopRight,
     WindowQuadShadowRight,

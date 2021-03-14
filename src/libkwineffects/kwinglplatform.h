@@ -71,7 +71,7 @@ enum GLFeature {
      * - GL_CLAMP_TO_EDGE
      * - GL_CLAMP_TO_BORDER
      */
-    LimitedNPOT
+    LimitedNPOT,
 };
 
 enum Driver {
@@ -93,9 +93,10 @@ enum Driver {
     Driver_Qualcomm,
     Driver_RadeonSI,
     Driver_Virgl,
-    Driver_Unknown
+    Driver_Unknown,
 };
 
+// clang-format off
 enum ChipClass {
     // Radeon
     R100          = 0,      // GL1.3         DX7                   2000
@@ -155,8 +156,9 @@ enum ChipClass {
     Adreno5XX,              // GLES3.1 CL2.0 DX11.2
     UnknownAdreno = 3999,
 
-    UnknownChipClass = 99999
+    UnknownChipClass = 99999,
 };
+// clang-format on
 
 
 class KWINGLUTILS_EXPORT GLPlatform
