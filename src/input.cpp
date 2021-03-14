@@ -1615,6 +1615,31 @@ public:
             qCCritical(KWIN_CORE) << "Could not find tablet to remove" << sysname;
     }
 
+    KWaylandServer::TabletToolV2Interface::Type getType(const KWin::TabletToolId &tabletToolId) {
+        using Type = KWaylandServer::TabletToolV2Interface::Type;
+        switch (tabletToolId.m_toolType) {
+        case InputRedirection::Pen:
+            return Type::Pen;
+        case InputRedirection::Eraser:
+            return Type::Eraser;
+        case InputRedirection::Brush:
+            return Type::Brush;
+        case InputRedirection::Pencil:
+            return Type::Pencil;
+        case InputRedirection::Airbrush:
+            return Type::Airbrush;
+        case InputRedirection::Finger:
+            return Type::Finger;
+        case InputRedirection::Mouse:
+            return Type::Mouse;
+        case InputRedirection::Lens:
+            return Type::Lens;
+        case InputRedirection::Totem:
+            return Type::Totem;
+        }
+        return Type::Pen;
+    }
+
     KWaylandServer::TabletToolV2Interface *createTool(const KWin::TabletToolId &tabletToolId)
     {
         using namespace KWaylandServer;
@@ -1641,37 +1666,7 @@ public:
         ifaceCapabilities.resize(tabletToolId.m_capabilities.size());
         std::transform(tabletToolId.m_capabilities.constBegin(), tabletToolId.m_capabilities.constEnd(), ifaceCapabilities.begin(), f);
 
-        TabletToolV2Interface::Type toolType = TabletToolV2Interface::Type::Pen;
-        switch (tabletToolId.m_toolType) {
-        case InputRedirection::Pen:
-            toolType = TabletToolV2Interface::Type::Pen;
-            break;
-        case InputRedirection::Eraser:
-            toolType = TabletToolV2Interface::Type::Eraser;
-            break;
-        case InputRedirection::Brush:
-            toolType = TabletToolV2Interface::Type::Brush;
-            break;
-        case InputRedirection::Pencil:
-            toolType = TabletToolV2Interface::Type::Pencil;
-            break;
-        case InputRedirection::Airbrush:
-            toolType = TabletToolV2Interface::Type::Airbrush;
-            break;
-        case InputRedirection::Finger:
-            toolType = TabletToolV2Interface::Type::Finger;
-            break;
-        case InputRedirection::Mouse:
-            toolType = TabletToolV2Interface::Type::Mouse;
-            break;
-        case InputRedirection::Lens:
-            toolType = TabletToolV2Interface::Type::Lens;
-            break;
-        case InputRedirection::Totem:
-            toolType = TabletToolV2Interface::Type::Totem;
-            break;
-        }
-        TabletToolV2Interface *tool = tabletSeat->addTool(toolType, tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities);
+        TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities);
 
         const auto cursor = new Cursor(tool);
         Cursors::self()->addCursor(cursor);
@@ -1722,7 +1717,7 @@ public:
             qCCritical(KWIN_CORE) << "Could not find tablet manager";
             return false;
         }
-        auto tool = tabletSeat->toolByHardwareSerial(event->tabletId().m_serialId);
+        auto tool = tabletSeat->toolByHardwareSerial(event->tabletId().m_serialId, getType(event->tabletId()));
         if (!tool) {
             tool = createTool(event->tabletId());
         }
@@ -1806,7 +1801,7 @@ public:
     bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId) override
     {
         KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
-        auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId);
+        auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId, getType(tabletToolId));
         if (!tool) {
             tool = createTool(tabletToolId);
         }
