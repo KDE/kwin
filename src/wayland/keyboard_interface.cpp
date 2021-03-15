@@ -71,8 +71,6 @@ void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 seri
     for (Resource *keyboardResource : keyboards) {
         send_enter(keyboardResource->handle, serial, surface->resource(), data);
     }
-
-    sendModifiers();
 }
 
 void KeyboardInterface::setKeymap(const QByteArray &content)
@@ -167,6 +165,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     });
 
     d->sendEnter(d->focusedSurface, serial);
+    d->sendModifiers();
 }
 
 QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
