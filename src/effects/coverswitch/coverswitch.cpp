@@ -106,15 +106,14 @@ void CoverSwitchEffect::reconfigure(ReconfigureFlags)
 
 void CoverSwitchEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
-    std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
-    if (lastPresentTime.count()) {
-        delta = presentTime - lastPresentTime;
-    }
-    lastPresentTime = presentTime;
-
     if (mActivated || stop || stopRequested) {
         data.mask |= Effect::PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
         if (animation || start || stop) {
+            std::chrono::milliseconds delta = std::chrono::milliseconds::zero();
+            if (lastPresentTime.count()) {
+                delta = presentTime - lastPresentTime;
+            }
+            lastPresentTime = presentTime;
             timeLine.update(delta);
         }
         if (selected_window == nullptr)
@@ -284,6 +283,7 @@ void CoverSwitchEffect::postPaintScreen()
     if ((mActivated && (animation || start)) || stop || stopRequested) {
         if (timeLine.done()) {
             timeLine.reset();
+            lastPresentTime = std::chrono::milliseconds::zero();
             if (stop) {
                 stop = false;
                 effects->setActiveFullScreenEffect(nullptr);
@@ -292,7 +292,6 @@ void CoverSwitchEffect::postPaintScreen()
                 }
                 referrencedWindows.clear();
                 currentWindowList.clear();
-                lastPresentTime = std::chrono::milliseconds::zero();
                 if (startRequested) {
                     startRequested = false;
                     mActivated = true;
