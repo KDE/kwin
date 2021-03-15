@@ -366,6 +366,7 @@ target_link_libraries(testXkb
     KF5::WindowSystem
 
     XKB::XKB
+    Qt5::XkbCommonSupportPrivate
 )
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)

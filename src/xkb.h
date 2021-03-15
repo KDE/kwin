@@ -54,11 +54,12 @@ public:
         return m_keysym;
     }
     QString toString(xkb_keysym_t keysym);
-    Qt::Key toQtKey(xkb_keysym_t keysym) const;
-    xkb_keysym_t fromQtKey(Qt::Key key, Qt::KeyboardModifiers mods) const;
-    xkb_keysym_t fromKeyEvent(QKeyEvent *event) const;
+    Qt::Key toQtKey(xkb_keysym_t keysym,
+                    uint32_t scanCode = 0,
+                    Qt::KeyboardModifiers modifiers = Qt::KeyboardModifiers(),
+                    bool superAsMeta = false) const;
     Qt::KeyboardModifiers modifiers() const;
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts(uint32_t scanCode = 0) const;
     bool shouldKeyRepeat(quint32 key) const;
 
     void switchToNextLayout();

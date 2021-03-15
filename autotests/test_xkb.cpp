@@ -19,8 +19,6 @@ class XkbTest : public QObject
 private Q_SLOTS:
     void testToQtKey_data();
     void testToQtKey();
-    void testFromQtKey_data();
-    void testFromQtKey();
 };
 
 // from kwindowsystem/src/platforms/xcb/kkeyserver.cpp
@@ -478,25 +476,6 @@ void XkbTest::testToQtKey()
     Xkb xkb;
     QFETCH(xkb_keysym_t, keySym);
     QTEST(xkb.toQtKey(keySym), "qt");
-}
-
-void XkbTest::testFromQtKey_data()
-{
-    QTest::addColumn<Qt::Key>("qt");
-    QTest::addColumn<xkb_keysym_t>("keySym");
-    QTest::addColumn<Qt::KeyboardModifiers>("modifiers");
-    for (std::size_t i = 0; i < sizeof(g_rgQtToSymX) / sizeof(TransKey); i++) {
-        const QByteArray row = QByteArray::number(g_rgQtToSymX[i].keySymX, 16);
-        QTest::newRow(row.constData()) << g_rgQtToSymX[i].keySymQt << g_rgQtToSymX[i].keySymX << g_rgQtToSymX[i].modifiers;
-    }
-}
-
-void XkbTest::testFromQtKey()
-{
-    Xkb xkb;
-    QFETCH(Qt::Key, qt);
-    QFETCH(Qt::KeyboardModifiers, modifiers);
-    QTEST(xkb.fromQtKey(qt, modifiers), "keySym");
 }
 
 QTEST_MAIN(XkbTest)

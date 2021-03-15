@@ -227,6 +227,7 @@ target_link_libraries(kwin
     Libinput::Libinput
     UDev::UDev
     XKB::XKB
+    Qt5::XkbCommonSupportPrivate
     epoxy::epoxy
 
     Threads::Threads

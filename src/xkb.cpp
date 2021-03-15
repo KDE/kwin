@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "xkb.h"
-#include "xkb_qt_mapping.h"
 #include "utils.h"
 // frameworks
 #include <KConfigGroup>
@@ -17,6 +16,7 @@
 // Qt
 #include <QTemporaryFile>
 #include <QKeyEvent>
+#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
 // xkbcommon
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
@@ -353,7 +353,7 @@ void Xkb::updateModifiers()
     if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::MetaModifier;
     }
-    if (isKeypadKey(m_keysym)) {
+    if (m_keysym >= XKB_KEY_KP_Space && m_keysym <= XKB_KEY_KP_9) {
         mods |= Qt::KeypadModifier;
     }
     m_modifiers = mods;
@@ -427,7 +427,7 @@ void Xkb::updateConsumedModifiers(uint32_t key)
     m_consumedModifiers = mods;
 }
 
-Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
+Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode) const
 {
     if (!m_state) {
         return Qt::NoModifier;
@@ -452,7 +452,7 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts() const
         // in that case the shift should be removed from the consumed modifiers again
         // otherwise it would not be possible to trigger e.g. Shift+W as a shortcut
         // see BUG: 370341
-        if (QChar(toQtKey(m_keysym)).isLetter()) {
+        if (QChar(toQtKey(m_keysym, scanCode, Qt::ControlModifier)).isLetter()) {
             consumedMods = Qt::KeyboardModifiers();
         }
     }
@@ -481,24 +481,28 @@ QString Xkb::toString(xkb_keysym_t keysym)
     return QString::fromUtf8(byteArray.constData());
 }
 
-Qt::Key Xkb::toQtKey(xkb_keysym_t keysym) const
+Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
+                     uint32_t scanCode,
+                     Qt::KeyboardModifiers modifiers,
+                     bool superAsMeta) const
 {
-    return xkbToQtKey(keysym);
-}
+    // FIXME: passing superAsMeta doesn't have impact due to bug in the Qt function, so handle it below
+    Qt::Key qtKey = Qt::Key( QXkbCommon::keysymToQtKey(keySym, modifiers, m_state, scanCode + 8, superAsMeta) );
 
-xkb_keysym_t Xkb::fromQtKey(Qt::Key key, Qt::KeyboardModifiers mods) const
-{
-    return qtKeyToXkb(key, mods);
-}
-
-xkb_keysym_t Xkb::fromKeyEvent(QKeyEvent *event) const
-{
-    xkb_keysym_t sym = xkb_keysym_from_name(event->text().toUtf8().constData(), XKB_KEYSYM_NO_FLAGS);
-    if (sym == XKB_KEY_NoSymbol) {
-        // mapping from text failed, try mapping through KKeyServer
-        sym = fromQtKey(Qt::Key(event->key() & ~Qt::KeyboardModifierMask), event->modifiers());
+    // FIXME: workarounds for symbols currently wrong/not mappable via keysymToQtKey()
+    if (superAsMeta && (qtKey == Qt::Key_Super_L || qtKey == Qt::Key_Super_R)) {
+        // translate Super/Hyper keys to Meta if we're using them as the MetaModifier
+        qtKey = Qt::Key_Meta;
+    } else if (qtKey > 0xff && keySym <= 0xff) {
+        // XKB_KEY_mu, XKB_KEY_ydiaeresis go here
+        qtKey = Qt::Key(keySym);
+#if QT_VERSION_MAJOR < 6	// since Qt 5 LTS is frozen
+    } else if (keySym == XKB_KEY_Sys_Req) {
+        // fixed in QTBUG-92087
+        qtKey = Qt::Key_SysReq;
+#endif
     }
-    return sym;
+    return qtKey;
 }
 
 bool Xkb::shouldKeyRepeat(quint32 key) const

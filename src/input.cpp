@@ -990,11 +990,10 @@ class InternalWindowEventFilter : public InputEventFilter {
             return false;
         }
         auto xkb = input()->keyboard()->xkb();
-        Qt::Key key = xkb->toQtKey(xkb->toKeysym(event->nativeScanCode()));
-        if (key == Qt::Key_Super_L || key == Qt::Key_Super_R) {
-            // workaround for QTBUG-62102
-            key = Qt::Key_Meta;
-        }
+        Qt::Key key = xkb->toQtKey( xkb->toKeysym(event->nativeScanCode()),
+                                    event->nativeScanCode(),
+                                    Qt::KeyboardModifiers(),
+                                    true /* workaround for QTBUG-62102 */ );
         QKeyEvent internalEvent(event->type(), key,
                                 event->modifiers(), event->nativeScanCode(), event->nativeVirtualKey(),
                                 event->nativeModifiers(), event->text());
