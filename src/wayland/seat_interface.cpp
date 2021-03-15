@@ -807,7 +807,9 @@ quint32 SeatInterface::pointerButtonSerial(quint32 button) const
 
 void SeatInterface::relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto relativePointer = RelativePointerV1Interface::get(pointer());
     if (relativePointer) {
@@ -817,7 +819,9 @@ void SeatInterface::relativePointerMotion(const QSizeF &delta, const QSizeF &del
 
 void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
@@ -827,7 +831,9 @@ void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
 
 void SeatInterface::updatePointerSwipeGesture(const QSizeF &delta)
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
@@ -837,7 +843,9 @@ void SeatInterface::updatePointerSwipeGesture(const QSizeF &delta)
 
 void SeatInterface::endPointerSwipeGesture()
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
@@ -847,7 +855,9 @@ void SeatInterface::endPointerSwipeGesture()
 
 void SeatInterface::cancelPointerSwipeGesture()
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
@@ -857,7 +867,9 @@ void SeatInterface::cancelPointerSwipeGesture()
 
 void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
@@ -867,7 +879,9 @@ void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
 
 void SeatInterface::updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation)
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
@@ -877,7 +891,9 @@ void SeatInterface::updatePointerPinchGesture(const QSizeF &delta, qreal scale, 
 
 void SeatInterface::endPointerPinchGesture()
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
@@ -887,7 +903,9 @@ void SeatInterface::endPointerPinchGesture()
 
 void SeatInterface::cancelPointerPinchGesture()
 {
-    Q_ASSERT(d->pointer);
+    if (!d->pointer) {
+        return;
+    }
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
