@@ -109,9 +109,6 @@ void KeyboardInterfacePrivate::sendKeymap(int fd, quint32 size)
 
 void KeyboardInterfacePrivate::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial)
 {
-    if (!focusedSurface) {
-        return;
-    }
     const QList<Resource *> keyboards = keyboardsForClient(focusedSurface->client());
     for (Resource *keyboardResource : keyboards) {
         send_modifiers(keyboardResource->handle, serial, depressed, latched, locked, group);
