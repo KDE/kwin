@@ -21,6 +21,7 @@ class PlasmaShellInterfacePrivate : public QtWaylandServer::org_kde_plasma_shell
 public:
     PlasmaShellInterfacePrivate(PlasmaShellInterface *q, Display *display);
 
+    QList<PlasmaShellSurfaceInterface *> shellSurfaces;
 
 private:
     void org_kde_plasma_shell_get_surface(Resource * resource, uint32_t id, struct ::wl_resource *surface) override;
@@ -77,9 +78,24 @@ void PlasmaShellInterfacePrivate::org_kde_plasma_shell_get_surface(QtWaylandServ
         wl_resource_post_error(resource->handle, 0, "Invalid  surface");
         return;
     }
+
+    auto it = std::find_if(shellSurfaces.constBegin(), shellSurfaces.constEnd(), [&s](PlasmaShellSurfaceInterface *shellSurface) {
+        return shellSurface->surface() == s;
+    });
+    if (it != shellSurfaces.constEnd()) {
+        wl_resource_post_error(resource->handle, 0, "org_kde_plasma_shell_surface already exists");
+        return;
+    }
+
     wl_resource *shell_resource = wl_resource_create(resource->client(), &org_kde_plasma_surface_interface, resource->version(), id);
 
     auto shellSurface = new PlasmaShellSurfaceInterface(s, shell_resource);
+    shellSurfaces.append(shellSurface);
+
+    QObject::connect(shellSurface, &QObject::destroyed, q, [this, shellSurface]() {
+        shellSurfaces.removeOne(shellSurface);
+    });
+
     emit q->surfaceCreated(shellSurface);
 }
 
