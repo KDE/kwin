@@ -23,6 +23,11 @@ KeyboardInterfacePrivate::KeyboardInterfacePrivate(SeatInterface *s)
 {
 }
 
+void KeyboardInterfacePrivate::keyboard_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
 void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
 {
     const ClientConnection *focusedClient = focusedSurface ? focusedSurface->client() : nullptr;

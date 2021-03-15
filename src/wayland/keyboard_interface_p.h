@@ -63,6 +63,7 @@ public:
     QVector<quint32> pressedKeys() const;
 
 protected:
+    void keyboard_release(Resource *resource) override;
     void keyboard_bind_resource(Resource *resource) override;
 };
 
