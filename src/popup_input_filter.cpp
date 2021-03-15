@@ -8,8 +8,11 @@
 #include "abstract_client.h"
 #include "deleted.h"
 #include "internal_client.h"
+#include "wayland_server.h"
 #include "workspace.h"
 
+#include <KWaylandServer/keyboard_interface.h>
+#include <KWaylandServer/seat_interface.h>
 #include <QMouseEvent>
 
 namespace KWin
@@ -63,6 +66,34 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         }
     }
     return false;
+}
+
+bool PopupInputFilter::keyEvent(QKeyEvent *event)
+{
+    if (m_popupClients.isEmpty()) {
+        return false;
+    }
+
+    auto seat = waylandServer()->seat();
+
+    auto last = m_popupClients.last();
+    if (last->surface() == nullptr) {
+        return false;
+    }
+
+    seat->setFocusedKeyboardSurface(last->surface());
+    switch (event->type()) {
+    case QEvent::KeyPress:
+        seat->keyboard()->keyPressed(event->nativeScanCode());
+        break;
+    case QEvent::KeyRelease:
+        seat->keyboard()->keyReleased(event->nativeScanCode());
+        break;
+    default:
+        break;
+    }
+
+    return true;
 }
 
 void PopupInputFilter::cancelPopups()
