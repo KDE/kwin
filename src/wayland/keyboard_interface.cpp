@@ -9,7 +9,6 @@
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "surface_interface.h"
-#include "compositor_interface.h"
 // Qt
 #include <QTemporaryFile>
 #include <QVector>
@@ -52,21 +51,8 @@ QList<KeyboardInterfacePrivate::Resource *> KeyboardInterfacePrivate::keyboardsF
     return resourceMap().values(client->client());
 }
 
-void KeyboardInterfacePrivate::focusChildSurface(SurfaceInterface *childSurface, quint32 serial)
-{
-    if (focusedChildSurface == childSurface) {
-        return;
-    }
-    sendLeave(focusedChildSurface.data(), serial);
-    focusedChildSurface = QPointer<SurfaceInterface>(childSurface);
-    sendEnter(focusedChildSurface.data(), serial);
-}
-
 void KeyboardInterfacePrivate::sendLeave(SurfaceInterface *surface, quint32 serial)
 {
-    if (!surface) {
-        return;
-    }
     const QList<Resource *> keyboards = keyboardsForClient(surface->client());
     for (Resource *keyboardResource : keyboards) {
         send_leave(keyboardResource->handle, serial, surface->resource());
@@ -75,9 +61,6 @@ void KeyboardInterfacePrivate::sendLeave(SurfaceInterface *surface, quint32 seri
 
 void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 serial)
 {
-    if (!surface) {
-        return;
-    }
     const auto states = pressedKeys();
     QByteArray data = QByteArray::fromRawData(
         reinterpret_cast<const char*>(states.constData()),
@@ -169,22 +152,19 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
         return;
     }
 
-    d->sendLeave(d->focusedChildSurface, serial);
-    disconnect(d->destroyConnection);
-    d->focusedChildSurface.clear();
+    if (d->focusedSurface) {
+        d->sendLeave(d->focusedSurface, serial);
+        disconnect(d->destroyConnection);
+    }
+
     d->focusedSurface = surface;
     if (!d->focusedSurface) {
         return;
     }
-    d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this,
-        [this] {
-            CompositorInterface *compositor = d->focusedChildSurface->compositor();
-            d->sendLeave(d->focusedChildSurface.data(), compositor->display()->nextSerial());
-            d->focusedSurface = nullptr;
-            d->focusedChildSurface.clear();
-        }
-    );
-    d->focusedChildSurface = QPointer<SurfaceInterface>(surface);
+    d->destroyConnection = connect(d->focusedSurface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
+        d->sendLeave(d->focusedSurface, d->seat->display()->nextSerial());
+        d->focusedSurface = nullptr;
+    });
 
     d->sendEnter(d->focusedSurface, serial);
 }

@@ -30,7 +30,6 @@ public:
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
 
     QList<Resource *> keyboardsForClient(ClientConnection *client) const;
-    void focusChildSurface(SurfaceInterface *childSurface, quint32 serial);
     void sendLeave(SurfaceInterface *surface, quint32 serial);
     void sendEnter(SurfaceInterface *surface, quint32 serial);
 
@@ -38,7 +37,6 @@ public:
 
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
-    QPointer<SurfaceInterface> focusedChildSurface;
     QMetaObject::Connection destroyConnection;
     QScopedPointer<QTemporaryFile> keymap;
 
