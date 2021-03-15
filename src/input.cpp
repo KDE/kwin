@@ -292,11 +292,10 @@ public:
             if (pointerSurfaceAllowed()) {
                 // TODO: can we leak presses/releases here when we move the mouse in between from an allowed surface to
                 //       disallowed one or vice versa?
-                if (event->type() == QEvent::MouseButtonPress) {
-                    seat->notifyPointerPress(nativeButton);
-                } else {
-                    seat->notifyPointerRelease(nativeButton);
-                }
+                const auto state = event->type() == QEvent::MouseButtonPress
+                    ? KWaylandServer::PointerButtonState::Pressed
+                    : KWaylandServer::PointerButtonState::Released;
+                seat->notifyPointerButton(nativeButton, state);
                 seat->notifyPointerFrame();
             }
         }
@@ -1409,11 +1408,11 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->notifyPointerPress(nativeButton);
+            seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Pressed);
             seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
-            seat->notifyPointerRelease(nativeButton);
+            seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Released);
             seat->notifyPointerFrame();
             break;
         default:
@@ -1917,11 +1916,11 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->notifyPointerPress(nativeButton);
+            seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Pressed);
             seat->notifyPointerFrame();
             break;
         case QEvent::MouseButtonRelease:
-            seat->notifyPointerRelease(nativeButton);
+            seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Released);
             seat->notifyPointerFrame();
             break;
         default:
