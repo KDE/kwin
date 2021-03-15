@@ -1266,8 +1266,17 @@ public:
         // this is important for combinations like alt+shift to ensure that shift is not considered pressed
         passToWaylandServer(event);
 
+        auto key = (event->modifiers() | event->key());
+
+        // the key event will have inverted shift if caps lock is on, so
+        // we need to invert shift again to get it back to the actual state
+        // of the user holding shift on the keyboard.
+        if (input()->keyboard()->xkb()->leds() & KWin::Xkb::LED::CapsLock) {
+            key ^= Qt::ShiftModifier;
+        }
+
         if (event->type() == QEvent::KeyPress) {
-            TabBox::TabBox::self()->keyPress(event->modifiers() | event->key());
+            TabBox::TabBox::self()->keyPress(key);
         } else if (static_cast<KeyEvent*>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             TabBox::TabBox::self()->modifiersReleased();
         }
