@@ -889,7 +889,6 @@ SurfaceInterface *SeatInterface::focusedKeyboardSurface() const
 void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
 {
     if (!d->keyboard) {
-        qCWarning(KWAYLAND_SERVER) << "Can not set focused keyboard surface without keyboard capability";
         return;
     }
 
