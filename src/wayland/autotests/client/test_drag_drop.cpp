@@ -206,7 +206,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QVERIFY(buttonPressSpy.isValid());
     m_seatInterface->setFocusedPointerSurface(serverSurface);
     m_seatInterface->setTimestamp(2);
-    m_seatInterface->notifyPointerPress(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonPressSpy.wait());
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
@@ -267,7 +267,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
     QVERIFY(droppedSpy.isValid());
     m_seatInterface->setTimestamp(4);
-    m_seatInterface->notifyPointerRelease(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(sourceDropSpy.isEmpty());
     QVERIFY(droppedSpy.wait());
@@ -405,7 +405,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QVERIFY(buttonPressSpy.isValid());
     m_seatInterface->setFocusedPointerSurface(serverSurface);
     m_seatInterface->setTimestamp(2);
-    m_seatInterface->notifyPointerPress(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonPressSpy.wait());
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
@@ -474,7 +474,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
     QVERIFY(droppedSpy.isValid());
     m_seatInterface->setTimestamp(4);
-    m_seatInterface->notifyPointerRelease(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(!droppedSpy.wait(500));
 
@@ -527,7 +527,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
 
     // let's start the drag
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerPress(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.count(), 1);
@@ -536,10 +536,10 @@ void TestDragAndDrop::testPointerEventsIgnored()
 
     // now simulate all the possible pointer interactions
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerPress(2);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerRelease(2);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel);
@@ -561,7 +561,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
     QSignalSpy cancelledSpy(m_dataSource, &DataSource::cancelled);
     QVERIFY(cancelledSpy.isValid());
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerRelease(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(cancelledSpy.wait());
 

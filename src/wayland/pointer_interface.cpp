@@ -190,7 +190,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
     emit focusedSurfaceChanged();
 }
 
-void PointerInterface::sendPress(quint32 button, quint32 serial)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, quint32 serial)
 {
     if (!d->focusedSurface) {
         return;
@@ -198,21 +198,7 @@ void PointerInterface::sendPress(quint32 button, quint32 serial)
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_button(resource->handle, serial, d->seat->timestamp(), button,
-                       PointerInterfacePrivate::button_state_pressed);
-    }
-}
-
-void PointerInterface::sendRelease(quint32 button, quint32 serial)
-{
-    if (!d->focusedSurface) {
-        return;
-    }
-
-    const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
-    for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_button(resource->handle, serial, d->seat->timestamp(), button,
-                       PointerInterfacePrivate::button_state_released);
+        d->send_button(resource->handle, serial, d->seat->timestamp(), button, quint32(state));
     }
 }
 

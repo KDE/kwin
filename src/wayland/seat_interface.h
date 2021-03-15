@@ -56,6 +56,15 @@ enum class PointerAxisSource {
 };
 
 /**
+ * This enum type is used to describe the state of a pointer button. It
+ * is equivalent to the @c wl_pointer.button_state enum.
+ */
+enum class PointerButtonState : quint32 {
+    Released = 0,
+    Pressed = 1,
+};
+
+/**
  * @brief Represents a Seat on the Wayland Display.
  *
  * A Seat is a set of input devices (e.g. Keyboard, Pointer and Touch) the client can connect
@@ -90,10 +99,10 @@ enum class PointerAxisSource {
  * seat->notifyPointerMotion(QPointF(350, 210)); // global pos, local pos in surface: 250,10
  * seat->notifyPointerFrame();
  * seat->setTimestamp(110);
- * seat->notifyPointerPress(Qt::LeftButton);
+ * seat->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
  * seat->notifyPointerFrame();
  * seat->setTimestamp(120);
- * seat->notifyPointerRelease(Qt::LeftButton);
+ * seat->notifyPointerButton(Qt::LeftButton, PointerButtonState::Released);
  * seat->notifyPointerFrame();
  * @endcode
  *
@@ -318,30 +327,14 @@ public:
      */
     QMatrix4x4 focusedPointerSurfaceTransformation() const;
     /**
-     * Marks the @p button as pressed.
-     *
-     * If there is a focused pointer surface a button pressed event is sent to it.
-     *
-     * @param button The Linux button code
+     * Marks the specified @a button as pressed or released based on @a state.
      */
-    void notifyPointerPress(quint32 button);
+    void notifyPointerButton(quint32 button, PointerButtonState state);
     /**
      * @overload
      */
-    void notifyPointerPress(Qt::MouseButton button);
+    void notifyPointerButton(Qt::MouseButton button, PointerButtonState state);
     void notifyPointerFrame();
-    /**
-     * Marks the @p button as released.
-     *
-     * If there is a focused pointer surface a button release event is sent to it.
-     *
-     * @param button The Linux button code
-     */
-    void notifyPointerRelease(quint32 button);
-    /**
-     * @overload
-     */
-    void notifyPointerRelease(Qt::MouseButton button);
     /**
      * @returns whether the @p button is pressed
      */

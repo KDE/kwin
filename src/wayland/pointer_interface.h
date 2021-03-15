@@ -23,6 +23,7 @@ class SeatInterface;
 class SurfaceInterface;
 
 enum class PointerAxisSource;
+enum class PointerButtonState : quint32;
 
 /**
  * The PointerInterface class represents one or more input devices such as mice, which control
@@ -59,8 +60,7 @@ public:
      */
     static PointerInterface *get(wl_resource *native);
 
-    void sendPress(quint32 button, quint32 serial);
-    void sendRelease(quint32 button, quint32 serial);
+    void sendButton(quint32 button, PointerButtonState state, quint32 serial);
     void sendAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     void sendMotion(const QPointF &position);
     void sendFrame();

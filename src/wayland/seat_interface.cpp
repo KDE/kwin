@@ -724,63 +724,51 @@ void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, 
     d->pointer->sendAxis(orientation, delta, discreteDelta, source);
 }
 
-void SeatInterface::notifyPointerPress(Qt::MouseButton button)
+void SeatInterface::notifyPointerButton(Qt::MouseButton button, PointerButtonState state)
 {
     const quint32 nativeButton = qtToWaylandButton(button);
     if (nativeButton == 0) {
         return;
     }
-    notifyPointerPress(nativeButton);
+    notifyPointerButton(nativeButton, state);
 }
 
-void SeatInterface::notifyPointerPress(quint32 button)
+void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state)
 {
     if (!d->pointer) {
         return;
     }
     const quint32 serial = d->display->nextSerial();
-    d->updatePointerButtonSerial(button, serial);
-    d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Pressed);
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        // ignore
-        return;
-    }
-    d->pointer->sendPress(button, serial);
 
-    if (focusedPointerSurface() == focusedKeyboardSurface()) {
+    if (state == PointerButtonState::Pressed) {
+        d->updatePointerButtonSerial(button, serial);
+        d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Pressed);
+        if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
+            // ignore
+            return;
+        }
+    } else {
+        const quint32 currentButtonSerial = pointerButtonSerial(button);
+        d->updatePointerButtonSerial(button, serial);
+        d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Released);
+        if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
+            if (d->drag.source->dragImplicitGrabSerial() != currentButtonSerial) {
+                // not our drag button - ignore
+                return;
+            }
+            d->endDrag(serial);
+            return;
+        }
+    }
+
+    d->pointer->sendButton(button, state, serial);
+
+    if (focusedPointerSurface() == focusedKeyboardSurface() &&
+            state == PointerButtonState::Pressed) {
         if (d->keyboard) {
             d->keyboard->setFocusedSurface(d->pointer->focusedSurface(), serial);
         }
     }
-}
-
-void SeatInterface::notifyPointerRelease(Qt::MouseButton button)
-{
-    const quint32 nativeButton = qtToWaylandButton(button);
-    if (nativeButton == 0) {
-        return;
-    }
-    notifyPointerRelease(nativeButton);
-}
-
-void SeatInterface::notifyPointerRelease(quint32 button)
-{
-    if (!d->pointer) {
-        return;
-    }
-    const quint32 serial = d->display->nextSerial();
-    const quint32 currentButtonSerial = pointerButtonSerial(button);
-    d->updatePointerButtonSerial(button, serial);
-    d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Released);
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        if (d->drag.source->dragImplicitGrabSerial() != currentButtonSerial) {
-            // not our drag button - ignore
-            return;
-        }
-        d->endDrag(serial);
-        return;
-    }
-    d->pointer->sendRelease(button, serial);
 }
 
 void SeatInterface::notifyPointerFrame()
@@ -1124,7 +1112,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
         if (touchPrivate->touchesForClient(focusedTouchSurface()->client()).isEmpty()) {
             // Client did not bind touch, fall back to emulating with pointer events.
             const quint32 serial = display()->nextSerial();
-            d->pointer->sendRelease(BTN_LEFT, serial);
+            d->pointer->sendButton(BTN_LEFT, PointerButtonState::Released, serial);
             d->pointer->sendFrame();
         }
     }

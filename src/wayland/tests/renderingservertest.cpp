@@ -203,7 +203,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
         }
     }
     m_seat->setTimestamp(event->timestamp());
-    m_seat->notifyPointerPress(event->button());
+    m_seat->notifyPointerButton(event->button(), KWaylandServer::PointerButtonState::Pressed);
     m_seat->notifyPointerFrame();
 }
 
@@ -211,7 +211,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
     m_seat->setTimestamp(event->timestamp());
-    m_seat->notifyPointerRelease(event->button());
+    m_seat->notifyPointerButton(event->button(), KWaylandServer::PointerButtonState::Released);
     m_seat->notifyPointerFrame();
 }
 

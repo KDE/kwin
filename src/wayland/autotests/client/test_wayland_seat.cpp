@@ -437,25 +437,25 @@ void TestWaylandSeat::testPointer()
 
     // test button
     m_seatInterface->setTimestamp(4);
-    m_seatInterface->notifyPointerPress(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 8);
     QCOMPARE(buttonSpy.at(0).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(5);
-    m_seatInterface->notifyPointerPress(2);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 9);
     QCOMPARE(buttonSpy.at(1).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(6);
-    m_seatInterface->notifyPointerRelease(2);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 10);
     QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(7);
-    m_seatInterface->notifyPointerRelease(1);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 11);
@@ -698,7 +698,7 @@ void TestWaylandSeat::testPointerButton()
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
     m_seatInterface->setTimestamp(msec);
-    m_seatInterface->notifyPointerPress(qtButton);
+    m_seatInterface->notifyPointerButton(qtButton, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), true);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), true);
@@ -711,7 +711,7 @@ void TestWaylandSeat::testPointerButton()
     QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), Pointer::ButtonState::Pressed);
     msec = QDateTime::currentMSecsSinceEpoch();
     m_seatInterface->setTimestamp(QDateTime::currentMSecsSinceEpoch());
-    m_seatInterface->notifyPointerRelease(qtButton);
+    m_seatInterface->notifyPointerButton(qtButton, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
@@ -1264,10 +1264,10 @@ void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()
 
     // let's click
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerPress(Qt::LeftButton);
+    m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerRelease(Qt::LeftButton);
+    m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(enterSpy.wait());
     QCOMPARE(enterSpy.count(), 2);
@@ -1276,10 +1276,10 @@ void TestWaylandSeat::testKeyboardSubSurfaceTreeFromPointer()
 
     // click on same surface should not trigger another enter
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerPress(Qt::LeftButton);
+    m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
     m_seatInterface->notifyPointerFrame();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerRelease(Qt::LeftButton);
+    m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(!enterSpy.wait(200));
     QCOMPARE(enterSpy.count(), 2);
