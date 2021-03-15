@@ -97,20 +97,21 @@ void FlipSwitchEffect::reconfigure(ReconfigureFlags)
 void FlipSwitchEffect::prePaintScreen(ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
     int time = 0;
-    if (m_lastPresentTime.count()) {
-        time = (presentTime - m_lastPresentTime).count();
+    if (m_animation || m_start || m_stop) {
+        if (m_lastPresentTime.count()) {
+            time = (presentTime - m_lastPresentTime).count();
+        }
+        m_lastPresentTime = presentTime;
     }
-    m_lastPresentTime = presentTime;
 
-    if (m_active) {
-        data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-        if (m_start)
-            m_startStopTimeLine.setCurrentTime(m_startStopTimeLine.currentTime() + time);
-        if (m_stop && m_scheduledDirections.isEmpty())
-            m_startStopTimeLine.setCurrentTime(m_startStopTimeLine.currentTime() - time);
-        if (m_animation)
-            m_timeLine.setCurrentTime(m_timeLine.currentTime() + time);
-    }
+    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
+    if (m_start)
+        m_startStopTimeLine.setCurrentTime(m_startStopTimeLine.currentTime() + time);
+    if (m_stop && m_scheduledDirections.isEmpty())
+        m_startStopTimeLine.setCurrentTime(m_startStopTimeLine.currentTime() - time);
+    if (m_animation)
+        m_timeLine.setCurrentTime(m_timeLine.currentTime() + time);
+
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -325,7 +326,6 @@ void FlipSwitchEffect::postPaintScreen()
             m_stop = false;
             m_active = false;
             m_captionFrame->free();
-            m_lastPresentTime = std::chrono::milliseconds::zero();
             effects->setActiveFullScreenEffect(nullptr);
             effects->addRepaintFull();
             qDeleteAll(m_windows);
@@ -351,6 +351,8 @@ void FlipSwitchEffect::postPaintScreen()
         }
         if (m_start || m_stop || m_animation)
             effects->addRepaintFull();
+        else
+            m_lastPresentTime = std::chrono::milliseconds::zero();
     }
     effects->postPaintScreen();
 }
