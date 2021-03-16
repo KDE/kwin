@@ -47,6 +47,8 @@ set(kwin_SRCS
     events.cpp
     focuschain.cpp
     ftrace.cpp
+    fullscreenshellv1client.cpp
+    fullscreenshellv1integration.cpp
     geometrytip.cpp
     gestures.cpp
     globalshortcuts.cpp

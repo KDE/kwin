@@ -8,18 +8,19 @@
 */
 #include "wayland_server.h"
 #include "abstract_wayland_output.h"
-#include "x11client.h"
-#include "platform.h"
 #include "composite.h"
+#include "fullscreenshellv1integration.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
-#include "screens.h"
 #include "layershellv1integration.h"
-#include "xdgshellintegration.h"
-#include "workspace.h"
-#include "xdgshellclient.h"
+#include "platform.h"
+#include "screens.h"
 #include "service_utils.h"
 #include "unmanaged.h"
+#include "workspace.h"
+#include "x11client.h"
+#include "xdgshellclient.h"
+#include "xdgshellintegration.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>
@@ -389,6 +390,9 @@ bool WaylandServer::init(InitializationFlags flags)
     auto layerShellV1Integration = new LayerShellV1Integration(this);
     connect(layerShellV1Integration, &LayerShellV1Integration::clientCreated,
             this, &WaylandServer::registerShellClient);
+
+    auto fullscreenShellV1Integration = new FullscreenShellV1Integration(this);
+    connect(fullscreenShellV1Integration, &FullscreenShellV1Integration::clientCreated, this, &WaylandServer::registerShellClient);
 
     m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display, m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this,
