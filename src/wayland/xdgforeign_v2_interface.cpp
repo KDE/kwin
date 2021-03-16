@@ -103,7 +103,6 @@ void XdgExporterV2InterfacePrivate::zxdg_exporter_v2_export_toplevel(Resource *r
     QObject::connect(xdgExported, &XdgExportedV2Interface::destroyed,
             q, [this, handle]() {
                 exportedSurfaces.remove(handle);
-                emit q->surfaceUnexported(handle);
             });
 
     //if the surface dies before this, this dies too
@@ -113,12 +112,10 @@ void XdgExporterV2InterfacePrivate::zxdg_exporter_v2_export_toplevel(Resource *r
                     xdgExported->deleteLater();
                 }
                 exportedSurfaces.remove(handle);
-                emit q->surfaceUnexported(handle);
             });
 
     exportedSurfaces[handle] = xdgExported;
     zxdg_exported_v2_send_handle(XdgExported_resource, handle.toUtf8().constData());
-    emit q->surfaceExported(handle, xdgExported);
 }
 
 XdgExporterV2InterfacePrivate::XdgExporterV2InterfacePrivate(XdgExporterV2Interface *_q, Display *display, XdgForeignV2Interface *foreignInterface)
@@ -211,7 +208,6 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
                     XdgImported->deleteLater();
                 }
                 importedSurfaces.remove(handle);
-                emit q->surfaceUnimported(handle);
             });
 
     QObject::connect(XdgImported, &XdgImportedV2Interface::childChanged,
@@ -245,7 +241,6 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
     QObject::connect(XdgImported, &XdgImportedV2Interface::destroyed,
             q, [this, handle, XdgImported]() {
                 importedSurfaces.remove(handle);
-                emit q->surfaceUnimported(handle);
 
                 auto it = children.find(XdgImported);
                 if (it != children.end()) {
@@ -257,7 +252,6 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
             });
 
     importedSurfaces[handle] = XdgImported;
-    emit q->surfaceImported(handle, XdgImported);
 }
 
 XdgImporterV2InterfacePrivate::XdgImporterV2InterfacePrivate(XdgImporterV2Interface *_q, Display *display, XdgForeignV2Interface *foreignInterface)

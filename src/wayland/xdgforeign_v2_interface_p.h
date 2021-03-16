@@ -40,10 +40,6 @@ public:
 
     XdgExportedV2Interface *exportedSurface(const QString &handle);
 
-Q_SIGNALS:
-    void surfaceExported(const QString &handle, XdgExportedV2Interface *exported);
-    void surfaceUnexported(const QString &handle);
-
 private:
     QScopedPointer<XdgExporterV2InterfacePrivate> d;
 };
@@ -59,8 +55,6 @@ public:
     SurfaceInterface *transientFor(SurfaceInterface *surface);
 
 Q_SIGNALS:
-    void surfaceImported(const QString &handle, XdgImportedV2Interface *imported);
-    void surfaceUnimported(const QString &handle);
     void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 private:
