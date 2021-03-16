@@ -175,6 +175,24 @@ public:
     QStringList plasmaVirtualDesktops() const;
 
     /**
+     * Adds an activity to this window: a window can be on
+     * an arbitrary subset of activities.
+     * If it's on none it will be considered on all activities.
+     */
+    void addPlasmaActivity(const QString &id);
+
+    /**
+     * Removes an activity from a window
+     */
+    void removePlasmaActivity(const QString &id);
+
+    /**
+     * The ids of all the activities currently associated with this window.
+     * When an activity is deleted it will be automatically removed from this list
+     */
+    QStringList plasmaActivities() const;
+
+    /**
      * Set the application menu D-BUS service name and object path for the window.
      */
     void setApplicationMenuPaths(const QString &serviceName, const QString &objectPath);
@@ -241,6 +259,18 @@ Q_SIGNALS:
      * The server will decide whether to consent this request
      */
     void leavePlasmaVirtualDesktopRequested(const QString &desktop);
+
+    /**
+     * Emitted when the client wishes this window to enter an activity.
+     * The server will decide whether to consent this request
+     */
+    void enterPlasmaActivityRequested(const QString &activity);
+
+    /**
+     * Emitted when the client wishes to remove this window from an activity.
+     * The server will decide whether to consent this request
+     */
+    void leavePlasmaActivityRequested(const QString &activity);
 
 private:
     friend class PlasmaWindowManagementInterface;

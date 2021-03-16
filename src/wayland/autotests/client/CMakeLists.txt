@@ -354,6 +354,17 @@ add_test(NAME kwayland-testPlasmaVirtualDesktop COMMAND testPlasmaVirtualDesktop
 ecm_mark_as_test(testPlasmaVirtualDesktop)
 
 ########################################################
+# Test Activities
+########################################################
+set( testPlasmaActivities_SRCS
+        test_plasma_activities.cpp
+    )
+add_executable(testPlasmaActivities ${testPlasmaActivities_SRCS})
+target_link_libraries( testPlasmaActivities Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
+add_test(NAME kwayland-testPlasmaActivities COMMAND testPlasmaActivities)
+ecm_mark_as_test(testPlasmaActivities)
+
+########################################################
 # Test XDG Output
 ########################################################
 set( testXdgOutput_SRCS

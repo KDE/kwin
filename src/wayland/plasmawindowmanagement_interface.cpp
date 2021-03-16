@@ -23,7 +23,7 @@
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 13;
+static const quint32 s_version = 14;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
 {
@@ -78,6 +78,7 @@ public:
     PlasmaWindowInterface *parentWindow = nullptr;
     QMetaObject::Connection parentWindowDestroyConnection;
     QStringList plasmaVirtualDesktops;
+    QStringList plasmaActivities;
     QRect geometry;
     PlasmaWindowInterface *q;
     QString m_title;
@@ -105,6 +106,8 @@ protected:
     void org_kde_plasma_window_request_enter_virtual_desktop(Resource *resource, const QString &id) override;
     void org_kde_plasma_window_request_enter_new_virtual_desktop(Resource *resource) override;
     void org_kde_plasma_window_request_leave_virtual_desktop(Resource *resource, const QString &id) override;
+    void org_kde_plasma_window_request_enter_activity(Resource *resource, const QString &id) override;
+    void org_kde_plasma_window_request_leave_activity(Resource *resource, const QString &id) override;
 };
 
 PlasmaWindowManagementInterfacePrivate::PlasmaWindowManagementInterfacePrivate(PlasmaWindowManagementInterface *_q, Display *display)
@@ -343,6 +346,11 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource 
     for (const auto &desk : plasmaVirtualDesktops) {
         send_virtual_desktop_entered(resource->handle, desk);
     }
+    for (const auto &activity : plasmaActivities) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ACTIVITY_ENTERED_SINCE_VERSION) {
+            send_activity_entered(resource->handle, activity);
+        }
+    }
     if (!m_appId.isEmpty()) {
         send_app_id_changed(resource->handle, m_appId);
     }
@@ -459,6 +467,18 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_leave_virtual_d
 {
     Q_UNUSED(resource)
     emit q->leavePlasmaVirtualDesktopRequested(id);
+}
+
+void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_enter_activity(Resource *resource, const QString &id)
+{
+    Q_UNUSED(resource)
+    emit q->enterPlasmaActivityRequested(id);
+}
+
+void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_leave_activity(Resource *resource, const QString &id)
+{
+    Q_UNUSED(resource)
+    emit q->leavePlasmaActivityRequested(id);
 }
 
 void PlasmaWindowInterfacePrivate::setTitle(const QString &title)
@@ -913,6 +933,41 @@ void PlasmaWindowInterface::removePlasmaVirtualDesktop(const QString &id)
 QStringList PlasmaWindowInterface::plasmaVirtualDesktops() const
 {
     return d->plasmaVirtualDesktops;
+}
+
+void PlasmaWindowInterface::addPlasmaActivity(const QString &id)
+{
+    if (d->plasmaActivities.contains(id)) {
+        return;
+    }
+
+    d->plasmaActivities << id;
+
+    const auto clientResources = d->resourceMap();
+    for (auto resource : clientResources) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ACTIVITY_ENTERED_SINCE_VERSION) {
+            d->send_activity_entered(resource->handle, id);
+        }
+    }
+}
+
+void PlasmaWindowInterface::removePlasmaActivity(const QString &id)
+{
+    if (!d->plasmaActivities.removeOne(id)) {
+        return;
+    }
+
+    const auto clientResources = d->resourceMap();
+    for (auto resource : clientResources) {
+        if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ACTIVITY_LEFT_SINCE_VERSION) {
+            d->send_activity_left(resource->handle, id);
+        }
+    }
+}
+
+QStringList PlasmaWindowInterface::plasmaActivities() const
+{
+    return d->plasmaActivities;
 }
 
 void PlasmaWindowInterface::setShadeable(bool set)
