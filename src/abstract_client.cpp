@@ -1682,6 +1682,39 @@ void AbstractClient::setupWindowManagementInterface()
         }
     );
 
+    for (const auto &activity : m_activityList) {
+        w->addPlasmaActivity(activity);
+    }
+
+    // Notify clients on activities changes
+    connect(this, &AbstractClient::activitiesChanged, w, [w, this] {
+        const auto newActivities = m_activityList.toSet();
+        const auto oldActivities = w->plasmaActivities().toSet();
+
+        const auto activitiesToAdd = newActivities - oldActivities;
+        for (const auto &activity : activitiesToAdd) {
+            w->addPlasmaActivity(activity);
+        }
+
+        const auto activitiesToRemove = oldActivities - newActivities;
+        for (const auto &activity : activitiesToRemove) {
+            w->removePlasmaActivity(activity);
+        }
+    });
+
+    //Plasma Activities management
+    //show/hide when the window enters/exits activity
+    connect(w, &PlasmaWindowInterface::enterPlasmaActivityRequested, this,
+        [this] (const QString &activityId) {
+            setOnActivity(activityId, true);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::leavePlasmaActivityRequested, this,
+        [this] (const QString &activityId) {
+            setOnActivity(activityId, false);
+        }
+    );
+
     m_windowManagementInterface = w;
 }
 
