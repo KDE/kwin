@@ -566,24 +566,10 @@ void TestWindowManagement::testIcon()
 {
     using namespace KWayland::Client;
 
-    // initially, the server should send us an icon
+    // initially, there shouldn't be any icon
     QSignalSpy iconChangedSpy(m_window, &PlasmaWindow::iconChanged);
     QVERIFY(iconChangedSpy.isValid());
-    QVERIFY(iconChangedSpy.wait());
-    QCOMPARE(iconChangedSpy.count(), 1);
-    if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
-        QEXPECT_FAIL("", "no icon", Continue);
-    }
-    QCOMPARE(m_window->icon().name(), QStringLiteral("wayland"));
-
-    // first goes from themed name to empty
-    m_windowInterface->setIcon(QIcon());
-    QVERIFY(iconChangedSpy.wait());
-    QCOMPARE(iconChangedSpy.count(), 2);
-    if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
-        QEXPECT_FAIL("", "no icon", Continue);
-    }
-    QCOMPARE(m_window->icon().name(), QStringLiteral("wayland"));
+    QVERIFY(m_window->icon().isNull());
 
     // create an icon with a pixmap
     QImage p(32, 32, QImage::Format_ARGB32_Premultiplied);
@@ -591,17 +577,17 @@ void TestWindowManagement::testIcon()
     const QIcon dummyIcon(QPixmap::fromImage(p));
     m_windowInterface->setIcon(dummyIcon);
     QVERIFY(iconChangedSpy.wait());
-    QCOMPARE(iconChangedSpy.count(), 3);
+    QCOMPARE(iconChangedSpy.count(), 1);
     QCOMPARE(m_window->icon().pixmap(32, 32), dummyIcon.pixmap(32, 32));
 
     // let's set a themed icon
-    m_windowInterface->setIcon(QIcon::fromTheme(QStringLiteral("xorg")));
+    m_windowInterface->setIcon(QIcon::fromTheme(QStringLiteral("wayland")));
     QVERIFY(iconChangedSpy.wait());
-    QCOMPARE(iconChangedSpy.count(), 4);
-    if (!QIcon::hasThemeIcon(QStringLiteral("xorg"))) {
-        QEXPECT_FAIL("", "no icon", Continue);
+    QCOMPARE(iconChangedSpy.count(), 2);
+    if (!QIcon::hasThemeIcon(QStringLiteral("wayland"))) {
+        QEXPECT_FAIL("", "no wayland icon", Continue);
     }
-    QCOMPARE(m_window->icon().name(), QStringLiteral("xorg"));
+    QCOMPARE(m_window->icon().name(), QStringLiteral("wayland"));
 }
 
 void TestWindowManagement::testPid()

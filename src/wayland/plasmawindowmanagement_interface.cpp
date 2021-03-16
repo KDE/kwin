@@ -328,7 +328,7 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource 
     send_state_changed(resource->handle, m_state);
     if (!m_themedIconName.isEmpty()) {
         send_themed_icon_name_changed(resource->handle, m_themedIconName);
-    } else {
+    } else if (!m_icon.isNull()) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ICON_CHANGED_SINCE_VERSION) {
             send_icon_changed(resource->handle);
         }
