@@ -105,15 +105,6 @@ void XdgExporterV2InterfacePrivate::zxdg_exporter_v2_export_toplevel(Resource *r
                 exportedSurfaces.remove(handle);
             });
 
-    //if the surface dies before this, this dies too
-    QObject::connect(SurfaceInterface::get(surface), &QObject::destroyed,
-            q, [this, xdgExported, handle]() {
-                if (xdgExported) {
-                    xdgExported->deleteLater();
-                }
-                exportedSurfaces.remove(handle);
-            });
-
     exportedSurfaces[handle] = xdgExported;
     zxdg_exported_v2_send_handle(XdgExported_resource, handle.toUtf8().constData());
 }
@@ -185,30 +176,13 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
         return;
     }
 
-    SurfaceInterface *surface = exp->surface();
-    if (!surface) {
-        zxdg_imported_v2_send_destroyed(resource->handle);
-        return;
-    }
-
     wl_resource *XdgImported_resource = wl_resource_create(resource->client(), &zxdg_imported_v2_interface, resource->version(), id);
     if (!XdgImported_resource) {
         wl_client_post_no_memory(resource->client());
         return;
     }
 
-    XdgImportedV2Interface * XdgImported = new XdgImportedV2Interface(surface, XdgImported_resource);
-
-    //surface no longer exported
-    QObject::connect(exp, &XdgExportedV2Interface::destroyed,
-            q, [this, XdgImported, handle, XdgImported_resource]() {
-                //imp valid when the exported is deleted before the imported
-                if (XdgImported) {
-                    zxdg_imported_v2_send_destroyed(XdgImported_resource);
-                    XdgImported->deleteLater();
-                }
-                importedSurfaces.remove(handle);
-            });
+    XdgImportedV2Interface * XdgImported = new XdgImportedV2Interface(exp, XdgImported_resource);
 
     QObject::connect(XdgImported, &XdgImportedV2Interface::childChanged,
             q, [this, XdgImported](SurfaceInterface *child) {
@@ -266,6 +240,7 @@ XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_res
     : QtWaylandServer::zxdg_exported_v2(resource)
     , m_surface(surface)
 {
+    connect(surface, &QObject::destroyed, this, &XdgExportedV2Interface::handleSurfaceDestroyed);
 }
 
 XdgExportedV2Interface::~XdgExportedV2Interface() = default;
@@ -286,11 +261,16 @@ void XdgExportedV2Interface::zxdg_exported_v2_destroy_resource(Resource *resourc
     delete this;
 }
 
-XdgImportedV2Interface::XdgImportedV2Interface(SurfaceInterface *surface, wl_resource *resource)
-    : QObject(nullptr)
-    , QtWaylandServer::zxdg_imported_v2(resource)
-    , m_surface(surface)
+void XdgExportedV2Interface::handleSurfaceDestroyed()
 {
+    delete this;
+}
+
+XdgImportedV2Interface::XdgImportedV2Interface(XdgExportedV2Interface *exported, wl_resource *resource)
+    : QtWaylandServer::zxdg_imported_v2(resource)
+    , m_exported(exported)
+{
+    connect(exported, &QObject::destroyed, this, &XdgImportedV2Interface::handleExportedDestroyed);
 }
 
 XdgImportedV2Interface::~XdgImportedV2Interface() = default;
@@ -302,7 +282,7 @@ SurfaceInterface *XdgImportedV2Interface::child() const
 
 SurfaceInterface *XdgImportedV2Interface::surface() const
 {
-    return m_surface;
+    return m_exported->surface();
 }
 
 void XdgImportedV2Interface::zxdg_imported_v2_set_parent_of(Resource *resource, wl_resource *surface)
@@ -328,4 +308,11 @@ void XdgImportedV2Interface::zxdg_imported_v2_destroy_resource(Resource *resourc
     Q_UNUSED(resource)
     delete this;
 }
+
+void XdgImportedV2Interface::handleExportedDestroyed()
+{
+    send_destroyed(resource()->handle);
+    delete this;
+}
+
 }

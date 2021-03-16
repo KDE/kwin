@@ -63,6 +63,8 @@ private:
 
 class XdgExportedV2Interface : public QObject, QtWaylandServer::zxdg_exported_v2
 {
+    Q_OBJECT
+
 public:
     explicit XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource );
     ~XdgExportedV2Interface() override;
@@ -73,6 +75,9 @@ protected:
     void zxdg_exported_v2_destroy(Resource *resource) override;
     void zxdg_exported_v2_destroy_resource(Resource *resource) override;
 
+private Q_SLOTS:
+    void handleSurfaceDestroyed();
+
 private:
     SurfaceInterface *m_surface;
 };
@@ -81,7 +86,7 @@ class XdgImportedV2Interface : public QObject, QtWaylandServer::zxdg_imported_v2
 {
     Q_OBJECT
 public:
-    explicit XdgImportedV2Interface(SurfaceInterface *surface, wl_resource *resource);
+    explicit XdgImportedV2Interface(XdgExportedV2Interface *exported, wl_resource *resource);
     ~XdgImportedV2Interface() override;
 
     SurfaceInterface *child() const;
@@ -90,8 +95,11 @@ public:
 Q_SIGNALS:
     void childChanged(KWaylandServer::SurfaceInterface *child);
 
+private Q_SLOTS:
+    void handleExportedDestroyed();
+
 private:
-    SurfaceInterface *m_surface;
+    XdgExportedV2Interface *m_exported;
     QPointer<SurfaceInterface> m_child;
 
 protected:

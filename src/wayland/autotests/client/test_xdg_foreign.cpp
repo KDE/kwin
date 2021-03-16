@@ -250,14 +250,8 @@ void TestForeign::testDeleteParentSurface()
     doExport();
 
     QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
-
     QVERIFY(transientSpy.isValid());
     m_exportedSurface->deleteLater();
-
-    QSignalSpy exportedSurfaceDestroyedSpy(m_exportedSurfaceInterface.data(), &QObject::destroyed);
-    QVERIFY(exportedSurfaceDestroyedSpy.isValid());
-    exportedSurfaceDestroyedSpy.wait();
-
     QVERIFY(transientSpy.wait());
 
     QCOMPARE(transientSpy.first().first().value<KWaylandServer::SurfaceInterface *>(), m_childSurfaceInterface.data());
