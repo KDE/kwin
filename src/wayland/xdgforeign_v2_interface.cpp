@@ -167,7 +167,7 @@ SurfaceInterface *XdgImporterV2Interface::transientFor(SurfaceInterface *surface
     if (it == d->parents.constEnd()) {
         return nullptr;
     }
-    return (*it)->parentResource();
+    return (*it)->surface();
 }
 
 void XdgImporterV2InterfacePrivate::zxdg_importer_v2_destroy(Resource *resource)
@@ -185,7 +185,7 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
         return;
     }
 
-    SurfaceInterface *surface = exp->parentResource();
+    SurfaceInterface *surface = exp->surface();
     if (!surface) {
         zxdg_imported_v2_send_destroyed(resource->handle);
         return;
@@ -221,7 +221,7 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
 
                 parents[child] = XdgImported;
                 children[XdgImported] = child;
-                SurfaceInterface *parent = XdgImported->parentResource();
+                SurfaceInterface *parent = XdgImported->surface();
                 emit q->transientChanged(child, parent);
 
                 //child surface destroyed
@@ -232,7 +232,7 @@ void XdgImporterV2InterfacePrivate::zxdg_importer_v2_import_toplevel(Resource *r
                                 KWaylandServer::XdgImportedV2Interface* parent = *it;
                                 children.remove(*it);
                                 parents.erase(it);
-                                emit q->transientChanged(nullptr, parent->parentResource());
+                                emit q->transientChanged(nullptr, parent->surface());
                             }
                         });
             });
@@ -263,17 +263,16 @@ XdgImporterV2InterfacePrivate::XdgImporterV2InterfacePrivate(XdgImporterV2Interf
 }
 
 XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource )
-    : QObject(nullptr)
-    , QtWaylandServer::zxdg_exported_v2(resource)
-    , surface(surface)
+    : QtWaylandServer::zxdg_exported_v2(resource)
+    , m_surface(surface)
 {
 }
 
 XdgExportedV2Interface::~XdgExportedV2Interface() = default;
 
-SurfaceInterface *XdgExportedV2Interface::parentResource()
+SurfaceInterface *XdgExportedV2Interface::surface()
 {
-    return surface;
+    return m_surface;
 }
 
 void XdgExportedV2Interface::zxdg_exported_v2_destroy(Resource *resource)
@@ -290,7 +289,7 @@ void XdgExportedV2Interface::zxdg_exported_v2_destroy_resource(Resource *resourc
 XdgImportedV2Interface::XdgImportedV2Interface(SurfaceInterface *surface, wl_resource *resource)
     : QObject(nullptr)
     , QtWaylandServer::zxdg_imported_v2(resource)
-    , surface(surface)
+    , m_surface(surface)
 {
 }
 
@@ -298,12 +297,12 @@ XdgImportedV2Interface::~XdgImportedV2Interface() = default;
 
 SurfaceInterface *XdgImportedV2Interface::child() const
 {
-    return parentOf.data();
+    return m_child;
 }
 
-SurfaceInterface *XdgImportedV2Interface::parentResource()
+SurfaceInterface *XdgImportedV2Interface::surface() const
 {
-    return surface;
+    return m_surface;
 }
 
 void XdgImportedV2Interface::zxdg_imported_v2_set_parent_of(Resource *resource, wl_resource *surface)
@@ -315,7 +314,7 @@ void XdgImportedV2Interface::zxdg_imported_v2_set_parent_of(Resource *resource, 
         return;
     }
 
-    parentOf = surf;
+    m_child = surf;
     emit childChanged(surf);
 }
 
