@@ -23,7 +23,7 @@ class DataOfferInterfacePrivate;
 /**
  * @brief Represents the Resource for the wl_data_offer interface.
  *
- **/
+ */
 class KWAYLANDSERVER_EXPORT DataOfferInterface : public QObject
 {
     Q_OBJECT
@@ -36,24 +36,24 @@ public:
 
     /**
      * @returns The Drag and Drop actions supported by this DataOfferInterface.
-     **/
+     */
     DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const;
 
     /**
      * @returns The preferred Drag and Drop action of this DataOfferInterface.
-     **/
+     */
     DataDeviceManagerInterface::DnDAction preferredDragAndDropAction() const;
 
     /**
      * This event indicates the @p action selected by the compositor after matching the
      * source/destination side actions. Only one action (or none) will be offered here.
-     **/
+     */
     void dndAction(DataDeviceManagerInterface::DnDAction action);
 
 Q_SIGNALS:
     /**
      * Emitted whenever the supported or preferred Drag and Drop actions changed.
-     **/
+     */
     void dragAndDropActionsChanged();
 
 private:

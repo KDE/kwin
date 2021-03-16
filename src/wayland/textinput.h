@@ -17,7 +17,7 @@ namespace KWaylandServer
 KWAYLANDSERVER_EXPORT Q_NAMESPACE
 /**
  * ContentHint allows to modify the behavior of the text input.
- **/
+ */
 enum class TextInputContentHint {
     /**
      * no special behaviour
@@ -80,7 +80,7 @@ enum class TextInputContentPurpose {
     Normal,
     /**
      * allow only alphabetic characters
-     **/
+     */
     Alpha,
     /**
      * allow only digits
@@ -100,7 +100,7 @@ enum class TextInputContentPurpose {
     Url,
     /**
      * input an email address
-     **/
+     */
     Email,
     /**
      * input a name of a person

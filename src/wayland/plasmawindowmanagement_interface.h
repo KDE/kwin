@@ -103,7 +103,7 @@ public:
 #if KWAYLANDSERVER_ENABLE_DEPRECATED_SINCE(5, 28)
     /**
      * @deprecated since 5.28 use setIcon
-     **/
+     */
     KWAYLANDSERVER_DEPRECATED_VERSION(5, 28, "Use PlasmaWindowManagementInterface::setIcon(const QIcon&)")
     void setThemedIconName(const QString &iconName);
 #endif
@@ -121,7 +121,7 @@ public:
      * bound for this Window.
      *
      * No more events should be sent afterwards.
-     **/
+     */
     void unmap();
 
     /**
@@ -134,14 +134,14 @@ public:
      * Sets this PlasmaWindowInterface as a transient window to @p parentWindow.
      * If @p parentWindow is @c nullptr, the PlasmaWindowInterface is a toplevel
      * window and does not have a parent window.
-     **/
+     */
     void setParentWindow(PlasmaWindowInterface *parentWindow);
 
     /**
      * Sets the window @p geometry of this PlasmaWindow.
      *
      * @param geometry The geometry in absolute coordinates
-     **/
+     */
     void setGeometry(const QRect &geometry);
 
     /**
@@ -153,7 +153,7 @@ public:
      * into which the icon will be serialized.
      *
      * @param icon The new icon
-     **/
+     */
     void setIcon(const QIcon &icon);
 
     /**

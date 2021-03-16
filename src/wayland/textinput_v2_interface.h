@@ -29,7 +29,7 @@ class TextInputManagerV2InterfacePrivate;
  * can be determined through {@link interfaceVersion}.
  *
  * To create a TextInputManagerV2Interface use {@link Display::createTextInputManager}
- **/
+ */
 class KWAYLANDSERVER_EXPORT TextInputManagerV2Interface : public QObject
 {
     Q_OBJECT
@@ -57,7 +57,7 @@ private:
  *
  * @see TextInputManagerV2Interface
  * @see SeatInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT TextInputV2Interface : public QObject
 {
     Q_OBJECT
@@ -75,22 +75,22 @@ public:
      *
      * This can be used by the server to show a language specific virtual keyboard layout.
      * @see preferredLanguageChanged
-     **/
+     */
     QString preferredLanguage() const;
 
     /**
      * @see cursorRectangleChanged
-     **/
+     */
     QRect cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
-     **/
+     */
     TextInputContentPurpose contentPurpose() const;
 
     /**
      *@see contentTypeChanged
-     **/
+     */
     TextInputContentHints contentHints() const;
 
     /**
@@ -98,13 +98,13 @@ public:
      * @see surroundingTextChanged
      * @see surroundingTextCursorPosition
      * @see surroundingTextSelectionAnchor
-     **/
+     */
     QString surroundingText() const;
     /**
      * @returns The byte offset of current cursor position within the {@link surroundingText}
      * @see surroundingText
      * @see surroundingTextChanged
-     **/
+     */
     qint32 surroundingTextCursorPosition() const;
     /**
      * The byte offset of the selection anchor within the {@link surroundingText}.
@@ -113,21 +113,21 @@ public:
      * @return The byte offset of the selection anchor
      * @see surroundingText
      * @see surroundingTextChanged
-     **/
+     */
     qint32 surroundingTextSelectionAnchor() const;
 
     /**
      * @return The surface the TextInputV2Interface is enabled on
      * @see isEnabled
      * @see enabledChanged
-     **/
+     */
     QPointer<SurfaceInterface> surface() const;
 
     /**
      * @return Whether the TextInputV2Interface is currently enabled for a SurfaceInterface.
      * @see surface
      * @see enabledChanged
-     **/
+     */
     bool isEnabled() const;
 
     /**
@@ -142,7 +142,7 @@ public:
      * @param commitText Utf8-encoded text to replace preedit text on reset
      * @see commit
      * @see preEditCursor
-     **/
+     */
     void preEdit(const QString &text, const QString &commitText);
 
     /**
@@ -156,7 +156,7 @@ public:
      * @param text The utf8-encoded text to be inserted into the editor widget
      * @see preEdit
      * @see deleteSurroundingText
-     **/
+     */
     void commitString(const QString &text);
 
     /**
@@ -166,7 +166,7 @@ public:
      * The Client applies the @p index together with {@link preEdit}.
      * @param index The cursor position relative to the start of the composing text
      * @see preEdit
-     **/
+     */
     void setPreEditCursor(qint32 index);
 
     /**
@@ -177,19 +177,19 @@ public:
      * @param beforeLength length of text before current cursor position.
      * @param afterLength length of text after current cursor position.
      * @see commit
-     **/
+     */
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
 
     /**
      * Notify when the cursor @p index or @p anchor position should be modified.
      *
      * The Client applies this together with the commit string.
-     **/
+     */
     void setCursorPosition(qint32 index, qint32 anchor);
 
     /**
      * Sets the text @p direction of input text.
-     **/
+     */
     void setTextDirection(Qt::LayoutDirection direction);
 
     void keysymPressed(quint32 keysym, Qt::KeyboardModifiers modifiers = Qt::NoModifier);
@@ -203,39 +203,39 @@ public:
      *
      * @param visible Whether the input panel is currently visible
      * @param overlappedSurfaceArea The overlapping area in surface local coordinates
-     **/
+     */
     void setInputPanelState(bool visible, const QRect &overlappedSurfaceArea);
 
     /**
      * Sets the language of the input text. The @p languageTag is a RFC-3066 format language tag.
-     **/
+     */
     void setLanguage(const QString &languageTag);
 
 Q_SIGNALS:
     /**
      * Requests input panels (virtual keyboard) to show.
      * @see requestHideInputPanel
-     **/
+     */
     void requestShowInputPanel();
     /**
      * Requests input panels (virtual keyboard) to hide.
      * @see requestShowInputPanel
-     **/
+     */
     void requestHideInputPanel();
     /**
      * Emitted whenever the preferred @p language changes.
      * @see preferredLanguage
-     **/
+     */
     void preferredLanguageChanged(const QString &language);
     /**
      * @see cursorRectangle
-     **/
+     */
     void cursorRectangleChanged(const QRect &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose
      * @see contentHints
-     **/
+     */
     void contentTypeChanged();
     /**
      * Emitted when the {@link surroundingText}, {@link surroundingTextCursorPosition}
@@ -243,17 +243,17 @@ Q_SIGNALS:
      * @see surroundingText
      * @see surroundingTextCursorPosition
      * @see surroundingTextSelectionAnchor
-     **/
+     */
     void surroundingTextChanged();
     /**
      * Emitted whenever this TextInputV2Interface gets enabled or disabled for a SurfaceInterface.
      * @see isEnabled
      * @see surface
-     **/
+     */
     void enabledChanged();
     /**
      * Emitted whenever TextInputInterface should update the current state.
-     **/
+     */
     void stateUpdated(uint32_t serial, UpdateReason reason);
 
 private:

@@ -28,7 +28,7 @@ class Display;
  * @link Display::clientConnected @endlink will be emitted.
  *
  * @see Display
- **/
+ */
 class KWAYLANDSERVER_EXPORT ClientConnection : public QObject
 {
     Q_OBJECT
@@ -37,7 +37,7 @@ public:
 
     /**
      * Flushes the connection to this client. Ensures that all events are pushed to the client.
-     **/
+     */
     void flush();
     /**
      * Creates a new wl_resource for the provided @p interface.
@@ -48,20 +48,20 @@ public:
      * @param version
      * @param id
      * @returns the created native wl_resource
-     **/
+     */
     wl_resource *createResource(const wl_interface *interface, quint32 version, quint32 id);
     /**
      * Get the wl_resource associated with the given @p id.
-     **/
+     */
     wl_resource *getResource(quint32 id);
 
     /**
      * @returns the native wl_client this ClientConnection represents.
-     **/
+     */
     wl_client *client() const;
     /**
      * @returns The Display this ClientConnection is connected to
-     **/
+     */
     Display *display() const;
 
     /**
@@ -71,7 +71,7 @@ public:
      * the pid will be identical to the process running the KWaylandServer::Display.
      *
      * @returns The pid of the connection.
-     **/
+     */
     pid_t processId() const;
     /**
      * The uid of the ClientConnection endpoint.
@@ -80,7 +80,7 @@ public:
      * the uid will be identical to the process running the KWaylandServer::Display.
      *
      * @returns The uid of the connection.
-     **/
+     */
     uid_t userId() const;
     /**
      * The gid of the ClientConnection endpoint.
@@ -89,7 +89,7 @@ public:
      * the gid will be identical to the process running the KWaylandServer::Display.
      *
      * @returns The gid of the connection.
-     **/
+     */
     gid_t groupId() const;
 
     /**
@@ -101,16 +101,16 @@ public:
      * If the executable path cannot be resolved an empty QString is returned.
      *
      * @see processId
-     **/
+     */
     QString executablePath() const;
 
     /**
      * Cast operator the native wl_client this ClientConnection represents.
-     **/
+     */
     operator wl_client*();
     /**
      * Cast operator the native wl_client this ClientConnection represents.
-     **/
+     */
     operator wl_client*() const;
 
     /**
@@ -118,13 +118,13 @@ public:
      * This is a convenient wrapper around wl_client_destroy. The use case is in combination
      * with ClientConnections created through @link Display::createClient @endlink. E.g. once
      * the process for the ClientConnection exited, the ClientConnection needs to be destroyed, too.
-     **/
+     */
     void destroy();
 
 Q_SIGNALS:
     /**
      * Signal emitted when the ClientConnection got disconnected from the server.
-     **/
+     */
     void disconnected(KWaylandServer::ClientConnection*);
 
 private:

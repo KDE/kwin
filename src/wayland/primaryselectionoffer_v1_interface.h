@@ -23,7 +23,7 @@ class PrimarySelectionOfferV1InterfacePrivate;
 /**
  * @brief Represents the Resource for the wl_data_offer interface.
  * Lifespan is mapped to the underlying object
- **/
+ */
 class KWAYLANDSERVER_EXPORT PrimarySelectionOfferV1Interface : public QObject
 {
     Q_OBJECT

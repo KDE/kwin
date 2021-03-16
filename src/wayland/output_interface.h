@@ -25,7 +25,7 @@ class Display;
 /**
  * @brief Global for the wl_output interface.
  *
- **/
+ */
 class KWAYLANDSERVER_EXPORT OutputInterface : public Global
 {
     Q_OBJECT
@@ -101,17 +101,17 @@ public:
     /**
      * Sets whether Dpms is supported for this output.
      * Default is @c false.
-     **/
+     */
     void setDpmsSupported(bool supported);
     /**
      * Sets the currently used dpms mode.
      * Default is @c DpmsMode::On.
-     **/
+     */
     void setDpmsMode(DpmsMode mode);
 
     /**
      * @returns all wl_resources bound for the @p client
-     **/
+     */
     QVector<wl_resource *> clientResources(ClientConnection *client) const;
 
     /**
@@ -144,7 +144,7 @@ Q_SIGNALS:
     /**
      * Change of dpms @p mode is requested.
      * A server is free to ignore this request.
-     **/
+     */
     void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
 
     /**

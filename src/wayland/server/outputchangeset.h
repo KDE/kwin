@@ -24,7 +24,7 @@ class OutputChangeSetPrivate;
  * side. The changes are per-configuration.
  *
  * @see OutputConfiguration
- **/
+ */
 class KWAYLANDSERVER_EXPORT OutputChangeSet : public QObject
 {
     Q_OBJECT

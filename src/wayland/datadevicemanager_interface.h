@@ -21,7 +21,7 @@ class DataDeviceManagerInterfacePrivate;
 /**
  * @brief Represents the Global for wl_data_device_manager interface.
  *
- **/
+ */
 class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public QObject
 {
     Q_OBJECT
@@ -32,7 +32,7 @@ public:
 
     /**
      * Drag and Drop actions supported by the DataSourceInterface.
-     **/
+     */
     enum class DnDAction {
         None = 0,
         Copy = 1 << 0,

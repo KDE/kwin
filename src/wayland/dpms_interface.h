@@ -46,7 +46,7 @@ class DpmsManagerInterfacePrivate;
  *
  * @see Display
  * @see OutputInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT DpmsManagerInterface : public QObject
 {
     Q_OBJECT

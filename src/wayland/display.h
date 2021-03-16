@@ -31,7 +31,7 @@ namespace KWaylandServer
  * Qt style API.
  *
  * @see Display
- **/
+ */
 
 class ClientConnection;
 class DisplayPrivate;
@@ -43,7 +43,7 @@ class SeatInterface;
  * @brief Class holding the Wayland server display loop.
  *
  * @todo Improve documentation
- **/
+ */
 class KWAYLANDSERVER_EXPORT Display : public QObject
 {
     Q_OBJECT
@@ -99,7 +99,7 @@ public:
      *
      * @param fd The file descriptor for the socket to the client
      * @returns The new ClientConnection or @c null on failure.
-     **/
+     */
     ClientConnection *createClient(int fd);
 
     operator wl_display*();
@@ -109,7 +109,7 @@ public:
     void createShm();
     /**
      * @returns All SeatInterface currently managed on the Display.
-     **/
+     */
     QVector<SeatInterface*> seats() const;
     QList<OutputDeviceInterface *> outputDevices() const;
     QList<OutputInterface *> outputs() const;
@@ -119,7 +119,7 @@ public:
      * If there is no ClientConnection yet for the given @p client, it will be created.
      * @param client The native client for which the ClientConnection is retrieved
      * @return The ClientConnection for the given native client
-     **/
+     */
     ClientConnection *getConnection(wl_client *client);
     QVector<ClientConnection*> connections() const;
 
@@ -130,12 +130,12 @@ public:
      * Wayland display prior to calling this method.
      *
      * @see eglDisplay
-     **/
+     */
     void setEglDisplay(void *display);
     /**
      * @returns the EGLDisplay used for this Wayland display or EGL_NO_DISPLAY if not set.
      * @see setEglDisplay
-     **/
+     */
     void *eglDisplay() const;
 
 private Q_SLOTS:

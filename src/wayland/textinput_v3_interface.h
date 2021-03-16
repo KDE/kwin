@@ -29,7 +29,7 @@ class TextInputManagerV3InterfacePrivate;
  * can be determined through {@link interfaceVersion}.
  *
  * To create a TextInputManagerV3Interface use {@link Display::createTextInputManager}
- **/
+ */
 class KWAYLANDSERVER_EXPORT TextInputManagerV3Interface : public QObject
 {
     Q_OBJECT
@@ -51,7 +51,7 @@ private:
  *
  * @see TextInputManagerV3Interface
  * @see SeatInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT TextInputV3Interface : public QObject
 {
     Q_OBJECT
@@ -60,17 +60,17 @@ public:
 
     /**
      * @see cursorRectangleChanged
-     **/
+     */
     QRect cursorRectangle() const;
 
     /**
      * @see contentTypeChanged
-     **/
+     */
     TextInputContentPurpose contentPurpose() const;
 
     /**
      *@see contentTypeChanged
-     **/
+     */
     TextInputContentHints contentHints() const;
 
     /**
@@ -78,13 +78,13 @@ public:
      * @see surroundingTextChanged
      * @see surroundingTextCursorPosition
      * @see surroundingTextSelectionAnchor
-     **/
+     */
     QString surroundingText() const;
     /**
      * @returns The byte offset of current cursor position within the {@link surroundingText}
      * @see surroundingText
      * @see surroundingTextChanged
-     **/
+     */
     qint32 surroundingTextCursorPosition() const;
     /**
      * The byte offset of the selection anchor within the {@link surroundingText}.
@@ -93,21 +93,21 @@ public:
      * @return The byte offset of the selection anchor
      * @see surroundingText
      * @see surroundingTextChanged
-     **/
+     */
     qint32 surroundingTextSelectionAnchor() const;
 
     /**
      * @return The surface the TextInputV3Interface is enabled on
      * @see isEnabled
      * @see enabledChanged
-     **/
+     */
     QPointer<SurfaceInterface> surface() const;
 
     /**
      * @return Whether the TextInputV3Interface is currently enabled for a SurfaceInterface.
      * @see surface
      * @see enabledChanged
-     **/
+     */
     bool isEnabled() const;
 
     /**
@@ -118,7 +118,7 @@ public:
      * @param beforeLength length of text before current cursor position.
      * @param afterLength length of text after current cursor position.
      * @see commit
-     **/
+     */
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     
     /**
@@ -127,7 +127,7 @@ public:
      * @param text pre-edit string
      * @param cursorBegin
      * @param cursorEnd
-     **/
+     */
     void sendPreEditString(const QString &text, quint32 cursorBegin, quint32 cursorEnd);
     
     /**
@@ -141,13 +141,13 @@ public:
      * @param text The utf8-encoded text to be inserted into the editor widget
      * @see preEdit
      * @see deleteSurroundingText
-     **/
+     */
     void commitString(const QString &text);
     
     /**
      * Notify when changes and state requested by sendPreEditString, commitString and deleteSurroundingText
      * should be applied.
-     **/
+     */
     void done();
 
 
@@ -155,13 +155,13 @@ Q_SIGNALS:
 
     /**
      * @see cursorRectangle
-     **/
+     */
     void cursorRectangleChanged(const QRect &rect);
     /**
      * Emitted when the {@link contentPurpose} and/or {@link contentHints} changes.
      * @see contentPurpose
      * @see contentHints
-     **/
+     */
     void contentTypeChanged();
 
     /**
@@ -170,19 +170,19 @@ Q_SIGNALS:
      * @see surroundingText
      * @see surroundingTextCursorPosition
      * @see surroundingTextSelectionAnchor
-     **/
+     */
     void surroundingTextChanged();
 
     /**
      * Emitted whenever this TextInputV3Interface gets enabled or disabled for a SurfaceInterface.
      * @see isEnabled
      * @see surface
-     **/
+     */
     void enabledChanged();
 
     /**
      * Emitted when state should be committed
-     **/
+     */
     void stateCommitted(quint32 serial);
 
 private:

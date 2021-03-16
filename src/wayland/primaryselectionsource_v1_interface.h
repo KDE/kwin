@@ -19,7 +19,7 @@ class PrimarySelectionSourceV1InterfacePrivate;
 /**
  * @brief Represents the Resource for the zwp_primary_selection_source_v1 interface.
  * Lifespan is mapped to the underlying object
- **/
+ */
 class KWAYLANDSERVER_EXPORT PrimarySelectionSourceV1Interface : public AbstractDataSource
 {
     Q_OBJECT

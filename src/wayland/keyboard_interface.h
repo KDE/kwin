@@ -18,7 +18,7 @@ class KeyboardInterfacePrivate;
 
 /**
  * @brief Resource for the wl_keyboard interface.
- **/
+ */
 class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
 {
     Q_OBJECT
@@ -27,16 +27,16 @@ public:
 
     /**
      * @returns the focused SurfaceInterface on this keyboard resource, if any.
-     **/
+     */
     SurfaceInterface *focusedSurface() const;
 
     /**
      * @returns The key repeat in character per second
-     **/
+     */
     qint32 keyRepeatRate() const;
     /**
      * @returns The delay on key press before starting repeating keys
-     **/
+     */
     qint32 keyRepeatDelay() const;
     void setKeymap(const QByteArray &content);
     void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
@@ -50,7 +50,7 @@ public:
      *
      * @param charactersPerSecond The characters per second rate, value of @c 0 disables key repeating
      * @param delay The delay on key press before starting repeating keys
-     **/
+     */
     void setRepeatInfo(qint32 charactersPerSecond, qint32 delay);
 
     void keyPressed(quint32 key);

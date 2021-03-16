@@ -52,21 +52,21 @@ class SurfaceInterfacePrivate;
  * @see ContrastInterface
  * @see ShadowInterface
  * @see SlideInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
     /**
      * The current damage region.
-     **/
+     */
     Q_PROPERTY(QRegion damage READ damage NOTIFY damaged)
     /**
      * The opaque region for a translucent buffer.
-     **/
+     */
     Q_PROPERTY(QRegion opaque READ opaque NOTIFY opaqueChanged)
     /**
      * The current input region.
-     **/
+     */
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 bufferScale READ bufferScale NOTIFY bufferScaleChanged)
     Q_PROPERTY(KWaylandServer::OutputInterface::Transform bufferTransform READ bufferTransform NOTIFY bufferTransformChanged)
@@ -177,7 +177,7 @@ public:
     OutputInterface::Transform bufferTransform() const;
     /**
      * @returns the current BufferInterface, might be @c nullptr.
-     **/
+     */
     BufferInterface *buffer();
     QPoint offset() const;
     /**
@@ -202,31 +202,31 @@ public:
 
     /**
      * @returns The SubSurface for this Surface in case there is one.
-     **/
+     */
     SubSurfaceInterface *subSurface() const;
     /**
      * @returns Children in stacking order from bottom (first) to top (last).
-     **/
+     */
     QList<SubSurfaceInterface *> childSubSurfaces() const;
 
     /**
      * @returns The Shadow for this Surface.
-     **/
+     */
     QPointer<ShadowInterface> shadow() const;
 
     /**
      * @returns The Blur for this Surface.
-     **/
+     */
     QPointer<BlurInterface> blur() const;
 
     /**
      * @returns The Slide for this Surface.
-     **/
+     */
     QPointer<SlideInterface> slideOnShowHide() const;
 
     /**
      * @returns The Contrast for this Surface.
-     **/
+     */
     QPointer<ContrastInterface> contrast() const;
 
     /**
@@ -236,7 +236,7 @@ public:
      * mapped if it has a BufferInterface attached and the parent SurfaceInterface is mapped.
      *
      * @returns Whether the SurfaceInterface is currently mapped
-     **/
+     */
     bool isMapped() const;
 
     /**
@@ -255,14 +255,14 @@ public:
      * @returns Combined damage since last call to resetTrackedDamage
      * @see damage
      * @see resetTrackedDamage
-     **/
+     */
     QRegion trackedDamage() const;
 
     /**
      * Reset the damage tracking. The compositor should invoke this method once it updated
      * it's internal state and processed the current damage.
      * @see trackedDamage
-     **/
+     */
     void resetTrackedDamage();
 
     /**
@@ -275,7 +275,7 @@ public:
      *
      * @param position The position in surface-local coordinates
      * @returns Child surface at the given @p position or surface itself at the position, might be @c nullptr
-     **/
+     */
     SurfaceInterface *surfaceAt(const QPointF &position);
 
     /**
@@ -289,7 +289,7 @@ public:
      *
      * @param position The position in surface-local coordinates
      * @returns Input receiving child surface at the given @p position or surface itself at the position, might be @c nullptr
-     **/
+     */
     SurfaceInterface *inputSurfaceAt(const QPointF &position);
 
     /**
@@ -299,40 +299,40 @@ public:
      * an OutputInterface by e.g. getting (un)mapped, resized, moved, etc.
      *
      * @see outputs
-     **/
+     */
     void setOutputs(const QVector<OutputInterface *> &outputs);
 
     /**
      * @returns All OutputInterfaces the SurfaceInterface is on.
      * @see setOutputs
-     **/
+     */
     QVector<OutputInterface *> outputs() const;
 
     /**
      * Pointer confinement installed on this SurfaceInterface.
      * @see pointerConstraintsChanged
-     **/
+     */
     ConfinedPointerV1Interface *confinedPointer() const;
 
     /**
      * Pointer lock installed on this SurfaceInterface.
      * @see pointerConstraintsChanged
-     **/
+     */
     LockedPointerV1Interface *lockedPointer() const;
 
     /**
      * @returns Whether this SurfaceInterface wants idle to be inhibited on the Output it is shown
      * @see inhibitsIdleChanged
-     **/
+     */
     bool inhibitsIdle() const;
 
     /**
      * @returns The SurfaceInterface for the @p native resource.
-     **/
+     */
     static SurfaceInterface *get(wl_resource *native);
     /**
      * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
-     **/
+     */
     static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
     /**
@@ -341,12 +341,12 @@ public:
      *
      * Setting a data proxy is only allowed when the client owning this surface
      * has not created a data device itself.
-     **/
+     */
     void setDataProxy(SurfaceInterface *surface);
     /**
      * Returns the data proxy of this SurfaceInterface or null if there
      * is none set.
-     **/
+     */
     SurfaceInterface* dataProxy() const;
 
 Q_SIGNALS:
@@ -375,7 +375,7 @@ Q_SIGNALS:
      *
      * @see buffer
      * @see damage
-     **/
+     */
     void damaged(const QRegion&);
     void opaqueChanged(const QRegion&);
     void inputChanged(const QRegion&);
@@ -393,11 +393,11 @@ Q_SIGNALS:
     void bufferSizeChanged();
     /**
      * Emitted when the Surface becomes visible, i.e. a non-null buffer has been attached.
-     **/
+     */
     void mapped();
     /**
      * Emitted when the Surface removes its content
-     **/
+     */
     void unmapped();
     /**
      * This signal is emitted when the surface size has changed.
@@ -409,7 +409,7 @@ Q_SIGNALS:
     void contrastChanged();
     /**
      * Emitted whenever the tree of sub-surfaces changes in a way which requires a repaint.
-     **/
+     */
     void subSurfaceTreeChanged();
     /**
      * Emitted whenever a new child sub-surface @p subSurface is added.
@@ -428,13 +428,13 @@ Q_SIGNALS:
      *
      * @see confinedPointer
      * @see lockedPointer
-     **/
+     */
     void pointerConstraintsChanged();
 
     /**
      * Emitted whenever the SurfaceInterface starts/ends to inhibit idle.
      * @see inhibitsIdle
-     **/
+     */
     void inhibitsIdleChanged();
 
     /**
@@ -442,7 +442,7 @@ Q_SIGNALS:
      *
      * This signal is emitted after all the relevant damage and xyzChanged signals
      * for this commit are emitted.
-     **/
+     */
     void committed();
 
 private:

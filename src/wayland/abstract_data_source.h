@@ -41,22 +41,22 @@ public:
 
     /**
      * @returns The Drag and Drop actions supported by this DataSourceInterface.
-     **/
+     */
     virtual DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const {
         return {};
     };
     /**
      * The user performed the drop action during a drag and drop operation.
-     **/
+     */
     virtual void dropPerformed() {};
     /**
      * The drop destination finished interoperating with this data source.
-     **/
+     */
     virtual void dndFinished() {};
     /**
      * This event indicates the @p action selected by the compositor after matching the
      * source/destination side actions. Only one action (or none) will be offered here.
-     **/
+     */
     virtual void dndAction(DataDeviceManagerInterface::DnDAction action) {
         Q_UNUSED(action);
     };

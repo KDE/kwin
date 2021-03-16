@@ -19,7 +19,7 @@ class DataSourceInterfacePrivate;
 
 /**
  * @brief Represents the Resource for the wl_data_source interface.
- **/
+ */
 class KWAYLANDSERVER_EXPORT DataSourceInterface : public AbstractDataSource
 {
     Q_OBJECT
@@ -36,7 +36,7 @@ public:
 
     /**
      * @returns The Drag and Drop actions supported by this DataSourceInterface.
-     **/
+     */
     DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
 
     void dropPerformed() override;

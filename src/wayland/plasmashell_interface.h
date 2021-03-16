@@ -32,7 +32,7 @@ class PlasmaShellSurfaceInterfacePrivate;
  *
  * A server providing this interface should think about how to restrict access to it as
  * it allows to perform absolute window positioning.
- **/
+ */
 class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public QObject
 {
     Q_OBJECT
@@ -44,7 +44,7 @@ public:
 Q_SIGNALS:
     /**
      * Emitted whenever a PlasmaShellSurfaceInterface got created.
-     **/
+     */
     void surfaceCreated(KWaylandServer::PlasmaShellSurfaceInterface*);
 
 private:
@@ -55,7 +55,7 @@ private:
  * @brief Resource for the org_kde_plasma_shell_surface interface.
  *
  * PlasmaShellSurfaceInterface gets created by PlasmaShellInterface.
- **/
+ */
 class KWAYLANDSERVER_EXPORT PlasmaShellSurfaceInterface : public QObject
 {
     Q_OBJECT
@@ -64,21 +64,21 @@ public:
 
     /**
      * @returns the SurfaceInterface this PlasmaShellSurfaceInterface got created for
-     **/
+     */
     SurfaceInterface *surface() const;
     /**
      * @returns the requested position in global coordinates.
-     **/
+     */
     QPoint position() const;
     /**
      * @returns Whether a global position has been requested.
-     **/
+     */
     bool isPositionSet() const;
 
     /**
      * Describes possible roles this PlasmaShellSurfaceInterface can have.
      * The role can be used by the server to e.g. change the stacking order accordingly.
-     **/
+     */
     enum class Role {
         Normal, ///< A normal surface
         Desktop, ///< The surface represents a desktop, normally stacked below all other surfaces
@@ -90,11 +90,11 @@ public:
     };
     /**
      * @returns The requested role, default value is @c Role::Normal.
-     **/
+     */
     Role role() const;
     /**
      * Describes how a PlasmaShellSurfaceInterface with role @c Role::Panel should behave.
-     **/
+     */
     enum class PanelBehavior {
         AlwaysVisible, ///< The panel should be always visible
         AutoHide, ///< The panel auto hides at a screen edge and returns on mouse press against edge
@@ -104,19 +104,19 @@ public:
     /**
      * @returns The PanelBehavior for a PlasmaShellSurfaceInterface with role @c Role::Panel
      * @see role
-     **/
+     */
     PanelBehavior panelBehavior() const;
 
     /**
      * @returns true if this window doesn't want to be listed
      * in the taskbar
-     **/
+     */
     bool skipTaskbar() const;
 
     /**
      * @returns true if this window doesn't want to be listed
      * in a window switcher
-     **/
+     */
     bool skipSwitcher() const;
 
     /**
@@ -126,7 +126,7 @@ public:
      * @see showAutoHidingPanel
      * @see panelAutoHideHideRequested
      * @see panelAutoHideShowRequested
-     **/
+     */
     void hideAutoHidingPanel();
 
     /**
@@ -136,7 +136,7 @@ public:
      * @see panelAutoHideHideRequested
      * @see panelAutoHideShowRequested
      * @see 5.28
-     **/
+     */
     void showAutoHidingPanel();
 
     /**
@@ -145,27 +145,27 @@ public:
      * By default some PlasmaShell roles do not get focus, but the PlasmaShellSurfaceInterface can
      * request that it wants to have focus. The compositor can use this information to
      * pass focus to the surface.
-     **/
+     */
     //TODO KF6 rename to something generic
     bool panelTakesFocus() const;
 
     /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
-     **/
+     */
     static PlasmaShellSurfaceInterface *get(wl_resource *native);
 
 Q_SIGNALS:
     /**
      * A change of global position has been requested.
-     **/
+     */
     void positionChanged();
     /**
      * A change of the role has been requested.
-     **/
+     */
     void roleChanged();
     /**
      * A change of the panel behavior has been requested.
-     **/
+     */
     void panelBehaviorChanged();
     /**
      * A change in the skip taskbar property has been requested
@@ -173,7 +173,7 @@ Q_SIGNALS:
     void skipTaskbarChanged();
     /**
      * A change in the skip switcher property has been requested
-     **/
+     */
     void skipSwitcherChanged();
 
     /**
@@ -188,7 +188,7 @@ Q_SIGNALS:
      * @see hideAutoHidingPanel
      * @see showAutoHidingPanel
      * @see panelAutoHideShowRequested
-     **/
+     */
     void panelAutoHideHideRequested();
 
     /**
@@ -200,7 +200,7 @@ Q_SIGNALS:
      * @see hideAutoHidingPanel
      * @see showAutoHidingPanel
      * @see panelAutoHideHideRequested
-     **/
+     */
     void panelAutoHideShowRequested();
 
     /*

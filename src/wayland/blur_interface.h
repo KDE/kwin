@@ -27,7 +27,7 @@ class BlurInterfacePrivate;
  *
  * @see BlurInterface
  * @see SurfaceInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT BlurManagerInterface : public QObject
 {
     Q_OBJECT
@@ -52,7 +52,7 @@ private:
  *
  * @see BlurManagerInterface
  * @see SurfaceInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT BlurInterface : public QObject
 {
     Q_OBJECT
@@ -61,7 +61,7 @@ public:
 
     /**
      * @returns The region or the SurfaceInterface which should be blurred, null Region implies complete surface.
-     **/
+     */
     QRegion region();
 
 private:

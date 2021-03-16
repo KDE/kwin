@@ -44,7 +44,7 @@ class LinuxDmabufBuffer;
  *
  * @see Display
  * @see SurfaceInterace
- **/
+ */
 class KWAYLANDSERVER_EXPORT BufferInterface : public QObject
 {
     Q_OBJECT
@@ -60,7 +60,7 @@ public:
      *
      * @see unref
      * @see isReferenced
-     **/
+     */
     void ref();
     /**
      * Unreference the BufferInterface.
@@ -70,19 +70,19 @@ public:
      *
      * @see ref
      * @see isReferenced
-     **/
+     */
     void unref();
     /**
      * @returns whether the BufferInterface is currently referenced
      *
      * @see ref
      * @see unref
-     **/
+     */
     bool isReferenced() const;
 
     /**
      * @returns The native wl_shm_buffer if the BufferInterface represents a shared memory buffer, otherwise @c nullptr.
-     **/
+     */
     wl_shm_buffer *shmBuffer();
     /**
      * Returns a pointer to the LinuxDmabufBuffer when the buffer is a dmabuf buffer, and nullptr otherwise.
@@ -90,7 +90,7 @@ public:
     LinuxDmabufBuffer *linuxDmabufBuffer();
     /**
      * @returns the native wl_resource wrapped by this BufferInterface.
-     **/
+     */
     wl_resource *resource() const;
 
     /**
@@ -112,7 +112,7 @@ public:
      * write to the returned QImage. The image is a read-only buffer. If there is need to modify
      * the image, perform a deep copy.
      *
-     **/
+     */
     QImage data();
 
     /**
@@ -131,13 +131,13 @@ public:
      * provide the proper size.
      * @see setSize
      * @see Display::setEglDisplay
-     **/
+     */
     QSize size() const;
     /**
      * Sets the @p size for non shared memory buffers.
      * @see size
      * @see sizeChanged
-     **/
+     */
     void setSize(const QSize &size);
 
     /**
@@ -150,7 +150,7 @@ public:
      *
      * If the format cannot be queried the default value (@c false) is returned.
      *
-     **/
+     */
     bool hasAlphaChannel() const;
 
     static BufferInterface *get(Display *display, wl_resource *r);
@@ -159,7 +159,7 @@ Q_SIGNALS:
     void aboutToBeDestroyed(KWaylandServer::BufferInterface*);
     /**
      * Emitted when the size of the Buffer changes.
-     **/
+     */
     void sizeChanged();
 
 private:

@@ -39,7 +39,7 @@ class Display;
  *
  * @see Display
  *
- **/
+ */
 class KWAYLANDSERVER_EXPORT Global : public QObject
 {
     Q_OBJECT
@@ -48,15 +48,15 @@ public:
     /**
      * Creates the global by creating a native wl_global and by that announcing it
      * to the clients.
-     **/
+     */
     void create();
     /**
      * Destroys the low level wl_global. Afterwards the Global is no longer shown to clients.
-     **/
+     */
     void destroy();
     /**
      * @returns whether the Global got created
-     **/
+     */
     bool isValid() const;
 
     /**
@@ -66,11 +66,11 @@ public:
 
     /**
      * Cast operator to the native wl_global this Global represents.
-     **/
+     */
     operator wl_global*();
     /**
      * Cast operator to the native wl_global this Global represents.
-     **/
+     */
     operator wl_global*() const;
 
 Q_SIGNALS:

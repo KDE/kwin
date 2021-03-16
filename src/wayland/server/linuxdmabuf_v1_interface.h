@@ -140,7 +140,7 @@ public:
 
     /**
      * Returns the LinuxDmabufInterface for the given resource.
-     **/
+     */
     static LinuxDmabufUnstableV1Interface *get(wl_resource *native);
 
 private:

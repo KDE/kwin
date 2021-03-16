@@ -34,7 +34,7 @@ class IdleInterfacePrivate;
  * know whether the input devices are used, only if their surfaces have focus. With this
  * interface it is possible to notice that there are input events. A server should consider
  * this to decide whether it wants to provide this feature!
- **/
+ */
 class KWAYLANDSERVER_EXPORT IdleInterface : public QObject
 {
     Q_OBJECT
@@ -55,7 +55,7 @@ public:
      * @see uninhibit
      * @see isInhibited
      * @see inhibitedChanged
-     **/
+     */
     void inhibit();
 
     /**
@@ -65,7 +65,7 @@ public:
      * @see inhibit
      * @see isInhibited
      * @see inhibitedChanged
-     **/
+     */
     void uninhibit();
 
     /**
@@ -73,7 +73,7 @@ public:
      * @see inhibit
      * @see uninhibit
      * @see inhibitedChanged
-     **/
+     */
     bool isInhibited() const;
 
     /**
@@ -81,7 +81,7 @@ public:
      * This means the same action is performed as if the user interacted with
      * an input device on the SeatInterface.
      * Idle timeouts are resumed and the idle time gets restarted.
-     **/
+     */
     void simulateUserActivity();
 
 Q_SIGNALS:
@@ -90,7 +90,7 @@ Q_SIGNALS:
      * @see inhibit
      * @see uninhibit
      * @see isInhibited
-     **/
+     */
     void inhibitedChanged();
 
 private:

@@ -42,7 +42,7 @@ public:
 Q_SIGNALS:
     /**
      * Emitted whenever a new AppmenuInterface is created.
-     **/
+     */
     void appMenuCreated(KWaylandServer::AppMenuInterface*);
 
 private:
@@ -76,7 +76,7 @@ public:
 
     /**
      * @returns The SurfaceInterface this AppmenuInterface references.
-     **/
+     */
     SurfaceInterface *surface() const;
 
 Q_SIGNALS:

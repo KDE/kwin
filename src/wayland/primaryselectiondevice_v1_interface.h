@@ -29,7 +29,7 @@ class PrimarySelectionDeviceV1InterfacePrivate;
  * @see SeatInterface
  * @see PrimarySelectionSourceInterface
  * Lifespan is mapped to the underlying object
- **/
+ */
 class KWAYLANDSERVER_EXPORT PrimarySelectionDeviceV1Interface : public QObject
 {
     Q_OBJECT

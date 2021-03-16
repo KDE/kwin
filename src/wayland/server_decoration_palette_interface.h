@@ -41,7 +41,7 @@ public:
 Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationPaletteInterface is created.
-     **/
+     */
     void paletteCreated(KWaylandServer::ServerSideDecorationPaletteInterface*);
 
 private:
@@ -65,7 +65,7 @@ public:
 
     /**
      * @returns The SurfaceInterface this ServerSideDecorationPaletteInterface references.
-     **/
+     */
     SurfaceInterface *surface() const;
 
 Q_SIGNALS:

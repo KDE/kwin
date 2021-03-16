@@ -22,7 +22,7 @@ class ServerSideDecorationInterfacePrivate;
 
 /**
  * @brief Manager to create ServerSideDecorationInterface.
- **/
+ */
 class KWAYLANDSERVER_EXPORT ServerSideDecorationManagerInterface : public QObject
 {
     Q_OBJECT
@@ -33,19 +33,19 @@ public:
 
     /**
      * Decoration mode used for SurfaceInterfaces.
-     **/
+     */
     enum class Mode {
         /**
          * Undecorated: neither client, nor server provide decoration. Example: popups.
-         **/
+         */
         None,
         /**
          * The decoration is part of the surface.
-         **/
+         */
         Client,
         /**
          * The surface gets embedded into a decoration frame provided by the Server.
-         **/
+         */
         Server
     };
 
@@ -53,18 +53,18 @@ public:
      * Sets the default @p mode which is pushed to the Clients on creating a ServerSideDecorationInterface.
      * @param mode The new default mode.
      * @see defaultMode
-     **/
+     */
     void setDefaultMode(Mode mode);
     /**
      * @returns the current default mode.
      * @see setDefaultMode
-     **/
+     */
     Mode defaultMode() const;
 
 Q_SIGNALS:
     /**
      * Emitted whenever a new ServerSideDecorationInterface is created.
-     **/
+     */
     void decorationCreated(KWaylandServer::ServerSideDecorationInterface*);
 
 private:
@@ -75,7 +75,7 @@ private:
  * @brief Representing how a SurfaceInterface should be decorated.
  *
  * Created by ServerSideDecorationManagerInterface and emitted with decorationCreated signal.
- **/
+ */
 class KWAYLANDSERVER_EXPORT ServerSideDecorationInterface : public QObject
 {
     Q_OBJECT
@@ -87,23 +87,23 @@ public:
      * in that case modeRequested will be emitted.
      * @see mode
      * @see modeRequested
-     **/
+     */
     void setMode(ServerSideDecorationManagerInterface::Mode mode);
     /**
      * @returns the currently set mode, not the requested mode.
      * @see setMode
      * @see modeRequested
-     **/
+     */
     ServerSideDecorationManagerInterface::Mode mode() const;
 
     /**
      * @returns The SurfaceInterface this ServerSideDecorationInterface references.
-     **/
+     */
     SurfaceInterface *surface() const;
 
     /**
      * @returns The ServerSideDecorationInterface for the given @p surface, @c nullptr if there is none.
-     **/
+     */
     static ServerSideDecorationInterface *get(SurfaceInterface *surface);
 
 Q_SIGNALS:
@@ -112,7 +112,7 @@ Q_SIGNALS:
      * The server needs to acknowledge the requested mode by setting it through setMode.
      * @see setMode
      * @see mode
-     **/
+     */
     void modeRequested(KWaylandServer::ServerSideDecorationManagerInterface::Mode);
 
 private:

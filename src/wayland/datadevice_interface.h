@@ -64,7 +64,7 @@ private:
  *
  * @see SeatInterface
  * @see DataSourceInterface
- **/
+ */
 class KWAYLANDSERVER_EXPORT DataDeviceInterface : public QObject
 {
     Q_OBJECT
@@ -82,7 +82,7 @@ public:
 
     /**
      * @returns the serial of the implicit grab which started the drag
-     **/
+     */
     quint32 dragImplicitGrabSerial() const;
 
     DataSourceInterface *selection() const;
@@ -91,7 +91,7 @@ public:
     void sendClearSelection();
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
-     **/
+     */
     void drop();
     /**
      * Updates the SurfaceInterface to which drag motion events are sent.
@@ -103,11 +103,11 @@ public:
      *
      * @param surface The SurfaceInterface which gets motion events
      * @param serial The serial to be used for enter/leave
-     **/
+     */
     void updateDragTarget(SurfaceInterface *surface, quint32 serial);
     /**
      * Mark this DataDeviceInterface as being a proxy device for @p remote.
-     **/
+     */
     void updateProxy(SurfaceInterface *remote);
 
     wl_client *client();
