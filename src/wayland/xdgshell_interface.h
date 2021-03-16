@@ -37,8 +37,6 @@ class XdgSurfaceInterface;
  * menus.
  *
  * XdgShellInterface corresponds to the WaylandInterface \c xdg_wm_base.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgShellInterface : public QObject
 {
@@ -106,8 +104,6 @@ private:
  * user interface elements.
  *
  * XdgSurfaceInterface corresponds to the Wayland interface \c xdg_surface.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgSurfaceInterface : public QObject
 {
@@ -191,8 +187,6 @@ private:
  * as maximize, fullscreen, resizing, minimizing, etc.
  *
  * XdgToplevelInterface corresponds to the Wayland interface \c xdg_toplevel.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgToplevelInterface : public QObject
 {
@@ -375,8 +369,6 @@ private:
  * The XdgPositioner class provides a collection of rules for the placement of a popup surface.
  *
  * XdgPositioner corresponds to the Wayland interface \c xdg_positioner.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgPositioner
 {
@@ -483,8 +475,6 @@ private:
  * popovers and other similar short-lived user interface elements.
  *
  * XdgPopupInterface corresponds to the Wayland interface \c xdg_popup.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgPopupInterface : public QObject
 {

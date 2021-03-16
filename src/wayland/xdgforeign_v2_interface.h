@@ -25,8 +25,6 @@ class XdgForeignV2InterfacePrivate;
  * as transient parent for one of its own surfaces.
  * This parent relationship is traced by the transientChanged signal and the
  * transientFor method.
- *
- * @since 5.40
  */
 class KWAYLANDSERVER_EXPORT XdgForeignV2Interface : public QObject
 {

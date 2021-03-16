@@ -26,7 +26,6 @@ class ContrastInterfacePrivate;
  *
  * @see ContrastInterface
  * @see SurfaceInterface
- * @since 5.5
  **/
 class KWAYLANDSERVER_EXPORT ContrastManagerInterface : public QObject
 {
@@ -51,7 +50,6 @@ private:
  *
  * @see ContrastManagerInterface
  * @see SurfaceInterface
- * @since 5.5
  **/
 class KWAYLANDSERVER_EXPORT ContrastInterface : public QObject
 {

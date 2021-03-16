@@ -131,14 +131,12 @@ public:
      * provide the proper size.
      * @see setSize
      * @see Display::setEglDisplay
-     * @since 5.3
      **/
     QSize size() const;
     /**
      * Sets the @p size for non shared memory buffers.
      * @see size
      * @see sizeChanged
-     * @since 5.3
      **/
     void setSize(const QSize &size);
 
@@ -152,7 +150,6 @@ public:
      *
      * If the format cannot be queried the default value (@c false) is returned.
      *
-     * @since 5.4
      **/
     bool hasAlphaChannel() const;
 
@@ -162,7 +159,6 @@ Q_SIGNALS:
     void aboutToBeDestroyed(KWaylandServer::BufferInterface*);
     /**
      * Emitted when the size of the Buffer changes.
-     * @since 5.3
      **/
     void sizeChanged();
 

@@ -23,8 +23,6 @@ class ViewporterInterfacePrivate;
  * surfaces. This effectively breaks the direct connection between the buffer and the surface size.
  *
  * ViewporterInterface corresponds to the Wayland interface @c wp_viewporter.
- *
- * @since 5.20
  */
 class KWAYLANDSERVER_EXPORT ViewporterInterface : public QObject
 {

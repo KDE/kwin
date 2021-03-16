@@ -32,8 +32,6 @@ class PlasmaShellSurfaceInterfacePrivate;
  *
  * A server providing this interface should think about how to restrict access to it as
  * it allows to perform absolute window positioning.
- *
- * @since 5.4
  **/
 class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public QObject
 {
@@ -57,8 +55,6 @@ private:
  * @brief Resource for the org_kde_plasma_shell_surface interface.
  *
  * PlasmaShellSurfaceInterface gets created by PlasmaShellInterface.
- *
- * @since 5.4
  **/
 class KWAYLANDSERVER_EXPORT PlasmaShellSurfaceInterface : public QObject
 {
@@ -88,9 +84,9 @@ public:
         Desktop, ///< The surface represents a desktop, normally stacked below all other surfaces
         Panel, ///< The surface represents a panel (dock), normally stacked above normal surfaces
         OnScreenDisplay, ///< The surface represents an on screen display, like a volume changed notification
-        Notification, ///< The surface represents a notification @since 5.24
-        ToolTip, ///< The surface represents a tooltip @since 5.24
-        CriticalNotification, ///< The surface represents a critical notification, like battery is running out @since 5.58
+        Notification, ///< The surface represents a notification
+        ToolTip, ///< The surface represents a tooltip
+        CriticalNotification, ///< The surface represents a critical notification, like battery is running out
     };
     /**
      * @returns The requested role, default value is @c Role::Normal.
@@ -114,14 +110,12 @@ public:
     /**
      * @returns true if this window doesn't want to be listed
      * in the taskbar
-     * @since 5.5
      **/
     bool skipTaskbar() const;
 
     /**
      * @returns true if this window doesn't want to be listed
      * in a window switcher
-     * @since 5.47
      **/
     bool skipSwitcher() const;
 
@@ -132,7 +126,6 @@ public:
      * @see showAutoHidingPanel
      * @see panelAutoHideHideRequested
      * @see panelAutoHideShowRequested
-     * @since 5.28
      **/
     void hideAutoHidingPanel();
 
@@ -152,14 +145,12 @@ public:
      * By default some PlasmaShell roles do not get focus, but the PlasmaShellSurfaceInterface can
      * request that it wants to have focus. The compositor can use this information to
      * pass focus to the surface.
-     * @since 5.28
      **/
     //TODO KF6 rename to something generic
     bool panelTakesFocus() const;
 
     /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
-     * @since 5.5
      **/
     static PlasmaShellSurfaceInterface *get(wl_resource *native);
 
@@ -197,7 +188,6 @@ Q_SIGNALS:
      * @see hideAutoHidingPanel
      * @see showAutoHidingPanel
      * @see panelAutoHideShowRequested
-     * @since 5.28
      **/
     void panelAutoHideHideRequested();
 
@@ -210,14 +200,12 @@ Q_SIGNALS:
      * @see hideAutoHidingPanel
      * @see showAutoHidingPanel
      * @see panelAutoHideHideRequested
-     * @since 5.28
      **/
     void panelAutoHideShowRequested();
 
     /*
      * Emitted when panelTakesFocus changes
      * @see panelTakesFocus
-     * @since 5.66
      */
     void panelTakesFocusChanged();
 

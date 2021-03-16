@@ -17,8 +17,6 @@ class KeyStateInterfacePrivate;
 
 /**
  * @brief Exposes key states to wayland clients
- *
- * @since 5.58
  **/
 class KWAYLANDSERVER_EXPORT KeyStateInterface : public QObject
 {

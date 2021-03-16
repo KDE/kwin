@@ -101,25 +101,21 @@ public:
     /**
      * Sets whether Dpms is supported for this output.
      * Default is @c false.
-     * @since 5.5
      **/
     void setDpmsSupported(bool supported);
     /**
      * Sets the currently used dpms mode.
      * Default is @c DpmsMode::On.
-     * @since 5.5
      **/
     void setDpmsMode(DpmsMode mode);
 
     /**
      * @returns all wl_resources bound for the @p client
-     * @since 5.27
      **/
     QVector<wl_resource *> clientResources(ClientConnection *client) const;
 
     /**
      * Returns @c true if the output is on; otherwise returns false.
-     * @since 5.20
      */
     bool isEnabled() const;
 
@@ -143,7 +139,6 @@ Q_SIGNALS:
     /**
      * Change of dpms @p mode is requested.
      * A server is free to ignore this request.
-     * @since 5.5
      **/
     void dpmsModeRequested(KWaylandServer::OutputInterface::DpmsMode mode);
 

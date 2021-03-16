@@ -46,8 +46,6 @@ private:
  * The KeyboardShortcutsInhibitManagerV1Interface allows clients to inhibit global shortcuts.
  *
  * KeyboardShortcutsInhibitManagerV1Interface correponds to the wayland interface zwp_keyboard_shortcuts_inhibit_manager_v1.
- *
- * @since 5.20
  */
 class KWAYLANDSERVER_EXPORT KeyboardShortcutsInhibitManagerV1Interface : public QObject
 {

@@ -82,7 +82,6 @@ public:
 
     /**
      * @returns the serial of the implicit grab which started the drag
-     * @since 5.6
      **/
     quint32 dragImplicitGrabSerial() const;
 
@@ -92,7 +91,6 @@ public:
     void sendClearSelection();
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
-     * @since 5.6
      **/
     void drop();
     /**
@@ -105,12 +103,10 @@ public:
      *
      * @param surface The SurfaceInterface which gets motion events
      * @param serial The serial to be used for enter/leave
-     * @since 5.6
      **/
     void updateDragTarget(SurfaceInterface *surface, quint32 serial);
     /**
      * Mark this DataDeviceInterface as being a proxy device for @p remote.
-     * @since 5.56
      **/
     void updateProxy(SurfaceInterface *remote);
 

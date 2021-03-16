@@ -99,7 +99,6 @@ public:
      * @brief Sets a longer description of the output
      * This should be consistent across reboots for the same monitor
      * It should be set once before the first done call
-     * @since 5.XDGOUTPUT
      */
     void setDescription(const QString &description);
     /**

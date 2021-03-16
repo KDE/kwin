@@ -24,7 +24,6 @@ class OutputChangeSetPrivate;
  * side. The changes are per-configuration.
  *
  * @see OutputConfiguration
- * @since 5.5
  **/
 class KWAYLANDSERVER_EXPORT OutputChangeSet : public QObject
 {
@@ -76,12 +75,10 @@ public:
     QPoint position() const;
 
     /** The new value for scale.
-     * @since 5.50
      */
     qreal scaleF() const;
     
     /** The new value for colorCurves.
-     * @since 5.XX
      */
     OutputDeviceInterface::ColorCurves colorCurves() const;
 

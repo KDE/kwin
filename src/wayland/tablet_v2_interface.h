@@ -38,8 +38,6 @@ class TabletPadGroupV2InterfacePrivate;
  *
  * This class is just the means to get a @class TabletSeatInterface, which is
  * the class that will have all of the information we need.
- *
- * @since 5.69
  */
 
 class KWAYLANDSERVER_EXPORT TabletManagerV2Interface : public QObject

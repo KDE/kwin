@@ -107,7 +107,6 @@ public:
      * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
      *
      * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     * @since 5.20
      */
     QPointF mapToBuffer(const QPointF &point) const;
     /**
@@ -120,7 +119,6 @@ public:
      * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
      *
      * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     * @since 5.20
      */
     QPointF mapFromBuffer(const QPointF &point) const;
     /**
@@ -133,7 +131,6 @@ public:
      * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
      *
      * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     * @since 5.20
      */
     QRegion mapToBuffer(const QRegion &region) const;
     /**
@@ -146,14 +143,12 @@ public:
      * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
      *
      * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     * @since 5.20
      */
     QRegion mapFromBuffer(const QRegion &region) const;
     /**
      * Returns the projection matrix from the surface-local coordinates to buffer coordinates.
      *
      * @see surfaceToBufferMatrixChanged()
-     * @since 5.20
      */
     QMatrix4x4 surfaceToBufferMatrix() const;
 
@@ -196,8 +191,6 @@ public:
      * Returns the rectangle that bounds this surface and all of its sub-surfaces.
      *
      * QPoint(0, 0) corresponds to the upper left corner of this surface.
-     *
-     * @since 5.69
      */
     QRect boundingRect() const;
     /**
@@ -218,25 +211,21 @@ public:
 
     /**
      * @returns The Shadow for this Surface.
-     * @since 5.4
      **/
     QPointer<ShadowInterface> shadow() const;
 
     /**
      * @returns The Blur for this Surface.
-     * @since 5.5
      **/
     QPointer<BlurInterface> blur() const;
 
     /**
      * @returns The Slide for this Surface.
-     * @since 5.5
      **/
     QPointer<SlideInterface> slideOnShowHide() const;
 
     /**
      * @returns The Contrast for this Surface.
-     * @since 5.5
      **/
     QPointer<ContrastInterface> contrast() const;
 
@@ -247,7 +236,6 @@ public:
      * mapped if it has a BufferInterface attached and the parent SurfaceInterface is mapped.
      *
      * @returns Whether the SurfaceInterface is currently mapped
-     * @since 5.22
      **/
     bool isMapped() const;
 
@@ -267,7 +255,6 @@ public:
      * @returns Combined damage since last call to resetTrackedDamage
      * @see damage
      * @see resetTrackedDamage
-     * @since 5.22
      **/
     QRegion trackedDamage() const;
 
@@ -275,7 +262,6 @@ public:
      * Reset the damage tracking. The compositor should invoke this method once it updated
      * it's internal state and processed the current damage.
      * @see trackedDamage
-     * @since 5.22
      **/
     void resetTrackedDamage();
 
@@ -289,7 +275,6 @@ public:
      *
      * @param position The position in surface-local coordinates
      * @returns Child surface at the given @p position or surface itself at the position, might be @c nullptr
-     * @since 5.22
      **/
     SurfaceInterface *surfaceAt(const QPointF &position);
 
@@ -304,7 +289,6 @@ public:
      *
      * @param position The position in surface-local coordinates
      * @returns Input receiving child surface at the given @p position or surface itself at the position, might be @c nullptr
-     * @since 5.52
      **/
     SurfaceInterface *inputSurfaceAt(const QPointF &position);
 
@@ -315,35 +299,30 @@ public:
      * an OutputInterface by e.g. getting (un)mapped, resized, moved, etc.
      *
      * @see outputs
-     * @since 5.27
      **/
     void setOutputs(const QVector<OutputInterface *> &outputs);
 
     /**
      * @returns All OutputInterfaces the SurfaceInterface is on.
      * @see setOutputs
-     * @since 5.27
      **/
     QVector<OutputInterface *> outputs() const;
 
     /**
      * Pointer confinement installed on this SurfaceInterface.
      * @see pointerConstraintsChanged
-     * @since 5.29
      **/
     ConfinedPointerV1Interface *confinedPointer() const;
 
     /**
      * Pointer lock installed on this SurfaceInterface.
      * @see pointerConstraintsChanged
-     * @since 5.29
      **/
     LockedPointerV1Interface *lockedPointer() const;
 
     /**
      * @returns Whether this SurfaceInterface wants idle to be inhibited on the Output it is shown
      * @see inhibitsIdleChanged
-     * @since 5.41
      **/
     bool inhibitsIdle() const;
 
@@ -353,7 +332,6 @@ public:
     static SurfaceInterface *get(wl_resource *native);
     /**
      * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
-     * @since 5.3
      **/
     static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
@@ -363,13 +341,11 @@ public:
      *
      * Setting a data proxy is only allowed when the client owning this surface
      * has not created a data device itself.
-     * @since 5.56
      **/
     void setDataProxy(SurfaceInterface *surface);
     /**
      * Returns the data proxy of this SurfaceInterface or null if there
      * is none set.
-     * @since 5.56
      **/
     SurfaceInterface* dataProxy() const;
 
@@ -427,35 +403,20 @@ Q_SIGNALS:
      * This signal is emitted when the surface size has changed.
      */
     void sizeChanged();
-    /**
-     * @since 5.4
-     **/
     void shadowChanged();
-    /**
-     * @since 5.5
-     **/
     void blurChanged();
-    /**
-     * @since 5.5
-     **/
     void slideOnShowHideChanged();
-    /**
-     * @since 5.5
-     **/
     void contrastChanged();
     /**
      * Emitted whenever the tree of sub-surfaces changes in a way which requires a repaint.
-     * @since 5.22
      **/
     void subSurfaceTreeChanged();
     /**
      * Emitted whenever a new child sub-surface @p subSurface is added.
-     * @since 5.70
      */
     void childSubSurfaceAdded(SubSurfaceInterface *subSurface);
     /**
      * Emitted whenver the child sub-surface @p subSurface is removed.
-     * @since 5.70
      */
     void childSubSurfaceRemoved(SubSurfaceInterface *subSurface);
 
@@ -467,14 +428,12 @@ Q_SIGNALS:
      *
      * @see confinedPointer
      * @see lockedPointer
-     * @since 5.29
      **/
     void pointerConstraintsChanged();
 
     /**
      * Emitted whenever the SurfaceInterface starts/ends to inhibit idle.
      * @see inhibitsIdle
-     * @since 5.41
      **/
     void inhibitsIdleChanged();
 
@@ -483,7 +442,6 @@ Q_SIGNALS:
      *
      * This signal is emitted after all the relevant damage and xyzChanged signals
      * for this commit are emitted.
-     * @since 5.54
      **/
     void committed();
 

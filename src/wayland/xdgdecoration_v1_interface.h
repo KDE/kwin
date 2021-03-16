@@ -26,8 +26,6 @@ class XdgToplevelInterface;
  * client to negotiate the use of server-side window decorations.
  *
  * XdgDecorationManagerV1Interface corresponds to the interface \c zxdg_decoration_manager_v1.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgDecorationManagerV1Interface : public QObject
 {
@@ -58,8 +56,6 @@ private:
  * decoration on an xdg-toplevel surface.
  *
  * XdgToplevelDecorationV1Interface corresponds to the interface \c zxdg_toplevel_decoration_v1.
- *
- * \since 5.20
  */
 class KWAYLANDSERVER_EXPORT XdgToplevelDecorationV1Interface : public QObject
 {

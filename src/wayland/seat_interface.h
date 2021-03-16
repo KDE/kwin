@@ -46,8 +46,6 @@ class TouchInterface;
  * The "wheel tilt" axis source indicates that the actual device is a
  * wheel but the scroll event is not caused by a rotation but a
  * (usually sideways) tilt of the wheel.
- *
- * @since 5.59
  **/
 enum class PointerAxisSource {
     Unknown,
@@ -160,7 +158,6 @@ public:
     ///@{
     /**
      * @returns whether there is currently a drag'n'drop going on.
-     * @since 5.6
      * @see isDragPointer
      * @see isDragTouch
      * @see dragStarted
@@ -169,14 +166,12 @@ public:
     bool isDrag() const;
     /**
      * @returns whether the drag'n'drop is operated through the pointer device
-     * @since 5.6
      * @see isDrag
      * @see isDragTouch
      **/
     bool isDragPointer() const;
     /**
      * @returns whether the drag'n'drop is operated through the touch device
-     * @since 5.6
      * @see isDrag
      * @see isDragPointer
      **/
@@ -184,12 +179,10 @@ public:
     /**
      * @returns The transformation applied to go from global to local coordinates for drag motion events.
      * @see dragSurfaceTransformation
-     * @since 5.6
      **/
     QMatrix4x4 dragSurfaceTransformation() const;
     /**
      * @returns The currently focused Surface for drag motion events.
-     * @since 5.6
      * @see dragSurfaceTransformation
      * @see dragSurfaceChanged
      **/
@@ -197,7 +190,6 @@ public:
     /**
      * @returns The DataDeviceInterface which started the drag and drop operation.
      * @see isDrag
-     * @since 5.6
      **/
     DataDeviceInterface *dragSource() const;
     /**
@@ -205,7 +197,6 @@ public:
      *
      * Sends a drag leave event to the current target and an enter event to @p surface.
      * The enter position is derived from @p globalPosition and transformed by @p inputTransformation.
-     * @since 5.6
      **/
     void setDragTarget(SurfaceInterface *surface, const QPointF &globalPosition, const QMatrix4x4 &inputTransformation);
     /**
@@ -213,7 +204,6 @@ public:
      *
      * Sends a drag leave event to the current target and an enter event to @p surface.
      * The enter position is derived from current global position and transformed by @p inputTransformation.
-     * @since 5.6
      **/
     void setDragTarget(SurfaceInterface *surface, const QMatrix4x4 &inputTransformation = QMatrix4x4());
     ///@}
@@ -281,7 +271,6 @@ public:
      * @see focusedPointerSurfacePosition
      * @see setFocusedPointerSurfaceTransformation
      * @see focusedPointerSurfaceTransformation
-     * @since 5.6
      **/
     void setFocusedPointerSurface(SurfaceInterface *surface, const QMatrix4x4 &transformation);
     /**
@@ -321,13 +310,11 @@ public:
      * @see focusedPointerSurfaceTransformation
      * @see focusedPointerSurfacePosition
      * @see setFocusedPointerSurfacePosition
-     * @since 5.6
      **/
     void setFocusedPointerSurfaceTransformation(const QMatrix4x4 &transformation);
     /**
      * @returns The transformation applied to pointer position to go from global to local coordinates.
      * @see setFocusedPointerSurfaceTransformation
-     * @since 5.6
      **/
     QMatrix4x4 focusedPointerSurfaceTransformation() const;
     /**
@@ -378,12 +365,10 @@ public:
      * @param delta The length of a vector along the specified axis @p orientation.
      * @param discreteDelta The number of discrete steps, e.g. mouse wheel clicks.
      * @param source Describes how the axis event was physically generated.
-     * @since 5.59
      **/
     void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
     /**
      * @returns true if there is a pressed button with the given @p serial
-     * @since 5.6
      **/
     bool hasImplicitPointerGrab(quint32 serial) const;
 
@@ -419,7 +404,6 @@ public:
      * @param deltaNonAccelerated non-accelerated motion vector
      * @param microseconds timestamp with microseconds granularity
      * @see setPointerPos
-     * @since 5.28
      **/
     void relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
 
@@ -443,7 +427,6 @@ public:
      * @see endPointerSwipeGesture
      * @see cancelPointerSwipeGesture
      * @see startPointerPinchGesture
-     * @since 5.29
      **/
     void startPointerSwipeGesture(quint32 fingerCount);
 
@@ -454,7 +437,6 @@ public:
      * @see startPointerSwipeGesture
      * @see endPointerSwipeGesture
      * @see cancelPointerSwipeGesture
-     * @since 5.29
      **/
     void updatePointerSwipeGesture(const QSizeF &delta);
 
@@ -472,7 +454,6 @@ public:
      * @see startPointerSwipeGesture
      * @see updatePointerSwipeGesture
      * @see endPointerSwipeGesture
-     * @since 5.29
      **/
     void cancelPointerSwipeGesture();
 
@@ -496,7 +477,6 @@ public:
      * @see endPointerPinchGesture
      * @see cancelPointerPinchGesture
      * @see startPointerSwipeGesture
-     * @since 5.29
      **/
     void startPointerPinchGesture(quint32 fingerCount);
 
@@ -510,7 +490,6 @@ public:
      * @see startPointerPinchGesture
      * @see endPointerPinchGesture
      * @see cancelPointerPinchGesture
-     * @since 5.29
      **/
     void updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation);
 
@@ -519,7 +498,6 @@ public:
      * @see startPointerPinchGesture
      * @see updatePointerPinchGesture
      * @see cancelPointerPinchGesture
-     * @since 5.29
      **/
     void endPointerPinchGesture();
 
@@ -528,7 +506,6 @@ public:
      * @see startPointerPinchGesture
      * @see updatePointerPinchGesture
      * @see endPointerPinchGesture
-     * @since 5.29
      **/
     void cancelPointerPinchGesture();
     ///@}
@@ -566,7 +543,6 @@ public:
     /**
      * @returns true if there is a touch sequence going on associated with a touch
      * down of the given @p serial.
-     * @since 5.XX
      **/
     bool hasImplicitTouchGrab(quint32 serial) const;
     ///@}
@@ -591,13 +567,11 @@ public:
      * @see focusedTextInput
      * @see focusedTextInputChanged
      * @see setFocusedKeyboardSurface
-     * @since 5.23
      **/
     void setFocusedTextInputSurface(SurfaceInterface *surface);
     /**
      * @returns The SurfaceInterface which is currently focused for text input.
      * @see setFocusedTextInputSurface
-     * @since 5.23
      **/
     SurfaceInterface *focusedTextInputSurface() const;
     /**
@@ -610,7 +584,6 @@ public:
      *
      * @see focusedTextInputChanged
      * @see focusedTextInputSurface
-     * @since 5.23
      **/
     TextInputV2Interface *textInputV2() const;
     
@@ -619,7 +592,6 @@ public:
 
     /**
      * @returns The DataDeviceInterface holding the current clipboard selection.
-     * @since 5.24
      * @see selectionChanged
      * @see setSelection
      * This may be null
@@ -637,7 +609,6 @@ public:
      * @param dataDevice Sets the current clipboard selection.
      * @see selection
      * @see selectionChanged
-     * @since 5.24
      **/
     void setSelection(AbstractDataSource *selection);
 
@@ -656,7 +627,6 @@ Q_SIGNALS:
 
     /**
      * Emitted whenever the selection changes
-     * @since 5.56
      * @see selection
      * @see setSelection
      **/
@@ -670,26 +640,22 @@ Q_SIGNALS:
 
     /**
      * Emitted when a drag'n'drop operation is started
-     * @since 5.6
      * @see dragEnded
      **/
     void dragStarted();
     /**
      * Emitted when a drag'n'drop operation ended, either by dropping or canceling.
-     * @since 5.6
      * @see dragStarted
      **/
     void dragEnded();
     /**
      * Emitted whenever the drag surface for motion events changed.
-     * @since 5.6
      * @see dragSurface
      **/
     void dragSurfaceChanged();
     /**
      * Emitted whenever the focused text input changed.
      * @see focusedTextInput
-     * @since 5.23
      **/
     void focusedTextInputSurfaceChanged();
 

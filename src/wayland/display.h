@@ -109,7 +109,6 @@ public:
     void createShm();
     /**
      * @returns All SeatInterface currently managed on the Display.
-     * @since 5.6
      **/
     QVector<SeatInterface*> seats() const;
     QList<OutputDeviceInterface *> outputDevices() const;
@@ -131,13 +130,11 @@ public:
      * Wayland display prior to calling this method.
      *
      * @see eglDisplay
-     * @since 5.3
      **/
     void setEglDisplay(void *display);
     /**
      * @returns the EGLDisplay used for this Wayland display or EGL_NO_DISPLAY if not set.
      * @see setEglDisplay
-     * @since 5.3
      **/
     void *eglDisplay() const;
 

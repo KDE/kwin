@@ -53,7 +53,6 @@ public:
      * @returns The id of this Resource if it is created, otherwise @c 0.
      *
      * This is a convenient wrapper for wl_resource_get_id.
-     * @since 5.3
      **/
     quint32 id() const;
 
@@ -61,7 +60,6 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the client unbound this Resource.
      * The Resource will be deleted in the next event cycle after this event.
-     * @since 5.24
      **/
     void unbound();
     /**
@@ -71,7 +69,6 @@ Q_SIGNALS:
      * getting destroyed.
      *
      * @see unbound
-     * @since 5.37
      **/
     void aboutToBeUnbound();
 

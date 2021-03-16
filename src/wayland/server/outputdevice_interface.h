@@ -27,7 +27,6 @@ class OutputDeviceInterfacePrivate;
  * so not currently used to display content.
  *
  * @see OutputManagementInterface
- * @since 5.5
  */
 class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public QObject
 {
@@ -96,7 +95,6 @@ public:
     QSize pixelSize() const;
     int refreshRate() const;
 
-    /// @since 5.50
     qreal scaleF() const;
     SubPixel subPixel() const;
     Transform transform() const;
@@ -115,7 +113,6 @@ public:
     void setSerialNumber(const QString &serialNumber);
     void setEisaId(const QString &eisaId);
 
-    /// @since 5.50
     void setScaleF(qreal scale);
     void setSubPixel(SubPixel subPixel);
     void setTransform(Transform transform);
@@ -152,7 +149,6 @@ Q_SIGNALS:
     void pixelSizeChanged(const QSize&);
     void refreshRateChanged(int);
 
-    /// @since 5.50
     void scaleFChanged(qreal);
     void subPixelChanged(SubPixel);
     void transformChanged(Transform);

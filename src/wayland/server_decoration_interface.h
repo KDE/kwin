@@ -22,8 +22,6 @@ class ServerSideDecorationInterfacePrivate;
 
 /**
  * @brief Manager to create ServerSideDecorationInterface.
- *
- * @since 5.6
  **/
 class KWAYLANDSERVER_EXPORT ServerSideDecorationManagerInterface : public QObject
 {
@@ -77,8 +75,6 @@ private:
  * @brief Representing how a SurfaceInterface should be decorated.
  *
  * Created by ServerSideDecorationManagerInterface and emitted with decorationCreated signal.
- *
- * @since 5.6
  **/
 class KWAYLANDSERVER_EXPORT ServerSideDecorationInterface : public QObject
 {

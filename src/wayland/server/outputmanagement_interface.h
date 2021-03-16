@@ -26,7 +26,6 @@ class OutputConfigurationInterface;
  *
  * @see OutputConfiguration
  * @see OutputConfigurationInterface
- * @since 5.5
  */
 class KWAYLANDSERVER_EXPORT OutputManagementInterface : public QObject
 {

@@ -18,7 +18,6 @@ class KeyboardInterfacePrivate;
 
 /**
  * @brief Resource for the wl_keyboard interface.
- *
  **/
 class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
 {
@@ -51,8 +50,6 @@ public:
      *
      * @param charactersPerSecond The characters per second rate, value of @c 0 disables key repeating
      * @param delay The delay on key press before starting repeating keys
-     *
-     * @since 5.21
      **/
     void setRepeatInfo(qint32 charactersPerSecond, qint32 delay);
 

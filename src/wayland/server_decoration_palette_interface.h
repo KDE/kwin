@@ -24,7 +24,6 @@ class ServerSideDecorationPaletteInterfacePrivate;
  *
  * This global can be used for clients to bind ServerSideDecorationPaletteInterface instances
  * and notifies when a new one is created
- * @since 5.42
  */
 class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteManagerInterface : public QObject
 {
@@ -52,7 +51,6 @@ private:
 /**
  * Provides the palette
  * This interface is attached to a wl_surface and informs the server of a requested palette
- * @since 5.42
  */
 class KWAYLANDSERVER_EXPORT ServerSideDecorationPaletteInterface : public QObject
 {

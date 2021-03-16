@@ -52,7 +52,6 @@ public:
     wl_resource *createResource(const wl_interface *interface, quint32 version, quint32 id);
     /**
      * Get the wl_resource associated with the given @p id.
-     * @since 5.3
      **/
     wl_resource *getResource(quint32 id);
 
@@ -102,7 +101,6 @@ public:
      * If the executable path cannot be resolved an empty QString is returned.
      *
      * @see processId
-     * @since 5.6
      **/
     QString executablePath() const;
 
@@ -120,7 +118,6 @@ public:
      * This is a convenient wrapper around wl_client_destroy. The use case is in combination
      * with ClientConnections created through @link Display::createClient @endlink. E.g. once
      * the process for the ClientConnection exited, the ClientConnection needs to be destroyed, too.
-     * @since 5.5
      **/
     void destroy();
 

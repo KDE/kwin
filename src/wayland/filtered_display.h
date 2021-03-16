@@ -18,8 +18,6 @@ namespace KWaylandServer
 * Server Implementation that allows one to restrict which globals are available to which clients
 *
 * Users of this class must implement the virtual @method allowInterface method.
-*
-* @since 5.FIXME
 */
 class KWAYLANDSERVER_EXPORT FilteredDisplay : public Display
 {

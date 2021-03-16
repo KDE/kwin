@@ -29,8 +29,6 @@ class TextInputManagerV2InterfacePrivate;
  * can be determined through {@link interfaceVersion}.
  *
  * To create a TextInputManagerV2Interface use {@link Display::createTextInputManager}
- *
- * @since 5.23
  **/
 class KWAYLANDSERVER_EXPORT TextInputManagerV2Interface : public QObject
 {
@@ -59,7 +57,6 @@ private:
  *
  * @see TextInputManagerV2Interface
  * @see SeatInterface
- * @since 5.23
  **/
 class KWAYLANDSERVER_EXPORT TextInputV2Interface : public QObject
 {

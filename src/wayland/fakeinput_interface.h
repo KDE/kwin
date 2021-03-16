@@ -36,7 +36,6 @@ class FakeInputInterfacePrivate;
  * way trusted clients.
  *
  * @see FakeInputDevice
- * @since 5.4
  **/
 class KWAYLANDSERVER_EXPORT FakeInputInterface : public QObject
 {
@@ -61,7 +60,6 @@ private:
  * @brief Represents the Resource for a org_kde_kwin_fake_input interface.
  *
  * @see FakeInputInterface
- * @since 5.4
  **/
 class KWAYLANDSERVER_EXPORT FakeInputDevice : public QObject
 {
@@ -103,8 +101,6 @@ Q_SIGNALS:
     void pointerMotionRequested(const QSizeF &delta);
     /**
      * Request an absolute pointer motion to @p pos.
-     *
-     * @since 5.54
      **/
     void pointerMotionAbsoluteRequested(const QPointF &pos);
     /**
@@ -121,44 +117,30 @@ Q_SIGNALS:
     void pointerAxisRequested(Qt::Orientation orientation, qreal delta);
     /**
      * Requests a touch down at @p pos and identified by @p id.
-     *
-     * @since 5.23
      **/
     void touchDownRequested(quint32 id, const QPointF &pos);
     /**
      * Requests a touch motion by @p pos and identified by @p id.
-     *
-     * @since 5.23
      **/
     void touchMotionRequested(quint32 id, const QPointF &pos);
     /**
      * Requests a touch up identified by @p id.
-     *
-     * @since 5.23
      **/
     void touchUpRequested(quint32 id);
     /**
      * Requests a touch cancel event.
-     *
-     * @since 5.23
      **/
     void touchCancelRequested();
     /**
      * Requests a touch frame event.
-     *
-     * @since 5.23
      **/
     void touchFrameRequested();
      /**
      * Requests a keyboard key pressed for @p key.
-     *
-     * @since 5.63
      **/
     void keyboardKeyPressRequested(quint32 key);
     /**
      * Requests a keyboard key release for @p key.
-     *
-     * @since 5.63
      **/
     void keyboardKeyReleaseRequested(quint32 key);
 

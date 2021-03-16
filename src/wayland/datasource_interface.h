@@ -36,7 +36,6 @@ public:
 
     /**
      * @returns The Drag and Drop actions supported by this DataSourceInterface.
-     * @since 5.42
      **/
     DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
 

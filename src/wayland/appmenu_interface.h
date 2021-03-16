@@ -25,7 +25,6 @@ class AppMenuInterfacePrivate;
  *
  * This global can be used for clients to bind AppmenuInterface instances
  * and notifies when a new one is created
- * @since 5.42
  */
 class KWAYLANDSERVER_EXPORT AppMenuManagerInterface : public QObject
 {
@@ -54,7 +53,6 @@ private:
  * Provides the DBus service name and object path to a AppMenu DBus interface.
  * This interface is attached to a wl_surface and provides access to where
  * the AppMenu DBus interface is registered.
- * @since 5.42
  */
 class KWAYLANDSERVER_EXPORT AppMenuInterface : public QObject
 {

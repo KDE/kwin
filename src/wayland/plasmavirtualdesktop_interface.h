@@ -21,7 +21,6 @@ class PlasmaVirtualDesktopManagementInterfacePrivate;
  * @short Wrapper for the org_kde_plasma_virtual_desktop_management interface.
  *
  * This class provides a convenient wrapper for the org_kde_plasma_virtual_desktop_management interface.
- * @since 5.52
  */
 class KWAYLANDSERVER_EXPORT PlasmaVirtualDesktopManagementInterface : public QObject
 {
@@ -33,7 +32,6 @@ public:
 
     /**
      * Sets how many rows the virtual desktops should be laid into
-     * @since 5.55
      */
     void setRows(quint32 rows);
 

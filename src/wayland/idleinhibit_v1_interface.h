@@ -21,8 +21,6 @@ class IdleInhibitManagerV1InterfacePrivate;
  * The IdleInhibitorManagerInterface is used by clients to inhibit idle on a
  * SurfaceInterface. Whether a SurfaceInterface inhibits idle is exposes through
  * @link{SurfaceInterface::inhibitsIdle}.
- *
- * @since 5.41
  **/
 class KWAYLANDSERVER_EXPORT IdleInhibitManagerV1Interface : public QObject
 {
