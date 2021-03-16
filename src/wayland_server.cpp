@@ -547,13 +547,16 @@ void WaylandServer::initWorkspace()
         connect(workspace(), &Workspace::workspaceInitialized, this, [this] {
             auto f = [this] () {
                 QVector<quint32> ids;
+                QVector<QString> uuids;
                 for (Toplevel *toplevel : workspace()->stackingOrder()) {
                     auto *client = qobject_cast<AbstractClient *>(toplevel);
                     if (client && client->windowManagementInterface()) {
                         ids << client->windowManagementInterface()->internalId();
+                        uuids << client->windowManagementInterface()->uuid();
                     }
                 }
                 m_windowManagement->setStackingOrder(ids);
+                m_windowManagement->setStackingOrderUuids(uuids);
             };
             f();
             connect(workspace(), &Workspace::stackingOrderChanged, this, f);
