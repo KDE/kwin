@@ -8,6 +8,7 @@ set(kcm_kwin_virtualdesktops_PART_SRCS
     animationsmodel.cpp
     desktopsmodel.cpp
     virtualdesktops.cpp
+    virtualdesktopsdata.cpp
 )
 
 kconfig_add_kcfg_files(kcm_kwin_virtualdesktops_PART_SRCS virtualdesktopssettings.kcfgc GENERATE_MOC)
