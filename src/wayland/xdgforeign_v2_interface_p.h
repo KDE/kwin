@@ -13,8 +13,6 @@
 namespace KWaylandServer
 {
 
-class Display;
-class SurfaceInterface;
 class XdgExportedV2Interface;
 class XdgImportedV2Interface;
 class XdgExporterV2InterfacePrivate;
