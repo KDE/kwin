@@ -208,6 +208,8 @@ bool SlideEffect::isTranslated(const EffectWindow *w) const
         return false;
     } else if (w == m_movingWindow) {
         return false;
+    } else if (w->isOnDesktop(m_oldDesktop) && w->isOnDesktop(m_currentDesktop)) {
+        return false;
     } else if (w->isOnDesktop(m_paintCtx.desktop)) {
         return true;
     }
@@ -341,6 +343,8 @@ bool SlideEffect::shouldElevate(const EffectWindow *w) const
 
 void SlideEffect::start(int old, int current, EffectWindow *movingWindow)
 {
+    m_oldDesktop = old;
+    m_currentDesktop = current;
     m_movingWindow = movingWindow;
 
     const bool wrap = effects->optionRollOverDesktops();
@@ -397,6 +401,8 @@ void SlideEffect::stop()
 
     m_paintCtx.fullscreenWindows.clear();
     m_movingWindow = nullptr;
+    m_oldDesktop = -1;
+    m_currentDesktop = -1;
     m_active = false;
     m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->setActiveFullScreenEffect(nullptr);

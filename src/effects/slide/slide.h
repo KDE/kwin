@@ -90,6 +90,9 @@ private:
     EffectWindow *m_movingWindow = nullptr;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
+    int m_oldDesktop = -1;
+    int m_currentDesktop = -1;
+
     struct {
         int desktop;
         bool firstPass;
