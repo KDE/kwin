@@ -641,7 +641,7 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                     Toplevel *toplevel = window->window();
                     if (toplevel->isOnScreen(screenId) && window->isVisible() && toplevel->opacity() > 0) {
                         AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel);
-                        if (!c || !c->isFullScreen() || !window->isOpaque()) {
+                        if (!c || !c->isFullScreen()) {
                             break;
                         }
                         auto pixmap = window->windowPixmap<WindowPixmap>();
@@ -652,6 +652,10 @@ void SceneOpenGL::paint(int screenId, const QRegion &damage, const QList<Topleve
                         pixmap = pixmap->topMostSurface();
                         // the subsurface has to be able to cover the whole window
                         if (pixmap->position() != QPoint(0, 0)) {
+                            break;
+                        }
+                        // and it has to be completely opaque
+                        if (!window->isOpaque() && !pixmap->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
                             break;
                         }
                         directScanout = m_backend->scanout(screenId, pixmap->surface());
