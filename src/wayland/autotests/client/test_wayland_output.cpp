@@ -146,6 +146,7 @@ void TestWaylandOutput::testRegistry()
     // changing again should not trigger signal
     m_serverOutput->setPhysicalSize(QSize(200, 100));
     QCOMPARE(physicalSizeChangedSpy.count(), 1);
+    m_serverOutput->done();
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -252,6 +253,7 @@ void TestWaylandOutput::testModeChanges()
     QSignalSpy modeChangedSpy(&output, &KWayland::Client::Output::modeChanged);
     QVERIFY(modeChangedSpy.isValid());
     m_serverOutput->setCurrentMode(QSize(800, 600));
+    m_serverOutput->done();
     QVERIFY(modeChangedSpy.wait());
     if (modeChangedSpy.size() == 1) {
         QVERIFY(modeChangedSpy.wait());
@@ -283,6 +285,7 @@ void TestWaylandOutput::testModeChanges()
     modeChangedSpy.clear();
     m_serverOutput->setCurrentMode(QSize(1280, 1024), 90000);
     QCOMPARE(m_serverOutput->refreshRate(), 90000);
+    m_serverOutput->done();
     QVERIFY(modeChangedSpy.wait());
     if (modeChangedSpy.size() == 1) {
         QVERIFY(modeChangedSpy.wait());
@@ -325,6 +328,7 @@ void TestWaylandOutput::testScaleChange()
     QVERIFY(serverScaleChanged.isValid());
     m_serverOutput->setScale(2);
     QCOMPARE(m_serverOutput->scale(), 2);
+    m_serverOutput->done();
     QCOMPARE(serverScaleChanged.count(), 1);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
@@ -336,6 +340,7 @@ void TestWaylandOutput::testScaleChange()
     // change once more
     outputChanged.clear();
     m_serverOutput->setScale(4);
+    m_serverOutput->done();
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 4);
 }
@@ -392,6 +397,7 @@ void TestWaylandOutput::testSubPixel()
     outputChanged.clear();
     m_serverOutput->setSubPixel(OutputInterface::SubPixel::Unknown);
     QCOMPARE(m_serverOutput->subPixel(), OutputInterface::SubPixel::Unknown);
+    m_serverOutput->done();
     QCOMPARE(serverSubPixelChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
@@ -452,6 +458,7 @@ void TestWaylandOutput::testTransform()
     outputChanged.clear();
     m_serverOutput->setTransform(OutputInterface::Transform::Normal);
     QCOMPARE(m_serverOutput->transform(), OutputInterface::Transform::Normal);
+    m_serverOutput->done();
     QCOMPARE(serverTransformChangedSpy.count(), 2);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());

@@ -156,6 +156,7 @@ void TestXdgOutput::testChanges()
     // names cannot dynamically change according to the spec
 
     m_serverXdgOutput->done();
+    m_serverOutput->done();
 
     QVERIFY(xdgOutputChanged.wait());
     QCOMPARE(xdgOutputChanged.count(), 1);

@@ -119,6 +119,12 @@ public:
      */
     bool isEnabled() const;
 
+    /**
+     * Submit changes to all clients.
+     * @since 5.22
+     */
+    void done();
+
     static OutputInterface *get(wl_resource *native);
 
 Q_SIGNALS:

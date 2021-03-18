@@ -129,9 +129,7 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
             }
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
                 d->sendMode((*it).resource, *currentModeIt);
-                d->sendDone(*it);
             }
-            wl_display_flush_clients(*(d->display));
         }
     );
     connect(this, &OutputInterface::subPixelChanged,       this, [d] { d->updateGeometry(); });
@@ -403,7 +401,6 @@ void OutputInterface::Private::updateGeometry()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         sendGeometry((*it).resource);
-        sendDone(*it);
     }
 }
 
@@ -411,7 +408,6 @@ void OutputInterface::Private::updateScale()
 {
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         sendScale(*it);
-        sendDone(*it);
     }
 }
 
@@ -535,6 +531,13 @@ bool OutputInterface::isEnabled() const
         return true;
     }
     return d->dpms.mode == DpmsMode::On;
+}
+
+void OutputInterface::done() {
+    Q_D();
+    for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+        d->sendDone(*it);
+    }
 }
 
 OutputInterface *OutputInterface::get(wl_resource* native)

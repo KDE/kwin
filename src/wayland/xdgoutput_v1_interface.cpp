@@ -12,11 +12,12 @@
 
 #include <QHash>
 #include <QDebug>
+#include <QPointer>
 
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 class XdgOutputManagerV1InterfacePrivate : public QtWaylandServer::zxdg_output_manager_v1
 {
@@ -34,12 +35,15 @@ protected:
 class XdgOutputV1InterfacePrivate : public QtWaylandServer::zxdg_output_v1
 {
 public:
+    XdgOutputV1InterfacePrivate(OutputInterface *wlOutput) : output(wlOutput) {}
+
     QPoint pos;
     QSize size;
     QString name;
     QString description;
     bool dirty = false;
     bool doneOnce = false;
+    QPointer<OutputInterface> output;
 
 protected:
     void zxdg_output_v1_bind_resource(Resource *resource) override;
@@ -60,7 +64,7 @@ XdgOutputV1Interface * XdgOutputManagerV1Interface::createXdgOutput(OutputInterf
 {
     Q_ASSERT_X(!d->outputs.contains(output), "createXdgOutput", "An XdgOuputInterface already exists for this output");
 
-    auto xdgOutput = new XdgOutputV1Interface(parent);
+    auto xdgOutput = new XdgOutputV1Interface(output, parent);
     d->outputs[output] = xdgOutput;
 
     //as XdgOutput lifespan is managed by user, delete our mapping when either
@@ -100,9 +104,9 @@ void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(Resource
     wl_resource_destroy(resource->handle);
 }
 
-XdgOutputV1Interface::XdgOutputV1Interface(QObject *parent)
+XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output, QObject *parent)
     : QObject(parent)
-    , d(new XdgOutputV1InterfacePrivate())
+    , d(new XdgOutputV1InterfacePrivate(output))
 {
 }
 
@@ -178,7 +182,9 @@ void XdgOutputV1Interface::done()
     }
     d->dirty = false;
     for (auto resource : d->resourceMap()) {
-        d->send_done(resource->handle);
+        if (wl_resource_get_version(resource->handle) < 3) {
+            d->send_done(resource->handle);
+        }
     }
 }
 
@@ -197,8 +203,15 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
     if (resource->version() >= ZXDG_OUTPUT_V1_DESCRIPTION_SINCE_VERSION) {
         send_description(resource->handle, description);
     }
+
     if (doneOnce) {
-        send_done(resource->handle);
+        if (wl_resource_get_version(resource->handle) >= 3) {
+            if (output) {
+                output->done();
+            }
+        } else {
+            send_done(resource->handle);
+        }
     }
 }
 

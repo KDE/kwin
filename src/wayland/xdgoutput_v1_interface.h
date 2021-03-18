@@ -112,7 +112,7 @@ public:
     void done();
 
 private:
-    explicit XdgOutputV1Interface(QObject *parent);
+    explicit XdgOutputV1Interface(OutputInterface *output, QObject *parent);
     friend class XdgOutputManagerV1Interface;
     friend class XdgOutputManagerV1InterfacePrivate;
 
