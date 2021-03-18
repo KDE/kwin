@@ -629,7 +629,7 @@ void EglGbmBackend::setViewport(const Output &output) const
 
 QRegion EglGbmBackend::beginFrame(int screenId)
 {
-    auto output = m_outputs[screenId];
+    Output &output = m_outputs[screenId];
     if (output.directScanoutBuffer) {
         gbm_bo_destroy(output.directScanoutBuffer);
         output.directScanoutBuffer = nullptr;
@@ -697,7 +697,7 @@ bool EglGbmBackend::scanout(int screenId, KWaylandServer::SurfaceInterface *surf
         return false;
     }
     auto buffer = surface->buffer();
-    Output output = m_outputs[screenId];
+    Output &output = m_outputs[screenId];
     if (buffer->linuxDmabufBuffer()->size() != output.output->modeSize()) {
         return false;
     }
