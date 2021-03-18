@@ -53,7 +53,7 @@ private:
     int m_fadeDuration;
     EffectWindow *m_monitorWindow;
     QList<WId> m_highlightedIds;
-    float m_ghostOpacity = 0.15;
+    float m_ghostOpacity = 0;
 };
 
 } // namespace
