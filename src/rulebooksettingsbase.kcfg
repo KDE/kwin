@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" 
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
   <kcfgfile arg="true">
   </kcfgfile>
   <group name="General">
     <entry name="count" type="int">
-      <label>Total rules count</label>
+      <label>Total rules count (legacy)</label>
       <default>0</default>
+    </entry>
+    <entry name="ruleGroupList" key="rules" type="stringList">
+      <label>Ordered list of rules groups</label>
+      <default>QStringList()</default>
     </entry>
   </group>
 </kcfg>
