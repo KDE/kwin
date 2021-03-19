@@ -30,9 +30,11 @@ class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_p
 public:
     PlasmaWindowManagementInterfacePrivate(PlasmaWindowManagementInterface *_q, Display *display);
     void sendShowingDesktopState();
-    void sendStackingOrderChanged();
     void sendShowingDesktopState(wl_resource *resource);
+    void sendStackingOrderChanged();
     void sendStackingOrderChanged(wl_resource *resource);
+    void sendStackingOrderUuidsChanged();
+    void sendStackingOrderUuidsChanged(wl_resource *resource);
 
     PlasmaWindowManagementInterface::ShowingDesktopState state = PlasmaWindowManagementInterface::ShowingDesktopState::Disabled;
     QList<PlasmaWindowInterface*> windows;
@@ -151,13 +153,31 @@ void PlasmaWindowManagementInterfacePrivate::sendStackingOrderChanged(wl_resourc
     }
 
     send_stacking_order_changed(r, QByteArray::fromRawData(reinterpret_cast<const char*>(stackingOrder.constData()), sizeof(uint32_t) * stackingOrder.size()));
+}
+
+void PlasmaWindowManagementInterfacePrivate::sendStackingOrderUuidsChanged()
+{
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        sendStackingOrderUuidsChanged(resource->handle);
+    }
+}
+
+void PlasmaWindowManagementInterfacePrivate::sendStackingOrderUuidsChanged(wl_resource *r)
+{
+    if (wl_resource_get_version(r) < ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STACKING_ORDER_UUID_CHANGED_SINCE_VERSION) {
+        return;
+    }
 
     QString uuids;
     for (const auto &uuid : qAsConst(stackingOrderUuids)) {
         uuids += uuid;
-        uuids += QStringLiteral(";");
+        uuids += QLatin1Char(';');
     }
-
+    // Remove the trailing ';', on the receiving side this is interpreted as an empty uuid.
+    if (stackingOrderUuids.size() > 0) {
+        uuids.remove(uuids.length() - 1, 1);
+    }
     send_stacking_order_uuid_changed(r, uuids);
 }
 
@@ -171,6 +191,7 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_bi
         }
     }
     sendStackingOrderChanged(resource->handle);
+    sendStackingOrderUuidsChanged(resource->handle);
 }
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_show_desktop(Resource *resource, uint32_t state)
@@ -265,13 +286,22 @@ QList<PlasmaWindowInterface*> PlasmaWindowManagementInterface::windows() const
     return d->windows;
 }
 
-void PlasmaWindowManagementInterface::setStackingOrder(const QVector<quint32>& stackingOrder)
+void PlasmaWindowManagementInterface::setStackingOrder(const QVector<quint32> &stackingOrder)
 {
     if (d->stackingOrder == stackingOrder) {
         return;
     }
     d->stackingOrder = stackingOrder;
     d->sendStackingOrderChanged();
+}
+
+void PlasmaWindowManagementInterface::setStackingOrderUuids(const QVector<QString> &stackingOrderUuids)
+{
+    if (d->stackingOrderUuids == stackingOrderUuids) {
+        return;
+    }
+    d->stackingOrderUuids = stackingOrderUuids;
+    d->sendStackingOrderUuidsChanged();
 }
 
 void PlasmaWindowManagementInterface::setPlasmaVirtualDesktopManagementInterface(PlasmaVirtualDesktopManagementInterface *manager)
@@ -928,6 +958,11 @@ void PlasmaWindowInterface::setApplicationMenuPaths(const QString &serviceName, 
 quint32 PlasmaWindowInterface::internalId() const
 {
     return d->windowId;
+}
+
+QString PlasmaWindowInterface::uuid() const
+{
+    return d->uuid;
 }
 
 }

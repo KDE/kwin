@@ -58,6 +58,8 @@ public:
      */
     void setStackingOrder(const QVector<quint32> &stackingOrder);
 
+    void setStackingOrderUuids(const QVector<QString> &stackingOrderUuids);
+
 Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
 
@@ -185,7 +187,7 @@ public:
     /**
      * @return a unique string that identifies this window
      */
-    QByteArray uuid() const;
+    QString uuid() const;
 
 Q_SIGNALS:
     void closeRequested();
