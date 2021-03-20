@@ -67,7 +67,7 @@ bool DrmCrtc::initProps()
 
 void DrmCrtc::flipBuffer()
 {
-    if (m_currentBuffer && m_gpu->deleteBufferAfterPageFlip() && m_currentBuffer != m_nextBuffer) {
+    if (m_currentBuffer && m_currentBuffer->shouldDeleteAfterPageflip() && m_currentBuffer != m_nextBuffer) {
         delete m_currentBuffer;
     }
     m_currentBuffer = m_nextBuffer;
@@ -94,7 +94,7 @@ bool DrmCrtc::blank(DrmOutput *output)
     }
 
     if (output->setModeLegacy(m_blackBuffer)) {
-        if (m_currentBuffer && m_gpu->deleteBufferAfterPageFlip()) {
+        if (m_currentBuffer && m_currentBuffer->shouldDeleteAfterPageflip()) {
             delete m_currentBuffer;
             delete m_nextBuffer;
         }

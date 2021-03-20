@@ -58,10 +58,6 @@ public:
         return m_useEglStreams;
     }
 
-    bool deleteBufferAfterPageFlip() const {
-        return m_deleteBufferAfterPageFlip;
-    }
-
     QByteArray devNode() const {
         return m_devNode;
     }
@@ -84,10 +80,6 @@ public:
 
     void setEglDisplay(EGLDisplay display) {
         m_eglDisplay = display;
-    }
-
-    void setDeleteBufferAfterPageFlip(bool deleteBuffer) {
-        m_deleteBufferAfterPageFlip = deleteBuffer;
     }
 
     DrmDumbBuffer *createBuffer(const QSize &size) const {
@@ -132,7 +124,6 @@ private:
     const int m_drmId;
     bool m_atomicModeSetting;
     bool m_useEglStreams;
-    bool m_deleteBufferAfterPageFlip;
     gbm_device* m_gbmDevice;
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;

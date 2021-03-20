@@ -40,6 +40,9 @@ public:
             return true;
         }
     }
+    bool shouldDeleteAfterPageflip() const override {
+        return true;
+    }
 
     bool hasBo() const {
         return m_bo != nullptr;

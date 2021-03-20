@@ -62,8 +62,6 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_b
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_useEglStreams = strstr(version->name, "nvidia-drm");
 
-    m_deleteBufferAfterPageFlip = !m_useEglStreams;
-
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 }

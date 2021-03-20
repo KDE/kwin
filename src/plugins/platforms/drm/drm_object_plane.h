@@ -87,7 +87,6 @@ public:
     Transformations transformation();
 
     void flipBuffer();
-    void flipBufferWithDelete();
 
     Transformations supportedTransformations() const {
         return m_supportedTransformations;

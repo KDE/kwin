@@ -61,8 +61,6 @@ public:
     void init() override;
     void prepareShutdown() override;
 
-    bool present(DrmBuffer *buffer, DrmOutput *output);
-
     Outputs outputs() const override;
     Outputs enabledOutputs() const override;
     QVector<DrmOutput*> drmOutputs() const {

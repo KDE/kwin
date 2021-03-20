@@ -70,7 +70,7 @@ void DrmOutput::teardown()
 
     if (m_primaryPlane) {
         // TODO: when having multiple planes, also clean up these
-        if (m_gpu->deleteBufferAfterPageFlip()) {
+        if (m_primaryPlane->current() && m_primaryPlane->current()->shouldDeleteAfterPageflip()) {
             delete m_primaryPlane->current();
         }
         m_primaryPlane->setCurrent(nullptr);
@@ -670,41 +670,23 @@ void DrmOutput::pageFlipped()
     if (!m_crtc) {
         return;
     }
-    // Egl based surface buffers get destroyed, QPainter based dumb buffers not
-    // TODO: split up DrmOutput in two for dumb and egl/gbm surface buffer compatible subclasses completely?
-    if (m_gpu->deleteBufferAfterPageFlip()) {
-        if (m_gpu->atomicModeSetting()) {
-            if (!m_primaryPlane->next()) {
-                // on manual vt switch
-                // TODO: when we later use overlay planes it might happen, that we have a page flip with only
-                //       damage on one of these, and therefore the primary plane has no next buffer
-                //       -> Then we don't want to return here!
-                if (m_primaryPlane->current()) {
-                    m_primaryPlane->current()->releaseGbm();
-                }
-                return;
+    if (m_gpu->atomicModeSetting()) {
+        if (!m_primaryPlane->next()) {
+            if (m_primaryPlane->current()) {
+                m_primaryPlane->current()->releaseGbm();
             }
-            for (DrmPlane *p : m_nextPlanesFlipList) {
-                p->flipBufferWithDelete();
-            }
-            m_nextPlanesFlipList.clear();
-        } else {
-            if (!m_crtc->next()) {
-                // on manual vt switch
-                if (DrmBuffer *b = m_crtc->current()) {
-                    b->releaseGbm();
-                }
-            }
-            m_crtc->flipBuffer();
+            return;
         }
+        for (DrmPlane *p : m_nextPlanesFlipList) {
+            p->flipBuffer();
+        }
+        m_nextPlanesFlipList.clear();
     } else {
-        if (m_gpu->atomicModeSetting()){
-            for (DrmPlane *p : m_nextPlanesFlipList) {
-                p->flipBuffer();
+        if (!m_crtc->next()) {
+            // on manual vt switch
+            if (DrmBuffer *b = m_crtc->current()) {
+                b->releaseGbm();
             }
-            m_nextPlanesFlipList.clear();
-        } else {
-            m_crtc->flipBuffer();
         }
         m_crtc->flipBuffer();
     }
@@ -716,14 +698,25 @@ void DrmOutput::pageFlipped()
 
 bool DrmOutput::present(DrmBuffer *buffer)
 {
+    if (!buffer || buffer->bufferId() == 0) {
+        if (buffer && buffer->shouldDeleteAfterPageflip()) {
+            delete buffer;
+        }
+        return false;
+    }
     if (m_dpmsModePending != DpmsMode::On) {
         return false;
     }
+    bool result;
     if (m_gpu->atomicModeSetting()) {
-        return presentAtomically(buffer);
+        result = presentAtomically(buffer);
     } else {
-        return presentLegacy(buffer);
+        result = presentLegacy(buffer);
     }
+    if (!result && buffer->shouldDeleteAfterPageflip()) {
+        delete buffer;
+    }
+    return result;
 }
 
 bool DrmOutput::dpmsAtomicOff()
@@ -976,8 +969,10 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), targetRect.height());
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), m_crtc->id());
     } else {
-        if (m_gpu->deleteBufferAfterPageFlip()) {
+        if (m_primaryPlane->current() && m_primaryPlane->current()->shouldDeleteAfterPageflip()) {
             delete m_primaryPlane->current();
+        }
+        if (m_primaryPlane->next() && m_primaryPlane->next()->shouldDeleteAfterPageflip()) {
             delete m_primaryPlane->next();
         }
         m_primaryPlane->setCurrent(nullptr);

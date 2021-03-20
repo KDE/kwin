@@ -164,16 +164,11 @@ DrmPlane::Transformations DrmPlane::transformation()
 
 void DrmPlane::flipBuffer()
 {
-    m_current = m_next;
-    m_next = nullptr;
-}
-
-void DrmPlane::flipBufferWithDelete()
-{
-    if (m_current != m_next) {
+    if (m_current != m_next && m_current && m_current->shouldDeleteAfterPageflip()) {
         delete m_current;
     }
-    flipBuffer();
+    m_current = m_next;
+    m_next = nullptr;
 }
 
 }

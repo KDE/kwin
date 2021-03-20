@@ -602,7 +602,7 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
     }
 
     Q_EMIT output.output->outputChange(damagedRegion);
-    if (!m_backend->present(output.buffer, output.output)) {
+    if (!output.output->present(output.buffer)) {
         return false;
     }
 

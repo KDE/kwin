@@ -516,23 +516,6 @@ DrmOutput *DrmBackend::findOutput(quint32 connector)
     return nullptr;
 }
 
-bool DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
-{
-    if (!buffer || buffer->bufferId() == 0) {
-        if (output->gpu()->deleteBufferAfterPageFlip()) {
-            delete buffer;
-        }
-        return false;
-    }
-
-    if (output->present(buffer)) {
-        return true;
-    } else if (output->gpu()->deleteBufferAfterPageFlip()) {
-        delete buffer;
-    }
-    return false;
-}
-
 void DrmBackend::initCursor()
 {
 
@@ -640,7 +623,6 @@ void DrmBackend::moveCursor()
 
 QPainterBackend *DrmBackend::createQPainterBackend()
 {
-    m_gpus.at(0)->setDeleteBufferAfterPageFlip(false);
     return new DrmQPainterBackend(this, m_gpus.at(0));
 }
 

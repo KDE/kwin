@@ -446,7 +446,7 @@ bool EglStreamBackend::presentOnOutput(EglStreamBackend::Output &o)
         return false;
     }
 
-    return m_backend->present(o.buffer, o.output);
+    return o.output->present(o.buffer);
 }
 
 SceneOpenGLTexturePrivate *EglStreamBackend::createBackendTexture(SceneOpenGLTexture *texture)
