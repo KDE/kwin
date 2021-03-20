@@ -232,6 +232,8 @@ EGLImage EglDmabuf::createImage(const QVector<Plane> &planes,
         }
     }
 
+    attribs << EGL_IMAGE_PRESERVED_KHR << EGL_TRUE;
+
     attribs << EGL_NONE;
 
     EGLImage image = eglCreateImageKHR(m_backend->eglDisplay(),
