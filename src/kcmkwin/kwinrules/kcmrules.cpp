@@ -143,7 +143,7 @@ void KCMKWinRules::createRuleFromProperties()
         return;
     }
 
-    QModelIndex matchedIndex = m_ruleBookModel->findRuleWithProperties(m_winProperties, m_wholeApp);
+    QModelIndex matchedIndex = findRuleWithProperties(m_winProperties, m_wholeApp);
     if (!matchedIndex.isValid()) {
         m_ruleBookModel->insertRow(0);
         m_ruleBookModel->setRuleAt(0, ruleForProperties(m_winProperties, m_wholeApp));
@@ -331,14 +331,98 @@ void KCMKWinRules::importFromFile(const QUrl &path)
 }
 
 // Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
-Rules *KCMKWinRules::ruleForProperties(const QVariantMap &windowProperties, bool wholeApp) const
+QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool wholeApp) const
 {
-    const QByteArray wmclass_class = windowProperties.value("resourceClass").toByteArray().toLower();
-    const QByteArray wmclass_name = windowProperties.value("resourceName").toByteArray().toLower();
-    const QByteArray role = windowProperties.value("role").toByteArray().toLower();
-    const NET::WindowType type = static_cast<NET::WindowType>(windowProperties.value("type").toInt());
-    const QString title = windowProperties.value("caption").toString();
-    const QByteArray machine = windowProperties.value("clientMachine").toByteArray();
+    const QByteArray wmclass_class = info.value("resourceClass").toByteArray().toLower();
+    const QByteArray wmclass_name = info.value("resourceName").toByteArray().toLower();
+    const QByteArray role = info.value("role").toByteArray().toLower();
+    const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
+    const QString title = info.value("caption").toString();
+    const QByteArray machine = info.value("clientMachine").toByteArray();
+    const bool isLocalHost = info.value("localhost").toBool();
+
+    int bestMatchRow = -1;
+    int bestMatchScore = 0;
+
+    for (int row = 0; row < m_ruleBookModel->rowCount(); row++) {
+        Rules *rule = m_ruleBookModel->ruleAt(row);
+
+        /* clang-format off */
+        // If the rule doesn't match try the next one
+        if (!rule->matchWMClass(wmclass_class, wmclass_name)
+                || !rule->matchType(type)
+                || !rule->matchRole(role)
+                || !rule->matchTitle(title)
+                || !rule->matchClientMachine(machine, isLocalHost)) {
+            continue;
+        }
+        /* clang-format on */
+
+        if (rule->wmclassmatch != Rules::ExactMatch) {
+            continue; // too generic
+        }
+
+        // Now that the rule matches the window, check the quality of the match
+        // It stablishes a quality depending on the match policy of the rule
+        int score = 0;
+        bool generic = true;
+
+        // from now on, it matches the app - now try to match for a specific window
+        if (rule->wmclasscomplete) {
+            score += 1;
+            generic = false; // this can be considered specific enough (old X apps)
+        }
+        if (!wholeApp) {
+            if (rule->windowrolematch != Rules::UnimportantMatch) {
+                score += rule->windowrolematch == Rules::ExactMatch ? 5 : 1;
+                generic = false;
+            }
+            if (rule->titlematch != Rules::UnimportantMatch) {
+                score += rule->titlematch == Rules::ExactMatch ? 3 : 1;
+                generic = false;
+            }
+            if (rule->types != NET::AllTypesMask) {
+                // Checks that type fits the mask, and only one of the types
+                int bits = 0;
+                for (unsigned int bit = 1; bit < 1U << 31; bit <<= 1) {
+                    if (rule->types & bit) {
+                        ++bits;
+                    }
+                }
+                if (bits == 1) {
+                    score += 2;
+                }
+            }
+            if (generic) { // ignore generic rules, use only the ones that are for this window
+                continue;
+            }
+        } else {
+            if (rule->types == NET::AllTypesMask) {
+                score += 2;
+            }
+        }
+
+        if (score > bestMatchScore) {
+            bestMatchRow = row;
+            bestMatchScore = score;
+        }
+    }
+
+    if (bestMatchRow < 0) {
+        return QModelIndex();
+    }
+    return m_ruleBookModel->index(bestMatchRow);
+}
+
+// Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
+Rules *KCMKWinRules::ruleForProperties(const QVariantMap &info, bool wholeApp) const
+{
+    const QByteArray wmclass_class = info.value("resourceClass").toByteArray().toLower();
+    const QByteArray wmclass_name = info.value("resourceName").toByteArray().toLower();
+    const QByteArray role = info.value("role").toByteArray().toLower();
+    const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
+    const QString title = info.value("caption").toString();
+    const QByteArray machine = info.value("clientMachine").toByteArray();
 
     Rules *rule = new Rules();
 

@@ -53,7 +53,9 @@ private:
     void saveCurrentRule();
     void parseArguments(const QStringList &args);
     void createRuleFromProperties();
-    Rules *ruleForProperties(const QVariantMap &windowProperties, bool wholeApp) const;
+
+    QModelIndex findRuleWithProperties(const QVariantMap &info, bool wholeApp) const;
+    Rules *ruleForProperties(const QVariantMap &info, bool wholeApp) const;
 
 private:
     RuleBookModel *m_ruleBookModel;
