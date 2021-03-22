@@ -121,7 +121,6 @@ public:
 
     /**
      * Submit changes to all clients.
-     * @since 5.22
      */
     void done();
 
