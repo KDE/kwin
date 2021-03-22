@@ -12,6 +12,7 @@
 
 #include <qobjectdefs.h>
 #include <xf86drmMode.h>
+#include <QSharedPointer>
 
 namespace KWin
 {
@@ -23,8 +24,6 @@ class DrmPlane : public DrmObject
     Q_GADGET
 public:
     DrmPlane(uint32_t plane_id, int fd);
-
-    ~DrmPlane() override;
 
     enum class PropertyIndex {
         Type = 0,
@@ -73,16 +72,16 @@ public:
         return m_formats;
     }
 
-    DrmBuffer *current() const {
+    QSharedPointer<DrmBuffer> current() const {
         return m_current;
     }
-    DrmBuffer *next() const {
+    QSharedPointer<DrmBuffer> next() const {
         return m_next;
     }
-    void setCurrent(DrmBuffer *b) {
+    void setCurrent(const QSharedPointer<DrmBuffer> &b) {
         m_current = b;
     }
-    void setNext(DrmBuffer *b);
+    void setNext(const QSharedPointer<DrmBuffer> &b);
     void setTransformation(Transformations t);
     Transformations transformation();
 
@@ -95,8 +94,8 @@ public:
     bool atomicPopulate(drmModeAtomicReq *req) const override;
 
 private:
-    DrmBuffer *m_current = nullptr;
-    DrmBuffer *m_next = nullptr;
+    QSharedPointer<DrmBuffer> m_current;
+    QSharedPointer<DrmBuffer> m_next;
 
     // TODO: See weston drm_output_check_plane_format for future use of these member variables
     QVector<uint32_t> m_formats;        // Possible formats, which can be presented on this plane

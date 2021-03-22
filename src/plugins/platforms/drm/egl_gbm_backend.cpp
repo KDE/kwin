@@ -162,7 +162,7 @@ bool EglGbmBackend::initRenderingContext()
     return true;
 }
 
-EGLSurface EglGbmBackend::createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const
+EGLSurface EglGbmBackend::createEglSurface(QSharedPointer<GbmSurface> gbmSurface) const
 {
     auto eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(),
                                                         (void *)(gbmSurface->surface()), nullptr);
@@ -184,10 +184,10 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
     } else {
         flags |= GBM_BO_USE_LINEAR;
     }
-    auto gbmSurface = std::make_shared<GbmSurface>(m_gpu->gbmDevice(),
-                                                   size.width(), size.height(),
-                                                   GBM_FORMAT_XRGB8888,
-                                                   flags);
+    auto gbmSurface = QSharedPointer<GbmSurface>::create(m_gpu->gbmDevice(),
+                                                         size.width(), size.height(),
+                                                         GBM_FORMAT_XRGB8888,
+                                                         flags);
     if (!gbmSurface) {
         qCCritical(KWIN_DRM) << "Creating GBM surface failed";
         return false;
@@ -376,7 +376,7 @@ void EglGbmBackend::initRenderTarget(Output &output)
         // Already initialized.
         return;
     }
-    std::shared_ptr<GLVertexBuffer> vbo(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
+    QSharedPointer<GLVertexBuffer> vbo(new GLVertexBuffer(KWin::GLVertexBuffer::Static));
     vbo->setData(6, 2, vertices, texCoords);
     output.render.vbo = vbo;
 }
@@ -580,7 +580,7 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
 bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
     if (output.directScanoutBuffer) {
-        output.buffer = new DrmSurfaceBuffer(m_gpu->fd(), output.directScanoutBuffer, output.bufferInterface);
+        output.buffer = QSharedPointer<DrmSurfaceBuffer>::create(m_gpu->fd(), output.directScanoutBuffer, output.bufferInterface);
     } else if (isPrimary()) {
         if (supportsSwapBuffersWithDamage()) {
             QVector<EGLint> rects = regionToRects(output.damageHistory.constFirst(), output.output);
@@ -595,7 +595,7 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
                 return false;
             }
         }
-        output.buffer = new DrmSurfaceBuffer(m_gpu->fd(), output.gbmSurface);
+        output.buffer = QSharedPointer<DrmSurfaceBuffer>::create(m_gpu->fd(), output.gbmSurface);
     } else {
         qCDebug(KWIN_DRM) << "imported gbm_bo does not exist!";
         return false;

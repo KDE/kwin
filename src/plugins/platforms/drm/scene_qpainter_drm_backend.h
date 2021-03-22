@@ -12,6 +12,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QSharedPointer>
 
 namespace KWin
 {
@@ -26,7 +27,6 @@ class DrmQPainterBackend : public QObject, public QPainterBackend
     Q_OBJECT
 public:
     DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu);
-    ~DrmQPainterBackend() override;
 
     QImage *bufferForScreen(int screenId) override;
     bool needsFullRepaint(int screenId) const override;
@@ -36,7 +36,7 @@ public:
 private:
     void initOutput(DrmOutput *output);
     struct Output {
-        DrmDumbBuffer *buffer[2];
+        QSharedPointer<DrmDumbBuffer> buffer[2];
         DrmOutput *output;
         int index = 0;
     };

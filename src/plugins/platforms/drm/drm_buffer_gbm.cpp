@@ -28,7 +28,7 @@ namespace KWin
 {
 
 // DrmSurfaceBuffer
-DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, const std::shared_ptr<GbmSurface> &surface)
+DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, const QSharedPointer<GbmSurface> &surface)
     : DrmBuffer(fd)
     , m_surface(surface)
 {

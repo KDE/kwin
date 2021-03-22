@@ -58,7 +58,7 @@ private:
     struct Output
     {
         DrmOutput *output = nullptr;
-        DrmBuffer *buffer = nullptr;
+        QSharedPointer<DrmBuffer> buffer;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         EGLStreamKHR eglStream = EGL_NO_STREAM_KHR;
     };

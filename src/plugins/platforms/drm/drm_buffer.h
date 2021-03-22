@@ -23,9 +23,6 @@ public:
     virtual ~DrmBuffer() = default;
 
     virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
-    virtual bool shouldDeleteAfterPageflip() const {
-        return false;
-    }
 
     quint32 bufferId() const {
         return m_bufferId;

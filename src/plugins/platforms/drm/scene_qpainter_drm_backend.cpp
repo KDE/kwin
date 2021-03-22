@@ -36,26 +36,16 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend, DrmGpu *gpu)
             if (it == m_outputs.end()) {
                 return;
             }
-            delete (*it).buffer[0];
-            delete (*it).buffer[1];
             m_outputs.erase(it);
         }
     );
-}
-
-DrmQPainterBackend::~DrmQPainterBackend()
-{
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        delete (*it).buffer[0];
-        delete (*it).buffer[1];
-    }
 }
 
 void DrmQPainterBackend::initOutput(DrmOutput *output)
 {
     Output o;
     auto initBuffer = [&o, output, this] (int index) {
-        o.buffer[index] = m_gpu->createBuffer(output->pixelSize());
+        o.buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu->fd(), output->pixelSize());
         if (o.buffer[index]->map()) {
             o.buffer[index]->image()->fill(Qt::black);
         }
@@ -70,10 +60,8 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
             if (it == m_outputs.end()) {
                 return;
             }
-            delete (*it).buffer[0];
-            delete (*it).buffer[1];
             auto initBuffer = [it, output, this] (int index) {
-                it->buffer[index] = m_gpu->createBuffer(output->pixelSize());
+                it->buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu->fd(), output->pixelSize());
                 if (it->buffer[index]->map()) {
                     it->buffer[index]->image()->fill(Qt::black);
                 }

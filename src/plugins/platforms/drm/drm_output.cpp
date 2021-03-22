@@ -70,9 +70,6 @@ void DrmOutput::teardown()
 
     if (m_primaryPlane) {
         // TODO: when having multiple planes, also clean up these
-        if (m_primaryPlane->current() && m_primaryPlane->current()->shouldDeleteAfterPageflip()) {
-            delete m_primaryPlane->current();
-        }
         m_primaryPlane->setCurrent(nullptr);
     }
 
@@ -86,7 +83,7 @@ void DrmOutput::teardown()
 
 void DrmOutput::releaseGbm()
 {
-    if (DrmBuffer *b = m_crtc->current()) {
+    if (const auto &b = m_crtc->current()) {
         b->releaseGbm();
     }
     if (m_primaryPlane && m_primaryPlane->current()) {
@@ -362,7 +359,7 @@ void DrmOutput::initEdid(drmModeConnector *connector)
 bool DrmOutput::initCursor(const QSize &cursorSize)
 {
     auto createCursor = [this, cursorSize] (int index) {
-        m_cursor[index].reset(m_gpu->createBuffer(cursorSize));
+        m_cursor[index].reset(new DrmDumbBuffer(m_gpu->fd(), cursorSize));
         if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
             return false;
         }
@@ -684,7 +681,7 @@ void DrmOutput::pageFlipped()
     } else {
         if (!m_crtc->next()) {
             // on manual vt switch
-            if (DrmBuffer *b = m_crtc->current()) {
+            if (const auto &b = m_crtc->current()) {
                 b->releaseGbm();
             }
         }
@@ -696,27 +693,15 @@ void DrmOutput::pageFlipped()
     }
 }
 
-bool DrmOutput::present(DrmBuffer *buffer)
+bool DrmOutput::present(const QSharedPointer<DrmBuffer> &buffer)
 {
     if (!buffer || buffer->bufferId() == 0) {
-        if (buffer && buffer->shouldDeleteAfterPageflip()) {
-            delete buffer;
-        }
         return false;
     }
     if (m_dpmsModePending != DpmsMode::On) {
         return false;
     }
-    bool result;
-    if (m_gpu->atomicModeSetting()) {
-        result = presentAtomically(buffer);
-    } else {
-        result = presentLegacy(buffer);
-    }
-    if (!result && buffer->shouldDeleteAfterPageflip()) {
-        delete buffer;
-    }
-    return result;
+    return m_gpu->atomicModeSetting() ? presentAtomically(buffer) : presentLegacy(buffer);
 }
 
 bool DrmOutput::dpmsAtomicOff()
@@ -724,7 +709,6 @@ bool DrmOutput::dpmsAtomicOff()
     m_atomicOffPending = false;
 
     // TODO: With multiple planes: deactivate all of them here
-    delete m_primaryPlane->next();
     m_primaryPlane->setNext(nullptr);
     m_nextPlanesFlipList << m_primaryPlane;
 
@@ -742,7 +726,7 @@ bool DrmOutput::dpmsAtomicOff()
     return true;
 }
 
-bool DrmOutput::presentAtomically(DrmBuffer *buffer)
+bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
 {
     if (!m_backend->session()->isActive()) {
         qCWarning(KWIN_DRM) << "Refusing to present output because session is inactive";
@@ -810,7 +794,7 @@ bool DrmOutput::presentAtomically(DrmBuffer *buffer)
     return true;
 }
 
-bool DrmOutput::presentLegacy(DrmBuffer *buffer)
+bool DrmOutput::presentLegacy(const QSharedPointer<DrmBuffer> &buffer)
 {
     if (m_crtc->next()) {
         return false;
@@ -821,8 +805,8 @@ bool DrmOutput::presentLegacy(DrmBuffer *buffer)
     }
 
     // Do we need to set a new mode first?
-    if (!m_crtc->current() || m_crtc->current()->needsModeChange(buffer)) {
-        if (!setModeLegacy(buffer)) {
+    if (!m_crtc->current() || m_crtc->current()->needsModeChange(buffer.get())) {
+        if (!setModeLegacy(buffer.get())) {
             return false;
         }
     }
@@ -969,12 +953,6 @@ bool DrmOutput::atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable)
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcH), targetRect.height());
         m_primaryPlane->setValue(int(DrmPlane::PropertyIndex::CrtcId), m_crtc->id());
     } else {
-        if (m_primaryPlane->current() && m_primaryPlane->current()->shouldDeleteAfterPageflip()) {
-            delete m_primaryPlane->current();
-        }
-        if (m_primaryPlane->next() && m_primaryPlane->next()->shouldDeleteAfterPageflip()) {
-            delete m_primaryPlane->next();
-        }
         m_primaryPlane->setCurrent(nullptr);
         m_primaryPlane->setNext(nullptr);
 

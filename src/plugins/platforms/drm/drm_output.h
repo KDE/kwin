@@ -19,6 +19,7 @@
 #include <QPoint>
 #include <QSize>
 #include <QVector>
+#include <QSharedPointer>
 #include <xf86drmMode.h>
 
 namespace KWin
@@ -51,7 +52,7 @@ public:
     bool updateCursor();
     void moveCursor();
     bool init(drmModeConnector *connector);
-    bool present(DrmBuffer *buffer);
+    bool present(const QSharedPointer<DrmBuffer> &buffer);
     void pageFlipped();
 
     // These values are defined by the kernel
@@ -105,7 +106,7 @@ private:
                             //       and save the connector ids in the DrmCrtc instance.
     DrmOutput(DrmBackend *backend, DrmGpu* gpu);
 
-    bool presentAtomically(DrmBuffer *buffer);
+    bool presentAtomically(const QSharedPointer<DrmBuffer> &buffer);
 
     enum class AtomicCommitMode {
         Test,
@@ -113,7 +114,7 @@ private:
     };
     bool doAtomicCommit(AtomicCommitMode mode);
 
-    bool presentLegacy(DrmBuffer *buffer);
+    bool presentLegacy(const QSharedPointer<DrmBuffer> &buffer);
     bool setModeLegacy(DrmBuffer *buffer);
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);

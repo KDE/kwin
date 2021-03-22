@@ -85,9 +85,6 @@ void EglStreamBackend::cleanupSurfaces()
 
 void EglStreamBackend::cleanupOutput(const Output &o)
 {
-    if (o.buffer != nullptr) {
-        delete o.buffer;
-    }
     if (o.eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay(), o.eglSurface);
     }
@@ -283,11 +280,8 @@ bool EglStreamBackend::initRenderingContext()
 bool EglStreamBackend::resetOutput(Output &o, DrmOutput *drmOutput)
 {
     o.output = drmOutput;
-    if (o.buffer != nullptr) {
-        delete o.buffer;
-    }
     // dumb buffer used for modesetting
-    o.buffer = m_gpu->createBuffer(drmOutput->pixelSize());
+    o.buffer = QSharedPointer<DrmDumbBuffer>::create(m_gpu->fd(), drmOutput->pixelSize());
 
     EGLAttrib streamAttribs[] = {
         EGL_STREAM_FIFO_LENGTH_KHR, 0, // mailbox mode

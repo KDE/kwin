@@ -10,7 +10,7 @@
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
 
-#include <memory>
+#include <QSharedPointer>
 
 struct gbm_surface;
 struct gbm_bo;
@@ -67,8 +67,8 @@ private:
 
     struct Output {
         DrmOutput *output = nullptr;
-        DrmSurfaceBuffer *buffer = nullptr;
-        std::shared_ptr<GbmSurface> gbmSurface;
+        QSharedPointer<DrmSurfaceBuffer> buffer;
+        QSharedPointer<GbmSurface> gbmSurface;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         int bufferAge = 0;
         /**
@@ -79,7 +79,7 @@ private:
         struct {
             GLuint framebuffer = 0;
             GLuint texture = 0;
-            std::shared_ptr<GLVertexBuffer> vbo;
+            QSharedPointer<GLVertexBuffer> vbo;
         } render;
 
         int dmabufFd = 0;
@@ -90,7 +90,7 @@ private:
     };
 
     bool resetOutput(Output &output, DrmOutput *drmOutput);
-    EGLSurface createEglSurface(std::shared_ptr<GbmSurface> gbmSurface) const;
+    EGLSurface createEglSurface(QSharedPointer<GbmSurface> gbmSurface) const;
 
     bool makeContextCurrent(const Output &output) const;
     void setViewport(const Output &output) const;

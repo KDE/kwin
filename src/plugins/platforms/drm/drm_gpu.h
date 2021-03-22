@@ -82,10 +82,6 @@ public:
         m_eglDisplay = display;
     }
 
-    DrmDumbBuffer *createBuffer(const QSize &size) const {
-        return new DrmDumbBuffer(m_fd, size);
-    }
-
     void setEglBackend(AbstractEglBackend *eglBackend) {
         m_eglBackend = eglBackend;
     }

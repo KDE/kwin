@@ -12,7 +12,7 @@
 
 #include "drm_buffer.h"
 
-#include <memory>
+#include <QSharedPointer>
 
 struct gbm_bo;
 
@@ -29,7 +29,7 @@ class GbmSurface;
 class DrmSurfaceBuffer : public DrmBuffer
 {
 public:
-    DrmSurfaceBuffer(int fd, const std::shared_ptr<GbmSurface> &surface);
+    DrmSurfaceBuffer(int fd, const QSharedPointer<GbmSurface> &surface);
     DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
     ~DrmSurfaceBuffer() override;
 
@@ -39,9 +39,6 @@ public:
         } else {
             return true;
         }
-    }
-    bool shouldDeleteAfterPageflip() const override {
-        return true;
     }
 
     bool hasBo() const {
@@ -55,7 +52,7 @@ public:
     void releaseGbm() override;
 
 private:
-    std::shared_ptr<GbmSurface> m_surface;
+    QSharedPointer<GbmSurface> m_surface;
     gbm_bo *m_bo = nullptr;
     KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
 

@@ -19,12 +19,6 @@ DrmPlane::DrmPlane(uint32_t plane_id, int fd)
 {
 }
 
-DrmPlane::~DrmPlane()
-{
-    delete m_current;
-    delete m_next;
-}
-
 bool DrmPlane::init()
 {
     qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
@@ -137,7 +131,7 @@ DrmPlane::TypeIndex DrmPlane::type()
     return TypeIndex::Overlay;
 }
 
-void DrmPlane::setNext(DrmBuffer *b)
+void DrmPlane::setNext(const QSharedPointer<DrmBuffer> &b)
 {
     if (auto property = m_props.at(int(PropertyIndex::FbId))) {
         property->setValue(b ? b->bufferId() : 0);
@@ -164,9 +158,6 @@ DrmPlane::Transformations DrmPlane::transformation()
 
 void DrmPlane::flipBuffer()
 {
-    if (m_current != m_next && m_current && m_current->shouldDeleteAfterPageflip()) {
-        delete m_current;
-    }
     m_current = m_next;
     m_next = nullptr;
 }

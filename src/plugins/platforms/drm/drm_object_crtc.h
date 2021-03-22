@@ -11,6 +11,8 @@
 
 #include "drm_object.h"
 
+#include <QSharedPointer>
+
 namespace KWin
 {
 
@@ -41,13 +43,13 @@ public:
         return m_resIndex;
     }
 
-    DrmBuffer *current() {
+    QSharedPointer<DrmBuffer> current() {
         return m_currentBuffer;
     }
-    DrmBuffer *next() {
+    QSharedPointer<DrmBuffer> next() {
         return m_nextBuffer;
     }
-    void setNext(DrmBuffer *buffer) {
+    void setNext(const QSharedPointer<DrmBuffer> &buffer) {
         m_nextBuffer = buffer;
     }
 
@@ -67,8 +69,8 @@ private:
     int m_resIndex;
     uint32_t m_gammaRampSize = 0;
 
-    DrmBuffer *m_currentBuffer = nullptr;
-    DrmBuffer *m_nextBuffer = nullptr;
+    QSharedPointer<DrmBuffer> m_currentBuffer;
+    QSharedPointer<DrmBuffer> m_nextBuffer;
     DrmDumbBuffer *m_blackBuffer = nullptr;
     DrmBackend *m_backend;
     DrmGpu *m_gpu;
