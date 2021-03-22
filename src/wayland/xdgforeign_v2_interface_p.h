@@ -15,10 +15,8 @@ namespace KWaylandServer
 
 class XdgExportedV2Interface;
 class XdgImportedV2Interface;
-class XdgExporterV2InterfacePrivate;
-class XdgImporterV2InterfacePrivate;
-class XdgExportedV2Interface;
-class XdgImportedV2InterfacePrivate;
+class XdgImporterV2Interface;
+class XdgExporterV2Interface;
 
 class XdgForeignV2InterfacePrivate : public QObject
 {
@@ -31,25 +29,30 @@ public:
     XdgImporterV2Interface *importer;
 };
 
-class XdgExporterV2Interface : public QObject
+class XdgExporterV2Interface : public QObject, public QtWaylandServer::zxdg_exporter_v2
 {
     Q_OBJECT
+
 public:
-    explicit XdgExporterV2Interface(Display *display, XdgForeignV2Interface *parent = nullptr);
-    ~XdgExporterV2Interface() override;
+    XdgExporterV2Interface(Display *display, XdgForeignV2Interface *foreign);
 
     XdgExportedV2Interface *exportedSurface(const QString &handle);
 
+protected:
+    void zxdg_exporter_v2_destroy(Resource *resource) override;
+    void zxdg_exporter_v2_export_toplevel(Resource *resource, uint32_t id, wl_resource *surface) override;
+
 private:
-    QScopedPointer<XdgExporterV2InterfacePrivate> d;
+    XdgForeignV2Interface *m_foreign;
+    QHash<QString, XdgExportedV2Interface *> m_exportedSurfaces;
 };
 
-class XdgImporterV2Interface : public QObject
+class XdgImporterV2Interface : public QObject, public QtWaylandServer::zxdg_importer_v2
 {
     Q_OBJECT
+
 public:
-    explicit XdgImporterV2Interface(Display *display, XdgForeignV2Interface *parent = nullptr);
-    ~XdgImporterV2Interface() override;
+    XdgImporterV2Interface(Display *display, XdgForeignV2Interface *foreign);
 
     XdgImportedV2Interface *importedSurface(const QString &handle);
     SurfaceInterface *transientFor(SurfaceInterface *surface);
@@ -57,8 +60,15 @@ public:
 Q_SIGNALS:
     void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
+protected:
+    void zxdg_importer_v2_destroy(Resource *resource) override;
+    void zxdg_importer_v2_import_toplevel(Resource *resource, uint32_t id, const QString &handle) override;
+
 private:
-    QScopedPointer<XdgImporterV2InterfacePrivate> d;
+    XdgForeignV2Interface *m_foreign;
+    QHash<QString, XdgImportedV2Interface *> m_importedSurfaces;
+    QHash<SurfaceInterface *, XdgImportedV2Interface *> m_parents; //child->parent hash
+    QHash<XdgImportedV2Interface *, SurfaceInterface *> m_children; //parent->child hash
 };
 
 class XdgExportedV2Interface : public QObject, QtWaylandServer::zxdg_exported_v2

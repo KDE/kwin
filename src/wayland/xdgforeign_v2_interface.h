@@ -14,8 +14,6 @@ namespace KWaylandServer
 
 class Display;
 class SurfaceInterface;
-class XdgExporterV2Interface;
-class XdgImporterV2Interface;
 class XdgForeignV2InterfacePrivate;
 
 /**
@@ -54,8 +52,8 @@ Q_SIGNALS:
     void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 private:
-    friend class XdgExporterV2InterfacePrivate;
-    friend class XdgImporterV2InterfacePrivate;
+    friend class XdgExporterV2Interface;
+    friend class XdgImporterV2Interface;
     QScopedPointer<XdgForeignV2InterfacePrivate> d;
 };
 
