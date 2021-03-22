@@ -87,6 +87,16 @@ private:
     SurfaceInterface *m_surface;
 };
 
+class XdgDummyImportedV2Interface : public QtWaylandServer::zxdg_imported_v2
+{
+public:
+    explicit XdgDummyImportedV2Interface(wl_resource *resource);
+
+protected:
+    void zxdg_imported_v2_destroy(Resource *resource) override;
+    void zxdg_imported_v2_destroy_resource(Resource *resource) override;
+};
+
 class XdgImportedV2Interface : public QObject, QtWaylandServer::zxdg_imported_v2
 {
     Q_OBJECT

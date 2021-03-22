@@ -111,17 +111,20 @@ void XdgImporterV2Interface::zxdg_importer_v2_destroy(Resource *resource)
 
 void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource, uint32_t id, const QString &handle)
 {
-    XdgExportedV2Interface *exported = m_foreign->d->exporter->exportedSurface(handle);
-    if (!exported) {
-        zxdg_imported_v2_send_destroyed(resource->handle);
-        return;
-    }
-
     wl_resource *importedResource = wl_resource_create(resource->client(),
                                                        &zxdg_imported_v2_interface,
                                                        resource->version(), id);
     if (!importedResource) {
         wl_client_post_no_memory(resource->client());
+        return;
+    }
+
+    // If there is no exported surface with the specified handle, we must still create an
+    // inert xdg_imported object and send the destroyed event right afterwards.
+    XdgExportedV2Interface *exported = m_foreign->d->exporter->exportedSurface(handle);
+    if (!exported) {
+        auto imported = new XdgDummyImportedV2Interface(importedResource);
+        imported->send_destroyed();
         return;
     }
 
@@ -193,6 +196,22 @@ void XdgExportedV2Interface::zxdg_exported_v2_destroy_resource(Resource *resourc
 
 void XdgExportedV2Interface::handleSurfaceDestroyed()
 {
+    delete this;
+}
+
+XdgDummyImportedV2Interface::XdgDummyImportedV2Interface(wl_resource *resource)
+    : QtWaylandServer::zxdg_imported_v2(resource)
+{
+}
+
+void XdgDummyImportedV2Interface::zxdg_imported_v2_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void XdgDummyImportedV2Interface::zxdg_imported_v2_destroy_resource(Resource *resource)
+{
+    Q_UNUSED(resource)
     delete this;
 }
 

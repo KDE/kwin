@@ -37,6 +37,7 @@ private Q_SLOTS:
     void testDeleteExported();
     void testExportTwoTimes();
     void testImportTwoTimes();
+    void testImportInvalidToplevel();
 
 private:
     void doExport();
@@ -351,6 +352,18 @@ void TestForeign::testImportTwoTimes()
     QCOMPARE(m_foreignInterface->transientFor(m_childSurfaceInterface), m_exportedSurfaceInterface.data());
     //check the new relationship
     QCOMPARE(m_foreignInterface->transientFor(childSurface2Interface), m_exportedSurfaceInterface.data());
+}
+
+void TestForeign::testImportInvalidToplevel()
+{
+    // This test verifies that the compositor properly handles the case where a client
+    // attempts to import a toplevel with an invalid handle.
+
+    KWayland::Client::XdgImported *imported = m_importer->importTopLevel(QStringLiteral("foobar"));
+    QVERIFY(imported->isValid());
+
+    QSignalSpy importedDestroySpy(imported, &KWayland::Client::XdgImported::importedDestroyed);
+    QVERIFY(importedDestroySpy.wait());
 }
 
 QTEST_GUILESS_MAIN(TestForeign)
