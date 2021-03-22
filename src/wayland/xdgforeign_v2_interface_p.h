@@ -53,7 +53,6 @@ class XdgImporterV2Interface : public QObject, public QtWaylandServer::zxdg_impo
 public:
     XdgImporterV2Interface(Display *display, XdgForeignV2Interface *foreign);
 
-    XdgImportedV2Interface *importedSurface(const QString &handle);
     SurfaceInterface *transientFor(SurfaceInterface *surface);
 
 protected:
@@ -62,7 +61,6 @@ protected:
 
 private:
     XdgForeignV2Interface *m_foreign;
-    QHash<QString, XdgImportedV2Interface *> m_importedSurfaces;
     QHash<SurfaceInterface *, XdgImportedV2Interface *> m_parents; //child->parent hash
     QHash<XdgImportedV2Interface *, SurfaceInterface *> m_children; //parent->child hash
 };

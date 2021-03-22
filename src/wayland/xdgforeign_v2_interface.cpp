@@ -90,11 +90,6 @@ XdgImporterV2Interface::XdgImporterV2Interface(Display *display, XdgForeignV2Int
 {
 }
 
-XdgImportedV2Interface *XdgImporterV2Interface::importedSurface(const QString &handle)
-{
-    return m_importedSurfaces.value(handle);
-}
-
 SurfaceInterface *XdgImporterV2Interface::transientFor(SurfaceInterface *surface)
 {
     auto it = m_parents.constFind(surface);
