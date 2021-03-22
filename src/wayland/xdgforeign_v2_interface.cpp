@@ -16,14 +16,10 @@ static const quint32 s_exporterVersion = 1;
 static const quint32 s_importerVersion = 1;
 
 XdgForeignV2InterfacePrivate::XdgForeignV2InterfacePrivate(Display *display, XdgForeignV2Interface *_q)
-    : QObject(nullptr)
-    , q(_q)
+    : q(_q)
+    , exporter(new XdgExporterV2Interface(display, _q))
+    , importer(new XdgImporterV2Interface(display, _q))
 {
-    exporter = new XdgExporterV2Interface(display, _q);
-    importer = new XdgImporterV2Interface(display, _q);
-
-    connect(importer, &XdgImporterV2Interface::transientChanged,
-            q, &XdgForeignV2Interface::transientChanged);
 }
 
 XdgForeignV2Interface::XdgForeignV2Interface(Display *display, QObject *parent)
@@ -34,8 +30,6 @@ XdgForeignV2Interface::XdgForeignV2Interface(Display *display, QObject *parent)
 
 XdgForeignV2Interface::~XdgForeignV2Interface()
 {
-    delete d->exporter;
-    delete d->importer;
 }
 
 SurfaceInterface *XdgForeignV2Interface::transientFor(SurfaceInterface *surface)
@@ -144,7 +138,7 @@ void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource
         m_parents[child] = imported;
         m_children[imported] = child;
         SurfaceInterface *parent = imported->surface();
-        emit transientChanged(child, parent);
+        emit m_foreign->transientChanged(child, parent);
 
         // child surface destroyed
         connect(child, &QObject::destroyed, this, [this, child]() {
@@ -153,7 +147,7 @@ void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource
                 XdgImportedV2Interface *parent = *it;
                 m_children.remove(*it);
                 m_parents.erase(it);
-                emit transientChanged(nullptr, parent->surface());
+                emit m_foreign->transientChanged(nullptr, parent->surface());
             }
         });
     });
@@ -167,7 +161,7 @@ void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource
             SurfaceInterface *child = *it;
             m_parents.remove(*it);
             m_children.erase(it);
-            emit transientChanged(child, nullptr);
+            emit m_foreign->transientChanged(child, nullptr);
         }
     });
 

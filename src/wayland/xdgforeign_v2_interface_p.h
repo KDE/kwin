@@ -18,15 +18,14 @@ class XdgImportedV2Interface;
 class XdgImporterV2Interface;
 class XdgExporterV2Interface;
 
-class XdgForeignV2InterfacePrivate : public QObject
+class XdgForeignV2InterfacePrivate
 {
-    Q_OBJECT
 public:
     XdgForeignV2InterfacePrivate(Display *display, XdgForeignV2Interface *q);
 
     XdgForeignV2Interface *q;
-    XdgExporterV2Interface *exporter;
-    XdgImporterV2Interface *importer;
+    QScopedPointer<XdgExporterV2Interface> exporter;
+    QScopedPointer<XdgImporterV2Interface> importer;
 };
 
 class XdgExporterV2Interface : public QObject, public QtWaylandServer::zxdg_exporter_v2
@@ -56,9 +55,6 @@ public:
 
     XdgImportedV2Interface *importedSurface(const QString &handle);
     SurfaceInterface *transientFor(SurfaceInterface *surface);
-
-Q_SIGNALS:
-    void transientChanged(KWaylandServer::SurfaceInterface *child, KWaylandServer::SurfaceInterface *parent);
 
 protected:
     void zxdg_importer_v2_destroy(Resource *resource) override;
