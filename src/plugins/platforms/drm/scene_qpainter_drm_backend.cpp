@@ -45,7 +45,7 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
 {
     Output o;
     auto initBuffer = [&o, output, this] (int index) {
-        o.buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu->fd(), output->pixelSize());
+        o.buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu, output->pixelSize());
         if (o.buffer[index]->map()) {
             o.buffer[index]->image()->fill(Qt::black);
         }
@@ -61,7 +61,7 @@ void DrmQPainterBackend::initOutput(DrmOutput *output)
                 return;
             }
             auto initBuffer = [it, output, this] (int index) {
-                it->buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu->fd(), output->pixelSize());
+                it->buffer[index] = QSharedPointer<DrmDumbBuffer>::create(m_gpu, output->pixelSize());
                 if (it->buffer[index]->map()) {
                     it->buffer[index]->image()->fill(Qt::black);
                 }

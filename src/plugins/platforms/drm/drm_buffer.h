@@ -15,11 +15,13 @@
 namespace KWin
 {
 
+class DrmGpu;
+
 class DrmBuffer : public QObject
 {
     Q_OBJECT
 public:
-    DrmBuffer(int fd);
+    DrmBuffer(DrmGpu *gpu);
     virtual ~DrmBuffer() = default;
 
     virtual bool needsModeChange(DrmBuffer *b) const {Q_UNUSED(b) return false;}
@@ -34,20 +36,20 @@ public:
 
     virtual void releaseGbm() {}
 
-    int fd() const {
-        return m_fd;
+    DrmGpu *gpu() const {
+        return m_gpu;
     }
 
 protected:
     quint32 m_bufferId = 0;
     QSize m_size;
-    int m_fd;
+    DrmGpu *m_gpu;
 };
 
 class DrmDumbBuffer : public DrmBuffer
 {
 public:
-    DrmDumbBuffer(int fd, const QSize &size);
+    DrmDumbBuffer(DrmGpu *gpu, const QSize &size);
     ~DrmDumbBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override;

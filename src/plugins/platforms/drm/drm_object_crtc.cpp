@@ -81,7 +81,7 @@ bool DrmCrtc::blank(DrmOutput *output)
     }
 
     if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = new DrmDumbBuffer(m_gpu->fd(), output->pixelSize());
+        DrmDumbBuffer *blackBuffer = new DrmDumbBuffer(m_gpu, output->pixelSize());
         if (!blackBuffer->map()) {
             delete blackBuffer;
             return false;

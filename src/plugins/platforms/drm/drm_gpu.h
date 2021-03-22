@@ -92,6 +92,10 @@ public:
      */
     clockid_t presentationClock() const;
 
+    bool addFB2ModifiersSupported() const {
+        return m_addFB2ModifiersSupported;
+    }
+
     void waitIdle();
 
 Q_SIGNALS:
@@ -124,6 +128,7 @@ private:
     EGLDisplay m_eglDisplay = EGL_NO_DISPLAY;
     clockid_t m_presentationClock;
     QSocketNotifier *m_socketNotifier = nullptr;
+    bool m_addFB2ModifiersSupported = false;
 
     // all planes: primarys, cursors and overlays
     QVector<DrmPlane*> m_planes;

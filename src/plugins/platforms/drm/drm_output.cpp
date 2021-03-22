@@ -359,7 +359,7 @@ void DrmOutput::initEdid(drmModeConnector *connector)
 bool DrmOutput::initCursor(const QSize &cursorSize)
 {
     auto createCursor = [this, cursorSize] (int index) {
-        m_cursor[index].reset(new DrmDumbBuffer(m_gpu->fd(), cursorSize));
+        m_cursor[index].reset(new DrmDumbBuffer(m_gpu, cursorSize));
         if (!m_cursor[index]->map(QImage::Format_ARGB32_Premultiplied)) {
             return false;
         }

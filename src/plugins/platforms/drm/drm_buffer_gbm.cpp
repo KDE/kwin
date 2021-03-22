@@ -11,6 +11,7 @@
 #include "gbm_surface.h"
 
 #include "logging.h"
+#include "drm_gpu.h"
 
 // system
 #include <sys/mman.h>
@@ -28,8 +29,8 @@ namespace KWin
 {
 
 // DrmSurfaceBuffer
-DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, const QSharedPointer<GbmSurface> &surface)
-    : DrmBuffer(fd)
+DrmSurfaceBuffer::DrmSurfaceBuffer(DrmGpu *gpu, const QSharedPointer<GbmSurface> &surface)
+    : DrmBuffer(gpu)
     , m_surface(surface)
 {
     m_bo = m_surface->lockFrontBuffer();
@@ -40,8 +41,8 @@ DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, const QSharedPointer<GbmSurface> &sur
     initialize();
 }
 
-DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
-    : DrmBuffer(fd)
+DrmSurfaceBuffer::DrmSurfaceBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface)
+    : DrmBuffer(gpu)
     , m_bo(buffer)
     , m_bufferInterface(bufferInterface)
 {
@@ -55,7 +56,7 @@ DrmSurfaceBuffer::DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::Buffe
 DrmSurfaceBuffer::~DrmSurfaceBuffer()
 {
     if (m_bufferId) {
-        drmModeRmFB(fd(), m_bufferId);
+        drmModeRmFB(m_gpu->fd(), m_bufferId);
     }
     releaseGbm();
     if (m_bufferInterface) {
@@ -99,14 +100,14 @@ void DrmSurfaceBuffer::initialize()
         modifiers[0] = DRM_FORMAT_MOD_INVALID;
     }
 
-    if (modifiers[0] != DRM_FORMAT_MOD_INVALID) {
-        if (drmModeAddFB2WithModifiers(m_fd, m_size.width(), m_size.height(), gbm_bo_get_format(m_bo), handles, strides, offsets, modifiers, &m_bufferId, DRM_MODE_FB_MODIFIERS)) {
+    if (modifiers[0] != DRM_FORMAT_MOD_INVALID && m_gpu->addFB2ModifiersSupported()) {
+        if (drmModeAddFB2WithModifiers(m_gpu->fd(), m_size.width(), m_size.height(), gbm_bo_get_format(m_bo), handles, strides, offsets, modifiers, &m_bufferId, DRM_MODE_FB_MODIFIERS)) {
             qCWarning(KWIN_DRM) << "drmModeAddFB2WithModifiers failed!" << strerror(errno);
         }
     } else {
-        if (drmModeAddFB2(m_fd, m_size.width(), m_size.height(), gbm_bo_get_format(m_bo), handles, strides, offsets, &m_bufferId, 0)) {
+        if (drmModeAddFB2(m_gpu->fd(), m_size.width(), m_size.height(), gbm_bo_get_format(m_bo), handles, strides, offsets, &m_bufferId, 0)) {
             // fallback
-            if (drmModeAddFB(m_fd, m_size.width(), m_size.height(), 24, 32, strides[0], handles[0], &m_bufferId) != 0) {
+            if (drmModeAddFB(m_gpu->fd(), m_size.width(), m_size.height(), 24, 32, strides[0], handles[0], &m_bufferId) != 0) {
                 qCWarning(KWIN_DRM) << "drmModeAddFB2 and drmModeAddFB both failed!" << strerror(errno);
             }
         }

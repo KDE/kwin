@@ -580,7 +580,7 @@ void EglGbmBackend::aboutToStartPainting(int screenId, const QRegion &damagedReg
 bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion)
 {
     if (output.directScanoutBuffer) {
-        output.buffer = QSharedPointer<DrmSurfaceBuffer>::create(m_gpu->fd(), output.directScanoutBuffer, output.bufferInterface);
+        output.buffer = QSharedPointer<DrmSurfaceBuffer>::create(m_gpu, output.directScanoutBuffer, output.bufferInterface);
     } else if (isPrimary()) {
         if (supportsSwapBuffersWithDamage()) {
             QVector<EGLint> rects = regionToRects(output.damageHistory.constFirst(), output.output);
@@ -595,7 +595,7 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
                 return false;
             }
         }
-        output.buffer = QSharedPointer<DrmSurfaceBuffer>::create(m_gpu->fd(), output.gbmSurface);
+        output.buffer = QSharedPointer<DrmSurfaceBuffer>::create(m_gpu, output.gbmSurface);
     } else {
         qCDebug(KWIN_DRM) << "imported gbm_bo does not exist!";
         return false;

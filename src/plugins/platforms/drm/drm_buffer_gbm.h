@@ -29,8 +29,8 @@ class GbmSurface;
 class DrmSurfaceBuffer : public DrmBuffer
 {
 public:
-    DrmSurfaceBuffer(int fd, const QSharedPointer<GbmSurface> &surface);
-    DrmSurfaceBuffer(int fd, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
+    DrmSurfaceBuffer(DrmGpu *gpu, const QSharedPointer<GbmSurface> &surface);
+    DrmSurfaceBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
     ~DrmSurfaceBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override {
