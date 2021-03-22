@@ -251,7 +251,6 @@ int main(int argc, char **argv)
     output->setPhysicalSize(QSize(269, 202));
     const QSize windowSize(1024, 768);
     output->addMode(windowSize);
-    output->create();
     SeatInterface *seat = new SeatInterface(&display);
     seat->setHasKeyboard(true);
     seat->setHasPointer(true);

@@ -80,7 +80,6 @@ int main(int argc, char **argv)
     OutputInterface *output = new OutputInterface(&display, &display);
     output->setPhysicalSize(QSize(10, 10));
     output->addMode(QSize(1024, 768));
-    output->create();
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();

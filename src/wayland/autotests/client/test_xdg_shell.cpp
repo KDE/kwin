@@ -95,10 +95,8 @@ void XdgShellTest::init()
     m_display->createShm();
     m_o1Interface = new OutputInterface(m_display, m_display);
     m_o1Interface->addMode(QSize(1024, 768));
-    m_o1Interface->create();
     m_o2Interface = new OutputInterface(m_display, m_display);
     m_o2Interface->addMode(QSize(1024, 768));
-    m_o2Interface->create();
     m_seatInterface = new SeatInterface(m_display, m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasPointer(true);

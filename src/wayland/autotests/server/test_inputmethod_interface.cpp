@@ -180,8 +180,7 @@ void TestInputMethodInterface::initTestCase()
     m_serverCompositor = new CompositorInterface(&m_display, this);
     m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
     m_inputPanelIface = new InputPanelV1Interface(&m_display, this);
-    auto outputIface = new OutputInterface(&m_display, this);
-    outputIface->create();
+    new OutputInterface(&m_display, this);
 
     connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;

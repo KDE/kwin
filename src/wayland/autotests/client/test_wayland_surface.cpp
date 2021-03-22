@@ -1051,7 +1051,6 @@ void TestWaylandSurface::testOutput()
     QVERIFY(outputAnnouncedSpy.isValid());
 
     auto serverOutput = new OutputInterface(m_display, m_display);
-    serverOutput->create();
     QVERIFY(outputAnnouncedSpy.wait());
     QScopedPointer<Output> clientOutput(registry.createOutput(outputAnnouncedSpy.first().first().value<quint32>(), outputAnnouncedSpy.first().last().value<quint32>()));
     QVERIFY(clientOutput->isValid());

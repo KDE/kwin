@@ -1,19 +1,17 @@
 /*
     SPDX-FileCopyrightText: 2014 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #pragma once
 
+#include <KWaylandServer/kwaylandserver_export.h>
+
 #include <QObject>
 #include <QPoint>
 #include <QSize>
 
-#include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
-
-struct wl_global;
-struct wl_client;
 struct wl_resource;
 
 namespace KWaylandServer
@@ -21,12 +19,13 @@ namespace KWaylandServer
 
 class ClientConnection;
 class Display;
+class OutputInterfacePrivate;
 
 /**
- * @brief Global for the wl_output interface.
- *
+ * The OutputInterface class represents a screen. This class corresponds to the Wayland
+ * interface @c wl_output.
  */
-class KWAYLANDSERVER_EXPORT OutputInterface : public Global
+class KWAYLANDSERVER_EXPORT OutputInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)
@@ -73,7 +72,7 @@ public:
     };
 
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
-    virtual ~OutputInterface();
+    ~OutputInterface() override;
 
     QSize physicalSize() const;
     QPoint globalPosition() const;
@@ -127,6 +126,7 @@ public:
     static OutputInterface *get(wl_resource *native);
 
 Q_SIGNALS:
+    void aboutToBeDestroyed();
     void physicalSizeChanged(const QSize&);
     void globalPositionChanged(const QPoint&);
     void manufacturerChanged(const QString&);
@@ -154,11 +154,10 @@ Q_SIGNALS:
     void bound(ClientConnection *client,  wl_resource *boundResource);
 
 private:
-    class Private;
-    Private *d_func() const;
+    QScopedPointer<OutputInterfacePrivate> d;
 };
 
-}
+} // namespace KWaylandServer
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::OutputInterface::ModeFlags)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::SubPixel)

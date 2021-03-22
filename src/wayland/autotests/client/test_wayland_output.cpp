@@ -81,7 +81,6 @@ void TestWaylandOutput::init()
     m_serverOutput->setCurrentMode(QSize(1024, 768));
     QCOMPARE(m_serverOutput->pixelSize(), QSize(1024, 768));
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
-    m_serverOutput->create();
     QCOMPARE(m_serverOutput->isDpmsSupported(), false);
     QCOMPARE(m_serverOutput->dpmsMode(), OutputInterface::DpmsMode::Off);
 
