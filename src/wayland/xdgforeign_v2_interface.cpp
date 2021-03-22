@@ -239,7 +239,7 @@ void XdgImportedV2Interface::zxdg_imported_v2_destroy_resource(Resource *resourc
 
 void XdgImportedV2Interface::handleExportedDestroyed()
 {
-    send_destroyed(resource()->handle);
+    send_destroyed();
     delete this;
 }
 
