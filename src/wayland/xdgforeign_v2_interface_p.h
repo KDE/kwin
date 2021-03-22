@@ -67,7 +67,6 @@ class XdgExportedV2Interface : public QObject, QtWaylandServer::zxdg_exported_v2
 
 public:
     explicit XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource );
-    ~XdgExportedV2Interface() override;
 
     SurfaceInterface *surface();
 
@@ -87,7 +86,6 @@ class XdgImportedV2Interface : public QObject, QtWaylandServer::zxdg_imported_v2
     Q_OBJECT
 public:
     explicit XdgImportedV2Interface(XdgExportedV2Interface *exported, wl_resource *resource);
-    ~XdgImportedV2Interface() override;
 
     SurfaceInterface *child() const;
     SurfaceInterface *surface() const;

@@ -243,8 +243,6 @@ XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_res
     connect(surface, &QObject::destroyed, this, &XdgExportedV2Interface::handleSurfaceDestroyed);
 }
 
-XdgExportedV2Interface::~XdgExportedV2Interface() = default;
-
 SurfaceInterface *XdgExportedV2Interface::surface()
 {
     return m_surface;
@@ -272,8 +270,6 @@ XdgImportedV2Interface::XdgImportedV2Interface(XdgExportedV2Interface *exported,
 {
     connect(exported, &QObject::destroyed, this, &XdgImportedV2Interface::handleExportedDestroyed);
 }
-
-XdgImportedV2Interface::~XdgImportedV2Interface() = default;
 
 SurfaceInterface *XdgImportedV2Interface::child() const
 {
