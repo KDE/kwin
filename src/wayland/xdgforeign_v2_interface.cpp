@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2017 Marco Martin <notmart@gmail.com>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -126,44 +127,58 @@ void XdgImporterV2Interface::zxdg_importer_v2_import_toplevel(Resource *resource
     XdgImportedV2Interface *imported = new XdgImportedV2Interface(exported, importedResource);
 
     connect(imported, &XdgImportedV2Interface::childChanged, this, [this, imported](SurfaceInterface *child) {
-        // remove any previous association
-        auto it = m_children.find(imported);
-        if (it != m_children.end()) {
-            m_parents.remove(*it);
-            m_children.erase(it);
-        }
-
-        m_parents[child] = imported;
-        m_children[imported] = child;
-        SurfaceInterface *parent = imported->surface();
-        emit m_foreign->transientChanged(child, parent);
+        link(imported, child);
 
         // child surface destroyed
         connect(child, &QObject::destroyed, this, [this, child]() {
-            auto it = m_parents.find(child);
-            if (it != m_parents.end()) {
-                XdgImportedV2Interface *parent = *it;
-                m_children.remove(*it);
-                m_parents.erase(it);
-                emit m_foreign->transientChanged(nullptr, parent->surface());
-            }
+            unlink(nullptr, child);
         });
     });
 
     // surface no longer imported
-    connect(imported, &XdgImportedV2Interface::destroyed, this, [this, handle, imported]() {
-        m_importedSurfaces.remove(handle);
+    connect(imported, &XdgImportedV2Interface::destroyed, this, [this, imported]() {
+        unlink(imported, nullptr);
+    });
+}
 
-        auto it = m_children.find(imported);
+void XdgImporterV2Interface::link(XdgImportedV2Interface *parent, SurfaceInterface *child)
+{
+    // remove any previous association
+    auto it = m_children.find(parent);
+    if (it != m_children.end()) {
+        m_parents.remove(*it);
+        m_children.erase(it);
+    }
+
+    m_parents[child] = parent;
+    m_children[parent] = child;
+
+    emit m_foreign->transientChanged(child, parent->surface());
+}
+
+void XdgImporterV2Interface::unlink(XdgImportedV2Interface *parent, SurfaceInterface *child)
+{
+    if (parent) {
+        // If the parent endpoint is unlinked, the transientChanged() signal will indicate
+        // the orphaned child.
+        auto it = m_children.find(parent);
         if (it != m_children.end()) {
             SurfaceInterface *child = *it;
             m_parents.remove(*it);
             m_children.erase(it);
             emit m_foreign->transientChanged(child, nullptr);
         }
-    });
-
-    m_importedSurfaces[handle] = imported;
+    } else if (child) {
+        // If the child endpoint is unlinked, the transientChanged() signal will indicate
+        // what parent has lost a child.
+        auto it = m_parents.find(child);
+        if (it != m_parents.end()) {
+            XdgImportedV2Interface *parent = *it;
+            m_children.remove(*it);
+            m_parents.erase(it);
+            emit m_foreign->transientChanged(nullptr, parent->surface());
+        }
+    }
 }
 
 XdgExportedV2Interface::XdgExportedV2Interface(SurfaceInterface *surface, wl_resource *resource )

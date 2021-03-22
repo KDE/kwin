@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2017 Marco Martin <notmart@gmail.com>
+    SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
@@ -52,6 +53,9 @@ class XdgImporterV2Interface : public QObject, public QtWaylandServer::zxdg_impo
 
 public:
     XdgImporterV2Interface(Display *display, XdgForeignV2Interface *foreign);
+
+    void link(XdgImportedV2Interface *parent, SurfaceInterface *child);
+    void unlink(XdgImportedV2Interface *parent, SurfaceInterface *child);
 
     SurfaceInterface *transientFor(SurfaceInterface *surface);
 
