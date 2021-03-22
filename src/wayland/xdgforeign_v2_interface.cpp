@@ -52,11 +52,7 @@ XdgExporterV2Interface::XdgExporterV2Interface(Display *display, XdgForeignV2Int
 
 XdgExportedV2Interface *XdgExporterV2Interface::exportedSurface(const QString &handle)
 {
-    auto it = m_exportedSurfaces.constFind(handle);
-    if (it != m_exportedSurfaces.constEnd()) {
-        return it.value();
-    }
-    return nullptr;
+    return m_exportedSurfaces.value(handle);
 }
 
 void XdgExporterV2Interface::zxdg_exporter_v2_destroy(Resource *resource)
@@ -102,11 +98,7 @@ XdgImporterV2Interface::XdgImporterV2Interface(Display *display, XdgForeignV2Int
 
 XdgImportedV2Interface *XdgImporterV2Interface::importedSurface(const QString &handle)
 {
-    auto it = m_importedSurfaces.constFind(handle);
-    if (it != m_importedSurfaces.constEnd()) {
-        return it.value();
-    }
-    return nullptr;
+    return m_importedSurfaces.value(handle);
 }
 
 SurfaceInterface *XdgImporterV2Interface::transientFor(SurfaceInterface *surface)
