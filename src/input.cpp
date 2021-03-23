@@ -70,9 +70,8 @@ static KWaylandServer::PointerAxisSource kwinAxisSourceToKWaylandAxisSource(Inpu
         return KWaylandServer::PointerAxisSource::Continuous;
     case KWin::InputRedirection::PointerAxisSourceWheelTilt:
         return KWaylandServer::PointerAxisSource::WheelTilt;
-    case KWin::InputRedirection::PointerAxisSourceUnknown:
     default:
-        return KWaylandServer::PointerAxisSource::Unknown;
+        Q_UNREACHABLE();
     }
 }
 
@@ -2114,7 +2113,7 @@ void InputRedirection::setupWorkspace()
                             break;
                         }
                         // TODO: Fix time
-                        m_pointer->processAxis(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, 0);
+                        m_pointer->processAxis(axis, delta, 0, InputRedirection::PointerAxisSourceContinuous, 0);
                         waylandServer()->simulateUserActivity();
                     }
                 );

@@ -78,7 +78,6 @@ public:
         PointerAxisHorizontal
     };
     enum PointerAxisSource {
-        PointerAxisSourceUnknown,
         PointerAxisSourceWheel,
         PointerAxisSourceFinger,
         PointerAxisSourceContinuous,

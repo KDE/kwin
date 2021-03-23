@@ -228,7 +228,7 @@ InputRedirection::PointerAxisSource PointerEvent::axisSource() const
     case LIBINPUT_POINTER_AXIS_SOURCE_WHEEL_TILT:
         return InputRedirection::PointerAxisSourceWheelTilt;
     default:
-        return InputRedirection::PointerAxisSourceUnknown;
+        Q_UNREACHABLE();
     }
 }
 
