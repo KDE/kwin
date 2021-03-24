@@ -3756,9 +3756,20 @@ QRect AbstractClient::fullscreenGeometryRestore() const
 {
     return m_fullscreenGeometryRestore;
 }
+
 void AbstractClient::setFullscreenGeometryRestore(const QRect &geom)
 {
     m_fullscreenGeometryRestore = geom;
+}
+
+void AbstractClient::cleanTabBox()
+{
+#ifdef KWIN_BUILD_TABBOX
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
+        tabBox->nextPrev(true);
+    }
+#endif
 }
 
 }

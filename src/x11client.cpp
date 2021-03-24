@@ -25,9 +25,6 @@
 #include "netinfo.h"
 #include "screens.h"
 #include "shadow.h"
-#ifdef KWIN_BUILD_TABBOX
-#include "tabbox.h"
-#endif
 #include "workspace.h"
 #include "screenedge.h"
 #include "decorations/decorationbridge.h"
@@ -200,12 +197,7 @@ void X11Client::deleteClient(X11Client *c)
 void X11Client::releaseWindow(bool on_shutdown)
 {
     markAsZombie();
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox->isDisplayed() && tabBox->currentClient() == this) {
-        tabBox->nextPrev(true);
-    }
-#endif
+    cleanTabBox();
     Deleted* del = nullptr;
     if (!on_shutdown) {
         del = Deleted::create(this);
@@ -272,12 +264,7 @@ void X11Client::releaseWindow(bool on_shutdown)
 void X11Client::destroyClient()
 {
     markAsZombie();
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    if (tabBox && tabBox->isDisplayed() && tabBox->currentClient() == this) {
-        tabBox->nextPrev(true);
-    }
-#endif
+    cleanTabBox();
     Deleted* del = Deleted::create(this);
     if (isMoveResize())
         emit clientFinishUserMovedResized(this);

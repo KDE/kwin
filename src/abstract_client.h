@@ -1243,6 +1243,9 @@ protected:
     QRect m_virtualKeyboardGeometry;
 
     void setFullscreenGeometryRestore(const QRect &geom);
+
+    void cleanTabBox();
+
 private Q_SLOTS:
     void shadeHover();
     void shadeUnhover();
