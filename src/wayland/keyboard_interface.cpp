@@ -120,7 +120,7 @@ void KeyboardInterfacePrivate::sendModifiers(quint32 depressed, quint32 latched,
     }
 }
 
-bool KeyboardInterfacePrivate::updateKey(quint32 key, State state)
+bool KeyboardInterfacePrivate::updateKey(quint32 key, KeyboardKeyState state)
 {
     auto it = states.find(key);
     if (it == states.end()) {
@@ -174,7 +174,7 @@ QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
 {
     QVector<quint32> keys;
     for (auto it = states.constBegin(); it != states.constEnd(); ++it) {
-        if (it.value() == State::Pressed) {
+        if (it.value() == KeyboardKeyState::Pressed) {
             keys << it.key();
         }
     }
@@ -182,9 +182,9 @@ QVector<quint32> KeyboardInterfacePrivate::pressedKeys() const
 }
 
 
-void KeyboardInterface::keyPressed(quint32 key)
+void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 {
-    if (!d->updateKey(key, KeyboardInterfacePrivate::State::Pressed)) {
+    if (!d->updateKey(key, state)) {
         return;
     }
 
@@ -195,28 +195,11 @@ void KeyboardInterface::keyPressed(quint32 key)
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(d->focusedSurface->client());
     const quint32 serial = d->seat->display()->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, KeyboardInterfacePrivate::key_state::key_state_pressed);
+        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, quint32(state));
     }
 }
 
-void KeyboardInterface::keyReleased(quint32 key)
-{
-    if (!d->updateKey(key, KeyboardInterfacePrivate::State::Released)) {
-        return;
-    }
-
-    if (!d->focusedSurface) {
-        return;
-    }
-
-    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(d->focusedSurface->client());
-    const quint32 serial = d->seat->display()->nextSerial();
-    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, KeyboardInterfacePrivate::key_state::key_state_released);
-    }
-}
-
-void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
+void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
 {
     bool changed = false;
 #define UPDATE( value ) \

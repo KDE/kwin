@@ -65,6 +65,15 @@ enum class PointerButtonState : quint32 {
 };
 
 /**
+ * This enum type is used to describe the state of a keyboard key. It is
+ * equivalent to the @c wl_keyboard.key_state enum.
+ */
+enum class KeyboardKeyState : quint32 {
+    Released = 0,
+    Pressed = 1,
+};
+
+/**
  * @brief Represents a Seat on the Wayland Display.
  *
  * A Seat is a set of input devices (e.g. Keyboard, Pointer and Touch) the client can connect
@@ -516,6 +525,8 @@ public:
     void setFocusedKeyboardSurface(SurfaceInterface *surface);
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
+    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);
+    void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     ///@}
 
     /**

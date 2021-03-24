@@ -170,7 +170,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(event->timestamp());
-    m_seat->keyboard()->keyPressed(event->nativeScanCode() - 8);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWaylandServer::KeyboardKeyState::Pressed);
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -180,7 +180,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
     m_seat->setTimestamp(event->timestamp());
-    m_seat->keyboard()->keyReleased(event->nativeScanCode() - 8);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWaylandServer::KeyboardKeyState::Released);
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)

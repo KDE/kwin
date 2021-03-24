@@ -16,6 +16,8 @@ class SeatInterface;
 class SurfaceInterface;
 class KeyboardInterfacePrivate;
 
+enum class KeyboardKeyState : quint32;
+
 /**
  * @brief Resource for the wl_keyboard interface.
  */
@@ -39,7 +41,6 @@ public:
      */
     qint32 keyRepeatDelay() const;
     void setKeymap(const QByteArray &content);
-    void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
 
     /**
      * Sets the key repeat information to be forwarded to all bound keyboards.
@@ -53,8 +54,8 @@ public:
      */
     void setRepeatInfo(qint32 charactersPerSecond, qint32 delay);
 
-    void keyPressed(quint32 key);
-    void keyReleased(quint32 key);
+    void sendKey(quint32 key, KeyboardKeyState state);
+    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
 
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);

@@ -54,12 +54,8 @@ public:
     };
     Modifiers modifiers;
 
-    enum class State {
-        Released,
-        Pressed
-    };
-    QHash<quint32, State> states;
-    bool updateKey(quint32 key, State state);
+    QHash<quint32, KeyboardKeyState> states;
+    bool updateKey(quint32 key, KeyboardKeyState state);
     QVector<quint32> pressedKeys() const;
 
 protected:

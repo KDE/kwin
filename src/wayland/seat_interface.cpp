@@ -962,6 +962,22 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.data();
 }
 
+void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
+{
+    if (!d->keyboard) {
+        return;
+    }
+    d->keyboard->sendKey(keyCode, state);
+}
+
+void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
+{
+    if (!d->keyboard) {
+        return;
+    }
+    d->keyboard->sendModifiers(depressed, latched, locked, group);
+}
+
 void SeatInterface::notifyTouchCancel()
 {
     if (!d->touch) {
