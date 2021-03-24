@@ -668,7 +668,6 @@ PointerInterface *SeatInterface::pointer() const
     return d->pointer.data();
 }
 
-namespace {
 static quint32 qtToWaylandButton(Qt::MouseButton button)
 {
 #if HAVE_LINUX_INPUT_H
@@ -695,7 +694,6 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
 #else
     return 0;
 #endif
-}
 }
 
 bool SeatInterface::isPointerButtonPressed(Qt::MouseButton button) const
