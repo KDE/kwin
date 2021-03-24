@@ -11,7 +11,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <KWaylandServer/keyboard_interface.h>
 #include <KWaylandServer/seat_interface.h>
 #include <QMouseEvent>
 
@@ -84,10 +83,10 @@ bool PopupInputFilter::keyEvent(QKeyEvent *event)
     seat->setFocusedKeyboardSurface(last->surface());
     switch (event->type()) {
     case QEvent::KeyPress:
-        seat->keyboard()->keyPressed(event->nativeScanCode());
+        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Pressed);
         break;
     case QEvent::KeyRelease:
-        seat->keyboard()->keyReleased(event->nativeScanCode());
+        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Released);
         break;
     default:
         break;

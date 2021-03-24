@@ -385,10 +385,10 @@ void Xkb::forwardModifiers()
     if (!m_seat || !m_seat->keyboard()) {
         return;
     }
-    m_seat->keyboard()->updateModifiers(m_modifierState.depressed,
-                                        m_modifierState.latched,
-                                        m_modifierState.locked,
-                                        m_currentLayout);
+    m_seat->notifyKeyboardModifiers(m_modifierState.depressed,
+                                    m_modifierState.latched,
+                                    m_modifierState.locked,
+                                    m_currentLayout);
 }
 
 QString Xkb::layoutName(xkb_layout_index_t index) const

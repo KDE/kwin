@@ -364,11 +364,13 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     }
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
+        KWaylandServer::KeyboardKeyState state;
         if (pressed) {
-            waylandServer()->seat()->keyboard()->keyPressed(keysymToKeycode(sym));
+            state = KWaylandServer::KeyboardKeyState::Pressed;
         } else {
-            waylandServer()->seat()->keyboard()->keyReleased(keysymToKeycode(sym));
+            state = KWaylandServer::KeyboardKeyState::Released;
         }
+        waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
         return;
     }
 }

@@ -233,12 +233,14 @@ void InputEventFilter::passToWaylandServer(QKeyEvent *event)
     if (event->isAutoRepeat()) {
         return;
     }
+
+    KWaylandServer::SeatInterface *seat = waylandServer()->seat();
     switch (event->type()) {
     case QEvent::KeyPress:
-        waylandServer()->seat()->keyboard()->keyPressed(event->nativeScanCode());
+        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Pressed);
         break;
     case QEvent::KeyRelease:
-        waylandServer()->seat()->keyboard()->keyReleased(event->nativeScanCode());
+        seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Released);
         break;
     default:
         break;
@@ -343,10 +345,10 @@ public:
         }
         switch (event->type()) {
         case QEvent::KeyPress:
-            seat->keyboard()->keyPressed(event->nativeScanCode());
+            seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Pressed);
             break;
         case QEvent::KeyRelease:
-            seat->keyboard()->keyReleased(event->nativeScanCode());
+            seat->notifyKeyboardKey(event->nativeScanCode(), KWaylandServer::KeyboardKeyState::Released);
             break;
         default:
             break;
