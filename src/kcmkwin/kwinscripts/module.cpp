@@ -20,7 +20,6 @@
 #include <KPluginFactory>
 #include <KMessageBox>
 #include <KMessageWidget>
-#include <KPluginInfo>
 #include <KPackage/PackageLoader>
 #include <KPackage/Package>
 #include <KPackage/PackageStructure>
@@ -57,8 +56,12 @@ Module::Module(QWidget *parent, const QVariantList &args) :
         }
     });
 
-    connect(ui->scriptSelector, &KPluginSelector::changed, this, qOverload<bool>(&KCModule::changed));
-    connect(ui->scriptSelector, &KPluginSelector::defaulted, this, qOverload<bool>(&KCModule::defaulted));
+    connect(ui->scriptSelector, &KPluginSelector::changed, this, [this](bool isChanged){
+        changed(isChanged || !m_pendingDeletions.isEmpty());
+    });
+    connect(ui->scriptSelector, &KPluginSelector::defaulted, this, [this](bool isDefaulted){
+        defaulted(isDefaulted && m_pendingDeletions.isEmpty());
+    });
     connect(this, &Module::defaultsIndicatorsVisibleChanged, ui->scriptSelector, &KPluginSelector::setDefaultsIndicatorsVisible);
     connect(ui->importScriptButton, &QPushButton::clicked, this, &Module::importScript);
 
@@ -66,26 +69,20 @@ Module::Module(QWidget *parent, const QVariantList &args) :
         QPushButton *button = new QPushButton(ui->scriptSelector);
         button->setIcon(QIcon::fromTheme(QStringLiteral("delete")));
         button->setEnabled(QFileInfo(info.entryPath()).isWritable());
-        connect(button, &QPushButton::clicked, this, [this, info](){
-            using namespace KPackage;
-            PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
-            Package package(structure);
-            // We can get the package root from the entry path
-            QDir root = QFileInfo(info.entryPath()).dir();
-            root.cdUp();
-            KJob *uninstallJob = Package(structure).uninstall(info.pluginName(), root.absolutePath());
-            connect(uninstallJob, &KJob::result, this, [this, uninstallJob](){
-                ui->scriptSelector->clearPlugins();
-                updateListViewContents();
-                // If the uninstallation is successful the entry will be immediately removed
-                if (!uninstallJob->errorString().isEmpty()) {
-                    ui->messageWidget->setText(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
-                    ui->messageWidget->setMessageType(KMessageWidget::Error);
-                    ui->messageWidget->animatedShow();
-                }
-            });
-       });
-       return button;
+        connect(button, &QPushButton::clicked, this, [this, info]() {
+            if (m_pendingDeletions.contains(info)) {
+                m_pendingDeletions.removeOne(info);
+            } else {
+                m_pendingDeletions << info;
+            }
+            Q_EMIT pendingDeletionsChanged();
+        });
+        connect(this, &Module::pendingDeletionsChanged, button, [this, info, button]() {
+            button->setIcon(QIcon::fromTheme(m_pendingDeletions.contains(info) ? QStringLiteral("edit-undo") : QStringLiteral("delete")));
+            changed(ui->scriptSelector->isSaveNeeded() || !m_pendingDeletions.isEmpty());
+            defaulted(ui->scriptSelector->isDefault() && m_pendingDeletions.isEmpty());
+        });
+        return button;
     });
 
     updateListViewContents();
@@ -150,11 +147,15 @@ void Module::updateListViewContents()
 
 void Module::defaults()
 {
+    m_pendingDeletions.clear();
+    Q_EMIT pendingDeletionsChanged();
     ui->scriptSelector->defaults();
 }
 
 void Module::load()
 {
+    m_pendingDeletions.clear();
+    Q_EMIT pendingDeletionsChanged();
     updateListViewContents();
     ui->scriptSelector->load();
 
@@ -163,6 +164,26 @@ void Module::load()
 
 void Module::save()
 {
+    using namespace KPackage;
+    PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
+    for (const KPluginInfo &info : qAsConst(m_pendingDeletions)) {
+        // We can get the package root from the entry path
+        QDir root = QFileInfo(info.entryPath()).dir();
+        root.cdUp();
+        KJob *uninstallJob = Package(structure).uninstall(info.pluginName(), root.absolutePath());
+        connect(uninstallJob, &KJob::result, this, [this, uninstallJob](){
+            ui->scriptSelector->clearPlugins();
+            updateListViewContents();
+            // If the uninstallation is successful the entry will be immediately removed
+            if (!uninstallJob->errorString().isEmpty()) {
+                ui->messageWidget->setText(i18n("Error when uninstalling KWin Script: %1", uninstallJob->errorString()));
+                ui->messageWidget->setMessageType(KMessageWidget::Error);
+                ui->messageWidget->animatedShow();
+            }
+        });
+    }
+    m_pendingDeletions.clear();
+
     ui->scriptSelector->save();
     m_kwinConfig->sync();
     QDBusMessage message = QDBusMessage::createMethodCall("org.kde.KWin", "/Scripting", "org.kde.kwin.Scripting", "start");
