@@ -114,7 +114,10 @@ OutputDeviceInterface::OutputDeviceInterface(Display *display, QObject *parent)
     connect(this, &OutputDeviceInterface::colorCurvesChanged,    this, [this] { d->updateColorCurves(); });
 }
 
-OutputDeviceInterface::~OutputDeviceInterface() = default;
+OutputDeviceInterface::~OutputDeviceInterface()
+{
+    d->globalRemove();
+}
 
 QSize OutputDeviceInterface::pixelSize() const
 {
