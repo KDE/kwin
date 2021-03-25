@@ -235,19 +235,6 @@ if (HAVE_LINUX_INPUT_H)
 endif()
 
 ########################################################
-# Test PlasmaWindowModel
-########################################################
-if (HAVE_LINUX_INPUT_H)
-    set( testPlasmaWindowModel_SRCS
-            test_plasma_window_model.cpp
-        )
-    add_executable(testPlasmaWindowModel ${testPlasmaWindowModel_SRCS})
-    target_link_libraries( testPlasmaWindowModel Qt::Test Qt::Gui KF5::WaylandClient Plasma::KWaylandServer)
-    add_test(NAME kwayland-testPlasmaWindowModel COMMAND testPlasmaWindowModel)
-    ecm_mark_as_test(testPlasmaWindowModel)
-endif()
-
-########################################################
 # Test TextInputV2
 ########################################################
 set( testTextInputV2_SRCS
