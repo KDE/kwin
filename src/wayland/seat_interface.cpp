@@ -179,7 +179,6 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     QObject::connect(dataDevice, &DataDeviceInterface::dragStarted, q,
         [this, dataDevice] {
             const auto dragSerial = dataDevice->dragImplicitGrabSerial();
-            auto *dragSurface = dataDevice->origin();
             if (q->hasImplicitPointerGrab(dragSerial)) {
                 drag.mode = Drag::Mode::Pointer;
                 drag.transformation = globalPointer.focus.transformation;
