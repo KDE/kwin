@@ -36,7 +36,7 @@ void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
         send_repeat_info(resource->handle, keyRepeat.charactersPerSecond, keyRepeat.delay);
     }
     if (!keymap.isNull()) {
-        send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, keymap->handle(), keymap->size());
+        sendKeymap(resource);
     }
 
     if (focusedClient && focusedClient->client() == resource->client()) {
@@ -78,37 +78,45 @@ void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 seri
     }
 }
 
+void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
+{
+    QScopedPointer<QTemporaryFile> tmp(new QTemporaryFile());
+    if (!tmp->open()) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to create keymap file:" << tmp->errorString();
+        return;
+    }
+
+    unlink(tmp->fileName().toUtf8().constData());
+    if (!tmp->resize(keymap.size())) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to resize keymap file:" << tmp->errorString();
+        return;
+    }
+
+    uchar *address = tmp->map(0, keymap.size());
+    if (!address) {
+        qCWarning(KWAYLAND_SERVER) << "Failed to map keymap file:" << tmp->errorString();
+        return;
+    }
+
+    if (qstrncpy(reinterpret_cast<char *>(address), keymap.constData(), keymap.size() + 1) == nullptr) {
+        return;
+    }
+    tmp->unmap(address);
+
+    send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, tmp->handle(), tmp->size());
+}
+
 void KeyboardInterface::setKeymap(const QByteArray &content)
 {
     if (content.isNull()) {
         return;
     }
-    QScopedPointer<QTemporaryFile> tmp{new QTemporaryFile(this)};
-    if (!tmp->open()) {
-        return;
-    }
-    unlink(tmp->fileName().toUtf8().constData());
-    if (!tmp->resize(content.size())) {
-        return;
-    }
-    uchar *address = tmp->map(0, content.size());
-    if (!address) {
-        return;
-    }
-    if (qstrncpy(reinterpret_cast<char*>(address), content.constData(), content.size() + 1) == nullptr) {
-        return;
-    }
-    tmp->unmap(address);
 
-    d->sendKeymap(tmp->handle(), content.size());
-    d->keymap.swap(tmp);
-}
+    d->keymap = content;
 
-void KeyboardInterfacePrivate::sendKeymap(int fd, quint32 size)
-{
-    const QList<Resource *> keyboards = resourceMap().values();
-    for (Resource *keyboardResource : keyboards) {
-        send_keymap(keyboardResource->handle, keymap_format::keymap_format_xkb_v1, fd, size);
+    const auto keyboardResources = d->resourceMap();
+    for (KeyboardInterfacePrivate::Resource *resource : keyboardResources) {
+        d->sendKeymap(resource);
     }
 }
 
