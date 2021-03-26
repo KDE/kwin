@@ -260,7 +260,7 @@ ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
 )
 
 ecm_add_qtwayland_server_protocol_kde(SERVER_LIB_SRCS
-    PROTOCOL PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/screencast.xml
     BASENAME zkde-screencast-unstable-v1
 )
 
