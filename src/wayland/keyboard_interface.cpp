@@ -98,9 +98,7 @@ void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
         return;
     }
 
-    if (qstrncpy(reinterpret_cast<char *>(address), keymap.constData(), keymap.size() + 1) == nullptr) {
-        return;
-    }
+    qstrncpy(reinterpret_cast<char *>(address), keymap.constData(), keymap.size() + 1);
     tmp->unmap(address);
 
     send_keymap(resource->handle, keymap_format::keymap_format_xkb_v1, tmp->handle(), tmp->size());
