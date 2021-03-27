@@ -90,6 +90,9 @@ public:
         return m_supportedTransformations;
     }
 
+    void setScaled(const QSize &srcSize, const QSize &modeSize, int crtcId, bool enable);
+    void set(const QSize &src, const QPoint &dstPos, const QSize &dstSize, int crtcId, bool enable);
+
 private:
     QSharedPointer<DrmBuffer> m_current;
     QSharedPointer<DrmBuffer> m_next;

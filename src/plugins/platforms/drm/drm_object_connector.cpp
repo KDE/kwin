@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -29,8 +30,31 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
 
 DrmConnector::~DrmConnector() = default;
 
+namespace {
+quint64 refreshRateForMode(_drmModeModeInfo *m)
+{
+    // Calculate higher precision (mHz) refresh rate
+    // logic based on Weston, see compositor-drm.c
+    quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
+    if (m->flags & DRM_MODE_FLAG_INTERLACE) {
+        refreshRate *= 2;
+    }
+    if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
+        refreshRate /= 2;
+    }
+    if (m->vscan > 1) {
+        refreshRate /= m->vscan;
+    }
+    return refreshRate;
+}
+}
+
 bool DrmConnector::init()
 {
+    if (!m_conn->count_modes) {
+        return false;
+    }
+
     qCDebug(KWIN_DRM) << "Creating connector" << id();
 
     if (!initProps({
@@ -72,16 +96,26 @@ bool DrmConnector::init()
         m_physicalSize = overwriteSize;
     }
 
+    // init modes
+    for (int i = 0; i < m_conn->count_modes; i++) {
+        auto mode = m_conn->modes[i];
+        Mode m;
+        m.mode = mode;
+        m.size = QSize(mode.hdisplay, mode.vdisplay);
+        m.refreshRate = refreshRateForMode(&mode);
+        m_modes << m;
+    }
+
     return true;
 }
 
 bool DrmConnector::isConnected()
 {
-    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(gpu()->fd(), id()));
-    if (!con) {
+    m_conn.reset(drmModeGetConnector(gpu()->fd(), id()));
+    if (!m_conn) {
         return false;
     }
-    return con->connection == DRM_MODE_CONNECTED;
+    return m_conn->connection == DRM_MODE_CONNECTED;
 }
 
 static QHash<int, QByteArray> s_connectorNames = {
@@ -131,6 +165,47 @@ QSize DrmConnector::physicalSize() const
 {
     return m_physicalSize;
 }
+
+const DrmConnector::Mode &DrmConnector::currentMode() const
+{
+    return m_modes[m_modeIndex];
+}
+
+int DrmConnector::currentModeIndex() const
+{
+    return m_modeIndex;
+}
+
+const QVector<DrmConnector::Mode> &DrmConnector::modes()
+{
+    return m_modes;
+}
+
+void DrmConnector::setModeIndex(int index)
+{
+    m_modeIndex = index;
+}
+
+AbstractWaylandOutput::SubPixel DrmConnector::subpixel() const
+{
+    switch (m_conn->subpixel) {
+    case DRM_MODE_SUBPIXEL_UNKNOWN:
+        return AbstractWaylandOutput::SubPixel::Unknown;
+    case DRM_MODE_SUBPIXEL_NONE:
+        return AbstractWaylandOutput::SubPixel::None;
+    case DRM_MODE_SUBPIXEL_HORIZONTAL_RGB:
+        return AbstractWaylandOutput::SubPixel::Horizontal_RGB;
+    case DRM_MODE_SUBPIXEL_HORIZONTAL_BGR:
+        return AbstractWaylandOutput::SubPixel::Horizontal_BGR;
+    case DRM_MODE_SUBPIXEL_VERTICAL_RGB:
+        return AbstractWaylandOutput::SubPixel::Vertical_RGB;
+    case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
+        return AbstractWaylandOutput::SubPixel::Vertical_BGR;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 
 
 }

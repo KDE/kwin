@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2016 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2021 Xaver Hugl <xaver.hugl@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -33,6 +34,8 @@ bool DrmCrtc::init()
     return initProps({
         PropertyDefinition(QByteArrayLiteral("MODE_ID")),
         PropertyDefinition(QByteArrayLiteral("ACTIVE")),
+        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT")),
+        PropertyDefinition(QByteArrayLiteral("GAMMA_LUT_SIZE")),
     }, DRM_MODE_OBJECT_CRTC);
 }
 
@@ -40,45 +43,12 @@ void DrmCrtc::flipBuffer()
 {
     m_currentBuffer = m_nextBuffer;
     m_nextBuffer = nullptr;
-
-    delete m_blackBuffer;
-    m_blackBuffer = nullptr;
 }
 
-bool DrmCrtc::blank(DrmOutput *output)
+drmModeModeInfo DrmCrtc::queryCurrentMode()
 {
-    if (gpu()->atomicModeSetting()) {
-        return false;
-    }
-
-    if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = new DrmDumbBuffer(gpu(), output->pixelSize());
-        if (!blackBuffer->map()) {
-            delete blackBuffer;
-            return false;
-        }
-        blackBuffer->image()->fill(Qt::black);
-        m_blackBuffer = blackBuffer;
-    }
-
-    if (output->setModeLegacy(m_blackBuffer)) {
-        m_currentBuffer = nullptr;
-        m_nextBuffer = nullptr;
-        return true;
-    }
-    return false;
-}
-
-bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
-{
-    uint16_t *red = const_cast<uint16_t *>(gamma.red());
-    uint16_t *green = const_cast<uint16_t *>(gamma.green());
-    uint16_t *blue = const_cast<uint16_t *>(gamma.blue());
-
-    const bool isError = drmModeCrtcSetGamma(gpu()->fd(), id(),
-        gamma.size(), red, green, blue);
-
-    return !isError;
+    m_crtc.reset(drmModeGetCrtc(gpu()->fd(), id()));
+    return m_crtc->mode;
 }
 
 }

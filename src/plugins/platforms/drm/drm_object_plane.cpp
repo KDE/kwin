@@ -118,4 +118,30 @@ void DrmPlane::flipBuffer()
     m_next = nullptr;
 }
 
+void DrmPlane::setScaled(const QSize &srcSize, const QSize &modeSize, int crtcId, bool enable)
+{
+    QPoint targetPos = QPoint(0, 0);
+    QSize targetSize = modeSize;
+    if (modeSize != srcSize) {
+        targetSize = srcSize.scaled(modeSize, Qt::AspectRatioMode::KeepAspectRatio);
+        targetPos.setX((modeSize.width() - targetSize.width()) / 2);
+        targetPos.setY((modeSize.height() - targetSize.height()) / 2);
+    }
+    set(srcSize, targetPos, targetSize, crtcId, enable);
+}
+
+void DrmPlane::set(const QSize &src, const QPoint &dstPos, const QSize &dstSize, int crtcId, bool enable)
+{
+    setValue(PropertyIndex::SrcX, 0);
+    setValue(PropertyIndex::SrcY, 0);
+    setValue(PropertyIndex::SrcW, src.width() << 16);
+    setValue(PropertyIndex::SrcH, src.height() << 16);
+    setValue(PropertyIndex::CrtcX, enable ? dstPos.x() : 0);
+    setValue(PropertyIndex::CrtcY, enable ? dstPos.y() : 0);
+    setValue(PropertyIndex::CrtcW, dstSize.width());
+    setValue(PropertyIndex::CrtcH, dstSize.height());
+    setValue(PropertyIndex::CrtcId, enable ? crtcId : 0);
+    setValue(PropertyIndex::FbId, (m_next && enable) ? m_next->bufferId() : 0);
+}
+
 }

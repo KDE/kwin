@@ -98,6 +98,8 @@ public:
 
     void waitIdle();
 
+    QSharedPointer<DrmBuffer> createTestbuffer(const QSize &size);
+
 Q_SIGNALS:
     void outputAdded(DrmOutput *output);
     void outputRemoved(DrmOutput *output);
