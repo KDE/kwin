@@ -25,9 +25,10 @@ namespace KWin
 {
 class AbstractOutput;
 class DrmBuffer;
-class DrmSurfaceBuffer;
+class DrmGbmBuffer;
 class DrmOutput;
 class GbmSurface;
+class GbmBuffer;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
@@ -68,7 +69,8 @@ private:
 
     struct Output {
         DrmOutput *output = nullptr;
-        QSharedPointer<DrmSurfaceBuffer> buffer;
+        QSharedPointer<DrmGbmBuffer> buffer;
+        QSharedPointer<GbmBuffer> secondaryBuffer;
         QSharedPointer<GbmSurface> gbmSurface;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         int bufferAge = 0;
@@ -83,11 +85,7 @@ private:
             QSharedPointer<GLVertexBuffer> vbo;
         } render;
 
-        int dmabufFd = 0;
-        gbm_bo *secondaryGbmBo = nullptr;
-        gbm_bo *directScanoutBuffer = nullptr;
         KWaylandServer::SurfaceInterface *surfaceInterface = nullptr;
-        KWaylandServer::BufferInterface *bufferInterface = nullptr;
     };
 
     bool resetOutput(Output &output, DrmOutput *drmOutput);
@@ -104,6 +102,7 @@ private:
     QRegion prepareRenderingForOutput(Output &output) const;
 
     bool presentOnOutput(Output &output, const QRegion &damagedRegion);
+    bool directScanoutActive(const Output &output);
 
     void cleanupOutput(Output &output);
     void cleanupFramebuffer(Output &output);

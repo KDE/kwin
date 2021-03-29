@@ -26,15 +26,35 @@ namespace KWin
 
 class GbmSurface;
 
-class DrmSurfaceBuffer : public DrmBuffer
+class GbmBuffer : public QObject
+{
+    Q_OBJECT
+public:
+    GbmBuffer(const QSharedPointer<GbmSurface> &surface);
+    GbmBuffer(gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
+    virtual ~GbmBuffer();
+
+    gbm_bo* getBo() const {
+        return m_bo;
+    }
+
+protected:
+    QSharedPointer<GbmSurface> m_surface;
+    gbm_bo *m_bo = nullptr;
+    KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
+
+    void clearBufferInterface();
+};
+
+class DrmGbmBuffer : public DrmBuffer, public GbmBuffer
 {
 public:
-    DrmSurfaceBuffer(DrmGpu *gpu, const QSharedPointer<GbmSurface> &surface);
-    DrmSurfaceBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
-    ~DrmSurfaceBuffer() override;
+    DrmGbmBuffer(DrmGpu *gpu, const QSharedPointer<GbmSurface> &surface);
+    DrmGbmBuffer(DrmGpu *gpu, gbm_bo *buffer, KWaylandServer::BufferInterface *bufferInterface);
+    ~DrmGbmBuffer() override;
 
     bool needsModeChange(DrmBuffer *b) const override {
-        if (DrmSurfaceBuffer *sb = dynamic_cast<DrmSurfaceBuffer*>(b)) {
+        if (DrmGbmBuffer *sb = dynamic_cast<DrmGbmBuffer*>(b)) {
             return hasBo() != sb->hasBo();
         } else {
             return true;
@@ -45,18 +65,7 @@ public:
         return m_bo != nullptr;
     }
 
-    gbm_bo* getBo() const {
-        return m_bo;
-    }
-
-    void releaseGbm() override;
-
 private:
-    QSharedPointer<GbmSurface> m_surface;
-    gbm_bo *m_bo = nullptr;
-    KWaylandServer::BufferInterface *m_bufferInterface = nullptr;
-
-    void clearBufferInterface();
     void initialize();
 };
 

@@ -77,14 +77,12 @@ void DrmOutput::teardown()
     //this is needed so that the pageflipcallback handle isn't deleted
 }
 
-void DrmOutput::releaseGbm()
+void DrmOutput::releaseBuffers()
 {
-    if (const auto &b = m_crtc->current()) {
-        b->releaseGbm();
-    }
-    if (m_primaryPlane && m_primaryPlane->current()) {
-        m_primaryPlane->current()->releaseGbm();
-    }
+    m_crtc->setCurrent(nullptr);
+    m_crtc->setNext(nullptr);
+    m_primaryPlane->setCurrent(nullptr);
+    m_primaryPlane->setNext(nullptr);
 }
 
 bool DrmOutput::hideCursor()
@@ -566,23 +564,11 @@ void DrmOutput::pageFlipped()
         return;
     }
     if (m_gpu->atomicModeSetting()) {
-        if (!m_primaryPlane->next()) {
-            if (m_primaryPlane->current()) {
-                m_primaryPlane->current()->releaseGbm();
-            }
-            return;
-        }
         for (DrmPlane *p : m_nextPlanesFlipList) {
             p->flipBuffer();
         }
         m_nextPlanesFlipList.clear();
     } else {
-        if (!m_crtc->next()) {
-            // on manual vt switch
-            if (const auto &b = m_crtc->current()) {
-                b->releaseGbm();
-            }
-        }
         m_crtc->flipBuffer();
     }
 

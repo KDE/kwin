@@ -17,9 +17,8 @@ namespace KWin
 
 class DrmGpu;
 
-class DrmBuffer : public QObject
+class DrmBuffer
 {
-    Q_OBJECT
 public:
     DrmBuffer(DrmGpu *gpu);
     virtual ~DrmBuffer() = default;
@@ -33,8 +32,6 @@ public:
     const QSize &size() const {
         return m_size;
     }
-
-    virtual void releaseGbm() {}
 
     DrmGpu *gpu() const {
         return m_gpu;

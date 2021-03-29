@@ -45,6 +45,9 @@ public:
     QSharedPointer<DrmBuffer> next() {
         return m_nextBuffer;
     }
+    void setCurrent(const QSharedPointer<DrmBuffer> &buffer) {
+        m_currentBuffer = buffer;
+    }
     void setNext(const QSharedPointer<DrmBuffer> &buffer) {
         m_nextBuffer = buffer;
     }
