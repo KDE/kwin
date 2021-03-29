@@ -12,6 +12,7 @@
 #include <kwinglobals.h>
 // Qt
 #include <QKeySequence>
+#include <QSharedPointer>
 
 class QAction;
 class KGlobalAccelD;
@@ -97,84 +98,65 @@ public:
 
 private:
     void objectDeleted(QObject *object);
-    QHash<Qt::KeyboardModifiers, QHash<Qt::MouseButtons, GlobalShortcut*> > m_pointerShortcuts;
-    QHash<Qt::KeyboardModifiers, QHash<PointerAxisDirection, GlobalShortcut*> > m_axisShortcuts;
-    QHash<Qt::KeyboardModifiers, QHash<SwipeDirection, GlobalShortcut*> > m_swipeShortcuts;
+    bool addIfNotExists(GlobalShortcut sc);
+
+    QVector<GlobalShortcut> m_shortcuts;
+
     KGlobalAccelD *m_kglobalAccel = nullptr;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;
     GestureRecognizer *m_gestureRecognizer;
 };
 
+struct KeyboardShortcut
+{
+    QKeySequence sequence;
+    bool operator==(const KeyboardShortcut& rhs) const {
+        return sequence == rhs.sequence;
+    }
+};
+struct PointerButtonShortcut
+{
+    Qt::KeyboardModifiers pointerModifiers;
+    Qt::MouseButtons pointerButtons;
+    bool operator==(const PointerButtonShortcut& rhs) const {
+        return pointerModifiers == rhs.pointerModifiers && pointerButtons == rhs.pointerButtons;
+    }
+};
+struct PointerAxisShortcut
+{
+    Qt::KeyboardModifiers axisModifiers;
+    PointerAxisDirection axisDirection;
+    bool operator==(const PointerAxisShortcut& rhs) const {
+        return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
+    }
+};
+struct FourFingerSwipeShortcut
+{
+    SwipeDirection swipeDirection;
+    bool operator==(const FourFingerSwipeShortcut& rhs) const {
+        return swipeDirection == rhs.swipeDirection;
+    }
+};
+
+using Shortcut = std::variant<KeyboardShortcut,PointerButtonShortcut,PointerAxisShortcut,FourFingerSwipeShortcut>;
+
 class GlobalShortcut
 {
+
 public:
-    virtual ~GlobalShortcut();
+    GlobalShortcut(Shortcut&& shortcut, QAction *action);
+    ~GlobalShortcut();
 
-    const QKeySequence &shortcut() const;
-    Qt::KeyboardModifiers pointerButtonModifiers() const;
-    Qt::MouseButtons pointerButtons() const;
-    SwipeDirection swipeDirection() const {
-        return m_swipeDirection;
-    }
-    virtual void invoke() = 0;
-
-protected:
-    GlobalShortcut(const QKeySequence &shortcut);
-    GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons);
-    GlobalShortcut(Qt::KeyboardModifiers axisModifiers);
-    GlobalShortcut(SwipeDirection direction);
-
-private:
-    QKeySequence m_shortcut;
-    Qt::KeyboardModifiers m_pointerModifiers;
-    Qt::MouseButtons m_pointerButtons;
-    SwipeDirection m_swipeDirection = SwipeDirection::Invalid;;
-};
-
-class InternalGlobalShortcut : public GlobalShortcut
-{
-public:
-    InternalGlobalShortcut(Qt::KeyboardModifiers modifiers, const QKeySequence &shortcut, QAction *action);
-    InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action);
-    InternalGlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis, QAction *action);
-    InternalGlobalShortcut(Qt::KeyboardModifiers swipeModifier, SwipeDirection direction, QAction *action);
-    ~InternalGlobalShortcut() override;
-
-    void invoke() override;
-
+    void invoke() const;
     QAction *action() const;
+    const Shortcut& shortcut() const;
+    SwipeGesture* swipeGesture() const;
 
-    SwipeGesture *swipeGesture() const {
-        return m_swipe.data();
-    }
 private:
-    QAction *m_action;
-    QScopedPointer<SwipeGesture> m_swipe;
+    QSharedPointer<SwipeGesture> m_gesture;
+    Shortcut m_shortcut = {};
+    QAction *m_action = nullptr;
 };
-
-inline
-QAction *InternalGlobalShortcut::action() const
-{
-    return m_action;
-}
-
-inline
-const QKeySequence &GlobalShortcut::shortcut() const
-{
-    return m_shortcut;
-}
-
-inline
-Qt::KeyboardModifiers GlobalShortcut::pointerButtonModifiers() const
-{
-    return m_pointerModifiers;
-}
-
-inline
-Qt::MouseButtons GlobalShortcut::pointerButtons() const
-{
-    return m_pointerButtons;
-}
 
 } // namespace
 
