@@ -184,6 +184,7 @@ public:
         return m_rightButtonDesktop;
     }
 public Q_SLOTS:
+    Q_SCRIPTABLE void presentWindows(const QStringList &windows);
     void setActive(bool active);
     void toggleActive()  {
         m_mode = ModeCurrentDesktop;
