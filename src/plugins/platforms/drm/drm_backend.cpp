@@ -15,7 +15,7 @@
 #include "cursor.h"
 #include "logging.h"
 #include "main.h"
-#include "renderloop_p.h"
+#include "renderloop.h"
 #include "scene_qpainter_drm_backend.h"
 #include "session.h"
 #include "udev.h"
@@ -183,50 +183,6 @@ void DrmBackend::deactivate()
     }
 
     m_active = false;
-}
-
-static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
-{
-    return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
-}
-
-static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_t targetClock,
-                                                 const timespec &timestamp)
-{
-    if (sourceClock == targetClock) {
-        return convertTimestamp(timestamp);
-    }
-
-    timespec sourceCurrentTime = {};
-    timespec targetCurrentTime = {};
-
-    clock_gettime(sourceClock, &sourceCurrentTime);
-    clock_gettime(targetClock, &targetCurrentTime);
-
-    const auto delta = convertTimestamp(sourceCurrentTime) - convertTimestamp(timestamp);
-    return convertTimestamp(targetCurrentTime) - delta;
-}
-
-void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
-{
-    Q_UNUSED(fd)
-    Q_UNUSED(frame)
-
-    auto output = static_cast<DrmOutput *>(data);
-    DrmGpu *gpu = output->gpu();
-
-    std::chrono::nanoseconds timestamp = convertTimestamp(gpu->presentationClock(),
-                                                          CLOCK_MONOTONIC,
-                                                          { sec, usec * 1000 });
-    if (timestamp == std::chrono::nanoseconds::zero()) {
-        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
-                sec, usec, qPrintable(output->name()));
-        timestamp = std::chrono::steady_clock::now().time_since_epoch();
-    }
-
-    output->pageFlipped();
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 bool DrmBackend::initialize()

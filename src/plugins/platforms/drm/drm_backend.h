@@ -91,7 +91,6 @@ private:
     friend class DrmGpu;
     void addOutput(DrmOutput* output);
     void removeOutput(DrmOutput* output);
-    static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
     void activate(bool active);
     void reactivate();
     void deactivate();

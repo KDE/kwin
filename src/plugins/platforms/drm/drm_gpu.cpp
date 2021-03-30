@@ -16,6 +16,7 @@
 #include "abstract_egl_backend.h"
 #include "logging.h"
 #include "session.h"
+#include "renderloop_p.h"
 
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
@@ -322,17 +323,6 @@ DrmPlane *DrmGpu::getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crt
     return nullptr;
 }
 
-void DrmGpu::dispatchEvents()
-{
-    if (!m_backend->session()->isActive()) {
-        return;
-    }
-    drmEventContext context = {};
-    context.version = 2;
-    context.page_flip_handler = DrmBackend::pageFlipHandler;
-    drmHandleEvent(m_fd, &context);
-}
-
 void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
@@ -361,6 +351,60 @@ void DrmGpu::waitIdle()
         }
     };
     m_socketNotifier->setEnabled(true);
+}
+
+static std::chrono::nanoseconds convertTimestamp(const timespec &timestamp)
+{
+    return std::chrono::seconds(timestamp.tv_sec) + std::chrono::nanoseconds(timestamp.tv_nsec);
+}
+
+static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_t targetClock,
+                                                 const timespec &timestamp)
+{
+    if (sourceClock == targetClock) {
+        return convertTimestamp(timestamp);
+    }
+
+    timespec sourceCurrentTime = {};
+    timespec targetCurrentTime = {};
+
+    clock_gettime(sourceClock, &sourceCurrentTime);
+    clock_gettime(targetClock, &targetCurrentTime);
+
+    const auto delta = convertTimestamp(sourceCurrentTime) - convertTimestamp(timestamp);
+    return convertTimestamp(targetCurrentTime) - delta;
+}
+
+static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
+{
+    Q_UNUSED(fd)
+    Q_UNUSED(frame)
+
+    auto output = static_cast<DrmOutput *>(data);
+
+    std::chrono::nanoseconds timestamp = convertTimestamp(output->gpu()->presentationClock(),
+                                                          CLOCK_MONOTONIC,
+                                                          { sec, usec * 1000 });
+    if (timestamp == std::chrono::nanoseconds::zero()) {
+        qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on output %s",
+                sec, usec, qPrintable(output->name()));
+        timestamp = std::chrono::steady_clock::now().time_since_epoch();
+    }
+
+    output->pageFlipped();
+    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(output->renderLoop());
+    renderLoopPrivate->notifyFrameCompleted(timestamp);
+}
+
+void DrmGpu::dispatchEvents()
+{
+    if (!m_backend->session()->isActive()) {
+        return;
+    }
+    drmEventContext context = {};
+    context.version = 2;
+    context.page_flip_handler = pageFlipHandler;
+    drmHandleEvent(m_fd, &context);
 }
 
 }
