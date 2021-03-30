@@ -9,6 +9,11 @@
 
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /**
  * Allocate and create a socket
  * It is bound and accepted
@@ -29,3 +34,7 @@ char *wl_socket_get_display_name(struct wl_socket *);
  * Cleanup resources and close the FD
  */
 void wl_socket_destroy(struct wl_socket *socket);
+
+#ifdef __cplusplus
+}
+#endif
