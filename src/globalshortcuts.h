@@ -20,7 +20,6 @@ class KGlobalAccelInterface;
 
 namespace KWin
 {
-
 class GlobalShortcut;
 class SwipeGesture;
 class GestureRecognizer;
@@ -92,7 +91,8 @@ public:
     void processSwipeCancel();
     void processSwipeEnd();
 
-    void setKGlobalAccelInterface(KGlobalAccelInterface *interface) {
+    void setKGlobalAccelInterface(KGlobalAccelInterface *interface)
+    {
         m_kglobalAccelInterface = interface;
     }
 
@@ -110,7 +110,8 @@ private:
 struct KeyboardShortcut
 {
     QKeySequence sequence;
-    bool operator==(const KeyboardShortcut& rhs) const {
+    bool operator==(const KeyboardShortcut &rhs) const
+    {
         return sequence == rhs.sequence;
     }
 };
@@ -118,7 +119,8 @@ struct PointerButtonShortcut
 {
     Qt::KeyboardModifiers pointerModifiers;
     Qt::MouseButtons pointerButtons;
-    bool operator==(const PointerButtonShortcut& rhs) const {
+    bool operator==(const PointerButtonShortcut &rhs) const
+    {
         return pointerModifiers == rhs.pointerModifiers && pointerButtons == rhs.pointerButtons;
     }
 };
@@ -126,31 +128,32 @@ struct PointerAxisShortcut
 {
     Qt::KeyboardModifiers axisModifiers;
     PointerAxisDirection axisDirection;
-    bool operator==(const PointerAxisShortcut& rhs) const {
+    bool operator==(const PointerAxisShortcut &rhs) const
+    {
         return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
     }
 };
 struct FourFingerSwipeShortcut
 {
     SwipeDirection swipeDirection;
-    bool operator==(const FourFingerSwipeShortcut& rhs) const {
+    bool operator==(const FourFingerSwipeShortcut &rhs) const
+    {
         return swipeDirection == rhs.swipeDirection;
     }
 };
 
-using Shortcut = std::variant<KeyboardShortcut,PointerButtonShortcut,PointerAxisShortcut,FourFingerSwipeShortcut>;
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, FourFingerSwipeShortcut>;
 
 class GlobalShortcut
 {
-
 public:
-    GlobalShortcut(Shortcut&& shortcut, QAction *action);
+    GlobalShortcut(Shortcut &&shortcut, QAction *action);
     ~GlobalShortcut();
 
     void invoke() const;
     QAction *action() const;
-    const Shortcut& shortcut() const;
-    SwipeGesture* swipeGesture() const;
+    const Shortcut &shortcut() const;
+    SwipeGesture *swipeGesture() const;
 
 private:
     QSharedPointer<SwipeGesture> m_gesture;

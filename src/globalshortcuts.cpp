@@ -9,24 +9,25 @@
 // own
 #include "globalshortcuts.h"
 // kwin
-#include <config-kwin.h>
+#include "gestures.h"
 #include "kwinglobals.h"
 #include "main.h"
-#include "gestures.h"
 #include "utils.h"
+#include <config-kwin.h>
 // KDE
-#include <KGlobalAccel/private/kglobalacceld.h>
 #include <KGlobalAccel/private/kglobalaccel_interface.h>
+#include <KGlobalAccel/private/kglobalacceld.h>
 // Qt
 #include <QAction>
 #include <variant>
 
 namespace KWin
 {
-
-GlobalShortcut::GlobalShortcut(Shortcut&& sc, QAction* action) : m_shortcut(sc), m_action(action)
+GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
+    : m_shortcut(sc)
+    , m_action(action)
 {
-    static const QMap<SwipeDirection,SwipeGesture::Direction> dirs = {
+    static const QMap<SwipeDirection, SwipeGesture::Direction> dirs = {
         {SwipeDirection::Up, SwipeGesture::Direction::Up},
         {SwipeDirection::Down, SwipeGesture::Direction::Down},
         {SwipeDirection::Left, SwipeGesture::Direction::Left},
@@ -45,7 +46,7 @@ GlobalShortcut::~GlobalShortcut()
 {
 }
 
-QAction* GlobalShortcut::action() const
+QAction *GlobalShortcut::action() const
 {
     return m_action;
 }
@@ -55,12 +56,12 @@ void GlobalShortcut::invoke() const
     QMetaObject::invokeMethod(m_action, "trigger", Qt::QueuedConnection);
 }
 
-const Shortcut& GlobalShortcut::shortcut() const
+const Shortcut &GlobalShortcut::shortcut() const
 {
     return m_shortcut;
 }
 
-SwipeGesture* GlobalShortcut::swipeGesture() const
+SwipeGesture *GlobalShortcut::swipeGesture() const
 {
     return m_gesture.get();
 }
@@ -104,7 +105,7 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
 
 bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
 {
-    for (const auto& cs : m_shortcuts) {
+    for (const auto &cs : m_shortcuts) {
         if (sc.shortcut() == cs.shortcut()) {
             return false;
         }
@@ -120,17 +121,17 @@ bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
 
 void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons)
 {
-    addIfNotExists(GlobalShortcut(PointerButtonShortcut{ modifiers, pointerButtons }, action));
+    addIfNotExists(GlobalShortcut(PointerButtonShortcut{modifiers, pointerButtons}, action));
 }
 
 void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis)
 {
-    addIfNotExists(GlobalShortcut(PointerAxisShortcut{ modifiers, axis }, action));
+    addIfNotExists(GlobalShortcut(PointerAxisShortcut{modifiers, axis}, action));
 }
 
 void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction)
 {
-    addIfNotExists(GlobalShortcut(FourFingerSwipeShortcut{ direction }, action));
+    addIfNotExists(GlobalShortcut(FourFingerSwipeShortcut{direction}, action));
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
@@ -139,13 +140,13 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
         if (!keyQt && !mods) {
             return false;
         }
-        auto check = [this] (Qt::KeyboardModifiers mods, int keyQt) {
+        auto check = [this](Qt::KeyboardModifiers mods, int keyQt) {
             bool retVal = false;
             QMetaObject::invokeMethod(m_kglobalAccelInterface,
-                                        "checkKeyPressed",
-                                        Qt::DirectConnection,
-                                        Q_RETURN_ARG(bool, retVal),
-                                        Q_ARG(int, int(mods) | keyQt));
+                                      "checkKeyPressed",
+                                      Qt::DirectConnection,
+                                      Q_RETURN_ARG(bool, retVal),
+                                      Q_ARG(int, int(mods) | keyQt));
             return retVal;
         };
         if (check(mods, keyQt)) {
@@ -172,7 +173,7 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
 template<typename ShortcutKind, typename... Args>
 bool match(QVector<GlobalShortcut> &shortcuts, Args... args)
 {
-    for (auto& sc : shortcuts) {
+    for (auto &sc : shortcuts) {
         if (std::holds_alternative<ShortcutKind>(sc.shortcut())) {
             if (std::get<ShortcutKind>(sc.shortcut()) == ShortcutKind{args...}) {
                 sc.invoke();
@@ -183,7 +184,7 @@ bool match(QVector<GlobalShortcut> &shortcuts, Args... args)
     return false;
 }
 
-//TODO(C++20): use ranges for a nicer way of filtering by shortcut type
+// TODO(C++20): use ranges for a nicer way of filtering by shortcut type
 bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Qt::MouseButtons pointerButtons)
 {
     return match<PointerButtonShortcut>(m_shortcuts, mods, pointerButtons);
