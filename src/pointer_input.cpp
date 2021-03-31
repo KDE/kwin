@@ -40,6 +40,8 @@
 
 #include <linux/input.h>
 
+using namespace KWaylandServer;
+
 namespace KWin
 {
 

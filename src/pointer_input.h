@@ -13,7 +13,8 @@
 
 #include "input.h"
 #include "cursor.h"
-#include "xcursortheme.h"
+
+#include <KWaylandServer/kxcursortheme.h>
 
 #include <QElapsedTimer>
 #include <QObject>
@@ -188,7 +189,7 @@ private:
     bool ensureCursorTheme();
     void invalidateCursorTheme();
 
-    KXcursorTheme m_cursorTheme;
+    KWaylandServer::KXcursorTheme m_cursorTheme;
 };
 
 class CursorImage : public QObject

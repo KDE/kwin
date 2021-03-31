@@ -18,7 +18,6 @@
 #include "screens.h"
 #include "wayland_server.h"
 #include "workspace.h"
-#include "xcursortheme.h"
 #include <kwineffects.h>
 
 #include <KWayland/Client/buffer.h>
@@ -36,6 +35,8 @@
 #include <KWaylandServer/seat_interface.h>
 
 #include <linux/input.h>
+
+using namespace KWaylandServer;
 
 namespace KWin
 {

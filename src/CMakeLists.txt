@@ -20,7 +20,6 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(kwin_SRCS
-    3rdparty/xcursor.c
     abstract_client.cpp
     abstract_opengl_context_attribute_builder.cpp
     abstract_output.cpp
@@ -135,7 +134,6 @@ set(kwin_SRCS
     x11client.cpp
     x11eventfilter.cpp
     xcbutils.cpp
-    xcursortheme.cpp
     xdgshellclient.cpp
     xdgshellintegration.cpp
     xkb.cpp
