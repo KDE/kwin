@@ -137,6 +137,13 @@ protected:
         const QByteArray &name() const {
             return m_propName;
         }
+        /**
+         * while this is usually automatically set, some properties
+         * (like DPMS) are not meant to be used in AMS
+         */
+        void setImmutable() {
+            m_immutable = true;
+        }
         bool isImmutable() const {
             return m_immutable;
         }

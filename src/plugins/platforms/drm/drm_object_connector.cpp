@@ -9,6 +9,11 @@
 #include "drm_object_connector.h"
 #include "drm_pointer.h"
 #include "logging.h"
+#include "edid.h"
+
+#include <main.h>
+// frameworks
+#include <KConfigGroup>
 
 namespace KWin
 {
@@ -31,10 +36,54 @@ bool DrmConnector::init()
 {
     qCDebug(KWIN_DRM) << "Creating connector" << m_id;
 
-    return initProps({
-        PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
-        PropertyDefinition(QByteArrayLiteral("non-desktop")),
-    }, DRM_MODE_OBJECT_CONNECTOR);
+    if (!initProps({
+            PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
+            PropertyDefinition(QByteArrayLiteral("non-desktop")),
+            PropertyDefinition(QByteArrayLiteral("DPMS")),
+            PropertyDefinition(QByteArrayLiteral("EDID")),
+        }, DRM_MODE_OBJECT_CONNECTOR)) {
+        return false;
+    }
+
+    if (auto dpmsProp = m_props[static_cast<uint32_t>(PropertyIndex::Dpms)]) {
+        // the dpms property makes atomic commits fail
+        // for legacy it will be explicitly set
+        dpmsProp->setImmutable();
+    } else {
+        qCWarning(KWIN_DRM) << "Could not find DPMS property!";
+    }
+
+    // parse edid
+    if (auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)]) {
+        m_edid.reset(new Edid(edidProp->blob()->data, edidProp->blob()->length));
+        if (!m_edid->isValid()) {
+            qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
+        }
+        deleteProp(PropertyIndex::Edid);
+    } else {
+        qCWarning(KWIN_DRM) << "Could not find edid for connector" << this;
+    }
+
+    // check the physical size
+    if (m_edid->physicalSize().isEmpty()) {
+        m_physicalSize = QSize(m_conn->mmWidth, m_conn->mmHeight);
+    } else {
+        m_physicalSize = m_edid->physicalSize();
+    }
+
+    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
+    // as this information is used to calculate DPI info, it's going to result in everything being huge
+    const QByteArray unknown = QByteArrayLiteral("unknown");
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid->eisaId().isEmpty() ? unknown : m_edid->eisaId())
+                                                       .group(m_edid->monitorName().isEmpty() ? unknown : m_edid->monitorName())
+                                                       .group(m_edid->serialNumber().isEmpty() ? unknown : m_edid->serialNumber());
+    if (group.hasKey("PhysicalSize")) {
+        const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid->eisaId() << "/" << m_edid->monitorName() << "/" << m_edid->serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
+        m_physicalSize = overwriteSize;
+    }
+
+    return true;
 }
 
 bool DrmConnector::isConnected()
@@ -45,5 +94,50 @@ bool DrmConnector::isConnected()
     }
     return con->connection == DRM_MODE_CONNECTED;
 }
+
+static QHash<int, QByteArray> s_connectorNames = {
+    {DRM_MODE_CONNECTOR_Unknown, QByteArrayLiteral("Unknown")},
+    {DRM_MODE_CONNECTOR_VGA, QByteArrayLiteral("VGA")},
+    {DRM_MODE_CONNECTOR_DVII, QByteArrayLiteral("DVI-I")},
+    {DRM_MODE_CONNECTOR_DVID, QByteArrayLiteral("DVI-D")},
+    {DRM_MODE_CONNECTOR_DVIA, QByteArrayLiteral("DVI-A")},
+    {DRM_MODE_CONNECTOR_Composite, QByteArrayLiteral("Composite")},
+    {DRM_MODE_CONNECTOR_SVIDEO, QByteArrayLiteral("SVIDEO")},
+    {DRM_MODE_CONNECTOR_LVDS, QByteArrayLiteral("LVDS")},
+    {DRM_MODE_CONNECTOR_Component, QByteArrayLiteral("Component")},
+    {DRM_MODE_CONNECTOR_9PinDIN, QByteArrayLiteral("DIN")},
+    {DRM_MODE_CONNECTOR_DisplayPort, QByteArrayLiteral("DP")},
+    {DRM_MODE_CONNECTOR_HDMIA, QByteArrayLiteral("HDMI-A")},
+    {DRM_MODE_CONNECTOR_HDMIB, QByteArrayLiteral("HDMI-B")},
+    {DRM_MODE_CONNECTOR_TV, QByteArrayLiteral("TV")},
+    {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
+    {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
+    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")},
+#ifdef DRM_MODE_CONNECTOR_DPI
+    {DRM_MODE_CONNECTOR_DPI, QByteArrayLiteral("DPI")},
+#endif
+};
+
+QString DrmConnector::connectorName() const
+{
+    return s_connectorNames.value(m_conn->connector_type, QByteArrayLiteral("Unknown")) + QStringLiteral("-") + QString::number(m_conn->connector_type_id);
+}
+
+QString DrmConnector::modelName() const
+{
+    return connectorName() + m_edid->nameString();
+}
+
+bool DrmConnector::isInternal() const
+{
+    return m_conn->connector_type == DRM_MODE_CONNECTOR_LVDS || m_conn->connector_type == DRM_MODE_CONNECTOR_eDP
+                || m_conn->connector_type == DRM_MODE_CONNECTOR_DSI;
+}
+
+QSize DrmConnector::physicalSize() const
+{
+    return m_physicalSize;
+}
+
 
 }

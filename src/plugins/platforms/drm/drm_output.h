@@ -13,7 +13,6 @@
 #include "drm_pointer.h"
 #include "drm_object.h"
 #include "drm_object_plane.h"
-#include "edid.h"
 
 #include <QObject>
 #include <QPoint>
@@ -116,8 +115,6 @@ private:
 
     bool presentLegacy(const QSharedPointer<DrmBuffer> &buffer);
     bool setModeLegacy(DrmBuffer *buffer);
-    void initEdid(drmModeConnector *connector);
-    void initDpms(drmModeConnector *connector);
     void initOutputDevice(drmModeConnector *connector);
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
@@ -150,8 +147,6 @@ private:
     DrmCrtc *m_crtc = nullptr;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
-    Edid m_edid;
-    DrmScopedPointer<drmModePropertyRes> m_dpms;
     DpmsMode m_dpmsMode = DpmsMode::On;
     DpmsMode m_dpmsModePending = DpmsMode::On;
     QByteArray m_uuid;

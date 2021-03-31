@@ -14,6 +14,8 @@
 #include <QFile>
 #include <QStandardPaths>
 
+#include <KLocalizedString>
+
 namespace KWin
 {
 
@@ -209,6 +211,33 @@ QByteArray Edid::vendor() const
 QByteArray Edid::raw() const
 {
     return m_raw;
+}
+
+QString Edid::manufacturerString() const
+{
+    QString manufacturer;
+    if (!m_vendor.isEmpty()) {
+        manufacturer = QString::fromLatin1(m_vendor);
+    } else if (!m_eisaId.isEmpty()) {
+        manufacturer = QString::fromLatin1(m_eisaId);
+    }
+    return manufacturer;
+}
+
+QString Edid::nameString() const
+{
+    if (!m_monitorName.isEmpty()) {
+        QString m = QString::fromLatin1(m_monitorName);
+        if (!m_serialNumber.isEmpty()) {
+            m.append('/');
+            m.append(QString::fromLatin1(m_serialNumber));
+        }
+        return m;
+    } else if (!m_serialNumber.isEmpty()) {
+        return QString::fromLatin1(m_serialNumber);
+    } else {
+        return i18n("unknown");
+    }
 }
 
 } // namespace KWin

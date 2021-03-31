@@ -61,6 +61,17 @@ public:
      */
     QByteArray raw() const;
 
+    /**
+     * returns the vendor if included, the EISA ID if not
+     */
+    QString manufacturerString() const;
+
+    /**
+     * returns a string representing the monitor name
+     * Can be a serial number or "unknown" if the name is empty
+     */
+    QString nameString() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;

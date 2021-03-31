@@ -10,6 +10,7 @@
 #include "drm_backend.h"
 #include "drm_object_crtc.h"
 #include "drm_object_connector.h"
+#include "edid.h"
 
 #include "composite.h"
 #include "cursor.h"
@@ -21,10 +22,6 @@
 #include "wayland_server.h"
 // KWayland
 #include <KWaylandServer/output_interface.h>
-// KF5
-#include <KConfigGroup>
-#include <KLocalizedString>
-#include <KSharedConfig>
 // Qt
 #include <QMatrix4x4>
 #include <QCryptographicHash>
@@ -175,29 +172,6 @@ void DrmOutput::moveCursor()
     drmModeMoveCursor(m_gpu->fd(), m_crtc->id(), pos.x(), pos.y());
 }
 
-static QHash<int, QByteArray> s_connectorNames = {
-    {DRM_MODE_CONNECTOR_Unknown, QByteArrayLiteral("Unknown")},
-    {DRM_MODE_CONNECTOR_VGA, QByteArrayLiteral("VGA")},
-    {DRM_MODE_CONNECTOR_DVII, QByteArrayLiteral("DVI-I")},
-    {DRM_MODE_CONNECTOR_DVID, QByteArrayLiteral("DVI-D")},
-    {DRM_MODE_CONNECTOR_DVIA, QByteArrayLiteral("DVI-A")},
-    {DRM_MODE_CONNECTOR_Composite, QByteArrayLiteral("Composite")},
-    {DRM_MODE_CONNECTOR_SVIDEO, QByteArrayLiteral("SVIDEO")},
-    {DRM_MODE_CONNECTOR_LVDS, QByteArrayLiteral("LVDS")},
-    {DRM_MODE_CONNECTOR_Component, QByteArrayLiteral("Component")},
-    {DRM_MODE_CONNECTOR_9PinDIN, QByteArrayLiteral("DIN")},
-    {DRM_MODE_CONNECTOR_DisplayPort, QByteArrayLiteral("DP")},
-    {DRM_MODE_CONNECTOR_HDMIA, QByteArrayLiteral("HDMI-A")},
-    {DRM_MODE_CONNECTOR_HDMIB, QByteArrayLiteral("HDMI-B")},
-    {DRM_MODE_CONNECTOR_TV, QByteArrayLiteral("TV")},
-    {DRM_MODE_CONNECTOR_eDP, QByteArrayLiteral("eDP")},
-    {DRM_MODE_CONNECTOR_VIRTUAL, QByteArrayLiteral("Virtual")},
-    {DRM_MODE_CONNECTOR_DSI, QByteArrayLiteral("DSI")},
-#ifdef DRM_MODE_CONNECTOR_DPI
-    {DRM_MODE_CONNECTOR_DPI, QByteArrayLiteral("DPI")},
-#endif
-};
-
 namespace {
 quint64 refreshRateForMode(_drmModeModeInfo *m)
 {
@@ -219,15 +193,12 @@ quint64 refreshRateForMode(_drmModeModeInfo *m)
 
 bool DrmOutput::init(drmModeConnector *connector)
 {
-    initEdid(connector);
-    initDpms(connector);
     initUuid();
     if (m_gpu->atomicModeSetting() && !m_primaryPlane) {
         return false;
     }
 
-    setInternal(connector->connector_type == DRM_MODE_CONNECTOR_LVDS || connector->connector_type == DRM_MODE_CONNECTOR_eDP
-                || connector->connector_type == DRM_MODE_CONNECTOR_DSI);
+    setInternal(m_conn->isInternal());
     setDpmsSupported(true);
     initOutputDevice(connector);
 
@@ -244,39 +215,14 @@ void DrmOutput::initUuid()
 {
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(QByteArray::number(m_conn->id()));
-    hash.addData(m_edid.eisaId());
-    hash.addData(m_edid.monitorName());
-    hash.addData(m_edid.serialNumber());
+    hash.addData(m_conn->edid()->eisaId());
+    hash.addData(m_conn->edid()->monitorName());
+    hash.addData(m_conn->edid()->serialNumber());
     m_uuid = hash.result().toHex().left(10);
 }
 
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
 {
-    QString manufacturer;
-    if (!m_edid.vendor().isEmpty()) {
-        manufacturer = QString::fromLatin1(m_edid.vendor());
-    } else if (!m_edid.eisaId().isEmpty()) {
-        manufacturer = QString::fromLatin1(m_edid.eisaId());
-    }
-
-    QString connectorName = s_connectorNames.value(connector->connector_type, QByteArrayLiteral("Unknown")) + QStringLiteral("-") + QString::number(connector->connector_type_id);
-    QString modelName;
-
-    if (!m_edid.monitorName().isEmpty()) {
-        QString m = QString::fromLatin1(m_edid.monitorName());
-        if (!m_edid.serialNumber().isEmpty()) {
-            m.append('/');
-            m.append(QString::fromLatin1(m_edid.serialNumber()));
-        }
-        modelName = m;
-    } else if (!m_edid.serialNumber().isEmpty()) {
-        modelName = QString::fromLatin1(m_edid.serialNumber());
-    } else {
-        modelName = i18n("unknown");
-    }
-
-    const QString model = connectorName + QStringLiteral("-") + modelName;
-
     // read in mode information
     QVector<KWaylandServer::OutputDeviceInterface::Mode> modes;
     for (int i = 0; i < connector->count_modes; ++i) {
@@ -299,20 +245,8 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
         modes << mode;
     }
 
-    QSize physicalSize = !m_edid.physicalSize().isEmpty() ? m_edid.physicalSize() : QSize(connector->mmWidth, connector->mmHeight);
-    // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
-    // as this information is used to calculate DPI info, it's going to result in everything being huge
-    const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
-                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
-                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
-    if (group.hasKey("PhysicalSize")) {
-        const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << physicalSize << "to " << overwriteSize;
-        physicalSize = overwriteSize;
-    }
-    setName(connectorName);
-    initInterfaces(model, manufacturer, m_uuid, physicalSize, modes, m_edid.raw());
+    setName(m_conn->connectorName());
+    initInterfaces(m_conn->modelName(), m_conn->edid()->manufacturerString(), m_uuid, m_conn->physicalSize(), modes, m_conn->edid()->raw());
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -333,28 +267,6 @@ bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
         && mode->type        == m_mode.type
         && qstrcmp(mode->name, m_mode.name) == 0;
 }
-void DrmOutput::initEdid(drmModeConnector *connector)
-{
-    DrmScopedPointer<drmModePropertyBlobRes> edid;
-    for (int i = 0; i < connector->count_props; ++i) {
-        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_gpu->fd(), connector->props[i]));
-        if (!property) {
-            continue;
-        }
-        if ((property->flags & DRM_MODE_PROP_BLOB) && qstrcmp(property->name, "EDID") == 0) {
-            edid.reset(drmModeGetPropertyBlob(m_gpu->fd(), connector->prop_values[i]));
-        }
-    }
-    if (!edid) {
-        qCWarning(KWIN_DRM) << "Could not find edid for connector" << connector << connector->connector_id;
-        return;
-    }
-
-    m_edid = Edid(edid->data, edid->length);
-    if (!m_edid.isValid()) {
-        qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", m_conn->id());
-    }
-}
 
 bool DrmOutput::initCursor(const QSize &cursorSize)
 {
@@ -369,20 +281,6 @@ bool DrmOutput::initCursor(const QSize &cursorSize)
         return false;
     }
     return true;
-}
-
-void DrmOutput::initDpms(drmModeConnector *connector)
-{
-    for (int i = 0; i < connector->count_props; ++i) {
-        DrmScopedPointer<drmModePropertyRes> property(drmModeGetProperty(m_gpu->fd(), connector->props[i]));
-        if (!property) {
-            continue;
-        }
-        if (qstrcmp(property->name, "DPMS") == 0) {
-            m_dpms.swap(property);
-            break;
-        }
-    }
 }
 
 void DrmOutput::updateEnablement(bool enable)
@@ -471,7 +369,7 @@ static KWaylandServer::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::Dp
 
 void DrmOutput::updateDpms(KWaylandServer::OutputInterface::DpmsMode mode)
 {
-    if (m_dpms.isNull() || !isEnabled()) {
+    if (!m_conn->dpms() || !isEnabled()) {
         return;
     }
 
@@ -534,7 +432,7 @@ void DrmOutput::dpmsFinishOff()
 bool DrmOutput::dpmsLegacyApply()
 {
     if (drmModeConnectorSetProperty(m_gpu->fd(), m_conn->id(),
-                                    m_dpms->prop_id, uint64_t(m_dpmsModePending)) < 0) {
+                                    m_conn->dpms()->propId(), uint64_t(m_dpmsModePending)) < 0) {
         m_dpmsModePending = m_dpmsMode;
         qCWarning(KWIN_DRM) << "Setting DPMS failed";
         return false;

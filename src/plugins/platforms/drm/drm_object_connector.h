@@ -9,10 +9,14 @@
 #ifndef KWIN_DRM_OBJECT_CONNECTOR_H
 #define KWIN_DRM_OBJECT_CONNECTOR_H
 
+#include <QSize>
+
 #include "drm_object.h"
 
 namespace KWin
 {
+
+class Edid;
 
 class DrmConnector : public DrmObject
 {
@@ -26,6 +30,8 @@ public:
     enum class PropertyIndex : uint32_t {
         CrtcId = 0,
         NonDesktop = 1,
+        Dpms = 2,
+        Edid = 3,
         Count
     };
 
@@ -42,9 +48,28 @@ public:
         }
         return prop->value();
     }
+
+    Property *dpms() const {
+        return m_props[static_cast<uint32_t>(PropertyIndex::Dpms)];
+    }
+
+    Edid *edid() const {
+        return m_edid.get();
+    }
+
+    QString connectorName() const;
+    QString modelName() const;
+
+    bool isInternal() const;
+    QSize physicalSize() const;
+
 private:
     DrmScopedPointer<drmModeConnector> m_conn;
     QVector<uint32_t> m_encoders;
+
+    QScopedPointer<Edid> m_edid;
+    QSize m_physicalSize = QSize(-1, -1);
+
 };
 
 }
