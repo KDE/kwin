@@ -18,7 +18,6 @@
 #include "workspace.h"
 #include "keyboard_input.h"
 #include "input_event.h"
-#include "subsurfacemonitor.h"
 #include "libinput/connection.h"
 #include "libinput/device.h"
 #include <kwinglplatform.h>
@@ -1253,34 +1252,72 @@ SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
     : QAbstractItemModel(parent)
 {
     // TODO: it would be nice to not have to reset the model on each change
-    auto reset = [this] {
-        beginResetModel();
-        endResetModel();
-    };
-    using namespace KWaylandServer;
 
-    auto watchSubsurfaces = [this, reset](AbstractClient *c) {
-        if (!c->surface()) {
-            return;
-        }
-        auto monitor = new SubSurfaceMonitor(c->surface(), this);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, reset);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, reset);
-        connect (c, &QObject::destroyed, monitor, &QObject::deleteLater);
-    };
+    workspace()->forEachToplevel([this](Toplevel *toplevel) {
+        watchToplevel(toplevel);
+    });
 
-    for (auto c : workspace()->allClientList()) {
-        watchSubsurfaces(c);
+    connect(workspace(), &Workspace::clientAdded, this, [this](AbstractClient *client) {
+        watchToplevel(client);
+        reset();
+    });
+    connect(workspace(), &Workspace::clientRemoved, this, &SurfaceTreeModel::reset);
+
+    connect(workspace(), &Workspace::unmanagedAdded, this, [this](Unmanaged *unmanaged) {
+        watchToplevel(unmanaged);
+        reset();
+    });
+    connect(workspace(), &Workspace::unmanagedRemoved, this, &SurfaceTreeModel::reset);
+}
+
+void SurfaceTreeModel::reset()
+{
+    beginResetModel();
+    endResetModel();
+}
+
+void SurfaceTreeModel::watchToplevel(Toplevel *toplevel)
+{
+    if (toplevel->surface()) {
+        watchSurface(toplevel->surface());
     }
-    connect(workspace(), &Workspace::clientAdded, this,
-        [reset, watchSubsurfaces] (AbstractClient *c) {
-            watchSubsurfaces(c);
-            reset();
-        }
-    );
-    connect(workspace(), &Workspace::clientRemoved, this, reset);
-    connect(workspace(), &Workspace::unmanagedAdded, this, reset);
-    connect(workspace(), &Workspace::unmanagedRemoved, this, reset);
+}
+
+void SurfaceTreeModel::watchSurface(KWaylandServer::SurfaceInterface *surface)
+{
+    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceAdded,
+            this, &SurfaceTreeModel::handleSubSurfaceAdded);
+    connect(surface, &KWaylandServer::SurfaceInterface::childSubSurfaceRemoved,
+            this, &SurfaceTreeModel::handleSubSurfaceRemoved);
+
+    const auto subsurfaces = surface->childSubSurfaces();
+    for (KWaylandServer::SubSurfaceInterface *subsurface : subsurfaces) {
+        watchSurface(subsurface->surface());
+    }
+}
+
+void SurfaceTreeModel::unwatchSurface(KWaylandServer::SurfaceInterface *surface)
+{
+    disconnect(surface, nullptr, this, nullptr);
+
+    const auto subsurfaces = surface->childSubSurfaces();
+    for (KWaylandServer::SubSurfaceInterface *subsurface : subsurfaces) {
+        unwatchSurface(subsurface->surface());
+    }
+}
+
+void SurfaceTreeModel::handleSubSurfaceAdded(KWaylandServer::SubSurfaceInterface *subsurface)
+{
+    watchSurface(subsurface->surface());
+    reset();
+}
+
+void SurfaceTreeModel::handleSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *subsurface)
+{
+    if (subsurface->surface()) {
+        unwatchSurface(subsurface->surface());
+    }
+    reset();
 }
 
 SurfaceTreeModel::~SurfaceTreeModel() = default;

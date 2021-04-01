@@ -20,6 +20,12 @@
 
 class QTextEdit;
 
+namespace KWaylandServer
+{
+class SurfaceInterface;
+class SubSurfaceInterface;
+}
+
 namespace Ui
 {
 class DebugConsole;
@@ -120,6 +126,17 @@ public:
     QModelIndex index(int row, int column, const QModelIndex & parent) const override;
     int rowCount(const QModelIndex &parent) const override;
     QModelIndex parent(const QModelIndex &child) const override;
+
+private:
+    void reset();
+
+    void handleSubSurfaceAdded(KWaylandServer::SubSurfaceInterface *subsurface);
+    void handleSubSurfaceRemoved(KWaylandServer::SubSurfaceInterface *subsurface);
+
+    void watchToplevel(Toplevel *toplevel);
+
+    void watchSurface(KWaylandServer::SurfaceInterface *surface);
+    void unwatchSurface(KWaylandServer::SurfaceInterface *surface);
 };
 
 class DebugConsoleFilter : public InputEventSpy
