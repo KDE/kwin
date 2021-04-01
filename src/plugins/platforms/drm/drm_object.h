@@ -98,7 +98,6 @@ protected:
     class Property;
     bool atomicAddProperty(drmModeAtomicReq *req, Property *property) const;
 
-    int m_fd;
     const uint32_t m_id;
 
     // for comparison with received name of DRM object
