@@ -20,6 +20,7 @@ namespace KWin
 {
 
 class DrmBackend;
+class DrmGpu;
 class DrmOutput;
 
 class DrmObject
@@ -30,7 +31,7 @@ public:
      * @param object_id provided by the kernel
      * @param fd of the DRM device
      */
-    DrmObject(uint32_t object_id, int fd);
+    DrmObject(DrmGpu *gpu, uint32_t object_id);
     virtual ~DrmObject();
 
     /**
@@ -43,8 +44,8 @@ public:
         return m_id;
     }
 
-    int fd() const {
-        return m_fd;
+    DrmGpu *gpu() const {
+        return m_gpu;
     }
 
     /**
@@ -163,6 +164,7 @@ protected:
     };
 
 private:
+    DrmGpu *m_gpu;
     QVector<QByteArray> m_propsNames;
 };
 

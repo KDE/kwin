@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_object.h"
+#include "drm_gpu.h"
 #include "drm_pointer.h"
 
 #include "logging.h"
@@ -18,8 +19,8 @@ namespace KWin
  * Definitions for class DrmObject
  */
 
-DrmObject::DrmObject(uint32_t object_id, int fd)
-    : m_fd(fd)
+DrmObject::DrmObject(DrmGpu *gpu, uint32_t object_id)
+    : m_gpu(gpu)
     , m_id(object_id)
 {
 }
@@ -33,14 +34,14 @@ DrmObject::~DrmObject()
 
 bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t objectType)
 {
-    DrmScopedPointer<drmModeObjectProperties> properties(drmModeObjectGetProperties(fd(), m_id, objectType));
+    DrmScopedPointer<drmModeObjectProperties> properties(drmModeObjectGetProperties(m_gpu->fd(), m_id, objectType));
     if (!properties) {
         qCWarning(KWIN_DRM) << "Failed to get properties for object" << m_id;
         return false;
     }
     m_props.resize(vector.count());
     for (uint32_t i = 0; i < properties->count_props; i++) {
-        DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(fd(), properties->props[i]));
+        DrmScopedPointer<drmModePropertyRes> prop(drmModeGetProperty(m_gpu->fd(), properties->props[i]));
         if (!prop) {
             qCWarning(KWIN_DRM, "Getting property %d of object %d failed!", i, m_id);
             continue;
@@ -50,7 +51,7 @@ bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t o
             if (def.name == prop->name) {
                 drmModePropertyBlobRes *blob = nullptr;
                 if (prop->flags & DRM_MODE_PROP_BLOB) {
-                    blob = drmModeGetPropertyBlob(fd(), properties->prop_values[i]);
+                    blob = drmModeGetPropertyBlob(m_gpu->fd(), properties->prop_values[i]);
                     if (!blob) {
                         break;
                     }
@@ -171,5 +172,5 @@ void DrmObject::Property::initEnumMap(drmModePropertyRes *prop)
 
 QDebug& operator<<(QDebug& s, const KWin::DrmObject *obj)
 {
-    return s.nospace() << "DrmObject(" << obj->id() << ", fd: "<< obj->fd() << ')';
+    return s.nospace() << "DrmObject(" << obj->id() << ", gpu: "<< obj->gpu() << ')';
 }

@@ -23,7 +23,7 @@ class DrmPlane : public DrmObject
 {
     Q_GADGET
 public:
-    DrmPlane(uint32_t plane_id, int fd);
+    DrmPlane(DrmGpu *gpu, uint32_t plane_id);
 
     enum class PropertyIndex : uint32_t {
         Type = 0,

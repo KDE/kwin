@@ -17,12 +17,11 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(uint32_t crtc_id, DrmBackend *backend, DrmGpu *gpu, int resIndex)
-    : DrmObject(crtc_id, gpu->fd()),
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtc_id, DrmBackend *backend, int resIndex)
+    : DrmObject(gpu, crtc_id),
       m_crtc(drmModeGetCrtc(gpu->fd(), crtc_id)),
       m_resIndex(resIndex),
-      m_backend(backend),
-      m_gpu(gpu)
+      m_backend(backend)
 {
 }
 
@@ -49,12 +48,12 @@ void DrmCrtc::flipBuffer()
 
 bool DrmCrtc::blank(DrmOutput *output)
 {
-    if (m_gpu->atomicModeSetting()) {
+    if (gpu()->atomicModeSetting()) {
         return false;
     }
 
     if (!m_blackBuffer) {
-        DrmDumbBuffer *blackBuffer = new DrmDumbBuffer(m_gpu, output->pixelSize());
+        DrmDumbBuffer *blackBuffer = new DrmDumbBuffer(gpu(), output->pixelSize());
         if (!blackBuffer->map()) {
             delete blackBuffer;
             return false;
@@ -77,7 +76,7 @@ bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
     uint16_t *green = const_cast<uint16_t *>(gamma.green());
     uint16_t *blue = const_cast<uint16_t *>(gamma.blue());
 
-    const bool isError = drmModeCrtcSetGamma(m_gpu->fd(), m_id,
+    const bool isError = drmModeCrtcSetGamma(gpu()->fd(), m_id,
         gamma.size(), red, green, blue);
 
     return !isError;

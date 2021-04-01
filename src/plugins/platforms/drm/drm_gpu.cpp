@@ -111,7 +111,7 @@ void DrmGpu::tryAMS()
         // create the plane objects
         for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
             DrmScopedPointer<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
-            DrmPlane *p = new DrmPlane(kplane->plane_id, m_fd);
+            DrmPlane *p = new DrmPlane(this, kplane->plane_id);
             if (p->init()) {
                 m_planes << p;
             } else {
@@ -142,7 +142,7 @@ bool DrmGpu::updateOutputs()
         const uint32_t currentConnector = resources->connectors[i];
         auto it = std::find_if(m_connectors.constBegin(), m_connectors.constEnd(), [currentConnector] (DrmConnector *c) { return c->id() == currentConnector; });
         if (it == m_connectors.constEnd()) {
-            auto c = new DrmConnector(currentConnector, m_fd);
+            auto c = new DrmConnector(this, currentConnector);
             if (!c->init()) {
                 delete c;
                 continue;
@@ -165,7 +165,7 @@ bool DrmGpu::updateOutputs()
         const uint32_t currentCrtc = resources->crtcs[i];
         auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc] (DrmCrtc *c) { return c->id() == currentCrtc; });
         if (it == m_crtcs.constEnd()) {
-            auto c = new DrmCrtc(currentCrtc, m_backend, this, i);
+            auto c = new DrmCrtc(this, currentCrtc, m_backend, i);
             if (!c->init()) {
                 delete c;
                 continue;

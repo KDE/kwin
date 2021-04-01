@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_object_connector.h"
+#include "drm_gpu.h"
 #include "drm_pointer.h"
 #include "logging.h"
 
@@ -17,9 +18,9 @@
 namespace KWin
 {
 
-DrmConnector::DrmConnector(uint32_t connector_id, int fd)
-    : DrmObject(connector_id, fd)
-    , m_conn(drmModeGetConnector(fd, connector_id))
+DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connector_id)
+    : DrmObject(gpu, connector_id)
+    , m_conn(drmModeGetConnector(gpu->fd(), connector_id))
 {
     for (int i = 0; i < m_conn->count_encoders; ++i) {
         m_encoders << m_conn->encoders[i];
@@ -84,7 +85,7 @@ bool DrmConnector::init()
 
 bool DrmConnector::isConnected()
 {
-    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(fd(), m_id));
+    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(gpu()->fd(), m_id));
     if (!con) {
         return false;
     }

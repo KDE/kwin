@@ -25,7 +25,7 @@ class DrmGpu;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(uint32_t crtc_id, DrmBackend *backend, DrmGpu *gpu, int resIndex);
+    DrmCrtc(DrmGpu *gpu, uint32_t crtc_id, DrmBackend *backend, int resIndex);
 
     bool init() override;
 
@@ -57,10 +57,6 @@ public:
     }
     bool setGammaRamp(const GammaRamp &gamma);
 
-    DrmGpu *gpu() {
-        return m_gpu;
-    }
-
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
     int m_resIndex;
@@ -69,7 +65,6 @@ private:
     QSharedPointer<DrmBuffer> m_nextBuffer;
     DrmDumbBuffer *m_blackBuffer = nullptr;
     DrmBackend *m_backend;
-    DrmGpu *m_gpu;
 };
 
 }

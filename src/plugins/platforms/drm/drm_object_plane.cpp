@@ -8,21 +8,22 @@
 */
 #include "drm_object_plane.h"
 #include "drm_buffer.h"
+#include "drm_gpu.h"
 #include "drm_pointer.h"
 #include "logging.h"
 
 namespace KWin
 {
 
-DrmPlane::DrmPlane(uint32_t plane_id, int fd)
-    : DrmObject(plane_id, fd)
+DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t plane_id)
+    : DrmObject(gpu, plane_id)
 {
 }
 
 bool DrmPlane::init()
 {
     qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
-    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(fd(), m_id));
+    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), m_id));
 
     if (!p) {
         qCWarning(KWIN_DRM) << "Failed to get kernel plane" << m_id;
