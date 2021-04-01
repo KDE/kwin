@@ -64,8 +64,8 @@ public:
     bool init() override;
     TypeIndex type();
 
-    bool isCrtcSupported(int resIndex) const {
-        return (m_possibleCrtcs & (1 << resIndex));
+    bool isCrtcSupported(int pipeIndex) const {
+        return (m_possibleCrtcs & (1 << pipeIndex));
     }
     QVector<uint32_t> formats() const {
         return m_formats;

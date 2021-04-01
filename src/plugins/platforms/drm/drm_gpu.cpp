@@ -235,7 +235,7 @@ bool DrmGpu::updateOutputs()
                 continue;
             }
             for (DrmCrtc *crtc : qAsConst(m_crtcs)) {
-                if (!(encoder->possible_crtcs & (1 << crtc->resIndex()))) {
+                if (!(encoder->possible_crtcs & (1 << crtc->pipeIndex()))) {
                     continue;
                 }
 
@@ -321,7 +321,7 @@ DrmPlane *DrmGpu::getCompatiblePlane(DrmPlane::TypeIndex typeIndex, DrmCrtc *crt
         if (plane->type() != typeIndex) {
             continue;
         }
-        if (plane->isCrtcSupported(crtc->resIndex())) {
+        if (plane->isCrtcSupported(crtc->pipeIndex())) {
             m_unusedPlanes.removeOne(plane);
             return plane;
         }

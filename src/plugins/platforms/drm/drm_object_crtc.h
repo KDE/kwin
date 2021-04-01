@@ -25,7 +25,7 @@ class DrmGpu;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int resIndex);
+    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex);
 
     bool init() override;
 
@@ -35,8 +35,8 @@ public:
         Count
     };
 
-    int resIndex() const {
-        return m_resIndex;
+    int pipeIndex() const {
+        return m_pipeIndex;
     }
 
     QSharedPointer<DrmBuffer> current() {
@@ -59,11 +59,10 @@ public:
 
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
-    int m_resIndex;
-
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QSharedPointer<DrmBuffer> m_nextBuffer;
     DrmDumbBuffer *m_blackBuffer = nullptr;
+    int m_pipeIndex;
 };
 
 }

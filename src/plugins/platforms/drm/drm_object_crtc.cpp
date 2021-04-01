@@ -17,10 +17,10 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int resIndex)
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex)
     : DrmObject(gpu, crtcId)
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
-    , m_resIndex(resIndex)
+    , m_pipeIndex(pipeIndex)
 {
 }
 
@@ -29,7 +29,7 @@ bool DrmCrtc::init()
     if (!m_crtc) {
         return false;
     }
-    qCDebug(KWIN_DRM) << "Init for CRTC:" << resIndex() << "id:" << id();
+    qCDebug(KWIN_DRM) << "Init for CRTC:" << pipeIndex() << "id:" << id();
     return initProps({
         PropertyDefinition(QByteArrayLiteral("MODE_ID")),
         PropertyDefinition(QByteArrayLiteral("ACTIVE")),
