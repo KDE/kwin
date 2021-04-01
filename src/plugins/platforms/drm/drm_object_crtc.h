@@ -25,7 +25,7 @@ class DrmGpu;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, DrmBackend *backend, int resIndex);
+    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int resIndex);
 
     bool init() override;
 
@@ -64,7 +64,6 @@ private:
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QSharedPointer<DrmBuffer> m_nextBuffer;
     DrmDumbBuffer *m_blackBuffer = nullptr;
-    DrmBackend *m_backend;
 };
 
 }

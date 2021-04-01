@@ -171,7 +171,7 @@ bool DrmGpu::updateOutputs()
         const uint32_t currentCrtc = resources->crtcs[i];
         auto it = std::find_if(m_crtcs.constBegin(), m_crtcs.constEnd(), [currentCrtc] (DrmCrtc *c) { return c->id() == currentCrtc; });
         if (it == m_crtcs.constEnd()) {
-            auto c = new DrmCrtc(this, currentCrtc, m_backend, i);
+            auto c = new DrmCrtc(this, currentCrtc, i);
             if (!c->init()) {
                 delete c;
                 continue;
