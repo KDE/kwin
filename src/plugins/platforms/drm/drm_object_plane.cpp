@@ -22,11 +22,11 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t plane_id)
 
 bool DrmPlane::init()
 {
-    qCDebug(KWIN_DRM) << "Atomic init for plane:" << m_id;
-    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), m_id));
+    qCDebug(KWIN_DRM) << "Atomic init for plane:" << id();
+    DrmScopedPointer<drmModePlane> p(drmModeGetPlane(gpu()->fd(), id()));
 
     if (!p) {
-        qCWarning(KWIN_DRM) << "Failed to get kernel plane" << m_id;
+        qCWarning(KWIN_DRM) << "Failed to get kernel plane" << id();
         return false;
     }
 

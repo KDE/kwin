@@ -31,7 +31,7 @@ DrmConnector::~DrmConnector() = default;
 
 bool DrmConnector::init()
 {
-    qCDebug(KWIN_DRM) << "Creating connector" << m_id;
+    qCDebug(KWIN_DRM) << "Creating connector" << id();
 
     if (!initProps({
             PropertyDefinition(QByteArrayLiteral("CRTC_ID")),
@@ -85,7 +85,7 @@ bool DrmConnector::init()
 
 bool DrmConnector::isConnected()
 {
-    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(gpu()->fd(), m_id));
+    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(gpu()->fd(), id()));
     if (!con) {
         return false;
     }

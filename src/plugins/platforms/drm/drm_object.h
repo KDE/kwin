@@ -98,8 +98,6 @@ protected:
     class Property;
     bool atomicAddProperty(drmModeAtomicReq *req, Property *property) const;
 
-    const uint32_t m_id;
-
     // for comparison with received name of DRM object
     QVector<Property *> m_props;
 
@@ -165,6 +163,7 @@ protected:
 private:
     DrmGpu *m_gpu;
     QVector<QByteArray> m_propsNames;
+    const uint32_t m_id;
 };
 
 }

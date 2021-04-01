@@ -30,7 +30,7 @@ bool DrmCrtc::init()
     if (!m_crtc) {
         return false;
     }
-    qCDebug(KWIN_DRM) << "Init for CRTC:" << resIndex() << "id:" << m_id;
+    qCDebug(KWIN_DRM) << "Init for CRTC:" << resIndex() << "id:" << id();
     return initProps({
         PropertyDefinition(QByteArrayLiteral("MODE_ID")),
         PropertyDefinition(QByteArrayLiteral("ACTIVE")),
@@ -76,7 +76,7 @@ bool DrmCrtc::setGammaRamp(const GammaRamp &gamma)
     uint16_t *green = const_cast<uint16_t *>(gamma.green());
     uint16_t *blue = const_cast<uint16_t *>(gamma.blue());
 
-    const bool isError = drmModeCrtcSetGamma(gpu()->fd(), m_id,
+    const bool isError = drmModeCrtcSetGamma(gpu()->fd(), id(),
         gamma.size(), red, green, blue);
 
     return !isError;
