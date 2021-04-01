@@ -25,7 +25,7 @@ class DrmGpu;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(DrmGpu *gpu, uint32_t crtc_id, DrmBackend *backend, int resIndex);
+    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, DrmBackend *backend, int resIndex);
 
     bool init() override;
 

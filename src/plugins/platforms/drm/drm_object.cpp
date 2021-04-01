@@ -19,9 +19,9 @@ namespace KWin
  * Definitions for class DrmObject
  */
 
-DrmObject::DrmObject(DrmGpu *gpu, uint32_t object_id)
+DrmObject::DrmObject(DrmGpu *gpu, uint32_t objectId)
     : m_gpu(gpu)
-    , m_id(object_id)
+    , m_id(objectId)
 {
 }
 

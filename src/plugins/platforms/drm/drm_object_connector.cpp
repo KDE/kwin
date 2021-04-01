@@ -18,9 +18,9 @@
 namespace KWin
 {
 
-DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connector_id)
-    : DrmObject(gpu, connector_id)
-    , m_conn(drmModeGetConnector(gpu->fd(), connector_id))
+DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
+    : DrmObject(gpu, connectorId)
+    , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
 {
     for (int i = 0; i < m_conn->count_encoders; ++i) {
         m_encoders << m_conn->encoders[i];

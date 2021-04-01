@@ -36,7 +36,13 @@
 namespace KWin
 {
 
-DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId) : m_backend(backend), m_devNode(devNode), m_fd(fd), m_drmId(drmId), m_atomicModeSetting(false), m_gbmDevice(nullptr)
+DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId)
+    : m_backend(backend)
+    , m_devNode(devNode)
+    , m_fd(fd)
+    , m_drmId(drmId)
+    , m_atomicModeSetting(false)
+    , m_gbmDevice(nullptr)
 {
     uint64_t capability = 0;
 

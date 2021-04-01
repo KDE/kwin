@@ -20,7 +20,7 @@ namespace KWin
 class DrmConnector : public DrmObject
 {
 public:
-    DrmConnector(DrmGpu *gpu, uint32_t connector_id);
+    DrmConnector(DrmGpu *gpu, uint32_t connectorId);
     ~DrmConnector() override;
 
     bool init() override;

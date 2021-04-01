@@ -31,7 +31,7 @@ public:
      * @param object_id provided by the kernel
      * @param fd of the DRM device
      */
-    DrmObject(DrmGpu *gpu, uint32_t object_id);
+    DrmObject(DrmGpu *gpu, uint32_t objectId);
     virtual ~DrmObject();
 
     /**

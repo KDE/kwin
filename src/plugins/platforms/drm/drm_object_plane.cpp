@@ -15,8 +15,8 @@
 namespace KWin
 {
 
-DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t plane_id)
-    : DrmObject(gpu, plane_id)
+DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
+    : DrmObject(gpu, planeId)
 {
 }
 

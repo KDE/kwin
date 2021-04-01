@@ -17,11 +17,11 @@
 namespace KWin
 {
 
-DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtc_id, DrmBackend *backend, int resIndex)
-    : DrmObject(gpu, crtc_id),
-      m_crtc(drmModeGetCrtc(gpu->fd(), crtc_id)),
-      m_resIndex(resIndex),
-      m_backend(backend)
+DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, DrmBackend *backend, int resIndex)
+    : DrmObject(gpu, crtc_id)
+    , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
+    , m_resIndex(resIndex)
+    , m_backend(backend)
 {
 }
 
