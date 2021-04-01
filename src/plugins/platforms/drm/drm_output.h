@@ -177,7 +177,4 @@ private:
 
 Q_DECLARE_METATYPE(KWin::DrmOutput*)
 
-QDebug& operator<<(QDebug& stream, const KWin::DrmOutput *);
-
 #endif
-
