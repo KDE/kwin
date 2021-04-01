@@ -50,7 +50,7 @@ bool DrmConnector::init()
         // for legacy it will be explicitly set
         dpmsProp->setImmutable();
     } else {
-        qCWarning(KWIN_DRM) << "Could not find DPMS property!";
+        qCDebug(KWIN_DRM) << "Could not find DPMS property!";
     }
 
     // parse edid
@@ -61,7 +61,7 @@ bool DrmConnector::init()
         }
         deleteProp(PropertyIndex::Edid);
     } else {
-        qCWarning(KWIN_DRM) << "Could not find edid for connector" << this;
+        qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
     }
 
     // check the physical size

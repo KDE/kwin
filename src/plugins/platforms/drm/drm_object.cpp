@@ -58,9 +58,11 @@ bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t o
             }
         }
     }
-    for (int i = 0; i < vector.count(); i++) {
-        if (!m_props[i]) {
-            qCWarning(KWIN_DRM) << "Could not find property" << vector[i].name;
+    if (KWIN_DRM().isDebugEnabled()) {
+        for (int i = 0; i < vector.count(); i++) {
+            if (!m_props[i]) {
+                qCDebug(KWIN_DRM) << "Could not find property" << vector[i].name;
+            }
         }
     }
     return true;
