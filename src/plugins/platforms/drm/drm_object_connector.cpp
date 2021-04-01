@@ -9,7 +9,6 @@
 #include "drm_object_connector.h"
 #include "drm_pointer.h"
 #include "logging.h"
-#include "edid.h"
 
 #include <main.h>
 // frameworks
@@ -20,13 +19,10 @@ namespace KWin
 
 DrmConnector::DrmConnector(uint32_t connector_id, int fd)
     : DrmObject(connector_id, fd)
+    , m_conn(drmModeGetConnector(fd, connector_id))
 {
-    DrmScopedPointer<drmModeConnector> con(drmModeGetConnector(fd, connector_id));
-    if (!con) {
-        return;
-    }
-    for (int i = 0; i < con->count_encoders; ++i) {
-        m_encoders << con->encoders[i];
+    for (int i = 0; i < m_conn->count_encoders; ++i) {
+        m_encoders << m_conn->encoders[i];
     }
 }
 
@@ -55,8 +51,8 @@ bool DrmConnector::init()
 
     // parse edid
     if (auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)]) {
-        m_edid.reset(new Edid(edidProp->blob()->data, edidProp->blob()->length));
-        if (!m_edid->isValid()) {
+        m_edid = Edid(edidProp->blob()->data, edidProp->blob()->length);
+        if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
         }
         deleteProp(PropertyIndex::Edid);
@@ -65,21 +61,21 @@ bool DrmConnector::init()
     }
 
     // check the physical size
-    if (m_edid->physicalSize().isEmpty()) {
+    if (m_edid.physicalSize().isEmpty()) {
         m_physicalSize = QSize(m_conn->mmWidth, m_conn->mmHeight);
     } else {
-        m_physicalSize = m_edid->physicalSize();
+        m_physicalSize = m_edid.physicalSize();
     }
 
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
     const QByteArray unknown = QByteArrayLiteral("unknown");
-    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid->eisaId().isEmpty() ? unknown : m_edid->eisaId())
-                                                       .group(m_edid->monitorName().isEmpty() ? unknown : m_edid->monitorName())
-                                                       .group(m_edid->serialNumber().isEmpty() ? unknown : m_edid->serialNumber());
+    KConfigGroup group = kwinApp()->config()->group("EdidOverwrite").group(m_edid.eisaId().isEmpty() ? unknown : m_edid.eisaId())
+                                                       .group(m_edid.monitorName().isEmpty() ? unknown : m_edid.monitorName())
+                                                       .group(m_edid.serialNumber().isEmpty() ? unknown : m_edid.serialNumber());
     if (group.hasKey("PhysicalSize")) {
         const QSize overwriteSize = group.readEntry("PhysicalSize", m_physicalSize);
-        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid->eisaId() << "/" << m_edid->monitorName() << "/" << m_edid->serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId() << "/" << m_edid.monitorName() << "/" << m_edid.serialNumber() << " from " << m_physicalSize << "to " << overwriteSize;
         m_physicalSize = overwriteSize;
     }
 
@@ -125,7 +121,7 @@ QString DrmConnector::connectorName() const
 
 QString DrmConnector::modelName() const
 {
-    return connectorName() + m_edid->nameString();
+    return connectorName() + m_edid.nameString();
 }
 
 bool DrmConnector::isInternal() const

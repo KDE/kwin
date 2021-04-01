@@ -12,11 +12,10 @@
 #include <QSize>
 
 #include "drm_object.h"
+#include "edid.h"
 
 namespace KWin
 {
-
-class Edid;
 
 class DrmConnector : public DrmObject
 {
@@ -53,8 +52,8 @@ public:
         return m_props[static_cast<uint32_t>(PropertyIndex::Dpms)];
     }
 
-    Edid *edid() const {
-        return m_edid.get();
+    const Edid *edid() const {
+        return &m_edid;
     }
 
     QString connectorName() const;
@@ -66,8 +65,7 @@ public:
 private:
     DrmScopedPointer<drmModeConnector> m_conn;
     QVector<uint32_t> m_encoders;
-
-    QScopedPointer<Edid> m_edid;
+    Edid m_edid;
     QSize m_physicalSize = QSize(-1, -1);
 
 };

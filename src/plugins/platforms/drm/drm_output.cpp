@@ -10,7 +10,6 @@
 #include "drm_backend.h"
 #include "drm_object_crtc.h"
 #include "drm_object_connector.h"
-#include "edid.h"
 
 #include "composite.h"
 #include "cursor.h"
