@@ -69,7 +69,7 @@ private:
     QHash<XdgImportedV2Interface *, SurfaceInterface *> m_children; //parent->child hash
 };
 
-class XdgExportedV2Interface : public QObject, QtWaylandServer::zxdg_exported_v2
+class XdgExportedV2Interface : public QObject, public QtWaylandServer::zxdg_exported_v2
 {
     Q_OBJECT
 

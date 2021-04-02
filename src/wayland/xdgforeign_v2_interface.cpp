@@ -81,7 +81,7 @@ void XdgExporterV2Interface::zxdg_exporter_v2_export_toplevel(Resource *resource
     });
 
     m_exportedSurfaces[handle] = exported;
-    zxdg_exported_v2_send_handle(exportedResource, handle.toUtf8().constData());
+    exported->send_handle(handle);
 }
 
 XdgImporterV2Interface::XdgImporterV2Interface(Display *display, XdgForeignV2Interface *foreign)
