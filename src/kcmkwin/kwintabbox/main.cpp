@@ -30,7 +30,6 @@
 #include <KPluginFactory>
 #include <KPluginTrader>
 #include <KTitleWidget>
-#include <KServiceTypeTrader>
 #include <KNewStuff3/KNS3/QtQuickDialogWrapper>
 // Plasma
 #include <KPackage/Package>
