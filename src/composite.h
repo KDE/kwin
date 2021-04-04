@@ -140,7 +140,6 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     Scene *m_scene;
-    int m_framesToTestForSafety = 3;
     QMap<RenderLoop *, AbstractOutput *> m_renderLoops;
 };
 
@@ -236,6 +235,7 @@ private:
      * Whether the Compositor is currently suspended, 8 bits encoding the reason
      */
     SuspendReasons m_suspended;
+    int m_framesToTestForSafety = 3;
 };
 
 }

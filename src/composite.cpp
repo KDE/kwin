@@ -145,9 +145,6 @@ Compositor::Compositor(QObject* workspace)
         }, Qt::QueuedConnection
     );
 
-    if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED"))
-       m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
-
     // register DBus
     new CompositorDBusInterface(this);
     FTraceLogger::create();
@@ -629,25 +626,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         }
     }
 
-    if (m_framesToTestForSafety > 0 && (m_scene->compositingType() & OpenGLCompositing)) {
-        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
-    }
-
     const QRegion repaints = m_scene->repaints(screenId);
     m_scene->resetRepaints(screenId);
 
     m_scene->paint(screenId, repaints, windows, renderLoop);
-
-    if (m_framesToTestForSafety > 0) {
-        if (m_scene->compositingType() & OpenGLCompositing) {
-            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
-        }
-        m_framesToTestForSafety--;
-        if (m_framesToTestForSafety == 0 && (m_scene->compositingType() & OpenGLCompositing)) {
-            kwinApp()->platform()->createOpenGLSafePoint(
-                Platform::OpenGLSafePoint::PostLastGuardedFrame);
-        }
-    }
 
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
@@ -710,6 +692,9 @@ X11Compositor::X11Compositor(QObject *parent)
     : Compositor(parent)
     , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
 {
+    if (qEnvironmentVariableIsSet("KWIN_MAX_FRAMES_TESTED")) {
+        m_framesToTestForSafety = qEnvironmentVariableIntValue("KWIN_MAX_FRAMES_TESTED");
+    }
 }
 
 void X11Compositor::toggleCompositing()
@@ -822,7 +807,21 @@ void X11Compositor::composite(RenderLoop *renderLoop)
         item->waitForDamage();
     }
 
+    if (m_framesToTestForSafety > 0 && (scene()->compositingType() & OpenGLCompositing)) {
+        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
+    }
+
     Compositor::composite(renderLoop);
+
+    if (m_framesToTestForSafety > 0) {
+        if (scene()->compositingType() & OpenGLCompositing) {
+            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
+        }
+        m_framesToTestForSafety--;
+        if (m_framesToTestForSafety == 0 && (scene()->compositingType() & OpenGLCompositing)) {
+            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
+        }
+    }
 }
 
 bool X11Compositor::checkForOverlayWindow(WId w) const
