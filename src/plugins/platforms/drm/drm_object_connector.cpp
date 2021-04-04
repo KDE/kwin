@@ -122,7 +122,7 @@ QString DrmConnector::connectorName() const
 
 QString DrmConnector::modelName() const
 {
-    return connectorName() + m_edid.nameString();
+    return connectorName() + QLatin1Char('-') + m_edid.nameString();
 }
 
 bool DrmConnector::isInternal() const
