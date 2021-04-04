@@ -18,9 +18,6 @@
 #include "renderloop.h"
 #include "screens.h"
 #include "session.h"
-#include "wayland_server.h"
-// KWayland
-#include <KWaylandServer/output_interface.h>
 // Qt
 #include <QMatrix4x4>
 #include <QCryptographicHash>
@@ -196,7 +193,7 @@ bool DrmOutput::init(drmModeConnector *connector)
     }
 
     setInternal(m_conn->isInternal());
-    setDpmsSupported(true);
+    setCapabilityInternal(DrmOutput::Capability::Dpms);
     initOutputDevice(connector);
 
     if (!m_gpu->atomicModeSetting() && !m_crtc->blank(this)) {
@@ -204,7 +201,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         return false;
     }
 
-    updateDpms(KWaylandServer::OutputInterface::DpmsMode::On);
+    setDpmsMode(DpmsMode::On);
     return true;
 }
 
@@ -221,29 +218,29 @@ void DrmOutput::initUuid()
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
 {
     // read in mode information
-    QVector<KWaylandServer::OutputDeviceInterface::Mode> modes;
+    QVector<Mode> modes;
+    modes.reserve(connector->count_modes);
     for (int i = 0; i < connector->count_modes; ++i) {
         // TODO: in AMS here we could read and store for later every mode's blob_id
         // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
         auto *m = &connector->modes[i];
-        KWaylandServer::OutputDeviceInterface::ModeFlags deviceflags;
+
+        Mode mode;
         if (isCurrentMode(m)) {
-            deviceflags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
+            mode.flags |= ModeFlag::Current;
         }
         if (m->type & DRM_MODE_TYPE_PREFERRED) {
-            deviceflags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Preferred;
+            mode.flags |= ModeFlag::Preferred;
         }
 
-        KWaylandServer::OutputDeviceInterface::Mode mode;
         mode.id = i;
         mode.size = QSize(m->hdisplay, m->vdisplay);
-        mode.flags = deviceflags;
         mode.refreshRate = refreshRateForMode(m);
         modes << mode;
     }
 
     setName(m_conn->connectorName());
-    initInterfaces(m_conn->modelName(), m_conn->edid()->manufacturerString(), m_uuid, m_conn->physicalSize(), modes, m_conn->edid()->raw());
+    initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(), m_uuid, m_conn->physicalSize(), modes, m_conn->edid()->raw());
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -331,59 +328,21 @@ void DrmOutput::atomicDisable()
     }
 }
 
-static DrmOutput::DpmsMode fromWaylandDpmsMode(KWaylandServer::OutputInterface::DpmsMode wlMode)
-{
-    using namespace KWaylandServer;
-    switch (wlMode) {
-    case OutputInterface::DpmsMode::On:
-        return DrmOutput::DpmsMode::On;
-    case OutputInterface::DpmsMode::Standby:
-        return DrmOutput::DpmsMode::Standby;
-    case OutputInterface::DpmsMode::Suspend:
-        return DrmOutput::DpmsMode::Suspend;
-    case OutputInterface::DpmsMode::Off:
-        return DrmOutput::DpmsMode::Off;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-static KWaylandServer::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
-{
-    using namespace KWaylandServer;
-    switch (mode) {
-    case DrmOutput::DpmsMode::On:
-        return OutputInterface::DpmsMode::On;
-    case DrmOutput::DpmsMode::Standby:
-        return OutputInterface::DpmsMode::Standby;
-    case DrmOutput::DpmsMode::Suspend:
-        return OutputInterface::DpmsMode::Suspend;
-    case DrmOutput::DpmsMode::Off:
-        return OutputInterface::DpmsMode::Off;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-void DrmOutput::updateDpms(KWaylandServer::OutputInterface::DpmsMode mode)
+void DrmOutput::setDpmsMode(DpmsMode mode)
 {
     if (!m_conn->dpms() || !isEnabled()) {
         return;
     }
 
-    const auto drmMode = fromWaylandDpmsMode(mode);
-
-    if (drmMode == m_dpmsModePending) {
-        qCDebug(KWIN_DRM) << "New DPMS mode equals old mode. DPMS unchanged.";
-        waylandOutput()->setDpmsMode(mode);
+    if (mode == m_dpmsModePending) {
         return;
     }
 
-    m_dpmsModePending = drmMode;
+    m_dpmsModePending = mode;
 
     if (m_gpu->atomicModeSetting()) {
         m_modesetRequested = true;
-        if (drmMode == DpmsMode::On) {
+        if (mode == DpmsMode::On) {
             if (m_atomicOffPending) {
                 Q_ASSERT(m_pageFlipPending);
                 m_atomicOffPending = false;
@@ -404,8 +363,6 @@ void DrmOutput::dpmsFinishOn()
 {
     qCDebug(KWIN_DRM) << "DPMS mode set for output" << m_crtc->id() << "to On.";
 
-    waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::On));
-
     m_backend->checkOutputsAreOn();
     m_crtc->blank(this);
     m_renderLoop->uninhibit();
@@ -419,19 +376,33 @@ void DrmOutput::dpmsFinishOff()
     qCDebug(KWIN_DRM) << "DPMS mode set for output" << m_crtc->id() << "to Off.";
 
     if (isEnabled()) {
-        waylandOutput()->setDpmsMode(toWaylandDpmsMode(m_dpmsModePending));
         m_backend->createDpmsFilter();
-    } else {
-        waylandOutput()->setDpmsMode(toWaylandDpmsMode(DpmsMode::Off));
     }
     m_renderLoop->inhibit();
+}
+
+static uint64_t kwinDpmsModeToDrmDpmsMode(AbstractWaylandOutput::DpmsMode dpmsMode)
+{
+    switch (dpmsMode) {
+    case AbstractWaylandOutput::DpmsMode::On:
+        return DRM_MODE_DPMS_ON;
+    case AbstractWaylandOutput::DpmsMode::Standby:
+        return DRM_MODE_DPMS_STANDBY;
+    case AbstractWaylandOutput::DpmsMode::Suspend:
+        return DRM_MODE_DPMS_SUSPEND;
+    case AbstractWaylandOutput::DpmsMode::Off:
+        return DRM_MODE_DPMS_OFF;
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 bool DrmOutput::dpmsLegacyApply()
 {
     if (drmModeConnectorSetProperty(m_gpu->fd(), m_conn->id(),
-                                    m_conn->dpms()->propId(), uint64_t(m_dpmsModePending)) < 0) {
-        m_dpmsModePending = m_dpmsMode;
+                                    m_conn->dpms()->propId(),
+                                    kwinDpmsModeToDrmDpmsMode(m_dpmsModePending)) < 0) {
+        m_dpmsModePending = dpmsMode();
         qCWarning(KWIN_DRM) << "Setting DPMS failed";
         return false;
     }
@@ -440,7 +411,7 @@ bool DrmOutput::dpmsLegacyApply()
     } else {
         dpmsFinishOff();
     }
-    m_dpmsMode = m_dpmsModePending;
+    setDpmsModeInternal(m_dpmsModePending);
     return true;
 }
 
@@ -540,12 +511,12 @@ void DrmOutput::updateMode(int modeIndex)
     }
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
-    setWaylandMode();
+    setCurrentModeInternal();
 }
 
-void DrmOutput::setWaylandMode()
+void DrmOutput::setCurrentModeInternal()
 {
-    AbstractWaylandOutput::setWaylandMode(QSize(m_mode.hdisplay, m_mode.vdisplay),
+    AbstractWaylandOutput::setCurrentModeInternal(QSize(m_mode.hdisplay, m_mode.vdisplay),
                                           refreshRateForMode(&m_mode));
 }
 
@@ -641,7 +612,7 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
         // go back to previous state
         if (m_lastWorkingState.valid) {
             m_mode = m_lastWorkingState.mode;
-            setTransform(m_lastWorkingState.transform);
+            setTransformInternal(m_lastWorkingState.transform);
             setGlobalPos(m_lastWorkingState.globalPos);
             if (m_primaryPlane) {
                 m_primaryPlane->setTransformation(m_lastWorkingState.planeTransformations);
@@ -652,7 +623,7 @@ bool DrmOutput::presentAtomically(const QSharedPointer<DrmBuffer> &buffer)
                 updateCursor();
                 showCursor();
             }
-            setWaylandMode();
+            setCurrentModeInternal();
             emit screens()->changed();
         }
         return false;
@@ -727,10 +698,10 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
             drmModeAtomicFree(req);
         }
 
-        if (m_dpmsMode != m_dpmsModePending) {
+        if (dpmsMode() != m_dpmsModePending) {
             qCWarning(KWIN_DRM) << "Setting DPMS failed";
-            m_dpmsModePending = m_dpmsMode;
-            if (m_dpmsMode != DpmsMode::On) {
+            m_dpmsModePending = dpmsMode();
+            if (dpmsMode() != DpmsMode::On) {
                 dpmsFinishOff();
             }
         }
@@ -807,7 +778,7 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
     if (mode == AtomicCommitMode::Real && (flags & DRM_MODE_ATOMIC_ALLOW_MODESET)) {
         qCDebug(KWIN_DRM) << "Atomic Modeset successful.";
         m_modesetRequested = false;
-        m_dpmsMode = m_dpmsModePending;
+        setDpmsModeInternal(m_dpmsModePending);
     }
 
     drmModeAtomicFree(req);

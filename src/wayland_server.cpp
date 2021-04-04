@@ -20,6 +20,8 @@
 #include "xdgshellclient.h"
 #include "service_utils.h"
 #include "unmanaged.h"
+#include "waylandoutput.h"
+#include "waylandoutputdevice.h"
 
 // Client
 #include <KWayland/Client/connection_thread.h>
@@ -313,16 +315,55 @@ void WaylandServer::registerXdgGenericClient(AbstractClient *client)
     qCDebug(KWIN_CORE) << "Received invalid xdg client:" << client->surface();
 }
 
+void WaylandServer::initOutputs()
+{
+    connect(kwinApp()->platform(), &Platform::outputAdded, this, &WaylandServer::handleOutputAdded);
+    connect(kwinApp()->platform(), &Platform::outputRemoved, this, &WaylandServer::handleOutputRemoved);
+
+    connect(kwinApp()->platform(), &Platform::outputEnabled, this, &WaylandServer::handleOutputEnabled);
+    connect(kwinApp()->platform(), &Platform::outputDisabled, this, &WaylandServer::handleOutputDisabled);
+
+    const QVector<AbstractOutput *> outputs = kwinApp()->platform()->outputs();
+    for (AbstractOutput *output : outputs) {
+        handleOutputAdded(output);
+    }
+
+    const QVector<AbstractOutput *> enabledOutputs = kwinApp()->platform()->enabledOutputs();
+    for (AbstractOutput *output : enabledOutputs) {
+        handleOutputEnabled(output);
+    }
+}
+
+void WaylandServer::handleOutputAdded(AbstractOutput *output)
+{
+    auto o = static_cast<AbstractWaylandOutput *>(output);
+    m_waylandOutputDevices.insert(o, new WaylandOutputDevice(o));
+}
+
+void WaylandServer::handleOutputRemoved(AbstractOutput *output)
+{
+    delete m_waylandOutputDevices.take(static_cast<AbstractWaylandOutput *>(output));
+}
+
+void WaylandServer::handleOutputEnabled(AbstractOutput *output)
+{
+    auto o = static_cast<AbstractWaylandOutput *>(output);
+    m_waylandOutputs.insert(o, new WaylandOutput(o));
+}
+
+void WaylandServer::handleOutputDisabled(AbstractOutput *output)
+{
+    delete m_waylandOutputs.take(static_cast<AbstractWaylandOutput *>(output));
+}
+
 AbstractWaylandOutput *WaylandServer::findOutput(KWaylandServer::OutputInterface *outputIface) const
 {
-    AbstractWaylandOutput *outputFound = nullptr;
-    const auto outputs = kwinApp()->platform()->enabledOutputs();
-    for (auto output : outputs) {
-        if (static_cast<AbstractWaylandOutput *>(output)->waylandOutput() == outputIface) {
-            outputFound = static_cast<AbstractWaylandOutput *>(output);
+    for (auto it = m_waylandOutputs.constBegin(); it != m_waylandOutputs.constEnd(); ++it) {
+        if ((*it)->waylandOutput() == outputIface) {
+            return it.key();
         }
     }
-    return outputFound;
+    return nullptr;
 }
 
 bool WaylandServer::start()
@@ -572,6 +613,8 @@ void WaylandServer::initWorkspace()
     } else {
         emit initialized();
     }
+
+    initOutputs();
 }
 
 void WaylandServer::initScreenLocker()

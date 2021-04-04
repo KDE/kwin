@@ -65,12 +65,12 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
     const int refreshRate = 60000; // TODO: get actual refresh rate of fb device?
     m_renderLoop->setRefreshRate(refreshRate);
 
-    KWaylandServer::OutputDeviceInterface::Mode mode;
+    Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
-    mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
+    mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
 }
 
 void FramebufferOutput::vblank(std::chrono::nanoseconds timestamp)

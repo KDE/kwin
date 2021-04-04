@@ -54,22 +54,11 @@ public:
     bool present(const QSharedPointer<DrmBuffer> &buffer);
     void pageFlipped();
 
-    // These values are defined by the kernel
-    enum class DpmsMode {
-        On = DRM_MODE_DPMS_ON,
-        Standby = DRM_MODE_DPMS_STANDBY,
-        Suspend = DRM_MODE_DPMS_SUSPEND,
-        Off = DRM_MODE_DPMS_OFF
-    };
-    Q_ENUM(DpmsMode);
     bool isDpmsEnabled() const {
         // We care for current as well as pending mode in order to allow first present in AMS.
         return m_dpmsModePending == DpmsMode::On;
     }
 
-    DpmsMode dpmsMode() const {
-        return m_dpmsMode;
-    }
     DpmsMode dpmsModePending() const {
         return m_dpmsModePending;
     }
@@ -131,10 +120,10 @@ private:
     void dpmsFinishOff();
 
     bool atomicReqModesetPopulate(drmModeAtomicReq *req, bool enable);
-    void updateDpms(KWaylandServer::OutputInterface::DpmsMode mode) override;
+    void setDpmsMode(DpmsMode mode) override;
     void updateMode(int modeIndex) override;
     void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
-    void setWaylandMode();
+    void setCurrentModeInternal();
 
     void updateTransform(Transform transform) override;
 
@@ -147,7 +136,6 @@ private:
     DrmCrtc *m_crtc = nullptr;
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
-    DpmsMode m_dpmsMode = DpmsMode::On;
     DpmsMode m_dpmsModePending = DpmsMode::On;
     QByteArray m_uuid;
     RenderLoop *m_renderLoop;

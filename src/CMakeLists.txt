@@ -136,6 +136,8 @@ set(kwin_SRCS
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp
     waylandclient.cpp
+    waylandoutput.cpp
+    waylandoutputdevice.cpp
     waylandshellintegration.cpp
     window_property_notify_x11_filter.cpp
     windowitem.cpp

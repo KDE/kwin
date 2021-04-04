@@ -14,22 +14,11 @@
 #include <kwin_export.h>
 
 #include <QObject>
-#include <QPoint>
-#include <QPointer>
-#include <QRect>
-#include <QSize>
-#include <QVector>
-
-#include <KWaylandServer/output_interface.h>
-#include <KWaylandServer/outputdevice_interface.h>
+#include <QTimer>
 
 namespace KWaylandServer
 {
-class OutputInterface;
-class OutputDeviceInterface;
 class OutputChangeSet;
-class OutputManagementInterface;
-class XdgOutputV1Interface;
 }
 
 namespace KWin
@@ -53,8 +42,33 @@ public:
         Flipped270
     };
 
+    enum class ModeFlag : uint {
+        Current = 0x1,
+        Preferred = 0x2,
+    };
+    Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
+
+    struct Mode
+    {
+        QSize size;
+        int refreshRate;
+        ModeFlags flags;
+        int id;
+    };
+
+    enum class DpmsMode {
+        On,
+        Standby,
+        Suspend,
+        Off,
+    };
+
+    enum class Capability : uint {
+        Dpms = 0x1,
+    };
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+
     explicit AbstractWaylandOutput(QObject *parent = nullptr);
-    ~AbstractWaylandOutput() override;
 
     QString name() const override;
     QString uuid() const override;
@@ -93,14 +107,15 @@ public:
 
     void applyChanges(const KWaylandServer::OutputChangeSet *changeSet) override;
 
-    QPointer<KWaylandServer::OutputInterface> waylandOutput() const {
-        return m_waylandOutput;
-    }
-
     bool isEnabled() const override;
     void setEnabled(bool enable) override;
 
     QString description() const;
+    Capabilities capabilities() const;
+    QByteArray edid() const;
+    QVector<Mode> modes() const;
+    DpmsMode dpmsMode() const;
+    virtual void setDpmsMode(DpmsMode mode);
 
     /**
      * Returns a matrix that can translate into the display's coordinates system
@@ -115,12 +130,14 @@ public:
 Q_SIGNALS:
     void modeChanged();
     void outputChange(const QRegion &damagedRegion);
+    void scaleChanged();
+    void transformChanged();
+    void dpmsModeChanged();
 
 protected:
-    void initInterfaces(const QString &model, const QString &manufacturer,
-                        const QString &uuid, const QSize &physicalSize,
-                        const QVector<KWaylandServer::OutputDeviceInterface::Mode> &modes,
-                        const QByteArray &edid);
+    void initialize(const QString &model, const QString &manufacturer,
+                    const QString &uuid, const QSize &physicalSize,
+                    const QVector<Mode> &modes, const QByteArray &edid);
 
     QPoint globalPos() const;
 
@@ -133,15 +150,9 @@ protected:
     void setInternal(bool set) {
         m_internal = set;
     }
-    void setDpmsSupported(bool set) {
-        m_waylandOutput->setDpmsSupported(set);
-    }
 
     virtual void updateEnablement(bool enable) {
         Q_UNUSED(enable);
-    }
-    virtual void updateDpms(KWaylandServer::OutputInterface::DpmsMode mode) {
-        Q_UNUSED(mode);
     }
     virtual void updateMode(int modeIndex) {
         Q_UNUSED(modeIndex);
@@ -150,24 +161,36 @@ protected:
         Q_UNUSED(transform);
     }
 
-    void setWaylandMode(const QSize &size, int refreshRate);
-    void setTransform(Transform transform);
+    void setCurrentModeInternal(const QSize &size, int refreshRate);
+    void setTransformInternal(Transform transform);
+    void setDpmsModeInternal(DpmsMode dpmsMode);
+    void setCapabilityInternal(Capability capability, bool on = true);
 
     QSize orientateSize(const QSize &size) const;
 
 private:
-    void setTransform(KWaylandServer::OutputDeviceInterface::Transform transform);
-
-    KWaylandServer::OutputInterface *m_waylandOutput;
-    KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;
-    KWaylandServer::OutputDeviceInterface *m_waylandOutputDevice;
-    KWaylandServer::OutputInterface::DpmsMode m_dpms = KWaylandServer::OutputInterface::DpmsMode::On;
-
     QString m_name;
-    bool m_internal = false;
+    QString m_manufacturer;
+    QString m_model;
+    QString m_serialNumber;
+    QString m_uuid;
+    QSize m_modeSize;
+    QSize m_physicalSize;
+    QPoint m_position;
+    qreal m_scale = 1;
+    Capabilities m_capabilities;
+    Transform m_transform = Transform::Normal;
+    QByteArray m_edid;
+    QVector<Mode> m_modes;
+    DpmsMode m_dpmsMode = DpmsMode::On;
+    int m_refreshRate = -1;
     int m_recorders = 0;
+    bool m_isEnabled = true;
+    bool m_internal = false;
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AbstractWaylandOutput::Capabilities)
 
 #endif // KWIN_OUTPUT_H
