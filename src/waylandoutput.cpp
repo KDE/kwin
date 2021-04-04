@@ -84,24 +84,12 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     m_waylandOutput->setDpmsSupported(output->capabilities() & AbstractWaylandOutput::Capability::Dpms);
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(output->scale()));
+    m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
 
     m_xdgOutputV1->setName(output->name());
     m_xdgOutputV1->setDescription(output->description());
     m_xdgOutputV1->setLogicalPosition(geometry.topLeft());
     m_xdgOutputV1->setLogicalSize(geometry.size());
-
-    const auto modes = output->modes();
-    for (const AbstractWaylandOutput::Mode &mode : modes) {
-        KWaylandServer::OutputInterface::ModeFlags flags;
-        if (mode.flags & AbstractWaylandOutput::ModeFlag::Current) {
-            flags |= KWaylandServer::OutputInterface::ModeFlag::Current;
-        }
-        if (mode.flags & AbstractWaylandOutput::ModeFlag::Preferred) {
-            flags |= KWaylandServer::OutputInterface::ModeFlag::Preferred;
-        }
-
-        m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
-    }
 
     m_waylandOutput->done();
     m_xdgOutputV1->done();
@@ -138,7 +126,7 @@ void WaylandOutput::update()
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(m_platformOutput->scale()));
     m_waylandOutput->setTransform(kwinTransformToOutputTransform(m_platformOutput->transform()));
-    m_waylandOutput->setCurrentMode(m_platformOutput->modeSize(), m_platformOutput->refreshRate());
+    m_waylandOutput->setMode(m_platformOutput->modeSize(), m_platformOutput->refreshRate());
 
     m_xdgOutputV1->setLogicalPosition(geometry.topLeft());
     m_xdgOutputV1->setLogicalSize(geometry.size());
