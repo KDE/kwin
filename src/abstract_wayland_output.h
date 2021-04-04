@@ -63,12 +63,7 @@ public:
 
     // TODO: The name is ambiguous. Rename this function.
     QSize pixelSize() const override;
-
     qreal scale() const override;
-
-    /**
-     * The geometry of this output in global compositor co-ordinates (i.e scaled)
-     */
     QRect geometry() const override;
     QSize physicalSize() const override;
 
@@ -83,9 +78,6 @@ public:
      */
     Transform transform() const;
 
-    /**
-     * Current refresh rate in 1/ms.
-     */
     int refreshRate() const override;
 
     bool isInternal() const override {
@@ -106,12 +98,6 @@ public:
     }
 
     bool isEnabled() const override;
-    /**
-     * Enable or disable the output.
-     *
-     * This differs from updateDpms as it also removes the wl_output.
-     * The default is on.
-     */
     void setEnabled(bool enable) override;
 
     QString description() const;
