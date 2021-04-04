@@ -315,6 +315,7 @@ void DrmOutput::atomicEnable()
         m_atomicOffPending = false;
     }
     m_backend->enableOutput(this, true);
+    dpmsFinishOn();
 
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
