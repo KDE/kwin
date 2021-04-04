@@ -103,7 +103,6 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
         m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }
 
-    m_waylandOutput->create();
     m_waylandOutput->done();
     m_xdgOutputV1->done();
 
