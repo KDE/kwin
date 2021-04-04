@@ -66,11 +66,14 @@ namespace KWin
 {
 
 class AbstractClient;
+class AbstractOutput;
 class Toplevel;
 class XdgPopupClient;
 class XdgSurfaceClient;
 class XdgToplevelClient;
 class AbstractWaylandOutput;
+class WaylandOutput;
+class WaylandOutputDevice;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -261,10 +264,15 @@ private:
     void shellClientShown(Toplevel *t);
     void destroyInternalConnection();
     void initScreenLocker();
+    void initOutputs();
     void registerXdgGenericClient(AbstractClient *client);
     void registerXdgToplevelClient(XdgToplevelClient *client);
     void registerXdgPopupClient(XdgPopupClient *client);
     void registerShellClient(AbstractClient *client);
+    void handleOutputAdded(AbstractOutput *output);
+    void handleOutputRemoved(AbstractOutput *output);
+    void handleOutputEnabled(AbstractOutput *output);
+    void handleOutputDisabled(AbstractOutput *output);
     KWaylandServer::Display *m_display = nullptr;
     KWaylandServer::CompositorInterface *m_compositor = nullptr;
     KWaylandServer::SeatInterface *m_seat = nullptr;
@@ -303,6 +311,8 @@ private:
     QList<AbstractClient *> m_clients;
     InitializationFlags m_initFlags;
     QVector<KWaylandServer::PlasmaShellSurfaceInterface*> m_plasmaShellSurfaces;
+    QHash<AbstractWaylandOutput *, WaylandOutput *> m_waylandOutputs;
+    QHash<AbstractWaylandOutput *, WaylandOutputDevice *> m_waylandOutputDevices;
     KWIN_SINGLETON(WaylandServer)
 };
 

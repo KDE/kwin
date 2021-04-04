@@ -8,42 +8,36 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "abstract_wayland_output.h"
-
 #include "screens.h"
-#include "wayland_server.h"
 
 // KWayland
-#include <KWaylandServer/display.h>
 #include <KWaylandServer/outputchangeset.h>
-#include <KWaylandServer/xdgoutput_v1_interface.h>
 // KF5
 #include <KLocalizedString>
 
 #include <QMatrix4x4>
-#include <cmath>
 
 namespace KWin
 {
 
+static AbstractWaylandOutput::Transform outputDeviceTransformToKWinTransform(KWaylandServer::OutputDeviceInterface::Transform transform)
+{
+    return static_cast<AbstractWaylandOutput::Transform>(transform);
+}
+
 AbstractWaylandOutput::AbstractWaylandOutput(QObject *parent)
     : AbstractOutput(parent)
 {
-    m_waylandOutput = new KWaylandServer::OutputInterface(waylandServer()->display(), this);
-    m_waylandOutputDevice = new KWaylandServer::OutputDeviceInterface(waylandServer()->display(), this);
-    m_xdgOutputV1 = waylandServer()->xdgOutputManagerV1()->createXdgOutput(m_waylandOutput, this);
-
-    connect(m_waylandOutput, &KWaylandServer::OutputInterface::dpmsModeRequested, this,
-            [this] (KWaylandServer::OutputInterface::DpmsMode mode) {
-        updateDpms(mode);
-    });
-
-    connect(m_waylandOutput, &KWaylandServer::OutputInterface::globalPositionChanged, this, &AbstractWaylandOutput::geometryChanged);
-    connect(m_waylandOutput, &KWaylandServer::OutputInterface::pixelSizeChanged, this, &AbstractWaylandOutput::geometryChanged);
-    connect(m_waylandOutput, &KWaylandServer::OutputInterface::scaleChanged, this, &AbstractWaylandOutput::geometryChanged);
 }
 
-AbstractWaylandOutput::~AbstractWaylandOutput()
+AbstractWaylandOutput::Capabilities AbstractWaylandOutput::capabilities() const
 {
+    return m_capabilities;
+}
+
+void AbstractWaylandOutput::setCapabilityInternal(Capability capability, bool on)
+{
+    m_capabilities.setFlag(capability, on);
 }
 
 QString AbstractWaylandOutput::name() const
@@ -53,7 +47,7 @@ QString AbstractWaylandOutput::name() const
 
 QString AbstractWaylandOutput::uuid() const
 {
-    return m_waylandOutputDevice->uuid();
+    return m_uuid;
 }
 
 QRect AbstractWaylandOutput::geometry() const
@@ -63,122 +57,74 @@ QRect AbstractWaylandOutput::geometry() const
 
 QSize AbstractWaylandOutput::physicalSize() const
 {
-    return orientateSize(m_waylandOutputDevice->physicalSize());
+    return orientateSize(m_physicalSize);
 }
 
 int AbstractWaylandOutput::refreshRate() const
 {
-    return m_waylandOutputDevice->refreshRate();
+    return m_refreshRate;
 }
 
 QPoint AbstractWaylandOutput::globalPos() const
 {
-    return m_waylandOutputDevice->globalPosition();
+    return m_position;
 }
 
 void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
 {
-    m_waylandOutputDevice->setGlobalPosition(pos);
-
-    m_waylandOutput->setGlobalPosition(pos);
-    m_xdgOutputV1->setLogicalPosition(pos);
-    m_waylandOutput->done();
-    m_xdgOutputV1->done();
+    if (m_position != pos) {
+        m_position = pos;
+        emit geometryChanged();
+    }
 }
 
 QString AbstractWaylandOutput::manufacturer() const
 {
-    return m_waylandOutputDevice->manufacturer();
+    return m_manufacturer;
 }
 
 QString AbstractWaylandOutput::model() const
 {
-    return m_waylandOutputDevice->model();
+    return m_model;
 }
 
 QString AbstractWaylandOutput::serialNumber() const
 {
-    return m_waylandOutputDevice->serialNumber();
+    return m_serialNumber;
 }
 
 QSize AbstractWaylandOutput::modeSize() const
 {
-    return m_waylandOutputDevice->pixelSize();
+    return m_modeSize;
 }
 
 QSize AbstractWaylandOutput::pixelSize() const
 {
-    return orientateSize(m_waylandOutputDevice->pixelSize());
+    return orientateSize(m_modeSize);
+}
+
+QByteArray AbstractWaylandOutput::edid() const
+{
+    return m_edid;
+}
+
+QVector<AbstractWaylandOutput::Mode> AbstractWaylandOutput::modes() const
+{
+    return m_modes;
 }
 
 qreal AbstractWaylandOutput::scale() const
 {
-    return m_waylandOutputDevice->scaleF();
+    return m_scale;
 }
 
 void AbstractWaylandOutput::setScale(qreal scale)
 {
-    m_waylandOutputDevice->setScaleF(scale);
-
-    // this is the scale that clients will ideally use for their buffers
-    // this has to be an int which is fine
-
-    // I don't know whether we want to round or ceil
-    // or maybe even set this to 3 when we're scaling to 1.5
-    // don't treat this like it's chosen deliberately
-    m_waylandOutput->setScale(std::ceil(scale));
-    m_xdgOutputV1->setLogicalSize(pixelSize() / scale);
-    m_waylandOutput->done();
-    m_xdgOutputV1->done();
-}
-
-using DeviceInterface = KWaylandServer::OutputDeviceInterface;
-
-KWaylandServer::OutputInterface::Transform toOutputTransform(DeviceInterface::Transform transform)
-{
-    using Transform = DeviceInterface::Transform;
-    using OutputTransform = KWaylandServer::OutputInterface::Transform;
-
-    switch (transform) {
-    case Transform::Rotated90:
-        return OutputTransform::Rotated90;
-    case Transform::Rotated180:
-        return OutputTransform::Rotated180;
-    case Transform::Rotated270:
-        return OutputTransform::Rotated270;
-    case Transform::Flipped:
-        return OutputTransform::Flipped;
-    case Transform::Flipped90:
-        return OutputTransform::Flipped90;
-    case Transform::Flipped180:
-        return OutputTransform::Flipped180;
-    case Transform::Flipped270:
-        return OutputTransform::Flipped270;
-    default:
-        return OutputTransform::Normal;
+    if (m_scale != scale) {
+        m_scale = scale;
+        emit scaleChanged();
+        emit geometryChanged();
     }
-}
-
-void AbstractWaylandOutput::setTransform(DeviceInterface::Transform transform)
-{
-    m_waylandOutputDevice->setTransform(transform);
-
-    m_waylandOutput->setTransform(toOutputTransform(transform));
-    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
-    m_waylandOutput->done();
-    m_xdgOutputV1->done();
-}
-
-inline
-AbstractWaylandOutput::Transform toTransform(DeviceInterface::Transform deviceTransform)
-{
-    return static_cast<AbstractWaylandOutput::Transform>(deviceTransform);
-}
-
-inline
-DeviceInterface::Transform toDeviceTransform(AbstractWaylandOutput::Transform transform)
-{
-    return static_cast<DeviceInterface::Transform>(transform);
 }
 
 void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
@@ -190,14 +136,14 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
     // Enablement changes are handled by platform.
     if (changeSet->modeChanged()) {
         qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->mode();
-        m_waylandOutputDevice->setCurrentMode(changeSet->mode());
         updateMode(changeSet->mode());
         emitModeChanged = true;
     }
     if (changeSet->transformChanged()) {
         qCDebug(KWIN_CORE) << "Server setting transform: " << (int)(changeSet->transform());
-        setTransform(changeSet->transform());
-        updateTransform(toTransform(changeSet->transform()));
+        auto transform = outputDeviceTransformToKWinTransform(changeSet->transform());
+        setTransformInternal(transform);
+        updateTransform(transform);
         emitModeChanged = true;
     }
     if (changeSet->positionChanged()) {
@@ -224,114 +170,91 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
 
 bool AbstractWaylandOutput::isEnabled() const
 {
-    return m_waylandOutputDevice->enabled() == DeviceInterface::Enablement::Enabled;
+    return m_isEnabled;
 }
 
 void AbstractWaylandOutput::setEnabled(bool enable)
 {
-    if (enable == isEnabled()) {
-        return;
+    if (m_isEnabled != enable) {
+        m_isEnabled = enable;
+        updateEnablement(enable);
+        emit enabledChanged();
     }
-
-    if (enable) {
-        m_waylandOutputDevice->setEnabled(DeviceInterface::Enablement::Enabled);
-        m_waylandOutput->create();
-        updateEnablement(true);
-    } else {
-        m_waylandOutputDevice->setEnabled(DeviceInterface::Enablement::Disabled);
-        m_waylandOutput->destroy();
-        // xdg-output is destroyed in KWayland on wl_output going away.
-        updateEnablement(false);
-    }
-
-    emit enabledChanged();
 }
 
 QString AbstractWaylandOutput::description() const
 {
-    return QStringLiteral("%1 %2").arg(m_waylandOutputDevice->manufacturer()).arg(
-                m_waylandOutputDevice->model());
+    return m_manufacturer + ' ' + m_model;
 }
 
-void AbstractWaylandOutput::setWaylandMode(const QSize &size, int refreshRate)
+void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refreshRate)
 {
-    m_waylandOutput->setCurrentMode(size, refreshRate);
-    m_waylandOutputDevice->setCurrentMode(size, refreshRate);
-    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
-    m_waylandOutput->done();
-    m_xdgOutputV1->done();
+    if (m_modeSize != size || m_refreshRate != refreshRate) {
+        m_modeSize = size;
+        m_refreshRate = refreshRate;
+        emit geometryChanged();
+    }
 }
 
-void AbstractWaylandOutput::initInterfaces(const QString &model, const QString &manufacturer,
-                                           const QString &uuid, const QSize &physicalSize,
-                                           const QVector<DeviceInterface::Mode> &modes,
-                                           const QByteArray &edid)
+void AbstractWaylandOutput::initialize(const QString &model, const QString &manufacturer,
+                                       const QString &uuid, const QSize &physicalSize,
+                                       const QVector<Mode> &modes, const QByteArray &edid)
 {
-    m_waylandOutputDevice->setUuid(uuid);
+    m_manufacturer = manufacturer.isEmpty() ? i18n("unknown") : manufacturer;
+    m_model = model;
+    m_physicalSize = physicalSize;
+    m_uuid = uuid;
+    m_edid = edid;
+    m_modes = modes;
 
-    if (manufacturer.isEmpty()) {
-        m_waylandOutputDevice->setManufacturer(i18n("unknown"));
-    } else {
-        m_waylandOutputDevice->setManufacturer(manufacturer);
-    }
-    m_waylandOutputDevice->setEdid(edid);
-
-    m_waylandOutputDevice->setModel(model);
-    m_waylandOutputDevice->setPhysicalSize(physicalSize);
-
-    m_waylandOutput->setManufacturer(m_waylandOutputDevice->manufacturer());
-    m_waylandOutput->setModel(m_waylandOutputDevice->model());
-    m_waylandOutput->setPhysicalSize(m_waylandOutputDevice->physicalSize());
-
-    int i = 0;
-    for (auto mode : modes) {
-        qCDebug(KWIN_CORE).nospace() << "Adding mode " << ++i << ": " << mode.size << " [" << mode.refreshRate << "]";
-        m_waylandOutputDevice->addMode(mode);
-
-        KWaylandServer::OutputInterface::ModeFlags flags;
-        if (mode.flags & DeviceInterface::ModeFlag::Current) {
-            flags |= KWaylandServer::OutputInterface::ModeFlag::Current;
+    for (const Mode &mode : modes) {
+        if (mode.flags & ModeFlag::Current) {
+            m_modeSize = mode.size;
+            m_refreshRate = mode.refreshRate;
+            break;
         }
-        if (mode.flags & DeviceInterface::ModeFlag::Preferred) {
-            flags |= KWaylandServer::OutputInterface::ModeFlag::Preferred;
-        }
-        m_waylandOutput->addMode(mode.size, flags, mode.refreshRate);
     }
-
-    // start off enabled
-
-    m_xdgOutputV1->setName(name());
-    m_xdgOutputV1->setDescription(description());
-    m_xdgOutputV1->setLogicalSize(pixelSize() / scale());
-    m_waylandOutput->create();
-    m_waylandOutput->done();
-    m_xdgOutputV1->done();
 }
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const
 {
-    using Transform = DeviceInterface::Transform;
-    const Transform transform = m_waylandOutputDevice->transform();
-    if (transform == Transform::Rotated90 || transform == Transform::Rotated270 ||
-            transform == Transform::Flipped90 || transform == Transform::Flipped270) {
+    if (m_transform == Transform::Rotated90 || m_transform == Transform::Rotated270 ||
+            m_transform == Transform::Flipped90 || m_transform == Transform::Flipped270) {
         return size.transposed();
     }
     return size;
 }
 
-void AbstractWaylandOutput::setTransform(Transform transform)
+void AbstractWaylandOutput::setTransformInternal(Transform transform)
 {
-    const auto deviceTransform = toDeviceTransform(transform);
-    if (deviceTransform == m_waylandOutputDevice->transform()) {
-        return;
+    if (m_transform != transform) {
+        m_transform = transform;
+        emit transformChanged();
+        emit modeChanged();
     }
-    setTransform(deviceTransform);
-    emit modeChanged();
 }
 
 AbstractWaylandOutput::Transform AbstractWaylandOutput::transform() const
 {
-    return static_cast<Transform>(m_waylandOutputDevice->transform());
+    return m_transform;
+}
+
+void AbstractWaylandOutput::setDpmsModeInternal(DpmsMode dpmsMode)
+{
+    if (m_dpmsMode != dpmsMode) {
+        m_dpmsMode = dpmsMode;
+        emit dpmsModeChanged();
+    }
+}
+
+void AbstractWaylandOutput::setDpmsMode(DpmsMode mode)
+{
+    Q_UNUSED(mode)
+}
+
+AbstractWaylandOutput::DpmsMode AbstractWaylandOutput::dpmsMode() const
+{
+    return m_dpmsMode;
 }
 
 QMatrix4x4 AbstractWaylandOutput::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)

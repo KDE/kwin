@@ -57,12 +57,12 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     const int refreshRate = 60000; // TODO: can we get refresh rate data from Wayland host?
     m_renderLoop->setRefreshRate(refreshRate);
 
-    KWaylandServer::OutputDeviceInterface::Mode mode;
+    Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
-    mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
+    mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode }, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(backend()->initialOutputScale());
 }

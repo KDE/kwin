@@ -61,16 +61,16 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    KWaylandServer::OutputDeviceInterface::Mode mode;
+    Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
-    mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
+    mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
 
     // Physicial size must be adjusted, such that QPA calculates correct sizes of
     // internal elements.
     const QSize physicalSize = pixelSize / 96.0 * 25.4 / m_backend->initialOutputScale();
-    initInterfaces("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "UUID_TODO", physicalSize, { mode }, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(m_backend->initialOutputScale());
 

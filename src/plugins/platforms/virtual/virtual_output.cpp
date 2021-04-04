@@ -48,15 +48,15 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    KWaylandServer::OutputDeviceInterface::Mode mode;
+    Mode mode;
     mode.id = 0;
     mode.size = pixelSize;
-    mode.flags = KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
+    mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initInterfaces(QByteArray("model_").append(QByteArray::number(m_identifier)),
-                   QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
-                   QByteArray("UUID_").append(QByteArray::number(m_identifier)),
-                   pixelSize, { mode }, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
+    initialize(QByteArray("model_").append(QByteArray::number(m_identifier)),
+               QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
+               QByteArray("UUID_").append(QByteArray::number(m_identifier)),
+               pixelSize, { mode }, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
     setGeometry(QRect(logicalPosition, pixelSize));
 }
 

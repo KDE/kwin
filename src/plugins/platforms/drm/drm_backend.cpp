@@ -115,7 +115,7 @@ void DrmBackend::turnOutputsOn()
 {
     m_dpmsFilter.reset();
     for (auto it = m_enabledOutputs.constBegin(), end = m_enabledOutputs.constEnd(); it != end; it++) {
-        (*it)->updateDpms(KWaylandServer::OutputInterface::DpmsMode::On);
+        (*it)->setDpmsMode(AbstractWaylandOutput::DpmsMode::On);
     }
 }
 
@@ -372,7 +372,7 @@ void DrmBackend::readOutputsConfiguration()
         (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
         if (outputConfig.hasKey("Scale"))
             (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
-        (*it)->setTransform(stringToTransform(outputConfig.readEntry("Transform", "normal")));
+        (*it)->setTransformInternal(stringToTransform(outputConfig.readEntry("Transform", "normal")));
         pos.setX(pos.x() + (*it)->geometry().width());
         if (outputConfig.hasKey("Mode")) {
             QString mode = outputConfig.readEntry("Mode");
