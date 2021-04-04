@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     new XdgShellInterface(&display, &display);
     OutputInterface *output = new OutputInterface(&display, &display);
     output->setPhysicalSize(QSize(10, 10));
-    output->addMode(QSize(1024, 768));
+    output->setMode(QSize(1024, 768));
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();

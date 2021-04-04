@@ -54,15 +54,9 @@ public:
         Flipped180,
         Flipped270
     };
-    enum class ModeFlag {
-        Current = 1,
-        Preferred = 2
-    };
-    Q_DECLARE_FLAGS(ModeFlags, ModeFlag)
     struct Mode {
         QSize size = QSize();
         int refreshRate = 60000;
-        ModeFlags flags;
     };
     enum class DpmsMode {
         On,
@@ -83,7 +77,7 @@ public:
     int scale() const;
     SubPixel subPixel() const;
     Transform transform() const;
-    QList<Mode> modes() const;
+    Mode mode() const;
     bool isDpmsSupported() const;
     DpmsMode dpmsMode() const;
 
@@ -94,8 +88,8 @@ public:
     void setScale(int scale);
     void setSubPixel(SubPixel subPixel);
     void setTransform(Transform transform);
-    void addMode(const QSize &size, ModeFlags flags = ModeFlags(), int refreshRate = 60000);
-    void setCurrentMode(const QSize &size, int refreshRate = 60000);
+    void setMode(const Mode &mode);
+    void setMode(const QSize &size, int refreshRate = 60000);
 
     /**
      * Sets whether Dpms is supported for this output.
@@ -136,8 +130,7 @@ Q_SIGNALS:
     void scaleChanged(int);
     void subPixelChanged(SubPixel);
     void transformChanged(Transform);
-    void modesChanged();
-    void currentModeChanged();
+    void modeChanged();
     void dpmsModeChanged();
     void dpmsSupportedChanged();
 
@@ -159,7 +152,6 @@ private:
 
 } // namespace KWaylandServer
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWaylandServer::OutputInterface::ModeFlags)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::SubPixel)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::Transform)
 Q_DECLARE_METATYPE(KWaylandServer::OutputInterface::DpmsMode)

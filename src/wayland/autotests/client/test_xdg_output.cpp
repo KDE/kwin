@@ -59,8 +59,7 @@ void TestXdgOutput::init()
     QVERIFY(m_display->isRunning());
 
     m_serverOutput = new OutputInterface(m_display, this);
-    m_serverOutput->addMode(QSize(1920, 1080), OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
-    m_serverOutput->setCurrentMode(QSize(1920, 1080));
+    m_serverOutput->setMode(QSize(1920, 1080));
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
     m_serverXdgOutput =  m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);

@@ -26,7 +26,7 @@ public:
 
     void sendScale(Resource *resource);
     void sendGeometry(Resource *resource);
-    void sendMode(Resource *resource, const OutputInterface::Mode &mode);
+    void sendMode(Resource *resource);
     void sendDone(Resource *resource);
 
     void broadcastGeometry();
@@ -40,7 +40,7 @@ public:
     int scale = 1;
     OutputInterface::SubPixel subPixel = OutputInterface::SubPixel::Unknown;
     OutputInterface::Transform transform = OutputInterface::Transform::Normal;
-    QList<OutputInterface::Mode> modes;
+    OutputInterface::Mode mode;
     struct {
         OutputInterface::DpmsMode mode = OutputInterface::DpmsMode::Off;
         bool supported = false;
@@ -58,18 +58,9 @@ OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface
 {
 }
 
-void OutputInterfacePrivate::sendMode(Resource *resource, const OutputInterface::Mode &mode)
+void OutputInterfacePrivate::sendMode(Resource *resource)
 {
-    quint32 flags = 0;
-
-    if (mode.flags & OutputInterface::ModeFlag::Current) {
-        flags |= mode_current;
-    }
-    if (mode.flags & OutputInterface::ModeFlag::Preferred) {
-        flags |= mode_preferred;
-    }
-
-    send_mode(resource->handle, flags, mode.size.width(), mode.size.height(), mode.refreshRate);
+    send_mode(resource->handle, mode_current, mode.size.width(), mode.size.height(), mode.refreshRate);
 }
 
 void OutputInterfacePrivate::sendScale(Resource *resource)
@@ -154,21 +145,7 @@ void OutputInterfacePrivate::output_release(Resource *resource)
 
 void OutputInterfacePrivate::output_bind_resource(Resource *resource)
 {
-    auto currentModeIt = modes.constEnd();
-    for (auto it = modes.constBegin(); it != modes.constEnd(); ++it) {
-        const OutputInterface::Mode &mode = *it;
-        if (mode.flags.testFlag(OutputInterface::ModeFlag::Current)) {
-            // needs to be sent as last mode
-            currentModeIt = it;
-            continue;
-        }
-        sendMode(resource, mode);
-    }
-
-    if (currentModeIt != modes.constEnd()) {
-        sendMode(resource, *currentModeIt);
-    }
-
+    sendMode(resource);
     sendScale(resource);
     sendGeometry(resource);
     sendDone(resource);
@@ -198,121 +175,40 @@ OutputInterface::~OutputInterface()
 
 QSize OutputInterface::pixelSize() const
 {
-    auto it = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    if (it == d->modes.constEnd()) {
-        return QSize();
-    }
-    return (*it).size;
+    return d->mode.size;
 }
 
 int OutputInterface::refreshRate() const
 {
-    auto it = std::find_if(d->modes.constBegin(), d->modes.constEnd(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    if (it == d->modes.constEnd()) {
-        return 60000;
-    }
-    return (*it).refreshRate;
+    return d->mode.refreshRate;
 }
 
-void OutputInterface::addMode(const QSize &size, OutputInterface::ModeFlags flags, int refreshRate)
+OutputInterface::Mode OutputInterface::mode() const
 {
-    auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    if (currentModeIt == d->modes.end() && !flags.testFlag(ModeFlag::Current)) {
-        // no mode with current flag - enforce
-        flags |= ModeFlag::Current;
-    }
-    if (currentModeIt != d->modes.end() && flags.testFlag(ModeFlag::Current)) {
-        // another mode has the current flag - remove
-        (*currentModeIt).flags &= ~uint(ModeFlag::Current);
+    return d->mode;
+}
+
+void OutputInterface::setMode(const Mode &mode)
+{
+    if (d->mode.size == mode.size && d->mode.refreshRate == mode.refreshRate) {
+        return;
     }
 
-    if (flags.testFlag(ModeFlag::Preferred)) {
-        // remove from existing Preferred mode
-        auto preferredIt = std::find_if(d->modes.begin(), d->modes.end(),
-            [](const Mode &mode) {
-                return mode.flags.testFlag(ModeFlag::Preferred);
-            }
-        );
-        if (preferredIt != d->modes.end()) {
-            (*preferredIt).flags &= ~uint(ModeFlag::Preferred);
-        }
-    }
-
-    auto modeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [size,refreshRate](const Mode &mode) {
-            return mode.size == size && mode.refreshRate == refreshRate;
-        }
-    );
-
-    if (modeIt != d->modes.end()) {
-        if ((*modeIt).flags == flags) {
-            // nothing to do
-            return;
-        }
-        (*modeIt).flags = flags;
-    } else {
-        Mode mode;
-        mode.size = size;
-        mode.refreshRate = refreshRate;
-        mode.flags = flags;
-        modeIt = d->modes.insert(d->modes.end(), mode);
-    }
+    d->mode = mode;
 
     const auto outputResources = d->resourceMap();
     for (OutputInterfacePrivate::Resource *resource : outputResources) {
-        d->sendMode(resource, *modeIt);
+        d->sendMode(resource);
     }
 
-    emit modesChanged();
-    if (flags.testFlag(ModeFlag::Current)) {
-        emit refreshRateChanged(refreshRate);
-        emit pixelSizeChanged(size);
-        emit currentModeChanged();
-    }
+    emit modeChanged();
+    emit refreshRateChanged(mode.refreshRate);
+    emit pixelSizeChanged(mode.size);
 }
 
-void OutputInterface::setCurrentMode(const QSize &size, int refreshRate)
+void OutputInterface::setMode(const QSize &size, int refreshRate)
 {
-    auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [](const Mode &mode) {
-            return mode.flags.testFlag(ModeFlag::Current);
-        }
-    );
-    if (currentModeIt != d->modes.end()) {
-        // another mode has the current flag - remove
-        (*currentModeIt).flags &= ~uint(ModeFlag::Current);
-    }
-
-    auto existingModeIt = std::find_if(d->modes.begin(), d->modes.end(),
-        [size,refreshRate](const Mode &mode) {
-            return mode.size == size && mode.refreshRate == refreshRate;
-        }
-    );
-
-    Q_ASSERT(existingModeIt != d->modes.end());
-    (*existingModeIt).flags |= ModeFlag::Current;
-
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
-        d->sendMode(resource, *existingModeIt);
-    }
-
-    emit modesChanged();
-    emit refreshRateChanged((*existingModeIt).refreshRate);
-    emit pixelSizeChanged((*existingModeIt).size);
-    emit currentModeChanged();
+    setMode({size, refreshRate});
 }
 
 QSize OutputInterface::physicalSize() const
@@ -422,11 +318,6 @@ void OutputInterface::setTransform(Transform transform)
     d->transform = transform;
     d->broadcastGeometry();
     emit transformChanged(d->transform);
-}
-
-QList< OutputInterface::Mode > OutputInterface::modes() const
-{
-    return d->modes;
 }
 
 void OutputInterface::setDpmsMode(OutputInterface::DpmsMode mode)

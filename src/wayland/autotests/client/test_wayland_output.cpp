@@ -27,7 +27,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testRegistry();
-    void testModeChanges();
+    void testModeChange();
     void testScaleChange();
 
     void testSubPixel_data();
@@ -73,12 +73,7 @@ void TestWaylandOutput::init()
     m_serverOutput = new OutputInterface(m_display, this);
     QCOMPARE(m_serverOutput->pixelSize(), QSize());
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
-    m_serverOutput->addMode(QSize(800, 600), OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
-    QCOMPARE(m_serverOutput->pixelSize(), QSize(800, 600));
-    m_serverOutput->addMode(QSize(1024, 768));
-    m_serverOutput->addMode(QSize(1280, 1024), OutputInterface::ModeFlags(), 90000);
-    QCOMPARE(m_serverOutput->pixelSize(), QSize(800, 600));
-    m_serverOutput->setCurrentMode(QSize(1024, 768));
+    m_serverOutput->setMode(QSize(1024, 768));
     QCOMPARE(m_serverOutput->pixelSize(), QSize(1024, 768));
     QCOMPARE(m_serverOutput->refreshRate(), 60000);
     QCOMPARE(m_serverOutput->isDpmsSupported(), false);
@@ -192,22 +187,8 @@ void TestWaylandOutput::testRegistry()
     QCOMPARE(output.transform(), KWayland::Client::Output::Transform::Normal);
 }
 
-void TestWaylandOutput::testModeChanges()
+void TestWaylandOutput::testModeChange()
 {
-    // verify the server modes
-    using namespace KWaylandServer;
-    const auto serverModes = m_serverOutput->modes();
-    QCOMPARE(serverModes.count(), 3);
-    QCOMPARE(serverModes.at(0).size, QSize(800, 600));
-    QCOMPARE(serverModes.at(1).size, QSize(1024, 768));
-    QCOMPARE(serverModes.at(2).size, QSize(1280, 1024));
-    QCOMPARE(serverModes.at(0).refreshRate, 60000);
-    QCOMPARE(serverModes.at(1).refreshRate, 60000);
-    QCOMPARE(serverModes.at(2).refreshRate, 90000);
-    QCOMPARE(serverModes.at(0).flags, OutputInterface::ModeFlags(OutputInterface::ModeFlag::Preferred));
-    QCOMPARE(serverModes.at(1).flags, OutputInterface::ModeFlags(OutputInterface::ModeFlag::Current));
-    QCOMPARE(serverModes.at(2).flags, OutputInterface::ModeFlags());
-
     using namespace KWayland::Client;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -226,80 +207,26 @@ void TestWaylandOutput::testModeChanges()
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
-    QCOMPARE(modeAddedSpy.count(), 3);
-    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().size, QSize(800, 600));
+    QCOMPARE(modeAddedSpy.count(), 1);
+    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().size, QSize(1024, 768));
     QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().refreshRate, 60000);
-    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Preferred));
+    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current));
     QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().output, QPointer<Output>(&output));
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().size, QSize(1280, 1024));
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().refreshRate, 90000);
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::None));
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().output, QPointer<Output>(&output));
-    QCOMPARE(modeAddedSpy.at(2).first().value<Output::Mode>().size, QSize(1024, 768));
-    QCOMPARE(modeAddedSpy.at(2).first().value<Output::Mode>().refreshRate, 60000);
-    QCOMPARE(modeAddedSpy.at(2).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current));
-    QCOMPARE(modeAddedSpy.at(2).first().value<Output::Mode>().output, QPointer<Output>(&output));
-    const QList<Output::Mode> &modes = output.modes();
-    QCOMPARE(modes.size(), 3);
-    QCOMPARE(modes.at(0), modeAddedSpy.at(0).first().value<Output::Mode>());
-    QCOMPARE(modes.at(1), modeAddedSpy.at(1).first().value<Output::Mode>());
-    QCOMPARE(modes.at(2), modeAddedSpy.at(2).first().value<Output::Mode>());
-
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
-
-    // change the current mode
-    outputChanged.clear();
-    QSignalSpy modeChangedSpy(&output, &KWayland::Client::Output::modeChanged);
-    QVERIFY(modeChangedSpy.isValid());
-    m_serverOutput->setCurrentMode(QSize(800, 600));
-    m_serverOutput->done();
-    QVERIFY(modeChangedSpy.wait());
-    if (modeChangedSpy.size() == 1) {
-        QVERIFY(modeChangedSpy.wait());
-    }
-    QCOMPARE(modeChangedSpy.size(), 2);
-    // the one which lost the current flag
-    QCOMPARE(modeChangedSpy.first().first().value<Output::Mode>().size, QSize(1024, 768));
-    QCOMPARE(modeChangedSpy.first().first().value<Output::Mode>().refreshRate, 60000);
-    QCOMPARE(modeChangedSpy.first().first().value<Output::Mode>().flags, Output::Mode::Flags());
-    // the one which got the current flag
-    QCOMPARE(modeChangedSpy.last().first().value<Output::Mode>().size, QSize(800, 600));
-    QCOMPARE(modeChangedSpy.last().first().value<Output::Mode>().refreshRate, 60000);
-    QCOMPARE(modeChangedSpy.last().first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current | Output::Mode::Flag::Preferred));
-    QVERIFY(!outputChanged.isEmpty());
-    QCOMPARE(output.pixelSize(), QSize(800, 600));
-    const QList<Output::Mode> &modes2 = output.modes();
-    QCOMPARE(modes2.at(0).size, QSize(1280, 1024));
-    QCOMPARE(modes2.at(0).refreshRate, 90000);
-    QCOMPARE(modes2.at(0).flags, Output::Mode::Flag::None);
-    QCOMPARE(modes2.at(1).size, QSize(1024, 768));
-    QCOMPARE(modes2.at(1).refreshRate, 60000);
-    QCOMPARE(modes2.at(1).flags, Output::Mode::Flag::None);
-    QCOMPARE(modes2.at(2).size, QSize(800, 600));
-    QCOMPARE(modes2.at(2).refreshRate, 60000);
-    QCOMPARE(modes2.at(2).flags, Output::Mode::Flag::Current | Output::Mode::Flag::Preferred);
+    QCOMPARE(output.refreshRate(), 60000);
 
     // change once more
-    outputChanged.clear();
-    modeChangedSpy.clear();
-    m_serverOutput->setCurrentMode(QSize(1280, 1024), 90000);
+    m_serverOutput->setMode(QSize(1280, 1024), 90000);
     QCOMPARE(m_serverOutput->refreshRate(), 90000);
     m_serverOutput->done();
-    QVERIFY(modeChangedSpy.wait());
-    if (modeChangedSpy.size() == 1) {
-        QVERIFY(modeChangedSpy.wait());
-    }
-    QCOMPARE(modeChangedSpy.size(), 2);
-    // the one which lost the current flag
-    QCOMPARE(modeChangedSpy.first().first().value<Output::Mode>().size, QSize(800, 600));
-    QCOMPARE(modeChangedSpy.first().first().value<Output::Mode>().refreshRate, 60000);
-    QCOMPARE(modeChangedSpy.first().first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Preferred));
-    // the one which got the current flag
-    QCOMPARE(modeChangedSpy.last().first().value<Output::Mode>().size, QSize(1280, 1024));
-    QCOMPARE(modeChangedSpy.last().first().value<Output::Mode>().refreshRate, 90000);
-    QCOMPARE(modeChangedSpy.last().first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current));
-    QVERIFY(!outputChanged.isEmpty());
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(modeAddedSpy.count(), 2);
+    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().size, QSize(1280, 1024));
+    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().refreshRate, 90000);
+    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current));
+    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().output, QPointer<Output>(&output));
     QCOMPARE(output.pixelSize(), QSize(1280, 1024));
+    QCOMPARE(output.refreshRate(), 90000);
 }
 
 void TestWaylandOutput::testScaleChange()
