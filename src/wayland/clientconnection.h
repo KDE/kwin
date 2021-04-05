@@ -18,6 +18,7 @@ struct wl_resource;
 namespace KWaylandServer
 {
 
+class ClientConnectionPrivate;
 class Display;
 
 /**
@@ -130,8 +131,7 @@ Q_SIGNALS:
 private:
     friend class Display;
     explicit ClientConnection(wl_client *c, Display *parent);
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<ClientConnectionPrivate> d;
 };
 
 }

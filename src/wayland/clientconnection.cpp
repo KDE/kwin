@@ -14,11 +14,11 @@
 namespace KWaylandServer
 {
 
-class ClientConnection::Private
+class ClientConnectionPrivate
 {
 public:
-    explicit Private(wl_client *c, Display *display, ClientConnection *q);
-    ~Private();
+    ClientConnectionPrivate(wl_client *c, Display *display, ClientConnection *q);
+    ~ClientConnectionPrivate();
 
     wl_client *client;
     Display *display;
@@ -31,12 +31,12 @@ private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
     ClientConnection *q;
     wl_listener listener;
-    static QVector<Private*> s_allClients;
+    static QVector<ClientConnectionPrivate *> s_allClients;
 };
 
-QVector<ClientConnection::Private*> ClientConnection::Private::s_allClients;
+QVector<ClientConnectionPrivate *> ClientConnectionPrivate::s_allClients;
 
-ClientConnection::Private::Private(wl_client *c, Display *display, ClientConnection *q)
+ClientConnectionPrivate::ClientConnectionPrivate(wl_client *c, Display *display, ClientConnection *q)
     : client(c)
     , display(display)
     , q(q)
@@ -48,7 +48,7 @@ ClientConnection::Private::Private(wl_client *c, Display *display, ClientConnect
     executablePath = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
 }
 
-ClientConnection::Private::~Private()
+ClientConnectionPrivate::~ClientConnectionPrivate()
 {
     if (client) {
         wl_list_remove(&listener.link);
@@ -56,12 +56,12 @@ ClientConnection::Private::~Private()
     s_allClients.removeAt(s_allClients.indexOf(this));
 }
 
-void ClientConnection::Private::destroyListenerCallback(wl_listener *listener, void *data)
+void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, void *data)
 {
     Q_UNUSED(listener)
     wl_client *client = reinterpret_cast<wl_client*>(data);
     auto it = std::find_if(s_allClients.constBegin(), s_allClients.constEnd(),
-        [client](Private *c) {
+        [client](ClientConnectionPrivate *c) {
             return c->client == client;
         }
     );
@@ -76,7 +76,7 @@ void ClientConnection::Private::destroyListenerCallback(wl_listener *listener, v
 
 ClientConnection::ClientConnection(wl_client *c, Display *parent)
     : QObject(parent)
-    , d(new Private(c, parent, this))
+    , d(new ClientConnectionPrivate(c, parent, this))
 {
 }
 
