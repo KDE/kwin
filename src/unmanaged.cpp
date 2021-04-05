@@ -77,7 +77,9 @@ void Unmanaged::initialize()
     // and us setting up damage tracking.  If the client wins we won't get a damage event even
     // though the window has been painted.  To avoid this we mark the whole window as damaged
     // and schedule a repaint immediately after creating the damage object.
-    surfaceItem()->addDamage(surfaceItem()->rect());
+    if (auto item = surfaceItem()) {
+        item->addDamage(item->rect());
+    }
 }
 
 bool Unmanaged::track(xcb_window_t w)
