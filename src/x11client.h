@@ -219,6 +219,8 @@ public:
     xcb_timestamp_t userTime() const override;
     bool hasUserTimeSupport() const;
 
+    virtual qreal bufferScale() const override;
+
     /// Does 'delete c;'
     static void deleteClient(X11Client *c);
 

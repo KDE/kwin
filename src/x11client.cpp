@@ -13,6 +13,7 @@
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "abstract_output.h"
 #include "atoms.h"
 #include "client_machine.h"
 #include "composite.h"
@@ -23,7 +24,9 @@
 #include "geometrytip.h"
 #include "group.h"
 #include "netinfo.h"
+#include "platform.h"
 #include "screens.h"
+#include "wayland_server.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "workspace.h"
@@ -190,6 +193,22 @@ X11Client::~X11Client()
 void X11Client::deleteClient(X11Client *c)
 {
     delete c;
+}
+
+qreal X11Client::bufferScale() const
+{
+    if (!waylandServer()) {
+        return 1.0;
+    }
+
+    const Platform *platform = kwinApp()->platform();
+    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
+    for (auto output : outputs) {
+        if (isOnOutput(output)) {
+            return output->scale();
+        }
+    }
+    return 1.0;
 }
 
 /**
