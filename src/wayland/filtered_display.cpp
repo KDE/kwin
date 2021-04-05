@@ -21,22 +21,22 @@ public:
     FilteredDisplay *q;
     static bool globalFilterCallback(const wl_client *client, const wl_global *global, void *data)
     {
-        auto t = static_cast<FilteredDisplay::Private*>(data);
-        auto clientConnection = t->q->getConnection(const_cast<wl_client*>(client));
+        auto t = static_cast<FilteredDisplay::Private *>(data);
+        auto clientConnection = t->q->getConnection(const_cast<wl_client *>(client));
         auto interface = wl_global_get_interface(global);
         auto name = QByteArray::fromRawData(interface->name, strlen(interface->name));
         return t->q->allowInterface(clientConnection, name);
     };
 };
 
-FilteredDisplay::Private::Private(FilteredDisplay *_q):
-    q(_q)
-{}
+FilteredDisplay::Private::Private(FilteredDisplay *_q)
+    : q(_q)
+{
+}
 
-
-FilteredDisplay::FilteredDisplay(QObject *parent):
-    Display(parent),
-    d(new Private(this))
+FilteredDisplay::FilteredDisplay(QObject *parent)
+    : Display(parent)
+    , d(new Private(this))
 {
     connect(this, &Display::runningChanged, [this](bool running) {
         if (!running) {
