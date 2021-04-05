@@ -279,6 +279,10 @@ bool DrmBackend::initialize()
 
 void DrmBackend::addOutput(DrmOutput *o)
 {
+    if (!m_active) {
+        o->renderLoop()->inhibit();
+    }
+
     m_outputs.append(o);
     m_enabledOutputs.append(o);
     emit o->gpu()->outputEnabled(o);
