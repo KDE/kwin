@@ -14,14 +14,14 @@
 namespace KWaylandServer
 {
 
-class FilteredDisplay::Private
+class FilteredDisplayPrivate
 {
 public:
-    Private(FilteredDisplay *_q);
+    FilteredDisplayPrivate(FilteredDisplay *_q);
     FilteredDisplay *q;
     static bool globalFilterCallback(const wl_client *client, const wl_global *global, void *data)
     {
-        auto t = static_cast<FilteredDisplay::Private *>(data);
+        auto t = static_cast<FilteredDisplayPrivate *>(data);
         auto clientConnection = t->q->getConnection(const_cast<wl_client *>(client));
         auto interface = wl_global_get_interface(global);
         auto name = QByteArray::fromRawData(interface->name, strlen(interface->name));
@@ -29,20 +29,20 @@ public:
     };
 };
 
-FilteredDisplay::Private::Private(FilteredDisplay *_q)
+FilteredDisplayPrivate::FilteredDisplayPrivate(FilteredDisplay *_q)
     : q(_q)
 {
 }
 
 FilteredDisplay::FilteredDisplay(QObject *parent)
     : Display(parent)
-    , d(new Private(this))
+    , d(new FilteredDisplayPrivate(this))
 {
     connect(this, &Display::runningChanged, [this](bool running) {
         if (!running) {
             return;
         }
-        wl_display_set_global_filter(*this, Private::globalFilterCallback, d.data());
+        wl_display_set_global_filter(*this, FilteredDisplayPrivate::globalFilterCallback, d.data());
     });
 }
 

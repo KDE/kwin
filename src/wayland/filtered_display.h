@@ -13,6 +13,8 @@
 namespace KWaylandServer
 {
 
+class FilteredDisplayPrivate;
+
 /**
  * Server Implementation that allows one to restrict which globals are available to which clients
  *
@@ -35,8 +37,7 @@ public:
      */
     virtual bool allowInterface(ClientConnection *client, const QByteArray &interfaceName) = 0;
 private:
-    class Private;
-    QScopedPointer<Private> d;
+    QScopedPointer<FilteredDisplayPrivate> d;
 };
 
 }
