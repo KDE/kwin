@@ -5,13 +5,12 @@
 */
 #pragma once
 
+#include <KWaylandServer/kwaylandserver_export.h>
+
 #include <QObject>
 #include <QPoint>
 #include <QSize>
 #include <QVector>
-
-#include <KWaylandServer/kwaylandserver_export.h>
-#include "global.h"
 
 struct wl_resource;
 

@@ -11,7 +11,8 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "resource.h"
+struct wl_client;
+struct wl_resource;
 
 namespace KWaylandServer
 {

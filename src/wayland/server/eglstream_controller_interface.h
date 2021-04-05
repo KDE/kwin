@@ -5,7 +5,6 @@
 */
 #pragma once
 
-#include "global.h"
 #include "surface_interface.h"
 
 #include <KWaylandServer/kwaylandserver_export.h>

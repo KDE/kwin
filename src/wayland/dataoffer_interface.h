@@ -10,7 +10,6 @@
 
 #include <KWaylandServer/kwaylandserver_export.h>
 
-#include "resource.h"
 #include "datadevicemanager_interface.h"
 
 namespace KWaylandServer

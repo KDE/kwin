@@ -6,9 +6,7 @@
 
 #pragma once
 
-#include "resource.h"
 #include "clientconnection.h"
-
 #include "datadevicemanager_interface.h"
 
 #include <KWaylandServer/kwaylandserver_export.h>

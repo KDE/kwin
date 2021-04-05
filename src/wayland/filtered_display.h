@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "display.h"
 
 #include <KWaylandServer/kwaylandserver_export.h>
