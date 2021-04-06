@@ -78,6 +78,11 @@ void AbstractWaylandOutput::setGlobalPos(const QPoint &pos)
     }
 }
 
+QString AbstractWaylandOutput::eisaId() const
+{
+    return m_eisaId;
+}
+
 QString AbstractWaylandOutput::manufacturer() const
 {
     return m_manufacturer;
@@ -197,9 +202,12 @@ void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refres
 }
 
 void AbstractWaylandOutput::initialize(const QString &model, const QString &manufacturer,
+                                       const QString &eisaId, const QString &serialNumber,
                                        const QString &uuid, const QSize &physicalSize,
                                        const QVector<Mode> &modes, const QByteArray &edid)
 {
+    m_serialNumber = serialNumber;
+    m_eisaId = eisaId;
     m_manufacturer = manufacturer.isEmpty() ? i18n("unknown") : manufacturer;
     m_model = model;
     m_physicalSize = physicalSize;

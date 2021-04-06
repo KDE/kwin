@@ -62,7 +62,7 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initialize("model_TODO", "manufacturer_TODO", "UUID_TODO", pixelSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", "UUID_TODO", pixelSize, { mode }, {});
     setGeometry(logicalPosition, pixelSize);
     setScale(backend()->initialOutputScale());
 }

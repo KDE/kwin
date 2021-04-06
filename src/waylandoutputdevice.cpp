@@ -28,6 +28,8 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDevice->setGlobalPosition(output->geometry().topLeft());
     m_outputDevice->setScaleF(output->scale());
     m_outputDevice->setTransform(kwinTransformToOutputDeviceTransform(output->transform()));
+    m_outputDevice->setEisaId(output->eisaId());
+    m_outputDevice->setSerialNumber(output->serialNumber());
 
     const auto modes = output->modes();
     for (const AbstractWaylandOutput::Mode &mode : modes) {

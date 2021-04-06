@@ -98,6 +98,7 @@ public:
         return m_internal;
     }
 
+    QString eisaId() const;
     QString manufacturer() const override;
     QString model() const override;
     QString serialNumber() const override;
@@ -136,6 +137,7 @@ Q_SIGNALS:
 
 protected:
     void initialize(const QString &model, const QString &manufacturer,
+                    const QString &eisaId, const QString &serialNumber,
                     const QString &uuid, const QSize &physicalSize,
                     const QVector<Mode> &modes, const QByteArray &edid);
 
@@ -170,6 +172,7 @@ protected:
 
 private:
     QString m_name;
+    QString m_eisaId;
     QString m_manufacturer;
     QString m_model;
     QString m_serialNumber;

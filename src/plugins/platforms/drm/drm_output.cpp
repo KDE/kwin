@@ -240,7 +240,9 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
     }
 
     setName(m_conn->connectorName());
-    initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(), m_uuid, m_conn->physicalSize(), modes, m_conn->edid()->raw());
+    initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(),
+               m_conn->edid()->eisaId(), m_conn->edid()->serialNumber(),
+               m_uuid, m_conn->physicalSize(), modes, m_conn->edid()->raw());
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
