@@ -1777,7 +1777,7 @@ NET::WindowType XdgPopupClient::windowType(bool direct, int supported_types) con
 {
     Q_UNUSED(direct)
     Q_UNUSED(supported_types)
-    return NET::Normal;
+    return NET::Unknown;
 }
 
 bool XdgPopupClient::hasPopupGrab() const
