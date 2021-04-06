@@ -107,7 +107,6 @@ private:
     void initOutputDevice(drmModeConnector *connector);
 
     bool isCurrentMode(const drmModeModeInfo *mode) const;
-    void initUuid();
 
     void atomicEnable();
     void atomicDisable();
@@ -137,7 +136,6 @@ private:
     bool m_lastGbm = false;
     drmModeModeInfo m_mode;
     DpmsMode m_dpmsModePending = DpmsMode::On;
-    QByteArray m_uuid;
     RenderLoop *m_renderLoop;
 
     uint32_t m_blobId = 0;

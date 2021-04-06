@@ -429,7 +429,7 @@ public:
         return Outputs();
     }
     AbstractOutput *findOutput(int screenId);
-    AbstractOutput *findOutput(const QString &uuid);
+    AbstractOutput *findOutput(const QUuid &uuid);
 
     /**
      * A string of information to include in kwin debug output

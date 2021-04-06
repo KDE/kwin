@@ -57,7 +57,6 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
                QByteArray("manufacturer_").append(QByteArray::number(m_identifier)),
                QByteArray("eisa_").append(QByteArray::number(m_identifier)),
                QByteArray("serial_").append(QByteArray::number(m_identifier)),
-               QByteArray("UUID_").append(QByteArray::number(m_identifier)),
                pixelSize, { mode }, QByteArray("EDID_").append(QByteArray::number(m_identifier)));
     setGeometry(QRect(logicalPosition, pixelSize));
 }

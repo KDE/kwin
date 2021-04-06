@@ -15,6 +15,7 @@
 #include <QObject>
 #include <QRect>
 #include <QSize>
+#include <QUuid>
 #include <QVector>
 
 namespace KWaylandServer
@@ -102,7 +103,7 @@ public:
      *
      * Default implementation returns an empty byte array.
      */
-    virtual QString uuid() const;
+    virtual QUuid uuid() const;
 
     /**
      * Returns @c true if the output is enabled; otherwise returns @c false.

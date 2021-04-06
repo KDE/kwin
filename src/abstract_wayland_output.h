@@ -80,7 +80,7 @@ public:
     explicit AbstractWaylandOutput(QObject *parent = nullptr);
 
     QString name() const override;
-    QString uuid() const override;
+    QUuid uuid() const override;
 
     QSize modeSize() const;
 
@@ -148,7 +148,7 @@ Q_SIGNALS:
 protected:
     void initialize(const QString &model, const QString &manufacturer,
                     const QString &eisaId, const QString &serialNumber,
-                    const QString &uuid, const QSize &physicalSize,
+                    const QSize &physicalSize,
                     const QVector<Mode> &modes, const QByteArray &edid);
 
     QPoint globalPos() const;
@@ -187,7 +187,7 @@ private:
     QString m_manufacturer;
     QString m_model;
     QString m_serialNumber;
-    QString m_uuid;
+    QUuid m_uuid;
     QSize m_modeSize;
     QSize m_physicalSize;
     QPoint m_position;

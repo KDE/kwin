@@ -70,7 +70,7 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
-    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", "UUID_TODO", physicalSize, { mode }, {});
+    initialize("model_TODO", "manufacturer_TODO", "eisa_TODO", "serial_TODO", physicalSize, { mode }, {});
 }
 
 void FramebufferOutput::vblank(std::chrono::nanoseconds timestamp)

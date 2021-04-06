@@ -207,7 +207,6 @@ static AbstractWaylandOutput::SubPixel drmSubPixelToKWinSubPixel(drmModeSubPixel
 
 bool DrmOutput::init(drmModeConnector *connector)
 {
-    initUuid();
     if (m_gpu->atomicModeSetting() && !m_primaryPlane) {
         return false;
     }
@@ -224,16 +223,6 @@ bool DrmOutput::init(drmModeConnector *connector)
 
     setDpmsMode(DpmsMode::On);
     return true;
-}
-
-void DrmOutput::initUuid()
-{
-    QCryptographicHash hash(QCryptographicHash::Md5);
-    hash.addData(QByteArray::number(m_conn->id()));
-    hash.addData(m_conn->edid()->eisaId());
-    hash.addData(m_conn->edid()->monitorName());
-    hash.addData(m_conn->edid()->serialNumber());
-    m_uuid = hash.result().toHex().left(10);
 }
 
 void DrmOutput::initOutputDevice(drmModeConnector *connector)
@@ -263,7 +252,7 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
     setName(m_conn->connectorName());
     initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(),
                m_conn->edid()->eisaId(), m_conn->edid()->serialNumber(),
-               m_uuid, m_conn->physicalSize(), modes, m_conn->edid()->raw());
+               m_conn->physicalSize(), modes, m_conn->edid()->raw());
 }
 
 bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
@@ -517,7 +506,7 @@ void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate
         }
     }
     qCWarning(KWIN_DRM, "Could not find a fitting mode with size=%dx%d and refresh rate %d for output %s",
-              width, height, refreshRate, uuid().constData());
+              width, height, refreshRate, qPrintable(name()));
 }
 
 void DrmOutput::updateMode(int modeIndex)

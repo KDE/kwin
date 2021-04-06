@@ -45,7 +45,7 @@ QString AbstractWaylandOutput::name() const
     return m_name;
 }
 
-QString AbstractWaylandOutput::uuid() const
+QUuid AbstractWaylandOutput::uuid() const
 {
     return m_uuid;
 }
@@ -211,9 +211,19 @@ void AbstractWaylandOutput::setCurrentModeInternal(const QSize &size, int refres
     }
 }
 
+static QUuid generateOutputId(const QString &eisaId, const QString &model,
+                              const QString &serialNumber, const QString &name)
+{
+    static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
+    static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));
+
+    const QString payload = QStringList{name, eisaId, model, serialNumber}.join(':');
+    return QUuid::createUuidV5(kwinNs, payload);
+}
+
 void AbstractWaylandOutput::initialize(const QString &model, const QString &manufacturer,
                                        const QString &eisaId, const QString &serialNumber,
-                                       const QString &uuid, const QSize &physicalSize,
+                                       const QSize &physicalSize,
                                        const QVector<Mode> &modes, const QByteArray &edid)
 {
     m_serialNumber = serialNumber;
@@ -221,9 +231,9 @@ void AbstractWaylandOutput::initialize(const QString &model, const QString &manu
     m_manufacturer = manufacturer.isEmpty() ? i18n("unknown") : manufacturer;
     m_model = model;
     m_physicalSize = physicalSize;
-    m_uuid = uuid;
     m_edid = edid;
     m_modes = modes;
+    m_uuid = generateOutputId(m_eisaId, m_model, m_serialNumber, m_name);
 
     for (const Mode &mode : modes) {
         if (mode.flags & ModeFlag::Current) {

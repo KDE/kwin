@@ -372,7 +372,7 @@ void DrmBackend::readOutputsConfiguration()
     QPoint pos(0, 0);
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
         qCDebug(KWIN_DRM) << "Reading output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
-        const auto outputConfig = configGroup.group((*it)->uuid());
+        const auto outputConfig = configGroup.group((*it)->uuid().toString(QUuid::WithoutBraces));
         (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
         if (outputConfig.hasKey("Scale"))
             (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
@@ -404,7 +404,7 @@ void DrmBackend::writeOutputsConfiguration()
     // default position goes from left to right
     for (auto it = m_outputs.cbegin(); it != m_outputs.cend(); ++it) {
         qCDebug(KWIN_DRM) << "Writing output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
-        auto outputConfig = configGroup.group((*it)->uuid());
+        auto outputConfig = configGroup.group((*it)->uuid().toString(QUuid::WithoutBraces));
         outputConfig.writeEntry("Scale", (*it)->scale());
         outputConfig.writeEntry("Transform", transformToString((*it)->transform()));
         QString mode;
@@ -422,11 +422,11 @@ QString DrmBackend::generateOutputConfigurationUuid() const
     auto it = m_outputs.constBegin();
     if (m_outputs.size() == 1) {
         // special case: one output
-        return (*it)->uuid();
+        return (*it)->uuid().toString(QUuid::WithoutBraces);
     }
     QCryptographicHash hash(QCryptographicHash::Md5);
     for (const DrmOutput *output: qAsConst(m_outputs)) {
-        hash.addData(output->uuid().toLocal8Bit());
+        hash.addData(output->uuid().toByteArray());
     }
     return QString::fromLocal8Bit(hash.result().toHex().left(10));
 }
