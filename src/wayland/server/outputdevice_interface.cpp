@@ -62,7 +62,7 @@ public:
 
     QByteArray edid;
     OutputDeviceInterface::Enablement enabled = OutputDeviceInterface::Enablement::Enabled;
-    QString uuid;
+    QUuid uuid;
     QPointer<Display> display;
     OutputDeviceInterface *q;
 
@@ -568,7 +568,7 @@ OutputDeviceInterface::Enablement OutputDeviceInterface::enabled() const
     return d->enabled;
 }
 
-void OutputDeviceInterface::setUuid(const QString &uuid)
+void OutputDeviceInterface::setUuid(const QUuid &uuid)
 {
     if (d->uuid != uuid) {
         d->uuid = uuid;
@@ -577,7 +577,7 @@ void OutputDeviceInterface::setUuid(const QString &uuid)
     }
 }
 
-QString OutputDeviceInterface::uuid() const
+QUuid OutputDeviceInterface::uuid() const
 {
     return d->uuid;
 }
@@ -598,7 +598,7 @@ void OutputDeviceInterfacePrivate::sendEnabled(Resource *resource)
 
 void OutputDeviceInterfacePrivate::sendUuid(Resource *resource)
 {
-    send_uuid(resource->handle, uuid);
+    send_uuid(resource->handle, uuid.toString(QUuid::WithoutBraces));
 }
 
 void OutputDeviceInterfacePrivate::updateEnabled()

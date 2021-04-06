@@ -81,8 +81,7 @@ void TestWaylandOutputDevice::init()
     QVERIFY(m_display->isRunning());
 
     m_serverOutputDevice = new OutputDeviceInterface(m_display, this);
-    m_serverOutputDevice->setUuid("1337");
-
+    m_serverOutputDevice->setUuid(QUuid("00000000-0000-0000-0000-000000000000"));
 
     OutputDeviceInterface::Mode m0;
     m0.id = 0;
@@ -228,7 +227,7 @@ void TestWaylandOutputDevice::testRegistry()
 
     QCOMPARE(output.edid(), m_edid);
     QCOMPARE(output.enabled(), OutputDevice::Enablement::Enabled);
-    QCOMPARE(output.uuid(), QStringLiteral("1337"));
+    QCOMPARE(output.uuid(), QStringLiteral("00000000-0000-0000-0000-000000000000"));
     QCOMPARE(output.serialNumber(), m_serialNumber);
     QCOMPARE(output.eisaId(), m_eidaId);
 }
@@ -596,22 +595,16 @@ void TestWaylandOutputDevice::testId()
     wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
 
-    QCOMPARE(output.uuid(), QStringLiteral("1337"));
+    QCOMPARE(output.uuid(), QStringLiteral("00000000-0000-0000-0000-000000000000"));
 
     QSignalSpy idChanged(&output, &KWayland::Client::OutputDevice::uuidChanged);
     QVERIFY(idChanged.isValid());
 
-    m_serverOutputDevice->setUuid("42");
+    m_serverOutputDevice->setUuid(QUuid("00000000-0000-0000-0000-000000000001"));
     QVERIFY(idChanged.wait());
-    QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("42"));
+    QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("00000000-0000-0000-0000-000000000001"));
     idChanged.clear();
-    QCOMPARE(output.uuid(), QStringLiteral("42"));
-
-    m_serverOutputDevice->setUuid("4711");
-    QVERIFY(idChanged.wait());
-    QCOMPARE(idChanged.first().first().toByteArray(), QByteArray("4711"));
-    idChanged.clear();
-    QCOMPARE(output.uuid(), QStringLiteral("4711"));
+    QCOMPARE(output.uuid(), QStringLiteral("00000000-0000-0000-0000-000000000001"));
 }
 
 void TestWaylandOutputDevice::testDone()

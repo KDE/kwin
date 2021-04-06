@@ -10,6 +10,7 @@
 #include <QObject>
 #include <QPoint>
 #include <QSize>
+#include <QUuid>
 #include <QVector>
 
 struct wl_resource;
@@ -41,7 +42,7 @@ class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public QObject
     Q_PROPERTY(qreal scale READ scaleF WRITE setScaleF NOTIFY scaleFChanged)
     Q_PROPERTY(QByteArray edid READ edid WRITE setEdid NOTIFY edidChanged)
     Q_PROPERTY(OutputDeviceInterface::Enablement enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QString uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
+    Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
 public:
     enum class SubPixel {
         Unknown,
@@ -103,7 +104,7 @@ public:
 
     QByteArray edid() const;
     OutputDeviceInterface::Enablement enabled() const;
-    QString uuid() const;
+    QUuid uuid() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -133,7 +134,7 @@ public:
 
     void setEdid(const QByteArray &edid);
     void setEnabled(OutputDeviceInterface::Enablement enabled);
-    void setUuid(const QString &uuid);
+    void setUuid(const QUuid &uuid);
 
     static OutputDeviceInterface *get(wl_resource *native);
     static QList<OutputDeviceInterface *>list();
