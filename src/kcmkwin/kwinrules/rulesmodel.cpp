@@ -555,12 +555,12 @@ void RulesModel::populateRuleList()
     // Arrangement & Access
     addRule(new RuleItem(QLatin1String("above"),
                          RulePolicy::SetRule, RuleItem::Boolean,
-                         i18n("Keep above"), i18n("Arrangement & Access"),
+                         i18n("Keep above other windows"), i18n("Arrangement & Access"),
                          QIcon::fromTheme("window-keep-above")));
 
     addRule(new RuleItem(QLatin1String("below"),
                          RulePolicy::SetRule, RuleItem::Boolean,
-                         i18n("Keep below"), i18n("Arrangement & Access"),
+                         i18n("Keep below other windows"), i18n("Arrangement & Access"),
                          QIcon::fromTheme("window-keep-below")));
 
     addRule(new RuleItem(QLatin1String("skiptaskbar"),
