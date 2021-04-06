@@ -572,7 +572,7 @@ bool EglGbmBackend::presentOnOutput(Output &output, const QRegion &damagedRegion
 {
     if (isPrimary()) {
         if (supportsSwapBuffersWithDamage()) {
-            QVector<EGLint> rects = regionToRects(output.damageHistory.constFirst(), output.output);
+            QVector<EGLint> rects = regionToRects(damagedRegion, output.output);
             if (!eglSwapBuffersWithDamageEXT(eglDisplay(), output.eglSurface,
                                              rects.data(), rects.count() / 4)) {
                 qCCritical(KWIN_DRM, "eglSwapBuffersWithDamageEXT() failed: %x", eglGetError());
@@ -659,7 +659,8 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
 
     renderFramebufferToSurface(output);
 
-    if (!presentOnOutput(output, damagedRegion)) {
+    const QRegion dirty = damagedRegion.intersected(output.output->geometry());
+    if (!presentOnOutput(output, dirty)) {
         output.damageHistory.clear();
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(drmOutput->renderLoop());
         renderLoopPrivate->notifyFrameFailed();
@@ -667,7 +668,6 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion,
     }
 
     if (supportsBufferAge()) {
-        const QRegion dirty = damagedRegion.intersected(output.output->geometry());
         if (output.damageHistory.count() > 10) {
             output.damageHistory.removeLast();
         }
