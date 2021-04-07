@@ -185,6 +185,24 @@ quint64 refreshRateForMode(_drmModeModeInfo *m)
 }
 }
 
+static AbstractWaylandOutput::SubPixel drmSubPixelToKWinSubPixel(drmModeSubPixel subpixel)
+{
+    switch (subpixel) {
+    case DRM_MODE_SUBPIXEL_UNKNOWN:
+        return AbstractWaylandOutput::SubPixel::Unknown;
+    case DRM_MODE_SUBPIXEL_NONE:
+        return AbstractWaylandOutput::SubPixel::None;
+    case DRM_MODE_SUBPIXEL_HORIZONTAL_RGB:
+        return AbstractWaylandOutput::SubPixel::Horizontal_RGB;
+    case DRM_MODE_SUBPIXEL_HORIZONTAL_BGR:
+        return AbstractWaylandOutput::SubPixel::Horizontal_BGR;
+    case DRM_MODE_SUBPIXEL_VERTICAL_RGB:
+        return AbstractWaylandOutput::SubPixel::Vertical_RGB;
+    case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
+        return AbstractWaylandOutput::SubPixel::Vertical_BGR;
+    }
+}
+
 bool DrmOutput::init(drmModeConnector *connector)
 {
     initUuid();
@@ -192,6 +210,7 @@ bool DrmOutput::init(drmModeConnector *connector)
         return false;
     }
 
+    setSubPixelInternal(drmSubPixelToKWinSubPixel(connector->subpixel));
     setInternal(m_conn->isInternal());
     setCapabilityInternal(DrmOutput::Capability::Dpms);
     initOutputDevice(connector);

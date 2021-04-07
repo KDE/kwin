@@ -15,6 +15,11 @@ static KWaylandServer::OutputDeviceInterface::Transform kwinTransformToOutputDev
     return static_cast<KWaylandServer::OutputDeviceInterface::Transform>(transform);
 }
 
+static KWaylandServer::OutputDeviceInterface::SubPixel kwinSubPixelToOutputDeviceSubPixel(AbstractWaylandOutput::SubPixel subPixel)
+{
+    return static_cast<KWaylandServer::OutputDeviceInterface::SubPixel>(subPixel);
+}
+
 WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
@@ -30,6 +35,7 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDevice->setTransform(kwinTransformToOutputDeviceTransform(output->transform()));
     m_outputDevice->setEisaId(output->eisaId());
     m_outputDevice->setSerialNumber(output->serialNumber());
+    m_outputDevice->setSubPixel(kwinSubPixelToOutputDeviceSubPixel(output->subPixel()));
 
     const auto modes = output->modes();
     for (const AbstractWaylandOutput::Mode &mode : modes) {

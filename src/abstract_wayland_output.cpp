@@ -132,6 +132,16 @@ void AbstractWaylandOutput::setScale(qreal scale)
     }
 }
 
+AbstractWaylandOutput::SubPixel AbstractWaylandOutput::subPixel() const
+{
+    return m_subPixel;
+}
+
+void AbstractWaylandOutput::setSubPixelInternal(SubPixel subPixel)
+{
+    m_subPixel = subPixel;
+}
+
 void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *changeSet)
 {
     qCDebug(KWIN_CORE) << "Apply changes to the Wayland output.";

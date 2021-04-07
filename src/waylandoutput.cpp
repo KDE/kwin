@@ -36,6 +36,26 @@ static KWaylandServer::OutputInterface::Transform kwinTransformToOutputTransform
     }
 }
 
+static KWaylandServer::OutputInterface::SubPixel kwinSubPixelToOutputSubPixel(AbstractWaylandOutput::SubPixel subPixel)
+{
+    switch (subPixel) {
+    case AbstractWaylandOutput::SubPixel::Unknown:
+        return KWaylandServer::OutputInterface::SubPixel::Unknown;
+    case AbstractWaylandOutput::SubPixel::None:
+        return KWaylandServer::OutputInterface::SubPixel::None;
+    case AbstractWaylandOutput::SubPixel::Horizontal_RGB:
+        return KWaylandServer::OutputInterface::SubPixel::HorizontalRGB;
+    case AbstractWaylandOutput::SubPixel::Horizontal_BGR:
+        return KWaylandServer::OutputInterface::SubPixel::HorizontalBGR;
+    case AbstractWaylandOutput::SubPixel::Vertical_RGB:
+        return KWaylandServer::OutputInterface::SubPixel::VerticalRGB;
+    case AbstractWaylandOutput::SubPixel::Vertical_BGR:
+        return KWaylandServer::OutputInterface::SubPixel::VerticalBGR;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 static KWaylandServer::OutputInterface::DpmsMode kwinDpmsModeToOutputDpmsMode(AbstractWaylandOutput::DpmsMode dpmsMode)
 {
     switch (dpmsMode) {
@@ -85,6 +105,7 @@ WaylandOutput::WaylandOutput(AbstractWaylandOutput *output, QObject *parent)
     m_waylandOutput->setGlobalPosition(geometry.topLeft());
     m_waylandOutput->setScale(std::ceil(output->scale()));
     m_waylandOutput->setMode(output->modeSize(), output->refreshRate());
+    m_waylandOutput->setSubPixel(kwinSubPixelToOutputSubPixel(output->subPixel()));
 
     m_xdgOutputV1->setName(output->name());
     m_xdgOutputV1->setDescription(output->description());

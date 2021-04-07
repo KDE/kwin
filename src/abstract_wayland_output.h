@@ -68,6 +68,15 @@ public:
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
+    enum class SubPixel {
+        Unknown,
+        None,
+        Horizontal_RGB,
+        Horizontal_BGR,
+        Vertical_RGB,
+        Vertical_BGR,
+    };
+
     explicit AbstractWaylandOutput(QObject *parent = nullptr);
 
     QString name() const override;
@@ -111,6 +120,7 @@ public:
     bool isEnabled() const override;
     void setEnabled(bool enable) override;
 
+    SubPixel subPixel() const;
     QString description() const;
     Capabilities capabilities() const;
     QByteArray edid() const;
@@ -167,6 +177,7 @@ protected:
     void setTransformInternal(Transform transform);
     void setDpmsModeInternal(DpmsMode dpmsMode);
     void setCapabilityInternal(Capability capability, bool on = true);
+    void setSubPixelInternal(SubPixel subPixel);
 
     QSize orientateSize(const QSize &size) const;
 
@@ -186,6 +197,7 @@ private:
     QByteArray m_edid;
     QVector<Mode> m_modes;
     DpmsMode m_dpmsMode = DpmsMode::On;
+    SubPixel m_subPixel = SubPixel::Unknown;
     int m_refreshRate = -1;
     int m_recorders = 0;
     bool m_isEnabled = true;
