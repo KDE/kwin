@@ -200,6 +200,8 @@ static AbstractWaylandOutput::SubPixel drmSubPixelToKWinSubPixel(drmModeSubPixel
         return AbstractWaylandOutput::SubPixel::Vertical_RGB;
     case DRM_MODE_SUBPIXEL_VERTICAL_BGR:
         return AbstractWaylandOutput::SubPixel::Vertical_BGR;
+    default:
+        Q_UNREACHABLE();
     }
 }
 
