@@ -262,6 +262,12 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
+
+        auto client = qobject_cast<AbstractClient *>(input()->findToplevel(event->globalPos()));
+        if (client && client->isLockScreen()) {
+            workspace()->activateClient(client);
+        }
+
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         if (event->type() == QEvent::MouseMove) {
