@@ -1139,14 +1139,14 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
 }
 
 template <class T>
-QVariant DebugConsoleModel::clientData(const QModelIndex &index, int role, const QVector<T*> clients) const
+QVariant DebugConsoleModel::clientData(const QModelIndex &index, int role, const QVector<T*> clients, const std::function<QString(T*)> &toString) const
 {
     if (index.row() >= clients.count()) {
         return QVariant();
     }
     auto c = clients.at(index.row());
     if (role == Qt::DisplayRole) {
-        return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption());
+        return toString(c);
     } else if (role == Qt::DecorationRole) {
         return c->icon();
     }
@@ -1193,9 +1193,11 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
         if (index.column() != 0) {
             return QVariant();
         }
+
+        auto generic = [] (AbstractClient* c) { return c->caption() + QLatin1Char(' ') + QString::fromUtf8(c->metaObject()->className()); };
         switch (index.parent().internalId()) {
         case s_x11ClientId:
-            return clientData(index, role, m_x11Clients);
+            return clientData<X11Client>(index, role, m_x11Clients, [] (X11Client* c) { return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption()); });
         case s_x11UnmanagedId: {
             if (index.row() >= m_unmanageds.count()) {
                 return QVariant();
@@ -1207,9 +1209,9 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             break;
         }
         case s_waylandClientId:
-            return clientData(index, role, m_waylandClients);
+            return clientData<WaylandClient>(index, role, m_waylandClients, generic);
         case s_workspaceInternalId:
-            return clientData(index, role, m_internalClients);
+            return clientData<InternalClient>(index, role, m_internalClients, generic);
         default:
             break;
         }

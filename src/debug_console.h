@@ -17,6 +17,7 @@
 #include <QAbstractItemModel>
 #include <QStyledItemDelegate>
 #include <QVector>
+#include <functional>
 
 class QTextEdit;
 
@@ -62,7 +63,7 @@ private:
     int propertyCount(const QModelIndex &parent, T *(DebugConsoleModel::*filter)(const QModelIndex&) const) const;
     QVariant propertyData(QObject *object, const QModelIndex &index, int role) const;
     template <class T>
-    QVariant clientData(const QModelIndex &index, int role, const QVector<T*> clients) const;
+    QVariant clientData(const QModelIndex &index, int role, const QVector<T*> clients, const std::function<QString(T*)> &toString) const;
     template <class T>
     void add(int parentRow, QVector<T*> &clients, T *client);
     template <class T>
