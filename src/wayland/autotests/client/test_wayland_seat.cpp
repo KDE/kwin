@@ -631,7 +631,10 @@ void TestWaylandSeat::testPointerButton_data()
 
     QTest::newRow("left")    << Qt::LeftButton    << quint32(BTN_LEFT);
     QTest::newRow("right")   << Qt::RightButton   << quint32(BTN_RIGHT);
+    //Deprecated in qt5.15
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
     QTest::newRow("mid")     << Qt::MidButton     << quint32(BTN_MIDDLE);
+#endif
     QTest::newRow("middle")  << Qt::MiddleButton  << quint32(BTN_MIDDLE);
     QTest::newRow("back")    << Qt::BackButton    << quint32(BTN_BACK);
     QTest::newRow("x1")      << Qt::XButton1      << quint32(BTN_BACK);
