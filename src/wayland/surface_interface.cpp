@@ -636,14 +636,6 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
             const QRegion bufferDamage = q->mapFromBuffer(target->bufferDamage);
             target->damage = windowRegion.intersected(target->damage.united(bufferDamage));
             emit q->damaged(target->damage);
-            // workaround for https://bugreports.qt.io/browse/QTBUG-52092
-            // if the surface is a sub-surface, but the main surface is not yet mapped, fake frame rendered
-            if (subSurface) {
-                const auto mainSurface = subSurface->mainSurface();
-                if (!mainSurface || !mainSurface->buffer()) {
-                    q->frameRendered(0);
-                }
-            }
         }
     }
     if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
