@@ -58,7 +58,6 @@ public:
     QRect inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
     void destroyClient() override;
-    void setVirtualKeyboardGeometry(const QRect &geo) override;
 
     virtual void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface) = 0;
 
