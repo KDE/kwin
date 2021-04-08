@@ -32,6 +32,7 @@ public:
     AbstractOutput *output() const;
 
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
+    bool isFullScreen() const override;
     bool isPlaceable() const override;
     bool isCloseable() const override;
     bool isMovable() const override;

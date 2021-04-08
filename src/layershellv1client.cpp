@@ -104,6 +104,11 @@ NET::WindowType LayerShellV1Client::windowType(bool, int) const
     return m_windowType;
 }
 
+bool LayerShellV1Client::isFullScreen() const
+{
+    return m_shellSurface->anchor() == (Qt::TopEdge | Qt::BottomEdge | Qt::LeftEdge | Qt::RightEdge) && m_shellSurface->margins().isNull();
+}
+
 bool LayerShellV1Client::isPlaceable() const
 {
     return false;
