@@ -1570,11 +1570,13 @@ void OpenGLWindow::performPaint(int mask, const QRegion &region, const WindowPai
 QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
 {
     OpenGLWindowPixmap *frame = nullptr;
-    if (surfaceItem()) {
-        frame = static_cast<OpenGLWindowPixmap *>(surfaceItem()->windowPixmap());
+    const SurfaceItem *item = surfaceItem();
+
+    if (item) {
+        frame = static_cast<OpenGLWindowPixmap *>(item->windowPixmap());
     }
 
-    if (frame && frame->children().isEmpty()) {
+    if (frame && item->childItems().isEmpty()) {
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
     } else {
         auto effectWindow = window()->effectWindow();
