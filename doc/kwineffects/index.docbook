@@ -14,8 +14,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2016-04-14</date>
-<releaseinfo>Plasma 5.6</releaseinfo>
+<date>2021-04-09</date>
+<releaseinfo>Plasma 5.20</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -32,8 +32,9 @@ for Plasma.</para>
 
 <para>The main part of this page is a list of all available effects grouped 
 by <guilabel>Accessibility</guilabel>, <guilabel>Appearance</guilabel>, 
-<guilabel>Focus</guilabel>, <guilabel>Tools</guilabel>,
-and <guilabel>Window Management</guilabel>.</para>
+<guilabel>Focus</guilabel>, <guilabel>Show Desktop Animation</guilabel>, <guilabel>Tools</guilabel>,
+<guilabel>Virtual Desktop Switching Animation</guilabel>, <guilabel>Window Management</guilabel>,
+and <guilabel>Window Open/Close Animation</guilabel>.</para>
 <para>Use the incremental search bar above the list window to find items in the list.</para>
 
 <para>Normally there is no reason for users to change that, but 
@@ -43,7 +44,7 @@ also those effects.
 </para>
 
 <para>The easiest way of installing new effects is by using the built-in
-KNewStuff support in &kwin;. Press the <guibutton>Get New Effects</guibutton> button to open 
+KNewStuff support in &kwin;. Press the <guibutton>Get New Desktop Effects</guibutton> button to open 
 a dialog with a list of available effects from the Internet and to install and uninstall effects.</para>
 <note><para>Please keep in mind that changing these sensible defaults can break your system.</para>
 </note>
@@ -59,7 +60,7 @@ at the left of the info button. Click it to open a configuration dialog.</para>
 </imageobject></inlinemediaobject> button.</para>
 
 <para>Some effects are mutual exclusive to other effects. For example one would only want to activate the 
-<guilabel>Minimize Animations</guilabel> or the <guilabel>Magic Lamp</guilabel> effect. Both activated at the same 
+<guilabel>Maximize</guilabel> or the <guilabel>Magic Lamp</guilabel> effect. Both activated at the same 
 time result in broken animations. 
 </para>
 
