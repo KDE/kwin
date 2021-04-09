@@ -13,8 +13,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2018-03-18</date>
-<releaseinfo>Plasma 5.12</releaseinfo>
+<date>2021-04-09</date>
+<releaseinfo>Plasma 5.21</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -27,10 +27,10 @@
 </keywordset>
 </articleinfo>
 <sect1 id="window-deco">
-<title>Window Decoration</title>
+<title>Window Decorations</title>
 
 <para>This module allows you to select a style for the buttons and borders around
-windows.</para>
+the windows.</para>
 
 <sect2>
 <title>Window Decorations</title>
@@ -81,7 +81,7 @@ module <ulink url="help:/kcontrol/windowspecific">Window Rules</ulink>.
 <tip>
 <para>For accessibility purposes, some window decorations support
 extra wide borders.  If this is available, you can also choose a
-border size here.  These large borders are easier to see for low
+<guilabel>Window border size</guilabel> here.  The large borders are easier to see for low
 vision users, and easier to grab for people with limited mobility or
 difficulty using a mouse.</para>
 </tip>
@@ -111,7 +111,7 @@ The available options depend on the selected style.
 </sect2>
 
 <sect2>
-<title>Buttons</title>
+<title>Titelbar Buttons</title>
 
 <para>This tab allows you to customize the button location on the titlebar. 
 You can drag buttons &eg; the <guilabel>Application menu</guilabel> into the 
@@ -133,6 +133,10 @@ buttons until you have the order that makes you comfortable.
 
 <para>Enable <guilabel>Close windows by double clicking the menu button</guilabel>
 to have an additional option to the Close button or if you have removed the Close button from the titlebar.
+</para>
+
+<para>Check the <guilabel>Show titlebar buttons tooltips</guilabel> item if you
+want to see the default tooltips when you hover the titlebar buttons with the mouse pointer.
 </para>
 
 </sect2>
