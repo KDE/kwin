@@ -38,11 +38,34 @@ private Q_SLOTS:
     void handleSubSurfacePositionChanged();
 
 protected:
-    WindowPixmap *createPixmap() override;
+    SurfacePixmap *createPixmap() override;
 
 private:
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     QHash<KWaylandServer::SubSurfaceInterface *, SurfaceItemWayland *> m_subsurfaces;
+};
+
+class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap
+{
+    Q_OBJECT
+
+public:
+    explicit SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent = nullptr);
+    ~SurfacePixmapWayland() override;
+
+    KWaylandServer::SurfaceInterface *surface() const;
+    KWaylandServer::BufferInterface *buffer() const;
+
+    void create() override;
+    void update() override;
+    bool isValid() const override;
+
+private:
+    void clearBuffer();
+    void setBuffer(KWaylandServer::BufferInterface *buffer);
+
+    SurfaceItemWayland *m_item;
+    KWaylandServer::BufferInterface *m_buffer = nullptr;
 };
 
 /**

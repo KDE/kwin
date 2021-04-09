@@ -43,12 +43,15 @@ class EffectWindowImpl;
 class GLTexture;
 class Item;
 class OverlayWindow;
+class PlatformSurfaceTexture;
 class RenderLoop;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
+class SurfacePixmapInternal;
+class SurfacePixmapWayland;
+class SurfacePixmapX11;
 class WindowItem;
-class WindowPixmap;
 
 // The base class for compositing backends.
 class KWIN_EXPORT Scene : public QObject
@@ -202,6 +205,10 @@ public:
         Q_UNUSED(output);
         return {};
     }
+
+    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap);
+    virtual PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
 Q_SIGNALS:
     void frameRendered();
@@ -373,14 +380,6 @@ public:
         return {};
     }
 
-    /**
-     * @brief Factory method to create a WindowPixmap.
-     *
-     * The inheriting classes need to implement this method to create a new instance of their WindowPixmap subclass.
-     * @note Do not use WindowPixmap::create on the created instance. The Scene will take care of that.
-     */
-    virtual WindowPixmap *createWindowPixmap() = 0;
-
 protected:
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
     WindowQuadList makeContentsQuads() const;
@@ -401,117 +400,6 @@ private:
     mutable QScopedPointer<WindowQuadList> cached_quad_list;
     QScopedPointer<WindowItem> m_windowItem;
     Q_DISABLE_COPY(Window)
-};
-
-/**
- * @brief Wrapper for a pixmap of the Scene::Window.
- *
- * This class encapsulates the functionality to get the pixmap for a window. When initialized the pixmap is not yet
- * mapped to the window and isValid will return @c false. The pixmap mapping to the window can be established
- * through @ref create. If it succeeds isValid will return @c true, otherwise it will keep in the non valid
- * state and it can be tried to create the pixmap mapping again (e.g. in the next frame).
- *
- * This class is not intended to be updated when the pixmap is no longer valid due to e.g. resizing the window.
- * Instead a new instance of this class should be instantiated. The idea behind this is that a valid pixmap does not
- * get destroyed, but can continue to be used. To indicate that a newer pixmap should in generally be around, one can
- * use markAsDiscarded.
- *
- * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
- * the native pixmap to the respective rendering format.
- */
-class KWIN_EXPORT WindowPixmap : public QObject
-{
-    Q_OBJECT
-public:
-    virtual ~WindowPixmap();
-    /**
-     * @brief Tries to create the mapping between the Window and the pixmap.
-     *
-     * In case this method succeeds in creating the pixmap for the window, isValid will return @c true otherwise
-     * @c false.
-     *
-     * Inheriting classes should re-implement this method in case they need to add further functionality for mapping the
-     * native pixmap to the rendering format.
-     */
-    virtual void create();
-    /**
-     * @brief Recursively updates the mapping between the WindowPixmap and the buffer.
-     */
-    virtual void update();
-    /**
-     * @return @c true if the pixmap has been created and is valid, @c false otherwise
-     */
-    virtual bool isValid() const;
-    /**
-     * @return The native X11 pixmap handle
-     */
-    xcb_pixmap_t pixmap() const;
-    /**
-     * @return The Wayland BufferInterface for this WindowPixmap.
-     */
-    KWaylandServer::BufferInterface *buffer() const;
-    const QSharedPointer<QOpenGLFramebufferObject> &fbo() const;
-    QImage internalImage() const;
-    /**
-     * @brief Whether this WindowPixmap is considered as discarded. This means the window has changed in a way that a new
-     * WindowPixmap should have been created already.
-     *
-     * @return @c true if this WindowPixmap is considered as discarded, @c false otherwise.
-     * @see markAsDiscarded
-     */
-    bool isDiscarded() const;
-    /**
-     * @brief Marks this WindowPixmap as discarded. From now on isDiscarded will return @c true. This method should
-     * only be used by the Window when it changes in a way that a new pixmap is required.
-     *
-     * @see isDiscarded
-     */
-    void markAsDiscarded();
-    /**
-     * The size of the pixmap.
-     */
-    const QSize &size() const;
-    /**
-     * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
-     * pixmap also contains the decoration which is not rendered into this pixmap, though. This
-     * contentsRect tells where inside the complete pixmap the real content is.
-     */
-    const QRect &contentsRect() const;
-    /**
-     * @brief Returns the Toplevel this WindowPixmap belongs to.
-     * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
-     */
-    Toplevel *toplevel() const;
-    /**
-     * Returns @c true if the attached buffer has an alpha channel; otherwise returns @c false.
-     */
-    bool hasAlphaChannel() const;
-    /**
-     * @returns the surface this WindowPixmap references, might be @c null.
-     */
-    KWaylandServer::SurfaceInterface *surface() const;
-    void setSurface(KWaylandServer::SurfaceInterface *surface);
-
-protected:
-    explicit WindowPixmap(Scene::Window *window);
-    /**
-     * @return The Window this WindowPixmap belongs to
-     */
-    Scene::Window *window();
-
-private:
-    void setBuffer(KWaylandServer::BufferInterface *buffer);
-    void clear();
-
-    Scene::Window *m_window;
-    xcb_pixmap_t m_pixmap;
-    QSize m_pixmapSize;
-    bool m_discarded;
-    QRect m_contentsRect;
-    KWaylandServer::BufferInterface *m_buffer = nullptr;
-    QSharedPointer<QOpenGLFramebufferObject> m_fbo;
-    QImage m_internalImage;
-    QPointer<KWaylandServer::SurfaceInterface> m_surface;
 };
 
 class Scene::EffectFrame
@@ -583,61 +471,6 @@ inline
 Toplevel* Scene::Window::window() const
 {
     return toplevel;
-}
-
-inline
-KWaylandServer::BufferInterface *WindowPixmap::buffer() const
-{
-    return m_buffer;
-}
-
-inline
-const QSharedPointer<QOpenGLFramebufferObject> &WindowPixmap::fbo() const
-{
-    return m_fbo;
-}
-
-inline
-QImage WindowPixmap::internalImage() const
-{
-    return m_internalImage;
-}
-
-inline
-Toplevel* WindowPixmap::toplevel() const
-{
-    return m_window->window();
-}
-
-inline
-xcb_pixmap_t WindowPixmap::pixmap() const
-{
-    return m_pixmap;
-}
-
-inline
-bool WindowPixmap::isDiscarded() const
-{
-    return m_discarded;
-}
-
-inline
-void WindowPixmap::markAsDiscarded()
-{
-    m_discarded = true;
-    m_window->referencePreviousPixmap();
-}
-
-inline
-const QRect &WindowPixmap::contentsRect() const
-{
-    return m_contentsRect;
-}
-
-inline
-const QSize &WindowPixmap::size() const
-{
-    return m_pixmapSize;
 }
 
 } // namespace

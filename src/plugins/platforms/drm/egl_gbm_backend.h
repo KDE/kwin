@@ -10,6 +10,8 @@
 #define KWIN_EGL_GBM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
 
+#include <kwinglutils.h>
+
 #include <QSharedPointer>
 
 struct gbm_surface;
@@ -40,7 +42,9 @@ public:
     EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu);
     ~EglGbmBackend() override;
 
-    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
@@ -112,19 +116,6 @@ private:
     QVector<Output> m_secondaryGpuOutputs;
 
     friend class EglGbmTexture;
-};
-
-/**
- * @brief Texture using an EGLImageKHR.
- */
-class EglGbmTexture : public AbstractEglTexture
-{
-public:
-    ~EglGbmTexture() override;
-
-private:
-    friend class EglGbmBackend;
-    EglGbmTexture(SceneOpenGLTexture *texture, EglGbmBackend *backend);
 };
 
 } // namespace

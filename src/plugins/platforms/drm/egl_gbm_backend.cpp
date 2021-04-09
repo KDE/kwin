@@ -7,6 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egl_gbm_backend.h"
+#include "basiceglsurfacetexture_internal.h"
+#include "basiceglsurfacetexture_wayland.h"
 // kwin
 #include "composite.h"
 #include "drm_backend.h"
@@ -605,9 +607,14 @@ bool EglGbmBackend::directScanoutActive(const Output &output)
     return output.surfaceInterface != nullptr;
 }
 
-SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTexture *texture)
+PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new EglGbmTexture(texture, this);
+    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+}
+
+PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+{
+    return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
 void EglGbmBackend::setViewport(const Output &output) const
@@ -782,16 +789,5 @@ bool EglGbmBackend::directScanoutAllowed(int screen) const
 {
     return !m_backend->usesSoftwareCursor() && !m_outputs[screen].output->directScanoutInhibited();
 }
-
-/************************************************
- * EglTexture
- ************************************************/
-
-EglGbmTexture::EglGbmTexture(KWin::SceneOpenGLTexture *texture, EglGbmBackend *backend)
-    : AbstractEglTexture(texture, backend)
-{
-}
-
-EglGbmTexture::~EglGbmTexture() = default;
 
 }

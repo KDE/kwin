@@ -67,8 +67,11 @@ class EglWaylandBackend : public AbstractEglBackend
 public:
     EglWaylandBackend(WaylandBackend *b);
     ~EglWaylandBackend() override;
+
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+
     void screenGeometryChanged(const QSize &size) override;
-    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
@@ -96,19 +99,6 @@ private:
     QVector<EglWaylandOutput*> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
-};
-
-/**
- * @brief Texture using an EGLImageKHR.
- */
-class EglWaylandTexture : public AbstractEglTexture
-{
-public:
-    ~EglWaylandTexture() override;
-
-private:
-    friend class EglWaylandBackend;
-    EglWaylandTexture(SceneOpenGLTexture *texture, EglWaylandBackend *backend);
 };
 
 }

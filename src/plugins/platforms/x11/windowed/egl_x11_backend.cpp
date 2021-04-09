@@ -8,6 +8,8 @@
 */
 #include "egl_x11_backend.h"
 // kwin
+#include "basiceglsurfacetexture_internal.h"
+#include "basiceglsurfacetexture_wayland.h"
 #include "main.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
@@ -106,27 +108,19 @@ void EglX11Backend::presentSurface(EGLSurface surface, const QRegion &damage, co
     }
 }
 
-SceneOpenGLTexturePrivate *EglX11Backend::createBackendTexture(SceneOpenGLTexture *texture)
-{
-    return new EglX11Texture(texture, this);
-}
-
 void EglX11Backend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)
 }
 
-/************************************************
- * EglX11Texture
- ************************************************/
-
-EglX11Texture::EglX11Texture(KWin::SceneOpenGLTexture *texture, EglX11Backend *backend)
-    : AbstractEglTexture(texture, backend)
+PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
+    return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
-EglX11Texture::~EglX11Texture()
+PlatformSurfaceTexture *EglX11Backend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
+    return new BasicEGLSurfaceTextureInternal(this, pixmap);
 }
 
 } // namespace

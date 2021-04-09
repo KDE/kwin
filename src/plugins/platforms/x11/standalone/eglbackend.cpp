@@ -13,6 +13,7 @@
 #include "scene.h"
 #include "screens.h"
 #include "softwarevsyncmonitor.h"
+#include "surfaceitem_x11.h"
 #include "x11_platform.h"
 
 namespace KWin
@@ -42,9 +43,9 @@ EglBackend::~EglBackend()
     RenderLoopPrivate::get(kwinApp()->platform()->renderLoop())->invalidate();
 }
 
-SceneOpenGLTexturePrivate *EglBackend::createBackendTexture(SceneOpenGLTexture *texture)
+PlatformSurfaceTexture *EglBackend::createPlatformSurfaceTextureX11(SurfacePixmapX11 *texture)
 {
-    return new EglTexture(texture, this);
+    return new EglSurfaceTextureX11(this, texture);
 }
 
 void EglBackend::screenGeometryChanged(const QSize &size)
@@ -114,21 +115,52 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-/************************************************
- * EglTexture
- ************************************************/
+EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)
+    : PlatformOpenGLSurfaceTextureX11(backend, texture)
+{
+}
 
-EglTexture::EglTexture(KWin::SceneOpenGLTexture *texture, EglBackend *backend)
-    : AbstractEglTexture(texture, backend)
+bool EglSurfaceTextureX11::create()
+{
+    auto texture = new EglPixmapTexture(static_cast<EglBackend *>(m_backend));
+    texture->create(m_pixmap);
+
+    m_texture.reset(texture);
+    return !m_texture->isNull();
+}
+
+void EglSurfaceTextureX11::update(const QRegion &region)
+{
+    Q_UNUSED(region)
+    // mipmaps need to be updated
+    m_texture->setDirty();
+}
+
+EglPixmapTexture::EglPixmapTexture(EglBackend *backend)
+    : GLTexture(*new EglPixmapTexturePrivate(this, backend))
+{
+}
+
+bool EglPixmapTexture::create(SurfacePixmapX11 *texture)
+{
+    Q_D(EglPixmapTexture);
+    return d->create(texture);
+}
+
+EglPixmapTexturePrivate::EglPixmapTexturePrivate(EglPixmapTexture *texture, EglBackend *backend)
+    : q(texture)
     , m_backend(backend)
 {
 }
 
-EglTexture::~EglTexture()
+EglPixmapTexturePrivate::~EglPixmapTexturePrivate()
 {
+    if (m_image != EGL_NO_IMAGE_KHR) {
+        eglDestroyImageKHR(m_backend->eglDisplay(), m_image);
+    }
 }
 
-bool EglTexture::loadTexture(WindowPixmap *pixmap)
+bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
 {
     const xcb_pixmap_t nativePixmap = pixmap->pixmap();
     if (nativePixmap == XCB_NONE) {
@@ -136,7 +168,6 @@ bool EglTexture::loadTexture(WindowPixmap *pixmap)
     }
 
     glGenTextures(1, &m_texture);
-    auto q = texture();
     q->setWrapMode(GL_CLAMP_TO_EDGE);
     q->setFilter(GL_LINEAR);
     q->bind();
@@ -144,30 +175,30 @@ bool EglTexture::loadTexture(WindowPixmap *pixmap)
         EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
         EGL_NONE
     };
-    setImage(eglCreateImageKHR(m_backend->eglDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                               (EGLClientBuffer)nativePixmap, attribs));
+    m_image = eglCreateImageKHR(m_backend->eglDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
+                                reinterpret_cast<EGLClientBuffer>(nativePixmap), attribs);
 
-    if (EGL_NO_IMAGE_KHR == image()) {
+    if (EGL_NO_IMAGE_KHR == m_image) {
         qCDebug(KWIN_CORE) << "failed to create egl image";
         q->unbind();
         q->discard();
         return false;
     }
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image());
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
     q->unbind();
     q->setYInverted(true);
-    m_size = pixmap->toplevel()->bufferGeometry().size();
+    m_size = pixmap->size();
     updateMatrix();
     return true;
 }
 
-void EglTexture::onDamage()
+void EglPixmapTexturePrivate::onDamage()
 {
     if (options->isGlStrictBinding()) {
         // This is just implemented to be consistent with
         // the example in mesa/demos/src/egl/opengles1/texture_from_pixmap.c
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) image());
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
     }
     GLTexturePrivate::onDamage();
 }

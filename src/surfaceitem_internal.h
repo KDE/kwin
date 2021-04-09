@@ -28,7 +28,27 @@ private Q_SLOTS:
     void handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old);
 
 protected:
-    WindowPixmap *createPixmap() override;
+    SurfacePixmap *createPixmap() override;
+};
+
+class KWIN_EXPORT SurfacePixmapInternal final : public SurfacePixmap
+{
+    Q_OBJECT
+
+public:
+    explicit SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent = nullptr);
+
+    QOpenGLFramebufferObject *fbo() const;
+    QImage image() const;
+
+    void create() override;
+    void update() override;
+    bool isValid() const override;
+
+private:
+    SurfaceItemInternal *m_item;
+    QSharedPointer<QOpenGLFramebufferObject> m_fbo;
+    QImage m_rasterBuffer;
 };
 
 } // namespace KWin

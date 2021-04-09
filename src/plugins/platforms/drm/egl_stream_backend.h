@@ -9,6 +9,7 @@
 #ifndef KWIN_EGL_STREAM_BACKEND_H
 #define KWIN_EGL_STREAM_BACKEND_H
 #include "abstract_egl_drm_backend.h"
+#include "basiceglsurfacetexture_wayland.h"
 #include <KWaylandServer/surface_interface.h>
 #include <KWaylandServer/eglstream_controller_interface.h>
 #include <wayland-server-core.h>
@@ -28,7 +29,8 @@ class EglStreamBackend : public AbstractEglDrmBackend
 public:
     EglStreamBackend(DrmBackend *b, DrmGpu *gpu);
     ~EglStreamBackend() override;
-    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     void init() override;
@@ -72,29 +74,27 @@ private:
     KWaylandServer::EglStreamControllerInterface *m_eglStreamControllerInterface;
     QHash<KWaylandServer::SurfaceInterface *, StreamTexture> m_streamTextures;
 
-    friend class EglStreamTexture;
+    friend class EglStreamSurfaceTextureWayland;
 };
 
-/**
- * @brief External texture bound to an EGLStreamKHR.
- */
-class EglStreamTexture : public AbstractEglTexture
+class EglStreamSurfaceTextureWayland : public BasicEGLSurfaceTextureWayland
 {
 public:
-    ~EglStreamTexture() override;
-    bool loadTexture(WindowPixmap *pixmap) override;
-    void updateTexture(WindowPixmap *pixmap, const QRegion &region) override;
+    EglStreamSurfaceTextureWayland(EglStreamBackend *backend, SurfacePixmapWayland *pixmap);
+    ~EglStreamSurfaceTextureWayland() override;
+
+    bool create() override;
+    void update(const QRegion &region) override;
 
 private:
-    EglStreamTexture(SceneOpenGLTexture *texture, EglStreamBackend *backend);
     bool acquireStreamFrame(EGLStreamKHR stream);
     void createFbo();
     void copyExternalTexture(GLuint tex);
     bool attachBuffer(KWaylandServer::BufferInterface *buffer);
+
     EglStreamBackend *m_backend;
-    GLuint m_fbo, m_rbo;
+    GLuint m_fbo, m_rbo, m_textureId;
     GLenum m_format;
-    friend class EglStreamBackend;
 };
 
 } // namespace

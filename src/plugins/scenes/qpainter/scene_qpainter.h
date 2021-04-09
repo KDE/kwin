@@ -34,6 +34,8 @@ public:
     Shadow *createShadow(Toplevel *toplevel) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     void screenGeometryChanged(const QSize &size) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     bool animationsSupported() const override {
         return false;
@@ -61,21 +63,6 @@ private:
     class Window;
 };
 
-class QPainterWindowPixmap : public WindowPixmap
-{
-public:
-    explicit QPainterWindowPixmap(Scene::Window *window);
-    ~QPainterWindowPixmap() override;
-    void create() override;
-    void update() override;
-    bool isValid() const override;
-
-    const QImage &image();
-
-private:
-    QImage m_image;
-};
-
 class SceneQPainter::Window : public Scene::Window
 {
     Q_OBJECT
@@ -84,8 +71,6 @@ public:
     Window(SceneQPainter *scene, Toplevel *c);
     ~Window() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
-protected:
-    WindowPixmap *createWindowPixmap() override;
 private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem);
     void renderShadow(QPainter *painter);
@@ -174,12 +159,6 @@ inline
 QPainter* SceneQPainter::scenePainter() const
 {
     return m_painter.data();
-}
-
-inline
-const QImage &QPainterWindowPixmap::image()
-{
-    return m_image;
 }
 
 } // KWin

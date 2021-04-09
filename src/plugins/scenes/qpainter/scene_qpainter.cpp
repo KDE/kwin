@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter.h"
+#include "platformqpaintersurfacetexture.h"
 // KWin
 #include "abstract_client.h"
 #include "composite.h"
@@ -251,12 +252,18 @@ void SceneQPainter::Window::performPaint(int mask, const QRegion &_region, const
 
 void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem)
 {
-    QPainterWindowPixmap *windowPixmap =
-            static_cast<QPainterWindowPixmap *>(surfaceItem->windowPixmap());
-    if (!windowPixmap || !windowPixmap->isValid()) {
+    const SurfacePixmap *surfaceTexture = surfaceItem->pixmap();
+    if (!surfaceTexture || !surfaceTexture->isValid()) {
         return;
     }
 
+    PlatformQPainterSurfaceTexture *platformSurfaceTexture =
+            static_cast<PlatformQPainterSurfaceTexture *>(surfaceTexture->platformTexture());
+    if (!platformSurfaceTexture->isValid()) {
+        platformSurfaceTexture->create();
+    } else {
+        platformSurfaceTexture->update(surfaceItem->damage());
+    }
     surfaceItem->resetDamage();
 
     const QRegion shape = surfaceItem->shape();
@@ -268,7 +275,7 @@ void SceneQPainter::Window::renderSurfaceItem(QPainter *painter, SurfaceItem *su
         const QPointF bufferBottomRight = surfaceItem->mapToBuffer(rect.bottomRight());
 
         painter->drawImage(QRectF(windowTopLeft, windowBottomRight),
-                           windowPixmap->image(),
+                           platformSurfaceTexture->image(),
                            QRectF(bufferTopLeft, bufferBottomRight));
     }
 
@@ -332,73 +339,19 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
     painter->drawImage(dbr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Bottom));
 }
 
-WindowPixmap *SceneQPainter::Window::createWindowPixmap()
-{
-    return new QPainterWindowPixmap(this);
-}
-
 Decoration::Renderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneQPainterDecorationRenderer(impl);
 }
 
-//****************************************
-// QPainterWindowPixmap
-//****************************************
-QPainterWindowPixmap::QPainterWindowPixmap(Scene::Window *window)
-    : WindowPixmap(window)
+PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
+    return m_backend->createPlatformSurfaceTextureInternal(pixmap);
 }
 
-QPainterWindowPixmap::~QPainterWindowPixmap()
+PlatformSurfaceTexture *SceneQPainter::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-}
-
-void QPainterWindowPixmap::create()
-{
-    if (isValid()) {
-        return;
-    }
-    KWin::WindowPixmap::create();
-    if (!isValid()) {
-        return;
-    }
-    if (!surface()) {
-        // That's an internal client.
-        m_image = internalImage();
-        return;
-    }
-    // performing deep copy, this could probably be improved
-    m_image = buffer()->data().copy();
-}
-
-void QPainterWindowPixmap::update()
-{
-    const auto oldBuffer = buffer();
-    WindowPixmap::update();
-    const auto &b = buffer();
-    if (!surface()) {
-        // That's an internal client.
-        m_image = internalImage();
-        return;
-    }
-    if (!b) {
-        m_image = QImage();
-        return;
-    }
-    if (b == oldBuffer) {
-        return;
-    }
-    // perform deep copy
-    m_image = b->data().copy();
-}
-
-bool QPainterWindowPixmap::isValid() const
-{
-    if (!m_image.isNull()) {
-        return true;
-    }
-    return WindowPixmap::isValid();
+    return m_backend->createPlatformSurfaceTextureWayland(pixmap);
 }
 
 QPainterEffectFrame::QPainterEffectFrame(EffectFrameImpl *frame, SceneQPainter *scene)

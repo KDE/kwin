@@ -10,6 +10,8 @@
 #define WL_EGL_PLATFORM 1
 
 #include "egl_wayland_backend.h"
+#include "basiceglsurfacetexture_internal.h"
+#include "basiceglsurfacetexture_wayland.h"
 
 #include "wayland_backend.h"
 #include "wayland_output.h"
@@ -348,9 +350,14 @@ void EglWaylandBackend::screenGeometryChanged(const QSize &size)
     }
 }
 
-SceneOpenGLTexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGLTexture *texture)
+PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new EglWaylandTexture(texture, this);
+    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+}
+
+PlatformSurfaceTexture *EglWaylandBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+{
+    return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
 QRegion EglWaylandBackend::beginFrame(int screenId)
@@ -390,17 +397,6 @@ void EglWaylandBackend::endFrame(int screenId, const QRegion &renderedRegion, co
         output->m_damageHistory.prepend(damage);
     }
 }
-
-/************************************************
- * EglTexture
- ************************************************/
-
-EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGLTexture *texture, KWin::Wayland::EglWaylandBackend *backend)
-    : AbstractEglTexture(texture, backend)
-{
-}
-
-EglWaylandTexture::~EglWaylandTexture() = default;
 
 }
 }

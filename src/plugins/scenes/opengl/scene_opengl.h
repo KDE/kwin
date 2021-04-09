@@ -49,18 +49,14 @@ public:
     void triggerFence() override;
     virtual QMatrix4x4 projectionMatrix() const = 0;
     bool animationsSupported() const override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     void insertWait();
 
     bool debug() const { return m_debug; }
     void initDebugOutput();
-
-    /**
-     * @brief Factory method to create a backend specific texture.
-     *
-     * @return :SceneOpenGL::Texture*
-     */
-    SceneOpenGLTexture *createTexture();
 
     OpenGLBackend *backend() const {
         return m_backend;
@@ -134,8 +130,6 @@ private:
     GLuint vao;
 };
 
-class OpenGLWindowPixmap;
-
 class OpenGLWindow final : public Scene::Window
 {
     Q_OBJECT
@@ -183,7 +177,6 @@ public:
     OpenGLWindow(Toplevel *toplevel, SceneOpenGL *scene);
     ~OpenGLWindow() override;
 
-    WindowPixmap *createWindowPixmap() override;
     void performPaint(int mask, const QRegion &region, const WindowPaintData &data) override;
     QSharedPointer<GLTexture> windowTexture() override;
 
@@ -200,18 +193,6 @@ private:
     SceneOpenGL *m_scene;
     bool m_hardwareClipping = false;
     bool m_blendingEnabled = false;
-};
-
-class OpenGLWindowPixmap : public WindowPixmap
-{
-public:
-    explicit OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL *scene);
-    ~OpenGLWindowPixmap() override;
-    SceneOpenGLTexture *texture() const;
-    bool bind(const QRegion &region);
-    bool isValid() const override;
-private:
-    QScopedPointer<SceneOpenGLTexture> m_texture;
 };
 
 class SceneOpenGL::EffectFrame
@@ -303,11 +284,6 @@ private:
     void resizeTexture();
     QScopedPointer<GLTexture> m_texture;
 };
-
-inline SceneOpenGLTexture* OpenGLWindowPixmap::texture() const
-{
-    return m_texture.data();
-}
 
 class KWIN_EXPORT OpenGLFactory : public SceneFactory
 {

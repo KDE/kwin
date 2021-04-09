@@ -24,7 +24,8 @@ public:
     explicit EglX11Backend(X11WindowedBackend *backend);
     ~EglX11Backend() override;
 
-    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
@@ -40,19 +41,6 @@ private:
 
     QVector<EGLSurface> m_surfaces;
     X11WindowedBackend *m_backend;
-};
-
-/**
- * @brief Texture using an EGLImageKHR.
- */
-class EglX11Texture : public AbstractEglTexture
-{
-public:
-    ~EglX11Texture() override;
-
-private:
-    friend class EglX11Backend;
-    EglX11Texture(SceneOpenGLTexture *texture, EglX11Backend *backend);
 };
 
 } // namespace

@@ -35,13 +35,32 @@ private Q_SLOTS:
     void handleBufferGeometryChanged(Toplevel *toplevel, const QRect &old);
 
 protected:
-    WindowPixmap *createPixmap() override;
+    SurfacePixmap *createPixmap() override;
 
 private:
     xcb_damage_damage_t m_damageHandle = XCB_NONE;
     xcb_xfixes_fetch_region_cookie_t m_damageCookie;
     bool m_isDamaged = false;
     bool m_havePendingDamageRegion = false;
+};
+
+class KWIN_EXPORT SurfacePixmapX11 final : public SurfacePixmap
+{
+    Q_OBJECT
+
+public:
+    explicit SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent = nullptr);
+    ~SurfacePixmapX11() override;
+
+    xcb_pixmap_t pixmap() const;
+    xcb_visualid_t visual() const;
+
+    void create() override;
+    bool isValid() const override;
+
+private:
+    SurfaceItemX11 *m_item;
+    xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
 };
 
 } // namespace KWaylandServer

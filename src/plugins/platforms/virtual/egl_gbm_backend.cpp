@@ -8,6 +8,8 @@
 */
 #include "egl_gbm_backend.h"
 // kwin
+#include "basiceglsurfacetexture_internal.h"
+#include "basiceglsurfacetexture_wayland.h"
 #include "composite.h"
 #include "virtual_backend.h"
 #include "options.h"
@@ -149,9 +151,14 @@ void EglGbmBackend::screenGeometryChanged(const QSize &size)
     // TODO, create new buffer?
 }
 
-SceneOpenGLTexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGLTexture *texture)
+PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    return new EglGbmTexture(texture, this);
+    return new BasicEGLSurfaceTextureInternal(this, pixmap);
+}
+
+PlatformSurfaceTexture *EglGbmBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+{
+    return new BasicEGLSurfaceTextureWayland(this, pixmap);
 }
 
 QRegion EglGbmBackend::beginFrame(int screenId)
@@ -213,16 +220,5 @@ void EglGbmBackend::endFrame(int screenId, const QRegion &renderedRegion, const 
 
     eglSwapBuffers(eglDisplay(), surface());
 }
-
-/************************************************
- * EglTexture
- ************************************************/
-
-EglGbmTexture::EglGbmTexture(KWin::SceneOpenGLTexture *texture, EglGbmBackend *backend)
-    : AbstractEglTexture(texture, backend)
-{
-}
-
-EglGbmTexture::~EglGbmTexture() = default;
 
 } // namespace

@@ -25,7 +25,8 @@ public:
     EglGbmBackend(VirtualBackend *b);
     ~EglGbmBackend() override;
     void screenGeometryChanged(const QSize &size) override;
-    SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     void init() override;
@@ -38,20 +39,6 @@ private:
     GLTexture *m_backBuffer = nullptr;
     GLRenderTarget *m_fbo = nullptr;
     int m_frameCounter = 0;
-    friend class EglGbmTexture;
-};
-
-/**
- * @brief Texture using an EGLImageKHR.
- */
-class EglGbmTexture : public AbstractEglTexture
-{
-public:
-    ~EglGbmTexture() override;
-
-private:
-    friend class EglGbmBackend;
-    EglGbmTexture(SceneOpenGLTexture *texture, EglGbmBackend *backend);
 };
 
 } // namespace

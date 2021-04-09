@@ -7,6 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "qpainterbackend.h"
+#include "platformqpaintersurfacetexture_internal.h"
+#include "platformqpaintersurfacetexture_wayland.h"
 #include <logging.h>
 
 #include <QtGlobal>
@@ -21,6 +23,16 @@ QPainterBackend::QPainterBackend()
 
 QPainterBackend::~QPainterBackend()
 {
+}
+
+PlatformSurfaceTexture *QPainterBackend::createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
+{
+    return new PlatformQPainterSurfaceTextureInternal(this, pixmap);
+}
+
+PlatformSurfaceTexture *QPainterBackend::createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
+{
+    return new PlatformQPainterSurfaceTextureWayland(this, pixmap);
 }
 
 void QPainterBackend::screenGeometryChanged(const QSize &size)

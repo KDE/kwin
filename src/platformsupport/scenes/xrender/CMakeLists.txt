@@ -1,4 +1,7 @@
-set(xrenderbackend_SOURCES xrenderbackend.cpp)
+set(xrenderbackend_SOURCES
+    platformxrendersurfacetexture_x11.cpp
+    xrenderbackend.cpp
+)
 
 ecm_qt_declare_logging_category(xrenderbackend_SOURCES
     HEADER logging.h

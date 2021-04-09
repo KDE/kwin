@@ -48,51 +48,51 @@ QRegion SurfaceItem::damage() const
     return m_damage;
 }
 
-WindowPixmap *SurfaceItem::windowPixmap() const
+SurfacePixmap *SurfaceItem::pixmap() const
 {
-    if (m_windowPixmap && m_windowPixmap->isValid()) {
-        return m_windowPixmap.data();
+    if (m_pixmap && m_pixmap->isValid()) {
+        return m_pixmap.data();
     }
-    if (m_previousWindowPixmap && m_previousWindowPixmap->isValid()) {
-        return m_previousWindowPixmap.data();
+    if (m_previousPixmap && m_previousPixmap->isValid()) {
+        return m_previousPixmap.data();
     }
     return nullptr;
 }
 
-WindowPixmap *SurfaceItem::previousWindowPixmap() const
+SurfacePixmap *SurfaceItem::previousPixmap() const
 {
-    return m_previousWindowPixmap.data();
+    return m_previousPixmap.data();
 }
 
 void SurfaceItem::referencePreviousPixmap()
 {
-    if (m_previousWindowPixmap && m_previousWindowPixmap->isDiscarded()) {
+    if (m_previousPixmap && m_previousPixmap->isDiscarded()) {
         m_referencePixmapCounter++;
     }
 }
 
 void SurfaceItem::unreferencePreviousPixmap()
 {
-    if (!m_previousWindowPixmap || !m_previousWindowPixmap->isDiscarded()) {
+    if (!m_previousPixmap || !m_previousPixmap->isDiscarded()) {
         return;
     }
     m_referencePixmapCounter--;
     if (m_referencePixmapCounter == 0) {
-        m_previousWindowPixmap.reset();
+        m_previousPixmap.reset();
     }
 }
 
 void SurfaceItem::updatePixmap()
 {
-    if (m_windowPixmap.isNull()) {
-        m_windowPixmap.reset(createPixmap());
+    if (m_pixmap.isNull()) {
+        m_pixmap.reset(createPixmap());
     }
-    if (m_windowPixmap->isValid()) {
-        m_windowPixmap->update();
+    if (m_pixmap->isValid()) {
+        m_pixmap->update();
     } else {
-        m_windowPixmap->create();
-        if (m_windowPixmap->isValid()) {
-            m_previousWindowPixmap.reset();
+        m_pixmap->create();
+        if (m_pixmap->isValid()) {
+            m_previousPixmap.reset();
             discardQuads();
         }
     }
@@ -100,12 +100,13 @@ void SurfaceItem::updatePixmap()
 
 void SurfaceItem::discardPixmap()
 {
-    if (!m_windowPixmap.isNull()) {
-        if (m_windowPixmap->isValid()) {
-            m_previousWindowPixmap.reset(m_windowPixmap.take());
-            m_previousWindowPixmap->markAsDiscarded();
+    if (!m_pixmap.isNull()) {
+        if (m_pixmap->isValid()) {
+            m_previousPixmap.reset(m_pixmap.take());
+            m_previousPixmap->markAsDiscarded();
+            m_referencePixmapCounter++;
         } else {
-            m_windowPixmap.reset();
+            m_pixmap.reset();
         }
     }
     addDamage(rect());
@@ -114,6 +115,50 @@ void SurfaceItem::discardPixmap()
 void SurfaceItem::preprocess()
 {
     updatePixmap();
+}
+
+PlatformSurfaceTexture::~PlatformSurfaceTexture()
+{
+}
+
+SurfacePixmap::SurfacePixmap(PlatformSurfaceTexture *platformTexture, QObject *parent)
+    : QObject(parent)
+    , m_platformTexture(platformTexture)
+{
+}
+
+void SurfacePixmap::update()
+{
+}
+
+PlatformSurfaceTexture *SurfacePixmap::platformTexture() const
+{
+    return m_platformTexture.data();
+}
+
+bool SurfacePixmap::hasAlphaChannel() const
+{
+    return m_hasAlphaChannel;
+}
+
+QSize SurfacePixmap::size() const
+{
+    return m_size;
+}
+
+QRect SurfacePixmap::contentsRect() const
+{
+    return m_contentsRect;
+}
+
+bool SurfacePixmap::isDiscarded() const
+{
+    return m_isDiscarded;
+}
+
+void SurfacePixmap::markAsDiscarded()
+{
+    m_isDiscarded = true;
 }
 
 } // namespace KWin

@@ -17,10 +17,18 @@ class QString;
 namespace KWin
 {
 
+class PlatformSurfaceTexture;
+class SurfacePixmapInternal;
+class SurfacePixmapWayland;
+
 class QPainterBackend
 {
 public:
     virtual ~QPainterBackend();
+
+    PlatformSurfaceTexture *createPlatformSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    PlatformSurfaceTexture *createPlatformSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+
     virtual void endFrame(int screenId, int mask, const QRegion &damage) = 0;
     virtual void beginFrame(int screenId) = 0;
     /**

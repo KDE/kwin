@@ -9,6 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_xrender.h"
+#include "platformxrendersurfacetexture_x11.h"
 #include "utils.h"
 #include "xrenderbackend.h"
 
@@ -26,7 +27,7 @@
 #include "renderloop.h"
 #include "screens.h"
 #include "shadowitem.h"
-#include "surfaceitem.h"
+#include "surfaceitem_x11.h"
 #include "xcbutils.h"
 #include "decorations/decoratedclient.h"
 
@@ -139,6 +140,11 @@ Decoration::Renderer *SceneXrender::createDecorationRenderer(Decoration::Decorat
     return new SceneXRenderDecorationRenderer(client);
 }
 
+PlatformSurfaceTexture *SceneXrender::createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap)
+{
+    return new PlatformXrenderSurfaceTextureX11(pixmap);
+}
+
 //****************************************
 // SceneXrender::Window
 //****************************************
@@ -150,7 +156,6 @@ XRenderPicture *SceneXrender::Window::s_fadeAlphaPicture = nullptr;
 SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
     : Scene::Window(c)
     , m_scene(scene)
-    , format(XRenderUtils::findPictFormat(c->visual()))
 {
 }
 
@@ -267,11 +272,20 @@ void SceneXrender::Window::performPaint(int mask, const QRegion &_region, const 
 
     if (region.isEmpty())
         return;
-    XRenderWindowPixmap *pixmap = static_cast<XRenderWindowPixmap *>(surfaceItem()->windowPixmap());
-    if (!pixmap || !pixmap->isValid()) {
+    SurfacePixmap *surfaceTexture = surfaceItem()->pixmap();
+    if (!surfaceTexture || !surfaceTexture->isValid()) {
         return;
     }
-    xcb_render_picture_t pic = pixmap->picture();
+    PlatformXrenderSurfaceTextureX11 *platformSurfaceTexture =
+            static_cast<PlatformXrenderSurfaceTextureX11 *>(surfaceTexture->platformTexture());
+    if (platformSurfaceTexture->picture() == XCB_RENDER_PICTURE_NONE) {
+        if (!platformSurfaceTexture->create()) {
+            qCWarning(KWIN_XRENDER, "Failed to create platform surface texture for window 0x%x",
+                      window()->frameId());
+            return;
+        }
+    }
+    xcb_render_picture_t pic = platformSurfaceTexture->picture();
     if (pic == XCB_RENDER_PICTURE_NONE)   // The render format can be null for GL and/or Xv visuals
         return;
     surfaceItem()->resetDamage();
@@ -503,9 +517,11 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
             xcb_render_composite(connection(), clientRenderOp, pic, clientAlpha, renderTarget,
                                  cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
             if (data.crossFadeProgress() < 1.0 && data.crossFadeProgress() > 0.0) {
-                XRenderWindowPixmap *previous =
-                        static_cast<XRenderWindowPixmap *>(surfaceItem()->previousWindowPixmap());
-                if (previous && previous != pixmap) {
+                SurfacePixmap *previous = surfaceItem()->previousPixmap();
+                if (previous && previous != surfaceTexture) {
+                    auto previousPlatformTexture =
+                            static_cast<PlatformXrenderSurfaceTextureX11 *>(previous->platformTexture());
+
                     static xcb_render_color_t cFadeColor = {0, 0, 0, 0};
                     cFadeColor.alpha = uint16_t((1.0 - data.crossFadeProgress()) * 0xffff);
                     if (!s_fadeAlphaPicture) {
@@ -514,21 +530,24 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
                         xcb_rectangle_t rect = {0, 0, 1, 1};
                         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *s_fadeAlphaPicture, cFadeColor , 1, &rect);
                     }
-                    if (previous->size() != pixmap->size()) {
+                    if (previous->size() != surfaceTexture->size()) {
                         xcb_render_transform_t xform2 = {
-                            DOUBLE_TO_FIXED(FIXED_TO_DOUBLE(xform.matrix11) * previous->size().width() / pixmap->size().width()), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
-                            DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(FIXED_TO_DOUBLE(xform.matrix22) * previous->size().height() / pixmap->size().height()), DOUBLE_TO_FIXED(0),
+                            DOUBLE_TO_FIXED(FIXED_TO_DOUBLE(xform.matrix11) * previous->size().width() / surfaceTexture->size().width()), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
+                            DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(FIXED_TO_DOUBLE(xform.matrix22) * previous->size().height() / surfaceTexture->size().height()), DOUBLE_TO_FIXED(0),
                             DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
                             };
-                        xcb_render_set_picture_transform(connection(), previous->picture(), xform2);
+                        xcb_render_set_picture_transform(connection(), previousPlatformTexture->picture(), xform2);
                     }
 
                     xcb_render_composite(connection(), opaque ? XCB_RENDER_PICT_OP_OVER : XCB_RENDER_PICT_OP_ATOP,
-                                         previous->picture(), *s_fadeAlphaPicture, renderTarget,
+                                         previousPlatformTexture->picture(), *s_fadeAlphaPicture,
+                                         renderTarget,
                                          cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
 
-                    if (previous->size() != pixmap->size()) {
-                        xcb_render_set_picture_transform(connection(), previous->picture(), identity);
+                    if (previous->size() != surfaceTexture->size()) {
+                        xcb_render_set_picture_transform(connection(),
+                                                         previousPlatformTexture->picture(),
+                                                         identity);
                     }
                 }
             }
@@ -609,11 +628,6 @@ void SceneXrender::Window::setPictureFilter(xcb_render_picture_t pic, Scene::Ima
     xcb_render_set_picture_filter(connection(), pic, filterName.length(), filterName.constData(), 0, nullptr);
 }
 
-WindowPixmap* SceneXrender::Window::createWindowPixmap()
-{
-    return new XRenderWindowPixmap(this, format);
-}
-
 void SceneXrender::screenGeometryChanged(const QSize &size)
 {
     Scene::screenGeometryChanged(size);
@@ -628,37 +642,6 @@ xcb_render_picture_t SceneXrender::xrenderBufferPicture() const
 OverlayWindow *SceneXrender::overlayWindow() const
 {
     return m_backend->overlayWindow();
-}
-
-//****************************************
-// XRenderWindowPixmap
-//****************************************
-
-XRenderWindowPixmap::XRenderWindowPixmap(Scene::Window *window, xcb_render_pictformat_t format)
-    : WindowPixmap(window)
-    , m_picture(XCB_RENDER_PICTURE_NONE)
-    , m_format(format)
-{
-}
-
-XRenderWindowPixmap::~XRenderWindowPixmap()
-{
-    if (m_picture != XCB_RENDER_PICTURE_NONE) {
-        xcb_render_free_picture(connection(), m_picture);
-    }
-}
-
-void XRenderWindowPixmap::create()
-{
-    if (isValid()) {
-        return;
-    }
-    KWin::WindowPixmap::create();
-    if (!isValid()) {
-        return;
-    }
-    m_picture = xcb_generate_id(connection());
-    xcb_render_create_picture(connection(), m_picture, pixmap(), m_format, 0, nullptr);
 }
 
 //****************************************

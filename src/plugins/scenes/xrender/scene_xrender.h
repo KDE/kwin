@@ -40,6 +40,7 @@ public:
     xcb_render_picture_t xrenderBufferPicture() const override;
     OverlayWindow *overlayWindow() const override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client) override;
+    PlatformSurfaceTexture *createPlatformSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
 
     bool animationsSupported() const override {
         return true;
@@ -71,8 +72,6 @@ public:
     QRegion transformedShape() const;
     void setTransformedShape(const QRegion& shape);
     static void cleanup();
-protected:
-    WindowPixmap* createWindowPixmap() override;
 private:
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
@@ -81,23 +80,10 @@ private:
     void prepareTempPixmap();
     void setPictureFilter(xcb_render_picture_t pic, ImageFilterType filter);
     SceneXrender *m_scene;
-    xcb_render_pictformat_t format;
     QRegion transformed_shape;
     static QRect temp_visibleRect;
     static XRenderPicture *s_tempPicture;
     static XRenderPicture *s_fadeAlphaPicture;
-};
-
-class XRenderWindowPixmap : public WindowPixmap
-{
-public:
-    explicit XRenderWindowPixmap(Scene::Window *window, xcb_render_pictformat_t format);
-    ~XRenderWindowPixmap() override;
-    xcb_render_picture_t picture() const;
-    void create() override;
-private:
-    xcb_render_picture_t m_picture;
-    xcb_render_pictformat_t m_format;
 };
 
 class SceneXrender::EffectFrame
@@ -138,12 +124,6 @@ inline
 void SceneXrender::Window::setTransformedShape(const QRegion& shape)
 {
     transformed_shape = shape;
-}
-
-inline
-xcb_render_picture_t XRenderWindowPixmap::picture() const
-{
-    return m_picture;
 }
 
 /**
