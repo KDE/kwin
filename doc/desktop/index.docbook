@@ -15,57 +15,52 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2015-04-09</date>
-<releaseinfo>Plasma 5.3</releaseinfo>
+<date>2021-04-09</date>
+<releaseinfo>Plasma 5.20</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>Systemsettings</keyword>
+<keyword>virtual</keyword>
 <keyword>desktop</keyword>
 </keywordset>
 </articleinfo>
 
-<sect1 id="virtual-desktops">
-
-<title>Virtual Desktops</title>
-
-<sect2 id="desktop-number">
-<title><guilabel>Desktops</guilabel></title>
-
-<para>&kde; offers you the possibility to have several virtual
-desktops. In this tab you can configure the number of desktops, the number of rows in the <guilabel>Pager</guilabel> icon
-as well as their names. Just use the input box to adjust the number of
-desktops. You can assign names to the desktops by entering text into the
-text fields below.</para> 
-<!-- not in 5.3
-<para>Enable <guilabel>Different widgets for each desktop</guilabel> 
-to use independent widgets and wallpapers on each individual desktop.
+<para>
+    &kde; offers you the possibility to have several virtual desktops.
 </para>
--->
-</sect2>
-
-<sect2 id="desktop-switching">
-<title><guilabel>Switching</guilabel></title>
+<para>
+    You can change the names to the desktops by clicking on the <guibutton>Rename</guibutton> button (appears when you hover the desktop item in the list) and entering text into the text field.
+</para>
+<para>
+    If you want to remove a desktop, use the trash overlay icon at the right of the desktop item.
+</para>
+<para>
+    Press the <guibutton>Add</guibutton> button to add a virtual desktop (default name is <guilabel>New Desktop</guilabel>) to the list.
+</para>
+<para>
+    You can configure the number of rows in the pager item on the panel. Just use the rows input box below the list to adjust the number of desktops. The desktops will be rearranged by the rows automatically.
+</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Desktop navigation wraps around</guilabel></term>
-<listitem><para>Enable this option if you want keyboard or active desktop border navigation 
+<term><guilabel>Navigation wraps around</guilabel></term>
+<listitem><para>Enable this option if you want a keyboard or active desktop border navigation 
 beyond the edge of a desktop to take you to the opposite edge of the new desktop.
 </para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Desktop Effect Animation</guilabel></term>
-<listitem><para>Select <guilabel>No Animation</guilabel>, <guilabel>Slide</guilabel>, 
-<guilabel>Desktop Cube Animation</guilabel> or <guilabel>Fade Desktop</guilabel>
-from the drop down box. If the selected animation has settings options, click on the 
-tools icon on the right of the drop down box to launch a configuration dialog. 
+<term><guilabel>Show animation when switching</guilabel></term>
+<listitem><para>Select <guilabel>Slide</guilabel>, 
+<guilabel>Desktop Cube Animation</guilabel>, or <guilabel>Fade Desktop</guilabel>
+from the drop-down box or switch animations off by unchecking the item. If the selected animation has settings options, click on the 
+tools icon on the right of the drop-down box to launch a configuration dialog. 
 </para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Desktop Switch On-Screen Display</guilabel></term>
+<term><guilabel>Show on-screen display when switching</guilabel></term>
 <listitem><para>Enable this option if you want to have an on-screen display for desktop switching. 
 </para></listitem>
 </varlistentry>
@@ -77,13 +72,6 @@ indicating the selected desktop.
 </para></listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Shortcuts</guilabel></term>
-<listitem><para>This section displays the configured shortcuts for switching the desktops 
-and allows you to edit them.
-</para></listitem>
-</varlistentry>
-
 </variablelist>
 
 <para>Scrolling the mouse wheel over an empty space on the
@@ -92,7 +80,5 @@ virtual desktop numerically, in the direction you scrolled (either up or down).<
 <para>You can change this default behavior on the page <guilabel>Mouse Actions</guilabel> in 
 the <guilabel>Desktop Settings</guilabel> (<keycombo action="simul">&Alt;<keycap>D</keycap></keycombo>, 
 <keycombo action="simul">&Alt;<keycap>S</keycap></keycombo>).</para>
-</sect2>
-</sect1>
 
 </article>
