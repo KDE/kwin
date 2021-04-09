@@ -428,8 +428,8 @@ public:
     virtual Outputs enabledOutputs() const {
         return Outputs();
     }
-    AbstractOutput *findOutput(int screenId);
-    AbstractOutput *findOutput(const QUuid &uuid);
+    AbstractOutput *findOutput(int screenId) const;
+    AbstractOutput *findOutput(const QUuid &uuid) const;
 
     /**
      * A string of information to include in kwin debug output

@@ -164,12 +164,12 @@ void Platform::requestOutputsChange(KWaylandServer::OutputConfigurationInterface
     config->setApplied();
 }
 
-AbstractOutput *Platform::findOutput(int screenId)
+AbstractOutput *Platform::findOutput(int screenId) const
 {
     return enabledOutputs().value(screenId);
 }
 
-AbstractOutput *Platform::findOutput(const QUuid &uuid)
+AbstractOutput *Platform::findOutput(const QUuid &uuid) const
 {
     const auto outs = outputs();
     auto it = std::find_if(outs.constBegin(), outs.constEnd(),
