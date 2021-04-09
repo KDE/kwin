@@ -272,4 +272,14 @@ void LayerShellV1Client::handleOutputDestroyed()
     destroyClient();
 }
 
+void LayerShellV1Client::setVirtualKeyboardGeometry(const QRect &geo)
+{
+    if (m_virtualKeyboardGeometry == geo) {
+        return;
+    }
+
+    m_virtualKeyboardGeometry = geo;
+    scheduleRearrange();
+}
+
 } // namespace KWin

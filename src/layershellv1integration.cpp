@@ -148,6 +148,11 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
             geometry.translate(0, -shellSurface->bottomMargin());
         }
 
+        // Move the window's bottom if its virtual keyboard is overlapping it
+        if (shellSurface->exclusiveZone() >= 0 && !client->virtualKeyboardGeometry().isEmpty() && geometry.bottom() > client->virtualKeyboardGeometry().top()) {
+            geometry.setBottom(client->virtualKeyboardGeometry().top());
+        }
+
         if (geometry.isValid()) {
             client->setFrameGeometry(geometry);
         } else {

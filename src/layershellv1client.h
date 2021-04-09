@@ -43,6 +43,7 @@ public:
     bool hasStrut() const override;
     void destroyClient() override;
     void closeWindow() override;
+    void setVirtualKeyboardGeometry(const QRect &geo) override;
 
 protected:
     Layer belongsToLayer() const override;
