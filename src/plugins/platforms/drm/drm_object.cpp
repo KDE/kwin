@@ -52,9 +52,6 @@ bool DrmObject::initProps(const QVector<PropertyDefinition> &&vector, uint32_t o
                 drmModePropertyBlobRes *blob = nullptr;
                 if (prop->flags & DRM_MODE_PROP_BLOB) {
                     blob = drmModeGetPropertyBlob(m_gpu->fd(), properties->prop_values[i]);
-                    if (!blob) {
-                        break;
-                    }
                 }
                 qCDebug(KWIN_DRM, "Found property %s with value %lu", def.name.data(), properties->prop_values[i]);
                 m_props[j] = new Property(prop.data(), properties->prop_values[i], def.enumNames, blob);

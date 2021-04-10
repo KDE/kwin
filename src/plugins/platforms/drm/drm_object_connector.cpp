@@ -50,15 +50,16 @@ bool DrmConnector::init()
     }
 
     // parse edid
-    if (auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)]) {
+    auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)];
+    if (edidProp && edidProp->blob() && edidProp->blob()->data) {
         m_edid = Edid(edidProp->blob()->data, edidProp->blob()->length);
         if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM, "Couldn't parse EDID for connector with id %d", id());
         }
-        deleteProp(PropertyIndex::Edid);
     } else {
         qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
     }
+    deleteProp(PropertyIndex::Edid);
 
     // check the physical size
     if (m_edid.physicalSize().isEmpty()) {
