@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title>Touch Screen</title>
+<authorgroup>
+<author>&Mike.McBride; &Mike.McBride.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2021-04-10</date>
+<releaseinfo>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>Systemsettings</keyword>
+<keyword>touch</keyword>
+<keyword>screen</keyword>
+</keywordset>
+</articleinfo>
+
+<para>Swiping from the screen edge towards the center of the screen allow you to activate effects. Here you can configure which effect will get activated on each edge of the screen.
+</para>
+
+<para>Click with any mouse button onto a square and select an effect 
+in the context menu. Edges with a blue square have already an attached effect, 
+a grey-colored square indicates that no effect is selected for this edge.</para>
+
+<para>The number of accessible items in the context menu depends on the settings in the module
+	<ulink url="help:/kcontrol/kwineffects/index.html">
+<guilabel>Desktop Effects</guilabel></ulink> in the <guilabel>Workspace</guilabel>
+category. Select your favorite effects from the <guilabel>Window Management</guilabel> 
+group. This activates the corresponding items in the context menu.</para>
+</article>

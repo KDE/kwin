@@ -2,6 +2,7 @@
 Icon=preferences-desktop-gestures-touch
 Type=Service
 X-KDE-ServiceTypes=KCModule
+X-DocPath=kcontrol/kwintouchscreen/index.html
 
 X-KDE-Library=kcm_kwintouchscreen
 X-KDE-ParentApp=kcontrol
