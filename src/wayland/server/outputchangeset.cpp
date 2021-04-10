@@ -19,6 +19,7 @@ OutputChangeSetPrivate::OutputChangeSetPrivate(OutputDeviceInterface *outputdevi
     , position(outputDevice->globalPosition())
     , scale(outputDevice->scaleF())
     , colorCurves(outputDevice->colorCurves())
+    , overscan(outputDevice->overscan())
 {
 }
 
@@ -87,6 +88,16 @@ bool OutputChangeSet::colorCurvesChanged() const
 OutputDeviceInterface::ColorCurves OutputChangeSet::colorCurves() const
 {
     return d->colorCurves;
+}
+
+bool OutputChangeSet::overscanChanged() const
+{
+    return d->overscan != d->outputDevice->overscan();
+}
+
+uint32_t OutputChangeSet::overscan() const
+{
+    return d->overscan;
 }
 
 }

@@ -62,6 +62,11 @@ public:
      */
     bool colorCurvesChanged() const;
 
+    /** Whether the overscan() property of the outputdevice changed.
+     * @returns @c true if the overscan() property of the outputdevice has changed
+     */
+    bool overscanChanged() const;
+
     /** The new value for enabled. */
     OutputDeviceInterface::Enablement enabled() const;
 
@@ -81,6 +86,9 @@ public:
     /** The new value for colorCurves.
      */
     OutputDeviceInterface::ColorCurves colorCurves() const;
+
+    /** the overscan value in % */
+    uint32_t overscan() const;
 
 private:
     friend class OutputConfigurationInterfacePrivate;

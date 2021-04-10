@@ -43,6 +43,8 @@ class KWAYLANDSERVER_EXPORT OutputDeviceInterface : public QObject
     Q_PROPERTY(QByteArray edid READ edid WRITE setEdid NOTIFY edidChanged)
     Q_PROPERTY(OutputDeviceInterface::Enablement enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(QUuid uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
+    Q_PROPERTY(Capabilities capabilities READ capabilities WRITE setCapabilities NOTIFY capabilitiesChanged)
+    Q_PROPERTY(uint32_t overscan READ overscan WRITE setOverscan NOTIFY overscanChanged)
 public:
     enum class SubPixel {
         Unknown,
@@ -82,6 +84,10 @@ public:
         bool operator==(const ColorCurves &cc) const;
         bool operator!=(const ColorCurves &cc) const;
     };
+    enum class Capability {
+        Overscan = 0x1,
+    };
+    Q_DECLARE_FLAGS(Capabilities, Capability)
 
     explicit OutputDeviceInterface(Display *display, QObject *parent = nullptr);
     ~OutputDeviceInterface() override;
@@ -105,6 +111,9 @@ public:
     QByteArray edid() const;
     OutputDeviceInterface::Enablement enabled() const;
     QUuid uuid() const;
+
+    Capabilities capabilities() const;
+    uint32_t overscan() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -136,6 +145,9 @@ public:
     void setEnabled(OutputDeviceInterface::Enablement enabled);
     void setUuid(const QUuid &uuid);
 
+    void setCapabilities(Capabilities cap);
+    void setOverscan(uint32_t overscan);
+
     static OutputDeviceInterface *get(wl_resource *native);
     static QList<OutputDeviceInterface *>list();
 
@@ -159,6 +171,9 @@ Q_SIGNALS:
     void edidChanged();
     void enabledChanged();
     void uuidChanged();
+
+    void capabilitiesChanged();
+    void overscanChanged();
 
 private:
     QScopedPointer<OutputDeviceInterfacePrivate> d;

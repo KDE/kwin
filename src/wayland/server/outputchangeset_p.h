@@ -24,6 +24,7 @@ public:
     QPoint position;
     qreal scale;
     OutputDeviceInterface::ColorCurves colorCurves;
+    uint32_t overscan;
 };
 
 }

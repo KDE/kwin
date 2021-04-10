@@ -47,6 +47,7 @@ protected:
     void org_kde_kwin_outputconfiguration_colorcurves(Resource *resource, wl_resource *outputdevice, wl_array *red, wl_array *green, wl_array *blue) override;
     void org_kde_kwin_outputconfiguration_destroy(Resource *resource) override;
     void org_kde_kwin_outputconfiguration_destroy_resource(Resource *resource) override;
+    void org_kde_kwin_outputconfiguration_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan) override;
 };
 
 void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
@@ -180,6 +181,17 @@ void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_color
     fillVector(blue, &cc.blue);
 
     pendingChanges(output)->d->colorCurves = cc;
+}
+
+void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan)
+{
+    Q_UNUSED(resource)
+    if (overscan > 100) {
+        qCWarning(KWAYLAND_SERVER) << "Invalid overscan requested:" << overscan;
+        return;
+    }
+    OutputDeviceInterface *output = OutputDeviceInterface::get(outputdevice);
+    pendingChanges(output)->d->overscan = overscan;
 }
 
 void OutputConfigurationInterfacePrivate::org_kde_kwin_outputconfiguration_destroy(Resource *resource)

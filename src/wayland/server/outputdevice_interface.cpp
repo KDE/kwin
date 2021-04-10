@@ -17,7 +17,7 @@
 namespace KWaylandServer
 {
 
-static const quint32 s_version = 2;
+static const quint32 s_version = 3;
 
 class OutputDeviceInterfacePrivate : public QtWaylandServer::org_kde_kwin_outputdevice
 {
@@ -33,6 +33,8 @@ public:
     void updateColorCurves();
     void updateEisaId();
     void updateSerialNumber();
+    void updateCapabilities();
+    void updateOverscan();
 
     void sendGeometry(Resource *resource);
     void sendMode(Resource *resource, const OutputDeviceInterface::Mode &mode);
@@ -44,6 +46,8 @@ public:
     void sendColorCurves(Resource *resource);
     void sendEisaId(Resource *resource);
     void sendSerialNumber(Resource *resource);
+    void sendCapabilities(Resource *resource);
+    void sendOverscan(Resource *resource);
 
     static OutputDeviceInterface *get(wl_resource *native);
 
@@ -63,6 +67,8 @@ public:
     QByteArray edid;
     OutputDeviceInterface::Enablement enabled = OutputDeviceInterface::Enablement::Enabled;
     QUuid uuid;
+    OutputDeviceInterface::Capabilities capabilities;
+    uint32_t overscan = 0;
     QPointer<Display> display;
     OutputDeviceInterface *q;
 
@@ -315,6 +321,8 @@ void OutputDeviceInterfacePrivate::org_kde_kwin_outputdevice_bind_resource(Resou
     sendUuid(resource);
     sendEdid(resource);
     sendEnabled(resource);
+    sendCapabilities(resource);
+    sendOverscan(resource);
     sendDone(resource);
 }
 
@@ -630,6 +638,66 @@ void OutputDeviceInterfacePrivate::updateEisaId()
     const auto clientResources = resourceMap();
     for (auto resource : clientResources) {
         sendEisaId(resource);
+    }
+}
+
+uint32_t OutputDeviceInterface::overscan() const
+{
+    return d->overscan;
+}
+
+OutputDeviceInterface::Capabilities OutputDeviceInterface::capabilities() const
+{
+    return d->capabilities;
+}
+
+void OutputDeviceInterface::setCapabilities(Capabilities cap)
+{
+    if (d->capabilities != cap) {
+        d->capabilities = cap;
+        d->updateCapabilities();
+        emit capabilitiesChanged();
+    }
+}
+
+void OutputDeviceInterfacePrivate::sendCapabilities(Resource *resource)
+{
+    if (resource->version() < ORG_KDE_KWIN_OUTPUTDEVICE_CAPABILITIES_SINCE_VERSION) {
+        return;
+    }
+    send_capabilities(resource->handle, static_cast<uint32_t>(capabilities));
+}
+
+void OutputDeviceInterfacePrivate::updateCapabilities()
+{
+    const auto clientResources = resourceMap();
+    for (const auto &resource : clientResources) {
+        sendCapabilities(resource);
+    }
+}
+
+void OutputDeviceInterface::setOverscan(uint32_t overscan)
+{
+    if (d->overscan != overscan) {
+        d->overscan = overscan;
+        d->updateOverscan();
+        emit overscanChanged();
+    }
+}
+
+void OutputDeviceInterfacePrivate::sendOverscan(Resource *resource)
+{
+    if (resource->version() < ORG_KDE_KWIN_OUTPUTDEVICE_OVERSCAN_SINCE_VERSION) {
+        return;
+    }
+    send_overscan(resource->handle, static_cast<uint32_t>(overscan));
+}
+
+void OutputDeviceInterfacePrivate::updateOverscan()
+{
+    const auto clientResources = resourceMap();
+    for (const auto &resource : clientResources) {
+        sendOverscan(resource);
     }
 }
 
