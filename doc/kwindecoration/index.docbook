@@ -111,7 +111,7 @@ The available options depend on the selected style.
 </sect2>
 
 <sect2>
-<title>Titelbar Buttons</title>
+<title>Titlebar Buttons</title>
 
 <para>This tab allows you to customize the button location on the titlebar. 
 You can drag buttons &eg; the <guilabel>Application menu</guilabel> into the 
