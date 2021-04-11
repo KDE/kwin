@@ -201,22 +201,13 @@ qreal X11Client::bufferScale() const
         return 1.0;
     }
 
-    if (captionNormal().contains("Steam") || captionNormal().contains("Spotify") || m_clientFrameExtents.isNull() /* todo: check for presence of GTK atom */) {
-        auto f = QFile(QStringLiteral("/proc/%1/environ").arg(pid()));
-        if (!f.open(QIODevice::ReadOnly)) {
-            return 1.0;
-        }
-
-        auto all = f.readAll();
-        f.close();
-        auto split = all.split('\0');
-        for (auto& item : split) {
-            if (item.startsWith("GDK_SCALE=")) {
-                return QString(item.chopped(10)).toInt();
-            }
+    const Platform *platform = kwinApp()->platform();
+    const QVector<AbstractOutput *> outputs = platform->enabledOutputs();
+    for (auto output : outputs) {
+        if (isOnOutput(output)) {
+            return output->scale();
         }
     }
-
     return 1.0;
 }
 
