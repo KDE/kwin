@@ -62,6 +62,7 @@ bool DrmConnector::init()
             PropertyDefinition(QByteArrayLiteral("non-desktop")),
             PropertyDefinition(QByteArrayLiteral("DPMS")),
             PropertyDefinition(QByteArrayLiteral("EDID")),
+            PropertyDefinition(QByteArrayLiteral("overscan")),
         }, DRM_MODE_OBJECT_CONNECTOR)) {
         return false;
     }
@@ -206,6 +207,22 @@ AbstractWaylandOutput::SubPixel DrmConnector::subpixel() const
     }
 }
 
+bool DrmConnector::hasOverscan() const
+{
+    return m_props[static_cast<uint32_t>(PropertyIndex::Overscan)];
+}
 
+uint32_t DrmConnector::overscan() const
+{
+    if (const auto &prop = m_props[static_cast<uint32_t>(PropertyIndex::Overscan)]) {
+        return prop->value();
+    }
+    return 0;
+}
+
+void DrmConnector::setOverscan(uint32_t overscan)
+{
+    setValue(PropertyIndex::Overscan, overscan);
+}
 
 }

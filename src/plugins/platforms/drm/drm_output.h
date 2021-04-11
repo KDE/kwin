@@ -102,6 +102,7 @@ private:
 
     int gammaRampSize() const override;
     bool setGammaRamp(const GammaRamp &gamma) override;
+    void setOverscan(uint32_t overscan) override;
 
     DrmBackend *m_backend;
     DrmGpu *m_gpu;

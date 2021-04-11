@@ -26,6 +26,8 @@ private Q_SLOTS:
     void handleEnabledChanged();
     void handleTransformChanged();
     void handleModeChanged();
+    void handleCapabilitiesChanged();
+    void handleOverscanChanged();
 
 private:
     AbstractWaylandOutput *m_platformOutput;

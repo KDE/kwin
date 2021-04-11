@@ -65,6 +65,7 @@ public:
 
     enum class Capability : uint {
         Dpms = 0x1,
+        Overscan = 0x2,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -128,6 +129,9 @@ public:
     DpmsMode dpmsMode() const;
     virtual void setDpmsMode(DpmsMode mode);
 
+    uint32_t overscan() const;
+    virtual void setOverscan(uint32_t overscan);
+
     /**
      * Returns a matrix that can translate into the display's coordinates system
      */
@@ -144,6 +148,8 @@ Q_SIGNALS:
     void scaleChanged();
     void transformChanged();
     void dpmsModeChanged();
+    void capabilitiesChanged();
+    void overscanChanged();
 
 protected:
     void initialize(const QString &model, const QString &manufacturer,
@@ -178,6 +184,7 @@ protected:
     void setDpmsModeInternal(DpmsMode dpmsMode);
     void setCapabilityInternal(Capability capability, bool on = true);
     void setSubPixelInternal(SubPixel subPixel);
+    void setOverscanInternal(uint32_t overscan);
 
     QSize orientateSize(const QSize &size) const;
 
@@ -202,6 +209,7 @@ private:
     int m_recorders = 0;
     bool m_isEnabled = true;
     bool m_internal = false;
+    uint32_t m_overscan = 0;
 };
 
 }

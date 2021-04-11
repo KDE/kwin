@@ -158,6 +158,10 @@ bool DrmOutput::init()
     setSubPixelInternal(m_conn->subpixel());
     setInternal(m_conn->isInternal());
     setCapabilityInternal(Capability::Dpms);
+    if (m_conn->hasOverscan()) {
+        setCapabilityInternal(Capability::Overscan);
+        setOverscanInternal(m_conn->overscan());
+    }
     initOutputDevice();
 
     m_pipeline = new DrmPipeline(this, m_gpu, m_conn, m_crtc, m_primaryPlane, m_cursorPlane);
@@ -415,6 +419,14 @@ int DrmOutput::gammaRampSize() const
 bool DrmOutput::setGammaRamp(const GammaRamp &gamma)
 {
     return m_pipeline->setGammaRamp(gamma);
+}
+
+void DrmOutput::setOverscan(uint32_t overscan)
+{
+    if (m_conn->hasOverscan() && overscan <= 100) {
+        m_conn->setOverscan(overscan);
+        setOverscanInternal(overscan);
+    }
 }
 
 }

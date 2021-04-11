@@ -37,7 +37,10 @@ AbstractWaylandOutput::Capabilities AbstractWaylandOutput::capabilities() const
 
 void AbstractWaylandOutput::setCapabilityInternal(Capability capability, bool on)
 {
-    m_capabilities.setFlag(capability, on);
+    if (static_cast<bool>(m_capabilities & capability) != on) {
+        m_capabilities.setFlag(capability, on);
+        emit capabilitiesChanged();
+    }
 }
 
 QString AbstractWaylandOutput::name() const
@@ -171,6 +174,10 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
         qCDebug(KWIN_CORE) << "Setting scale:" << changeSet->scaleF();
         setScale(changeSet->scaleF());
         emitModeChanged = true;
+    }
+    if (changeSet->overscanChanged()) {
+        qCDebug(KWIN_CORE) << "Setting overscan:" << changeSet->overscan();
+        setOverscan(changeSet->overscan());
     }
 
     overallSizeCheckNeeded |= emitModeChanged;
@@ -341,6 +348,24 @@ void AbstractWaylandOutput::recordingStopped()
 bool AbstractWaylandOutput::isBeingRecorded()
 {
     return m_recorders;
+}
+
+void AbstractWaylandOutput::setOverscanInternal(uint32_t overscan)
+{
+    if (m_overscan != overscan) {
+        m_overscan = overscan;
+        emit overscanChanged();
+    }
+}
+
+uint32_t AbstractWaylandOutput::overscan() const
+{
+    return m_overscan;
+}
+
+void AbstractWaylandOutput::setOverscan(uint32_t overscan)
+{
+    Q_UNUSED(overscan);
 }
 
 }

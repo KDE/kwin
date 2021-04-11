@@ -20,6 +20,15 @@ static KWaylandServer::OutputDeviceInterface::SubPixel kwinSubPixelToOutputDevic
     return static_cast<KWaylandServer::OutputDeviceInterface::SubPixel>(subPixel);
 }
 
+static KWaylandServer::OutputDeviceInterface::Capabilities kwinCapabilitiesToOutputDeviceCapabilities(AbstractWaylandOutput::Capabilities caps)
+{
+    KWaylandServer::OutputDeviceInterface::Capabilities ret;
+    if (caps & AbstractWaylandOutput::Capability::Overscan) {
+        ret |= KWaylandServer::OutputDeviceInterface::Capability::Overscan;
+    }
+    return ret;
+}
+
 WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject *parent)
     : QObject(parent)
     , m_platformOutput(output)
@@ -36,6 +45,8 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDevice->setEisaId(output->eisaId());
     m_outputDevice->setSerialNumber(output->serialNumber());
     m_outputDevice->setSubPixel(kwinSubPixelToOutputDeviceSubPixel(output->subPixel()));
+    m_outputDevice->setOverscan(output->overscan());
+    m_outputDevice->setCapabilities(kwinCapabilitiesToOutputDeviceCapabilities(output->capabilities()));
 
     const auto modes = output->modes();
     for (const AbstractWaylandOutput::Mode &mode : modes) {
@@ -64,6 +75,10 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
             this, &WaylandOutputDevice::handleTransformChanged);
     connect(output, &AbstractWaylandOutput::modeChanged,
             this, &WaylandOutputDevice::handleModeChanged);
+    connect(output, &AbstractWaylandOutput::capabilitiesChanged,
+            this, &WaylandOutputDevice::handleCapabilitiesChanged);
+    connect(output, &AbstractWaylandOutput::overscanChanged,
+            this, &WaylandOutputDevice::handleOverscanChanged);
 }
 
 void WaylandOutputDevice::handleGeometryChanged()
@@ -93,6 +108,16 @@ void WaylandOutputDevice::handleTransformChanged()
 void WaylandOutputDevice::handleModeChanged()
 {
     m_outputDevice->setCurrentMode(m_platformOutput->modeSize(), m_platformOutput->refreshRate());
+}
+
+void WaylandOutputDevice::handleCapabilitiesChanged()
+{
+    m_outputDevice->setCapabilities(kwinCapabilitiesToOutputDeviceCapabilities(m_platformOutput->capabilities()));
+}
+
+void WaylandOutputDevice::handleOverscanChanged()
+{
+    m_outputDevice->setOverscan(m_platformOutput->overscan());
 }
 
 } // namespace KWin
