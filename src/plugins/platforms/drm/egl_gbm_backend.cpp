@@ -272,13 +272,13 @@ int EglGbmBackend::getDmabufForSecondaryGpuOutput(AbstractOutput *output, uint32
         return -1;
     }
     it->secondaryBuffer = QSharedPointer<GbmBuffer>::create(it->gbmSurface);
-    int fd = gbm_bo_get_fd(it->buffer->getBo());
+    int fd = gbm_bo_get_fd(it->secondaryBuffer->getBo());
     if (fd == -1) {
         qCDebug(KWIN_DRM) << "failed to export gbm_bo as dma-buf!";
         return -1;
     }
-    *format = gbm_bo_get_format(it->buffer->getBo());
-    *stride = gbm_bo_get_stride(it->buffer->getBo());
+    *format = gbm_bo_get_format(it->secondaryBuffer->getBo());
+    *stride = gbm_bo_get_stride(it->secondaryBuffer->getBo());
     return fd;
 }
 
