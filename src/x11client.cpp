@@ -197,6 +197,7 @@ void X11Client::deleteClient(X11Client *c)
 
 qreal X11Client::bufferScale() const
 {
+    qDebug() << "X11 bufferscale";
     if (!waylandServer()) {
         return 1.0;
     }
@@ -208,6 +209,7 @@ qreal X11Client::bufferScale() const
             return output->scale();
         }
     }
+    qDebug() << "return fallback";
     return 1.0;
 }
 
