@@ -306,7 +306,12 @@ UdevDevice::Ptr UdevMonitor::getDevice()
     if (!m_monitor) {
         return UdevDevice::Ptr();
     }
-    return UdevDevice::Ptr(new UdevDevice(udev_monitor_receive_device(m_monitor)));
+    auto dev = udev_monitor_receive_device(m_monitor);
+    if (!dev) {
+        return {};
+    }
+
+    return UdevDevice::Ptr(new UdevDevice(dev));
 }
 
 }
