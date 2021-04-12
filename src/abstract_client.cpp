@@ -1004,7 +1004,7 @@ void AbstractClient::finishMoveResize(bool cancel)
     checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
     if (screen() != moveResizeStartScreen()) {
         if (isFullScreen() || isElectricBorderMaximizing()) {
-            updateGeometryRestoresForFullscreen();
+            updateGeometryRestoresForFullscreen(screen());
         }
         workspace()->sendClientToScreen(this, screen()); // checks rule validity
         if (maximizeMode() != MaximizeRestore) {
@@ -3268,7 +3268,7 @@ void AbstractClient::sendToScreen(int newScreen)
     }
 
     if (isFullScreen()) {
-        updateGeometryRestoresForFullscreen();
+        updateGeometryRestoresForFullscreen(newScreen);
         checkWorkspacePosition(oldGeom);
     } else {
         // align geom_restore - checkWorkspacePosition operates on it
@@ -3292,9 +3292,9 @@ void AbstractClient::sendToScreen(int newScreen)
         (*it)->sendToScreen(newScreen);
 }
 
-void AbstractClient::updateGeometryRestoresForFullscreen()
+void AbstractClient::updateGeometryRestoresForFullscreen(int screen)
 {
-    QRect screenArea = workspace()->clientArea(MaximizeArea, screen(), desktop());
+    QRect screenArea = workspace()->clientArea(MaximizeArea, screen, desktop());
     QRect newFullScreenGeometryRestore = screenArea;
     if (!(maximizeMode() & MaximizeVertical)) {
         newFullScreenGeometryRestore.setHeight(geometryRestore().height());
