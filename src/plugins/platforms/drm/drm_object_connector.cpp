@@ -42,14 +42,6 @@ bool DrmConnector::init()
         return false;
     }
 
-    if (auto dpmsProp = m_props[static_cast<uint32_t>(PropertyIndex::Dpms)]) {
-        // the dpms property makes atomic commits fail
-        // for legacy it will be explicitly set
-        dpmsProp->setImmutable();
-    } else {
-        qCDebug(KWIN_DRM) << "Could not find DPMS property!";
-    }
-
     // parse edid
     if (auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)]) {
         m_edid = Edid(edidProp->blob()->data, edidProp->blob()->length);

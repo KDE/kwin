@@ -135,15 +135,11 @@ protected:
         const QByteArray &name() const {
             return m_propName;
         }
-        /**
-         * while this is usually automatically set, some properties
-         * (like DPMS) are not meant to be used in AMS
-         */
-        void setImmutable() {
-            m_immutable = true;
-        }
         bool isImmutable() const {
             return m_immutable;
+        }
+        bool isAtomic() const {
+            return m_atomic;
         }
         drmModePropertyBlobRes *blob() const {
             return m_blob.data();
@@ -157,6 +153,7 @@ protected:
         QVector<uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
         bool m_immutable = false;
+        bool m_atomic;
         DrmScopedPointer<drmModePropertyBlobRes> m_blob;
     };
 
