@@ -67,11 +67,13 @@ void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation locati
     w->setProperty("kwin_slide_offset", offset);
 }
 
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 81)
 QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
 {
     Q_UNUSED(ids)
     return {};
 }
+#endif
 
 void WindowEffects::presentWindows(WId controller, const QList<WId> &ids)
 {

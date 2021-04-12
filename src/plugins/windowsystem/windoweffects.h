@@ -18,7 +18,9 @@ public:
 
     bool isEffectAvailable(KWindowEffects::Effect effect) override;
     void slideWindow(WId id, KWindowEffects::SlideFromLocation location, int offset) override;
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 81)
     QList<QSize> windowSizes(const QList<WId> &ids) override;
+#endif
     void presentWindows(WId controller, const QList<WId> &ids) override;
     void presentWindows(WId controller, int desktop = NET::OnAllDesktops) override;
     void highlightWindows(WId controller, const QList<WId> &ids) override;
