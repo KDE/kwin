@@ -256,6 +256,21 @@ const char *UdevDevice::property(const char *key)
     return udev_device_get_property_value(m_device, key);
 }
 
+QMap<QByteArray, QByteArray> UdevDevice::properties() const
+{
+    QMap<QByteArray, QByteArray> r;
+    if (!m_device) {
+        return r;
+    }
+
+    auto it = udev_device_get_properties_list_entry(m_device);
+    auto current = it;
+    udev_list_entry_foreach (current, it) {
+        r.insert(udev_list_entry_get_name(current), udev_list_entry_get_value(current));
+    }
+    return r;
+}
+
 bool UdevDevice::hasProperty(const char *key, const char *value)
 {
     const char *p = property(key);

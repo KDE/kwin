@@ -34,6 +34,8 @@ public:
     const char *property(const char *key);
     bool hasProperty(const char *key, const char *value);
 
+    QMap<QByteArray, QByteArray> properties() const;
+
     operator udev_device*() const {
         return m_device;
     }
