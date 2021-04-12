@@ -249,24 +249,22 @@ bool DrmBackend::initialize()
             QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
             connect(notifier, &QSocketNotifier::activated, this,
                 [this] {
-                    auto device = m_udevMonitor->getDevice();
-                    if (!device) {
-                        return;
-                    }
-                    bool drm = false;
-                    for (auto gpu : m_gpus) {
-                        if (gpu->drmId() == device->sysNum()) {
-                            drm = true;
-                            break;
+                    while (auto device = m_udevMonitor->getDevice()) {
+                        bool drm = false;
+                        for (auto gpu : m_gpus) {
+                            if (gpu->drmId() == device->sysNum()) {
+                                drm = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!drm) {
-                        return;
-                    }
-                    if (device->hasProperty("HOTPLUG", "1")) {
-                        qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
-                        updateOutputs();
-                        updateCursor();
+                        if (!drm) {
+                            return;
+                        }
+                        if (device->hasProperty("HOTPLUG", "1")) {
+                            qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
+                            updateOutputs();
+                            updateCursor();
+                        }
                     }
                 }
             );
