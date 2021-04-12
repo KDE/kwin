@@ -10,9 +10,11 @@
 #include "main.h"
 #include "platform.h"
 #include "session.h"
+#include "utils.h"
 // Qt
 #include <QByteArray>
 #include <QScopedPointer>
+#include <QDebug>
 // system
 #include <libudev.h>
 #include <functional>
@@ -199,7 +201,12 @@ std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
 
 UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
 {
-    return UdevDevice::Ptr(new UdevDevice(udev_device_new_from_syspath(m_udev, syspath)));
+    auto dev = udev_device_new_from_syspath(m_udev, syspath);
+    if (!dev) {
+        qCWarning(KWIN_CORE) << "failed to retrieve device for" << syspath << strerror(errno);
+        return {};
+    }
+    return UdevDevice::Ptr(new UdevDevice(dev));
 }
 
 UdevMonitor *Udev::monitor()
@@ -215,54 +222,37 @@ UdevMonitor *Udev::monitor()
 UdevDevice::UdevDevice(udev_device *device)
     : m_device(device)
 {
+    Q_ASSERT(device);
 }
 
 UdevDevice::~UdevDevice()
 {
-    if (m_device) {
-        udev_device_unref(m_device);
-    }
+    udev_device_unref(m_device);
 }
 
 udev_device *UdevDevice::getParentWithSubsystemDevType(const char *subsystem, const char *devtype) const
 {
-    if (!m_device) {
-        return nullptr;
-    }
     return udev_device_get_parent_with_subsystem_devtype(m_device, subsystem, devtype);
 }
 
 const char *UdevDevice::devNode()
 {
-    if (!m_device) {
-        return nullptr;
-    }
     return udev_device_get_devnode(m_device);
 }
 
 int UdevDevice::sysNum() const
 {
-    if (!m_device) {
-        return 0;
-    }
     return QByteArray(udev_device_get_sysnum(m_device)).toInt();
 }
 
 const char *UdevDevice::property(const char *key)
 {
-    if (!m_device) {
-        return nullptr;
-    }
     return udev_device_get_property_value(m_device, key);
 }
 
 QMap<QByteArray, QByteArray> UdevDevice::properties() const
 {
     QMap<QByteArray, QByteArray> r;
-    if (!m_device) {
-        return r;
-    }
-
     auto it = udev_device_get_properties_list_entry(m_device);
     auto current = it;
     udev_list_entry_foreach (current, it) {

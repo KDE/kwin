@@ -378,6 +378,8 @@ void Xkb::updateModifiers()
     m_modifierState.depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
     m_modifierState.latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
     m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
+
+    qDebug() << "xxxxxxx modifiers!!!!!!" << m_modifiers;
 }
 
 void Xkb::forwardModifiers()

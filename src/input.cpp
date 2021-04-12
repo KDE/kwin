@@ -268,7 +268,7 @@ public:
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             if (event->nativeVirtualKey() == XKB_KEY_Terminate_Server) {
                 qCWarning(KWIN_CORE) << "Request to terminate server";
-                QMetaObject::invokeMethod(qApp, "quit", Qt::QueuedConnection);
+                QMetaObject::invokeMethod(QCoreApplication::instance(), &QCoreApplication::quit, Qt::QueuedConnection);
                 return true;
             }
         }

@@ -45,7 +45,7 @@ public:
     typedef std::unique_ptr<UdevDevice> Ptr;
 
 private:
-    udev_device *m_device;
+    udev_device *const m_device;
 };
 
 class KWIN_EXPORT UdevMonitor
