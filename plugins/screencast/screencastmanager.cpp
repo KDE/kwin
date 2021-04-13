@@ -131,7 +131,7 @@ void ScreencastManager::integrateStreams(KWaylandServer::ScreencastStreamV1Inter
     connect(waylandStream, &KWaylandServer::ScreencastStreamV1Interface::finished, stream, &PipeWireStream::stop);
     connect(stream, &PipeWireStream::stopStreaming, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
-        delete stream;
+        stream->deleteLater();
     });
     connect(stream, &PipeWireStream::streamReady, stream, [waylandStream] (uint nodeid) {
         waylandStream->sendCreated(nodeid);
