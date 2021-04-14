@@ -152,8 +152,8 @@ protected:
         uint64_t m_value = 0;
         QVector<uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
-        bool m_immutable = false;
-        bool m_atomic;
+        const bool m_immutable;
+        const bool m_atomic;
         DrmScopedPointer<drmModePropertyBlobRes> m_blob;
     };
 
