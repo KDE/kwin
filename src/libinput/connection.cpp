@@ -576,7 +576,7 @@ void Connection::processEvents()
 #ifndef KWIN_BUILD_TESTING
                 auto client = workspace()->activeClient();
                 const auto *output = static_cast<AbstractWaylandOutput*>(
-                            kwinApp()->platform()->enabledOutputs()[client->screen()]);
+                            kwinApp()->platform()->enabledOutputs()[client ? client->screen() : tte->device()->screenId()]);
                 const QPointF globalPos =
                         devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
                                                     output);
