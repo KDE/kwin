@@ -1580,23 +1580,24 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
         return QSharedPointer<GLTexture>(new GLTexture(*frame->texture()));
     } else {
         auto effectWindow = window()->effectWindow();
-        const QRect geo = window()->bufferGeometry();
-        QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, geo.size() * window()->bufferScale()));
+        const QRect virtualGeometry = window()->bufferGeometry();
+        QSharedPointer<GLTexture> texture(new GLTexture(GL_RGBA8, virtualGeometry.size() * window()->bufferScale()));
 
         QScopedPointer<GLRenderTarget> framebuffer(new KWin::GLRenderTarget(*texture));
         GLRenderTarget::pushRenderTarget(framebuffer.data());
 
         auto renderVSG = GLRenderTarget::virtualScreenGeometry();
-        GLVertexBuffer::setVirtualScreenGeometry(geo);
-        GLRenderTarget::setVirtualScreenGeometry(geo);
+        const QRect outputGeometry = { virtualGeometry.topLeft(), texture->size() };
+        GLVertexBuffer::setVirtualScreenGeometry(outputGeometry);
+        GLRenderTarget::setVirtualScreenGeometry(outputGeometry);
 
         QMatrix4x4 mvp;
-        mvp.ortho(geo.x(), geo.x() + geo.width(), geo.y(), geo.y() + geo.height(), -1, 1);
+        mvp.ortho(virtualGeometry.x(), virtualGeometry.x() + virtualGeometry.width(), virtualGeometry.y(), virtualGeometry.y() + virtualGeometry.height(), -1, 1);
 
         WindowPaintData data(effectWindow);
         data.setProjectionMatrix(mvp);
 
-        performPaint(Scene::PAINT_WINDOW_TRANSFORMED, geo, data);
+        performPaint(Scene::PAINT_WINDOW_TRANSFORMED, outputGeometry, data);
         GLRenderTarget::popRenderTarget();
         GLVertexBuffer::setVirtualScreenGeometry(renderVSG);
         GLRenderTarget::setVirtualScreenGeometry(renderVSG);
