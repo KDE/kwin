@@ -48,22 +48,7 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
     m_outputDevice->setOverscan(output->overscan());
     m_outputDevice->setCapabilities(kwinCapabilitiesToOutputDeviceCapabilities(output->capabilities()));
 
-    const auto modes = output->modes();
-    for (const AbstractWaylandOutput::Mode &mode : modes) {
-        KWaylandServer::OutputDeviceInterface::Mode deviceMode;
-        deviceMode.size = mode.size;
-        deviceMode.refreshRate = mode.refreshRate;
-        deviceMode.id = mode.id;
-
-        if (mode.flags & AbstractWaylandOutput::ModeFlag::Current) {
-            deviceMode.flags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
-        }
-        if (mode.flags & AbstractWaylandOutput::ModeFlag::Preferred) {
-            deviceMode.flags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Preferred;
-        }
-
-        m_outputDevice->addMode(deviceMode);
-    }
+    handleModesChanged();
 
     connect(output, &AbstractWaylandOutput::geometryChanged,
             this, &WaylandOutputDevice::handleGeometryChanged);
@@ -79,6 +64,8 @@ WaylandOutputDevice::WaylandOutputDevice(AbstractWaylandOutput *output, QObject 
             this, &WaylandOutputDevice::handleCapabilitiesChanged);
     connect(output, &AbstractWaylandOutput::overscanChanged,
             this, &WaylandOutputDevice::handleOverscanChanged);
+    connect(output, &AbstractWaylandOutput::modesChanged,
+            this, &WaylandOutputDevice::handleModesChanged);
 }
 
 void WaylandOutputDevice::handleGeometryChanged()
@@ -118,6 +105,28 @@ void WaylandOutputDevice::handleCapabilitiesChanged()
 void WaylandOutputDevice::handleOverscanChanged()
 {
     m_outputDevice->setOverscan(m_platformOutput->overscan());
+}
+
+void WaylandOutputDevice::handleModesChanged()
+{
+    const auto &platformModes = m_platformOutput->modes();
+    QList<KWaylandServer::OutputDeviceInterface::Mode> modes;
+
+    for (const AbstractWaylandOutput::Mode &mode : platformModes) {
+        KWaylandServer::OutputDeviceInterface::Mode deviceMode;
+        deviceMode.size = mode.size;
+        deviceMode.refreshRate = mode.refreshRate;
+
+        if (mode.flags & AbstractWaylandOutput::ModeFlag::Current) {
+            deviceMode.flags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Current;
+        }
+        if (mode.flags & AbstractWaylandOutput::ModeFlag::Preferred) {
+            deviceMode.flags |= KWaylandServer::OutputDeviceInterface::ModeFlag::Preferred;
+        }
+        modes.append(deviceMode);
+    }
+
+    m_outputDevice->setModes(modes);
 }
 
 } // namespace KWin

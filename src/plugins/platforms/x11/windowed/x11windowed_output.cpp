@@ -62,7 +62,6 @@ void X11WindowedOutput::init(const QPoint &logicalPosition, const QSize &pixelSi
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
     Mode mode;
-    mode.id = 0;
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;

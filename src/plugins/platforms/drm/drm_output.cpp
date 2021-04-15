@@ -229,17 +229,16 @@ bool DrmOutput::init(drmModeConnector *connector)
     return true;
 }
 
-void DrmOutput::initOutputDevice(drmModeConnector *connector)
+QList<AbstractWaylandOutput::Mode> DrmOutput::getModes(drmModeConnector *connector)
 {
-    // read in mode information
-    QVector<Mode> modes;
+    QList<AbstractWaylandOutput::Mode> modes;
     modes.reserve(connector->count_modes);
     for (int i = 0; i < connector->count_modes; ++i) {
         // TODO: in AMS here we could read and store for later every mode's blob_id
         // would simplify isCurrentMode(..) and presentAtomically(..) in case of mode set
         auto *m = &connector->modes[i];
 
-        Mode mode;
+        AbstractWaylandOutput::Mode mode;
         if (isCurrentMode(m)) {
             mode.flags |= ModeFlag::Current;
         }
@@ -247,11 +246,17 @@ void DrmOutput::initOutputDevice(drmModeConnector *connector)
             mode.flags |= ModeFlag::Preferred;
         }
 
-        mode.id = i;
         mode.size = QSize(m->hdisplay, m->vdisplay);
         mode.refreshRate = refreshRateForMode(m);
         modes << mode;
     }
+    return modes;
+}
+
+void DrmOutput::initOutputDevice(drmModeConnector *connector)
+{
+    // read in mode information
+    const auto &modes = getModes(connector);
 
     setName(m_conn->connectorName());
     initialize(m_conn->modelName(), m_conn->edid()->manufacturerString(),
@@ -510,7 +515,7 @@ void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate
         }
     }
     qCWarning(KWIN_DRM, "Could not find a fitting mode with size=%dx%d and refresh rate %d for output %s",
-              width, height, refreshRate, qPrintable(name()));
+              width, height, refreshRate, uuid());
 }
 
 void DrmOutput::updateMode(int modeIndex)
@@ -521,13 +526,28 @@ void DrmOutput::updateMode(int modeIndex)
         // TODO: error?
         return;
     }
-    if (isCurrentMode(&connector->modes[modeIndex])) {
-        // nothing to do
-        return;
-    }
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
     setCurrentModeInternal();
+}
+
+void DrmOutput::updateModes()
+{
+    drmModeConnector *connector(drmModeGetConnector(m_gpu->fd(), m_conn->id()));
+
+    QList<AbstractWaylandOutput::Mode> modes = getModes(connector);
+
+    bool currentExists = std::any_of(modes.constBegin(), modes.constEnd(), [](const AbstractWaylandOutput::Mode &mode){
+        return mode.flags.testFlag(ModeFlag::Current);
+    });
+
+    if (!currentExists) {
+        // select by default first available mode
+        updateMode(0);
+        modes[0].flags |= ModeFlag::Current;
+    }
+
+    setModes(modes);
 }
 
 void DrmOutput::setCurrentModeInternal()

@@ -275,10 +275,17 @@ void DrmBackend::handleUdevEvent()
         if (!drm) {
             continue;
         }
-        if (device->hasProperty("HOTPLUG", "1")) {
-            qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
+
+        if (device->action() == QStringLiteral("add")) {
+            qCDebug(KWIN_DRM) << "Received add event for monitored drm device";
             updateOutputs();
             updateCursor();
+        } else if (device->action() == QStringLiteral("change")) {
+            qCDebug(KWIN_DRM) << "Received change event for monitored drm device";
+            updateOutputs();
+            updateCursor();
+        } else {
+            qCInfo(KWIN_DRM) << "Received" << device->action() << " unhandled action event for monitored drm device" << device->property("DEVNAME");
         }
     }
 }
@@ -372,14 +379,15 @@ void DrmBackend::readOutputsConfiguration()
     const auto configGroup = outputGroup.group(uuid);
     // default position goes from left to right
     QPoint pos(0, 0);
-    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
-        qCDebug(KWIN_DRM) << "Reading output configuration for [" << uuid << "] ["<< (*it)->uuid() << "]";
-        const auto outputConfig = configGroup.group((*it)->uuid().toString(QUuid::WithoutBraces));
-        (*it)->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
-        if (outputConfig.hasKey("Scale"))
-            (*it)->setScale(outputConfig.readEntry("Scale", 1.0));
-        (*it)->setTransformInternal(stringToTransform(outputConfig.readEntry("Transform", "normal")));
-        pos.setX(pos.x() + (*it)->geometry().width());
+    for (DrmOutput* output : m_outputs) {
+        qCDebug(KWIN_DRM) << "Reading output configuration for [" << uuid << "] ["<< output->uuid() << "]";
+        const auto outputConfig = configGroup.group(output->uuid().toString(QUuid::WithoutBraces));
+        output->setGlobalPos(outputConfig.readEntry<QPoint>("Position", pos));
+        if (outputConfig.hasKey("Scale")) {
+            output->setScale(outputConfig.readEntry("Scale", 1.0));
+        }
+        output->setTransformInternal(stringToTransform(outputConfig.readEntry("Transform", "normal")));
+        pos.setX(pos.x() + output->geometry().width());
         if (outputConfig.hasKey("Mode")) {
             QString mode = outputConfig.readEntry("Mode");
             QStringList list = mode.split("_");
@@ -389,7 +397,7 @@ void DrmBackend::readOutputsConfiguration()
                     int width = size[0].toInt();
                     int height = size[1].toInt();
                     int refreshRate = list[1].toInt();
-                    (*it)->updateMode(width, height, refreshRate);
+                    output->updateMode(width, height, refreshRate);
                 }
             }
         }

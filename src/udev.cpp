@@ -218,6 +218,12 @@ int UdevDevice::sysNum() const
     return QByteArray(udev_device_get_sysnum(m_device)).toInt();
 }
 
+QString UdevDevice::action() const
+{
+    const char *action = udev_device_get_action(m_device);
+    return std::move(QString::fromLocal8Bit(action));
+}
+
 const char *UdevDevice::property(const char *key)
 {
     return udev_device_get_property_value(m_device, key);

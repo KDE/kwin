@@ -53,7 +53,6 @@ public:
         QSize size;
         int refreshRate;
         ModeFlags flags;
-        int id;
     };
 
     enum class DpmsMode {
@@ -125,12 +124,14 @@ public:
     QString description() const;
     Capabilities capabilities() const;
     QByteArray edid() const;
-    QVector<Mode> modes() const;
+    QList<Mode> modes() const;
     DpmsMode dpmsMode() const;
     virtual void setDpmsMode(DpmsMode mode);
 
     uint32_t overscan() const;
     virtual void setOverscan(uint32_t overscan);
+
+    void setModes(const QList<Mode> &modes);
 
     /**
      * Returns a matrix that can translate into the display's coordinates system
@@ -144,6 +145,7 @@ public:
 
 Q_SIGNALS:
     void modeChanged();
+    void modesChanged();
     void outputChange(const QRegion &damagedRegion);
     void scaleChanged();
     void transformChanged();
@@ -155,7 +157,7 @@ protected:
     void initialize(const QString &model, const QString &manufacturer,
                     const QString &eisaId, const QString &serialNumber,
                     const QSize &physicalSize,
-                    const QVector<Mode> &modes, const QByteArray &edid);
+                    const QList<Mode> &modes, const QByteArray &edid);
 
     QPoint globalPos() const;
 
@@ -174,6 +176,10 @@ protected:
     }
     virtual void updateMode(int modeIndex) {
         Q_UNUSED(modeIndex);
+    }
+    virtual void updateMode(QSize modeSize, int modeRefreshRate) {
+        Q_UNUSED(modeSize);
+        Q_UNUSED(modeRefreshRate);
     }
     virtual void updateTransform(Transform transform) {
         Q_UNUSED(transform);
@@ -202,7 +208,7 @@ private:
     Capabilities m_capabilities;
     Transform m_transform = Transform::Normal;
     QByteArray m_edid;
-    QVector<Mode> m_modes;
+    QList<Mode> m_modes;
     DpmsMode m_dpmsMode = DpmsMode::On;
     SubPixel m_subPixel = SubPixel::Unknown;
     int m_refreshRate = -1;

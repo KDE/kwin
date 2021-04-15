@@ -49,7 +49,6 @@ void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
     Mode mode;
-    mode.id = 0;
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;

@@ -116,7 +116,7 @@ QByteArray AbstractWaylandOutput::edid() const
     return m_edid;
 }
 
-QVector<AbstractWaylandOutput::Mode> AbstractWaylandOutput::modes() const
+QList<AbstractWaylandOutput::Mode> AbstractWaylandOutput::modes() const
 {
     return m_modes;
 }
@@ -152,9 +152,9 @@ void AbstractWaylandOutput::applyChanges(const KWaylandServer::OutputChangeSet *
     bool overallSizeCheckNeeded = false;
 
     // Enablement changes are handled by platform.
-    if (changeSet->modeChanged()) {
-        qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->mode();
-        updateMode(changeSet->mode());
+    if (changeSet->sizeChanged() || changeSet->refreshRateChanged()) {
+        qCDebug(KWIN_CORE) << "Setting new mode:" << changeSet->size() << "@" << changeSet->refreshRate();
+        updateMode(changeSet->size(), changeSet->refreshRate());
         emitModeChanged = true;
     }
     if (changeSet->transformChanged()) {
@@ -231,7 +231,7 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
 void AbstractWaylandOutput::initialize(const QString &model, const QString &manufacturer,
                                        const QString &eisaId, const QString &serialNumber,
                                        const QSize &physicalSize,
-                                       const QVector<Mode> &modes, const QByteArray &edid)
+                                       const QList<Mode> &modes, const QByteArray &edid)
 {
     m_serialNumber = serialNumber;
     m_eisaId = eisaId;
@@ -249,6 +249,12 @@ void AbstractWaylandOutput::initialize(const QString &model, const QString &manu
             break;
         }
     }
+}
+
+void AbstractWaylandOutput::setModes(const QList<Mode> &modes)
+{
+    m_modes = modes;
+    emit modesChanged();
 }
 
 QSize AbstractWaylandOutput::orientateSize(const QSize &size) const

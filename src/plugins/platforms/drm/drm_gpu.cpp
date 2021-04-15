@@ -211,12 +211,14 @@ bool DrmGpu::updateOutputs()
     auto it = m_outputs.begin();
     while (it != m_outputs.end()) {
         if (connectedOutputs.contains(*it)) {
+            DrmOutput *updated = *it;
+            updated->updateModes();
             it++;
-            continue;
+        } else {
+            DrmOutput *removed = *it;
+            it = m_outputs.erase(it);
+            removedOutputs.append(removed);
         }
-        DrmOutput *removed = *it;
-        it = m_outputs.erase(it);
-        removedOutputs.append(removed);
     }
 
     for (DrmConnector *con : qAsConst(pendingConnectors)) {

@@ -123,6 +123,9 @@ private:
     void updateMode(int modeIndex) override;
     void updateMode(uint32_t width, uint32_t height, uint32_t refreshRate);
     void setCurrentModeInternal();
+    void updateModes();
+
+    QList<Mode> getModes(drmModeConnector *connector);
 
     void updateTransform(Transform transform) override;
 

@@ -30,6 +30,7 @@ public:
 
     const char *devNode();
     int sysNum() const;
+    QString action() const;
     const char *property(const char *key);
     bool hasProperty(const char *key, const char *value);
 

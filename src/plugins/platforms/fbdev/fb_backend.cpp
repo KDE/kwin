@@ -61,7 +61,6 @@ void FramebufferOutput::init(const QSize &pixelSize, const QSize &physicalSize)
     m_renderLoop->setRefreshRate(refreshRate);
 
     Mode mode;
-    mode.id = 0;
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;

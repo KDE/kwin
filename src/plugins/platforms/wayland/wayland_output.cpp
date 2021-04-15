@@ -58,7 +58,6 @@ void WaylandOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
     m_renderLoop->setRefreshRate(refreshRate);
 
     Mode mode;
-    mode.id = 0;
     mode.size = pixelSize;
     mode.flags = ModeFlag::Current;
     mode.refreshRate = refreshRate;
