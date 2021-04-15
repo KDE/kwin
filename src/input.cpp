@@ -1687,7 +1687,7 @@ public:
                 return ret;
             };
             static const auto defaultCursor = createDefaultCursor();
-            if (!tcursor) {
+            if (!tcursor || tcursor->enteredSerial() == 0) {
                 cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
                 return;
             }
