@@ -1611,7 +1611,6 @@ QSharedPointer<GLTexture> OpenGLWindow::windowTexture()
 OpenGLWindowPixmap::OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL* scene)
     : WindowPixmap(window)
     , m_texture(scene->createTexture())
-    , m_scene(scene)
 {
 }
 

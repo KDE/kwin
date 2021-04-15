@@ -212,7 +212,6 @@ public:
     bool isValid() const override;
 private:
     QScopedPointer<SceneOpenGLTexture> m_texture;
-    SceneOpenGL *m_scene;
 };
 
 class SceneOpenGL::EffectFrame
