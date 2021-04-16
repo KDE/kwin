@@ -21,7 +21,7 @@ set(SERVER_LIB_SRCS
     filtered_display.cpp
     global.cpp
     idle_interface.cpp
-    idleinhibit_v1_interface
+    idleinhibit_v1_interface.cpp
     inputmethod_v1_interface.cpp
     keyboard_interface.cpp
     keyboard_shortcuts_inhibit_v1_interface.cpp
