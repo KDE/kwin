@@ -18,6 +18,7 @@
 // system
 #include <libudev.h>
 #include <functional>
+#include <cerrno>
 
 namespace KWin
 {
