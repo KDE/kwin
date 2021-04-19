@@ -89,6 +89,7 @@ DrmGpu::~DrmGpu()
         gbm_device_destroy(m_gbmDevice);
     }
 #endif
+    qDeleteAll(m_outputs);
     qDeleteAll(m_crtcs);
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
