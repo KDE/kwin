@@ -32,6 +32,7 @@
 char *old_wayland_env = NULL;
 
 #define WAYLAND_ENV_NAME "WAYLAND_DISPLAY"
+#define DISABLE_SYSTEMD_CAT "KWIN_WRAPPER_NO_SYSTEMD_CAT"
 
 pid_t launch_kwin(struct wl_socket *socket, int argc, char **argv)
 {
@@ -41,8 +42,9 @@ pid_t launch_kwin(struct wl_socket *socket, int argc, char **argv)
         char fdString[5]; // long enough string to contain what is probably a 1 digit number.
         snprintf(fdString, sizeof(fdString) - 1, "%d", wl_socket_get_fd(socket));
 
-        char **args = calloc(argc + 6, sizeof(char *));
+        char **args = calloc(argc + 7, sizeof(char *));
         unsigned int pos = 0;
+        args[pos++] = (char *)"systemd-cat"; //process name is the first argument by convention
         args[pos++] = (char *)"kwin_wayland"; //process name is the first argument by convention
         args[pos++] = (char *)"--wayland_fd";
         args[pos++] = fdString;
@@ -60,6 +62,11 @@ pid_t launch_kwin(struct wl_socket *socket, int argc, char **argv)
 
         args[pos++] = NULL;
 
+        if (getenv(DISABLE_SYSTEMD_CAT) || old_wayland_env) {
+            args++;
+        } else {
+            execvp("systemd-cat", args++); // we (ab)use execvp's fail behaviour if systemd-cat doesn't exist
+        }
         execvp("kwin_wayland", args);
         free(args);
         exit(127); /* if exec fails */
