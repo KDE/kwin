@@ -20,6 +20,7 @@
 // Qt
 #include <QAction>
 #include <variant>
+#include <signal.h>
 
 namespace KWin
 {
@@ -39,6 +40,17 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
         m_gesture->setMaximumFingerCount(4);
         m_gesture->setMinimumFingerCount(4);
         QObject::connect(m_gesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+    } else if (auto rtSwipeGesture = std::get_if<FourFingerRealtimeFeedbackSwipeShortcut>(&sc)) {
+        m_gesture.reset(new SwipeGesture);
+        m_gesture->setDirection(dirs[rtSwipeGesture->swipeDirection]);
+        m_gesture->setMinimumDelta(QSizeF(200, 200));
+        m_gesture->setMaximumFingerCount(4);
+        m_gesture->setMinimumFingerCount(4);
+        QObject::connect(m_gesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
+        QObject::connect(m_gesture.get(), &SwipeGesture::cancelled, m_action, &QAction::trigger, Qt::QueuedConnection);
+        QObject::connect(m_gesture.get(), &SwipeGesture::progress, [cb = rtSwipeGesture->progressCallback](qreal v) {
+            cb(v);
+        });
     }
 }
 
@@ -111,7 +123,7 @@ bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc)
         }
     }
 
-    if (std::holds_alternative<FourFingerSwipeShortcut>(sc.shortcut())) {
+    if (std::holds_alternative<FourFingerSwipeShortcut>(sc.shortcut()) || std::holds_alternative<FourFingerRealtimeFeedbackSwipeShortcut>(sc.shortcut())) {
         m_gestureRecognizer->registerGesture(sc.swipeGesture());
     }
     connect(sc.action(), &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
@@ -132,6 +144,11 @@ void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardM
 void GlobalShortcutsManager::registerTouchpadSwipe(QAction *action, SwipeDirection direction)
 {
     addIfNotExists(GlobalShortcut(FourFingerSwipeShortcut{direction}, action));
+}
+
+void GlobalShortcutsManager::registerRealtimeTouchpadSwipe(QAction *action, std::function<void (qreal)> progressCallback, SwipeDirection direction)
+{
+    addIfNotExists(GlobalShortcut(FourFingerRealtimeFeedbackSwipeShortcut{direction, progressCallback}, action));
 }
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)

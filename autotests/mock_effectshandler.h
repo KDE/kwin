@@ -174,6 +174,7 @@ public:
     void registerGlobalShortcut(const QKeySequence &, QAction *) override {}
     void registerPointerShortcut(Qt::KeyboardModifiers, Qt::MouseButton, QAction *) override {}
     void registerTouchpadSwipeShortcut(KWin::SwipeDirection, QAction *) override {}
+    void registerRealtimeTouchpadSwipeShortcut(KWin::SwipeDirection, QAction*, std::function<void(qreal)>) override {}
     void reloadEffect(KWin::Effect *) override {}
     void removeSupportProperty(const QByteArray &, KWin::Effect *) override {}
     void reserveElectricBorder(KWin::ElectricBorder, KWin::Effect *) override {}

@@ -60,6 +60,8 @@ public:
 
     void registerTouchpadSwipe(QAction *action, SwipeDirection direction);
 
+    void registerRealtimeTouchpadSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction);
+
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
      *
@@ -141,8 +143,19 @@ struct FourFingerSwipeShortcut
         return swipeDirection == rhs.swipeDirection;
     }
 };
+struct FourFingerRealtimeFeedbackSwipeShortcut
+{
+    SwipeDirection swipeDirection;
+    std::function<void(qreal)> progressCallback;
 
-using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, FourFingerSwipeShortcut>;
+    template<typename T>
+    bool operator==(const T& rhs) const
+    {
+        return swipeDirection == rhs.swipeDirection;
+    }
+};
+
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, FourFingerSwipeShortcut, FourFingerRealtimeFeedbackSwipeShortcut>;
 
 class GlobalShortcut
 {

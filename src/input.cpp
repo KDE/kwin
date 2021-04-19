@@ -2701,6 +2701,11 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
 }
 
+void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, QAction *action, std::function<void(qreal)> cb)
+{
+    m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction);
+}
+
 void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
 {
     m_shortcuts->registerTouchpadSwipe(action, direction);

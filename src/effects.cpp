@@ -750,6 +750,11 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
     input()->registerAxisShortcut(modifiers, axis, action);
 }
 
+void EffectsHandlerImpl::registerRealtimeTouchpadSwipeShortcut(SwipeDirection dir, QAction* onUp, std::function<void(qreal)> progressCallback)
+{
+    input()->registerRealtimeTouchpadSwipeShortcut(dir, onUp, progressCallback);
+}
+
 void EffectsHandlerImpl::registerTouchpadSwipeShortcut(SwipeDirection direction, QAction *action)
 {
     input()->registerTouchpadSwipeShortcut(direction, action);
