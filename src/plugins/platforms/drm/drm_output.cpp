@@ -155,10 +155,6 @@ bool DrmOutput::moveCursor()
 
 bool DrmOutput::init()
 {
-    if (m_gpu->atomicModeSetting() && !m_primaryPlane) {
-        return false;
-    }
-
     setSubPixelInternal(m_conn->subpixel());
     setInternal(m_conn->isInternal());
     setCapabilityInternal(Capability::Dpms);

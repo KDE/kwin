@@ -256,10 +256,15 @@ bool DrmGpu::updateOutputs()
                     continue;
                 }
 
+                auto primary = getCompatiblePlane(DrmPlane::TypeIndex::Primary, crtc);
+                if (m_atomicModeSetting && !primary) {
+                    continue;
+                }
+
                 DrmOutput *output = new DrmOutput(this->m_backend, this);
                 output->m_conn = con;
                 output->m_crtc = crtc;
-                output->m_primaryPlane = getCompatiblePlane(DrmPlane::TypeIndex::Primary, crtc);
+                output->m_primaryPlane = primary;
 
                 qCDebug(KWIN_DRM) << "For new output use mode" << con->currentMode().mode.name;
                 if (!output->init()) {
