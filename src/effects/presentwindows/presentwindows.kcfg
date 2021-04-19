@@ -21,7 +21,7 @@
             <default>false</default>
         </entry>
         <entry name="ShowPanel" type="Bool">
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="Accuracy" type="Int">
             <default>1</default>
