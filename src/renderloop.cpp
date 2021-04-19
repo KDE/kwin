@@ -32,7 +32,7 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
 
 void RenderLoopPrivate::scheduleRepaint()
 {
-    if (compositeTimer.isActive()) {
+    if (compositeTimer.isActive() || kwinApp()->isTerminating()) {
         return;
     }
 
