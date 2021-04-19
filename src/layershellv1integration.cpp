@@ -103,7 +103,7 @@ static void rearrangeLayer(const QList<LayerShellV1Client *> &clients, QRect *wo
 
         QRect bounds;
         if (shellSurface->exclusiveZone() == -1) {
-            bounds = workspace()->clientArea(ScreenArea, client);
+            bounds = client->output()->geometry();
         } else {
             bounds = *workArea;
         }
