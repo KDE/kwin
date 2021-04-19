@@ -77,7 +77,7 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
     bool ret = true;
 
     for (const auto &property : qAsConst(m_props)) {
-        if (property && !property->isImmutable() && property->isAtomic()) {
+        if (property && !property->isImmutable() && !property->isLegacy()) {
             ret &= atomicAddProperty(req, property);
         }
     }
@@ -108,7 +108,6 @@ DrmObject::Property::Property(drmModePropertyRes *prop, uint64_t val, const QVec
     , m_propName(prop->name)
     , m_value(val)
     , m_immutable(prop->flags & DRM_MODE_PROP_IMMUTABLE)
-    , m_atomic(prop->flags & DRM_MODE_PROP_ATOMIC)
     , m_blob(blob)
 {
     if (!enumNames.isEmpty()) {

@@ -67,6 +67,12 @@ bool DrmConnector::init()
         return false;
     }
 
+    if (auto dpmsProp = m_props[static_cast<uint32_t>(PropertyIndex::Dpms)]) {
+        dpmsProp->setLegacy();
+    } else {
+        qCDebug(KWIN_DRM) << "Could not find DPMS property!";
+    }
+
     // parse edid
     if (auto edidProp = m_props[static_cast<uint32_t>(PropertyIndex::Edid)]) {
         m_edid = Edid(edidProp->blob()->data, edidProp->blob()->length);

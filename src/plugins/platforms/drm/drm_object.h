@@ -138,11 +138,17 @@ protected:
         bool isImmutable() const {
             return m_immutable;
         }
-        bool isAtomic() const {
-            return m_atomic;
-        }
         drmModePropertyBlobRes *blob() const {
             return m_blob.data();
+        }
+        bool isLegacy() const {
+            return m_legacy;
+        }
+        /**
+         * Makes this property be ignored by DrmObject::atomicPopulate
+         */
+        void setLegacy() {
+            m_legacy = true;
         }
 
     private:
@@ -153,7 +159,7 @@ protected:
         QVector<uint64_t> m_enumMap;
         QVector<QByteArray> m_enumNames;
         const bool m_immutable;
-        const bool m_atomic;
+        bool m_legacy = false;
         DrmScopedPointer<drmModePropertyBlobRes> m_blob;
     };
 
