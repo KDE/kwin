@@ -125,7 +125,11 @@ ScrollViewKCM {
                 text: i18n("Get New Desktop Effects...")
                 visible: KAuthorized.authorize("ghns")
                 configFile: "kwineffect.knsrc"
-                onChangedEntriesChanged: kcm.onGHNSEntriesChanged()
+                onEntryEvent: function (entry, event) {
+                    if (event == 1) { // StatusChangedEvent
+                        kcm.onGHNSEntriesChanged()
+                    }
+                }
             }
         }
     }

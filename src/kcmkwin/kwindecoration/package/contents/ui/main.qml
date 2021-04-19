@@ -106,7 +106,11 @@ Kirigami.Page {
                                 icon.name: "get-hot-new-stuff"
                                 visible: KAuthorized.authorize("ghns")
                                 configFile: "window-decorations.knsrc"
-                                onChangedEntriesChanged: kcm.reloadKWinSettings()
+                                onEntryEvent: function (entry, event) {
+                                    if (event == 1) { // StatusChangedEvent
+                                        kcm.reloadKWinSettings()
+                                    }
+                                }
                             }
                         }
                     }
