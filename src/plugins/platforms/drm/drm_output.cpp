@@ -293,35 +293,23 @@ bool DrmOutput::hardwareTransforms() const
     if (!m_primaryPlane) {
         return false;
     }
-    return m_primaryPlane->transformation() == outputToPlaneTransform(transform());
+    return m_pipeline->transformation() == outputToPlaneTransform(transform());
 }
 
 void DrmOutput::updateTransform(Transform transform)
 {
     const auto planeTransform = outputToPlaneTransform(transform);
-
-     if (m_primaryPlane) {
-        // At the moment we have to exclude hardware transforms for vertical buffers.
-        // For that we need to support other buffers and graceful fallback from atomic tests.
-        // Reason is that standard linear buffers are not suitable.
-        const bool isPortrait = transform == Transform::Rotated90
-                                || transform == Transform::Flipped90
-                                || transform == Transform::Rotated270
-                                || transform == Transform::Flipped270;
-        const auto &currentTransform = m_primaryPlane->transformation();
-        if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY") &&
-                (m_primaryPlane->supportedTransformations() & planeTransform) &&
-                !isPortrait) {
-            m_primaryPlane->setTransformation(planeTransform);
-        } else {
-            m_primaryPlane->setTransformation(DrmPlane::Transformation::Rotate0);
+    if (!qEnvironmentVariableIsSet("KWIN_DRM_SW_ROTATIONS_ONLY")
+        && m_primaryPlane
+        && (m_primaryPlane->supportedTransformations() & planeTransform)) {
+        QSize srcSize = m_conn->currentMode().size;
+        if (planeTransform & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
+            srcSize = srcSize.transposed();
         }
-        if (!m_pipeline->test()) {
-            m_primaryPlane->setTransformation(currentTransform);
-        }
+        m_pipeline->setTransformation(srcSize, planeTransform);
     }
 
-    // show cursor only if is enabled, i.e if pointer device is presentP
+    // show cursor only if is enabled, i.e if pointer device is present
     if (!m_backend->isCursorHidden() && !m_backend->usesSoftwareCursor()) {
         // the cursor might need to get rotated
         showCursor();
@@ -355,11 +343,7 @@ void DrmOutput::updateMode(int modeIndex)
     }
     const auto &mode = modelist[modeIndex];
     QSize srcSize = mode.size;
-    if (hardwareTransforms() &&
-        (transform() == Transform::Rotated270
-        || transform() == Transform::Rotated90
-        || transform() == Transform::Flipped90
-        || transform() == Transform::Flipped270)) {
+    if (m_pipeline->transformation() & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
         srcSize = srcSize.transposed();
     }
     if (m_pipeline->modeset(srcSize, mode.mode)) {

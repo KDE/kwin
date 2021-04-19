@@ -16,12 +16,13 @@
 
 #include <xf86drmMode.h>
 
+#include "drm_object_plane.h"
+
 namespace KWin {
 
 class DrmGpu;
 class DrmConnector;
 class DrmCrtc;
-class DrmPlane;
 class DrmBuffer;
 class DrmDumbBuffer;
 class GammaRamp;
@@ -48,11 +49,14 @@ public:
     bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer);
     bool setEnablement(bool enable);
     bool setGammaRamp(const GammaRamp &ramp);
+    bool setTransformation(const QSize &srcSize, const DrmPlane::Transformations &transformation);
 
     void setPrimaryBuffer(const QSharedPointer<DrmBuffer> &buffer);
     bool moveCursor(QPoint pos);
 
     bool addOverlayPlane(DrmPlane *plane);
+
+    DrmPlane::Transformations transformation() const;
 
 private:
     bool atomicCommit(bool testOnly);
@@ -78,6 +82,7 @@ private:
         QSize sourceSize = QSize(-1, -1);
         drmModeModeInfo mode;
         uint32_t blobId = 0;
+        DrmPlane::Transformations transformation = DrmPlane::Transformation::Rotate0;
     } m_mode;
     struct {
         DrmPlane *plane = nullptr;

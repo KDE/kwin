@@ -126,7 +126,8 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
     }
 
     QSize modesize = QSize(m_mode.mode.hdisplay, m_mode.mode.vdisplay);
-    m_primaryPlane->setScaled(m_primaryPlane->next() ? m_primaryPlane->next()->size() : modesize, modesize, m_crtc->id(), m_mode.enabled);
+    m_primaryPlane->setScaled(m_primaryPlane->next() ? m_primaryPlane->next()->size() : m_mode.sourceSize, modesize, m_crtc->id(), m_mode.enabled);
+    m_primaryPlane->setTransformation(m_mode.transformation);
     if (!m_primaryPlane->atomicPopulate(req)) {
         qCWarning(KWIN_DRM) << "Atomic populate for primary plane failed!";
         return false;
@@ -136,6 +137,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
         const QSize &size = m_cursor.buffer ? m_cursor.buffer->size() : QSize(0, 0);
         m_cursor.plane->setNext(m_cursor.buffer);
         m_cursor.plane->set(size, m_cursor.pos, size, m_crtc->id(), m_mode.enabled && m_cursor.buffer != nullptr);
+        m_cursor.plane->setTransformation(m_mode.transformation);
         if (!m_cursor.plane->atomicPopulate(req)) {
             qCWarning(KWIN_DRM) << "Atomic populate for cursor plane failed!";
             return false;
@@ -143,7 +145,8 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
     }
 
     for (const auto &overlay : qAsConst(m_overlayPlanes)) {
-        overlay->setScaled(overlay->next() ? overlay->next()->size() : modesize, modesize, m_crtc->id(), m_mode.enabled);
+        overlay->setScaled(overlay->next() ? overlay->next()->size() : m_mode.sourceSize, modesize, m_crtc->id(), m_mode.enabled);
+        overlay->setTransformation(m_mode.transformation);
         if (!overlay->atomicPopulate(req)) {
             qCWarning(KWIN_DRM) << "Atomic populate for overlay plane failed!";
             return false;
@@ -326,12 +329,34 @@ bool DrmPipeline::setGammaRamp(const GammaRamp &ramp)
     return true;
 }
 
+bool DrmPipeline::setTransformation(const QSize &srcSize, const DrmPlane::Transformations &transformation)
+{
+    if (m_gpu->atomicModeSetting()) {
+        const auto oldMode = m_mode;
+        m_mode.transformation = transformation;
+        m_mode.sourceSize = srcSize;
+        m_mode.changed = true;
+        if (!atomicCommit(true)) {
+            m_mode = oldMode;
+            return false;
+        }
+    } else {
+        return false;
+    }
+    return true;
+}
+
 void DrmPipeline::checkTestBuffer()
 {
     if (m_testBuffer && m_testBuffer->size() == m_mode.sourceSize) {
         return;
     }
     m_testBuffer = m_gpu->createTestbuffer(m_mode.sourceSize);
+}
+
+DrmPlane::Transformations DrmPipeline::transformation() const
+{
+    return m_mode.transformation;
 }
 
 }
