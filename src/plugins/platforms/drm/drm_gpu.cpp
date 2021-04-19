@@ -74,6 +74,10 @@ DrmGpu::DrmGpu(DrmBackend *backend, QByteArray devNode, int fd, int drmId)
     DrmScopedPointer<drmVersion> version(drmGetVersion(fd));
     m_useEglStreams = strstr(version->name, "nvidia-drm");
 
+    if (!m_useEglStreams) {
+        m_gbmDevice = gbm_create_device(fd);
+    }
+
     m_socketNotifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
     connect(m_socketNotifier, &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 }
@@ -419,7 +423,7 @@ void DrmGpu::dispatchEvents()
 QSharedPointer<DrmBuffer> DrmGpu::createTestbuffer(const QSize &size)
 {
 #if HAVE_GBM
-    if (m_gbmDevice) {
+    if (m_gbmDevice && (!m_eglBackend || qobject_cast<EglGbmBackend*>(m_eglBackend))) {
         gbm_bo *bo = gbm_bo_create(m_gbmDevice, size.width(), size.height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT);
         if (bo) {
             auto buffer = QSharedPointer<DrmGbmBuffer>::create(this, bo, nullptr);

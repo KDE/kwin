@@ -92,14 +92,12 @@ bool EglGbmBackend::initializeEgl()
             return false;
         }
 
-        auto device = gbm_create_device(m_gpu->fd());
-        if (!device) {
-            setFailed("Could not create gbm device");
+        if (!m_gpu->gbmDevice()) {
+            setFailed("Missing create gbm device");
             return false;
         }
-        m_gpu->setGbmDevice(device);
 
-        display = eglGetPlatformDisplayEXT(platform, device, nullptr);
+        display = eglGetPlatformDisplayEXT(platform, m_gpu->gbmDevice(), nullptr);
         m_gpu->setEglDisplay(display);
     }
 

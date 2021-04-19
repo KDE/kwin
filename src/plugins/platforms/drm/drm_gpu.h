@@ -74,10 +74,6 @@ public:
         return m_eglBackend;
     }
 
-    void setGbmDevice(gbm_device *d) {
-        m_gbmDevice = d;
-    }
-
     void setEglDisplay(EGLDisplay display) {
         m_eglDisplay = display;
     }
@@ -118,7 +114,7 @@ private:
     DrmOutput *findOutput(quint32 connector);
 
     DrmBackend* const m_backend;
-    AbstractEglBackend *m_eglBackend;
+    AbstractEglBackend *m_eglBackend = nullptr;
 
     const QByteArray m_devNode;
     QSize m_cursorSize;
