@@ -38,6 +38,7 @@ class EglGbmBackend : public AbstractEglDrmBackend
     Q_OBJECT
 public:
     EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu);
+    ~EglGbmBackend() override;
 
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion beginFrame(int screenId) override;

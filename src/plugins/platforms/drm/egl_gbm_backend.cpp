@@ -41,6 +41,11 @@ EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend, DrmGpu *gpu)
 {
 }
 
+EglGbmBackend::~EglGbmBackend()
+{
+    cleanup();
+}
+
 void EglGbmBackend::cleanupSurfaces()
 {
     for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {

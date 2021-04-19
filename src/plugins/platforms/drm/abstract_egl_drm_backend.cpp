@@ -24,11 +24,6 @@ AbstractEglDrmBackend::AbstractEglDrmBackend(DrmBackend *drmBackend, DrmGpu *gpu
     connect(m_gpu, &DrmGpu::outputDisabled, this, &AbstractEglDrmBackend::removeOutput);
 }
 
-AbstractEglDrmBackend::~AbstractEglDrmBackend()
-{
-    cleanup();
-}
-
 void AbstractEglDrmBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)

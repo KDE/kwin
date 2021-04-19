@@ -75,6 +75,11 @@ EglStreamBackend::EglStreamBackend(DrmBackend *drmBackend, DrmGpu *gpu)
 {
 }
 
+EglStreamBackend::~EglStreamBackend()
+{
+    cleanup();
+}
+
 void EglStreamBackend::cleanupSurfaces()
 {
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {

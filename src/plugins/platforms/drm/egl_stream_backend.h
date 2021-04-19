@@ -27,6 +27,7 @@ class EglStreamBackend : public AbstractEglDrmBackend
     Q_OBJECT
 public:
     EglStreamBackend(DrmBackend *b, DrmGpu *gpu);
+    ~EglStreamBackend() override;
     SceneOpenGLTexturePrivate *createBackendTexture(SceneOpenGLTexture *texture) override;
     QRegion beginFrame(int screenId) override;
     void endFrame(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
