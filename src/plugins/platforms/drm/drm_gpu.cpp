@@ -84,16 +84,16 @@ DrmGpu::~DrmGpu()
     if (m_eglDisplay != EGL_NO_DISPLAY) {
         eglTerminate(m_eglDisplay);
     }
-#if HAVE_GBM
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
-#endif
     qDeleteAll(m_outputs);
     qDeleteAll(m_crtcs);
     qDeleteAll(m_connectors);
     qDeleteAll(m_planes);
     delete m_socketNotifier;
+#if HAVE_GBM
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
+#endif
     m_backend->session()->closeRestricted(m_fd);
 }
 
