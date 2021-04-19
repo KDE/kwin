@@ -15,9 +15,7 @@ var blacklist = [
     "ksmserver-logout-greeter ksmserver-logout-greeter",
 
     // KDE Plasma splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml",
-    "ksplashsimple ksplashsimple",
-    "ksplashx ksplashx"
+    "ksplashqml ksplashqml"
 ];
 
 var scaleEffect = {

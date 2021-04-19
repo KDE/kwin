@@ -17,17 +17,7 @@ var loginEffect = {
         loginEffect.isFadeToBlack = effect.readConfig("FadeToBlack", false);
     },
     isLoginSplash: function (window) {
-        var windowClass = window.windowClass;
-        if (windowClass === "ksplashx ksplashx") {
-            return true;
-        }
-        if (windowClass === "ksplashsimple ksplashsimple") {
-            return true;
-        }
-        if (windowClass === "ksplashqml ksplashqml") {
-            return true;
-        }
-        return false;
+        return window.windowClass === "ksplashqml ksplashqml";
     },
     fadeOut: function (window) {
         animate({

@@ -14,9 +14,7 @@ var blacklist = [
     "ksmserver-logout-greeter ksmserver-logout-greeter",
 
     // The splash screen has to be animated only by the login effect.
-    "ksplashqml ksplashqml",
-    "ksplashsimple ksplashsimple",
-    "ksplashx ksplashx"
+    "ksplashqml ksplashqml"
 ];
 
 function isFadeWindow(w) {
