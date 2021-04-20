@@ -158,8 +158,6 @@ void DrmBackend::reactivate()
             // only relevant in atomic mode
             o->m_modesetRequested = true;
             o->m_crtc->blank(o);
-            o->showCursor();
-            o->moveCursor();
         }
     }
 
@@ -169,6 +167,11 @@ void DrmBackend::reactivate()
     if (Compositor *compositor = Compositor::self()) {
         compositor->addRepaintFull();
     }
+
+    // While the session had been inactive, an output could have been added or
+    // removed, we need to re-scan outputs.
+    updateOutputs();
+    updateCursor();
 }
 
 void DrmBackend::deactivate()
@@ -247,27 +250,7 @@ bool DrmBackend::initialize()
         const int fd = m_udevMonitor->fd();
         if (fd != -1) {
             QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-            connect(notifier, &QSocketNotifier::activated, this,
-                [this] {
-                    while (auto device = m_udevMonitor->getDevice()) {
-                        bool drm = false;
-                        for (auto gpu : m_gpus) {
-                            if (gpu->drmId() == device->sysNum()) {
-                                drm = true;
-                                break;
-                            }
-                        }
-                        if (!drm) {
-                            return;
-                        }
-                        if (device->hasProperty("HOTPLUG", "1")) {
-                            qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
-                            updateOutputs();
-                            updateCursor();
-                        }
-                    }
-                }
-            );
+            connect(notifier, &QSocketNotifier::activated, this, &DrmBackend::handleUdevEvent);
             m_udevMonitor->enable();
         }
     }
@@ -275,12 +258,33 @@ bool DrmBackend::initialize()
     return true;
 }
 
+void DrmBackend::handleUdevEvent()
+{
+    while (auto device = m_udevMonitor->getDevice()) {
+        if (!session()->isActive()) {
+            continue;
+        }
+
+        bool drm = false;
+        for (auto gpu : m_gpus) {
+            if (gpu->drmId() == device->sysNum()) {
+                drm = true;
+                break;
+            }
+        }
+        if (!drm) {
+            continue;
+        }
+        if (device->hasProperty("HOTPLUG", "1")) {
+            qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
+            updateOutputs();
+            updateCursor();
+        }
+    }
+}
+
 void DrmBackend::addOutput(DrmOutput *o)
 {
-    if (!m_active) {
-        o->renderLoop()->inhibit();
-    }
-
     m_outputs.append(o);
     m_enabledOutputs.append(o);
     emit o->gpu()->outputEnabled(o);

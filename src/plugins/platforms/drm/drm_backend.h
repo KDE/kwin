@@ -103,6 +103,7 @@ private:
     QString generateOutputConfigurationUuid() const;
     DrmOutput *findOutput(quint32 connector);
     void updateOutputsEnabled();
+    void handleUdevEvent();
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
     Session *m_session = nullptr;
