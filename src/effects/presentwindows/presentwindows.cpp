@@ -1718,8 +1718,8 @@ void PresentWindowsEffect::updateFilterFrame()
         font.setBold(true);
         m_filterFrame->setFont(font);
     }
-    m_filterFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 2));
-    m_filterFrame->setText(i18n("Filter:\n%1", m_windowFilter));
+    m_filterFrame->setPosition(QPoint(area.x() + area.width() / 2, area.y() + area.height() / 10));
+    m_filterFrame->setText(m_windowFilter);
 }
 
 //-----------------------------------------------------------------------------
