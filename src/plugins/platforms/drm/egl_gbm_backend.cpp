@@ -86,6 +86,10 @@ bool EglGbmBackend::initializeEgl()
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
     if (display == EGL_NO_DISPLAY) {
+        if (!supportsSurfacelessContext()) {
+            setFailed("EGL_KHR_surfaceless_context extension is unavailable!");
+            return false;
+        }
         const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
         const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
         const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
@@ -151,12 +155,8 @@ bool EglGbmBackend::initRenderingContext()
         qCCritical(KWIN_DRM) << "Create Window Surfaces failed";
         return false;
     }
-    if (!m_outputs.isEmpty()) {
-        // Set our first surface as the one for the abstract backend, just to make it happy.
-        setSurface(m_outputs.first().eglSurface);
-        if (isPrimary()) {
-            return makeContextCurrent(m_outputs.first());
-        }
+    if (isPrimary()) {
+        return makeCurrent();
     }
     return true;
 }
@@ -196,9 +196,6 @@ bool EglGbmBackend::resetOutput(Output &output, DrmOutput *drmOutput)
         return false;
     }
 
-    if (surface() == output.eglSurface || surface() == EGL_NO_SURFACE) {
-        setSurface(eglSurface);
-    }
     // destroy previous surface
     if (output.eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay(), output.eglSurface);
