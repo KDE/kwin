@@ -226,7 +226,7 @@ void DrmOutput::updateEnablement(bool enable)
         return;
     }
 
-    if (m_pipeline->setEnablement(enable)) {
+    if (m_pipeline->setActive(enable)) {
         m_backend->enableOutput(this, enable);
         if (enable) {
             m_renderLoop->inhibit();
@@ -247,7 +247,7 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
         AbstractWaylandOutput::setDpmsModeInternal(mode);
         return;
     }
-    if (m_pipeline->setEnablement(newDpmsEnable)) {
+    if (m_pipeline->setActive(newDpmsEnable)) {
         m_dpmsEnabled = newDpmsEnable;
         AbstractWaylandOutput::setDpmsModeInternal(mode);
         if (m_dpmsEnabled) {

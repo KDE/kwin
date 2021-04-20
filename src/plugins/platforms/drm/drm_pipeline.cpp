@@ -32,7 +32,7 @@ DrmPipeline::DrmPipeline(void *pageflipUserData, DrmGpu *gpu, DrmConnector *conn
     const auto &mode = m_connector->currentMode();
     m_mode.mode = mode.mode;
     m_mode.sourceSize = mode.size;
-    m_mode.enabled = true;
+    m_mode.active = true;
     m_mode.blobId = -1;// = keep mode
 }
 
@@ -102,7 +102,7 @@ bool DrmPipeline::atomicCommit(bool testOnly)
 
 bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
 {
-    if (!m_gpu->useEglStreams() && m_mode.enabled) {
+    if (!m_gpu->useEglStreams() && m_mode.active) {
         flags |= DRM_MODE_PAGE_FLIP_EVENT;
     }
     if (m_mode.changed) {
@@ -111,22 +111,22 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
         flags |= DRM_MODE_ATOMIC_NONBLOCK;
     }
 
-    m_connector->setValue(DrmConnector::PropertyIndex::CrtcId, m_mode.enabled ? m_crtc->id() : 0);
+    m_connector->setValue(DrmConnector::PropertyIndex::CrtcId, m_mode.active ? m_crtc->id() : 0);
     if (!m_connector->atomicPopulate(req)) {
         qCWarning(KWIN_DRM) << "Atomic populate for connector failed!";
         return false;
     }
 
-    m_crtc->setValue(DrmCrtc::PropertyIndex::ModeId, m_mode.enabled ? m_mode.blobId : 0);
-    m_crtc->setValue(DrmCrtc::PropertyIndex::Active, m_mode.enabled ? 1 : 0);
-    m_crtc->setValue(DrmCrtc::PropertyIndex::Gamma_LUT, m_mode.enabled ? m_gamma.blobId : 0);
+    m_crtc->setValue(DrmCrtc::PropertyIndex::ModeId, m_mode.active ? m_mode.blobId : 0);
+    m_crtc->setValue(DrmCrtc::PropertyIndex::Active, m_mode.active ? 1 : 0);
+    m_crtc->setValue(DrmCrtc::PropertyIndex::Gamma_LUT, m_mode.active ? m_gamma.blobId : 0);
     if (!m_crtc->atomicPopulate(req)) {
         qCWarning(KWIN_DRM) << "Atomic populate for crtc failed!";
         return false;
     }
 
     QSize modesize = QSize(m_mode.mode.hdisplay, m_mode.mode.vdisplay);
-    m_primaryPlane->setScaled(m_primaryPlane->next() ? m_primaryPlane->next()->size() : modesize, modesize, m_crtc->id(), m_mode.enabled);
+    m_primaryPlane->setScaled(m_primaryPlane->next() ? m_primaryPlane->next()->size() : modesize, modesize, m_crtc->id(), m_mode.active);
     if (!m_primaryPlane->atomicPopulate(req)) {
         qCWarning(KWIN_DRM) << "Atomic populate for primary plane failed!";
         return false;
@@ -135,7 +135,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
     if (m_cursor.plane) {
         const QSize &size = m_cursor.buffer ? m_cursor.buffer->size() : QSize(0, 0);
         m_cursor.plane->setNext(m_cursor.buffer);
-        m_cursor.plane->set(size, m_cursor.pos, size, m_crtc->id(), m_mode.enabled && m_cursor.buffer != nullptr);
+        m_cursor.plane->set(size, m_cursor.pos, size, m_crtc->id(), m_mode.active && m_cursor.buffer != nullptr);
         if (!m_cursor.plane->atomicPopulate(req)) {
             qCWarning(KWIN_DRM) << "Atomic populate for cursor plane failed!";
             return false;
@@ -143,7 +143,7 @@ bool DrmPipeline::populateAtomicValues(drmModeAtomicReq* req, uint32_t &flags)
     }
 
     for (const auto &overlay : qAsConst(m_overlayPlanes)) {
-        overlay->setScaled(overlay->next() ? overlay->next()->size() : modesize, modesize, m_crtc->id(), m_mode.enabled);
+        overlay->setScaled(overlay->next() ? overlay->next()->size() : modesize, modesize, m_crtc->id(), m_mode.active);
         if (!overlay->atomicPopulate(req)) {
             qCWarning(KWIN_DRM) << "Atomic populate for overlay plane failed!";
             return false;
@@ -256,15 +256,15 @@ bool DrmPipeline::moveCursor(QPoint pos)
     return true;
 }
 
-bool DrmPipeline::setEnablement(bool enabled)
+bool DrmPipeline::setActive(bool active)
 {
     auto oldMode = m_mode;
-    m_mode.enabled = enabled;
+    m_mode.active = active;
     setPrimaryBuffer(nullptr);
     if (m_gpu->atomicModeSetting()) {
         m_mode.changed = true;
         // immediately commit if disabling as there will be no present
-        if (!atomicCommit(enabled)) {
+        if (!atomicCommit(active)) {
             m_mode = oldMode;
             return false;
         }
@@ -274,7 +274,7 @@ bool DrmPipeline::setEnablement(bool enabled)
             m_mode = oldMode;
             return false;
         }
-        if (drmModeConnectorSetProperty(m_gpu->fd(), m_connector->id(), m_connector->dpms()->propId(), m_mode.enabled ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF) < 0) {
+        if (drmModeConnectorSetProperty(m_gpu->fd(), m_connector->id(), m_connector->dpms()->propId(), m_mode.active ? DRM_MODE_DPMS_ON : DRM_MODE_DPMS_OFF) < 0) {
             qCWarning(KWIN_DRM) << "Setting DPMS failed";
             m_mode = oldMode;
             return false;
