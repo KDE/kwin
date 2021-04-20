@@ -264,8 +264,9 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         }
         // don't update serial, we need it
     }
-    if (!surface) {
-        if (auto s = d->seat->dragSource()->dragSource()) {
+    auto dragSourceDevice = d->seat->dragSource();
+    if (!surface || !dragSourceDevice) {
+        if (auto s = dragSourceDevice->dragSource()) {
             s->dndAction(DataDeviceManagerInterface::DnDAction::None);
         }
         return;
@@ -275,7 +276,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         // TODO: do this for all client's surfaces?
         return;
     }
-    auto *source = d->seat->dragSource()->dragSource();
+    auto *source = dragSourceDevice->dragSource();
     if (source) {
         source->setAccepted(false);
     }
