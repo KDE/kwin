@@ -155,13 +155,11 @@ void DrmBackend::reactivate()
     if (!usesSoftwareCursor()) {
         for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
             DrmOutput *o = *it;
-            if (o->isEnabled()) {
-                o->updateMode(o->connector()->currentModeIndex());
-                o->showCursor();
-                o->moveCursor();
-            } else {
-                o->updateEnablement(false);
-            }
+            // only relevant in atomic mode
+            o->m_modesetRequested = true;
+            o->m_crtc->blank(o);
+            o->showCursor();
+            o->moveCursor();
         }
     }
 
@@ -180,6 +178,7 @@ void DrmBackend::deactivate()
     }
 
     for (DrmOutput *output : qAsConst(m_outputs)) {
+        output->hideCursor();
         output->renderLoop()->inhibit();
     }
 
@@ -432,16 +431,15 @@ QString DrmBackend::generateOutputConfigurationUuid() const
 
 void DrmBackend::enableOutput(DrmOutput *output, bool enable)
 {
-    bool enabled = m_enabledOutputs.contains(output);
-    if (enabled == enable) {
-        return;
-    }
     if (enable) {
+        Q_ASSERT(!m_enabledOutputs.contains(output));
         m_enabledOutputs << output;
         emit output->gpu()->outputEnabled(output);
         emit outputEnabled(output);
     } else {
+        Q_ASSERT(m_enabledOutputs.contains(output));
         m_enabledOutputs.removeOne(output);
+        Q_ASSERT(!m_enabledOutputs.contains(output));
         emit output->gpu()->outputDisabled(output);
         emit outputDisabled(output);
     }
@@ -522,11 +520,7 @@ void DrmBackend::updateCursor()
             qCDebug(KWIN_DRM) << "Failed to show cursor on output" << output->name();
             break;
         }
-        success = output->moveCursor();
-        if (!success) {
-            qCDebug(KWIN_DRM) << "Failed to move cursor on output" << output->name();
-            break;
-        }
+        output->moveCursor();
     }
 
     setSoftwareCursor(!success);

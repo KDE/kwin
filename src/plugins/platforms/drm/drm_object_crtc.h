@@ -13,8 +13,6 @@
 
 #include <QSharedPointer>
 
-#include "drm_pointer.h"
-
 namespace KWin
 {
 
@@ -33,9 +31,7 @@ public:
 
     enum class PropertyIndex : uint32_t {
         ModeId = 0,
-        Active = 1,
-        Gamma_LUT = 2,
-        Gamma_LUT_size = 3,
+        Active,
         Count
     };
 
@@ -57,26 +53,19 @@ public:
     }
 
     void flipBuffer();
+    bool blank(DrmOutput *output);
 
     int gammaRampSize() const {
-        if (const auto &prop = m_props.at(static_cast<int>(PropertyIndex::Gamma_LUT_size))) {
-            return prop->value();
-        }
         return m_crtc->gamma_size;
     }
-
-    bool hasGammaProp() const {
-        return m_props.at(static_cast<int>(PropertyIndex::Gamma_LUT));
-    }
-
-    drmModeModeInfo queryCurrentMode();
+    bool setGammaRamp(const GammaRamp &gamma);
 
 private:
     DrmScopedPointer<drmModeCrtc> m_crtc;
-    int m_pipeIndex;
-
     QSharedPointer<DrmBuffer> m_currentBuffer;
     QSharedPointer<DrmBuffer> m_nextBuffer;
+    DrmDumbBuffer *m_blackBuffer = nullptr;
+    int m_pipeIndex;
 };
 
 }

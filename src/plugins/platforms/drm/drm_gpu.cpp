@@ -266,9 +266,10 @@ bool DrmGpu::updateOutputs()
                 output->m_conn = con;
                 output->m_crtc = crtc;
                 output->m_primaryPlane = primary;
+                output->m_mode = connector->modes[0];
 
-                qCDebug(KWIN_DRM) << "For new output use mode" << con->currentMode().mode.name;
-                if (!output->init()) {
+                qCDebug(KWIN_DRM) << "For new output use mode " << output->m_mode.name << output->m_mode.hdisplay << output->m_mode.vdisplay;
+                if (!output->init(connector.data())) {
                     qCWarning(KWIN_DRM) << "Failed to create output for connector " << con->id();
                     delete output;
                     continue;
@@ -415,22 +416,6 @@ void DrmGpu::dispatchEvents()
     context.version = 2;
     context.page_flip_handler = pageFlipHandler;
     drmHandleEvent(m_fd, &context);
-}
-
-QSharedPointer<DrmBuffer> DrmGpu::createTestbuffer(const QSize &size)
-{
-#if HAVE_GBM
-    if (m_gbmDevice) {
-        gbm_bo *bo = gbm_bo_create(m_gbmDevice, size.width(), size.height(), GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT);
-        if (bo) {
-            auto buffer = QSharedPointer<DrmGbmBuffer>::create(this, bo, nullptr);
-            if (buffer->bufferId()) {
-                return buffer;
-            }
-        }
-    }
-#endif
-    return QSharedPointer<DrmDumbBuffer>::create(this, size);
 }
 
 }

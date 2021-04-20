@@ -13,7 +13,6 @@ set(DRM_SOURCES
     drm_gpu.cpp
     egl_multi_backend.cpp
     abstract_egl_drm_backend.cpp
-    drm_pipeline.cpp
 )
 
 if (HAVE_GBM)
