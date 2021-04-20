@@ -76,7 +76,6 @@ void DrmOutput::teardown()
 
 void DrmOutput::releaseBuffers()
 {
-    m_pipeline->setPrimaryBuffer(nullptr);
     m_crtc->setCurrent(nullptr);
     m_crtc->setNext(nullptr);
     m_primaryPlane->setCurrent(nullptr);
