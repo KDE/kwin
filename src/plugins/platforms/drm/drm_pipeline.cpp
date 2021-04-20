@@ -32,7 +32,7 @@ DrmPipeline::DrmPipeline(void *pageflipUserData, DrmGpu *gpu, DrmConnector *conn
     const auto &mode = m_connector->currentMode();
     m_mode.mode = mode.mode;
     m_mode.sourceSize = mode.size;
-    m_mode.active = true;
+    m_mode.active = false;
     m_mode.blobId = -1;// = keep mode
 }
 
@@ -254,6 +254,11 @@ bool DrmPipeline::moveCursor(QPoint pos)
         }
     }
     return true;
+}
+
+bool DrmPipeline::isActive() const
+{
+    return m_mode.active;
 }
 
 bool DrmPipeline::setActive(bool active)

@@ -57,9 +57,7 @@ public:
     bool showCursor();
     bool hideCursor();
 
-    bool isDpmsEnabled() const {
-        return m_dpmsEnabled;
-    }
+    bool isDpmsEnabled() const;
 
     const DrmCrtc *crtc() const {
         return m_crtc;
@@ -114,7 +112,6 @@ private:
     RenderLoop *m_renderLoop;
     DrmPipeline *m_pipeline = nullptr;
 
-    bool m_dpmsEnabled = true;
     QSharedPointer<DrmDumbBuffer> m_cursor;
     bool m_firstCommit = true;
     bool m_pageFlipPending = false;

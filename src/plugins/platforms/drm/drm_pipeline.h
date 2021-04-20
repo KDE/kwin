@@ -46,6 +46,7 @@ public:
 
     bool modeset(QSize source, drmModeModeInfo mode);
     bool setCursor(const QSharedPointer<DrmDumbBuffer> &buffer);
+    bool isActive() const;
     bool setActive(bool active);
     bool setGammaRamp(const GammaRamp &ramp);
 
@@ -74,7 +75,7 @@ private:
 
     struct {
         bool changed = false;
-        bool active = true;
+        bool active = false;
         QSize sourceSize = QSize(-1, -1);
         drmModeModeInfo mode;
         uint32_t blobId = 0;

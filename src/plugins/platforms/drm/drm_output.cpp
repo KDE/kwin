@@ -168,10 +168,10 @@ bool DrmOutput::init()
     updateMode(0);
 
     // renderloop will be un-inhibited when updating DPMS
+    Q_ASSERT(!m_pipeline->isActive());
     m_renderLoop->inhibit();
-    m_dpmsEnabled = false;
     setDpmsMode(DpmsMode::On);
-    return m_dpmsEnabled;
+    return m_pipeline->isActive();
 }
 
 static bool checkIfEqual(_drmModeModeInfo one, _drmModeModeInfo two) {
@@ -221,7 +221,7 @@ void DrmOutput::initOutputDevice()
 
 void DrmOutput::updateEnablement(bool enable)
 {
-    if (m_dpmsEnabled == enable) {
+    if (m_pipeline->isActive() == enable) {
         m_backend->enableOutput(this, enable);
         return;
     }
@@ -233,24 +233,27 @@ void DrmOutput::updateEnablement(bool enable)
         } else {
             m_renderLoop->uninhibit();
         }
-        m_dpmsEnabled = enable;
     } else {
         qCWarning(KWIN_DRM) << "Setting enablement to" << enable << "failed!" << strerror(errno);
     }
 }
 
+bool DrmOutput::isDpmsEnabled() const
+{
+    return m_pipeline->isActive();
+}
+
 void DrmOutput::setDpmsMode(DpmsMode mode)
 {
     bool newDpmsEnable = mode == DpmsMode::On;
-    if (newDpmsEnable == m_dpmsEnabled) {
+    if (newDpmsEnable == m_pipeline->isActive()) {
         qCDebug(KWIN_DRM) << "New DPMS mode equals old mode. DPMS unchanged.";
         AbstractWaylandOutput::setDpmsModeInternal(mode);
         return;
     }
     if (m_pipeline->setActive(newDpmsEnable)) {
-        m_dpmsEnabled = newDpmsEnable;
         AbstractWaylandOutput::setDpmsModeInternal(mode);
-        if (m_dpmsEnabled) {
+        if (m_pipeline->isActive()) {
             m_renderLoop->uninhibit();
             if (Compositor *compositor = Compositor::self()) {
                 compositor->addRepaintFull();
