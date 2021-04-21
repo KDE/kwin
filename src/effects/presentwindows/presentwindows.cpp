@@ -451,8 +451,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
             effects->paintWindow(w, mask, region, data);
 
             if (m_showIcons) {
-                QPoint point(rect.x() + rect.width() * 0.95,
-                             rect.y() + rect.height() * 0.95);
+                QPoint point(rect.x() + rect.width() / 2,
+                             rect.y() + rect.height() / 2);
+                winData->iconFrame->setAlignment(Qt::AlignCenter);
                 winData->iconFrame->setPosition(point);
                 if (effects->compositingType() == KWin::OpenGL2Compositing && data.shader) {
                     const float a = 0.9 * data.opacity() * m_decalOpacity * 0.75;
@@ -461,8 +462,9 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 winData->iconFrame->render(region, 0.9 * data.opacity() * m_decalOpacity, 0.75);
             }
             if (m_showCaptions) {
+                QSize iconSize = winData->iconFrame->iconSize();
                 QPoint point(rect.x() + rect.width() / 2,
-                             rect.y() + rect.height() / 2);
+                             rect.y() + rect.height() / 2 + iconSize.height());
                 winData->textFrame->setPosition(point);
                 if (effects->compositingType() == KWin::OpenGL2Compositing && data.shader) {
                     const float a = 0.9 * data.opacity() * m_decalOpacity * 0.75;
@@ -497,9 +499,9 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
 
     winData->textFrame->setFont(font);
     winData->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
-    winData->iconFrame->setAlignment(Qt::AlignRight | Qt::AlignBottom);
+    winData->iconFrame->setAlignment(Qt::AlignCenter);
     winData->iconFrame->setIcon(w->icon());
-    winData->iconFrame->setIconSize(QSize(32, 32));
+    winData->iconFrame->setIconSize(QSize(64, 64));
 
     if (isSelectableWindow(w)) {
         m_motionManager.manage(w);
@@ -1618,9 +1620,9 @@ void PresentWindowsEffect::setActive(bool active)
 
             winData->textFrame->setFont(font);
             winData->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
-            winData->iconFrame->setAlignment(Qt::AlignRight | Qt::AlignBottom);
+            winData->iconFrame->setAlignment(Qt::AlignCenter);
             winData->iconFrame->setIcon(w->icon());
-            winData->iconFrame->setIconSize(QSize(32, 32));
+            winData->iconFrame->setIconSize(QSize(64, 64));
         }
 
         // Filter out special windows such as panels and taskbars
