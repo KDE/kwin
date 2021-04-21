@@ -176,8 +176,6 @@ void KeyboardLayout::notifyLayoutChange()
 }
 
 static const QString s_keyboardService = QStringLiteral("org.kde.keyboard");
-// this exists because in Plasma 5.21 we want to use a new applet for wayland, but still have the legacy system in use on X11
-static const QString s_keyboardService_appletTrigger = QStringLiteral("org.kde.keyboard.wayland");
 static const QString s_keyboardObject = QStringLiteral("/Layouts");
 
 KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, const KConfigGroup &configGroup, KeyboardLayout *parent)
@@ -192,13 +190,11 @@ KeyboardLayoutDBusInterface::KeyboardLayoutDBusInterface(Xkb *xkb, const KConfig
 
     QDBusConnection::sessionBus().registerObject(s_keyboardObject, this, QDBusConnection::ExportAllSlots | QDBusConnection::ExportAllSignals);
     QDBusConnection::sessionBus().registerService(s_keyboardService);
-    QDBusConnection::sessionBus().registerService(s_keyboardService_appletTrigger);
 }
 
 KeyboardLayoutDBusInterface::~KeyboardLayoutDBusInterface()
 {
     QDBusConnection::sessionBus().unregisterService(s_keyboardService);
-    QDBusConnection::sessionBus().unregisterService(s_keyboardService_appletTrigger);
 }
 
 void KeyboardLayoutDBusInterface::switchToNextLayout()
