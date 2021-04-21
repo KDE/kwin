@@ -503,6 +503,8 @@ void destroyWaylandConnection()
     s_waylandConnection.inputPanelV1 = nullptr;
     delete s_waylandConnection.layerShellV1;
     s_waylandConnection.layerShellV1 = nullptr;
+    delete s_waylandConnection.outputManagement;
+    s_waylandConnection.outputManagement = nullptr;
     if (s_waylandConnection.thread) {
         QSignalSpy spy(s_waylandConnection.connection, &QObject::destroyed);
         s_waylandConnection.connection->deleteLater();
