@@ -86,10 +86,6 @@ bool EglGbmBackend::initializeEgl()
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
     if (display == EGL_NO_DISPLAY) {
-        if (!supportsSurfacelessContext()) {
-            setFailed("EGL_KHR_surfaceless_context extension is unavailable!");
-            return false;
-        }
         const bool hasMesaGBM = hasClientExtension(QByteArrayLiteral("EGL_MESA_platform_gbm"));
         const bool hasKHRGBM = hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_gbm"));
         const GLenum platform = hasMesaGBM ? EGL_PLATFORM_GBM_MESA : EGL_PLATFORM_GBM_KHR;
@@ -125,6 +121,12 @@ void EglGbmBackend::init()
         setFailed("Could not initialize egl");
         return;
     }
+
+    if (!supportsSurfacelessContext()) {
+        setFailed("EGL_KHR_surfaceless_context extension is unavailable!");
+        return false;
+    }
+
     if (!initRenderingContext()) {
         setFailed("Could not initialize rendering context");
         return;
