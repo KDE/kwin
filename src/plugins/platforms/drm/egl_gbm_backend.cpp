@@ -124,7 +124,7 @@ void EglGbmBackend::init()
 
     if (!supportsSurfacelessContext()) {
         setFailed("EGL_KHR_surfaceless_context extension is unavailable!");
-        return false;
+        return;
     }
 
     if (!initRenderingContext()) {
