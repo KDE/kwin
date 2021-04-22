@@ -344,16 +344,10 @@ void KWinTabBoxConfig::save()
     const bool flipSwitchAlternative = m_alternativeTabBoxUi->showTabBox()
             && m_alternativeTabBoxUi->effectComboCurrentData().toString() == m_flipSwitch;
 
-    // activate effects if not active
-    if (coverSwitch || coverSwitchAlternative) {
-        m_data->pluginsConfig()->setCoverswitchEnabled(true);
-    }
-    if (flipSwitch || flipSwitchAlternative) {
-        m_data->pluginsConfig()->setFlipswitchEnabled(true);
-    }
-    if (highlightWindows) {
-        m_data->pluginsConfig()->setHighlightwindowEnabled(true);
-    }
+    // activate effects if they are used otherwise deactivate them.
+    m_data->pluginsConfig()->setCoverswitchEnabled(coverSwitch || coverSwitchAlternative);
+    m_data->pluginsConfig()->setFlipswitchEnabled(flipSwitch || flipSwitchAlternative);
+    m_data->pluginsConfig()->setHighlightwindowEnabled(highlightWindows);
     m_data->pluginsConfig()->save();
 
     m_data->coverSwitchConfig()->setTabBox(coverSwitch);

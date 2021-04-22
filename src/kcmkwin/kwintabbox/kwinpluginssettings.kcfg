@@ -12,7 +12,7 @@
             <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::FlipSwitch)</default>
         </entry>
         <entry key="highlightwindowEnabled" type="Bool">
-            <default>false</default>
+            <default code="true">BuiltInEffects::enabledByDefault(BuiltInEffect::HighlightWindow)</default>
         </entry>
     </group>
 </kcfg>
