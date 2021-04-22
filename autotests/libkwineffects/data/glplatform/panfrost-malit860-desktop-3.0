@@ -1,0 +1,19 @@
+[Driver]
+Vendor=Panfrost
+Renderer=Mali T860 (Panfrost)
+Version=3.0 Mesa 19.1
+ShadingLanguageVersion=1.30
+
+[Settings]
+LooseBinding=true
+GLSL=true
+TextureNPOT=true
+Mesa=true
+Panfrost=true
+GLVersion=3,0
+GLSLVersion=1,30
+MesaVersion=19,1
+DriverVersion=19,1
+Driver=18
+ChipClass=4001
+Compositor=9

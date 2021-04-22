@@ -256,6 +256,8 @@ bool ContrastEffect::enabledByDefault()
 
     if (gl->isIntel() && gl->chipClass() < SandyBridge)
         return false;
+    if (gl->isPanfrost() && gl->chipClass() <= MaliT8XX)
+        return false;
     if (gl->isSoftwareEmulation()) {
         return false;
     }

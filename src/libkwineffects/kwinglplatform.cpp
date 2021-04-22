@@ -499,6 +499,25 @@ static ChipClass detectQualcommClass(const QByteArray &chipClass)
     return UnknownAdreno;
 }
 
+static ChipClass detectPanfrostClass(const QByteArray &chipClass)
+{
+
+    if (chipClass.contains("T720")   ||
+           chipClass.contains("T760"))
+        return MaliT7XX;
+
+    if (chipClass.contains("T820")   ||
+           chipClass.contains("T860"))
+        return MaliT8XX;
+
+    if (chipClass.contains("G31")   ||
+           chipClass.contains("G52") ||
+           chipClass.contains("G72"))
+        return MaliGXX;
+
+    return UnknownPanfrost;
+}
+
 QString GLPlatform::versionToString(qint64 version)
 {
     return QString::fromLatin1(versionToString8(version));
@@ -559,6 +578,8 @@ QByteArray GLPlatform::driverToString8(Driver driver)
         return QByteArrayLiteral("Qualcomm");
     case Driver_Virgl:
         return QByteArrayLiteral("Virgl (virtio-gpu, Qemu/KVM guest)");
+    case Driver_Panfrost:
+        return QByteArrayLiteral("Panfrost");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -665,6 +686,13 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
         return QByteArrayLiteral("Adreno 4xx series");
     case Adreno5XX:
         return QByteArrayLiteral("Adreno 5xx series");
+
+    case MaliT7XX:
+        return QByteArrayLiteral("Mali T7xx series");
+    case MaliT8XX:
+        return QByteArrayLiteral("Mali T8xx series");
+    case MaliGXX:
+        return QByteArrayLiteral("Mali Gxx series");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -848,6 +876,11 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_driver = Driver_Qualcomm;
         m_chipClass = detectQualcommClass(m_renderer);
     }
+
+    else if (m_renderer.contains("Panfrost")) {
+        m_driver = Driver_Panfrost;
+        m_chipClass = detectPanfrostClass(m_renderer);
+     }
 
     else if (m_renderer == "Software Rasterizer") {
         m_driver = Driver_Swrast;
@@ -1044,6 +1077,10 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         } else {
             m_recommendedCompositor = OpenGL2Compositing;
         }
+    }
+
+    if (isPanfrost()) {
+        m_recommendedCompositor = OpenGL2Compositing;
     }
 
     if (isMesaDriver() && platformInterface == EglPlatformInterface) {
@@ -1264,6 +1301,11 @@ bool GLPlatform::isSoftwareEmulation() const
 bool GLPlatform::isAdreno() const
 {
     return m_chipClass >= Adreno1XX && m_chipClass <= UnknownAdreno;
+}
+
+bool GLPlatform::isPanfrost() const
+{
+    return m_chipClass >= MaliT7XX && m_chipClass <= UnknownPanfrost;
 }
 
 const QByteArray &GLPlatform::glRendererString() const

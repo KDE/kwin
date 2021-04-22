@@ -68,6 +68,7 @@ void GLPlatformTest::testDriverToString_data()
     QTest::newRow("VMware") << Driver_VMware << QStringLiteral("VMware (SVGA3D)");
     QTest::newRow("Qualcomm") << Driver_Qualcomm << QStringLiteral("Qualcomm");
     QTest::newRow("Virgl") << Driver_Virgl << QStringLiteral("Virgl (virtio-gpu, Qemu/KVM guest)");
+    QTest::newRow("Panfrost") << Driver_Panfrost << QStringLiteral("Panfrost");
     QTest::newRow("Unknown") << Driver_Unknown << QStringLiteral("Unknown");
 }
 
@@ -116,7 +117,11 @@ void GLPlatformTest::testChipClassToString_data()
     QTest::newRow("Adreno3XX") << Adreno3XX << QStringLiteral("Adreno 3xx series");
     QTest::newRow("Adreno4XX") << Adreno4XX << QStringLiteral("Adreno 4xx series");
     QTest::newRow("Adreno5XX") << Adreno5XX << QStringLiteral("Adreno 5xx series");
-    QTest::newRow("UnknwonAdreno") << UnknownAdreno << QStringLiteral("Unknown");
+    QTest::newRow("UnknownAdreno") << UnknownAdreno << QStringLiteral("Unknown");
+    QTest::newRow("MaliT7XX") << MaliT7XX << QStringLiteral("Mali T7xx series");
+    QTest::newRow("MaliT8XX") << MaliT7XX << QStringLiteral("Mali T8xx series");
+    QTest::newRow("MaliGXX") << MaliT7XX << QStringLiteral("Mali Gxx series");
+    QTest::newRow("UnknownPanfrost") << UnknownAdreno << QStringLiteral("Unknown");
     QTest::newRow("UnknownChipClass") << UnknownChipClass << QStringLiteral("Unknown");
 }
 
@@ -152,6 +157,7 @@ void GLPlatformTest::testPriorDetect()
     QCOMPARE(gl->isRadeon(), false);
     QCOMPARE(gl->isNvidia(), false);
     QCOMPARE(gl->isIntel(), false);
+    QCOMPARE(gl->isPanfrost(), false);
     QCOMPARE(gl->isVirtualBox(), false);
     QCOMPARE(gl->isVMware(), false);
 
@@ -252,6 +258,7 @@ void GLPlatformTest::testDetect()
     QCOMPARE(gl->isVirtualBox(), settingsGroup.readEntry("VirtualBox", false));
     QCOMPARE(gl->isVMware(), settingsGroup.readEntry("VMware", false));
     QCOMPARE(gl->isAdreno(), settingsGroup.readEntry("Adreno", false));
+    QCOMPARE(gl->isPanfrost(), settingsGroup.readEntry("Panfrost", false));
     QCOMPARE(gl->isVirgl(), settingsGroup.readEntry("Virgl", false));
 
     QCOMPARE(gl->isSoftwareEmulation(), settingsGroup.readEntry("SoftwareEmulation", false));

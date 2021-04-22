@@ -93,6 +93,7 @@ enum Driver {
     Driver_Qualcomm,
     Driver_RadeonSI,
     Driver_Virgl,
+    Driver_Panfrost,
     Driver_Unknown,
 };
 
@@ -155,6 +156,13 @@ enum ChipClass {
     Adreno4XX,              // GLES3.1 CL1.2 DX11.2
     Adreno5XX,              // GLES3.1 CL2.0 DX11.2
     UnknownAdreno = 3999,
+
+    // Panfrost Mali
+    // from https://docs.mesa3d.org/drivers/panfrost.html
+    MaliT7XX      = 4000,   // GLES2.0/GLES3.0
+    MaliT8XX,               // GLES3.0
+    MaliGXX,                // GLES3.0
+    UnknownPanfrost = 4999,
 
     UnknownChipClass = 99999,
 };
@@ -300,6 +308,12 @@ public:
      * @since 5.18
      **/
     bool isVirgl() const;
+
+     /**
+     * @returns @c true if the "GPU" is a Panfrost Mali GPU
+     * @since 5.21.5
+     **/
+    bool isPanfrost() const;
 
     /**
      * @returns the GL_VERSION string as provided by the driver.
