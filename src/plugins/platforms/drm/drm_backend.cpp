@@ -315,7 +315,7 @@ bool DrmBackend::updateOutputs()
         return false;
     }
     const auto oldOutputs = m_outputs;
-    for (auto gpu : m_gpus) {
+    for (DrmGpu* gpu : m_gpus) {
         gpu->updateOutputs();
     }
 
@@ -643,7 +643,15 @@ QString DrmBackend::supportInformation() const
 #if HAVE_EGL_STREAMS
     s << "Using EGL Streams: " << m_gpus.at(0)->useEglStreams() << Qt::endl;
 #endif
+
+    for (const DrmOutput *o : qAsConst(m_outputs)) {
+        s << "Modes of screen:" << o->name() << Qt::endl;
+        for( const auto m : o->modes()) {
+            s << m.size << m.refreshRate << Qt::endl;
+        }
+    }
     return supportInfo;
+
 }
 
 DmaBufTexture *DrmBackend::createDmaBufTexture(const QSize &size)

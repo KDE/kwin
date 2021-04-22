@@ -22,6 +22,7 @@
 #include <QMatrix4x4>
 #include <QCryptographicHash>
 #include <QPainter>
+#include <QDebug>
 // c++
 #include <cerrno>
 // drm
@@ -499,7 +500,6 @@ void DrmOutput::updateTransform(Transform transform)
         showCursor();
     }
 }
-
 void DrmOutput::updateMode(uint32_t width, uint32_t height, uint32_t refreshRate)
 {
     if (m_mode.hdisplay == width && m_mode.vdisplay == height && m_mode.vrefresh == refreshRate) {
@@ -526,6 +526,7 @@ void DrmOutput::updateMode(int modeIndex)
         // TODO: error?
         return;
     }
+    qDebug() << "updateMode" << modeIndex << m_mode.vdisplay << m_mode.hdisplay << "to" << connector->modes[modeIndex].hdisplay << connector->modes[modeIndex].vdisplay;
     m_mode = connector->modes[modeIndex];
     m_modesetRequested = true;
     setCurrentModeInternal();
@@ -541,11 +542,12 @@ void DrmOutput::updateModes()
         return mode.flags.testFlag(ModeFlag::Current);
     });
 
-    if (!currentExists) {
+    qDebug() << "m_mode" << m_mode.vdisplay << m_mode.hdisplay << "currentExists" << currentExists;
+    //if (!currentExists) {
         // select by default first available mode
         updateMode(0);
         modes[0].flags |= ModeFlag::Current;
-    }
+    //}
 
     setModes(modes);
 }
@@ -807,7 +809,7 @@ bool DrmOutput::doAtomicCommit(AtomicCommitMode mode)
     }
 
     if (drmModeAtomicCommit(m_gpu->fd(), req, flags, this)) {
-        qCDebug(KWIN_DRM) << "Atomic request failed to commit: " << strerror(errno);
+        qCDebug(KWIN_DRM) << "Atomic request failed to commit: " << strerror(errno) << QStringLiteral("(%i)").arg(errno);
         errorHandler();
         return false;
     }
