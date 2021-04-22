@@ -580,6 +580,7 @@ bool DrmOutput::dpmsAtomicOff()
     m_atomicOffPending = false;
 
     // TODO: With multiple planes: deactivate all of them here
+    hideCursor();
     m_primaryPlane->setNext(nullptr);
     m_nextPlanesFlipList << m_primaryPlane;
 
