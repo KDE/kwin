@@ -76,8 +76,15 @@ bool Integration::hasCapability(Capability cap) const
 
 void Integration::initialize()
 {
-    // The QPA is initialized before the platform plugin is loaded.
-    connect(kwinApp(), &Application::platformCreated, this, &Integration::handlePlatformCreated);
+    // This method is called from QGuiApplication's constructor, before kwinApp is built
+    QTimer::singleShot(0, this, [this] {
+        // The QPA is initialized before the platform plugin is loaded.
+        if (kwinApp()->platform()) {
+            handlePlatformCreated();
+        } else {
+            connect(kwinApp(), &Application::platformCreated, this, &Integration::handlePlatformCreated);
+        }
+    });
 
     QPlatformIntegration::initialize();
 
