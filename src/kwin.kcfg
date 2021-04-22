@@ -103,7 +103,7 @@
             <default>false</default>
         </entry>
         <entry name="ActiveMouseScreen" type="Bool">
-            <default code="true">focusPolicy() != Options::ClickToFocus</default>
+            <default>true</default>
         </entry>
         <entry name="RollOverDesktops" type="Bool">
             <default>true</default>
