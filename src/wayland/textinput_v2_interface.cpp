@@ -362,7 +362,7 @@ QList<TextInputV2InterfacePrivate::Resource *> TextInputV2InterfacePrivate::text
 }
 
 TextInputV2Interface::TextInputV2Interface(SeatInterface *seat)
-    : QObject()
+    : QObject(seat)
     , d(new TextInputV2InterfacePrivate(seat, this))
 {
 }

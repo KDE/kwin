@@ -337,7 +337,7 @@ void TextInputV3InterfacePrivate::defaultPending()
 }
 
 TextInputV3Interface::TextInputV3Interface(SeatInterface *seat)
-    : QObject()
+    : QObject(seat)
     , d(new TextInputV3InterfacePrivate(seat, this))
 {
 }
