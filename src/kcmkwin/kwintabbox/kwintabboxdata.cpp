@@ -26,7 +26,10 @@ KWinTabboxData::KWinTabboxData(QObject *parent, const QVariantList &args)
     , m_flipSwitchConfig(new SwitchEffectSettings(QStringLiteral("Effect-FlipSwitch"), this))
     , m_pluginsConfig(new PluginsSettings(this))
 {
-    autoRegisterSkeletons();
+    registerSkeleton(m_tabBoxConfig);
+    registerSkeleton(m_tabBoxAlternativeConfig);
+    registerSkeleton(m_coverSwitchConfig);
+    registerSkeleton(m_flipSwitchConfig);
 }
 
 TabBoxSettings *KWinTabboxData::tabBoxConfig() const
