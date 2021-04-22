@@ -141,7 +141,6 @@ private:
 
     uint32_t m_blobId = 0;
     DrmPlane *m_primaryPlane = nullptr;
-    DrmPlane *m_cursorPlane = nullptr;
     QVector<DrmPlane*> m_nextPlanesFlipList;
     bool m_pageFlipPending = false;
     bool m_atomicOffPending = false;
