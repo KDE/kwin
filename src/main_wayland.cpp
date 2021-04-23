@@ -392,7 +392,11 @@ static QString automaticBackendSelection(SpawnMode spawnMode)
         return s_x11Plugin;
     }
 #if HAVE_DRM
-    return s_drmPlugin;
+    // Only default to drm when there's dri drivers. This way fbdev will be
+    // used when running using nomodeset
+    if (QFileInfo::exists("/dev/dri")) {
+        return s_drmPlugin;
+    }
 #endif
     return s_fbdevPlugin;
 }
