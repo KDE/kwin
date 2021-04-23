@@ -59,6 +59,7 @@ void DontCrashCursorPhysicalSizeEmpty::initTestCase()
     QVERIFY(applicationStartedSpy.isValid());
     kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     if (!QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("icons/DMZ-White/index.theme")).isEmpty()) {
         qputenv("XCURSOR_THEME", QByteArrayLiteral("DMZ-White"));
@@ -70,6 +71,7 @@ void DontCrashCursorPhysicalSizeEmpty::initTestCase()
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
+    waylandServer()->initWorkspace();
 }
 
 void DontCrashCursorPhysicalSizeEmpty::testMoveCursorOverDeco()
