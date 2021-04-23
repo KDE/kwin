@@ -1194,10 +1194,14 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
 
-        auto generic = [] (AbstractClient* c) { return c->caption() + QLatin1Char(' ') + QString::fromUtf8(c->metaObject()->className()); };
+        auto generic = [] (AbstractClient *c) -> QString {
+            return c->caption() + QLatin1Char(' ') + QString::fromUtf8(c->metaObject()->className());
+        };
         switch (index.parent().internalId()) {
         case s_x11ClientId:
-            return clientData<X11Client>(index, role, m_x11Clients, [] (X11Client* c) { return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption()); });
+            return clientData<X11Client>(index, role, m_x11Clients, [](X11Client *c) -> QString {
+                return QStringLiteral("0x%1: %2").arg(c->window(), 0, 16).arg(c->caption());
+            });
         case s_x11UnmanagedId: {
             if (index.row() >= m_unmanageds.count()) {
                 return QVariant();
