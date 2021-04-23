@@ -47,7 +47,8 @@ public:
     };
     void addMatch(Match match, const char *name);
     void scan();
-    std::vector<UdevDevice::Ptr> find();
+    bool findAny();
+    std::vector<UdevDevice::Ptr> findForSeat();
 
 private:
     Udev *m_udev;
@@ -96,7 +97,7 @@ void UdevEnumerate::scan()
     udev_enumerate_scan_devices(m_enumerate.data());
 }
 
-std::vector<UdevDevice::Ptr> UdevEnumerate::find()
+std::vector<UdevDevice::Ptr> UdevEnumerate::findForSeat()
 {
     std::vector<UdevDevice::Ptr> vect;
     if (m_enumerate.isNull()) {
@@ -124,6 +125,11 @@ std::vector<UdevDevice::Ptr> UdevEnumerate::find()
     return vect;
 }
 
+bool UdevEnumerate::findAny()
+{
+    return !m_enumerate.isNull() && udev_enumerate_get_list_entry(m_enumerate.data());
+}
+
 std::vector<UdevDevice::Ptr> Udev::listGPUs()
 {
     if (!m_udev) {
@@ -140,7 +146,7 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
     enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
     enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]");
     enumerate.scan();
-    auto vect = enumerate.find();
+    auto vect = enumerate.findForSeat();
     std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
         auto pci1 = device1->getParentWithSubsystemDevType("pci");
         auto pci2 = device2->getParentWithSubsystemDevType("pci");
@@ -165,6 +171,23 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
 #endif
 }
 
+bool Udev::hasGPUs()
+{
+    if (!m_udev) {
+        return true;
+    }
+#if defined(Q_OS_FREEBSD)
+    // listGPUs will always return /dev/dri/card0
+    return true;
+#else
+    UdevEnumerate enumerate(this);
+    enumerate.addMatch(UdevEnumerate::Match::SubSystem, "drm");
+    enumerate.addMatch(UdevEnumerate::Match::SysName, "card[0-9]");
+    enumerate.scan();
+    return enumerate.findAny();
+#endif
+}
+
 std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
 {
     if (!m_udev) {
@@ -176,7 +199,7 @@ std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
     enumerate.addMatch(UdevEnumerate::Match::SubSystem, "graphics");
     enumerate.addMatch(UdevEnumerate::Match::SysName, "fb[0-9]");
     enumerate.scan();
-    auto vect = enumerate.find();
+    auto vect = enumerate.findForSeat();
     std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
         auto pci1 = device1->getParentWithSubsystemDevType("pci");
         auto pci2 = device2->getParentWithSubsystemDevType("pci");

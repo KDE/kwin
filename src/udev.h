@@ -76,6 +76,8 @@ public:
         return m_udev != nullptr;
     }
     std::vector<UdevDevice::Ptr> listGPUs();
+    bool hasGPUs();
+
     std::vector<UdevDevice::Ptr> listFramebuffers();
     UdevDevice::Ptr deviceFromSyspath(const char *syspath);
     UdevMonitor *monitor();

@@ -15,6 +15,7 @@
 #include "platform.h"
 #include "effects.h"
 #include "tabletmodemanager.h"
+#include "udev.h"
 
 #include "wayland_server.h"
 #include "xwl/xwayland.h"
@@ -392,7 +393,11 @@ static QString automaticBackendSelection(SpawnMode spawnMode)
         return s_x11Plugin;
     }
 #if HAVE_DRM
-    return s_drmPlugin;
+    // Only default to drm when there's dri drivers. This way fbdev will be
+    // used when running using nomodeset
+    if (Udev().hasGPUs()) {
+        return s_drmPlugin;
+    }
 #endif
     return s_fbdevPlugin;
 }
