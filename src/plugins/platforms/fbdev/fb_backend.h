@@ -26,7 +26,7 @@ class FramebufferOutput : public AbstractWaylandOutput
     Q_OBJECT
 
 public:
-    explicit FramebufferOutput(FramebufferBackend *backend, QObject *parent = nullptr);
+    explicit FramebufferOutput(QObject *parent = nullptr);
     ~FramebufferOutput() override = default;
 
     RenderLoop *renderLoop() const override;

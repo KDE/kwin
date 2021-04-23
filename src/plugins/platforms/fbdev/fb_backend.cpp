@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "fb_backend.h"
-#include "fbvsyncmonitor.h"
 
 #include "composite.h"
 #include "logging.h"
@@ -28,16 +27,12 @@
 
 namespace KWin
 {
-
-FramebufferOutput::FramebufferOutput(FramebufferBackend *backend, QObject *parent)
+FramebufferOutput::FramebufferOutput(QObject *parent)
     : AbstractWaylandOutput(parent)
     , m_renderLoop(new RenderLoop(this))
 {
     setName("FB-0");
 
-    if (!qEnvironmentVariableIsSet("KWIN_FB_NO_HW_VSYNC")) {
-        m_vsyncMonitor = FramebufferVsyncMonitor::create(backend->fileDescriptor(), this);
-    }
     if (!m_vsyncMonitor) {
         SoftwareVsyncMonitor *monitor = SoftwareVsyncMonitor::create(this);
         monitor->setRefreshRate(m_renderLoop->refreshRate());
@@ -160,7 +155,7 @@ bool FramebufferBackend::handleScreenInfo()
         return false;
     }
 
-    auto *output = new FramebufferOutput(this);
+    auto *output = new FramebufferOutput;
     output->init(QSize(varinfo.xres, varinfo.yres), QSize(varinfo.width, varinfo.height));
     m_outputs << output;
     emit outputAdded(output);

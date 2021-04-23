@@ -1,6 +1,5 @@
 set(FBDEV_SOURCES
     fb_backend.cpp
-    fbvsyncmonitor.cpp
     logging.cpp
     scene_qpainter_fb_backend.cpp
 )
