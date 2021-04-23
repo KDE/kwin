@@ -11,6 +11,7 @@
 #include <linux/fb.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include "logging.h"
 
 namespace KWin
 {
@@ -69,11 +70,13 @@ FramebufferVsyncMonitor *FramebufferVsyncMonitor::create(int fileDescriptor, QOb
 {
     if (ioctl(fileDescriptor, FBIO_WAITFORVSYNC)) {
         // FBIO_WAITFORVSYNC is not supported
+        qCDebug(KWIN_FB) << "FBIO_WAITFORVSYNC is unsupported:" << strerror(errno);
         return nullptr;
     }
 
     const int threadFileDescriptor = dup(fileDescriptor);
     if (threadFileDescriptor == -1) {
+        qCDebug(KWIN_FB) << "Failed to dup() the fb file descriptor:" << strerror(errno);
         return nullptr;
     }
     return new FramebufferVsyncMonitor(threadFileDescriptor, parent);
