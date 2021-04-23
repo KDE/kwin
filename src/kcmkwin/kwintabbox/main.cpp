@@ -28,7 +28,6 @@
 #include <KCModuleProxy>
 #include <KLocalizedString>
 #include <KPluginFactory>
-#include <KPluginTrader>
 #include <KTitleWidget>
 #include <KNewStuff3/KNS3/QtQuickDialogWrapper>
 // Plasma
@@ -443,9 +442,30 @@ void KWinTabBoxConfig::configureEffectClicked()
         connect(buttonBox, &QDialogButtonBox::rejected, configDialog.data(), &QDialog::reject);
 
         const QString name = form->effectComboCurrentData().toString();
-        KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kwin/effects/configs/"), QString(),
-                                                                         QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(name),
-                                                                         configDialog);
+
+        auto filter = [name](const KPluginMetaData &md) -> bool
+        {
+            const QStringList parentComponents = KPluginMetaData::readStringList(md.rawData(), QStringLiteral("X-KDE-ParentComponents"));
+            return parentComponents.contains(name);
+        };
+
+        const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
+
+        if (plugins.isEmpty()) {
+            delete configDialog;
+            return;
+        }
+
+        KCModule *kcm = nullptr;
+
+        KPluginLoader loader(plugins.first().fileName());
+        KPluginFactory *factory = loader.factory();
+        if (!factory) {
+            qWarning() << "Error loading plugin:" << loader.errorString();
+        } else {
+            kcm = factory->create<KCModule>(configDialog);
+        }
+
         if (!kcm) {
             delete configDialog;
             return;

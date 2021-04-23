@@ -16,11 +16,13 @@
 
 #include <KAboutData>
 #include <KCModule>
+#include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPackage/PackageLoader>
 #include <KPluginLoader>
+#include <KPluginFactory>
+#include <KPluginInfo>
 #include <KPluginMetaData>
-#include <KPluginTrader>
 
 #include <QDBusConnection>
 #include <QDBusInterface>
@@ -341,14 +343,16 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
         // TODO KF6 remove
         if (effect.configModule.isEmpty()) {
 
-            const QList<KPluginInfo> infos = KPluginTrader::self()->query(
-                QStringLiteral("kwin/effects/configs/"),
-                QString(),
-                QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(pluginEffect.pluginId())
-            );
+            auto filter = [pluginEffect](const KPluginMetaData &md) -> bool
+            {
+                const QStringList parentComponents = KPluginMetaData::readStringList(md.rawData(), QStringLiteral("X-KDE-ParentComponents"));
+                return parentComponents.contains(pluginEffect.pluginId());
+            };
 
-            if (!infos.isEmpty()) {
-                effect.configModule = infos.first().pluginName();
+            const QVector<KPluginMetaData> plugins = KPluginLoader::findPlugins(QStringLiteral("kwin/effects/configs/"), filter);
+
+            if (!plugins.isEmpty()) {
+                effect.configModule = plugins.first().pluginId();
             }
         }
 

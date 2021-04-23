@@ -14,7 +14,7 @@
 #include <KCModule>
 #include <KPluginLoader>
 #include <KPluginFactory>
-#include <KPluginTrader>
+#include <KPluginMetaData>
 
 #include <QDebug>
 #include <QDBusConnection>
@@ -119,10 +119,10 @@ void PreviewBridge::createFactory()
         return;
     }
 
-    const auto offers = KPluginTrader::self()->query(s_pluginName, s_pluginName);
-    auto item = std::find_if(offers.constBegin(), offers.constEnd(), [this](const auto &plugin) { return plugin.pluginName() == m_plugin; });
+    const auto offers = KPluginLoader::findPlugins(s_pluginName);
+    auto item = std::find_if(offers.constBegin(), offers.constEnd(), [this](const auto &plugin) { return plugin.pluginId() == m_plugin; });
     if (item != offers.constEnd()) {
-        KPluginLoader loader(item->libraryPath());
+        KPluginLoader loader(item->fileName());
         m_factory = loader.factory();
     }
 
