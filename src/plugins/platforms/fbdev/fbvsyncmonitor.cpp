@@ -67,6 +67,11 @@ void FramebufferVsyncMonitor::arm()
 
 FramebufferVsyncMonitor *FramebufferVsyncMonitor::create(int fileDescriptor, QObject *parent)
 {
+    if (ioctl(fileDescriptor, FBIO_WAITFORVSYNC)) {
+        // FBIO_WAITFORVSYNC is not supported
+        return nullptr;
+    }
+
     const int threadFileDescriptor = dup(fileDescriptor);
     if (threadFileDescriptor == -1) {
         return nullptr;
