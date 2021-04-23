@@ -1880,10 +1880,7 @@ QRect XdgPopupClient::transientPlacement(const QRect &bounds) const
 {
     const XdgPositioner positioner = m_shellSurface->positioner();
 
-    QSize desiredSize = size();
-    if (desiredSize.isEmpty()) {
-        desiredSize = positioner.size();
-    }
+    const QSize desiredSize = positioner.size();
 
     const QPoint parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
 
