@@ -726,7 +726,9 @@ bool EglGbmBackend::scanout(int screenId, SurfaceItem *surfaceItem)
         importedBuffer = gbm_bo_import(m_gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
     if (!importedBuffer) {
-        qCDebug(KWIN_DRM) << "importing the dmabuf for direct scanout failed:" << strerror(errno);
+        if (errno != EINVAL) {
+            qCWarning(KWIN_DRM) << "Importing buffer for direct scanout failed!" << strerror(errno);
+        }
         return false;
     }
     // damage tracking for screen casting
