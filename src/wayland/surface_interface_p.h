@@ -40,11 +40,7 @@ struct SurfaceState
     QRegion bufferDamage = QRegion();
     QRegion opaque = QRegion();
     QRegion input = infiniteRegion();
-    QRectF sourceGeometry = QRectF();
-    QSize destinationSize = QSize();
     QSize size = QSize();
-    bool sourceGeometryIsSet = false;
-    bool destinationSizeIsSet = false;
     bool inputIsSet = false;
     bool opaqueIsSet = false;
     bool bufferIsSet = false;
@@ -66,6 +62,13 @@ struct SurfaceState
     QPointer<BlurInterface> blur;
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
+
+    struct {
+        QRectF sourceGeometry = QRectF();
+        QSize destinationSize = QSize();
+        bool sourceGeometryIsSet = false;
+        bool destinationSizeIsSet = false;
+    } viewport;
 };
 
 class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface

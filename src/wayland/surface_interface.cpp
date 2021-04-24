@@ -472,10 +472,10 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const SurfaceStat
         break;
     }
 
-    if (state->sourceGeometry.isValid()) {
-        surfaceToBufferMatrix.translate(state->sourceGeometry.x(), state->sourceGeometry.y());
-        surfaceToBufferMatrix.scale(state->sourceGeometry.width() / state->size.width(),
-                                    state->sourceGeometry.height() / state->size.height());
+    if (state->viewport.sourceGeometry.isValid()) {
+        surfaceToBufferMatrix.translate(state->viewport.sourceGeometry.x(), state->viewport.sourceGeometry.y());
+        surfaceToBufferMatrix.scale(state->viewport.sourceGeometry.width() / state->size.width(),
+                                    state->viewport.sourceGeometry.height() / state->size.height());
     }
 
     return surfaceToBufferMatrix;
@@ -518,13 +518,13 @@ void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *tar
         target->bufferDamage = source->bufferDamage;
         target->bufferIsSet = source->bufferIsSet;
     }
-    if (source->sourceGeometryIsSet) {
-        target->sourceGeometry = source->sourceGeometry;
-        target->sourceGeometryIsSet = true;
+    if (source->viewport.sourceGeometryIsSet) {
+        target->viewport.sourceGeometry = source->viewport.sourceGeometry;
+        target->viewport.sourceGeometryIsSet = true;
     }
-    if (source->destinationSizeIsSet) {
-        target->destinationSize = source->destinationSize;
-        target->destinationSizeIsSet = true;
+    if (source->viewport.destinationSizeIsSet) {
+        target->viewport.destinationSize = source->viewport.destinationSize;
+        target->viewport.destinationSizeIsSet = true;
     }
     if (childrenChanged) {
         target->childrenChanged = source->childrenChanged;
@@ -582,10 +582,10 @@ void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *tar
     // TODO: Refactor the state management code because it gets more clumsy.
     if (target->buffer) {
         bufferSize = target->buffer->size();
-        if (target->destinationSize.isValid()) {
-            target->size = target->destinationSize;
-        } else if (target->sourceGeometry.isValid()) {
-            target->size = target->sourceGeometry.size().toSize();
+        if (target->viewport.destinationSize.isValid()) {
+            target->size = target->viewport.destinationSize;
+        } else if (target->viewport.sourceGeometry.isValid()) {
+            target->size = target->viewport.sourceGeometry.size().toSize();
         } else {
             target->size = target->buffer->size() / target->bufferScale;
             switch (target->bufferTransform) {
