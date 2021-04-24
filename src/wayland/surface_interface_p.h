@@ -34,42 +34,43 @@ protected:
     void callback_destroy_resource(Resource *resource) override;
 };
 
+struct SurfaceState
+{
+    QRegion damage = QRegion();
+    QRegion bufferDamage = QRegion();
+    QRegion opaque = QRegion();
+    QRegion input = infiniteRegion();
+    QRectF sourceGeometry = QRectF();
+    QSize destinationSize = QSize();
+    QSize size = QSize();
+    bool sourceGeometryIsSet = false;
+    bool destinationSizeIsSet = false;
+    bool inputIsSet = false;
+    bool opaqueIsSet = false;
+    bool bufferIsSet = false;
+    bool shadowIsSet = false;
+    bool blurIsSet = false;
+    bool contrastIsSet = false;
+    bool slideIsSet = false;
+    bool childrenChanged = false;
+    bool bufferScaleIsSet = false;
+    bool bufferTransformIsSet = false;
+    qint32 bufferScale = 1;
+    OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
+    QList<KWaylandFrameCallback *> frameCallbacks;
+    QPoint offset = QPoint();
+    BufferInterface *buffer = nullptr;
+    // stacking order: bottom (first) -> top (last)
+    QList<SubSurfaceInterface *> children;
+    QPointer<ShadowInterface> shadow;
+    QPointer<BlurInterface> blur;
+    QPointer<ContrastInterface> contrast;
+    QPointer<SlideInterface> slide;
+};
+
 class SurfaceInterfacePrivate : public QtWaylandServer::wl_surface
 {
 public:
-    struct State {
-        QRegion damage = QRegion();
-        QRegion bufferDamage = QRegion();
-        QRegion opaque = QRegion();
-        QRegion input = infiniteRegion();
-        QRectF sourceGeometry = QRectF();
-        QSize destinationSize = QSize();
-        QSize size = QSize();
-        bool sourceGeometryIsSet = false;
-        bool destinationSizeIsSet = false;
-        bool inputIsSet = false;
-        bool opaqueIsSet = false;
-        bool bufferIsSet = false;
-        bool shadowIsSet = false;
-        bool blurIsSet = false;
-        bool contrastIsSet = false;
-        bool slideIsSet = false;
-        bool childrenChanged = false;
-        bool bufferScaleIsSet = false;
-        bool bufferTransformIsSet = false;
-        qint32 bufferScale = 1;
-        OutputInterface::Transform bufferTransform = OutputInterface::Transform::Normal;
-        QList<KWaylandFrameCallback *> frameCallbacks;
-        QPoint offset = QPoint();
-        BufferInterface *buffer = nullptr;
-        // stacking order: bottom (first) -> top (last)
-        QList<SubSurfaceInterface *> children;
-        QPointer<ShadowInterface> shadow;
-        QPointer<BlurInterface> blur;
-        QPointer<ContrastInterface> contrast;
-        QPointer<SlideInterface> slide;
-    };
-
     static SurfaceInterfacePrivate *get(SurfaceInterface *surface) { return surface->d.data(); }
 
     explicit SurfaceInterfacePrivate(SurfaceInterface *q);
@@ -88,16 +89,15 @@ public:
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
     void commit();
-    QMatrix4x4 buildSurfaceToBufferMatrix(const State *state);
-    void swapStates(State *source, State *target, bool emitChanged);
+    QMatrix4x4 buildSurfaceToBufferMatrix(const SurfaceState *state);
+    void swapStates(SurfaceState *source, SurfaceState *target, bool emitChanged);
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;
-
-    State current;
-    State pending;
-    State cached;
+    SurfaceState current;
+    SurfaceState pending;
+    SurfaceState cached;
     SubSurfaceInterface *subSurface = nullptr;
     QMatrix4x4 surfaceToBufferMatrix;
     QMatrix4x4 bufferToSurfaceMatrix;

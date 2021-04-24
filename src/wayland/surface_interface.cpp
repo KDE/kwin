@@ -423,7 +423,7 @@ bool SurfaceInterface::hasFrameCallbacks() const
     return !d->current.frameCallbacks.isEmpty();
 }
 
-QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const State *state)
+QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const SurfaceState *state)
 {
     // The order of transforms is reversed, i.e. the viewport transform is the first one.
 
@@ -481,7 +481,7 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix(const State *stat
     return surfaceToBufferMatrix;
 }
 
-void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emitChanged)
+void SurfaceInterfacePrivate::swapStates(SurfaceState *source, SurfaceState *target, bool emitChanged)
 {
     const bool bufferChanged = source->bufferIsSet;
     const bool opaqueRegionChanged = source->opaqueIsSet;
@@ -573,7 +573,7 @@ void SurfaceInterfacePrivate::swapStates(State *source, State *target, bool emit
         confinedPointerPrivate->commit();
     }
 
-    *source = State{};
+    *source = SurfaceState{};
     source->children = target->children;
 
     if (!emitChanged) {
