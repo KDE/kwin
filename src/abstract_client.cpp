@@ -3357,9 +3357,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (!oldClientGeometry.isValid())
         oldClientGeometry = oldGeometry.adjusted(border[Left], border[Top], -border[Right], -border[Bottom]);
     if (isFullScreen()) {
-        QRect area = workspace()->clientArea(FullScreenArea, fullscreenGeometryRestore().center(), desktop());
-        if (frameGeometry() != area)
-            setFrameGeometry(area);
+        setFrameGeometry(workspace()->clientArea(FullScreenArea, fullscreenGeometryRestore().center(), desktop()));
         return;
     }
 
@@ -3554,8 +3552,7 @@ void AbstractClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, Q
     if (!isShade())
         newGeom.setSize(constrainFrameSize(newGeom.size()));
 
-    if (newGeom != frameGeometry())
-        setFrameGeometry(newGeom);
+    setFrameGeometry(newGeom);
 }
 
 void AbstractClient::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
