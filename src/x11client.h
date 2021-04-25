@@ -167,15 +167,15 @@ public:
     void updateShape();
 
     using AbstractClient::move;
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
+    void move(int x, int y) override;
+    void setFrameGeometry(const QRect &rect) override;
     /// plainResize() simply resizes
-    void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
-    void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
+    void plainResize(int w, int h);
+    void plainResize(const QSize& s);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
-    void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
-    void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
+    void resizeWithChecks(const QSize &size) override;
+    void resizeWithChecks(int w, int h, xcb_gravity_t gravity);
+    void resizeWithChecks(const QSize& s, xcb_gravity_t gravity);
     QSize constrainClientSize(const QSize &size, SizeMode mode = SizeModeAny) const override;
 
     bool providesContextHelp() const override;
@@ -588,19 +588,19 @@ inline bool X11Client::isManaged() const
     return m_managed;
 }
 
-inline void X11Client::plainResize(const QSize& s, ForceGeometry_t force)
+inline void X11Client::plainResize(const QSize& s)
 {
-    plainResize(s.width(), s.height(), force);
+    plainResize(s.width(), s.height());
 }
 
-inline void X11Client::resizeWithChecks(const QSize &s, AbstractClient::ForceGeometry_t force)
+inline void X11Client::resizeWithChecks(const QSize &s)
 {
-    resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET, force);
+    resizeWithChecks(s.width(), s.height(), XCB_GRAVITY_BIT_FORGET);
 }
 
-inline void X11Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)
+inline void X11Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity)
 {
-    resizeWithChecks(s.width(), s.height(), gravity, force);
+    resizeWithChecks(s.width(), s.height(), gravity);
 }
 
 inline bool X11Client::hasUserTimeSupport() const

@@ -620,17 +620,13 @@ public:
 
     void placeIn(const QRect &area);
 
-    enum ForceGeometry_t {
-        NormalGeometrySet,
-        ForceGeometrySet,
-    };
-    virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
-    void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
-    virtual void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet) = 0;
+    virtual void move(int x, int y);
+    void move(const QPoint &p);
+    virtual void resizeWithChecks(const QSize& s) = 0;
     void keepInArea(QRect area, bool partial = false);
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
-    virtual void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) = 0;
+    virtual void setFrameGeometry(const QRect &rect) = 0;
 
     /**
      * How to resize the window in order to obey constraints (mainly aspect ratios).
@@ -1052,7 +1048,6 @@ protected:
     enum PendingGeometry_t {
         PendingGeometryNone,
         PendingGeometryNormal,
-        PendingGeometryForced
     };
     PendingGeometry_t pendingGeometryUpdate() const;
     void setPendingGeometryUpdate(PendingGeometry_t update);
@@ -1354,9 +1349,9 @@ private:
     AbstractClient* cl;
 };
 
-inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
+inline void AbstractClient::move(const QPoint &p)
 {
-    move(p.x(), p.y(), force);
+    move(p.x(), p.y());
 }
 
 inline const QList<AbstractClient*>& AbstractClient::transients() const

@@ -871,9 +871,9 @@ void AbstractClient::blockGeometryUpdates(bool block)
         if (--m_blockGeometryUpdates == 0) {
             if (m_pendingGeometryUpdate != PendingGeometryNone) {
                 if (isShade())
-                    setFrameGeometry(QRect(pos(), adjustedSize()), NormalGeometrySet);
+                    setFrameGeometry(QRect(pos(), adjustedSize()));
                 else
-                    setFrameGeometry(frameGeometry(), NormalGeometrySet);
+                    setFrameGeometry(frameGeometry());
                 m_pendingGeometryUpdate = PendingGeometryNone;
             }
         }
@@ -900,7 +900,7 @@ void AbstractClient::setMaximize(bool vertically, bool horizontally)
     }
 }
 
-void AbstractClient::move(int x, int y, ForceGeometry_t force)
+void AbstractClient::move(int x, int y)
 {
     // resuming geometry updates is handled only in setGeometry()
     Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
@@ -908,16 +908,11 @@ void AbstractClient::move(int x, int y, ForceGeometry_t force)
     if (!areGeometryUpdatesBlocked() && p != rules()->checkPosition(p)) {
         qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
     }
-    if (force == NormalGeometrySet && m_frameGeometry.topLeft() == p)
+    if (m_frameGeometry.topLeft() == p)
         return;
     m_frameGeometry.moveTopLeft(p);
     if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced)
-            {} // maximum, nothing needed
-        else if (force == ForceGeometrySet)
-            setPendingGeometryUpdate(PendingGeometryForced);
-        else
-            setPendingGeometryUpdate(PendingGeometryNormal);
+        setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
@@ -3140,13 +3135,11 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (maximizeMode() != MaximizeRestore) {
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
-            // decorations may turn off some borders when tiled
-            const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
             m_quickTileMode = int(QuickTileFlag::None); // Temporary, so the maximize code doesn't get all confused
 
             setMaximize(false, false);
 
-            setFrameGeometry(electricBorderMaximizeGeometry(keyboard ? frameGeometry().center() : Cursors::self()->mouse()->pos(), desktop()), geom_mode);
+            setFrameGeometry(electricBorderMaximizeGeometry(keyboard ? frameGeometry().center() : Cursors::self()->mouse()->pos(), desktop()));
             // Store the mode change
             m_quickTileMode = mode;
         } else {
@@ -3213,11 +3206,9 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
             m_quickTileMode = mode;
-            // decorations may turn off some borders when tiled
-            const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
             // Temporary, so the maximize code doesn't get all confused
             m_quickTileMode = int(QuickTileFlag::None);
-            setFrameGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()), geom_mode);
+            setFrameGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()));
         }
 
         // Store the mode change
@@ -3229,9 +3220,7 @@ void AbstractClient::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // Untiling, so just restore geometry, and we're done.
         if (!geometryRestore().isValid()) // invalid if we started maximized and wait for placement
             setGeometryRestore(frameGeometry());
-        // decorations may turn off some borders when tiled
-        const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
-        setFrameGeometry(geometryRestore(), geom_mode);
+        setFrameGeometry(geometryRestore());
         checkWorkspacePosition(); // Just in case it's a different screen
     }
     doSetQuickTileMode();

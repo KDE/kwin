@@ -311,7 +311,6 @@ bool X11Client::manage(xcb_window_t w, bool isMapped)
 
     // From this place on, manage() must not return false
     blockGeometryUpdates();
-    setPendingGeometryUpdate(PendingGeometryForced); // Force update when finishing with geometry changes
 
     embedClient(w, attr->visual, attr->colormap, windowGeometry->depth);
 
@@ -1046,7 +1045,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
 //                 move(calculateGravitation(true));
 //                 move(calculateGravitation(false));
                 QRect oldgeom = frameGeometry();
-                plainResize(adjustedSize(), ForceGeometrySet);
+                plainResize(adjustedSize());
                 if (!isShade())
                     checkWorkspacePosition(oldgeom);
                 emit geometryShapeChanged(this, oldgeom);
@@ -1060,7 +1059,7 @@ void X11Client::createDecoration(const QRect& oldgeom)
     setDecoration(decoration);
 
     move(calculateGravitation(false));
-    plainResize(adjustedSize(), ForceGeometrySet);
+    plainResize(adjustedSize());
     updateDecorationInputShape();
     if (Compositor::compositing()) {
         discardWindowPixmap();
@@ -1074,7 +1073,7 @@ void X11Client::destroyDecoration()
     if (isDecorated()) {
         QPoint grav = calculateGravitation(true);
         AbstractClient::destroyDecoration();
-        plainResize(adjustedSize(), ForceGeometrySet);
+        plainResize(adjustedSize());
         move(grav);
         if (compositing())
             discardWindowPixmap();
@@ -2736,7 +2735,7 @@ void X11Client::handleSync()
         addRepaintFull();
 }
 
-void X11Client::move(int x, int y, ForceGeometry_t force)
+void X11Client::move(int x, int y)
 {
     const QPoint framePosition(x, y);
     m_clientGeometry.moveTopLeft(framePosToClientPos(framePosition));
@@ -2747,18 +2746,12 @@ void X11Client::move(int x, int y, ForceGeometry_t force)
         qCDebug(KWIN_CORE) << "forced position fail:" << framePosition << ":" << rules()->checkPosition(framePosition);
     }
     m_frameGeometry.moveTopLeft(framePosition);
-    if (force == NormalGeometrySet && m_bufferGeometry.topLeft() == bufferPosition) {
+    if (m_bufferGeometry.topLeft() == bufferPosition) {
         return;
     }
     m_bufferGeometry.moveTopLeft(bufferPosition);
     if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced) {
-            // Maximum, nothing needed.
-        } else if (force == ForceGeometrySet) {
-            setPendingGeometryUpdate(PendingGeometryForced);
-        } else {
-            setPendingGeometryUpdate(PendingGeometryNormal);
-        }
+        setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
@@ -3867,7 +3860,7 @@ void X11Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh,
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
 }
 
-void X11Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force)
+void X11Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity)
 {
     Q_ASSERT(!shade_geometry_change);
     if (isShade()) {
@@ -3925,7 +3918,7 @@ void X11Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeome
         newy = newy + height() - h;
         break;
     }
-    setFrameGeometry(QRect{newx, newy, w, h}, force);
+    setFrameGeometry(QRect{newx, newy, w, h});
 }
 
 // _NET_MOVERESIZE_WINDOW
@@ -4008,7 +4001,7 @@ bool X11Client::isMaximizable() const
 /**
  * Reimplemented to inform the client about the new window position.
  */
-void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
+void X11Client::setFrameGeometry(const QRect &rect)
 {
     // this code is also duplicated in X11Client::plainResize()
     // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
@@ -4041,17 +4034,12 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
         qCDebug(KWIN_CORE) << "forced geometry fail:" << frameGeometry << ":" << rules()->checkGeometry(frameGeometry);
     }
     m_frameGeometry = frameGeometry;
-    if (force == NormalGeometrySet && m_bufferGeometry == bufferGeometry && pendingGeometryUpdate() == PendingGeometryNone) {
+    if (m_bufferGeometry == bufferGeometry && pendingGeometryUpdate() == PendingGeometryNone) {
         return;
     }
     m_bufferGeometry = bufferGeometry;
     if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced)
-            {} // maximum, nothing needed
-        else if (force == ForceGeometrySet)
-            setPendingGeometryUpdate(PendingGeometryForced);
-        else
-            setPendingGeometryUpdate(PendingGeometryNormal);
+        setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
 
@@ -4080,7 +4068,7 @@ void X11Client::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     emit geometryShapeChanged(this, oldFrameGeometry);
 }
 
-void X11Client::plainResize(int w, int h, ForceGeometry_t force)
+void X11Client::plainResize(int w, int h)
 {
     QSize frameSize(w, h);
     QSize bufferSize;
@@ -4109,17 +4097,12 @@ void X11Client::plainResize(int w, int h, ForceGeometry_t force)
     m_frameGeometry.setSize(frameSize);
     // resuming geometry updates is handled only in setGeometry()
     Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
-    if (force == NormalGeometrySet && m_bufferGeometry.size() == bufferSize) {
+    if (m_bufferGeometry.size() == bufferSize) {
         return;
     }
     m_bufferGeometry.setSize(bufferSize);
     if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced)
-            {} // maximum, nothing needed
-        else if (force == ForceGeometrySet)
-            setPendingGeometryUpdate(PendingGeometryForced);
-        else
-            setPendingGeometryUpdate(PendingGeometryNormal);
+        setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
@@ -4146,7 +4129,7 @@ void X11Client::updateServerGeometry()
 {
     const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
 
-    if (oldBufferGeometry.size() != m_bufferGeometry.size() || pendingGeometryUpdate() == PendingGeometryForced) {
+    if (oldBufferGeometry.size() != m_bufferGeometry.size()) {
         resizeDecoration();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
@@ -4285,8 +4268,6 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         changeMaximizeRecursion = false;
     }
 
-    const ForceGeometry_t geom_mode = isDecorated() ? ForceGeometrySet : NormalGeometrySet;
-
     // Conditional quick tiling exit points
     if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
         if (old_mode == MaximizeFull &&
@@ -4307,17 +4288,17 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (old_mode & MaximizeHorizontal) { // actually restoring from MaximizeFull
             if (geometryRestore().width() == 0 || !clientArea.contains(geometryRestore().center())) {
                 // needs placement
-                plainResize(constrainFrameSize(QSize(width() * 2 / 3, clientArea.height()), SizeModeFixedH), geom_mode);
+                plainResize(constrainFrameSize(QSize(width() * 2 / 3, clientArea.height()), SizeModeFixedH));
                 Placement::self()->placeSmart(this, clientArea);
             } else {
                 setFrameGeometry(QRect(QPoint(geometryRestore().x(), clientArea.top()),
-                                       constrainFrameSize(QSize(geometryRestore().width(), clientArea.height()), SizeModeFixedH)), geom_mode);
+                                       constrainFrameSize(QSize(geometryRestore().width(), clientArea.height()), SizeModeFixedH)));
             }
         } else {
             QRect r(x(), clientArea.top(), width(), clientArea.height());
             r.setTopLeft(rules()->checkPosition(r.topLeft()));
             r.setSize(constrainFrameSize(r.size(), SizeModeFixedH));
-            setFrameGeometry(r, geom_mode);
+            setFrameGeometry(r);
         }
         info->setState(NET::MaxVert, NET::Max);
         break;
@@ -4327,17 +4308,17 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (old_mode & MaximizeVertical) { // actually restoring from MaximizeFull
             if (geometryRestore().height() == 0 || !clientArea.contains(geometryRestore().center())) {
                 // needs placement
-                plainResize(constrainFrameSize(QSize(clientArea.width(), height() * 2 / 3), SizeModeFixedW), geom_mode);
+                plainResize(constrainFrameSize(QSize(clientArea.width(), height() * 2 / 3), SizeModeFixedW));
                 Placement::self()->placeSmart(this, clientArea);
             } else {
                 setFrameGeometry(QRect(QPoint(clientArea.left(), geometryRestore().y()),
-                                       constrainFrameSize(QSize(clientArea.width(), geometryRestore().height()), SizeModeFixedW)), geom_mode);
+                                       constrainFrameSize(QSize(clientArea.width(), geometryRestore().height()), SizeModeFixedW)));
             }
         } else {
             QRect r(clientArea.left(), y(), clientArea.width(), height());
             r.setTopLeft(rules()->checkPosition(r.topLeft()));
             r.setSize(constrainFrameSize(r.size(), SizeModeFixedW));
-            setFrameGeometry(r, geom_mode);
+            setFrameGeometry(r);
         }
         info->setState(NET::MaxHoriz, NET::Max);
         break;
@@ -4376,7 +4357,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
         if (m_geometryHints.hasAspect()) {
             restore.setSize(constrainFrameSize(restore.size(), SizeModeAny));
         }
-        setFrameGeometry(restore, geom_mode);
+        setFrameGeometry(restore);
         if (!clientArea.contains(geometryRestore().center())) { // Not restoring to the same screen
             Placement::self()->place(this, clientArea);
         }
@@ -4427,7 +4408,7 @@ void X11Client::changeMaximize(bool horizontal, bool vertical, bool adjust)
             }
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
         }
-        setFrameGeometry(r, geom_mode);
+        setFrameGeometry(r);
         if (options->electricBorderMaximize() && r.top() == clientArea.top())
             updateQuickTileMode(QuickTileFlag::Maximize);
         else

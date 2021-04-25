@@ -51,8 +51,8 @@ public:
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const override;
     void hideClient(bool hide) override;
-    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size) override;
+    void setFrameGeometry(const QRect &rect) override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;

@@ -32,10 +32,10 @@ public:
     bool isLockScreen() const override;
     bool isLocalhost() const override;
     AbstractClient *findModal(bool allow_itself = false) override;
-    void resizeWithChecks(const QSize &size, ForceGeometry_t force = NormalGeometrySet) override;
-    void setFrameGeometry(const QRect &rect, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(const QSize &size) override;
+    void setFrameGeometry(const QRect &rect) override;
     using AbstractClient::move;
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
+    void move(int x, int y) override;
     void killWindow() override;
     QByteArray windowRole() const override;
     bool isShown(bool shaded_is_shown) const override;

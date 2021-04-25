@@ -96,7 +96,7 @@ AbstractClient *WaylandClient::findModal(bool allow_itself)
     return nullptr;
 }
 
-void WaylandClient::resizeWithChecks(const QSize &size, ForceGeometry_t force)
+void WaylandClient::resizeWithChecks(const QSize &size)
 {
     const QRect area = workspace()->clientArea(WorkArea, this);
 
@@ -110,7 +110,7 @@ void WaylandClient::resizeWithChecks(const QSize &size, ForceGeometry_t force)
     if (height > area.height()) {
         height = area.height();
     }
-    setFrameGeometry(QRect(x(), y(), width, height), force);
+    setFrameGeometry(QRect(x(), y(), width, height));
 }
 
 void WaylandClient::killWindow()
@@ -339,7 +339,7 @@ QSize WaylandClient::requestedClientSize() const
     return requestedClientGeometry().size();
 }
 
-void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
+void WaylandClient::setFrameGeometry(const QRect &rect)
 {
     m_requestedFrameGeometry = rect;
 
@@ -356,14 +356,7 @@ void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
 
     if (areGeometryUpdatesBlocked()) {
         m_frameGeometry = m_requestedFrameGeometry;
-        if (pendingGeometryUpdate() == PendingGeometryForced) {
-            return;
-        }
-        if (force == ForceGeometrySet) {
-            setPendingGeometryUpdate(PendingGeometryForced);
-        } else {
-            setPendingGeometryUpdate(PendingGeometryNormal);
-        }
+        setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
 
@@ -386,7 +379,7 @@ void WaylandClient::setFrameGeometry(const QRect &rect, ForceGeometry_t force)
     updateGeometry(updateRect);
 }
 
-void WaylandClient::move(int x, int y, ForceGeometry_t force)
+void WaylandClient::move(int x, int y)
 {
     Q_ASSERT(pendingGeometryUpdate() == PendingGeometryNone || areGeometryUpdatesBlocked());
     QPoint p(x, y);
@@ -395,19 +388,12 @@ void WaylandClient::move(int x, int y, ForceGeometry_t force)
     }
     m_requestedFrameGeometry.moveTopLeft(p);
     m_requestedClientGeometry.moveTopLeft(framePosToClientPos(p));
-    if (force == NormalGeometrySet && m_frameGeometry.topLeft() == p) {
+    if (m_frameGeometry.topLeft() == p) {
         return;
     }
     m_frameGeometry.moveTopLeft(m_requestedFrameGeometry.topLeft());
     if (areGeometryUpdatesBlocked()) {
-        if (pendingGeometryUpdate() == PendingGeometryForced) {
-            return;
-        }
-        if (force == ForceGeometrySet) {
-            setPendingGeometryUpdate(PendingGeometryForced);
-        } else {
-            setPendingGeometryUpdate(PendingGeometryNormal);
-        }
+        setPendingGeometryUpdate(PendingGeometryNormal);
         return;
     }
     const QRect oldBufferGeometry = bufferGeometryBeforeUpdateBlocking();
