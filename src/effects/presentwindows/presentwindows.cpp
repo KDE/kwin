@@ -385,6 +385,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
         DataHash::const_iterator winData = m_windowData.constFind(w);
         if (winData == m_windowData.constEnd() || (w->isDock() && m_showPanel)) {
             // in case the panel should be shown just display it without any changes
+            data.multiplyBrightness(interpolate(0.40, 1.0, winData->highlight));
             effects->paintWindow(w, mask, region, data);
             return;
         }
