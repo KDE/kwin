@@ -142,22 +142,13 @@ std::vector<UdevDevice::Ptr> Udev::listGPUs()
     enumerate.scan();
     auto vect = enumerate.find();
     std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
-        auto pci1 = device1->getParentWithSubsystemDevType("pci");
-        auto pci2 = device2->getParentWithSubsystemDevType("pci");
-        const char *systAttrValue;
         // if set as boot GPU, prefer 1
-        if (pci1) {
-            systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
-            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-                return true;
-            }
+        if (device1->isBootVga()) {
+            return true;
         }
         // if set as boot GPU, prefer 2
-        if (pci2) {
-            systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
-            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-                return false;
-            }
+        if (device2->isBootVga()) {
+            return false;
         }
         return true;
     });
@@ -178,22 +169,13 @@ std::vector<UdevDevice::Ptr> Udev::listFramebuffers()
     enumerate.scan();
     auto vect = enumerate.find();
     std::sort(vect.begin(), vect.end(), [](const UdevDevice::Ptr &device1, const UdevDevice::Ptr &device2) {
-        auto pci1 = device1->getParentWithSubsystemDevType("pci");
-        auto pci2 = device2->getParentWithSubsystemDevType("pci");
-        const char *systAttrValue;
         // if set as boot GPU, prefer 1
-        if (pci1) {
-            systAttrValue = udev_device_get_sysattr_value(pci1, "boot_vga");
-            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-                return true;
-            }
+        if (device1->isBootVga()) {
+            return true;
         }
         // if set as boot GPU, prefer 2
-        if (pci2) {
-            systAttrValue = udev_device_get_sysattr_value(pci2, "boot_vga");
-            if (systAttrValue && qstrcmp(systAttrValue, "1") == 0) {
-                return false;
-            }
+        if (device2->isBootVga()) {
+            return false;
         }
         return true;
     });
@@ -231,11 +213,6 @@ UdevDevice::~UdevDevice()
     udev_device_unref(m_device);
 }
 
-udev_device *UdevDevice::getParentWithSubsystemDevType(const char *subsystem, const char *devtype) const
-{
-    return udev_device_get_parent_with_subsystem_devtype(m_device, subsystem, devtype);
-}
-
 const char *UdevDevice::devNode()
 {
     return udev_device_get_devnode(m_device);
@@ -269,6 +246,16 @@ bool UdevDevice::hasProperty(const char *key, const char *value)
         return false;
     }
     return qstrcmp(p, value) == 0;
+}
+
+bool UdevDevice::isBootVga() const
+{
+    auto pci = udev_device_get_parent_with_subsystem_devtype(m_device, "pci", nullptr);
+    if (!pci) {
+        return false;
+    }
+    const char *systAttrValue = udev_device_get_sysattr_value(pci, "boot_vga");
+    return systAttrValue && qstrcmp(systAttrValue, "1") == 0;
 }
 
 UdevMonitor::UdevMonitor(Udev *udev)

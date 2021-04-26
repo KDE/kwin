@@ -28,13 +28,13 @@ public:
     UdevDevice(udev_device *device);
     ~UdevDevice();
 
-    udev_device *getParentWithSubsystemDevType(const char *subsystem, const char *devtype = nullptr) const;
     const char *devNode();
     int sysNum() const;
     const char *property(const char *key);
     bool hasProperty(const char *key, const char *value);
 
     QMap<QByteArray, QByteArray> properties() const;
+    bool isBootVga() const;
 
     operator udev_device*() const {
         return m_device;
