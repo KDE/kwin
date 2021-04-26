@@ -99,19 +99,19 @@ void ScreensTest::cleanup()
 
 void ScreensTest::testCurrentFollowsMouse()
 {
+    QVERIFY(screens()->isCurrentFollowsMouse());
+    screens()->setCurrentFollowsMouse(false);
     QVERIFY(!screens()->isCurrentFollowsMouse());
-    screens()->setCurrentFollowsMouse(true);
-    QVERIFY(screens()->isCurrentFollowsMouse());
     // setting to same should not do anything
-    screens()->setCurrentFollowsMouse(true);
-    QVERIFY(screens()->isCurrentFollowsMouse());
+    screens()->setCurrentFollowsMouse(false);
+    QVERIFY(!screens()->isCurrentFollowsMouse());
 
     // setting back to other value
-    screens()->setCurrentFollowsMouse(false);
-    QVERIFY(!screens()->isCurrentFollowsMouse());
+    screens()->setCurrentFollowsMouse(true);
+    QVERIFY(screens()->isCurrentFollowsMouse());
     // setting to same should not do anything
-    screens()->setCurrentFollowsMouse(false);
-    QVERIFY(!screens()->isCurrentFollowsMouse());
+    screens()->setCurrentFollowsMouse(true);
+    QVERIFY(screens()->isCurrentFollowsMouse());
 }
 
 void ScreensTest::testReconfigure_data()
@@ -129,20 +129,10 @@ void ScreensTest::testReconfigure_data()
 void ScreensTest::testReconfigure()
 {
     screens()->reconfigure();
-    QVERIFY(!screens()->isCurrentFollowsMouse());
-
-    QFETCH(QString, focusPolicy);
-
-    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
-    config->group("Windows").writeEntry("FocusPolicy", focusPolicy);
-    config->group("Windows").sync();
-    config->sync();
-
-    screens()->setConfig(config);
-    screens()->reconfigure();
-    QTEST(screens()->isCurrentFollowsMouse(), "expectedDefault");
+    QVERIFY(screens()->isCurrentFollowsMouse());
 
     QFETCH(bool, setting);
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     config->group("Windows").writeEntry("ActiveMouseScreen", setting);
     config->sync();
     screens()->reconfigure();
@@ -240,6 +230,7 @@ void ScreensTest::testCurrent()
     QVERIFY(currentChangedSpy.isValid());
 
     QFETCH(int, current);
+    screens()->setCurrentFollowsMouse(false);
     screens()->setCurrent(current);
     QCOMPARE(screens()->current(), current);
     QTEST(!currentChangedSpy.isEmpty(), "signal");
@@ -249,6 +240,8 @@ void ScreensTest::testCurrentClient()
 {
     QSignalSpy currentChangedSpy(screens(), &Screens::currentChanged);
     QVERIFY(currentChangedSpy.isValid());
+
+    screens()->setCurrentFollowsMouse(false);
 
     // create a test window
     QScopedPointer<KWayland::Client::Surface> surface(Test::createSurface());
@@ -330,6 +323,8 @@ void ScreensTest::testCurrentPoint()
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
                               Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
     QVERIFY(changedSpy.wait());
+
+    screens()->setCurrentFollowsMouse(false);
 
     QFETCH(QPoint, cursorPos);
     screens()->setCurrent(cursorPos);
