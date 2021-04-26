@@ -12,6 +12,8 @@
 
 #include "internal_client.h"
 
+#include <QPainter>
+
 namespace KWin
 {
 namespace QPA
@@ -47,29 +49,16 @@ void BackingStore::resize(const QSize &size, const QRegion &staticContents)
     m_frontBuffer.setDevicePixelRatio(devicePixelRatio);
 }
 
-static void blitImage(const QImage &source, QImage &target, const QRect &rect)
+static QRect scaledRect(const QRect &rect, qreal devicePixelRatio)
 {
-    Q_ASSERT(source.format() == QImage::Format_ARGB32_Premultiplied);
-    Q_ASSERT(target.format() == QImage::Format_ARGB32_Premultiplied);
-
-    const int devicePixelRatio = target.devicePixelRatio();
-
-    const int x = rect.x() * devicePixelRatio;
-    const int y = rect.y() * devicePixelRatio;
-    const int width = rect.width() * devicePixelRatio;
-    const int height = rect.height() * devicePixelRatio;
-
-    for (int i = y; i < y + height; ++i) {
-        const uint32_t *in = reinterpret_cast<const uint32_t *>(source.scanLine(i));
-        uint32_t *out = reinterpret_cast<uint32_t *>(target.scanLine(i));
-        std::copy(in + x, in + x + width, out + x);
-    }
+    return QRect(rect.topLeft() * devicePixelRatio, rect.size() * devicePixelRatio);
 }
 
 static void blitImage(const QImage &source, QImage &target, const QRegion &region)
 {
+    QPainter painter(&target);
     for (const QRect &rect : region) {
-        blitImage(source, target, rect);
+        painter.drawImage(rect, source, scaledRect(rect, source.devicePixelRatio()));
     }
 }
 
