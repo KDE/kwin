@@ -69,7 +69,6 @@ void EglGbmBackend::cleanupFramebuffer(Output &output)
 void EglGbmBackend::cleanupOutput(Output &output)
 {
     cleanupFramebuffer(output);
-    output.output->releaseBuffers();
 
     output.buffer = nullptr;
     output.secondaryBuffer = nullptr;

@@ -74,14 +74,6 @@ void DrmOutput::teardown()
     //this is needed so that the pageflipcallback handle isn't deleted
 }
 
-void DrmOutput::releaseBuffers()
-{
-    m_crtc->setCurrent(nullptr);
-    m_crtc->setNext(nullptr);
-    m_primaryPlane->setCurrent(nullptr);
-    m_primaryPlane->setNext(nullptr);
-}
-
 bool DrmOutput::hideCursor()
 {
     return drmModeSetCursor(m_gpu->fd(), m_crtc->id(), 0, 0, 0) == 0;
